@@ -5,28 +5,46 @@
     <title></title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="/site_media/static/styles/screen.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="/site_media/static/styles/print.css" type="text/css" media="print">    
-
+    <link rel="stylesheet" href="/site_media/static/styles/print.css" type="text/css" media="print">
+    
+    <script type="text/javascript" src="/site_media/static/pinax/js/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript">
+        
+        jQuery(document).ready(function() {
+             jQuery('#login').click(function() {
+                e = jQuery('#login-dialogue');
+                e.toggle('normal');
+                return false;
+            })
+        })
+        
+    </script>
 </head>
 <body>
 
 <div id="header-pane">
     <div class="container">
-        <img src="/site_media/static/images/logo.png" alt="Apparel Row" id="logotype" />
-        <div id="main-nav">
-        
+        <img src="/site_media/static/images/logo.png" alt="Apparel Row" id="logo" />
+
+        <div id="login-dialogue">
+            Logga in here din caralinho
         </div>
+        
+        <ul id="main-nav">
+            <li><a href="/account/login" id="login">{% trans "Login" %}</a><li>
+        </ul>
         
         <div id="search-pane">
         
         </div>
     </div>
 </div>
-{% if not user.is_authenticated %}
+{% if user.is_authenticated %}
 <div id="login-pane">
-    <div class="container">
+    <div class="container clearfix">
+        <a href="/account/logout" id="logout">{% trans "Logout" %}</a>
         <span>
-            {% trans "Logged in as" %} <strong>{{ user.login }}</string>
+            {% trans "Logged in as" %} <strong>{{ user.username }}</string>
         </span>
         <ul id="nav-user">
         </ul>

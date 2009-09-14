@@ -34,9 +34,26 @@
 
 
 /* INDIVIDUAL ELEMENTS */
+
 #logo {
     float:left;
-    margin-top: 100px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid white;
+    margin-top: 30px;
+    padding: 20px;
+    border-bottom: 1px solid #999999;
 }
+
+#logout {
+    display: block;
+    float: right;
+    text-decoration: none;
+    padding-left: 20px;
+    background: transparent url('/site_media/static/images/icons/logout.png') fixed no-repeat left center;
+}
+
+#login-dialogue {
+    display: none;
+}
+
+
+
+
