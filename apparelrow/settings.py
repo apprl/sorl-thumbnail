@@ -137,6 +137,8 @@ INSTALLED_APPS = (
     'ajax_validation',
     'uni_form',
     'staticfiles',
+    'mptt',
+    'apparel',
     
     # internal (for now)
     'basic_profiles',
