@@ -1,12 +1,13 @@
+/* STRUCTURAL RULES */
+
 .container {
     padding-left: 1em;
 }
 
 /* Wraps the header */
 #header-pane {
-    background: transparent url('/site_media/static/images/bg.png') fixed repeat-x top left;
-    height: 137px;
-    color: white;
+    background: transparent url('/site_media/static/images/header-bg.png') fixed repeat-x top left;
+    height: 140px;
 }
 
 
@@ -20,7 +21,7 @@
 }
 
 
-/* Navigtation panes */
+/* NAVIGATION */
 #nav-user {
 
 }
@@ -30,3 +31,12 @@
 }
 
 
+
+
+/* INDIVIDUAL ELEMENTS */
+#logo {
+    float:left;
+    margin-top: 100px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid white;
+}
