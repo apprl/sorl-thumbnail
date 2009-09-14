@@ -1,0 +1,60 @@
+
+if [[ -z $DEPLROOT ]]; then
+    DEPLROOT='/opt/hanssonlarsson'                      # Deployment root dir
+fi
+
+# Generate these names
+DEPLNAME='example.com'                            # Deployment name
+PROJNAME='apparelrow'                           # Django project name
+
+# Static, should not be touched
+PROJDIR="$DEPLROOT/$DEPLNAME/$PROJNAME"                 # Django project directory
+PIDFILE="$PROJDIR/../server/$PROJNAME.pid"              # PID file for controlling instance
+SOCKET="$PROJDIR/../server/$PROJNAME.sock"              # FCGI socket
+
+if [ -z $1 ]; then
+    echo "Missing argument"
+    echo "./django-server stop|start|restart"
+    exit 1
+fi
+
+cd $PROJDIR
+
+if ([[ "$1" == "restart" ]] || [[ "$1" == "stop" ]]); then
+    for pfile in "$PIDFILE" "$PIDFILE-admin"
+    do
+       if [[ $pfile == "$PIDFILE-admin" ]]; then
+            pname="FCGI process (admin)"
+       else
+            pname="FCGI process"
+       fi
+    
+       if [[ -f $pfile ]]; then
+            echo "Stopping $pname"
+            kill `cat -- $pfile`
+            rm -f -- $pfile
+        elif [[ "$1" == "stop" ]]; then
+            echo "No $pname running"
+        fi    
+    done
+fi
+
+
+if [[ "$1" == "restart" ]] || [[ "$1" == "start" ]]; then
+
+    echo "Starting FCGI process"
+    /usr/bin/env - \
+        PYTHONPATH="$DEPLROOT/django-3pt-apps" \
+        ./manage.py runfcgi method=threaded socket=$SOCKET pidfile=$PIDFILE \
+        maxspare=4 workdir=$PROJDIR
+        
+    echo "Starting FCGI process (admin)"
+    /usr/bin/env - \
+        PYTHONPATH="$DEPLROOT/django-3pt-apps" \
+        ./manage.py runfcgi method=threaded socket=$SOCKET-admin pidfile=$PIDFILE-admin \
+        maxchildren=1 workdir=$PROJDIR
+fi
+
+
+
+
