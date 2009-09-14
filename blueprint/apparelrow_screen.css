@@ -50,7 +50,21 @@
     background: transparent url('/site_media/static/images/icons/logout.png') fixed no-repeat left center;
 }
 
-#login-dialogue {
+/* LOGIN FORM */
+
+#account-dialogue {
+    display: none;
+}
+
+#signup-form {
+    display: none;
+}
+
+#account-dialogue input.default-value {
+    font-style: italic;
+}
+
+.password-field {
     display: none;
 }
 

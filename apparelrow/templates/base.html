@@ -12,12 +12,55 @@
         
         jQuery(document).ready(function() {
              jQuery('#login').click(function() {
-                e = jQuery('#login-dialogue');
-                e.toggle('normal');
+                jQuery('#account-dialogue').toggle('normal');
+                
                 return false;
-            })
-        })
-        
+            });
+            jQuery('#signup-link, #login-link').click(function() {
+                jQuery('#login-form').toggle();
+                jQuery('#signup-form').toggle();
+                return false;
+            });
+
+            
+            /* Toggle login/signup field text */
+            
+            jQuery('#account-dialogue input[type=text]').each(function() {
+                if(this.name) {
+                    jQuery(this).focus(function() { 
+                        this.value = '';
+                        jQuery(this).removeClass('default-value');
+                    } );
+                    
+                    jQuery(this).blur(function() { 
+                        if(this.value == '') {
+                            this.value = this.defaultValue 
+                            jQuery(this).addClass('default-value');
+                        }
+                    } );
+                }
+            });
+            
+            jQuery('#account-dialogue input[id$=-placeholder]').each(function() {
+                e = jQuery(this);
+                e.focus(function() {
+                    with(jQuery(this)) {
+                        toggle();
+                        next().toggle();
+                        next().focus();
+                    }
+                });
+                e.next().blur(function() {
+                    if(this.value == '') {
+                        with(jQuery(this)) {
+                            toggle();
+                            prev().toggle();
+                        }
+                    }
+                });
+            });
+        });
+                
     </script>
 </head>
 <body>
@@ -25,9 +68,31 @@
 <div id="header-pane">
     <div class="container">
         <img src="/site_media/static/images/logo.png" alt="Apparel Row" id="logo" />
+        
+        <div id="account-dialogue">
+            <form action="/account/login/" method="post" id="login-form">
+                <a href="/account/signup/" id="signup-link">{% trans "Sign up" %}</a>
+                
+                <input type="text" name="username" class="default-value" value="{% trans "Username" %}" id="login-username" />
+                <input type="text" value="{% trans "Password" %}" class="default-value" id="login-password-placeholder" />
+                <input type="password" name="password" id="login-password" class="password-field" />
+                <input type="submit" name="submit" id="login-submit" value="{% trans "Login" %}" />
+                
+                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            </form>
 
-        <div id="login-dialogue">
-            Logga in here din caralinho
+            <form action="/account/signup/" method="post" id="signup-form">
+                <a href="/account/login/" id="login-link">{% trans "Log in" %}</a>
+
+                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                <input type="text" name="username" class="default-value" value="{% trans "Username" %}" id="signup-username" />
+                <input type="text" name="email" class="default-value" value="{% trans "E-mail" %}" id="signup-email" />
+                <input type="text" value="{% trans "Password" %}" class="default-value" id="signup-password-placeholder" />
+                <input type="password" name="password1" id="signup-password" class="password-field" />
+                <input type="text" value="{% trans "Password again" %}" class="default-value" id="signup-password-repeat-placeholder" />
+                <input type="password" name="password2" id="signup-repeat-password" class="password-field"/>
+                <input type="submit" name="submit" id="login-submit" value="{% trans "Sign up" %}" />
+            </form>
         </div>
         
         <ul id="main-nav">

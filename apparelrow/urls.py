@@ -24,6 +24,10 @@ urlpatterns = patterns('',
     url(r'^account/signup/$', signup_view, name="acct_signup"),
     
     (r'^about/', include('about.urls')),
+    
+    # FIXME: Is it possible to include this in some other way? All I want to do
+    # is to pass the next_page attribute (and not do it via query)
+    url(r'^account/logout/', 'django.contrib.auth.views.logout', {"next_page": "/"}, name="acct_logout"),
     (r'^account/', include('account.urls')),
     (r'^openid/(.*)', PinaxConsumer()),
     (r'^profiles/', include('basic_profiles.urls')),
