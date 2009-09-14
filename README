@@ -1,1 +1,10 @@
-Hej
+== APPAREL ROW ==
+
+= Directory Structure =
+.               This directory
+./bin           General scripts, such as the FCGI daemon controller
+./apparelrow    Django application root directory
+./conf          Non-Django related configuration files, such as webserver config
+./docs          General documentation
+
+

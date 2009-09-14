@@ -34,3 +34,5 @@ form.ap-inline div, form.ap-inline p {vertical-align:middle;}
 form.ap-inline label {position:relative;top:-0.25em;}
 form.ap-inline input.ap-checkbox, form.ap-inline input.ap-radio, form.ap-inline input.ap-button, form.ap-inline button {margin:0.5em 0;}
 button, input.ap-button {position:relative;top:0.25em;}
+
+/* ../../../blueprint/apparelrow_ie.css */

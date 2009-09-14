@@ -256,6 +256,8 @@ hr.ap-space {background:#fff;color:#fff;visibility:hidden;}
 .ap-clearfix, .ap-container {display:block;}
 .ap-clear {clear:both;}
 
+/* ../../../blueprint/apparelrow_screen.css */
+
 /* semantic class names */
 #content {float:left;margin-right:20px;width:620px;}
 #nav {width:940px;margin-right:0;}

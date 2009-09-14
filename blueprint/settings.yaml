@@ -4,11 +4,11 @@ apparelrow:
   namespace: ap-
   custom_css:
     ie.css:
-      - apparelrow_ie.css
+      - ../../../blueprint/apparelrow_ie.css
     print.css:
-      - apparelrow_print.css
+      - ../../../blueprint/apparelrow_print.css
     screen.css:
-      - apparelrow_screen.css
+      - ../../../blueprint/apparelrow_screen.css
   custom_layout:
     column_count: 24
     column_width: 20
