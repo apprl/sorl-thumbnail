@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Run blueprint"
+blueprint -p apparelrow -f blueprint/settings.yaml > /dev/null
+
+echo "Delete existing site_media"
+rm -rf apparelrow/site_media 
+
+echo "Assemble Pinax application files"
+python apparelrow/manage.py build_media -a  > /dev/null
+
+echo "Done"
+

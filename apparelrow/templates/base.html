@@ -1,0 +1,41 @@
+{% load i18n %}
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/site_media/static/styles/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/site_media/static/styles/print.css" type="text/css" media="print">    
+
+</head>
+<body>
+
+<div id="header-pane">
+    <div class="container">
+
+        <!--
+            <img src="/media/images/logotype.png" alt="Apparel Row" id="logotype" />
+        -->
+        <div id="main-nav">
+        
+        </div>
+        
+        <div id="search-pane">
+        
+        </div>
+    </div>
+</div>
+{% if not user.is_authenticated %}
+<div id="login-pane">
+    <div class="container">
+        <span>
+            {% trans "Logged in as" %} <strong>{{ user.login }}</string>
+        </span>
+        <ul id="nav-user">
+        </ul>
+    </div>
+{% endif %}
+</div>
+
+</body>
+</html>

@@ -257,6 +257,9 @@ hr.ap-space {background:#fff;color:#fff;visibility:hidden;}
 .ap-clear {clear:both;}
 
 /* ../../../blueprint/apparelrow_screen.css */
+.container {padding-left:1em;}
+#header-pane {background:transparent url('/site_media/static/images/bg.png') fixed repeat-x top left;height:137px;color:white;}
+#login-pane {padding-top:0.75em;padding-bottom:0.75em;font-size:0.5em;height:2em;background-color:#e2e2e2;}
 
 /* semantic class names */
 #content {float:left;margin-right:20px;width:620px;}

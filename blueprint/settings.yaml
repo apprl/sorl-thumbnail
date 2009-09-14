@@ -1,6 +1,6 @@
 # refer to http://www.yaml.org/spec/1.1/ for clarification on YAML collections
 apparelrow:
-  path: apparelrow/media/css
+  path: apparelrow/media/styles
   namespace: ap-
   custom_css:
     ie.css:

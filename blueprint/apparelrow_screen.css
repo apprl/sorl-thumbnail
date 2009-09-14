@@ -1,1 +1,32 @@
-/* Main CSS file for the Apparel Row project */
+.container {
+    padding-left: 1em;
+}
+
+/* Wraps the header */
+#header-pane {
+    background: transparent url('/site_media/static/images/bg.png') fixed repeat-x top left;
+    height: 137px;
+    color: white;
+}
+
+
+/* Gray area displayed when user is authenticated */
+#login-pane {
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
+    font-size: 0.5em;
+    height: 2em;
+    background-color: #e2e2e2;
+}
+
+
+/* Navigtation panes */
+#nav-user {
+
+}
+
+#nav-main {
+
+}
+
+
