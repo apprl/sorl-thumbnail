@@ -62,7 +62,7 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'static')
 
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
-STATIC_URL = '/site_media/static/'
+STATIC_URL = '/_media/static/'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
@@ -99,7 +99,7 @@ ROOT_URLCONF = 'apparelrow.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
-    os.path.join(PINAX_ROOT, "templates", PINAX_THEME),
+    os.path.join(PINAX_ROOT, "templates", 'default'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -130,7 +130,7 @@ INSTALLED_APPS = (
     'notification', # must be first
     'django_openid',
     'emailconfirmation',
-    'mailer',
+#    'mailer',          # FIXME: Includes e-mail manager, set this up later
     'announcements',
     'pagination',
     'timezones',
@@ -171,10 +171,21 @@ ACCOUNT_EMAIL_VERIFICATION = False
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
-CONTACT_EMAIL = "feedback@example.com"
+CONTACT_EMAIL = "support@hanssonlarsson.se"
 SITE_NAME = "Pinax"
 LOGIN_URL = "/account/login/"
+
+# FIXME: Set this
 LOGIN_REDIRECT_URLNAME = "what_next"
+
+
+
+EMAIL_HOST          = 'mail.hanssonlarsson.se'
+EMAIL_PORT          = 587
+EMAIL_HOST_USER     = 'outgoing@hanssonlarsson.se'
+EMAIL_HOST_PASSWORD = 'K6kb4Lle'
+EMAIL_USE_TLS       = False
+
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

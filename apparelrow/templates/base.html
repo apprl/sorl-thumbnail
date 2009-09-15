@@ -16,15 +16,21 @@
                 
                 return false;
             });
-            jQuery('#signup-link, #login-link').click(function() {
-                jQuery('#login-form').toggle();
-                jQuery('#signup-form').toggle();
+            jQuery('.account-option').click(function() {
+                var link = this;
+
+                jQuery('#account-dialogue>form').each(function() {
+                    var form = jQuery(this);
+                    
+                    if(form.css('display') != 'none' || form.attr('action') == link.pathname)
+                        form.toggle();
+                } );
+                
                 return false;
             });
 
             
-            /* Toggle login/signup field text */
-            
+            /* Toggle text field texts */
             jQuery('#account-dialogue input[type=text]').each(function() {
                 if(this.name) {
                     jQuery(this).focus(function() { 
@@ -41,23 +47,22 @@
                 }
             });
             
-            jQuery('#account-dialogue input[id$=-placeholder]').each(function() {
-                e = jQuery(this);
-                e.focus(function() {
-                    with(jQuery(this)) {
-                        toggle();
-                        next().toggle();
-                        next().focus();
-                    }
-                });
-                e.next().blur(function() {
-                    if(this.value == '') {
-                        with(jQuery(this)) {
-                            toggle();
-                            prev().toggle();
-                        }
-                    }
-                });
+            
+            /* Toggle password box */
+            jQuery('#login-password-placeholder').focus(function() {
+                pwdField = jQuery('#login-password');
+                jQuery(this).toggle();
+                pwdField.toggle();
+                pwdField.focus();
+            });
+            
+            
+            jQuery('#login-password').blur(function() {
+                if(this.value == '') {
+                    txtField = jQuery('#login-password-placeholder');
+                    jQuery(this).toggle();
+                    txtField.toggle();
+                }
             });
         });
                 
@@ -70,33 +75,38 @@
         <img src="/site_media/static/images/logo.png" alt="Apparel Row" id="logo" />
         
         <div id="account-dialogue">
+            <!-- LOGIN FORM -->
             <form action="/account/login/" method="post" id="login-form">
-                <a href="/account/signup/" id="signup-link">{% trans "Sign up" %}</a>
-                
+                <a href="/account/password_reset/" class="account-option">{% trans "Forgot password?" %}</a>
+
                 <input type="text" name="username" class="default-value" value="{% trans "Username" %}" id="login-username" />
                 <input type="text" value="{% trans "Password" %}" class="default-value" id="login-password-placeholder" />
-                <input type="password" name="password" id="login-password" class="password-field" />
+                <input type="password" name="password" id="login-password" />
                 <input type="submit" name="submit" id="login-submit" value="{% trans "Login" %}" />
                 
                 <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             </form>
 
-            <form action="/account/signup/" method="post" id="signup-form">
-                <a href="/account/login/" id="login-link">{% trans "Log in" %}</a>
+            <!-- PASSWORD RESET FORM -->
 
-                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-                <input type="text" name="username" class="default-value" value="{% trans "Username" %}" id="signup-username" />
-                <input type="text" name="email" class="default-value" value="{% trans "E-mail" %}" id="signup-email" />
-                <input type="text" value="{% trans "Password" %}" class="default-value" id="signup-password-placeholder" />
-                <input type="password" name="password1" id="signup-password" class="password-field" />
-                <input type="text" value="{% trans "Password again" %}" class="default-value" id="signup-password-repeat-placeholder" />
-                <input type="password" name="password2" id="signup-repeat-password" class="password-field"/>
-                <input type="submit" name="submit" id="login-submit" value="{% trans "Sign up" %}" />
+            <form action="/account/password_reset/" method="post" id="signup-form">
+                <a href="/account/login/" class="account-option">{% trans "Log in" %}</a>
+
+                <input type="text" name="email" class="default-value" value="{% trans "E-mail" %}" id="password-reset-email" />
+                <input type="submit" name="submit" id="password-reset-submit" value="{% trans "Reset password" %}" />
             </form>
         </div>
         
-        <ul id="main-nav">
-            <li><a href="/account/login" id="login">{% trans "Login" %}</a><li>
+        <ul id="nav-main">
+        {% if user.is_authenticated %}
+            <li><a href="/apparel/likes/"{% ifequal request.path "/apparel/likes/" %} class="selected"{% endifequal %}>{% trans "My likes" %}</a></li>            
+            <li><a href="/apparel/looks/"{% ifequal request.path "/apparel/looks/" %} class="selected"{% endifequal %}>{% trans "My looks" %}</a></li>            
+            <li><a href="/apparel/monitor/"{% ifequal request.path "/apparel/monitor/" %} class="selected"{% endifequal %}>{% trans "My ..." %}</a></li>            
+        {% else %}
+            <li><a href="/">{% trans "Hem" %}</a></li>
+            <li><a href="/account/login/" id="login">{% trans "Login" %}</a></li>
+            <li><a href="/account/signup/" id="login">{% trans "Sign up" %}</a></li>
+        {% endif %}
         </ul>
         
         <div id="search-pane">
@@ -107,7 +117,7 @@
 {% if user.is_authenticated %}
 <div id="login-pane">
     <div class="container clearfix">
-        <a href="/account/logout" id="logout">{% trans "Logout" %}</a>
+        <a href="/account/logout/" id="logout">{% trans "Logout" %}</a>
         <span>
             {% trans "Logged in as" %} <strong>{{ user.username }}</string>
         </span>
@@ -116,6 +126,10 @@
     </div>
 {% endif %}
 </div>
+
+{% block body %}
+
+{% endblock %}
 
 </body>
 </html>

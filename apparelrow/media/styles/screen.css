@@ -260,12 +260,16 @@ hr.ap-space {background:#fff;color:#fff;visibility:hidden;}
 .container {padding-left:1em;}
 #header-pane {background:transparent url('/site_media/static/images/header-bg.png') fixed repeat-x top left;height:140px;}
 #login-pane {padding-top:0.75em;padding-bottom:0.75em;font-size:0.5em;height:2em;background-color:#e2e2e2;}
+#nav-main {float:right;margin-top:50px;}
+#nav-main li {display:inline;margin-right:2em;}
+#nav-main li a {text-decoration:none;text-transform:uppercase;color:white;padding-top:1em;padding-bottom:1em;}
+#nav-main li a.selected {background:transparent url('/site_media/static/images/nav-main-selected.png') fixed no-repeat center bottom;}
 #logo {float:left;margin-top:30px;padding:20px;border-bottom:1px solid #999999;}
 #logout {display:block;float:right;text-decoration:none;padding-left:20px;background:transparent url('/site_media/static/images/icons/logout.png') fixed no-repeat left center;}
-#account-dialogue {display:none;}
+#account-dialogue {position:absolute;top:50px;left:175px;display:none;}
 #signup-form {display:none;}
 #account-dialogue input.default-value {font-style:italic;}
-.password-field {display:none;}
+#login-password {display:none;}
 
 /* semantic class names */
 #content {float:left;margin-right:20px;width:620px;}

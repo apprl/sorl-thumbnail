@@ -27,7 +27,25 @@
 }
 
 #nav-main {
+    float: right;
+    margin-top: 50px;
+}
 
+#nav-main li {
+    display: inline;
+    margin-right: 2em;
+}
+
+#nav-main li a {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: white;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+#nav-main li a.selected {
+    background: transparent url('/site_media/static/images/nav-main-selected.png') fixed no-repeat center bottom;
 }
 
 
@@ -53,6 +71,9 @@
 /* LOGIN FORM */
 
 #account-dialogue {
+    position: absolute;
+    top: 50px;
+    left: 175px;
     display: none;
 }
 
@@ -64,7 +85,7 @@
     font-style: italic;
 }
 
-.password-field {
+#login-password {
     display: none;
 }
 
