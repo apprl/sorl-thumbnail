@@ -1,21 +1,29 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
-
+from django.template.defaultfilters import slugify
+import datetime
 import mptt
 
 class Manufacturer(models.Model):
     name = models.CharField(max_length=50)
+    active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
     def __unicode__(self):
         return self.name
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
+    active = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
     def __unicode__(self):
         return self.name
 
-mptt.register(Category, order_insertion_by=['name'])
+try:
+    mptt.register(Category, order_insertion_by=['name'])
+except mptt.AlreadyRegistered:
+    # FIXME: Use a debug statement here
+    print "Attempt to register category, but it's already registered"
+    
 
 class Product(models.Model):
     GENDER_CHOICES = (
@@ -34,14 +42,14 @@ class Product(models.Model):
     date_added = models.DateField(_("Date added"), null=True, blank=True)
 
     def __unicode__(self):
-        return "%s %s %s" % (self.manufacturer, self.model_name, self.product_type)
+        return "%s %s %s" % (self.manufacturer, self.product_name, self.category)
 
     def save(self, force_insert=False, force_update=False):
         if not self.pk:
             self.date_added = datetime.date.today()
 
-        if self.name and not self.slug:
-            self.slug = slugify(self.name, instance=self)
+        if self.product_name and not self.slug:
+            self.slug = slugify(self.product_name)
 
         if not self.sku:
             self.sku = self.slug
@@ -59,12 +67,15 @@ class OptionGroup(models.Model):
 
 class Option(models.Model):
     option_group = models.ForeignKey(OptionGroup)
-    name = models.CharField(_('Display name'), max_length=50)
-    value = models.CharField(_('Stored name'), max_length=50)
+    # FIXME:
+    # It might be good to add a value field for a couple of different datatypes
+#    value_str  = models.CharField(_('Text value'), max_length=255)
+#    value_int  = models.CharField(_('Integer value'), max_length=255)
+    value = models.CharField(_('Value'), max_length=255)
     sort_order = models.IntegerField(_('Sort order'))
 
     class Meta:
-        ordering = ['option_group', 'sort_order', 'name']
+        ordering = ['option_group', 'sort_order']
         unique_together = (('option_group', 'value'),)
         verbose_name = _('Option Item')
         verbose_name_plural = _('Option Items')
@@ -82,4 +93,3 @@ class Look(models.Model):
     def __unicode__(self):
         return "%s by %s" % (self.title, self.user)
 
-# Create your models here.
