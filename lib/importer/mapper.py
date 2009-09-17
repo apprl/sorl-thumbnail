@@ -2,7 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 from apps.apparel.models import *
-
+from copy import copy
+import re
 
 class DataMapper():
     
@@ -14,13 +15,16 @@ class DataMapper():
     fields = {
         'sku': None,                # Product ID, should be unique with manufacturer
         'product_name': None,       # Product name
-        'gender': None,             # F, M or U
         'category_name': None,      # Identifies a category
         'manufacturer_name': None,  # Identifies a manufacturer
+        'description': None,        # Product description
     }
     
     # Options
-    options = []                    # List of options as tuples (option name: value)
+    options = {
+        'size':  None,     # Size (any size)
+        'color': None,     # Colour
+    }
     
     def __init__(self, data={}):
         self.data = data
@@ -34,9 +38,9 @@ class DataMapper():
         
         2) Maps the data to database objects, and create new ones if necessary.
            Following objects are mapped (in order)
-           1) Category
-           2) Manufacturer
-           3) Product
+           *) Category
+           *) Manufacturer
+           *) Product
         """
         if not isinstance(self.data, dict):
             raise ValueError('data property is expected to be a dictionary')
@@ -130,17 +134,17 @@ class DataMapper():
         
         This method is expected to return the newly created product.
         """
-        product = Product(
-            product_name=self.fields['product_name'],
-            sku=self.fields['sku'],
-            manufacturer=self.manufacturer,
-            gender=self.fields['gender'],
-        )
+        
+        fields = copy(self.fields)
+        del fields['manufacturer_name'], fields['category_name']
+        
+        product = Product(manufacturer=self.manufacturer, **fields)
         
         print "Created product %s" % product.product_name
         product.save()
         
         if self.category:
+            # It is safe to call this method repeatidly
             product.category.add(self.category)
         
         return product
@@ -167,4 +171,44 @@ class DataMapper():
         Updates, or adds options for the product. This method doesn't remove
         any options.
         """
-        pass
+        
+        # 1 Get a list of option types from categories
+        # FIXME: Retrieve these objects in only one query
+        
+        for category in self.product.category.all():
+            for option_type in category.option_types.all():
+                key = re.sub(r'\W', '', option_type.name.lower())
+                
+                # 2 Collect raw data by calling set_[typename], or use field in self.data
+            
+                if hasattr(self, 'set_option_%s' % key):
+                    value = getattr(self, 'set_option_%s' % key)()
+                elif key in self.data:
+                    value = self.data[key]
+        
+                if not value:
+                    continue
+                
+                opt = self.product.options.filter(option_type=option_type)
+                
+                if len(opt) > 1:
+                    print "Got more than one matching option of type %s for product %s" % (option_type, self.product)
+                    continue
+                
+                print "Setting option %s to %s" % (option_type.name, value)
+                
+                # 3 Create or update option with correspoding type for product
+                if not len(opt):
+                    # Create new option
+                    self.product.options.create(
+                        option_type=option_type,
+                        value=value,
+                    )
+                else:
+                    # Update existing option
+                    opt[0].value = value
+                    opt[0].save()
+        
+
+
+        

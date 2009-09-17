@@ -2,13 +2,13 @@ import csv, codecs, cStringIO, sys
 import traceback
 
 def load_provider(name):
-    try:
-        module = __import__('importer.provider.%s' % name, fromlist = ['Processor'])
-    except:
+    #try:
+    module = __import__('importer.provider.%s' % name, fromlist = ['Processor'])
+    #except:
         # FIXME: Raise fatal exception
-        
-        print "Failed to import provider: %s" % sys.exc_info()[1]
-        return
+    #    
+    #    print "Failed to import provider: %s" % sys.exc_info()[1]
+    #    return
    
     return module.Processor()
 
@@ -27,7 +27,8 @@ class Processor():
         """
         Processes.
         """
-        raise "process() has to be implemented by subclass"
+        # FIXME: Let this be fatal
+        raise Exception("process() has to be implemented by subclass")
 
     
     def process_csv(self, source, dialect=None, mapper=None, **kwargs):

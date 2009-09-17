@@ -39,7 +39,4 @@ if __name__ == '__main__':
     if not options.provider:
         op.error('Require provider name (-p)')
     
-    
-    
-    
     run(options.provider)
