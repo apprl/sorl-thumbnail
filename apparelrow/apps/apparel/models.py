@@ -5,6 +5,10 @@ from django.template.defaultfilters import slugify
 import datetime
 import mptt
 
+# FIXME: Move to Django settings directory
+PRODUCT_IMAGE_BASE = 'static/product'
+
+
 class Manufacturer(models.Model):
     name   = models.CharField(max_length=50, unique=True)
     active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
@@ -98,7 +102,6 @@ try:
 except mptt.AlreadyRegistered:
     # FIXME: Use a debug statement here
     print "Attempt to register category, but it's already registered"
-    
 
 class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
@@ -108,10 +111,11 @@ class Product(models.Model):
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=True, null=True,
         help_text=_("Defaults to slug if left blank"))
-    product_name = models.CharField(max_length=200)
-    date_added = models.DateField(_("Date added"), null=True, blank=True)
-    description = models.TextField(_('Product description'), null=True, blank=True)
-
+    product_name  = models.CharField(max_length=200)
+    date_added    = models.DateField(_("Date added"), null=True, blank=True)
+    description   = models.TextField(_('Product description'), null=True, blank=True)
+    product_image = models.ImageField(upload_to=PRODUCT_IMAGE_BASE, help_text=_('Product image')) 
+    
     def __unicode__(self):
         return "%s %s" % (self.manufacturer, self.product_name)
 

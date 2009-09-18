@@ -1,27 +1,42 @@
 import csv, codecs, cStringIO, sys
 import traceback
+from importer.fetcher import fetch_source
+
 
 def load_provider(name):
-    #try:
-    module = __import__('importer.provider.%s' % name, fromlist = ['Processor'])
-    #except:
-        # FIXME: Raise fatal exception
-    #    
-    #    print "Failed to import provider: %s" % sys.exc_info()[1]
-    #    return
-   
-    return module.Processor()
+    module = __import__('importer.provider.%s' % name, fromlist = ['Provider'])   
+    return module.Provider()
 
 
-class Processor():
+class Provider():
+    """
+    Base class for product providers.
+    
+    Fields:
+     - name          Unique name to identify the provider
+     - url           URL to remote file   
+     - username      Username if remote site requires authentication
+     - password      Password if remote site requires authentication
+     - extension     File name extension
+    
+    """
+    def __init__(self, **kwargs):
+        self.name      = None
+        self.url       = None
+        self.username  = None
+        self.password  = None
+        self.extension = None
+        self.file      = None
+        
+    
     
     def fetch(self):
         """
-        Retrieve a file from somewhere and set the 'file' property of the 
-        instance.
+        Retrieve a file from somewhere returns it as an open file handle. 
         
         Returns nothing.
         """
+        self.file = fetch_source(self)
     
     def process(self):
         """
@@ -31,14 +46,21 @@ class Processor():
         raise Exception("process() has to be implemented by subclass")
 
     
-    def process_csv(self, source, dialect=None, mapper=None, **kwargs):
+    def process_as_csv(self, dialect=None, mapper=None, **kwargs):
         """
         Process CSV.
         """
         
-        csv_reader = CSVReader(source, dialect, **kwargs)
+        print self.file
+        fh = open(self.file)
+        csv_reader = CSVReader(fh, dialect, **kwargs)
         
         for row in csv_reader:
+            # FIXME: Is that generic enough to be in this module
+            # Probably best to add an 'default_values' hash as arguments, and 
+            # merge the row with keys/values in there
+            
+            row['vendor_name'] = self.name
             m = mapper(row)
             # FIXME: Wrap this in a try/except clause and log any errors
             m.translate()

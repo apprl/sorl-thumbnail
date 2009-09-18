@@ -1,9 +1,16 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-
+#from django import settings
+from django.core.files.storage import default_storage
+from django.core.files import File
 from apps.apparel.models import *
-from copy import copy
+from importer import fetcher
 import re
+
+
+# FIXME: Move to Django settings directory
+PRODUCT_IMAGE_BASE = 'static/product'
+
 
 class DataMapper():
     
@@ -13,21 +20,17 @@ class DataMapper():
     
     # Product data fields
     fields = {
+        'vendor_name': None,        # Name of vendor
         'sku': None,                # Product ID, should be unique with manufacturer
         'product_name': None,       # Product name
         'category_name': None,      # Identifies a category
         'manufacturer_name': None,  # Identifies a manufacturer
         'description': None,        # Product description
-    }
-    
-    # Options
-    options = {
-        'size':  None,     # Size (any size)
-        'color': None,     # Colour
+        'product_image_url': None,  # Product URL
     }
     
     def __init__(self, data={}):
-        self.data = data
+        self.data     = data
     
     def translate(self):
         """
@@ -76,7 +79,6 @@ class DataMapper():
             # that the reader listens to. Like ARImporterException
             return
         
-
         self.manufacturer, created = Manufacturer.objects.get_or_create(name=name)
         
         if created:
@@ -124,7 +126,8 @@ class DataMapper():
         else:
             self.update_product()
         
-        self.set_product_options()
+        self.map_product_options()
+        self.map_product_image()
         
         # Record that the object was dealt with
     
@@ -135,10 +138,12 @@ class DataMapper():
         This method is expected to return the newly created product.
         """
         
-        fields = copy(self.fields)
-        del fields['manufacturer_name'], fields['category_name']
-        
-        product = Product(manufacturer=self.manufacturer, **fields)
+        product = Product(
+            manufacturer=self.manufacturer, 
+            product_name=self.fields['product_name'],
+            description=self.fields['description'],
+            sku=self.fields['sku'],
+        )
         
         print "Created product %s" % product.product_name
         product.save()
@@ -166,7 +171,7 @@ class DataMapper():
         print "Updated product %s" % self.product.product_name
         self.product.save()
     
-    def set_product_options(self):
+    def map_product_options(self):
         """
         Updates, or adds options for the product. This method doesn't remove
         any options.
@@ -202,4 +207,33 @@ class DataMapper():
                 if not self.product.options.filter(pk=opt.pk):
                     print "Attaching option '%s: %s'" % (option_type.name, value)
                     self.product.options.add(opt)
-                
+    
+    def map_product_image(self):
+        """
+        Fetches the file specified in 'product_image' and assigns it to the 
+        product 
+        """
+        if not 'product_image_url' in self.fields or not self.fields['product_image_url']:
+            return
+        
+        (url, name) = re.match(r'^.+/(.+)$', self.fields['product_image_url']).group(0,1)
+        
+        sitepath = '%s/%s_%s' % (PRODUCT_IMAGE_BASE, self.fields['vendor_name'], name)
+        
+        if not default_storage.exists(sitepath):
+            print "Downloading product image %s" % url        
+            temppath = fetcher.fetch(url)
+            default_storage.save(sitepath, File(open(temppath)))
+            
+            self.product.product_image = sitepath
+            self.product.save()
+            
+        
+        # FIXME: Update product
+        
+        # FIXME: Delete temppath? Can it be done implictly when the process
+        # exists?
+        
+        
+        
+        
