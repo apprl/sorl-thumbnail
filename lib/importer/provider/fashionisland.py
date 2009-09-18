@@ -25,7 +25,7 @@ class Provider(ProviderBase):
         # Set configurations here
         ProviderBase.__init__(self, **kwargs)
         
-        self.name      = 'fasionisland'      # Name (FIXME: derive from package?)
+        self.name      = 'fashionisland'      # Name (FIXME: derive from package?)
         self.url       = 'http://www.fashionisland.se/system/tools/dbexport/kelkoo.asp'
         self.extension = 'csv'
     
