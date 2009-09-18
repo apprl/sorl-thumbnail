@@ -180,35 +180,26 @@ class DataMapper():
                 key = re.sub(r'\W', '', option_type.name.lower())
                 
                 # 2 Collect raw data by calling set_[typename], or use field in self.data
-            
+                
+                value = None
+                
                 if hasattr(self, 'set_option_%s' % key):
                     value = getattr(self, 'set_option_%s' % key)()
                 elif key in self.data:
                     value = self.data[key]
-        
+                else:
+                    print 'No mapping for option type %s' % key
+                
                 if not value:
                     continue
                 
-                opt = self.product.options.filter(option_type=option_type)
+                # FIXME: One could move this code to the Option or Product class                
+                opt, created = Option.objects.get_or_create(option_type=option_type, value=value)
                 
-                if len(opt) > 1:
-                    print "Got more than one matching option of type %s for product %s" % (option_type, self.product)
-                    continue
+                if created:
+                    print "Created option '%s: %s'" % (option_type.name, value)
                 
-                print "Setting option %s to %s" % (option_type.name, value)
+                if not self.product.options.filter(pk=opt.pk):
+                    print "Attaching option '%s: %s'" % (option_type.name, value)
+                    self.product.options.add(opt)
                 
-                # 3 Create or update option with correspoding type for product
-                if not len(opt):
-                    # Create new option
-                    self.product.options.create(
-                        option_type=option_type,
-                        value=value,
-                    )
-                else:
-                    # Update existing option
-                    opt[0].value = value
-                    opt[0].save()
-        
-
-
-        

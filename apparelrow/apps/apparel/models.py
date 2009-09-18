@@ -51,12 +51,12 @@ class Option(models.Model):
 
     class Meta:
         ordering = ['option_type']
-#        unique_together = (('option_group', 'value_chr', 'value_int', 'value_txt'),)
-        verbose_name = _('Option Item')
+        unique_together     = (('option_type', 'value'),)
+        verbose_name        = _('Option Item')
         verbose_name_plural = _('Option Items')
 
     def __unicode__(self):
-        return "%s: %s" % (self.value, self.option_type.name) 
+        return "%s: %s" % (self.option_type.name, self.value) 
 #        return getattr(self, 'value_%s' % self.field)()
         
 

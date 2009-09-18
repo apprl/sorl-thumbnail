@@ -109,14 +109,18 @@ class FasionIslandDataMapper(DataMapper):
             return 'U'
     
     
-    def set_option_shoessizeeu(self):
-        pass
+    def set_option_shoesizeeu(self):
+        if not 'size' in self.data:
+            return
         
+        if re.match(r'^\d+(?:\.5)?$', self.data['size']):
+            return self.data['size']
+    
     def set_option_pantslength(self):
-        pass
+        return
     
     def set_option_pantswidth(self):
-        pass
+        return
     
     def set_option_relativesize(self):
         if not 'size' in self.data:
