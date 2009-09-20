@@ -1,8 +1,8 @@
 from importer.provider import Provider as ProviderBase
 from importer.mapper import DataMapper
 from importer.fetcher import fetch_source
-import csv, re
 
+import csv, re
 from pprint import pprint
 
 

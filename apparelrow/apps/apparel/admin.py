@@ -4,7 +4,11 @@ from mptt.admin import MpttModelAdmin
 
 admin.site.register(Manufacturer)
 
-admin.site.register(Product)
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('product_name', 'manufacturer', 'sku',)
+
+admin.site.register(Product, ProductAdmin)
 
 class CategoryAdmin(MpttModelAdmin):
     list_display = ('name',)

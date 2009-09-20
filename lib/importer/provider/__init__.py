@@ -1,4 +1,4 @@
-import csv, codecs, cStringIO, sys
+import csv, codecs, cStringIO, sys, re
 import traceback
 from importer.fetcher import fetch_source
 
@@ -30,13 +30,13 @@ class Provider():
         
     
     
-    def fetch(self):
+    def fetch(self, **kwargs):
         """
         Retrieve a file from somewhere returns it as an open file handle. 
         
         Returns nothing.
         """
-        self.file = fetch_source(self)
+        self.file = fetch_source(self, **kwargs)
     
     def process(self):
         """
@@ -60,8 +60,7 @@ class Provider():
             # Probably best to add an 'default_values' hash as arguments, and 
             # merge the row with keys/values in there
             
-            row['vendor_name'] = self.name
-            m = mapper(row)
+            m = mapper(self.name, row)
             # FIXME: Wrap this in a try/except clause and log any errors
             m.translate()
 

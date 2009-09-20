@@ -1,22 +1,27 @@
-import urllib2, os, sys, time
-from datetime import date
+import urllib2, os, sys
+from datetime import datetime
 import tempfile
 
 
 WAREHOUSE_DIR = os.path.abspath(os.path.dirname(__file__) + '../../../warehouse')
 
-def fetch_source(provider, from_archive=False, for_date=date.today().isoformat()):
+def fetch_source(provider, from_warehouse=False, for_date=None):
     """
     Fetches the source file for the given provider and returns an open file object
     
      - provider         Processor object
-     - from_archive     If True, the file will not be downloaded from the internet, but read from the archive
-     - for_date         Date for which the given file will be archived (or read from archive)
+     - from_warehouse   If True, the file will not be downloaded from the internet, but read from the archive
+     - for_date         date instance (from datetime package) for which the given file will be archived (or read from archive)
+                        Defaults for today
     
     """
+    if not for_date:
+        for_date = datetime.utcnow()
+    
     
     # FIXME: Might be worth to do some error handling around this
-    name = '%s.%s' % (for_date, provider.extension) if provider.extension else for_date
+    date = for_date.strftime('%Y-%m-%d')
+    name = '%s.%s' % (date, provider.extension) if provider.extension else date
     wdir = os.path.join(WAREHOUSE_DIR, provider.name)
     
     if not os.path.exists(wdir):
@@ -26,12 +31,12 @@ def fetch_source(provider, from_archive=False, for_date=date.today().isoformat()
     
     path = os.path.join(wdir, name)
         
-    if not from_archive:
+    if not from_warehouse:
         print "Downloading... %s to %s" % (provider.url, path)
         fetch(provider.url, path, provider.username, provider.password)
     
     return path
-    
+
 
 def fetch(url, localpath=None, username=None, password=None):
     """

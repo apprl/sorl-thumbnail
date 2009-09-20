@@ -3,9 +3,11 @@ from django.db.models import Q
 #from django import settings
 from django.core.files.storage import default_storage
 from django.core.files import File
+from django.template.defaultfilters import slugify
 from apps.apparel.models import *
 from importer import fetcher
 import re
+from urllib2 import HTTPError
 
 
 # FIXME: Move to Django settings directory
@@ -15,12 +17,9 @@ PRODUCT_IMAGE_BASE = 'static/product'
 class DataMapper():
     
     # Lookups
-    category          = None      # Category instance
-    manufacturer      = None      # Manufacturer instance
     
     # Product data fields
     fields = {
-        'vendor_name': None,        # Name of vendor
         'sku': None,                # Product ID, should be unique with manufacturer
         'product_name': None,       # Product name
         'category_name': None,      # Identifies a category
@@ -29,8 +28,11 @@ class DataMapper():
         'product_image_url': None,  # Product URL
     }
     
-    def __init__(self, data={}):
-        self.data     = data
+    def __init__(self, name, data={}):
+        self.data         = data
+        self.category     = None      # Category instance
+        self.manufacturer = None      # Manufacturer instance
+        self.vendor_name  = name      # Name of vendor FIXME: Derive from package name)
     
     def translate(self):
         """
@@ -56,7 +58,7 @@ class DataMapper():
             if hasattr(self, 'set_%s' % attr):
                 value = getattr(self, 'set_%s' % attr)(value)
             
-            self.fields[attr] = value
+            self.fields[attr] = _trim(value)
             
         # FIXME: Might need to move out to separate routine
         
@@ -95,16 +97,24 @@ class DataMapper():
         
         name = self.fields['category_name']
         
-        if not name:
+        if not name or re.match(r'^\s*$', name):
             # FIXME: At this point we've got a problem, and we should probably
             # stop. Best way of stopping is to throw a new kind of exception
             # that the reader listens to. Like ARImporterException
             return
         
-
-        self.category, created = Category.objects.get_or_create(name=name)
+        try:
+            # NOTE: get_or_create won't work as a case-insensetive match on
+            # name is required, and then it will pass the name as 'name__iexact'
+            # instead of 'name' to the constructor for category. 
+            # I think this is a bug in Django
+            self.category = Category.objects.get(key=slugify(name))
         
-        if created:
+        except ObjectDoesNotExist:
+            self.category = Category(
+                name=name
+            )
+            self.category.save()
             print "Created new category: %s" % name
         
     def map_product(self):
@@ -114,15 +124,18 @@ class DataMapper():
         
         try:
             self.product = Product.objects.get(
-                Q(manufacturer__id__exact=self.manufacturer.id),
-                Q(product_name__exact=self.fields['product_name'])
-                |
-                Q(sku__exact=self.fields['product_name']),
+                manufacturer__id__exact=self.manufacturer.id,
+                sku__exact=self.fields['sku']
             )
         except ObjectDoesNotExist:
             self.product = self.create_product()
             
             # call create object and return
+        except MultipleObjectsReturned:
+            print "WARNING: There are more than one product with sku %s for manufacturer %s" % (self.manufacturer.name, self.fields['sku'])
+            
+            # FIXME: Raise exception that causes this product to be skipped
+            return
         else:
             self.update_product()
         
@@ -198,6 +211,8 @@ class DataMapper():
                 if not value:
                     continue
                 
+                value = _trim(value)
+                
                 # FIXME: One could move this code to the Option or Product class                
                 opt, created = Option.objects.get_or_create(option_type=option_type, value=value)
                 
@@ -218,22 +233,31 @@ class DataMapper():
         
         (url, name) = re.match(r'^.+/(.+)$', self.fields['product_image_url']).group(0,1)
         
-        sitepath = '%s/%s_%s' % (PRODUCT_IMAGE_BASE, self.fields['vendor_name'], name)
+        sitepath = '%s/%s_%s' % (PRODUCT_IMAGE_BASE, self.vendor_name, name)
         
         if not default_storage.exists(sitepath):
-            print "Downloading product image %s" % url        
-            temppath = fetcher.fetch(url)
+            print "Downloading product image %s" % url
+            temppath = None
+            
+            try:
+                temppath = fetcher.fetch(url)
+            except HTTPError, e:
+                # FIXME: Replace with proper logging
+                print "%s: (while downloading %s)" % (e, url)
+                return
+            
             default_storage.save(sitepath, File(open(temppath)))
             
             self.product.product_image = sitepath
             self.product.save()
             
-        
-        # FIXME: Update product
-        
-        # FIXME: Delete temppath? Can it be done implictly when the process
+        # FIXME: Delete file at temppath? Can it be done implictly when the process
         # exists?
         
         
         
-        
+def _trim(value):
+    if value:
+        return re.sub(r'^\s*|\s*$', '', value)
+    
+    return value

@@ -89,8 +89,10 @@ class Category(models.Model):
     option_types = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
     
     def save(self, force_insert=False, force_update=False):
+        print "SETTING NAME TO: %s" % self.name
         if not self.key and self.name:
             self.key = slugify(self.name)
+            print "SETTING KEY TO: %s" % self.key
         
         super(Category, self).save(force_insert=force_insert, force_update=force_update)
 
@@ -109,8 +111,8 @@ class Product(models.Model):
     options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
     slug = models.SlugField(_("Slug Name"), blank=True,
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
-    sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=True, null=True,
-        help_text=_("Defaults to slug if left blank"))
+    sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
+        help_text=_("Has to be unique with the manufacturer"))
     product_name  = models.CharField(max_length=200)
     date_added    = models.DateField(_("Date added"), null=True, blank=True)
     description   = models.TextField(_('Product description'), null=True, blank=True)
