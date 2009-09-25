@@ -2,8 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
-import datetime
-import mptt
+
+from apps.apparel.manager import SearchManager
+
+import datetime, mptt
 
 # FIXME: Move to Django settings directory
 PRODUCT_IMAGE_BASE = 'static/product'
@@ -39,19 +41,8 @@ class OptionType(models.Model):
 
 
 class Option(models.Model):
-    FIELD_CHOICES = (
-        ('chr', 'Small text'),
-        ('int', 'Number'),
-        ('txt', 'Large text'),
-    )
-    
     value       = models.CharField(_('Option value'), max_length=255)
-#    value_chr   = models.CharField(_('Small text'), max_length=255, null=True, blank=True)
-#    value_int   = models.IntegerField(_('Number'),  null=True, blank=True)
-#    value_txt   = models.TextField(_('Large text',  null=True, blank=True)
-#    field       = models.CharField(_('Used field',  choices=FIELD_CHOICES))
     option_type = models.ForeignKey(OptionType)
-#    sort_order  = models.IntegerField(_('Sort order'))
 
     class Meta:
         ordering = ['option_type']
@@ -118,6 +109,17 @@ class Product(models.Model):
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = models.ImageField(upload_to=PRODUCT_IMAGE_BASE, help_text=_('Product image')) 
     
+    objects = SearchManager()
+
+    
+#    def options_as_list(self):
+#        options = self.options.all()
+#        ret = {}
+#        for op in options:
+#            ret[op.option_type] = op.value
+#        
+#        return ret
+    
     def __unicode__(self):
         return "%s %s" % (self.manufacturer, self.product_name)
 
@@ -132,6 +134,14 @@ class Product(models.Model):
             self.sku = self.slug
 
         super(Product, self).save(force_insert=force_insert, force_update=force_update)
+
+
+    class Meta:
+        pass
+#        ordering = ['name']
+#        verbose_name = _("Option Type")
+#        verbose_name_plural = _("Option Types")
+
 
 
 
