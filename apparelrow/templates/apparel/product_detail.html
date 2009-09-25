@@ -1,0 +1,61 @@
+{% extends 'site_base.html' %}
+{% load thumbnail %}
+
+{% block body %}
+{% if object %}
+    <div class="container">
+        <div id="product" class="span-18">
+            <h2>{{ object.category.all|join:'\\' }}\{{ object.product_name }}</h2>
+            <div class="product-info clearfix">
+                <div class="product-image span-8 last">
+                    <img src="{% thumbnail object.product_image 317x500 %}" />
+                </div>
+                <div class="span-9 prepend-1 last">
+                <div class="box">
+                    <h3>{{ object.product_name }}</h3>
+                    <h4 class="available-options">Finns i</h4>
+                    <table class="available-sizes">
+                        <tr>
+                            <th>3xs</th>
+                            <th>2xs</th>
+                            <th>xs</th>
+                            <th>s</th>
+                            <th>m</th>
+                            <th>l</th>
+                            <th>xl</th>
+                            <th>2xl</th>
+                            <th>3xl</th>
+                        </tr>
+                        <tr>
+                            {% for option in object.options.all %}
+                                <th>{{ option.value }}</th>
+                            {% endfor %}
+                        </tr>
+                    </table>
+                    <p>{{ object.description }}</p>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div id="related" class="span-6 last">
+            <div class="last-shown">
+                <h2>Senast visade plagg</h2>
+            </div>
+            <div class="similar-products">
+                <h2>Liknande plagg</h2>
+                <div class="similar-product clearfix">
+                    <img class="product-photo" />
+                    <div class="product-summary">
+                        <h5>Marc Jacobs</h5>
+                        <span class="likes">9 likes</span>
+                        <span class="price">959 SEK</span>
+                        <a href="">Till plagget</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <p>No product found!</p>
+{% endif %}
+{% endblock body %}

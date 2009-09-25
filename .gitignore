@@ -2,3 +2,4 @@
 *.db
 settings_local.py
 apparelrow/site_media/
+warehouse
