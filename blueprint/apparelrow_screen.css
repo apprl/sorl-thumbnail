@@ -1,7 +1,10 @@
 /* STRUCTURAL RULES */
 
-.container {
-    padding-left: 1em;
+/* Typography */
+
+h2 {
+    text-transform: uppercase;
+    border-bottom: 1px solid gray;
 }
 
 /* Wraps the header */
@@ -89,6 +92,26 @@
     display: none;
 }
 
+/* PRODUCT MENU */
 
+#product-menu {
+    margin: 0;
+    text-transform: uppercase;
+}
 
+#product-menu li {
+    list-style: none;
+}
 
+#product-menu ul {
+    margin: 0 0 5px 0;
+    border-top: 1px solid gray;
+    list-style: disc;
+}
+
+#product-menu ul li {
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
+    background-color: #aaa;
+}

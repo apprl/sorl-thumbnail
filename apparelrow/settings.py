@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     'uni_form',
     'staticfiles',
     'mptt',
+    'sorl.thumbnail',
     'apparel',
     
     # internal (for now)

@@ -248,8 +248,8 @@ class DataMapper():
             
             default_storage.save(sitepath, File(open(temppath)))
             
-            self.product.product_image = sitepath
-            self.product.save()
+        self.product.product_image = sitepath
+        self.product.save()
             
         # FIXME: Delete file at temppath? Can it be done implictly when the process
         # exists?
