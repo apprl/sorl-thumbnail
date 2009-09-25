@@ -15,6 +15,8 @@ class Manufacturer(models.Model):
     name   = models.CharField(max_length=50, unique=True)
     active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
     
+    objects = SearchManager()
+
     def __unicode__(self):
         return self.name
 
@@ -79,6 +81,8 @@ class Category(models.Model):
     active = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
     option_types = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
     
+    objects = SearchManager()
+
     def save(self, force_insert=False, force_update=False):
         print "SETTING NAME TO: %s" % self.name
         if not self.key and self.name:

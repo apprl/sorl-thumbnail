@@ -10,12 +10,34 @@ import re
 from pprint import pprint
 
 
-def search_product(request):
+
+
+def search(request):
+    r = None
+    m = re.match(r'/apparel/(?:(.+)/)?search', request.path)
+    c = {
+        'products'     : 'Product',
+        'manufacturers': 'Manufacturer',
+        'categories'   : 'Category',
+    }.get(m.group(1))
+    
+    if c:
+        c = eval(c)
+        r = c.objects.search(request.GET)
+        
+    else:
+        # Wide search
+        s = request.GET.get('s')
+        r = {
+            'products': Product.objects.filter(product_name__icontains=s, description__icontains=s),
+            'manufacturers': Manufacturer.objects.filter(name__icontains=s),
+            'categories': Category.objects.filter(name__icontains=s)
+        }
+
     data = {
         'status': 'OK',
-        'objects': Product.objects.search(request.GET)
+        'objects': r
     }
-    
     
     return HttpResponse(
         encode(data),

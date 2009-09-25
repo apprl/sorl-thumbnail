@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.http import QueryDict
 
 import re
+from pprint import pprint
 
 class SearchManager(models.Manager):
     """
@@ -16,14 +17,13 @@ class SearchManager(models.Manager):
         Returns a QuerySet from the given QueryDict object.
         """
         
-        qp = QueryParser()
+        qp = QueryParser(self.model)
         query = qp.parse(query_dict)
         
         if not query:
             raise InvalidExpression('Could not create query')
         
-        # FIXME: Get model (Product) from the class this manager is attached to
-        # If that is possible
+        
         return self.get_query_set().filter(query)
     
     
@@ -33,9 +33,10 @@ class QueryParser():
     django_models = {
         # Maps a shorthand to the field name on the Product that represents
         # another model
-        'm': 'manufacturer',
-        'o': 'options',
-        'c': 'category',
+        'm': ('Manufacturer', 'manufacturer'),
+        'o': ('Option', 'options'),
+        'c': ('Category', 'category'),
+        'p': ('Product', 'product'),
     }    
     
     django_operators = (
@@ -46,10 +47,11 @@ class QueryParser():
     )
 
 
-    def __init__(self):
+    def __init__(self, model=None):
         self.query_dict  = None
         self.expressions = None
         self.order       = None
+        self.model       = model
         
     
     def parse(self, query_dict=None):
@@ -69,7 +71,7 @@ class QueryParser():
         for group_index, group in enumerate(self.order):
             # Create new group Q-expression for groups with first named expression
                 
-            grp_query = self.query_for_expression(label=group[0])
+            grp_query = self.get_expression(label=group[0])
             
             for offset in range(1, len(group), 2):
                 op_exp = group[offset:offset + 2]
@@ -80,7 +82,7 @@ class QueryParser():
                     
                     # Full expression. Create new Q-expression and add it to the
                     # group expression                
-                    q         = self.query_for_expression(label=op_exp[1])
+                    q         = self.get_expression(label=op_exp[1])
                     grp_query = self.__merge_q_objects(grp_query, q, op_exp[0])
             else:
                 # Executed when all expressions in group has been expanded
@@ -192,61 +194,7 @@ class QueryParser():
         return order
     
     
-    def query_for_expression(self, label):
-        """
-        Returns a Djano Query object (django.models.db.Q) for the given expression
-        """
-
-        expr  = self.__get_expression(label)
-        model = expr.get('model')
-        
-        if model == 'options':
-            # Special case Option, as they go with an explicit type (should correspond to 'field')
-            
-            return Q(
-                        options__option_type__name__iexact=expr.get('field')
-                    ) & Q(
-                        **{'options__value__%s' % expr.get('operator'): expr.get('value')}
-                    )
-        
-        # Construct a Django Query API expression "model__field__operand" 
-        # (model__ might be left out)
-        key = '__'.join(filter(None, [model, expr.get('field'), expr.get('operator')]))
-        return Q(**{str(key): expr.get('value')})
-        
-    
-    # --------------------------------------------------------------------------
-    # 
-    # --------------------------------------------------------------------------        
-    
-    def __expr_from_item(self, pair):
-        """
-        Extracts an expression from a key/value pair. 
-        
-        A two-tuple is returned where the first element is the expression label 
-        and the second the expression dictionary.
-        
-        None is returned if the key isn't properly formatted
-        """
-        m = re.match(r'(\d+):(\w)\.(.+?)(?::(.+))?$', pair[0])
-        if not m:
-            return
-        
-        operator, value = self.__prepare_op_val(m.group(4), pair[1])
-        
-        if not m.group(2) in self.django_models:
-            raise InvalidExpression('Unknown model label %s' % m.group(2))
-        
-        model = self.django_models[m.group(2)]
-        
-        return (m.group(1), {
-            'field':    m.group(3),
-            'model':    model,
-            'value':    value,
-            'operator': operator
-        })
-        
-    def __get_expression(self, label=None):
+    def get_expression(self, label=None):
         """
         Returns an expression from expressions for the given label or throwns
         an exception
@@ -256,7 +204,52 @@ class QueryParser():
         except:
             # FIXME: Log original error
             InvalidExpression('No expression labelled %s' % label)
+
+
     
+    # --------------------------------------------------------------------------
+    # PRIVATE ROUTINES
+    # --------------------------------------------------------------------------        
+    
+    # FIXME: Might make this public so it can be properly tested
+    def __expr_from_item(self, pair):
+        """
+        Extracts an expression from a key/value pair. 
+        
+        A two-tuple is returned where the first element is the expression label 
+        and the second a django.db.models.Q instance for the expression.
+        
+        None is returned if the key isn't properly formatted
+        """
+        m = re.match(r'(\d+):(\w)\.(.+?)(?::(.+))?$', pair[0])
+        if not m:
+            return
+        
+        (model_class, model_field) = self.django_models.get(m.group(2), (None, None))
+
+        if not model_class:
+            raise InvalidExpression('Unknown model label %s' % m.group(2))
+        
+        if self.model and model_class == self.model.__name__:
+            model_field = None
+
+        operator, value = self.__prepare_op_val(m.group(4), pair[1])
+        field, label = m.group(3), m.group(1)
+        
+        q = None
+        
+        if model_class == 'Option':
+            # Special case option
+            q = Q(
+                    options__option_type__name__iexact=field
+                ) & Q(
+                    **{'options__value__%s' % operator: value}
+                )
+        else:
+            key = '__'.join(filter(None, [model_field, field, operator]))
+            q   =  Q(**{str(key): value})
+
+        return (label, q)    
 
 
     def __merge_q_objects(self, base=None, new=None, operand='a'):
@@ -313,88 +306,6 @@ class QueryParser():
         
         return operator, value
 
-
-    
-        
-    
-#
-#self.expressions = dict(filter(None, map(self.expression_from_item, qd.items())))
-#self.order       = self.order_from_pattern(qd.get('o', self.default_order_pattern()))
-#
-#query = self.create_query()
-#        
-#
-#
-#
-#        
-#def __prepare_op_val(operator, value):
-#    """
-#    Private routine. Returns two values; the operator in a form that Django
-#    accepts and a value formatted to match that operator.
-#    
-#    If the operator isn't recogised, or if the value is malformatted, the 
-#    routine raises an InvalidExpression exception.
-#    
-#    """
-#    
-#    if not operator:
-#        operator = 'exact'
-#    elif not operator in django_operators:
-#        raise InvalidExpression('Unknown operator %s' % operator)
-#    
-#    # Perform special casing for value
-#    if operator == 'in':
-#        value = value.split(',')
-#    
-#    elif operator == 'range':
-#        value = value.split(',', 1)
-#    
-#    elif operator == 'isnull':
-#        value = True if operator == 1 else False
-#    
-#    # FIXME: Add specific handling for date values etc
-#    
-#    return operator, value
-#
-##
-##def __merge_q_obj(base=None, new=None, operand='a'):
-##    """
-##    Takes django.db.models.Q object "new" and adds it to Q object "base" and
-##    using the logic specified in operand. The resulting Q object is returned.
-##    
-##    Supported operands
-##    
-##        - 'a'   AND (default)
-##        - 'an'  AND NOT 
-##        - 'o'   OR
-##        - 'on'  OR NOT
-##
-##    """
-##    if operand == 'a':
-##        base &= new
-##    elif operand == 'o':
-##        base |= new
-##    elif operand == 'an':
-##        base &= ~new
-##    elif operand == 'on':
-##        base |= ~new
-##    
-##    return base
-##
-##
-#
-#
-#def raiseException(s):
-#    """
-#    This method is just a shorthand for raising InvalidExpression exceptions,
-#    like this
-#    
-#        dict.get('some_key', raiseException('Damn, key not found!!'))
-#    
-#    Surely there's a better way of doing this, just fix this and refactor code
-#    accordingly.
-#    """
-#    raise InvalidExpression(v)
 
 class InvalidExpression(Exception):
     pass
