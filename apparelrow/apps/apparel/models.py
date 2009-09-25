@@ -54,23 +54,8 @@ class Option(models.Model):
 
     def __unicode__(self):
         return "%s: %s" % (self.option_type.name, self.value) 
-#        return getattr(self, 'value_%s' % self.field)()
-        
 
-#    def save(self, force_insert=False, force_update=False):
-#        # Check what fields we've got a defined value for
-#        values = filter(lambda f: not getattr(self, f) == None, ('value_chr', 'value_int', 'value_txt'))
-#        
-#        if not values:
-#            raise ValueError('Got no value for option')
-#        
-#        if len(values) > 1:
-#            raise ValueError('Got data in more than one value field (%s)' % values)
-#        
-#        if not self.field:
-#            self.field = values[0]
-#        
-#        super(Option, self).save(force_insert=force_insert, force_update=force_update)
+
 
 
 
@@ -84,10 +69,8 @@ class Category(models.Model):
     objects = SearchManager()
 
     def save(self, force_insert=False, force_update=False):
-        print "SETTING NAME TO: %s" % self.name
         if not self.key and self.name:
             self.key = slugify(self.name)
-            print "SETTING KEY TO: %s" % self.key
         
         super(Category, self).save(force_insert=force_insert, force_update=force_update)
 

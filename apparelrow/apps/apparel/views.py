@@ -10,7 +10,7 @@ import re
 from pprint import pprint
 
 
-
+WIDE_LIMIT = 10 # FIME: Move to application settings fileI
 
 def search(request):
     r = None
@@ -29,18 +29,13 @@ def search(request):
         # Wide search
         s = request.GET.get('s')
         r = {
-            'products': Product.objects.filter(product_name__icontains=s, description__icontains=s),
-            'manufacturers': Manufacturer.objects.filter(name__icontains=s),
-            'categories': Category.objects.filter(name__icontains=s)
+            'products': Product.objects.filter(product_name__icontains=s, description__icontains=s)[:WIDE_LIMIT],
+            'manufacturers': Manufacturer.objects.filter(name__icontains=s)[:WIDE_LIMIT],
+            'categories': Category.objects.filter(name__icontains=s)[:WIDE_LIMIT],
         }
 
-    data = {
-        'status': 'OK',
-        'objects': r
-    }
-    
     return HttpResponse(
-        encode(data),
+        encode(r),
         mimetype='text/json'
     )
     
