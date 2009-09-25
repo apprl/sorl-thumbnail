@@ -52,19 +52,19 @@ class Provider(ProviderBase):
                 'description',       # 11
                 'gender',            # 12
             ),
-            dialect=FasionIslandCSVDialect,
-            mapper=FasionIslandDataMapper,
+            dialect=FashionIslandCSVDialect,
+            mapper=FashionIslandDataMapper,
         )
         
 
 
-class FasionIslandCSVDialect(csv.Dialect):
+class FashionIslandCSVDialect(csv.Dialect):
     lineterminator = '\n'
     delimiter = '|'
     quoting = csv.QUOTE_NONE
 
 
-class FasionIslandDataMapper(DataMapper):
+class FashionIslandDataMapper(DataMapper):
     def set_sku(self, value):
         
         if 'product_id' in self.data:
