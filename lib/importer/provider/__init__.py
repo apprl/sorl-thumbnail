@@ -96,7 +96,10 @@ class CSVReader:
 
     def next(self):
         row = self.reader.next()
-        return dict([(k, unicode(v, "utf-8")) for (k, v) in row.items()])
+        return dict([(k, self.from_latin(v)) for (k, v) in row.items()])
+
+    def from_latin(self, s):
+        return u'' if s is None else unicode(s, "utf-8") 
 
     def __iter__(self):
         return self
