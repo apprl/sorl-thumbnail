@@ -141,13 +141,10 @@
             <li><a href="/account/login/" id="login">{% trans "Login" %}</a></li>
             <li><a href="/account/signup/" id="login">{% trans "Sign up" %}</a></li>
         {% endif %}
+            <li>
+                <form action="/apparel/search" method="get" onsubmit="return false"><input type="text" name="s" id="searchbox" /></form>
+            </li>
         </ul>
-        
-        <div id="search-pane">
-            <form action="/apparel/search" method="get" onsubmit="return false">
-                <input type="text" name="s" id="search">
-            </form>
-        </div>
     </div>
 </div>
 
