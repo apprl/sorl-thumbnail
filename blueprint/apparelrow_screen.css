@@ -26,7 +26,7 @@ h2 {
 
 /* Wraps the header */
 #header-pane {
-    background: transparent url('/site_media/static/images/header-bg.png') fixed repeat-x top left;
+    background: transparent url('../images/header-bg.png') fixed repeat-x top left;
     height: 140px;
 }
 
@@ -65,7 +65,7 @@ h2 {
 }
 
 #nav-main li a.selected {
-    background: transparent url('/site_media/static/images/nav-main-selected.png') fixed no-repeat center bottom;
+    background: transparent url('../images/nav-main-selected.png') fixed no-repeat center bottom;
 }
 
 
@@ -85,7 +85,7 @@ h2 {
     float: right;
     text-decoration: none;
     padding-left: 20px;
-    background: transparent url('/site_media/static/images/icons/logout.png') fixed no-repeat left center;
+    background: transparent url('../images/icons/logout.png') fixed no-repeat left center;
 }
 
 /* LOGIN FORM */
@@ -125,27 +125,27 @@ h2 {
     border-right: 1px solid #dadada;
     border-bottom: 1px solid #dadada;
     background-color: #f2f2f2;
-    list-style: disc inside url(/site_media/static/images/list-item.png);
+    list-style: disc inside url(../images/list-item.png);
     line-height: 2.5em;
     padding-left: 1em;
 }
 
 #product-gender li.selected {
-    list-style-image: url(/site_media/static/images/list-item-radio-selected.png);
+    list-style-image: url(../images/list-item-radio-selected.png);
 }
 
 #product-category li.selected {
-    list-style-image: url(/site_media/static/images/list-item-check-selected.png);
+    list-style-image: url(../images/list-item-check-selected.png);
 }
 
 span.likes {
-    background: transparent url(/site_media/static/images/heart.png) no-repeat scroll left bottom;
+    background: transparent url(../images/heart.png) no-repeat scroll left bottom;
     padding-left: 20px;
     color: #fa7070;
 }
 
 span.price {
-    background: transparent url(/site_media/static/images/check.png) no-repeat scroll left bottom;
+    background: transparent url(../images/check.png) no-repeat scroll left bottom;
     padding-left: 20px;
 }
 
@@ -202,7 +202,7 @@ table.available-sizes td {
 
 .product-summary a {
     text-transform: uppercase;
-    background: transparent url(/site_media/static/images/arrow-bg.png) scroll no-repeat left bottom;
+    background: transparent url(../images/arrow-bg.png) scroll no-repeat left bottom;
     padding-left: 20px;
 }
 
