@@ -1,77 +1,101 @@
-import os
-import datetime
-from decimal import Decimal
-
-from django.core.serializers.json import DateTimeAwareJSONEncoder
+import os, datetime
+#from datetime import datetime
 from django.db.models import Model
 from django.db.models.query import QuerySet
-from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.db.models.fields.files import FieldFile
-from django.template.loader import render_to_string
-from django.utils import simplejson
+from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.utils.functional import Promise
-from django.utils.encoding import force_unicode
-from pprint import pprint
 
-def encode(data):
-    """
-    Returns a JSON string with the data in data.
-    """
+from django.utils.simplejson import encoder
 
-    def _any(data):
-        """
-        Encodes a piece of data. This will deligate to encoders for specific
-        fields and hence it is recursive.
+
+class ExtendedJSONEncoder(encoder.JSONEncoder):
+    """
+    Extends the Django encoder to deal with Django models, relationships and
+    other non-primitive objects.
+    
+    Usage
+    
+        from ...json import encode
         
-        """
-        ret = None
+        json = encode(thing)
+    
+    or
+    
+        from ...json import ExtendedJSONEncoder
         
-        if isinstance(data, FieldFile):
-            if str(data):
-                ret = data.url
+        encoder = ExtendedJSONEncoder(**opts)
+        json = encoder.encode(thing)
+    
+    See documentation for django.utils.simplejson.encoder.JSONEncoder for list
+    of available options.
+    """
+    
+    # FIXME: Add options for how relationships should be followed
+    # FIXME: Add class to encapsulate encoded JSON 
+    # FIXME: Special case JSON objects so they do not get processed again 
+    #        (just concatinate them to base string). This would allow caching
+    #        on object level
+    
+        
+    def default(self, o):
+        """
+        Returns iterable for non-native objects
+        """
+        
+        if isinstance(o, FieldFile):
+            if str(o):
+                return o.url
             else:
-                ret = u''
+                return u''
             
         elif isinstance(data, Decimal):
-            ret = str(data)
+           # FIXME: Can you turn this into a primitive, like a float or something
+           # instead and let the core module handle the conversion to string? 
+            return str(data)
         
-        elif isinstance(data, QuerySet):
-            ret = _list(data)
+        elif isinstance(o, QuerySet):
+            return list(o)
         
-        elif isinstance(data, Model):
-            ret = _model(data)
-
-        # see http://code.djangoproject.com/ticket/5868
-        elif isinstance(data, Promise):
-            ret = force_unicode(data)
-                
-        elif isinstance(data, datetime.datetime):
-            # FIXME: Explicitly export as ISO string
-            ret = str(data).replace(' ', 'T')
-
-        elif isinstance(data, datetime.date):
-            # FIXME: Excplictly export as ISO string
-            ret = str(data)
-
-        elif isinstance(data, datetime.time):
-            # FIXME: Excplictly export as ISO string
-            ret = "T" + str(data)
-
-        elif isinstance(data, basestring):
-            ret = unicode(data)
+        elif isinstance(o, Model):
+            return self.encode_model(o)   # Should return a dictionary
         
-        elif isinstance(data, dict):
-            ret = _dict(data)
+        # FIXME: Does these objects have a common superclass?
+        elif (isinstance(o, datetime.datetime) or 
+              isinstance(o, datetime.time)  or 
+              isinstance(o, datetime.date)):
+            
+            return o.isoformat()
         
-        elif isinstance(data, list):
-            # FIXME: Treat anything that is iterable as list?
-            ret = _list(data)
         else:
-            ret = data
-
+            return encoder.JSONEncoder.default(self, o)
+    
+    
+    
+    def encode_model(self, model):
+        """
+        Iterates over a model, follows relationships and properly handles field
+        data.
+        """
+        ret     = {}
+        builtin = dir(model.__class__)
+        
+        # Get database fields and any many_to_many relationships
+        for f in model._meta.fields + model._meta.many_to_many:
+            field, value = self.model_field(model, f)
+            ret[field]   = value
+            
+            # Save the custom field, plus the new field
+            builtin.extend([field, f.attname])
+        
+        # Add runtime properties
+        for f in [k for k in dir(model) if k not in builtin]:
+            # FIXME: Note sure to call encode() from here...
+            ret[f] = getattr(model, f)
+        
         return ret
     
-    def _field(model, field):
+    def model_field(self, model ,field):
         """
         Preprocess data in a model field. This is primary used to follow 
         relationships.
@@ -94,38 +118,12 @@ def encode(data):
             value = getattr(model, name).all()
         
         return name, value
-        
-    
-    def _model(data):
-        ret     = {}
-        builtin = dir(data.__class__)
-        
-        # Get database fields and any many_to_many relationships
-        for f in data._meta.fields + data._meta.many_to_many:
-            field, value = _field(data, f)
-            ret[field]   = _any(value)
-            
-            # Save the custom field, plus the new field
-            builtin.extend([field, f.attname])
-        
-        # Add runtime properties
-        for f in [k for k in dir(data) if k not in builtin]:
-           ret[f] = _any(getattr(data, f))
-
-        return ret
-
-
-    def _list(data):       
-        return [_any(v) for v in data]
-    
-    def _dict(data):
-        return dict([(k, _any(v)) for k, v in data.items()])
-    
-    
-    
-    ret = _any(data)
-    
-    return simplejson.dumps(ret, cls=DateTimeAwareJSONEncoder)
 
 
 
+
+def encode(o):
+    """
+    Creates a basic encoder with no options and encodes the given object.
+    """
+    return ExtendedJSONEncoder().encode(o)
