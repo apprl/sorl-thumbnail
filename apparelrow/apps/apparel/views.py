@@ -1,7 +1,6 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse
 from apparel.models import *
-from django.utils import simplejson
 from django.db.models import Q
 from apparel.json import encode
 
