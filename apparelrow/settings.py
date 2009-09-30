@@ -141,6 +141,7 @@ INSTALLED_APPS = (
     'mptt',
     'sorl.thumbnail',
     'apparel',
+    'scale',
     
     # internal (for now)
     'basic_profiles',
