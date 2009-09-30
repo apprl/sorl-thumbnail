@@ -124,10 +124,9 @@ class Product(models.Model):
             self.sku = self.slug
 
         super(Product, self).save(force_insert=force_insert, force_update=force_update)
-
-    class Meta:
-        pass
-
+    
+    class Exporter:
+        export_fields = ['__all__', 'vendorproduct']
 
 class VendorProduct(models.Model):
     vendor     = models.ForeignKey(Vendor)

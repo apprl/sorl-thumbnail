@@ -23,10 +23,8 @@ class SearchManager(models.Manager):
         if not query:
             raise InvalidExpression('Could not create query')
         
-        
         return self.get_query_set().filter(query)
-    
-    
+
         
 class QueryParser():
 
@@ -38,7 +36,7 @@ class QueryParser():
         'c': ('Category', 'category'),
         'p': ('Product', 'product'),
         'v': ('Vendor', 'vendors'),
-        'r': ('VendorProduct', 'vendor_products'),
+        'r': ('VendorProduct', 'vendorproduct'),
     }    
     
     django_operators = (

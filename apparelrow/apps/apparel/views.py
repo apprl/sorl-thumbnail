@@ -12,29 +12,37 @@ from pprint import pprint
 WIDE_LIMIT = 10 # FIME: Move to application settings fileI
 
 def search(request):
-    r = None
-    m = re.match(r'/apparel/(?:(.+)/)?search', request.path)
-    c = {
+    result = None
+    match  = re.match(r'/apparel/(?:(.+)/)?search', request.path)
+    klass  = {
         'products'     : 'Product',
         'manufacturers': 'Manufacturer',
         'categories'   : 'Category',
-    }.get(m.group(1))
+        'vendors'      : 'Vendor',
+    }.get(match.group(1))
     
-    if c:
-        c = eval(c)
-        r = c.objects.search(request.GET)
-        
+    if klass:
+        klass  = eval(klass)
+        result = klass.objects.search(request.GET)
     else:
-        # Wide search
-        s = request.GET.get('s')
-        r = {
-            'products': Product.objects.filter(product_name__icontains=s, description__icontains=s)[:WIDE_LIMIT],
-            'manufacturers': Manufacturer.objects.filter(name__icontains=s)[:WIDE_LIMIT],
-            'categories': Category.objects.filter(name__icontains=s)[:WIDE_LIMIT],
-        }
+        raise Exception('No model to search for')
+    
+    return HttpResponse(
+        encode(result),
+        mimetype='text/json'
+    )
+
+def wide_search(request):
+    query  = request.GET.get('s')
+    result = {
+        'products': Product.objects.filter(product_name__icontains=s, description__icontains=query)[:WIDE_LIMIT],
+        'manufacturers': Manufacturer.objects.filter(name__icontains=query)[:WIDE_LIMIT],
+        'categories': Category.objects.filter(name__icontains=query)[:WIDE_LIMIT],
+        'vendors': Vendor.objects.filter(name__icontains=query)[:WIDE_LIMIT],
+    }
 
     return HttpResponse(
-        encode(r),
+        encode(result),
         mimetype='text/json'
     )
     
