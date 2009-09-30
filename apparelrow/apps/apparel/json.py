@@ -36,7 +36,9 @@ class ExtendedJSONEncoder(encoder.JSONEncoder):
     # FIXME: Special case JSON objects so they do not get processed again 
     #        (just concatinate them to base string). This would allow caching
     #        on object level
-    
+    #        That can probably be done by overriding _iterencode, check for the
+    #        type and yield the string representation of the object, else just
+    #        call the super class
         
     def default(self, o):
         """
@@ -48,12 +50,12 @@ class ExtendedJSONEncoder(encoder.JSONEncoder):
                 return o.url
             else:
                 return u''
-            
-        elif isinstance(data, Decimal):
-           # FIXME: Can you turn this into a primitive, like a float or something
-           # instead and let the core module handle the conversion to string? 
-            return str(data)
-        
+#            
+#        elif isinstance(o, Decimal):
+#           # FIXME: Can you turn this into a primitive, like a float or something
+#           # instead and let the core module handle the conversion to string? 
+#            return str(data)
+#       
         elif isinstance(o, QuerySet):
             return list(o)
         

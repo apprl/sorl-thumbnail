@@ -67,7 +67,7 @@
             });
             
             // Add handlers
-            jQuery('#search').keyup(function(e) {
+            jQuery('#searchbox').keyup(function(e) {
                 // FIXME: Ignore if modifier is used (apart from shift)
                 j = jQuery(this)
                 clearTimeout(j.data('tid'));
@@ -86,7 +86,7 @@
         });
         
         function search() {
-            var value = jQuery('#search').val();
+            var value = jQuery('#searchbox').val();
             if(value.length == 0)
                 return
             

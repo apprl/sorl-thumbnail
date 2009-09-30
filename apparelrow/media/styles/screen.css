@@ -262,25 +262,25 @@ a {text-decoration:none;color:#333;}
 a:hover, a:active {text-decoration:underline;}
 h2 {border-bottom:1px solid #d9d9d9;}
 h2 {text-transform:uppercase;border-bottom:1px solid gray;}
-#header-pane {background:transparent url('/site_media/static/images/header-bg.png') fixed repeat-x top left;height:140px;}
+#header-pane {background:transparent url('../images/header-bg.png') fixed repeat-x top left;height:140px;}
 #login-pane {padding-top:0.75em;padding-bottom:0.75em;font-size:0.5em;height:2em;background-color:#e2e2e2;}
 #nav-main {float:right;margin-top:50px;}
 #nav-main li {display:inline;margin-right:2em;}
 #nav-main li a {text-decoration:none;text-transform:uppercase;color:white;padding-top:1em;padding-bottom:1em;}
-#nav-main li a.selected {background:transparent url('/site_media/static/images/nav-main-selected.png') fixed no-repeat center bottom;}
+#nav-main li a.selected {background:transparent url('../images/nav-main-selected.png') fixed no-repeat center bottom;}
 #logo {float:left;margin-top:30px;padding:20px;border-bottom:1px solid #999999;}
-#logout {display:block;float:right;text-decoration:none;padding-left:20px;background:transparent url('/site_media/static/images/icons/logout.png') fixed no-repeat left center;}
+#logout {display:block;float:right;text-decoration:none;padding-left:20px;background:transparent url('../images/icons/logout.png') fixed no-repeat left center;}
 #account-dialogue {position:absolute;top:50px;left:175px;display:none;}
 #signup-form {display:none;}
 #account-dialogue input.default-value {font-style:italic;}
 #login-password {display:none;}
 #product-menu li {list-style:none;}
 #product-menu ul {margin:0 0 9px 0;border-top:1px solid #dadada;}
-#product-menu ul li {border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;background-color:#f2f2f2;list-style:disc inside url(/site_media/static/images/list-item.png);line-height:2.5em;padding-left:1em;}
-#product-gender li.selected {list-style-image:url(/site_media/static/images/list-item-radio-selected.png);}
-#product-category li.selected {list-style-image:url(/site_media/static/images/list-item-check-selected.png);}
-span.likes {background:transparent url(/site_media/static/images/heart.png) no-repeat scroll left bottom;padding-left:20px;color:#fa7070;}
-span.price {background:transparent url(/site_media/static/images/check.png) no-repeat scroll left bottom;padding-left:20px;}
+#product-menu ul li {border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;background-color:#f2f2f2;list-style:disc inside url(../images/list-item.png);line-height:2.5em;padding-left:1em;}
+#product-gender li.selected {list-style-image:url(../images/list-item-radio-selected.png);}
+#product-category li.selected {list-style-image:url(../images/list-item-check-selected.png);}
+span.likes {background:transparent url(../images/heart.png) no-repeat scroll left bottom;padding-left:20px;color:#fa7070;}
+span.price {background:transparent url(../images/check.png) no-repeat scroll left bottom;padding-left:20px;}
 .product-photo {border:1px solid #dadada;}
 .product-image {width:317px;height:500px;border:1px solid #dadada;float:left;margin-top:-12px;}
 table.available-sizes th {border:none;font-size:0.8em;font-weight:normal;text-align:center;text-transform:uppercase;}
@@ -290,7 +290,7 @@ table.available-sizes td {border:1px solid #dadada;background-color:#f2f2f2;}
 .similar-product .product-photo {float:left;margin-right:10px;}
 .similar-product .product-summary {float:left;}
 .product-summary a, .product-summary span {display:block;}
-.product-summary a {text-transform:uppercase;background:transparent url(/site_media/static/images/arrow-bg.png) scroll no-repeat left bottom;padding-left:20px;}
+.product-summary a {text-transform:uppercase;background:transparent url(../images/arrow-bg.png) scroll no-repeat left bottom;padding-left:20px;}
 a.block_link {display:block;background-color:#f2f2f2;border:1px solid #dadada;line-height:2.5em;text-align:center;text-transform:uppercase;}
 #searchbox {background:transparent url(../images/search.png) scroll no-repeat left center;width:163px;height:24px;margin:0;border:none;vertical-align:middle;padding:17px 50px 17px 25px;font-size:1.2em;}
 
