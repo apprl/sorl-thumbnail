@@ -85,6 +85,8 @@
             });
         });
         
+        
+        // FIXME: Move these into namespace 
         function search() {
             var value = jQuery('#searchbox').val();
             if(value.length == 0)
@@ -96,8 +98,36 @@
         }
         
         function display(data) {
-            jQuery('#display').text(jQuery.dump(data))
+            for( var name in data) {
+                var elem = jQuery('#search-result-' + name);
+                if(!elem)
+                    continue;
+                
+                if(!name in adders)
+                    continue;
+                
+                elem.empty();
+                
+                for(var i = 0; i < data[name].length; i++)
+                    adders[name](elem, data[name][i]);
+            }
         }
+        
+        // FIXME: These could be replaced with different templates to process
+        adders = {
+            'products': function(elem, product) {
+                elem.append('<h3>' + product.product_name + '</h3>');
+                elem.append('<a href="/apparel/products/' + product.id + '">Read more</a>');
+            },
+            'manufacturers': function(elem, manufacturer) {
+                elem.append('<h3>' + manufacturer.name + '</h3>');
+                elem.append('<a href="/apparel/manufacturer/' + manufacturer.id + '">Read more</a>');            
+            },
+            'categories': function(elem, category) {
+                elem.append('<h3>' + category.name + '</h3>');
+                elem.append('<a href="/apparel/products/' + category.id + '">Read more</a>');
+            }
+        };  
         
                 
     </script>
@@ -148,9 +178,6 @@
     </div>
 </div>
 
-<pre id="display">
-    
-</pre>
 
 {% if user.is_authenticated %}
 <div id="login-pane">
@@ -165,6 +192,17 @@
 </div>
 {% endif %}
 
+    <div id="search-result" class="container">
+        <h2>{% trans "Products" %}</h2>
+        <div class="search-result-container" id="search-result-products">
+        </div>
+        <h2>{% trans "Categories" %}</h2>
+        <div class="search-result-container" id="search-result-categories">
+        </div>
+        <h2>{% trans "Manufacturers" %}</h2>
+        <div class="search-result-container" id="search-result-manufacturers">
+        </div>
+    </div>
 {% block body %}
 {% endblock %}
 </body>

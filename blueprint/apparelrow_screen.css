@@ -228,3 +228,25 @@ a.block_link {
     font-size: 1.2em;
 }
 
+/* Search result */
+#search-result {
+
+}
+
+#search-result h2 {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.search-result-container {
+    margin-left: 5px;
+}
+
+.search-result-container h3 {
+    font-size: 1em;
+    font-weight: bold;
+}
+.search-result-container a {
+    display: block;
+    margin-bottom: 4px;
+}

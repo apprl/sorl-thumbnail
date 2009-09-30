@@ -293,6 +293,10 @@ table.available-sizes td {border:1px solid #dadada;background-color:#f2f2f2;}
 .product-summary a {text-transform:uppercase;background:transparent url(../images/arrow-bg.png) scroll no-repeat left bottom;padding-left:20px;}
 a.block_link {display:block;background-color:#f2f2f2;border:1px solid #dadada;line-height:2.5em;text-align:center;text-transform:uppercase;}
 #searchbox {background:transparent url(../images/search.png) scroll no-repeat left center;width:163px;height:24px;margin:0;border:none;vertical-align:middle;padding:17px 50px 17px 25px;font-size:1.2em;}
+#search-result h2 {font-size:1.2em;font-weight:bold;}
+.search-result-container {margin-left:5px;}
+.search-result-container h3 {font-size:1em;font-weight:bold;}
+.search-result-container a {display:block;margin-bottom:4px;}
 
 /* semantic class names */
 #content {float:left;margin-right:20px;width:620px;}
