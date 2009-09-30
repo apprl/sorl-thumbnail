@@ -24,15 +24,17 @@ class DataMapper():
         'product_name': None,       # Product name
         'category_name': None,      # Identifies a category
         'manufacturer_name': None,  # Identifies a manufacturer
+        'vendor_name': None,
         'description': None,        # Product description
         'product_image_url': None,  # Product URL
     }
     
-    def __init__(self, name, data={}):
+    def __init__(self, provider, data={}):
         self.data         = data
         self.category     = None      # Category instance
         self.manufacturer = None      # Manufacturer instance
-        self.vendor_name  = name      # Name of vendor FIXME: Derive from package name)
+        self.vendor       = None      # Vendor instance
+        self.provider     = provider  # Reference to the provider instance
     
     def translate(self):
         """
@@ -43,9 +45,15 @@ class DataMapper():
         
         2) Maps the data to database objects, and create new ones if necessary.
            Following objects are mapped (in order)
-           *) Category
-           *) Manufacturer
-           *) Product
+           1) Category
+           2) Manufacturer
+           3) Vendor
+           4) Product
+        
+        3) Adds/Updates product options
+        
+        4) Adds/Updates vendor options for product
+        
         """
         if not isinstance(self.data, dict):
             raise ValueError('data property is expected to be a dictionary')
@@ -64,6 +72,7 @@ class DataMapper():
         
         self.map_manufacturer()
         self.map_category()
+        self.map_vendor()
         self.map_product()
     
     
@@ -91,7 +100,7 @@ class DataMapper():
     # be different methods
     def map_category(self):
         """
-        Attempts to locate manufacturer matching the collected. If it can't, a
+        Attempts to locate category matching the collected data. If it can't, a
         new one will be created.
         """
         
@@ -116,6 +125,26 @@ class DataMapper():
             )
             self.category.save()
             print "Created new category: %s" % name
+    
+    def map_vendor(self):
+        """
+        Attempts to locate category matching the collected data. If it can't, a
+        new one will be created.        
+        """
+        
+        name = self.fields['vendor_name']
+        
+        if not name:
+            # FIXME: At this point we've got a problem, and we should probably
+            # stop. Best way of stopping is to throw a new kind of exception
+            # that the reader listens to. Like ARImporterException
+            return
+        
+        self.vendor, created = Vendor.objects.get_or_create(name=name)
+        
+        if created:
+            print "Created new vendor: %s" % name
+
         
     def map_product(self):
         """
@@ -141,6 +170,7 @@ class DataMapper():
         
         self.map_product_options()
         self.map_product_image()
+        self.map_vendor_options()
         
         # Record that the object was dealt with
     
@@ -183,11 +213,66 @@ class DataMapper():
         
         print "Updated product %s" % self.product.product_name
         self.product.save()
+        
+    def map_vendor_options(self):
+        """
+        Updates, or adds, product vendor options, for example price and currency.
+        
+        This is done by calling 'set_vendor_option_...' method on self, or finding the
+        value in data
+        """
+        
+        if not self.vendor:
+            print "No vendor to update"
+            return
+        
+        opt, created = VendorProduct.objects.get_or_create(product=self.product,
+                                                           vendor=self.vendor)
+        
+        if created:
+            print 'Added product data to vendor: %s' % opt
+        
+        # FIXME: Make this better
+        
+        fields = filter(
+                    lambda x: x not in ['vendor_id', 'product_id', 'id'],
+                    map(
+                        lambda f: f.attname,
+                        opt._meta.fields
+                    )
+                )
+        
+        for field in fields:
+            value = None
+            
+            if hasattr(self, 'set_vendor_option_%s' % field):
+                value = getattr(self, 'set_vendor_option_%s' % field)()
+            elif field in self.data:
+                value = self.data[field]
+            else:
+                print 'No mapping for vendor option %s' % field
+                value = None
+                continue
+            
+            if value == '':
+                # Ensure correct NULL handling
+                value = None
+            
+            # FIXME: Wrap in debug statement
+            print "Set vendor options %s to %s" % (field, value)
+            
+            
+            setattr(opt, field, value)
+        
+        opt.save()
     
     def map_product_options(self):
         """
         Updates, or adds options for the product. This method doesn't remove
         any options.
+        
+        This is done by calling 'set_option_...' method on self, or finding the
+        value in data
         """
         
         # 1 Get a list of option types from categories
@@ -233,7 +318,7 @@ class DataMapper():
         
         (url, name) = re.match(r'^.+/(.+)$', self.fields['product_image_url']).group(0,1)
         
-        sitepath = '%s/%s_%s' % (PRODUCT_IMAGE_BASE, self.vendor_name, name)
+        sitepath = '%s/%s_%s' % (PRODUCT_IMAGE_BASE, self.provider.name, name)
         
         if not default_storage.exists(sitepath):
             print "Downloading product image %s" % url

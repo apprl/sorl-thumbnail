@@ -60,7 +60,7 @@ class Provider():
             # Probably best to add an 'default_values' hash as arguments, and 
             # merge the row with keys/values in there
             
-            m = mapper(self.name, row)
+            m = mapper(self, row)
             # FIXME: Wrap this in a try/except clause and log any errors
             m.translate()
 

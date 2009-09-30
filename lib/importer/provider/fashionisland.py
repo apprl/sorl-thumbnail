@@ -66,11 +66,10 @@ class FashionIslandCSVDialect(csv.Dialect):
 
 class FashionIslandDataMapper(DataMapper):
     def set_sku(self, value):
-        
-        if 'product_id' in self.data:
-            return self.data['product_id']
+        return self.data.get('product_id')
     
-        return None
+    def set_vendor_name(self, value):
+        return 'Fashion Island'
     
     def set_category_name(self, value):
         if not value:
@@ -93,7 +92,6 @@ class FashionIslandDataMapper(DataMapper):
     def set_product_image_url(self, value):
         if not value:
             return
-        
         
         return re.sub(r'_(\w)\.jpg', '_L.jpg', value)
     
@@ -172,6 +170,16 @@ class FashionIslandDataMapper(DataMapper):
             return color
         
         return
+        
+    
+    def set_vendor_option_currency(self):
+        return 'SEK'
+    
+    def set_vendor_option_price(self):
+        return self.data.get('delivery_price')
+    
+    def set_vendor_option_buy_url(self):
+        return self.data.get('product_url')
         
 
 

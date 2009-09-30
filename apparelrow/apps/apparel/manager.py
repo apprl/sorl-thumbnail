@@ -31,12 +31,14 @@ class SearchManager(models.Manager):
 class QueryParser():
 
     django_models = {
-        # Maps a shorthand to the field name on the Product that represents
-        # another model
+        # Maps a short hand to the field used as foreign key on the current object 
+        # FIXME: Make this list smart somehow. Properly map for example Vendor > Products and Product > Vendors
         'm': ('Manufacturer', 'manufacturer'),
         'o': ('Option', 'options'),
         'c': ('Category', 'category'),
         'p': ('Product', 'product'),
+        'v': ('Vendor', 'vendors'),
+        'r': ('VendorProduct', 'vendor_products'),
     }    
     
     django_operators = (
@@ -245,6 +247,10 @@ class QueryParser():
                 ) & Q(
                     **{'options__value__%s' % operator: value}
                 )
+        
+#        elif model_class == 'Price' and field == 'price':
+#            q = Q(**{'vendor_products__price__%s' % operator: value})
+            
         else:
             key = '__'.join(filter(None, [model_field, field, operator]))
             q   =  Q(**{str(key): value})

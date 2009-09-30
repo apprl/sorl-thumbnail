@@ -17,7 +17,7 @@ class Provider(ProviderBase):
         ProviderBase.__init__(self, **kwargs)
         
         self.name      = 'acnejeans'      # Name (FIXME: derive from package?)
-        self.url       = 'http://shop.acnestudios.com/system/tools/cj/feed.asp?cid=1&subid=2&aid=3&currency=USD'
+        self.url       = 'http://shop.acnestudios.com/system/tools/cj/feed.asp?cid=1&subid=2&aid=3&currency=SEK'
         self.extension = 'xml'
     
     def process(self):
@@ -33,7 +33,7 @@ class Provider(ProviderBase):
             # to be fixed.
             row = dict([(e.name, unescape(e.getContent())) for e in elemPrd.xpathEval('./*')])
             
-            mapper = AcneJeansDataMapper(self.name, row)
+            mapper = AcneJeansDataMapper(self, row)
             mapper.translate()
         
         context.xpathFreeContext()
@@ -51,6 +51,9 @@ class AcneJeansDataMapper(DataMapper):
         
         return re.sub(r'_(\w)\.jpg', '_L.jpg', self.data['imageurl'])
         
+    def set_vendor_name(self, value):
+        return 'Acne Jeans'
+    
     def set_category_name(self, value):
         if not 'advertisercategory' in self.data:
             return
@@ -83,4 +86,10 @@ class AcneJeansDataMapper(DataMapper):
                 return 'M'
         
         return
+    
+    def set_vendor_name(self, value):
+        return 'Acne Jeans'
+    
+    def set_vendor_option_buy_url(self):
+        return self.data.get('buyurl')
     

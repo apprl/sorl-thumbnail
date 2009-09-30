@@ -9,12 +9,16 @@ import datetime, mptt
 
 # FIXME: Move to Django settings directory
 PRODUCT_IMAGE_BASE = 'static/product'
+LOGOTYPE_BASE      = 'static/logos'
 
 
 class Manufacturer(models.Model):
     name   = models.CharField(max_length=50, unique=True)
     active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
-    
+    logotype = models.ImageField(upload_to=LOGOTYPE_BASE, help_text=_('Logotype')) 
+    homepage = models.URLField(_('Home page'))
+
+
     objects = SearchManager()
 
     def __unicode__(self):
@@ -56,7 +60,15 @@ class Option(models.Model):
         return "%s: %s" % (self.option_type.name, self.value) 
 
 
+class Vendor(models.Model):
+    name     = models.CharField(max_length=100)
+    homepage = models.URLField(_('Home page'))
+    logotype = models.ImageField(upload_to=LOGOTYPE_BASE, help_text=_('Logotype')) 
 
+    objects = SearchManager()
+
+    def __unicode__(self):
+        return "%s" % (self.name) 
 
 
 class Category(models.Model):
@@ -97,15 +109,6 @@ class Product(models.Model):
     product_image = models.ImageField(upload_to=PRODUCT_IMAGE_BASE, help_text=_('Product image')) 
     
     objects = SearchManager()
-
-    
-#    def options_as_list(self):
-#        options = self.options.all()
-#        ret = {}
-#        for op in options:
-#            ret[op.option_type] = op.value
-#        
-#        return ret
     
     def __unicode__(self):
         return "%s %s" % (self.manufacturer, self.product_name)
@@ -122,13 +125,19 @@ class Product(models.Model):
 
         super(Product, self).save(force_insert=force_insert, force_update=force_update)
 
-
     class Meta:
         pass
-#        ordering = ['name']
-#        verbose_name = _("Option Type")
-#        verbose_name_plural = _("Option Types")
 
+
+class VendorProduct(models.Model):
+    vendor     = models.ForeignKey(Vendor)
+    product    = models.ForeignKey(Product)
+    buy_url    = models.URLField(_('Buy URL'), null=True, blank=True, )
+    price      = models.DecimalField(_('Numeric price'), null=True, blank=True, max_digits=10, decimal_places=2)
+    currency   = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
+    
+    def __unicode__(self):
+        return u'%s (%s)' % (self.product, self.vendor)
 
 
 
