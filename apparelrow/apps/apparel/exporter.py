@@ -14,6 +14,7 @@ def export_model(instance):
     
     See the Exporter class for details.
     """
+
     ret  = {}
     seen = dir(instance.__class__)
     meta = instance._meta
@@ -30,7 +31,7 @@ def export_model(instance):
         finally:
             if hasattr(field, 'attname'):
                 seen.append(field.attname)
-        
+    
     # If there are explicit fields, or if export_transient_fields is true,
     # add runtime fields/values that is not already seen, or is a built-in
     exp = ModelExporter.get_instance(instance)
@@ -48,13 +49,16 @@ def export_model(instance):
                 pass
     
     return ret
-        
+
     
 def field_value(instance, field):
     """
     Returns a value for the given field. Throws an ExcludeField exception if this
     field should be excluded from the export dictionary.
     """
+    
+    # FIXME: Move all of this logic to the exporter instance
+    
     exp = ModelExporter.get_instance(instance)
     
     if not exp.include_field(field):
@@ -62,28 +66,26 @@ def field_value(instance, field):
     
     if isinstance(field, RelatedObject):
         # Special case related object as it has no attribute value
-        # EXPORT RELATED OBJECT
         
-#        return field.model.objects.filter(**{field.field.name: instance.pk})
-#        pprint(field.__dict__)
-#        pprint(field.field.__dict__)
+        value = field.model.objects.filter(**{field.field.name: instance})
         
-        #        field = field.field
-        #        value = getattr(
-        return None
+        # Because we're following a relationship backward, add a note on the
+        # targets Exporter instance that it shouldn't follow the relationship back here
+        for model in value:
+            ModelExporter.get_instance(model)._circular.append(field.field.name)
+        
     else:
         value = getattr(instance, field.attname)  # Get raw object value
     
-        
     if value is None:
         pass
-     
+    
     elif isinstance(field, ForeignKey):
         value = field.related.parent_model.objects.get(id=value)
     
     elif isinstance(field, ManyToManyField):
         value = value.all()
-            
+    
     return value
     
 
@@ -93,6 +95,18 @@ class ExcludeField(Exception):
     exporter.
     """
     pass
+
+class ExporterCache():
+    """
+    Wraps cached output so that encoders can recogise cached data.
+    """
+    
+    def __init__(self, data, type):
+        self.data = data
+        self.type = type
+    
+    def __unicode__(self):
+        return self.data
 
 
 class ModelExporter():
@@ -163,6 +177,8 @@ class ModelExporter():
         self.follow_direct_rel       = True
         self.follow_indirect_rel     = False
         self.export_transient_fields = True
+        self._circular               = []
+        self._cache                  = {}
         
         if hasattr(model, 'Exporter'):
             for attr in self.__dict__:
@@ -190,16 +206,26 @@ class ModelExporter():
                 except ValueError:
                     pass
     
+    def cache_output(self, data, type):
+        self._cache[type] = ExporterCache(data, type)
+    
     def include_field(self, field):
         """
         Given a django.db.models.fields.Field object, returns True or False 
         whether it should be included in export or not.
         """
         
+        field_name = ModelExporter.get_field_name(field)
+        
+        if field_name in self._circular:
+            # If this field is marked as circular, pop it from the list
+            # and return
+            self._circular.remove(field_name)
+            return False
+        
         if self.export_fields is not None:
             # export_fields list is explicit and no other rules apply
-            name = ModelExporter.get_field_name(field)
-            return True if name in self.export_fields else False
+            return True if field_name in self.export_fields else False
         
         if (isinstance(field, ForeignKey) or 
             isinstance(field, ManyToManyField) or

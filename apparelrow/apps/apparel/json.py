@@ -1,10 +1,11 @@
 import os, datetime
-#from datetime import datetime
 from django.db.models import Model
 from django.db.models.query import QuerySet
 from django.db.models.fields.files import FieldFile
 from django.utils.functional import Promise
 from django.utils.simplejson import encoder
+
+from decimal import Decimal
 
 from apps.apparel import exporter
 
@@ -30,16 +31,7 @@ class ExtendedJSONEncoder(encoder.JSONEncoder):
     See documentation for django.utils.simplejson.encoder.JSONEncoder for list
     of available options.
     """
-    
-    # FIXME: Add options for how relationships should be followed
-    # FIXME: Add class to encapsulate encoded JSON 
-    # FIXME: Special case JSON objects so they do not get processed again 
-    #        (just concatinate them to base string). This would allow caching
-    #        on object level
-    #        That can probably be done by overriding _iterencode, check for the
-    #        type and yield the string representation of the object, else just
-    #        call the super class
-        
+            
     def default(self, o):
         """
         Returns iterable for non-native objects
@@ -56,6 +48,9 @@ class ExtendedJSONEncoder(encoder.JSONEncoder):
         
         elif isinstance(o, Model):
             return exporter.export_model(o)
+        
+        elif isinstance(o, Decimal):
+            return str(o)
         
         # FIXME: Does these objects have a common superclass?
         elif (isinstance(o, datetime.datetime) or 

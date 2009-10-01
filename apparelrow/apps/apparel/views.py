@@ -32,6 +32,7 @@ def search(request):
         mimetype='text/json'
     )
 
+
 def wide_search(request):
     query  = request.GET.get('s')
     result = {
