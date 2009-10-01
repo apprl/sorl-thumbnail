@@ -2,6 +2,8 @@
 from django.db import models
 from django.db.models import Q
 from django.http import QueryDict
+from django.db.models.fields.related import ForeignKey, ManyToManyField, RelatedObject, RelatedField
+
 
 import re
 from pprint import pprint
@@ -28,16 +30,17 @@ class SearchManager(models.Manager):
         
 class QueryParser():
 
-    django_models = {
+    model_shorthands = {
         # Maps a short hand to the field used as foreign key on the current object 
         # FIXME: Make this list smart somehow. Properly map for example Vendor > Products and Product > Vendors
-        'm': ('Manufacturer', 'manufacturer'),
-        'o': ('Option', 'options'),
-        'c': ('Category', 'category'),
-        'p': ('Product', 'product'),
-        'v': ('Vendor', 'vendors'),
-        'r': ('VendorProduct', 'vendorproduct'),
-    }    
+        'Manufacturer' : 'm',
+        'Option'       : 'o',
+        'Category'     : 'c',
+        'Product'      : 'p',
+        'Vendor'       : 'v',
+        'OptionType'   : 't',
+        'VendorProduct': 'vp',
+    }
     
     django_operators = (
         # FIXME: Can you extract these from the django module that implements them?
@@ -45,14 +48,41 @@ class QueryParser():
         'startswith', 'istartswith', 'endswith', 'iendswith',  'range', 'year',
         'month', 'day', 'week_day', 'isnull', 'search', 'regex', 'iregex',
     )
-
-
+    
     def __init__(self, model=None):
-        self.query_dict  = None
-        self.expressions = None
-        self.order       = None
-        self.model       = model
+        self.query_dict    = None
+        self.expressions   = None
+        self.order         = None
+        self.model         = model
+        self.django_models = {}
         
+        
+        #
+        # Introspect model to find out what other models somehow relates to this
+        # and what field name they have. This then maps to the model_shorthand
+        # list and weed out unrelated relations and map the query to the right
+        # field
+        #
+        for field_name in self.model._meta.get_all_field_names():
+            field = self.model._meta.get_field_by_name(field_name)[0]
+            
+            if isinstance(field, RelatedField):
+                rel_model = field.rel.to.__name__
+                rel_field = field.name
+                
+            elif isinstance(field, RelatedObject):
+                rel_model = field.model.__name__
+                rel_field = field.var_name
+            else:
+                continue
+            
+            short = self.model_shorthands.get(rel_model)
+            
+            if short is None:
+                continue
+            
+            self.django_models[short] = (rel_model, rel_field)    
+    
     
     def parse(self, query_dict=None):
         """
@@ -221,18 +251,18 @@ class QueryParser():
         
         None is returned if the key isn't properly formatted
         """
-        m = re.match(r'(\d+):(\w)\.(.+?)(?::(.+))?$', pair[0])
+        m = re.match(r'(\d+):(\w{1,3})\.(.+?)(?::(.+))?$', pair[0])
         if not m:
             return
         
         (model_class, model_field) = self.django_models.get(m.group(2), (None, None))
-
+        
         if not model_class:
             raise InvalidExpression('Unknown model label %s' % m.group(2))
         
         if self.model and model_class == self.model.__name__:
             model_field = None
-
+    
         operator, value = self.__prepare_op_val(m.group(4), pair[1])
         field, label = m.group(3), m.group(1)
         
@@ -252,7 +282,7 @@ class QueryParser():
         else:
             key = '__'.join(filter(None, [model_field, field, operator]))
             q   =  Q(**{str(key): value})
-
+        
         return (label, q)    
 
 

@@ -1,5 +1,5 @@
 from django.db.models.fields import FieldDoesNotExist
-from django.db.models.fields.related import ForeignKey, ManyToManyField, RelatedObject, OneToOneField
+from django.db.models.fields.related import ForeignKey, ManyToManyField, RelatedObject, RelatedField
 
 from pprint import pprint
     
@@ -227,13 +227,12 @@ class ModelExporter():
             # export_fields list is explicit and no other rules apply
             return True if field_name in self.export_fields else False
         
-        if (isinstance(field, ForeignKey) or 
-            isinstance(field, ManyToManyField) or
-            isinstance(field, OneToOneField)):
-            return True if self.follow_direct_rel else False
-        
         if isinstance(field, RelatedObject):
             return True if self.follow_indirect_rel else False
+
+        if isinstance(field, RelatedField):
+            return True if self.follow_direct_rel else False
+        
           
         return True
     
