@@ -1,6 +1,8 @@
 from django.db.models.fields import FieldDoesNotExist
-from django.db.models.fields.related import ForeignKey, ManyToManyField, RelatedObject
+from django.db.models.fields.related import ForeignKey, ManyToManyField, RelatedObject, OneToOneField
 
+from pprint import pprint
+    
 
 def export_model(instance):
     """
@@ -15,7 +17,7 @@ def export_model(instance):
     ret  = {}
     seen = dir(instance.__class__)
     meta = instance._meta
-        
+    
     # Try to add value from each field by looking at the class' metadata
     for name in meta.get_all_field_names():
         try:
@@ -23,24 +25,27 @@ def export_model(instance):
             ret[name] = field_value(instance, field)
         
         except (FieldDoesNotExist, ExcludeField), e:
-            print 'Skipping field: %s' % e            # FIXME: Only print on debug
             continue
-            
+        
         finally:
             if hasattr(field, 'attname'):
                 seen.append(field.attname)
-    
-    
+        
     # If there are explicit fields, or if export_transient_fields is true,
     # add runtime fields/values that is not already seen, or is a built-in
-    exp = Exporter.get_instance(instance)
+    exp = ModelExporter.get_instance(instance)
     
-    # FIXME: Move logic to Exporter object
+    # FIXME: Move logic to Exporter object'
+    # FIXME: Remove this altogether?
     if exp.export_fields is not None or exp.export_transient_fields:
         possible = exp.export_fields if exp.export_fields else dir(instance)
 
-        for attr in [f for f in possible if f not in seen ]:
-            ret[attr] = getattr(instance, attr)
+        for attr in [f for f in possible if f not in seen and not f[0] == '_' ]:
+            # This will ignore fields already treated and those deemed private (prefixed with _)
+            try:
+                ret[attr] = getattr(instance, attr)
+            except AttributeError:
+                pass
     
     return ret
         
@@ -50,20 +55,26 @@ def field_value(instance, field):
     Returns a value for the given field. Throws an ExcludeField exception if this
     field should be excluded from the export dictionary.
     """
-    exp = Exporter.get_instance(instance)
+    exp = ModelExporter.get_instance(instance)
     
     if not exp.include_field(field):
         raise ExcludeField(field.name)
     
-    
     if isinstance(field, RelatedObject):
         # Special case related object as it has no attribute value
         # EXPORT RELATED OBJECT
-        print "EXPORt RELATED OBJECT"
+        
+#        return field.model.objects.filter(**{field.field.name: instance.pk})
+#        pprint(field.__dict__)
+#        pprint(field.field.__dict__)
+        
+        #        field = field.field
+        #        value = getattr(
         return None
+    else:
+        value = getattr(instance, field.attname)  # Get raw object value
     
-    value = getattr(instance, field.attname)  # Get raw object value
-    
+        
     if value is None:
         pass
      
@@ -100,8 +111,8 @@ class ModelExporter():
             ...
             
             class Exporter():
-                export_fields   = ['author', 'title']
-                follow_indirect = False
+                export_fields       = ['author', 'title']
+                follow_indirect_rel = False
         
         book = Book()
         exporter = Exporter.get_instance(book)
@@ -142,13 +153,10 @@ class ModelExporter():
     """
     
     # FIXME:
-    #   - Add "-" prefix to export_fields which will remove them from list, so
-    #     you can do ['__all__', '-id', ...]
-    #
     #   - Add "+" prefix to export_fields that will override other setting
     
     
-    __init__(self, model):
+    def __init__(self, model):
         # Initialise exporter attributes with data from exp
         self.model                   = model
         self.export_fields           = None
@@ -156,12 +164,13 @@ class ModelExporter():
         self.follow_indirect_rel     = False
         self.export_transient_fields = True
         
-        for attr in self.__dict__:
-            if attr == 'model':
-                continue
-            
-            if hasattr(model.Exporter, attr):
-                setattr(self, attr, getattr(model.Exporter, attr))
+        if hasattr(model, 'Exporter'):
+            for attr in self.__dict__:
+                if attr == 'model':
+                    continue
+                
+                if hasattr(model.Exporter, attr):
+                    setattr(self, attr, getattr(model.Exporter, attr))
         
         if self.export_fields:
             try:
@@ -169,27 +178,46 @@ class ModelExporter():
             except ValueError:
                 pass
             else:
-                self.export_fields.extend(self.model._meta.fields)
-        
+                # Add all physical fields, and all declared relationships
+                all_fields = self.model._meta.fields + self.model._meta.many_to_many
+                
+                self.export_fields.extend(map(lambda x: x.name, all_fields))
+            
+            for field in filter(lambda x: x.find('-') == 0, self.export_fields):
+                try:
+                    self.export_fields.remove(field)            # Remove the -field
+                    self.export_fields.remove(field[1:])        # Remove the field it indicates
+                except ValueError:
+                    pass
     
-    def include_field(field):
+    def include_field(self, field):
         """
         Given a django.db.models.fields.Field object, returns True or False 
         whether it should be included in export or not.
         """
-        if self.export_fields is not None and field.name in self.export_fields:
-            return True
         
-        if follow_direct_rel and (isinstance(field, ForeignKey) or 
-                                  isinstance(field, ManyToManyField) or
-                                  isinstance(field, OneToOneField)):
-            return True
+        if self.export_fields is not None:
+            # export_fields list is explicit and no other rules apply
+            name = ModelExporter.get_field_name(field)
+            return True if name in self.export_fields else False
         
-        if follow_indirect_rel and isinstance(field, RelatedObject):
-            return True
-             
-        return False
+        if (isinstance(field, ForeignKey) or 
+            isinstance(field, ManyToManyField) or
+            isinstance(field, OneToOneField)):
+            return True if self.follow_direct_rel else False
+        
+        if isinstance(field, RelatedObject):
+            return True if self.follow_indirect_rel else False
+          
+        return True
     
+    
+    @staticmethod
+    def get_field_name(field):
+        try:
+            return field.var_name
+        except AttributeError:
+            return field.name
     
     @staticmethod
     def get_instance(model_instance):
@@ -202,8 +230,8 @@ class ModelExporter():
         """
         
         try:
-            return instance._exporter
+            return model_instance._exporter
         
         except AttributeError:
-            instance._exporter = ModelExporter(instance)
-            return instance._exporter
+            model_instance._exporter = ModelExporter(model_instance)
+            return model_instance._exporter

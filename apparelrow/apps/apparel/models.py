@@ -18,11 +18,13 @@ class Manufacturer(models.Model):
     logotype = models.ImageField(upload_to=LOGOTYPE_BASE, help_text=_('Logotype')) 
     homepage = models.URLField(_('Home page'))
 
-
     objects = SearchManager()
 
     def __unicode__(self):
         return self.name
+
+    class Exporter:
+        export_fields = ['__all__', '-active']
 
 
 class OptionType(models.Model):
@@ -35,20 +37,22 @@ class OptionType(models.Model):
     description = models.CharField(max_length=100)
     type_group = models.CharField(_('Type group'), max_length=10, null=True, 
         blank=True, choices=TYPE_GROUP_CHOICES)
-    
+        
+    def __unicode__(self):
+        return self.name
+
     class Meta:
         ordering = ['name']
         verbose_name = _("Option Type")
         verbose_name_plural = _("Option Types")
-    
-    def __unicode__(self):
-        return self.name
-
 
 
 class Option(models.Model):
     value       = models.CharField(_('Option value'), max_length=255)
     option_type = models.ForeignKey(OptionType)
+
+    def __unicode__(self):
+        return "%s: %s" % (self.option_type.name, self.value) 
 
     class Meta:
         ordering = ['option_type']
@@ -56,8 +60,9 @@ class Option(models.Model):
         verbose_name        = _('Option Item')
         verbose_name_plural = _('Option Items')
 
-    def __unicode__(self):
-        return "%s: %s" % (self.option_type.name, self.value) 
+    class Exporter:
+        export_fields = ['__all__', '-active']
+
 
 
 class Vendor(models.Model):
@@ -88,6 +93,9 @@ class Category(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    class Exporter:
+        export_fields = ['name', 'option_types']
 
 try:
     mptt.register(Category, order_insertion_by=['name'])

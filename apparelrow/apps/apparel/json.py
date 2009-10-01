@@ -2,6 +2,7 @@ import os, datetime
 #from datetime import datetime
 from django.db.models import Model
 from django.db.models.query import QuerySet
+from django.db.models.fields.files import FieldFile
 from django.utils.functional import Promise
 from django.utils.simplejson import encoder
 
