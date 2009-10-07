@@ -93,7 +93,7 @@ class DataMapper():
         self.manufacturer, created = Manufacturer.objects.get_or_create(name=name)
         
         if created:
-            print "Created new manufacturer: %s" % name
+            print u"Created new manufacturer: %s" % name
         
         
     # NOTE: This is identical to manufacturer mostly by coincidence. These should
@@ -124,7 +124,7 @@ class DataMapper():
                 name=name
             )
             self.category.save()
-            print "Created new category: %s" % name
+            print u"Created new category: %s" % name
     
     def map_vendor(self):
         """
@@ -143,7 +143,7 @@ class DataMapper():
         self.vendor, created = Vendor.objects.get_or_create(name=name)
         
         if created:
-            print "Created new vendor: %s" % name
+            print u"Created new vendor: %s" % name
 
         
     def map_product(self):
@@ -161,7 +161,7 @@ class DataMapper():
             
             # call create object and return
         except MultipleObjectsReturned:
-            print "WARNING: There are more than one product with sku %s for manufacturer %s" % (self.manufacturer.name, self.fields['sku'])
+            print u"WARNING: There are more than one product with sku %s for manufacturer %s" % (self.manufacturer.name, self.fields['sku'])
             
             # FIXME: Raise exception that causes this product to be skipped
             return
@@ -188,7 +188,7 @@ class DataMapper():
             sku=self.fields['sku'],
         )
         
-        print "Created product %s" % product.product_name
+        print u"Created product %s" % product.product_name
         product.save()
         
         if self.category:
@@ -211,7 +211,7 @@ class DataMapper():
         # changed since it was loaded? If so, would be good to check it before
         # hitting save, if Django doesn't do that itself
         
-        print "Updated product %s" % self.product.product_name
+        print u"Updated product %s" % self.product.product_name
         self.product.save()
         
     def map_vendor_options(self):
@@ -230,7 +230,7 @@ class DataMapper():
                                                            vendor=self.vendor)
         
         if created:
-            print 'Added product data to vendor: %s' % opt
+            print u'Added product data to vendor: %s' % opt
         
         # FIXME: Make this better
         
@@ -250,7 +250,7 @@ class DataMapper():
             elif field in self.data:
                 value = self.data[field]
             else:
-                print 'No mapping for vendor option %s' % field
+                print u'No mapping for vendor option %s' % field
                 value = None
                 continue
             
@@ -259,7 +259,7 @@ class DataMapper():
                 value = None
             
             # FIXME: Wrap in debug statement
-            print "Set vendor options %s to %s" % (field, value)
+            print u"Set vendor options %s to %s" % (field, value)
             
             
             setattr(opt, field, value)
@@ -291,7 +291,7 @@ class DataMapper():
                 elif key in self.data:
                     value = self.data[key]
                 else:
-                    print 'No mapping for option type %s' % key
+                    print u'No mapping for option type %s' % key
                 
                 if not value:
                     continue
@@ -302,10 +302,10 @@ class DataMapper():
                 opt, created = Option.objects.get_or_create(option_type=option_type, value=value)
                 
                 if created:
-                    print "Created option '%s: %s'" % (option_type.name, value)
+                    print u"Created option '%s: %s'" % (option_type.name, value)
                 
                 if not self.product.options.filter(pk=opt.pk):
-                    print "Attaching option '%s: %s'" % (option_type.name, value)
+                    print u"Attaching option '%s: %s'" % (option_type.name, value)
                     self.product.options.add(opt)
     
     def map_product_image(self):
@@ -321,14 +321,14 @@ class DataMapper():
         sitepath = '%s/%s_%s' % (PRODUCT_IMAGE_BASE, self.provider.name, name)
         
         if not default_storage.exists(sitepath):
-            print "Downloading product image %s" % url
+            print u"Downloading product image %s" % url
             temppath = None
             
             try:
                 temppath = fetcher.fetch(url)
             except HTTPError, e:
                 # FIXME: Replace with proper logging
-                print "%s: (while downloading %s)" % (e, url)
+                print u"%s: (while downloading %s)" % (e, url)
                 return
             
             default_storage.save(sitepath, File(open(temppath)))

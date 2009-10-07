@@ -28,16 +28,10 @@ class Manufacturer(models.Model):
 
 
 class OptionType(models.Model):
-    TYPE_GROUP_CHOICES = (
-        (None,   'Nothing'),
-        ('size', 'Size'),
-    )
-
     name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=100)
-    type_group = models.CharField(_('Type group'), max_length=10, null=True, 
-        blank=True, choices=TYPE_GROUP_CHOICES)
-        
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
+
     def __unicode__(self):
         return self.name
 
@@ -46,13 +40,18 @@ class OptionType(models.Model):
         verbose_name = _("Option Type")
         verbose_name_plural = _("Option Types")
 
+try:
+    mptt.register(OptionType, order_insertion_by=['name'])
+except mptt.AlreadyRegistered:
+    # FIXME: Use a debug statement here
+    print "Attempt to register option type, but it's already registered"
 
 class Option(models.Model):
     value       = models.CharField(_('Option value'), max_length=255)
     option_type = models.ForeignKey(OptionType)
 
     def __unicode__(self):
-        return "%s: %s" % (self.option_type.name, self.value) 
+        return u"%s: %s" % (self.option_type.name, self.value) 
 
     class Meta:
         ordering = ['option_type']
@@ -73,7 +72,7 @@ class Vendor(models.Model):
     objects = SearchManager()
 
     def __unicode__(self):
-        return "%s" % (self.name) 
+        return u"%s" % (self.name) 
 
 
 class Category(models.Model):
@@ -119,7 +118,7 @@ class Product(models.Model):
     objects = SearchManager()
     
     def __unicode__(self):
-        return "%s %s" % (self.manufacturer, self.product_name)
+        return u"%s %s" % (self.manufacturer, self.product_name)
 
     def save(self, force_insert=False, force_update=False):
         if not self.pk:
@@ -155,5 +154,5 @@ class Look(models.Model):
     image = models.ImageField(upload_to='looks')
 
     def __unicode__(self):
-        return "%s by %s" % (self.title, self.user)
+        return u"%s by %s" % (self.title, self.user)
 

@@ -1,0 +1,57 @@
+{% extends 'site_base.html' %}
+{% load mptt_tags %}
+
+{% block 'extra-scripts' %}
+    <script src="http://cdn.jquerytools.org/1.1.2/full/jquery.tools.min.js"></script>
+    <script type="text/javascript">
+     jQuery(document).ready(function() {
+        jQuery('#product-menu').tabs('#product-menu > li > ul > li > ul', { tabs: '#product-menu > li > ul > li > span', effect: 'slide', initialIndex: null });
+     });
+    </script>
+{% endblock 'extra-scripts' %}
+
+{% block body %}
+    <div class="container">
+        <div class="span-6">
+            {{ categories|pprint }}
+            {{ manufacturers|pprint }}
+            {{ genders|pprint }}
+            {{ pricerange|pprint }}
+            <h2>Bläddra bland plagg</h2>
+            <ul id="product-menu">
+                <li>
+                    <ul id="product-gender">
+                        <li>Alla</li>
+                        <li>Kvinna</li>
+                        <li class="selected">Man</li>
+                    </ul>
+                </li>
+                <li>
+                    <ul id="product-options">
+                        <li>Pris</li>
+                        <li>Färg</li>
+                        <li><span>Märke</span>
+                        <ul>
+                            {% for manufacturer in manufacturers %}
+                                <li>{{ manufacturer.name }}</li>
+                            {% endfor %}
+                        </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+    {% for category, structure in categories|tree_info %}
+    {% if structure.new_level %}<ul><li>{% else %}</li><li>{% endif %}
+    {{ category.name }}
+    {% for level in structure.closed_levels %}</li></ul>{% endfor %}
+    {% endfor %}
+                </li>
+            </ul>
+            <div id="price-slider"></div>
+            <input type="text" id="min-price" />
+            <input type="text" id="max-price" />
+        </div>
+        <div class="span-18 last">
+        </div>
+    </div>
+{% endblock body %}

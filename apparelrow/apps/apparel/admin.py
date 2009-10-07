@@ -1,6 +1,5 @@
 from apparel.models import *
 from django.contrib import admin
-from mptt.admin import MpttModelAdmin
 
 admin.site.register(Manufacturer)
 
@@ -10,7 +9,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 
-class CategoryAdmin(MpttModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
 admin.site.register(Category, CategoryAdmin)
@@ -21,7 +20,7 @@ admin.site.register(Option)
 
 
 class OptionTypeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'type_group']
+    list_display = ['name']
 
 
 admin.site.register(OptionType, OptionTypeAdmin)

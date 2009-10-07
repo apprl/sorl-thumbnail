@@ -1,10 +1,12 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse
+from django.utils.translation import ugettext
 from apparel.models import *
-from django.db.models import Q
+from django.db.models import Q, Max, Min
 from apparel.json import encode
 
 import re
+import math
 # Create your views here.
 from pprint import pprint
 
@@ -47,6 +49,22 @@ def wide_search(request):
         mimetype='text/json'
     )
     
+def filter(request):
+    pricerange = VendorProduct.objects.aggregate(min=Min('price'), max=Max('price'))
+    pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
+    pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
+    result = {
+        'categories': Category._tree_manager.all(),
+        'manufacturers': Manufacturer.objects.all(),
+        'genders': {
+            'M': ugettext('Male'),
+            'F': ugettext('Female'),
+            'U': ugettext('Unisex'),
+            #FIXME: Maybe do this a little nicer
+        },
+        'pricerange': pricerange,
+    }
+    return render_to_response('filter.html', result)
 
 def looks():
     pass
