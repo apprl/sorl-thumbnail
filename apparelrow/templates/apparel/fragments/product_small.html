@@ -1,7 +1,5 @@
-{% load thumbnail %}
-
 <div class="product-small">
-    <img src="{% thumbnail product.product_image 90x116 %}" alt="{{ product.product_name }}" />
+    <img src="/scale/90x116/site_media/media/{{ product.product_image }}" alt="{{ product.product_name }}" />
     <div class="product-info">
         <p class="product-name">{{ product.product_name }}</p>
         <span class="likes">x likes</span>

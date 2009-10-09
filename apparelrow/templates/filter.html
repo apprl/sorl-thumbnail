@@ -1,22 +1,117 @@
 {% extends 'site_base.html' %}
 {% load mptt_tags %}
 
+{% block 'extra-styles' %}
+    <style type="text/css">
+        .product-small {
+            width: 140px;
+            height: 150px;
+            float: left;
+        }
+    </style>
+{% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
-    <script src="http://cdn.jquerytools.org/1.1.2/full/jquery.tools.min.js"></script>
+    <!--script type="text/javascript" src="http://cdn.jquerytools.org/1.1.2/full/jquery.tools.min.js"></script-->
     <script type="text/javascript">
-     jQuery(document).ready(function() {
-        jQuery('#product-menu').tabs('#product-menu > li > ul > li > ul', { tabs: '#product-menu > li > ul > li > span', effect: 'slide', initialIndex: null });
-     });
+        jQuery(document).ready(function() {
+            //jQuery('#product-menu').tabs('#product-menu > li > ul > li > ul', { tabs: '#product-menu > li > ul > li > span', effect: 'slide', initialIndex: null });
+            jQuery('#product-menu li').click(function() {
+                jQuery(this).toggleClass('selected');
+                filter(getQuery());
+                return false;
+            });
+            jQuery.extend(jQuery.template.regx, {django: /\{\{\s*([\w-\.]+)(?:\|([\w\.]*)(?:\:(.*?)?[\s\}])?)?\s*\}\}/g});
+            jQuery.template.regx.standard = jQuery.template.regx.django;
+            product_template = '{{ product_template|escapejs }}';
+            t = jQuery.template(product_template);
+
+            jQuery("#price-slider").slider({
+                range: true,
+                min: 0,
+                max: 5000,
+                step: 10,
+                values: [100, 2000],
+                change: function(event, ui) {
+                    jQuery("#min-price").val(jQuery(this).slider('values', 0));
+                    jQuery("#max-price").val(jQuery(this).slider('values', 1));
+                }
+            });
+        });
+        function getQuery() {
+            index = 0;
+            query = {};
+            category_list = getElementIds(jQuery('#product-category li.selected'));
+            if(category_list.length > 0) {
+                query[++index + ':c.id:in'] = category_list.join(',');
+            }
+            manufacturer_list = getElementIds(jQuery('#product-manufacturers li.selected'));
+            if(manufacturer_list.length > 0) {
+                query[++index + ':m.id:in'] = manufacturer_list.join(',');
+            }
+            query[++index + ':vp.price:range'] = jQuery('#price-slider').slider('values', 0) + ',' + jQuery('#price-slider').slider('values', 1);
+            return query;
+        }
+        function getElementIds(elements) {
+            return jQuery.map(elements, function(element) {
+                return element.id.split('-')[1];
+            });
+        }
+        function filter(query) {
+            jQuery.getJSON('/apparel/products/search', query, renderProducts);
+        }
+        function render(element, objects, template, templateContextGetter) {
+            jQuery.each(objects, function(i, obj) {
+                element.append(template, templateContextGetter(obj));
+            });
+        }
+        function renderProducts(products) {
+            jQuery('#product-list').empty();
+            render(jQuery('#product-list'), products, t,
+                function(obj) {
+                    return getTemplateContext({
+                        'product': {
+                            'object': obj,
+                            'properties': ['product_image', 'product_name']
+                        },
+                    });
+                }
+            );
+        }
+        /** getTemplateContext is called with a structure containing information about an object
+          * and returns a dictionary where the keys are the full names of the properties, e.g.:
+          * 
+          * getTemplateContext( {
+          *     'product': {
+          *         'object': product,
+          *         'properties': ['product_image', 'product_name']
+          *     },
+          *     'category': {
+          *         'object': category,
+          *         'properties': ['category_name']
+          *     }
+          * })
+          * yields:
+          * {
+          *     'product.product_name': product.product_name,
+          *     'product.product_image': product.product_image,
+          *     'category.category_name': category.category_name
+          * }
+          */
+        function getTemplateContext(objects) {
+            result = {};
+            jQuery.each(objects, function(object_name, object_meta) {
+                jQuery.each(object_meta['properties'], function(i, property) {
+                    result[object_name + '.' + property] = object_meta['object'][property];
+                });
+            });
+            return result;
+        }
     </script>
 {% endblock 'extra-scripts' %}
 
 {% block body %}
     <div class="container">
         <div class="span-6">
-            {{ categories|pprint }}
-            {{ manufacturers|pprint }}
-            {{ genders|pprint }}
-            {{ pricerange|pprint }}
             <h2>Bläddra bland plagg</h2>
             <ul id="product-menu">
                 <li>
@@ -28,12 +123,13 @@
                 </li>
                 <li>
                     <ul id="product-options">
-                        <li>Pris</li>
+                        <li id="product-price">Pris
+                        <div id="price-slider"></div></li>
                         <li>Färg</li>
                         <li><span>Märke</span>
-                        <ul>
+                        <ul id="product-manufacturers">
                             {% for manufacturer in manufacturers %}
-                                <li>{{ manufacturer.name }}</li>
+                                <li id="manufacturer-{{ manufacturer.id }}">{{ manufacturer.name }}</li>
                             {% endfor %}
                         </ul>
                         </li>
@@ -41,17 +137,23 @@
                 </li>
                 <li>
     {% for category, structure in categories|tree_info %}
-    {% if structure.new_level %}<ul><li>{% else %}</li><li>{% endif %}
+    {% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li id="category-{{ category.id }}">
     {{ category.name }}
     {% for level in structure.closed_levels %}</li></ul>{% endfor %}
     {% endfor %}
                 </li>
             </ul>
-            <div id="price-slider"></div>
             <input type="text" id="min-price" />
             <input type="text" id="max-price" />
+            {{ categories|pprint }}
+            {{ manufacturers|pprint }}
+            {{ genders|pprint }}
+            {{ pricerange|pprint }}
         </div>
-        <div class="span-18 last">
+        <div id="product-list" class="span-18 clearfix last">
+            {% for product in products.object_list %}
+                {% include 'apparel/fragments/product_small.html' %}
+            {% endfor %}
         </div>
     </div>
 {% endblock body %}
