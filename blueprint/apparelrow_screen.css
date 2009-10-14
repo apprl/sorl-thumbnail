@@ -157,6 +157,7 @@ table.available-sizes td,
     list-style-image: url(../images/list-item-radio-selected.png);
 }
 
+#product-manufacturers li.selected,
 #product-category li.selected {
     list-style-image: url(../images/list-item-check-selected.png);
 }

@@ -283,7 +283,7 @@ ul#product-menu {margin:0;}
 #product-menu ul li {border-bottom:1px solid #dadada;padding-left:1em;list-style:disc inside url(../images/list-item.png);line-height:2.5em;}
 #product-menu ul li ul li {border-bottom:1px solid #f2f2f2;}
 #product-gender li.selected {list-style-image:url(../images/list-item-radio-selected.png);}
-#product-category li.selected {list-style-image:url(../images/list-item-check-selected.png);}
+#product-manufacturers li.selected, #product-category li.selected {list-style-image:url(../images/list-item-check-selected.png);}
 span.likes {background:transparent url(../images/heart.png) no-repeat scroll left bottom;padding-left:20px;color:#fa7070;}
 span.price {background:transparent url(../images/check.png) no-repeat scroll left bottom;padding-left:20px;}
 .product-photo {border:1px solid #dadada;}

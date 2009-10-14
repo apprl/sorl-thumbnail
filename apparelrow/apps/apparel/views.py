@@ -30,7 +30,7 @@ def search(request, model):
     else:
         raise Exception('No model to search for')
     
-    paginator = Paginator(result, 20) #FIXME: Make results per page configurable
+    paginator = Paginator(result, 10) #FIXME: Make results per page configurable
 
     try:
         page = int(request.GET.get('page', '1'))
@@ -44,7 +44,7 @@ def search(request, model):
 
     #FIXME: We don't return the paged result because it's not JSON serializable
     return HttpResponse(
-        encode(result),
+        encode(paged_result.object_list),
         mimetype='text/json'
     )
 
@@ -70,7 +70,7 @@ def filter(request):
     #FIXME: Create a generic way of getting relevant templates and putting them into the context
     template_source, template_origin = find_template_source('apparel/fragments/product_small.html')
     products = Product.objects.all()
-    paginator = Paginator(products, 20) #FIXME: Make number per page configurable
+    paginator = Paginator(products, 10) #FIXME: Make number per page configurable
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -82,12 +82,8 @@ def filter(request):
     result = {
         'categories': Category._tree_manager.all(),
         'manufacturers': Manufacturer.objects.all(),
-        'genders': {
-            'M': ugettext('Male'),
-            'F': ugettext('Female'),
-            'U': ugettext('Unisex'),
-            #FIXME: Maybe do this a little nicer
-        },
+        'genders': Option.objects.filter(option_type__name__iexact='gender'),
+        'colors': Option.objects.filter(option_type__name__iexact='color'),
         'pricerange': pricerange,
         'products': paged_products,
         'product_template': template_source,

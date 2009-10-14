@@ -273,7 +273,7 @@ class QueryParser():
             q = Q(
                     options__option_type__name__iexact=field
                 ) & Q(
-                    **{'options__value__%s' % operator: value}
+                    **{'options__value__%s' % str(operator): value}
                 )
         
 #        elif model_class == 'Price' and field == 'price':

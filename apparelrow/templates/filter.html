@@ -15,7 +15,13 @@
     <script type="text/javascript">
         jQuery(document).ready(function() {
             //jQuery('#product-menu').tabs('#product-menu > li > ul > li > ul', { tabs: '#product-menu > li > ul > li > span', effect: 'slide', initialIndex: null });
-            jQuery('#product-menu li').click(function() {
+            jQuery('#product-gender li').click(function() {
+                jQuery(this).toggleClass('selected');
+                jQuery(this).siblings().removeClass('selected');
+                filter(getQuery());
+                return false;
+            });
+            jQuery('#product-color li, #product-manufacturers li, #product-category li').click(function() {
                 jQuery(this).toggleClass('selected');
                 filter(getQuery());
                 return false;
@@ -31,9 +37,13 @@
                 max: 5000,
                 step: 10,
                 values: [100, 2000],
+                animate: 'fast',
+                slide: function(event, ui) {
+                    jQuery("#min-price").html(jQuery(this).slider('values', 0));
+                    jQuery("#max-price").html(jQuery(this).slider('values', 1));
+                },
                 change: function(event, ui) {
-                    jQuery("#min-price").val(jQuery(this).slider('values', 0));
-                    jQuery("#max-price").val(jQuery(this).slider('values', 1));
+                    filter(getQuery());
                 }
             });
         });
@@ -47,6 +57,14 @@
             manufacturer_list = getElementIds(jQuery('#product-manufacturers li.selected'));
             if(manufacturer_list.length > 0) {
                 query[++index + ':m.id:in'] = manufacturer_list.join(',');
+            }
+            gender_list = getElementIds(jQuery('#product-gender li.selected'));
+            if(gender_list.length > 0) {
+                query[++index + ':o.gender:in'] = gender_list.join(',');
+            }
+            color_list = getElementIds(jQuery('#product-color li.selected'));
+            if(color_list.length > 0) {
+                query[++index + ':o.color:in'] = color_list.join(',');
             }
             query[++index + ':vp.price:range'] = jQuery('#price-slider').slider('values', 0) + ',' + jQuery('#price-slider').slider('values', 1);
             return query;
@@ -117,15 +135,22 @@
                 <li>
                     <ul id="product-gender">
                         <li>Alla</li>
-                        <li>Kvinna</li>
-                        <li class="selected">Man</li>
+                        {% for gender in genders %}
+                        <li id="option-{{gender.value}}">{{ gender.value }}</li>
+                        {% endfor %}
                     </ul>
                 </li>
                 <li>
                     <ul id="product-options">
-                        <li id="product-price">Pris
+                        <li id="product-price">Pris (<span id="min-price"></span>-<span id="max-price"></span>)
                         <div id="price-slider"></div></li>
-                        <li>Färg</li>
+                        <li><span>Färg</span>
+                            <ul id="product-color">
+                                {% for color in colors %}
+                                <li id="option-{{color.value}}">{{ color.value }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
                         <li><span>Märke</span>
                         <ul id="product-manufacturers">
                             {% for manufacturer in manufacturers %}
@@ -143,17 +168,17 @@
     {% endfor %}
                 </li>
             </ul>
-            <input type="text" id="min-price" />
-            <input type="text" id="max-price" />
-            {{ categories|pprint }}
-            {{ manufacturers|pprint }}
-            {{ genders|pprint }}
-            {{ pricerange|pprint }}
         </div>
-        <div id="product-list" class="span-18 clearfix last">
-            {% for product in products.object_list %}
-                {% include 'apparel/fragments/product_small.html' %}
-            {% endfor %}
+        <div class="span-18 last">
+            <h2>{{ products.paginator.count }} produkter</h2>
+            <div id="product-list" class="clearfix">
+                {% for product in products.object_list %}
+                    {% include 'apparel/fragments/product_small.html' %}
+                {% endfor %}
+            </div>
+            <div id="pagination">
+                {% include 'apparel/fragments/pagination.html' %}
+            </div>
         </div>
     </div>
 {% endblock body %}
