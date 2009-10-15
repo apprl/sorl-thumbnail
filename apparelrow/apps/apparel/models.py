@@ -137,7 +137,7 @@ class Product(models.Model):
 
 class VendorProduct(models.Model):
     vendor     = models.ForeignKey(Vendor)
-    product    = models.ForeignKey(Product)
+    product    = models.ForeignKey(Product, related_name='vendorproduct')
     buy_url    = models.URLField(_('Buy URL'), null=True, blank=True, )
     price      = models.DecimalField(_('Numeric price'), null=True, blank=True, max_digits=10, decimal_places=2)
     currency   = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))

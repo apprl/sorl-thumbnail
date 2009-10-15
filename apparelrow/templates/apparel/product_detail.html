@@ -1,5 +1,26 @@
 {% extends 'site_base.html' %}
 {% load thumbnail %}
+{% block 'extra-styles' %}
+    <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-basic.css" media="screen" />
+    <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-gallery.css" media="screen" />
+{% endblock 'extra-styles' %}
+
+{% block 'extra-scripts' %}
+    <script src="http://cdn.jquerytools.org/1.1.1/full/jquery.tools.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('.product-image').mouseenter(function() {
+                jQuery(this).find('.magnifier').fadeIn('slow');
+                return false;
+            });
+            jQuery('.product-image').mouseleave(function() {
+                jQuery(this).find('.magnifier').fadeOut('slow');
+                return false;
+            });
+            jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
+        });
+    </script>
+{% endblock 'extra-scripts' %}
 
 {% block body %}
 {% if object %}
@@ -7,8 +28,9 @@
         <div id="product" class="span-18">
             <h2>{{ object.category.all|join:'\\' }}\{{ object.product_name }}</h2>
             <div class="product-info clearfix">
-                <div class="product-image span-8 last">
-                    <img src="{% thumbnail object.product_image 317x500 %}" />
+                <div class="product-image">
+                    <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="{% thumbnail object.product_image 317x500 %}" /></a>
+                    <span class="magnifier"></span>
                 </div>
                 <div class="span-9 prepend-1 last">
                 <div class="box">
@@ -33,8 +55,28 @@
                         </tr>
                     </table>
                     <p>{{ object.description }}</p>
+                    <div class="product-vendors">
+                        {% for vendorproduct in object.vendorproduct.all %}
+                            <div class="product-vendor">
+                                <span class="price">{{ vendorproduct.price }}</span><span class="currency">{{ vendorproduct.currency }}</span>
+                                <a class="vendor" href="{{ vendorproduct.buy_url }}">{{ vendorproduct.vendor }}</a>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 </div>
+            </div>
+            <!-- overlay element -->
+            <div class="simple_overlay" id="gallery">
+                <!-- "previous image" action -->
+                <a class="prev">prev</a>
+                <!-- "next image" action -->
+                <a class="next">next</a>
+                <!-- image information -->
+                <div class="info"></div>
+            
+                <!-- load indicator (animated gif) -->
+                <img class="progress" src="http://static.flowplayer.org/tools/img/overlay/loading.gif" />
             </div>
         </div>
         <div id="related" class="span-6 last">

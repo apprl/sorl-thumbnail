@@ -277,20 +277,25 @@ h2 {text-transform:uppercase;border-bottom:1px solid gray;}
 #login-password {display:none;}
 ul#product-menu {margin:0;}
 #product-menu li {list-style:none;}
-#product-menu ul, a.block_link, table.available-sizes td, .product-info {border:1px solid #dadada;background-color:#f2f2f2;}
+#product-menu ul, a.block_link, table.available-sizes td, .product-info, .product-vendor {border:1px solid #dadada;background-color:#f2f2f2;}
 #product-menu ul {margin:0 0 9px 0;border-bottom:none;}
-#product-menu ul li ul {background-color:#dadada;}
+#product-menu ul li ul {background-color:#dadada;margin-left:-1em;margin-bottom:0;}
 #product-menu ul li {border-bottom:1px solid #dadada;padding-left:1em;list-style:disc inside url(../images/list-item.png);line-height:2.5em;}
 #product-menu ul li ul li {border-bottom:1px solid #f2f2f2;}
 #product-gender li.selected {list-style-image:url(../images/list-item-radio-selected.png);}
-#product-manufacturers li.selected, #product-category li.selected {list-style-image:url(../images/list-item-check-selected.png);}
+#product-color li.selected, #product-manufacturers li.selected, #product-category li.selected {list-style-image:url(../images/list-item-check-selected.png);}
 span.likes {background:transparent url(../images/heart.png) no-repeat scroll left bottom;padding-left:20px;color:#fa7070;}
 span.price {background:transparent url(../images/check.png) no-repeat scroll left bottom;padding-left:20px;}
 .product-photo {border:1px solid #dadada;}
-.product-image {width:317px;height:500px;border:1px solid #dadada;float:left;margin-top:-12px;}
+.product-image {height:500px;border:1px solid #dadada;float:left;margin-top:-12px;position:relative;}
+.product-image .magnifier {position:absolute;right:10px;bottom:10px;width:19px;height:20px;background:transparent url(../images/magnifier.png) no-repeat scroll left top;display:none;}
 table.available-sizes th {border:none;font-size:0.8em;font-weight:normal;text-align:center;text-transform:uppercase;}
-.product-info {border-left:none;}
+.product-info {border-left:none;background:#fafafa;height:478px;overflow:visible;}
 .product-info .box {background-color:inherit;}
+.product-vendors {border-bottom:1px solid #e7e7e7;}
+.product-vendor {border-bottom:none;}
+.product-vendor .price {font-size:2em;}
+.product-vendor .vendor {float:right;background:transparent url(../images/vendor.png) scroll no-repeat left center;padding-left:10px;}
 .similar-product .product-photo {float:left;margin-right:10px;}
 .similar-product .product-summary {float:left;}
 .product-summary a, .product-summary span {display:block;}

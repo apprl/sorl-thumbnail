@@ -5,7 +5,6 @@
     <style type="text/css">
         .product-small {
             width: 140px;
-            height: 150px;
             float: left;
         }
     </style>
@@ -79,7 +78,7 @@
         }
         function render(element, objects, template, templateContextGetter) {
             jQuery.each(objects, function(i, obj) {
-                element.append(template, templateContextGetter(obj));
+                element.append(template, templateContextGetter(obj)).hide().fadeIn('normal');
             });
         }
         function renderProducts(products) {
@@ -89,7 +88,7 @@
                     return getTemplateContext({
                         'product': {
                             'object': obj,
-                            'properties': ['product_image', 'product_name']
+                            'properties': ['id', 'product_image', 'product_name']
                         },
                     });
                 }
