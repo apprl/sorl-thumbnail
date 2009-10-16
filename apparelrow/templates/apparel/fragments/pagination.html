@@ -1,3 +1,3 @@
-<span class="prev"></span>
-<span class="current">{{ products.number }} of {{ products.paginator.num_pages }}</span>
-<span class="next"></span>
+<a class="prev" href="/apparel/filter/?page={{products.previous_page_number }}"> </a>
+<div class="current">{{ products.number }} of {{ products.paginator.num_pages }}</div>
+<a class="next" href="/apparel/filter/?page={{products.next_page_number }}"> </a>

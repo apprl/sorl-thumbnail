@@ -260,24 +260,28 @@ hr.space {background:#fff;color:#fff;visibility:hidden;}
 body {color:#333;}
 a {text-decoration:none;color:#333;}
 a:hover, a:active {text-decoration:underline;}
-h2 {border-bottom:1px solid #d9d9d9;}
-h2 {text-transform:uppercase;border-bottom:1px solid gray;}
+h2 {text-transform:uppercase;font-size:1.3em;border-bottom:1px solid #d9d9d9;}
+h3 {text-transform:uppercase;}
+h4 {text-transform:uppercase;}
 #header-pane {background:transparent url('../images/header-bg.png') fixed repeat-x top left;height:140px;overflow:visible;}
 #header-pane .container {position:relative;}
-#login-pane {padding-top:0.75em;padding-bottom:0.75em;font-size:0.5em;height:2em;background-color:#e2e2e2;}
+#login-pane {height:2em;line-height:2em;background:transparent url(../images/loggedin-pane-bg.png) scroll repeat-x left top;}
+#login-pane.updates {background:transparent url(../images/updates-bg.png) scroll repeat-x left top;}
+#nav-user {float:left;margin:0;}
 #nav-main {float:right;margin-top:50px;}
 #nav-main li {display:inline;margin-right:2em;}
 #nav-main li a {text-decoration:none;text-transform:uppercase;color:white;padding-top:1em;padding-bottom:1em;}
 #nav-main li a.selected {background:transparent url('../images/nav-main-selected.png') fixed no-repeat center bottom;}
 #logo {float:left;margin-top:30px;padding:20px;border-bottom:1px solid #999999;}
-#logout {display:block;float:right;text-decoration:none;padding-left:20px;background:transparent url('../images/icons/logout.png') fixed no-repeat left center;}
+#logged-in-as {float:left;}
+#logout {display:inline-block;float:right;text-decoration:none;padding-left:20px;background:transparent url('../images/logout.png') fixed no-repeat left center;}
 #account-dialogue {position:absolute;top:50px;left:175px;display:none;}
 #signup-form {display:none;}
 #account-dialogue input.default-value {font-style:italic;}
 #login-password {display:none;}
 ul#product-menu {margin:0;}
 #product-menu li {list-style:none;}
-#product-menu ul, a.block_link, table.available-sizes td, .product-info, .product-vendor {border:1px solid #dadada;background-color:#f2f2f2;}
+#product-menu ul, a.block_link, table.available-sizes td, #pagination, .product-info, .product-vendor, .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border:1px solid #dadada;background-color:#f2f2f2;}
 #product-menu ul {margin:0 0 9px 0;border-bottom:none;}
 #product-menu ul li ul {background-color:#dadada;margin-left:-1em;margin-bottom:0;}
 #product-menu ul li {border-bottom:1px solid #dadada;padding-left:1em;list-style:disc inside url(../images/list-item.png);line-height:2.5em;}
@@ -287,14 +291,37 @@ ul#product-menu {margin:0;}
 span.likes {background:transparent url(../images/heart.png) no-repeat scroll left bottom;padding-left:20px;color:#fa7070;}
 span.price {background:transparent url(../images/check.png) no-repeat scroll left bottom;padding-left:20px;}
 .product-photo {border:1px solid #dadada;}
-.product-image {height:500px;border:1px solid #dadada;float:left;margin-top:-12px;position:relative;}
-.product-image .magnifier {position:absolute;right:10px;bottom:10px;width:19px;height:20px;background:transparent url(../images/magnifier.png) no-repeat scroll left top;display:none;}
+#product-list {border-bottom:1px solid #dadada;height:360px;}
+.product-small {width:140px;height:180px;float:left;}
+.product-small .product-image {text-align:center;position:relative;height:138px;}
+.product-small span.likes {position:absolute;top:5px;left:5px;padding-left:0;padding-top:6px;min-width:10px;background-position:center top;}
+.product-small .product-info {text-align:center;border-bottom:none;padding-bottom:5px;}
+#pagination {height:30px;border-top:none;}
+#pagination .prev {float:left;display:inline-block;width:138px;height:30px;background:transparent url(../images/prev-page.png) no-repeat scroll 20px center;border-right:1px solid #dadada;}
+#pagination .next {float:right;display:inline-block;width:138px;height:30px;background:transparent url(../images/next-page.png) no-repeat scroll 120px center;border-left:1px solid #dadada;}
+#pagination .current {float:left;line-height:30px;text-align:center;}
+#product .product-image {height:500px;border:1px solid #dadada;float:left;margin-top:-12px;position:relative;}
+#product .product-image .magnifier {position:absolute;right:10px;bottom:10px;width:19px;height:20px;background:transparent url(../images/magnifier.png) no-repeat scroll left top;display:none;}
 table.available-sizes th {border:none;font-size:0.8em;font-weight:normal;text-align:center;text-transform:uppercase;}
-.product-info {border-left:none;background:#fafafa;height:478px;overflow:visible;}
+.product-info {border-left:none;overflow:visible;}
+#product .product-info {background:#fafafa;height:478px;}
 .product-info .box {background-color:inherit;}
+.product-options, .product-options ul {margin-left:0;margin-right:0;margin-bottom:5px;list-style:none;}
+.product-options li ul li {float:left;}
+.product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border-right:none;}
+.product-options .option-size li, .product-options .option-relative-size li, .product-options .option-shoe-size li, .product-options .option-pants-length li, .product-options .option-pants-width li {padding:0 10px;border-right:1px solid #dadada;}
+.product-options .option-color {background:transparent url(../images/option-color-bg.png) scroll repeat-x left top;border-right:1px solid #dadada;}
+.product-options .option-color li {width:39px;height:20px;}
+.product-options .option-color li.black {background:transparent url(../images/option-color-black.png) scroll no-repeat left top;}
+.product-options .option-color li.yellow {background:transparent url(../images/option-color-yellow.png) scroll no-repeat left top;}
+.product-options .option-color li.green {background:transparent url(../images/option-color-green.png) scroll no-repeat left top;}
+.product-options .option-color li.magenta {background:transparent url(../images/option-color-magenta.png) scroll no-repeat left top;}
 .product-vendors {border-bottom:1px solid #e7e7e7;}
-.product-vendor {border-bottom:none;}
-.product-vendor .price {font-size:2em;}
+a.buy-now {padding:50px 10px 5px;background:#d0fae8 url(../images/check-large.png) scroll no-repeat center center;border:1px solid #92c0c7;color:#408994;text-transform:uppercase;font-weight:bold;}
+.product-vendors a.buy-now {float:right;}
+.product-vendor {border-bottom:none;padding:5px 10px;height:30px;line-height:30px;}
+.product-vendor .price, .product-vendor .currency {line-height:30px;}
+.product-vendor .price {font-size:2em;background:none;padding-left:0;padding-right:5px;}
 .product-vendor .vendor {float:right;background:transparent url(../images/vendor.png) scroll no-repeat left center;padding-left:10px;}
 .similar-product .product-photo {float:left;margin-right:10px;}
 .similar-product .product-summary {float:left;}

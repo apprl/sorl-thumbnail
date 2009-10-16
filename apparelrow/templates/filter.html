@@ -1,14 +1,6 @@
 {% extends 'site_base.html' %}
 {% load mptt_tags %}
 
-{% block 'extra-styles' %}
-    <style type="text/css">
-        .product-small {
-            width: 140px;
-            float: left;
-        }
-    </style>
-{% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
     <!--script type="text/javascript" src="http://cdn.jquerytools.org/1.1.2/full/jquery.tools.min.js"></script-->
     <script type="text/javascript">
@@ -23,6 +15,14 @@
             jQuery('#product-color li, #product-manufacturers li, #product-category li').click(function() {
                 jQuery(this).toggleClass('selected');
                 filter(getQuery());
+                return false;
+            });
+            jQuery('#pagination .prev').click(function() {
+                filter(getQuery({{ products.previous_page_number }}));
+                return false;
+            });
+            jQuery('#pagination .next').click(function() {
+                filter(getQuery({{ products.next_page_number }}));
                 return false;
             });
             jQuery.extend(jQuery.template.regx, {django: /\{\{\s*([\w-\.]+)(?:\|([\w\.]*)(?:\:(.*?)?[\s\}])?)?\s*\}\}/g});
@@ -46,7 +46,7 @@
                 }
             });
         });
-        function getQuery() {
+        function getQuery(page_number) {
             index = 0;
             query = {};
             category_list = getElementIds(jQuery('#product-category li.selected'));
@@ -66,6 +66,9 @@
                 query[++index + ':o.color:in'] = color_list.join(',');
             }
             query[++index + ':vp.price:range'] = jQuery('#price-slider').slider('values', 0) + ',' + jQuery('#price-slider').slider('values', 1);
+            if(page_number) {
+                query['page'] = page_number;
+            }
             return query;
         }
         function getElementIds(elements) {

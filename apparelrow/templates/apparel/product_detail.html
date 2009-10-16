@@ -25,8 +25,9 @@
 {% block body %}
 {% if object %}
     <div class="container">
-        <div id="product" class="span-18">
+        <div class="span-18">
             <h2>{{ object.category.all|join:'\\' }}\{{ object.product_name }}</h2>
+            <div id="product">
             <div class="product-info clearfix">
                 <div class="product-image">
                     <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="{% thumbnail object.product_image 317x500 %}" /></a>
@@ -35,33 +36,32 @@
                 <div class="span-9 prepend-1 last">
                 <div class="box">
                     <h3>{{ object.product_name }}</h3>
-                    <h4 class="available-options">Finns i</h4>
-                    <table class="available-sizes">
-                        <tr>
-                            <th>3xs</th>
-                            <th>2xs</th>
-                            <th>xs</th>
-                            <th>s</th>
-                            <th>m</th>
-                            <th>l</th>
-                            <th>xl</th>
-                            <th>2xl</th>
-                            <th>3xl</th>
-                        </tr>
-                        <tr>
-                            {% for option in object.options.all %}
-                                <th>{{ option.value }}</th>
+                    <h4>Finns i</h4>
+                    {% regroup object.options.all by option_type as option_list %}
+                    <ul class="product-options">
+                    {% for option in option_list %}
+                        <li>{{ option.grouper }}
+                        <ul class="option-{{ option.grouper|slugify }} clearfix">
+                            {% for item in option.list %}
+                            <li class="{{ item.value|slugify }}">{{ item.value }}</li>
                             {% endfor %}
-                        </tr>
-                    </table>
+                        </ul>
+                        </li>
+                    {% endfor %}
+                    </ul>
                     <p>{{ object.description }}</p>
                     <div class="product-vendors">
-                        {% for vendorproduct in object.vendorproduct.all %}
+                        {% with object.vendorproduct.all|dictsort:'price' as vendorproducts %}
+                        {% for vendorproduct in vendorproducts %}
+                            {% if forloop.first %}
+                            <a href="{{ vendorproduct.buy_url }}" class="buy-now">Köp nu!</a>
+                            {% endif %}
                             <div class="product-vendor">
                                 <span class="price">{{ vendorproduct.price }}</span><span class="currency">{{ vendorproduct.currency }}</span>
                                 <a class="vendor" href="{{ vendorproduct.buy_url }}">{{ vendorproduct.vendor }}</a>
                             </div>
                         {% endfor %}
+                        {% endwith %}
                     </div>
                 </div>
                 </div>
@@ -78,6 +78,7 @@
                 <!-- load indicator (animated gif) -->
                 <img class="progress" src="http://static.flowplayer.org/tools/img/overlay/loading.gif" />
             </div>
+        </div>
         </div>
         <div id="related" class="span-6 last">
             <div class="last-shown">
