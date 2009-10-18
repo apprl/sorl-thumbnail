@@ -1,16 +1,17 @@
+#!/bin/bash
 
 if [[ -z $DEPLROOT ]]; then
-    DEPLROOT='/opt/hanssonlarsson'                      # Deployment root dir
+    DEPLROOT='/opt/hanssonlarsson'              # Deployment root dir
 fi
 
 # Generate these names
-DEPLNAME='example.com'                            # Deployment name
+DEPLNAME='apparelrow-dev'                       # Deployment name
 PROJNAME='apparelrow'                           # Django project name
 
 # Static, should not be touched
-PROJDIR="$DEPLROOT/$DEPLNAME/$PROJNAME"                 # Django project directory
-PIDFILE="$PROJDIR/../server/$PROJNAME.pid"              # PID file for controlling instance
-SOCKET="$PROJDIR/../server/$PROJNAME.sock"              # FCGI socket
+PROJDIR="$DEPLROOT/$DEPLNAME/$PROJNAME"         # Django project directory
+PIDFILE="$PROJDIR/../var/$PROJNAME.pid"         # PID file for controlling instance
+SOCKET="$PROJDIR/../var/$PROJNAME.sock"         # FCGI socket
 
 if [ -z $1 ]; then
     echo "Missing argument"
@@ -18,6 +19,8 @@ if [ -z $1 ]; then
     exit 1
 fi
 
+# FIXME: Check that this path exists
+. $PROJDIR/../python/bin/activate
 cd $PROJDIR
 
 if ([[ "$1" == "restart" ]] || [[ "$1" == "stop" ]]); then
@@ -43,15 +46,11 @@ fi
 if [[ "$1" == "restart" ]] || [[ "$1" == "start" ]]; then
 
     echo "Starting FCGI process"
-    /usr/bin/env - \
-        PYTHONPATH="$DEPLROOT/django-3pt-apps" \
-        ./manage.py runfcgi method=threaded socket=$SOCKET pidfile=$PIDFILE \
+    ./manage.py runfcgi method=threaded socket=$SOCKET pidfile=$PIDFILE \
         maxspare=4 workdir=$PROJDIR
         
     echo "Starting FCGI process (admin)"
-    /usr/bin/env - \
-        PYTHONPATH="$DEPLROOT/django-3pt-apps" \
-        ./manage.py runfcgi method=threaded socket=$SOCKET-admin pidfile=$PIDFILE-admin \
+    ./manage.py runfcgi method=threaded socket=$SOCKET-admin pidfile=$PIDFILE-admin \
         maxchildren=1 workdir=$PROJDIR
 fi
 

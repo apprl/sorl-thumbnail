@@ -3,16 +3,18 @@
 
 import os.path
 import posixpath
-import pinax
+#import pinax
 
-PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
+#PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 # tells Pinax to use the default theme
-PINAX_THEME = 'default'
+#PINAX_THEME = 'default'
 
+#DEBUG = False
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+FORCE_SCRIPT_NAME = ''
 
 
 # tells Pinax to serve media through django.views.static.serve.
@@ -24,10 +26,10 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'     # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = os.path.join(PROJECT_ROOT, 'dev.db')       # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
+DATABASE_ENGINE = 'mysql'     # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
+DATABASE_NAME = 'apparelrow_dev'  #os.path.join(PROJECT_ROOT, 'dev.db')       # Or path to database file if using sqlite3.
+DATABASE_USER = 'apparelrow'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'r0W'
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
@@ -59,7 +61,7 @@ MEDIA_URL = '/site_media/media/'
 
 # Absolute path to the directory that holds static files like app media.
 # Example: "/home/media/media.lawrence.com/apps/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'static')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
@@ -68,13 +70,13 @@ STATIC_URL = '/_media/static/'
 # Additional directories which hold static files
 STATICFILES_DIRS = (
     ('apparelrow', os.path.join(PROJECT_ROOT, 'media')),
-    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+#    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = posixpath.join(STATIC_URL, "admin/")
+ADMIN_MEDIA_PREFIX = '/admin_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'zb*p6d^l!by6hhugm+^f34m@-yex9c90yz)c_71t=+lxo%mn(3'
@@ -89,18 +91,18 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django_openid.consumer.SessionConsumer',
-    'account.middleware.LocaleMiddleware',
+#    'django_openid.consumer.SessionConsumer',
+#    'account.middleware.LocaleMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
-    'pinax.middleware.security.HideSensistiveFieldsMiddleware',
+#    'pinax.middleware.security.HideSensistiveFieldsMiddleware',
 )
 
 ROOT_URLCONF = 'apparelrow.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
-    os.path.join(PINAX_ROOT, "templates", 'default'),
+ #   os.path.join(PINAX_ROOT, "templates", 'default'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -110,12 +112,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     
-    "pinax.core.context_processors.pinax_settings",
+ #   "pinax.core.context_processors.pinax_settings",
     
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
-    "account.context_processors.openid",
-    "account.context_processors.account",
+#    "account.context_processors.openid",
+#    "account.context_processors.account",
 )
 
 INSTALLED_APPS = (
@@ -125,29 +127,29 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.humanize',
-    'pinax.templatetags',
+#    'pinax.templatetags',
     
     # external
     'notification', # must be first
-    'django_openid',
+#    'django_openid',
     'emailconfirmation',
 #    'mailer',          # FIXME: Includes e-mail manager, set this up later
     'announcements',
     'pagination',
-    'timezones',
-    'ajax_validation',
-    'uni_form',
-    'staticfiles',
+#    'timezones',
+#    'ajax_validation',
+#    'uni_form',
+#    'staticfiles',
     'mptt',
     'sorl.thumbnail',
     'apparel',
     'scale',
     
     # internal (for now)
-    'basic_profiles',
-    'account',
-    'signup_codes',
-    'about',
+#    'basic_profiles',
+    #'account',
+    #'signup_codes',
+    #'about',
     'django.contrib.admin',
 
 )
@@ -180,7 +182,6 @@ LOGIN_URL = "/account/login/"
 
 # FIXME: Set this
 LOGIN_REDIRECT_URLNAME = "what_next"
-
 
 
 EMAIL_HOST          = 'mail.hanssonlarsson.se'
