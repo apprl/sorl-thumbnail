@@ -3,15 +3,11 @@
 
 import os.path
 import posixpath
-#import pinax
 
-#PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 # tells Pinax to use the default theme
-#PINAX_THEME = 'default'
 
-#DEBUG = False
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 FORCE_SCRIPT_NAME = ''
@@ -88,21 +84,25 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'facebook.djangofb.FacebookMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-#    'django_openid.consumer.SessionConsumer',
-#    'account.middleware.LocaleMiddleware',
+    'facebookconnect.middleware.FacebookConnectMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
-#    'pinax.middleware.security.HideSensistiveFieldsMiddleware',
 )
+
+AUTHENTICATION_BACKENDS = (
+    'facebookconnect.models.FacebookBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
 ROOT_URLCONF = 'apparelrow.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
- #   os.path.join(PINAX_ROOT, "templates", 'default'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -112,12 +112,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     
- #   "pinax.core.context_processors.pinax_settings",
-    
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
-#    "account.context_processors.openid",
-#    "account.context_processors.account",
 )
 
 INSTALLED_APPS = (
@@ -127,31 +123,22 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.humanize',
-#    'pinax.templatetags',
+    
     
     # external
     'notification', # must be first
-#    'django_openid',
-    'emailconfirmation',
+    'facebookconnect',
+    'registration',
 #    'mailer',          # FIXME: Includes e-mail manager, set this up later
     'announcements',
     'pagination',
-#    'timezones',
-#    'ajax_validation',
-#    'uni_form',
-#    'staticfiles',
     'mptt',
     'sorl.thumbnail',
     'apparel',
     'scale',
     
     # internal (for now)
-#    'basic_profiles',
-    #'account',
-    #'signup_codes',
-    #'about',
     'django.contrib.admin',
-
 )
 
 ABSOLUTE_URL_OVERRIDES = {
@@ -167,28 +154,42 @@ MARKUP_CHOICES = (
 )
 WIKI_MARKUP_CHOICES = MARKUP_CHOICES
 
-AUTH_PROFILE_MODULE = 'basic_profiles.Profile'
-NOTIFICATION_LANGUAGE_MODULE = 'account.Account'
 
-ACCOUNT_OPEN_SIGNUP = True
-ACCOUNT_REQUIRED_EMAIL = False
-ACCOUNT_EMAIL_VERIFICATION = False
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
 CONTACT_EMAIL = "support@hanssonlarsson.se"
-SITE_NAME = "Pinax"
-LOGIN_URL = "/account/login/"
+SITE_NAME = "ApparelRow"
 
-# FIXME: Set this
+
+# ACCOUNT/LOGIN AND OTHER STUFF
+ACCOUNT_ACTIVATION_DAYS = 7
+
 LOGIN_REDIRECT_URLNAME = "what_next"
+LOGIN_URL = "/account/"
+LOGIN_REDIRECT_URL = "/"
 
+# FACEBOOK CONFIGURATION
+FACEBOOK_API_KEY = '44d47ef3e7285cace9a4c7c88f645742'
+FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
+FACEBOOK_INTERNAL = True
+FACEBOOK_CACHE_TIMEOUT = 1800
+DUMMY_FACEBOOK_INFO = {
+    'uid':0,
+    'name':'(Private)',
+    'first_name':'(Private)',
+    'pic_square_with_logo':'http://www.facebook.com/pics/t_silhouette.gif',
+    'affiliations':None,
+    'status':None,
+    'proxied_email':None,
+}
 
 EMAIL_HOST          = 'mail.hanssonlarsson.se'
 EMAIL_PORT          = 587
 EMAIL_HOST_USER     = 'outgoing@hanssonlarsson.se'
 EMAIL_HOST_PASSWORD = 'K6kb4Lle'
 EMAIL_USE_TLS       = False
+
 
 
 # local_settings.py can be used to override environment-specific settings
