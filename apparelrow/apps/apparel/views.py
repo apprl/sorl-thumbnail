@@ -5,7 +5,9 @@ from apparel.models import *
 from django.db.models import Q, Max, Min
 from django.template.loader import find_template_source
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from apparel.json import encode
+#from apparel.json import encode
+from hanssonlarsson.django.exporter import json
+
 
 import re
 import math
@@ -44,7 +46,7 @@ def search(request, model):
 
     #FIXME: We don't return the paged result because it's not JSON serializable
     return HttpResponse(
-        encode(paged_result.object_list),
+        json.encode(paged_result.object_list),
         mimetype='text/json'
     )
 
@@ -59,7 +61,7 @@ def wide_search(request):
     }
 
     return HttpResponse(
-        encode(result),
+        json.encode(result),
         mimetype='text/json'
     )
     

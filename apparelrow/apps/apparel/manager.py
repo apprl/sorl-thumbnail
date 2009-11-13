@@ -4,10 +4,6 @@ from django.db.models import Q
 from django.http import QueryDict
 from django.db.models.fields.related import ForeignKey, ManyToManyField, RelatedObject, RelatedField
 
-
-import re
-from pprint import pprint
-
 class SearchManager(models.Manager):
     """
     This Manager adds enables complex searching specifically for the Product
