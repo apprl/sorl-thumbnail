@@ -1,0 +1,8 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block body %}
+    <p>{% blocktrans %}
+        The activation key {{ activation_key }} is invalid or expired. Please sign up again.
+    {% endblocktrans %}</p>
+{% endblock %}

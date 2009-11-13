@@ -1,9 +1,6 @@
 from django.db.models.fields import FieldDoesNotExist
 from django.db.models.fields.related import ForeignKey, ManyToManyField, RelatedObject, RelatedField
 
-from pprint import pprint
-    
-
 def export_model(instance):
     """
     This routine determines what fields should be exported from the model, and

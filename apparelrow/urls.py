@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     
     # FIXME: Is it possible to include this in some other way? All I want to do
     # is to pass the next_page attribute (and not do it via query)
-    (r'^account/', include('registration.backends.default.urls')),
+    (r'^accounts/', include('registration.backends.default.urls')),
     (r'^facebookconnect/', include('facebookconnect.urls')),    
 
 #    (r'^account/login/$', 'django.contrib.auth.views.login'),

@@ -182,8 +182,8 @@
             <li><a href="/apparel/monitor/"{% ifequal request.path "/apparel/monitor/" %} class="selected"{% endifequal %}>{% trans "My ..." %}</a></li>            
         {% else %}
             <li><a href="/">{% trans "Hem" %}</a></li>
-            <li><a href="/account/login/" id="login">{% trans "Login" %}</a></li>
-            <li><a href="/account/signup/" id="login">{% trans "Sign up" %}</a></li>
+            <li><a href="/accounts/login/" id="login">{% trans "Login" %}</a></li>
+            <li><a href="/accounts/register/" id="login">{% trans "Sign up" %}</a></li>
         {% endif %}
             <li>
                 <form action="/apparel/search" method="get" onsubmit="return false"><input type="text" name="s" id="searchbox" /></form>
