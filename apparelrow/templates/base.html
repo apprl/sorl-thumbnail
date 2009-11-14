@@ -155,7 +155,7 @@
                 {# Facebook connect button #}
                 {% show_connect_button %}
             <!-- LOGIN FORM -->
-            <form action="/account/login/" method="post" id="login-form">
+            <form action="/accounts/login/" method="post" id="login-form">
                 <a href="/account/password_reset/" class="account-option">{% trans "Forgot password?" %}</a>
 
                 <input type="text" name="username" class="default-value" value="{% trans "Username" %}" id="login-username" />
@@ -163,15 +163,6 @@
                 <input type="password" name="password" id="login-password" />
                 <input type="submit" name="submit" id="login-submit" value="{% trans "Login" %}" />
                 <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-            </form>
-
-            <!-- PASSWORD RESET FORM -->
-
-            <form action="/account/password_reset/" method="post" id="signup-form">
-                <a href="/account/login/" class="account-option">{% trans "Log in" %}</a>
-
-                <input type="text" name="email" class="default-value" value="{% trans "E-mail" %}" id="password-reset-email" />
-                <input type="submit" name="submit" id="password-reset-submit" value="{% trans "Reset password" %}" />
             </form>
         </div>
         
@@ -207,7 +198,7 @@
 {% if user.is_authenticated %}
 <div id="login-pane">
     <div class="container clearfix">
-        <a href="/account/logout/" id="logout">{% trans "Logout" %}</a>
+        <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
         <span id="logged-in-as">
             {% trans "Logged in as" %}: <strong>{{ user.username }}</strong>
         </span>
