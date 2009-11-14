@@ -86,13 +86,23 @@ class Category(models.Model):
 
     def save(self, force_insert=False, force_update=False):
         if not self.key and self.name:
-            self.key = slugify(self.name)
+            self.key = self.key_for_name(self.name)
         
+        # FIXME: Can you get Django to auto truncate fields?
+        self.name = self.name[:100]
         super(Category, self).save(force_insert=force_insert, force_update=force_update)
-
+    
     def __unicode__(self):
         return self.name
-
+    
+    
+    @staticmethod
+    def key_for_name(name):
+        field = Category._meta.get_field_by_name('key')[0]
+        key   = slugify(name)
+        
+        return key[:field.max_length]
+    
     class Exporter:
         export_fields = ['name', 'option_types']
 

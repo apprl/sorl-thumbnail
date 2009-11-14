@@ -6,7 +6,7 @@ if [[ -z $DEPLROOT ]]; then
 fi
 
 # Generate these names
-DEPLNAME='apparelrow-dev'                       # Deployment name
+#DEPLNAME='apparelrow-dev'                       # Deployment name
 PROJNAME='apparelrow'                           # Django project name
 
 # Static, should not be touched
@@ -19,9 +19,11 @@ export DJANGO_SETTINGS_MODULE=settings
 
 
 # FIXME: Check that this path exists
-. $PROJDIR/python/bin/activate
+if [[ -e $PROJDIR/python/bin/activate ]]; then
+    . $PROJDIR/python/bin/activate
+fi
 cd $PROJDIR/lib
 
-python importer/runner.py -p $1
+python importer/runner.py $@
 
 

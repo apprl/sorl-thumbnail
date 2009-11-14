@@ -117,7 +117,7 @@ class DataMapper():
             # name is required, and then it will pass the name as 'name__iexact'
             # instead of 'name' to the constructor for category. 
             # I think this is a bug in Django
-            self.category = Category.objects.get(key=slugify(name))
+            self.category = Category.objects.get(key=Category.key_for_name(name))
         
         except ObjectDoesNotExist:
             self.category = Category(
