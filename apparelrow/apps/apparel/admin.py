@@ -18,9 +18,11 @@ admin.site.register(Look)
 
 admin.site.register(Option)
 
-
 class OptionTypeAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 
 admin.site.register(OptionType, OptionTypeAdmin)
+
+admin.site.register(Vendor)
+admin.site.register(VendorProduct)
