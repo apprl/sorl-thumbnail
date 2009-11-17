@@ -6,6 +6,9 @@
     <script type="text/javascript">
         jQuery(document).ready(function() {
             //jQuery('#product-menu').tabs('#product-menu > li > ul > li > ul', { tabs: '#product-menu > li > ul > li > span', effect: 'slide', initialIndex: null });
+            if(window.location.hash) {
+                doFilter(window.location.hash.substr(1));
+            }
             jQuery('#product-gender li').click(function() {
                 jQuery(this).toggleClass('selected');
                 jQuery(this).siblings().removeClass('selected');
@@ -77,6 +80,10 @@
             });
         }
         function filter(query) {
+            window.location.hash = jQuery.param(query);
+            doFilter(query);
+        }
+        function doFilter(query) {
             jQuery.getJSON('/apparel/products/search', query, renderProducts);
         }
         function render(element, objects, template, templateContextGetter) {

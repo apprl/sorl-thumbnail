@@ -1,3 +1,4 @@
+import logging
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
@@ -43,8 +44,7 @@ class OptionType(models.Model):
 try:
     mptt.register(OptionType, order_insertion_by=['name'])
 except mptt.AlreadyRegistered:
-    # FIXME: Use a debug statement here
-    print "Attempt to register option type, but it's already registered"
+    logging.debug("Attempt to register option type, but it's already registered")
 
 class Option(models.Model):
     value       = models.CharField(_('Option value'), max_length=255)
@@ -109,8 +109,7 @@ class Category(models.Model):
 try:
     mptt.register(Category, order_insertion_by=['name'])
 except mptt.AlreadyRegistered:
-    # FIXME: Use a debug statement here
-    print "Attempt to register category, but it's already registered"
+    logging.debug("Attempt to register category, but it's already registered")
 
 class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)

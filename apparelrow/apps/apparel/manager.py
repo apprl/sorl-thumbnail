@@ -1,4 +1,5 @@
 #from apparel.models import *
+import re
 from django.db import models
 from django.db.models import Q
 from django.http import QueryDict
