@@ -1,12 +1,11 @@
+import re, traceback, sys
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-#from django import settings
 from django.core.files.storage import default_storage
 from django.core.files import File
 from django.template.defaultfilters import slugify
 from apps.apparel.models import *
 from importer import fetcher
-import re
 from urllib2 import HTTPError
 
 
@@ -22,7 +21,7 @@ class DataMapper():
     fields = {
         'sku': None,                # Product ID, should be unique with manufacturer
         'product_name': None,       # Product name
-        'category_name': None,      # Identifies a category
+        'categories': None,         # Identifies categories for the product. List with names or None
         'manufacturer_name': None,  # Identifies a manufacturer
         'vendor_name': None,
         'description': None,        # Product description
@@ -41,7 +40,7 @@ class DataMapper():
         Runs the actual mapping process and does following things (in order)
         
         1) Translates raw data given to the class (in the data property) and 
-           stores it as properties.
+           stores it in the field property.
         
         2) Maps the data to database objects, and create new ones if necessary.
            Following objects are mapped (in order)
@@ -55,6 +54,35 @@ class DataMapper():
         4) Adds/Updates vendor options for product
         
         """
+        
+        try:
+            self.map_fields()    
+            self.map_manufacturer()
+            self.map_category()
+            self.map_vendor()
+            self.map_product()
+        
+        except SkipRecord:
+            # FIXME: Add logging here. Require the SkipRecord exception to carry a name with the reason
+            print "Skipping record, rolling back"
+            self.rollback()
+        except Exception, e:
+            # FIXME: For debugging purposes, we might not want a rollback to 
+            # happen here, let this be an option
+            print "Caught fatal exception, rolling back changes"
+            self.rollback()
+            tb = sys.exc_info()
+            print "Original exception"
+            traceback.print_tb(tb[2])
+            
+            raise e
+    
+    def map_fields(self):
+        """
+        Maps the data in self.data to the self.fields list that will be used to
+        create related objects.
+        """
+        
         if not isinstance(self.data, dict):
             raise ValueError('data property is expected to be a dictionary')
         
@@ -67,14 +95,6 @@ class DataMapper():
                 value = getattr(self, 'set_%s' % attr)(value)
             
             self.fields[attr] = _trim(value)
-            
-        # FIXME: Might need to move out to separate routine
-        
-        self.map_manufacturer()
-        self.map_category()
-        self.map_vendor()
-        self.map_product()
-    
     
     def map_manufacturer(self):
         """
@@ -100,31 +120,50 @@ class DataMapper():
     # be different methods
     def map_category(self):
         """
-        Attempts to locate category matching the collected data. If it can't, a
-        new one will be created.
+        Maps a category to the product. This is done using the data in fields.categories
+        that is expected to be a list of category names where the last element
+        will be associated with the product.
+        
+        All names will be created if necessary and associated with eachother
         """
         
-        name = self.fields['category_name']
+        category_names = self.fields['categories']
         
-        if not name or re.match(r'^\s*$', name):
-            # FIXME: At this point we've got a problem, and we should probably
-            # stop. Best way of stopping is to throw a new kind of exception
-            # that the reader listens to. Like ARImporterException
-            return
+        if category_names is None:
+            raise SkipRecord()
         
-        try:
-            # NOTE: get_or_create won't work as a case-insensetive match on
-            # name is required, and then it will pass the name as 'name__iexact'
-            # instead of 'name' to the constructor for category. 
-            # I think this is a bug in Django
-            self.category = Category.objects.get(key=Category.key_for_name(name))
+        # iterate through list
+        categories = []
+        category_names.reverse()
         
-        except ObjectDoesNotExist:
-            self.category = Category(
-                name=name
-            )
-            self.category.save()
-            print u"Created new category: %s" % name
+        for name in category_names:
+            if re.match(r'^\s*$', name):
+                continue
+            
+            try:
+                category = Category.objects.get(key=Category.key_for_name(name))
+            except ObjectDoesNotExist:
+                category = Category(
+                    name=name
+                )
+            else:
+                # If we find an existing category we should stop looking
+                break
+            finally:
+                # Assign previous category to this one, if there is any
+                if len(categories) > 0:
+                    categories[0].parent = category
+                
+                categories.insert(0, category)
+        
+        if len(categories) == 0:
+            raise SkipRecord()
+        
+        for category in categories:
+            category.save()
+        
+        self.category = categories[-1]
+        print u"Assigned category %s to product" % self.category.name
     
     def map_vendor(self):
         """
@@ -338,11 +377,33 @@ class DataMapper():
             
         # FIXME: Delete file at temppath? Can it be done implictly when the process
         # exists?
-        
-        
+    
+    
+    def rollback(self):
+        """
+        Perform rollback on the objects created for the given product.
+        """
+        pass
         
 def _trim(value):
-    if value:
-        return re.sub(r'^\s*|\s*$', '', value)
+    if value is None:
+        return value
+    
+    repl = lambda x: re.sub(r'^\s*|\s*$', '', x)
+    
+    if isinstance(value, list):
+        value = map(repl, value)
+    else:
+        value = repl(value)
     
     return value
+
+
+
+class SkipRecord(Exception):
+    """
+    Raising this exception will cause the current record to be ignored, and no
+    product created.
+    """
+    pass
+

@@ -1,7 +1,7 @@
 from importer.provider import Provider as ProviderBase
 from importer.mapper import DataMapper
 from importer.fetcher import fetch_source
-
+from importer.parser import csv_dialects
 import csv, re
 from pprint import pprint
 
@@ -38,7 +38,7 @@ class Provider(ProviderBase):
         self.process_as_csv(
             encoding='iso-8859-1',
             fieldnames=(
-                'category_name',     # 0 
+                'categories',        # 0 
                 'manufacturer_name', # 1 
                 'product_name',      # 2 
                 'size',              # 3 
@@ -52,7 +52,7 @@ class Provider(ProviderBase):
                 'description',       # 11
                 'gender',            # 12
             ),
-            dialect=FashionIslandCSVDialect,
+            dialect=csv_dialects.PipeDelimited,
             mapper=FashionIslandDataMapper,
         )
         
@@ -71,7 +71,7 @@ class FashionIslandDataMapper(DataMapper):
     def set_vendor_name(self, value):
         return 'Fashion Island'
     
-    def set_category_name(self, value):
+    def set_categories(self, value):
         if not value:
             return
         
@@ -213,8 +213,6 @@ category_name_map = {
     u'V\u00E4skor':   'Bags',
     u'Ziptr\u00F6ja': 'Zip shirt',
 }
-
-#(black|blue|red|bronze|navy|white|gr(?:e|a)y|brown|green|svart)
 
 def translate_category(name):
     if name in category_name_map:

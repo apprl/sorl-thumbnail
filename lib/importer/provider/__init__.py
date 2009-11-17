@@ -1,7 +1,9 @@
-import csv, codecs, cStringIO, sys, re
 import traceback
 from importer.fetcher import fetch_source
+from importer.parser import csv_parser as csv
+#pprint(sys.path)
 
+#from importer.parser import csv_parser as csv
 
 def load_provider(name):
     module = __import__('importer.provider.%s' % name, fromlist = ['Provider'])   
@@ -53,7 +55,7 @@ class Provider():
         
         print self.file
         fh = open(self.file)
-        csv_reader = CSVReader(fh, dialect, **kwargs)
+        csv_reader = csv.CSVReader(fh, dialect, **kwargs)
         
         for row in csv_reader:
             # FIXME: Is that generic enough to be in this module
@@ -63,44 +65,3 @@ class Provider():
             m = mapper(self, row)
             # FIXME: Wrap this in a try/except clause and log any errors
             m.translate()
-
-
-
-
-
-# FIXME: Define these in a different namespace, perhaps
-# importer.parsers or something
-
-class UTF8Recoder:
-    """
-    Iterator that reads an encoded stream and reencodes the input to UTF-8
-    """
-    def __init__(self, f, encoding):
-        self.reader = codecs.getreader(encoding)(f)
-        
-    def __iter__(self):
-        return self
-
-    def next(self):
-        return self.reader.next().encode("utf-8")
-
-class CSVReader:
-    """
-    A CSV reader which will iterate over lines in the CSV file "f",
-    which is encoded in the given encoding. 
-    """
-
-    def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
-        f = UTF8Recoder(f, encoding)
-        self.reader = csv.DictReader(f, dialect=dialect, **kwds)
-
-    def next(self):
-        row = self.reader.next()
-        return dict([(k, self.from_latin(v)) for (k, v) in row.items()])
-
-    def from_latin(self, s):
-        return u'' if s is None else unicode(s, "utf-8") 
-
-    def __iter__(self):
-        return self
-

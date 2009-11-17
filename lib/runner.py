@@ -1,19 +1,17 @@
-import sys, os, re
+import sys, os, re, datetime
 from optparse import OptionParser, OptionError
 from importer.provider import load_provider
-import datetime 
-from pprint import pprint
 
-try:
-    import pinax
-except ImportError:
-    # Yieeehaaa! No godforsaken pinax to configure!
-    pass
-else:
-    import settings
-    
-    sys.path.insert(0, os.path.join(settings.PINAX_ROOT, "apps"))
-    sys.path.insert(0, os.path.join(settings.PROJECT_ROOT, "apps"))
+#try:
+#    import pinax
+#except ImportError:
+#    # Yieeehaaa! No godforsaken pinax to configure!
+#    pass
+#else:
+#    import settings
+#    
+#    sys.path.insert(0, os.path.join(settings.PINAX_ROOT, "apps"))
+#    sys.path.insert(0, os.path.join(settings.PROJECT_ROOT, "apps"))
 
 
 

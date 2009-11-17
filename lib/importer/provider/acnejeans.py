@@ -54,13 +54,13 @@ class AcneJeansDataMapper(DataMapper):
     def set_vendor_name(self, value):
         return 'Acne Jeans'
     
-    def set_category_name(self, value):
+    def set_categories(self, value):
         if not 'advertisercategory' in self.data:
             return
         
         m = re.match('.+?>(.+)', self.data['advertisercategory'])
         if m:
-            return m.group(1)
+            return [m.group(1)]
     
     def set_product_name(self, value):
         if not 'name' in self.data:
