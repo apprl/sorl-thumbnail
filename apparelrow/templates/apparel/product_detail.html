@@ -1,4 +1,5 @@
 {% extends 'site_base.html' %}
+{% load i18n %}
 {% load thumbnail %}
 {% block 'extra-styles' %}
     <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-basic.css" media="screen" />
@@ -18,6 +19,15 @@
                 return false;
             });
             jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
+
+            jQuery('#add-to-look > ul > li').click(function() {
+                args = {};
+                args['product_id'] = {{ object.id }};
+                if(this.id) {
+                    args['look_id'] = this.id.split('-')[1];
+                }
+                jQuery.post("{% url apps.apparel.views.add_to_look %}", args);
+            });
         });
     </script>
 {% endblock 'extra-scripts' %}
@@ -54,7 +64,7 @@
                         {% with object.vendorproduct.all|dictsort:'price' as vendorproducts %}
                         {% for vendorproduct in vendorproducts %}
                             {% if forloop.first %}
-                            <a href="{{ vendorproduct.buy_url }}" class="buy-now">Köp nu!</a>
+                            <a href="{{ vendorproduct.buy_url }}" class="buy-now">{% trans "Buy now!" %}</a>
                             {% endif %}
                             <div class="product-vendor">
                                 <span class="price">{{ vendorproduct.price }}</span><span class="currency">{{ vendorproduct.currency }}</span>
@@ -63,6 +73,16 @@
                         {% endfor %}
                         {% endwith %}
                     </div>
+                    <ul>
+                        <li id="add-to-look">{% trans "Add to look" %}
+                            <ul>
+                                {% for look in looks %}
+                                <li id="look-{{ look.id }}">{{ look.title }}</li>
+                                {% endfor %}
+                                <li>{% trans "New look" %}</li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
                 </div>
             </div>

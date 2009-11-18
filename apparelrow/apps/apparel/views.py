@@ -1,5 +1,6 @@
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from apparel.models import *
 from django.db.models import Q, Max, Min
@@ -92,8 +93,25 @@ def filter(request):
     }
     return render_to_response('filter.html', result)
 
-def looks():
-    pass
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    looks = Look.objects.filter(user=request.user)
+    return render_to_response('apparel/product_detail.html', { 'object': product, 'looks': looks })
+
+def add_to_look(request):
+    product = get_object_or_404(Product, pk=request.POST['product_id'])
+    if 'look_id' in request.POST:
+        look = get_object_or_404(Look, pk=request.POST['look_id'])
+    else:
+        look = Look(user=request.user)
+        look.save()
+    look.products.add(product)
+    look.save()
+    return HttpResponseRedirect(reverse('apps.apparel.views.look_detail', args=(look.id,)))
+
+def look_detail(request, look_id):
+    look = get_object_or_404(Look, pk=look_id)
+    return render_to_response('look.html', look)
 
 def looks():
     pass
