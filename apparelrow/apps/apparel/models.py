@@ -120,7 +120,7 @@ class Product(models.Model):
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
         help_text=_("Has to be unique with the manufacturer"))
     product_name  = models.CharField(max_length=200)
-    date_added    = models.DateField(_("Date added"), null=True, blank=True)
+    date_added    = models.DateTimeField(_("Time added"), null=True, blank=True)
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = models.ImageField(upload_to=PRODUCT_IMAGE_BASE, help_text=_('Product image')) 
     
