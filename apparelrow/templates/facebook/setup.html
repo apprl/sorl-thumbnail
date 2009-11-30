@@ -1,0 +1,35 @@
+{% extends "profile/base.html" %}
+{% load facebook_tags %}
+{% load i18n %}
+
+{% block profile_content %}
+
+    {% show_facebook_photo user %}
+    <p>{% show_facebook_greeting user %}</p>
+    <p>{% blocktrans %}
+        If you already have an account at ApparelRow, enter your username and password below to link it with your facebook account. If you do not already have an account, click Continue with facebook only - you will not have to remember a username and password.    
+    {% endblocktrans %}</p>
+    
+    <h2>{% trans "Link accounts" %}</h2>
+    <form action="" method="post" accept-charset="utf-8" id="fb-link-accounts">
+        <input type="hidden" name="next" value="{{ next }}" id="next">
+        {% if form.errors %}
+            <p class="error">
+            {% blocktrans %}
+                Your username and password did not match. Please try again.</p>
+            {% endblocktrans %}
+            </p>
+        {% endif %}
+        {{ form.as_p }}
+
+        <p><input type="submit" value="{% trans "Link accounts" %}"></p>
+    </form>
+    
+    <h2>{% trans "Facebook only" %}</h2>
+    <form action="" method="post" accept-charset="utf-8" id="fb-facebook-only">
+        <input type="hidden" name="facebook_only" value="true" id="facebook_only">
+        <input type="hidden" name="next" value="{{ next }}" id="next">
+        <p><input type="submit" value="{% trans "Connect with facebook only" %}"></p>
+    </form>
+
+{% endblock %}

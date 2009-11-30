@@ -22,18 +22,15 @@ urlpatterns = patterns('',
 #    url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),
 #    url(r'^account/signup/$', signup_view, name="acct_signup"),
     
-    (r'^about/', include('about.urls')),
+#    (r'^about/', include('about.urls')),
     
     # FIXME: Is it possible to include this in some other way? All I want to do
     # is to pass the next_page attribute (and not do it via query)
-    (r'^accounts/', include('registration.backends.default.urls')),
-    (r'^facebookconnect/', include('facebookconnect.urls')),    
-
-#    (r'^account/login/$', 'django.contrib.auth.views.login'),
-#    (r'^account/logout/$', 'django.contrib.auth.views.logout'),
-
-#    (r'^account/', include('account.urls')),
-#    (r'^profiles/', include('basic_profiles.urls')),
+    (r'^accounts/',         include('registration.backends.default.urls')),
+    (r'^facebookconnect/',  include('facebookconnect.urls')),    
+    
+    (r'^profile/', include('profile.urls')),
+    
     (r'^notices/', include('notification.urls')),
     (r'^announcements/', include('announcements.urls')),
     (r'^apparel/', include('apparel.urls')),

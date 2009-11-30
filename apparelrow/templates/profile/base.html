@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        <ul id="profile-nav">
+            <li{% ifequal request.path "/profile/" %} class="selected"{% endifequal %}>
+                <a href="/profile/">{{ user }}</a>
+            </li>
+            <li{% ifequal request.path "/profile/looks/" %} class="selected"{% endifequal %}>
+                <a href="/profile/looks/">{% trans "Looks" %}</a>
+            </li>
+            <li{% ifequal request.path "/profile/wardrobe/" %} class="selected"{% endifequal %}>
+                <a href="/profile/wardrobe/">{% trans "Wardrobe" %}</a>
+            </li>
+            <li{% ifequal request.path "/profile/following/" %} class="selected"{% endifequal %}>
+                <a href="/profile/following/">{% trans "Following" %}</a>
+            </li>
+            <li{% ifequal request.path "/profile/followers/" %} class="selected"{% endifequal %}>
+                <a href="/profile/followers/">{% trans "Followers" %}</a>
+            </li>
+            <li{% ifequal request.path "/profile/watch/" %} class="selected"{% endifequal %}>
+                <a href="/profile/watch/">{% trans "Product Watch" %}</a>
+            </li>
+        </ul>
+    {% endif %}
+    {% block profile_content %}
+    {% endblock %}
+{% endblock %}

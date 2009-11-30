@@ -167,14 +167,11 @@
         </div>
         
         <ul id="nav-main">
+            <li><a href="/">{% trans "Home" %}</a></li>            
         {% if user.is_authenticated %}
-            <li><a href="/apparel/likes/"{% ifequal request.path "/apparel/likes/" %} class="selected"{% endifequal %}>{% trans "My likes" %}</a></li>            
-            <li><a href="/apparel/looks/"{% ifequal request.path "/apparel/looks/" %} class="selected"{% endifequal %}>{% trans "My looks" %}</a></li>            
-            <li><a href="/apparel/monitor/"{% ifequal request.path "/apparel/monitor/" %} class="selected"{% endifequal %}>{% trans "My ..." %}</a></li>            
+            <li><a href="/profile/"{% ifequal request.path "/apparel/profile/" %} class="selected"{% endifequal %}>{% trans "My Profile" %}</a></li>            
         {% else %}
-            <li><a href="/">{% trans "Hem" %}</a></li>
             <li><a href="/accounts/login/" id="login">{% trans "Login" %}</a></li>
-            <li><a href="/accounts/register/" id="login">{% trans "Sign up" %}</a></li>
         {% endif %}
             <li>
                 <form action="/apparel/search" method="get" onsubmit="return false"><input type="text" name="s" id="searchbox" /></form>
@@ -209,8 +206,6 @@
 {% endif %}
 
 {% block body %}
-{% endblock %}
-{% block content %}
 {% endblock %}
 </body>
 </html>
