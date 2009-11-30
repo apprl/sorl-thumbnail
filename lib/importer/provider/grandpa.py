@@ -73,6 +73,15 @@ class GrandpaDataMapper(DataMapper):
         
         return map(lambda x: translate_category(x), categories)
     
+    def set_description(self, value):
+        if not value:
+            return
+        
+        value = re.sub(ur'-{2,}', '', value) # Remove occurances or ---
+        # FIXME: Remove embedded HTML
+        return value
+    
+    
     def set_product_image_url(self, value):
         if not value:
             return
