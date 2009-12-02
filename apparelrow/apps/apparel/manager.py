@@ -60,6 +60,11 @@ class QueryParser():
         # list and weed out unrelated relations and map the query to the right
         # field
         #
+        
+        # Allow looking up properties on class being searched
+        if self.model.__name__ in self.model_shorthands:
+            self.django_models[self.model_shorthands[self.model.__name__]] = (self.model, None)
+        
         for field_name in self.model._meta.get_all_field_names():
             field = self.model._meta.get_field_by_name(field_name)[0]
             
@@ -78,7 +83,8 @@ class QueryParser():
             if short is None:
                 continue
             
-            self.django_models[short] = (rel_model, rel_field)    
+            self.django_models[short] = (rel_model, rel_field)  
+            
     
     
     def parse(self, query_dict=None):
@@ -248,6 +254,8 @@ class QueryParser():
         
         None is returned if the key isn't properly formatted
         """
+        
+        
         m = re.match(r'(\d+):(\w{1,3})\.(.+?)(?::(.+))?$', pair[0])
         if not m:
             return
