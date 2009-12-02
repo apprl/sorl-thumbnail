@@ -1,0 +1,25 @@
+{% extends "profile/base.html" %}
+{% load i18n %}
+
+{% block profile_content %}
+    
+    {% if queries %}
+        <form action="" method="post">
+        <table>
+        {% for query in queries %}
+        <tr>
+            <td><input type="checkbox" name="query_id" value="{{ query.id }}" /></td>
+            <td>{{ query.name }}</td>
+            <td><a href="/apparel/products/search?{{ query.query }}">{% trans "Search now" %}</a></td>
+        </tr>
+        {% endfor %}
+        </table>
+        <input type="submit" name="delete" value="{% trans "Delete selected" %}" />
+        </form>
+    {% else %}
+        <p>
+        {% blocktrans %}
+            You can subscribe in a particular search by...
+        {% endblocktrans %}
+    {% endif %}
+{% endblock %}
