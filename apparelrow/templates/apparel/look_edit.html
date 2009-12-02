@@ -1,0 +1,79 @@
+{% extends 'site_base.html' %}
+{% block 'extra-styles' %}
+<style type="text/css">
+    #collage {
+        height: 500px;
+        border: 1px dotted black;
+    }
+    .look {
+        height: 150px;
+    }
+    .ui-wrapper {
+        float: left;
+        position: absolute;
+    }
+</style>
+{% endblock 'extra-styles' %}
+{% block 'extra-scripts' %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+<script type="text/javascript">
+function saveProduct(ui) {
+    data = {
+        look: {{ object.id }},
+        product: ui.helper.find('.look').attr('id').split('-')[1],
+        top: parseInt(ui.position.top),
+        left: parseInt(ui.position.left),
+    }
+    if('size' in ui) {
+        data['width'] = ui.size.width;
+        data['height'] = ui.size.height;
+    }
+    jQuery.post('/apparel/looks/save_product/', data,
+    function(response) {
+        alert('saved! ' + response);
+    });
+}
+    jQuery(document).ready(function() {
+        jQuery('.look').resizable({
+            aspectRatio: 'true',
+            maxHeight: $('#collage').height(),
+            maxWidth: $('#collage').width(),
+            minHeight: 30,
+            minWidth: 30,
+            grid: [10, 10],
+            stop: function(event, ui) {
+                saveProduct(ui);
+            },
+        });
+        jQuery('.ui-wrapper').draggable({
+            stack: { group: '*', min: 50 },
+            containment: 'parent',
+            snap: true,
+            grid: [10, 10],
+            stop: function(event, ui) {
+                saveProduct(ui);
+            },
+        });
+        jQuery.fn.reverse = [].reverse;
+        jQuery('.ui-wrapper').reverse().each(function() {
+            var el = $(this);
+            position = el.position();
+            el.css({
+                position: 'absolute',
+                marginLeft: 0,
+                marginRight: 0,
+                top: position.top,
+                left: position.left,
+            });
+        });
+    });
+</script>
+{% endblock 'extra-scripts' %}
+{% block body %}
+    <div id="collage">
+        {% for product in object.products.all %}
+            <img id="product-{{ product.id }}" class="look" src="{{ product.product_image.url }}" />
+        {% endfor %}
+    </div>
+    </div>
+{% endblock body %}

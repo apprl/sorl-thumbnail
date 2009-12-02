@@ -24,7 +24,9 @@ urlpatterns = patterns('',
 
     (r'^likes/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
     (r'^looks/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
+    (r'^looks/edit/(?P<look_id>\d+)/$', 'apps.apparel.views.look_edit'),
     (r'^looks/add_product/$', 'apps.apparel.views.add_to_look'),
+    (r'^looks/save_product/$', 'apps.apparel.views.save_look_product'),
     (r'^looks/(?P<look_id>\d+)/$', 'apps.apparel.views.look_detail'),
     (r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
 )

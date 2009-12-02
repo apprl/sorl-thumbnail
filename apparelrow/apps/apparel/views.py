@@ -1,8 +1,10 @@
+import logging
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from apparel.models import *
+from apparel.forms import *
 from django.db.models import Q, Max, Min
 from django.template.loader import find_template_source
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -95,8 +97,16 @@ def filter(request):
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
-    looks = Look.objects.filter(user=request.user)
+    looks = []
+    if request.user.is_authenticated():
+        looks = Look.objects.filter(user=request.user)
     return render_to_response('apparel/product_detail.html', { 'object': product, 'looks': looks })
+
+def save_look_product(request):
+    lp = LookProduct.objects.get(product__id=request.POST['product'], look__id=request.POST['look'])
+    form = LookProductForm(request.POST, instance=lp)
+    form.save()
+    return HttpResponseRedirect(reverse('apps.apparel.views.look_detail', args=(request.POST['look'],)))
 
 def add_to_look(request):
     product = get_object_or_404(Product, pk=request.POST['product_id'])
@@ -105,13 +115,17 @@ def add_to_look(request):
     else:
         look = Look(user=request.user)
         look.save()
-    look.products.add(product)
-    look.save()
+    lp = LookProduct(product=product, look=look)
+    lp.save()
     return HttpResponseRedirect(reverse('apps.apparel.views.look_detail', args=(look.id,)))
 
 def look_detail(request, look_id):
     look = get_object_or_404(Look, pk=look_id)
     return render_to_response('look.html', look)
+
+def look_edit(request, look_id):
+    look = get_object_or_404(Look, pk=look_id)
+    return render_to_response('apparel/look_edit.html', dict(object=look))
 
 def looks():
     pass

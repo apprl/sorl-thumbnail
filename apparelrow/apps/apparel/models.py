@@ -158,10 +158,20 @@ class VendorProduct(models.Model):
 
 class Look(models.Model):
     title = models.CharField(max_length=200)
-    products = models.ManyToManyField(Product)
+    products = models.ManyToManyField(Product, through='LookProduct')
     user = models.ForeignKey(User)
     image = models.ImageField(upload_to='looks')
 
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user)
 
+class LookProduct(models.Model):
+    product = models.ForeignKey(Product)
+    look = models.ForeignKey(Look)
+    top = models.IntegerField(_('CSS top'), blank=True, null=True)
+    left = models.IntegerField(_('CSS left'), blank=True, null=True)
+    width = models.IntegerField(_('CSS width'), blank=True, null=True)
+    height = models.IntegerField(_('CSS height'), blank=True, null=True)
+
+    class Meta:
+        unique_together     = (('product', 'look'),)
