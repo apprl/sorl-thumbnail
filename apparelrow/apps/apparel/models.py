@@ -167,14 +167,15 @@ class Look(models.Model):
 
 class LookProduct(models.Model):
     product = models.ForeignKey(Product)
-    look = models.ForeignKey(Look)
+    look = models.ForeignKey(Look, related_name='look_products')
     top = models.IntegerField(_('CSS top'), blank=True, null=True)
     left = models.IntegerField(_('CSS left'), blank=True, null=True)
     width = models.IntegerField(_('CSS width'), blank=True, null=True)
     height = models.IntegerField(_('CSS height'), blank=True, null=True)
+    z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
 
     def __unicode__(self):
-        return u"%s (%s, %s [%sx%s]) in %s" % (self.product, self.top, self.left, self.width, self.height, self.look)
+        return u"%s (%s, %s [%sx%s] %s) in %s" % (self.product, self.top, self.left, self.width, self.height, self.z_index, self.look)
 
     class Meta:
         unique_together     = (('product', 'look'),)

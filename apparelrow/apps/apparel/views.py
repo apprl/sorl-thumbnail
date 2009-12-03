@@ -103,8 +103,11 @@ def product_detail(request, product_id):
     return render_to_response('apparel/product_detail.html', { 'object': product, 'looks': looks })
 
 def save_look_product(request):
-    lp = LookProduct.objects.get(product__id=request.POST['product'], look__id=request.POST['look'])
-    form = LookProductForm(request.POST, instance=lp)
+    try:
+        lp = LookProduct.objects.get(product__id=request.POST['product'], look__id=request.POST['look'])
+        form = LookProductForm(request.POST, instance=lp)
+    except LookProduct.DoesNotExist:
+        form = LookProductForm(request.POST)
     form.save()
     return HttpResponseRedirect(reverse('apps.apparel.views.look_detail', args=(request.POST['look'],)))
 
@@ -125,7 +128,14 @@ def look_detail(request, look_id):
 
 def look_edit(request, look_id):
     look = get_object_or_404(Look, pk=look_id)
-    return render_to_response('apparel/look_edit.html', dict(object=look))
+    style = {}
+    for product in look.look_products.all():
+        s = ['position: absolute;']
+        for attr in ['top', 'left', 'width', 'height', 'z_index']:
+            if(attr in product.__dict__.keys()):
+                s.append("%s: %spx;" % (attr.replace('_', '-'), product.__dict__[attr]))
+        style[product.product.id] = " ".join(s)
+    return render_to_response('apparel/look_edit.html', dict(object=look, style=style))
 
 def looks():
     pass
