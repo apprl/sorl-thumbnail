@@ -20,23 +20,10 @@
         
         jQuery(document).ready(function() {
              jQuery('#login').click(function() {
-                jQuery('#account-dialogue').toggle('normal');
+                jQuery('#account-dialogue').slideToggle('fast');
                 
                 return false;
             });
-            jQuery('.account-option').click(function() {
-                var link = this;
-
-                jQuery('#account-dialogue>form').each(function() {
-                    var form = jQuery(this);
-                    
-                    if(form.css('display') != 'none' || form.attr('action') == link.pathname)
-                        form.toggle();
-                } );
-                
-                return false;
-            });
-
             
             /* Toggle text field texts */
             jQuery('#account-dialogue input[type=text]').each(function() {
@@ -55,7 +42,6 @@
                 }
             });
             
-            
             /* Toggle password box */
             jQuery('#login-password-placeholder').focus(function() {
                 pwdField = jQuery('#login-password');
@@ -64,7 +50,6 @@
                 pwdField.focus();
             });
             
-            
             jQuery('#login-password').blur(function() {
                 if(this.value == '') {
                     txtField = jQuery('#login-password-placeholder');
@@ -72,6 +57,8 @@
                     txtField.toggle();
                 }
             });
+            
+            
             
             // Add handlers
             jQuery('#searchbox').keyup(function(e) {
@@ -152,18 +139,19 @@
         <img src="/site_media/static/images/logo.png" alt="Apparel Row" id="logo" />
         
         <div id="account-dialogue">
-                {# Facebook connect button #}
-                {% show_connect_button %}
             <!-- LOGIN FORM -->
             <form action="/accounts/login/" method="post" id="login-form">
-                <a href="/account/password_reset/" class="account-option">{% trans "Forgot password?" %}</a>
-
-                <input type="text" name="username" class="default-value" value="{% trans "Username" %}" id="login-username" />
-                <input type="text" value="{% trans "Password" %}" class="default-value" id="login-password-placeholder" />
-                <input type="password" name="password" id="login-password" />
-                <input type="submit" name="submit" id="login-submit" value="{% trans "Login" %}" />
-                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                <div>
+                    <input type="text" name="username" class="default-value" value="{% trans "Username" %}" id="login-username" />
+                    <input type="text" value="{% trans "Password" %}" class="default-value" id="login-password-placeholder" />
+                    <input type="password" name="password" id="login-password" />
+                    <input type="submit" name="submit" id="login-submit" value="{% trans "Login" %}" />
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                </div>
+                <a href="/accounts/password/reset/">{% trans "Forgot password?" %}</a>
             </form>
+            {# Facebook connect button #}
+            {% show_connect_button %}
         </div>
         
         <ul id="nav-main">
@@ -172,6 +160,7 @@
             <li><a href="/profile/"{% ifequal request.path "/apparel/profile/" %} class="selected"{% endifequal %}>{% trans "My Profile" %}</a></li>            
         {% else %}
             <li><a href="/accounts/login/" id="login">{% trans "Login" %}</a></li>
+            <li><a href="/accounts/register/" id="login">{% trans "Sign up" %}</a></li>
         {% endif %}
             <li>
                 <form action="/apparel/search" method="get" onsubmit="return false"><input type="text" name="s" id="searchbox" /></form>

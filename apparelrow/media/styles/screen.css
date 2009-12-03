@@ -275,9 +275,10 @@ h4 {text-transform:uppercase;}
 #logo {float:left;margin-top:30px;padding:20px;border-bottom:1px solid #999999;}
 #logged-in-as {float:left;}
 #logout {display:inline-block;float:right;text-decoration:none;padding-left:20px;background:transparent url('../images/logout.png') fixed no-repeat left center;}
-#account-dialogue {position:absolute;top:50px;left:175px;display:none;}
-#signup-form {display:none;}
+#account-dialogue {position:absolute;top:50px;left:200px;display:none;}
+#account-dialogue a {color:white;float:right;}
 #account-dialogue input.default-value {font-style:italic;}
+#account-dialogue form {margin:0;float:right;margin:auto 1em auto 1em;}
 #login-password {display:none;}
 ul#product-menu {margin:0;}
 #product-menu li {list-style:none;}

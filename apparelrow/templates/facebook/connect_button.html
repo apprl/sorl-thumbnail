@@ -1,0 +1,9 @@
+{% spaceless %}
+    <form class="connect-button" name="login" method="post" action="{% url facebook_login %}">
+        {% if next %}
+            <input type="hidden" name="next" value="{{ next }}" />
+        {% endif %}
+        <input type="image" onclick="facebookConnect(this.form); return false;" src="/site_media/static/images/fblogo.png" />
+    </form>
+    {% if javascript_friendly %}\{% endif %}
+{% endspaceless %}

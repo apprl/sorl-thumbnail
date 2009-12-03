@@ -105,21 +105,30 @@ h4 { text-transform: uppercase; }
 #account-dialogue {
     position: absolute;
     top: 50px;
-    left: 175px;
+    left: 200px;
     display: none;
 }
 
-#signup-form {
-    display: none;
+#account-dialogue a {
+    /* FIXME: Set this elsewhere? */
+    color: white;
+    float: right;
 }
 
 #account-dialogue input.default-value {
     font-style: italic;
 }
 
+#account-dialogue form {
+    margin: 0;
+    float: right;
+    margin: auto 1em auto 1em;
+}
+
 #login-password {
     display: none;
 }
+
 
 /* PRODUCT MENU */
 
