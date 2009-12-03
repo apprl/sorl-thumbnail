@@ -19,10 +19,12 @@
             <li{% ifequal request.path "/profile/followers/" %} class="selected"{% endifequal %}>
                 <a href="/profile/followers/">{% trans "Followers" %}</a>
             </li>
-            <li{% ifequal request.path "/profile/watch/" %} class="selected"{% endifequal %}>
-                <a href="/profile/watch/">{% trans "Product Watch" %}</a>
+            <li{% ifequal request.path "/profile/watcher/" %} class="selected"{% endifequal %}>
+                <a href="/profile/watcher/">{% trans "Product Watch" %}</a>
             </li>
         </ul>
+    {% else %}
+        Menu for people who are not authenticated
     {% endif %}
     {% block profile_content %}
     {% endblock %}

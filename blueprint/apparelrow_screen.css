@@ -460,3 +460,14 @@ a.block_link {
     display: block;
     margin-bottom: 4px;
 }
+
+
+#profile-nav li {
+    display: inline;
+    margin: 0;
+}
+
+#profile-nav li a {
+    margin-right: 1em;
+}
+

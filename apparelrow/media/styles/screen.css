@@ -47,8 +47,8 @@ address {margin:0 0 1.5em;font-style:italic;}
 del {color:#666;}
 pre {margin:1.5em 0;white-space:pre;}
 pre, code, tt {font:1em 'andale mono', 'lucida console', monospace;line-height:1.5;}
-li ul, li ol {margin:0 1.5em;}
-ul, ol {margin:0 1.5em 1.5em 1.5em;}
+li ul, li ol {margin:0;}
+ul, ol {margin:0 1.5em 1.5em 0;padding-left:3.333em;}
 ul {list-style-type:disc;}
 ol {list-style-type:decimal;}
 dl {margin:0 0 1.5em 0;}
@@ -334,9 +334,11 @@ a.block_link {display:block;line-height:2.5em;text-align:center;text-transform:u
 .search-result-container {margin-left:5px;}
 .search-result-container h3 {font-size:1em;font-weight:bold;}
 .search-result-container a {display:block;margin-bottom:4px;}
+#profile-nav li {display:inline;margin:0;}
+#profile-nav li a {margin-right:1em;}
 
 /* semantic class names */
 #content {float:left;margin-right:20px;width:620px;}
 #nav {width:940px;margin-right:0;}
-#extra-content {margin-right:0;padding-right:0;float:left;margin-right:20px;margin-right:0;width:300px;}
 #header {width:940px;margin-right:0;}
+#extra-content {margin-right:0;padding-right:0;float:left;margin-right:20px;margin-right:0;width:300px;}

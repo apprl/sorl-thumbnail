@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'apparel',
     'scale',
+    'watcher',
     
     # internal (for now)
     'django.contrib.admin',
@@ -166,7 +167,7 @@ SITE_NAME = "ApparelRow"
 ACCOUNT_ACTIVATION_DAYS = 7
 
 LOGIN_REDIRECT_URLNAME = "what_next"
-LOGIN_URL = "/account/"
+LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 
 # FACEBOOK CONFIGURATION

@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     (r'^facebookconnect/',  include('facebookconnect.urls')),    
     
     (r'^profile/', include('profile.urls')),
+    (r'^watcher/', include('watcher.urls')),
     
     (r'^notices/', include('notification.urls')),
     (r'^announcements/', include('announcements.urls')),

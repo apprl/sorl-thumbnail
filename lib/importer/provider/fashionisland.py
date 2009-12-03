@@ -87,7 +87,7 @@ class FashionIslandDataMapper(DataMapper):
         # Always in plural
         value = re.sub(r'^T-shirt$', 'T-shirts', value)
         
-        return translate_category(value)
+        return [translate_category(value)]
     
     def set_product_image_url(self, value):
         if not value:
