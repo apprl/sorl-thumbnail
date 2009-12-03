@@ -173,5 +173,8 @@ class LookProduct(models.Model):
     width = models.IntegerField(_('CSS width'), blank=True, null=True)
     height = models.IntegerField(_('CSS height'), blank=True, null=True)
 
+    def __unicode__(self):
+        return u"%s (%s, %s [%sx%s]) in %s" % (self.product, self.top, self.left, self.width, self.height, self.look)
+
     class Meta:
         unique_together     = (('product', 'look'),)

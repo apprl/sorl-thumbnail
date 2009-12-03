@@ -11,30 +11,19 @@
     .ui-wrapper {
         float: left;
         position: absolute;
+        opacity: 0.8;
+    }
+    .ui-state-disabled, .ui-widget-content .ui-state-disabled {
+        opacity: 1.0;
     }
 </style>
 {% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
 <script type="text/javascript">
-function saveProduct(ui) {
-    data = {
-        look: {{ object.id }},
-        product: ui.helper.find('.look').attr('id').split('-')[1],
-        top: parseInt(ui.position.top),
-        left: parseInt(ui.position.left),
-    }
-    if('size' in ui) {
-        data['width'] = ui.size.width;
-        data['height'] = ui.size.height;
-    }
-    jQuery.post('/apparel/looks/save_product/', data,
-    function(response) {
-        alert('saved! ' + response);
-    });
-}
-    jQuery(document).ready(function() {
-        jQuery('.look').resizable({
+var look = {
+    initialize: function(ele) {
+        ele.resizable({
             aspectRatio: 'true',
             maxHeight: $('#collage').height(),
             maxWidth: $('#collage').width(),
@@ -42,20 +31,20 @@ function saveProduct(ui) {
             minWidth: 30,
             grid: [10, 10],
             stop: function(event, ui) {
-                saveProduct(ui);
+                look.saveProduct(ui);
             },
         });
-        jQuery('.ui-wrapper').draggable({
+        ele.parent('.ui-wrapper').draggable({
             stack: { group: '*', min: 50 },
             containment: 'parent',
             snap: true,
             grid: [10, 10],
             stop: function(event, ui) {
-                saveProduct(ui);
+                look.saveProduct(ui);
             },
         });
         jQuery.fn.reverse = [].reverse;
-        jQuery('.ui-wrapper').reverse().each(function() {
+        ele.parent('.ui-wrapper').reverse().each(function() {
             var el = $(this);
             position = el.position();
             el.css({
@@ -65,6 +54,40 @@ function saveProduct(ui) {
                 top: position.top,
                 left: position.left,
             });
+        });
+    },
+    saveProduct: function(ui) {
+        data = {
+            look: {{ object.id }},
+            product: ui.helper.find('.look').attr('id').split('-')[1],
+            top: parseInt(ui.position.top),
+            left: parseInt(ui.position.left),
+        }
+        if('size' in ui) {
+            data['width'] = ui.size.width;
+            data['height'] = ui.size.height;
+        }
+        jQuery.post('/apparel/looks/save_product/', data,
+        function(response) {
+            alert('saved! ' + response);
+        });
+    },
+    disable: function(ele) {
+        ele.resizable('disable');
+        ele.parent('.ui-wrapper').draggable('disable');
+    },
+};
+    jQuery(document).ready(function() {
+        look.initialize(jQuery('.look'));
+        look.disable(jQuery('.look'));
+        jQuery('.look').click(function() {
+            look.disable(jQuery('.look'));
+            $(this).resizable('enable');
+            $(this).parent('.ui-wrapper').draggable('enable');
+            return false;
+        });
+        jQuery('#collage').click(function() {
+            look.disable(jQuery('.look'));
         });
     });
 </script>

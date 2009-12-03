@@ -16,6 +16,8 @@ admin.site.register(Category, CategoryAdmin)
 
 admin.site.register(Look)
 
+admin.site.register(LookProduct)
+
 admin.site.register(Option)
 
 class OptionTypeAdmin(admin.ModelAdmin):
