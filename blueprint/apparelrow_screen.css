@@ -305,6 +305,7 @@ span.price {
     text-align: center;
 }
 
+.tooltip .product-image,
 #product .product-image {
     height: 500px;
     border: 1px solid #dadada;
@@ -313,6 +314,7 @@ span.price {
     position: relative;
 }
 
+.tooltip .product-image .magnifier,
 #product .product-image .magnifier {
     position: absolute;
     right: 10px;
@@ -336,6 +338,7 @@ table.available-sizes th {
     overflow: visible;
 }
 
+.tooltip .product-info,
 #product .product-info {
     background: #fafafa;
     height: 478px;
