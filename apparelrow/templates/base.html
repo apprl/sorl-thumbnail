@@ -16,11 +16,13 @@
     <script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.core.js"></script>
     <script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.slider.js"></script>
     <script type="text/javascript" src="/site_media/static/js/dump.js"></script>
+    <script type="text/javascript" src="/site_media/static/js/template.js"></script>
     <script type="text/javascript">
         
         jQuery(document).ready(function() {
              jQuery('#login').click(function() {
-                jQuery('#account-dialogue').slideToggle('fast');
+                jQuery('#nav-main').animate({ opacity: 'toggle' }, 'fast');
+                jQuery('#account-dialogue').animate({ opacity: 'toggle' }, 'fast');
                 
                 return false;
             });
@@ -63,14 +65,19 @@
             // Add handlers
             jQuery('#searchbox').keyup(function(e) {
                 // FIXME: Ignore if modifier is used (apart from shift)
-                j = jQuery(this)
+                j = jQuery(this);
                 clearTimeout(j.data('tid'));
                 
                 switch(e.keyCode) {
+                    case 0: // command+tab
                     case 9: // tab
-                        search();
-                        return false;
                     case 13: // enter
+                    case 17: // ctrl
+                    case 18: // alt
+                    case 224: // command
+                        return false;
+                    case 27: // escape
+                        hideSearch();
                         return false;
                     
                     default:
@@ -92,9 +99,15 @@
             }, display);
         }
         
+        function hideSearch() {
+            jQuery('#search-result').fadeOut('fast');
+            jQuery('#search').removeClass('expanded');
+        }
+
         function display(data) {
+            jQuery('#search-result').slideDown();
+            jQuery('#search').addClass('expanded');
             for( var name in data) {
-                jQuery('#search-result').slideDown();
                 var elem = jQuery('#search-result-' + name);
                 if(!elem)
                     continue;
@@ -141,18 +154,43 @@
         <div id="account-dialogue">
             <!-- LOGIN FORM -->
             <form action="/accounts/login/" method="post" id="login-form">
+                <!--
+                <a id="login-forgot-password" href="/accounts/password/reset/">{% trans "Forgot password?" %}</a>
+                <a id="login-create-account" href="/accounts/register/">{% trans "Create account" %}</a>
+                -->
                 <div>
                     <input type="text" name="username" class="default-value" value="{% trans "Username" %}" id="login-username" />
                     <input type="text" value="{% trans "Password" %}" class="default-value" id="login-password-placeholder" />
                     <input type="password" name="password" id="login-password" />
-                    <input type="submit" name="submit" id="login-submit" value="{% trans "Login" %}" />
+                    <button type="submit" name="submit" id="login-submit">{% trans "Login" %}</button>
                     <input type="hidden" name="next" value="{{ request.get_full_path }}" />
                 </div>
-                <a href="/accounts/password/reset/">{% trans "Forgot password?" %}</a>
             </form>
             {# Facebook connect button #}
             {% show_connect_button %}
         </div>
+        <form action="/apparel/search" method="get" onsubmit="return false">
+            <div id="search">
+                <input type="text" name="s" id="searchbox" />
+                <div id="search-result">
+                    <div class="span-7">
+                        <h2>{% trans "Products" %}</h2>
+                        <div class="search-result-container" id="search-result-products">
+                        </div>
+                    </div>
+                    <div class="span-7">
+                        <h2>{% trans "Categories" %}</h2>
+                        <div class="search-result-container" id="search-result-categories">
+                        </div>
+                    </div>
+                    <div class="span-7">
+                        <h2>{% trans "Manufacturers" %}</h2>
+                        <div class="search-result-container" id="search-result-manufacturers">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
         
         <ul id="nav-main">
             <li><a href="/">{% trans "Home" %}</a></li>            
@@ -162,21 +200,7 @@
             <li><a href="/accounts/login/" id="login">{% trans "Login" %}</a></li>
             <li><a href="/accounts/register/" id="login">{% trans "Sign up" %}</a></li>
         {% endif %}
-            <li>
-                <form action="/apparel/search" method="get" onsubmit="return false"><input type="text" name="s" id="searchbox" /></form>
-            </li>
         </ul>
-        <div id="search-result" class="container">
-            <h2>{% trans "Products" %}</h2>
-            <div class="search-result-container" id="search-result-products">
-            </div>
-            <h2>{% trans "Categories" %}</h2>
-            <div class="search-result-container" id="search-result-categories">
-            </div>
-            <h2>{% trans "Manufacturers" %}</h2>
-            <div class="search-result-container" id="search-result-manufacturers">
-            </div>
-        </div>
     </div>
 </div>
 

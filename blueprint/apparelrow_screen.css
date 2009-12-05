@@ -61,13 +61,14 @@ h4 { text-transform: uppercase; }
 }
 
 #nav-main {
-    float: right;
-    margin-top: 50px;
+    position: absolute;
+    top: 50px;
+    left: 470px;
 }
 
 #nav-main li {
     display: inline;
-    margin-right: 2em;
+    margin-left: 2em;
 }
 
 #nav-main li a {
@@ -110,15 +111,21 @@ h4 { text-transform: uppercase; }
 
 #account-dialogue {
     position: absolute;
-    top: 50px;
+    width: 482px;
+    height: 36px;
+    padding: 3px 0;
+    top: 37px;
     left: 200px;
     display: none;
+    background: transparent url('../images/login-bg.png') scroll no-repeat left center;
 }
 
-#account-dialogue a {
-    /* FIXME: Set this elsewhere? */
-    color: white;
-    float: right;
+#login-forgot-password {
+    color: #fb9292;
+}
+
+#login-create-account {
+    color: #92c0c0;
 }
 
 #account-dialogue input.default-value {
@@ -127,14 +134,40 @@ h4 { text-transform: uppercase; }
 
 #account-dialogue form {
     margin: 0;
-    float: right;
-    margin: auto 1em auto 1em;
+    margin: auto 1em;
+}
+
+#login-username,
+#login-password,
+#login-password-placeholder {
+    background: transparent url(../images/login-text-bg.png) scroll no-repeat left center;
+    width: 108px;
+    height: 24px;
+    margin: 0;
+    border: none;
+    vertical-align: middle;
+    padding: 8px 16px;
+    font-size: 1.2em;
+    float: left;
+}
+
+#login-submit {
+    width: 40px;
+    height: 40px;
+    background: transparent url(../images/login-button.png) scroll no-repeat left center;
+    text-indent: -10000em;
+    border: none;
+    float: left;
+    cursor: pointer;
 }
 
 #login-password {
     display: none;
 }
 
+.connect-button {
+    float: right;
+}
 
 /* PRODUCT MENU */
 
@@ -437,24 +470,38 @@ a.block_link {
 
 /* SEARCH */
 
-#searchbox {
+#search {
     background: transparent url(../images/search.png) scroll no-repeat left center;
+    top: 31px;
+    right: 0px;
+    position: absolute;
     width: 163px;
     height: 24px;
+    padding: 17px 50px 17px 25px;
+    overflow: visible;
+    z-index: 1000;
+}
+
+#search.expanded {
+    background: transparent url(../images/searchresult-bg.png) scroll no-repeat center top;
+    height: 547px;
+    width: 895px;
+}
+
+#searchbox {
+    position: absolute;
+    width: 163px;
+    right: 50px;
     margin: 0;
     border: none;
     vertical-align: middle;
-    padding: 17px 50px 17px 25px;
     font-size: 1.2em;
+    background: transparent;
 }
 
 /* Search result */
 #search-result {
-    background: transparent url(../images/searchresult-bg.png) scroll no-repeat center top;
-    position: absolute;
-    top: 100px;
-    left: 0;
-    height: 547px;
+    margin-top: 140px;
     display: none;
 }
 
