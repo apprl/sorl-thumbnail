@@ -1,3 +1,6 @@
+alter table auth_user modify email varchar(255);
+
+
 INSERT INTO apparel_optiontype VALUES(1,'Size','Size Parent Node',NULL,1,10,3,0);
 INSERT INTO apparel_optiontype VALUES(2,'Shoe Size (EU)','European sizes (numeric)',1,8,9,3,1);
 INSERT INTO apparel_optiontype VALUES(3,'Pants (Length)','Length of pants or trousers',1,2,3,3,1);
