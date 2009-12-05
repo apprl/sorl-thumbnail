@@ -2,5 +2,10 @@
 {% load i18n %}
 
 {% block body %}
-    {{ form.as_p }}
+<div class="container">
+    <h2>{% trans "Login" %}</h2>
+    {% with "Login" as submit_text %}
+        {% include "fragments/form.html" %}
+    {% endwith %}
+</div>
 {% endblock %}

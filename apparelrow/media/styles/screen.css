@@ -260,6 +260,7 @@ hr.space {background:#fff;color:#fff;visibility:hidden;}
 body {color:#333;}
 a {text-decoration:none;color:#333;}
 a:hover, a:active {text-decoration:underline;}
+ul {list-style:none;padding:0;}
 h2 {text-transform:uppercase;font-size:1.3em;border-bottom:1px solid #d9d9d9;}
 h3 {text-transform:uppercase;}
 h4 {text-transform:uppercase;}
@@ -337,6 +338,10 @@ a.block_link {display:block;line-height:2.5em;text-align:center;text-transform:u
 .search-result-container a {display:block;margin-bottom:4px;}
 #profile-nav li {display:inline;margin:0;}
 #profile-nav li a {margin-right:1em;}
+#main-content form {margin-left:.5em;padding-top:-.5em;}
+#main-content form label {display:block;margin-top:.5em;}
+#main-content form button {margin-top:1em;}
+#main-content form .errorlist {color:#990000;}
 
 /* semantic class names */
 #content {float:left;margin-right:20px;width:620px;}

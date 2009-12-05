@@ -2,7 +2,12 @@
 {% load i18n %}
 
 {% block body %}
-    <p>{% blocktrans %}
+<div class="container">
+    <h2>{% trans "Sign up" %}</h2>
+    <p>
+    {% blocktrans %}
         Thank you for signing up. An e-mail has been sent to you with an activation key. Once you've followed the link it contains, you may log in.
-    {% endblocktrans %}</p>
+    {% endblocktrans %}
+    </p>
+</div>
 {% endblock %}

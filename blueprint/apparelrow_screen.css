@@ -13,6 +13,12 @@ a:hover, a:active {
     text-decoration: underline;
 }
 
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+
 /* Typography */
 
 h2 {
@@ -479,4 +485,23 @@ a.block_link {
 #profile-nav li a {
     margin-right: 1em;
 }
+
+#main-content form {
+    margin-left: .5em;
+    padding-top: -.5em;
+}
+
+#main-content form label {
+    display: block;
+    margin-top: .5em;
+}
+
+#main-content form button {
+    margin-top: 1em;
+}
+
+#main-content form .errorlist  {
+    color: #990000;
+}
+
 
