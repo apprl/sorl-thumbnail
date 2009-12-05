@@ -1,11 +1,24 @@
 {% extends 'site_base.html' %}
 {% load mptt_tags %}
 
+{% block 'extra-styles' %}
+    <style type="text/css">
+        .tooltip {
+            display: none;
+            width: 699px;
+            height: 478px;
+            -moz-box-shadow: 0 0 1em black;
+            -webkit-box-shadow: 0 0 1em black;
+            z-index: 200;
+        }
+    </style>
+{% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
-    <!--script type="text/javascript" src="http://cdn.jquerytools.org/1.1.2/full/jquery.tools.min.js"></script-->
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            //jQuery('#product-menu').tabs('#product-menu > li > ul > li > ul', { tabs: '#product-menu > li > ul > li > span', effect: 'slide', initialIndex: null });
+            // Tooltips
+            jQuery('#product-list > a').tooltip({ effect: 'slide', position: 'bottom center' });
+            jQuery('#product-menu').tabs('#product-menu > li > ul > li > ul', { tabs: '#product-menu > li > ul > li > span', effect: 'slide', initialIndex: null });
             if(window.location.hash) {
                 doFilter(window.location.hash.substr(1));
             }
@@ -146,6 +159,11 @@
             <div id="product-list" class="clearfix">
                 {% for product in products.object_list %}
                     {% include 'apparel/fragments/product_small.html' %}
+                    {% with product as object %}
+                    <div class="tooltip">
+                        {% include 'apparel/fragments/product_detail.html' %}
+                    </div>
+                    {% endwith %}
                 {% endfor %}
             </div>
             <div id="pagination">

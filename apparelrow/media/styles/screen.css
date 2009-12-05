@@ -306,11 +306,11 @@ span.price {background:transparent url(../images/check.png) no-repeat scroll lef
 #pagination .prev {float:left;display:inline-block;width:138px;height:30px;background:transparent url(../images/prev-page.png) no-repeat scroll 20px center;border-right:1px solid #dadada;}
 #pagination .next {float:right;display:inline-block;width:138px;height:30px;background:transparent url(../images/next-page.png) no-repeat scroll 120px center;border-left:1px solid #dadada;}
 #pagination .current {float:left;line-height:30px;text-align:center;}
-#product .product-image {height:500px;border:1px solid #dadada;float:left;margin-top:-12px;position:relative;}
-#product .product-image .magnifier {position:absolute;right:10px;bottom:10px;width:19px;height:20px;background:transparent url(../images/magnifier.png) no-repeat scroll left top;display:none;}
+.tooltip .product-image, #product .product-image {height:500px;border:1px solid #dadada;float:left;margin-top:-12px;position:relative;}
+.tooltip .product-image .magnifier, #product .product-image .magnifier {position:absolute;right:10px;bottom:10px;width:19px;height:20px;background:transparent url(../images/magnifier.png) no-repeat scroll left top;display:none;}
 table.available-sizes th {border:none;font-size:0.8em;font-weight:normal;text-align:center;text-transform:uppercase;}
 .product-info {border-left:none;overflow:visible;}
-#product .product-info {background:#fafafa;height:478px;}
+.tooltip .product-info, #product .product-info {background:#fafafa;height:478px;}
 .product-info .box {background-color:inherit;}
 .product-options, .product-options ul {margin-left:0;margin-right:0;margin-bottom:5px;list-style:none;}
 .product-options li ul li {float:left;}
