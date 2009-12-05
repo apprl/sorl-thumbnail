@@ -1,5 +1,5 @@
 import re, traceback, sys
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 from django.core.files.storage import default_storage
 from django.core.files import File
