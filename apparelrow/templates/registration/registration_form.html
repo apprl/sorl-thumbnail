@@ -2,9 +2,12 @@
 {% load i18n %}
 
 {% block body %}
-    <p></p>
-    <form action="{{ request.path }}" method="post">
-        {{ form.as_p }}
-        <input type="submit" value="{% trans "Sign up" %}" />
-    </form>
+
+<div class="container">
+    <h2>{% trans "Sign up" %}</h2>
+    {% with "Sign up" as submit_text %}
+        {% include "fragments/form.html" %}
+    {% endwith %}
+</div>
+
 {% endblock %}

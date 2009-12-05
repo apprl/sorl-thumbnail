@@ -2,7 +2,15 @@
 {% load i18n %}
 
 {% block body %}
+<div class="container">
+    <h2>{% trans "Activate account" %}</h2>
     <p>{% blocktrans %}
         Done! Your account at ApparelRow is now active.
     {% endblocktrans %}</p>
+    <p>
+    {% blocktrans %}
+        Click <a href="/accounts/login/">here to login</a>.
+    {% endblocktrans %}
+    </p>
+</div>
 {% endblock %}

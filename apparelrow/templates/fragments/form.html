@@ -1,0 +1,15 @@
+{% load i18n %}
+<form action="{{ request.path }}" method="post">
+<ul>
+{% for field in form %}
+    <li>
+        {{ field.label_tag }}
+        {{ field.errors }}
+        {{ field }}
+    </li>
+{% endfor %}
+    <li>
+        <button type="submit">{% trans submit_text %}</button>
+    </li>
+</ul>    
+</form>
