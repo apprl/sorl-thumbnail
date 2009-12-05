@@ -3,13 +3,15 @@
 {% load i18n %}
 
 {% block profile_content %}
-
-    {% show_facebook_photo user %}
-    <p>{% show_facebook_greeting user %}</p>
+    
+    <h2>{% show_facebook_greeting user %}</h2>
+    <div class="facebook-profile-image">
+        {% show_facebook_photo user %}
+    </div>
     <p>{% blocktrans %}
         If you already have an account at ApparelRow, enter your username and password below to link it with your facebook account. If you do not already have an account, click Continue with facebook only - you will not have to remember a username and password.    
     {% endblocktrans %}</p>
-    
+    <div class="clearfix"></div>
     <h2>{% trans "Link accounts" %}</h2>
     <form action="" method="post" accept-charset="utf-8" id="fb-link-accounts">
         <input type="hidden" name="next" value="{{ next }}" id="next">

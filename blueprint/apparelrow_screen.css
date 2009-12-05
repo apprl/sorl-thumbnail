@@ -505,3 +505,9 @@ a.block_link {
 }
 
 
+
+.facebook-profile-image {
+    float: left;
+    margin-right: .5em;
+}
+
