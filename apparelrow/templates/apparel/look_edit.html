@@ -34,16 +34,16 @@ var look = {
             maxWidth: $('#collage').width(),
             minHeight: 30,
             minWidth: 30,
-            grid: [10, 10],
+            //grid: [10, 10],
             stop: function(event, ui) {
                 look.saveProduct(ui);
             },
         });
         ele.parent('.ui-wrapper').draggable({
-            stack: { group: '*', min: 50 },
+            stack: { group: '.ui-wrapper', min: 50 },
             containment: 'parent',
-            snap: true,
-            grid: [10, 10],
+            //snap: true,
+            //grid: [10, 10],
             stop: function(event, ui) {
                 look.saveProduct(ui);
             },
@@ -68,7 +68,7 @@ var look = {
             product: product.attr('id').split('-')[1],
             top: parseInt(ui.position.top),
             left: parseInt(ui.position.left),
-            z_index: product.css('z-index'),
+            z_index: product.parent('.ui-wrapper').css('z-index'),
         }
         if('size' in ui) {
             data['width'] = parseInt(ui.size.width);
