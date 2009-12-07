@@ -196,6 +196,9 @@ EMAIL_USE_TLS       = False
 
 
 
+APPAREL_DEFAULT_AVATAR = os.path.join('/', 'site_media', 'static', 'images', 'avatar.jpg')
+
+
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.db.models.signals import post_save
 from facebookconnect.models import FacebookProfile
+import settings
 
 
 import datetime, mptt
@@ -26,22 +27,24 @@ class ApparelProfile(models.Model):
     def display_name(self):
         if self.name is not None:
             return self.name
-        
-        if self.user.facebook_profile:
+            
+        if hasattr(self.user, 'facebook_profile'):
             return self.user.facebook_profile.first_name
         
-        return self.user.__unicode__()
+        return u'%s' % self.user
     
     @property
     def avatar(self):
-        if self.user.facebook_profile and self.user.facebook_profile.picture_url:
-            return self.user.facebook_profile.picture_url
+        if hasattr(self.user, 'facebook_profile'):
+            if self.user.facebook_profile.picture_url:
+                return self.user.facebook_profile.picture_url
+        if self.image:
+            return self.image
         
-        return self.image
+        return settings.APPAREL_DEFAULT_AVATAR
 
     def __unicode__(self):
-        return "HEJREJ"
-        return self.name
+        return self.display_name
 
 def create_profile(signal, instance, **kwargs):
     if kwargs['created']:

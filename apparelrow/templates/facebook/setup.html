@@ -1,15 +1,15 @@
-{% extends "profile/base.html" %}
+{% extends "base.html" %}
 {% load facebook_tags %}
 {% load i18n %}
 
-{% block profile_content %}
-    
+{% block body %}
+<div class="container">
     <h2>{% show_facebook_greeting user %}</h2>
     <div class="facebook-profile-image">
         {% show_facebook_photo user %}
     </div>
     <p>{% blocktrans %}
-        If you already have an account at ApparelRow, enter your username and password below to link it with your facebook account. If you do not already have an account, click Continue with facebook only - you will not have to remember a username and password.    
+        If you already have an account at ApparelRow, enter your username and password below to link it with your facebook account. If you do not have an account, click Continue with facebook only - you will not have to remember a username and password.    
     {% endblocktrans %}</p>
     <div class="clearfix"></div>
     <h2>{% trans "Link accounts" %}</h2>
@@ -33,5 +33,5 @@
         <input type="hidden" name="next" value="{{ next }}" id="next">
         <p><input type="submit" value="{% trans "Connect with facebook only" %}"></p>
     </form>
-
+</div>
 {% endblock %}

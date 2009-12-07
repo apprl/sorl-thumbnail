@@ -164,7 +164,11 @@
                     <input type="text" value="{% trans "Password" %}" class="default-value" id="login-password-placeholder" />
                     <input type="password" name="password" id="login-password" />
                     <button type="submit" name="submit" id="login-submit">{% trans "Login" %}</button>
-                    <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                    {% ifequal request.path "/accounts/logout/" %}
+                        <input type="hidden" name="next" value="/" />
+                    {% else %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                    {% endifequal %}
                 </div>
             </form>
             {# Facebook connect button #}
@@ -208,7 +212,7 @@
 </div>
 
 
-{% if user.is_authenticated %}
+{% if user.is_authenticated and user.get_profile %}
 <div id="login-pane">
     <div class="container clearfix">
         <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
