@@ -1,9 +1,6 @@
 import traceback
 from importer.fetcher import fetch_source
 from importer.parser import csv_parser as csv
-#pprint(sys.path)
-
-#from importer.parser import csv_parser as csv
 
 def load_provider(name):
     module = __import__('importer.provider.%s' % name, fromlist = ['Provider'])   
@@ -30,8 +27,6 @@ class Provider():
         self.extension = None
         self.file      = None
         
-    
-    
     def fetch(self, **kwargs):
         """
         Retrieve a file from somewhere returns it as an open file handle. 

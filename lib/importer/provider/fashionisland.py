@@ -142,7 +142,6 @@ class FashionIslandDataMapper(DataMapper):
             match = re.match(pair[1], self.data['size'])
             if match:
                 if match.groups():
-                    from pprint import pprint
                     return '%s%s' % (match.group(1).upper(), pair[0])
                 else:
                     return pair[0]
