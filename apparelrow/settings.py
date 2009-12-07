@@ -137,6 +137,7 @@ INSTALLED_APPS = (
     'apparel',
     'scale',
     'watcher',
+    'profile',
     
     # internal (for now)
     'django.contrib.admin',
@@ -169,6 +170,8 @@ ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_REDIRECT_URLNAME = "what_next"
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
+
+AUTH_PROFILE_MODULE='profile.ApparelProfile'
 
 # FACEBOOK CONFIGURATION
 FACEBOOK_API_KEY = '44d47ef3e7285cace9a4c7c88f645742'

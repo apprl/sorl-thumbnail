@@ -47,8 +47,8 @@ address {margin:0 0 1.5em;font-style:italic;}
 del {color:#666;}
 pre {margin:1.5em 0;white-space:pre;}
 pre, code, tt {font:1em 'andale mono', 'lucida console', monospace;line-height:1.5;}
-li ul, li ol {margin:0 1.5em;}
-ul, ol {margin:0 1.5em 1.5em 1.5em;}
+li ul, li ol {margin:0;}
+ul, ol {margin:0 1.5em 1.5em 0;padding-left:3.333em;}
 ul {list-style-type:disc;}
 ol {list-style-type:decimal;}
 dl {margin:0 0 1.5em 0;}
@@ -284,7 +284,7 @@ h4 {text-transform:uppercase;}
 #login-username, #login-password, #login-password-placeholder {background:transparent url(../images/login-text-bg.png) scroll no-repeat left center;width:108px;height:24px;margin:0;border:none;vertical-align:middle;padding:8px 16px;font-size:1.2em;float:left;}
 #login-submit {width:40px;height:40px;background:transparent url(../images/login-button.png) scroll no-repeat left center;text-indent:-10000em;border:none;float:left;cursor:pointer;}
 #login-password {display:none;}
-.connect-button {float:right;}
+#account-dialogue .fb-connect-button {float:right;margin-right:2em;margin-top:auto;height:100%;padding-top:6px;}
 ul#product-menu {margin:0;}
 #product-menu li {list-style:none;}
 #product-menu ul, a.block_link, table.available-sizes td, #pagination, .product-info, .product-vendor, .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border:1px solid #dadada;background-color:#f2f2f2;}
@@ -342,15 +342,18 @@ a.block_link {display:block;line-height:2.5em;text-align:center;text-transform:u
 .search-result-container {margin-left:5px;}
 .search-result-container h3 {font-size:1em;font-weight:bold;}
 .search-result-container a {display:block;margin-bottom:4px;}
-#profile-nav li {display:inline;margin:0;}
-#profile-nav li a {margin-right:1em;}
 #main-content form {margin-left:.5em;padding-top:-.5em;}
 #main-content form label {display:block;margin-top:.5em;}
 #main-content form button {margin-top:1em;}
 #main-content form .errorlist {color:#990000;}
+.facebook-profile-image {float:left;margin-right:.5em;}
+#profile-nav li {display:block;float:left;height:30px;padding-left:.5em;padding-right:.5em;border:1px solid #d9d9d9;border-left-color:white;text-transform:uppercase;background:transparent url(../images/profile-nav-bg.png) scroll repeat-x top left;}
+#profile-nav li.selected {background-image:url(../images/profile-nav-bg-selected.png);border-right-color:#ababab;}
+#profile-nav li.profile-image {padding:0;}
+#profile-nav-dash {position:relative;top:-10px;z-index:-1;}
 
 /* semantic class names */
 #content {float:left;margin-right:20px;width:620px;}
 #nav {width:940px;margin-right:0;}
-#extra-content {margin-right:0;padding-right:0;float:left;margin-right:20px;margin-right:0;width:300px;}
 #header {width:940px;margin-right:0;}
+#extra-content {margin-right:0;padding-right:0;float:left;margin-right:20px;margin-right:0;width:300px;}

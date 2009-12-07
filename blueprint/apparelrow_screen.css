@@ -165,9 +165,15 @@ h4 { text-transform: uppercase; }
     display: none;
 }
 
-.connect-button {
+#account-dialogue .fb-connect-button {
     float: right;
+    margin-right: 2em;
+    margin-top: auto;
+
+    height: 100%;
+    padding-top: 6px;
 }
+
 
 /* PRODUCT MENU */
 
@@ -526,16 +532,6 @@ a.block_link {
     margin-bottom: 4px;
 }
 
-
-#profile-nav li {
-    display: inline;
-    margin: 0;
-}
-
-#profile-nav li a {
-    margin-right: 1em;
-}
-
 #main-content form {
     margin-left: .5em;
     padding-top: -.5em;
@@ -554,10 +550,51 @@ a.block_link {
     color: #990000;
 }
 
-
-
 .facebook-profile-image {
     float: left;
     margin-right: .5em;
 }
 
+/*
+#profile-nav li {
+    display: inline;
+    margin: 0;
+}
+
+#profile-nav li a {
+    margin-right: 1em;
+}
+*/
+
+
+#profile-nav li {
+    display: block;
+    float: left;
+
+    height: 30px;
+    padding-left: .5em;
+    padding-right: .5em;
+
+    border: 1px solid #d9d9d9;
+    border-left-color: white;
+    text-transform: uppercase;
+    
+    background: transparent url(../images/profile-nav-bg.png) scroll repeat-x top left;
+}
+
+#profile-nav li.selected {
+    background-image: url(../images/profile-nav-bg-selected.png);
+    border-right-color: #ababab;
+}
+
+
+
+#profile-nav li.profile-image {
+    padding: 0;
+}
+
+#profile-nav-dash {
+    position: relative;
+    top: -10px;
+    z-index: -1;
+}

@@ -1,9 +1,12 @@
 {% spaceless %}
-    <form class="connect-button" name="login" method="post" action="{% url facebook_login %}">
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next }}" />
-        {% endif %}
-        <input type="image" onclick="facebookConnect(this.form); return false;" src="/site_media/static/images/fblogo.png" />
+    <form class="fb-connect-button" name="login" method="post" action="{% url facebook_login %}">
+        <input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}{{ request.path }}{% endif %}" />
+        <input type="image" onclick="facebookConnect(this.form); return false;" class="fb-connect-image" src="
+        {% if fb_connect_logo %}
+            {{ fb_connect_logo }}
+        {% else %}
+            http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_large_long.gif
+        {% endif %}" />
     </form>
     {% if javascript_friendly %}\{% endif %}
 {% endspaceless %}

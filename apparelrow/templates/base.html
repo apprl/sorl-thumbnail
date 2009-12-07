@@ -168,7 +168,9 @@
                 </div>
             </form>
             {# Facebook connect button #}
-            {% show_connect_button %}
+            {% with "/site_media/static/images/fblogo.png" as fb_connect_logo %}
+                {% include "facebook/connect_button.html" %}
+            {% endwith %}
         </div>
         <form action="/apparel/search" method="get" onsubmit="return false">
             <div id="search">
@@ -211,7 +213,7 @@
     <div class="container clearfix">
         <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
         <span id="logged-in-as">
-            {% trans "Logged in as" %}: <strong>{{ user.username }}</strong>
+            {% trans "Logged in as" %}: <strong>{{ user.get_profile.display_name }}</strong>
         </span>
         <ul id="nav-user">
         </ul>

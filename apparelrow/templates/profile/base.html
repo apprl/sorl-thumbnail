@@ -3,30 +3,34 @@
 
 {% block body %}
 <div class="container">
+    <ul id="profile-nav">
     {% if user.is_authenticated %}
-        <ul id="profile-nav">
-            <li{% ifequal request.path "/profile/" %} class="selected"{% endifequal %}>
-                <a href="/profile/">{{ user }}</a>
-            </li>
-            <li{% ifequal request.path "/profile/looks/" %} class="selected"{% endifequal %}>
-                <a href="/profile/looks/">{% trans "Looks" %}</a>
-            </li>
-            <li{% ifequal request.path "/profile/wardrobe/" %} class="selected"{% endifequal %}>
-                <a href="/profile/wardrobe/">{% trans "Wardrobe" %}</a>
-            </li>
-            <li{% ifequal request.path "/profile/following/" %} class="selected"{% endifequal %}>
-                <a href="/profile/following/">{% trans "Following" %}</a>
-            </li>
-            <li{% ifequal request.path "/profile/followers/" %} class="selected"{% endifequal %}>
-                <a href="/profile/followers/">{% trans "Followers" %}</a>
-            </li>
-            <li{% ifequal request.path "/profile/watcher/" %} class="selected"{% endifequal %}>
-                <a href="/profile/watcher/">{% trans "Product Watch" %}</a>
-            </li>
-        </ul>
+        <li class="profile-image">
+            <img src="{{ user.get_profile.avatar }}" width="30" height="30" />
+        </li>
+        <li{% ifequal request.path "/profile/" %} class="selected"{% endifequal %}>
+            <a href="/profile/">{{ user.get_profile.display_name }}</a>
+        </li>
+        <li{% ifequal request.path "/profile/looks/" %} class="selected"{% endifequal %}>
+            <a href="/profile/looks/">{% trans "Looks" %}</a>
+        </li>
+        <li{% ifequal request.path "/profile/wardrobe/" %} class="selected"{% endifequal %}>
+            <a href="/profile/wardrobe/">{% trans "Wardrobe" %}</a>
+        </li>
+        <li{% ifequal request.path "/profile/following/" %} class="selected"{% endifequal %}>
+            <a href="/profile/following/">{% trans "Following" %}</a>
+        </li>
+        <li{% ifequal request.path "/profile/followers/" %} class="selected"{% endifequal %}>
+            <a href="/profile/followers/">{% trans "Followers" %}</a>
+        </li>
+        <li{% ifequal request.path "/profile/watcher/" %} class="selected"{% endifequal %}>
+            <a href="/profile/watcher/">{% trans "Product Watch" %}</a>
+        </li>
     {% else %}
-        Menu for people who are not authenticated
+        <li>Menu for people who are not authenticated</li>
     {% endif %}
+    </ul>
+    <hr class="clearfix" id="profile-nav-dash" />
     {% block profile_content %}
     {% endblock %}
 </div>

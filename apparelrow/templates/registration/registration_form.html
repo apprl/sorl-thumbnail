@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load facebook_tags %}
 
 {% block body %}
 
@@ -8,6 +9,12 @@
     {% with "Sign up" as submit_text %}
         {% include "fragments/form.html" %}
     {% endwith %}
+    <p>
+        <strong>{% trans "... or sign up using your Facebook ID" %}</strong>
+    </p>
+    <p>
+        {% show_connect_button %}
+    </p>
 </div>
 
 {% endblock %}
