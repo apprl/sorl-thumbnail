@@ -28,20 +28,28 @@ class PriceRunnerProvider(ProviderBase):
         # Global variables
         vendor_name = context.xpathEval('/Products/@company')
         if vendor_name:
-            vendor_name = vendor_name[0].content.capitalize()
+            vendor_name = self.process_text(vendor_name[0].content).capitalize()
         
         for product in context.xpathEval('//Product'):
-            # FIXME: The unescape routine only handles <, > and &. This needs
-            # to be fixed.
-
-            row = dict([(e.name.lower(), unescape(e.getContent())) for e in product.xpathEval('./*')])
-            row['categories'] = [unescape(c.getContent()) for c in product.xpathEval('./Categories/*')]
+            row = dict([(e.name.lower(), self.process_text(e.getContent())) for e in product.xpathEval('./*')])
+            row['categories'] = [self.process_text(c.getContent()) for c in product.xpathEval('./Categories/*')]
             row['vendorname'] = vendor_name
+            
             mapper = self.mapper(self, row)
             mapper.translate()
-        
+            
         context.xpathFreeContext()
         doc.freeDoc()
+    
+    def process_text(self, text):
+        """
+        Ensures the content is UTF-8 encoded (not a bytestring)
+        Unescapes XML entities
+        """
+        text = unescape(text)
+        text = unicode(text, 'utf-8')
+        
+        return text
 
 
 class PriceRunnerMapper(DataMapper):
