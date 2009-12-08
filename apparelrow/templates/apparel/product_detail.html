@@ -13,17 +13,16 @@
             jQuery('.product-image').mouseenter(function() {
                 jQuery(this).find('.magnifier').fadeIn('slow');
                 return false;
-            });
-            jQuery('.product-image').mouseleave(function() {
+            }).mouseleave(function() {
                 jQuery(this).find('.magnifier').fadeOut('slow');
                 return false;
             });
             jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
 
             jQuery('#add-to-look').mouseenter(function() {
-                $(this).find('ul').show();
+                jQuery(this).find('ul').show();
             }).mouseleave(function() {
-                $(this).find('ul').hide();
+                jQuery(this).find('ul').hide();
             });
             jQuery('#add-to-look > ul > li > a').click(function() {
                 args = {};

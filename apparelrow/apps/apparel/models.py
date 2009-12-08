@@ -178,6 +178,14 @@ class LookProduct(models.Model):
     height = models.IntegerField(_('CSS height'), blank=True, null=True)
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
 
+    @property
+    def style(self):
+        s = []
+        for attr in ['top', 'left', 'width', 'height', 'z_index']:
+            if(attr in self.__dict__.keys()):
+                s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr]))
+        return " ".join(s)
+
     def __unicode__(self):
         return u"%s (%s, %s [%sx%s] %s) in %s" % (self.product, self.top, self.left, self.width, self.height, self.z_index, self.look)
 

@@ -328,7 +328,7 @@ a.buy-now {padding:50px 10px 5px;background:#d0fae8 url(../images/check-large.pn
 .product-vendor {border-bottom:none;padding:5px 10px;height:30px;line-height:30px;}
 .product-vendor .price, .product-vendor .currency {line-height:30px;}
 .product-vendor .price {font-size:2em;background:none;padding-left:0;padding-right:5px;}
-.product-vendor .vendor {float:right;background:transparent url(../images/vendor.png) scroll no-repeat left center;padding-left:10px;}
+.product-vendor .vendor {float:right;background:transparent url(../images/vendor.png) scroll no-repeat left center;padding:0 10px;}
 .similar-product .product-photo {float:left;margin-right:10px;}
 .similar-product .product-summary {float:left;}
 .product-summary a, .product-summary span {display:block;}

@@ -128,14 +128,7 @@ def look_detail(request, look_id):
 
 def look_edit(request, look_id):
     look = get_object_or_404(Look, pk=look_id)
-    style = {}
-    for product in look.look_products.all():
-        s = ['position: absolute;']
-        for attr in ['top', 'left', 'width', 'height', 'z_index']:
-            if(attr in product.__dict__.keys()):
-                s.append("%s: %spx;" % (attr.replace('_', '-'), product.__dict__[attr]))
-        style[product.product.id] = " ".join(s)
-    return render_to_response('apparel/look_edit.html', dict(object=look, style=style))
+    return render_to_response('apparel/look_edit.html', dict(object=look))
 
 def looks():
     pass
