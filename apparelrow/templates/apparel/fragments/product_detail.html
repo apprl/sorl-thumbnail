@@ -1,14 +1,13 @@
 {% load i18n %}
-{% load thumbnail %}
             <div class="product-info clearfix">
                 <div class="product-image">
-                    <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="{% thumbnail object.product_image 317x500 %}" /></a>
+                    <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/317x500/site_media/media/{{ object.product_image }}" /></a>
                     <span class="magnifier"></span>
                 </div>
                 <div class="span-9 prepend-1 last">
                 <div class="box">
                     <h3>{{ object.product_name }}</h3>
-                    <h4>Finns i</h4>
+                    <h4>{% trans "Available in" %}</h4>
                     {% regroup object.options.all by option_type as option_list %}
                     <ul class="product-options">
                     {% for option in option_list %}
@@ -35,15 +34,16 @@
                         {% endfor %}
                         {% endwith %}
                     </div>
-                    <ul>
-                        <li id="add-to-look">{% trans "Add to look" %}
+                    <ul id="add-menu" class="clearfix">
+                        <li id="add-to-look"><a href="/apparel/look/">{% trans "Add to look" %}</a>
                             <ul>
                                 {% for look in looks %}
-                                <li id="look-{{ look.id }}">{{ look.title }}</li>
+                                <li><a id="look-{{ look.id }}" href="{{ look.get_absolute_url }}">{{ look.title }}</a></li>
                                 {% endfor %}
-                                <li>{% trans "New look" %}</li>
+                                <li><a href="/apparel/look/new/">{% trans "New look" %}</a></li>
                             </ul>
                         </li>
+                        <li id="add-to-wardrobe"><a href="#">{% trans "Add to wardrobe" %}</a></li>
                     </ul>
                 </div>
                 </div>

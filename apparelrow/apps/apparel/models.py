@@ -165,6 +165,10 @@ class Look(models.Model):
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user)
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('apps.apparel.views.look_detail', [str(self.id)])
+
 class LookProduct(models.Model):
     product = models.ForeignKey(Product)
     look = models.ForeignKey(Look, related_name='look_products')
