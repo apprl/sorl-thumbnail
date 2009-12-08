@@ -189,6 +189,7 @@ ul#product-menu {
 a.block_link,
 table.available-sizes td,
 #pagination,
+#add-to-look,
 .product-info,
 .product-vendor,
 .product-options .option-size,
@@ -468,6 +469,11 @@ a.buy-now {
     text-transform: uppercase;
     background: transparent url(../images/arrow-bg.png) scroll no-repeat left bottom;
     padding-left: 20px;
+}
+
+#add-to-look {
+    background: transparent url(../images/add.png) scroll no-repeat left center;
+    padding-left: 10px;
 }
 
 a.block_link {
