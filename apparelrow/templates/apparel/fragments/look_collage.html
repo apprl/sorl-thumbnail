@@ -1,7 +1,6 @@
 {% load i18n %}
-<div id="collage">
     {% for product in object.look_products.all %}
-        <img id="product-{{ product.product.id }}" class="look" style="{{ product.style }}" src="{{ product.product.product_image.url }}" />
+        <img id="product-{{ product.product.id }}" class="look" style="{{ product.style_half }}" src="{{ product.product.product_image.url }}" />
         {% if tooltips %}
             {% with product.product as product %}
                 <div class="tooltip">
@@ -13,5 +12,4 @@
             {% endwith %}
         {% endif %}
     {% endfor %}
-</div>
 

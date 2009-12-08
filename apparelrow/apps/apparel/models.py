@@ -183,11 +183,18 @@ class LookProduct(models.Model):
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
 
     @property
+    def style_half(self):
+        return self.style(0.5)
+
+    @property
     def style(self):
+        return self.style(1)
+
+    def style(self, scale=1):
         s = []
         for attr in ['top', 'left', 'width', 'height', 'z_index']:
             if(attr in self.__dict__.keys()):
-                s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr]))
+                s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr] * scale))
         return " ".join(s)
 
     def __unicode__(self):

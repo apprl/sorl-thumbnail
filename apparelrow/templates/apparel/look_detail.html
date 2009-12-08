@@ -2,11 +2,16 @@
 
 {% block 'extra-styles' %}
 <style type="text/css">
+    .collage {
+        position: relative;
+    }
     .look {
         position: absolute;
+        cursor: pointer;
     }
     .tooltip {
         display: none;
+        z-index: 1100;
         padding: 1em;
     }
 </style>
@@ -21,5 +26,7 @@
 {% endblock 'extra-scripts' %}
 
 {% block body %}
+<div class="container collage">
     {% include 'apparel/fragments/look_collage.html' %}
+</div>
 {% endblock body %}

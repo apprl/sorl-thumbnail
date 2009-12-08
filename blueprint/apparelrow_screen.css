@@ -186,7 +186,7 @@ ul#product-menu {
     list-style: none;
 }
 
-#collage .tooltip,
+.collage .tooltip,
 #product-menu ul,
 a.block_link,
 table.available-sizes td,
@@ -522,6 +522,8 @@ a.block_link {
     text-align: center;
     text-transform: uppercase;
 }
+
+/* LOOKS */
 
 /* SEARCH */
 

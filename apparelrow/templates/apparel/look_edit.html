@@ -4,6 +4,7 @@
     #collage {
         height: 500px;
         border: 1px dotted black;
+        position: relative;
     }
     .look {
         height: 150px;
@@ -26,8 +27,8 @@ var look = {
     initialize: function(ele) {
         ele.resizable({
             aspectRatio: 'true',
-            maxHeight: $('#collage').height(),
-            maxWidth: $('#collage').width(),
+            maxHeight: ele.parent().height(),
+            maxWidth: ele.parent().width(),
             minHeight: 30,
             minWidth: 30,
             //grid: [10, 10],
@@ -74,14 +75,18 @@ var look = {
             data['width'] = product.width();
             data['height'] = product.height();
         }
-        jQuery.post('/apparel/looks/save_product/', data,
+        jQuery.post('{% url apps.apparel.views.save_look_product %}', data,
         function(response) {
-            alert('saved! ' + response);
+            //alert('saved! ' + response);
         });
     },
     disable: function(ele) {
         ele.resizable('disable');
         ele.parent('.ui-wrapper').draggable('disable');
+    },
+    enable: function(ele) {
+        ele.resizable('enable');
+        ele.parent('.ui-wrapper').draggable('enable');
     },
 };
     jQuery(document).ready(function() {
@@ -89,8 +94,7 @@ var look = {
         look.disable(jQuery('.look'));
         jQuery('.look').click(function() {
             look.disable(jQuery('.look'));
-            $(this).resizable('enable');
-            $(this).parent('.ui-wrapper').draggable('enable');
+            look.enable(jQuery(this));
             return false;
         });
         jQuery('#collage').click(function() {
@@ -100,5 +104,9 @@ var look = {
 </script>
 {% endblock 'extra-scripts' %}
 {% block body %}
+<div class="container">
+    <div id="collage">
     {% include 'apparel/fragments/look_collage.html' %}
+    </div>
+</div>
 {% endblock body %}
