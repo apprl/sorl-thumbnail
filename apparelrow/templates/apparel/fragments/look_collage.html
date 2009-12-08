@@ -1,6 +1,17 @@
+{% load i18n %}
 <div id="collage">
     {% for product in object.look_products.all %}
         <img id="product-{{ product.product.id }}" class="look" style="{{ product.style }}" src="{{ product.product.product_image.url }}" />
+        {% if tooltips %}
+            {% with product.product as product %}
+                <div class="tooltip">
+                    <h2>{{ product.product_name }}</h2> {% trans "by" %} {{ product.manufacturer }}
+                    {% with product.vendorproduct.all|dictsort:'price'|first as vendor %}
+                        <a href="{{ vendor.buy_url }}" target="_blank">{{ vendor.price }} {{ vendor.currency }} {% trans "at" %} {{ vendor.vendor }}</a>
+                    {% endwith %}
+                </div>
+            {% endwith %}
+        {% endif %}
     {% endfor %}
 </div>
 

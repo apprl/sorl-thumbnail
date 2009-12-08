@@ -1,0 +1,25 @@
+{% extends 'site_base.html' %}
+
+{% block 'extra-styles' %}
+<style type="text/css">
+    .look {
+        position: absolute;
+    }
+    .tooltip {
+        display: none;
+        padding: 1em;
+    }
+</style>
+{% endblock 'extra-styles' %}
+
+{% block 'extra-scripts' %}
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery('.look').tooltip({ effect: 'slide' });
+    });
+</script>
+{% endblock 'extra-scripts' %}
+
+{% block body %}
+    {% include 'apparel/fragments/look_collage.html' %}
+{% endblock body %}

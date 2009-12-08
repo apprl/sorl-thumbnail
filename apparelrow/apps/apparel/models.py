@@ -129,6 +129,10 @@ class Product(models.Model):
     def __unicode__(self):
         return u"%s %s" % (self.manufacturer, self.product_name)
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('apps.apparel.views.product_detail', [str(self.id)])
+
     def save(self, force_insert=False, force_update=False):
         if not self.pk:
             self.date_added = datetime.date.today()

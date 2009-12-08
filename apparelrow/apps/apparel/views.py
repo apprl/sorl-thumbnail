@@ -124,7 +124,7 @@ def add_to_look(request):
 
 def look_detail(request, look_id):
     look = get_object_or_404(Look, pk=look_id)
-    return render_to_response('look.html', look)
+    return render_to_response('apparel/look_detail.html', dict(object=look, tooltips=True))
 
 def look_edit(request, look_id):
     look = get_object_or_404(Look, pk=look_id)

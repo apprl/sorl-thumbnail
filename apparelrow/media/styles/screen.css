@@ -287,7 +287,7 @@ h4 {text-transform:uppercase;}
 #account-dialogue .fb-connect-button {float:right;margin-right:2em;margin-top:auto;height:100%;padding-top:6px;}
 ul#product-menu {margin:0;}
 #product-menu li {list-style:none;}
-#product-menu ul, a.block_link, table.available-sizes td, #pagination, #add-menu, #add-to-look ul li, .product-info, .product-vendor, .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border:1px solid #dadada;background-color:#f2f2f2;}
+#collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #pagination, #add-menu, #add-to-look ul li, .product-info, .product-vendor, .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border:1px solid #dadada;background-color:#f2f2f2;}
 #product-menu ul {margin:0 0 9px 0;border-bottom:none;}
 #product-menu ul li ul {background-color:#dadada;margin-left:-1em;margin-bottom:0;}
 #product-menu ul li {border-bottom:1px solid #dadada;padding-left:1em;list-style:disc inside url(../images/list-item.png);line-height:2.5em;}
