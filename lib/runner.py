@@ -1,19 +1,9 @@
-import sys, os, re, datetime
+import sys, os, re, datetime, logging
 from optparse import OptionParser, OptionError
 from importer.provider import load_provider
 
-#try:
-#    import pinax
-#except ImportError:
-#    # Yieeehaaa! No godforsaken pinax to configure!
-#    pass
-#else:
-#    import settings
-#    
-#    sys.path.insert(0, os.path.join(settings.PINAX_ROOT, "apps"))
-#    sys.path.insert(0, os.path.join(settings.PROJECT_ROOT, "apps"))
 
-
+logging.basicConfig(level=logging.INFO)
 
 def run(provider_name, archive=None, date=None):
     processor = load_provider(provider_name)
@@ -23,7 +13,6 @@ def run(provider_name, archive=None, date=None):
     
     processor.fetch(from_warehouse=archive, for_date=date)
     processor.process()
-
 
 if __name__ == '__main__':
     op = OptionParser(description = 'Import a product feed into the Apparel Row system')

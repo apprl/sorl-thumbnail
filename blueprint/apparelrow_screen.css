@@ -591,9 +591,12 @@ a.block_link {
 #profile-nav li.selected {
     background-image: url(../images/profile-nav-bg-selected.png);
     border-right-color: #ababab;
+    border-left-color: #ababab;
 }
 
-
+#profile-nav li a {
+    line-height: 30px;
+}
 
 #profile-nav li.profile-image {
     padding: 0;

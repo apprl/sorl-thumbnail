@@ -349,7 +349,8 @@ a.block_link {display:block;line-height:2.5em;text-align:center;text-transform:u
 #main-content form .errorlist {color:#990000;}
 .facebook-profile-image {float:left;margin-right:.5em;}
 #profile-nav li {display:block;float:left;height:30px;padding-left:.5em;padding-right:.5em;border:1px solid #d9d9d9;border-left-color:white;text-transform:uppercase;background:transparent url(../images/profile-nav-bg.png) scroll repeat-x top left;}
-#profile-nav li.selected {background-image:url(../images/profile-nav-bg-selected.png);border-right-color:#ababab;}
+#profile-nav li.selected {background-image:url(../images/profile-nav-bg-selected.png);border-right-color:#ababab;border-left-color:#ababab;}
+#profile-nav li a {line-height:30px;}
 #profile-nav li.profile-image {padding:0;}
 #profile-nav-dash {position:relative;top:-10px;z-index:-1;}
 

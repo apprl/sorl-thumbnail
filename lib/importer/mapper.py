@@ -1,4 +1,4 @@
-import re, traceback, sys
+import re, traceback, sys, logging
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 from django.core.files.storage import default_storage
@@ -55,6 +55,8 @@ class DataMapper():
         
         """
         
+        logging.debug('*** Start mapping raw product data ***'.upper())
+        
         try:
             self.map_fields()    
             self.map_manufacturer()
@@ -62,20 +64,19 @@ class DataMapper():
             self.map_vendor()
             self.map_product()
         
-        except SkipRecord:
+        except SkipRecord, e:
             # FIXME: Add logging here. Require the SkipRecord exception to carry a name with the reason
-            print "Skipping record, rolling back"
+            logging.error("Skipping record: %s", e)
             self.rollback()
         except Exception, e:
             # FIXME: For debugging purposes, we might not want a rollback to 
             # happen here, let this be an option
-            print "Caught fatal exception, rolling back changes"
+            logging.critical("Caught fatal exception")
             self.rollback()
-            tb = sys.exc_info()
-            print "Original exception"
-            traceback.print_tb(tb[2])
-            
+            logging.exception(e)
             raise e
+        
+        logging.info('Processed product %s', self.product)
     
     def map_fields(self):
         """
@@ -86,6 +87,8 @@ class DataMapper():
         if not isinstance(self.data, dict):
             raise ValueError('data property is expected to be a dictionary')
         
+        logging.debug(self.data)
+        
         for attr in self.fields.keys():
             # If there is a set_... method, use it to return the value, otherwise
             
@@ -95,6 +98,8 @@ class DataMapper():
                 value = getattr(self, 'set_%s' % attr)(value)
             
             self.fields[attr] = _trim(value)
+            
+            logging.debug('Mapped product field %s to %s', attr, value)
     
     def map_manufacturer(self):
         """
@@ -105,15 +110,12 @@ class DataMapper():
         name = self.fields['manufacturer_name']
         
         if not name:
-            # FIXME: At this point we've got a problem, and we should probably
-            # stop. Best way of stopping is to throw a new kind of exception
-            # that the reader listens to. Like ARImporterException
-            return
+            raise SkipRecord('Manufacturer name not mapped')
         
         self.manufacturer, created = Manufacturer.objects.get_or_create(name=name)
         
         if created:
-            print u"Created new manufacturer: %s" % name
+            logging.debug('Created new manufacturer: %s', name)
         
         
     # NOTE: This is identical to manufacturer mostly by coincidence. These should
@@ -130,7 +132,7 @@ class DataMapper():
         category_names = self.fields['categories']
         
         if category_names is None:
-            raise SkipRecord()
+            raise SkipRecord('No categories defined')
         
         # iterate through list
         categories = []
@@ -143,27 +145,28 @@ class DataMapper():
             try:
                 category = Category.objects.get(key=Category.key_for_name(name))
             except ObjectDoesNotExist:
+                logging.debug('Creating new category: %s', name)
                 category = Category(
                     name=name
                 )
             else:
-                # If we find an existing category we should stop looking
+                logging.debug('Using existing category: %s', category.name)
                 break
             finally:
-                # Assign previous category to this one, if there is any
                 if len(categories) > 0:
+                    logging.debug('Assigning child category %s to %s', category, categories[0].parent)
                     categories[0].parent = category
                 
                 categories.insert(0, category)
         
         if len(categories) == 0:
-            raise SkipRecord()
+            raise SkipRecord('Require at least one valid category')
         
         for category in categories:
             category.save()
         
         self.category = categories[-1]
-        print u"Assigned category %s to product" % self.category.name
+        logging.debug('Assigned category %s to product', self.category.name)
     
     def map_vendor(self):
         """
@@ -182,7 +185,7 @@ class DataMapper():
         self.vendor, created = Vendor.objects.get_or_create(name=name)
         
         if created:
-            print u"Created new vendor: %s" % name
+            logging.debug("Created new vendor: %s", name)
 
         
     def map_product(self):
@@ -200,10 +203,7 @@ class DataMapper():
             
             # call create object and return
         except MultipleObjectsReturned:
-            print u"WARNING: There are more than one product with sku %s for manufacturer %s" % (self.manufacturer.name, self.fields['sku'])
-            
-            # FIXME: Raise exception that causes this product to be skipped
-            return
+            raise SkipRecord('There are more than one product with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku']))
         else:
             self.update_product()
         
@@ -227,11 +227,10 @@ class DataMapper():
             sku=self.fields['sku'],
         )
         
-        print u"Created product %s" % product.product_name
+        logging.info("Created product %s", product)
         product.save()
         
         if self.category:
-            # It is safe to call this method repeatidly
             product.category.add(self.category)
         
         return product
@@ -250,7 +249,7 @@ class DataMapper():
         # changed since it was loaded? If so, would be good to check it before
         # hitting save, if Django doesn't do that itself
         
-        print u"Updated product %s" % self.product.product_name
+        logging.info("Updated product %s", self.product)
         self.product.save()
         
     def map_vendor_options(self):
@@ -262,17 +261,18 @@ class DataMapper():
         """
         
         if not self.vendor:
-            print "No vendor to update"
+            logging.debug('No vendor to add options to')
             return
         
         opt, created = VendorProduct.objects.get_or_create(product=self.product,
                                                            vendor=self.vendor)
         
         if created:
-            print u'Added product data to vendor: %s' % opt
+            logging.debug('Added product data to vendor: %s', opt)
         
         # FIXME: Make this better
         
+        # Map all fields for the vendor (except internal fields)
         fields = filter(
                     lambda x: x not in ['vendor_id', 'product_id', 'id'],
                     map(
@@ -289,17 +289,14 @@ class DataMapper():
             elif field in self.data:
                 value = self.data[field]
             else:
-                print u'No mapping for vendor option %s' % field
+                logging.debug('No vendor option %s mapped from source', field)
                 value = None
                 continue
             
             if value == '':
-                # Ensure correct NULL handling
                 value = None
             
-            # FIXME: Wrap in debug statement
-            print u"Set vendor options %s to %s" % (field, value)
-            
+            logging.debug('Set vendor options %s to %s', field, value)
             
             setattr(opt, field, value)
         
@@ -330,21 +327,21 @@ class DataMapper():
                 elif key in self.data:
                     value = self.data[key]
                 else:
-                    print u'No mapping for option type %s' % key
+                    logging.debug('No product option %s mapped from source', key)
                 
                 if not value:
                     continue
                 
                 value = _trim(value)
                 
-                # FIXME: One could move this code to the Option or Product class                
+                # FIXME: One could move this code to the Option or Product class
                 opt, created = Option.objects.get_or_create(option_type=option_type, value=value)
                 
                 if created:
-                    print u"Created option '%s: %s'" % (option_type.name, value)
+                    logging.info("Created option '%s: %s'", option_type.name, value)
                 
                 if not self.product.options.filter(pk=opt.pk):
-                    print u"Attaching option '%s: %s'" % (option_type.name, value)
+                    logging.debug("Attaching option '%s: %s'", option_type.name, value)
                     self.product.options.add(opt)
     
     def map_product_image(self):
@@ -352,7 +349,8 @@ class DataMapper():
         Fetches the file specified in 'product_image' and assigns it to the 
         product 
         """
-        if not 'product_image_url' in self.fields or not self.fields['product_image_url']:
+        if not self.fields.get('product_image_url'):
+            logging.debug('No product_image_url mapped from source')
             return
         
         (url, name) = re.match(r'^.+/(.+)$', self.fields['product_image_url']).group(0,1)
@@ -360,21 +358,23 @@ class DataMapper():
         sitepath = '%s/%s_%s' % (PRODUCT_IMAGE_BASE, self.provider.name, name)
         
         if not default_storage.exists(sitepath):
-            print u"Downloading product image %s" % url
+            logging.info('Downloading product image %s', url)
             temppath = None
             
             try:
                 temppath = fetcher.fetch(url)
             except HTTPError, e:
-                # FIXME: Replace with proper logging
-                print u"%s: (while downloading %s)" % (e, url)
+                logging.error('%s (while downloading %s', e, url)
                 return
             
             default_storage.save(sitepath, File(open(temppath)))
-            
+            logging.debug("Stored %s", sitepath)
+        else:
+            logging.debug('Image %s already exists, will not download', sitepath)
+        
         self.product.product_image = sitepath
         self.product.save()
-            
+        
         # FIXME: Delete file at temppath? Can it be done implictly when the process
         # exists?
     
@@ -383,6 +383,9 @@ class DataMapper():
         """
         Perform rollback on the objects created for the given product.
         """
+        # FIXME: We need to either incorporate some transaction state, or
+        # keep a reference to fetched objects prior change (this means deep cloned versions)
+        # and created objects
         pass
         
 def _trim(value):
@@ -405,5 +408,9 @@ class SkipRecord(Exception):
     Raising this exception will cause the current record to be ignored, and no
     product created.
     """
-    pass
 
+    def __init__(self, reason):
+        if reason is None:
+            raise Exception("Need reason to raise SkipRecord")
+        
+        Exception.__init__(self, reason)
