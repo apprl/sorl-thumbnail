@@ -7,6 +7,7 @@
     }
     .look {
         height: 150px;
+        position: absolute;
     }
     .ui-wrapper {
         float: left;
@@ -16,11 +17,6 @@
     .ui-state-disabled, .ui-widget-content .ui-state-disabled {
         opacity: 1.0;
     }
-    {% for p, s in style.items %}
-    #product-{{ p }} {
-        {{ s }}
-    }
-    {% endfor %}
 </style>
 {% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
@@ -104,10 +100,5 @@ var look = {
 </script>
 {% endblock 'extra-scripts' %}
 {% block body %}
-    <div id="collage">
-        {% for product in object.look_products.all %}
-            <img id="product-{{ product.product.id }}" class="look" src="{{ product.product.product_image.url }}" />
-        {% endfor %}
-    </div>
-    </div>
+    {% include 'apparel/fragments/look_collage.html' %}
 {% endblock body %}

@@ -13,20 +13,25 @@
             jQuery('.product-image').mouseenter(function() {
                 jQuery(this).find('.magnifier').fadeIn('slow');
                 return false;
-            });
-            jQuery('.product-image').mouseleave(function() {
+            }).mouseleave(function() {
                 jQuery(this).find('.magnifier').fadeOut('slow');
                 return false;
             });
             jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
 
-            jQuery('#add-to-look > ul > li').click(function() {
+            jQuery('#add-to-look').mouseenter(function() {
+                jQuery(this).find('ul').show();
+            }).mouseleave(function() {
+                jQuery(this).find('ul').hide();
+            });
+            jQuery('#add-to-look > ul > li > a').click(function() {
                 args = {};
                 args['product_id'] = {{ object.id }};
                 if(this.id) {
                     args['look_id'] = this.id.split('-')[1];
                 }
                 jQuery.post("{% url apps.apparel.views.add_to_look %}", args);
+                return false;
             });
         });
     </script>

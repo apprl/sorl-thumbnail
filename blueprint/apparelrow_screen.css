@@ -16,6 +16,7 @@ a:hover, a:active {
 ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 
@@ -189,6 +190,8 @@ ul#product-menu {
 a.block_link,
 table.available-sizes td,
 #pagination,
+#add-menu,
+#add-to-look ul li,
 .product-info,
 .product-vendor,
 .product-options .option-size,
@@ -389,24 +392,26 @@ table.available-sizes th {
 }
 
 .product-options .option-color li {
+    background: transparent scroll no-repeat left top;
     width: 39px;
     height: 20px;
+    text-indent: -10000em;
 }
 
 .product-options .option-color li.black {
-    background: transparent url(../images/option-color-black.png) scroll no-repeat left top;
+    background-image: url(../images/option-color-black.png);
 }
 
 .product-options .option-color li.yellow {
-    background: transparent url(../images/option-color-yellow.png) scroll no-repeat left top;
+    background-image: url(../images/option-color-yellow.png);
 }
 
 .product-options .option-color li.green {
-    background: transparent url(../images/option-color-green.png) scroll no-repeat left top;
+    background-image: url(../images/option-color-green.png);
 }
 
 .product-options .option-color li.magenta {
-    background: transparent url(../images/option-color-magenta.png) scroll no-repeat left top;
+    background-image: url(../images/option-color-magenta.png);
 }
 
 .product-vendors {
@@ -448,7 +453,7 @@ a.buy-now {
 .product-vendor .vendor {
     float: right;
     background: transparent url(../images/vendor.png) scroll no-repeat left center;
-    padding-left: 10px;
+    padding: 0 10px;
 }
 
 .similar-product .product-photo {
@@ -468,6 +473,46 @@ a.buy-now {
     text-transform: uppercase;
     background: transparent url(../images/arrow-bg.png) scroll no-repeat left bottom;
     padding-left: 20px;
+}
+
+#add-menu {
+    margin-top: 4em;
+    text-transform: uppercase;
+}
+
+#add-menu > li {
+    position: relative;
+    float: left;
+    line-height: 2.5em;
+    padding-right: 1em;
+    padding-left: 1em;
+}
+
+#add-to-look {
+    border-right: 1px solid #dadada;
+}
+
+#add-menu > li > a {
+    background: transparent url(../images/add.png) scroll no-repeat left center;
+    padding-left: 20px;
+}
+
+li#add-to-look > a {
+    background-image: url(../images/add.png);
+}
+
+li#add-to-look ul {
+    display: none;
+    position: absolute;
+    margin: 0 -1em;
+}
+
+li#add-to-look ul li {
+    padding: 0 1em;
+}
+
+li#add-to-wardrobe > a {
+    background-image: url(../images/embed.png);
 }
 
 a.block_link {

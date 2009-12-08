@@ -132,7 +132,7 @@
                         <li><span>Färg</span>
                             <ul id="product-color">
                                 {% for color in colors %}
-                                <li id="option-{{color.value}}">{{ color.value }}</li>
+                                <li class="{{ color.value }}" id="option-{{ color.value }}">{{ color.value }}</li>
                                 {% endfor %}
                             </ul>
                         </li>

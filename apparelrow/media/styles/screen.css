@@ -47,8 +47,8 @@ address {margin:0 0 1.5em;font-style:italic;}
 del {color:#666;}
 pre {margin:1.5em 0;white-space:pre;}
 pre, code, tt {font:1em 'andale mono', 'lucida console', monospace;line-height:1.5;}
-li ul, li ol {margin:0;}
-ul, ol {margin:0 1.5em 1.5em 0;padding-left:3.333em;}
+li ul, li ol {margin:0 1.5em;}
+ul, ol {margin:0 1.5em 1.5em 1.5em;}
 ul {list-style-type:disc;}
 ol {list-style-type:decimal;}
 dl {margin:0 0 1.5em 0;}
@@ -260,7 +260,7 @@ hr.space {background:#fff;color:#fff;visibility:hidden;}
 body {color:#333;}
 a {text-decoration:none;color:#333;}
 a:hover, a:active {text-decoration:underline;}
-ul {list-style:none;padding:0;}
+ul {list-style:none;padding:0;margin:0;}
 h2 {text-transform:uppercase;font-size:1.3em;border-bottom:1px solid #d9d9d9;}
 h3 {text-transform:uppercase;}
 h4 {text-transform:uppercase;}
@@ -287,7 +287,7 @@ h4 {text-transform:uppercase;}
 #account-dialogue .fb-connect-button {float:right;margin-right:2em;margin-top:auto;height:100%;padding-top:6px;}
 ul#product-menu {margin:0;}
 #product-menu li {list-style:none;}
-#product-menu ul, a.block_link, table.available-sizes td, #pagination, .product-info, .product-vendor, .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border:1px solid #dadada;background-color:#f2f2f2;}
+#product-menu ul, a.block_link, table.available-sizes td, #pagination, #add-menu, #add-to-look ul li, .product-info, .product-vendor, .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border:1px solid #dadada;background-color:#f2f2f2;}
 #product-menu ul {margin:0 0 9px 0;border-bottom:none;}
 #product-menu ul li ul {background-color:#dadada;margin-left:-1em;margin-bottom:0;}
 #product-menu ul li {border-bottom:1px solid #dadada;padding-left:1em;list-style:disc inside url(../images/list-item.png);line-height:2.5em;}
@@ -317,22 +317,30 @@ table.available-sizes th {border:none;font-size:0.8em;font-weight:normal;text-al
 .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border-right:none;}
 .product-options .option-size li, .product-options .option-relative-size li, .product-options .option-shoe-size li, .product-options .option-pants-length li, .product-options .option-pants-width li {padding:0 10px;border-right:1px solid #dadada;}
 .product-options .option-color {background:transparent url(../images/option-color-bg.png) scroll repeat-x left top;border-right:1px solid #dadada;}
-.product-options .option-color li {width:39px;height:20px;}
-.product-options .option-color li.black {background:transparent url(../images/option-color-black.png) scroll no-repeat left top;}
-.product-options .option-color li.yellow {background:transparent url(../images/option-color-yellow.png) scroll no-repeat left top;}
-.product-options .option-color li.green {background:transparent url(../images/option-color-green.png) scroll no-repeat left top;}
-.product-options .option-color li.magenta {background:transparent url(../images/option-color-magenta.png) scroll no-repeat left top;}
+.product-options .option-color li {background:transparent scroll no-repeat left top;width:39px;height:20px;text-indent:-10000em;}
+.product-options .option-color li.black {background-image:url(../images/option-color-black.png);}
+.product-options .option-color li.yellow {background-image:url(../images/option-color-yellow.png);}
+.product-options .option-color li.green {background-image:url(../images/option-color-green.png);}
+.product-options .option-color li.magenta {background-image:url(../images/option-color-magenta.png);}
 .product-vendors {border-bottom:1px solid #e7e7e7;}
 a.buy-now {padding:50px 10px 5px;background:#d0fae8 url(../images/check-large.png) scroll no-repeat center center;border:1px solid #92c0c7;color:#408994;text-transform:uppercase;font-weight:bold;}
 .product-vendors a.buy-now {float:right;}
 .product-vendor {border-bottom:none;padding:5px 10px;height:30px;line-height:30px;}
 .product-vendor .price, .product-vendor .currency {line-height:30px;}
 .product-vendor .price {font-size:2em;background:none;padding-left:0;padding-right:5px;}
-.product-vendor .vendor {float:right;background:transparent url(../images/vendor.png) scroll no-repeat left center;padding-left:10px;}
+.product-vendor .vendor {float:right;background:transparent url(../images/vendor.png) scroll no-repeat left center;padding:0 10px;}
 .similar-product .product-photo {float:left;margin-right:10px;}
 .similar-product .product-summary {float:left;}
 .product-summary a, .product-summary span {display:block;}
 .product-summary a {text-transform:uppercase;background:transparent url(../images/arrow-bg.png) scroll no-repeat left bottom;padding-left:20px;}
+#add-menu {margin-top:4em;text-transform:uppercase;}
+#add-menu > li {position:relative;float:left;line-height:2.5em;padding-right:1em;padding-left:1em;}
+#add-to-look {border-right:1px solid #dadada;}
+#add-menu > li > a {background:transparent url(../images/add.png) scroll no-repeat left center;padding-left:20px;}
+li#add-to-look > a {background-image:url(../images/add.png);}
+li#add-to-look ul {display:none;position:absolute;margin:0 -1em;}
+li#add-to-look ul li {padding:0 1em;}
+li#add-to-wardrobe > a {background-image:url(../images/embed.png);}
 a.block_link {display:block;line-height:2.5em;text-align:center;text-transform:uppercase;}
 #search {background:transparent url(../images/search.png) scroll no-repeat left center;top:31px;right:0px;position:absolute;width:163px;height:24px;padding:17px 50px 17px 25px;overflow:visible;z-index:1000;}
 #search.expanded {background:transparent url(../images/searchresult-bg.png) scroll no-repeat center top;height:547px;width:895px;}
@@ -356,5 +364,5 @@ a.block_link {display:block;line-height:2.5em;text-align:center;text-transform:u
 /* semantic class names */
 #content {float:left;margin-right:20px;width:620px;}
 #nav {width:940px;margin-right:0;}
-#header {width:940px;margin-right:0;}
 #extra-content {margin-right:0;padding-right:0;float:left;margin-right:20px;margin-right:0;width:300px;}
+#header {width:940px;margin-right:0;}

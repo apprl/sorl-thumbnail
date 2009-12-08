@@ -1,0 +1,6 @@
+<div id="collage">
+    {% for product in object.look_products.all %}
+        <img id="product-{{ product.product.id }}" class="look" style="{{ product.style }}" src="{{ product.product.product_image.url }}" />
+    {% endfor %}
+</div>
+
