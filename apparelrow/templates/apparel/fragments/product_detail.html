@@ -7,6 +7,7 @@
                 <div class="span-9 prepend-1 last">
                 <div class="box">
                     <h3>{{ object.product_name }}</h3>
+                    <h4>{% trans "by" %} {{ object.manufacturer }}</h4>
                     <h4>{% trans "Available in" %}</h4>
                     {% regroup object.options.all by option_type as option_list %}
                     <ul class="product-options">

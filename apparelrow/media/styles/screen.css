@@ -287,7 +287,7 @@ h4 {text-transform:uppercase;}
 #account-dialogue .fb-connect-button {float:right;margin-right:2em;margin-top:auto;height:100%;padding-top:6px;}
 ul#product-menu {margin:0;}
 #product-menu li {list-style:none;}
-.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #pagination, #add-menu, #add-to-look ul li, .product-info, .product-vendor, .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border:1px solid #dadada;background-color:#f2f2f2;}
+.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #pagination, #add-menu, #add-to-look ul, .product-info, .product-vendor, .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {border:1px solid #dadada;background-color:#f2f2f2;}
 #product-menu ul {margin:0 0 9px 0;border-bottom:none;}
 #product-menu ul li ul {background-color:#dadada;margin-left:-1em;margin-bottom:0;}
 #product-menu ul li {border-bottom:1px solid #dadada;padding-left:1em;list-style:disc inside url(../images/list-item.png);line-height:2.5em;}
@@ -338,8 +338,8 @@ a.buy-now {padding:50px 10px 5px;background:#d0fae8 url(../images/check-large.pn
 #add-to-look {border-right:1px solid #dadada;}
 #add-menu > li > a {background:transparent url(../images/add.png) scroll no-repeat left center;padding-left:20px;}
 li#add-to-look > a {background-image:url(../images/add.png);}
-li#add-to-look ul {display:none;position:absolute;margin:0 -1em;}
-li#add-to-look ul li {padding:0 1em;}
+li#add-to-look ul {display:none;position:absolute;margin:0 -1em;border-bottom:none;}
+li#add-to-look ul li {padding:0 1em;border-bottom:1px solid #dadada;}
 li#add-to-wardrobe > a {background-image:url(../images/embed.png);}
 a.block_link {display:block;line-height:2.5em;text-align:center;text-transform:uppercase;}
 #search {background:transparent url(../images/search.png) scroll no-repeat left center;top:31px;right:0px;position:absolute;width:163px;height:24px;padding:17px 50px 17px 25px;overflow:visible;z-index:1000;}

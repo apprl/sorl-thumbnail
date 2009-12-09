@@ -192,7 +192,7 @@ a.block_link,
 table.available-sizes td,
 #pagination,
 #add-menu,
-#add-to-look ul li,
+#add-to-look ul,
 .product-info,
 .product-vendor,
 .product-options .option-size,
@@ -506,10 +506,12 @@ li#add-to-look ul {
     display: none;
     position: absolute;
     margin: 0 -1em;
+    border-bottom: none;
 }
 
 li#add-to-look ul li {
     padding: 0 1em;
+    border-bottom: 1px solid #dadada;
 }
 
 li#add-to-wardrobe > a {
