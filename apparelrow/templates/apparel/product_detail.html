@@ -4,6 +4,11 @@
 {% block 'extra-styles' %}
     <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-basic.css" media="screen" />
     <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-gallery.css" media="screen" />
+    <style type="text/css">
+        .look {
+            position: absolute;
+        }
+    </style>
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
@@ -59,11 +64,12 @@
             </div>
         </div>
         <div id="related" class="span-6 last">
+            <!--
             <div class="last-shown">
-                <h2>Senast visade plagg</h2>
+                <h2>{% trans "Recently viewed products" %}</h2>
             </div>
             <div class="similar-products">
-                <h2>Liknande plagg</h2>
+                <h2>{% trans "Similar products" %}</h2>
                 <div class="similar-product clearfix">
                     <img class="product-photo" />
                     <div class="product-summary">
@@ -74,6 +80,23 @@
                     </div>
                 </div>
             </div>
+            -->
+            {% if looks_with_product %}
+            <div>
+                <h2>
+                    {% blocktrans count looks_with_product|length as counter %}
+                        {{ counter }} look with this product
+                    {% plural %}
+                        {{ counter }} looks with this product
+                    {% endblocktrans %}
+                </h2>
+                <ul id="looks-with-product">
+                    {% for object in looks_with_product %}
+                    <li><a href="{{ object.get_absolute_url }}"><div style="position: relative;">{% include 'apparel/fragments/look_collage_small.html' %}</div></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
         </div>
     </div>
 {% else %}

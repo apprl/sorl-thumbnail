@@ -18,7 +18,7 @@ import math
 from pprint import pprint
 
 
-WIDE_LIMIT = 10 # FIME: Move to application settings fileI
+WIDE_LIMIT = 4 # FIME: Move to application settings fileI
 
 def search(request, model):
     result = None
@@ -62,9 +62,12 @@ def wide_search(request):
         'categories': Category.objects.filter(name__icontains=query)[:WIDE_LIMIT],
         'vendors': Vendor.objects.filter(name__icontains=query)[:WIDE_LIMIT],
     }
+    templates = {
+        'products': get_template_source('apparel/fragments/product_small.html'),
+    }
 
     return HttpResponse(
-        json.encode(result),
+        json.encode(dict(result=result, templates=templates)),
         mimetype='text/json'
     )
     
@@ -73,7 +76,7 @@ def filter(request):
     pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
     pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
     #FIXME: Create a generic way of getting relevant templates and putting them into the context
-    template_source, template_origin = find_template_source('apparel/fragments/product_small.html')
+    product_template = get_template_source('apparel/fragments/product_small.html')
     products = Product.objects.all()
     paginator = Paginator(products, 10) #FIXME: Make number per page configurable
     try:
@@ -91,16 +94,17 @@ def filter(request):
         'colors': Option.objects.filter(option_type__name__iexact='color'),
         'pricerange': pricerange,
         'products': paged_products,
-        'product_template': template_source,
+        'product_template': product_template,
     }
     return render_to_response('filter.html', result)
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
+    looks_with_product = Look.objects.filter(products=product)
     looks = []
     if request.user.is_authenticated():
         looks = Look.objects.filter(user=request.user)
-    return render_to_response('apparel/product_detail.html', { 'object': product, 'looks': looks })
+    return render_to_response('apparel/product_detail.html', { 'object': product, 'looks': looks, 'looks_with_product': looks_with_product })
 
 def save_look_product(request):
     try:
@@ -136,4 +140,7 @@ def looks():
 def looks():
     pass
 
+def get_template_source(template):
+    template_source, template_origin = find_template_source(template)
+    return template_source
 

@@ -183,8 +183,8 @@ class LookProduct(models.Model):
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
 
     @property
-    def style_half(self):
-        return self.style(0.5)
+    def style_small(self):
+        return self.style(0.2)
 
     @property
     def style(self):

@@ -582,6 +582,19 @@ a.block_link {
     margin-bottom: 4px;
 }
 
+.search-result-container .product-info {
+    border: none;
+    text-align: left;
+}
+
+.search-result-container .product-small {
+    width: 205px;
+}
+
+.search-result-container .product-image {
+    float: left;
+}
+
 #main-content form {
     margin-left: .5em;
     padding-top: -.5em;

@@ -350,6 +350,9 @@ a.block_link {display:block;line-height:2.5em;text-align:center;text-transform:u
 .search-result-container {margin-left:5px;}
 .search-result-container h3 {font-size:1em;font-weight:bold;}
 .search-result-container a {display:block;margin-bottom:4px;}
+.search-result-container .product-info {border:none;text-align:left;}
+.search-result-container .product-small {width:205px;}
+.search-result-container .product-image {float:left;}
 #main-content form {margin-left:.5em;padding-top:-.5em;}
 #main-content form label {display:block;margin-top:.5em;}
 #main-content form button {margin-top:1em;}

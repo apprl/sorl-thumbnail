@@ -101,14 +101,29 @@
         }
         
         function hideSearch() {
-            jQuery('#search-result').fadeOut('fast');
+            jQuery('#search-result').hide();
             jQuery('#search').removeClass('expanded');
         }
 
         function display(data) {
-            jQuery('#search-result').slideDown();
+            jQuery('#search-result').fadeIn();
             jQuery('#search').addClass('expanded');
-            for( var name in data) {
+            $.each(data.result, function(result_type, result) {
+                var ele = jQuery('#search-result-' + result_type);
+                ele.empty();
+                template.render(ele, result, jQuery.template(data.templates[result_type]),
+                    function(obj) {
+                        return template.getTemplateContext({
+                            'product': {
+                                'object': obj,
+                                'properties': ['id', 'product_image', 'product_name']
+                            },
+                        });
+                    }
+                );
+            });
+            /*
+            for( var name in data.result) {
                 var elem = jQuery('#search-result-' + name);
                 if(!elem)
                     continue;
@@ -121,6 +136,7 @@
                 for(var i = 0; i < data[name].length; i++)
                     adders[name](elem, data[name][i]);
             }
+            */
         }
         
         // FIXME: These could be replaced with different templates to process
@@ -180,17 +196,17 @@
             <div id="search">
                 <input type="text" name="s" id="searchbox" />
                 <div id="search-result">
-                    <div class="span-7">
+                    <div class="span-11">
                         <h2>{% trans "Products" %}</h2>
                         <div class="search-result-container" id="search-result-products">
                         </div>
                     </div>
-                    <div class="span-7">
+                    <div class="span-5">
                         <h2>{% trans "Categories" %}</h2>
                         <div class="search-result-container" id="search-result-categories">
                         </div>
                     </div>
-                    <div class="span-7">
+                    <div class="span-5">
                         <h2>{% trans "Manufacturers" %}</h2>
                         <div class="search-result-container" id="search-result-manufacturers">
                         </div>

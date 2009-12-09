@@ -4,7 +4,8 @@
         {% if tooltips %}
             {% with product.product as product %}
                 <div class="tooltip">
-                    <h2>{{ product.product_name }}</h2> {% trans "by" %} {{ product.manufacturer }}
+                    <h2>{{ product.product_name }}</h2>
+                    <p>{% trans "by" %} {{ product.manufacturer }}</p>
                     {% with product.vendorproduct.all|dictsort:'price'|first as vendor %}
                         <a href="{{ vendor.buy_url }}" target="_blank">{{ vendor.price }} {{ vendor.currency }} {% trans "at" %} {{ vendor.vendor }}</a>
                     {% endwith %}
