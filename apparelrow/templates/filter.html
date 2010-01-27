@@ -1,4 +1,4 @@
-{% extends 'site_base.html' %}
+{% extends 'base.html' %}
 {% load mptt_tags %}
 
 {% block 'extra-styles' %}
@@ -17,11 +17,28 @@
     <script type="text/javascript">
         jQuery(document).ready(function() {
             // Tooltips
-            jQuery('#product-list > a').tooltip({ effect: 'slide', position: 'bottom center' });
+                jQuery('#product-list > a').tooltip({ effect: 'slide', position: 'bottom left' });
+            content = $('#content');
+            view = $(window);
+            view.bind(
+                "scroll resize",
+                function() {
+                    contentTop = content.parent().offset().top;
+                    viewTop = view.scrollTop();
+                    if(viewTop > contentTop && !content.is(".fixed")) {
+                        content.height(content.height());
+                        content.addClass("fixed");
+                    } else if(viewTop <= contentTop && content.is(".fixed")) {
+                        content.css("height", "auto");
+                        content.removeClass("fixed");
+                    }
+                });
             jQuery('#product-menu').tabs('#product-menu > li > ul > li > ul', { tabs: '#product-menu > li > ul > li > span', effect: 'slide', initialIndex: null });
+            /*
             if(window.location.hash) {
                 doFilter(window.location.hash.substr(1));
             }
+            */
             jQuery('#product-gender li').click(function() {
                 jQuery(this).toggleClass('selected');
                 jQuery(this).siblings().removeClass('selected');
@@ -112,9 +129,10 @@
     </script>
 {% endblock 'extra-scripts' %}
 
+{% block body-classes %}sidebar left{% endblock body-classes %}
+
 {% block body %}
-    <div class="container">
-        <div class="span-6">
+        <div id="sidebar">
             <h2>Bläddra bland plagg</h2>
             <ul id="product-menu">
                 <li>
@@ -154,7 +172,7 @@
                 </li>
             </ul>
         </div>
-        <div class="span-18 last">
+        <div id="content">
             <h2>{{ products.paginator.count }} produkter</h2>
             <div id="product-list" class="clearfix">
                 {% for product in products.object_list %}
@@ -170,5 +188,4 @@
                 {% include 'apparel/fragments/pagination.html' %}
             </div>
         </div>
-    </div>
 {% endblock body %}

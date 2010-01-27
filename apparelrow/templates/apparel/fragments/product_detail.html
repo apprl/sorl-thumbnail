@@ -1,10 +1,10 @@
 {% load i18n %}
-            <div class="product-info clearfix">
+            <div class="product-info">
                 <div class="product-image">
                     <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/317x500/site_media/media/{{ object.product_image }}" /></a>
                     <span class="magnifier"></span>
                 </div>
-                <div class="span-9 prepend-1 last">
+                <div class="product-meta">
                 <div class="box">
                     <h3>{{ object.product_name }}</h3>
                     <h4>{% trans "by" %} {{ object.manufacturer }}</h4>

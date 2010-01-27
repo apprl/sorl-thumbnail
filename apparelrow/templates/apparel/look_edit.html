@@ -1,6 +1,11 @@
-{% extends 'site_base.html' %}
+{% extends 'base.html' %}
+{% load i18n %}
+{% load thumbnail %}
 {% block 'extra-styles' %}
 <style type="text/css">
+    #look {
+        position: relative;
+    }
     #collage {
         height: 500px;
         border: 1px dotted black;
@@ -104,6 +109,11 @@ var look = {
 {% endblock 'extra-scripts' %}
 {% block body %}
 <div class="container">
+    <form enctype="multipart/form-data" action="" method="POST">
+        {{ form.as_ul }}
+        <button type="submit">{% trans "Save look" %}</button>
+    </form>
+    {% include 'apparel/fragments/look_picture.html' %}
     <div id="collage">
     {% include 'apparel/fragments/look_collage.html' %}
     </div>

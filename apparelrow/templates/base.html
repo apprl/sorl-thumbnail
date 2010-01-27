@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="{{ lang }}">
 <head>
-    <title></title>
+    <title>{% block extra-title %}{% endblock %}Apparel Row</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="/site_media/static/styles/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="/site_media/static/styles/print.css" type="text/css" media="print">
@@ -162,10 +162,9 @@
     {% facebook_js %}
     {% initialize_facebook_connect %}
 </head>
-<body>
+<body class="bp {% block body-classes %}{% endblock %}">
 
 <div id="header-pane">
-    <div class="container">
         <img src="/site_media/static/images/logo.png" alt="Apparel Row" id="logo" />
         
         <div id="account-dialogue">
@@ -224,7 +223,6 @@
             <li><a href="/accounts/register/" id="login">{% trans "Sign up" %}</a></li>
         {% endif %}
         </ul>
-    </div>
 </div>
 
 

@@ -1,9 +1,11 @@
-{% extends 'site_base.html' %}
+{% extends 'profile/base.html' %}
+{% load i18n %}
 
 {% block 'extra-styles' %}
 <style type="text/css">
     .collage {
         position: relative;
+        height: 500px;
     }
     .look {
         position: absolute;
@@ -25,8 +27,14 @@
 </script>
 {% endblock 'extra-scripts' %}
 
+{% block body-classes %}sidebar left{% endblock %}
+
 {% block body %}
-<div class="container collage">
+<div id="sidebar"></div>
+<div id="content" class="collage">
     {% include 'apparel/fragments/look_collage.html' %}
 </div>
+    {% ifequal object.user user %}
+    <a href="{% url apps.apparel.views.look_edit object.id %}">{% trans "Edit look" %}</a>
+    {% endifequal %}
 {% endblock body %}

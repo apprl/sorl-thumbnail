@@ -126,8 +126,9 @@ class Product(models.Model):
     
     objects = SearchManager()
     
-    def __unicode__(self):
-        return u"%s %s" % (self.manufacturer, self.product_name)
+    @property
+    def default_vendor(self):
+        return self.vendorproduct.order_by('price')[0]
 
     @models.permalink
     def get_absolute_url(self):
@@ -145,6 +146,9 @@ class Product(models.Model):
 
         super(Product, self).save(force_insert=force_insert, force_update=force_update)
     
+    def __unicode__(self):
+        return u"%s %s" % (self.manufacturer, self.product_name)
+
     class Exporter:
         export_fields = ['__all__', 'vendorproduct']
 
@@ -164,7 +168,7 @@ class Look(models.Model):
     title = models.CharField(max_length=200)
     products = models.ManyToManyField(Product, through='LookProduct')
     user = models.ForeignKey(User)
-    image = models.ImageField(upload_to='looks')
+    image = models.ImageField(upload_to='static/looks')
 
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user)
@@ -193,7 +197,7 @@ class LookProduct(models.Model):
     def style(self, scale=1):
         s = []
         for attr in ['top', 'left', 'width', 'height', 'z_index']:
-            if(attr in self.__dict__.keys()):
+            if(attr in self.__dict__.keys() and self.__dict__[attr]):
                 s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr] * scale))
         return " ".join(s)
 

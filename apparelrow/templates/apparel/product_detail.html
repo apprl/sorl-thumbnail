@@ -1,4 +1,4 @@
-{% extends 'site_base.html' %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% load thumbnail %}
 {% block 'extra-styles' %}
@@ -42,10 +42,11 @@
     </script>
 {% endblock 'extra-scripts' %}
 
+{% block body-classes %}sidebar right{% endblock %}
+
 {% block body %}
 {% if object %}
-    <div class="container">
-        <div class="span-18">
+        <div id="content">
             <h2>{{ object.category.all|join:'\\' }}\{{ object.product_name }}</h2>
             <div id="product">
                 {% include 'apparel/fragments/product_detail.html' %}
@@ -63,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <div id="related" class="span-6 last">
+        <div id="sidebar">
             <!--
             <div class="last-shown">
                 <h2>{% trans "Recently viewed products" %}</h2>
@@ -98,7 +99,6 @@
             </div>
             {% endif %}
         </div>
-    </div>
 {% else %}
     <p>No product found!</p>
 {% endif %}

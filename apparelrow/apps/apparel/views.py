@@ -70,14 +70,17 @@ def wide_search(request):
         json.encode(dict(result=result, templates=templates)),
         mimetype='text/json'
     )
-    
+
 def filter(request):
+    if len(request.GET):
+        products = Product.objects.search(request.GET)
+    else:
+        products = Product.objects.all()
     pricerange = VendorProduct.objects.aggregate(min=Min('price'), max=Max('price'))
     pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
     pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
     #FIXME: Create a generic way of getting relevant templates and putting them into the context
     product_template = get_template_source('apparel/fragments/product_small.html')
-    products = Product.objects.all()
     paginator = Paginator(products, 10) #FIXME: Make number per page configurable
     try:
         page = int(request.GET.get('page', '1'))
@@ -132,7 +135,14 @@ def look_detail(request, look_id):
 
 def look_edit(request, look_id):
     look = get_object_or_404(Look, pk=look_id)
-    return render_to_response('apparel/look_edit.html', dict(object=look))
+    if request.method == 'POST':
+        form = LookForm(request.POST, request.FILES, instance=look)
+        if form.is_valid():
+            form.save()
+    else:
+        form = LookForm(instance=look)
+
+    return render_to_response('apparel/look_edit.html', dict(object=look, form=form))
 
 def looks():
     pass
