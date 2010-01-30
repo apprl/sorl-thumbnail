@@ -11,7 +11,7 @@ import datetime, mptt
 # FIXME: Move to Django settings directory
 PRODUCT_IMAGE_BASE = 'static/product'
 LOGOTYPE_BASE      = 'static/logos'
-
+LOOKS_BASE         = 'static/looks'
 
 class Manufacturer(models.Model):
     name   = models.CharField(max_length=50, unique=True)
@@ -82,7 +82,7 @@ class Category(models.Model):
     active = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
     option_types = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
     
-    objects = SearchManager()
+    objects = CategoryManager()
 
     def save(self, force_insert=False, force_update=False):
         if not self.key and self.name:
@@ -102,7 +102,7 @@ class Category(models.Model):
         key   = slugify(name)
         
         return key[:field.max_length]
-    
+        
     class Exporter:
         export_fields = ['name', 'option_types']
 
@@ -110,6 +110,14 @@ try:
     mptt.register(Category, order_insertion_by=['name'])
 except mptt.AlreadyRegistered:
     logging.debug("Attempt to register category, but it's already registered")
+
+
+class CategoryAlias(models.Model):
+    category = models.ForeigKey(Category)
+    alias    = models.CharField(_('Alias'), max_length=256, unique=True, blank=True)
+    
+    def __unicode__(self):
+        return '%s alias to %s' % (self.alias, self.category.name)
 
 class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
@@ -145,10 +153,10 @@ class Product(models.Model):
             self.sku = self.slug
 
         super(Product, self).save(force_insert=force_insert, force_update=force_update)
-    
+
     def __unicode__(self):
         return u"%s %s" % (self.manufacturer, self.product_name)
-
+    
     class Exporter:
         export_fields = ['__all__', 'vendorproduct']
 
@@ -168,7 +176,7 @@ class Look(models.Model):
     title = models.CharField(max_length=200)
     products = models.ManyToManyField(Product, through='LookProduct')
     user = models.ForeignKey(User)
-    image = models.ImageField(upload_to='static/looks')
+    image = models.ImageField(upload_to=LOOKS_BASE)
 
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user)
@@ -199,6 +207,7 @@ class LookProduct(models.Model):
         for attr in ['top', 'left', 'width', 'height', 'z_index']:
             if(attr in self.__dict__.keys() and self.__dict__[attr]):
                 s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr] * scale))
+        
         return " ".join(s)
 
     def __unicode__(self):

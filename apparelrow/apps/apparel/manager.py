@@ -1,9 +1,9 @@
-#from apparel.models import *
 import re
 from django.db import models
 from django.db.models import Q
 from django.http import QueryDict
 from django.db.models.fields.related import ForeignKey, ManyToManyField, RelatedObject, RelatedField
+from apparel.models import Category
 
 class SearchManager(models.Manager):
     """
@@ -23,6 +23,35 @@ class SearchManager(models.Manager):
             raise InvalidExpression('Could not create query')
         
         return self.get_query_set().filter(query)
+
+
+
+class CategoryManager(SearchManager):
+    """
+    Just like SearchManager, but adds overrides the default get_or_create to 
+    enable automatic lookup using the CategoryAlias method.
+    """
+    
+    def get(self, **kwargs):
+        """
+        Just like get, unless the argument 'key' or 'name' is given. In those
+        cases, the CategoryAlias class will also be used to locate the correct 
+        Category
+        """
+        
+        if 'name' in kwargs:
+            # FIXME: Move key_for_name out of the Category class so it can be used elsewhere
+            kwargs['key'] = self.model.key_for_name(kwargs['name'])
+        
+        if not hasattr(self.model, 'aliases') or not 'key' in kwargs:
+            return super(CategoryManager, self).get_or_create(**kwargs)
+        
+        key = kwargs['key']
+        try:
+            return self.get_query_set().get(key=key)
+        except ObjectDoesNotExist:
+            # FIXME: Set alias class name on Category class so it can be genercially looked up
+            return CategoryAlias.objects.get(alias=key)
 
         
 class QueryParser():
