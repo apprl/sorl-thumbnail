@@ -82,7 +82,7 @@ class Category(models.Model):
     active = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
     option_types = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
     
-    objects = CategoryManager()
+#    objects = CategoryManager()
 
     def save(self, force_insert=False, force_update=False):
         if not self.key and self.name:
@@ -113,8 +113,8 @@ except mptt.AlreadyRegistered:
 
 
 class CategoryAlias(models.Model):
-    category = models.ForeigKey(Category)
-    alias    = models.CharField(_('Alias'), max_length=256, unique=True, blank=True)
+    category = models.ForeignKey(Category)
+    alias    = models.CharField(_('Alias'), max_length=255, unique=True, blank=True)
     
     def __unicode__(self):
         return '%s alias to %s' % (self.alias, self.category.name)
