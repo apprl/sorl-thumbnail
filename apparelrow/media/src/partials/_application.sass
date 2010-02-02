@@ -1,43 +1,34 @@
-@import base.sass
+@import partials/base.sass
+@import partials/typography.sass
+@import partials/filter.sass
 
-#header, #nav
-  +span(24)
+body
+  background:
+    color: white
+    image= image_url("header-bg.png")
+    repeat: no-repeat
+    position: center top
 
-#header-pane
-  +container
-
-#main-content
-  +container
+button, .button
+  +button
+  display: inline-block
 
 #content.fixed
   position: fixed
   top: 0
 
-body
-  background: transparent url('../images/header-bg.png') no-repeat scroll center top
-
-
-a
-  text-decoration: none
-
-  &:hover, &:active
-    text-decoration: underline
-
-
-h2
-  text-transform: uppercase
-  font-size: 1.3em
-  border-bottom: 1px solid #d9d9d9
-
-
-h3, h4
-  text-transform: uppercase
-
-
-#header-pane
+#header
   height: 140px
   overflow: visible
   position: relative
+  h1
+    +float-left
+    +replace-text("logo.png")
+    width: 128px
+    height: 13px
+    padding: 20px
+    margin-top: 38px
+    +border("bottom", #999)
 
 
 #login-pane
@@ -73,12 +64,6 @@ h3, h4
       &.selected
         background: transparent url('../images/nav-main-selected.png') fixed no-repeat center bottom
 
-
-#logo
-  float: left
-  margin-top: 30px
-  padding: 20px
-  border-bottom: 1px solid #999999
 
 
 #logged-in-as
@@ -155,11 +140,6 @@ h3, h4
   padding-top: 6px
 
 
-ul#product-menu
-  +no-bullets
-  margin: 0
-
-
 
 .collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #pagination, #add-menu, #add-to-look ul, .product-info, .product-vendor
   border: 1px solid #dadada
@@ -174,33 +154,26 @@ ul#product-menu
 #sidebar ul
   padding: 0
 
-#product-menu ul
-  margin: 0 0 9px 0
-  border-bottom: none
+#product-gender
+  +filter("list-item.png", "list-item-radio-selected.png")
 
+#product-options
+  +filter("list-item-arrow.png", "list-item-radio-checked.png")
+  +popup
+  #product-manufacturers
+    height: 300px
+    overflow-y: scroll
+
+#product-category
+  +filter("list-item-check.png", "list-item-check-selected.png")
   li
-    +v-gradient(!box_color, !box_gradient_color)
-    border-bottom: 1px solid #dadada
-    padding-left: 1em
-    list-style: disc inside url(../images/list-item.png)
-    line-height: 2.5em
-
     ul
-      background-color: #dadada
-      margin-left: -1em
-      margin-bottom: 0
-
+      margin-left: -10px
       li
-        border-bottom: 1px solid #f2f2f2
-
-
-#product-gender li.selected
-  list-style-image: url(../images/list-item-radio-selected.png)
-
-
-#product-color li.selected, #product-manufacturers li.selected, #product-category li.selected
-  list-style-image: url(../images/list-item-check-selected.png)
-
+        border: none
+        padding-left: 20px
+        +border("top")
+        background-image= image_url("gradient-dark-bg.png")
 
 span
   &.likes
@@ -223,7 +196,7 @@ span
 
 
 .product-small
-  width: 140px
+  width: 139px
   height: 180px
   float: left
 
@@ -307,9 +280,6 @@ table.available-sizes th
 .tooltip .product-info, #product .product-info
   background: #fafafa
   height: 478px
-
-.product-meta
-  +column(10, true)
 
 .product-info .box
   padding: 1.5em
@@ -525,7 +495,7 @@ a.block_link
     margin-right: 5px
 
 
-#main-content form
+#content form
   margin-left: .5em
   padding-top: -.5em
 

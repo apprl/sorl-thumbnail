@@ -1,0 +1,38 @@
+=filter(!img, !selected_img)
+  +border("bottom")
+  +no-bullets
+  margin-bottom: 10px
+  li
+    +button
+    border-bottom: none
+    > a
+      display: block
+      padding-left: 25px
+      background= transparent image_url(!img) no-repeat scroll 10px center
+      &.selected
+        background-image= image_url(!selected_img)
+
+=popup
+  position: relative
+  li
+    div.options
+      +box(#fff)
+      margin-left: -10px
+      &.popup
+        +box-shadow
+        display: none
+        position: absolute
+        left: 35px
+        top: 0px
+        z-index: 10
+        width: 500px
+        a.button
+          width: 249px
+      > div
+        padding: 10px
+      a.button
+        border: none
+        +border("top")
+        text-align: center
+      a.ok
+        +border("left")

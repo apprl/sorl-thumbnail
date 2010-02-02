@@ -101,8 +101,8 @@ def filter(request):
     }
     return render_to_response('filter.html', result)
 
-def product_detail(request, product_id):
-    product = get_object_or_404(Product, pk=product_id)
+def product_detail(request, product_slug):
+    product = get_object_or_404(Product, slug=product_slug)
     looks_with_product = Look.objects.filter(products=product)
     looks = []
     if request.user.is_authenticated():

@@ -132,7 +132,7 @@ class Product(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('apps.apparel.views.product_detail', [str(self.id)])
+        return ('apps.apparel.views.product_detail', [str(self.slug)])
 
     def save(self, force_insert=False, force_update=False):
         if not self.pk:
@@ -150,7 +150,7 @@ class Product(models.Model):
         return u"%s %s" % (self.manufacturer, self.product_name)
 
     class Exporter:
-        export_fields = ['__all__', 'vendorproduct']
+        export_fields = ['__all__', 'vendorproduct', 'get_absolute_url']
 
 class VendorProduct(models.Model):
     vendor     = models.ForeignKey(Vendor)

@@ -16,9 +16,23 @@
 {% block 'extra-scripts' %}
     <script type="text/javascript">
         jQuery(document).ready(function() {
+            // Brand search
+            jQuery("input[name=brand]").keyup(function(e) {
+                var s = jQuery(this).val();
+                if(s == "") {
+                    $('#product-manufacturers > li').show();
+                    return;
+                }
+                $('#product-manufacturers > li').filter(function(index) {
+                    return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) < 0;
+                }).hide();
+                $('#product-manufacturers > li').filter(function(index) {
+                    return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) >= 0;
+                }).show();
+            });
             // Tooltips
-                jQuery('#product-list > a').tooltip({ effect: 'slide', position: 'bottom left' });
-            content = $('#content');
+            jQuery('#product-list > a').tooltip({ effect: 'slide', position: 'bottom left' });
+            content = jQuery('#content');
             view = $(window);
             view.bind(
                 "scroll resize",
@@ -33,19 +47,36 @@
                         content.removeClass("fixed");
                     }
                 });
-            jQuery('#product-menu').tabs('#product-menu > li > ul > li > ul', { tabs: '#product-menu > li > ul > li > span', effect: 'slide', initialIndex: null });
             /*
             if(window.location.hash) {
                 doFilter(window.location.hash.substr(1));
             }
             */
-            jQuery('#product-gender li').click(function() {
-                jQuery(this).toggleClass('selected');
-                jQuery(this).siblings().removeClass('selected');
+            jQuery('.options').addClass('popup');
+            jQuery('.options a.cancel').click(function() {
+                $(this).parent().hide();
+                return false;
+            });
+            jQuery('.options a.ok').click(function() {
+                $(this).parent().hide();
                 filter(getQuery());
                 return false;
             });
-            jQuery('#product-color li, #product-manufacturers li, #product-category li').click(function() {
+            jQuery('#product-options > li > a').click(function() {
+                $(this).next('.options').slideToggle('fast');
+                return false;
+            });
+            jQuery('#product-options li > a').click(function() {
+                jQuery(this).toggleClass('selected');
+                return false;
+            });
+            jQuery('#product-gender li > a').click(function() {
+                jQuery(this).toggleClass('selected');
+                jQuery(this).parent().siblings().find('a').removeClass('selected');
+                filter(getQuery());
+                return false;
+            });
+            jQuery('#product-category li > a').click(function() {
                 jQuery(this).toggleClass('selected');
                 filter(getQuery());
                 return false;
@@ -79,19 +110,19 @@
         function getQuery(page_number) {
             index = 0;
             query = {};
-            category_list = getElementIds(jQuery('#product-category li.selected'));
+            category_list = getElementIds(jQuery('#product-category li > a.selected'));
             if(category_list.length > 0) {
                 query[++index + ':c.id:in'] = category_list.join(',');
             }
-            manufacturer_list = getElementIds(jQuery('#product-manufacturers li.selected'));
+            manufacturer_list = getElementIds(jQuery('#product-manufacturers li > a.selected'));
             if(manufacturer_list.length > 0) {
                 query[++index + ':m.id:in'] = manufacturer_list.join(',');
             }
-            gender_list = getElementIds(jQuery('#product-gender li.selected'));
+            gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
             if(gender_list.length > 0) {
                 query[++index + ':o.gender:in'] = gender_list.join(',');
             }
-            color_list = getElementIds(jQuery('#product-color li.selected'));
+            color_list = getElementIds(jQuery('#product-color li > a.selected'));
             if(color_list.length > 0) {
                 query[++index + ':o.color:in'] = color_list.join(',');
             }
@@ -120,7 +151,7 @@
                     return template.getTemplateContext({
                         'product': {
                             'object': obj,
-                            'properties': ['id', 'product_image', 'product_name']
+                            'properties': ['id', 'product_image', 'product_name', 'get_absolute_url']
                         },
                     });
                 }
@@ -129,48 +160,33 @@
     </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}sidebar left{% endblock body-classes %}
+{% block body-classes %}two-columns{% endblock body-classes %}
 
 {% block body %}
-        <div id="sidebar">
+        <div class="sidebar">
             <h2>Bläddra bland plagg</h2>
-            <ul id="product-menu">
-                <li>
                     <ul id="product-gender">
-                        <li>Alla</li>
+                        <li><a href="#">Alla</a></li>
                         {% for gender in genders %}
-                        <li id="option-{{gender.value}}">{{ gender.value }}</li>
+                        <li><a id="option-{{ gender.value }}" href="?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
                         {% endfor %}
                     </ul>
-                </li>
-                <li>
                     <ul id="product-options">
-                        <li id="product-price">Pris (<span id="min-price"></span>-<span id="max-price"></span>)
-                        <div id="price-slider"></div></li>
-                        <li><span>Färg</span>
-                            <ul id="product-color">
-                                {% for color in colors %}
-                                <li class="{{ color.value }}" id="option-{{ color.value }}">{{ color.value }}</li>
-                                {% endfor %}
-                            </ul>
+                        <li id="product-price"><a href="#">Pris (<span id="min-price"></span>-<span id="max-price"></span>)</a>
+                        {% include "fragments/product_options_price.html" %}
                         </li>
-                        <li><span>Märke</span>
-                        <ul id="product-manufacturers">
-                            {% for manufacturer in manufacturers %}
-                                <li id="manufacturer-{{ manufacturer.id }}">{{ manufacturer.name }}</li>
-                            {% endfor %}
-                        </ul>
+                        <li><a href="#">Färg</a>
+                        {% include "fragments/product_options_color.html" %}
+                        </li>
+                        <li><a href="#">Märke</a>
+                        {% include "fragments/product_options_brand.html" %}
                         </li>
                     </ul>
-                </li>
-                <li>
     {% for category, structure in categories|tree_info %}
-    {% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li id="category-{{ category.id }}">
-    {{ category.name }}
+    {% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li>
+        <a id="category-{{ category.id }}" href="?1:c.id:in={{ category.id }}">{{ category.name }}</a>
     {% for level in structure.closed_levels %}</li></ul>{% endfor %}
     {% endfor %}
-                </li>
-            </ul>
         </div>
         <div id="content">
             <h2>{{ products.paginator.count }} produkter</h2>

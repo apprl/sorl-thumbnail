@@ -1,25 +1,40 @@
-// Here is where you can define your constants for your application and to configure the blueprint framework.
-// Feel free to delete these if you want keep the defaults:
+!page_width = 980px
+!margin_width = 20px
+!gutter_width = 40px
+!content_width = !page_width - 2 * !margin_width
 
-!blueprint_grid_columns = 24
-!blueprint_container_size = 940px
-!blueprint_grid_margin  = 20px
+!aside_width = 205px
+!middle_width = 450px
+!large_width = 695px
 
-// Use this to calculate the width based on the total width.
-// Or you can set !blueprint_grid_width to a fixed value and unset !blueprint_container_size -- it will be calculated for you.
-!blueprint_grid_width   = (!blueprint_container_size + !blueprint_grid_margin) / !blueprint_grid_columns - !blueprint_grid_margin
+!box_color = #fafafa
+!border_color = !box_color - #212121
+!font_color = !box_color - #bababa
 
-!blueprint_font_family = "Helvetica, Arial, sans-serif"
-!font_color = #333
-!link_color = #333
-!border_color = #dadada
-!box_color = #f2f2f2
-!box_gradient_color = !box_color - #777
+!default_box_shadow_color     ||= #999
+!default_box_shadow_h_offset  ||= 0px
+!default_box_shadow_v_offset  ||= 0px
+!default_box_shadow_blur      ||= 20px
 
-=apparelrow-button
-  +v-gradient(!box_color, !box_gradient_color)
-  border: 1px solid !border_color
 
-@import compass/reset.sass
-@import compass/css3.sass
-@import compass/utilities.sass
+=container
+  margin: 0 auto
+  width= !content_width
+
+=border(!side = "none", !color = !border_color)
+  @if !side == "all"
+    border= 1px "solid" !color
+  @else
+    border-#{!side}= 1px "solid" !color
+
+=box(!bg = !box_color, !border = !border_color)
+  +border("all", !border)
+  background-color= !bg
+
+=button(!bg = "gradient-bg.png")
+  +box
+  text-transform: uppercase
+  line-height: 30px
+  background:
+    image= image_url(!bg)
+    repeat: repeat-x

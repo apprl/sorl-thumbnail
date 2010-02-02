@@ -34,7 +34,7 @@ urlpatterns = patterns('',
     
     (r'^notices/', include('notification.urls')),
     (r'^announcements/', include('announcements.urls')),
-    (r'^apparel/', include('apparel.urls')),
+    (r'^apparel/', include('apps.apparel.urls')),
     (r'^scale/', include('scale.urls')),
     (r'^admin/(.*)', admin.site.root),
     (r'^site_media/media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT + '/../site_media/media/static' } ),

@@ -162,10 +162,10 @@
     {% facebook_js %}
     {% initialize_facebook_connect %}
 </head>
-<body class="bp {% block body-classes %}{% endblock %}">
+<body class="{% block body-classes %}{% endblock %}">
 
-<div id="header-pane">
-        <img src="/site_media/static/images/logo.png" alt="Apparel Row" id="logo" />
+<div id="header">
+        <h1>ApparelRow</h1>
         
         <div id="account-dialogue">
             <!-- LOGIN FORM -->
@@ -239,7 +239,7 @@
 </div>
 {% endif %}
 
-<div id="main-content">
+<div id="container">
 {% block body %}
 {% endblock %}
 </div>
