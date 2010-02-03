@@ -154,12 +154,17 @@ button, .button
 #sidebar ul
   padding: 0
 
+#reset
+  +filter("cancel.png", "cancel.png")
+
 #product-gender
   +filter("list-item.png", "list-item-radio-selected.png")
 
 #product-options
   +filter("list-item-arrow.png", "list-item-radio-checked.png")
   +popup
+  li.active
+    background-image= image_url("gradient-darker-bg.png")
   #product-manufacturers
     height: 300px
     overflow-y: scroll

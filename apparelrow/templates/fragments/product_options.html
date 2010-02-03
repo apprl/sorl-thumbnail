@@ -1,10 +1,12 @@
 {% load i18n %}
 
 <div class="options">
-    <div>
-        <h3>{% block option_header %}{% endblock %}</h3>
-        {% block option_content %}{% endblock %}
+    <div class="box">
+        <div>
+            <h3>{% block option_header %}{% endblock %}</h3>
+            {% block option_content %}{% endblock %}
+        </div>
+        <a class="button cancel">{% trans "Cancel" %}</a><a class="button ok">{% trans "OK" %}</a>
     </div>
-    <a class="button cancel">{% trans "Cancel" %}</a><a class="button ok">{% trans "OK" %}</a>
 </div>
 

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load mptt_tags %}
 
 {% block 'extra-styles' %}
@@ -32,8 +33,9 @@
             });
             // Tooltips
             jQuery('#product-list > a').tooltip({ effect: 'slide', position: 'bottom left' });
+            // Fixed scrolling
             content = jQuery('#content');
-            view = $(window);
+            view = jQuery(window);
             view.bind(
                 "scroll resize",
                 function() {
@@ -52,17 +54,25 @@
                 doFilter(window.location.hash.substr(1));
             }
             */
+            // Make option panels popups
             jQuery('.options').addClass('popup');
-            jQuery('.options a.cancel').click(function() {
-                $(this).parent().hide();
+            // Reset button
+            jQuery('#reset a').click(function() {
+                $('.selected').removeClass('selected');
+                filter(getQuery());
+                return false;
+            });
+            jQuery('.options a.button').click(function() {
+                $(this).parents('.popup').hide();
+                $(this).parents('li.active').removeClass('active');
                 return false;
             });
             jQuery('.options a.ok').click(function() {
-                $(this).parent().hide();
                 filter(getQuery());
                 return false;
             });
             jQuery('#product-options > li > a').click(function() {
+                $(this).parent().toggleClass('active');
                 $(this).next('.options').slideToggle('fast');
                 return false;
             });
@@ -76,8 +86,11 @@
                 filter(getQuery());
                 return false;
             });
+            // Initially hide all subcategories
+            jQuery('#product-category li > ul').hide();
             jQuery('#product-category li > a').click(function() {
                 jQuery(this).toggleClass('selected');
+                jQuery(this).next().slideToggle();
                 filter(getQuery());
                 return false;
             });
@@ -93,8 +106,8 @@
 
             jQuery("#price-slider").slider({
                 range: true,
-                min: 0,
-                max: 5000,
+                min: {{ pricerange.min }},
+                max: {{ pricerange.max }},
                 step: 10,
                 values: [100, 2000],
                 animate: 'fast',
@@ -103,7 +116,7 @@
                     jQuery("#max-price").html(jQuery(this).slider('values', 1));
                 },
                 change: function(event, ui) {
-                    filter(getQuery());
+                    //filter(getQuery());
                 }
             });
         });
@@ -165,23 +178,26 @@
 {% block body %}
         <div class="sidebar">
             <h2>Bläddra bland plagg</h2>
-                    <ul id="product-gender">
-                        <li><a href="#">Alla</a></li>
-                        {% for gender in genders %}
-                        <li><a id="option-{{ gender.value }}" href="?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
-                        {% endfor %}
-                    </ul>
-                    <ul id="product-options">
-                        <li id="product-price"><a href="#">Pris (<span id="min-price"></span>-<span id="max-price"></span>)</a>
-                        {% include "fragments/product_options_price.html" %}
-                        </li>
-                        <li><a href="#">Färg</a>
-                        {% include "fragments/product_options_color.html" %}
-                        </li>
-                        <li><a href="#">Märke</a>
-                        {% include "fragments/product_options_brand.html" %}
-                        </li>
-                    </ul>
+            <ul id="reset">
+                <li><a href="#">{% trans "Reset" %}</a></li>
+            </ul>
+            <ul id="product-gender">
+                <li><a href="#">Alla</a></li>
+                {% for gender in genders %}
+                <li><a id="option-{{ gender.value }}" href="?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
+                {% endfor %}
+            </ul>
+            <ul id="product-options">
+                <li id="product-price"><a href="#">Pris (<span id="min-price"></span>-<span id="max-price"></span>)</a>
+                {% include "fragments/product_options_price.html" %}
+                </li>
+                <li><a href="#">Färg</a>
+                {% include "fragments/product_options_color.html" %}
+                </li>
+                <li><a href="#">Märke</a>
+                {% include "fragments/product_options_brand.html" %}
+                </li>
+            </ul>
     {% for category, structure in categories|tree_info %}
     {% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li>
         <a id="category-{{ category.id }}" href="?1:c.id:in={{ category.id }}">{{ category.name }}</a>

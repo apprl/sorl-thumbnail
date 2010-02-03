@@ -8,28 +8,37 @@
     > a
       display: block
       padding-left: 25px
-      background= transparent image_url(!img) no-repeat scroll 10px center
+      background= "transparent" image_url(!img) "no-repeat" "scroll" 10px "center"
       &.selected
         background-image= image_url(!selected_img)
 
-=popup
+=popup(!n = 1)
   position: relative
   li
     div.options
-      +box(#fff)
       margin-left: -10px
+      div.box
+        +box(#fff)
+        > div
+          padding: 10px
+          background: #fff
       &.popup
-        +box-shadow
+        background:
+          color: transparent
+          image= image_url("box-arrow-left.png")
+          repeat: no-repeat
+          position= !n * 30px "left"
+        padding-left: 7px
         display: none
         position: absolute
-        left: 35px
+        left= !aside_width
         top: 0px
         z-index: 10
-        width: 500px
-        a.button
-          width: 249px
-      > div
-        padding: 10px
+        div.box
+          width: 500px
+          +box-shadow
+          a.button
+            width: 249px
       a.button
         border: none
         +border("top")
