@@ -1,0 +1,30 @@
+{% load i18n %}
+{% load mptt_tags %}
+
+<h2>Bläddra bland plagg</h2>
+<ul id="reset">
+    <li><a href="{% url apps.apparel.views.filter %}">{% trans "Reset" %}</a></li>
+</ul>
+<ul id="product-gender">
+    <li><a href="#">Alla</a></li>
+    {% for gender in genders %}
+    <li><a id="option-{{ gender.value }}" href="{% url apps.apparel.views.filter %}?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
+    {% endfor %}
+</ul>
+<ul id="product-options">
+    <li id="product-price"><a href="{% url apps.apparel.views.filter %}">Pris (<span id="min-price"></span>-<span id="max-price"></span>)</a>
+    {% include "fragments/product_options_price.html" %}
+    </li>
+    <li><a href="{% url apps.apparel.views.filter %}">Färg</a>
+    {% include "fragments/product_options_color.html" %}
+    </li>
+    <li><a href="{% url apps.apparel.views.filter %}">Märke</a>
+    {% include "fragments/product_options_brand.html" %}
+    </li>
+</ul>
+{% for category, structure in categories|tree_info %}
+{% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li>
+    <a id="category-{{ category.id }}" href="{% url apps.apparel.views.filter %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
+{% for level in structure.closed_levels %}</li></ul>{% endfor %}
+{% endfor %}
+

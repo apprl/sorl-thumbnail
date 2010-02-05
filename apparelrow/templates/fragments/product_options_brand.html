@@ -7,7 +7,7 @@
 <input type="text" name="brand" />
 <ul id="product-manufacturers">
     {% for manufacturer in manufacturers %}
-    <li><a id="manufacturer-{{ manufacturer.id }}" href="?1:m.id:in={{ manufacturer.id }}">{{ manufacturer.name }}</a></li>
+    <li><a id="manufacturer-{{ manufacturer.id }}" href="{% url apps.apparel.views.filter %}?1:m.id:in={{ manufacturer.id }}">{{ manufacturer.name }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}

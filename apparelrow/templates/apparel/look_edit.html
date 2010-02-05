@@ -107,13 +107,20 @@ var look = {
     });
 </script>
 {% endblock 'extra-scripts' %}
+
+{% block body-classes %}two-columns{% endblock %}
+
 {% block body %}
-<div class="container">
+<div class="sidebar">
+    <h2>Sidebar</h2>
+</div>
+<div id="content">
+    <h2>{% trans "Edit look" %}</h2>
     <form enctype="multipart/form-data" action="" method="POST">
         {{ form.as_ul }}
         <button type="submit">{% trans "Save look" %}</button>
     </form>
-    {% include 'apparel/fragments/look_picture.html' %}
+    {# include 'apparel/fragments/look_picture.html' #}
     <div id="collage">
     {% include 'apparel/fragments/look_collage.html' %}
     </div>

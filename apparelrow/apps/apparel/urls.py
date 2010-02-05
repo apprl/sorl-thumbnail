@@ -14,6 +14,7 @@ manufacturer_dict = {
 
 
 urlpatterns = patterns('',
+    (r'^$', 'apps.apparel.views.index'),
     (r'^search$', 'apps.apparel.views.wide_search'),
     (r'^products/$', 'django.views.generic.list_detail.object_list', product_dict),
     (r'^(?P<model>\w+)/search$', 'apps.apparel.views.search'),

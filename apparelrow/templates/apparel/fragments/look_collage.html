@@ -6,7 +6,7 @@
                 <div class="tooltip">
                     <h2>{{ product.product_name }}</h2>
                     <p>{% trans "by" %} {{ product.manufacturer }}</p>
-                    {% with product.vendorproduct.all|dictsort:'price'|first as vendor %}
+                    {% with product.default_vendor as vendor %}
                         <a href="{{ vendor.buy_url }}" target="_blank">{{ vendor.price }} {{ vendor.currency }} {% trans "at" %} {{ vendor.vendor }}</a>
                     {% endwith %}
                 </div>

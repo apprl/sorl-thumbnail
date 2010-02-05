@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load mptt_tags %}
 
+{% block extra-title %}{% trans "Browse" %} | {% endblock %}
+
 {% block 'extra-styles' %}
     <style type="text/css">
         .tooltip {
@@ -15,65 +17,27 @@
     </style>
 {% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
+    <script type="text/javascript" src="/site_media/static/js/jquery.fixedscroll.js"></script>
+    <script type="text/javascript" src="/site_media/static/js/filtersetup.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            // Brand search
-            jQuery("input[name=brand]").keyup(function(e) {
-                var s = jQuery(this).val();
-                if(s == "") {
-                    $('#product-manufacturers > li').show();
-                    return;
-                }
-                $('#product-manufacturers > li').filter(function(index) {
-                    return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) < 0;
-                }).hide();
-                $('#product-manufacturers > li').filter(function(index) {
-                    return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) >= 0;
-                }).show();
-            });
             // Tooltips
-            jQuery('#product-list > a').tooltip({ effect: 'slide', position: 'bottom left' });
+            jQuery('#product-list > a').tooltip({ effect: 'slide', position: 'bottom left', offset: [170, 0], relative: true });
             // Fixed scrolling
-            content = jQuery('#content');
-            view = jQuery(window);
-            view.bind(
-                "scroll resize",
-                function() {
-                    contentTop = content.parent().offset().top;
-                    viewTop = view.scrollTop();
-                    if(viewTop > contentTop && !content.is(".fixed")) {
-                        content.height(content.height());
-                        content.addClass("fixed");
-                    } else if(viewTop <= contentTop && content.is(".fixed")) {
-                        content.css("height", "auto");
-                        content.removeClass("fixed");
-                    }
-                });
+            jQuery('#content').fixedscroll();
             /*
             if(window.location.hash) {
                 doFilter(window.location.hash.substr(1));
             }
             */
-            // Make option panels popups
-            jQuery('.options').addClass('popup');
             // Reset button
             jQuery('#reset a').click(function() {
                 $('.selected').removeClass('selected');
                 filter(getQuery());
                 return false;
             });
-            jQuery('.options a.button').click(function() {
-                $(this).parents('.popup').hide();
-                $(this).parents('li.active').removeClass('active');
-                return false;
-            });
             jQuery('.options a.ok').click(function() {
                 filter(getQuery());
-                return false;
-            });
-            jQuery('#product-options > li > a').click(function() {
-                $(this).parent().toggleClass('active');
-                $(this).next('.options').slideToggle('fast');
                 return false;
             });
             jQuery('#product-options li > a').click(function() {
@@ -86,11 +50,7 @@
                 filter(getQuery());
                 return false;
             });
-            // Initially hide all subcategories
-            jQuery('#product-category li > ul').hide();
             jQuery('#product-category li > a').click(function() {
-                jQuery(this).toggleClass('selected');
-                jQuery(this).next().slideToggle();
                 filter(getQuery());
                 return false;
             });
@@ -177,32 +137,7 @@
 
 {% block body %}
         <div class="sidebar">
-            <h2>Bläddra bland plagg</h2>
-            <ul id="reset">
-                <li><a href="#">{% trans "Reset" %}</a></li>
-            </ul>
-            <ul id="product-gender">
-                <li><a href="#">Alla</a></li>
-                {% for gender in genders %}
-                <li><a id="option-{{ gender.value }}" href="?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
-                {% endfor %}
-            </ul>
-            <ul id="product-options">
-                <li id="product-price"><a href="#">Pris (<span id="min-price"></span>-<span id="max-price"></span>)</a>
-                {% include "fragments/product_options_price.html" %}
-                </li>
-                <li><a href="#">Färg</a>
-                {% include "fragments/product_options_color.html" %}
-                </li>
-                <li><a href="#">Märke</a>
-                {% include "fragments/product_options_brand.html" %}
-                </li>
-            </ul>
-    {% for category, structure in categories|tree_info %}
-    {% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li>
-        <a id="category-{{ category.id }}" href="?1:c.id:in={{ category.id }}">{{ category.name }}</a>
-    {% for level in structure.closed_levels %}</li></ul>{% endfor %}
-    {% endfor %}
+            {% include 'fragments/product_menu.html' %}
         </div>
         <div id="content">
             <h2>{{ products.paginator.count }} produkter</h2>

@@ -1,6 +1,7 @@
 @import partials/base.sass
 @import partials/typography.sass
 @import partials/filter.sass
+@import partials/row.sass
 
 body
   background:
@@ -151,6 +152,49 @@ button, .button
     border: 1px solid #dadada
     background-color: #f2f2f2
 
+#switchlook
+  +box
+  height: 36px
+  padding: 16px 10px 10px
+  background:
+    image= image_url("gradient-tall-bg.png")
+    repeat: repeat-x
+  .info
+    +float-left
+    background= transparent image_url("arrow-bg.png") no-repeat scroll left 10px
+    padding-left: 20px
+  .nav
+    +float-right
+    margin-top: 10px
+    .backward
+      +replace-text("prev-shadow.png")
+      +float-left
+      display: inline-block
+      width: 6px
+      height: 16px
+      margin-right: 20px
+    .forward
+      +replace-text("next-shadow.png")
+      +float-left
+      display: inline-block
+      width: 6px
+      height: 16px
+      margin-left: 10px
+    .tabs
+      +float-left
+      +horizontal-list(0)
+      a
+        +replace-text("switcher.png")
+        display: inline-block
+        width: 10px
+        height: 16px
+        margin-right: 10px
+        &.current
+          background-image= image_url("switcher-selected.png")
+
+#lookproducts
+  +row
+
 #sidebar ul
   padding: 0
 
@@ -211,6 +255,7 @@ span
     height: 138px
 
   span.likes
+    display: none
     position: absolute
     top: 5px
     left: 5px

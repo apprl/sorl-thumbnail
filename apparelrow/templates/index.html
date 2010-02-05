@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block 'extra-scripts' %}
+    <script type="text/javascript" src="/site_media/static/js/filtersetup.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+                jQuery('.tabs').tabs('#looks > li', {
+                    effect: 'fade',
+                    rotate: true
+                }).slideshow({ autoplay: true }).history();
+        });
+    </script>
+{% endblock 'extra-scripts' %}
+
+{% block body-classes %}three-columns{% endblock body-classes %}
+
+{% block body %}
+    <div class="sidebar">
+        {% include 'fragments/product_menu.html' %}
+    </div>
+    <div id="content">
+        <h2>{% trans "Current" %}</h2>
+        <ul id="looks">
+            <li><img src="/site_media/static/images/example-look.png" /></li>
+            <li><img src="/site_media/static/images/example-look2.jpg" /></li>
+            <li><img src="/site_media/static/images/example-look3.jpg" /></li>
+        </ul>
+        <div id="switchlook">
+            <div class="info">
+                <h3>{% trans "Best looks of the month" %}</h3>
+                <p>{% trans "Take a look at the highlights of last month" %}</p>
+            </div>
+            <div class="nav">
+                <a class="backward" href="#prev">{% trans "Previous" %}</a>
+                <ul class="tabs">
+                    <li><a id="l1" href="#look1">Look 1</a></li>
+                    <li><a id="l2" href="#look2">Look 2</a></li>
+                    <li><a id="l3" href="#look3">Look 3</a></li>
+                </ul>
+                <a class="forward" href="#next">{% trans "Next" %}</a>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar last">
+        <h2>{% trans "Popular looks" %}</h2>
+    </div>
+{% endblock body %}
+

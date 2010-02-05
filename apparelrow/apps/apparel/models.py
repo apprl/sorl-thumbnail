@@ -199,6 +199,9 @@ class LookProduct(models.Model):
         return self.style(0.2)
 
     @property
+    def style_middle(self):
+        return self.style(1.54)
+    @property
     def style(self):
         return self.style(1)
 

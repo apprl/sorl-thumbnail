@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load thumbnail %}
+
+{# FIXME: we should reverse the list of categories. I think we need to create a filter for this #}
+{% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.category.all|join:'|' }} | {% endblock %}
+
 {% block 'extra-styles' %}
     <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-basic.css" media="screen" />
     <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-gallery.css" media="screen" />

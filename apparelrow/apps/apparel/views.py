@@ -71,14 +71,26 @@ def wide_search(request):
         mimetype='text/json'
     )
 
+def get_filter():
+    pricerange = VendorProduct.objects.aggregate(min=Min('price'), max=Max('price'))
+    pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
+    pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
+    return {
+        'categories': Category._tree_manager.all(),
+        'manufacturers': Manufacturer.objects.all(),
+        'genders': Option.objects.filter(option_type__name__iexact='gender'),
+        'colors': Option.objects.filter(option_type__name__iexact='color'),
+        'pricerange': pricerange
+    }
+
+def index(request):
+    return render_to_response('index.html', get_filter())
+
 def filter(request):
     if len(request.GET):
         products = Product.objects.search(request.GET)
     else:
         products = Product.objects.all()
-    pricerange = VendorProduct.objects.aggregate(min=Min('price'), max=Max('price'))
-    pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
-    pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
     #FIXME: Create a generic way of getting relevant templates and putting them into the context
     product_template = get_template_source('apparel/fragments/product_small.html')
     paginator = Paginator(products, 10) #FIXME: Make number per page configurable
@@ -90,15 +102,9 @@ def filter(request):
         paged_products = paginator.page(page)
     except (EmptyPage, InvalidPage):
         paged_products = paginator.page(paginator.num_pages)
-    result = {
-        'categories': Category._tree_manager.all(),
-        'manufacturers': Manufacturer.objects.all(),
-        'genders': Option.objects.filter(option_type__name__iexact='gender'),
-        'colors': Option.objects.filter(option_type__name__iexact='color'),
-        'pricerange': pricerange,
-        'products': paged_products,
-        'product_template': product_template,
-    }
+    result = get_filter()
+    result['products'] = paged_products
+    result['product_template'] = product_template
     return render_to_response('filter.html', result)
 
 def product_detail(request, product_slug):
