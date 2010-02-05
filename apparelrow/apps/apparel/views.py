@@ -73,8 +73,14 @@ def wide_search(request):
 
 def get_filter():
     pricerange = VendorProduct.objects.aggregate(min=Min('price'), max=Max('price'))
-    pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
-    pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
+    if pricerange['min'] is None:
+        pricerange['min'] = 0
+    else:
+        pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
+    if pricerange['max'] is None:
+        pricerange['max'] = 10000
+    else:
+        pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
     return {
         'categories': Category._tree_manager.all(),
         'manufacturers': Manufacturer.objects.all(),
