@@ -7,10 +7,7 @@ from pprint import pprint
 from os.path import join
 import csv, codecs, cStringIO, re, sys
 
-sys.path.insert(0, join(settings.PINAX_ROOT, "apps"))
-sys.path.insert(0, join(settings.PROJECT_ROOT, "apps"))
-
-from apparelrow.apps.apparel.models import *
+from apparelrow.apparel.models import *
 
 
 class DataMapper():

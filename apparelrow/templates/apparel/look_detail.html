@@ -51,7 +51,7 @@
     <h2>{{ object.title }}</h2>
     <ul class="collage">{% include 'apparel/fragments/look_collage.html' %}</ul>
     {% ifequal object.user user %}
-    <a href="{% url apps.apparel.views.look_edit object.id %}">{% trans "Edit look" %}</a>
+    <a href="{% url apparel.views.look_edit object.id %}">{% trans "Edit look" %}</a>
     {% endifequal %}
     <h2>{% trans "Articles in this look" %}</h2>
     <div id="lookproducts">

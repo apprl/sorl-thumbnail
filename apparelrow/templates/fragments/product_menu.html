@@ -1,27 +1,27 @@
 {% load i18n %}
 {% load mptt_tags %}
 
-<h2>{% trans "Browse articles" %}<a id="reset" href="{% url apps.apparel.views.filter %}">{% trans "Show all" %}</a></h2>
+<h2>{% trans "Browse articles" %}<a id="reset" href="{% url apparel.views.filter %}">{% trans "Show all" %}</a></h2>
 <ul id="product-gender">
     <li><a href="#">{% trans "All" %}</a></li>
     {% for gender in genders %}
-    <li><a id="option-{{ gender.value }}" href="{% url apps.apparel.views.filter %}?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
+    <li><a id="option-{{ gender.value }}" href="{% url apparel.views.filter %}?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
     {% endfor %}
 </ul>
 <ul id="product-options">
-    <li id="product-price"><a href="{% url apps.apparel.views.filter %}">{% trans "Price" %} (<span id="min-price"></span>-<span id="max-price"></span>)</a>
+    <li id="product-price"><a href="{% url apparel.views.filter %}">{% trans "Price" %} (<span id="min-price"></span>-<span id="max-price"></span>)</a>
     {% include "fragments/product_options_price.html" %}
     </li>
-    <li><a href="{% url apps.apparel.views.filter %}">{% trans "Color" %}</a>
+    <li><a href="{% url apparel.views.filter %}">{% trans "Color" %}</a>
     {% include "fragments/product_options_color.html" %}
     </li>
-    <li><a href="{% url apps.apparel.views.filter %}">{% trans "Brand" %}</a>
+    <li><a href="{% url apparel.views.filter %}">{% trans "Brand" %}</a>
     {% include "fragments/product_options_brand.html" %}
     </li>
 </ul>
 {% for category, structure in categories|tree_info %}
 {% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li>
-    <a id="category-{{ category.id }}" href="{% url apps.apparel.views.filter %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
+    <a id="category-{{ category.id }}" href="{% url apparel.views.filter %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
 {% for level in structure.closed_levels %}</li></ul>{% endfor %}
 {% endfor %}
 

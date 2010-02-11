@@ -138,7 +138,7 @@ def save_look_product(request):
     except LookProduct.DoesNotExist:
         form = LookProductForm(request.POST)
     form.save()
-    return HttpResponseRedirect(reverse('apps.apparel.views.look_detail', args=(request.POST['look'],)))
+    return HttpResponseRedirect(reverse('apparel.views.look_detail', args=(request.POST['look'],)))
 
 def add_to_look(request):
     product = get_object_or_404(Product, pk=request.POST['product_id'])
@@ -149,7 +149,7 @@ def add_to_look(request):
         look.save()
     lp = LookProduct(product=product, look=look)
     lp.save()
-    return HttpResponseRedirect(reverse('apps.apparel.views.look_detail', args=(look.id,)))
+    return HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.id,)))
 
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)

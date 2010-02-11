@@ -39,7 +39,7 @@
                 if(this.id) {
                     args['look_id'] = this.id.split('-')[1];
                 }
-                jQuery.post("{% url apps.apparel.views.add_to_look %}", args);
+                jQuery.post("{% url apparel.views.add_to_look %}", args);
                 return false;
             });
         });

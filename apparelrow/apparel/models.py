@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 
-from apps.apparel.manager import SearchManager
+from apparel.manager import SearchManager
 
 import datetime, mptt
 
@@ -140,7 +140,7 @@ class Product(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('apps.apparel.views.product_detail', [str(self.slug)])
+        return ('apparel.views.product_detail', [str(self.slug)])
 
     def save(self, force_insert=False, force_update=False):
         if not self.pk:
@@ -195,7 +195,7 @@ class Look(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('apps.apparel.views.look_detail', [str(self.slug)])
+        return ('apparel.views.look_detail', [str(self.slug)])
 
 class LookProduct(models.Model):
     product = models.ForeignKey(Product)

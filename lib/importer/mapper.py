@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.core.files.storage import default_storage
 from django.core.files import File
 from django.template.defaultfilters import slugify
-from apps.apparel.models import *
+from apparel.models import *
 from importer import fetcher
 from urllib2 import HTTPError
 

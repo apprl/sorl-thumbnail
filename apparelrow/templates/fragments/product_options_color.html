@@ -6,7 +6,7 @@
 {% block option_content %}
 <ul id="product-color">
     {% for color in colors %}
-    <li><a href="{% url apps.apparel.views.filter %}?1:o.color:in={{ color.value }}" class="{{ color.value }}" id="option-{{ color.value }}">{{ color.value }}</a></li>
+    <li><a href="{% url apparel.views.filter %}?1:o.color:in={{ color.value }}" class="{{ color.value }}" id="option-{{ color.value }}">{{ color.value }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}

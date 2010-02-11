@@ -79,7 +79,7 @@ var look = {
             data['width'] = product.width();
             data['height'] = product.height();
         }
-        jQuery.post('{% url apps.apparel.views.save_look_product %}', data,
+        jQuery.post('{% url apparel.views.save_look_product %}', data,
         function(response) {
             //alert('saved! ' + response);
         });
