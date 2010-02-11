@@ -173,17 +173,29 @@ class VendorProduct(models.Model):
 
 
 class Look(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(_('Title'), max_length=200)
+    slug = models.SlugField(_('Slug Name'), blank=True,
+        help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     products = models.ManyToManyField(Product, through='LookProduct')
     user = models.ForeignKey(User)
     image = models.ImageField(upload_to=LOOKS_BASE)
+
+    def save(self, force_insert=False, force_update=False):
+        if self.title and not self.slug:
+            self.slug = slugify(self.title)
+        super(Look, self).save(force_insert=force_insert, force_update=force_update)
+
+    @property
+    def total_price(self):
+        prices = [p.default_vendor.price for p in self.products.all()]
+        return sum(prices)
 
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user)
 
     @models.permalink
     def get_absolute_url(self):
-        return ('apps.apparel.views.look_detail', [str(self.id)])
+        return ('apps.apparel.views.look_detail', [str(self.slug)])
 
 class LookProduct(models.Model):
     product = models.ForeignKey(Product)
@@ -200,7 +212,8 @@ class LookProduct(models.Model):
 
     @property
     def style_middle(self):
-        return self.style(1.54)
+        return self.style(0.65)
+
     @property
     def style(self):
         return self.style(1)

@@ -5,7 +5,8 @@
 <style type="text/css">
     .collage {
         position: relative;
-        height: 500px;
+        height: 450px;
+        overflow: hidden;
     }
     .look {
         position: absolute;
@@ -28,16 +29,23 @@
             delay: 500,
             offset: [30, 0],
         });
-        jQuery('.row').scrollable();
     });
 </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}three-columns{% endblock %}
+{% block body-classes %}two-columns{% endblock %}
 
 {% block body %}
 <div class="sidebar">
     <h2>Sidebar</h2>
+    <p>
+    {% blocktrans count object.look_products.all|length as number %}
+    {{ number }} article
+    {% plural %}
+    {{ number }} articles
+    {% endblocktrans %}
+    {{ object.total_price }} SEK
+    </p>
 </div>
 <div id="content">
     <h2>{{ object.title }}</h2>
@@ -47,18 +55,9 @@
     {% endifequal %}
     <h2>{% trans "Articles in this look" %}</h2>
     <div id="lookproducts">
-        <a class="prevPage">{% trans "Previous" %}</a>
-        <div class="row">
-            <ul>
-                {% for product in object.look_products.all %}
-                <li><a href="{{ product.product.get_absolute_url }}"><img src="/scale/116x116{{ product.product.product_image.url }}" /></a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <a class="nextPage">{% trans "Next" %}</a>
+        {% with object.products.all as products %}
+        {% include 'apparel/fragments/product_row.html' %}
+        {% endwith %}
     </div>
-</div>
-<div class="sidebar">
-    <h2>Sidebar 2</h2>
 </div>
 {% endblock body %}

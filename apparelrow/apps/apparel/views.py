@@ -113,13 +113,23 @@ def filter(request):
     result['product_template'] = product_template
     return render_to_response('filter.html', result)
 
-def product_detail(request, product_slug):
-    product = get_object_or_404(Product, slug=product_slug)
+def product_detail(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    viewed_products = request.session.get('viewed_products', [])
+    viewed_products.append(product.id)
+    request.session['viewed_products'] = viewed_products
     looks_with_product = Look.objects.filter(products=product)
     looks = []
     if request.user.is_authenticated():
         looks = Look.objects.filter(user=request.user)
-    return render_to_response('apparel/product_detail.html', { 'object': product, 'looks': looks, 'looks_with_product': looks_with_product })
+    return render_to_response(
+            'apparel/product_detail.html',
+            {
+                'object': product,
+                'looks': looks,
+                'looks_with_product': looks_with_product,
+                'viewed_products': Product.objects.filter(pk__in=viewed_products),
+            })
 
 def save_look_product(request):
     try:
@@ -141,12 +151,12 @@ def add_to_look(request):
     lp.save()
     return HttpResponseRedirect(reverse('apps.apparel.views.look_detail', args=(look.id,)))
 
-def look_detail(request, look_id):
-    look = get_object_or_404(Look, pk=look_id)
+def look_detail(request, slug):
+    look = get_object_or_404(Look, slug=slug)
     return render_to_response('apparel/look_detail.html', dict(object=look, tooltips=True))
 
-def look_edit(request, look_id):
-    look = get_object_or_404(Look, pk=look_id)
+def look_edit(request, slug):
+    look = get_object_or_404(Look, slug=slug)
     if request.method == 'POST':
         form = LookForm(request.POST, request.FILES, instance=look)
         if form.is_valid():

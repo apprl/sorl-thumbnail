@@ -161,7 +161,7 @@ button, .button
     repeat: repeat-x
   .info
     +float-left
-    background= transparent image_url("arrow-bg.png") no-repeat scroll left 10px
+    background= "transparent" image_url("arrow-bg.png") "no-repeat" "scroll" "left" 10px
     padding-left: 20px
   .nav
     +float-right
@@ -198,8 +198,71 @@ button, .button
 #sidebar ul
   padding: 0
 
+h2
+  a
+    +float-right
+
 #reset
-  +filter("cancel.png", "cancel.png")
+  background= "transparent" image_url("logout.png") "no-repeat" "scroll" "right" "center"
+  padding-right: 15px
+
+!color_width = 39px
+!color_height = 20px
+
+=colors
+  +horizontal-list
+  li
+    background: none
+    border: none
+    a
+      +replace-text("colors.png")
+      padding: 0
+      background= "transparent" image_url("colors.png") "no-repeat" "scroll" 0 0
+      width= !color_width
+      height= !color_height
+      &.black
+        &.selected
+          background-position= 0 -!color_height
+      &.grey
+        background-position= -!color_width top
+        &.selected
+          background-position= -!color_width -!color_height
+      &.white
+        background-position= -!color_width * 2 top
+        &.selected
+          background-position= -!color_width * 2 -!color_height
+      &.beige
+        background-position= -!color_width * 3 top
+        &.selected
+          background-position= -!color_width * 3 !color_height
+      &.brown
+        background-position= -!color_width * 4 top
+        &.selected
+          background-position= -!color_width * 4 !color_height
+      &.red
+        background-position= -!color_width * 5 top
+        &.selected
+          background-position= -!color_width * 5 !color_height
+      &.yellow
+        background-position= -!color_width * 6 top
+        &.selected
+          background-position= -!color_width * 6 !color_height
+      &.green
+        background-position= -!color_width * 7 top
+        &.selected
+          background-position= -!color_width * 7 !color_height
+      &.blue
+        background-position= -!color_width * 8 top
+        &.selected
+          background-position= -!color_width * 8 !color_height
+      &.magenta
+        background-position= -!color_width * 9 top
+        &.selected
+          background-position= -!color_width * 9 !color_height
+      &.pink
+        background-position= -!color_width * 10 top
+        &.selected
+          background-position= -!color_width * 10 !color_height
 
 #product-gender
   +filter("list-item.png", "list-item-radio-selected.png")
@@ -209,6 +272,8 @@ button, .button
   +popup
   li.active
     background-image= image_url("gradient-darker-bg.png")
+  #product-color
+    +colors
   #product-manufacturers
     height: 300px
     overflow-y: scroll
@@ -418,6 +483,8 @@ a.buy-now
     background: transparent url(../images/vendor.png) scroll no-repeat left center
     padding: 0 10px
 
+#recentlyviewed
+  +row(!aside_width)
 
 .similar-product
   .product-photo

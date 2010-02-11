@@ -46,7 +46,7 @@
     </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}sidebar right{% endblock %}
+{% block body-classes %}two-columns right{% endblock %}
 
 {% block body %}
 {% if object %}
@@ -68,7 +68,7 @@
                 </div>
             </div>
         </div>
-        <div id="sidebar">
+        <div class="sidebar last">
             <!--
             <div class="last-shown">
                 <h2>{% trans "Recently viewed products" %}</h2>
@@ -86,21 +86,26 @@
                 </div>
             </div>
             -->
-            {% if looks_with_product %}
-            <div>
-                <h2>
-                    {% blocktrans count looks_with_product|length as counter %}
-                        {{ counter }} look with this product
-                    {% plural %}
-                        {{ counter }} looks with this product
-                    {% endblocktrans %}
-                </h2>
-                <ul id="looks-with-product">
-                    {% for object in looks_with_product %}
-                    <li><a href="{{ object.get_absolute_url }}"><div style="position: relative;">{% include 'apparel/fragments/look_collage_small.html' %}</div></a></li>
-                    {% endfor %}
-                </ul>
+            <h2>{% trans "Recently viewed" %}</h2>
+            <div id="recentlyviewed">
+                {% with viewed_products as products %}
+                {% include 'apparel/fragments/product_row.html' %}
+                {% endwith %}
             </div>
+
+            {% if looks_with_product %}
+            <h2>
+                {% blocktrans count looks_with_product|length as counter %}
+                    {{ counter }} look with this product
+                {% plural %}
+                    {{ counter }} looks with this product
+                {% endblocktrans %}
+            </h2>
+            <ul id="looks-with-product">
+                {% for object in looks_with_product %}
+                <li><a href="{{ object.get_absolute_url }}"><div style="position: relative;">{% include 'apparel/fragments/look_collage_small.html' %}</div></a></li>
+                {% endfor %}
+            </ul>
             {% endif %}
         </div>
 {% else %}
