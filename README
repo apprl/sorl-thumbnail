@@ -1,5 +1,18 @@
 == APPAREL ROW ==
 
+= virtualenv =
+virtualenv-2.6 --no-site-packages apparelrow
+
+= buildout =
+* Get the bootstrap.py script
+  wget http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py
+* Run it (it will set up buildout)
+  python bootstrap.py (if it complains about setuptools, easy_install setuptools)
+* Run the buildout
+  ./bin/buildout -v (fika...)
+* Start the server
+  ./bin/django-1.1.1 runserver
+
 = Directory Structure =
 .               This directory
 ./bin           General scripts, such as the FCGI daemon controller

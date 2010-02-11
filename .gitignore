@@ -4,3 +4,14 @@
 settings_local.py
 apparelrow/site_media/
 warehouse
+eggs
+develop-eggs
+parts
+downloads
+include
+lib/python*
+bin/python*
+bin/activate*
+bin/easy_install*
+bin/django-1.1.1
+bin/buildout
