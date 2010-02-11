@@ -2,6 +2,8 @@
 
 = virtualenv =
 virtualenv-2.6 --no-site-packages apparelrow
+cd apparelrow
+source bin/activate
 
 = buildout =
 * Get the bootstrap.py script
