@@ -6,9 +6,9 @@ cd apparelrow
 source bin/activate
 
 = buildout =
-* Get the bootstrap.py script
-  wget http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py
-* Run it (it will set up buildout)
+* Run the bootstrap.py script (it will set up buildout)
+  (it is already checked-in, but bootstrap.py can be downloaded from
+    http://svn.zope.org/*checkout*/zc.buildout/tags/1.4.3/bootstrap/bootstrap.py)
   python bootstrap.py (if it complains about setuptools, easy_install setuptools)
 * Run the buildout
   ./bin/buildout -v (fika...)
