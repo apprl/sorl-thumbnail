@@ -10,7 +10,7 @@ body
     repeat: no-repeat
     position: center top
 
-button, .button
+button, a.button
   +button
   display: inline-block
 
@@ -507,7 +507,7 @@ a.buy-now
 
 #add-menu
   margin-top: 4em
-  text-transform: uppercase
+  +clearfix
 
   > li
     position: relative
@@ -517,10 +517,6 @@ a.buy-now
     padding-left: 1em
 
 
-#add-to-look
-  border-right: 1px solid #dadada
-
-
 #add-menu > li > a
   background: transparent url(../images/add.png) scroll no-repeat left center
   padding-left: 20px
@@ -528,18 +524,19 @@ a.buy-now
 
 li
   &#add-to-look
+    +border("right")
     > a
       background-image: url(../images/add.png)
-
     ul
       display: none
-      position: absolute
       margin: 0 -1em
       border-bottom: none
-
+      border-right: none
       li
         padding: 0 1em
         border-bottom: 1px solid #dadada
+        a
+          display: block
 
   &#add-to-wardrobe > a
     background-image: url(../images/embed.png)

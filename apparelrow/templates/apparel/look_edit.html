@@ -117,7 +117,9 @@ var look = {
 <div id="content">
     <h2>{% trans "Edit look" %}</h2>
     <form enctype="multipart/form-data" action="" method="POST">
+        <ul>
         {{ form.as_ul }}
+        </ul>
         <button type="submit">{% trans "Save look" %}</button>
     </form>
     {# include 'apparel/fragments/look_picture.html' #}

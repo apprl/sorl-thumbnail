@@ -147,7 +147,7 @@ def add_to_look(request):
     else:
         look = Look(user=request.user)
         look.save()
-    lp = LookProduct(product=product, look=look)
+    lp = LookProduct(product=product, look=look, width=product.product_image.width, height=product.product_image.height)
     lp.save()
     return HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.id,)))
 

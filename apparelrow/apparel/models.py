@@ -158,7 +158,7 @@ class Product(models.Model):
         return u"%s %s" % (self.manufacturer, self.product_name)
     
     class Exporter:
-        export_fields = ['__all__', 'vendorproduct', 'get_absolute_url']
+        export_fields = ['__all__', 'get_absolute_url']
 
 class VendorProduct(models.Model):
     vendor     = models.ForeignKey(Vendor)
@@ -178,7 +178,7 @@ class Look(models.Model):
         help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     products = models.ManyToManyField(Product, through='LookProduct')
     user = models.ForeignKey(User)
-    image = models.ImageField(upload_to=LOOKS_BASE)
+    image = models.ImageField(upload_to=LOOKS_BASE, blank=True)
 
     def save(self, force_insert=False, force_update=False):
         if self.title and not self.slug:
