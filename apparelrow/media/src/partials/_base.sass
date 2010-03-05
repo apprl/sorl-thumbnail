@@ -1,0 +1,46 @@
+!page_width = 980px
+!margin_width = 20px
+!gutter_width = 40px
+!content_width = !page_width - 2 * !margin_width
+
+!aside_width = 205px
+!middle_width = 450px
+!large_width = 695px
+
+!box_color = #fafafa
+!border_color = !box_color - #212121
+!font_color = !box_color - #bababa
+
+!box_disabled_color = !box_color + #aaa
+!border_disabled_color = !border_color + #1e1e1e
+
+!default_box_shadow_color     ||= #999
+!default_box_shadow_h_offset  ||= 0px
+!default_box_shadow_v_offset  ||= 0px
+!default_box_shadow_blur      ||= 20px
+
+
+=container
+  margin: 0 auto
+  width= !content_width
+
+=border(!side = "none", !color = !border_color)
+  @if !side == "all"
+    border= 1px "solid" !color
+  @else
+    border-#{!side}= 1px "solid" !color
+
+=box(!bg = !box_color, !border = !border_color)
+  +border("all", !border)
+  background-color= !bg
+
+=button(!bg = "gradient-bg.png")
+  +box
+  line-height: 30px
+  background:
+    image= image_url(!bg)
+    repeat: repeat-x
+  &.cancel:before
+    content= image_url("cancel.png")
+  &.ok:before
+    content= image_url("ok.png")

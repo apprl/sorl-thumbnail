@@ -48,7 +48,9 @@ class Provider():
         Process CSV.
         """
         
-        print self.file
+        # FIXME: Should this really be a method of its own? Isn't there better 
+        # to let the Parser provide a generic interface for this. 
+        
         fh = open(self.file)
         csv_reader = csv.CSVReader(fh, dialect, **kwargs)
         

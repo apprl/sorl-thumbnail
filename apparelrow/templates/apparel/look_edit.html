@@ -1,6 +1,11 @@
-{% extends 'site_base.html' %}
+{% extends 'base.html' %}
+{% load i18n %}
+{% load thumbnail %}
 {% block 'extra-styles' %}
 <style type="text/css">
+    #look {
+        position: relative;
+    }
     #collage {
         height: 500px;
         border: 1px dotted black;
@@ -74,7 +79,7 @@ var look = {
             data['width'] = product.width();
             data['height'] = product.height();
         }
-        jQuery.post('{% url apps.apparel.views.save_look_product %}', data,
+        jQuery.post('{% url apparel.views.save_look_product %}', data,
         function(response) {
             //alert('saved! ' + response);
         });
@@ -102,8 +107,22 @@ var look = {
     });
 </script>
 {% endblock 'extra-scripts' %}
+
+{% block body-classes %}two-columns{% endblock %}
+
 {% block body %}
-<div class="container">
+<div class="sidebar">
+    <h2>Sidebar</h2>
+</div>
+<div id="content">
+    <h2>{% trans "Edit look" %}</h2>
+    <form enctype="multipart/form-data" action="" method="POST">
+        <ul>
+        {{ form.as_ul }}
+        </ul>
+        <button type="submit">{% trans "Save look" %}</button>
+    </form>
+    {# include 'apparel/fragments/look_picture.html' #}
     <div id="collage">
     {% include 'apparel/fragments/look_collage.html' %}
     </div>

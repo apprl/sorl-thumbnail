@@ -1,0 +1,47 @@
+=filter(!img, !selected_img)
+  +border("bottom")
+  +no-bullets
+  margin-bottom: 10px
+  li
+    +button
+    border-bottom: none
+    > a
+      display: block
+      padding-left: 25px
+      background= "transparent" image_url(!img) "no-repeat" "scroll" 10px "center"
+      &.selected
+        background-image= image_url(!selected_img)
+
+=popup(!n = 1)
+  position: relative
+  li
+    div.options
+      margin-left: -10px
+      div.box
+        +box(#fff)
+        > div
+          padding: 10px
+          background: #fff
+      &.popup
+        background:
+          color: transparent
+          image= image_url("box-arrow-left.png")
+          repeat: no-repeat
+          position= !n * 30px "left"
+        padding-left: 7px
+        display: none
+        position: absolute
+        left= !aside_width
+        top: 0px
+        z-index: 10
+        div.box
+          width: 500px
+          +box-shadow
+          a.button
+            width: 249px
+      a.button
+        border: none
+        +border("top")
+        text-align: center
+      a.ok
+        +border("left")

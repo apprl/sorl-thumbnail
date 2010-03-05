@@ -1,4 +1,4 @@
-import urllib2, os, sys
+import urllib2, os, sys, logging
 from datetime import datetime
 import tempfile
 
@@ -26,13 +26,16 @@ def fetch_source(provider, from_warehouse=False, for_date=None):
     
     if not os.path.exists(wdir):
         # Create dir
-        print "Creating warehouse dir %s" % wdir
+        logging.debug("Creating warehouse dir %s" % wdir)
         os.makedirs(wdir)
     
     path = os.path.join(wdir, name)
         
-    if not from_warehouse:
-        print "Downloading... %s to %s" % (provider.url, path)
+    if from_warehouse:
+        logging.debug("Reading file from warehouse %s" % path)
+    else:
+        logging.info("Downloading %s to %s" % provider.url, path)
+        logging.debug("Storing file in warehouse at %s" % path)
         fetch(provider.url, path, provider.username, provider.password)
     
     return path

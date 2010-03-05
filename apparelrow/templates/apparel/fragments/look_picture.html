@@ -1,0 +1,17 @@
+{% load thumbnail %}
+    <div id="look"><img src="{% thumbnail object.image 500x500 %}" /></div>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('#look').click(function(e) {
+                var x = e.pageX - this.offsetLeft;
+                var y = e.pageY - this.offsetTop;
+                jQuery('<a href="#"></a>').css({
+                    'position': 'absolute',
+                    'padding': '10px',
+                    'background': '#0f0',
+                    'top': y + 'px',
+                    'left': x + 'px',
+                }).appendTo(this);
+            });
+        });
+    </script>

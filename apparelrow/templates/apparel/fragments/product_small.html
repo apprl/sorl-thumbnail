@@ -1,12 +1,12 @@
-<a href="/apparel/products/{{ product.id }}/">
+<a href="{{ product.get_absolute_url }}">
 <div class="product-small">
     <div class="product-info">
         <div class="product-image">
-            <img src="/scale/130x138{{ product.product_image }}" alt="{{ product.product_name }}" />
+            <img src="/scale/130x138/site_media/media/{{ product.product_image }}" alt="{{ product.product_name }}" />
             <span class="likes">x</span>
         </div>
         <div>{{ product.product_name }}<br />
-        <span class="price">xxx SEK</span></div>
+        <span class="price">{{ product.default_vendor.price }} {{ product.default_vendor.currency }}</span></div>
     </div>
 </div>
 </a>

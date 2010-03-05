@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="{{ lang }}">
 <head>
-    <title></title>
+    <title>{% block extra-title %}{% endblock %}Apparel Row</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="/site_media/static/styles/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="/site_media/static/styles/print.css" type="text/css" media="print">
@@ -11,16 +11,21 @@
     {% block 'extra-styles' %}
     {% endblock 'extra-styles' %}
     
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-    <script type="text/javascript" src="http://cdn.jquerytools.org/1.1.2/full/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("jquery", "1.4.1");
+        google.load("jqueryui", "1.7.2");
+    </script>
+    <script type="text/javascript" src="/site_media/static/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="/site_media/static/js/jquery.template.js"></script>
-    <script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.core.js"></script>
-    <script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.slider.js"></script>
     <script type="text/javascript" src="/site_media/static/js/dump.js"></script>
     <script type="text/javascript" src="/site_media/static/js/template.js"></script>
     <script type="text/javascript">
         
         jQuery(document).ready(function() {
+            // Make all "apparel rows" scrollables
+            jQuery('.row').scrollable().end();
+
              jQuery('#login').click(function() {
                 jQuery('#nav-main').animate({ opacity: 'toggle' }, 'fast');
                 jQuery('#account-dialogue').animate({ opacity: 'toggle' }, 'fast');
@@ -162,11 +167,10 @@
     {% facebook_js %}
     {% initialize_facebook_connect %}
 </head>
-<body>
+<body class="{% block body-classes %}{% endblock %}">
 
-<div id="header-pane">
-    <div class="container">
-        <img src="/site_media/static/images/logo.png" alt="Apparel Row" id="logo" />
+<div id="header">
+        <h1>ApparelRow</h1>
         
         <div id="account-dialogue">
             <!-- LOGIN FORM -->
@@ -224,7 +228,6 @@
             <li><a href="/accounts/register/" id="login">{% trans "Sign up" %}</a></li>
         {% endif %}
         </ul>
-    </div>
 </div>
 
 
@@ -241,7 +244,7 @@
 </div>
 {% endif %}
 
-<div id="main-content">
+<div id="container">
 {% block body %}
 {% endblock %}
 </div>

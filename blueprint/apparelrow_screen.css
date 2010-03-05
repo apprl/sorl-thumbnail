@@ -593,6 +593,7 @@ a.block_link {
 
 .search-result-container .product-image {
     float: left;
+    margin-right: 5px;
 }
 
 #main-content form {

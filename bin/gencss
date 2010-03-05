@@ -1,7 +1,0 @@
-#!/bin/bash
-
-echo "Run blueprint"
-blueprint -p apparelrow -f blueprint/settings.yaml > /dev/null
-
-echo "Done"
-

@@ -10,8 +10,8 @@ export PYTHONPATH="$PROJDIR/$PROJNAME"
 export DJANGO_SETTINGS_MODULE=settings
 
 
-if [[ -e $PROJDIR/python/bin/activate ]]; then
-    . $PROJDIR/python/bin/activate
+if [[ -e $PROJDIR/bin/activate ]]; then
+    . $PROJDIR/bin/activate
 fi
 cd $PROJDIR/lib
 

@@ -49,7 +49,8 @@ class AcneJeansDataMapper(DataMapper):
         if not 'imageurl' in self.data:
             return
         
-        return re.sub(r'_(\w)\.jpg', '_L.jpg', self.data['imageurl'])
+        substitute = re.sub(r'_(\w)\.jpg', '_L.jpg', self.data['imageurl'])
+        return re.sub(r'/(\w)_', '/l_', substitute)
         
     def set_vendor_name(self, value):
         return 'Acne Jeans'
