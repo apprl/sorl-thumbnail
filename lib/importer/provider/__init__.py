@@ -9,7 +9,7 @@ def load_provider(name):
 
 class Provider():
     """
-    Base class for product providers.
+    Base class for data providers.
     
     Fields:
      - name          Unique name to identify the provider

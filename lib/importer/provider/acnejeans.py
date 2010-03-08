@@ -20,24 +20,24 @@ class Provider(ProviderBase):
         self.url       = 'http://shop.acnestudios.com/system/tools/cj/feed.asp?cid=1&subid=2&aid=3&currency=SEK'
         self.extension = 'xml'
     
-    def process(self):
-        if not self.file:
-            # FIXME: Replace with ImporterException
-            raise Exception('No source file available')
-        
-        doc = libxml2.parseFile(self.file)
-        context = doc.xpathNewContext()
-        
-        for elemPrd in context.xpathEval('//product'):
-            # FIXME: The unescape routine only handles <, > and &. This needs
-            # to be fixed.
-            row = dict([(e.name, unescape(e.getContent())) for e in elemPrd.xpathEval('./*')])
-            
-            mapper = AcneJeansDataMapper(self, row)
-            mapper.translate()
-        
-        context.xpathFreeContext()
-        doc.freeDoc()
+#    def process(self):
+#        if not self.file:
+#            # FIXME: Replace with ImporterException
+#            raise Exception('No source file available')
+#        
+#        doc = libxml2.parseFile(self.file)
+#        context = doc.xpathNewContext()
+#        
+#        for elemPrd in context.xpathEval('//product'):
+#            # FIXME: The unescape routine only handles <, > and &. This needs
+#            # to be fixed.
+#            row = dict([(e.name, unescape(e.getContent())) for e in elemPrd.xpathEval('./*')])
+#            
+#            mapper = AcneJeansDataMapper(self, row)
+#            mapper.translate()
+#        
+#        context.xpathFreeContext()
+#        doc.freeDoc()
 
 
 class AcneJeansDataMapper(DataMapper):
