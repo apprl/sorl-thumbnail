@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'apparelrow.scale',
     'apparelrow.watcher',
     'apparelrow.profile',
+    'apparelrow.importer',
     
     # internal (for now)
     'django.contrib.admin',
