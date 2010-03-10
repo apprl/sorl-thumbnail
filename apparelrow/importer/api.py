@@ -1,5 +1,6 @@
 import logging, re
 
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import transaction
 
 from apparel.models import *
@@ -10,9 +11,9 @@ web application
 
 Synopsis
 
-    api = API()
-    api.import(data)
-
+    api = API(some_data)
+    api.import()
+    
 Required Data Structure
 
 {
@@ -22,7 +23,7 @@ Required Data Structure
     'product': {
         'product-id': '375512-162',
         'product-name': 'Flight 45',
-        'category': 'Sneakers',
+        'categories': 'Sneakers',
         'manufacturer': 'Jordan',
         'price': 1399.00,
         'currency': 'SEK',
@@ -48,43 +49,29 @@ Required Data Structure
 """
 
 class API():
-    _regexp = re.compile(r'')  # FIXME: Anyone know how to identify a regular expression object in python apart from doing "type(re.compile(something))"
-    key_structure = {
-        'version': lambda s, x: True if x == s.version else False,
-        # FIXME: There are libraries that supports ISO8601 parsing, but I think
-        # we should require the timezone bit
-        'date': re.compile(r'^\d{4}-\d{2}-\d{2}(?:T| )\d{2}:\d{2}:\d{2}(?:Z| )(?:\w{3,4}|(?:\+|-)?\d{2}:?\d{2})$'),
-        'vendor': u'',
-        'product': {
-            'product-id': u'',
-            'category': [
-                u'',
-            ],
-            'manufacturer': u'',
-            'price': (0, 0.0,),
-            'currency': re.compile(r'^[A-Z]{3}$'),
-            'delivery-cost': (0, 0.0,),
-            'delivery-time': re.compile(r'^\d+(?:-\d+)? D$'),
-            'availability': (True, 0,),
-            'image-url': re.compile(r'^https?://'),
-            'product-url': re.compile(r'^https?://'),
-            'description': u'',
-            'variations': [
-                {
-                    'size': (None, 0, u'',),
-                    'color': (None, u'',),   # FIXME: Check against list of supported colors
-                    'availability': (True, 0,),
-                }
-            ]
-            
-        }
-    }
     
-    def __init__(self):
-        self.version      = "0.1"        
-        self.product      = None
-        self.categories   = []
-        self.manufacturer = None
+    def __init__(self, dataset=None):
+        self.version       = "0.1"
+        self._dataset      = dataset        
+        self._product      = None
+        self._category     = None
+        self._manufacturer = None
+        self._vendor       = None
+        
+    @property
+    def dataset(self):
+        """
+        The API's dataset. Required before calling import() or accessing any
+        data property.
+        """
+        if not self._dataset:
+            raise IncompleteDataSet('No dataset')
+        
+        return self._dataset
+    
+    @dataset.setter
+    def dataset(self, d):
+        self._dataset = d
     
     @transaction.commit_on_success
     def import_dataset(self, data):
@@ -94,7 +81,10 @@ class API():
         
         try:
             self.validate(data)
-            self.do_import(data)
+            
+            if 'product' in data:
+                self.import_product(data['product'])
+            
         except ImporterException, e:
             # Log ImporterException
             logging.error('%s, record skipped', e)
@@ -102,77 +92,114 @@ class API():
         else:
             logging.info('Imported %s', self.product)
     
-    def validate(self, data, keymap=key_structure):
+    
+    
+    def validate(self):
         """
         Validates a data structure. Returns True on success, will otherwise throw
         an exception
         """
         
-        if not isinstance(data, dict):
-            raise IncompleteDataSet('Expecting a dict, got "%s"' % data)
+        if self.dataset.get('version') != self.version:
+            raise ImporterException('Incompatable version number "%s" (this is version %s)', self.dataset.get('version'), self.version)
         
-        for (k, v) in data.iteritems():
-            
-            if k not in keymap: raise IncompleteDataSet('Unknown key %s' % k)
-            
-            test = keymap[k]
-            
-            # Handle recursiveness
-            if isinstance(test, dict):
-                self.validate(v, test)
-            
-            elif isinstance(test, list):
-                if isinstance(test[0], dict):
-                    # Descend into dictionary
-                    for i in v: self.validate(i, test[0]) 
-                else:
-                    # Check all values in array
-                    for i in v: self.validation_test(i, k, test[0])
-            
-            elif isinstance(test, tuple):
-                # Run several tests, only one has to pass
-                for t in test:
-                    try:
-                        # run test
-                        self.validation_test(v, k, t)
-                    except IncompleteDataSet:
-                        pass
-                    except Exception:
-                        raise
-                    else:
-                        # if it passed, stop checking and move on to next item
-                        break
-                else:
-                    # If all items were processed, re-throw last caught exception
-                    raise
-            else:
-                # Run test
-                self.validation_test(v, k, test)
-        
-        
-        # Dataset is valid, now check that no required keys are missing
-        for (k, v) in keymap.iteritems():
-            l = (v,) if not isinstance(v, tuple) else v
-            if None in l: continue  # If None types are allowed to be missed out
-            if not k in data: raise IncompleteDataSet('Missing required key %s' % k)
-        
+        logging.debug('Dataset is valid')
         return True
+    
+    
+    @property
+    def category(self):
+        """
+        Returns category. Category hierarchy is retrieved or created first time
+        the property is accessed.
+        """
         
-    def validation_test(self, value, prop, test):
-        if test is None and value is None:
-            return True
+        if not self._category:        
+            category_names = self.dataset['product'].get('categories')
+            
+            if not category_names:
+                raise IncompleteDataSet('No category')
+            
+            # Force list
+            if not isinstance(category_names, list):
+                category_names = [category_names]
+            else:
+                category_names.reverse()
+            
+            categories = []
+            
+            for name in category_names:
+                try:
+                    category = Category.objects.get(key=Category.key_for_name(name))
+                except ObjectDoesNotExist:
+                    logging.debug('Creating new category: %s', name)
+                    category = Category( name=name )
+                else:
+                    logging.debug('Using existing category: %s', category.name)
+                    break
+                finally:
+                    if len(categories) > 0:
+                        logging.debug('Assigning child category %s to %s', category, categories[0].parent)
+                        categories[0].parent = category
+                    
+                    categories.insert(0, category)
+            
+            if len(categories) == 0:
+                raise ImporterException('Could not retrieve or create any categories')
+            
+            for category in categories:
+                # FIXME: Is this required?
+                category.save()
+            
+            logging.debug('Using category %s', categories[-1])
+            
+            self._category = categories[-1]
         
-        elif callable(test):
-            if test(self, value): return True 
+        return self._category
+            
+    @property 
+    def manufacturer(self):
+        """
+        Retrieves, or creates, the product's manufacturer.
+        """
+        
+        if not self._manufacturer:
+            name = self.dataset['product'].get('manufacturer')
+            
+            if not name: 
+                raise IncompleteDataSet('Missing manufacturer name')
+            
+            self._manufacturer, created = Manufacturer.objects.get_or_create(name=name)
+            
+            if created: 
+                logging.debug('Created new manufacturer')
+            
+            logging.debug('Using manufacturer %s', name)
+        
+        return self._manufacturer
+    
+    @property
+    def vendor(self):
+        """
+        Retrives, or creates, the vendor of this dataset
+        """
+        
+        if not self._vendor:
+            name = self.dataset.get('vendor')
+         
+            if not name:
+                raise IncompleteDataSet('Missing vendor name')
+            
+            self._vendor, created = Vendor.objects.get_or_create(name=name)
+            
+            if created:
+                logging.debug('Created new vendor')
+            
+            logging.debug('Using vendor %s', name)
+        
+        return self._vendor
 
-        elif isinstance(test, type(self._regexp)):
-            if test.match(value): return True
 
-        elif isinstance(value, type(test)):
-            # FIXME: Is this test really safe?           
-            return True 
-                
-        raise IncompleteDataSet('Value "%s" not valid for property "%s"' % (value, prop))
 
 
 class ImporterException(Exception):
