@@ -1,11 +1,11 @@
-import re
+import re, decimal
 
 from django.test import TestCase
-from apparelrow.apparel.models import Manufacturer, Category, Product, Vendor
+from apparelrow.apparel.models import Manufacturer, Category, Product, Vendor, VendorProduct
 from apparelrow.importer.api import API, IncompleteDataSet, ImporterException
 
 
-class ValidationTest(TestCase):
+class ImporterAPITest(TestCase):
     
     def setUp(self):
         self.dataset = {
@@ -17,11 +17,11 @@ class ValidationTest(TestCase):
                 'product-name': u'A cool pair of Jeans',
                 'categories': [u'Jeans'],
                 'manufacturer': u'WhateverMan',
-                'price': 239.0,
+                'price': '239.0',
                 'currency': 'GBP',
-                'delivery-cost': 10,
+                'delivery-cost': '10',
                 'delivery-time': '1-2 D',
-                'availability': 35,
+                'availability': '35',
                 'image-url': 'http://www.example.com/image.jpg',
                 'product-url': 'https://www.example.com/c001',
                 'description': u'This is a cool par of whatever',
@@ -37,7 +37,7 @@ class ValidationTest(TestCase):
                     },
                     {
                         'size': u'XS',
-                        'availability': 24,
+                        'availability': '24',
                     }
                 ]            
             }
@@ -136,10 +136,6 @@ class ValidationTest(TestCase):
         self.assertEqual(p1.product_name, a1.dataset['product'].get('product-name'), 'product name property populated')
         self.assertEqual(p1.description,  a1.dataset['product'].get('description'),  'Description populated')
         
-        # FIXME: Check vendor product
-        
-        # FIXME: Check product options
-        
         # Modify product
         a2 = API()
         a2.dataset = self.dataset
@@ -150,19 +146,37 @@ class ValidationTest(TestCase):
         self.assertNotEqual(p2.product_name, 'A Brand New Name', 'Product name NOT changed')
         self.assertEqual(p2.description, 'The new description', 'Product descrption changed')
         
-    def test_import_product_vendor(self):
-        pass
-        # FIXME: Check that vendor options are added/modifieds
+        a2.dataset['product']['product-id'] = None
+        a2.import_product()
         
+        
+    def test_import_product_vendor(self):
+        a1 = API()
+        a1.dataset = self.dataset
+        p1 = a1.import_product()
+        
+        vp = VendorProduct.objects.get( product=p1, vendor=a1.vendor )
+        
+        self.assertTrue(isinstance(vp, VendorProduct), 'Created vendor product')
+        self.assertEqual(vp.buy_url,    self.dataset['product']['product-url'], 'buy_url property')
+        self.assertEqual(vp.price,      decimal.Decimal(self.dataset['product']['price']),    'price property')
+        self.assertEqual(vp.currency,   self.dataset['product']['currency'], 'currency property')
+        
+        a2 = API()
+        a2.dataset = self.dataset
+        a2.dataset['product']['currency'] = 'SEK'
+        p2 = a2.import_product()
+        
+        vp2 = VendorProduct.objects.get( product=p2, vendor=a2.vendor )
+        self.assertEqual(vp2.id, vp.id, 'Same product updated')
+        self.assertEqual(vp2.currency, 'SEK', 'Currency updated')
+    
     def test_import_product_options(self):
         pass
         # FIXME: Check that options are added/modified
     
     def test_import_product_image(self):
-        pass
-        # FIXME: Check that a URL is downloaded and imported        
-        
-        
+        pass        
         
         
         

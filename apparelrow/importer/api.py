@@ -107,7 +107,6 @@ class API():
             p.category.add( self.category )
             logging.debug('Created new product')
             
-            # call create object and return
         except MultipleObjectsReturned:
             s = 'There are more than one product with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku'])
             logging.error(s)
@@ -117,17 +116,48 @@ class API():
             for f in fields:
                 setattr(p, f, fields.get(f))
             
+            
+            # FIXME: How do we deal with category? Re-assign?
             logging.debug('Updated product')
+        
         
         # Store product variants
         #self.map_product_options()
         # Store vendor options
         #self.map_vendor_options()
+        self.__vendor_options(p)
         
         p.save()
         return p
     
+    
+    def __vendor_options(self, product):
+        """
+        Private method that adds, update and maintain vendor data and options
+        for a particular product
+        """
         
+        
+        vp, created = VendorProduct.objects.get_or_create( product=product, vendor=self.vendor )
+        
+        if created:
+            logging.debug('Added product data to vendor: %s', vp)
+
+        # FIXME: Map
+        #   - availability
+        #   - delivery time
+        #   - delivery cost (Property of vendor?)
+        
+        fields = {
+            'buy_url': self.dataset['product'].get('product-url'),
+            'price': self.dataset['product'].get('price'),
+            'currency': self.dataset['product'].get('currency'),            
+        }
+        
+        for f in fields:
+            setattr(vp, f, fields[f])
+        
+        vp.save()
     
     def validate(self):
         """
