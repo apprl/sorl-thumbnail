@@ -12,7 +12,7 @@ web application
 Synopsis
 
     api = API(some_data)
-    api.import()
+    api.import_dataset()
     
 Required Data Structure
 
@@ -58,6 +58,89 @@ class API():
         self._manufacturer = None
         self._vendor       = None
         
+    @transaction.commit_on_success
+    def import_dataset(self, data=None):
+        """
+        Imports the Product and related data specified in the data structure. 
+        """
+        
+        try:
+            if data:
+                self.dataset = data
+            
+            self.validate()
+            self.import_product()
+        
+        except ImporterException, e:
+            # Log ImporterException
+            logging.error('%s, record skipped', e)
+            raise
+        else:
+            logging.info('Imported %s', self.product)
+    
+    
+    def import_product(self):
+        """
+        Imports the product
+        """
+        
+        # Download and store product image 
+        fields = {
+            'product_name': self.dataset['product'].get('product-name'),
+            'description': self.dataset['product'].get('description'),
+        }
+
+        
+        try:
+            p = Product.objects.get(
+                manufacturer__id__exact=self.manufacturer.id,
+                sku__exact=self.dataset['product']['product-id']
+            )
+        except ObjectDoesNotExist:
+            # Create product
+            p = Product.objects.create(
+                manufacturer=self.manufacturer, 
+                sku=self.dataset['product']['product-id'],
+                **fields
+            )
+            
+            p.category.add( self.category )
+            logging.debug('Created new product')
+            
+            # call create object and return
+        except MultipleObjectsReturned:
+            s = 'There are more than one product with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku'])
+            logging.error(s)
+            raise SkipRecord(s)
+        else:
+            # Update product
+            for f in fields:
+                setattr(p, f, fields.get(f))
+            
+            logging.debug('Updated product')
+        
+        # Store product variants
+        #self.map_product_options()
+        # Store vendor options
+        #self.map_vendor_options()
+        
+        p.save()
+        return p
+    
+        
+    
+    def validate(self):
+        """
+        Validates a data structure. Returns True on success, will otherwise throw
+        an exception
+        """
+        
+        if self.dataset.get('version') != self.version:
+            raise ImporterException('Incompatable version number "%s" (this is version %s)', self.dataset.get('version'), self.version)
+        
+        logging.debug('Dataset is valid')
+        return True
+    
     @property
     def dataset(self):
         """
@@ -73,40 +156,7 @@ class API():
     def dataset(self, d):
         self._dataset = d
     
-    @transaction.commit_on_success
-    def import_dataset(self, data):
-        """
-        Imports the Product and related data specified in the data structure. 
-        """
         
-        try:
-            self.validate(data)
-            
-            if 'product' in data:
-                self.import_product(data['product'])
-            
-        except ImporterException, e:
-            # Log ImporterException
-            logging.error('%s, record skipped', e)
-            raise
-        else:
-            logging.info('Imported %s', self.product)
-    
-    
-    
-    def validate(self):
-        """
-        Validates a data structure. Returns True on success, will otherwise throw
-        an exception
-        """
-        
-        if self.dataset.get('version') != self.version:
-            raise ImporterException('Incompatable version number "%s" (this is version %s)', self.dataset.get('version'), self.version)
-        
-        logging.debug('Dataset is valid')
-        return True
-    
-    
     @property
     def category(self):
         """

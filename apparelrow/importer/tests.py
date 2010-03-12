@@ -14,6 +14,7 @@ class ValidationTest(TestCase):
             'vendor': u'Cool Clothes Store',
             'product': {
                 'product-id': u'c001',
+                'product-name': u'A cool pair of Jeans',
                 'categories': [u'Jeans'],
                 'manufacturer': u'WhateverMan',
                 'price': 239.0,
@@ -124,3 +125,57 @@ class ValidationTest(TestCase):
         del a3.dataset['product']['categories']
         self.assertRaises(IncompleteDataSet, lambda: a3.category)
     
+    def test_import_product(self):
+        a1 = API()
+        a1.dataset = self.dataset
+        p1 = a1.import_product()
+        
+        self.assertTrue(isinstance(p1, Product), 'Returned product')
+        self.assertEqual(p1.manufacturer.id, a1.manufacturer.id, 'Manufacturer assigned')
+        self.assertEqual(p1.sku, a1.dataset['product'].get('product-id'), 'SKU property populated')
+        self.assertEqual(p1.product_name, a1.dataset['product'].get('product-name'), 'product name property populated')
+        self.assertEqual(p1.description,  a1.dataset['product'].get('description'),  'Description populated')
+        
+        # FIXME: Check vendor product
+        
+        # FIXME: Check product options
+        
+        # Modify product
+        a2 = API()
+        a2.dataset = self.dataset
+        a2.dataset['product']['product_name'] = 'A Brand New Name'
+        a2.dataset['product']['description'] = 'The new description'
+        p2 = a2.import_product()
+        self.assertEqual(p2.id, p1.id, 'Product updated')
+        self.assertNotEqual(p2.product_name, 'A Brand New Name', 'Product name NOT changed')
+        self.assertEqual(p2.description, 'The new description', 'Product descrption changed')
+        
+    def test_import_product_vendor(self):
+        pass
+        # FIXME: Check that vendor options are added/modifieds
+        
+    def test_import_product_options(self):
+        pass
+        # FIXME: Check that options are added/modified
+    
+    def test_import_product_image(self):
+        pass
+        # FIXME: Check that a URL is downloaded and imported        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
