@@ -7,6 +7,8 @@ from django.template.defaultfilters import slugify
 from apparel.manager import SearchManager
 
 import datetime, mptt
+import tagging
+from tagging.fields import TagField
 
 # FIXME: Move to Django settings directory
 PRODUCT_IMAGE_BASE = 'static/product'
@@ -158,7 +160,7 @@ class Product(models.Model):
         return u"%s %s" % (self.manufacturer, self.product_name)
     
     class Exporter:
-        export_fields = ['__all__', 'get_absolute_url']
+        export_fields = ['__all__', 'get_absolute_url', 'default_vendor']
 
 class VendorProduct(models.Model):
     vendor     = models.ForeignKey(Vendor)
@@ -170,15 +172,22 @@ class VendorProduct(models.Model):
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)
 
+    class Exporter:
+        export_fields = ['__all__', '-product']
+
 
 
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
     slug = models.SlugField(_('Slug Name'), blank=True,
         help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
+    description   = models.TextField(_('Look description'), null=True, blank=True)
     products = models.ManyToManyField(Product, through='LookProduct')
     user = models.ForeignKey(User)
     image = models.ImageField(upload_to=LOOKS_BASE, blank=True)
+    created    = models.DateTimeField(_("Time created"), auto_now_add=True)
+    modified    = models.DateTimeField(_("Time modified"), auto_now=True)
+    tags = TagField()
 
     def save(self, force_insert=False, force_update=False):
         if self.title and not self.slug:
@@ -197,9 +206,15 @@ class Look(models.Model):
     def get_absolute_url(self):
         return ('apparel.views.look_detail', [str(self.slug)])
 
+LOOK_PRODUCT_TYPE_CHOICES = (
+    ('C', 'Collage'),
+    ('P', 'Picture'),
+)
+
 class LookProduct(models.Model):
     product = models.ForeignKey(Product)
     look = models.ForeignKey(Look, related_name='look_products')
+    type = models.CharField(max_length=1, choices=LOOK_PRODUCT_TYPE_CHOICES)
     top = models.IntegerField(_('CSS top'), blank=True, null=True)
     left = models.IntegerField(_('CSS left'), blank=True, null=True)
     width = models.IntegerField(_('CSS width'), blank=True, null=True)

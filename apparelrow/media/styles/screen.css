@@ -70,38 +70,39 @@ body #container, body .container {
   width: 940px;
   overflow: hidden;
   display: inline-block;
+  overflow: visible;
 }
 /* line 5, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.pre2/lib/compass/frameworks/compass/stylesheets/compass/utilities/general/_hacks.sass */
 body #container, body .container {
   display: block;
 }
-/* line 13, ../src/screen.sass */
+/* line 14, ../src/screen.sass */
 body #header, body #footer {
   margin: 0 auto;
   width: 940px;
 }
-/* line 15, ../src/screen.sass */
+/* line 16, ../src/screen.sass */
 body .sidebar {
   display: inline;
   float: left;
   width: 205px;
   margin-right: 40px;
 }
-/* line 19, ../src/screen.sass */
+/* line 20, ../src/screen.sass */
 body .last {
   margin-right: 0;
 }
-/* line 22, ../src/screen.sass */
+/* line 23, ../src/screen.sass */
 body.two-columns #content {
   display: inline;
   float: left;
   width: 695px;
 }
-/* line 26, ../src/screen.sass */
+/* line 27, ../src/screen.sass */
 body.right #content {
   margin-right: 40px;
 }
-/* line 29, ../src/screen.sass */
+/* line 30, ../src/screen.sass */
 body.three-columns #content {
   display: inline;
   float: left;
@@ -109,7 +110,7 @@ body.three-columns #content {
   margin-right: 40px;
 }
 
-/* line 34, ../src/screen.sass */
+/* line 35, ../src/screen.sass */
 *:focus {
   outline: #d9d9d9 dotted medium;
 }
@@ -149,7 +150,206 @@ h3 {
   font-weight: bolder;
 }
 
-/* line 6, ../src/partials/_application.sass */
+/* line 10, ../src/partials/_look.sass */
+#photo, #collage {
+  position: relative;
+  height: 500px;
+}
+/* line 13, ../src/partials/_look.sass */
+#photo .look, #collage .look {
+  position: absolute;
+}
+/* line 15, ../src/partials/_look.sass */
+#photo .ui-wrapper, #collage .ui-wrapper {
+  position: absolute;
+  opacity: 0.8;
+  /* Webkit (Safari, Chrome) */
+  -webkit-box-shadow: #999999 0px 0px 20px;
+  /* Gecko (Firefox, Camino) */
+  -moz-box-shadow: #999999 0px 0px 20px;
+  /* CSS3 */
+  box-shadow: #999999 0px 0px 20px;
+}
+/* line 19, ../src/partials/_look.sass */
+#photo .ui-state-disabled, #photo .ui-widget-content .ui-state-disabled, #collage .ui-state-disabled, #collage .ui-widget-content .ui-state-disabled {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  opacity: 1.0;
+}
+
+/* line 25, ../src/partials/_look.sass */
+#edit-look {
+  border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -webkit-border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -webkit-border-top-right-radius: 5px;
+  border: 1px solid #d9d9d9;
+  height: 500px;
+}
+/* line 29, ../src/partials/_look.sass */
+#edit-look ul.tabs {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  overflow: hidden;
+  display: inline-block;
+}
+/* line 5, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.pre2/lib/compass/frameworks/compass/stylesheets/compass/utilities/general/_hacks.sass */
+#edit-look ul.tabs {
+  display: block;
+}
+/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.pre2/lib/compass/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal_list.sass */
+#edit-look ul.tabs li {
+  list-style-type: none;
+  margin-left: 0px;
+  white-space: nowrap;
+  display: inline;
+  float: left;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+/* line 40, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.pre2/lib/compass/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal_list.sass */
+#edit-look ul.tabs li.first {
+  padding-left: 0px;
+}
+/* line 42, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.pre2/lib/compass/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal_list.sass */
+#edit-look ul.tabs li.last {
+  padding-right: 0px;
+}
+/* line 31, ../src/partials/_look.sass */
+#edit-look ul.tabs li {
+  border: 1px solid #d9d9d9;
+  background-color: #fafafa;
+  line-height: 30px;
+  background-image: url('../images/gradient-bg.png?1265910786');
+  background-repeat: repeat-x;
+  width: 222px;
+  border-style: none solid solid none;
+  text-align: center;
+}
+/* line 43, ../src/partials/_base.sass */
+#edit-look ul.tabs li.cancel:before {
+  content: url('../images/cancel.png?1265910786');
+}
+/* line 45, ../src/partials/_base.sass */
+#edit-look ul.tabs li.ok:before {
+  content: url('../images/ok.png?1265910786');
+}
+/* line 36, ../src/partials/_look.sass */
+#edit-look ul.tabs li.current {
+  background-image: url('../images/gradient-dark-bg.png?1265910786');
+}
+/* line 38, ../src/partials/_look.sass */
+#edit-look ul.tabs li:last {
+  border-right: none;
+}
+/* line 40, ../src/partials/_look.sass */
+#edit-look ul.tabs li a {
+  display: block;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 75px center;
+}
+/* line 46, ../src/partials/_look.sass */
+#edit-look ul.tabs li a.collage {
+  background-image: url('../images/kollage.png?1267020375');
+}
+/* line 48, ../src/partials/_look.sass */
+#edit-look ul.tabs li a.photo {
+  background-image: url('../images/foto.png?1267020375');
+  background-position: 80px center;
+}
+/* line 51, ../src/partials/_look.sass */
+#edit-look ul.tabs li a.selection {
+  background-image: url('../images/urval.png?1267020375');
+}
+
+/* line 54, ../src/partials/_look.sass */
+#look-title {
+  border: 1px solid #d9d9d9;
+  width: 893px;
+  height: 27px;
+  background: transparent url('../images/gradient-bg.png?1265910786') repeat-x;
+  margin: 20px 0 10px -20px;
+  padding-top: 3px;
+  padding-left: 20px;
+}
+/* line 63, ../src/partials/_look.sass */
+#look-title #id_title, #look-title button {
+  color: #408993;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+/* line 67, ../src/partials/_look.sass */
+#look-title #id_title {
+  border: 1px solid #80bba2;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  background-color: #d0fae8;
+  line-height: 20px;
+  height: 14px;
+  width: 203px;
+  text-align: center;
+  padding-top: 6px;
+  /* Webkit (Safari, Chrome) */
+  -webkit-box-shadow: inset #aed8c6 0 3px 3px;
+  /* Gecko (Firefox, Camino) */
+  -moz-box-shadow: inset #aed8c6 0 3px 3px;
+  /* CSS3 */
+  box-shadow: inset #aed8c6 0 3px 3px;
+}
+/* line 78, ../src/partials/_look.sass */
+#look-title button {
+  display: inline;
+  float: right;
+  margin-right: -21px;
+  background: transparent url('../images/preview-button.png?1266933655') no-repeat scroll;
+  height: 24px;
+  line-height: 24px;
+  width: 103px;
+  border: none;
+  text-align: start;
+}
+
+/* line 88, ../src/partials/_look.sass */
+#id_description,
+#id_tags {
+  font-family: "Helvetica", "Arial", sans-serif;
+  font-size: 1em;
+  width: 193px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border: 1px solid #d9d9d9;
+  background-color: #f6f6f6;
+  color: #666;
+  /* Webkit (Safari, Chrome) */
+  -webkit-box-shadow: inset #d4d4d4 0 3px 3px;
+  /* Gecko (Firefox, Camino) */
+  -moz-box-shadow: inset #d4d4d4 0 3px 3px;
+  /* CSS3 */
+  box-shadow: inset #d4d4d4 0 3px 3px;
+  padding: 0.5em 5px;
+}
+
+/* line 100, ../src/partials/_look.sass */
+#id_description {
+  height: 2em;
+}
+
+/* line 103, ../src/partials/_look.sass */
+.sidebar label {
+  display: block;
+  margin: 20px 0 10px;
+  padding: 0 0 5px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+/* line 7, ../src/partials/_application.sass */
 body {
   background-color: white;
   background-image: url('../images/header-bg.png?1265910786');
@@ -157,7 +357,7 @@ body {
   background-position: center top;
 }
 
-/* line 13, ../src/partials/_application.sass */
+/* line 14, ../src/partials/_application.sass */
 button, a.button {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -175,19 +375,19 @@ button.ok:before, a.button.ok:before {
   content: url('../images/ok.png?1265910786');
 }
 
-/* line 17, ../src/partials/_application.sass */
+/* line 18, ../src/partials/_application.sass */
 #content.fixed {
   position: fixed;
   top: 0;
 }
 
-/* line 21, ../src/partials/_application.sass */
+/* line 22, ../src/partials/_application.sass */
 #header {
   height: 140px;
   overflow: visible;
   position: relative;
 }
-/* line 25, ../src/partials/_application.sass */
+/* line 26, ../src/partials/_application.sass */
 #header h1 {
   display: inline;
   float: left;
@@ -203,35 +403,35 @@ button.ok:before, a.button.ok:before {
   border-bottom: 1px solid #999999;
 }
 
-/* line 35, ../src/partials/_application.sass */
+/* line 36, ../src/partials/_application.sass */
 #login-pane {
   height: 2em;
   line-height: 2em;
   background: transparent url(../images/loggedin-pane-bg.png) scroll repeat-x left top;
 }
-/* line 40, ../src/partials/_application.sass */
+/* line 41, ../src/partials/_application.sass */
 #login-pane.updates {
   background: transparent url(../images/updates-bg.png) scroll repeat-x left top;
 }
 
-/* line 44, ../src/partials/_application.sass */
+/* line 45, ../src/partials/_application.sass */
 #nav-user {
   float: left;
   margin: 0;
 }
 
-/* line 49, ../src/partials/_application.sass */
+/* line 50, ../src/partials/_application.sass */
 #nav-main {
   position: absolute;
   top: 50px;
   left: 450px;
 }
-/* line 54, ../src/partials/_application.sass */
+/* line 55, ../src/partials/_application.sass */
 #nav-main li {
   display: inline;
   margin-left: 2em;
 }
-/* line 58, ../src/partials/_application.sass */
+/* line 59, ../src/partials/_application.sass */
 #nav-main li a {
   text-decoration: none;
   text-transform: uppercase;
@@ -239,17 +439,17 @@ button.ok:before, a.button.ok:before {
   padding-top: 1em;
   padding-bottom: 1em;
 }
-/* line 65, ../src/partials/_application.sass */
+/* line 66, ../src/partials/_application.sass */
 #nav-main li a.selected {
   background: transparent url('../images/nav-main-selected.png') fixed no-repeat center bottom;
 }
 
-/* line 70, ../src/partials/_application.sass */
+/* line 71, ../src/partials/_application.sass */
 #logged-in-as {
   float: left;
 }
 
-/* line 74, ../src/partials/_application.sass */
+/* line 75, ../src/partials/_application.sass */
 #logout {
   display: inline-block;
   float: right;
@@ -258,7 +458,7 @@ button.ok:before, a.button.ok:before {
   background: transparent url('../images/logout.png') fixed no-repeat left center;
 }
 
-/* line 82, ../src/partials/_application.sass */
+/* line 83, ../src/partials/_application.sass */
 #account-dialogue {
   position: absolute;
   width: 482px;
@@ -270,27 +470,27 @@ button.ok:before, a.button.ok:before {
   background: transparent url('../images/login-bg.png') scroll no-repeat left center;
 }
 
-/* line 93, ../src/partials/_application.sass */
+/* line 94, ../src/partials/_application.sass */
 #login-forgot-password {
   color: #fb9292;
 }
 
-/* line 97, ../src/partials/_application.sass */
+/* line 98, ../src/partials/_application.sass */
 #login-create-account {
   color: #92c0c0;
 }
 
-/* line 102, ../src/partials/_application.sass */
+/* line 103, ../src/partials/_application.sass */
 #account-dialogue input.default-value {
   font-style: italic;
 }
-/* line 105, ../src/partials/_application.sass */
+/* line 106, ../src/partials/_application.sass */
 #account-dialogue form {
   margin: 0;
   margin: auto 1em;
 }
 
-/* line 110, ../src/partials/_application.sass */
+/* line 111, ../src/partials/_application.sass */
 #login-username, #login-password, #login-password-placeholder {
   background: transparent url(../images/login-text-bg.png) scroll no-repeat left center;
   width: 108px;
@@ -303,7 +503,7 @@ button.ok:before, a.button.ok:before {
   float: left;
 }
 
-/* line 122, ../src/partials/_application.sass */
+/* line 123, ../src/partials/_application.sass */
 #login-submit {
   width: 40px;
   height: 40px;
@@ -314,12 +514,12 @@ button.ok:before, a.button.ok:before {
   cursor: pointer;
 }
 
-/* line 132, ../src/partials/_application.sass */
+/* line 133, ../src/partials/_application.sass */
 #login-password {
   display: none;
 }
 
-/* line 136, ../src/partials/_application.sass */
+/* line 137, ../src/partials/_application.sass */
 #account-dialogue .fb-connect-button {
   float: right;
   margin-right: 2em;
@@ -328,10 +528,10 @@ button.ok:before, a.button.ok:before {
   padding-top: 6px;
 }
 
-/* line 145, ../src/partials/_application.sass */
-.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #pagination, #add-menu, #add-to-look ul, .product-info, .product-vendor {
-  border: 1px solid #dadada;
-  background-color: #f2f2f2;
+/* line 146, ../src/partials/_application.sass */
+.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #add-menu, #add-to-look ul, .product-info, .product-vendor {
+  border: 1px solid #d9d9d9;
+  background-color: #fafafa;
 }
 
 /* line 151, ../src/partials/_application.sass */
@@ -901,33 +1101,72 @@ span.likes {
 /* line 298, ../src/partials/_application.sass */
 span.price {
   background: transparent url(../images/check.png) no-repeat scroll left bottom;
-  padding-left: 20px;
+  color: #737373;
+  padding-left: 15px;
 }
 
-/* line 303, ../src/partials/_application.sass */
+/* line 304, ../src/partials/_application.sass */
 .product-photo {
   border: 1px solid #dadada;
 }
 
-/* line 307, ../src/partials/_application.sass */
-#product-list {
-  border-bottom: 1px solid #dadada;
-  height: 360px;
+/* line 308, ../src/partials/_application.sass */
+div#product-list {
+  overflow: hidden;
+  display: inline-block;
+  border: 1px solid #d9d9d9;
+  background-color: #fafafa;
+  border: none;
+  width: 697px;
+  border-bottom-left-radius: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  -moz-border-radius-bottomright: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+}
+/* line 5, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.pre2/lib/compass/frameworks/compass/stylesheets/compass/utilities/general/_hacks.sass */
+div#product-list {
+  display: block;
+}
+/* line 314, ../src/partials/_application.sass */
+div#product-list ul {
+  overflow: hidden;
+  display: inline-block;
+  border: 1px solid #d9d9d9;
+  border-left: none;
+}
+/* line 5, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.pre2/lib/compass/frameworks/compass/stylesheets/compass/utilities/general/_hacks.sass */
+div#product-list ul {
+  display: block;
+}
+/* line 318, ../src/partials/_application.sass */
+div#product-list ul li {
+  display: block;
 }
 
-/* line 312, ../src/partials/_application.sass */
+/* line 321, ../src/partials/_application.sass */
 .product-small {
-  width: 139px;
-  height: 180px;
+  width: 115px;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-top: none;
+  border-right: none;
+  text-align: center;
   float: left;
 }
-/* line 317, ../src/partials/_application.sass */
-.product-small .product-image {
-  text-align: center;
-  position: relative;
-  height: 138px;
+/* line 329, ../src/partials/_application.sass */
+.product-small h4 {
+  border-top: 1px solid #d9d9d9;
+  height: 1.5em;
+  overflow: hidden;
 }
-/* line 322, ../src/partials/_application.sass */
+/* line 334, ../src/partials/_application.sass */
+.product-small .product-image {
+  position: relative;
+  height: 153px;
+}
+/* line 338, ../src/partials/_application.sass */
 .product-small span.likes {
   display: none;
   position: absolute;
@@ -938,44 +1177,45 @@ span.price {
   min-width: 10px;
   background-position: center top;
 }
-/* line 332, ../src/partials/_application.sass */
-.product-small .product-info {
-  text-align: center;
-  border-bottom: none;
-  padding-bottom: 5px;
-}
 
-/* line 338, ../src/partials/_application.sass */
+/* line 349, ../src/partials/_application.sass */
 #pagination {
   height: 30px;
+  border: 1px solid #d9d9d9;
   border-top: none;
+  border-bottom-left-radius: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  -moz-border-radius-bottomright: 3px;
+  -webkit-border-bottom-right-radius: 3px;
 }
-/* line 342, ../src/partials/_application.sass */
+/* line 355, ../src/partials/_application.sass */
 #pagination .prev {
   float: left;
   display: inline-block;
-  width: 138px;
+  width: 115px;
   height: 30px;
   background: transparent url(../images/prev-page.png) no-repeat scroll 20px center;
-  border-right: 1px solid #dadada;
+  border-right: 1px solid #d9d9d9;
 }
-/* line 350, ../src/partials/_application.sass */
+/* line 363, ../src/partials/_application.sass */
 #pagination .next {
   float: right;
   display: inline-block;
-  width: 138px;
+  width: 115px;
   height: 30px;
-  background: transparent url(../images/next-page.png) no-repeat scroll 120px center;
-  border-left: 1px solid #dadada;
+  background: transparent url(../images/next-page.png) no-repeat scroll 89px center;
+  border-left: 1px solid #d9d9d9;
 }
-/* line 358, ../src/partials/_application.sass */
+/* line 371, ../src/partials/_application.sass */
 #pagination .current {
   float: left;
   line-height: 30px;
   text-align: center;
 }
 
-/* line 364, ../src/partials/_application.sass */
+/* line 377, ../src/partials/_application.sass */
 .tooltip .product-image, #product .product-image {
   height: 500px;
   border: 1px solid #dadada;
@@ -984,7 +1224,7 @@ span.price {
   position: relative;
 }
 
-/* line 372, ../src/partials/_application.sass */
+/* line 385, ../src/partials/_application.sass */
 .tooltip .product-image .magnifier, #product .product-image .magnifier {
   position: absolute;
   right: 10px;
@@ -995,7 +1235,7 @@ span.price {
   display: none;
 }
 
-/* line 382, ../src/partials/_application.sass */
+/* line 395, ../src/partials/_application.sass */
 table.available-sizes th {
   border: none;
   font-size: 0.8em;
@@ -1004,86 +1244,86 @@ table.available-sizes th {
   text-transform: uppercase;
 }
 
-/* line 390, ../src/partials/_application.sass */
+/* line 403, ../src/partials/_application.sass */
 .product-info {
   border-left: none;
   overflow: visible;
 }
 
-/* line 395, ../src/partials/_application.sass */
+/* line 408, ../src/partials/_application.sass */
 .tooltip .product-info, #product .product-info {
   background: #fafafa;
   height: 478px;
 }
 
-/* line 399, ../src/partials/_application.sass */
+/* line 412, ../src/partials/_application.sass */
 .product-info .box {
   padding: 1.5em;
   background-color: inherit;
 }
 
-/* line 404, ../src/partials/_application.sass */
+/* line 417, ../src/partials/_application.sass */
 .product-options {
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 5px;
   list-style: none;
 }
-/* line 410, ../src/partials/_application.sass */
+/* line 423, ../src/partials/_application.sass */
 .product-options ul {
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 5px;
   list-style: none;
 }
-/* line 416, ../src/partials/_application.sass */
+/* line 429, ../src/partials/_application.sass */
 .product-options li ul li {
   float: left;
 }
-/* line 419, ../src/partials/_application.sass */
+/* line 432, ../src/partials/_application.sass */
 .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {
   border-right: none;
 }
-/* line 422, ../src/partials/_application.sass */
+/* line 435, ../src/partials/_application.sass */
 .product-options .option-size li, .product-options .option-relative-size li, .product-options .option-shoe-size li, .product-options .option-pants-length li, .product-options .option-pants-width li {
   padding: 0 10px;
   border-right: 1px solid #dadada;
 }
-/* line 426, ../src/partials/_application.sass */
+/* line 439, ../src/partials/_application.sass */
 .product-options .option-color {
   background: transparent url(../images/option-color-bg.png) scroll repeat-x left top;
   border-right: 1px solid #dadada;
 }
-/* line 430, ../src/partials/_application.sass */
+/* line 443, ../src/partials/_application.sass */
 .product-options .option-color li {
   background: transparent scroll no-repeat left top;
   width: 39px;
   height: 20px;
   text-indent: -10000em;
 }
-/* line 436, ../src/partials/_application.sass */
+/* line 449, ../src/partials/_application.sass */
 .product-options .option-color li.black {
   background-image: url(../images/option-color-black.png);
 }
-/* line 439, ../src/partials/_application.sass */
+/* line 452, ../src/partials/_application.sass */
 .product-options .option-color li.yellow {
   background-image: url(../images/option-color-yellow.png);
 }
-/* line 442, ../src/partials/_application.sass */
+/* line 455, ../src/partials/_application.sass */
 .product-options .option-color li.green {
   background-image: url(../images/option-color-green.png);
 }
-/* line 445, ../src/partials/_application.sass */
+/* line 458, ../src/partials/_application.sass */
 .product-options .option-color li.magenta {
   background-image: url(../images/option-color-magenta.png);
 }
 
-/* line 449, ../src/partials/_application.sass */
+/* line 462, ../src/partials/_application.sass */
 .product-vendors {
   border-bottom: 1px solid #e7e7e7;
 }
 
-/* line 453, ../src/partials/_application.sass */
+/* line 466, ../src/partials/_application.sass */
 a.buy-now {
   padding: 50px 10px 5px;
   background: #d0fae8 url(../images/check-large.png) scroll no-repeat center center;
@@ -1093,37 +1333,37 @@ a.buy-now {
   font-weight: bold;
 }
 
-/* line 462, ../src/partials/_application.sass */
+/* line 475, ../src/partials/_application.sass */
 .product-vendors a.buy-now {
   float: right;
 }
 
-/* line 466, ../src/partials/_application.sass */
+/* line 479, ../src/partials/_application.sass */
 .product-vendor {
   border-bottom: none;
   padding: 5px 10px;
   height: 30px;
   line-height: 30px;
 }
-/* line 472, ../src/partials/_application.sass */
+/* line 485, ../src/partials/_application.sass */
 .product-vendor .price, .product-vendor .currency {
   line-height: 30px;
 }
-/* line 475, ../src/partials/_application.sass */
+/* line 488, ../src/partials/_application.sass */
 .product-vendor .price {
   font-size: 2em;
   background: none;
   padding-left: 0;
   padding-right: 5px;
 }
-/* line 481, ../src/partials/_application.sass */
+/* line 494, ../src/partials/_application.sass */
 .product-vendor .vendor {
   float: right;
   background: transparent url(../images/vendor.png) scroll no-repeat left center;
   padding: 0 10px;
 }
 
-/* line 486, ../src/partials/_application.sass */
+/* line 499, ../src/partials/_application.sass */
 #recentlyviewed {
   overflow: hidden;
   display: inline-block;
@@ -1240,28 +1480,28 @@ a.buy-now {
   border: 1px solid #d9d9d9;
 }
 
-/* line 490, ../src/partials/_application.sass */
+/* line 503, ../src/partials/_application.sass */
 .similar-product .product-photo {
   float: left;
   margin-right: 10px;
 }
-/* line 494, ../src/partials/_application.sass */
+/* line 507, ../src/partials/_application.sass */
 .similar-product .product-summary {
   float: left;
 }
 
-/* line 499, ../src/partials/_application.sass */
+/* line 512, ../src/partials/_application.sass */
 .product-summary a, .product-summary span {
   display: block;
 }
-/* line 502, ../src/partials/_application.sass */
+/* line 515, ../src/partials/_application.sass */
 .product-summary a {
   text-transform: uppercase;
   background: transparent url(../images/arrow-bg.png) scroll no-repeat left bottom;
   padding-left: 20px;
 }
 
-/* line 508, ../src/partials/_application.sass */
+/* line 521, ../src/partials/_application.sass */
 #add-menu {
   margin-top: 4em;
   overflow: hidden;
@@ -1271,7 +1511,7 @@ a.buy-now {
 #add-menu {
   display: block;
 }
-/* line 512, ../src/partials/_application.sass */
+/* line 525, ../src/partials/_application.sass */
 #add-menu > li {
   position: relative;
   float: left;
@@ -1280,42 +1520,42 @@ a.buy-now {
   padding-left: 1em;
 }
 
-/* line 520, ../src/partials/_application.sass */
+/* line 533, ../src/partials/_application.sass */
 #add-menu > li > a {
   background: transparent url(../images/add.png) scroll no-repeat left center;
   padding-left: 20px;
 }
 
-/* line 526, ../src/partials/_application.sass */
+/* line 539, ../src/partials/_application.sass */
 li#add-to-look {
   border-right: 1px solid #d9d9d9;
 }
-/* line 528, ../src/partials/_application.sass */
+/* line 541, ../src/partials/_application.sass */
 li#add-to-look > a {
   background-image: url(../images/add.png);
 }
-/* line 530, ../src/partials/_application.sass */
+/* line 543, ../src/partials/_application.sass */
 li#add-to-look ul {
   display: none;
   margin: 0 -1em;
   border-bottom: none;
   border-right: none;
 }
-/* line 535, ../src/partials/_application.sass */
+/* line 548, ../src/partials/_application.sass */
 li#add-to-look ul li {
   padding: 0 1em;
   border-bottom: 1px solid #dadada;
 }
-/* line 538, ../src/partials/_application.sass */
+/* line 551, ../src/partials/_application.sass */
 li#add-to-look ul li a {
   display: block;
 }
-/* line 541, ../src/partials/_application.sass */
+/* line 554, ../src/partials/_application.sass */
 li#add-to-wardrobe > a {
   background-image: url(../images/embed.png);
 }
 
-/* line 545, ../src/partials/_application.sass */
+/* line 558, ../src/partials/_application.sass */
 a.block_link {
   display: block;
   line-height: 2.5em;
@@ -1323,7 +1563,7 @@ a.block_link {
   text-transform: uppercase;
 }
 
-/* line 552, ../src/partials/_application.sass */
+/* line 565, ../src/partials/_application.sass */
 #search {
   background: transparent url(../images/search.png) scroll no-repeat left center;
   top: 31px;
@@ -1335,14 +1575,14 @@ a.block_link {
   overflow: visible;
   z-index: 1000;
 }
-/* line 563, ../src/partials/_application.sass */
+/* line 576, ../src/partials/_application.sass */
 #search.expanded {
   background: transparent url(../images/searchresult-bg.png) scroll no-repeat center top;
   height: 547px;
   width: 895px;
 }
 
-/* line 569, ../src/partials/_application.sass */
+/* line 582, ../src/partials/_application.sass */
 #searchbox {
   position: absolute;
   width: 163px;
@@ -1354,72 +1594,72 @@ a.block_link {
   background: transparent;
 }
 
-/* line 580, ../src/partials/_application.sass */
+/* line 593, ../src/partials/_application.sass */
 #search-result {
   margin-top: 140px;
   display: none;
 }
-/* line 584, ../src/partials/_application.sass */
+/* line 597, ../src/partials/_application.sass */
 #search-result h2 {
   font-size: 1.2em;
   font-weight: bold;
 }
 
-/* line 589, ../src/partials/_application.sass */
+/* line 602, ../src/partials/_application.sass */
 .search-result-container {
   margin-left: 5px;
 }
-/* line 592, ../src/partials/_application.sass */
+/* line 605, ../src/partials/_application.sass */
 .search-result-container h3 {
   font-size: 1em;
   font-weight: bold;
 }
-/* line 596, ../src/partials/_application.sass */
+/* line 609, ../src/partials/_application.sass */
 .search-result-container a {
   display: block;
   margin-bottom: 4px;
 }
-/* line 600, ../src/partials/_application.sass */
+/* line 613, ../src/partials/_application.sass */
 .search-result-container .product-info {
   border: none;
   text-align: left;
 }
-/* line 604, ../src/partials/_application.sass */
+/* line 617, ../src/partials/_application.sass */
 .search-result-container .product-small {
   width: 205px;
 }
-/* line 607, ../src/partials/_application.sass */
+/* line 620, ../src/partials/_application.sass */
 .search-result-container .product-image {
   float: left;
   margin-right: 5px;
 }
 
-/* line 612, ../src/partials/_application.sass */
+/* line 625, ../src/partials/_application.sass */
 #content form {
   margin-left: .5em;
   padding-top: -.5em;
 }
-/* line 616, ../src/partials/_application.sass */
+/* line 629, ../src/partials/_application.sass */
 #content form label {
   display: block;
   margin-top: .5em;
 }
-/* line 620, ../src/partials/_application.sass */
+/* line 633, ../src/partials/_application.sass */
 #content form button {
   margin-top: 1em;
 }
-/* line 623, ../src/partials/_application.sass */
+/* line 636, ../src/partials/_application.sass */
 #content form .errorlist {
   color: #990000;
 }
 
-/* line 627, ../src/partials/_application.sass */
+/* line 640, ../src/partials/_application.sass */
 .facebook-profile-image {
   float: left;
   margin-right: .5em;
 }
 
-/* line 632, ../src/partials/_application.sass */
+/* line 645, ../src/partials/_application.sass */
 #profile-nav li {
   display: block;
   float: left;
@@ -1431,22 +1671,22 @@ a.block_link {
   text-transform: uppercase;
   background: transparent url(../images/profile-nav-bg.png) scroll repeat-x top left;
 }
-/* line 643, ../src/partials/_application.sass */
+/* line 656, ../src/partials/_application.sass */
 #profile-nav li.selected {
   background-image: url(../images/profile-nav-bg-selected.png);
   border-right-color: #ababab;
   border-left-color: #ababab;
 }
-/* line 648, ../src/partials/_application.sass */
+/* line 661, ../src/partials/_application.sass */
 #profile-nav li a {
   line-height: 30px;
 }
-/* line 651, ../src/partials/_application.sass */
+/* line 664, ../src/partials/_application.sass */
 #profile-nav li.profile-image {
   padding: 0;
 }
 
-/* line 655, ../src/partials/_application.sass */
+/* line 668, ../src/partials/_application.sass */
 #profile-nav-dash {
   position: relative;
   top: -10px;

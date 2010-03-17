@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponsePermanentRedirect, HttpResponseNotFound
 from django.core.files.storage import default_storage
 
 from sorl.thumbnail.main import DjangoThumbnail
@@ -23,7 +23,9 @@ def thumb(request, size, path):
     
     # FIXME: Is it possible to do a URL re-write here instead of sending back
     # a location header to the client?
-    return HttpResponseRedirect(thumbnail.absolute_url)
+    response = HttpResponsePermanentRedirect(thumbnail.absolute_url)
+    response['Expires'] = 'never'
+    return response
 
 def get_transparent(path):
     path_and_file, ext = os.path.splitext(path)

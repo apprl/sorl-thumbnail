@@ -2,6 +2,7 @@
 @import partials/typography.sass
 @import partials/filter.sass
 @import partials/row.sass
+@import partials/look.sass
 
 body
   background:
@@ -142,9 +143,8 @@ button, a.button
 
 
 
-.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #pagination, #add-menu, #add-to-look ul, .product-info, .product-vendor
-  border: 1px solid #dadada
-  background-color: #f2f2f2
+.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #add-menu, #add-to-look ul, .product-info, .product-vendor
+  +box
 
 
 .product-options
@@ -297,27 +297,43 @@ span
 
   &.price
     background: transparent url(../images/check.png) no-repeat scroll left bottom
-    padding-left: 20px
+    color: #737373
+    padding-left: 15px
 
 
 .product-photo
   border: 1px solid #dadada
 
 
-#product-list
-  border-bottom: 1px solid #dadada
-  height: 360px
-
+div#product-list
+  +clearfix
+  +box
+  border: none
+  width: 697px
+  +border-bottom-radius("3px")
+  ul
+    +clearfix
+    +border("all")
+    border-left: none
+    li
+      display: block
 
 .product-small
-  width: 139px
-  height: 180px
+  width: 115px
+  background-color: white
+  +border("all")
+  border-top: none
+  border-right: none
+  text-align: center
   float: left
+  h4
+    +border("top")
+    height: 1.5em
+    overflow: hidden
 
   .product-image
-    text-align: center
     position: relative
-    height: 138px
+    height: 153px
 
   span.likes
     display: none
@@ -329,31 +345,28 @@ span
     min-width: 10px
     background-position: center top
 
-  .product-info
-    text-align: center
-    border-bottom: none
-    padding-bottom: 5px
-
 
 #pagination
   height: 30px
+  +border("all")
   border-top: none
+  +border-bottom-radius("3px")
 
   .prev
     float: left
     display: inline-block
-    width: 138px
+    width: 115px
     height: 30px
     background: transparent url(../images/prev-page.png) no-repeat scroll 20px center
-    border-right: 1px solid #dadada
+    +border("right")
 
   .next
     float: right
     display: inline-block
-    width: 138px
+    width: 115px
     height: 30px
-    background: transparent url(../images/next-page.png) no-repeat scroll 120px center
-    border-left: 1px solid #dadada
+    background: transparent url(../images/next-page.png) no-repeat scroll 89px center
+    +border("left")
 
   .current
     float: left

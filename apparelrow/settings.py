@@ -134,10 +134,12 @@ INSTALLED_APPS = (
     'pagination',
     'mptt',
     'sorl.thumbnail',
-    'apparelrow.apparel',
-    'apparelrow.scale',
-    'apparelrow.watcher',
-    'apparelrow.profile',
+    'tagging',
+    'pagination',
+    'apparel',
+    'scale',
+    'watcher',
+    'profile',
     
     # internal (for now)
     'django.contrib.admin',

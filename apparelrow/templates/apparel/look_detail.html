@@ -1,5 +1,6 @@
 {% extends 'profile/base.html' %}
 {% load i18n %}
+{% load humanize %}
 
 {% block 'extra-styles' %}
 <style type="text/css">
@@ -46,6 +47,8 @@
     {% endblocktrans %}
     {{ object.total_price }} SEK
     </p>
+    {% if object.description %}<p>{{ object.description }}</p>{% endif %}
+    <p>{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</p>
 </div>
 <div id="content">
     <h2>{{ object.title }}</h2>

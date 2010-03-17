@@ -35,7 +35,7 @@ def search(request, model):
     else:
         raise Exception('No model to search for')
     
-    paginator = Paginator(result, 10) #FIXME: Make results per page configurable
+    paginator = Paginator(result, 12) #FIXME: Make results per page configurable
 
     try:
         page = int(request.GET.get('page', '1'))
@@ -48,8 +48,18 @@ def search(request, model):
         paged_result = paginator.page(paginator.num_pages)
 
     #FIXME: We don't return the paged result because it's not JSON serializable
+    response = {
+        'object_list': paged_result.object_list,
+        'previous_page_number': paged_result.previous_page_number(),
+        'next_page_number': paged_result.next_page_number(),
+        'number': paged_result.number,
+        'paginator': {
+            'num_pages': paged_result.paginator.num_pages,
+            'count': paged_result.paginator.count,
+        },
+    }
     return HttpResponse(
-        json.encode(paged_result.object_list),
+        json.encode(response),
         mimetype='text/json'
     )
 
@@ -92,14 +102,16 @@ def get_filter():
 def index(request):
     return render_to_response('index.html', get_filter())
 
-def filter(request):
+def browse(request):
     if len(request.GET):
         products = Product.objects.search(request.GET)
     else:
         products = Product.objects.all()
     #FIXME: Create a generic way of getting relevant templates and putting them into the context
+    product_count_template = get_template_source('apparel/fragments/product_count.html')
     product_template = get_template_source('apparel/fragments/product_small.html')
-    paginator = Paginator(products, 10) #FIXME: Make number per page configurable
+    pagination_template = get_template_source('apparel/fragments/pagination.html')
+    paginator = Paginator(products, 12) #FIXME: Make number per page configurable
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -110,8 +122,13 @@ def filter(request):
         paged_products = paginator.page(paginator.num_pages)
     result = get_filter()
     result['products'] = paged_products
-    result['product_template'] = product_template
-    return render_to_response('filter.html', result)
+    result['product_count_template'] = js_template(product_count_template)
+    result['product_template'] = js_template(product_template)
+    result['pagination_template'] = js_template(pagination_template)
+    return render_to_response('apparel/browse.html', result)
+
+def js_template(str):
+    return str.replace('{%', '<%').replace('%}', '%>').replace('{{', '<%=').replace('}}', '%>')
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
@@ -161,6 +178,7 @@ def look_edit(request, slug):
         form = LookForm(request.POST, request.FILES, instance=look)
         if form.is_valid():
             form.save()
+            return HttpResponseRedirect(look.get_absolute_url())
     else:
         form = LookForm(instance=look)
 
