@@ -121,7 +121,8 @@ class CategoryAlias(models.Model):
 
 class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
-    category = models.ManyToManyField(Category, blank=True, verbose_name=_("Category"))
+    category = models.ForeignKey(Category, blank=True)
+    #models.ManyToManyField(Category, blank=True, verbose_name=_("Category"))
     options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
     slug = models.SlugField(_("Slug Name"), blank=True,
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)

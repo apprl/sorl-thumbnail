@@ -27,7 +27,7 @@ Required Data Structure
         'manufacturer': 'Jordan',
         'price': 1399.00,
         'currency': 'SEK',
-        'delivery-cost': 99.00
+        'delivery-cost': 99.00,
         'delivery-time': '3-5 D',
         'availability': True OR a number (0 for not available),
         'product-url': 'http://caliroots.com/system/search/product_vert.asp?id=20724',
@@ -88,6 +88,7 @@ class API():
         fields = {
             'product_name': self.dataset['product'].get('product-name'),
             'description': self.dataset['product'].get('description'),
+            'category': self.category
         }
 
         
@@ -103,8 +104,7 @@ class API():
                 sku=self.dataset['product']['product-id'],
                 **fields
             )
-            
-            p.category.add( self.category )
+
             logging.debug('Created new product')
             
         except MultipleObjectsReturned:
@@ -123,6 +123,7 @@ class API():
         
         # Store product variants
         #self.map_product_options()
+        self.__product_options(p)
         # Store vendor options
         #self.map_vendor_options()
         self.__vendor_options(p)
@@ -130,6 +131,34 @@ class API():
         p.save()
         return p
     
+    
+    def __product_options(self, product):
+        """
+        Private method that adds, update and maintain vendor product options
+        """
+        
+        types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in product.category.option_types.all()])
+        
+        for variation in self.dataset['product']['variations']:
+            variation_options = []
+            # Create a list of options used for each variation            
+            for key in filter(lambda k: k in types.keys(), variation.keys()):
+                option, created = Option.objects.get_or_create(option_type=types[key], value=variation[key])
+                
+                if created:
+                    logging.debug('Created option %s', option)
+                
+                if not product.options.filter(pk=option.pk):
+                    logging.debug("Attaching option '%s: %s'", types[key].name, variation[key])
+                    product.options.add(option)
+                
+                # Now, have the option been automagically added to the product's options list
+                variation_options.append(option)
+            
+            # FIXME: Create an Availability instance here, keyed on the list of variation_options
+            # and using the value of 'availability'
+        
+        
     
     def __vendor_options(self, product):
         """
@@ -213,6 +242,9 @@ class API():
                     category = Category.objects.get(key=Category.key_for_name(name))
                 except ObjectDoesNotExist:
                     logging.debug('Creating new category: %s', name)
+                    # FIXME: Mark this as new and inactive. 
+                    # FIXME: Create a workflow ticket for someone to approve the category
+                    # and all products related to it
                     category = Category( name=name )
                 else:
                     logging.debug('Using existing category: %s', category.name)
