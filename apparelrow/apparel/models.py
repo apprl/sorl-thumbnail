@@ -173,6 +173,30 @@ class VendorProduct(models.Model):
 
 
 
+class VendorProductVariation(models.Model):
+    """
+    This class prepresents product combinations sold at a particular vendor
+    """
+    vendor_product = models.ForeignKey(VendorProduct, related_name='variations')
+    # Negative value means it is in stock, but we have no information about how many
+    # Null means we have no information about availability
+    # 0 means it is sold out
+    in_stock = models.IntegerField(_('Items in stock'), null=True, blank=True)
+    options = models.ManyToManyField(Option)
+    
+    def __unicode__(self):
+        if self.in_stock is None:
+            s = _('No information available')
+        elif self.in_stock == 0:
+            s = _('Out of stock')
+        elif self.in_stock < 0:
+            s = _('In stock')
+        else:
+            s = '%i %s' % (self.in_stock, _('items in stock'))
+        
+        return s
+
+
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
     slug = models.SlugField(_('Slug Name'), blank=True,

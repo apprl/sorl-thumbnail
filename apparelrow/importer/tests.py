@@ -3,7 +3,7 @@ import re, decimal, copy
 from django.test import TestCase
 from apparelrow.apparel.models import *
 from apparelrow.importer.api import API, IncompleteDataSet, ImporterException
-
+from django.core.exceptions import ObjectDoesNotExist
 
 
 sample_dict = {
@@ -254,8 +254,77 @@ class TestImporterAPIProduct(TestCase):
     
     
     def test_product_availability(self):
-        pass
+        p  = self.api.import_product()
+        vp = VendorProduct.objects.get(product=p, vendor=self.api.vendor)
         
+        self.assertEqual(len(vp.variations.all()), 3, 'Three variations imported')
         
+        # NOTE: This test relies on that the API is creating new options in the order
+        # they appear in the data passed to import_product
         
+        var_1 = vp.variations.get(id=1)
+        self.assertEqual(var_1.in_stock, -1, 'Got correct stock level for Medium/Blue')
+        self.assertTrue(var_1.options.get(option_type=self.type_color, value='blue'), 'Got color: blue option')
+        self.assertTrue(var_1.options.get(option_type=self.type_size, value='M'), 'Got size: m option')
+
+        var_2 = vp.variations.get(id=2)
+        self.assertEqual(var_2.in_stock, -1, 'Got correct stock level for Large')
+        self.assertTrue(var_2.options.get(option_type=self.type_size, value='L'), 'Got size: L option')
+
+
+        var_3 = vp.variations.get(id=3)
+        self.assertEqual(var_3.in_stock, 24, 'Got correct stock level for XtraSmall')
+        self.assertTrue(var_3.options.get(option_type=self.type_size, value='XS'), 'Got size: xs option')
+
+    def test_product_availability_modify(self):
+        # FIXME: This test is a bit lengthy, but it covers all aspects of the 
+        # behaviour when modifying availability for an existing product/vendor
+        
+        p  = self.api.import_product()
+        vp = VendorProduct.objects.get(product=p, vendor=self.api.vendor)
+        original_var_1 = vp.variations.get(id=1)
+        
+        d = self.dataset
+        d['product']['variations'].append({
+            'size': 'M',
+            'color': 'red',
+            'availability': False
+        }) 
+        del d['product']['variations'][0]['availability']
+        d['product']['variations'][1]['availability'] = '1'
+        d['product']['variations'][2]['color'] = 'green'
+        
+        a = API()
+        a.dataset = d
+        p  = a.import_product()
+        vp = VendorProduct.objects.get(product=p, vendor=a.vendor)
+        
+        # No availability property in input data, will result in NULL (None)
+        var_1 = vp.variations.get(id=original_var_1.id) # Ensure that the same object is retrieved
+        self.assertEqual(var_1.in_stock, None, 'Got correct stock level for Medium/Blue')
+        self.assertTrue(var_1.options.get(option_type=self.type_color, value='blue'), 'Got color: blue option')
+        self.assertTrue(var_1.options.get(option_type=self.type_size, value='M'), 'Got size: m option')
+        
+        # Changed availability
+        var_2 = vp.variations.get(id=2)
+        self.assertEqual(var_2.in_stock, 1, 'Got correct stock level for Large')
+        self.assertTrue(var_2.options.get(option_type=self.type_size, value='L'), 'Got size: L option')
+
+        # Untouched variation left alone
+        var_3 = vp.variations.get(id=3)
+        self.assertEqual(var_3.in_stock, 24, 'Got correct stock level for XtraSmall')
+        self.assertTrue(var_3.options.get(option_type=self.type_size, value='XS'), 'Got size: xs option')
+        
+        # Changed definition creates new variation
+        var_4 = vp.variations.get(id=4)
+        self.assertEqual(var_4.in_stock, 24, 'Got correct stock level for XtraSmall/Green')
+        self.assertTrue(var_4.options.get(option_type=self.type_size, value='XS'), 'Got size: xs option')
+        self.assertTrue(var_4.options.get(option_type=self.type_color, value='green'), 'Got color: green option')
+
+        # Added new variation
+        var_5 = vp.variations.get(id=5)
+        self.assertEqual(var_5.in_stock, 0, 'Got correct stock level for Medium/Red')
+        self.assertTrue(var_5.options.get(option_type=self.type_size, value='M'), 'Got size: xs option')
+        self.assertTrue(var_5.options.get(option_type=self.type_color, value='red'), 'Got color: red option')
+
         

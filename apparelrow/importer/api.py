@@ -2,6 +2,7 @@ import logging, re
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import transaction
+from django.db.models import Count
 
 from apparel.models import *
 
@@ -48,7 +49,7 @@ Required Data Structure
  
 """
 
-class API():
+class API(object):
     
     def __init__(self, dataset=None):
         self.version       = "0.1"
@@ -121,12 +122,8 @@ class API():
             logging.debug('Updated product')
         
         
-        # Store product variants
-        #self.map_product_options()
-        self.__product_options(p)
-        # Store vendor options
-        #self.map_vendor_options()
         self.__vendor_options(p)
+        self.__product_options(p)
         
         p.save()
         return p
@@ -137,10 +134,12 @@ class API():
         Private method that adds, update and maintain vendor product options
         """
         
+        vp = VendorProduct.objects.get( product=product, vendor=self.vendor )
         types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in product.category.option_types.all()])
         
         for variation in self.dataset['product']['variations']:
-            variation_options = []
+            options = []
+            
             # Create a list of options used for each variation            
             for key in filter(lambda k: k in types.keys(), variation.keys()):
                 option, created = Option.objects.get_or_create(option_type=types[key], value=variation[key])
@@ -149,17 +148,45 @@ class API():
                     logging.debug('Created option %s', option)
                 
                 if not product.options.filter(pk=option.pk):
-                    logging.debug("Attaching option '%s: %s'", types[key].name, variation[key])
+                    logging.debug("Attaching option %s", option)
                     product.options.add(option)
                 
-                # Now, have the option been automagically added to the product's options list
-                variation_options.append(option)
+                options.append(option)
             
-            # FIXME: Create an Availability instance here, keyed on the list of variation_options
-            # and using the value of 'availability'
-        
-        
-    
+            if len(options) == 0:
+                continue
+            
+            
+            db_variation = None
+            
+            # FIXME: Sanitise this, and move it out to separate routine
+            for v in vp.variations.all():
+                # FIXME: Can we rely on this being cached, or is it more efficient
+                # to call this outside the loop?
+                
+                if set(options) - set(v.options.all()):
+                    continue
+                
+                db_variation = v                
+                break
+            
+            else:
+                # Create variation
+                db_variation = VendorProductVariation.objects.create( vendor_product=vp )
+                # FIXME: Pass in when creating variant?
+                for o in options:
+                    db_variation.options.add(o)
+            
+                logging.debug('Added availability for combination %s', db_variation)
+
+            in_stock = variation.get('availability')
+            
+            if in_stock is not None and isinstance(in_stock, bool):
+                in_stock = -1 if in_stock else 0
+            
+            db_variation.in_stock = in_stock
+            db_variation.save()
+
     def __vendor_options(self, product):
         """
         Private method that adds, update and maintain vendor data and options
@@ -171,7 +198,7 @@ class API():
         
         if created:
             logging.debug('Added product data to vendor: %s', vp)
-
+        
         # FIXME: Map
         #   - availability
         #   - delivery time
