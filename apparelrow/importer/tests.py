@@ -1,9 +1,11 @@
-import re, decimal, copy
+import re, decimal, copy, os, shutil, time
 
 from django.test import TestCase
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+
 from apparelrow.apparel.models import *
 from apparelrow.importer.api import API, IncompleteDataSet, ImporterException
-from django.core.exceptions import ObjectDoesNotExist
 
 
 sample_dict = {
@@ -20,7 +22,7 @@ sample_dict = {
         'delivery-cost': '10',
         'delivery-time': '1-2 D',
         'availability': '35',
-        'image-url': 'http://www.example.com/image.jpg',
+        'image-url': 'http://localhost:8000/site_media/static/_test/__image.png',
         'product-url': 'https://www.example.com/c001',
         'description': u'This is a cool par of whatever',
         'variations': [
@@ -276,55 +278,153 @@ class TestImporterAPIProduct(TestCase):
         self.assertEqual(var_3.in_stock, 24, 'Got correct stock level for XtraSmall')
         self.assertTrue(var_3.options.get(option_type=self.type_size, value='XS'), 'Got size: xs option')
 
-    def test_product_availability_modify(self):
-        # FIXME: This test is a bit lengthy, but it covers all aspects of the 
-        # behaviour when modifying availability for an existing product/vendor
-        
+
+    def test_product_availability_null(self):
+        del self.api.dataset['product']['variations'][0]['availability']
         p  = self.api.import_product()
         vp = VendorProduct.objects.get(product=p, vendor=self.api.vendor)
-        original_var_1 = vp.variations.get(id=1)
         
-        d = self.dataset
-        d['product']['variations'].append({
+        var_1 = vp.variations.get(id=1)
+        self.assertEqual(var_1.in_stock, None, 'Got correct stock level when availability attribute is missing')
+    
+    def test_product_availability_true(self):
+        self.api.dataset['product']['variations'][0]['availability'] = True
+        p  = self.api.import_product()
+        vp = VendorProduct.objects.get(product=p, vendor=self.api.vendor)
+        
+        var_1 = vp.variations.get(id=1)
+        self.assertEqual(var_1.in_stock, -1, 'Got correct stock level when availability is true')
+    
+    def test_product_availability_false(self):
+        self.api.dataset['product']['variations'][0]['availability'] = False
+        p  = self.api.import_product()
+        vp = VendorProduct.objects.get(product=p, vendor=self.api.vendor)
+        
+        var_1 = vp.variations.get(id=1)
+        self.assertEqual(var_1.in_stock, 0, 'Got correct stock level when availability is false')
+    
+    def test_product_availability_modify(self):
+        p  = self.api.import_product()
+        vp = VendorProduct.objects.get(product=p, vendor=self.api.vendor)
+        original_in_stock_1 = vp.variations.get(id=1).in_stock
+        original_in_stock_2 = vp.variations.get(id=2).in_stock
+        
+        # Add new item
+        self.dataset['product']['variations'].append({
             'size': 'M',
             'color': 'red',
-            'availability': False
+            'availability': '5'
         }) 
-        del d['product']['variations'][0]['availability']
-        d['product']['variations'][1]['availability'] = '1'
-        d['product']['variations'][2]['color'] = 'green'
+        # Change availability for first item
+        self.dataset['product']['variations'][0]['availability'] = '10'
+        # Modify spec for combination item (should create new variation)
+        self.dataset['product']['variations'][1]['color'] = 'black'
         
+        # Run import again
         a = API()
-        a.dataset = d
+        a.dataset = self.dataset
         p  = a.import_product()
         vp = VendorProduct.objects.get(product=p, vendor=a.vendor)
         
-        # No availability property in input data, will result in NULL (None)
-        var_1 = vp.variations.get(id=original_var_1.id) # Ensure that the same object is retrieved
-        self.assertEqual(var_1.in_stock, None, 'Got correct stock level for Medium/Blue')
-        self.assertTrue(var_1.options.get(option_type=self.type_color, value='blue'), 'Got color: blue option')
-        self.assertTrue(var_1.options.get(option_type=self.type_size, value='M'), 'Got size: m option')
+        # Check that stock level changed
+        self.assertEqual(len(vp.variations.all()), 5, 'Got five variations')
+        self.assertEqual(vp.variations.get(id=1).in_stock, 10, 'In stock set to correct value')
+        self.assertNotEqual(vp.variations.get(id=1).in_stock, original_in_stock_1, 'in_stock property changed')
         
-        # Changed availability
-        var_2 = vp.variations.get(id=2)
-        self.assertEqual(var_2.in_stock, 1, 'Got correct stock level for Large')
-        self.assertTrue(var_2.options.get(option_type=self.type_size, value='L'), 'Got size: L option')
-
-        # Untouched variation left alone
-        var_3 = vp.variations.get(id=3)
-        self.assertEqual(var_3.in_stock, 24, 'Got correct stock level for XtraSmall')
-        self.assertTrue(var_3.options.get(option_type=self.type_size, value='XS'), 'Got size: xs option')
+        # Assert that stock level was unchanged for second
+        self.assertEqual(vp.variations.get(id=2).in_stock, original_in_stock_2, 'In stock not changed')
+        self.assertTrue(vp.variations.get(id=2).options.get(option_type=self.type_size, value='L'), 'Option unchanged')
+        self.assertRaises(ObjectDoesNotExist, lambda: vp.variations.get(id=2).options.get(option_type=self.type_color, value='black'))
         
-        # Changed definition creates new variation
-        var_4 = vp.variations.get(id=4)
-        self.assertEqual(var_4.in_stock, 24, 'Got correct stock level for XtraSmall/Green')
-        self.assertTrue(var_4.options.get(option_type=self.type_size, value='XS'), 'Got size: xs option')
-        self.assertTrue(var_4.options.get(option_type=self.type_color, value='green'), 'Got color: green option')
+        # Assert that update options yields new variation (old is preserved)
+        self.assertTrue(vp.variations.get(id=4), 'New item created')
+        self.assertTrue(vp.variations.get(id=4).options.get(option_type=self.type_color, value='black'), 'New item created with red color')
+        self.assertTrue(vp.variations.get(id=4).options.get(option_type=self.type_size, value='L'), 'Changed item, old property remain')
+        
+        # Assert that fourth item created new variation
+        self.assertTrue(vp.variations.get(id=5), 'New item created')
+        self.assertEqual(vp.variations.get(id=5).in_stock, 5, 'New item created')
+        self.assertTrue(vp.variations.get(id=5).options.get(option_type=self.type_color, value='red'), 'New item created with red color')
+        self.assertTrue(vp.variations.get(id=5).options.get(option_type=self.type_size, value='M'), 'New item created with red color')
 
-        # Added new variation
-        var_5 = vp.variations.get(id=5)
-        self.assertEqual(var_5.in_stock, 0, 'Got correct stock level for Medium/Red')
-        self.assertTrue(var_5.options.get(option_type=self.type_size, value='M'), 'Got size: xs option')
-        self.assertTrue(var_5.options.get(option_type=self.type_color, value='red'), 'Got color: red option')
 
+class TestProductImage(TestCase):
+    def setUp(self):
+        self.api = API()
+        self.api.dataset = copy.deepcopy(sample_dict)
+        
+        # Create sample directory at 
+    
+    def tearDown(self):
+        # FIXME: Remove local image if it eixsts
+        fp = os.path.join(settings.MEDIA_ROOT, settings.APPAREL_PROD_IMG_ROOT, 'cool-clothes-store', '__image.jpg')
+        if os.path.exists(fp):
+            os.remove(fp)
+    
+    
+    def test_product_image_path(self):
+        self.assertTrue(settings.APPAREL_PROD_IMG_ROOT, 'APPAREL_PROD_IMG_ROOT setting exists')
+        self.assertEqual(self.api.product_image_path, '%s/%s/%s' % (
+            settings.APPAREL_PROD_IMG_ROOT, 
+            'cool-clothes-store', 
+            '__image.png'
+        ))
+        
+    
+    # FIXME: Clean up paths for these tests
+    # FIXME: Let the test add the file to prod dir during setup
+    
+    def test_product_image_path_missing_url(self):
+        del self.api.dataset['product']['image-url']
+        
+        self.assertRaises(IncompleteDataSet, lambda: self.api.product_image_path)
+    
+    def test_product_image_path_no_url(self):
+        self.api.dataset['product']['image-url'] = None
+
+        self.assertEqual(self.api.product_image_path, None, 'No URL available')
+        
+    def test_product_image(self):
+        print 'Currently no way of testing a request against testserver using urllib2.'
+        # FIXME: Implement this test somehow.
+        #
+        #p = self.api.product_image()
+        #
+        #self.assertEqual(p, self.api.product_image_path, "Returns product_image_path property")
+        #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, p)), 'File downloaded')
+        #
+    def test_product_image_http_error(self):
+        self.api.dataset['product']['image-url'] = 'http://www.example.com/404.jpg'
+        self.assertEqual(self.api.product_image(), None, 'HTTP error returns None')
+    
+    def test_product_image_exists(self):
+        target_file = os.path.join(settings.MEDIA_ROOT, self.api.product_image_path)
+        shutil.copy(os.path.join(settings.STATIC_ROOT, '_test', '__image.png'), target_file)
+        stat = os.stat(target_file)
+        time.sleep(2) # Wait for time from 
+        
+        p = self.api.product_image()
+        self.assertEqual(stat.st_mtime, os.stat(os.path.join(settings.MEDIA_ROOT, p)).st_mtime, 'File not change after downloading')
+        
+    def test_product_image_missing(self):
+        self.api.dataset['product']['image-url'] = None
+        self.assertEqual(self.api.product_image(), None, 'Returns Null if no URL was available')
+    
+    def test_product_image_import(self):
+        """
+        Product image is downloaded during import
+        """
+        print 'Currently no way of testing a request against testserver using urllib2.'
+        # FIXME: Implement this test somehow.
+        #
+        #p = self.api.import_product()
+        #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, self.api.product_image_path)), 'Image downloaded during import')
+        #self.assertEqual(p.product_image, self.api.product_image_path, 'image_path stored in product')
+
+    
+    
+    
+    
+        
+        
         

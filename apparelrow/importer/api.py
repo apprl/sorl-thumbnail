@@ -1,8 +1,12 @@
-import logging, re
+import logging, re, tempfile, urllib2, os
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.files.storage import default_storage
+from django.template.defaultfilters import slugify
 from django.db import transaction
 from django.db.models import Count
+from django.conf import settings
+from urllib2 import HTTPError
 
 from apparel.models import *
 
@@ -50,6 +54,7 @@ Required Data Structure
 """
 
 class API(object):
+    re_url = re.compile(r'^.+/(.+)$')
     
     def __init__(self, dataset=None):
         self.version       = "0.1"
@@ -200,7 +205,6 @@ class API(object):
             logging.debug('Added product data to vendor: %s', vp)
         
         # FIXME: Map
-        #   - availability
         #   - delivery time
         #   - delivery cost (Property of vendor?)
         
@@ -338,7 +342,77 @@ class API(object):
         
         return self._vendor
 
-
+    
+    @property
+    # FIXME: Cache this
+    def product_image_path(self):
+        """
+        Read-only property to retrieve the path to the image for the current
+        dataset.
+        
+        AR_PROD_IMG_BASE/vendor_name/orignal_image
+    
+        If the image already exists, it will not be downloaded. Returns None if
+        no image is specified
+        """
+        
+        try:
+           url = self.dataset['product']['image-url'] 
+        except KeyError:
+            raise IncompleteDataSet('Missing image-url property')
+        
+        if url is None:
+            return None
+        
+        m = self.re_url.match(url)
+        if not m:
+            logging.warn('%s does not match %s', url, self.re_url)
+            return None
+        
+        return '%s/%s/%s' % (
+            settings.APPAREL_PROD_IMG_ROOT, 
+            slugify(self.vendor.name), 
+            m.group(1)
+        )
+        
+                
+    
+    def product_image(self):
+        """
+        Downloads the product image and stores it in the appropriate location. 
+        Returns None if no image URL exists in url, otherwise it returns the
+        path to the image.
+        """
+        
+        if self.product_image_path is None:
+            return None
+            
+        url = self.dataset['product']['image-url']
+        
+        
+        # FIXME: This ensures that the vendor's directory is present. 
+        # Re-implement this when a ProductImageStorage backend has been developed
+        m = re.match('(.+)/', self.product_image_path)
+        d = m.group(1)
+        if not os.path.exists(os.path.join(settings.MEDIA_ROOT, d)):
+            os.makedirs(os.path.join(settings.MEDIA_ROOT, d))
+        
+        if not default_storage.exists(self.product_image_path):
+            logging.info('Downloading product image %s', url)
+            temppath = None
+            
+            try:
+                temppath = fetch(url)
+            except HTTPError, e:
+                logging.error('%s (while downloading %s', e, url)
+                return
+            
+            default_storage.save(self.product_image_path, File(open(temppath)))
+            logging.debug('Stored image at %s', self.product_image_path)
+        else:
+            logging.debug('Image %s already exists, will not download', self.product_image_path)
+        
+        return self.product_image_path
 
 
 class ImporterException(Exception):
@@ -360,4 +434,32 @@ class IncompleteDataSet(ImporterException):
     malformatted.
     """
     pass
+
+
+
+#
+# FIXME: Use routine from lib/importer/fetcher.py instead
+#
+
+def fetch(url, localpath=None, username=None, password=None):
+    """
+    Retrieves given URL and stores it in the given location. The path of the
+    downloaded file is returned. If localpath is not defined, a temporary path
+    is generated.
+    """
+    
+    # FIXE: Add authentication
+    
+    if not localpath:
+        (fh, localpath) = tempfile.mkstemp(prefix='ar_importer_', suffix='.tmp')
+    
+    f = urllib2.urlopen(url)
+    
+    local_fh = open(localpath, 'w')
+    local_fh.write(f.read())
+    local_fh.close()
+    local_fh = None
+    
+    return localpath
+
 

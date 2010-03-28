@@ -198,6 +198,7 @@ EMAIL_USE_TLS       = False
 
 
 APPAREL_DEFAULT_AVATAR = os.path.join('/', 'site_media', 'static', 'images', 'avatar.jpg')
+APPAREL_PROD_IMG_ROOT = 'static/product'
 
 
 # local_settings.py can be used to override environment-specific settings
