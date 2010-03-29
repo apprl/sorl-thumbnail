@@ -1,56 +1,93 @@
 import re, traceback, sys, logging
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.db.models import Q
-from django.core.files.storage import default_storage
-from django.core.files import File
-from django.template.defaultfilters import slugify
-from apparel.models import *
-from importer import fetcher
-from urllib2 import HTTPError
+from apparel.importer.api import API, SkipRecord, ImporterException
 
-
-# FIXME: Move to Django settings directory
-PRODUCT_IMAGE_BASE = 'static/product'
 
 
 class DataMapper():
-      
-    def __init__(self, provider, data={}):
-        self.data         = data
-        self.provider     = provider  # Reference to the provider instance
+    
+    def __init__(self, provider, record={}):
+        self.provider     = provider    # Reference to the provider instance
+        self.record       = record      # Raw data record source file
+        self.variances    = []          # Product variances
+    
     
     def translate(self):
         """
-        Runs the actual mapping process and does following things (in order)
+        Maps a record (a flat dict) parsed from source file to a hash readable
+        by the API. The mapping follows the following procedure
+        
+            add_variances()     Returns list of variances extracted from record
+            map_fields()        Returns the API friendly data structure
+            store_product()     Calls the API with the product
+        
         """
         
-        logging.debug('*** Start mapping raw product data ***'.upper())
-        mapped = dict()
+        p = None
         
         try:
-            self.map_fields()    
-            self.map_manufacturer()
-            self.map_category()
-            self.map_vendor()
-            self.map_product()
+            self.add_variances()
+
+            p = API().import_dataset( self.map_fields() )
         
         except SkipRecord, e:
-            logging.error("Skipping record: %s", e)
-            self.log_error('skip', e)
-    
+            logging.info('Record skipped: %s', e)
+        
+        except ImporterException, e:
+            # Also skip record, but log it as an error
+            logging.error('Record skipped due to importer errors: %s', e)
+
         except Exception, e:
-            logging.critical("Caught fatal exception")
-            logging.exception(e)
-            self.log_error('fatal', e)
-            
-            raise e
+            # Log as critical and rethrow
+            logging.critical('Translation failed with uncaught exception: %s', e)
+            raise 
+        else:
+            # Log ass successful
+            logging.info('Imported product %s', p)
+
+    
+    def add_variances(self):
+        """
+        Adds a list of variances to the 'variances' array.
+        """
+        # FIXME: Should we simply let the parser to this, and leave it out
+        # of here. Something along the lines of
+        #   for record in parse_source:
+        #       m = Mapper(record)
+        #       m.variances.append(record['var1'])
+        #       m.variances.append(record['var2'])
+        #       m.translate()
         
-        logging.info('Processed product %s', self.product)
+        # Currently the base class implementation does nothing
+        pass
         
-        return mapped
+    
+    def map_fields(self):
+        """
+        Returns a hash of correctly formatted fields
+        """
+        return {}
+        
+    def map_field(self, field_name):
+        """
+        Returns a value for the given field. This method will first try to call
+        a method called
+        
+            self.get_[field_name]
+        
+        and if that does not exist it will try use a value stored in
+        
+            self.record[field_name]
+        
+        else return None
+        
+        This method may throw a SkipField exception causing the field to be 
+        skipped, but the process to continue.
+        """
+        pass
     
 
-        
+
+
 def _trim(value):
     if value is None:
         return value
@@ -64,17 +101,5 @@ def _trim(value):
     
     return value
 
-
-
-class SkipRecord(Exception):
-    """
-    Raising this exception will cause the current record to be ignored, and no
-    product created.
-    """
-
-    def __init__(self, reason):
-        if reason is None:
-            raise Exception("Need reason to raise SkipRecord")
-        
-        Exception.__init__(self, reason)
-
+class SkipField(Exception):
+    pass

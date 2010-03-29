@@ -63,26 +63,29 @@ class API(object):
         self._category     = None
         self._manufacturer = None
         self._vendor       = None
-        
+    
     @transaction.commit_on_success
     def import_dataset(self, data=None):
         """
         Imports the Product and related data specified in the data structure. 
         """
         
+        p = None
+        
         try:
             if data:
                 self.dataset = data
             
             self.validate()
-            self.import_product()
+            p = self.import_product()
         
         except ImporterException, e:
             # Log ImporterException
             logging.error('%s, record skipped', e)
             raise
         else:
-            logging.info('Imported %s', self.product)
+            logging.info('Imported %s', p)
+            return p
     
     
     def import_product(self):
@@ -160,7 +163,6 @@ class API(object):
             
             if len(options) == 0:
                 continue
-            
             
             db_variation = None
             
@@ -392,6 +394,7 @@ class API(object):
         
         # FIXME: This ensures that the vendor's directory is present. 
         # Re-implement this when a ProductImageStorage backend has been developed
+        # Possibly, move this out
         m = re.match('(.+)/', self.product_image_path)
         d = m.group(1)
         if not os.path.exists(os.path.join(settings.MEDIA_ROOT, d)):
@@ -419,12 +422,15 @@ class ImporterException(Exception):
     """
     An exception base class that will prevent the current data to be imported
     and any change to be rolled back.
+    However, a client should continue its execution and attempt to import 
+    subsequent datasets.
     """
     pass
 
 class SkipProduct(ImporterException):
     """
-    For some reason the product should be skipped.
+    Raising this exception indicates that the product should be skipped, but
+    this should not be considered an error.
     """
     pass
 

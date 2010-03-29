@@ -1,6 +1,6 @@
 import re, decimal, copy, os, shutil, time
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -160,7 +160,7 @@ class TestImporterAPIBasic(TestCase):
         
         
     
-class TestImporterAPIProduct(TestCase):
+class TestImporterAPIProduct(TransactionTestCase):
     """
     Test importing a product and all related objects
     """        
@@ -233,7 +233,7 @@ class TestImporterAPIProduct(TestCase):
     def test_product_options(self):
         p = self.api.import_product()
         
-        self.assertEqual(len(p.options.all()), 4, 'Got four product options')
+        self.assertEqual(p.options.count(), 4, 'Got four product options')
         self.assertTrue(p.options.filter(option_type=self.type_size, value='M'), 'Added size "M"')
         self.assertTrue(p.options.filter(option_type=self.type_size, value='L'), 'Added size "L"')
         self.assertTrue(p.options.filter(option_type=self.type_size, value='XS'), 'Added size "XS"')
@@ -248,7 +248,7 @@ class TestImporterAPIProduct(TestCase):
         
         p = self.api.import_product()
 
-        self.assertEqual(len(p.options.all()), 4, 'Got four product options')
+        self.assertEqual(p.options.count(), 4, 'Got four product options')
         self.assertTrue(p.options.filter(pk=o1.pk), 'Exiting option assigned to product')
         self.assertTrue(p.options.filter(pk=o2.pk), 'Exiting option untouched')
         self.assertTrue(p.options.filter(option_type=self.type_size, value='XS'), 'Added size "M"')
@@ -259,7 +259,7 @@ class TestImporterAPIProduct(TestCase):
         p  = self.api.import_product()
         vp = VendorProduct.objects.get(product=p, vendor=self.api.vendor)
         
-        self.assertEqual(len(vp.variations.all()), 3, 'Three variations imported')
+        self.assertEqual(vp.variations.count(), 3, 'Three variations imported')
         
         # NOTE: This test relies on that the API is creating new options in the order
         # they appear in the data passed to import_product
@@ -327,7 +327,7 @@ class TestImporterAPIProduct(TestCase):
         vp = VendorProduct.objects.get(product=p, vendor=a.vendor)
         
         # Check that stock level changed
-        self.assertEqual(len(vp.variations.all()), 5, 'Got five variations')
+        self.assertEqual(vp.variations.count(), 5, 'Got five variations')
         self.assertEqual(vp.variations.get(id=1).in_stock, 10, 'In stock set to correct value')
         self.assertNotEqual(vp.variations.get(id=1).in_stock, original_in_stock_1, 'in_stock property changed')
         
@@ -421,10 +421,33 @@ class TestProductImage(TestCase):
         #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, self.api.product_image_path)), 'Image downloaded during import')
         #self.assertEqual(p.product_image, self.api.product_image_path, 'image_path stored in product')
 
+class TestDataSetImport(TransactionTestCase):
+    def setUp(self):
+        self.api = API()
+        self.dataset = copy.deepcopy(sample_dict)
     
-    
-    
-    
+    def test_import_successful(self):
+        self.api.dataset = self.dataset
+        p = self.api.import_dataset()
         
+        self.assertTrue(isinstance(p, Product), 'Data imported using default dataset')
+        # Note: This test is not ensuring all related data was created. See
+        # above tests for that.
         
+    def test_import_successful_data(self):
+        p = self.api.import_dataset(data=self.dataset)
+        
+        self.assertTrue(isinstance(p, Product), 'Data using passed dataset')
+    
+    def test_import_validation(self):
+        self.dataset['version'] = 'xxx'
+        self.assertRaises(ImporterException, self.api.import_dataset, self.dataset)
+    
+    def test_import_rollback(self):
+        self.dataset['product']['manufacturer'] = None
+        
+        self.assertRaises(IncompleteDataSet, self.api.import_dataset, self.dataset)
+        
+        if Category.objects.count() > 0:
+            self.fail('Objects not rolled back, are all product-related tables created with the InnoDB engine?')
         
