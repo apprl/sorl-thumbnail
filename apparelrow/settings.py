@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'tagging',
     'pagination',
+    'voting',
     'apparel',
     'scale',
     'watcher',

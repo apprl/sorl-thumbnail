@@ -192,6 +192,24 @@ button, a.button
         &.current
           background-image= image_url("switcher-selected.png")
 
+ul.looks
+  +horizontal-list(0)
+  li
+    margin-right= !gutter_width / 2
+    margin-bottom: 10px
+    &.last
+      margin-right: 0
+    .look
+      +box
+      width= !aside_width / 2 - !gutter_width / 4 - 2
+      height: 72px
+    .button
+      line-height: 1.5em
+      border-top: 0
+      display: block
+      +border-bottom-radius("3px")
+      text-align: center
+
 #lookproducts
   +row
 
@@ -224,43 +242,43 @@ h2
         &.selected
           background-position= 0 -!color_height
       &.grey
-        background-position= -!color_width top
+        background-position= -!color_width "top"
         &.selected
           background-position= -!color_width -!color_height
       &.white
-        background-position= -!color_width * 2 top
+        background-position= -!color_width * 2 "top"
         &.selected
           background-position= -!color_width * 2 -!color_height
       &.beige
-        background-position= -!color_width * 3 top
+        background-position= -!color_width * 3 "top"
         &.selected
           background-position= -!color_width * 3 !color_height
       &.brown
-        background-position= -!color_width * 4 top
+        background-position= -!color_width * 4 "top"
         &.selected
           background-position= -!color_width * 4 !color_height
       &.red
-        background-position= -!color_width * 5 top
+        background-position= -!color_width * 5 "top"
         &.selected
           background-position= -!color_width * 5 !color_height
       &.yellow
-        background-position= -!color_width * 6 top
+        background-position= -!color_width * 6 "top"
         &.selected
           background-position= -!color_width * 6 !color_height
       &.green
-        background-position= -!color_width * 7 top
+        background-position= -!color_width * 7 "top"
         &.selected
           background-position= -!color_width * 7 !color_height
       &.blue
-        background-position= -!color_width * 8 top
+        background-position= -!color_width * 8 "top"
         &.selected
           background-position= -!color_width * 8 !color_height
       &.magenta
-        background-position= -!color_width * 9 top
+        background-position= -!color_width * 9 "top"
         &.selected
           background-position= -!color_width * 9 !color_height
       &.pink
-        background-position= -!color_width * 10 top
+        background-position= -!color_width * 10 "top"
         &.selected
           background-position= -!color_width * 10 !color_height
 
@@ -291,13 +309,13 @@ h2
 
 span
   &.likes
-    background: transparent url(../images/heart.png) no-repeat scroll left bottom
-    padding-left: 20px
-    color: #fa7070
+    background= "transparent" image_url("heart.png") "no-repeat" "scroll" "left" "center"
+    padding-left: 16px
+    color= !like_color
 
   &.price
     background: transparent url(../images/check.png) no-repeat scroll left bottom
-    color: #737373
+    color= !price_color
     padding-left: 15px
 
 
@@ -310,11 +328,9 @@ div#product-list
   +box
   border: none
   width: 697px
-  +border-bottom-radius("3px")
   ul
     +clearfix
-    +border("all")
-    border-left: none
+    +border("right")
     li
       display: block
 
@@ -322,7 +338,7 @@ div#product-list
   width: 115px
   background-color: white
   +border("all")
-  border-top: none
+  border-bottom: none
   border-right: none
   text-align: center
   float: left
@@ -349,7 +365,6 @@ div#product-list
 #pagination
   height: 30px
   +border("all")
-  border-top: none
   +border-bottom-radius("3px")
 
   .prev

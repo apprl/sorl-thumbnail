@@ -8,11 +8,6 @@
 {% block 'extra-styles' %}
     <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-basic.css" media="screen" />
     <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-gallery.css" media="screen" />
-    <style type="text/css">
-        .look {
-            position: absolute;
-        }
-    </style>
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
@@ -101,9 +96,9 @@
                     {{ counter }} looks with this product
                 {% endblocktrans %}
             </h2>
-            <ul id="looks-with-product">
+            <ul class="looks">
                 {% for object in looks_with_product %}
-                <li><a href="{{ object.get_absolute_url }}"><div style="position: relative;">{% include 'apparel/fragments/look_collage_small.html' %}</div></a></li>
+                {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_collage_small.html' %}</li>
                 {% endfor %}
             </ul>
             {% endif %}

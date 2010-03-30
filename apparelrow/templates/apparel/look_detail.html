@@ -1,6 +1,7 @@
 {% extends 'profile/base.html' %}
 {% load i18n %}
 {% load humanize %}
+{% load voting_tags %}
 
 {% block 'extra-styles' %}
 <style type="text/css">
@@ -8,10 +9,6 @@
         position: relative;
         height: 450px;
         overflow: hidden;
-    }
-    .look {
-        position: absolute;
-        cursor: pointer;
     }
     .tooltip {
         display: none;
@@ -24,7 +21,22 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery('.look').tooltip({
+        jQuery('.collage form').hide();
+        jQuery('.collage').hover(
+            function() { jQuery(this).find('form').fadeIn(); },
+            function() { jQuery(this).find('form').fadeOut(); }
+        );
+        jQuery('.collage form').submit(function() {
+            jQuery.ajax({
+                type: this.method,
+                url: this.action,
+                data: jQuery(this).serialize(),
+                success: function(data, statusText, req) { console.log("liked!") },
+                dataType: 'json',
+            });
+            return false;
+            });
+        jQuery('.product').tooltip({
             effect: 'slide',
             relative: true,
             delay: 500,
@@ -49,10 +61,16 @@
     </p>
     {% if object.description %}<p>{{ object.description }}</p>{% endif %}
     <p>{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</p>
+    <p>{% include 'apparel/fragments/likes.html' %}</p>
 </div>
 <div id="content">
     <h2>{{ object.title }}</h2>
-    <ul class="collage">{% include 'apparel/fragments/look_collage.html' %}</ul>
+    <div class="collage">
+        {% include 'apparel/fragments/look_collage.html' %}
+        <form method="post" action="{% url like-look object.slug "up" %}">
+            <button type="submit" name="like" id="like">{% trans "Like!" %}</button>
+        </form>
+    </div>
     {% ifequal object.user user %}
     <a href="{% url apparel.views.look_edit object.id %}">{% trans "Edit look" %}</a>
     {% endifequal %}

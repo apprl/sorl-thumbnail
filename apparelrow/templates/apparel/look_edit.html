@@ -27,7 +27,7 @@ var look = {
         });
         jQuery.fn.reverse = jQuery.fn.reverse || [].reverse;
         ele.parent('.ui-wrapper').reverse().each(function() {
-            var el = $(this);
+            var el = jQuery(this);
             position = el.position();
             el.css({
                 position: 'absolute',
@@ -39,7 +39,7 @@ var look = {
         });
     },
     saveProduct: function(ui, type) {
-        product = ui.helper.find('.look');
+        product = ui.helper.find('.product');
         data = {
             look: {{ object.id }},
             product: product.attr('id').split('-')[1],
@@ -71,12 +71,12 @@ var look = {
     },
 };
     jQuery(document).ready(function() {
-        look.initialize(jQuery('#collage .look'), 'C'); // FIXME: We should get look product type from the model
-        look.initialize(jQuery('#photo .look'), 'P');
-        look.disable(jQuery('.look'));
-        jQuery('.look').hover(
+        look.initialize(jQuery('#collage .product'), 'C'); // FIXME: We should get look product type from the model
+        look.initialize(jQuery('#photo .product'), 'P');
+        look.disable(jQuery('.product'));
+        jQuery('.product').hover(
             function() {
-                look.disable(jQuery('.look'));
+                look.disable(jQuery('.product'));
                 look.enable(jQuery(this));
                 return false;
             },
@@ -85,7 +85,7 @@ var look = {
                 return false;
             });
         jQuery('#collage').click(function() {
-            look.disable(jQuery('.look'));
+            look.disable(jQuery('.product'));
         });
         jQuery('ul.tabs').tabs('div.panes > div');
     });

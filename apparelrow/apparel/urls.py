@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from voting.views import vote_on_object
 from apparel.models import *
 from django.db.models import Q
 
@@ -11,7 +12,12 @@ manufacturer_dict = {
     'queryset': Manufacturer.objects.all(),
 }
 
-
+look_dict = {
+    'model': Look,
+    'template_object_name': 'look',
+    'slug_field': 'slug',
+    'allow_xmlhttprequest': True,
+}
 
 urlpatterns = patterns('',
     (r'^$', 'apparel.views.index'),
@@ -25,10 +31,11 @@ urlpatterns = patterns('',
 
     (r'^likes/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
     (r'^looks/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
+    (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
     (r'^looks/(?P<slug>[\w-]+)/edit/$', 'apparel.views.look_edit'),
     (r'^looks/add_product/$', 'apparel.views.add_to_look'),
     (r'^looks/save_product/$', 'apparel.views.save_look_product'),
-    (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
+    (r'^looks/(?P<slug>[\w-]+)/like/(?P<direction>up|clear)/?$', vote_on_object, look_dict, "like-look"),
     (r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
 )
 

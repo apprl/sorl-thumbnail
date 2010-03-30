@@ -1,0 +1,6 @@
+{% load i18n %}
+{% load humanize %}
+{% load voting_tags %}
+
+{% score_for_object object as score %}
+<span class="likes">{% blocktrans count score.score as counter and score.score|apnumber as likes %}{{ likes }} like{% plural %}{{ likes }} likes{% endblocktrans %}</span>

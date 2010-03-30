@@ -100,7 +100,9 @@ def get_filter():
     }
 
 def index(request):
-    return render_to_response('index.html', get_filter())
+    ctx = get_filter()
+    ctx['popular_looks'] = Look.objects.all()[:8]
+    return render_to_response('index.html', ctx)
 
 def browse(request):
     if len(request.GET):
@@ -135,16 +137,11 @@ def product_detail(request, slug):
     viewed_products = request.session.get('viewed_products', [])
     viewed_products.append(product.id)
     request.session['viewed_products'] = viewed_products
-    looks_with_product = Look.objects.filter(products=product)
-    looks = []
-    if request.user.is_authenticated():
-        looks = Look.objects.filter(user=request.user)
     return render_to_response(
             'apparel/product_detail.html',
             {
                 'object': product,
-                'looks': looks,
-                'looks_with_product': looks_with_product,
+                'looks_with_product': Look.objects.filter(products=product),
                 'viewed_products': Product.objects.filter(pk__in=viewed_products),
             })
 
