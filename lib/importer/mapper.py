@@ -1,5 +1,5 @@
 import re, traceback, sys, logging
-from apparel.importer.api import API, SkipRecord, ImporterException
+from apparelrow.importer.api import API, SkipRecord, ImporterException
 
 
 
@@ -33,15 +33,12 @@ class DataMapper():
             logging.info('Record skipped: %s', e)
         
         except ImporterException, e:
-            # Also skip record, but log it as an error
             logging.error('Record skipped due to importer errors: %s', e)
 
         except Exception, e:
-            # Log as critical and rethrow
             logging.critical('Translation failed with uncaught exception: %s', e)
             raise 
         else:
-            # Log ass successful
             logging.info('Imported product %s', p)
 
     
@@ -65,6 +62,7 @@ class DataMapper():
         """
         Returns a hash of correctly formatted fields
         """
+        
         return {}
         
     def map_field(self, field_name):
