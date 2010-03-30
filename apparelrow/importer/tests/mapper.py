@@ -61,9 +61,6 @@ class DataMapperTest(TestCase):
     def test_map_field_nonexistent(self):
         self.assertEqual(self.mapper.map_field('some-field'), None)
     
-    def test_map_field_alt_name(self):
-        self.assertEqual(self.mapper.map_field('product-id'), 'the id')
-    
     def test_map_field_skip(self):
         self.assertRaises(SkipField, self.mapper.map_field, 'currency')
     

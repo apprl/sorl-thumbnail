@@ -82,19 +82,12 @@ class DataMapper():
         skipped, but the process to continue.
         """
         
-        alt_field_name = field_name.replace('-', '_')
-        method_name    = 'set_%s' % alt_field_name
+        method_name = 'set_%s' % field_name.replace('-', '_')
         
-        if hasattr(self,  method_name):
+        if hasattr(self, method_name):
             return getattr(self, method_name)()
-        
-        if field_name in self.record:
-            return self.record[field_name]
-        
-        if alt_field_name in self.record:
-            return self.record[alt_field_name]
-        
-        return None
+       
+        return self.record.get(field_name)
 
 
 
