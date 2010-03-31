@@ -46,21 +46,18 @@
 {% block body %}
 {% if object %}
         <div id="content">
-            <h2>{{ object.category.all|join:'\\' }}\{{ object.product_name }}</h2>
-            <div id="product">
-                {% include 'apparel/fragments/product_detail.html' %}
-                <!-- overlay element -->
-                <div class="simple_overlay" id="gallery">
-                    <!-- "previous image" action -->
-                    <a class="prev">prev</a>
-                    <!-- "next image" action -->
-                    <a class="next">next</a>
-                    <!-- image information -->
-                    <div class="info"></div>
-                
-                    <!-- load indicator (animated gif) -->
-                    <img class="progress" src="http://static.flowplayer.org/tools/img/overlay/loading.gif" />
-                </div>
+            {% include 'apparel/fragments/product_detail.html' %}
+            <!-- overlay element -->
+            <div class="simple_overlay" id="gallery">
+                <!-- "previous image" action -->
+                <a class="prev">prev</a>
+                <!-- "next image" action -->
+                <a class="next">next</a>
+                <!-- image information -->
+                <div class="info"></div>
+            
+                <!-- load indicator (animated gif) -->
+                <img class="progress" src="http://static.flowplayer.org/tools/img/overlay/loading.gif" />
             </div>
         </div>
         <div class="sidebar last">

@@ -137,6 +137,7 @@ INSTALLED_APPS = (
     'tagging',
     'pagination',
     'voting',
+    'django.contrib.comments',
     'apparel',
     'scale',
     'watcher',

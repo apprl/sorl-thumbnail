@@ -143,7 +143,7 @@ button, a.button
 
 
 
-.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #add-menu, #add-to-look ul, .product-info, .product-vendor
+.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
   +box
 
 
@@ -389,23 +389,38 @@ div#product-list
     line-height: 30px
     text-align: center
 
+.product-left
+  +float-left
+  margin-top: 30px
+  width= !small_width
+  margin-right= !gutter_width
 
-.tooltip .product-image, #product .product-image
-  height: 500px
+.product-info
+  +float-left
+  width= !small_width
+  h2
+    color= !easy_color
+  h1
+    text-transform: uppercase
+    font-size: 1.25em
+  h3
+    text-transform: uppercase
+    font-weight: normal
+  p.description
+    width= !aside_width + !gutter_width
+    margin-bottom: 18px
+
+.product-image
   border: 1px solid #dadada
-  float: left
-  margin-top: -12px
   position: relative
-
-
-.tooltip .product-image .magnifier, #product .product-image .magnifier
-  position: absolute
-  right: 10px
-  bottom: 10px
-  width: 19px
-  height: 20px
-  background: transparent url(../images/magnifier.png) no-repeat scroll left top
-  display: none
+  .magnifier
+    position: absolute
+    right: 10px
+    bottom: 10px
+    width: 19px
+    height: 20px
+    background: transparent url(../images/magnifier.png) no-repeat scroll left top
+    display: none
 
 
 table.available-sizes th
@@ -414,20 +429,6 @@ table.available-sizes th
   font-weight: normal
   text-align: center
   text-transform: uppercase
-
-
-.product-info
-  border-left: none
-  overflow: visible
-
-
-.tooltip .product-info, #product .product-info
-  background: #fafafa
-  height: 478px
-
-.product-info .box
-  padding: 1.5em
-  background-color: inherit
 
 
 .product-options
@@ -480,7 +481,10 @@ table.available-sizes th
 
 
 a.buy-now
-  padding: 50px 10px 5px
+  padding: 58px 0 0
+  text-align: center
+  width: 73px
+  height: 30px
   background: #d0fae8 url(../images/check-large.png) scroll no-repeat center center
   border: 1px solid #92c0c7
   color: #408994
@@ -490,16 +494,16 @@ a.buy-now
 
 .product-vendors a.buy-now
   float: right
+  margin-top: -50px
 
 
 .product-vendor
   border-bottom: none
-  padding: 5px 10px
-  height: 30px
-  line-height: 30px
+  padding: 7px 9px
+  height: 16px
 
   .price, .currency
-    line-height: 30px
+    vertical-align: middle
 
   .price
     font-size: 2em
@@ -509,8 +513,15 @@ a.buy-now
 
   .vendor
     float: right
-    background: transparent url(../images/vendor.png) scroll no-repeat left center
-    padding: 0 10px
+    background= "transparent" image_url("vendor-three-quarters.png") "scroll" "no-repeat" "left" "center"
+    padding: 0 10px 0 16px
+
+#comments
+  li
+    h3
+      span
+        float: right
+        font-weight: normal
 
 #recentlyviewed
   +row(!aside_width)
@@ -535,40 +546,35 @@ a.buy-now
 
 
 #add-menu
-  margin-top: 4em
   +clearfix
-
-  > li
-    position: relative
-    float: left
-    line-height: 2.5em
-    padding-right: 1em
-    padding-left: 1em
-
-
-#add-menu > li > a
-  background: transparent url(../images/add.png) scroll no-repeat left center
-  padding-left: 20px
-
-
-li
-  &#add-to-look
-    +border("right")
-    > a
-      background-image: url(../images/add.png)
-    ul
-      display: none
-      margin: 0 -1em
-      border-bottom: none
-      border-right: none
-      li
-        padding: 0 1em
-        border-bottom: 1px solid #dadada
-        a
-          display: block
-
-  &#add-to-wardrobe > a
-    background-image: url(../images/embed.png)
+  +horizontal-list(0)
+  margin-top: 18px
+  li
+    +button
+    line-height: 2em
+    padding: 0 10px
+    margin-right: 8px
+    a
+      background: transparent url(../images/add.png) scroll no-repeat left center
+      padding-left: 20px
+    &#add-to-look
+      > a
+        background-image= image_url("look.png")
+      ul
+        display: none
+        margin: 0 -1em
+        border-bottom: none
+        border-right: none
+        li
+          padding: 0 1em
+          border-bottom: 1px solid #dadada
+          a
+            display: block
+    &.share > a
+      background-image= image_url("share.png")
+    &#add-to-wardrobe > a
+      margin-right: 0
+      background-image= image_url("embed.png")
 
 
 a.block_link

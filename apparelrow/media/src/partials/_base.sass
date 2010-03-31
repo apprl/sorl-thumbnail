@@ -4,12 +4,14 @@
 !content_width = !page_width - 2 * !margin_width
 
 !aside_width = 208px
+!small_width = 1.5 * !aside_width + !gutter_width / 2
 !middle_width = 2 * !aside_width + !gutter_width
 !large_width = !aside_width + !middle_width + !gutter_width
 
 !box_color = #fafafa
 !border_color = !box_color - #212121
 !font_color = !box_color - #bababa
+!easy_color = !box_color - #999
 !like_color = !box_color - #008a8a
 !price_color = !box_color - #878787
 
@@ -40,8 +42,10 @@
 
 =button(!bg = "gradient-bg.png")
   +box
+  +border-radius(3px)
   line-height: 30px
   background:
+    color: #f3f3f3
     image= image_url(!bg)
     repeat: repeat-x
   &.cancel:before
