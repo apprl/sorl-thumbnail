@@ -114,7 +114,7 @@
             doFilter(query);
         }
         function doFilter(query) {
-            jQuery.getJSON('/apparel/products/search', query, renderProducts);
+            jQuery.getJSON('{% url apparel.views.search "products" %}', query, renderProducts);
         }
         function renderProducts(products) {
             jQuery('#product-list > ul').empty();
