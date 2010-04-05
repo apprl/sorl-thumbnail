@@ -1318,14 +1318,69 @@ div#product-list ul li {
   background-position: 89px center;
   border-left: 1px solid #d9d9d9;
 }
-/* line 394, ../src/partials/_application.sass */
-#pagination .current {
+/* line 395, ../src/partials/_application.sass */
+#pagination div {
   float: left;
+  width: 462px;
   line-height: 30px;
   text-align: center;
+  margin: 0 auto;
+  position: relative;
+}
+/* line 402, ../src/partials/_application.sass */
+#pagination div ol {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  overflow: hidden;
+  display: inline-block;
+  clear: left;
+  float: left;
+  left: 50%;
+  text-align: center;
+  position: relative;
+  overflow: visible;
+}
+/* line 5, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/frameworks/compass/stylesheets/compass/utilities/general/_hacks.sass */
+#pagination div ol {
+  display: block;
+}
+/* line 54, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal_list.sass */
+#pagination div ol li {
+  list-style-type: none;
+  margin-left: 0px;
+  white-space: nowrap;
+  display: inline;
+  float: left;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+/* line 44, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal_list.sass */
+#pagination div ol li:first-child, #pagination div ol li.first {
+  padding-left: 0px;
+}
+/* line 46, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal_list.sass */
+#pagination div ol li:last-child, #pagination div ol li.last {
+  padding-right: 0px;
+}
+/* line 410, ../src/partials/_application.sass */
+#pagination div ol li {
+  right: 50%;
+  display: block;
+  position: relative;
+}
+/* line 414, ../src/partials/_application.sass */
+#pagination div ol li a {
+  display: block;
+}
+/* line 416, ../src/partials/_application.sass */
+#pagination div ol li.current {
+  font-weight: bold;
+  background: transparent url('../images/current-page.png?1270479247') no-repeat scroll center bottom;
 }
 
-/* line 399, ../src/partials/_application.sass */
+/* line 421, ../src/partials/_application.sass */
 .product-left {
   display: inline;
   float: left;
@@ -1334,49 +1389,49 @@ div#product-list ul li {
   margin-right: 36px;
 }
 
-/* line 405, ../src/partials/_application.sass */
+/* line 427, ../src/partials/_application.sass */
 .activity {
   margin-top: 30px;
   border-top: 1px solid #d9d9d9;
 }
-/* line 408, ../src/partials/_application.sass */
+/* line 430, ../src/partials/_application.sass */
 .activity p {
   line-height: 26px;
   border-bottom: 1px solid #f2f2f2;
 }
 
-/* line 412, ../src/partials/_application.sass */
+/* line 434, ../src/partials/_application.sass */
 .product-info {
   display: inline;
   float: left;
   width: 330px;
 }
-/* line 415, ../src/partials/_application.sass */
+/* line 437, ../src/partials/_application.sass */
 .product-info h2 {
   color: #616161;
 }
-/* line 417, ../src/partials/_application.sass */
+/* line 439, ../src/partials/_application.sass */
 .product-info h1 {
   text-transform: uppercase;
   font-size: 1.25em;
 }
-/* line 420, ../src/partials/_application.sass */
+/* line 442, ../src/partials/_application.sass */
 .product-info h3 {
   text-transform: uppercase;
   font-weight: normal;
 }
-/* line 423, ../src/partials/_application.sass */
+/* line 445, ../src/partials/_application.sass */
 .product-info p.description {
   width: 244px;
   margin-bottom: 18px;
 }
 
-/* line 427, ../src/partials/_application.sass */
+/* line 449, ../src/partials/_application.sass */
 .product-image {
   border: 1px solid #dadada;
   position: relative;
 }
-/* line 430, ../src/partials/_application.sass */
+/* line 452, ../src/partials/_application.sass */
 .product-image .magnifier {
   position: absolute;
   right: 10px;
@@ -1386,12 +1441,12 @@ div#product-list ul li {
   background: transparent url(../images/magnifier.png) no-repeat scroll left top;
   display: none;
 }
-/* line 438, ../src/partials/_application.sass */
+/* line 460, ../src/partials/_application.sass */
 .product-image img {
   vertical-align: top;
 }
 
-/* line 442, ../src/partials/_application.sass */
+/* line 464, ../src/partials/_application.sass */
 table.available-sizes th {
   border: none;
   font-size: 0.8em;
@@ -1400,68 +1455,68 @@ table.available-sizes th {
   text-transform: uppercase;
 }
 
-/* line 450, ../src/partials/_application.sass */
+/* line 472, ../src/partials/_application.sass */
 .product-options {
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 5px;
   list-style: none;
 }
-/* line 456, ../src/partials/_application.sass */
+/* line 478, ../src/partials/_application.sass */
 .product-options ul {
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 5px;
   list-style: none;
 }
-/* line 462, ../src/partials/_application.sass */
+/* line 484, ../src/partials/_application.sass */
 .product-options li ul li {
   float: left;
 }
-/* line 465, ../src/partials/_application.sass */
+/* line 487, ../src/partials/_application.sass */
 .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {
   border-right: none;
 }
-/* line 468, ../src/partials/_application.sass */
+/* line 490, ../src/partials/_application.sass */
 .product-options .option-size li, .product-options .option-relative-size li, .product-options .option-shoe-size li, .product-options .option-pants-length li, .product-options .option-pants-width li {
   padding: 0 10px;
   border-right: 1px solid #dadada;
 }
-/* line 472, ../src/partials/_application.sass */
+/* line 494, ../src/partials/_application.sass */
 .product-options .option-color {
   background: transparent url(../images/option-color-bg.png) scroll repeat-x left top;
   border-right: 1px solid #dadada;
 }
-/* line 476, ../src/partials/_application.sass */
+/* line 498, ../src/partials/_application.sass */
 .product-options .option-color li {
   background: transparent scroll no-repeat left top;
   width: 39px;
   height: 20px;
   text-indent: -10000em;
 }
-/* line 482, ../src/partials/_application.sass */
+/* line 504, ../src/partials/_application.sass */
 .product-options .option-color li.black {
   background-image: url(../images/option-color-black.png);
 }
-/* line 485, ../src/partials/_application.sass */
+/* line 507, ../src/partials/_application.sass */
 .product-options .option-color li.yellow {
   background-image: url(../images/option-color-yellow.png);
 }
-/* line 488, ../src/partials/_application.sass */
+/* line 510, ../src/partials/_application.sass */
 .product-options .option-color li.green {
   background-image: url(../images/option-color-green.png);
 }
-/* line 491, ../src/partials/_application.sass */
+/* line 513, ../src/partials/_application.sass */
 .product-options .option-color li.magenta {
   background-image: url(../images/option-color-magenta.png);
 }
 
-/* line 495, ../src/partials/_application.sass */
+/* line 517, ../src/partials/_application.sass */
 .product-vendors {
   border-bottom: 1px solid #e7e7e7;
 }
 
-/* line 499, ../src/partials/_application.sass */
+/* line 521, ../src/partials/_application.sass */
 a.buy-now {
   padding: 58px 0 0;
   text-align: center;
@@ -1474,43 +1529,43 @@ a.buy-now {
   font-weight: bold;
 }
 
-/* line 511, ../src/partials/_application.sass */
+/* line 533, ../src/partials/_application.sass */
 .product-vendors a.buy-now {
   float: right;
   margin-top: -50px;
 }
 
-/* line 516, ../src/partials/_application.sass */
+/* line 538, ../src/partials/_application.sass */
 .product-vendor {
   border-bottom: none;
   padding: 7px 9px;
   height: 16px;
 }
-/* line 521, ../src/partials/_application.sass */
+/* line 543, ../src/partials/_application.sass */
 .product-vendor .price, .product-vendor .currency {
   vertical-align: middle;
 }
-/* line 524, ../src/partials/_application.sass */
+/* line 546, ../src/partials/_application.sass */
 .product-vendor .price {
   font-size: 2em;
   background: none;
   padding-left: 0;
   padding-right: 5px;
 }
-/* line 530, ../src/partials/_application.sass */
+/* line 552, ../src/partials/_application.sass */
 .product-vendor .vendor {
   float: right;
   background: transparent url('../images/vendor-three-quarters.png?1270040291') scroll no-repeat left center;
   padding: 0 10px 0 16px;
 }
 
-/* line 538, ../src/partials/_application.sass */
+/* line 560, ../src/partials/_application.sass */
 #comments li h3 span {
   float: right;
   font-weight: normal;
 }
 
-/* line 542, ../src/partials/_application.sass */
+/* line 564, ../src/partials/_application.sass */
 #recentlyviewed {
   overflow: hidden;
   display: inline-block;
@@ -1629,13 +1684,13 @@ a.buy-now {
   border: 1px solid #d9d9d9;
 }
 
-/* line 546, ../src/partials/_application.sass */
+/* line 568, ../src/partials/_application.sass */
 body.product .product-image form, body.look .collage form {
   position: absolute;
   top: 7px;
   right: 9px;
 }
-/* line 550, ../src/partials/_application.sass */
+/* line 572, ../src/partials/_application.sass */
 body.product .product-image form button, body.look .collage form button {
   margin: 0;
   border: none;
@@ -1649,28 +1704,28 @@ body.product .product-image form button, body.look .collage form button {
   text-align: center;
 }
 
-/* line 563, ../src/partials/_application.sass */
+/* line 585, ../src/partials/_application.sass */
 .similar-product .product-photo {
   float: left;
   margin-right: 10px;
 }
-/* line 567, ../src/partials/_application.sass */
+/* line 589, ../src/partials/_application.sass */
 .similar-product .product-summary {
   float: left;
 }
 
-/* line 572, ../src/partials/_application.sass */
+/* line 594, ../src/partials/_application.sass */
 .product-summary a, .product-summary span {
   display: block;
 }
-/* line 575, ../src/partials/_application.sass */
+/* line 597, ../src/partials/_application.sass */
 .product-summary a {
   text-transform: uppercase;
   background: transparent url(../images/arrow-bg.png) scroll no-repeat left bottom;
   padding-left: 20px;
 }
 
-/* line 581, ../src/partials/_application.sass */
+/* line 603, ../src/partials/_application.sass */
 #add-menu {
   overflow: hidden;
   display: inline-block;
@@ -1708,7 +1763,7 @@ body.product .product-image form button, body.look .collage form button {
 #add-menu li:last-child, #add-menu li.last {
   padding-right: 0px;
 }
-/* line 585, ../src/partials/_application.sass */
+/* line 607, ../src/partials/_application.sass */
 #add-menu li {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -1731,42 +1786,42 @@ body.product .product-image form button, body.look .collage form button {
 #add-menu li.ok:before {
   content: url('../images/ok.png?1265910786');
 }
-/* line 591, ../src/partials/_application.sass */
+/* line 613, ../src/partials/_application.sass */
 #add-menu li a {
   background: transparent url(../images/add.png) scroll no-repeat left center;
   padding-left: 20px;
 }
-/* line 595, ../src/partials/_application.sass */
+/* line 617, ../src/partials/_application.sass */
 #add-menu li#add-to-look > a {
   background-image: url('../images/look.png?1270041250');
 }
-/* line 597, ../src/partials/_application.sass */
+/* line 619, ../src/partials/_application.sass */
 #add-menu li#add-to-look ul {
   display: none;
   margin: 0 -1em;
   border-bottom: none;
   border-right: none;
 }
-/* line 602, ../src/partials/_application.sass */
+/* line 624, ../src/partials/_application.sass */
 #add-menu li#add-to-look ul li {
   padding: 0 1em;
   border-bottom: 1px solid #dadada;
 }
-/* line 605, ../src/partials/_application.sass */
+/* line 627, ../src/partials/_application.sass */
 #add-menu li#add-to-look ul li a {
   display: block;
 }
-/* line 607, ../src/partials/_application.sass */
+/* line 629, ../src/partials/_application.sass */
 #add-menu li.share > a {
   background-image: url('../images/share.png?1270041239');
 }
-/* line 609, ../src/partials/_application.sass */
+/* line 631, ../src/partials/_application.sass */
 #add-menu li#add-to-wardrobe > a {
   margin-right: 0;
   background-image: url('../images/embed.png?1265910786');
 }
 
-/* line 614, ../src/partials/_application.sass */
+/* line 636, ../src/partials/_application.sass */
 a.block_link {
   display: block;
   line-height: 2.5em;
@@ -1774,7 +1829,7 @@ a.block_link {
   text-transform: uppercase;
 }
 
-/* line 621, ../src/partials/_application.sass */
+/* line 643, ../src/partials/_application.sass */
 #search {
   background: transparent url(../images/search.png) scroll no-repeat left center;
   top: 31px;
@@ -1786,14 +1841,14 @@ a.block_link {
   overflow: visible;
   z-index: 1000;
 }
-/* line 632, ../src/partials/_application.sass */
+/* line 654, ../src/partials/_application.sass */
 #search.expanded {
   background: transparent url(../images/searchresult-bg.png) scroll no-repeat center top;
   height: 547px;
   width: 895px;
 }
 
-/* line 638, ../src/partials/_application.sass */
+/* line 660, ../src/partials/_application.sass */
 #searchbox {
   position: absolute;
   width: 163px;
@@ -1805,72 +1860,72 @@ a.block_link {
   background: transparent;
 }
 
-/* line 649, ../src/partials/_application.sass */
+/* line 671, ../src/partials/_application.sass */
 #search-result {
   margin-top: 140px;
   display: none;
 }
-/* line 653, ../src/partials/_application.sass */
+/* line 675, ../src/partials/_application.sass */
 #search-result h2 {
   font-size: 1.2em;
   font-weight: bold;
 }
 
-/* line 658, ../src/partials/_application.sass */
+/* line 680, ../src/partials/_application.sass */
 .search-result-container {
   margin-left: 5px;
 }
-/* line 661, ../src/partials/_application.sass */
+/* line 683, ../src/partials/_application.sass */
 .search-result-container h3 {
   font-size: 1em;
   font-weight: bold;
 }
-/* line 665, ../src/partials/_application.sass */
+/* line 687, ../src/partials/_application.sass */
 .search-result-container a {
   display: block;
   margin-bottom: 4px;
 }
-/* line 669, ../src/partials/_application.sass */
+/* line 691, ../src/partials/_application.sass */
 .search-result-container .product-info {
   border: none;
   text-align: left;
 }
-/* line 673, ../src/partials/_application.sass */
+/* line 695, ../src/partials/_application.sass */
 .search-result-container .product-small {
   width: 205px;
 }
-/* line 676, ../src/partials/_application.sass */
+/* line 698, ../src/partials/_application.sass */
 .search-result-container .product-image {
   float: left;
   margin-right: 5px;
 }
 
-/* line 681, ../src/partials/_application.sass */
+/* line 703, ../src/partials/_application.sass */
 #content form {
   margin-left: .5em;
   padding-top: -.5em;
 }
-/* line 685, ../src/partials/_application.sass */
+/* line 707, ../src/partials/_application.sass */
 #content form label {
   display: block;
   margin-top: .5em;
 }
-/* line 689, ../src/partials/_application.sass */
+/* line 711, ../src/partials/_application.sass */
 #content form button {
   margin-top: 1em;
 }
-/* line 692, ../src/partials/_application.sass */
+/* line 714, ../src/partials/_application.sass */
 #content form .errorlist {
   color: #990000;
 }
 
-/* line 696, ../src/partials/_application.sass */
+/* line 718, ../src/partials/_application.sass */
 .facebook-profile-image {
   float: left;
   margin-right: .5em;
 }
 
-/* line 701, ../src/partials/_application.sass */
+/* line 723, ../src/partials/_application.sass */
 #profile-nav li {
   display: block;
   float: left;
@@ -1882,22 +1937,22 @@ a.block_link {
   text-transform: uppercase;
   background: transparent url(../images/profile-nav-bg.png) scroll repeat-x top left;
 }
-/* line 712, ../src/partials/_application.sass */
+/* line 734, ../src/partials/_application.sass */
 #profile-nav li.selected {
   background-image: url(../images/profile-nav-bg-selected.png);
   border-right-color: #ababab;
   border-left-color: #ababab;
 }
-/* line 717, ../src/partials/_application.sass */
+/* line 739, ../src/partials/_application.sass */
 #profile-nav li a {
   line-height: 30px;
 }
-/* line 720, ../src/partials/_application.sass */
+/* line 742, ../src/partials/_application.sass */
 #profile-nav li.profile-image {
   padding: 0;
 }
 
-/* line 724, ../src/partials/_application.sass */
+/* line 746, ../src/partials/_application.sass */
 #profile-nav-dash {
   position: relative;
   top: -10px;

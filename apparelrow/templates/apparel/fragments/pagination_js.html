@@ -1,0 +1,28 @@
+<% /* NOTE: If you change this, also change products.pagination_js.html */ %>
+<a class="prev<% if(!products.has_previous) { %> disabled<% } %>" href="/browse/?page=<%= products.previous_page_number %>">&lt;</a>
+<div>
+<ol>
+<% if(products.pagination.left) { %>
+    <% for(var i = 0; i < products.pagination.left.length; i++) { %>
+        <li><a href="/browse/?page=<%= products.pagination.left[i] %>"><%= products.pagination.left[i] %></a></li>
+    <% } %>
+    <li class="pagination-dots">&hellip;</li>
+<% } %>
+
+<% for(var i = 0; i < products.pagination.mid.length; i++) { %>
+    <% if(products.pagination.mid[i] == products.number) { %>
+        <li class="current"><%=products.pagination.mid[i] %></li>
+    <% } else { %>
+        <li><a href="/browse/?page=<%=products.pagination.mid[i] %>"><%=products.pagination.mid[i] %></a></li>
+    <% } %>
+<% } %>
+
+<% if(products.pagination.right) { %>
+    <li class="pagination-dots">&hellip;</li>
+    <% for(var i = 0; i < products.pagination.right.length; i++) { %>
+        <li><a href="/browse/?page=<%=products.pagination.right[i] %>"><%=products.pagination.right[i] %></a></li>
+    <% } %>
+<% } %>
+</ol>
+</div>
+<a class="next<% if(! products.has_next) { %> disabled<% } %>" href="/browse/?page=<%= products.next_page_number %>">&gt;</a>

@@ -6,7 +6,7 @@ from django.core.files import File
 from django.template.defaultfilters import slugify
 from apparel.models import *
 from importer import fetcher
-from urllib2 import HTTPError
+from urllib2 import HTTPError, URLError
 
 
 # FIXME: Move to Django settings directory
@@ -68,6 +68,8 @@ class DataMapper():
             # FIXME: Add logging here. Require the SkipRecord exception to carry a name with the reason
             logging.error("Skipping record: %s", e)
             self.rollback()
+        except HTTPError, e:
+            pass
         except Exception, e:
             # FIXME: For debugging purposes, we might not want a rollback to 
             # happen here, let this be an option
@@ -363,7 +365,7 @@ class DataMapper():
             
             try:
                 temppath = fetcher.fetch(url)
-            except HTTPError, e:
+            except (HTTPError, URLError), e:
                 logging.error('%s (while downloading %s', e, url)
                 return
             
