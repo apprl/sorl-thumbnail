@@ -376,20 +376,19 @@ div#product-list
   +border("all")
   +border-bottom-radius("3px")
 
-  .prev
-    float: left
+  .prev, .next
     display: inline-block
     width: 115px
     height: 30px
-    background: transparent url(../images/prev-page.png) no-repeat scroll 20px center
+    
+  .prev
+    float: left
+    +replace-text("prev-page.png", "20px", "center")
     +border("right")
 
   .next
     float: right
-    display: inline-block
-    width: 115px
-    height: 30px
-    background: transparent url(../images/next-page.png) no-repeat scroll 89px center
+    +replace-text("next-page.png", "89px", "center")
     +border("left")
 
   .current
