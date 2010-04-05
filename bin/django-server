@@ -20,7 +20,7 @@ if [ -z $1 ]; then
 fi
 
 # FIXME: Check that this path exists
-. $PROJDIR/../python/bin/activate
+. $PROJDIR/bin/activate
 cd $PROJDIR
 
 if ([[ "$1" == "restart" ]] || [[ "$1" == "stop" ]]); then
@@ -46,11 +46,11 @@ fi
 if [[ "$1" == "restart" ]] || [[ "$1" == "start" ]]; then
 
     echo "Starting FCGI process"
-    ./manage.py runfcgi method=threaded socket=$SOCKET pidfile=$PIDFILE \
+    ./apparelrow/manage.py runfcgi method=threaded socket=$SOCKET pidfile=$PIDFILE \
         maxspare=4 workdir=$PROJDIR
         
     echo "Starting FCGI process (admin)"
-    ./manage.py runfcgi method=threaded socket=$SOCKET-admin pidfile=$PIDFILE-admin \
+    ./apparelrow/manage.py runfcgi method=threaded socket=$SOCKET-admin pidfile=$PIDFILE-admin \
         maxchildren=1 workdir=$PROJDIR
 fi
 
