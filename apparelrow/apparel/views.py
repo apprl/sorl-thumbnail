@@ -17,7 +17,7 @@ import math
 # Create your views here.
 from pprint import pprint
 
-
+BROWSE_PAGE_SIZE = 12
 WIDE_LIMIT = 4 # FIME: Move to application settings fileI
 
 def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
@@ -75,7 +75,7 @@ def search(request, model):
     else:
         raise Exception('No model to search for')
     
-    paginator = Paginator(result, 12) #FIXME: Make results per page configurable
+    paginator = Paginator(result, BROWSE_PAGE_SIZE)
 
     try:
         page = int(request.GET.get('page', '1'))
@@ -87,7 +87,6 @@ def search(request, model):
     except (EmptyPage, InvalidPage):
         paged_result = paginator.page(paginator.num_pages)
 
-    left, mid, right = get_pagination(paginator, page)
     #FIXME: We don't return the paged result because it's not JSON serializable
     response = {
         'object_list': paged_result.object_list,
@@ -97,11 +96,6 @@ def search(request, model):
         'paginator': {
             'num_pages': paged_result.paginator.num_pages,
             'count': paged_result.paginator.count,
-        },
-        'pagination': {
-            'left': left,
-            'right': right,
-            'mid': mid,
         },
     }
     return HttpResponse(
@@ -159,7 +153,8 @@ def browse(request):
     product_count_template = get_template_source('apparel/fragments/product_count.html')
     product_template = get_template_source('apparel/fragments/product_small.html')
     pagination_template = get_template_source('apparel/fragments/pagination.html')
-    paginator = Paginator(products, 12) #FIXME: Make number per page configurable
+    paginator = Paginator(products, BROWSE_PAGE_SIZE)
+    
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -168,11 +163,21 @@ def browse(request):
         paged_products = paginator.page(page)
     except (EmptyPage, InvalidPage):
         paged_products = paginator.page(paginator.num_pages)
+
+    left, mid, right = get_pagination(paginator, page)
+
+
     result = get_filter()
     result['products'] = paged_products
     result['product_count_template'] = js_template(product_count_template)
     result['product_template'] = js_template(product_template)
     result['pagination_template'] = js_template(pagination_template)
+    result['pagination'] = {
+        'left': left,
+        'right': right,
+        'mid': mid,
+    }    
+        
     return render_to_response('apparel/browse.html', result)
 
 def js_template(str):

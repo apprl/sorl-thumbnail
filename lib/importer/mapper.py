@@ -68,6 +68,8 @@ class DataMapper():
             # FIXME: Add logging here. Require the SkipRecord exception to carry a name with the reason
             logging.error("Skipping record: %s", e)
             self.rollback()
+        except HTTPError, e:
+            pass
         except Exception, e:
             # FIXME: For debugging purposes, we might not want a rollback to 
             # happen here, let this be an option

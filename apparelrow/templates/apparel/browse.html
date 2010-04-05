@@ -56,7 +56,7 @@
                 filter(getQuery());
                 return false;
             });
-            jQuery('#pagination .prev, #pagination .next').live('click', function() {
+            jQuery('#pagination a').live('click', function() {
                 filter(getQuery($(this).attr('href').split('=')[1]));
                 return false;
             });
@@ -131,8 +131,8 @@
             );*/
             $('#product-count').empty();
             $('#product-count').append(tmpl('product_count_template', { products: products }));
-            $('#pagination').empty();
-            $('#pagination').append(tmpl('pagination_template', { products: products }));
+//            $('#pagination').empty();
+//            $('#pagination').append(tmpl('pagination_template', { products: products }));
             $.each(products.object_list, function(i, product) {
                     try {
                     $('#product-list > ul').append(tmpl('product_template', { product: product }));
