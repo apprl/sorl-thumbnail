@@ -41,7 +41,7 @@
     </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}two-columns right{% endblock %}
+{% block body-classes %}product two-columns right{% endblock %}
 
 {% block body %}
 {% if object %}
@@ -78,6 +78,7 @@
                 </div>
             </div>
             -->
+            <p>{% include 'apparel/fragments/likes.html' %}</p>
             <h2>{% trans "Recently viewed" %}</h2>
             <div id="recentlyviewed">
                 {% with viewed_products as products %}

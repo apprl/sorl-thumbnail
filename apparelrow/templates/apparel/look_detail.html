@@ -21,21 +21,6 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery('.collage form').hide();
-        jQuery('.collage').hover(
-            function() { jQuery(this).find('form').fadeIn(); },
-            function() { jQuery(this).find('form').fadeOut(); }
-        );
-        jQuery('.collage form').submit(function() {
-            jQuery.ajax({
-                type: this.method,
-                url: this.action,
-                data: jQuery(this).serialize(),
-                success: function(data, statusText, req) { console.log("liked!") },
-                dataType: 'json',
-            });
-            return false;
-            });
         jQuery('.product').tooltip({
             effect: 'slide',
             relative: true,
@@ -46,7 +31,7 @@
 </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}two-columns{% endblock %}
+{% block body-classes %}look two-columns{% endblock %}
 
 {% block body %}
 <div class="sidebar">
@@ -68,7 +53,7 @@
     <div class="collage">
         {% include 'apparel/fragments/look_collage.html' %}
         <form method="post" action="{% url like-look object.slug "up" %}">
-            <button type="submit" name="like" id="like">{% trans "Like!" %}</button>
+            <button type="submit" name="like" id="like">{% trans "Like" %}</button>
         </form>
     </div>
     {% ifequal object.user user %}

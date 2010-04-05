@@ -16,6 +16,7 @@
         google.load("jquery", "1.4.1");
         google.load("jqueryui", "1.7.2");
     </script>
+    <script type="text/javascript" src="/site_media/static/js/apparel.js"></script>
     <script type="text/javascript" src="/site_media/static/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="/site_media/static/js/jquery.template.js"></script>
     <script type="text/javascript" src="/site_media/static/js/dump.js"></script>
@@ -100,7 +101,7 @@
             if(value.length == 0)
                 return
             
-            jQuery.getJSON('/apparel/search', {
+            jQuery.getJSON('{% url apparel.views.wide_search %}', {
                 s: value
             }, display);
         }
