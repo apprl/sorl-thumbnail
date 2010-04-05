@@ -1,3 +1,20 @@
-<a class="prev" href="/apparel/browse/?page={{products.previous_page_number }}"> </a>
-<div class="current">{{ products.number }} of {{ products.paginator.num_pages }}</div>
-<a class="next" href="/apparel/browse/?page={{products.next_page_number }}"> </a>
+{% if products.paginaton.left %}
+    {% for page in products.pagination.left %}
+        <a class="prev" href="/apparel/browse/?page={{products.previous_page_number }}"> </a>
+    {% endfor %}
+<div class="pagination-dots">...</div>
+{% endif %}
+
+{% for page in products.pagination.mid %}
+    {% ifequal page products.number %}
+        <div class="current">{{ products.number }} of {{ products.paginator.num_pages }}</div>
+    {% else %}
+    {% endifequal %}
+{% endfor %}
+
+{% if products.pagination.right %}
+    <div class="pagination-dots">...</div>
+    {% for page in products.pagination.right %}
+	<a class="next" href="/apparel/browse/?page={{products.next_page_number }}"> </a>
+    {% endfor %}
+{% endif %}
