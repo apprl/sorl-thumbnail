@@ -10,6 +10,8 @@ import datetime, mptt
 import tagging
 from tagging.fields import TagField
 
+from django_extensions.db.fields import AutoSlugField
+
 # FIXME: Move to Django settings directory
 PRODUCT_IMAGE_BASE = 'static/product'
 LOGOTYPE_BASE      = 'static/logos'
@@ -125,7 +127,7 @@ class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
     category = models.ManyToManyField(Category, blank=True, verbose_name=_("Category"))
     options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
-    slug = models.SlugField(_("Slug Name"), blank=True,
+    slug = AutoSlugField(_("Slug Name"), populate_from=("manufacturer", "product_name",), blank=True,
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
         help_text=_("Has to be unique with the manufacturer"))
@@ -147,9 +149,6 @@ class Product(models.Model):
     def save(self, force_insert=False, force_update=False):
         if not self.pk:
             self.date_added = datetime.date.today()
-
-        if self.product_name and not self.slug:
-            self.slug = slugify(self.manufacturer.name + " " + self.product_name)
 
         if not self.sku:
             self.sku = self.slug
@@ -179,7 +178,7 @@ class VendorProduct(models.Model):
 
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
-    slug = models.SlugField(_('Slug Name'), blank=True,
+    slug = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
         help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     description   = models.TextField(_('Look description'), null=True, blank=True)
     products = models.ManyToManyField(Product, through='LookProduct')
@@ -188,11 +187,6 @@ class Look(models.Model):
     created    = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags = TagField()
-
-    def save(self, force_insert=False, force_update=False):
-        if self.title and not self.slug:
-            self.slug = slugify(self.title)
-        super(Look, self).save(force_insert=force_insert, force_update=force_update)
 
     @property
     def total_price(self):

@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'pagination',
     'voting',
     'django.contrib.comments',
+    'django_extensions',
     'apparel',
     'scale',
     'watcher',
