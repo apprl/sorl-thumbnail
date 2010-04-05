@@ -11,8 +11,9 @@ jQuery(document).ready(function() {
             url: this.action,
             data: jQuery(this).serialize(),
             success: function(data, statusText, req) { 
-            console.log(data);
-                jQuery('span.likes > span').html(data.score.score);
+                var likes = jQuery('span.likes > span');
+                //likes.width(likes.width()).hide().html(data.score.score).fadeIn();
+                likes.hide().html(data.score.score).fadeIn();
             },
             dataType: 'json',
         });
