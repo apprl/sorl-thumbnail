@@ -5,6 +5,9 @@
     <div class="product-image">
         <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/328x500/site_media/media/{{ object.product_image }}" /></a>
         <span class="magnifier"></span>
+        <form method="post" action="{% url like-product object.slug "up" %}">
+            <button type="submit" name="like" id="like">{% trans "Like" %}</button>
+        </form>
     </div>
     <h2>{% trans "Comments & links" %}</h2>
     {% get_comment_list for object as comments %}

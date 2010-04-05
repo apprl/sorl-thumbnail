@@ -12,7 +12,14 @@ manufacturer_dict = {
     'queryset': Manufacturer.objects.all(),
 }
 
-look_dict = {
+like_product_dict = {
+    'model': Product,
+    'template_object_name': 'product',
+    'slug_field': 'slug',
+    'allow_xmlhttprequest': True,
+}
+
+like_look_dict = {
     'model': Look,
     'template_object_name': 'look',
     'slug_field': 'slug',
@@ -35,7 +42,8 @@ urlpatterns = patterns('',
     (r'^looks/(?P<slug>[\w-]+)/edit/$', 'apparel.views.look_edit'),
     (r'^looks/add_product/$', 'apparel.views.add_to_look'),
     (r'^looks/save_product/$', 'apparel.views.save_look_product'),
-    (r'^looks/(?P<slug>[\w-]+)/like/(?P<direction>up|clear)/?$', vote_on_object, look_dict, "like-look"),
+    (r'^looks/(?P<slug>[\w-]+)/like/(?P<direction>up|clear)/?$', vote_on_object, like_look_dict, "like-look"),
+    (r'^products/(?P<slug>[\w-]+)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
     (r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
 )
 

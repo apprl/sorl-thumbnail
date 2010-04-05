@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load thumbnail %}
+{% load comments %}
+{% load trackback_tags %}
 
 {# FIXME: we should reverse the list of categories. I think we need to create a filter for this #}
 {% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.category.all|join:'|' }} | {% endblock %}
@@ -8,6 +10,8 @@
 {% block 'extra-styles' %}
     <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-basic.css" media="screen" />
     <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-gallery.css" media="screen" />
+    <link rel="pingback" href="{% get_pingback_url %}" />
+    {% get_trackback_rdf_for object %}
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
@@ -41,11 +45,12 @@
     </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}two-columns right{% endblock %}
+{% block body-classes %}product two-columns right{% endblock %}
 
 {% block body %}
 {% if object %}
         <div id="content">
+            {% get_trackbacks_for object as trackbacks %}
             {% include 'apparel/fragments/product_detail.html' %}
             <!-- overlay element -->
             <div class="simple_overlay" id="gallery">
@@ -78,6 +83,12 @@
                 </div>
             </div>
             -->
+            {% get_comment_count for object as comment_count %}
+            <div class="activity">
+                <p><a class="comments" href="#comments">{{ trackbacks|length|add:comment_count }} {% trans "comments and links" %}</a></p>
+                <p><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to {{ counter }} look{% plural %}Added to {{ counter }} looks{% endblocktrans %}</a></p>
+                <p>{% include 'apparel/fragments/likes.html' %}</p>
+            </div>
             <h2>{% trans "Recently viewed" %}</h2>
             <div id="recentlyviewed">
                 {% with viewed_products as products %}
@@ -86,7 +97,7 @@
             </div>
 
             {% if looks_with_product %}
-            <h2>
+            <h2 id="looks">
                 {% blocktrans count looks_with_product|length as counter %}
                     {{ counter }} look with this product
                 {% plural %}

@@ -91,6 +91,7 @@ MIDDLEWARE_CLASSES = (
     'facebookconnect.middleware.FacebookConnectMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
+    'trackback.middleware.PingbackUrlInjectionMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -139,6 +140,7 @@ INSTALLED_APPS = (
     'voting',
     'django.contrib.comments',
     'django_extensions',
+    'trackback',
     'apparel',
     'scale',
     'watcher',
