@@ -133,8 +133,12 @@
             );*/
             $('#product-count').empty();
             $('#product-count').append(tmpl('product_count_template', { products: products }));
-//            $('#pagination').empty();
-//            $('#pagination').append(tmpl('pagination_template', { products: products }));
+            try {
+                $('#pagination').empty();
+                $('#pagination').append(tmpl('pagination_template', { products: products }));
+            } catch(e) {
+                console.log(e)
+            }
             $.each(products.object_list, function(i, product) {
                     try {
                     $('#product-list > ul').append(tmpl('product_template', { product: product }));

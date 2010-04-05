@@ -391,10 +391,32 @@ div#product-list
     +replace-text("next-page.png", "89px", "center")
     +border("left")
 
-  .current
+  
+  div
     float: left
+    width= !large_width - 2 * (115 + 2)
     line-height: 30px
     text-align: center
+    margin: 0 auto
+    position: relative
+    ol
+      +horizontal-list(5px)
+      clear: left
+      float: left
+      left: 50%
+      text-align: center
+      position: relative
+      overflow: visible
+      li
+        right: 50%
+        display: block
+        position: relative
+        a
+          display: block
+        &.current
+          font-weight: bold
+          background= "transparent" image_url("current-page.png") "no-repeat" "scroll" "center" "bottom"
+      
 
 .product-left
   +float-left

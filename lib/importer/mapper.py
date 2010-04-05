@@ -6,7 +6,7 @@ from django.core.files import File
 from django.template.defaultfilters import slugify
 from apparel.models import *
 from importer import fetcher
-from urllib2 import HTTPError
+from urllib2 import HTTPError, URLError
 
 
 # FIXME: Move to Django settings directory
@@ -365,7 +365,7 @@ class DataMapper():
             
             try:
                 temppath = fetcher.fetch(url)
-            except HTTPError, e:
+            except (HTTPError, URLError), e:
                 logging.error('%s (while downloading %s', e, url)
                 return
             

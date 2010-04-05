@@ -87,6 +87,8 @@ def search(request, model):
     except (EmptyPage, InvalidPage):
         paged_result = paginator.page(paginator.num_pages)
 
+    left, mid, right = get_pagination(paginator, page)
+
     #FIXME: We don't return the paged result because it's not JSON serializable
     response = {
         'object_list': paged_result.object_list,
@@ -97,6 +99,11 @@ def search(request, model):
             'num_pages': paged_result.paginator.num_pages,
             'count': paged_result.paginator.count,
         },
+        'pagination': {
+            'left': left,
+            'right': right,
+            'mid': mid,
+        }    
     }
     return HttpResponse(
         json.encode(response),
@@ -145,20 +152,20 @@ def index(request):
     return render_to_response('index.html', ctx)
 
 def browse(request):
-    if len(request.GET):
-        products = Product.objects.search(request.GET)
+    query = request.GET.copy()
+    page  = int(query.pop('page', [1])[0]) # all values are lists in the QueryDict object and we never expect more than one
+    
+    if len(query):
+        products = Product.objects.search(query)
     else:
         products = Product.objects.all()
+    
     #FIXME: Create a generic way of getting relevant templates and putting them into the context
     product_count_template = get_template_source('apparel/fragments/product_count.html')
     product_template = get_template_source('apparel/fragments/product_small.html')
     pagination_template = get_template_source('apparel/fragments/pagination.html')
     paginator = Paginator(products, BROWSE_PAGE_SIZE)
     
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
     try:
         paged_products = paginator.page(page)
     except (EmptyPage, InvalidPage):
@@ -171,7 +178,7 @@ def browse(request):
     result['products'] = paged_products
     result['product_count_template'] = js_template(product_count_template)
     result['product_template'] = js_template(product_template)
-    result['pagination_template'] = js_template(pagination_template)
+    result['pagination_template'] = get_template_source('apparel/fragments/pagination_js.html')
     result['pagination'] = {
         'left': left,
         'right': right,
