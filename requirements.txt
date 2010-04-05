@@ -15,3 +15,4 @@ django-announcements==0.1.0
 django-tagging==0.3.1
 django-pagination==1.0.5
 -e git://github.com/django-extensions/django-extensions.git#egg=django-extensions
+-e svn+http://django-trackback.googlecode.com/svn/trunk/@15#egg=django-trackback

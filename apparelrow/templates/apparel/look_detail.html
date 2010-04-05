@@ -2,20 +2,23 @@
 {% load i18n %}
 {% load humanize %}
 {% load voting_tags %}
+{% load trackback_tags %}
 
 {% block 'extra-styles' %}
-<style type="text/css">
-    .collage {
-        position: relative;
-        height: 450px;
-        overflow: hidden;
-    }
-    .tooltip {
-        display: none;
-        z-index: 1100;
-        padding: 1em;
-    }
-</style>
+    <link rel="pingback" href="{% get_pingback_url %}" />
+    {% get_trackback_rdf_for object %}
+    <style type="text/css">
+        .collage {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+        }
+        .tooltip {
+            display: none;
+            z-index: 1100;
+            padding: 1em;
+        }
+    </style>
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}

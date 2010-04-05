@@ -308,6 +308,14 @@ h2
         +border("top")
         background-image= image_url("gradient-dark-bg.png")
 
+a.comments
+  background= "transparent" image_url("comments.png") "no-repeat" "scroll" "left" "center"
+  padding-left: 16px
+
+a.looks
+  background= "transparent" image_url("look.png") "no-repeat" "scroll" "left" "center"
+  padding-left: 16px
+
 span
   &.likes
     background= "transparent" image_url("heart.png") "no-repeat" "scroll" "left" "center"
@@ -394,6 +402,13 @@ div#product-list
   margin-top: 30px
   width= !small_width
   margin-right= !gutter_width
+
+.activity
+  margin-top: 30px
+  +border("top")
+  p
+    line-height: 26px
+    +border("bottom", !easy_border_color)
 
 .product-info
   +float-left
