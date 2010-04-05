@@ -75,8 +75,8 @@ class DataMapper():
             self.rollback()
             logging.exception(e)
             raise e
-        
-        logging.info('Processed product %s', self.product)
+        else:        
+            logging.info('Processed product %s', self.product)
     
     def map_fields(self):
         """

@@ -109,7 +109,8 @@ class GrandpaDataMapper(DataMapper):
         price = self.data.get('price')
         
         if price:
-            return re.search('^(\d+) (\w{3})$', price).groups()
+            r = re.search('^(\d+) (\w{3})$', price)
+            if r: return r.groups()
         
         return (None, None)
 
