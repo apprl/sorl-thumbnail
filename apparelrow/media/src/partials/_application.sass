@@ -375,7 +375,6 @@ div#product-list
 
 .product-small
   width: 115px
-  background-color: white
   +border("all")
   border-bottom: none
   border-right: none
@@ -387,6 +386,8 @@ div#product-list
     overflow: hidden
 
   .product-image
+    border: none
+    background-color: white
     position: relative
     height: 153px
 
@@ -403,6 +404,7 @@ div#product-list
 
 #pagination
   height: 30px
+  background-color= !button_color
   +border("all")
   +border-bottom-radius("3px")
 
