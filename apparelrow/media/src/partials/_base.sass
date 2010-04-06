@@ -69,3 +69,66 @@
     content= image_url("cancel.png")
   &.ok:before
     content= image_url("ok.png")
+
+!color_width = 21px
+!color_height = 19px
+
+=colors
+  +horizontal-list
+  position: relative
+  li
+    background: none
+    border: none
+    padding: 0
+    height= !color_height
+    a
+      +replace-text("sprite-colors.png")
+      padding: 0
+      width= !color_width
+      height= !color_height
+      position: absolute
+      top: 0
+      &.black
+        background-position: 0 0
+        left: 0
+      &.grey
+        background-position= -!color_width "top"
+        left= !color_width + 1
+      &.white
+        background-position= -!color_width * 2 "top"
+        left= (!color_width + 1) * 2
+      &.beige
+        background-position= -!color_width * 3 "top"
+        left= (!color_width + 1) * 3 + 7
+      &.brown
+        background-position= -!color_width * 4 "top"
+        left= (!color_width + 1) * 4 + 7    
+      &.red
+        background-position= -!color_width * 5 "top"
+        left= (!color_width + 1) * 5 + 7
+      &.orange
+        background-position= -!color_width * 6 "top"
+        left= (!color_width + 1) * 6 + 7
+      &.yellow
+        background-position= -!color_width * 7 "top"
+        left= (!color_width + 1) * 7 + 7
+      &.green
+        background-position= -!color_width * 8 "top"
+        left= (!color_width + 1) * 8 + 7
+      &.blue
+        background-position= -!color_width * 9 "top"
+        left= (!color_width + 1) * 9 + 7
+      &.magenta
+        background-position= -!color_width * 10 "top"
+        left= (!color_width + 1) * 10 + 7
+      &.pink
+        background-position= -!color_width * 11 "top"
+        left= (!color_width + 1) * 11 + 7
+      &.gold
+        background-position= -!color_width * 12 "top"
+        left= (!color_width + 1) * 12 + 14
+      &.silver
+        background-position= -!color_width * 13 "top"
+        left= (!color_width + 1) * 13 + 14
+      &.selected
+        background-position= "inherit" !color_height
