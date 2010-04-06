@@ -1134,79 +1134,127 @@ h2 a {
   position: absolute;
   top: 0;
 }
-/* line 91, ../src/partials/_base.sass */
+/* line 92, ../src/partials/_base.sass */
 #product-options #product-color ul li a.black {
   background-position: 0 0;
   left: 0;
 }
-/* line 94, ../src/partials/_base.sass */
+/* line 95, ../src/partials/_base.sass */
 #product-options #product-color ul li a.grey {
   background-position: -21px top;
   left: 22px;
 }
-/* line 97, ../src/partials/_base.sass */
+/* line 98, ../src/partials/_base.sass */
+#product-options #product-color ul li a.grey.selected {
+  background-position: -39px;
+}
+/* line 100, ../src/partials/_base.sass */
 #product-options #product-color ul li a.white {
   background-position: -42px top;
   left: 44px;
 }
-/* line 100, ../src/partials/_base.sass */
+/* line 103, ../src/partials/_base.sass */
+#product-options #product-color ul li a.white.selected {
+  background-position: -61px;
+}
+/* line 105, ../src/partials/_base.sass */
 #product-options #product-color ul li a.beige {
   background-position: -63px top;
   left: 73px;
 }
-/* line 103, ../src/partials/_base.sass */
+/* line 108, ../src/partials/_base.sass */
+#product-options #product-color ul li a.beige.selected {
+  background-position: -82px;
+}
+/* line 110, ../src/partials/_base.sass */
 #product-options #product-color ul li a.brown {
   background-position: -84px top;
   left: 95px;
 }
-/* line 106, ../src/partials/_base.sass */
+/* line 113, ../src/partials/_base.sass */
+#product-options #product-color ul li a.brown.selected {
+  background-position: -103px;
+}
+/* line 115, ../src/partials/_base.sass */
 #product-options #product-color ul li a.red {
   background-position: -105px top;
   left: 117px;
 }
-/* line 109, ../src/partials/_base.sass */
+/* line 118, ../src/partials/_base.sass */
+#product-options #product-color ul li a.red.selected {
+  background-position: -124px;
+}
+/* line 120, ../src/partials/_base.sass */
 #product-options #product-color ul li a.orange {
   background-position: -126px top;
   left: 139px;
 }
-/* line 112, ../src/partials/_base.sass */
+/* line 123, ../src/partials/_base.sass */
+#product-options #product-color ul li a.orange.selected {
+  background-position: -145px;
+}
+/* line 125, ../src/partials/_base.sass */
 #product-options #product-color ul li a.yellow {
   background-position: -147px top;
   left: 161px;
 }
-/* line 115, ../src/partials/_base.sass */
+/* line 128, ../src/partials/_base.sass */
+#product-options #product-color ul li a.yellow.selected {
+  background-position: -166px;
+}
+/* line 130, ../src/partials/_base.sass */
 #product-options #product-color ul li a.green {
   background-position: -168px top;
   left: 183px;
 }
-/* line 118, ../src/partials/_base.sass */
+/* line 133, ../src/partials/_base.sass */
+#product-options #product-color ul li a.green.selected {
+  background-position: -187px;
+}
+/* line 135, ../src/partials/_base.sass */
 #product-options #product-color ul li a.blue {
   background-position: -189px top;
   left: 205px;
 }
-/* line 121, ../src/partials/_base.sass */
+/* line 138, ../src/partials/_base.sass */
+#product-options #product-color ul li a.blue.selected {
+  background-position: -208px;
+}
+/* line 140, ../src/partials/_base.sass */
 #product-options #product-color ul li a.magenta {
   background-position: -210px top;
   left: 227px;
 }
-/* line 124, ../src/partials/_base.sass */
+/* line 143, ../src/partials/_base.sass */
+#product-options #product-color ul li a.magenta.selected {
+  background-position: -229px;
+}
+/* line 145, ../src/partials/_base.sass */
 #product-options #product-color ul li a.pink {
   background-position: -231px top;
   left: 249px;
 }
-/* line 127, ../src/partials/_base.sass */
+/* line 149, ../src/partials/_base.sass */
+#product-options #product-color ul li a.pink.selected {
+  background-position: -231px -19px;
+}
+/* line 151, ../src/partials/_base.sass */
 #product-options #product-color ul li a.gold {
   background-position: -252px top;
   left: 278px;
 }
-/* line 130, ../src/partials/_base.sass */
+/* line 154, ../src/partials/_base.sass */
+#product-options #product-color ul li a.gold.selected {
+  background-position: -271px;
+}
+/* line 156, ../src/partials/_base.sass */
 #product-options #product-color ul li a.silver {
   background-position: -273px top;
   left: 300px;
 }
-/* line 133, ../src/partials/_base.sass */
-#product-options #product-color ul li a.selected {
-  background-position: inherit 19px;
+/* line 159, ../src/partials/_base.sass */
+#product-options #product-color ul li a.silver.selected {
+  background-position: -292px;
 }
 /* line 243, ../src/partials/_application.sass */
 #product-options #product-color ul li {

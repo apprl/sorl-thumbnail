@@ -82,6 +82,7 @@
     padding: 0
     height= !color_height
     a
+      !y = -!color_height
       +replace-text("sprite-colors.png")
       padding: 0
       width= !color_width
@@ -94,41 +95,66 @@
       &.grey
         background-position= -!color_width "top"
         left= !color_width + 1
+        &.selected
+          background-position= -!color_width + 1 -!color_height
       &.white
         background-position= -!color_width * 2 "top"
         left= (!color_width + 1) * 2
+        &.selected
+          background-position= -!color_width * 2 -!color_height
       &.beige
         background-position= -!color_width * 3 "top"
         left= (!color_width + 1) * 3 + 7
+        &.selected
+          background-position= -!color_width * 3 -!color_height
       &.brown
         background-position= -!color_width * 4 "top"
-        left= (!color_width + 1) * 4 + 7    
+        left= (!color_width + 1) * 4 + 7
+        &.selected
+          background-position= -!color_width * 4 -!color_height
       &.red
         background-position= -!color_width * 5 "top"
         left= (!color_width + 1) * 5 + 7
+        &.selected
+          background-position= -!color_width * 5 -!color_height
       &.orange
         background-position= -!color_width * 6 "top"
         left= (!color_width + 1) * 6 + 7
+        &.selected
+          background-position= -!color_width * 6 -!color_height
       &.yellow
         background-position= -!color_width * 7 "top"
         left= (!color_width + 1) * 7 + 7
+        &.selected
+          background-position= -!color_width * 7 -!color_height
       &.green
         background-position= -!color_width * 8 "top"
         left= (!color_width + 1) * 8 + 7
+        &.selected
+          background-position= -!color_width * 8 -!color_height
       &.blue
         background-position= -!color_width * 9 "top"
         left= (!color_width + 1) * 9 + 7
+        &.selected
+          background-position= -!color_width * 9 -!color_height
       &.magenta
         background-position= -!color_width * 10 "top"
         left= (!color_width + 1) * 10 + 7
+        &.selected
+          background-position= -!color_width * 10 -!color_height
       &.pink
-        background-position= -!color_width * 11 "top"
+        !x = -!color_width * 11
+        background-position= !x "top"
         left= (!color_width + 1) * 11 + 7
+        &.selected
+          background-position= !x !y
       &.gold
         background-position= -!color_width * 12 "top"
         left= (!color_width + 1) * 12 + 14
+        &.selected
+          background-position= -!color_width * 12 -!color_height
       &.silver
         background-position= -!color_width * 13 "top"
         left= (!color_width + 1) * 13 + 14
-      &.selected
-        background-position= "inherit" !color_height
+        &.selected
+          background-position= -!color_width * 13 -!color_height
