@@ -4,9 +4,13 @@
     <div class="box">
         <div>
             <h3>{% block option_header %}{% endblock %}</h3>
-            {% block option_content %}{% endblock %}
+            <div class="option-content">
+                {% block option_content %}{% endblock %}
+            </div>
         </div>
-        <a class="button cancel">{% trans "Cancel" %}</a><a class="button ok">{% trans "OK" %}</a>
+        <div class="buttons">
+            <a class="button cancel">{% trans "Cancel" %}</a><a class="button ok">{% trans "OK" %}</a>
+        </div>
     </div>
 </div>
 

@@ -15,8 +15,12 @@
 !easy_color = !box_color - #999
 !like_color = !box_color - #008a8a
 !price_color = !box_color - #878787
+!button_color = !box_color - #080808
 
 !border_width = 1px
+
+!button_height = 30px
+
 
 !box_disabled_color = !box_color + #aaa
 !border_disabled_color = !border_color + #1e1e1e
@@ -25,6 +29,16 @@
 !default_box_shadow_h_offset  ||= 0px
 !default_box_shadow_v_offset  ||= 0px
 !default_box_shadow_blur      ||= 20px
+
+=text_input
+  font-family: "Helvetica", "Arial", sans-serif
+  font-size: 1em
+  +border-radius(3px)
+  +border("all", #d9d9d9)
+  background-color: #f6f6f6
+  color: #666
+  +box-shadow-inset(#f6f6f6 - #222, 0, 3px, 3px)
+  padding: 0.5em 5px
 
 
 =container
@@ -43,9 +57,12 @@
 
 =button(!bg = "gradient-bg.png")
   +box
-  line-height: 30px
+  line-height= !button_height
+  height= !button_height
+  overflow: hidden
+  white-space: nowrap
   background:
-    color: #f3f3f3
+    color= !button_color
     image= image_url(!bg)
     repeat: repeat-x
   &.cancel:before

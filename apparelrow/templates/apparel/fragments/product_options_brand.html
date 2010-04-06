@@ -5,7 +5,7 @@
 
 {% block option_content %}
 <input type="text" name="brand" />
-<ul id="product-manufacturers">
+<ul>
     {% for manufacturer in manufacturers %}
     <li><a id="manufacturer-{{ manufacturer.id }}" href="{% url apparel.views.browse %}?1:m.id:in={{ manufacturer.id }}">{{ manufacturer.name }}</a></li>
     {% endfor %}

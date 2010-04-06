@@ -13,8 +13,15 @@ jQuery(document).ready(function() {
         return false;
     });
     jQuery('#product-options > li > a').click(function() {
+        
+        if(!$(this).parent().is(".active")) {
+            jQuery('#product-options .options').hide();
+            jQuery('#product-options li.active').removeClass('active');
+        }
+        
         $(this).parent().toggleClass('active');
         $(this).next('.options').slideToggle('fast');
+        
         return false;
     });
     // Brand search

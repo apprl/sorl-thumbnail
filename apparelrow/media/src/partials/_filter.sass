@@ -25,10 +25,16 @@
   li
     div.options
       margin-left: -10px
+      .option-content
+        +border("top")
+        +box-shadow-inset(#f6f6f6 - #222, 0, 3px, 3px)
+      h3
+        font-weight: normal
+        line-height= !button_height
+        padding: 0 12px
       div.box
         +box(#fff)
         > div
-          padding: 10px
           background: #fff
       &.popup
         background:
@@ -43,13 +49,12 @@
         top: 0px
         z-index: 10
         div.box
-          width: 500px
+          width: 348px
           +box-shadow
+          .buttons
+            padding: 10px 12px
           a.button
-            width: 249px
-      a.button
-        border: none
-        +border("top")
-        text-align: center
-      a.ok
-        +border("left")
+            text-align: center
+            width: 159px
+          a.ok
+            border-left: none
