@@ -1,10 +1,18 @@
 =filter(!img, !selected_img)
-  +border("bottom")
+  +border("all")
+  +border-radius("3px")
   +no-bullets
   margin-bottom: 10px
   li
     +button
     border-bottom: none
+    border-left: none
+    border-right: none
+    &.first
+      border-top: none
+      +border-top-radius("3px")
+    &.last
+      +border-bottom-radius("3px")
     > a
       display: block
       padding-left: 25px

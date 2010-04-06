@@ -3,19 +3,19 @@
 
 <h2>{% trans "Browse articles" %}<a id="reset" href="{% url apparel.views.browse %}">{% trans "Show all" %}</a></h2>
 <ul id="product-gender">
-    <li><a href="#">{% trans "All" %}</a></li>
+    <li class="first"><a href="#">{% trans "All" %}</a></li>
     {% for gender in genders %}
-    <li><a id="option-{{ gender.value }}" href="{% url apparel.views.browse %}?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
+    <li{% if forloop.last %} class="last"{% endif %}><a id="option-{{ gender.value }}" href="{% url apparel.views.browse %}?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
     {% endfor %}
 </ul>
 <ul id="product-options">
-    <li id="product-price"><a href="{% url apparel.views.browse %}">{% trans "Price" %} (<span id="min-price"></span>-<span id="max-price"></span>)</a>
+    <li class="first" id="product-price"><a href="{% url apparel.views.browse %}">{% trans "Price" %} (<span id="min-price"></span>-<span id="max-price"></span>)</a>
     {% include "apparel/fragments/product_options_price.html" %}
     </li>
     <li><a href="{% url apparel.views.browse %}">{% trans "Color" %}</a>
     {% include "apparel/fragments/product_options_color.html" %}
     </li>
-    <li><a href="{% url apparel.views.browse %}">{% trans "Brand" %}</a>
+    <li class="last"><a href="{% url apparel.views.browse %}">{% trans "Brand" %}</a>
     {% include "apparel/fragments/product_options_brand.html" %}
     </li>
 </ul>
