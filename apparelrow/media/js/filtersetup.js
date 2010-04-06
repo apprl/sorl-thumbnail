@@ -2,25 +2,25 @@ jQuery(document).ready(function() {
     // Make option panels popups
     jQuery('.options').addClass('popup');
     jQuery('.options a.button').click(function() {
-        $(this).parents('.popup').hide();
-        $(this).parents('li.active').removeClass('active');
+        jQuery(this).parents('.popup').hide();
+        jQuery(this).parents('li.active').removeClass('active');
         return false;
     });
     jQuery('.options a.ok').click(function() {
-        if($(this).parents('.options').find('.selected').length > 0) {
-            $(this).parents('.options').siblings('a').addClass('selected');
+        if(jQuery(this).parents('.options').find('.selected').length > 0) {
+            jQuery(this).parents('.options').siblings('a').addClass('selected');
         }
         return false;
     });
     jQuery('#product-options > li > a').click(function() {
         
-        if(!$(this).parent().is(".active")) {
+        if(!jQuery(this).parent().is(".active")) {
             jQuery('#product-options .options').hide();
             jQuery('#product-options li.active').removeClass('active');
         }
         
-        $(this).parent().toggleClass('active');
-        $(this).next('.options').slideToggle('fast');
+        jQuery(this).parent().toggleClass('active');
+        jQuery(this).next('.options').slideToggle('fast');
         
         return false;
     });
@@ -28,13 +28,13 @@ jQuery(document).ready(function() {
     jQuery("input[name=brand]").keyup(function(e) {
         var s = jQuery(this).val();
         if(s == "") {
-            $('#product-manufacturers > li').show();
+            jQuery('#product-manufacturers ul > li').show();
             return;
         }
-        $('#product-manufacturers > li').filter(function(index) {
+        jQuery('#product-manufacturers ul > li').filter(function(index) {
             return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) < 0;
         }).hide();
-        $('#product-manufacturers > li').filter(function(index) {
+        jQuery('#product-manufacturers ul > li').filter(function(index) {
             return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) >= 0;
         }).show();
     });
