@@ -635,14 +635,15 @@ body.product .product-image, body.look .collage
   +horizontal-list(0)
   margin-top: 18px
   li
+    margin-right: 8px
     +button
     +border-radius(3px)
     line-height: 2em
-    padding: 0 10px
-    margin-right: 8px
+    height: 2em
     a
-      background: transparent url(../images/add.png) scroll no-repeat left center
-      padding-left: 20px
+      display: block
+      background: transparent url(../images/add.png) scroll no-repeat 9px center
+      padding: 0 10px 0 29px
     &#add-to-look
       > a
         background-image= image_url("look.png")
