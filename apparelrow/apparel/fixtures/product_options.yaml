@@ -1,0 +1,88 @@
+# - OPTION TYPES -
+- model: apparel.optiontype
+  pk: 1
+  fields:
+    name: color
+    description: Product colour
+    lft: 1
+    rght: 1
+    tree_id: 1
+    level: 1
+
+# - OPTION VALUES -
+- model: apparel.option
+  pk: 1
+  fields:
+    value: black
+    option_type: 1
+    
+- model: apparel.option
+  pk: 2
+  fields:
+    value: grey
+    option_type: 1
+- model: apparel.option
+  pk: 3
+  fields:
+    value: white
+    option_type: 1
+- model: apparel.option
+  pk: 4
+  fields:
+    value: beige
+    option_type: 1
+- model: apparel.option
+  pk: 5
+  fields:
+    value: brown
+    option_type: 1
+- model: apparel.option
+  pk: 6
+  fields:
+    value: red
+    option_type: 1
+- model: apparel.option
+  pk: 7
+  fields:
+    value: yellow
+    option_type: 1
+- model: apparel.option
+  pk: 8
+  fields:
+    value: green
+    option_type: 1
+- model: apparel.option
+  pk: 9
+  fields:
+    value: blue
+    option_type: 1
+- model: apparel.option
+  pk: 10
+  fields:
+    value: silver
+    option_type: 1
+- model: apparel.option
+  pk: 11
+  fields:
+    value: gold
+    option_type: 1
+- model: apparel.option
+  pk: 12
+  fields:
+    value: bronze
+    option_type: 1
+- model: apparel.option
+  pk: 13
+  fields:
+    value: pink
+    option_type: 1
+- model: apparel.option
+  pk: 14
+  fields:
+    value: orange
+    option_type: 1
+- model: apparel.option
+  pk: 15
+  fields:
+    value: magneta
+    option_type: 1
