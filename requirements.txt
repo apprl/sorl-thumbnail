@@ -18,4 +18,4 @@ django-pagination==1.0.5
 -e git://github.com/django-extensions/django-extensions.git#egg=django-extensions
 -e svn+http://django-trackback.googlecode.com/svn/trunk/@15#egg=django-trackback
 django-ajaxcomments==0.2
--e svn+http://code.hanssonlarsson.se/svn/hanssonlarsson_django-recommender-fork#egg=django-recommender
+-e svn+http://code.hanssonlarsson.se/svn_public/hanssonlarsson_django-recommender-fork#egg=django-recommender
