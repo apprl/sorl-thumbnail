@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from hanssonlarsson.django.exporter import json
 
 from recommender.models import Recommender
+from voting.models import Vote
 
 import re
 import math
@@ -150,7 +151,8 @@ def get_filter():
 
 def index(request):
     ctx = get_filter()
-    ctx['popular_looks'] = Look.objects.all()[:8]
+    #FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
+    ctx['popular_looks'] = Vote.objects.get_top(Look, limit=8) #Look.objects.all()[:8]
     return render_to_response('index.html', ctx)
 
 def browse(request):
