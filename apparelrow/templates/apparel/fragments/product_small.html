@@ -1,3 +1,4 @@
+{% if product and product.product_image %}
 <li>
 <a href="{{ product.get_absolute_url }}">
 <div class="product-small">
@@ -10,3 +11,4 @@
 </div>
 </a>
 </li>
+{% endif %}

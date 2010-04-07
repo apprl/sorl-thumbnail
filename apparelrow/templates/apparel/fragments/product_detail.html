@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load humanize %}
 {% load comments %}
+{% if object and object.product_image %}
 <div class="product-left">
     <div class="product-image">
         <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/328x500/site_media/media/{{ object.product_image }}" /></a>
@@ -54,3 +55,4 @@
         <li id="add-to-wardrobe"><a href="#">{% trans "Add to wardrobe" %}</a></li>
     </ul>
 </div>
+{% endif %}
