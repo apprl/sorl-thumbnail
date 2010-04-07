@@ -42,8 +42,8 @@
                 return false;
             });
             if(jQuery('#comments-and-links textarea').val() == '') { jQuery('#comments-and-links button').hide() }
-            jQuery('#comments-and-links textarea').focus(function() { jQuery('#comments-and-links button').slideDown() });
-            jQuery('#comments-and-links textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments-and-links button').fadeOut() } });
+            jQuery('#comments-and-links textarea').focus(function() { jQuery('#comments-and-links button').show() });
+            jQuery('#comments-and-links textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments-and-links button').hide() } });
 //            jQuery('#comments textarea').autogrow();
             jQuery('#comments-and-links form').submit(function() {
                 jQuery.ajax({
@@ -54,7 +54,7 @@
                     success: function(data, statusText, req) {
                         jQuery('#comments-and-links textarea').val('');
                         jQuery('#comments-and-links button').hide();
-                        jQuery('ul#comments').append(data.html).slideDown();
+                        jQuery('ul#comments').append(data.html).hide().slideDown('fast');
                     },
                 });
                 return false;

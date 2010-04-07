@@ -362,6 +362,27 @@ h3 {
   position: absolute;
 }
 
+/* line 108, ../src/partials/_look.sass */
+body.look #comments-and-links {
+  float: left;
+  width: 452px;
+  margin-right: 36px;
+}
+/* line 112, ../src/partials/_look.sass */
+body.look #tags {
+  float: left;
+  width: 208px;
+}
+/* line 115, ../src/partials/_look.sass */
+body.look #tags li {
+  border-bottom: 1px solid #f2f2f2;
+}
+/* line 117, ../src/partials/_look.sass */
+body.look #tags li span {
+  float: right;
+  color: #999999;
+}
+
 /* line 7, ../src/partials/_application.sass */
 body {
   background-color: white;
