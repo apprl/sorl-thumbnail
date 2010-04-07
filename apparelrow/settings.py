@@ -142,6 +142,8 @@ INSTALLED_APPS = (
     'ajaxcomments',
     'django_extensions',
     'trackback',
+    'recommender',
+
     'apparel',
     'scale',
     'watcher',

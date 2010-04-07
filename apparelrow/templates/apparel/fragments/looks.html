@@ -1,0 +1,5 @@
+<ul class="looks">
+{% for object in looks %}
+    {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_collage_small.html' %}</li>
+{% endfor %}
+</ul>

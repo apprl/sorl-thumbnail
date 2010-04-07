@@ -11,6 +11,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 #from apparel.json import encode
 from hanssonlarsson.django.exporter import json
 
+from recommender.models import Recommender
 
 import re
 import math
@@ -225,7 +226,9 @@ def add_to_look(request):
 
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
-    return render_to_response('apparel/look_detail.html', dict(object=look, tooltips=True))
+    looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id)
+    similar_looks = Recommender.objects.get_similar_items(look, User.objects.all(), Look.objects.all(), 0)
+    return render_to_response('apparel/look_detail.html', dict(object=look, looks_by_user=looks_by_user, similar_looks=similar_looks, tooltips=True))
 
 def look_edit(request, slug):
     look = get_object_or_404(Look, slug=slug)

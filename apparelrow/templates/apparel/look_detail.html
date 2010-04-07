@@ -24,7 +24,7 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery('.product').tooltip({
+        jQuery('.collage .product').tooltip({
             effect: 'slide',
             relative: true,
             delay: 500,
@@ -68,6 +68,18 @@
     {% if object.description %}<p>{{ object.description }}</p>{% endif %}
     <p>{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</p>
     <p>{% include 'apparel/fragments/likes.html' %}</p>
+    {% if looks_by_user %}
+    <h2>{% trans "More looks by" %} {{ object.user.get_profile.display_name }}</h2>
+    {% with looks_by_user as looks %}
+    {% include 'apparel/fragments/looks.html' %}
+    {% endwith %}
+    {% endif %}
+    {% if similar_looks %}
+    <h2>{% trans "Similar looks" %}</h2>
+    {% with similar_looks as looks %}
+    {% include 'apparel/fragments/looks.html' %}
+    {% endwith %}
+    {% endif %}
 </div>
 <div id="content">
     <h2>{{ object.title }}</h2>
