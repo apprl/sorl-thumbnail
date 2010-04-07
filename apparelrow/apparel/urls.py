@@ -36,7 +36,7 @@ urlpatterns = patterns('',
     (r'^manufacturers/(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', manufacturer_dict),
     (r'^browse/$', 'apparel.views.browse'),
     
-    (r'^wardrobe/add/$', 'apparel.views.wardrobe_add'),
+    (r'^wardrobe/add/$', 'apparel.views.add_to_wardrobe'),
 
     (r'^likes/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
     (r'^looks/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),

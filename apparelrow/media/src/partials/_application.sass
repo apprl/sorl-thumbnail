@@ -15,6 +15,12 @@ button, a.button
   +button
   display: inline-block
 
+button
+  font-family: "Helvetica", "Arial", sans-serif
+  font-size: 1em
+  height: 30px
+  color= !font_color
+
 #content.fixed
   position: fixed
   top: 0
@@ -591,13 +597,14 @@ body.product .product-image, body.look .collage
   +clearfix
   +horizontal-list(0)
   margin-top: 18px
+  li.last
+    margin-right: 0px
   li
-    margin-right: 8px
+    margin-right: 2px
     +button
     +border-radius(3px)
     line-height: 2em
-    height: 2em
-    a
+    a, button
       display: block
       background: transparent url(../images/add.png) scroll no-repeat 9px center
       padding: 0 10px 0 29px
@@ -612,11 +619,9 @@ body.product .product-image, body.look .collage
         li
           padding: 0 1em
           border-bottom: 1px solid #dadada
-          a
-            display: block
     &.share > a
       background-image= image_url("share.png")
-    &#add-to-wardrobe > a
+    &#add-to-wardrobe button
       margin-right: 0
       background-image= image_url("embed.png")
 

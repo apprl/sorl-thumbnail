@@ -11,14 +11,6 @@ jQuery(document).ready(function() {
             likes.hide().html(data.score.score).fadeIn();
         });
     });
-    
-    jQuery('#add-to-wardrobe>form').submit(function() {
-        // dim button
-        return form_to_ajax(this, function(data, statusText, req) {
-            
-        });
-        // make "in wardrobe"
-    });
 });
 
 
