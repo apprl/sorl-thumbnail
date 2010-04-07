@@ -628,8 +628,27 @@ body.product .product-image, body.look .collage
           +border("bottom")
           &.last
             border-bottom: none
-    &.share > a
-      background-image= image_url("share.png")
+    &.share
+      ul
+        display: none
+        width: 50px
+        li
+          border: none
+          display: inline
+          a
+            +sprite-background("social_bookmarks.png", 16, 16)
+            padding: 0
+            text-indent: -9000px
+            width: 16px
+            height: 16px
+            margin: 2px
+            &.facebook
+              +sprite-column(10, 16)
+            &.twitter
+              +sprite-column(6, 16)
+
+      > a
+        background-image= image_url("share.png")
     &#add-to-wardrobe button
       margin-right: 0
       background-image= image_url("embed.png")
