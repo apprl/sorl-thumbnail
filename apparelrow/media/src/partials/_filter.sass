@@ -21,40 +21,40 @@
         background-image= image_url(!selected_img)
 
 =popup(!n = 1)
-  position: relative
-  li
-    div.options
-      margin-left: -10px
-      .option-content
-        +border("top")
-        +box-shadow-inset(#f6f6f6 - #222, 0, 3px, 3px)
-      h3
-        font-weight: normal
-        line-height= !button_height
-        padding: 0 12px
-      div.box
-        +box(#fff)
-        > div
-          background: #fff
-      &.popup
-        background:
-          color: transparent
-          image= image_url("box-arrow-left.png")
-          repeat: no-repeat
-          position= !n * 30px "left"
-        padding-left: 7px
-        display: none
+  div.options
+    margin-left: -5px
+    .option-content
+      +border("top")
+      +box-shadow-inset(#f6f6f6 - #222, 0, 3px, 3px)
+    h3
+      font-weight: normal
+      line-height= !button_height
+      padding: 0 12px
+    div.box
+      +box(#fff)
+      > div
+        background: #fff
+    &.popup
+      display: none
+      position: absolute
+      left= !aside_width
+      top: 0px
+      z-index: 10
+      .arrow
         position: absolute
-        left= !aside_width
-        top: 0px
-        z-index: 10
-        div.box
-          width: 348px
-          +box-shadow
-          .buttons
-            padding: 10px 12px
-          a.button
-            text-align: center
-            width: 159px
-          a.ok
-            border-left: none
+        top= !n * 30px
+        left: -6px
+        height: 35px
+        width: 7px
+        background= "transparent" image_url("box-arrow-left.png") "no-repeat" "scroll" "left" "top"
+
+      div.box
+        width: 348px
+        +box-shadow
+        .buttons
+          padding: 10px 12px
+        a.button
+          text-align: center
+          width: 159px
+        a.ok
+          border-left: none

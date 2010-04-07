@@ -230,19 +230,22 @@ h2
 
 #product-options
   +filter("list-item-arrow.png", "list-item-radio-checked.png")
-  +popup
+  position: relative
   li.active
     background-image= image_url("gradient-darker-bg.png")
   #product-price
+    +popup(0)
     #price-slider
       margin: 10px 12px    
   #product-color
+    +popup(1)
     ul
       +colors
       margin: 10px 12px
       li
         line-height: 1em
   #product-manufacturers
+    +popup(2)
     .option-content
       background-color= !button_color
     input

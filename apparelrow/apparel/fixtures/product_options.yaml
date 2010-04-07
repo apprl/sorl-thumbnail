@@ -69,20 +69,15 @@
 - model: apparel.option
   pk: 12
   fields:
-    value: bronze
+    value: pink
     option_type: 1
 - model: apparel.option
   pk: 13
   fields:
-    value: pink
+    value: orange
     option_type: 1
 - model: apparel.option
   pk: 14
   fields:
-    value: orange
-    option_type: 1
-- model: apparel.option
-  pk: 15
-  fields:
-    value: magneta
+    value: magenta
     option_type: 1
