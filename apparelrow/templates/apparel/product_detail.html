@@ -41,6 +41,10 @@
                 jQuery.post("{% url apparel.views.add_to_look %}", args);
                 return false;
             });
+            jQuery('#comments button').hide();
+            jQuery('#comments textarea').focus(function() { jQuery('#comments button').slideDown() });
+            jQuery('#comments textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments button').fadeOut() } });
+            jQuery('#comments textarea').autogrow();
         });
     </script>
 {% endblock 'extra-scripts' %}

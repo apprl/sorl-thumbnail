@@ -11,15 +11,19 @@
     </div>
     <h2>{% trans "Comments & links" %}</h2>
     {% get_comment_list for object as comments %}
-    <ul id="comments">
-    {% for comment in comments %}
-    <li>
-      <h3>{{ comment.user_name }}<span>{{ comment.submit_date|naturalday:"Y-m-d" }}</span></h3>
-      <p>{{ comment.comment }}</p>
-    </li>
-    {% endfor %}
-    </ul>
-    {% render_comment_form for object %}
+    name {{ user }} name
+    <div id="comments">
+        <ul>
+        {% for comment in comments %}
+        <li>
+          <img class="avatar" src="{{ comment.user.get_profile.avatar }}" />
+          <h3>{{ comment.user.get_profile.display_name }}<span>{{ comment.submit_date|naturalday:"Y-m-d" }} {{ comment.submit_date|date:"H:i"}}</span></h3>
+          <p>{{ comment.comment }}</p>
+        </li>
+        {% endfor %}
+        </ul>
+        {% render_comment_form for object %}
+    </div>
 </div>
 <div class="product-info">
     <h2>{{ object.category.all|join:' \\ ' }} \ {{ object.manufacturer }}</h2>
