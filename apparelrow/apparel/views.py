@@ -1,6 +1,6 @@
 import logging
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from apparel.models import *
@@ -8,7 +8,8 @@ from apparel.forms import *
 from django.db.models import Q, Max, Min
 from django.template.loader import find_template_source
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-#from apparel.json import encode
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 from hanssonlarsson.django.exporter import json
 
 
@@ -242,10 +243,42 @@ def look_edit(request, slug):
 def looks():
     pass
 
-def looks():
-    pass
-
 def get_template_source(template):
     template_source, template_origin = find_template_source(template)
     return template_source
 
+def wardrobe_add(request):
+    """
+    Adds a product to a user's wardrobe (and creates it if necessary)
+    """
+    
+    # FIXME: Support non-ajax requests
+    response = {}
+    
+    if not request.user.is_authenticated():
+        response['success'] = False
+        response['error_message'] = 'Login required'
+        response['login_url'] = '%s?next=%s' % (reverse('django.contrib.auth.views.login'), request.META.get('HTTP_REFERER', '/'))
+        
+    elif not request.method == 'POST':
+        return HttpResponseNotAllowed(['POST'])
+        
+    else:
+        # Create wardrobe if 
+        pk = request.POST.get('product_id')
+        w, created = Wardrobe.objects.get_or_create(user=request.user)
+        try:
+            w.products.add(Product.objects.get(pk=pk))
+        except ObjectDoesNotExist, e:
+            response['success'] = False
+            response['error_message'] = ugettext('The product with id %s does not exist' % pk)
+        else:
+            # Need to save changes to w?
+            response['success'] = True
+    
+    return HttpResponse(
+        json.encode(response),
+        mimetype='text/json'
+    )
+
+    

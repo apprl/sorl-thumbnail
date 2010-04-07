@@ -35,11 +35,12 @@ class ApparelProfile(models.Model):
     
     @property
     def avatar(self):
+        if self.image:
+            return self.image
+
         if hasattr(self.user, 'facebook_profile'):
             if self.user.facebook_profile.picture_url:
                 return self.user.facebook_profile.picture_url
-        if self.image:
-            return self.image
         
         return settings.APPAREL_DEFAULT_AVATAR
 

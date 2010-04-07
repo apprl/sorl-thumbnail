@@ -8,8 +8,18 @@
     rght: 1
     tree_id: 1
     level: 1
+- model: apparel.optiontype
+  pk: 2
+  fields:
+    name: gender
+    description: Gender: M(ale), F(email) or U(nisex)
+    lft: 1
+    rght: 1
+    tree_id: 1
+    level: 1
 
 # - OPTION VALUES -
+#   colours
 - model: apparel.option
   pk: 1
   fields:
@@ -81,3 +91,20 @@
   fields:
     value: magenta
     option_type: 1
+
+#   genders
+- model: apparel.option
+  pk: 15
+  fields:
+    value: M
+    option_type: 2
+- model: apparel.option
+  pk: 15
+  fields:
+    value: F
+    option_type: 2
+- model: apparel.option
+  pk: 15
+  fields:
+    value: U
+    option_type: 2
