@@ -1889,38 +1889,38 @@ a.buy-now {
 }
 
 /* line 519, ../src/partials/_application.sass */
-#comments li {
+#comments-and-links li {
   overflow: hidden;
   display: inline-block;
   padding: 9px 0;
   border-bottom: 1px solid #d9d9d9;
 }
 /* line 5, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/frameworks/compass/stylesheets/compass/utilities/general/_hacks.sass */
-#comments li {
+#comments-and-links li {
   display: block;
 }
 /* line 523, ../src/partials/_application.sass */
-#comments li img.avatar {
+#comments-and-links li img.avatar {
   border: 1px solid #d9d9d9;
   float: left;
   margin-right: 9px;
 }
 /* line 527, ../src/partials/_application.sass */
-#comments li h3 {
+#comments-and-links li h3 {
   font-weight: normal;
 }
 /* line 529, ../src/partials/_application.sass */
-#comments li h3 span {
+#comments-and-links li h3 span {
   color: #999999;
   float: right;
   font-size: 10px;
 }
 /* line 533, ../src/partials/_application.sass */
-#comments li p {
+#comments-and-links li p {
   color: #616161;
 }
 /* line 535, ../src/partials/_application.sass */
-#comments form {
+#comments-and-links form {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
   overflow: hidden;
@@ -1929,11 +1929,11 @@ a.buy-now {
   padding: 3px 2px 3px 3px;
 }
 /* line 5, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/frameworks/compass/stylesheets/compass/utilities/general/_hacks.sass */
-#comments form {
+#comments-and-links form {
   display: block;
 }
 /* line 540, ../src/partials/_application.sass */
-#comments form textarea {
+#comments-and-links form textarea {
   height: 1em;
   width: 96%;
   font-family: "Helvetica", "Arial", sans-serif;
@@ -1953,7 +1953,7 @@ a.buy-now {
   padding: 0.5em 5px;
 }
 /* line 544, ../src/partials/_application.sass */
-#comments form button {
+#comments-and-links form button {
   float: right;
   font-family: "Helvetica", "Arial", sans-serif;
   font-size: 1em;

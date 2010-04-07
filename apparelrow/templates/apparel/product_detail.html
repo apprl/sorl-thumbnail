@@ -41,20 +41,20 @@
                 jQuery.post("{% url apparel.views.add_to_look %}", args);
                 return false;
             });
-            if(jQuery('#comments textarea').val() == '') { jQuery('#comments button').hide() }
-            jQuery('#comments textarea').focus(function() { jQuery('#comments button').slideDown() });
-            jQuery('#comments textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments button').fadeOut() } });
+            if(jQuery('#comments-and-links textarea').val() == '') { jQuery('#comments-and-links button').hide() }
+            jQuery('#comments-and-links textarea').focus(function() { jQuery('#comments-and-links button').slideDown() });
+            jQuery('#comments-and-links textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments-and-links button').fadeOut() } });
 //            jQuery('#comments textarea').autogrow();
-            jQuery('#comments form').submit(function() {
+            jQuery('#comments-and-links form').submit(function() {
                 jQuery.ajax({
                     type: this.method,
                     url: this.action,
                     data: jQuery(this).serialize(),
                     dataType: 'json',
                     success: function(data, statusText, req) {
-                        jQuery('#comments textarea').val('');
-                        jQuery('#comments button').hide();
-                        jQuery('#comments > ul').append(data.html).slideDown();
+                        jQuery('#comments-and-links textarea').val('');
+                        jQuery('#comments-and-links button').hide();
+                        jQuery('ul#comments').append(data.html).slideDown();
                     },
                 });
                 return false;
