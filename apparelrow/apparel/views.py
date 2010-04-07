@@ -252,7 +252,7 @@ def get_template_source(template):
     template_source, template_origin = find_template_source(template)
     return template_source
 
-def wardrobe_add(request):
+def add_to_wardrobe(request):
     """
     Adds a product to a user's wardrobe (and creates it if necessary)
     """

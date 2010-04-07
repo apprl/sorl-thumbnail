@@ -27,12 +27,11 @@
             });
             jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
 
-            jQuery('#add-to-look').mouseenter(function() {
-                jQuery(this).find('ul').show();
-            }).mouseleave(function() {
-                jQuery(this).find('ul').hide();
-            });
-            jQuery('#add-to-look > ul > li > a').click(function() {
+            jQuery('#add-to-look').hover(
+                function() { jQuery(this).find('ul').show(); }, 
+                function() { jQuery(this).find('ul').hide(); }
+            );
+            jQuery('#add-to-look > ul > li > button').click(function() {
                 args = {};
                 args['product_id'] = {{ object.id }};
                 if(this.id) {
@@ -58,6 +57,16 @@
                     },
                 });
                 return false;
+            });
+            
+            jQuery('#add-to-wardrobe>form').submit(function() {
+                btn = jQuery(this).find('button[type=submit]');
+                btn.text('{% trans "Adding..." %}');
+                return form_to_ajax(this, function(data, statusText, req) {
+                    btn.text('{% trans "In wardrobe" %}');
+                    btn.click( function() { return false } );
+                    // FIXME: Set a class name to make it dimmed or whatever?
+                });
             });
         });
     </script>
