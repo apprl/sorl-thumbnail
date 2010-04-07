@@ -162,13 +162,14 @@
                 <ul>
                 {% for product in products.object_list %}
                     {% include 'apparel/fragments/product_small.html' %}
-                    {# FIXME: Fix this so it works with ajax fetched stuff and looks nice
+                    {% comment %}
+                    FIXME: Fix this so it works with ajax fetched stuff and looks nice
                     {% with product as object %}
                     <div class="tooltip">
                         {% include 'apparel/fragments/product_detail.html' %}
                     </div>
                     {% endwith %}
-                    #}
+                    {% endcomment %}
                 {% endfor %}
             </ul>
             <div id="pagination">
