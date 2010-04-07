@@ -1,0 +1,6 @@
+{% load humanize %}
+<li>
+  <img class="avatar" src="{{ comment.user.get_profile.avatar }}" />
+  <h3>{{ comment.user.get_profile.display_name }}<span>{{ comment.submit_date|naturalday:"Y-m-d" }} {{ comment.submit_date|date:"H:i"}}</span></h3>
+  <p>{{ comment.comment }}</p>
+</li>

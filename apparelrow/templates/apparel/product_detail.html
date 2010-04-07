@@ -44,7 +44,19 @@
             jQuery('#comments button').hide();
             jQuery('#comments textarea').focus(function() { jQuery('#comments button').slideDown() });
             jQuery('#comments textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments button').fadeOut() } });
-            jQuery('#comments textarea').autogrow();
+//            jQuery('#comments textarea').autogrow();
+            jQuery('#comments form').submit(function() {
+                jQuery.ajax({
+                    type: this.method,
+                    url: this.action,
+                    data: jQuery(this).serialize(),
+                    dataType: 'json',
+                    success: function(data, statusText, req) {
+                        jQuery('#comments > ul').append(data.html).slideDown();
+                    },
+                });
+                return false;
+            });
         });
     </script>
 {% endblock 'extra-scripts' %}
