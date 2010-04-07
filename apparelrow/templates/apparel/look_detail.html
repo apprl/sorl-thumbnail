@@ -3,6 +3,7 @@
 {% load humanize %}
 {% load voting_tags %}
 {% load trackback_tags %}
+{% load tagging_tags %}
 
 {% block 'extra-styles' %}
     <link rel="pingback" href="{% get_pingback_url %}" />
@@ -30,20 +31,20 @@
             delay: 500,
             offset: [30, 0],
         });
-       if(jQuery('#comments textarea').val() == '') { jQuery('#comments button').hide() }
-       jQuery('#comments textarea').focus(function() { jQuery('#comments button').slideDown() });
-       jQuery('#comments textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments button').fadeOut() } });
+       if(jQuery('#comments-and-links textarea').val() == '') { jQuery('#comments-and-links button').hide() }
+       jQuery('#comments-and-links textarea').focus(function() { jQuery('#comments-and-links button').show() });
+       jQuery('#comments-and-links textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments-and-links button').hide() } });
 //            jQuery('#comments textarea').autogrow();
-        jQuery('#comments form').submit(function() {
+        jQuery('#comments-and-links form').submit(function() {
             jQuery.ajax({
                 type: this.method,
                 url: this.action,
                 data: jQuery(this).serialize(),
                 dataType: 'json',
                 success: function(data, statusText, req) {
-                    jQuery('#comments textarea').val('');
-                    jQuery('#comments button').hide();
-                    jQuery('#comments > ul').append(data.html).slideDown();
+                    jQuery('#comments-and-links textarea').val('');
+                    jQuery('#comments-and-links button').hide();
+                    jQuery('ul#comments').append(data.html).slideDown('fast');
                 },
             });
             return false;
@@ -94,11 +95,25 @@
     {% endifequal %}
     {% get_trackbacks_for object as trackbacks %}
     {% include 'apparel/fragments/comments.html' %}
+    {% tags_for_object object as tags %}
+    {% if tags %}
+    <div id="tags">
+        <h2>{% trans "Tags" %}</h2>
+        <ul>
+            {% for tag in tags %}
+            {% tagged_objects tag in apparel.look as looks_with_tag %}
+            <li>{{ tag.name }}<span>{{ looks_with_tag|length }}</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% comment %}
     <h2>{% trans "Articles in this look" %}</h2>
     <div id="lookproducts">
         {% with object.products.all as products %}
         {% include 'apparel/fragments/product_row.html' %}
         {% endwith %}
     </div>
+    {% endcomment %}
 </div>
 {% endblock body %}

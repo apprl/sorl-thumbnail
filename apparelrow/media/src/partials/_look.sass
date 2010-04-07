@@ -104,3 +104,16 @@
   img.product
     position: absolute
 
+body.look
+  #comments-and-links
+    float: left
+    width= !middle_width
+    margin-right= !gutter_width
+  #tags
+    float: left
+    width= !aside_width
+    li
+      +border("bottom", !easy_border_color)
+      span
+        float: right
+        color= !easier_color
