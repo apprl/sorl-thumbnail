@@ -7,9 +7,10 @@
 
 // EDIT
 
-#photo, #collage
-  position: relative
-  height: 500px
+#photo, #collage, #selection
+  height: 524px
+
+#collage
   .look
     position: absolute
   .ui-wrapper
@@ -21,6 +22,15 @@
     -webkit-box-shadow: none
     box-shadow: none
     opacity: 1.0
+
+#photo
+  div
+    position: relative
+    margin: 0 auto
+    a
+      position: absolute
+      padding: 40px
+      background= "transparent" image_url("look-hotspot.png") "no-repeat" "scroll" "center" "center"
 
 #edit-look
   +border-top-radius
