@@ -175,7 +175,6 @@ class VendorProduct(models.Model):
         export_fields = ['__all__', '-product']
 
 
-
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
     slug = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
@@ -240,3 +239,12 @@ class LookProduct(models.Model):
 
     class Meta:
         unique_together     = (('product', 'look'),)
+
+
+
+class Wardrobe(models.Model):
+    user     = models.ForeignKey(User)
+    products = models.ManyToManyField(Product)
+    
+    def __unicode__(self):
+        return 'Wardrobe for %s' % self.user

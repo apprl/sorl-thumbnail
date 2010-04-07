@@ -52,7 +52,12 @@
                 <li><a href="/apparel/look/new/">{% trans "New look" %}</a></li>
             </ul>
         </li>
-        <li id="add-to-wardrobe"><a href="#">{% trans "Add to wardrobe" %}</a></li>
+        <li id="add-to-wardrobe">
+            <form action="/wardrobe/add/" method="post">
+                <input type="hidden" name="product_id" value="{{ object.id }}" />
+                <button type="submit">{% trans "Add to wardrobe" %}</a></button>
+            </form>
+        </li>
     </ul>
 </div>
 {% endif %}

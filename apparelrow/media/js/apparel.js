@@ -6,17 +6,36 @@ jQuery(document).ready(function() {
         function() { jQuery(this).find('form').fadeOut(); }
     );
     jQuery(likeContainers).children('form').submit(function() {
-        jQuery.ajax({
-            type: this.method,
-            url: this.action,
-            data: jQuery(this).serialize(),
-            success: function(data, statusText, req) { 
-                var likes = jQuery('span.likes > span');
-                //likes.width(likes.width()).hide().html(data.score.score).fadeIn();
-                likes.hide().html(data.score.score).fadeIn();
-            },
-            dataType: 'json',
+        return form_to_ajax(this, function(data, statusText, req) { 
+            var likes = jQuery('span.likes > span');
+            likes.hide().html(data.score.score).fadeIn();
         });
-        return false;
+    });
+    
+    jQuery('#add-to-wardrobe>form').submit(function() {
+        // dim button
+        return form_to_ajax(this, function(data, statusText, req) {
+            
+        });
+        // make "in wardrobe"
     });
 });
+
+
+function form_to_ajax(form, callback) {
+    jQuery.ajax({
+        type: form.method,
+        url: form.action,
+        data: jQuery(form).serialize(),
+        success: function(data, statusText, req) {
+            if(!data.success && data.error_message == 'Login required') {
+                window.location = data.login_url
+                return;
+            }
+            
+            return callback(data, statusText, req)
+        },
+        dataType: 'json',
+    });
+    return false;
+}
