@@ -44,10 +44,10 @@
     </div>
     <ul id="add-menu" class="clearfix">
         <li class="share">
-            <a href="#" class="button">{% trans "Share" %}</a>
+            <a href="#">{% trans "Share" %}</a>
         </li>
         <li id="add-to-look">
-            <a href="/apparel/look/" class="button">{% trans "Add to look" %}</a>
+            <a href="/apparel/look/">{% trans "Add to look" %}</a>
             <form action="{% url apparel.views.add_to_look %}" method="post">
             <input type="hidden" name="product_id" value="{{ object.id }}" />
             <ul>
@@ -56,8 +56,8 @@
                     <button type="submit" name="{{ look.id }}">{{ look.title }}</button>
                 </li>
             {% endfor %}
-                <li>
-                    <button type="submit"">{% trans "New look" %}</button>
+                <li class="last">
+                    <button type="submit">{% trans "New look" %}</button>
                 </li>
             </ul>
             </form>
