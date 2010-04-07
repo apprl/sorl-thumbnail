@@ -9,16 +9,7 @@
             <button type="submit" name="like" id="like">{% trans "Like" %}</button>
         </form>
     </div>
-    <h2>{% trans "Comments & links" %}</h2>
-    {% get_comment_list for object as comments %}
-    <div id="comments">
-        <ul>
-        {% for comment in comments %}
-        {% include 'comments/comment.html' %}
-        {% endfor %}
-        </ul>
-        {% render_comment_form for object %}
-    </div>
+    {% include 'apparel/fragments/comments.html' %}
 </div>
 <div class="product-info">
     <h2>{{ object.category.all|join:' \\ ' }} \ {{ object.manufacturer }}</h2>

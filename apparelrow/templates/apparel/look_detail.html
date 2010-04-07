@@ -30,6 +30,24 @@
             delay: 500,
             offset: [30, 0],
         });
+       if(jQuery('#comments textarea').val() == '') { jQuery('#comments button').hide() }
+       jQuery('#comments textarea').focus(function() { jQuery('#comments button').slideDown() });
+       jQuery('#comments textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments button').fadeOut() } });
+//            jQuery('#comments textarea').autogrow();
+        jQuery('#comments form').submit(function() {
+            jQuery.ajax({
+                type: this.method,
+                url: this.action,
+                data: jQuery(this).serialize(),
+                dataType: 'json',
+                success: function(data, statusText, req) {
+                    jQuery('#comments textarea').val('');
+                    jQuery('#comments button').hide();
+                    jQuery('#comments > ul').append(data.html).slideDown();
+                },
+            });
+            return false;
+        });
     });
 </script>
 {% endblock 'extra-scripts' %}
@@ -62,6 +80,7 @@
     {% ifequal object.user user %}
     <a href="{% url apparel.views.look_edit object.id %}">{% trans "Edit look" %}</a>
     {% endifequal %}
+    {% include 'apparel/fragments/comments.html' %}
     <h2>{% trans "Articles in this look" %}</h2>
     <div id="lookproducts">
         {% with object.products.all as products %}
