@@ -44,9 +44,13 @@
     </div>
     <div class="sidebar last">
         <h2>{% trans "Popular looks" %}</h2>
-        {% with popular_looks as looks %}
-        {% include 'apparel/fragments/looks.html' %}
-        {% endwith %}
+        <ul class="looks">
+        {% for look in popular_looks %}
+            {% with look|first as object %}
+            {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_collage_small.html' %}</li>
+            {% endwith %}
+        {% endfor %}
+        </ul>
     </div>
 {% endblock body %}
 
