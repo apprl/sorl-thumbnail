@@ -7,9 +7,10 @@
 
 // EDIT
 
-#photo, #collage
-  position: relative
-  height: 500px
+#photo, #collage, #selection
+  height: 524px
+
+#collage
   .look
     position: absolute
   .ui-wrapper
@@ -22,20 +23,32 @@
     box-shadow: none
     opacity: 1.0
 
+#photo
+  div
+    position: relative
+    margin: 0 auto
+    a
+      position: absolute
+      padding: 40px
+      background= "transparent" image_url("look-hotspot.png") "no-repeat" "scroll" "center" "center"
+
 #edit-look
   +border-top-radius
   +border("all")
   height: 500px
   ul.tabs
-    +horizontal-list
+    +horizontal-list(1px)
     li
       +button
-      width: 222px
+      width: 229px
       border-style: none solid solid none
       text-align: center
       &.current
         background-image= image_url("gradient-dark-bg.png")
-      &:last
+      &:first-child, &.first
+        +border-top-left-radius
+      &:last-child, &.last
+        +border-top-right-radius
         border-right: none
       a
         display: block
@@ -55,7 +68,7 @@
   +border("all")
   width: 893px
   height: 27px
-  background= "transparent" image_url("gradient-bg.png") "repeat-x"
+  background= !button_color image_url("gradient-bg.png") "repeat-x"
   margin: 20px 0 10px -20px
   padding-top: 3px
   padding-left: 20px

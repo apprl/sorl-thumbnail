@@ -116,16 +116,20 @@ var look = {
 <div id="content">
     <div id="edit-look">
         <ul class="tabs">
-            <li><a class="collage" href="#collage">{% trans "Collage" %}</a></li>
+            <li class="first"><a class="collage" href="#collage">{% trans "Collage" %}</a></li>
             <li><a class="photo" href="#photo">{% trans "Photo" %}</a></li>
-            <li><a class="selection" href="#selection">{% trans "Selection" %}</a></li>
+            <li class="last"><a class="selection" href="#selection">{% trans "Selection" %}</a></li>
         </ul>
         <div class="panes">
             <div id="collage">
             {% include 'apparel/fragments/look_collage.html' %}
             </div>
             {% include 'apparel/fragments/look_picture.html' %}
-            <div id="selection"></div>
+            <div id="selection">
+            {% with object.products.all as products %}
+            {% include 'apparel/fragments/product_row.html' %}
+            {% endwith %}
+            </div>
         </div>
     </div>
 </div>
