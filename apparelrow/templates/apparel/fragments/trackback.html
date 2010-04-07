@@ -1,0 +1,5 @@
+{% extends 'apparel/fragments/trackback_comment_base.html' %}
+{% load humanize %}
+{% block title %}<a href="{{ trackback.url }}">{{ trackback.title }}</a>{% endblock %}
+{% block submit_date %}{{ trackback.submit_date|naturalday:"Y-m-d" }} {{ trackback.submit_date|date:"H:i"}}{% endblock %}
+{% block content %}{{ trackback.excerpt }}{% endblock %}

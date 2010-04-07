@@ -80,6 +80,7 @@
     {% ifequal object.user user %}
     <a href="{% url apparel.views.look_edit object.id %}">{% trans "Edit look" %}</a>
     {% endifequal %}
+    {% get_trackbacks_for object as trackbacks %}
     {% include 'apparel/fragments/comments.html' %}
     <h2>{% trans "Articles in this look" %}</h2>
     <div id="lookproducts">
