@@ -30,8 +30,8 @@
         });
         */
         jQuery(document).ready(function() {
-            // Tooltips
-            jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
+            // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
+            // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
             // Fixed scrolling
             //jQuery('#content').fixedscroll();
             // Reset button
@@ -162,11 +162,13 @@
                 <ul>
                 {% for product in products.object_list %}
                     {% include 'apparel/fragments/product_small.html' %}
+                    {# FIXME: Fix this so it works with ajax fetched stuff and looks nice
                     {% with product as object %}
                     <div class="tooltip">
                         {% include 'apparel/fragments/product_detail.html' %}
                     </div>
                     {% endwith %}
+                    #}
                 {% endfor %}
             </ul>
             <div id="pagination">

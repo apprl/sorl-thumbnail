@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load humanize %}
 {% load comments %}
+{% if object and object.product_image %}
 <div class="product-left">
     <div class="product-image">
         <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/328x500/site_media/media/{{ object.product_image }}" /></a>
@@ -9,17 +10,7 @@
             <button type="submit" name="like" id="like">{% trans "Like" %}</button>
         </form>
     </div>
-    <h2>{% trans "Comments & links" %}</h2>
-    {% get_comment_list for object as comments %}
-    <ul id="comments">
-    {% for comment in comments %}
-    <li>
-      <h3>{{ comment.user_name }}<span>{{ comment.submit_date|naturalday:"Y-m-d" }}</span></h3>
-      <p>{{ comment.comment }}</p>
-    </li>
-    {% endfor %}
-    </ul>
-    {% render_comment_form for object %}
+    {% include 'apparel/fragments/comments.html' %}
 </div>
 <div class="product-info">
     <h2>{{ object.category.all|join:' \\ ' }} \ {{ object.manufacturer }}</h2>
@@ -69,3 +60,4 @@
         </li>
     </ul>
 </div>
+{% endif %}

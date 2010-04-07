@@ -484,9 +484,9 @@ a.buy-now
   text-align: center
   width: 73px
   height: 30px
-  background: #d0fae8 url(../images/check-large.png) scroll no-repeat center center
-  border: 1px solid #92c0c7
-  color: #408994
+  background= !highlight_bg_color image_url("check-large.png") "scroll" "no-repeat" "center" "center"
+  +border("all", !highlight_border_color)
+  color= !highlight_color
   text-transform: uppercase
   font-weight: bold
 
@@ -517,10 +517,36 @@ a.buy-now
 
 #comments
   li
+    +clearfix
+    padding: 9px 0
+    +border("bottom")
+    img.avatar
+      +border("all")
+      float: left
+      margin-right: 9px
     h3
+      font-weight: normal
       span
+        color= !easier_color
         float: right
-        font-weight: normal
+        font-size: 10px
+    p
+      color= !easy_color
+  form
+    +box
+    +clearfix
+    margin-top: 18px
+    padding: 3px 2px 3px 3px
+    textarea
+      height: 1em
+      width: 96%
+      +text_input
+    button
+      float: right
+      +text_input
+      +highlight
+      background-image: none
+
 
 #recentlyviewed
   +row(!aside_width)
@@ -660,21 +686,6 @@ a.block_link
   .product-image
     float: left
     margin-right: 5px
-
-
-#content form
-  margin-left: .5em
-  padding-top: -.5em
-
-  label
-    display: block
-    margin-top: .5em
-
-  button
-    margin-top: 1em
-
-  .errorlist
-    color: #990000
 
 
 .facebook-profile-image

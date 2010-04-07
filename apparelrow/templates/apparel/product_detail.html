@@ -41,6 +41,24 @@
                 jQuery.post("{% url apparel.views.add_to_look %}", args);
                 return false;
             });
+            if(jQuery('#comments textarea').val() == '') { jQuery('#comments button').hide() }
+            jQuery('#comments textarea').focus(function() { jQuery('#comments button').slideDown() });
+            jQuery('#comments textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments button').fadeOut() } });
+//            jQuery('#comments textarea').autogrow();
+            jQuery('#comments form').submit(function() {
+                jQuery.ajax({
+                    type: this.method,
+                    url: this.action,
+                    data: jQuery(this).serialize(),
+                    dataType: 'json',
+                    success: function(data, statusText, req) {
+                        jQuery('#comments textarea').val('');
+                        jQuery('#comments button').hide();
+                        jQuery('#comments > ul').append(data.html).slideDown();
+                    },
+                });
+                return false;
+            });
         });
     </script>
 {% endblock 'extra-scripts' %}
@@ -104,11 +122,9 @@
                     {{ counter }} looks with this product
                 {% endblocktrans %}
             </h2>
-            <ul class="looks">
-                {% for object in looks_with_product %}
-                {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_collage_small.html' %}</li>
-                {% endfor %}
-            </ul>
+            {% with looks_with_product as looks %}
+            {% include 'apparel/fragments/looks.html' %}
+            {% endwith %}
             {% endif %}
         </div>
 {% else %}
