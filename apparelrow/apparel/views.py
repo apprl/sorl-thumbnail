@@ -11,6 +11,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from hanssonlarsson.django.exporter import json
+from apparel.decorators import seamless_request_handling
 
 from recommender.models import Recommender
 
@@ -162,10 +163,6 @@ def browse(request):
     else:
         products = Product.objects.all()
     
-    #FIXME: Create a generic way of getting relevant templates and putting them into the context
-    product_count_template = get_template_source('apparel/fragments/product_count.html')
-    product_template = get_template_source('apparel/fragments/product_small.html')
-    pagination_template = get_template_source('apparel/fragments/pagination.html')
     paginator = Paginator(products, BROWSE_PAGE_SIZE)
     
     try:
@@ -178,8 +175,8 @@ def browse(request):
 
     result = get_filter()
     result['products'] = paged_products
-    result['product_count_template'] = js_template(product_count_template)
-    result['product_template'] = js_template(product_template)
+    result['product_count_template'] = js_template(get_template_source('apparel/fragments/product_count.html'))
+    result['product_template'] = js_template(get_template_source('apparel/fragments/product_small.html'))
     result['pagination_template'] = get_template_source('apparel/fragments/pagination_js.html')
     result['pagination'] = {
         'left': left,
@@ -197,10 +194,15 @@ def product_detail(request, slug):
     viewed_products = request.session.get('viewed_products', [])
     viewed_products.append(product.id)
     request.session['viewed_products'] = viewed_products
+    
+    user_looks = Look.objects.filter(user=request.user) if request.user.is_authenticated() else []
+    
     return render_to_response(
             'apparel/product_detail.html',
             {
+                'look_button_template': js_template(get_template_source('apparel/fragments/look_button.html')),
                 'object': product,
+                'user_looks': user_looks,
                 'looks_with_product': Look.objects.filter(products=product),
                 'viewed_products': Product.objects.filter(pk__in=viewed_products),
             })
@@ -213,17 +215,6 @@ def save_look_product(request):
         form = LookProductForm(request.POST)
     form.save()
     return HttpResponseRedirect(reverse('apparel.views.look_detail', args=(request.POST['look'],)))
-
-def add_to_look(request):
-    product = get_object_or_404(Product, pk=request.POST['product_id'])
-    if 'look_id' in request.POST:
-        look = get_object_or_404(Look, pk=request.POST['look_id'])
-    else:
-        look = Look(user=request.user)
-        look.save()
-    lp = LookProduct(product=product, look=look, width=product.product_image.width, height=product.product_image.height)
-    lp.save()
-    return HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.id,)))
 
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
@@ -250,38 +241,36 @@ def get_template_source(template):
     template_source, template_origin = find_template_source(template)
     return template_source
 
+
+
+@seamless_request_handling
+@login_required
+def add_to_look(request):
+    product = Product.objects.get(pk=request.POST.get('product_id'))
+    
+    if 'look_id' in request.POST:
+        look = Look.objects.get(pk=request.POST['look_id'])
+        created = False
+    else:
+        look = Look(user=request.user, title=request.POST.get('new_name'))
+        look.save()
+        created = True
+    
+          
+    lp, c = LookProduct.objects.get_or_create(product=product, look=look, width=product.product_image.width, height=product.product_image.height)
+    if c: lp.save()
+    
+    return ({'look': look, 'created': created}, HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,))))
+
+@seamless_request_handling
+@login_required
 def add_to_wardrobe(request):
     """
     Adds a product to a user's wardrobe (and creates it if necessary)
     """
     
-    # FIXME: Support non-ajax requests
-    response = {}
+    wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
+    wardrobe.products.add(Product.objects.get(pk=request.POST.get('product_id')))
+    wardrobe.save() # FIXME: Only save if created?
     
-    if not request.user.is_authenticated():
-        response['success'] = False
-        response['error_message'] = 'Login required'
-        response['login_url'] = '%s?next=%s' % (reverse('django.contrib.auth.views.login'), request.META.get('HTTP_REFERER', '/'))
-        
-    elif not request.method == 'POST':
-        return HttpResponseNotAllowed(['POST'])
-        
-    else:
-        # Create wardrobe if 
-        pk = request.POST.get('product_id')
-        w, created = Wardrobe.objects.get_or_create(user=request.user)
-        try:
-            w.products.add(Product.objects.get(pk=pk))
-        except ObjectDoesNotExist, e:
-            response['success'] = False
-            response['error_message'] = ugettext('The product with id %s does not exist' % pk)
-        else:
-            # Need to save changes to w?
-            response['success'] = True
-    
-    return HttpResponse(
-        json.encode(response),
-        mimetype='text/json'
-    )
-
-    
+    return wardrobe

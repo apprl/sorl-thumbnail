@@ -14,14 +14,31 @@ jQuery(document).ready(function() {
 });
 
 
-function form_to_ajax(form, callback) {
+function form_to_ajax(form, e, callback, error_callback) {
+    query  = jQuery(form).serialize();
+    if(e && e.originalEvent && e.originalEvent.explicitOriginalTarget) {
+        target = e.originalEvent.explicitOriginalTarget;
+    
+        if("name" in target && "value" in target )
+            // FIXME: Also check that the query string query also doesn't contain target.name
+            query += '&' + escape(target.name) + '=' + escape(target.value);
+    }
+    
     jQuery.ajax({
         type: form.method,
         url: form.action,
-        data: jQuery(form).serialize(),
+        data: query,
         success: function(data, statusText, req) {
-            if(!data.success && data.error_message == 'Login required') {
-                window.location = data.login_url
+            if(!data.success) {
+                if('location' in data) {
+                    window.location = data.location
+                    return;
+                }
+                
+                if(typeof error_callback == 'function')
+                    return error_callback(data, req);
+                
+                alert('Error in AJAX call:\n' + data.error_message);
                 return;
             }
             
@@ -31,3 +48,4 @@ function form_to_ajax(form, callback) {
     });
     return false;
 }
+

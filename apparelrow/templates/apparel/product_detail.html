@@ -17,6 +17,8 @@
 {% block 'extra-scripts' %}
     <script src="http://cdn.jquerytools.org/1.1.1/full/jquery.tools.min.js"></script>
     <script type="text/javascript">
+    
+    
         jQuery(document).ready(function() {
             jQuery('.product-image').mouseenter(function() {
                 jQuery(this).find('.magnifier').fadeIn('slow');
@@ -28,18 +30,47 @@
             jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
 
             jQuery('#add-to-look').hover(
-                function() { jQuery(this).find('ul').show(); }, 
-                function() { jQuery(this).find('ul').hide(); }
-            );
-            jQuery('#add-to-look > ul > li > button').click(function() {
-                args = {};
-                args['product_id'] = {{ object.id }};
-                if(this.id) {
-                    args['look_id'] = this.id.split('-')[1];
+                function() { jQuery(this).find('ul').show().width(jQuery(this).width()); }, 
+                function() { 
+                    jQuery(this).find('ul').hide();
+                    jQuery(this).find('#add-to-look-new button').show(); 
+                    jQuery(this).find('#add-to-look-new input[name=new_name]').hide(); 
                 }
-                jQuery.post("{% url apparel.views.add_to_look %}", args);
+            );
+            
+            jQuery('#add-to-look>form').submit(function(e) {
+                link = jQuery(this).siblings('a[href=/apparel/look/]');
+                text = link.text();
+                link.text('{% trans "Adding..." %}');
+                return form_to_ajax(this, e, function(json, statusText, req) {
+                    
+                    if(json.data['created'])
+                        jQuery('#add-to-look-new').before(tmpl('look_button_template', { look: json.data.look } ));
+                    
+                    link.text(text);
+                    input = jQuery('#add-to-look-new input[name=new_name]');
+                    input.hide();
+                    input.value = input.defaultValue;
+                    
+                    jQuery('#add-to-look-new button').show();
+                    // FIXME: Show the new look in list. Should we reload or just display?
+                }, function(error, req) {
+                    // FIXME: Do something generically with the error? probably better handled further up
+                    link.text(text);
+                });
+            });
+
+            jQuery('#add-to-look-new button').click(function() {
+                jQuery(this).hide();
+                jQuery(this).siblings('input[name=new_name]').show().focus();
                 return false;
             });
+            jQuery('#add-to-look-new input[name=new_name]')
+                .hide()
+                .focus(function() { if(this.value == this.defaultValue) this.select() })
+                .blur(function()  { if(this.value == '') this.value = this.defaultValue })
+                .bind('keypress', function(e) { if(e.keyCode == 13) { jQuery('#add-to-look>form').submit(); return false } return true})
+            
             if(jQuery('#comments-and-links textarea').val() == '') { jQuery('#comments-and-links button').hide() }
             jQuery('#comments-and-links textarea').focus(function() { jQuery('#comments-and-links button').show() });
             jQuery('#comments-and-links textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments-and-links button').hide() } });
@@ -136,6 +167,12 @@
             {% endwith %}
             {% endif %}
         </div>
+
+        <script type="text/html" id="look_button_template">
+        <![CDATA[
+            {{ look_button_template|safe }}
+        ]]>
+        </script>
 {% else %}
     <p>No product found!</p>
 {% endif %}

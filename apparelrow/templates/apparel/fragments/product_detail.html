@@ -51,13 +51,12 @@
             <form action="{% url apparel.views.add_to_look %}" method="post">
             <input type="hidden" name="product_id" value="{{ object.id }}" />
             <ul>
-            {% for look in looks %}
-                <li>
-                    <button type="submit" name="{{ look.id }}">{{ look.title }}</button>
-                </li>
+            {% for look in user_looks %}
+                {% include "apparel/fragments/look_button.html" %}
             {% endfor %}
-                <li>
-                    <button type="submit"">{% trans "New look" %}</button>
+                <li id="add-to-look-new" class="last">
+                    <input type="text" name="new_name" value="{% trans "Enter look name" %}" />
+                    <button type="submit" name="new" value="1">{% trans "New look" %}</button>
                 </li>
             </ul>
             </form>
@@ -72,3 +71,4 @@
     </ul>
 </div>
 {% endif %}
+
