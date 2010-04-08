@@ -1,14 +1,18 @@
 {% load thumbnail %}
-    <div id="photo"><img src="{% thumbnail object.image 500x500 %}" /></div>
+<div id="photo">
+    {% if object.image %}
+    {% thumbnail object.image 696x524 as image %}
+    <div style="background-image: url('{{ image }}'); width: {{ image.width }}px; height: {{ image.height }}px"></div>
+    {% else %}
+    {{ form.image }}
+    {% endif %}
+</div>
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            jQuery('#photo').click(function(e) {
-                var x = e.pageX - this.offsetLeft;
-                var y = e.pageY - this.offsetTop;
+            jQuery('#photo > div').click(function(e) {
+                var x = e.pageX - this.offsetLeft - 40;
+                var y = e.pageY - this.offsetTop - 40;
                 jQuery('<a href="#"></a>').css({
-                    'position': 'absolute',
-                    'padding': '10px',
-                    'background': '#0f0',
                     'top': y + 'px',
                     'left': x + 'px',
                 }).appendTo(this);

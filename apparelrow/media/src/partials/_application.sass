@@ -11,15 +11,19 @@ body
     repeat: no-repeat
     position: center top
 
-button, a.button
+.button
   +button
   display: inline-block
 
 button
   font-family: "Helvetica", "Arial", sans-serif
   font-size: 1em
-  height: 30px
   color= !font_color
+  box-sizing: content-box
+  -webkit-box-sizing: content-box
+  -moz-box-sizing: content-box
+  display: block
+  border: none
 
 #content.fixed
   position: fixed
@@ -220,8 +224,31 @@ ul.looks
 #lookproducts
   +row
 
-#sidebar ul
-  padding: 0
+.sidebar
+  p
+    +border("top")
+    line-height: 2em
+    &.description
+      padding: 1.5em 0
+      line-height: 1.5em
+  .activity
+    margin-top: 1.5em
+    p
+      border-top: none
+    
+  .created
+    float: right
+    line-height= 24 + 2 * !border_width
+    color= !easier_color
+  #add-menu
+    float: left
+    margin-top: 0
+  .share-created
+    +clearfix
+  .price
+    color= !font_color
+  .sum
+    color= !easier_color
 
 h2
   a
@@ -308,7 +335,7 @@ span
 
   &.price
     background: transparent url(../images/check.png) no-repeat scroll left bottom
-    color= !price_color
+    color= !easier_color
     padding-left: 15px
 
 
@@ -414,8 +441,10 @@ div#product-list
   margin-top: 30px
   +border("top")
   p
-    line-height: 26px
+    line-height: 2em
     +border("bottom", !easy_border_color)
+    &.last
+      border-color= !border_color
 
 .product-info
   +float-left
@@ -557,22 +586,25 @@ a.buy-now
 #recentlyviewed
   +row(!aside_width)
 
-body.product .product-image, body.look .collage
-  form
-    position: absolute
-    top: 0px
-    right: 0px
-    button
-      margin: 0
-      border: none
-      background= "transparent" image_url("like-large.png") "no-repeat" "scroll" "center" "center"
-      color= !like_color
-      text-transform: uppercase
-      padding-top: 20px
-      height: 100px
-      width: 89px
-      cursor: pointer
-      text-align: center
+body.product
+  .sidebar
+    margin-top: 30px
+  .product-image, body.look .collage
+    form
+      position: absolute
+      top: 0px
+      right: 0px
+      button
+        margin: 0
+        border: none
+        background= "transparent" image_url("like-large.png") "no-repeat" "scroll" "center" "center"
+        color= !like_color
+        text-transform: uppercase
+        padding-top: 20px
+        height: 100px
+        width: 89px
+        cursor: pointer
+        text-align: center
 
 .similar-product
   .product-photo
@@ -600,14 +632,16 @@ body.product .product-image, body.look .collage
   li.last
     margin-right: 0px
   li
-    margin-right: 2px
     +button
     +border-radius(3px)
+    margin-right: 2px
     line-height: 2em
     a, button
       display: block
       background: transparent url(../images/add.png) scroll no-repeat 9px center
       padding: 0 10px 0 29px
+      height: 24px
+      line-height: 24px
     &#add-to-look
       > a
         background-image= image_url("look.png")
@@ -618,10 +652,32 @@ body.product .product-image, body.look .collage
         border-right: none
         li
           padding: 0 1em
-          clear: left
-          border-bottom: 1px solid #dadada
-    &.share > a
-      background-image= image_url("share.png")
+          border-top: none
+          +border("bottom")
+          &.last
+            border-bottom: none
+    &.share
+      ul
+        display: none
+        width: 50px
+        li
+          border: none
+          display: inline
+          a
+            +sprite-background("social_bookmarks.png", 16, 16)
+            padding: 0
+            text-indent: -9000px
+            width: 16px
+            height: 16px
+            margin: 2px
+            &.facebook
+              +sprite-column(10, 16)
+            &.twitter
+              +sprite-column(6, 16)
+
+      > a
+        background-image= image_url("share.png")
+_application.sass
     &#add-to-wardrobe button
       margin-right: 0
       background-image= image_url("embed.png")

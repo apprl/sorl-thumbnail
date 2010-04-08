@@ -27,23 +27,23 @@
             }
         });
         */
+        var pricerange = {
+            min: {{ pricerange.min }},
+            max: {{ pricerange.max }}
+        }
         jQuery(document).ready(function() {
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
             // Fixed scrolling
-            //jQuery('#content').fixedscroll();
+            jQuery('#content').fixedscroll();
             // Reset button
             jQuery('#reset').click(function() {
                 $('.selected').removeClass('selected');
                 filter(getQuery());
                 return false;
             });
-            jQuery('.options a.ok').click(function() {
+            jQuery('.options form').submit(function() {
                 filter(getQuery());
-                return false;
-            });
-            jQuery('.options li > a').click(function() {
-                jQuery(this).toggleClass('selected');
                 return false;
             });
             jQuery('#product-gender li > a').click(function() {
@@ -61,23 +61,6 @@
                 return false;
             });
             product_template = jQuery.template('{{ product_template|escapejs }}');
-
-            jQuery("#price-slider").slider({
-                range: true,
-                min: {{ pricerange.min }},
-                max: {{ pricerange.max }},
-                step: 10,
-                values: [100, 2000],
-                animate: 'fast',
-                slide: function(event, ui) {
-                    jQuery("#min-price").html(jQuery(this).slider('values', 0));
-                    jQuery("#max-price").html(jQuery(this).slider('values', 1));
-                },
-                change: function(event, ui) {
-                    jQuery(this).addClass('selected');
-                    //filter(getQuery());
-                }
-            });
         });
         function getQuery(page_number) {
             index = 0;
@@ -98,7 +81,9 @@
             if(color_list.length > 0) {
                 query[++index + ':o.color:in'] = color_list.join(',');
             }
-            query[++index + ':vp.price:range'] = jQuery('#price-slider').slider('values', 0) + ',' + jQuery('#price-slider').slider('values', 1);
+            if(jQuery('#product-price > a').is('.selected')) {
+                query[++index + ':vp.price:range'] = jQuery('#price-slider').slider('values', 0) + ',' + jQuery('#price-slider').slider('values', 1);
+            }
             if(page_number) {
                 query['page'] = page_number;
             }
@@ -110,7 +95,8 @@
             });
         }
         function filter(query) {
-            window.location.hash = jQuery.param(query);
+            q = jQuery.param(query);
+            window.location.hash = q ? q : "!";
             doFilter(query);
         }
         function doFilter(query) {

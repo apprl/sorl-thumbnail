@@ -1,0 +1,76 @@
+/*
+Sass::SyntaxError: The line was indented 2 levels deeper than the previous line.
+on line 681 of /Users/gunnar/Projects/apparelrow-master/apparelrow/apparelrow/media/src/partials/_application.sass
+
+677: 
+678:       > a
+679:         background-image= image_url("share.png")
+680: _application.sass
+681:     &#add-to-wardrobe button
+682:       margin-right: 0
+683:       background-image= image_url("embed.png")
+684: 
+685: 
+686: a.block_link
+687:   display: block
+
+
+Backtrace:
+/Users/gunnar/Projects/apparelrow-master/apparelrow/apparelrow/media/src/partials/_application.sass:681
+/Users/gunnar/Projects/apparelrow-master/apparelrow/apparelrow/media/src/partials/_application.sass:681
+/Users/gunnar/Projects/apparelrow-master/apparelrow/apparelrow/media/src/partials/_application.sass:681
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/engine.rb:256:in `tree'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/engine.rb:175:in `to_tree'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/files.rb:35:in `tree_for'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/import_node.rb:34:in `perform!'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/node.rb:181:in `_perform'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/node.rb:158:in `perform'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/node.rb:202:in `perform_children'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/node.rb:202:in `map'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/node.rb:202:in `perform_children'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/node.rb:193:in `perform!'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/node.rb:181:in `_perform'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/node.rb:158:in `perform'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/tree/node.rb:103:in `render'
+/Library/Ruby/Gems/1.8/gems/haml-2.2.22/lib/sass/engine.rb:164:in `render'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/compiler.rb:103:in `compile'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/logger.rb:42:in `red'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/compiler.rb:102:in `compile'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/compiler.rb:93:in `compile_if_required'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/compiler.rb:84:in `run'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/compiler.rb:82:in `each'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/compiler.rb:82:in `run'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/commands/watch_project.rb:91:in `recompile'
+/Library/Ruby/Site/1.8/rubygems/custom_require.rb:31:in `to_proc'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/path.rb:71:in `call'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/path.rb:71:in `run_callback'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/path.rb:54:in `callback_action'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/path.rb:34:in `update'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/state/directory.rb:32:in `modified'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/state/directory.rb:31:in `each'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/state/directory.rb:31:in `modified'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/state/directory.rb:16:in `refresh'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/backends/fsevents.rb:15:in `add_handler'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/backends/fsevents.rb:14:in `each'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/backends/fsevents.rb:14:in `add_handler'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/backends/rubycocoa/fsevents.rb:107:in `call'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/backends/rubycocoa/fsevents.rb:107:in `initialize'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/backends/fsevents.rb:27:in `call'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/backends/fsevents.rb:27:in `CFRunLoopRun'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/backends/fsevents.rb:27:in `run'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm/monitor.rb:24:in `run'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/vendor/fssm/fssm.rb:17:in `monitor'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/commands/watch_project.rb:60:in `perform'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/commands/base.rb:18:in `execute'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/commands/project_base.rb:19:in `execute'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/exec/switch_ui.rb:166:in `do_command'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/exec/switch_ui.rb:35:in `perform!'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/lib/compass/exec/switch_ui.rb:18:in `run!'
+/Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/bin/compass:26
+/usr/bin/compass:19:in `load'
+/usr/bin/compass:19
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Sass::SyntaxError: The line was indented 2 levels deeper than the previous line.\A on line 681 of /Users/gunnar/Projects/apparelrow-master/apparelrow/apparelrow/media/src/partials/_application.sass\A \A 677: \A 678:       > a\A 679:         background-image= image_url(\"share.png\")\A 680: _application.sass\A 681:     &#add-to-wardrobe button\A 682:       margin-right: 0\A 683:       background-image= image_url(\"embed.png\")\A 684: \A 685: \A 686: a.block_link\A 687:   display: block\A "; }

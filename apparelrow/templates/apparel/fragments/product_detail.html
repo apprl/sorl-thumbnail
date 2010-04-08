@@ -43,11 +43,9 @@
         {% endwith %}
     </div>
     <ul id="add-menu" class="clearfix">
-        <li class="share">
-            <a href="#" class="button">{% trans "Share" %}</a>
-        </li>
+        {% include 'apparel/fragments/share.html' %}
         <li id="add-to-look">
-            <a href="/apparel/look/" class="button">{% trans "Add to look" %}</a>
+            <a href="/apparel/look/">{% trans "Add to look" %}</a>
             <form action="{% url apparel.views.add_to_look %}" method="post">
             <input type="hidden" name="product_id" value="{{ object.id }}" />
             <ul>

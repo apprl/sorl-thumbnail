@@ -9,7 +9,7 @@
     {% endfor %}
 </ul>
 <ul id="product-options">
-    <li class="first" id="product-price"><a href="{% url apparel.views.browse %}">{% trans "Price" %} (<span id="min-price"></span>-<span id="max-price"></span>)</a>
+    <li class="first" id="product-price"><a href="{% url apparel.views.browse %}">{% trans "Price" %}</a>
     {% include "apparel/fragments/product_options_price.html" %}
     </li>
     <li id="product-color"><a href="{% url apparel.views.browse %}">{% trans "Color" %}</a>

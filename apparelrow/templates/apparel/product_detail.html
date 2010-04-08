@@ -124,28 +124,11 @@
             </div>
         </div>
         <div class="sidebar last">
-            <!--
-            <div class="last-shown">
-                <h2>{% trans "Recently viewed products" %}</h2>
-            </div>
-            <div class="similar-products">
-                <h2>{% trans "Similar products" %}</h2>
-                <div class="similar-product clearfix">
-                    <img class="product-photo" />
-                    <div class="product-summary">
-                        <h5>Marc Jacobs</h5>
-                        <span class="likes">9 likes</span>
-                        <span class="price">959 SEK</span>
-                        <a href="">Till plagget</a>
-                    </div>
-                </div>
-            </div>
-            -->
             {% get_comment_count for object as comment_count %}
             <div class="activity">
-                <p><a class="comments" href="#comments">{{ trackbacks|length|add:comment_count }} {% trans "comments and links" %}</a></p>
+                {% include 'apparel/fragments/comment_count.html' %}
                 <p><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to {{ counter }} look{% plural %}Added to {{ counter }} looks{% endblocktrans %}</a></p>
-                <p>{% include 'apparel/fragments/likes.html' %}</p>
+                <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
             </div>
             <h2>{% trans "Recently viewed" %}</h2>
             <div id="recentlyviewed">

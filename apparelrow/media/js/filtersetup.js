@@ -1,15 +1,20 @@
 jQuery(document).ready(function() {
     // Make option panels popups
     jQuery('.options').addClass('popup');
-    jQuery('.options a.button').click(function() {
+    jQuery('.options button').click(function() {
         jQuery(this).parents('.popup').hide();
         jQuery(this).parents('li.active').removeClass('active');
-        return false;
+        
     });
-    jQuery('.options a.ok').click(function() {
+    jQuery('.options form').submit(function() {
         if(jQuery(this).parents('.options').find('.selected').length > 0) {
             jQuery(this).parents('.options').siblings('a').addClass('selected');
+        } else {
+            jQuery(this).parents('.options').siblings('a').removeClass('selected');
         }
+    });
+    jQuery('.options li > a').click(function() {
+        jQuery(this).toggleClass('selected');
         return false;
     });
     jQuery('#product-options > li > a').click(function() {
@@ -24,6 +29,23 @@ jQuery(document).ready(function() {
         
         return false;
     });
+    // Price slider
+    var rangefield = jQuery("input[name=1:vp.price:range]");
+    //rangefield.hide();
+    jQuery("#price-slider").slider({
+        range: true,
+        min: pricerange.min,
+        max: pricerange.max,
+        step: 10,
+        values: rangefield.val().split(","),
+        animate: 'fast',
+        slide: function(event, ui) {
+                rangefield.val(jQuery(this).slider('values', 0) + "," + jQuery(this).slider('values', 1));
+        },
+        change: function(event, ui) {
+            jQuery(this).addClass('selected');
+        }
+     });
     // Brand search
     jQuery("input[name=brand]").keyup(function(e) {
         var s = jQuery(this).val();

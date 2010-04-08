@@ -14,6 +14,7 @@ from hanssonlarsson.django.exporter import json
 from apparel.decorators import seamless_request_handling
 
 from recommender.models import Recommender
+from voting.models import Vote
 
 import re
 import math
@@ -72,18 +73,14 @@ def search(request, model):
         'vendors'      : 'Vendor',
     }.get(model)
     
+    query, page = get_query_and_page(request)
     if klass:
         klass  = eval(klass)
-        result = klass.objects.search(request.GET)
+        result = klass.objects.search(query)
     else:
         raise Exception('No model to search for')
     
     paginator = Paginator(result, BROWSE_PAGE_SIZE)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
 
     try:
         paged_result = paginator.page(page)
@@ -131,7 +128,7 @@ def wide_search(request):
         mimetype='text/json'
     )
 
-def get_filter():
+def get_pricerange(request):
     pricerange = VendorProduct.objects.aggregate(min=Min('price'), max=Max('price'))
     if pricerange['min'] is None:
         pricerange['min'] = 0
@@ -141,22 +138,32 @@ def get_filter():
         pricerange['max'] = 10000
     else:
         pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
+    pricerange['selected'] = request.GET['1:vp.price:range'] if '1:vp.price:range' in request.GET else '%s,%s' % (pricerange['min'],pricerange['max'])
+    return pricerange
+
+def get_filter(request):
     return {
         'categories': Category._tree_manager.all(),
         'manufacturers': Manufacturer.objects.all(),
         'genders': Option.objects.filter(option_type__name__iexact='gender'),
         'colors': Option.objects.filter(option_type__name__iexact='color'),
-        'pricerange': pricerange
+        'pricerange': get_pricerange(request),
     }
 
 def index(request):
-    ctx = get_filter()
-    ctx['popular_looks'] = Look.objects.all()[:8]
+    ctx = get_filter(request)
+    #FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
+    ctx['popular_looks'] = Vote.objects.get_top(Look, limit=8) #Look.objects.all()[:8]
     return render_to_response('index.html', ctx)
 
-def browse(request):
+def get_query_and_page(request):
     query = request.GET.copy()
     page  = int(query.pop('page', [1])[0]) # all values are lists in the QueryDict object and we never expect more than one
+
+    return query, page
+
+def browse(request):
+    query, page = get_query_and_page(request)
     
     if len(query):
         products = Product.objects.search(query)
@@ -173,7 +180,7 @@ def browse(request):
     left, mid, right = get_pagination(paginator, page)
 
 
-    result = get_filter()
+    result = get_filter(request)
     result['products'] = paged_products
     result['product_count_template'] = js_template(get_template_source('apparel/fragments/product_count.html'))
     result['product_template'] = js_template(get_template_source('apparel/fragments/product_small.html'))
