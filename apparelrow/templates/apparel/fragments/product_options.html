@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <div class="options">
-    <div class="box">
+    <form action="{% url apparel.views.browse %}">
         <div>
             <h3>{% block option_header %}{% endblock %}</h3>
             <div class="option-content">
@@ -9,9 +9,9 @@
             </div>
         </div>
         <div class="buttons">
-            <a class="button cancel">{% trans "Cancel" %}</a><a class="button ok">{% trans "OK" %}</a>
+            <button type="button" class="cancel">{% trans "Cancel" %}</button><button type="submit" class="ok">{% trans "OK" %}</button>
         </div>
-    </div>
+    </form>
     <span class="arrow"></span>
 </div>
 

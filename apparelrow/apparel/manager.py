@@ -18,16 +18,16 @@ class SearchManager(models.Manager):
     def search(self, query_dict):
         """
         Returns a QuerySet from the given QueryDict object.
-        """
+        """        
+        if query_dict:
+            query = self.get_query(query_dict)
         
-        #qp = QueryParser(self.model)
-        #query = qp.parse(query_dict)
-        query = self.get_query(query_dict)
+            if not query:
+                raise InvalidExpression('Could not create query')
         
-        if not query:
-            raise InvalidExpression('Could not create query')
+            return self.get_query_set().filter(query)
         
-        return self.get_query_set().filter(query)
+        return self.model.objects.all()
 
 
 

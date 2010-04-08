@@ -30,10 +30,13 @@
       font-weight: normal
       line-height= !button_height
       padding: 0 12px
-    div.box
+    form
       +box(#fff)
       > div
         background: #fff
+    .buttons
+      button
+        +button
     &.popup
       display: none
       position: absolute
@@ -48,13 +51,16 @@
         width: 7px
         background= "transparent" image_url("box-arrow-left.png") "no-repeat" "scroll" "left" "top"
 
-      div.box
+      form
         width: 348px
         +box-shadow
         .buttons
           padding: 10px 12px
-        a.button
-          text-align: center
+        button
           width: 159px
-        a.ok
-          border-left: none
+          display: inline
+          padding: 0
+          line-height: 30px
+          height: 30px
+          &.ok
+            border-left: none

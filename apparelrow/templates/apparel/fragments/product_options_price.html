@@ -3,4 +3,4 @@
 
 {% block option_header %}{% trans "Select price range" %}{% endblock %}
 
-{% block option_content %}<div id="price-slider"></div>{% endblock %}
+{% block option_content %}<div id="price-slider"></div><input type="text" name="1:vp.price:range" value="{{ pricerange.selected  }}">{% endblock %}

@@ -4,6 +4,10 @@
 {% block 'extra-scripts' %}
     <script type="text/javascript" src="/site_media/static/js/filtersetup.js"></script>
     <script type="text/javascript">
+        var pricerange = {
+            min: {{ pricerange.min }},
+            max: {{ pricerange.max }}
+        }
         jQuery(document).ready(function() {
                 jQuery('.tabs').tabs('#looks > li', {
                     effect: 'fade',
