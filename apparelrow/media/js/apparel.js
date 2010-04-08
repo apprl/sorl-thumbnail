@@ -19,7 +19,7 @@ jQuery(document).ready(function() {
 });
 
 
-function form_to_ajax(form, e, callback, error_callback) {
+function form_to_ajax(form, callback, error_callback, e) {
     query  = jQuery(form).serialize();
     if(e && e.originalEvent && e.originalEvent.explicitOriginalTarget) {
         target = e.originalEvent.explicitOriginalTarget;

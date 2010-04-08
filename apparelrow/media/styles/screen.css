@@ -414,26 +414,33 @@ body.look .collage {
 }
 /* line 136, ../src/partials/_look.sass */
 body.look .collage .tooltip {
+  border-radius: 24px;
+  -moz-border-radius: 24px;
+  -webkit-border-radius: 24px;
   display: none;
   z-index: 1100;
   padding: 1em;
 }
-/* line 140, ../src/partials/_look.sass */
+/* line 141, ../src/partials/_look.sass */
+body.look .collage .tooltip h2 {
+  margin-top: 0;
+}
+/* line 143, ../src/partials/_look.sass */
 body.look #comments-and-links {
   float: left;
   width: 452px;
   margin-right: 36px;
 }
-/* line 144, ../src/partials/_look.sass */
+/* line 147, ../src/partials/_look.sass */
 body.look #tags {
   float: left;
   width: 208px;
 }
-/* line 147, ../src/partials/_look.sass */
+/* line 150, ../src/partials/_look.sass */
 body.look #tags li {
   border-bottom: 1px solid #f2f2f2;
 }
-/* line 149, ../src/partials/_look.sass */
+/* line 152, ../src/partials/_look.sass */
 body.look #tags li span {
   float: right;
   color: #999999;
