@@ -1,0 +1,77 @@
+/**
+ * jquery.hypersubmit.js
+ * Copyright (c) 2010 Hansson & Larsson Internet AB (http://hanssonlarsson.se/)
+ * Licensed under the MIT License (http://www.opensource.org/licenses/mit-license.php)
+ *
+ * @author Linus G Thiel
+ *
+ * @projectDescription  jQuery plugin for making elements stick to the top of the viewport as the page is scrolled
+ *
+ * @version 0.1.0
+ *
+ * @requires jquery.js (tested with 1.4.2)
+ *
+ * @param success          function - function to execute at success
+ *                                      default: logs if console.log is available
+ * @param error            function - function to execute at error
+ *                                      default: logs if console.log is available
+ *
+ * Usage:
+ * $('form').hyperSubmit(options);
+ *
+ * */
+(function($) {
+    // Define an empty console.log if it's not available FIXME does not work
+    //console = console || { log: function() {} };
+    $.hyperSubmit = $.hyperSubmit || {
+        version: '0.1.0',
+        defaults: {
+            success: function(data, textStatus, req) { console.log("success in form submit, ", data, textStatus, req) },
+            error: function(req, textStatus, errorThrown) { console.log("error in form submit, ", req, textStatus, errorThrown) },
+            dataType: 'json',
+        }
+    };
+    $.fn.hyperSubmit = $.fn.hyperSubmit || function(options) {
+        var config = $.extend({}, $.hyperSubmit.defaults, options);
+        return this.each(function() {
+            var $this = $(this);
+            $this.submit(function(e) {
+                var formData = $this.serializeArray();
+                if(e.originalEvent && e.originalEvent.explicitOriginalTarget) {
+                    var target = e.originalEvent.explicitOriginalTarget;
+                    //console.log(target);
+                    if('name' in target && 'value' in target) {
+                        // Only add the value if there is no parameter of the same name
+                        if(!$.grep(formData, function(obj, i) { return target.name in obj })) {
+                            //console.log("no", target, "in", formData);
+                            //FIXME: The line below doesn't work. Complains that there is nothing before :
+                            //formData.push({ target.name : target.value });
+                        }
+                    }
+                }
+                var params = $.extend({}, config, {
+                    type: this.method,
+                    url: this.action,
+                    data: $.param(formData),
+                    success: function(response, statusText, req) {
+                        if(!response.success) {
+                            if('location' in response) {
+                                window.location = response.location;
+                                return;
+                            }
+                            if(typeof config.error == 'function')
+                                return config.error(response, req);
+                            config.log('Error in ajax call', response.error_message);
+                            return;
+                        }
+                        return config.success(response, statusText, req);
+                    },
+                    error: config.error,
+                });
+                //console.log(params);
+                $.ajax(params);
+                return false;
+            });
+        });
+    };
+})(jQuery);
