@@ -20,3 +20,5 @@ bin/django-admin.py
 bin/pip
 pip-log.txt
 src
+*~
+*#*#

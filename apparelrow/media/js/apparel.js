@@ -11,6 +11,11 @@ jQuery(document).ready(function() {
             likes.hide().html(data.score.score).fadeIn();
         });
     });
+    //Hover state for share button
+    jQuery('.share').hover(
+        function() { jQuery(this).find('ul').show(); }, 
+        function() { jQuery(this).find('ul').hide(); }
+    );
 });
 
 

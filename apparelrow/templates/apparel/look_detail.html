@@ -4,6 +4,7 @@
 {% load voting_tags %}
 {% load trackback_tags %}
 {% load tagging_tags %}
+{% load comments %}
 
 {% block 'extra-styles' %}
     <link rel="pingback" href="{% get_pingback_url %}" />
@@ -59,15 +60,24 @@
 <div class="sidebar">
     <h2>Sidebar</h2>
     <p>
+    <span class="price">
     {% blocktrans count object.look_products.all|length as number %}
     {{ number }} article
     {% plural %}
     {{ number }} articles
     {% endblocktrans %}
-    {{ object.total_price }} SEK
+    </span>
+    <span class="sum"> - {{ object.total_price }} SEK</span>
     </p>
     {% if object.description %}<p>{{ object.description }}</p>{% endif %}
-    <p>{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</p>
+    <div class="share-created">
+    <ul id="add-menu">
+      {% include 'apparel/fragments/share.html' %}
+    </ul>
+    <span class="created">{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</span>
+    </div>
+    {% get_comment_count for object as comment_count %}
+    {% include 'apparel/fragments/comment_count.html' %}
     <p>{% include 'apparel/fragments/likes.html' %}</p>
     {% if looks_by_user %}
     <h2>{% trans "More looks by" %} {{ object.user.get_profile.display_name }}</h2>

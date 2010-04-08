@@ -224,8 +224,20 @@ ul.looks
 #lookproducts
   +row
 
-#sidebar ul
-  padding: 0
+.sidebar
+  .created
+    float: right
+    line-height= 24 + 2 * !border_width
+    color= !easier_color
+  #add-menu
+    float: left
+    margin-top: 0
+  .share-created
+    +clearfix
+  .price
+    color= !font_color
+  .sum
+    color= !easier_color
 
 h2
   a
