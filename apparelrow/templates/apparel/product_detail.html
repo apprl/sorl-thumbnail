@@ -97,7 +97,7 @@
             <div class="activity">
                 {% include 'apparel/fragments/comment_count.html' %}
                 <p><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to {{ counter }} look{% plural %}Added to {{ counter }} looks{% endblocktrans %}</a></p>
-                <p>{% include 'apparel/fragments/likes.html' %}</p>
+                <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
             </div>
             <h2>{% trans "Recently viewed" %}</h2>
             <div id="recentlyviewed">
