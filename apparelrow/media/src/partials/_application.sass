@@ -225,6 +225,17 @@ ul.looks
   +row
 
 .sidebar
+  p
+    +border("top")
+    line-height: 2em
+    &.description
+      padding: 1.5em 0
+      line-height: 1.5em
+  .activity
+    margin-top: 1.5em
+    p
+      border-top: none
+    
   .created
     float: right
     line-height= 24 + 2 * !border_width
@@ -430,8 +441,10 @@ div#product-list
   margin-top: 30px
   +border("top")
   p
-    line-height: 26px
+    line-height: 2em
     +border("bottom", !easy_border_color)
+    &.last
+      border-color= !border_color
 
 .product-info
   +float-left
@@ -573,22 +586,25 @@ a.buy-now
 #recentlyviewed
   +row(!aside_width)
 
-body.product .product-image, body.look .collage
-  form
-    position: absolute
-    top: 0px
-    right: 0px
-    button
-      margin: 0
-      border: none
-      background= "transparent" image_url("like-large.png") "no-repeat" "scroll" "center" "center"
-      color= !like_color
-      text-transform: uppercase
-      padding-top: 20px
-      height: 100px
-      width: 89px
-      cursor: pointer
-      text-align: center
+body.product
+  .sidebar
+    margin-top: 30px
+  .product-image, body.look .collage
+    form
+      position: absolute
+      top: 0px
+      right: 0px
+      button
+        margin: 0
+        border: none
+        background= "transparent" image_url("like-large.png") "no-repeat" "scroll" "center" "center"
+        color= !like_color
+        text-transform: uppercase
+        padding-top: 20px
+        height: 100px
+        width: 89px
+        cursor: pointer
+        text-align: center
 
 .similar-product
   .product-photo
