@@ -173,11 +173,16 @@ def browse(request):
     except (EmptyPage, InvalidPage):
         paged_products = paginator.page(paginator.num_pages)
 
+    try:
+        next_page = paginator.page(page + 1)
+    except (EmptyPage, InvalidPage):
+        next_page = None
+
     left, mid, right = get_pagination(paginator, page)
 
 
     result = get_filter(request)
-    result['products'] = paged_products
+    result['pages'] = (paged_products, next_page,)
     result['product_count_template'] = js_template(get_template_source('apparel/fragments/product_count.html'))
     result['product_template'] = js_template(get_template_source('apparel/fragments/product_small.html'))
     result['pagination_template'] = get_template_source('apparel/fragments/pagination_js.html')
@@ -222,7 +227,7 @@ def save_look_product(request):
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
     looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id)
-    similar_looks = Recommender.objects.get_similar_items(look, User.objects.all(), Look.objects.all(), 0)
+    similar_looks = [] #Recommender.objects.get_similar_items(look, User.objects.all(), Look.objects.all(), 0)
     return render_to_response('apparel/look_detail.html', dict(object=look, looks_by_user=looks_by_user, similar_looks=similar_looks, tooltips=True))
 
 def look_edit(request, slug):

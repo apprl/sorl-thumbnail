@@ -4,4 +4,4 @@
 
 {% score_for_object object as score %}
 {#<span class="likes">{% blocktrans count score.score as counter and score.score|apnumber as likes %}<span>{{ likes }}</span> like{% plural %}<span>{{ likes }}</span> likes{% endblocktrans %}</span>#}
-<span class="likes">{% blocktrans count score.score as counter %}<span>{{ counter }}</span> like{% plural %}<span>{{ counter }}</span> likes{% endblocktrans %}</span>
+<span class="likes">{% blocktrans count score.score as counter %}<span class="count">{{ counter }}</span> like{% plural %}<span class="count">{{ counter }}</span> likes{% endblocktrans %}</span>
