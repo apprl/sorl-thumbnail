@@ -60,7 +60,6 @@
                 filter(getQuery($(this).attr('href').split('=')[1]));
                 return false;
             });
-            product_template = jQuery.template('{{ product_template|escapejs }}');
         });
         function getQuery(page_number) {
             index = 0;
@@ -104,17 +103,6 @@
         }
         function renderProducts(products) {
             jQuery('#product-list > ul').empty();
-            /*
-            template.render(jQuery('#product-list'), products, product_template,
-                function(obj) {
-                    return template.getTemplateContext({
-                        'product': {
-                            'object': obj,
-                            'properties': ['id', 'product_image', 'product_name', 'get_absolute_url']
-                        },
-                    });
-                }
-            );*/
             $('#product-count').empty();
             $('#product-count').append(tmpl('product_count_template', { products: products }));
             try {
