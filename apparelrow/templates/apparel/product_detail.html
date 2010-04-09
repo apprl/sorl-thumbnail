@@ -15,7 +15,7 @@
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
-    <script src="http://cdn.jquerytools.org/1.1.1/full/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="/site_media/static/js/jquery.hypersubmit.js"></script>
     <script type="text/javascript">
     
     
@@ -38,15 +38,15 @@
                 }
             );
             jQuery('#add-to-look ul').width(jQuery('#add-to-look').width());
-            
-            jQuery('#add-to-look>form').submit(function(e) {
-                link = jQuery(this).siblings('a[href=/apparel/look/]');
-                text = link.text();
-                link.text('{% trans "Adding..." %}');
-                return form_to_ajax(this, function(json, statusText, req) {
-                    
+            jQuery('#add-to-look>form').hyperSubmit({
+                beforeSend: function(req) {
+                    link = jQuery('#add-to-look a[href=/apparel/look/]');
+                    text = link.text();
+                    link.text('{% trans "Adding..." %}');
+                },
+                success: function(json, statusText, req) {
                     if(json.data['created'])
-                        jQuery('#add-to-look-new').before(tmpl('look_button_template', { look: json.data.look } ));
+                        jQuery('#add-to-look-new').before(tmpl('look_button_template', json.data ));
                     
                     link.text(text);
                     input = jQuery('#add-to-look-new input[name=new_name]');
@@ -54,10 +54,12 @@
                     input.value = input.defaultValue;
                     
                     jQuery('#add-to-look-new button').show();
-                }, function(error, req) {
-                    // FIXME: Do something generically with the error? probably better handled further up
-                    link.text(text);
-                }, e);
+                    return false;
+                    // FIXME: Show the new look in list. Should we reload or just display?
+                },
+                error: function(error, req) {
+                    link.text = text;
+                },
             });
 
             jQuery('#add-to-look-new button').click(function() {

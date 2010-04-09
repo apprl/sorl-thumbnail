@@ -9,18 +9,6 @@
 {% block 'extra-styles' %}
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
-    <style type="text/css">
-        .collage {
-            position: relative;
-            height: 450px;
-            overflow: hidden;
-        }
-        .tooltip {
-            display: none;
-            z-index: 1100;
-            padding: 1em;
-        }
-    </style>
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
@@ -81,7 +69,9 @@
       {% include 'apparel/fragments/comment_count.html' %}
       <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
     </div>
-    <input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}">
+    <div class="spread">
+        <label>{% trans "Embed" %}<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}"></label>
+    </div>
     {% if looks_by_user %}
     <h2>{% trans "More looks by" %} {{ object.user.get_profile.display_name }}</h2>
     {% with looks_by_user as looks %}
