@@ -7,7 +7,7 @@
  *
  * @projectDescription  jQuery plugin for making elements stick to the top of the viewport as the page is scrolled
  *
- * @version 0.1.0
+ * @version 0.1.1
  *
  * @requires jquery.js (tested with 1.4.2)
  *
@@ -28,7 +28,7 @@
         window.console = { log: function() {} };
     
     $.hyperSubmit = $.hyperSubmit || {
-        version: '0.1.0',
+        version: '0.1.1',
         defaults: {
             success: function(data, textStatus, req) { console.log("success in form submit, ", data, textStatus, req) },
             error: function(req, textStatus, errorThrown) { console.log("error in form submit, ", req, textStatus, errorThrown) },
@@ -47,12 +47,9 @@
                 var formData = $this.serializeArray();
                 if(e.originalEvent && e.originalEvent.explicitOriginalTarget) {
                     var target = e.originalEvent.explicitOriginalTarget;
-                    //console.log(target);
                     if('name' in target && 'value' in target) {
                         // Only add the value if there is no parameter of the same name
                         if($.grep(formData, function(obj, i) { return target.name in obj }).length == 0) {
-                            //console.log("no", target, "in", formData);
-                            //FIXME: The line below doesn't work. Complains that there is nothing before :
                             formData.push({ 'name': target.name, 'value': target.value });
                         }
                     }
@@ -77,7 +74,6 @@
                     },
                     error: config.error,
                 });
-                console.log(params);
                 $.ajax(params);
                 return false;
             });
