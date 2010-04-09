@@ -86,7 +86,6 @@ class Category(models.Model):
     active = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
     option_types = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
     
-#    objects = CategoryManager()
 
     def save(self, force_insert=False, force_update=False):
         if not self.key and self.name:

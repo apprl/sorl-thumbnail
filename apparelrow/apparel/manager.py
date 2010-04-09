@@ -10,55 +10,20 @@ class SearchManager(models.Manager):
     class.
     """
     
-    def get_query(self, query_dict):
-        qp = QueryParser(self.model)
-        query = qp.parse(query_dict)
-        return query
-
     def search(self, query_dict):
         """
         Returns a QuerySet from the given QueryDict object.
-        """        
-        if query_dict:
-            query = self.get_query(query_dict)
+        """
+        qp = QueryParser(self.model)
+        qs = self.get_query_set()
         
-            if not query:
-                raise InvalidExpression('Could not create query')
+        try:
+            qs = qs.filter(qp.parse(query_dict))
+        except NoQuery:
+            pass
         
-            return self.get_query_set().filter(query)
-        
-        return self.model.objects.all()
+        return qs.order_by(*qp.parse_order_by(query_dict))
 
-
-
-#class CategoryManager(SearchManager):
-#    """
-#    Just like SearchManager, but adds overrides the default get_or_create to 
-#    enable automatic lookup using the CategoryAlias method.
-#    """
-#    
-#    def get(self, **kwargs):
-#        """
-#        Just like get, unless the argument 'key' or 'name' is given. In those
-#        cases, the CategoryAlias class will also be used to locate the correct 
-#        Category
-#        """
-#        
-#        if 'name' in kwargs:
-#            # FIXME: Move key_for_name out of the Category class so it can be used elsewhere
-#            kwargs['key'] = self.model.key_for_name(kwargs['name'])
-#        
-#        if not hasattr(self.model, 'aliases') or not 'key' in kwargs:
-#            return super(CategoryManager, self).get_or_create(**kwargs)
-#        
-#        key = kwargs['key']
-#        try:
-#            return self.get_query_set().get(key=key)
-#        except ObjectDoesNotExist:
-#            # FIXME: Set alias class name on Category class so it can be genercially looked up
-#            return CategoryAlias.objects.get(alias=key)
-
-        
 class QueryParser():
 
     model_shorthands = {
@@ -83,10 +48,9 @@ class QueryParser():
     def __init__(self, model=None):
         self.query_dict    = None
         self.expressions   = None
-        self.order         = None
+        self.grouping      = None
         self.model         = model
         self.django_models = {}
-        
         
         #
         # Introspect model to find out what other models somehow relates to this
@@ -127,15 +91,15 @@ class QueryParser():
         """
         
         if not isinstance(query_dict, QueryDict):
-            Exception('query_dict is not a django.http.QueryDict')    
+            raise NoQuery('query_dict is not a django.http.QueryDict')    
         
         self.query_dict  = query_dict
         self.expressions = self.parse_expressions()
-        self.order       = self.parse_order()
+        self.grouping    = self.parse_grouping()
         
         query = Q()
         
-        for group_index, group in enumerate(self.order):
+        for group_index, group in enumerate(self.grouping):
             # Create new group Q-expression for groups with first named expression
                 
             grp_query = self.get_expression(label=group[0])
@@ -159,7 +123,7 @@ class QueryParser():
                 else:
                     # Get the last operand (previous group, last element)
                     # Use it to add to the db query
-                    operand = order[group_index - 1][-1]
+                    operand = grouping[group_index - 1][-1]
                     query   = self.__merge_q_objects(query, group_exp, operand)
             
             return query
@@ -208,10 +172,10 @@ class QueryParser():
         )
     
     
-    def parse_order(self):
+    def parse_grouping(self):
         """
-        Returns a list with the sort order. The list contains tuples with grouped
-        expressions followed by and operand.
+        Returns a list with the order of expressions. The list contains tuples 
+        with grouped expressions followed by and operand.
         
         The input string is taken from the value of key 'o' in query_dict, or
         a list of the expression ids.
@@ -242,23 +206,23 @@ class QueryParser():
             b) (1 or 2) and (3 or 4 or 5) and not 6 and 7
         """
         
-        pattern = self.query_dict['o'] if 'o' in self.query_dict else 'a'.join(self.expressions.keys())
-        order   = []      # Sort order list
-        append  = True    # If true, will not group statements
+        pattern  = self.query_dict['o'] if 'o' in self.query_dict else 'a'.join(self.expressions.keys())
+        grouping = []      # Sort order list
+        append   = True    # If true, will not group statements
         
         #   (operand, expression_label, end of group)
         for (op, oid, group) in re.compile('(^|(?:a|o)n?)(\d)(,)?').findall(pattern):
             if op:
-                order[-1] += (op,)
+                grouping[-1] += (op,)
             
             if append:
-                order.append((oid,))
+                grouping.append((oid,))
             else:
-                order[-1] += (oid,)
+                grouping[-1] += (oid,)
             
             append = True if group else False
 
-        return order
+        return grouping
     
     
     def get_expression(self, label=None):
@@ -272,7 +236,30 @@ class QueryParser():
             # FIXME: Log original error
             InvalidExpression('No expression labelled %s' % label)
 
+    
+    def parse_order_by(self, query_dict):
+        """
+        Returns a list of order by extracted from the given order_by field in
+        the given query_dict. Returns empty list if no values could be extracted.
+        """
+        
+        order_by = []
+        if 'order_by' in query_dict:
+            for expr in query_dict['order_by'].split(','):
+                m = re.match(r'^(-)?(?:(\w+)\.)?(.+)$', expr)
+                if not m: continue
 
+                desc, shorthand, field = m.groups()
+                if not field: continue
+                
+                if shorthand in self.django_models:
+                    field = '%s__%s' % (self.django_models[shorthand][1], field)
+                
+                if desc: field = '-' + field
+                
+                order_by.append(field)
+        
+        return order_by
     
     # --------------------------------------------------------------------------
     # PRIVATE ROUTINES
@@ -365,7 +352,6 @@ class QueryParser():
         elif not operator in self.django_operators:
             raise InvalidExpression('Unknown operator %s' % operator)
         
-        # Perform special casing for value
         if operator == 'in':
             value = value.split(',')
         
@@ -382,4 +368,8 @@ class QueryParser():
 
 class InvalidExpression(Exception):
     pass
+    
+class NoQuery(Exception):
+    pass
+
 

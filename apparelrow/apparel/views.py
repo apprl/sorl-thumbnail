@@ -64,7 +64,7 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
 
     return left, mid, right
 
-def search(request, model):
+def search(request, model):    
     result = None
     klass  = {
         'products'     : 'Product',
@@ -165,11 +165,7 @@ def get_query_and_page(request):
 def browse(request):
     query, page = get_query_and_page(request)
     
-    if len(query):
-        products = Product.objects.search(query)
-    else:
-        products = Product.objects.all()
-    
+    products = Product.objects.search(query)
     paginator = Paginator(products, BROWSE_PAGE_SIZE)
     
     try:
