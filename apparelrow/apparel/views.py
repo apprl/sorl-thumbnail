@@ -255,6 +255,7 @@ def get_template_source(template):
 def add_to_look(request):
     product = Product.objects.get(pk=request.POST.get('product_id'))
     
+    
     if 'look_id' in request.POST:
         look = Look.objects.get(pk=request.POST['look_id'])
         created = False
