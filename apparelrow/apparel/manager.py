@@ -22,7 +22,10 @@ class SearchManager(models.Manager):
         except NoQuery:
             pass
         
-        return qs.order_by(*qp.parse_order_by(query_dict))
+        ob = qp.parse_order_by(query_dict)
+        if ob: qs = qs.order_by(*ob)
+        
+        return qs
 
 class QueryParser():
 
