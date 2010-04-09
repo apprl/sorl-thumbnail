@@ -125,8 +125,8 @@ class QueryParser():
                     # Use it to add to the db query
                     operand = grouping[group_index - 1][-1]
                     query   = self.__merge_q_objects(query, group_exp, operand)
-            
-            return query
+                        
+        return query
 
 
     

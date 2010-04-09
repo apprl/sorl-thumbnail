@@ -157,6 +157,9 @@ class Product(models.Model):
     def __unicode__(self):
         return u"%s %s" % (self.manufacturer, self.product_name)
     
+    class Meta:
+        ordering = ('-date_added',)
+    
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'default_vendor']
 
