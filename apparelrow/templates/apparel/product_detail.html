@@ -30,14 +30,14 @@
             jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
 
             jQuery('#add-to-look').hover(
-                function() { jQuery(this).find('ul').show().width(jQuery(this).width()); }, 
+                function() { jQuery(this).find('ul').show(); }, 
                 function() { 
                     jQuery(this).find('ul').hide();
                     jQuery(this).find('#add-to-look-new button').show(); 
                     jQuery(this).find('#add-to-look-new input[name=new_name]').hide(); 
                 }
             );
-            
+            jQuery('#add-to-look ul').width(jQuery('#add-to-look').width());
             jQuery('#add-to-look>form').hyperSubmit({
                 beforeSend: function(req) {
                     link = jQuery('#add-to-look a[href=/apparel/look/]');

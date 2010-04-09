@@ -15,25 +15,33 @@
  *                                      default: logs if console.log is available
  * @param error            function - function to execute at error
  *                                      default: logs if console.log is available
+ * @param follow_redirect  boolean  - if true, redirects in error responses will be followed
+ *                                      default: true
  *
  * Usage:
  * $('form').hyperSubmit(options);
  *
  * */
 (function($) {
-    // Define an empty console.log if it's not available FIXME does not work
-    //console = console || { log: function() {} };
+    // Define an empty console.log if it's not available
+    if(!'console' in window)
+        window.console = { log: function() {} };
+    
     $.hyperSubmit = $.hyperSubmit || {
         version: '0.1.0',
         defaults: {
             success: function(data, textStatus, req) { console.log("success in form submit, ", data, textStatus, req) },
             error: function(req, textStatus, errorThrown) { console.log("error in form submit, ", req, textStatus, errorThrown) },
             dataType: 'json',
+            follow_redirect: true,
         }
     };
     $.fn.hyperSubmit = $.fn.hyperSubmit || function(options) {
         var config = $.extend({}, $.hyperSubmit.defaults, options);
         return this.each(function() {
+            if(this.tagName.toLowerCase() != 'form')
+                return true;
+            
             var $this = $(this);
             $this.submit(function(e) {
                 var formData = $this.serializeArray();
@@ -42,20 +50,21 @@
                     //console.log(target);
                     if('name' in target && 'value' in target) {
                         // Only add the value if there is no parameter of the same name
-                        if(!$.grep(formData, function(obj, i) { return target.name in obj })) {
+                        if($.grep(formData, function(obj, i) { return target.name in obj }).length == 0) {
                             //console.log("no", target, "in", formData);
                             //FIXME: The line below doesn't work. Complains that there is nothing before :
-                            //formData.push({ target.name : target.value });
+                            formData.push({ 'name': target.name, 'value': target.value });
                         }
                     }
                 }
+                
                 var params = $.extend({}, config, {
                     type: this.method,
                     url: this.action,
                     data: $.param(formData),
                     success: function(response, statusText, req) {
                         if(!response.success) {
-                            if('location' in response) {
+                            if(config.follow_redirect && 'location' in response) {
                                 window.location = response.location;
                                 return;
                             }
@@ -68,7 +77,7 @@
                     },
                     error: config.error,
                 });
-                //console.log(params);
+                console.log(params);
                 $.ajax(params);
                 return false;
             });
