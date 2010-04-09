@@ -177,11 +177,16 @@ def browse(request):
     except (EmptyPage, InvalidPage):
         paged_products = paginator.page(paginator.num_pages)
 
+    try:
+        next_page = paginator.page(page + 1)
+    except (EmptyPage, InvalidPage):
+        next_page = None
+
     left, mid, right = get_pagination(paginator, page)
 
 
     result = get_filter(request)
-    result['products'] = paged_products
+    result['pages'] = (paged_products, next_page,)
     result['product_count_template'] = js_template(get_template_source('apparel/fragments/product_count.html'))
     result['product_template'] = js_template(get_template_source('apparel/fragments/product_small.html'))
     result['pagination_template'] = get_template_source('apparel/fragments/pagination_js.html')
