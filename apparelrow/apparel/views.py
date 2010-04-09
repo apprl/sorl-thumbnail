@@ -213,6 +213,7 @@ def product_detail(request, slug):
                 'user_looks': user_looks,
                 'looks_with_product': Look.objects.filter(products=product),
                 'viewed_products': Product.objects.filter(pk__in=viewed_products),
+                'object_url': request.build_absolute_uri()
             })
 
 def save_look_product(request):
@@ -228,7 +229,15 @@ def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
     looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id)
     similar_looks = [] #Recommender.objects.get_similar_items(look, User.objects.all(), Look.objects.all(), 0)
-    return render_to_response('apparel/look_detail.html', dict(object=look, looks_by_user=looks_by_user, similar_looks=similar_looks, tooltips=True))
+    return render_to_response(
+            'apparel/look_detail.html',
+            {
+                'object': look,
+                'looks_by_user': looks_by_user,
+                'similar_looks': similar_looks,
+                'tooltips': True,
+                'object_url': request.build_absolute_uri()
+            })
 
 def look_edit(request, slug):
     look = get_object_or_404(Look, slug=slug)
