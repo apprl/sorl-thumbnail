@@ -226,7 +226,7 @@ def save_look_product(request):
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
     looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id)
-    similar_looks = Recommender.objects.get_similar_items(look, User.objects.all(), Look.objects.all(), 0)
+    similar_looks = [] #Recommender.objects.get_similar_items(look, User.objects.all(), Look.objects.all(), 0)
     return render_to_response('apparel/look_detail.html', dict(object=look, looks_by_user=looks_by_user, similar_looks=similar_looks, tooltips=True))
 
 def look_edit(request, slug):
