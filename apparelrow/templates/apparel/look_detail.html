@@ -20,24 +20,6 @@
             delay: 500,
             offset: [30, 0],
         });
-       if(jQuery('#comments-and-links textarea').val() == '') { jQuery('#comments-and-links button').hide() }
-       jQuery('#comments-and-links textarea').focus(function() { jQuery('#comments-and-links button').show() });
-       jQuery('#comments-and-links textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments-and-links button').hide() } });
-//            jQuery('#comments textarea').autogrow();
-        jQuery('#comments-and-links form').submit(function() {
-            jQuery.ajax({
-                type: this.method,
-                url: this.action,
-                data: jQuery(this).serialize(),
-                dataType: 'json',
-                success: function(data, statusText, req) {
-                    jQuery('#comments-and-links textarea').val('');
-                    jQuery('#comments-and-links button').hide();
-                    jQuery('ul#comments').append(data.html).slideDown('fast');
-                },
-            });
-            return false;
-        });
     });
 </script>
 {% endblock 'extra-scripts' %}

@@ -73,33 +73,15 @@
                 .blur(function()  { if(this.value == '') this.value = this.defaultValue })
                 .bind('keypress', function(e) { if(e.keyCode == 13) { jQuery('#add-to-look>form').submit(); return false } return true})
             
-            if(jQuery('#comments-and-links textarea').val() == '') { jQuery('#comments-and-links button').hide() }
-            jQuery('#comments-and-links textarea').focus(function() { jQuery('#comments-and-links button').show() });
-            jQuery('#comments-and-links textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments-and-links button').hide() } });
-//            jQuery('#comments textarea').autogrow();
-            jQuery('#comments-and-links form').submit(function() {
-                jQuery.ajax({
-                    type: this.method,
-                    url: this.action,
-                    data: jQuery(this).serialize(),
-                    dataType: 'json',
-                    success: function(data, statusText, req) {
-                        jQuery('#comments-and-links textarea').val('');
-                        jQuery('#comments-and-links button').hide();
-                        jQuery('ul#comments').append(data.html).hide().slideDown('fast');
-                    },
-                });
-                return false;
-            });
-            
-            jQuery('#add-to-wardrobe>form').submit(function() {
-                btn = jQuery(this).find('button[type=submit]');
-                btn.text('{% trans "Adding..." %}');
-                return form_to_ajax(this, function(data, statusText, req) {
+            jQuery('#add-to-wardrobe>form').hyperSubmit({
+                beforeSend: function(req) {
+                    btn = jQuery('#add-to-wardrobe form button[type=submit]');
+                    btn.text('{% trans "Adding..." %}');
+                },
+                success: function(data, statusText, req) {
                     btn.text('{% trans "In wardrobe" %}');
                     btn.click( function() { return false } );
-                    // FIXME: Set a class name to make it dimmed or whatever?
-                });
+                },
             });
         });
     </script>

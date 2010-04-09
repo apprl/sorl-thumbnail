@@ -7,9 +7,24 @@ jQuery(document).ready(function() {
     );
     jQuery(likeContainers).children('form').submit(function() {
         return form_to_ajax(this, function(data, statusText, req) { 
-            var likes = jQuery('span.likes > span');
+            var likes = jQuery('span.likes > span.count');
             likes.hide().html(data.score.score).fadeIn();
         });
+    });
+    // Comments posting
+    if(jQuery('#comments-and-links textarea').val() == '') { jQuery('#comments-and-links button').hide() }
+    jQuery('#comments-and-links textarea').focus(function() { jQuery('#comments-and-links button').show() });
+    jQuery('#comments-and-links textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments-and-links button').hide() } });
+//    jQuery('#comments textarea').autogrow();
+    jQuery('#comments-and-links form').hyperSubmit({
+        success: function(data, statusText, req) {
+            jQuery('#comments-and-links textarea').val('');
+            jQuery('#comments-and-links button').hide();
+            jQuery(data.html).hide().appendTo('ul#comments').slideDown('fast');
+            var count = jQuery('a.comments > span.count');
+            count.html(parseInt(count.html()) + 1);
+            return false;
+        },
     });
     //Hover state for share button
     jQuery('.share').hover(
