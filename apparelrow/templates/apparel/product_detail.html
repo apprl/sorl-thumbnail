@@ -30,19 +30,20 @@
             jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
 
             jQuery('#add-to-look').hover(
-                function() { jQuery(this).find('ul').show().width(jQuery(this).width()); }, 
+                function() { jQuery(this).find('ul').show(); }, 
                 function() { 
                     jQuery(this).find('ul').hide();
                     jQuery(this).find('#add-to-look-new button').show(); 
                     jQuery(this).find('#add-to-look-new input[name=new_name]').hide(); 
                 }
             );
+            jQuery('#add-to-look ul').width(jQuery('#add-to-look').width());
             
             jQuery('#add-to-look>form').submit(function(e) {
                 link = jQuery(this).siblings('a[href=/apparel/look/]');
                 text = link.text();
                 link.text('{% trans "Adding..." %}');
-                return form_to_ajax(this, e, function(json, statusText, req) {
+                return form_to_ajax(this, function(json, statusText, req) {
                     
                     if(json.data['created'])
                         jQuery('#add-to-look-new').before(tmpl('look_button_template', { look: json.data.look } ));
@@ -53,11 +54,10 @@
                     input.value = input.defaultValue;
                     
                     jQuery('#add-to-look-new button').show();
-                    // FIXME: Show the new look in list. Should we reload or just display?
                 }, function(error, req) {
                     // FIXME: Do something generically with the error? probably better handled further up
                     link.text(text);
-                });
+                }, e);
             });
 
             jQuery('#add-to-look-new button').click(function() {
