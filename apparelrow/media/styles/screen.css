@@ -2458,14 +2458,15 @@ body.product .product-image form button, body.look .collage form button {
 /* line 672, ../src/partials/_application.sass */
 #add-menu li.share ul {
   display: none;
-  width: 50px;
+  width: 60px;
 }
 /* line 675, ../src/partials/_application.sass */
 #add-menu li.share ul li {
   border: none;
   display: inline;
+  margin: 3px 0 3px 3px;
 }
-/* line 678, ../src/partials/_application.sass */
+/* line 679, ../src/partials/_application.sass */
 #add-menu li.share ul li a {
   background: url('../images/social_bookmarks.png?1270657761') no-repeat;
   width: 16;
@@ -2475,7 +2476,6 @@ body.product .product-image form button, body.look .collage form button {
   text-indent: -9000px;
   width: 16px;
   height: 16px;
-  margin: 2px;
 }
 /* line 685, ../src/partials/_application.sass */
 #add-menu li.share ul li a.facebook {
