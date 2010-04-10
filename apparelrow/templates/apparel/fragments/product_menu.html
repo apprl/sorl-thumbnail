@@ -1,11 +1,12 @@
 {% load i18n %}
+{% load apparel_extras %}
 {% load mptt_tags %}
 
 <h2>{% trans "Browse articles" %}<a id="reset" href="{% url apparel.views.browse %}">{% trans "Show all" %}</a></h2>
 <ul id="product-gender">
     <li class="first"><a href="#">{% trans "All" %}</a></li>
     {% for gender in genders %}
-    <li{% if forloop.last %} class="last"{% endif %}><a id="option-{{ gender.value }}" href="{% url apparel.views.browse %}?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
+    <li{% if forloop.last %} class="last"{% endif %}><a id="option-{{ gender.value }}"{% ifequal selected_gender gender.value %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
     {% endfor %}
 </ul>
 <ul id="product-options">
@@ -21,7 +22,7 @@
 </ul>
 {% for category, structure in categories|tree_info %}
 {% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li{% if forloop.first %} class="first"{% endif %}{% if forloop.last %} class="last"{% endif %}>
-    <a id="category-{{ category.id }}" href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
+    <a id="category-{{ category.id }}"{% ifinlist category.id selected_categories %} class="selected"{% endifinlist %} href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
 {% for level in structure.closed_levels %}</li></ul>{% endfor %}
 {% endfor %}
 

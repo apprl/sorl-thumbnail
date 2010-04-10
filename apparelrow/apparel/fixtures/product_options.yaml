@@ -12,7 +12,7 @@
   pk: 2
   fields:
     name: gender
-    description: Gender: M(ale), F(email) or U(nisex)
+    description: "Gender: M(ale), F(email) or U(nisex)"
     lft: 1
     rght: 1
     tree_id: 1
@@ -99,12 +99,12 @@
     value: M
     option_type: 2
 - model: apparel.option
-  pk: 15
+  pk: 16
   fields:
     value: F
     option_type: 2
 - model: apparel.option
-  pk: 15
+  pk: 17
   fields:
     value: U
     option_type: 2

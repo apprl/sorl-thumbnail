@@ -235,8 +235,7 @@ class QueryParser():
         """
         try:
             return self.expressions[label]
-        except:
-            # FIXME: Log original error
+        except KeyError:
             InvalidExpression('No expression labelled %s' % label)
 
     
@@ -268,6 +267,29 @@ class QueryParser():
     # PRIVATE ROUTINES
     # --------------------------------------------------------------------------        
     
+    def parse_key(self, key):
+        """
+        >>> from apparel.models import Product
+        >>> from apparel.manager import QueryParser
+        >>> qp = QueryParser(Product)
+        >>> qp.parse_key('1:o.hej:in')
+        ('1', 'o', 'hej', 'in')
+        
+        >>> qp.parse_key('1:o.hej')
+        ('1', 'o', 'hej', None)
+        
+        >>> qp.parse_key('nomatch')
+        Traceback (most recent call last):
+            ...
+        InvalidExpression
+        
+        """
+        m = re.match(r'(\d+):(\w{1,3})\.(.+?)(?::(.+))?$', key)
+        if not m:
+            raise InvalidExpression()
+        
+        return m.groups()
+    
     # FIXME: Might make this public so it can be properly tested
     def __expr_from_item(self, pair):
         """
@@ -279,22 +301,20 @@ class QueryParser():
         None is returned if the key isn't properly formatted
         """
         
-        
-        m = re.match(r'(\d+):(\w{1,3})\.(.+?)(?::(.+))?$', pair[0])
-        if not m:
+        try:
+            label, short, field, oper = self.parse_key(pair[0]) 
+        except InvalidExpression:
             return
-        
-        (model_class, model_field) = self.django_models.get(m.group(2), (None, None))
+                
+        (model_class, model_field) = self.django_models.get(short, (None, None))
         
         if not model_class:
-            raise InvalidExpression('Unknown model label %s' % m.group(2))
+            raise InvalidExpression('Unknown model label %s' % short)
         
         if self.model and model_class == self.model.__name__:
             model_field = None
-    
-        operator, value = self.__prepare_op_val(m.group(4), pair[1])
-        field, label = m.group(3), m.group(1)
         
+        operator, value = self.prepare_op_val(oper, pair[1])
         q = None
         
         if model_class == 'Option':
@@ -305,9 +325,6 @@ class QueryParser():
                     **{'options__value__%s' % str(operator): value}
                 )
         
-#        elif model_class == 'Price' and field == 'price':
-#            q = Q(**{'vendor_products__price__%s' % operator: value})
-            
         else:
             key = '__'.join(filter(None, [model_field, field, operator]))
             q   =  Q(**{str(key): value})
@@ -340,7 +357,7 @@ class QueryParser():
         return base
     
     
-    def __prepare_op_val(self, operator, value):
+    def prepare_op_val(self, operator, value):
         """
         Private routine. Returns two values; the operator in a form that Django
         accepts and a value formatted to match that operator.

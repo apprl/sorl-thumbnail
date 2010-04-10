@@ -1,25 +1,23 @@
-import logging
+import logging, re, math
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
-from apparel.models import *
-from apparel.forms import *
 from django.db.models import Q, Max, Min
 from django.template.loader import find_template_source
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from hanssonlarsson.django.exporter import json
-from apparel.decorators import seamless_request_handling
 
+from hanssonlarsson.django.exporter import json
 from recommender.models import Recommender
 from voting.models import Vote
 
-import re
-import math
-# Create your views here.
-from pprint import pprint
+from apparel.decorators import seamless_request_handling
+from apparel.manager import QueryParser, InvalidExpression
+from apparel.models import *
+from apparel.forms import *
+
 
 BROWSE_PAGE_SIZE = 12
 WIDE_LIMIT = 4 # FIME: Move to application settings fileI
@@ -190,9 +188,39 @@ def browse(request):
         'left': left,
         'right': right,
         'mid': mid,
-    }    
+    }
+    
+    
+    
+    # FIXME: This could perhaps be moved out to a routine on its own. It is used
+    # to collect the current query from the command line to enable options to
+    # be pre-checked. The conversion from string to int for id-fields is required
+    # to check wether they exist using the in-operator
+    
+    def _to_int(s):
+        try:
+            return int(s)
+        except ValueError:
+            return None
+    
+    qp   = QueryParser(Product)
+    expr = {}
+    for key, value in request.GET.items():
+        try:
+            label, short, field, operator = qp.parse_key(key)
+        except InvalidExpression:
+            continue
         
+        expr['%s.%s' % (short, field)] = qp.prepare_op_val(operator, value)[1]
+            
+    result['selected_categories'] = filter(None, map(_to_int, expr.get('c.id') or []))
+    result['selected_colors']     = expr.get('o.color')
+    result['selected_brands']     = filter(None, map(_to_int, expr.get('m.id') or []))
+    result['selected_price']      = expr.get('vp.price')
+    result['selected_gender']     = expr.get('o.gender')
+    
     return render_to_response('apparel/browse.html', result)
+
 
 def js_template(str):
     return str.replace('{%', '<%').replace('%}', '%>').replace('{{', '<%=').replace('}}', '%>')

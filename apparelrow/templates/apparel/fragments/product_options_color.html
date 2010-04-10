@@ -1,12 +1,12 @@
 {% extends "apparel/fragments/product_options.html" %}
 {% load i18n %}
-
+{% load apparel_extras %}
 {% block option_header %}{% trans "Select one or more colors" %}{% endblock %}
 
 {% block option_content %}
 <ul>
     {% for color in colors %}
-    <li><a href="{% url apparel.views.browse %}?1:o.color:in={{ color.value }}" class="{{ color.value }}" id="option-{{ color.value }}">{{ color.value }}</a></li>
+    <li><a href="{% url apparel.views.browse %}?1:o.color:in={{ color.value }}" class="{{ color.value }}{% ifinlist color.value selected_colors %} selected{% endifinlist %}" id="option-{{ color.value }}">{{ color.value }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}
