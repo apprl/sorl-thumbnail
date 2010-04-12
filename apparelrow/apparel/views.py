@@ -152,6 +152,7 @@ def index(request):
     ctx = get_filter(request)
     #FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
     ctx['popular_looks'] = Vote.objects.get_top(Look, limit=8) #Look.objects.all()[:8]
+    ctx['categories']    = ctx['categories'].filter(on_front_page=True)
     return render_to_response('index.html', ctx)
 
 def get_query_and_page(request):
