@@ -1,5 +1,13 @@
 import logging
 from django.template import Library, Variable, TemplateSyntaxError, Node, VariableDoesNotExist
+from django import template
+from django.template.defaultfilters import linebreaksbr
+from django.utils.html import escape
+try:
+    from django.utils.safestring import mark_safe
+except ImportError: # v0.96 and 0.97-pre-autoescaping compat
+    def mark_safe(x): return x
+from pprint import pformat
 
 register = Library()
 
@@ -124,7 +132,51 @@ class IfInListNode(Node):
         
         return self.nodes.render(context) if self.negate else ''
         
+
+def class_name(o):
+    """ Outputs class name of given object (if it is one)
+    >>> from django.template.loader import Template, Context
+    >>> from apparel.models import Product
+    >>> from apparel.templatetags import apparel_extras
+    >>> c = Context({'p': Product(), 's': "hello"})
+    >>> t = Template('{% load apparel_extras %}{{ p|class_name }}')
+    >>> t.render(c)
+    u'Product'
     
+    >>> t = Template('{% load apparel_extras %}{{ o|class_name }}')
+    >>> t.render(c)
+    u'str'
     
-    
+    """
+    try:
+        return mark_safe(o.__class__.__name__)
+    except:
+        return ''
+
+register.filter('class_name', class_name)
+
+
+
+#
+# This is taken from http://www.djangosnippets.org/snippets/743/ and should
+# probably not be included in a live release
+#    
+
+def rawdump(x):
+    if hasattr(x, '__dict__'):
+        d = {
+            '__str__':str(x),
+            '__unicode__':unicode(x),
+            '__repr__':repr(x),
+        }
+        d.update(x.__dict__)
+        x = d
+    output = pformat(x)+'\n'
+    return output
+
+def dump(x):
+    return mark_safe(linebreaksbr(escape(rawdump(x))))
+
+register.filter('rawdump', rawdump)
+register.filter('dump', dump)
 
