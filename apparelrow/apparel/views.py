@@ -229,7 +229,12 @@ def js_template(str):
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
     viewed_products = request.session.get('viewed_products', [])
+    try:
+        viewed_products.remove(product.id)
+    except ValueError:
+        pass
     viewed_products.append(product.id)
+    
     request.session['viewed_products'] = viewed_products
     
     user_looks = Look.objects.filter(user=request.user) if request.user.is_authenticated() else []
@@ -241,7 +246,7 @@ def product_detail(request, slug):
                 'object': product,
                 'user_looks': user_looks,
                 'looks_with_product': Look.objects.filter(products=product),
-                'viewed_products': Product.objects.filter(pk__in=viewed_products),
+                'viewed_products': Product.objects.filter(pk__in=viewed_products[:-1]),
                 'object_url': request.build_absolute_uri()
             })
 
