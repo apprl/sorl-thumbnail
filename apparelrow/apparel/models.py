@@ -80,12 +80,12 @@ class Vendor(models.Model):
 
 
 class Category(models.Model):
-    key    = models.CharField(max_length=100, unique=True, blank=True)
-    name   = models.CharField(max_length=100)
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
-    active = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
-    option_types = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
-    
+    key           = models.CharField(max_length=100, unique=True, blank=True)
+    name          = models.CharField(max_length=100)
+    parent        = models.ForeignKey('self', null=True, blank=True, related_name='children')
+    active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
+    option_types  = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
+    on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'))
 
     def save(self, force_insert=False, force_update=False):
         if not self.key and self.name:
@@ -108,6 +108,9 @@ class Category(models.Model):
         
     class Exporter:
         export_fields = ['name', 'option_types']
+    
+    class Meta:
+        verbose_name_plural = 'categories'
 
 try:
     mptt.register(Category, order_insertion_by=['name'])

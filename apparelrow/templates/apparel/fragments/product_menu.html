@@ -5,9 +5,8 @@
 <h2>{% trans "Browse articles" %}<a id="reset" href="{% url apparel.views.browse %}">{% trans "Show all" %}</a></h2>
 <ul id="product-gender">
     <li class="first"><a href="#">{% trans "All" %}</a></li>
-    {% for gender in genders %}
-    <li{% if forloop.last %} class="last"{% endif %}><a id="option-{{ gender.value }}"{% ifequal selected_gender gender.value %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
-    {% endfor %}
+    <li><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender=M">{% trans "Men" %}</a></li>
+    <li class="last"><a id="option-F"{% ifequal selected_gender "F" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender=F">{% trans "Women" %}</a></li>
 </ul>
 <ul id="product-options">
     <li class="first" id="product-price"><a href="{% url apparel.views.browse %}">{% trans "Price" %}</a>
@@ -25,4 +24,3 @@
     <a id="category-{{ category.id }}"{% ifinlist category.id selected_categories %} class="selected"{% endifinlist %} href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
 {% for level in structure.closed_levels %}</li></ul>{% endfor %}
 {% endfor %}
-
