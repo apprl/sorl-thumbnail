@@ -2103,7 +2103,7 @@ a.buy-now {
 /* line 559, ../src/partials/_application.sass */
 .product-vendor .vendor {
   float: right;
-  background: transparent url('../images/vendor-three-quarters.png?1270040291') scroll no-repeat left center;
+  background: transparent url('../images/vendor.png?1265910786') scroll no-repeat left center;
   padding: 0 10px 0 16px;
 }
 
