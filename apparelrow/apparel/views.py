@@ -213,7 +213,7 @@ def browse(request):
             continue
         
         expr['%s.%s' % (short, field)] = qp.prepare_op_val(operator, value)[1]
-            
+    
     result['selected_categories'] = filter(None, map(_to_int, expr.get('c.id') or []))
     result['selected_colors']     = expr.get('o.color')
     result['selected_brands']     = filter(None, map(_to_int, expr.get('m.id') or []))

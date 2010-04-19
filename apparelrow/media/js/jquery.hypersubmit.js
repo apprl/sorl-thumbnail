@@ -28,7 +28,7 @@
         window.console = { log: function() {} };
     
     $.hyperSubmit = $.hyperSubmit || {
-        version: '0.1.1',
+        version: '0.1.2',
         defaults: {
             success: function(data, textStatus, req) { console.log("success in form submit, ", data, textStatus, req) },
             error: function(req, textStatus, errorThrown) { console.log("error in form submit, ", req, textStatus, errorThrown) },
@@ -67,12 +67,15 @@
                             }
                             if(typeof config.error == 'function')
                                 return config.error(response, req);
-                            config.log('Error in ajax call', response.error_message);
+                            
+                            console.log('Unhandled error in ajax call', response.error_message);
                             return;
                         }
-                        return config.success(response, statusText, req);
+                        return config.success(response, statusText, req, $this);
                     },
-                    error: config.error,
+                    error: function(response, statusText, error) {
+                        return config.error(response, statusText, error, $this);
+                    }
                 });
                 $.ajax(params);
                 return false;
