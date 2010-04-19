@@ -42,8 +42,20 @@
                 filter(getQuery());
                 return false;
             });
-            jQuery('.options form').submit(function() {
-                filter(getQuery());
+            jQuery('.options li > a').click(function() {
+                jQuery(this).toggleClass('selected');
+                return false;
+            });
+            jQuery('#product-price form').submit(function() {
+                filter(getQuery({criterion: 'price'}));
+                return false;
+            });
+            jQuery('#product-color form').submit(function() {
+                filter(getQuery({criterion: 'color'}));
+                return false;
+            });
+            jQuery('#product-manufacturers form').submit(function() {
+                filter(getQuery({criterion: 'manufacturer'}));
                 return false;
             });
             jQuery('#product-gender li > a').click(function() {
@@ -53,14 +65,14 @@
                 return false;
             });
             jQuery('#product-category li > a').click(function() {
-                filter(getQuery());
+                filter(getQuery({ criterion: 'category'}));
                 return false;
             });
             jQuery('#pagination a').live('click', function() {
                 //filter(getQuery($(this).attr('href').split('=')[1]));
                 var page = parseInt(jQuery(this).attr('href').split('=')[1]);
                 if(jQuery('#page-' + page).length == 0) {
-                    filter(getQuery(page), function(response) {
+                    filter(getQuery({page: page}), function(response) {
                         renderPage(response, page);
                         jQuery('#product-list').scrollable().reload().setPage(jQuery('#page-' + page).index());
                     });
@@ -77,9 +89,9 @@
                 size: 1,
             });
         });
-        function getQuery(page_number) {
+        function getQuery(query) {
             index = 0;
-            query = {};
+            query = query || {};
             category_list = getElementIds(jQuery('#product-category li > a.selected'));
             if(category_list.length > 0) {
                 query[++index + ':c.id:in'] = category_list.join(',');
@@ -99,9 +111,7 @@
             if(jQuery('#product-price > a').is('.selected')) {
                 query[++index + ':vp.price:range'] = jQuery('#price-slider').slider('values', 0) + ',' + jQuery('#price-slider').slider('values', 1);
             }
-            if(page_number) {
-                query['page'] = page_number;
-            }
+            
             return query;
         }
         function getElementIds(elements) {
@@ -109,6 +119,7 @@
                 return element.id.split('-')[1];
             });
         }
+        
         function filter(query, callback) {
             q = jQuery.param(query);
             window.location.hash = q ? q : "!";
@@ -140,12 +151,56 @@
                 console.log(e)
             }
         }
+        function filterCriteria(criteria_filter) {
+            if('manufacturers' in criteria_filter) {
+                applyCriteriaFilter({ 
+                    'selector': '#product-manufacturers .option-content li > a', 
+                    'criteria': criteria_filter['manufacturers'],
+                    'add': function(o) { jQuery(o).parent().addClass('filtered'); },
+                    'remove': function(o) { jQuery(o).parent().removeClass('filtered');  },
+                });
+            }
+            
+            if('categories' in criteria_filter) {
+                applyCriteriaFilter({ 
+                    'selector': '#product-category li > a', 
+                    'criteria': criteria_filter['categories'],
+                    'add': function(o) { jQuery(o).parent().addClass('filtered'); },
+                    'remove': function(o) { jQuery(o).parent().removeClass('filtered');  },
+                });
+            }
+            
+            if('options' in criteria_filter) {            
+                applyCriteriaFilter({ 
+                    'selector': '#product-color .option-content li > a', 
+                    'criteria': criteria_filter['options'],
+                    'add': function(o) { jQuery(o).addClass('filtered'); },
+                    'remove': function(o) { jQuery(o).removeClass('filtered');  },
+                });
+
+                // FIXME: Add size here aswell
+            }
+        }
+        
+        function applyCriteriaFilter(args) {
+            //selector, criteria, cb_add, cb_remove) {
+            jQuery(args.selector).each(function() {
+                if (args.criteria.length == 0 || jQuery.inArray(this.id.split('-')[1], args.criteria) >= 0) {
+                    args.remove(this);
+                } else {
+                    args.add(this);
+                }
+            });
+        }
+        
         function renderProducts(products) {
             $('#product-count').empty();
             $('#product-count').append(tmpl('product_count_template', { products: products }));
             jQuery('#product-list > ul').empty();
             renderPage(products, 1);
             jQuery('#product-list').scrollable().begin();
+            filterCriteria(products.criteria_filter);
+            
         }
     </script>
 {% endblock 'extra-scripts' %}

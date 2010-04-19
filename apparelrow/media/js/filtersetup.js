@@ -13,10 +13,7 @@ jQuery(document).ready(function() {
             jQuery(this).parents('.options').siblings('a').removeClass('selected');
         }
     });
-    jQuery('.options li > a').click(function() {
-        jQuery(this).toggleClass('selected');
-        return false;
-    });
+
     jQuery('#product-options > li > a').click(function() {
         
         if(!jQuery(this).parent().is(".active")) {
