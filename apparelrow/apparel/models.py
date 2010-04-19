@@ -127,8 +127,8 @@ class CategoryAlias(models.Model):
 
 class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
-    category = models.ManyToManyField(Category, blank=True, verbose_name=_("Category"))
-    options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
+    category = models.ForeignKey(Category)
+    options  = models.ManyToManyField(Option, blank=True, verbose_name=_("Option"))
     slug = AutoSlugField(_("Slug Name"), populate_from=("manufacturer", "product_name",), blank=True,
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,

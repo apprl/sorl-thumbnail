@@ -168,6 +168,7 @@ class DataMapper():
             category.save()
         
         self.category = categories[-1]
+        
         logging.debug('Assigned category %s to product', self.category.name)
     
     def map_vendor(self):
@@ -227,13 +228,11 @@ class DataMapper():
             product_name=self.fields['product_name'],
             description=self.fields['description'],
             sku=self.fields['sku'],
+            category=self.category
         )
         
         logging.info("Created product %s", product)
         product.save()
-        
-        if self.category:
-            product.category.add(self.category)
         
         return product
     
@@ -316,35 +315,34 @@ class DataMapper():
         # 1 Get a list of option types from categories
         # FIXME: Retrieve these objects in only one query
         
-        for category in self.product.category.all():
-            for option_type in category.option_types.all():
-                key = re.sub(r'\W', '', option_type.name.lower())
-                
-                # 2 Collect raw data by calling set_[typename], or use field in self.data
-                
-                value = None
-                
-                if hasattr(self, 'set_option_%s' % key):
-                    value = getattr(self, 'set_option_%s' % key)()
-                elif key in self.data:
-                    value = self.data[key]
-                else:
-                    logging.debug('No product option %s mapped from source', key)
-                
-                if not value:
-                    continue
-                
-                value = _trim(value)
-                
-                # FIXME: One could move this code to the Option or Product class
-                opt, created = Option.objects.get_or_create(option_type=option_type, value=value)
-                
-                if created:
-                    logging.info("Created option '%s: %s'", option_type.name, value)
-                
-                if not self.product.options.filter(pk=opt.pk):
-                    logging.debug("Attaching option '%s: %s'", option_type.name, value)
-                    self.product.options.add(opt)
+        for option_type in self.product.category.option_types.all():
+            key = re.sub(r'\W', '', option_type.name.lower())
+            
+            # 2 Collect raw data by calling set_[typename], or use field in self.data
+            
+            value = None
+            
+            if hasattr(self, 'set_option_%s' % key):
+                value = getattr(self, 'set_option_%s' % key)()
+            elif key in self.data:
+                value = self.data[key]
+            else:
+                logging.debug('No product option %s mapped from source', key)
+            
+            if not value:
+                continue
+            
+            value = _trim(value)
+            
+            # FIXME: One could move this code to the Option or Product class
+            opt, created = Option.objects.get_or_create(option_type=option_type, value=value)
+            
+            if created:
+                logging.info("Created option '%s: %s'", option_type.name, value)
+            
+            if not self.product.options.filter(pk=opt.pk):
+                logging.debug("Attaching option '%s: %s'", option_type.name, value)
+                self.product.options.add(opt)
     
     def map_product_image(self):
         """

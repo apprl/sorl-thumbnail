@@ -101,13 +101,35 @@ def search(request, model):
             'left': left,
             'right': right,
             'mid': mid,
-        }    
+        },
+        'criteria_filter': get_criteria_filter(request, result),
     }
     return HttpResponse(
         json.encode(response),
         mimetype='text/json'
     )
 
+
+def get_criteria_filter(request, result):
+    criterion = request.GET.get('criterion')
+    if criterion == 'category':
+        return {
+            'manufacturers': map(lambda o: str(o['id']), Manufacturer.objects.filter(id__in=result.values('manufacturer__id')).values('id')),
+            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=result.values('id')).values('value').distinct()),
+        }
+    elif criterion == 'manufacturer':
+        return {
+            'categories': map(lambda o: str(o['id']), Category.objects.filter(id__in=result.values('category__id')).values('id')),
+            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=result.values('id')).values('value').distinct()),
+        }
+    elif criterion is None:
+        return {
+            'categories': [],
+            'manufacturers': [],
+            'options': [],
+        }
+    
+    return {}
 
 def wide_search(request):
     query  = request.GET.get('s')
@@ -142,7 +164,7 @@ def get_pricerange(request):
 def get_filter(request):
     return {
         'categories': Category._tree_manager.all(),
-        'manufacturers': Manufacturer.objects.all(),
+        'manufacturers': Manufacturer.objects.all().order_by('name'),
         'genders': Option.objects.filter(option_type__name__iexact='gender'),
         'colors': Option.objects.filter(option_type__name__iexact='color'),
         'pricerange': get_pricerange(request),
@@ -150,15 +172,15 @@ def get_filter(request):
 
 def index(request):
     ctx = get_filter(request)
-    #FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
-    ctx['popular_looks'] = Vote.objects.get_top(Look, limit=8) #Look.objects.all()[:8]
+    # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
+    ctx['popular_looks'] = Vote.objects.get_top(Look, limit=8)
     ctx['categories']    = ctx['categories'].filter(on_front_page=True)
     return render_to_response('index.html', ctx)
 
 def get_query_and_page(request):
     query = request.GET.copy()
     page  = int(query.pop('page', [1])[0]) # all values are lists in the QueryDict object and we never expect more than one
-
+    
     return query, page
 
 def browse(request):
