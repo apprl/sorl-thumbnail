@@ -35,7 +35,7 @@
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
             // Fixed scrolling
-            jQuery('#content').fixedscroll();
+            //jQuery('#content').fixedscroll();
             // Reset button
             jQuery('#reset').click(function() {
                 $('.selected').removeClass('selected');
@@ -58,23 +58,23 @@
             });
             jQuery('#pagination a').live('click', function() {
                 //filter(getQuery($(this).attr('href').split('=')[1]));
+                var page = parseInt(jQuery(this).attr('href').split('=')[1]);
+                if(jQuery('#page-' + page).length == 0) {
+                    filter(getQuery(page), function(response) {
+                        renderPage(response, page);
+                        jQuery('#product-list').scrollable().reload().setPage(jQuery('#page-' + page).index());
+                    });
+                } else {
+                    jQuery('#product-list').scrollable().reload().setPage(jQuery('#page-' + page).index());
+                }
                 return false;
             });
             var product_list = jQuery('#product-list').scrollable({
+                api: true,
                 items: 'ul.list',
                 prevPage: '.prev',
                 nextPage: '.next',
                 size: 1,
-                onBeforeSeek: function(e, page) {
-                    var ourPage = page + 1; // Scrollable's page handling is 0-indexed, ours is 1-indexed
-                    ourPage++; //Looking for the next page
-                    nextPage = ourPage + 1;
-                    if(jQuery('#page-' + nextPage).length == 0) {
-                        filter(getQuery(nextPage), function(response) {
-                            renderPage(response, nextPage);
-                        });
-                    }
-                }
             });
         });
         function getQuery(page_number) {
@@ -120,8 +120,17 @@
         function renderPage(products, page) {
             // FIXME: This should probably be moved into a template, but it's kind of simple so it'll do for now
             var pageList = jQuery('<ul></ul>');
-            jQuery('<li></li>').attr('id', 'page-' + page).appendTo('#product-list > ul.list').append(pageList);
-            $.each(products.object_list, function(i, product) {
+            var newPage = jQuery('<li></li>').attr('id', 'page-' + page).append(pageList);
+            var existingPages = jQuery('#product-list > ul.list > li')
+            var nextPage = existingPages.filter(function(i) { return this.id.split('-')[1] > parseInt(page) }).first();
+            if(nextPage.length == 1) {
+                nextPage.before(newPage);
+            } else if(existingPages.length > 0) {
+                existingPages.last().after(newPage);
+            } else {
+                jQuery('#product-list > ul.list').append(newPage);
+            }
+            jQuery.each(products.object_list, function(i, product) {
                 pageList.append(tmpl('product_template', { product: product }));
             });
             try {
@@ -130,7 +139,6 @@
             } catch(e) {
                 console.log(e)
             }
-            jQuery('#product-list').scrollable().reload();
         }
         function renderProducts(products) {
             $('#product-count').empty();
