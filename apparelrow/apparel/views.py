@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllow
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from django.db.models import Q, Max, Min
+from django.template import RequestContext
 from django.template.loader import find_template_source
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
@@ -175,7 +176,7 @@ def index(request):
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
     ctx['popular_looks'] = Vote.objects.get_top(Look, limit=8)
     ctx['categories']    = ctx['categories'].filter(on_front_page=True)
-    return render_to_response('index.html', ctx)
+    return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 
 def get_query_and_page(request):
     query = request.GET.copy()
@@ -242,7 +243,7 @@ def browse(request):
     result['selected_price']      = expr.get('vp.price')
     result['selected_gender']     = expr.get('o.gender')
     
-    return render_to_response('apparel/browse.html', result)
+    return render_to_response('apparel/browse.html', result, context_instance=RequestContext(request))
 
 
 def js_template(str):
@@ -270,7 +271,9 @@ def product_detail(request, slug):
                 'looks_with_product': Look.objects.filter(products=product),
                 'viewed_products': Product.objects.filter(pk__in=viewed_products[:-1]),
                 'object_url': request.build_absolute_uri()
-            })
+            },
+            context_instance=RequestContext(request),
+            )
 
 def save_look_product(request):
     try:
@@ -293,7 +296,9 @@ def look_detail(request, slug):
                 'similar_looks': similar_looks,
                 'tooltips': True,
                 'object_url': request.build_absolute_uri()
-            })
+            },
+            context_instance=RequestContext(request),
+            )
 
 def look_edit(request, slug):
     look = get_object_or_404(Look, slug=slug)
@@ -305,7 +310,11 @@ def look_edit(request, slug):
     else:
         form = LookForm(instance=look)
 
-    return render_to_response('apparel/look_edit.html', dict(object=look, form=form))
+    return render_to_response(
+                'apparel/look_edit.html', 
+                dict(object=look, form=form),
+                context_instance=RequestContext(request),
+            )
 
 def looks():
     pass

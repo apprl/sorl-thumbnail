@@ -1,5 +1,5 @@
 {% load comments i18n %}
-<img class="avatar" src="{{ user.get_profile.avatar }}" />
+<img class="avatar" src="/scale/42{{ user.get_profile.avatar }}" />
 <form action="{% comment_form_target %}" method="post">
   {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
   {% for field in form %}

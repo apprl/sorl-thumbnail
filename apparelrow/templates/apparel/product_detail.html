@@ -3,6 +3,7 @@
 {% load thumbnail %}
 {% load comments %}
 {% load trackback_tags %}
+{% load apparel_extras %}
 
 {# FIXME: we should reverse the list of categories. I think we need to create a filter for this #}
 {% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.category.all|join:'|' }} | {% endblock %}
@@ -15,7 +16,7 @@
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
-    <script type="text/javascript" src="/site_media/static/js/jquery.hypersubmit.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.hypersubmit.js"></script>
     <script type="text/javascript">
     
     

@@ -1,6 +1,7 @@
 {% extends 'apparel/fragments/trackback_comment_base.html' %}
 {% load humanize %}
-{% block image %}<img class="avatar" src="{{ comment.user.get_profile.avatar }}" />{% endblock %}
+
+{% block image %}<img class="avatar" src="/scale/42{{ comment.user.get_profile.avatar }}" />{% endblock %}
 {% block title %}{{ comment.user.get_profile.display_name }}{% endblock %}
 {% block submit_date %}{{ comment.submit_date|naturalday:"Y-m-d" }} {{ comment.submit_date|date:"H:i"}}{% endblock %}
 {% block content %}{{ comment.comment }}{% endblock %}

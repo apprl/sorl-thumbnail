@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
+from django.conf import settings
 
 from apparel.manager import SearchManager
 
@@ -13,7 +14,6 @@ from tagging.fields import TagField
 from django_extensions.db.fields import AutoSlugField
 
 # FIXME: Move to Django settings directory
-PRODUCT_IMAGE_BASE = 'static/product'
 LOGOTYPE_BASE      = 'static/logos'
 LOOKS_BASE         = 'static/looks'
 
@@ -136,7 +136,7 @@ class Product(models.Model):
     product_name  = models.CharField(max_length=200)
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True)
     description   = models.TextField(_('Product description'), null=True, blank=True)
-    product_image = models.ImageField(upload_to=PRODUCT_IMAGE_BASE, help_text=_('Product image')) 
+    product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, help_text=_('Product image')) 
     
     objects = SearchManager()
     

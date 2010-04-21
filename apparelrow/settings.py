@@ -49,11 +49,11 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'media')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
-MEDIA_URL = '/site_media/media/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory that holds static files like app media.
 # Example: "/home/media/media.lawrence.com/apps/"
@@ -206,7 +206,8 @@ EMAIL_USE_TLS       = False
 
 
 
-APPAREL_DEFAULT_AVATAR = os.path.join('/', 'site_media', 'static', 'images', 'avatar.jpg')
+APPAREL_DEFAULT_AVATAR     = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
+APPAREL_PRODUCT_IMAGE_ROOT = 'products'
 
 
 # local_settings.py can be used to override environment-specific settings

@@ -3,6 +3,7 @@ from django.template import Library, Variable, TemplateSyntaxError, Node, Variab
 from django import template
 from django.template.defaultfilters import linebreaksbr
 from django.utils.html import escape
+from django.conf import settings
 try:
     from django.utils.safestring import mark_safe
 except ImportError: # v0.96 and 0.97-pre-autoescaping compat
@@ -179,4 +180,3 @@ def dump(x):
 
 register.filter('rawdump', rawdump)
 register.filter('dump', dump)
-

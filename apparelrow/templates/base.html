@@ -1,13 +1,14 @@
 {% load i18n %}
 {% load facebook_tags %}
+{% load apparel_extras %}
 <!doctype html>
 <html lang="{{ lang }}">
 <head>
     <title>{% block extra-title %}{% endblock %}Apparel Row</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="/site_media/static/styles/screen.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="/site_media/static/styles/print.css" type="text/css" media="print">
-    <link type="text/css" href="/site_media/static/styles/smoothness/jquery-ui-1.8rc3.custom.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}/styles/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="{{ MEDIA_URL }}/styles/print.css" type="text/css" media="print">
+    <link type="text/css" href="{{ MEDIA_URL }}/styles/smoothness/jquery-ui-1.8rc3.custom.css" rel="stylesheet" />
     {% block 'extra-styles' %}
     {% endblock 'extra-styles' %}
     
@@ -16,12 +17,12 @@
         google.load("jquery", "1.4.1");
         google.load("jqueryui", "1.7.2");
     </script>
-    <script type="text/javascript" src="/site_media/static/js/jquery.autogrow.js"></script>
-    <script type="text/javascript" src="/site_media/static/js/apparel.js"></script>
-    <script type="text/javascript" src="/site_media/static/js/jquery.hypersubmit.js"></script>
-    <script type="text/javascript" src="/site_media/static/js/jquery.tools.min.js"></script>
-    <script type="text/javascript" src="/site_media/static/js/dump.js"></script>
-    <script type="text/javascript" src="/site_media/static/js/resig.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.autogrow.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/apparel.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.hypersubmit.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/dump.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/resig.js"></script>
     <script type="text/javascript">
         
         jQuery(document).ready(function() {
@@ -195,7 +196,7 @@
                 </div>
             </form>
             {# Facebook connect button #}
-            {% with "/site_media/static/images/fblogo.png" as fb_connect_logo %}
+            {% with "/media/images/fblogo.png" as fb_connect_logo %}
                 {% include "facebook/connect_button.html" %}
             {% endwith %}
         </div>

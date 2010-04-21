@@ -1,10 +1,11 @@
 {% load i18n %}
 {% load humanize %}
 {% load comments %}
+{% load apparel_extras %}
 {% if object and object.product_image %}
 <div class="product-left">
     <div class="product-image">
-        <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/328x500/site_media/media/{{ object.product_image }}" /></a>
+        <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/328x500{{ MEDIA_URL }}{{ object.product_image }}" /></a>
         <span class="magnifier"></span>
         <form method="post" action="{% url like-product object.slug "up" %}">
             <button type="submit" name="like" id="like">{% trans "Like" %}</button>

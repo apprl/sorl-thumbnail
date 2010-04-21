@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load apparel_extras %}
 
 {% block 'extra-scripts' %}
-    <script type="text/javascript" src="/site_media/static/js/filtersetup.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/filtersetup.js"></script>
     <script type="text/javascript">
         var pricerange = {
             min: {{ pricerange.min }},
@@ -26,9 +27,9 @@
     <div id="content">
         <h2>{% trans "Current" %}</h2>
         <ul id="looks">
-            <li><img src="/site_media/static/images/example-look.png" /></li>
-            <li><img src="/site_media/static/images/example-look2.jpg" /></li>
-            <li><img src="/site_media/static/images/example-look3.jpg" /></li>
+            <li><img src="{{ MEDIA_URL }}/images/example-look.png" /></li>
+            <li><img src="{{ MEDIA_URL }}/images/example-look2.jpg" /></li>
+            <li><img src="{{ MEDIA_URL }}/images/example-look3.jpg" /></li>
         </ul>
         <div id="switchlook">
             <div class="info">

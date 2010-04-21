@@ -1,6 +1,7 @@
 import re, traceback, sys, logging
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
+from django.conf import settings
 from django.core.files.storage import default_storage
 from django.core.files import File
 from django.template.defaultfilters import slugify
@@ -355,7 +356,7 @@ class DataMapper():
         
         (url, name) = re.match(r'^.+/(.+)$', self.fields['product_image_url']).group(0,1)
         
-        sitepath = '%s/%s_%s' % (PRODUCT_IMAGE_BASE, self.provider.name, name)
+        sitepath = '%s/%s_%s' % (settings.APPAREL_PRODUCT_IMAGE_ROOT, self.provider.name, name)
         
         if not default_storage.exists(sitepath):
             logging.info('Downloading product image %s', url)

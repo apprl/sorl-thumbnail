@@ -34,9 +34,10 @@ urlpatterns = patterns('',
     (r'^comments/', include('django.contrib.comments.urls')),
     (r'^ping/', include('trackback.urls')),
     (r'^admin/(.*)', admin.site.root),
-    (r'^site_media/media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT + '/../site_media/media/static' } ),
-    (r'^site_media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
-    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
+    #(r'^site_media/media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT + '/../site_media/media/static' } ),
+    #(r'^site_media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
+    #(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
     
     (r'', include('apparel.urls')),
 )
