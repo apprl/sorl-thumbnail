@@ -92,6 +92,9 @@ class GrandpaDataMapper(DataMapper):
     def set_option_gender(self):
         # Does not exist
         pass    
+    
+    def set_option_color(self):
+        pass
         
     def set_vendor_option_currency(self):        
         price = self._get_price_currency()
@@ -103,7 +106,6 @@ class GrandpaDataMapper(DataMapper):
     
     def set_vendor_option_buy_url(self):
         return self.data.get('product_url')
-    
     
     def _get_price_currency(self):
         price = self.data.get('price')
@@ -171,13 +173,11 @@ category_name_map = {
     u'V\u00e4skor':  'Bags',
     u'skjortor':  'Shirts',
     u'skjortor-Kl\u00e4nning':  'Dresses',
+    u'Jewellry': 'Jewelry',
 }
 
 def translate_category(name):
-    if name in category_name_map:
-        return category_name_map[name]
-    
-    return name
+    return category_name_map.get(name, name)
 
 
 

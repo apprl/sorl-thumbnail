@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'trackback',
     'recommender',
+    'south',
 
     'apparel',
     'scale',

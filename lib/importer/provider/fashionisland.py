@@ -214,10 +214,6 @@ category_name_map = {
 }
 
 def translate_category(name):
-    if name in category_name_map:
-        return category_name_map[name]
-    
-    return name
-
+    return category_name_map.get(name, name)
 
 
