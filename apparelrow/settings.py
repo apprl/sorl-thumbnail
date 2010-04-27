@@ -113,6 +113,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     
+    "context_processors.settings",
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
 )
@@ -209,7 +210,7 @@ EMAIL_USE_TLS       = False
 
 APPAREL_DEFAULT_AVATAR     = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
 APPAREL_PRODUCT_IMAGE_ROOT = 'products'
-
+APPAREL_LOOK_MAX_SIZE      = 470
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

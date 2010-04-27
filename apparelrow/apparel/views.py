@@ -4,12 +4,13 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllow
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from django.db.models import Q, Max, Min
-from django.template import RequestContext
+from django.template import RequestContext, Template, Context
 from django.template.loader import find_template_source
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 
+from sorl.thumbnail.main import DjangoThumbnail
 from hanssonlarsson.django.exporter import json
 from recommender.models import Recommender
 from voting.models import Vote
@@ -205,9 +206,11 @@ def browse(request):
 
     result = get_filter(request)
     result['pages'] = (paged_products, next_page,)
-    result['product_count_template'] = js_template(get_template_source('apparel/fragments/product_count.html'))
-    result['product_template'] = js_template(get_template_source('apparel/fragments/product_small.html'))
-    result['pagination_template'] = get_template_source('apparel/fragments/pagination_js.html')
+    result['templates'] = {
+        'product_count': js_template(get_template_source('apparel/fragments/product_count.html')),
+        'product': js_template(get_template_source('apparel/fragments/product_small.html')),
+        'pagination': get_template_source('apparel/fragments/pagination_js.html')
+    }
     result['pagination'] = {
         'left': left,
         'right': right,
@@ -247,7 +250,10 @@ def browse(request):
 
 
 def js_template(str):
-    return str.replace('{%', '<%').replace('%}', '%>').replace('{{', '<%=').replace('}}', '%>')
+    str = str.replace('{{', '<%=').replace('}}', '%>')
+    return Template(str).render(Context())
+    
+    #return str.replace('{%', '<%').replace('%}', '%>').replace('{{', '<%=').replace('}}', '%>')
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
@@ -265,7 +271,9 @@ def product_detail(request, slug):
     return render_to_response(
             'apparel/product_detail.html',
             {
-                'look_button_template': js_template(get_template_source('apparel/fragments/look_button.html')),
+                'templates': {
+                    'look_button': js_template(get_template_source('apparel/fragments/look_button.html'))
+                },
                 'object': product,
                 'user_looks': user_looks,
                 'looks_with_product': Look.objects.filter(products=product),
@@ -274,15 +282,6 @@ def product_detail(request, slug):
             },
             context_instance=RequestContext(request),
             )
-
-def save_look_product(request):
-    try:
-        lp = LookProduct.objects.get(product__id=request.POST['product'], look__id=request.POST['look'])
-        form = LookProductForm(request.POST, instance=lp)
-    except LookProduct.DoesNotExist:
-        form = LookProductForm(request.POST)
-    form.save()
-    return HttpResponseRedirect(reverse('apparel.views.look_detail', args=(request.POST['look'],)))
 
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
@@ -298,7 +297,7 @@ def look_detail(request, slug):
                 'object_url': request.build_absolute_uri()
             },
             context_instance=RequestContext(request),
-            )
+        )
 
 def look_edit(request, slug):
     look = get_object_or_404(Look, slug=slug)
@@ -309,12 +308,19 @@ def look_edit(request, slug):
             return HttpResponseRedirect(look.get_absolute_url())
     else:
         form = LookForm(instance=look)
-
+    
     return render_to_response(
-                'apparel/look_edit.html', 
-                dict(object=look, form=form),
-                context_instance=RequestContext(request),
-            )
+            'apparel/look_edit.html', 
+            {
+                'object': look, 
+                'form': form,
+                'wardrobe': Wardrobe.objects.get(user=request.user).products.all(),
+                'templates': {
+                    'look_collage_product': js_template(get_template_source('apparel/fragments/look_collage_product.html')), 
+                }
+            },
+            context_instance=RequestContext(request),
+        )
 
 def looks():
     pass
@@ -325,25 +331,53 @@ def get_template_source(template):
 
 
 
+#def save_look_product(request):
+#    try:
+#        lp = LookProduct.objects.get(product__id=request.POST['product'], look__id=request.POST['look'])
+#        form = LookProductForm(request.POST, instance=lp)
+#    except LookProduct.DoesNotExist:
+#        form = LookProductForm(request.POST)
+#    form.save()
+#    return HttpResponseRedirect(reverse('apparel.views.look_detail', args=(request.POST['look'],)))
+
+
 @seamless_request_handling
 @login_required
 def add_to_look(request):
-    product = Product.objects.get(pk=request.POST.get('product_id'))
+    #product = Product.objects.get(pk=request.POST.get('product_id'))
     
-    
-    if 'look_id' in request.POST:
-        look = Look.objects.get(pk=request.POST['look_id'])
+    if 'look' in request.POST:
+        look = Look.objects.get(pk=request.POST['look'])
         created = False
     else:
         look = Look(user=request.user, title=request.POST.get('new_name'))
         look.save()
         created = True
     
-          
-    lp, c = LookProduct.objects.get_or_create(product=product, look=look, width=product.product_image.width, height=product.product_image.height)
-    if c: lp.save()
+    try:
+        lp = LookProduct.objects.get(product__id=request.POST['product'], look=look)
+        form = LookProductForm(request.POST, instance=lp)
+    except LookProduct.DoesNotExist:
+        form = LookProductForm(request.POST)
     
-    return ({'look': look, 'created': created}, HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,))))
+    form.save()
+    
+    #    
+    #    # 1) Get or create LookProduct on look + product
+    #    # 2) Scale product image to value from settings
+    #    # 3) Update lp with image dimensions
+    #    # 4) store and return
+    #    lp, c  = LookProduct.objects.get_or_create(product=product, look=look)
+    #    scaled = _scale_image(product.product_image, side=settings.APPAREL_LOOK_MAX_SIZE)
+    #        
+    #    lp.width  = scaled.data.size[0]
+    #    lp.height = scaled.data.size[1]
+    #    lp.top    = request.POST.get('top')
+    #    lp.left   = request.POST.get('left')
+    #    lp.save()
+    #    
+    return ({'look_product': form.instance, 'created': created}, HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,))))
+    
 
 @seamless_request_handling
 @login_required
@@ -357,3 +391,16 @@ def add_to_wardrobe(request):
     wardrobe.save() # FIXME: Only save if created?
     
     return wardrobe
+
+
+# FIXME: Move these helpers out of here
+def _scale_image(image, side=None):
+    """
+    Returns a DjangoThumbnail object from the given image scaled to specified
+    sizes.
+    """
+    
+    thumb = DjangoThumbnail(image, (side, side))
+        
+    return thumb
+

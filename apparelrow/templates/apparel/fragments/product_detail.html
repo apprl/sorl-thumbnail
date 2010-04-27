@@ -48,7 +48,7 @@
         <li id="add-to-look">
             <a href="/apparel/look/">{% trans "Add to look" %}</a>
             <form action="{% url apparel.views.add_to_look %}" method="post">
-            <input type="hidden" name="product_id" value="{{ object.id }}" />
+            <input type="hidden" name="product" value="{{ object.id }}" />
             <ul>
             {% for look in user_looks %}
                 {% include "apparel/fragments/look_button.html" %}

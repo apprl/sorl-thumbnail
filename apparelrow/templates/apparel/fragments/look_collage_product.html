@@ -1,0 +1,7 @@
+{% load i18n %}
+<img id="product-{{ look_product.product.id }}" class="product" style="position: absolute; {{ look_product.style }}" src="/scale/{{ django_settings.APPAREL_LOOK_MAX_SIZE }}{{ look_product.product.product_image.url }}?trans=true" />
+<div class="tooltip">
+    <h2>{{ look_product.product.product_name }}</h2>
+    <p>{% trans "by" %} {{ look_product.product.manufacturer }}</p>
+    <a href="{{ look_product.product.default_vendor.buy_url }}" target="_blank">{{ look_product.product.default_vendor.price }} {{ look_product.product.default_vendor.currency }} {% trans "at" %} {{ look_product.product.default_vendor.vendor }}</a>
+</div>

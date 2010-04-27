@@ -245,7 +245,8 @@ class LookProduct(models.Model):
     class Meta:
         unique_together     = (('product', 'look'),)
 
-
+    class Exporter:
+        export_fields = ['__all__', 'style']
 
 class Wardrobe(models.Model):
     user     = models.ForeignKey(User)

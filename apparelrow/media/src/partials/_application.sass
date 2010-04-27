@@ -4,12 +4,20 @@
 @import partials/row.sass
 @import partials/look.sass
 
+
+li
+  list-style: none
+  margin: 0
+  padding: 0
+
 body
   background:
     color: white
     image= image_url("header-bg.png")
     repeat: no-repeat
     position: center top
+  .ui-draggable-dragging a
+    cursor: move
 
 .button
   +button

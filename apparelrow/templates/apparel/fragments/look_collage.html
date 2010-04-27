@@ -1,17 +1,5 @@
-{% load i18n %}
 <div class="look">
-    {% for product in object.look_products.all %}
-        <img id="product-{{ product.product.id }}" class="product" style="position: absolute; {{ product.style }}" src="/scale/500x500{{ product.product.product_image.url }}?trans=true" />
-        {% if tooltips %}
-            {% with product.product as product %}
-                <div class="tooltip">
-                    <h2>{{ product.product_name }}</h2>
-                    <p>{% trans "by" %} {{ product.manufacturer }}</p>
-                    {% with product.default_vendor as vendor %}
-                        <a href="{{ vendor.buy_url }}" target="_blank">{{ vendor.price }} {{ vendor.currency }} {% trans "at" %} {{ vendor.vendor }}</a>
-                    {% endwith %}
-                </div>
-            {% endwith %}
-        {% endif %}
+    {% for look_product in object.look_products.all %}
+        {% include "apparel/fragments/look_collage_product.html" %}
     {% endfor %}
 </div>

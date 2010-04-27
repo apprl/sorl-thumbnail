@@ -12,6 +12,10 @@
 #photo, #collage, #selection
   height= !look_height
 
+#selection
+  !row_width = !large_width - 20
+  +row(!row_width)
+
 #collage
   .look
     position: absolute
@@ -129,17 +133,18 @@ body.look
   img.product
     position: absolute
 
+.tooltip
+  +border-radius(24px)
+  display: none
+  z-index: 1100
+  padding: 1em
+  h2
+    margin-top: 0
+
 body.look
   .collage
     position: relative
     height= !look_height
-    .tooltip
-      +border-radius(24px)
-      display: none
-      z-index: 1100
-      padding: 1em
-      h2
-        margin-top: 0
   #comments-and-links
     float: left
     width= !middle_width
@@ -152,3 +157,26 @@ body.look
       span
         float: right
         color= !easier_color
+
+#wardrobe-title
+  +border("all")
+  clear: both
+  width= !content_width
+  height: 27px
+  background= !button_color image_url("gradient-bg.png") "repeat-x"
+  padding-top: 12px
+  padding-left: 20px
+  
+  span
+    background= "transparent" image_url("arrow-bg-down.png") "no-repeat" "top left"
+    padding-left: 14px
+
+#wardrobe-contents
+  margin-top: 10px
+  margin-bottom: 3em
+  +row(!content_width)
+  
+  li
+    a
+      cursor: move
+  

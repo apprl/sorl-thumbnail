@@ -252,5 +252,12 @@
 {% block body %}
 {% endblock %}
 </div>
+{% for template_name,template_string in templates.items %}
+    <script type="text/html" id="{{ template_name }}_template">
+    <![CDATA[
+        {{ template_string|safe }}
+    ]]>
+    </script>
+{% endfor %}
 </body>
 </html>

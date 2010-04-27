@@ -3,6 +3,7 @@
 {% load thumbnail %}
 {% block 'extra-scripts' %}
 <script type="text/javascript">
+
 var look = {
     initialize: function(ele, type) {
         ele.resizable({
@@ -70,25 +71,59 @@ var look = {
         ele.parent('.ui-wrapper').draggable('enable');
     },
 };
-    jQuery(document).ready(function() {
-        look.initialize(jQuery('#collage .product'), 'C'); // FIXME: We should get look product type from the model
-        look.initialize(jQuery('#photo .product'), 'P');
-        look.disable(jQuery('.product'));
-        jQuery('.product').hover(
-            function() {
-                look.disable(jQuery('.product'));
-                look.enable(jQuery(this));
-                return false;
-            },
-            function() {
-                look.disable(jQuery(this));
-                return false;
-            });
-        jQuery('#collage').click(function() {
+
+jQuery(document).ready(function() {
+    look.initialize(jQuery('#collage .product'), 'C'); // FIXME: We should get look product type from the model
+    look.initialize(jQuery('#photo .product'), 'P');
+    look.disable(jQuery('.product'));
+    jQuery('.product').hover(
+        function() {
             look.disable(jQuery('.product'));
+            look.enable(jQuery(this));
+            return false;
+        },
+        function() {
+            look.disable(jQuery(this));
+            return false;
         });
-        jQuery('ul.tabs').tabs('div.panes > div');
+    jQuery('#collage').click(function() {
+        look.disable(jQuery('.product'));
     });
+    jQuery('ul.tabs').tabs('div.panes > div');
+    jQuery('#wardrobe-contents li').draggable({
+        'disabled': false,
+        'addClasses': false,
+        'helper': 'clone',
+        'cursor': 'move',
+        'appendTo': 'body'
+    });
+    jQuery('#selection,#photo,#collage').droppable({
+        'accept': '#wardrobe-contents li',
+        'drop': function(e, ui) {
+            
+            jQuery.post('/looks/add_product/', {
+                'look_id': '{{ object.id }}',
+                'product_id': ui.draggable.attr('id').split('-').pop(),
+                'top': ui.position.top,
+                'left': ui.position.left 
+            }, function(json, status, request) {
+                if(json.data.success) {
+                    //var product = response.data.look_product.product;
+                    jQuery('#collage').append(tmpl('look_collage_product_template', json.data.look_product ));
+                } else {
+                    // an error occured
+                }
+                console.log(json, status, request);
+            } );
+        
+            // 1) get id of product being dropped
+            // 2) make call to add product to look
+            // 3) opon receiving response from call, display it's product image
+            //    where it was dropped
+            console.log(e, ui)
+        }
+    })
+});
 </script>
 {% endblock 'extra-scripts' %}
 
@@ -134,4 +169,14 @@ var look = {
     </div>
 </div>
 </form>
+<div id="wardrobe-title">
+    <span>{% trans "Your wardrobe" %}</span>
+</div>
+<div id="wardrobe-contents">
+    {% with "wardrobe" as id_prefix %}
+    {% with wardrobe as products %}
+    {% include 'apparel/fragments/product_row.html' %}
+    {% endwith %}
+    {% endwith %}
+</div>
 {% endblock body %}

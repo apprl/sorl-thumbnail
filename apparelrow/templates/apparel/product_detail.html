@@ -47,7 +47,7 @@
                 },
                 success: function(json, statusText, req) {
                     if(json.data['created'])
-                        jQuery('#add-to-look-new').before(tmpl('look_button_template', json.data ));
+                        jQuery('#add-to-look-new').before(tmpl('look_button_template', json.data.look_product ));
                     
                     link.text(text);
                     input = jQuery('#add-to-look-new input[name=new_name]');
@@ -137,12 +137,6 @@
             {% endwith %}
             {% endif %}
         </div>
-
-        <script type="text/html" id="look_button_template">
-        <![CDATA[
-            {{ look_button_template|safe }}
-        ]]>
-        </script>
 {% else %}
     <p>No product found!</p>
 {% endif %}
