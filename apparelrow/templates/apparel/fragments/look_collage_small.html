@@ -1,6 +1,6 @@
 {% load i18n %}
 <a href="{{ object.get_absolute_url }}"><div class="look">
-    {% for product in object.look_products.all %}
-    <img id="product-{{ product.product.id }}" class="product" style="{{ product.style_small }}" src="/scale/100x100{{ product.product.product_image.url }}?trans=true" />
+    {% for component in object.components.all %}
+    <img id="product-{{ component.product.id }}" class="product" style="{{ component.style_small }}" src="/scale/100x100{{ component.product.product_image.url }}?trans=true" />
     {% endfor %}
 </div><span class="button">{% include 'apparel/fragments/likes.html' %}</span></a>

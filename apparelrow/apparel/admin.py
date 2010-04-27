@@ -32,6 +32,6 @@ admin.site.register(VendorProduct)
 #
 
 admin.site.register(Look)
-admin.site.register(LookProduct)
+admin.site.register(LookComponent)
 admin.site.register(Wardrobe)
 

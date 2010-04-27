@@ -10,6 +10,7 @@ from apparel.manager import SearchManager
 import datetime, mptt
 import tagging
 from tagging.fields import TagField
+from sorl.thumbnail.main import DjangoThumbnail
 
 from django_extensions.db.fields import AutoSlugField
 
@@ -182,16 +183,16 @@ class VendorProduct(models.Model):
 
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
-    slug = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
-        help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
-    description   = models.TextField(_('Look description'), null=True, blank=True)
-    products = models.ManyToManyField(Product, through='LookProduct')
-    user = models.ForeignKey(User)
-    image = models.ImageField(upload_to=LOOKS_BASE, blank=True)
-    created    = models.DateTimeField(_("Time created"), auto_now_add=True)
+    slug  = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
+                help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
+    description = models.TextField(_('Look description'), null=True, blank=True)
+    products    = models.ManyToManyField(Product)
+    user        = models.ForeignKey(User)
+    image       = models.ImageField(upload_to=LOOKS_BASE, blank=True)
+    created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
-    tags = TagField()
-
+    tags        = TagField()
+    
     @property
     def total_price(self):
         prices = [p.default_vendor.price for p in self.products.all()]
@@ -203,22 +204,38 @@ class Look(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('apparel.views.look_detail', [str(self.slug)])
+    
+    class Exporter:
+        export_fields = ['__all__']
 
-LOOK_PRODUCT_TYPE_CHOICES = (
-    ('C', 'Collage'),
-    ('P', 'Picture'),
-)
-
-class LookProduct(models.Model):
+class LookComponent(models.Model):
+    """
+    This class maps a product to a collage or uploaded image of a look and 
+    contains necessary information to display the product's image there in.
+    """
+    look    = models.ForeignKey(Look, related_name='components')
     product = models.ForeignKey(Product)
-    look = models.ForeignKey(Look, related_name='look_products')
-    type = models.CharField(max_length=1, choices=LOOK_PRODUCT_TYPE_CHOICES)
+    component_of = models.CharField(max_length=1, choices=(
+        ('C', 'Collage'),
+        ('P', 'Picture'),
+    ))
     top = models.IntegerField(_('CSS top'), blank=True, null=True)
     left = models.IntegerField(_('CSS left'), blank=True, null=True)
     width = models.IntegerField(_('CSS width'), blank=True, null=True)
     height = models.IntegerField(_('CSS height'), blank=True, null=True)
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
+    
+    # FIXME: Scale product image on initial save and store height and width
+    # properties 
 
+    def _style(self, scale=1):
+        s = []
+        for attr in ['top', 'left', 'width', 'height', 'z_index']:
+            if(attr in self.__dict__.keys() and self.__dict__[attr]):
+                s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr] * scale))
+        
+        return " ".join(s)
+    
     @property
     def style_small(self):
         return self.style(1.0 / 7.0)
@@ -229,24 +246,31 @@ class LookProduct(models.Model):
 
     @property
     def style(self):
-        return self.style(1)
-
-    def style(self, scale=1):
-        s = []
-        for attr in ['top', 'left', 'width', 'height', 'z_index']:
-            if(attr in self.__dict__.keys() and self.__dict__[attr]):
-                s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr] * scale))
+        return self._style(1)
+    
+    def save(self, *args, **kwargs):
+        if self.product.product_image and not self.height and not self.width:
+            # FIXME: Does this only scale the image  if it isn't already scaled? 
+            # Performance-wise, it probably should and just give us the dimensions
+            thumb = DjangoThumbnail(self.product.product_image, (
+                                        settings.APPAREL_LOOK_MAX_SIZE, 
+                                        settings.APPAREL_LOOK_MAX_SIZE
+                                    ))
+            self.width  = thumb.data.size[0]
+            self.height = thumb.data.size[1]
         
-        return " ".join(s)
-
+        super(LookComponent, self).save(*args, **kwargs)
+    
     def __unicode__(self):
         return u"%s (%s, %s [%sx%s] %s) in %s" % (self.product, self.top, self.left, self.width, self.height, self.z_index, self.look)
 
     class Meta:
-        unique_together     = (('product', 'look'),)
+        unique_together = (('product', 'look', 'component_of'),)
 
     class Exporter:
         export_fields = ['__all__', 'style']
+
+
 
 class Wardrobe(models.Model):
     user     = models.ForeignKey(User)

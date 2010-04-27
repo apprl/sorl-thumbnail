@@ -61,6 +61,7 @@ class Migration(SchemaMigration):
             ('key', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100, blank=True)),
             ('tree_id', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
             ('active', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('on_front_page', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
         ))
         db.send_create_signal('apparel', ['Category'])
@@ -83,24 +84,17 @@ class Migration(SchemaMigration):
 
         # Adding model 'Product'
         db.create_table('apparel_product', (
+            ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Category'])),
             ('sku', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(db_index=True, max_length=80, blank=True)),
+            ('product_name', self.gf('django.db.models.fields.CharField')(max_length=200)),
             ('product_image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('date_added', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('product_name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('slug', self.gf('django.db.models.fields.SlugField')(db_index=True, max_length=80, blank=True)),
             ('manufacturer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Manufacturer'])),
         ))
         db.send_create_signal('apparel', ['Product'])
-
-        # Adding M2M table for field category on 'Product'
-        db.create_table('apparel_product_category', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('product', models.ForeignKey(orm['apparel.product'], null=False)),
-            ('category', models.ForeignKey(orm['apparel.category'], null=False))
-        ))
-        db.create_unique('apparel_product_category', ['product_id', 'category_id'])
 
         # Adding M2M table for field options on 'Product'
         db.create_table('apparel_product_options', (
@@ -135,22 +129,30 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('apparel', ['Look'])
 
-        # Adding model 'LookProduct'
-        db.create_table('apparel_lookproduct', (
+        # Adding M2M table for field products on 'Look'
+        db.create_table('apparel_look_products', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('look', models.ForeignKey(orm['apparel.look'], null=False)),
+            ('product', models.ForeignKey(orm['apparel.product'], null=False))
+        ))
+        db.create_unique('apparel_look_products', ['look_id', 'product_id'])
+
+        # Adding model 'LookComponent'
+        db.create_table('apparel_lookcomponent', (
             ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Product'])),
             ('z_index', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('look', self.gf('django.db.models.fields.related.ForeignKey')(related_name='look_products', to=orm['apparel.Look'])),
+            ('look', self.gf('django.db.models.fields.related.ForeignKey')(related_name='components', to=orm['apparel.Look'])),
             ('top', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('height', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('width', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('type', self.gf('django.db.models.fields.CharField')(max_length=1)),
+            ('component_of', self.gf('django.db.models.fields.CharField')(max_length=1)),
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('left', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
         ))
-        db.send_create_signal('apparel', ['LookProduct'])
+        db.send_create_signal('apparel', ['LookComponent'])
 
-        # Adding unique constraint on 'LookProduct', fields ['product', 'look']
-        db.create_unique('apparel_lookproduct', ['product_id', 'look_id'])
+        # Adding unique constraint on 'LookComponent', fields ['product', 'look', 'component_of']
+        db.create_unique('apparel_lookcomponent', ['product_id', 'look_id', 'component_of'])
 
         # Adding model 'Wardrobe'
         db.create_table('apparel_wardrobe', (
@@ -197,9 +199,6 @@ class Migration(SchemaMigration):
         # Deleting model 'Product'
         db.delete_table('apparel_product')
 
-        # Removing M2M table for field category on 'Product'
-        db.delete_table('apparel_product_category')
-
         # Removing M2M table for field options on 'Product'
         db.delete_table('apparel_product_options')
 
@@ -209,11 +208,14 @@ class Migration(SchemaMigration):
         # Deleting model 'Look'
         db.delete_table('apparel_look')
 
-        # Deleting model 'LookProduct'
-        db.delete_table('apparel_lookproduct')
+        # Removing M2M table for field products on 'Look'
+        db.delete_table('apparel_look_products')
 
-        # Removing unique constraint on 'LookProduct', fields ['product', 'look']
-        db.delete_unique('apparel_lookproduct', ['product_id', 'look_id'])
+        # Deleting model 'LookComponent'
+        db.delete_table('apparel_lookcomponent')
+
+        # Removing unique constraint on 'LookComponent', fields ['product', 'look', 'component_of']
+        db.delete_unique('apparel_lookcomponent', ['product_id', 'look_id', 'component_of'])
 
         # Deleting model 'Wardrobe'
         db.delete_table('apparel_wardrobe')
@@ -231,6 +233,7 @@ class Migration(SchemaMigration):
             'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'on_front_page': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'option_types': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['apparel.OptionType']", 'blank': 'True'}),
             'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'children'", 'null': 'True', 'to': "orm['apparel.Category']"}),
             'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
@@ -249,21 +252,21 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['apparel.Product']", 'through': "'LookProduct'"}),
+            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['apparel.Product']"}),
             'slug': ('django.db.models.fields.SlugField', [], {'db_index': 'True', 'max_length': '80', 'blank': 'True'}),
             'tags': ('tagging.fields.TagField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
-        'apparel.lookproduct': {
-            'Meta': {'unique_together': "(('product', 'look'),)", 'object_name': 'LookProduct'},
+        'apparel.lookcomponent': {
+            'Meta': {'unique_together': "(('product', 'look', 'component_of'),)", 'object_name': 'LookComponent'},
+            'component_of': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             'height': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'left': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'look': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'look_products'", 'to': "orm['apparel.Look']"}),
+            'look': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'components'", 'to': "orm['apparel.Look']"}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['apparel.Product']"}),
             'top': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             'width': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'z_index': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
@@ -294,7 +297,7 @@ class Migration(SchemaMigration):
         },
         'apparel.product': {
             'Meta': {'object_name': 'Product'},
-            'category': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['apparel.Category']", 'blank': 'True'}),
+            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['apparel.Category']"}),
             'date_added': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

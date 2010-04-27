@@ -57,7 +57,7 @@ var look = {
             data['width'] = product.width();
             data['height'] = product.height();
         }
-        jQuery.post('{% url apparel.views.save_look_product %}', data,
+        jQuery.post('{% url apparel.views.save_look_component %}', data,
         function(response) {
             //alert('saved! ' + response);
         });
@@ -100,27 +100,58 @@ jQuery(document).ready(function() {
     jQuery('#selection,#photo,#collage').droppable({
         'accept': '#wardrobe-contents li',
         'drop': function(e, ui) {
+            var look_id = '{{ object.id }}', product_id = ui.draggable.attr('id').split('-').pop();
             
-            jQuery.post('/looks/add_product/', {
-                'look_id': '{{ object.id }}',
-                'product_id': ui.draggable.attr('id').split('-').pop(),
-                'top': ui.position.top,
-                'left': ui.position.left 
+            jQuery.post('{% url apparel.views.add_to_look %}', {
+                'look': look_id,
+                'product': product_id
             }, function(json, status, request) {
-                if(json.data.success) {
-                    //var product = response.data.look_product.product;
-                    jQuery('#collage').append(tmpl('look_collage_product_template', json.data.look_product ));
-                } else {
-                    // an error occured
+                if(json.success == false) {
+                    alert('something went wrong');
+                    return;
                 }
-                console.log(json, status, request);
+                
+                var component_of;
+                switch(e.target.id) {
+                    case 'collage':
+                        component_of = 'C';
+                        break;
+                    case 'photo':
+                        component_of = 'P';
+                        break;
+                    
+                    default:
+                        return;
+                }
+                
+                jQuery.post('{% url apparel.views.save_look_component %}', {
+                    'look': look_id,
+                    'product': product_id,
+                    'top': Math.round(ui.position.top),
+                    'left': Math.round(ui.position.left),
+                    'component_of': component_of 
+                }, function(json, status, request) {
+                    if(json.success) {
+                        // FIXME: Either have the exporter make a File/Image an object, or have
+                        //        the Django template stringify the property. And remove this
+                        //        hack forever
+                        json.data.look_component.product.product_image = {
+                            'url': json.data.look_component.product.product_image
+                        }
+                        // FIXME: Need a way for the templates to expand settings. I've ruled
+                        //        out doing it in JSON as it's unsafe to expose all settings to
+                        //        the template (which is why the whoke django_settings.* might
+                        //        be a bad idea after all)
+                        jQuery(e.target).append(tmpl('look_collage_product_template', {
+                            'component': json.data.look_component,
+                            'django_settings': { 'APPAREL_LOOK_MAX_SIZE': '{{ django_settings.APPAREL_LOOK_MAX_SIZE }}'}
+                        } ));
+                    } else {
+                        // FIXME: Do something better
+                        alert('not good');
+                    }
+                } );
             } );
-        
-            // 1) get id of product being dropped
-            // 2) make call to add product to look
-            // 3) opon receiving response from call, display it's product image
-            //    where it was dropped
-            console.log(e, ui)
         }
     })
 });

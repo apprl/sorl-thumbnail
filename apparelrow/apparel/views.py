@@ -218,7 +218,6 @@ def browse(request):
     }
     
     
-    
     # FIXME: This could perhaps be moved out to a routine on its own. It is used
     # to collect the current query from the command line to enable options to
     # be pre-checked. The conversion from string to int for id-fields is required
@@ -343,9 +342,40 @@ def get_template_source(template):
 
 @seamless_request_handling
 @login_required
-def add_to_look(request):
-    #product = Product.objects.get(pk=request.POST.get('product_id'))
+def save_look_component(request):
+    """
+    This view adds or updates a component for a look and product
+    """
     
+    try:
+        lc = LookComponent.objects.get(
+                    product__id=request.POST['product'],
+                    look__id=request.POST['look'],
+                    component_of=request.POST['component_of']
+        )
+        form  = LookComponentForm(request.POST, instance=lc)
+        added = False
+    except LookComponent.DoesNotExist:
+        form  = LookComponentForm(request.POST)
+        added = True
+    
+    if form.is_valid():
+        form.save()
+    else:
+        # FIXME: Return some error response here. Can we just throw an exception?
+        pass
+        raise Exception('Validaton errors %s' % form.errors)
+    
+    
+    return (
+        {'look_component': form.instance, 'added': added },                                       # JSON response 
+        HttpResponseRedirect( reverse('apparel.views.look_edit', args=(request.POST['look'],)))   # Browser request response
+    )
+    
+
+@seamless_request_handling
+@login_required
+def add_to_look(request):
     if 'look' in request.POST:
         look = Look.objects.get(pk=request.POST['look'])
         created = False
@@ -354,29 +384,12 @@ def add_to_look(request):
         look.save()
         created = True
     
-    try:
-        lp = LookProduct.objects.get(product__id=request.POST['product'], look=look)
-        form = LookProductForm(request.POST, instance=lp)
-    except LookProduct.DoesNotExist:
-        form = LookProductForm(request.POST)
+    look.products.add(Product.objects.get(pk=request.POST.get('product')))
     
-    form.save()
-    
-    #    
-    #    # 1) Get or create LookProduct on look + product
-    #    # 2) Scale product image to value from settings
-    #    # 3) Update lp with image dimensions
-    #    # 4) store and return
-    #    lp, c  = LookProduct.objects.get_or_create(product=product, look=look)
-    #    scaled = _scale_image(product.product_image, side=settings.APPAREL_LOOK_MAX_SIZE)
-    #        
-    #    lp.width  = scaled.data.size[0]
-    #    lp.height = scaled.data.size[1]
-    #    lp.top    = request.POST.get('top')
-    #    lp.left   = request.POST.get('left')
-    #    lp.save()
-    #    
-    return ({'look_product': form.instance, 'created': created}, HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,))))
+    return (
+        {'look': look, 'created': created}, 
+        HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,)))
+    )
     
 
 @seamless_request_handling
@@ -391,16 +404,3 @@ def add_to_wardrobe(request):
     wardrobe.save() # FIXME: Only save if created?
     
     return wardrobe
-
-
-# FIXME: Move these helpers out of here
-def _scale_image(image, side=None):
-    """
-    Returns a DjangoThumbnail object from the given image scaled to specified
-    sizes.
-    """
-    
-    thumb = DjangoThumbnail(image, (side, side))
-        
-    return thumb
-

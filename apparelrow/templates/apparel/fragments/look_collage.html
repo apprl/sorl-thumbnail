@@ -1,5 +1,6 @@
 <div class="look">
-    {% for look_product in object.look_products.all %}
+    {# FIXME: Only filter on either type C or P. Perhaps create manager on the Look to handle this better? #}
+    {% for component in object.components.all %}
         {% include "apparel/fragments/look_collage_product.html" %}
     {% endfor %}
 </div>

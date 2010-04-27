@@ -40,7 +40,7 @@ urlpatterns = patterns('',
 
     (r'^likes/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
     (r'^looks/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
-    #(r'^looks/save_product/$', 'apparel.views.save_look_product'),
+    (r'^looks/save_component/$', 'apparel.views.save_look_component'),
     (r'^looks/add_product/$', 'apparel.views.add_to_look'),
     (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
     (r'^looks/(?P<slug>[\w-]+)/edit/$', 'apparel.views.look_edit'),

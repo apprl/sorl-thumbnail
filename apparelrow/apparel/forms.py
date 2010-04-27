@@ -6,6 +6,6 @@ class LookForm(ModelForm):
         model = Look
         exclude = ('products','user')
 
-class LookProductForm(ModelForm):
+class LookComponentForm(ModelForm):
     class Meta:
-        model = LookProduct
+        model = LookComponent

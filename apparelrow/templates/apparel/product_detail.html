@@ -47,7 +47,7 @@
                 },
                 success: function(json, statusText, req) {
                     if(json.data['created'])
-                        jQuery('#add-to-look-new').before(tmpl('look_button_template', json.data.look_product ));
+                        jQuery('#add-to-look-new').before(tmpl('look_button_template', json.data ));
                     
                     link.text(text);
                     input = jQuery('#add-to-look-new input[name=new_name]');
