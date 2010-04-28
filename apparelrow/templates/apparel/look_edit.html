@@ -4,8 +4,10 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
 
+
 var look = {
-    initialize: function(ele, type) {
+    initialize: function(ele) {
+        var pane = ele.parent();
         ele.resizable({
             aspectRatio: 'true',
             maxHeight: ele.parent().height(),
@@ -14,7 +16,7 @@ var look = {
             minWidth: 30,
             //grid: [10, 10],
             stop: function(event, ui) {
-                look.saveProduct(ui, type);
+                look.saveComponent(ui, pane);
             },
         });
         ele.parent('.ui-wrapper').draggable({
@@ -23,7 +25,7 @@ var look = {
             //snap: true,
             //grid: [10, 10],
             stop: function(event, ui) {
-                look.saveProduct(ui, type);
+                look.saveComponent(ui, pane);
             },
         });
         jQuery.fn.reverse = jQuery.fn.reverse || [].reverse;
@@ -38,16 +40,32 @@ var look = {
                 left: position.left,
             });
         });
+        look.disable(ele);
+        ele.parent('.ui-wrapper').hover(
+            function() {
+                look.disable(jQuery('.product'));
+                look.enable(jQuery('.product', this));
+                return false;
+            },
+            function() {
+                look.disable(jQuery('.product', this));
+                return false;
+            }
+        );
+        
+        // FIXME: Register a handler that calls deleteComponent()
     },
-    saveProduct: function(ui, type) {
-        product = ui.helper.find('.product');
+    saveComponent: function(ui, pane) {
+        var context = getContextFromPane(pane);
+        var product = getProductFromUI(ui);
+        
         data = {
             look: {{ object.id }},
-            product: product.attr('id').split('-')[1],
-            type: type,
+            product: product.attr('id').split('-').pop(),
+            component_of: context.component_of,
             top: parseInt(ui.position.top),
             left: parseInt(ui.position.left),
-            z_index: product.parent('.ui-wrapper').css('z-index'),
+            z_index: 50 // FIXME: We need to create a stack
         }
         if('size' in ui) {
             data['width'] = parseInt(ui.size.width);
@@ -58,9 +76,37 @@ var look = {
             data['height'] = product.height();
         }
         jQuery.post('{% url apparel.views.save_look_component %}', data,
-        function(response) {
-            //alert('saved! ' + response);
-        });
+            function(response, status, request) {
+                var component = response.data.look_component;
+                
+                if(!response.success) {
+                    console.error('Bad AJAX request', response, status, request);
+                    return;
+                }
+                
+                if(response.data.added) {
+                    var new_product = jQuery(tmpl(context.template, { 'component': component } )).appendTo(pane);
+                    look.initialize(new_product);
+                }
+            }
+        );
+    },
+    deleteComponent: function(ui, pane) {
+        var context = getContextFromPane(pane);
+        var product = getProductFromUI(ui);
+        
+        jQuery.post(
+            '{% url apparel.views.delete_look_component %}', {
+                look: {{ object.id }},
+                product: product.attr('id').split('-').pop(),
+                component_of: context.component_of
+            },
+            function(response, status, request) {
+                if(response.success) {
+                    ui.remove();
+                }
+            }
+        );
     },
     disable: function(ele) {
         ele.resizable('disable');
@@ -69,88 +115,65 @@ var look = {
     enable: function(ele) {
         ele.resizable('enable');
         ele.parent('.ui-wrapper').draggable('enable');
-    },
+    }
 };
 
+function getContextFromPane(pane) {
+    var context = {// FIXME: We should get look product type from the model
+        'photo': { 'template': 'look_photo_product_template', 'component_of': 'P' },
+        'collage': { 'template': 'look_collage_product_template', 'component_of': 'C' }
+    }[pane.attr('id')];
+    
+    if(!context) {
+        console.error('Unknown pane', pane);
+        return;
+    }
+    
+    return context;
+}
+function getProductFromUI(ui) {
+    var product = ui.helper.find('.product');
+    if(product.length == 0)
+        product = ui.draggable;
+    
+    return product;
+}
+
 jQuery(document).ready(function() {
-    look.initialize(jQuery('#collage .product'), 'C'); // FIXME: We should get look product type from the model
-    look.initialize(jQuery('#photo .product'), 'P');
-    look.disable(jQuery('.product'));
-    jQuery('.product').hover(
-        function() {
-            look.disable(jQuery('.product'));
-            look.enable(jQuery(this));
-            return false;
-        },
-        function() {
-            look.disable(jQuery(this));
-            return false;
-        });
-    jQuery('#collage').click(function() {
-        look.disable(jQuery('.product'));
-    });
+    look.initialize(jQuery('#collage > .product'));
+    look.initialize(jQuery('#photo > .product'));
+
     jQuery('ul.tabs').tabs('div.panes > div');
     jQuery('#wardrobe-contents li').draggable({
         'disabled': false,
         'addClasses': false,
         'helper': 'clone',
         'cursor': 'move',
-        'appendTo': 'body'
+        'revert': 'invalid',
+        'appendTo': '#edit-look .panes'
     });
     jQuery('#selection,#photo,#collage').droppable({
         'accept': '#wardrobe-contents li',
-        'drop': function(e, ui) {
-            var look_id = '{{ object.id }}', product_id = ui.draggable.attr('id').split('-').pop();
-            
+        'drop': function(event, ui) {
+            var product_id = ui.draggable.attr('id').split('-').pop();
             jQuery.post('{% url apparel.views.add_to_look %}', {
-                'look': look_id,
+                'look': '{{ object.id }}',
                 'product': product_id
-            }, function(json, status, request) {
-                if(json.success == false) {
+            }, function(response, status, request) {
+                if(response.success == false) {
                     alert('something went wrong');
                     return;
                 }
                 
-                var component_of;
-                switch(e.target.id) {
-                    case 'collage':
-                        component_of = 'C';
-                        break;
-                    case 'photo':
-                        component_of = 'P';
-                        break;
+                if(response.data.added) {
+                    var product = ui.draggable.clone();
+                        product.removeAttr('id');
                     
-                    default:
-                        return;
+                    jQuery('#selection .row ul').append(product);
                 }
                 
-                jQuery.post('{% url apparel.views.save_look_component %}', {
-                    'look': look_id,
-                    'product': product_id,
-                    'top': Math.round(ui.position.top),
-                    'left': Math.round(ui.position.left),
-                    'component_of': component_of 
-                }, function(json, status, request) {
-                    if(json.success) {
-                        // FIXME: Either have the exporter make a File/Image an object, or have
-                        //        the Django template stringify the property. And remove this
-                        //        hack forever
-                        json.data.look_component.product.product_image = {
-                            'url': json.data.look_component.product.product_image
-                        }
-                        // FIXME: Need a way for the templates to expand settings. I've ruled
-                        //        out doing it in JSON as it's unsafe to expose all settings to
-                        //        the template (which is why the whoke django_settings.* might
-                        //        be a bad idea after all)
-                        jQuery(e.target).append(tmpl('look_collage_product_template', {
-                            'component': json.data.look_component,
-                            'django_settings': { 'APPAREL_LOOK_MAX_SIZE': '{{ django_settings.APPAREL_LOOK_MAX_SIZE }}'}
-                        } ));
-                    } else {
-                        // FIXME: Do something better
-                        alert('not good');
-                    }
-                } );
+                if(event.target.id != 'selection')
+                    look.saveComponent(ui, $(event.target));
             } );
         }
     })

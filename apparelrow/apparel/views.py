@@ -373,6 +373,26 @@ def save_look_component(request):
     )
     
 
+
+@seamless_request_handling
+@login_required
+def delete_look_component(request):
+    """
+    Removes a component from a look. This does *not* remove the product from the
+    look
+    """
+    
+    LookComponent.objects.delete(
+        product__id=request.POST['product'],
+        look_id=request.POST['look'],
+        component_of=request.POST['component_of']
+    )
+    
+    return (
+        {}, 
+        HttpResponseRedirect( reverse('apparel.views.look_edit', args=(request.POST['look'],)))
+    )
+
 @seamless_request_handling
 @login_required
 def add_to_look(request):
@@ -384,10 +404,20 @@ def add_to_look(request):
         look.save()
         created = True
     
-    look.products.add(Product.objects.get(pk=request.POST.get('product')))
+    p = Product.objects.get(pk=request.POST.get('product'))
+    
+    if look.products.filter(pk=p.id):
+        added = False
+    else:
+        added = True
+        look.products.add(p)
     
     return (
-        {'look': look, 'created': created}, 
+        {
+            'look': look,           # The look the product was added to
+            'created': created,     # Whether the look was created
+            'added': added,         # Whether the product was added to the look or not. If false it was aleady there.
+        }, 
         HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,)))
     )
     

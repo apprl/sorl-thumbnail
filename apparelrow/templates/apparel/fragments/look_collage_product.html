@@ -1,5 +1,5 @@
 {% load i18n %}
-<img id="product-{{ component.product.id }}" class="product" style="position: absolute; {{ component.style }}" src="/scale/{{ django_settings.APPAREL_LOOK_MAX_SIZE }}{{ component.product.product_image.url }}?trans=true" />
+<img id="product-{{ component.product.id }}" class="product" style="position: absolute; {{ component.style }}" src="/scale/470{{ component.product.product_image.url }}?trans=true" />
 <div class="tooltip">
     <h2>{{ component.product.product_name }}</h2>
     <p>{% trans "by" %} {{ component.product.manufacturer }}</p>
