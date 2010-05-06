@@ -24,9 +24,10 @@ var look = {
             }
         })
         .parent('.ui-wrapper')
-        .rotatable()
+        .append(jQuery('<div/>').addClass('delete').click(function() { alert('click') }))
+        .rotatable({ handles: 'ne' })
         .draggable({
-            stack: { group: '.ui-wrapper', min: 50 },
+            stack: '.ui-wrapper',
             containment: 'parent',
             //snap: true,
             //grid: [10, 10],
@@ -60,11 +61,7 @@ var look = {
                     look.disable(jQuery('.product', this));
                     return false;
                 }
-            )
-            .append(jQuery('<div/>')
-                .addClass('close')
-                .bind('click', function(e) { alert('click') })) 
-        ;
+            );
         
         // FIXME: Register a handler that calls deleteComponent()
     },
