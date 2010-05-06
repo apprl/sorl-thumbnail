@@ -1,0 +1,9 @@
+/* Rotatable
+----------------------------------*/
+.ui-rotatable { position: relative; }
+.ui-rotatable-handle { position: absolute; z-index: 99999; display: block; }
+.ui-rotatable-disabled .ui-rotatable-handle, .ui-rotatable-autohide .ui-rotatable-handle { display: none; }
+.ui-rotatable-nw { top: 0; left: 0; width: 12px; height: 12px; background-position: -162px -66px; }
+.ui-rotatable-ne { top: 0; right: 0; width: 12px; height: 12px; background-position: -178px -66px; }
+.ui-rotatable-se { bottom: 0; right: 0; width: 12px; height: 12px; background-position: -130px -66px; }
+.ui-rotatable-sw { bottom: 0; left: 0; width: 12px; height: 12px; background-position: -146px -66px; }

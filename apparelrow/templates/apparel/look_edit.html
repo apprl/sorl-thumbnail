@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load thumbnail %}
+{% block 'extra-styles' %}
+<link rel="stylesheet" href="{{ MEDIA_URL }}/styles/jquery.ui.rotatable.css" type="text/css" media="screen, projection">
+{% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
+<script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.ui.rotatable.js"></script>
 <script type="text/javascript">
 
 
@@ -18,8 +22,10 @@ var look = {
             stop: function(event, ui) {
                 look.saveComponent(ui, pane);
             },
-        });
-        ele.parent('.ui-wrapper').draggable({
+        })
+        .parent('.ui-wrapper')
+        .rotatable()
+        .draggable({
             stack: { group: '.ui-wrapper', min: 50 },
             containment: 'parent',
             //snap: true,
