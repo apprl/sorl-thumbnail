@@ -12,12 +12,15 @@
 #edit-look .panes
   position: relative
 
-#photo, #collage, #selection
+#photo, #collage
   height= !look_height
 
 #selection
   !row_width = !large_width - 20
   +row(!row_width)
+  background= "transparent" image_url("look-selection-row-bg.png") "no-repeat" "scroll"
+  padding: 9px 9px 0 9px
+  height: 252px
 
 #collage, #photo
   position: relative
@@ -220,7 +223,8 @@ body.look
 
 #wardrobe-contents
   padding: 10px 8px
-  +row(!content_width)
+  background= "transparent" image_url("wardrobe-bg.png") scroll repeat-x "center" "center"
+  +row(!content_width + !gutter_width - 12)
   
   li
     a
