@@ -238,14 +238,16 @@ jQuery(document).ready(function() {
     </div>
 </div>
 </form>
-<div id="wardrobe-title">
-    <span>{% trans "Your wardrobe" %}</span>
-</div>
-<div id="wardrobe-contents">
-    {% with "wardrobe" as id_prefix %}
-    {% with wardrobe as products %}
-    {% include 'apparel/fragments/product_row.html' %}
-    {% endwith %}
-    {% endwith %}
+<div id="wardrobe">
+    <div id="wardrobe-title">
+        <span>{% trans "Your wardrobe" %}</span>
+    </div>
+    <div id="wardrobe-contents">
+        {% with "wardrobe" as id_prefix %}
+        {% with wardrobe as products %}
+        {% include 'apparel/fragments/product_row.html' %}
+        {% endwith %}
+        {% endwith %}
+    </div>
 </div>
 {% endblock body %}

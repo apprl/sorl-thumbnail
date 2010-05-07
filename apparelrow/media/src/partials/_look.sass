@@ -169,22 +169,22 @@ body.look
         float: right
         color= !easier_color
 
+#wardrobe
+  margin: 0 -16px 0 -24px
+  clear: both
+
 #wardrobe-title
   +border("all")
-  clear: both
-  width= !content_width
   height: 27px
   background= !button_color image_url("gradient-bg.png") "repeat-x"
-  padding-top: 12px
-  padding-left: 20px
+  padding: 10px 8px 0 10px
   
   span
     background= "transparent" image_url("arrow-bg-down.png") "no-repeat" "top left"
     padding-left: 14px
 
 #wardrobe-contents
-  margin-top: 10px
-  margin-bottom: 3em
+  padding: 10px 8px
   +row(!content_width)
   
   li
