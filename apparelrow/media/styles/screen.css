@@ -774,13 +774,15 @@ button {
 #container {
   background: transparent url('../images/content-bg.png?1273156953') scroll repeat-y center center;
 }
+/* line 38, ../src/partials/_application.sass */
+#container .container {
+  overflow: visible;
+}
 
-/* line 39, ../src/partials/_application.sass */
+/* line 41, ../src/partials/_application.sass */
 #header {
   background: transparent url('../images/header-bg.png?1273156926') scroll no-repeat center center;
   height: 118px;
-  overflow: visible;
-  position: relative;
 }
 /* line 44, ../src/partials/_application.sass */
 #header .container {
@@ -813,7 +815,7 @@ button {
 #login-pane {
   height: 2em;
   line-height: 2em;
-  margin: 0 -20px;
+  margin: 0 -16px 0 -24px;
   background: transparent url(../images/loggedin-pane-bg.png) scroll repeat-x left top;
 }
 /* line 65, ../src/partials/_application.sass */

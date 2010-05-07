@@ -35,12 +35,12 @@ button
 
 #container
   background= "transparent" image_url("content-bg.png") "scroll" "repeat-y" "center" "center"
+  .container
+    overflow: visible
 
 #header
   background= "transparent" image_url("header-bg.png") "scroll" "no-repeat" "center" "center"
   height: 118px
-  overflow: visible
-  position: relative
   .container
     position: relative
   h1
@@ -59,7 +59,7 @@ button
 #login-pane
   height: 2em
   line-height: 2em
-  margin: 0 -20px
+  margin: 0 -16px 0 -24px
   background: transparent url(../images/loggedin-pane-bg.png) scroll repeat-x left top
 
   &.updates

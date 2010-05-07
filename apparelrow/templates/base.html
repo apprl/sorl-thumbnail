@@ -241,12 +241,14 @@
     <div class="container">
 {% if user.is_authenticated and user.get_profile %}
 <div id="login-pane">
+    <div class="container">
     <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
     <span id="logged-in-as">
         {% trans "Logged in as" %}: <strong>{{ user.get_profile.display_name }}</strong>
     </span>
     <ul id="nav-user">
     </ul>
+    </div>
 </div>
 {% endif %}
 
