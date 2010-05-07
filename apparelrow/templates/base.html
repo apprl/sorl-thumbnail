@@ -173,6 +173,7 @@
 <body class="{% block body-classes %}{% endblock %}">
 
 <div id="header">
+    <div class="container">
         
         <a href="/"><h1>ApparelRow</h1></a>
         
@@ -232,25 +233,32 @@
             <li><a href="/accounts/register/" id="login">{% trans "Sign up" %}</a></li>
         {% endif %}
         </ul>
+    </div>
 </div>
 
 
+<div id="container">
+    <div class="container">
 {% if user.is_authenticated and user.get_profile %}
 <div id="login-pane">
-    <div class="container clearfix">
-        <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
-        <span id="logged-in-as">
-            {% trans "Logged in as" %}: <strong>{{ user.get_profile.display_name }}</strong>
-        </span>
-        <ul id="nav-user">
-        </ul>
+    <div class="container">
+    <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
+    <span id="logged-in-as">
+        {% trans "Logged in as" %}: <strong>{{ user.get_profile.display_name }}</strong>
+    </span>
+    <ul id="nav-user">
+    </ul>
     </div>
 </div>
 {% endif %}
 
-<div id="container">
-{% block body %}
-{% endblock %}
+    {% block body %}
+    {% endblock %}
+    </div>
+</div>
+<div id="footer">
+    <div class="container">
+    </div>
 </div>
 {% for template_name,template_string in templates.items %}
     <script type="text/html" id="{{ template_name }}_template">

@@ -7,12 +7,9 @@
 
 // Page layout can be done using mixins applied to your semantic classes and IDs:
 body
-  #container, .container
+  .container
     +container
     +clearfix
-    overflow: visible
-  #header, #footer
-    +container
   .sidebar
     +float-left
     width= !aside_width

@@ -33,11 +33,11 @@
     .delete
       display: block
       position: absolute
-      height: 20px
-      width: 20px
-      background-color: green
-      left: -10px
-      top: -10px
+      height: 22px
+      width: 22px
+      background= "transparent" image_url("delete.png") "no-repeat" "scroll" "center" "center"
+      left: -11px
+      top: -11px
   .ui-state-disabled, .ui-widget-content .ui-state-disabled
     -moz-box-shadow: none
     -webkit-box-shadow: none
@@ -64,7 +64,6 @@
 #edit-look
   +border-top-radius
   +border("all")
-  height: 500px
   ul.tabs
     +horizontal-list(1px)
     li
@@ -205,22 +204,22 @@ body.look
       a
         font-size: 0.75em
 
+#wardrobe
+  margin: 0 -16px 0 -24px
+  clear: both
+
 #wardrobe-title
   +border("all")
-  clear: both
-  width= !content_width
   height: 27px
   background= !button_color image_url("gradient-bg.png") "repeat-x"
-  padding-top: 12px
-  padding-left: 20px
+  padding: 10px 8px 0 10px
   
   span
     background= "transparent" image_url("arrow-bg-down.png") "no-repeat" "top left"
     padding-left: 14px
 
 #wardrobe-contents
-  margin-top: 10px
-  margin-bottom: 3em
+  padding: 10px 8px
   +row(!content_width)
   
   li
