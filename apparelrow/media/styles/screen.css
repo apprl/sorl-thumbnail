@@ -464,7 +464,7 @@ h3 {
   background-color: #d0fae8;
   line-height: 20px;
   height: 14px;
-  width: 203px;
+  width: 210px;
   text-align: center;
   padding-top: 6px;
   /* Webkit (Safari, Chrome) */
@@ -505,7 +505,7 @@ h3 {
   /* CSS3 */
   box-shadow: inset #d4d4d4 0 3px 3px;
   padding: 0.5em 5px;
-  width: 193px;
+  width: 196px;
 }
 
 /* line 134, ../src/partials/_look.sass */
