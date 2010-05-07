@@ -209,7 +209,7 @@ $.widget("ui.rotatable", $.ui.mouse, {
 		el.css({
             'transform': 'rotate(' + self.rotation + 'deg)',
             '-moz-transform': 'rotate(' + self.rotation + 'deg)',
-            '-webkit-transform': 'rotate(' + self.rotation + 'deg)',
+            '-webkit-transform': 'rotate(' + self.rotation + 'deg)'
 		});
 
 		// calling the user callback at the end
