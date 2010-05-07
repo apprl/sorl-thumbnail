@@ -27,19 +27,36 @@
 {% block body-classes %}look two-columns{% endblock %}
 
 {% block body %}
+<div id="look-header">
+    <img src="/scale/52{{ object.user.get_profile.avatar }}" class="profile-image" />
+    <div>
+        <h1>
+            {{ object.title }}
+            {% ifequal object.user user %}
+                <a href="{% url apparel.views.look_edit object.slug %}">{% trans "(edit)" %}</a>
+            {% endifequal %}
+        </h1>
+        <span>
+            {% blocktrans with object.user.get_profile.display_name as name %}
+                {{name}}'s looks
+            {% endblocktrans %}
+        </span>
+    </div>
+</div>
 <div class="sidebar">
-    <h2>Sidebar</h2>
     <p>
     <span class="price">
     {% blocktrans count object.products.all|length as number %}
-    {{ number }} article
+        {{ number }} article
     {% plural %}
-    {{ number }} articles
+        {{ number }} articles
     {% endblocktrans %}
     </span>
     <span class="sum"> - {{ object.total_price }} SEK</span>
     </p>
-    {% if object.description %}<p class="description">{{ object.description }}</p>{% endif %}
+    {% if object.description %}
+        <p class="description">{{ object.description }}</p>
+    {% endif %}
     <div class="share-created">
     <ul id="add-menu">
       {% include 'apparel/fragments/share.html' %}
@@ -68,16 +85,12 @@
     {% endif %}
 </div>
 <div id="content">
-    <h2>{{ object.title }}</h2>
     <div class="collage">
         {% include 'apparel/fragments/look_collage.html' %}
         <form method="post" action="{% url like-look object.slug "up" %}">
             <button type="submit" name="like" id="like">{% trans "Like" %}</button>
         </form>
     </div>
-    {% ifequal object.user user %}
-        <a href="{% url apparel.views.look_edit object.slug %}">{% trans "Edit look" %}</a>
-    {% endifequal %}
     {% get_trackbacks_for object as trackbacks %}
     {% include 'apparel/fragments/comments.html' %}
     {% tags_for_object object as tags %}

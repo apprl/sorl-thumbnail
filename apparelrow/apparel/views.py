@@ -308,12 +308,17 @@ def look_edit(request, slug):
     else:
         form = LookForm(instance=look)
     
+    try:
+        wardrobe = Wardrobe.objects.get(user=request.user).products.all()
+    except Wardrobe.DoesNotExist:
+        wardrobe = []
+    
     return render_to_response(
             'apparel/look_edit.html', 
             {
                 'object': look, 
                 'form': form,
-                'wardrobe': Wardrobe.objects.get(user=request.user).products.all(),
+                'wardrobe': wardrobe,
                 'templates': {
                     'look_collage_product': js_template(get_template_source('apparel/fragments/look_collage_product.html')), 
                 }
