@@ -11,11 +11,7 @@ li
   padding: 0
 
 body
-  background:
-    color: white
-    image= image_url("header-bg.png")
-    repeat: no-repeat
-    position: center top
+  background-color: #e6e6e6
   .ui-draggable-dragging a
     cursor: move
 
@@ -37,10 +33,16 @@ button
   position: fixed
   top: 0
 
+#container
+  background= "transparent" image_url("content-bg.png") "scroll" "repeat-y" "center" "center"
+
 #header
-  height: 140px
+  background= "transparent" image_url("header-bg.png") "scroll" "no-repeat" "center" "center"
+  height: 118px
   overflow: visible
   position: relative
+  .container
+    position: relative
   h1
     +float-left
     +replace-text("logo.png")
@@ -50,10 +52,14 @@ button
     margin-top: 38px
     +border("bottom", #999)
 
+#footer
+  background= "transparent" image_url("footer-bg.png") "scroll" "no-repeat" "center" "center"
+  height: 58px
 
 #login-pane
   height: 2em
   line-height: 2em
+  margin: 0 -20px
   background: transparent url(../images/loggedin-pane-bg.png) scroll repeat-x left top
 
   &.updates
