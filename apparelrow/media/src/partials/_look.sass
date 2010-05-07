@@ -46,14 +46,20 @@
     .close
       display: none
 
-#photo
-  div
-    position: relative
-    margin: 0 auto
-    a
-      position: absolute
-      padding: 40px
-      background= "transparent" image_url("look-hotspot.png") "no-repeat" "scroll" "center" "center"
+#photo-background
+  position: relative
+  margin: 0 auto
+  a
+    position: absolute
+    padding: 40px
+    background= "transparent" image_url("look-hotspot.png") "no-repeat" "scroll" "center" "center"
+#photo-form
+  position: absolute
+  top: 10px
+  left: 10px
+  background-color: white
+  .upload-form
+    display: none
 
 #edit-look
   +border-top-radius

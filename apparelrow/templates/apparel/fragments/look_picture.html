@@ -1,21 +1,60 @@
 {% load thumbnail %}
+{% load i18n %}
 <div id="photo">
-    {% if object.image %}
-    {% thumbnail object.image 696x524 as image %}
-    <div style="background-image: url('{{ image }}'); width: {{ image.width }}px; height: {{ image.height }}px"></div>
-    {% else %}
-    {{ form.image }}
-    {% endif %}
+    <div id="photo-background"
+        {% if object.image %}
+           {% thumbnail object.image 470x470 as image %}
+           style="background-image: url('{{ image }}'); width: {{ image.width }}px; height: {{ image.height }}px"
+        {% endif %}
+    >
+    </div>
+    
+    <div id="photo-form">
+        <div{% if not object.image %} style="display: block"{% endif %} class="upload-form">
+            {{ form.image }}
+        </div>
+        <div>
+            <button class="upload-form"{% if object.image %} style="display: block"{% endif %}>{% trans "Upload a Photo" %}</button>
+            <button type="submit" class="upload-form"{% if not object.image %} style="display: block"{% endif %}>{% trans "Upload" %}</button>
+        </div>
+    </div>
 </div>
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-            jQuery('#photo > div').click(function(e) {
-                var x = e.pageX - this.offsetLeft - 40;
-                var y = e.pageY - this.offsetTop - 40;
-                jQuery('<a href="#"></a>').css({
-                    'top': y + 'px',
-                    'left': x + 'px',
-                }).appendTo(this);
-            });
+<script type="text/javascript">
+    /* Upload form interaction */
+    
+    jQuery(document).ready(function() {
+        jQuery('#photo-form button:first').click(function(e) {
+            jQuery('#photo-form .upload-form').toggle();
+            return false;
         });
-    </script>
+    });
+    jQuery('#photo-form').click(function(e) { e.stopPropagation(); });
+    jQuery('#photo').click(function(e) {
+        // Toggle upload-form elements only if there's a photo and the form is visible
+        
+        if(
+            jQuery('#photo-background').css('background-image') != 'none' 
+            && jQuery('#photo-form > div:first').is(':visible')
+        ) {
+            jQuery('#photo-form .upload-form').toggle();
+        }
+        return true;
+    });
+    
+    jQuery('#photo-form button[type=submit]').click(function(e) {
+        this.form.action += '#photo-tab'
+        return true;
+    });
+    
+    /*
+    jQuery('#photo > div').click(function(e) {
+        var x = e.pageX - this.offsetLeft - 40;
+        var y = e.pageY - this.offsetTop - 40;
+        jQuery('<a href="#"></a>').css({
+            'top': y + 'px',
+            'left': x + 'px',
+        }).appendTo(this);
+    });
+    */
+
+</script>

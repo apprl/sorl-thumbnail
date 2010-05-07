@@ -1,4 +1,4 @@
-import logging, re, math
+import logging, re, math, copy
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
@@ -298,13 +298,17 @@ def look_detail(request, slug):
             context_instance=RequestContext(request),
         )
 
+
+#@login_required - FIXME: Find out why this isn't working anymore
+@seamless_request_handling
 def look_edit(request, slug):
     look = get_object_or_404(Look, slug=slug)
+    
     if request.method == 'POST':
         form = LookForm(request.POST, request.FILES, instance=look)
+        #import pdb; pdb.set_trace()
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(look.get_absolute_url())
     else:
         form = LookForm(instance=look)
     
@@ -313,18 +317,21 @@ def look_edit(request, slug):
     except Wardrobe.DoesNotExist:
         wardrobe = []
     
-    return render_to_response(
-            'apparel/look_edit.html', 
-            {
-                'object': look, 
-                'form': form,
-                'wardrobe': wardrobe,
-                'templates': {
-                    'look_collage_product': js_template(get_template_source('apparel/fragments/look_collage_product.html')), 
-                }
-            },
-            context_instance=RequestContext(request),
-        )
+    data = {
+        'object': form.instance, 
+        'form': form,
+        'wardrobe': wardrobe,
+        'templates': {
+            'look_collage_product': js_template(get_template_source('apparel/fragments/look_collage_product.html')), 
+        }
+    }
+    
+    return (
+        data,
+        render_to_response('apparel/look_edit.html', data, context_instance=RequestContext(request))
+    )
+
+
 
 def looks():
     pass
@@ -368,7 +375,6 @@ def save_look_component(request):
         form.save()
     else:
         # FIXME: Return some error response here. Can we just throw an exception?
-        pass
         raise Exception('Validaton errors %s' % form.errors)
     
     
