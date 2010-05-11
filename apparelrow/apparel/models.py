@@ -242,11 +242,11 @@ class LookComponent(models.Model):
     
     @property
     def style_small(self):
-        return self.style(1.0 / 7.0)
+        return self._style(1.0 / 7.0)
 
     @property
     def style_middle(self):
-        return self.style(0.65)
+        return self._style(0.65)
 
     @property
     def style(self):
