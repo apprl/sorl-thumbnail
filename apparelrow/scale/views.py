@@ -23,8 +23,12 @@ def thumb(request, size, path):
     extension = None
     if request.GET.get('trans'):
         path, extension = get_transparent(path)
-
-    thumbnail = DjangoThumbnail(path, size_group, extension=extension, opts=('crop',)) 
+    
+    opts = None
+    if request.GET.get('crop'):
+        opts = ('crop',)
+    
+    thumbnail = DjangoThumbnail(path, size_group, extension=extension, opts=opts) 
     
     # FIXME: Is it possible to do a URL re-write here instead of sending back
     # a location header to the client?
