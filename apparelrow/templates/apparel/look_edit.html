@@ -12,7 +12,8 @@
 var look = {
     initialize: function(ele) {
         var pane = ele.parent();
-        ele.resizable({
+        ele
+        .resizable({
             aspectRatio: 'true',
             maxHeight: ele.parent().height(),
             maxWidth: ele.parent().width(),
@@ -24,8 +25,13 @@ var look = {
             }
         })
         .parent('.ui-wrapper')
-        .append(jQuery('<div/>').addClass('delete').click(function() { alert('click') }))
-        .rotatable({ handles: 'ne' })
+        .rotatable({ 
+            handles: 'ne',
+            stop: function(event, ui) {
+                look.saveComponent(ui, pane);
+            }
+        })
+        .append(jQuery('<div/>').addClass('delete'))
         .draggable({
             stack: '.ui-wrapper',
             containment: 'parent',
@@ -47,6 +53,10 @@ var look = {
                 left: position.left,
                 overflow:'visible'
             });
+        });
+        
+        ele.siblings('.delete').bind('click', function(e) { 
+            look.deleteComponent(jQuery(e.currentTarget).parent(), pane)
         });
         look.disable(ele);
         
@@ -73,10 +83,18 @@ var look = {
             look: {{ object.id }},
             product: product.attr('id').split('-').pop(),
             component_of: context.component_of,
-            top: parseInt(ui.position.top),
-            left: parseInt(ui.position.left),
             z_index: 50 // FIXME: We need to create a stack
         }
+        
+        if('position' in ui) {
+            data['top']  = parseInt(ui.position.top);
+            data['left'] = parseInt(ui.position.left);
+        }
+        
+        if('rotation' in ui) {
+            data['rotation'] = parseInt(ui.rotation);
+        }
+        
         if('size' in ui) {
             data['width'] = parseInt(ui.size.width);
             data['height'] = parseInt(ui.size.height);
@@ -85,6 +103,7 @@ var look = {
             data['width'] = product.width();
             data['height'] = product.height();
         }
+        
         jQuery.post('{% url apparel.views.save_look_component %}', data,
             function(response, status, request) {
                 var component = response.data.look_component;
@@ -101,9 +120,9 @@ var look = {
             }
         );
     },
-    deleteComponent: function(ui, pane) {
+    deleteComponent: function(wrapper, pane) {
         var context = getContextFromPane(pane);
-        var product = getProductFromElement(ui);
+        var product = getProductFromElement(wrapper);
         
         jQuery.post(
             '{% url apparel.views.delete_look_component %}', {
@@ -113,7 +132,7 @@ var look = {
             },
             function(response, status, request) {
                 if(response.success) {
-                    ui.remove();
+                    product.remove();
                 }
             }
         );
@@ -142,12 +161,14 @@ function getContextFromPane(pane) {
     return context;
 }
 function getProductFromElement(ui) {
-    console.log(ui);
     var product;
+    
     if('helper' in ui) {
         product = ui.helper.find('.product');
         if(product.length == 0)
             product = ui.draggable;
+    } else if('element' in ui) {
+        product = ui.element.find('.product');
     } else {
         product = ui.closest('.ui-wrapper').find('.product');
     }

@@ -224,16 +224,20 @@ class LookComponent(models.Model):
     width = models.IntegerField(_('CSS width'), blank=True, null=True)
     height = models.IntegerField(_('CSS height'), blank=True, null=True)
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
-    
+    rotation = models.IntegerField(_('CSS rotation'), blank=True, null=True)
     # FIXME: Scale product image on initial save and store height and width
     # properties 
 
     def _style(self, scale=1):
         s = []
-        for attr in ['top', 'left', 'width', 'height', 'z_index']:
+        for attr in ('top', 'left', 'width', 'height', 'z_index'):
             if(attr in self.__dict__.keys() and self.__dict__[attr]):
                 s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr] * scale))
         
+        if self.rotation:
+            s.append('-moz-transform: rotate(%sdeg); ' % self.rotation)
+            s.append('-webkit-transform: rotate(%sdeg); ' % self.rotation)
+            
         return " ".join(s)
     
     @property

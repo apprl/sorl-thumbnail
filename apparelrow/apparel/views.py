@@ -372,6 +372,12 @@ def save_look_component(request):
         added = True
     
     if form.is_valid():
+        # FIXME: This behaviour should be default in all forms. Implement this
+        # globally somehow.
+        for field in form.cleaned_data:
+            if form.cleaned_data[field] is None and field not in form.data:
+                form.cleaned_data[field] = form.initial.get(field)
+        
         form.save()
     else:
         # FIXME: Return some error response here. Can we just throw an exception?
@@ -393,11 +399,11 @@ def delete_look_component(request):
     look
     """
     
-    LookComponent.objects.delete(
+    LookComponent.objects.get(
         product__id=request.POST['product'],
-        look_id=request.POST['look'],
+        look__id=request.POST['look'],
         component_of=request.POST['component_of']
-    )
+    ).delete()
     
     return (
         {}, 

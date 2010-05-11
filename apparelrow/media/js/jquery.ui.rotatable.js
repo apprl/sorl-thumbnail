@@ -17,15 +17,44 @@ $.widget("ui.rotatable", $.ui.mouse, {
 	options: {
 		handles: "nw",
         autoHide: false,
-		zIndex: 1000
+		zIndex: 1000,
+		reRotate: /rotate\((-?\d+)deg\)/,
+		cssRules: ['transform', 'WebkitTransform', 'MozTransform']
 	},
+    _get_rotation: function(style) {
+        for(var i = 0; i < this.options.cssRules.length; i++) {
+            var p = this.options.cssRules[i];
+            if(typeof style[p] != 'undefined') {
+                r = style[p].match(this.options.reRotate);
+                return r && r[1] ? r[1] : 0;
+            }
+        }
+        return 0;
+    },
+    _swap_rotation: function(from, to) {
+        to.css({
+            'transform': 'rotate(' + this.rotation + 'deg)',
+            '-moz-transform': 'rotate(' + this.rotation + 'deg)',
+            '-webkit-transform': 'rotate(' + this.rotation + 'deg)'
+        });
+        
+        for(var i = 0; i < this.options.cssRules.length; i++) {
+            var rule      = this.options.cssRules[i];
+            var transform = from.get(0).style[rule];
+            
+            if(typeof transform != 'undefined') {
+                from.get(0).style[rule] = transform.replace(this.options.reRotate, '');
+                break;
+            }
+        }
+    },
 	_create: function() {
-
-		var self = this, o = this.options;
+        var self = this, o = this.options;
         if(!($.browser.mozilla || $.browser.webkit))
             return;
 		this.element.addClass("ui-rotatable");
-        this.rotation = 0;
+		this.rotatedElement = this.element.is('.ui-wrapper') ? this.element.children().first() : this.element;
+        this.rotation = this._get_rotation(this.rotatedElement.get(0).style);
 
 		$.extend(this, {
 			originalElement: this.element
@@ -48,21 +77,18 @@ $.widget("ui.rotatable", $.ui.mouse, {
 					left: this.element.css('left')
 				})
 			);
-
+			
 			//Overwrite the original this.element
 			this.element = this.element.parent().data(
 				"rotatable", this.element.data('rotatable')
 			);
-
 			this.elementIsWrapper = true;
-
-			//Move margins to the wrapper
-			this.element.css({ marginLeft: this.originalElement.css("marginLeft"), marginTop: this.originalElement.css("marginTop"), marginRight: this.originalElement.css("marginRight"), marginBottom: this.originalElement.css("marginBottom") });
-			this.originalElement.css({ marginLeft: 0, marginTop: 0, marginRight: 0, marginBottom: 0});
-
-			// avoid IE jump (hard set the margin)
-			this.originalElement.css({ margin: this.originalElement.css('margin') });
-
+            
+            // Let wrapper take over rotation from original element
+            this._swap_rotation(this.originalElement, this.element);
+		} else if(this.element != this.rotatedElement) {
+		    // If element is already rotated, take it's rotation property
+            this._swap_rotation(this.rotatedElement, this.element);
 		}
 
 		this.handles = o.handles || (!$('.ui-rotatable-handle', this.element).length ? "nw" : { se: '.ui-rotatable-se', sw: '.ui-rotatable-sw', ne: '.ui-rotatable-ne', nw: '.ui-rotatable-nw' });
@@ -143,8 +169,11 @@ $.widget("ui.rotatable", $.ui.mouse, {
 					width: wrapper.outerWidth(),
 					height: wrapper.outerHeight(),
 					top: wrapper.css('top'),
-					left: wrapper.css('left')
-				})
+					left: wrapper.css('left'),
+                    'transform': 'rotate(' + this.rotation + 'deg)',
+                    '-moz-transform': 'rotate(' + this.rotation + 'deg)',
+                    '-webkit-transform': 'rotate(' + this.rotation + 'deg)'
+                })
 			).remove();
 		}
 
@@ -156,7 +185,7 @@ $.widget("ui.rotatable", $.ui.mouse, {
 	_mouseCapture: function(event) {
 		var handle = false;
 		for (var i in this.handles) {
-			if ($(this.handles[i])[0] == event.target) {
+			if ($(this.handles[i], this.element)[0] == event.target) {
 				handle = true;
 			}
 		}
@@ -262,7 +291,6 @@ $.widget("ui.rotatable", $.ui.mouse, {
 		return {
 			originalElement: this.originalElement,
 			element: this.element,
-			position: this.position,
             rotation: this.rotation
 		};
 	}
