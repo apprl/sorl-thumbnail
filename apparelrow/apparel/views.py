@@ -261,9 +261,12 @@ def product_detail(request, slug):
         viewed_products.remove(product.id)
     except ValueError:
         pass
-    viewed_products.append(product.id)
     
-    request.session['viewed_products'] = viewed_products
+    request.session['viewed_products'] = [product.id]
+    request.session['viewed_products'].extend(viewed_products)
+    
+    for p in Product.objects.filter(pk__in=viewed_products):
+        viewed_products[viewed_products.index(p.id)] = p
     
     user_looks = Look.objects.filter(user=request.user) if request.user.is_authenticated() else []
     
@@ -276,7 +279,7 @@ def product_detail(request, slug):
                 'object': product,
                 'user_looks': user_looks,
                 'looks_with_product': Look.objects.filter(products=product),
-                'viewed_products': Product.objects.filter(pk__in=viewed_products[:-1]),
+                'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri()
             },
             context_instance=RequestContext(request),
