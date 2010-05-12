@@ -74,18 +74,15 @@
                 if(jQuery('#page-' + page).length == 0) {
                     filter(getQuery({page: page}), function(response) {
                         renderPage(response, page);
-                        jQuery('#product-list').scrollable().reload().setPage(jQuery('#page-' + page).index());
+                        jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 200);
                     });
                 } else {
-                    jQuery('#product-list').scrollable().reload().setPage(jQuery('#page-' + page).index());
+                    jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 200);
                 }
                 return false;
             });
             jQuery('#product-list').scrollable({
-                items: 'ul.list',
-                prevPage: '.prev',
-                nextPage: '.next',
-                size: 1
+                items: 'ul.list'
             });
         });
         function getQuery(query) {
@@ -197,7 +194,7 @@
             $('#product-count').append(tmpl('product_count_template', { products: products }));
             jQuery('#product-list > ul').empty();
             renderPage(products, 1);
-            jQuery('#product-list').scrollable().begin();
+            jQuery('#product-list').data('scrollable').begin();
             filterCriteria(products.criteria_filter);
             
         }
