@@ -167,7 +167,7 @@ h3 {
   display: block;
 }
 /* line 7, ../src/partials/_row.sass */
-#selection a.prevPage, #selection a.nextPage {
+#selection a.prev, #selection a.next {
   display: inline;
   float: left;
   border: 1px solid #d9d9d9;
@@ -178,13 +178,13 @@ h3 {
   padding: 54px 4px;
 }
 /* line 14, ../src/partials/_row.sass */
-#selection a.prevPage.disabled, #selection a.nextPage.disabled {
+#selection a.prev.disabled, #selection a.next.disabled {
   visibility: visible;
   background-color: white;
   border-color: #f7f7f7;
 }
 /* line 18, ../src/partials/_row.sass */
-#selection a.prevPage {
+#selection a.prev {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
@@ -200,11 +200,11 @@ h3 {
   margin-right: 5px;
 }
 /* line 22, ../src/partials/_row.sass */
-#selection a.prevPage.disabled {
+#selection a.prev.disabled {
   background-image: url('../images/prev-page-disabled.png?1265910786');
 }
 /* line 24, ../src/partials/_row.sass */
-#selection a.nextPage {
+#selection a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
@@ -220,7 +220,7 @@ h3 {
   margin-left: 5px;
 }
 /* line 28, ../src/partials/_row.sass */
-#selection a.nextPage.disabled {
+#selection a.next.disabled {
   background-image: url('../images/next-page-disabled.png?1265910786');
 }
 /* line 30, ../src/partials/_row.sass */
@@ -702,7 +702,7 @@ body.look #content .collage {
   display: block;
 }
 /* line 7, ../src/partials/_row.sass */
-#wardrobe-contents a.prevPage, #wardrobe-contents a.nextPage {
+#wardrobe-contents a.prev, #wardrobe-contents a.next {
   display: inline;
   float: left;
   border: 1px solid #d9d9d9;
@@ -713,13 +713,13 @@ body.look #content .collage {
   padding: 54px 4px;
 }
 /* line 14, ../src/partials/_row.sass */
-#wardrobe-contents a.prevPage.disabled, #wardrobe-contents a.nextPage.disabled {
+#wardrobe-contents a.prev.disabled, #wardrobe-contents a.next.disabled {
   visibility: visible;
   background-color: white;
   border-color: #f7f7f7;
 }
 /* line 18, ../src/partials/_row.sass */
-#wardrobe-contents a.prevPage {
+#wardrobe-contents a.prev {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
@@ -735,11 +735,11 @@ body.look #content .collage {
   margin-right: 5px;
 }
 /* line 22, ../src/partials/_row.sass */
-#wardrobe-contents a.prevPage.disabled {
+#wardrobe-contents a.prev.disabled {
   background-image: url('../images/prev-page-disabled.png?1265910786');
 }
 /* line 24, ../src/partials/_row.sass */
-#wardrobe-contents a.nextPage {
+#wardrobe-contents a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
@@ -755,7 +755,7 @@ body.look #content .collage {
   margin-left: 5px;
 }
 /* line 28, ../src/partials/_row.sass */
-#wardrobe-contents a.nextPage.disabled {
+#wardrobe-contents a.next.disabled {
   background-image: url('../images/next-page-disabled.png?1265910786');
 }
 /* line 30, ../src/partials/_row.sass */
@@ -1267,7 +1267,7 @@ ul.looks li span.button.ok:before {
   display: block;
 }
 /* line 7, ../src/partials/_row.sass */
-#lookproducts a.prevPage, #lookproducts a.nextPage {
+#lookproducts a.prev, #lookproducts a.next {
   display: inline;
   float: left;
   border: 1px solid #d9d9d9;
@@ -1278,13 +1278,13 @@ ul.looks li span.button.ok:before {
   padding: 54px 4px;
 }
 /* line 14, ../src/partials/_row.sass */
-#lookproducts a.prevPage.disabled, #lookproducts a.nextPage.disabled {
+#lookproducts a.prev.disabled, #lookproducts a.next.disabled {
   visibility: visible;
   background-color: white;
   border-color: #f7f7f7;
 }
 /* line 18, ../src/partials/_row.sass */
-#lookproducts a.prevPage {
+#lookproducts a.prev {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
@@ -1300,11 +1300,11 @@ ul.looks li span.button.ok:before {
   margin-right: 5px;
 }
 /* line 22, ../src/partials/_row.sass */
-#lookproducts a.prevPage.disabled {
+#lookproducts a.prev.disabled {
   background-image: url('../images/prev-page-disabled.png?1265910786');
 }
 /* line 24, ../src/partials/_row.sass */
-#lookproducts a.nextPage {
+#lookproducts a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
@@ -1320,7 +1320,7 @@ ul.looks li span.button.ok:before {
   margin-left: 5px;
 }
 /* line 28, ../src/partials/_row.sass */
-#lookproducts a.nextPage.disabled {
+#lookproducts a.next.disabled {
   background-image: url('../images/next-page-disabled.png?1265910786');
 }
 /* line 30, ../src/partials/_row.sass */
@@ -2706,7 +2706,7 @@ a.buy-now {
   display: block;
 }
 /* line 7, ../src/partials/_row.sass */
-#recentlyviewed a.prevPage, #recentlyviewed a.nextPage {
+#recentlyviewed a.prev, #recentlyviewed a.next {
   display: inline;
   float: left;
   border: 1px solid #d9d9d9;
@@ -2717,13 +2717,13 @@ a.buy-now {
   padding: 54px 4px;
 }
 /* line 14, ../src/partials/_row.sass */
-#recentlyviewed a.prevPage.disabled, #recentlyviewed a.nextPage.disabled {
+#recentlyviewed a.prev.disabled, #recentlyviewed a.next.disabled {
   visibility: visible;
   background-color: white;
   border-color: #f7f7f7;
 }
 /* line 18, ../src/partials/_row.sass */
-#recentlyviewed a.prevPage {
+#recentlyviewed a.prev {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
@@ -2739,11 +2739,11 @@ a.buy-now {
   margin-right: 5px;
 }
 /* line 22, ../src/partials/_row.sass */
-#recentlyviewed a.prevPage.disabled {
+#recentlyviewed a.prev.disabled {
   background-image: url('../images/prev-page-disabled.png?1265910786');
 }
 /* line 24, ../src/partials/_row.sass */
-#recentlyviewed a.nextPage {
+#recentlyviewed a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
@@ -2759,7 +2759,7 @@ a.buy-now {
   margin-left: 5px;
 }
 /* line 28, ../src/partials/_row.sass */
-#recentlyviewed a.nextPage.disabled {
+#recentlyviewed a.next.disabled {
   background-image: url('../images/next-page-disabled.png?1265910786');
 }
 /* line 30, ../src/partials/_row.sass */

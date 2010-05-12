@@ -9,8 +9,6 @@
 {% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.category.all|join:'|' }} | {% endblock %}
 
 {% block 'extra-styles' %}
-    <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-basic.css" media="screen" />
-    <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-gallery.css" media="screen" />
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
 {% endblock 'extra-styles' %}
@@ -96,13 +94,10 @@
             {% get_trackbacks_for object as trackbacks %}
             {% include 'apparel/fragments/product_detail.html' %}
             <!-- overlay element -->
-            <div class="simple_overlay" id="gallery">
+            <div id="gallery">
                 <img src="{{object.product_image.url}}">
                 <!-- image information -->
-                <div class="info"></div>
-            
-                <!-- load indicator (animated gif) -->
-                <img class="progress" src="http://static.flowplayer.org/tools/img/overlay/loading.gif" />
+                <!--div class="info">{{object.description}}</div-->
             </div>
         </div>
         <div class="sidebar last">
