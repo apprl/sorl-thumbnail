@@ -1,4 +1,5 @@
 import logging
+from hanssonlarsson.django.exporter import json
 from django.template import Library, Variable, TemplateSyntaxError, Node, VariableDoesNotExist
 from django import template
 from django.template.defaultfilters import linebreaksbr
@@ -157,6 +158,21 @@ def class_name(o):
 register.filter('class_name', class_name)
 
 
+def export_as_json(o):
+    """Renders the given object as JSON. Any Django objects will be exported
+    >>> from django.template.loader import Template, Context
+    >>> c = Context({'p': {'gunnar': True}})
+    >>> t = Template('{% load apparel_extras %}{{ p|export_as_json }}')
+    >>> t.render(c)
+    u'{"gunnar": true}'
+    """
+    
+    try:
+        return mark_safe(json.encode(o))
+    except:
+        return ''
+
+register.filter('export_as_json', export_as_json)
 
 #
 # This is taken from http://www.djangosnippets.org/snippets/743/ and should
