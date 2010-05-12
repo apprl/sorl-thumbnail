@@ -23,9 +23,12 @@
 
         var pagination = {
             recalculate: function(page) {
-                if(!this.data) return;
+                if(!'number' in this.data) {
+                    console.log('pagination is not initialised!');
+                    return;
+                }
                 
-                var on_ends = 2;
+                var on_ends      = 2;   // FIXME: These two should come from the server
                 var on_each_side = 3;
                 var num_pages = this.data.paginator.num_pages;
                 this.data.pagination.right = null;
@@ -42,11 +45,10 @@
                             this.data.pagination.mid.push(i);
                         }
                     } else {
-                        this.data.pagination.left = []
+                        this.data.pagination.left = [];
                         for(var i = 1; i <= on_ends; i++) {
                             this.data.pagination.left.push(i);
                         }
-                        
                         for(var i = page - on_each_side; i <= page; i++) {
                             this.data.pagination.left.push(i);
                         }
@@ -57,6 +59,7 @@
                             this.data.pagination.mid.push(i);
                         }
                     } else {
+                        this.data.pagination.right = [];
                         for(var i = page + 1; i <= on_each_side + page; i++) {
                             this.data.pagination.mid.push(i);
                         }
@@ -72,22 +75,22 @@
                 this.data.has_previous = (this.data.previous_page_number) ? true : false;
                 this.data.number = page;
             },
-            data: {
-                // next_page_number = ''
-                // previous_page_number
-                // has_next
-                // has_previous
-                // pagination = {
-                //  left
-                //  right
-                //  mid
-                // }
-                // paginator {
-                //  count
-                //  num_pages
-                // }
-                // number            
-            },
+            /* This variable contains the pagination data. It needs to be populated 
+               with before rendering/recalculation may happen. This is the structure:
+                - next_page_number      Integer or null if on last page
+                - previous_page_number  Integer or null if on first page
+                - has_next              true if there is a next page, else false
+                - has_previous          true if there is a previous page, else false
+                - pagination
+                    left                Array with page numbers on the left of ... null if there is nothing to display
+                    mid                 Array with page numbers on in the middle of the ...
+                    right               Array with page numbers on the right of ... null if there is nothing to display
+                - paginator
+                    count               ?
+                    num_pages           Total number of pages
+                - number                Current page number
+            */
+            data: {},
             render: function() {
                 try {
                     $('#pagination').empty();
@@ -102,10 +105,6 @@
             min: {{ pricerange.min }},
             max: {{ pricerange.max }}
         };
-        function recalculatePagination(page) {
-            // Implement calculation hash based on information in lastPagination and page
-            
-        }
         jQuery(document).ready(function() {
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
@@ -149,13 +148,12 @@
                 if(jQuery('#page-' + page).length == 0) {
                     filter(getQuery({page: page}), function(response) {
                         renderPage(response, page);
-                        jQuery('#product-list').scrollable().reload().setPage(jQuery('#page-' + page).index());
+                        jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index());
                     });
                 } else {
-                    // Recalculate pagination
                     pagination.recalculate(page);
                     pagination.render();
-                    jQuery('#product-list').scrollable().reload().setPage(jQuery('#page-' + page).index());
+                    jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index());
                 }
                 return false;
             });
@@ -222,7 +220,7 @@
                 pageList.append(tmpl('product_template', { product: product }));
             });
             
-            console.log(products);            
+            console.log(products);
             pagination.data = products;
             pagination.render();
         }
