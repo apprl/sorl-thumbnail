@@ -28,7 +28,7 @@
                 jQuery(this).find('.magnifier').fadeOut('slow');
                 return false;
             });
-            jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
+            jQuery('.product-image a').overlay({ target: "#gallery" });
 
             jQuery('#add-to-look').hover(
                 function() { jQuery(this).find('ul').show(); }, 
@@ -97,10 +97,7 @@
             {% include 'apparel/fragments/product_detail.html' %}
             <!-- overlay element -->
             <div class="simple_overlay" id="gallery">
-                <!-- "previous image" action -->
-                <a class="prev">prev</a>
-                <!-- "next image" action -->
-                <a class="next">next</a>
+                <img src="{{object.product_image.url}}">
                 <!-- image information -->
                 <div class="info"></div>
             

@@ -159,12 +159,11 @@
                 }
                 return false;
             });
-            var product_list = jQuery('#product-list').scrollable({
-                api: true,
+            jQuery('#product-list').scrollable({
                 items: 'ul.list',
                 prevPage: '.prev',
                 nextPage: '.next',
-                size: 1,
+                size: 1
             });
         });
         function getQuery(query) {
