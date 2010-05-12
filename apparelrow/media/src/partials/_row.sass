@@ -4,7 +4,7 @@
 
 =row(!width = !default_row_width, !height = !default_row_height)
   +clearfix
-  a.prevPage, a.nextPage
+  a.prev, a.next
     +float-left
     +box
     display: block 
@@ -15,13 +15,13 @@
       visibility: visible
       background-color= !box_disabled_color
       border-color= !border_disabled_color
-  a.prevPage
+  a.prev
     +replace-text("prev-page.png")
     +border-left-radius
     margin-right: 5px
     &.disabled
       background-image= image_url("prev-page-disabled.png")
-  a.nextPage
+  a.next
     +replace-text("next-page.png")
     +border-right-radius
     margin-left: 5px
