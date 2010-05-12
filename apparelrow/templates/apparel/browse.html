@@ -23,14 +23,10 @@
 
         var pagination = {
             recalculate: function(page) {
-                if(!'number' in this.data) {
-                    console.log('pagination is not initialised!');
-                    return;
-                }
-                
                 var on_ends      = 2;   // FIXME: These two should come from the server
                 var on_each_side = 3;
                 var num_pages = this.data.paginator.num_pages;
+                
                 this.data.pagination.right = null;
                 this.data.pagination.left  = null;
                 this.data.pagination.mid   = [];
@@ -50,7 +46,7 @@
                             this.data.pagination.left.push(i);
                         }
                         for(var i = page - on_each_side; i <= page; i++) {
-                            this.data.pagination.left.push(i);
+                            this.data.pagination.mid.push(i);
                         }
                     }
                     
@@ -63,17 +59,19 @@
                         for(var i = page + 1; i <= on_each_side + page; i++) {
                             this.data.pagination.mid.push(i);
                         }
-                        for(var i = num_pages - on_ends; i <= num_pages; i++) {
+                        for(var i = num_pages - on_ends + 1; i <= num_pages; i++) {
                             this.data.pagination.right.push(i);
                         }                        
                     }
                 }
-                
+                                
                 this.data.next_page_number     = (page < num_pages) ? page + 1 : null;
                 this.data.previous_page_number = (page > 1)         ? page - 1 : null;
                 this.data.has_next     = (this.data.next_page_number    ) ? true : false;
                 this.data.has_previous = (this.data.previous_page_number) ? true : false;
                 this.data.number = page;
+                
+                console.log('got pagination', this.data);
             },
             /* This variable contains the pagination data. It needs to be populated 
                with before rendering/recalculation may happen. This is the structure:
@@ -90,7 +88,15 @@
                     num_pages           Total number of pages
                 - number                Current page number
             */
-            data: {},
+            data: {
+                pagination: {{ pagination|export_as_json}},
+                paginator: {
+                    {# The Pagination object is not currently exportable... #}
+                    count: {{ pages.0.paginator.count }},
+                    num_pages: {{ pages.0.paginator.num_pages }}
+                },
+                number: {{ pages.0.number }}
+            },
             render: function() {
                 try {
                     $('#pagination').empty();
@@ -148,10 +154,12 @@
                 if(jQuery('#page-' + page).length == 0) {
                     filter(getQuery({page: page}), function(response) {
                         renderPage(response, page);
-                        jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 200);
+                        jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 400);
                     });
                 } else {
-                    jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 200);
+                    pagination.recalculate(page);
+                    pagination.render();
+                    jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 400);
                 }
                 return false;
             });
@@ -215,7 +223,7 @@
                 pageList.append(tmpl('product_template', { product: product }));
             });
             
-            console.log(products);
+            console.log('new products', products);
             pagination.data = products;
             pagination.render();
         }
