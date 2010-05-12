@@ -148,6 +148,16 @@ class Product(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('apparel.views.product_detail', [str(self.slug)])
+    
+    def categories(self):
+        c = self.category
+        categories = []
+                
+        while c:
+            categories.insert(0, c)
+            c = c.parent
+        
+        return categories
 
     def save(self, force_insert=False, force_update=False):
         if not self.pk:

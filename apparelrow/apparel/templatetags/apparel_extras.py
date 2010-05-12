@@ -169,7 +169,11 @@ def export_as_json(o):
     
     try:
         return mark_safe(json.encode(o))
-    except:
+    except Exception, e:
+        logging.error('Error while exporting object to JSON in template')
+        logging.debug('Object: ', pformat(o))
+        logging.exception(e)
+        
         return ''
 
 register.filter('export_as_json', export_as_json)
