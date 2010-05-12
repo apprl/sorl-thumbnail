@@ -20,16 +20,91 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.fixedscroll.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/filtersetup.js"></script>
     <script type="text/javascript">
-        /*
-        jQuery(window).load(function() {
-            if(window.location.hash) {
-                doFilter(window.location.hash.substr(1));
+
+        var pagination = {
+            recalculate: function(page) {
+                if(!this.data) return;
+                
+                var on_ends = 2;
+                var on_each_side = 3;
+                var num_pages = this.data.paginator.num_pages;
+                this.data.pagination.right = null;
+                this.data.pagination.left  = null;
+                this.data.pagination.mid   = [];
+                
+                if(num_pages <= (on_ends * 2) + (on_each_side * 2)) {
+                    for(var i = 1; i <= num_pages; i++) {
+                        this.data.pagination.mid.push(i);
+                    }
+                } else {
+                    if(page <= on_ends + on_each_side + 1) {
+                        for(var i = 1; i <= page; i++) {
+                            this.data.pagination.mid.push(i);
+                        }
+                    } else {
+                        this.data.pagination.left = []
+                        for(var i = 1; i <= on_ends; i++) {
+                            this.data.pagination.left.push(i);
+                        }
+                        
+                        for(var i = page - on_each_side; i <= page; i++) {
+                            this.data.pagination.left.push(i);
+                        }
+                    }
+                    
+                    if(page >= num_pages - (on_ends + on_each_side + 1)) {
+                        for(var i = page + 1; i <= num_pages; i++) {
+                            this.data.pagination.mid.push(i);
+                        }
+                    } else {
+                        for(var i = page + 1; i <= on_each_side + page; i++) {
+                            this.data.pagination.mid.push(i);
+                        }
+                        for(var i = num_pages - on_ends; i <= num_pages; i++) {
+                            this.data.pagination.right.push(i);
+                        }                        
+                    }
+                }
+                
+                this.data.next_page_number     = (page < num_pages) ? page + 1 : null;
+                this.data.previous_page_number = (page > 1)         ? page - 1 : null;
+                this.data.has_next     = (this.data.next_page_number    ) ? true : false;
+                this.data.has_previous = (this.data.previous_page_number) ? true : false;
+                this.data.number = page;
+            },
+            data: {
+                // next_page_number = ''
+                // previous_page_number
+                // has_next
+                // has_previous
+                // pagination = {
+                //  left
+                //  right
+                //  mid
+                // }
+                // paginator {
+                //  count
+                //  num_pages
+                // }
+                // number            
+            },
+            render: function() {
+                try {
+                    $('#pagination').empty();
+                    $('#pagination').append(tmpl('pagination_template', { products: this.data }));
+                } catch(e) {
+                    console.log(e)
+                }
             }
-        });
-        */
+        };
+        
         var pricerange = {
             min: {{ pricerange.min }},
             max: {{ pricerange.max }}
+        };
+        function recalculatePagination(page) {
+            // Implement calculation hash based on information in lastPagination and page
+            
         }
         jQuery(document).ready(function() {
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
@@ -77,6 +152,9 @@
                         jQuery('#product-list').scrollable().reload().setPage(jQuery('#page-' + page).index());
                     });
                 } else {
+                    // Recalculate pagination
+                    pagination.recalculate(page);
+                    pagination.render();
                     jQuery('#product-list').scrollable().reload().setPage(jQuery('#page-' + page).index());
                 }
                 return false;
@@ -144,12 +222,10 @@
             jQuery.each(products.object_list, function(i, product) {
                 pageList.append(tmpl('product_template', { product: product }));
             });
-            try {
-                $('#pagination').empty();
-                $('#pagination').append(tmpl('pagination_template', { products: products }));
-            } catch(e) {
-                console.log(e)
-            }
+            
+            console.log(products);            
+            pagination.data = products;
+            pagination.render();
         }
         function filterCriteria(criteria_filter) {
             if('manufacturers' in criteria_filter) {
