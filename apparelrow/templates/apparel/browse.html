@@ -70,8 +70,6 @@
                 this.data.has_next     = (this.data.next_page_number    ) ? true : false;
                 this.data.has_previous = (this.data.previous_page_number) ? true : false;
                 this.data.number = page;
-                
-                console.log('got pagination', this.data);
             },
             /* This variable contains the pagination data. It needs to be populated 
                with before rendering/recalculation may happen. This is the structure:
@@ -224,7 +222,6 @@
                 pageList.append(tmpl('product_template', { product: product }));
             });
             
-            console.log('new products', products);
             pagination.data = products;
             pagination.render();
         }
@@ -233,8 +230,8 @@
                 applyCriteriaFilter({ 
                     'selector': '#product-manufacturers .option-content li > a', 
                     'criteria': criteria_filter['manufacturers'],
-                    'add': function(o) { jQuery(o).parent().addClass('filtered'); },
-                    'remove': function(o) { jQuery(o).parent().removeClass('filtered');  },
+                    'add': function(o) { o.parent().addClass('filtered'); },
+                    'remove': function(o) { o.parent().removeClass('filtered');  },
                 });
             }
             
@@ -242,8 +239,17 @@
                 applyCriteriaFilter({ 
                     'selector': '#product-category li > a', 
                     'criteria': criteria_filter['categories'],
-                    'add': function(o) { jQuery(o).parent().addClass('filtered'); },
-                    'remove': function(o) { jQuery(o).parent().removeClass('filtered');  },
+                    'add': function(o) { o.parent().addClass('filtered'); },
+                    'remove': function(o) { 
+                        o.parent().removeClass('filtered');
+                        if(o.parent().parent().attr('id') != 'product-category') {
+                            // If the element is part of a sub category, ensure its
+                            // parent is also not filtered. 
+                            // FIXME: This does currently only work for a one level deep hierarchy
+                            // FIXME: Is there an easier way to look up in the hierarchy?
+                            o.parent().parent().parent().removeClass('filtered');
+                        }
+                    },
                 });
             }
             
@@ -251,8 +257,8 @@
                 applyCriteriaFilter({ 
                     'selector': '#product-color .option-content li > a', 
                     'criteria': criteria_filter['options'],
-                    'add': function(o) { jQuery(o).addClass('filtered'); },
-                    'remove': function(o) { jQuery(o).removeClass('filtered');  },
+                    'add': function(o) { o.addClass('filtered'); },
+                    'remove': function(o) { o.removeClass('filtered');  },
                 });
 
                 // FIXME: Add size here aswell
@@ -262,10 +268,11 @@
         function applyCriteriaFilter(args) {
             //selector, criteria, cb_add, cb_remove) {
             jQuery(args.selector).each(function() {
+                $this = jQuery(this);
                 if (args.criteria.length == 0 || jQuery.inArray(this.id.split('-')[1], args.criteria) >= 0) {
-                    args.remove(this);
+                    args.remove($this);
                 } else {
-                    args.add(this);
+                    args.add($this);
                 }
             });
         }
