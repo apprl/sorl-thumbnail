@@ -150,6 +150,7 @@
             });
             jQuery('#pagination a').live('click', function() {
                 //filter(getQuery($(this).attr('href').split('=')[1]));
+                // FIXME: Move out logic to section that handles page-swapping
                 var page = parseInt(jQuery(this).attr('href').split('=')[1]);
                 if(jQuery('#page-' + page).length == 0) {
                     filter(getQuery({page: page}), function(response) {
