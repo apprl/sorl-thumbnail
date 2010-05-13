@@ -61,14 +61,18 @@ jQuery(document).ready(function() {
     jQuery('#product-category li > ul').hide();
     jQuery('#product-category li > a').click(function() {
         var $this = jQuery(this);
-        $this.toggleClass('selected');
-        var underCategories = $this.next();
-        if(underCategories.length > 0) {
-            var selected = underCategories.find('a.selected');
-            if(selected.length <= 0) {
-                underCategories.find('a').addClass('selected');
+            $this.toggleClass('selected');
+        
+        var subCategories = $this.next();
+        
+        if(subCategories.length > 0) {
+            if($this.hasClass('selected')) {
+                subCategories.find('a').addClass('selected');
+            } else {
+                subCategories.find('a').removeClass('selected');
             }
-            underCategories.slideToggle();
+            
+            subCategories.slideToggle();
             return false;
         }
         return true;
