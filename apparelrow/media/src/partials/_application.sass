@@ -602,36 +602,53 @@ a.buy-now
     padding: 0 10px 0 16px
 
 #comments-and-links
-  li
-    +clearfix
-    padding: 9px 0
-    +border("bottom")
-    img.avatar
-      +border("all")
-      float: left
-      margin-right: 9px
-    h3
-      font-weight: normal
-      span
-        color= !easier_color
-        float: right
-        font-size: 10px
-    p
-      color= !easy_color
+  img.avatar
+    +border("all")
+    float: left
+    margin-right: -1px
+  #comments
+    margin-bottom: 9px
+    li
+      +clearfix
+      padding: 9px 0
+      +border("bottom")
+      img.avatar
+        margin-right: 9px
+      h3
+        font-weight: normal
+        span
+          color= !easier_color
+          float: right
+          font-size: 10px
+      p
+        color= !easy_color
   form
     +box
     +clearfix
-    margin-top: 18px
+    +border-right-radius(3px)
+    margin: 15px 0 0 -1px
     padding: 3px 2px 3px 3px
     textarea
       height: 1em
       width: 96%
+      display: block
       +text_input
     button
       float: right
       +text_input
       +highlight
       background-image: none
+      margin-top: 2px
+
+body.look
+  #comments-and-links
+    textarea
+      width= !middle_width - 62px
+
+body.product
+  #comments-and-links
+    textarea
+      width= !small_width - 62px
 
 
 #recentlyviewed

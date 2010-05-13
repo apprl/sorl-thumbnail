@@ -29,13 +29,16 @@ jQuery(document).ready(function() {
         },
     });
     // Comments posting
-    if(jQuery('#comments-and-links textarea').val() == '') { jQuery('#comments-and-links button').hide() }
-    jQuery('#comments-and-links textarea').focus(function() { jQuery('#comments-and-links button').show() });
-    jQuery('#comments-and-links textarea').blur(function() { if(jQuery(this).val() == '' ) { jQuery('#comments-and-links button').hide() } });
-//    jQuery('#comments textarea').autogrow();
+    var comment_area = jQuery('#comments-and-links textarea');
+    if(comment_area.val() == '')
+        jQuery('#comments-and-links button').hide();
+    comment_area
+        .focus(function() { jQuery('#comments-and-links button').show() })
+        .blur(function() { if(jQuery(this).val() == '') jQuery('#comments-and-links button').hide() })
+        .autogrow();
     jQuery('#comments-and-links form').hyperSubmit({
         success: function(data, statusText, req) {
-            jQuery('#comments-and-links textarea').val('');
+            comment_area.val();
             jQuery('#comments-and-links button').hide();
             jQuery(data.html).hide().appendTo('ul#comments').slideDown('fast');
             increase_counts(jQuery('a.comments > span.count'));
