@@ -504,8 +504,23 @@ div#product-list
     background: transparent url(../images/magnifier.png) no-repeat scroll left top
     display: none
   img
+    cursor: -moz-zoom-in
     vertical-align: top
 
+#gallery
+  display: none
+  z-index: 10000
+  +box-shadow
+  img
+    vertical-align: top
+  .close
+    position: absolute
+    background= "transparent" image_url("delete.png") "no-repeat" "scroll" "center" "center"
+    cursor: pointer
+    height: 22px
+    width: 22px
+    top: -11px
+    left: -11px
 
 table.available-sizes th
   border: none
