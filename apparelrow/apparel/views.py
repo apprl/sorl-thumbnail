@@ -402,14 +402,26 @@ def delete_look_component(request):
     look
     """
     
-    LookComponent.objects.get(
+    components = LookComponent.objects.filter(
         product__id=request.POST['product'],
-        look__id=request.POST['look'],
-        component_of=request.POST['component_of']
-    ).delete()
+        look__id=request.POST['look']
+    )
+    in_look = True
+    
+    if components.count() > 1:
+        # Remove only selected component
+        components.filter(component_of=request.POST['component_of']).delete()
+    else:
+        # Remove selected component AND product from look
+        components[0].delete()
+        Look.objects.get(pk=request.POST['look']).products.remove(request.POST['product'])
+        in_look = False
     
     return (
-        {}, 
+        {
+            'component': request.POST['component_of'],
+            'in_look': in_look,
+        }, 
         HttpResponseRedirect( reverse('apparel.views.look_edit', args=(request.POST['look'],)))
     )
 

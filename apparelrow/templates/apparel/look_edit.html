@@ -122,16 +122,19 @@ var look = {
     deleteComponent: function(wrapper, pane) {
         var context = getContextFromPane(pane);
         var product = getProductFromElement(wrapper);
-        
+        var product_id = product.attr('id').split('-').pop();
         jQuery.post(
             '{% url apparel.views.delete_look_component %}', {
                 look: {{ object.id }},
-                product: product.attr('id').split('-').pop(),
+                product: product_id,
                 component_of: context.component_of
             },
             function(response, status, request) {
                 if(response.success) {
                     product.remove();
+                    
+                    if(!response.data.in_look)
+                        jQuery('#selection-' + product_id).remove();
                 }
             }
         );
@@ -250,8 +253,10 @@ jQuery(document).ready(function() {
             </div>
             {% include 'apparel/fragments/look_picture.html' %}
             <div id="selection">
+            {% with "selection" as id_prefix %}
             {% with object.products.all as products %}
             {% include 'apparel/fragments/product_row.html' %}
+            {% endwith %}
             {% endwith %}
             </div>
         </div>
