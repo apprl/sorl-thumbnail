@@ -43,10 +43,15 @@
                     text = link.text();
                     link.text('{% trans "Adding..." %}');
                 },
-                success: function(json, statusText, req) {
-                    if(json.data['created'])
-                        jQuery('#add-to-look-new').before(tmpl('look_button_template', json.data ));
+                success: function(response, statusText, req) {
+                    if(response.data['created'])
+                        jQuery('#add-to-look-new').before(jQuery('#look_button_template').render(response.data));
                     
+                        /* FIXME uncommented this, for now. We need to do something more smart with templates.
+                    if(response.data['added'])
+                        jQuery('<li/>').append(response.data.template, { 'object': response.data.look }).prependTo('ul.looks');
+                        */
+
                     link.text(text);
                     input = jQuery('#add-to-look-new input[name=new_name]');
                     input.hide();

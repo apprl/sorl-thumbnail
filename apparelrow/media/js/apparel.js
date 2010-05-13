@@ -1,4 +1,9 @@
 jQuery(document).ready(function() {
+    // Adding comments to jquery-tmpl, syntax: {{#}}comment{{/#}} Note: the "" are important
+    jQuery.tmplcmd['#'] = {
+        prefix: '/*',
+        suffix: '*/'
+    }
     var likeContainers = 'body.look .collage, body.product .product-image';
     jQuery(likeContainers).children('form').hide();
     jQuery(likeContainers).hover(

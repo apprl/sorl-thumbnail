@@ -249,7 +249,7 @@ def browse(request):
 
 
 def js_template(str):
-    str = str.replace('{{', '<%=').replace('}}', '%>')
+    str = str.replace('{{', '${').replace('}}', '}')
     return Template(str).render(Context())
     
     #return str.replace('{%', '<%').replace('%}', '%>').replace('{{', '<%=').replace('}}', '%>')
@@ -449,6 +449,7 @@ def add_to_look(request):
             'look': look,           # The look the product was added to
             'created': created,     # Whether the look was created
             'added': added,         # Whether the product was added to the look or not. If false it was aleady there.
+            'template': js_template(get_template_source('apparel/fragments/look_collage_small.html')),
         }, 
         HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,)))
     )

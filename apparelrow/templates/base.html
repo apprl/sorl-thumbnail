@@ -22,7 +22,7 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.hypersubmit.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/dump.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}/js/resig.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.tmpl.js"></script>
     <script type="text/javascript">
         
         jQuery(document).ready(function() {
@@ -267,9 +267,7 @@
 </div>
 {% for template_name,template_string in templates.items %}
     <script type="text/html" id="{{ template_name }}_template">
-    <![CDATA[
         {{ template_string|safe }}
-    ]]>
     </script>
 {% endfor %}
 </body>
