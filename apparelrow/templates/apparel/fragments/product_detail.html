@@ -16,7 +16,7 @@
 <div class="product-info">
     <h2>{% for c in object.categories %}
             {{ c.name }}
-            {% if not forloop.last %} \\ {% endif %}
+            {% if not forloop.last %} \ {% endif %}
         {% endfor %} \ {{ object.manufacturer }}</h2>
     <h1>{{ object.product_name }}</h1>
     <h3>{% trans "by" %} {{ object.manufacturer }}</h3>
