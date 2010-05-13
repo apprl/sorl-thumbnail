@@ -1,3 +1,13 @@
+function increase_counts(counts, new_count) {
+    // For each element, set to new_count if available, otherwise increase the current count with 1
+    counts.each(function() {
+        $(this)
+            .hide()
+            .html(new_count ? new_count : parseInt($(this).html()) + 1)
+            .fadeIn()
+            ;
+    });
+}
 jQuery(document).ready(function() {
     // Adding comments to jquery-tmpl, syntax: {{#}}comment{{/#}} Note: the "" are important
     jQuery.tmplcmd['#'] = {
@@ -14,10 +24,7 @@ jQuery(document).ready(function() {
         success: function(response, statusText, req, form) {
             // Match "/model/slug/like"
             if(/^\/(\w+)\/([\w-]+)\/like/.test(form.attr('action'))) {
-                jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count')
-                    .hide()
-                    .html(response.score.score)
-                    .fadeIn();
+                increase_counts(jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count'), response.score.score);
             }
         },
     });
@@ -31,8 +38,7 @@ jQuery(document).ready(function() {
             jQuery('#comments-and-links textarea').val('');
             jQuery('#comments-and-links button').hide();
             jQuery(data.html).hide().appendTo('ul#comments').slideDown('fast');
-            var count = jQuery('a.comments > span.count');
-            count.html(parseInt(count.html()) + 1);
+            increase_counts(jQuery('a.comments > span.count'));
             return false;
         },
     });
