@@ -133,7 +133,7 @@ var look = {
                 }
                 
                 if(response.data.added) {
-                    var new_product = jQuery(tmpl(context.template, { 'component': component } )).appendTo(pane);
+                    var new_product = jQuery(context.template).render({component: component}).appendTo(pane);
                     look.initialize(new_product);
                 }
             }

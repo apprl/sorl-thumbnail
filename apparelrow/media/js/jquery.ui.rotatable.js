@@ -1,5 +1,5 @@
 /*
- * jQuery UI Rotatable 1.8rc3
+ * jQuery UI Rotatable 0.7.0
  *
  * Copyright (c) 2010 Linus G Thiel (Hansson & Larsson)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -26,7 +26,7 @@ $.widget("ui.rotatable", $.ui.mouse, {
             var p = this.options.cssRules[i];
             if(typeof style[p] != 'undefined') {
                 r = style[p].match(this.options.reRotate);
-                return r && r[1] ? r[1] : 0;
+                return r && r[1] ? parseInt(r[1]) : 0;
             }
         }
         return 0;
@@ -223,12 +223,20 @@ $.widget("ui.rotatable", $.ui.mouse, {
 		//Increase performance, avoid regex
 		var el = this.element, self = this, smp = this.originalMousePosition, a = this.axis;
 
+        // Midpoint of element
+        var xm = el.offset().left + el.width() / 2;
+        var ym = el.offset().top + el.height() / 2;
+        // Delta between midpoint and original position
+        var dx0 = smp.left - xm, dy0 = smp.top - ym;
+        // Delta between midpoint and current position
+        var dx1 = event.pageX - xm, dy1 = event.pageY - ym;
+        // Delta between original position and current
 		var dx = (event.pageX-smp.left)||0, dy = (event.pageY-smp.top)||0;
 		var trigger = this._change[a];
 		if (!trigger) return false;
 
 		// Calculate the attrs that will be change
-		var data = trigger.apply(this, [event, dx, dy]);
+		var data = trigger.apply(this, [event, dx, dy, dx0, dy0, dx1, dy1]);
 
 		// plugins callbacks need to be called first
 		this._propagate("rotate", event);
@@ -262,17 +270,25 @@ $.widget("ui.rotatable", $.ui.mouse, {
 	},
 
 	_change: {
-		se: function(event, dx, dy) {
-			return -this._change.nw.apply(this, [event, dx, dy]);
+		se: function(event, dx, dy, dx0, dy0, dx1, dy1) {
+			return this._change.nw.apply(this, [event, dx, dy, dx0, dy0, dx1, dy1]);
 		},
-		sw: function(event, dx, dy) {
-			return this._change.nw.apply(this, [event, dx, dy]);
+		sw: function(event, dx, dy, dx0, dy0, dx1, dy1) {
+			return this._change.nw.apply(this, [event, dx, dy, dx0, dy0, dx1, dy1]);
 		},
-		ne: function(event, dx, dy) {
-			return -this._change.nw.apply(this, [event, dx, dy]);
+		ne: function(event, dx, dy, dx0, dy0, dx1, dy1) {
+			return this._change.nw.apply(this, [event, dx, dy, dx0, dy0, dx1, dy1]);
 		},
-		nw: function(event, dx, dy) {
-            return (dy < 0 ? 1 : -1) * Math.round(Math.sqrt(dy * dy + dx * dx));
+		nw: function(event, dx, dy, dx0, dy0, dx1, dy1) {
+            var a2 = dx * dx + dy * dy
+              , b2 = dx0 * dx0 + dy0 * dy0
+              , c2 = dx1 * dx1 + dy1 * dy1;
+            // Cosine law
+            var cos_a = (b2 + c2 - a2)/(2 * Math.sqrt(b2) * Math.sqrt(c2));
+            // Arccos and convert to degrees
+            var angle = Math.round(Math.acos(cos_a) * 180 / Math.PI);
+            var sign = dx < 0 || dy < 0 ? -1 : 1;
+            return sign * angle;
 		}
 	},
 
@@ -298,7 +314,7 @@ $.widget("ui.rotatable", $.ui.mouse, {
 });
 
 $.extend($.ui.rotatable, {
-	version: "1.8rc3"
+	version: "0.8.0"
 });
 
 var num = function(v) {

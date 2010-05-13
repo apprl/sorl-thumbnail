@@ -43,10 +43,19 @@
                     text = link.text();
                     link.text('{% trans "Adding..." %}');
                 },
-                success: function(json, statusText, req) {
-                    if(json.data['created'])
-                        jQuery('#add-to-look-new').before(tmpl('look_button_template', json.data ));
+                success: function(response, statusText, req) {
+                    if(response.data['created']) {
+                        jQuery('#add-to-look-new').before(jQuery('#look_button_template').render(response.data));
+                    }
                     
+                    if(response.data['added']) {
+                        increase_counts(jQuery('h2#looks > span.count, a.looks > span.count'));
+                        jQuery('h2#looks.hidden, p.hidden:has(a.looks)').fadeIn().removeClass('hidden');
+                        /* FIXME uncommented this, for now. We need to do something more smart with templates.
+                        jQuery('<li/>').append(response.data.template, { 'object': response.data.look }).prependTo('ul.looks');
+                        */
+                    }
+
                     link.text(text);
                     input = jQuery('#add-to-look-new input[name=new_name]');
                     input.hide();
@@ -96,17 +105,13 @@
             <!-- overlay element -->
             <div id="gallery">
                 <img src="{{object.product_image.url}}">
-                <!-- image information -->
-                <!--div class="info">{{object.description}}</div-->
             </div>
         </div>
         <div class="sidebar last">
             {% get_comment_count for object as comment_count %}
             <div class="activity">
                 {% include 'apparel/fragments/comment_count.html' %}
-                {% if looks_with_product|length %}
-                    <p><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to {{ counter }} look{% plural %}Added to {{ counter }} looks{% endblocktrans %}</a></p>
-                {% endif %}
+                <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
                 <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
             </div>
             <h2>{% trans "Recently viewed" %}</h2>
@@ -116,18 +121,16 @@
                 {% endwith %}
             </div>
 
-            {% if looks_with_product %}
-            <h2 id="looks">
+            <h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
                 {% blocktrans count looks_with_product|length as counter %}
-                    {{ counter }} look with this product
+                    <span class="count">{{ counter }}</span> look with this product
                 {% plural %}
-                    {{ counter }} looks with this product
+                    <span class="count">{{ counter }}</span> looks with this product
                 {% endblocktrans %}
             </h2>
             {% with looks_with_product as looks %}
             {% include 'apparel/fragments/looks.html' %}
             {% endwith %}
-            {% endif %}
         </div>
 {% else %}
     <p>No product found!</p>

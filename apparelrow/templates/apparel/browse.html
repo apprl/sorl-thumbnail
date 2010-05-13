@@ -98,7 +98,7 @@
             render: function() {
                 try {
                     $('#pagination').empty();
-                    $('#pagination').append(tmpl('pagination_template', { products: this.data }));
+                    $('#pagination_template').render({products: this.data}).appendTo('#pagination');
                 } catch(e) {
                     console.log(e)
                 }
@@ -219,7 +219,7 @@
                 jQuery('#product-list > ul.list').append(newPage);
             }
             jQuery.each(products.object_list, function(i, product) {
-                pageList.append(tmpl('product_template', { product: product }));
+                jQuery('#product_template').render({ product: product }).appendTo(pageList);
             });
             
             pagination.data = products;
@@ -279,7 +279,7 @@
         
         function renderProducts(products) {
             $('#product-count').empty();
-            $('#product-count').append(tmpl('product_count_template', { products: products }));
+            $('#product_count_template').render({ products: products }).appendTo('#product-count');
             jQuery('#product-list > ul').empty();
             renderPage(products, 1);
             jQuery('#product-list').data('scrollable').begin();
