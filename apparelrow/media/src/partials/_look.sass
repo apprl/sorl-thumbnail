@@ -188,12 +188,26 @@ body.look
   +box
   background= !box_color - #0b0b0b image_url("tooltip-bg.png") "repeat-x" "scroll" "center" "top"
   +border-radius(2px)
+  +border("all")
   +box-shadow
   display: none
   z-index: 1100
   padding: 10px 10px 8px 10px
+  position: relative
   h2
     margin-top: 0
+    margin-bottom: 1px
+    border-bottom: none
+  p, a
+    color= !easy_color
+    font-size: smaller
+  .arrow
+    position: absolute
+    background= "transparent" image_url("tooltip-arrow.png") "no-repeat" "scroll" "center" "center"
+    width: 14px
+    height: 8px
+    bottom: -8px
+    left: 16px
 
 body.look
   .collage

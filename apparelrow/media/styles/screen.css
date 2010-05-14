@@ -630,6 +630,7 @@ body.look .spread input {
   border-radius: 2px;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
+  border: 1px solid #d9d9d9;
   /* Webkit (Safari, Chrome) */
   -webkit-box-shadow: #999999 0px 0px 20px;
   /* Gecko (Firefox, Camino) */
@@ -639,106 +640,123 @@ body.look .spread input {
   display: none;
   z-index: 1100;
   padding: 10px 10px 8px 10px;
+  position: relative;
 }
-/* line 195, ../src/partials/_look.sass */
+/* line 197, ../src/partials/_look.sass */
 .tooltip h2 {
   margin-top: 0;
+  margin-bottom: 1px;
+  border-bottom: none;
+}
+/* line 201, ../src/partials/_look.sass */
+.tooltip p, .tooltip a {
+  color: #666666;
+  font-size: smaller;
+}
+/* line 204, ../src/partials/_look.sass */
+.tooltip .arrow {
+  position: absolute;
+  background: transparent url('../images/tooltip-arrow.png?1273840466') no-repeat scroll center center;
+  width: 14px;
+  height: 8px;
+  bottom: -8px;
+  left: 16px;
 }
 
-/* line 199, ../src/partials/_look.sass */
+/* line 213, ../src/partials/_look.sass */
 body.look .collage {
   position: relative;
   height: 524px;
 }
-/* line 202, ../src/partials/_look.sass */
+/* line 216, ../src/partials/_look.sass */
 body.look #comments-and-links {
   float: left;
   width: 452px;
   margin-right: 36px;
 }
-/* line 206, ../src/partials/_look.sass */
+/* line 220, ../src/partials/_look.sass */
 body.look #tags {
   float: left;
   width: 208px;
 }
-/* line 209, ../src/partials/_look.sass */
+/* line 223, ../src/partials/_look.sass */
 body.look #tags li {
   border-bottom: 1px solid #f2f2f2;
 }
-/* line 211, ../src/partials/_look.sass */
+/* line 225, ../src/partials/_look.sass */
 body.look #tags li span {
   float: right;
   color: #999999;
 }
-/* line 214, ../src/partials/_look.sass */
+/* line 228, ../src/partials/_look.sass */
 body.look .sidebar {
   margin-top: 30px;
 }
-/* line 216, ../src/partials/_look.sass */
+/* line 230, ../src/partials/_look.sass */
 body.look .sidebar p {
   border-top: none;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 219, ../src/partials/_look.sass */
+/* line 233, ../src/partials/_look.sass */
 body.look .sidebar .description {
   border-bottom: none;
   padding-top: 1.5em;
 }
-/* line 222, ../src/partials/_look.sass */
+/* line 236, ../src/partials/_look.sass */
 body.look #content {
   margin-top: -2em;
 }
-/* line 224, ../src/partials/_look.sass */
+/* line 238, ../src/partials/_look.sass */
 body.look #content .collage {
   background-color: white;
   margin-right: 2em;
 }
 
-/* line 229, ../src/partials/_look.sass */
+/* line 243, ../src/partials/_look.sass */
 #look-header {
   position: relative;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 232, ../src/partials/_look.sass */
+/* line 246, ../src/partials/_look.sass */
 #look-header .profile-image {
   position: absolute;
   left: 0em;
   top: 0;
 }
-/* line 236, ../src/partials/_look.sass */
+/* line 250, ../src/partials/_look.sass */
 #look-header div {
   margin-left: 70px;
 }
-/* line 238, ../src/partials/_look.sass */
+/* line 252, ../src/partials/_look.sass */
 #look-header div h1 {
   font-size: 1.5em;
   line-height: 2em;
 }
-/* line 241, ../src/partials/_look.sass */
+/* line 255, ../src/partials/_look.sass */
 #look-header div h1 a {
   font-size: 0.75em;
 }
 
-/* line 244, ../src/partials/_look.sass */
+/* line 258, ../src/partials/_look.sass */
 #wardrobe {
   margin: 0 -16px 0 -24px;
   clear: both;
 }
 
-/* line 248, ../src/partials/_look.sass */
+/* line 262, ../src/partials/_look.sass */
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
   background: #f2f2f2 url('../images/gradient-bg.png?1270043905') repeat-x;
   padding: 10px 8px 0 10px;
 }
-/* line 254, ../src/partials/_look.sass */
+/* line 268, ../src/partials/_look.sass */
 #wardrobe-title span {
   background: transparent url('../images/arrow-bg-down.png?1272964037') no-repeat top left;
   padding-left: 14px;
 }
 
-/* line 258, ../src/partials/_look.sass */
+/* line 272, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
   background: transparent url('../images/wardrobe-bg.png?1273247149') scroll repeat-x center center;
@@ -866,7 +884,7 @@ body.look #content .collage {
 #wardrobe-contents div.row ul li a img {
   vertical-align: middle;
 }
-/* line 264, ../src/partials/_look.sass */
+/* line 278, ../src/partials/_look.sass */
 #wardrobe-contents li a {
   cursor: move;
 }
