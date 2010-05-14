@@ -190,8 +190,7 @@ var look = {
 };
 
 function getContextFromPane(pane) {
-    var context = {// FIXME: We should get look product type from the model
-        //'photo': { 'template': 'look_photo_product_template', 'component_of': 'P' },
+    var context = {
         'photo-background': { 'template': '#look_photo_product_template', 'component_of': 'P' },
         'collage': { 'template': '#look_collage_product_template', 'component_of': 'C' }
     }[pane.attr('id')];
@@ -270,14 +269,18 @@ jQuery(document).ready(function() {
         var left   = e.pageX - offset.left;
         var top    = e.pageY - offset.top;
         
-        chooser.show({
-            anchor: jQuery(this),
-            callback: function(li) {
-                createHotspot(li.data('product'), top, left);
-            },
-            left: left,
-            top: top
-        });
+        if(chooser.dialog.is(':visible')) {
+            chooser.dialog.hide();
+        } else {            
+            chooser.show({
+                anchor: jQuery(this),
+                callback: function(li) {
+                    createHotspot(li.data('product'), top, left);
+                },
+                left: left,
+                top: top
+            });
+        }
     });
     
     jQuery('#photo-background a').live('click', function(e) {
@@ -341,8 +344,8 @@ jQuery(document).ready(function() {
                 function(id, idx) {
                     return (existing.indexOf(id) > -1 || ids.indexOf(id) < idx) ? false : true;
                 }
-            );            
-            
+            );   
+                        
             // Find out what ids needs to be fetched
             var to_fetch = [];
             jQuery.each(ids, function(idx, id) {
