@@ -16,7 +16,8 @@ var look = {
         switch(pane.attr('id')) {
             case 'collage':
                 ele.resizable({
-                    aspectRatio: 'true',
+                    aspectRatio: true,
+                    autoHide: true,
                     maxHeight: ele.parent().height(),
                     maxWidth: ele.parent().width(),
                     minHeight: 30,
@@ -33,6 +34,7 @@ var look = {
                 wrapper = ele.parent('.ui-wrapper');
                 wrapper.rotatable({ 
                     handles: 'ne',
+                    autoHide: true,
                     stop: function(event, ui) {
                         look.saveComponent({
                             id: ui.element.find('.product').attr('id').split('-').pop(),
@@ -78,12 +80,12 @@ var look = {
             })            
             .hover(
                 function() {
-                    look.disable(jQuery('.product'));
-                    look.enable(jQuery('.product', this));
+                    look.disable(jQuery('.ui-draggable'));
+                    look.enable(jQuery(this));
                     return true;
                 },
                 function() {
-                    look.disable(jQuery('.product', this));
+                    look.disable(jQuery(this));
                     return true;
                 }
             );
@@ -109,7 +111,6 @@ var look = {
                 pane
             );
         });
-        look.disable(ele);
     },
     saveComponent: function(args, pane) {
         var context = getContextFromPane(pane);
@@ -171,12 +172,12 @@ var look = {
         );
     },
     disable: function(ele) {
-        ele.resizable('disable');
-        ele.parent('.ui-wrapper').draggable('disable');
+        ele.children('.delete').hide();
+        ele.draggable('disable');
     },
     enable: function(ele) {
-        ele.resizable('enable');
-        ele.parent('.ui-wrapper').draggable('enable');
+        ele.children('.delete').show();
+        ele.draggable('enable');
     }
 };
 
@@ -198,6 +199,7 @@ function getContextFromPane(pane) {
 jQuery(document).ready(function() {
     look.initialize(jQuery('#collage > .product'));
     look.initialize(jQuery('#photo-background > .product'));
+    look.disable(jQuery('.ui-draggable'));
 
     jQuery('ul.tabs').tabs('div.panes > div', {'history': true});
     jQuery('#wardrobe-contents li').draggable({
