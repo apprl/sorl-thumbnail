@@ -200,11 +200,11 @@ DUMMY_FACEBOOK_INFO = {
     'proxied_email':None,
 }
 
-EMAIL_HOST          = 'mail.hanssonlarsson.se'
+EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587
-EMAIL_HOST_USER     = 'outgoing@hanssonlarsson.se'
+EMAIL_HOST_USER     = 'postman@hanssonlarsson.se'
 EMAIL_HOST_PASSWORD = 'K6kb4Lle'
-EMAIL_USE_TLS       = False
+EMAIL_USE_TLS       = True
 
 
 
