@@ -10,10 +10,12 @@
             max: {{ pricerange.max }}
         }
         jQuery(document).ready(function() {
-                jQuery('.tabs').tabs('#looks > li', {
-                    effect: 'fade',
-                    rotate: true
-                }).slideshow({ autoplay: true }).history();
+            jQuery('.tabs').tabs('#looks > li', {
+                effect: 'fade',
+                fadeInSpeed: 1000,
+                rotate: true,
+                history: true
+            }).slideshow({ autoplay: true });
         });
     </script>
 {% endblock 'extra-scripts' %}
