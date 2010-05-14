@@ -632,11 +632,11 @@ body.look .spread input {
   -webkit-border-radius: 2px;
   border: 1px solid #d9d9d9;
   /* Webkit (Safari, Chrome) */
-  -webkit-box-shadow: #999999 0px 0px 20px;
+  -webkit-box-shadow: #999999 0px 0px 5px;
   /* Gecko (Firefox, Camino) */
-  -moz-box-shadow: #999999 0px 0px 20px;
+  -moz-box-shadow: #999999 0px 0px 5px;
   /* CSS3 */
-  box-shadow: #999999 0px 0px 20px;
+  box-shadow: #999999 0px 0px 5px;
   display: none;
   z-index: 1100;
   padding: 10px 10px 8px 10px;
