@@ -44,14 +44,13 @@ var look = {
             case 'photo-background':
                 // FIXME: This is the same as the look product page
                 ele.tooltip({
-                    def: 'mouseenter,mouseleave',
+                    //def: 'mouseenter,mouseleave',
                     effect: 'slide',
                     relative: true,
                     delay: 500,
-                    offset: [30, 0]
+                    offset: [15, 60]
                 })
                 break;
-            default:
         }
         
         wrapper
@@ -103,12 +102,23 @@ var look = {
             });
         });
         
-        ele.siblings('.delete').bind('click', function(e) { 
-            look.deleteComponent(
-                jQuery(e.currentTarget).closest('.ui-wrapper').find('.product'),
-                pane
-            );
-        });
+        
+        if(pane.attr('id') == 'collage') {
+            ele.siblings('.delete').bind('click', function(e) {
+                look.deleteComponent(
+                    jQuery(e.currentTarget).closest('.ui-wrapper').find('.product'),
+                    pane
+                );
+            });
+        } else {
+            ele.children('.delete').bind('click', function(e) {
+                var p = jQuery(e.currentTarget).parent('.product')
+                    p.tooltip().hide();
+                look.deleteComponent(p, pane);
+                return false;
+            });
+        }
+
         look.disable(ele);
     },
     saveComponent: function(args, pane) {
@@ -295,7 +305,7 @@ jQuery(document).ready(function() {
             //  left
             //  top
             
-            this.render();
+            this.render(args.anchor);
             
             var dialog = this.dialog;
             args.anchor.append(dialog);
@@ -310,9 +320,15 @@ jQuery(document).ready(function() {
             });
             dialog.show();            
         },
-        render: function() {
+        render: function(anchor) {
             var dialog = this.dialog;
             dialog.find('li').hide();
+            
+            // Find products already plotted in anchor
+            var existing = jQuery.map(anchor.find('.product'), function(element) {
+                return jQuery(element).attr('id').split('-').pop()
+            });
+            
             // Find all products in wordrobe and look
             var ids = jQuery.map(
                     jQuery('#wardrobe-contents li, #selection li'),
@@ -320,25 +336,22 @@ jQuery(document).ready(function() {
                         return li.id.split('-').pop();
                     }
             );
-            // Weed out duplicates
+            // Weed out duplicates and existing ids
             ids = jQuery.grep(ids, 
                 function(id, idx) {
-                    // FIXME: Also remove elements that is already included in the view
-                    return (ids.indexOf(id) < idx) ? false : true;
+                    return (existing.indexOf(id) > -1 || ids.indexOf(id) < idx) ? false : true;
                 }
-            );
-            
+            );            
             
             // Find out what ids needs to be fetched
             var to_fetch = [];
-            
             jQuery.each(ids, function(idx, id) {
                 var item = dialog.find('#option-' + id);
                 if(item.length > 0) {
                     // Display item
                     item.show();
                 } else {
-                    // Insert after previous item
+                    // Insert after previous item to maintain order
                     var li = jQuery('<li/>')
                         .attr('id', 'option-' + id)
                     ;
