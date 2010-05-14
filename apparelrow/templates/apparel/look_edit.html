@@ -10,38 +10,87 @@
 
 var look = {
     initialize: function(ele) {
-        var pane = ele.parent();
-        ele
-        .resizable({
-            aspectRatio: 'true',
-            maxHeight: ele.parent().height(),
-            maxWidth: ele.parent().width(),
-            minHeight: 30,
-            minWidth: 30,
-            //grid: [10, 10],
-            stop: function(event, ui) {
-                look.saveComponent(ui, pane);
-            }
-        })
-        .parent('.ui-wrapper')
-        .rotatable({ 
-            handles: 'ne',
-            stop: function(event, ui) {
-                look.saveComponent(ui, pane);
-            }
-        })
-        .append(jQuery('<div/>').addClass('delete'))
-        .draggable({
-            stack: '.ui-wrapper',
-            containment: 'parent',
-            //snap: true,
-            //grid: [10, 10],
-            stop: function(event, ui) {
-                look.saveComponent(ui, pane);
-            }
-        });
+        var pane    = ele.parent();
+        var wrapper = ele;
+        
+        switch(pane.attr('id')) {
+            case 'collage':
+                ele.resizable({
+                    aspectRatio: 'true',
+                    maxHeight: ele.parent().height(),
+                    maxWidth: ele.parent().width(),
+                    minHeight: 30,
+                    minWidth: 30,
+                    //grid: [10, 10],
+                    stop: function(event, ui) {
+                        look.saveComponent({
+                            id: ui.element.find('.product').attr('id').split('-').pop(),
+                            position: ui.position,
+                            size: ui.size
+                        }, pane);
+                    }
+                });
+                wrapper = ele.parent('.ui-wrapper');
+                wrapper.rotatable({ 
+                    handles: 'ne',
+                    stop: function(event, ui) {
+                        look.saveComponent({
+                            id: ui.element.find('.product').attr('id').split('-').pop(),
+                            rotation: ui.rotation
+                        }, pane);
+                    }
+                });
+                break;
+            case 'photo-background':
+                // FIXME: This is the same as the look product page
+                ele.tooltip({
+                    def: 'mouseenter,mouseleave',
+                    effect: 'slide',
+                    relative: true,
+                    delay: 500,
+                    offset: [30, 0]
+                })
+                break;
+            default:
+        }
+        
+        wrapper
+            .append(jQuery('<div/>').addClass('delete'))
+            .draggable({
+                    stack: '.ui-wrapper',
+                    containment: 'parent',
+                    //snap: true,
+                    //grid: [10, 10],
+                    stop: function(event, ui) {
+                        //var id = ui.helper.
+                        var p = (ui.helper.hasClass('product')) ? ui.helper : ui.helper.find('.product');
+                        //console.log('drag', ui);
+                        look.saveComponent({
+                            id: p.attr('id').split('-').pop(),
+                            position: ui.position
+                        }, pane);
+                        //look.saveComponent(ui, pane);
+                    },
+                    start: function(event, ui) {
+                        var tp = ui.helper.data('tooltip');
+                        if(tp) tp.hide();
+                    }
+            })            
+            .hover(
+                function() {
+                    look.disable(jQuery('.product'));
+                    look.enable(jQuery('.product', this));
+                    return true;
+                },
+                function() {
+                    look.disable(jQuery('.product', this));
+                    return true;
+                }
+            );
+
+        
         jQuery.fn.reverse = jQuery.fn.reverse || [].reverse;
-        ele.parent('.ui-wrapper').reverse().each(function() {
+        wrapper.reverse().each(function() {
             var el = jQuery(this);
             position = el.position();
             el.css({
@@ -55,52 +104,35 @@ var look = {
         });
         
         ele.siblings('.delete').bind('click', function(e) { 
-            look.deleteComponent(jQuery(e.currentTarget).parent(), pane)
+            look.deleteComponent(
+                jQuery(e.currentTarget).closest('.ui-wrapper').find('.product'),
+                pane
+            );
         });
         look.disable(ele);
-        
-        ele.parent('.ui-wrapper')
-            .hover(
-                function() {
-                    look.disable(jQuery('.product'));
-                    look.enable(jQuery('.product', this));
-                    return false;
-                },
-                function() {
-                    look.disable(jQuery('.product', this));
-                    return false;
-                }
-            );
-        
-        // FIXME: Register a handler that calls deleteComponent()
     },
-    saveComponent: function(ui, pane) {
+    saveComponent: function(args, pane) {
         var context = getContextFromPane(pane);
-        var product = getProductFromElement(ui);
-        
+                
         data = {
             look: {{ object.id }},
-            product: product.attr('id').split('-').pop(),
+            product: args.id,    // product.attr('id').split('-').pop(),
             component_of: context.component_of,
             z_index: 50 // FIXME: We need to create a stack
         }
         
-        if('position' in ui) {
-            data['top']  = parseInt(ui.position.top);
-            data['left'] = parseInt(ui.position.left);
+        if('position' in args) {
+            data['top']  = parseInt(args.position.top);
+            data['left'] = parseInt(args.position.left);
         }
         
-        if('rotation' in ui) {
-            data['rotation'] = parseInt(ui.rotation);
+        if('rotation' in args) {
+            data['rotation'] = parseInt(args.rotation);
         }
         
-        if('size' in ui) {
-            data['width'] = parseInt(ui.size.width);
-            data['height'] = parseInt(ui.size.height);
-        }
-        else {
-            data['width'] = product.width();
-            data['height'] = product.height();
+        if('size' in args) {
+            data['width'] = parseInt(args.size.width);
+            data['height'] = parseInt(args.size.height);
         }
         
         jQuery.post('{% url apparel.views.save_look_component %}', data,
@@ -114,19 +146,18 @@ var look = {
                 
                 if(response.data.added) {
                     var new_product = jQuery(context.template).render({component: component}).appendTo(pane);
-                    look.initialize(new_product);
+                    look.initialize(new_product.first());
                 }
             }
         );
     },
-    deleteComponent: function(wrapper, pane) {
+    deleteComponent: function(product, pane) {
         var context = getContextFromPane(pane);
-        var product = getProductFromElement(wrapper);
-        var product_id = product.attr('id').split('-').pop();
+        var id = product.attr('id').split('-').pop();
         jQuery.post(
             '{% url apparel.views.delete_look_component %}', {
                 look: {{ object.id }},
-                product: product_id,
+                product: id,
                 component_of: context.component_of
             },
             function(response, status, request) {
@@ -134,7 +165,7 @@ var look = {
                     product.remove();
                     
                     if(!response.data.in_look)
-                        jQuery('#selection-' + product_id).remove();
+                        jQuery('#selection-' + id).remove();
                 }
             }
         );
@@ -151,8 +182,9 @@ var look = {
 
 function getContextFromPane(pane) {
     var context = {// FIXME: We should get look product type from the model
-        'photo': { 'template': 'look_photo_product_template', 'component_of': 'P' },
-        'collage': { 'template': 'look_collage_product_template', 'component_of': 'C' }
+        //'photo': { 'template': 'look_photo_product_template', 'component_of': 'P' },
+        'photo-background': { 'template': '#look_photo_product_template', 'component_of': 'P' },
+        'collage': { 'template': '#look_collage_product_template', 'component_of': 'C' }
     }[pane.attr('id')];
     
     if(!context) {
@@ -162,24 +194,10 @@ function getContextFromPane(pane) {
     
     return context;
 }
-function getProductFromElement(ui) {
-    var product;
-    
-    if('helper' in ui) {
-        product = ui.helper.find('.product');
-        if(product.length == 0)
-            product = ui.draggable;
-    } else if('element' in ui) {
-        product = ui.element.find('.product');
-    } else {
-        product = ui.closest('.ui-wrapper').find('.product');
-    }
-    return product;
-}
 
 jQuery(document).ready(function() {
     look.initialize(jQuery('#collage > .product'));
-    look.initialize(jQuery('#photo > .product'));
+    look.initialize(jQuery('#photo-background > .product'));
 
     jQuery('ul.tabs').tabs('div.panes > div', {'history': true});
     jQuery('#wardrobe-contents li').draggable({
@@ -190,10 +208,11 @@ jQuery(document).ready(function() {
         'revert': 'invalid',
         'appendTo': '#edit-look .panes'
     });
-    jQuery('#selection,#photo,#collage').droppable({
+    jQuery('#selection,#photo-background,#collage').droppable({
         'accept': '#wardrobe-contents li',
         'drop': function(event, ui) {
             var product_id = ui.draggable.attr('id').split('-').pop();
+
             jQuery.post('{% url apparel.views.add_to_look %}', {
                 'look': '{{ object.id }}',
                 'product': product_id
@@ -210,11 +229,145 @@ jQuery(document).ready(function() {
                     jQuery('#selection .row ul').append(product);
                 }
                 
-                if(event.target.id != 'selection')
-                    look.saveComponent(ui, $(event.target));
+                var data = { id: product_id }
+                switch(event.target.id) {
+                    case 'selection':
+                        return;     // No component to save
+                    
+                    case 'collage':
+                        data['position'] = ui.position;
+                        data['size'] = {
+                            height: ui.draggable.height(),
+                            width: ui.draggable.width()                        
+                        }
+                        break;
+                    case 'photo-background':
+                        oy = event.layerY || 0;
+                        ox = event.layerX || 0;
+                        data['position'] = {
+                            top: ui.position.top + oy - 40,
+                            left: ui.position.left + ox - event.target.offsetLeft - 40
+                        }
+                        break;
+                }
+                
+                look.saveComponent(data, $(event.target));
             } );
         }
-    })
+    });
+    jQuery('#photo-background').live('click', function(e) {
+        var offset = jQuery(e.target).offset();
+        var left   = e.pageX - offset.left;
+        var top    = e.pageY - offset.top;
+        
+        chooser.show({
+            anchor: jQuery(this),
+            callback: function(li) {
+                createHotspot(li.data('product'), top, left);
+            },
+            left: left,
+            top: top
+        });
+    });
+    
+    jQuery('#photo-background a').live('click', function(e) {
+        e.preventDefault();
+    });
+    function createHotspot(product, top, left) {
+        look.saveComponent({
+            id: product.id,
+            position: {
+                left: left - 40,
+                top: top - 40
+            }
+        }, jQuery('#photo-background'));
+        
+        return;
+    }
+    
+    var chooser = {
+        dialog: jQuery('#product-chooser'),
+        show: function(args) {
+            // Renders and displays the dialog 
+            // args:
+            //  callback: routine to run when product has been chosen
+            //  anchor:   (jQuery) element to attach the dialog to
+            //  left
+            //  top
+            
+            this.render();
+            
+            var dialog = this.dialog;
+            args.anchor.append(dialog);
+            dialog.find('li').unbind('click').bind('click', function(e) {
+                args.callback(jQuery(this));
+                dialog.hide();
+                return false;
+            } );
+            this.dialog.css({
+                left: args.left,
+                top: args.top
+            });
+            dialog.show();            
+        },
+        render: function() {
+            var dialog = this.dialog;
+            dialog.find('li').hide();
+            // Find all products in wordrobe and look
+            var ids = jQuery.map(
+                    jQuery('#wardrobe-contents li, #selection li'),
+                    function(li) {
+                        return li.id.split('-').pop();
+                    }
+            );
+            // Weed out duplicates
+            ids = jQuery.grep(ids, 
+                function(id, idx) {
+                    // FIXME: Also remove elements that is already included in the view
+                    return (ids.indexOf(id) < idx) ? false : true;
+                }
+            );
+            
+            
+            // Find out what ids needs to be fetched
+            var to_fetch = [];
+            
+            jQuery.each(ids, function(idx, id) {
+                var item = dialog.find('#option-' + id);
+                if(item.length > 0) {
+                    // Display item
+                    item.show();
+                } else {
+                    // Insert after previous item
+                    var li = jQuery('<li/>')
+                        .attr('id', 'option-' + id)
+                    ;
+                    
+                    if(idx > 0) {
+                        jQuery('#option-' + ids[idx - 1]).after(li);
+                    } else {
+                        dialog.find('ul').append(li);
+                    }
+                    to_fetch.push(id);
+                }
+            });
+            
+            if(to_fetch.length > 0) {
+                jQuery.getJSON('{% url apparel.views.search "products"  %}', {
+                    '1:p.id:in': to_fetch.join(','),
+                    'page': '-1'
+                }, function(result, status) {
+                    jQuery.each(result.object_list, function(idx, product) {
+                        jQuery('#option-' + product.id)
+                            .append(
+                                jQuery('#product_thumb_template').render({ product: product })
+                            )
+                            .data('product', product);
+                    });
+                });
+            }
+        }
+    };
 });
 </script>
 {% endblock 'extra-scripts' %}
@@ -251,7 +404,7 @@ jQuery(document).ready(function() {
             <div id="collage">
             {% include 'apparel/fragments/look_collage.html' %}
             </div>
-            {% include 'apparel/fragments/look_picture.html' %}
+            {% include 'apparel/fragments/look_photo.html' %}
             <div id="selection">
             {% with "selection" as id_prefix %}
             {% with object.products.all as products %}
@@ -275,4 +428,5 @@ jQuery(document).ready(function() {
         {% endwith %}
     </div>
 </div>
+<div id="product-chooser"><ul></ul></div>
 {% endblock body %}

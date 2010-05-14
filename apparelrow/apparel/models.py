@@ -191,6 +191,7 @@ class VendorProduct(models.Model):
         export_fields = ['__all__', '-product']
 
 
+
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
     slug  = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
@@ -202,6 +203,12 @@ class Look(models.Model):
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags        = TagField()
+    
+    def photo_components(self):
+        return self.components.filter(component_of='P')
+
+    def collage_components(self):
+        return self.components.filter(component_of='C')
     
     @property
     def total_price(self):
@@ -217,6 +224,7 @@ class Look(models.Model):
     
     class Exporter:
         export_fields = ['__all__']
+
 
 class LookComponent(models.Model):
     """
@@ -263,9 +271,8 @@ class LookComponent(models.Model):
         return self._style(1)
     
     def save(self, *args, **kwargs):
-        if self.product.product_image and not self.height and not self.width:
-            # FIXME: Does this only scale the image  if it isn't already scaled? 
-            # Performance-wise, it probably should and just give us the dimensions
+        if self.component_of == 'C' and self.product.product_image and not self.height and not self.width:
+            # This scales collage images to maximum size if height and width isn't defined
             thumb = DjangoThumbnail(self.product.product_image, (
                                         settings.APPAREL_LOOK_MAX_SIZE, 
                                         settings.APPAREL_LOOK_MAX_SIZE

@@ -1,4 +1,3 @@
-{# FIXME: Only filter on either type C or P. Perhaps create manager on the Look to handle this better? #}
-{% for component in object.components.all %}
+{% for component in object.collage_components.all %}
     {% include "apparel/fragments/look_collage_product.html" %}
 {% endfor %}

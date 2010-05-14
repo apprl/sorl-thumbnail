@@ -1,7 +1,2 @@
-{% load i18n %}
 <img id="product-{{ component.product.id }}" class="product" style="position: absolute; {{ component.style }}" src="/scale/470{{ component.product.product_image.url }}?trans=true" />
-<div class="tooltip">
-    <h2>{{ component.product.product_name }}</h2>
-    <p>{% trans "by" %} {{ component.product.manufacturer }}</p>
-    <a href="{{ component.product.default_vendor.buy_url }}" target="_blank">{{ component.product.default_vendor.price }} {{ component.product.default_vendor.currency }} {% trans "at" %} {{ component.product.default_vendor.vendor }}</a>
-</div>
+{% include "apparel/fragments/look_product_tooltip.html" %}

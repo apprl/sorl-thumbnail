@@ -22,6 +22,7 @@ from apparel.forms import *
 
 
 BROWSE_PAGE_SIZE = 12
+BROWSE_PAGE_MAX  = 100
 WIDE_LIMIT = 4 # FIME: Move to application settings fileI
 
 def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
@@ -80,7 +81,7 @@ def search(request, model):
     else:
         raise Exception('No model to search for')
     
-    paginator = Paginator(result, BROWSE_PAGE_SIZE)
+    paginator = Paginator(result, BROWSE_PAGE_MAX if page == -1 else BROWSE_PAGE_SIZE)
 
     try:
         paged_result = paginator.page(page)
@@ -250,9 +251,9 @@ def browse(request):
 
 def js_template(str):
     str = str.replace('{{', '${').replace('}}', '}')
+    str = re.sub(r'\{%\s*include "(.+?)"\s*%\}', lambda m: js_template(get_template_source(m.group(1))), str)
+
     return Template(str).render(Context())
-    
-    #return str.replace('{%', '<%').replace('%}', '%>').replace('{{', '<%=').replace('}}', '%>')
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
@@ -325,7 +326,9 @@ def look_edit(request, slug):
         'form': form,
         'wardrobe': wardrobe,
         'templates': {
-            'look_collage_product': js_template(get_template_source('apparel/fragments/look_collage_product.html')), 
+            'look_collage_product': js_template(get_template_source('apparel/fragments/look_collage_product.html')),
+            'product_thumb':        js_template(get_template_source('apparel/fragments/product_thumb.html')),
+            'look_photo_product':   js_template(get_template_source('apparel/fragments/look_photo_product.html')),
         }
     }
     

@@ -28,7 +28,7 @@
     position: absolute
 
 
-#collage
+#collage, #photo
   .ui-wrapper
     position: absolute
     opacity: 0.8
@@ -52,10 +52,30 @@
 #photo-background
   position: relative
   margin: 0 auto
-  a
+  .hotspot
     position: absolute
     padding: 40px
     background= "transparent" image_url("look-hotspot.png") "no-repeat" "scroll" "center" "center"
+
+#product-chooser
+  position: absolute
+  width: 250px
+  height: 175px
+  overflow-y: auto
+  overflow-x: hidden
+  background-color: white
+  
+  li
+    +clearfix
+    padding: 5px
+    a
+      display: block
+      img
+        float: left
+        margin-right: 10px
+      h4, p
+        white-space: nowrap
+
 #photo-form
   position: absolute
   top: 10px
