@@ -271,9 +271,8 @@ class LookComponent(models.Model):
         return self._style(1)
     
     def save(self, *args, **kwargs):
-        if self.product.product_image and not self.height and not self.width:
-            # FIXME: Does this only scale the image  if it isn't already scaled? 
-            # Performance-wise, it probably should and just give us the dimensions
+        if self.component_of == 'C' and self.product.product_image and not self.height and not self.width:
+            # This scales collage images to maximum size if height and width isn't defined
             thumb = DjangoThumbnail(self.product.product_image, (
                                         settings.APPAREL_LOOK_MAX_SIZE, 
                                         settings.APPAREL_LOOK_MAX_SIZE

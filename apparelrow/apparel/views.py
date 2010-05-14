@@ -328,7 +328,7 @@ def look_edit(request, slug):
         'templates': {
             'look_collage_product': js_template(get_template_source('apparel/fragments/look_collage_product.html')),
             'product_thumb':        js_template(get_template_source('apparel/fragments/product_thumb.html')),
-            'look_product_tooltip': js_template(get_template_source('apparel/fragments/look_product_tooltip.html')),
+            'look_photo_product':   js_template(get_template_source('apparel/fragments/look_photo_product.html')),
         }
     }
     
@@ -343,8 +343,6 @@ def looks():
     pass
 
 def get_template_source(template):
-    print "*******"
-    print template
     template_source, template_origin = find_template_source(template)
     return template_source
 
