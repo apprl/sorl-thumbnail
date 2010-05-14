@@ -585,112 +585,121 @@ body.look .spread input {
 
 /* line 163, ../src/partials/_look.sass */
 .tooltip {
-  border-radius: 24px;
-  -moz-border-radius: 24px;
-  -webkit-border-radius: 24px;
+  border: 1px solid #d9d9d9;
+  background-color: #fafafa;
+  background: #efefef url('../images/tooltip-bg.png?1273840367') repeat-x scroll center top;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  /* Webkit (Safari, Chrome) */
+  -webkit-box-shadow: #999999 0px 0px 20px;
+  /* Gecko (Firefox, Camino) */
+  -moz-box-shadow: #999999 0px 0px 20px;
+  /* CSS3 */
+  box-shadow: #999999 0px 0px 20px;
   display: none;
   z-index: 1100;
-  padding: 1em;
+  padding: 10px 10px 8px 10px;
 }
-/* line 168, ../src/partials/_look.sass */
+/* line 171, ../src/partials/_look.sass */
 .tooltip h2 {
   margin-top: 0;
 }
 
-/* line 172, ../src/partials/_look.sass */
+/* line 175, ../src/partials/_look.sass */
 body.look .collage {
   position: relative;
   height: 524px;
 }
-/* line 175, ../src/partials/_look.sass */
+/* line 178, ../src/partials/_look.sass */
 body.look #comments-and-links {
   float: left;
   width: 452px;
   margin-right: 36px;
 }
-/* line 179, ../src/partials/_look.sass */
+/* line 182, ../src/partials/_look.sass */
 body.look #tags {
   float: left;
   width: 208px;
 }
-/* line 182, ../src/partials/_look.sass */
+/* line 185, ../src/partials/_look.sass */
 body.look #tags li {
   border-bottom: 1px solid #f2f2f2;
 }
-/* line 184, ../src/partials/_look.sass */
+/* line 187, ../src/partials/_look.sass */
 body.look #tags li span {
   float: right;
   color: #999999;
 }
-/* line 187, ../src/partials/_look.sass */
+/* line 190, ../src/partials/_look.sass */
 body.look .sidebar {
   margin-top: 30px;
 }
-/* line 189, ../src/partials/_look.sass */
+/* line 192, ../src/partials/_look.sass */
 body.look .sidebar p {
   border-top: none;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 192, ../src/partials/_look.sass */
+/* line 195, ../src/partials/_look.sass */
 body.look .sidebar .description {
   border-bottom: none;
   padding-top: 1.5em;
 }
-/* line 195, ../src/partials/_look.sass */
+/* line 198, ../src/partials/_look.sass */
 body.look #content {
   margin-top: -2em;
 }
-/* line 197, ../src/partials/_look.sass */
+/* line 200, ../src/partials/_look.sass */
 body.look #content .collage {
   background-color: white;
   margin-right: 2em;
 }
 
-/* line 202, ../src/partials/_look.sass */
+/* line 205, ../src/partials/_look.sass */
 #look-header {
   position: relative;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 205, ../src/partials/_look.sass */
+/* line 208, ../src/partials/_look.sass */
 #look-header .profile-image {
   position: absolute;
   left: 0em;
   top: 0;
 }
-/* line 209, ../src/partials/_look.sass */
+/* line 212, ../src/partials/_look.sass */
 #look-header div {
   margin-left: 70px;
 }
-/* line 211, ../src/partials/_look.sass */
+/* line 214, ../src/partials/_look.sass */
 #look-header div h1 {
   font-size: 1.5em;
   line-height: 2em;
 }
-/* line 214, ../src/partials/_look.sass */
+/* line 217, ../src/partials/_look.sass */
 #look-header div h1 a {
   font-size: 0.75em;
 }
 
-/* line 217, ../src/partials/_look.sass */
+/* line 220, ../src/partials/_look.sass */
 #wardrobe {
   margin: 0 -16px 0 -24px;
   clear: both;
 }
 
-/* line 221, ../src/partials/_look.sass */
+/* line 224, ../src/partials/_look.sass */
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
   background: #f2f2f2 url('../images/gradient-bg.png?1270043905') repeat-x;
   padding: 10px 8px 0 10px;
 }
-/* line 227, ../src/partials/_look.sass */
+/* line 230, ../src/partials/_look.sass */
 #wardrobe-title span {
   background: transparent url('../images/arrow-bg-down.png?1272964037') no-repeat top left;
   padding-left: 14px;
 }
 
-/* line 231, ../src/partials/_look.sass */
+/* line 234, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
   background: transparent url('../images/wardrobe-bg.png?1273247149') scroll repeat-x center center;
@@ -818,7 +827,7 @@ body.look #content .collage {
 #wardrobe-contents div.row ul li a img {
   vertical-align: middle;
 }
-/* line 237, ../src/partials/_look.sass */
+/* line 240, ../src/partials/_look.sass */
 #wardrobe-contents li a {
   cursor: move;
 }
@@ -1061,7 +1070,7 @@ button {
 }
 
 /* line 172, ../src/partials/_application.sass */
-.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor {
+#product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
 }
