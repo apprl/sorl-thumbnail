@@ -28,19 +28,19 @@
     position: absolute
 
 
-#collage, #photo
+#collage, #photo-background
   .ui-wrapper
     position: absolute
     opacity: 0.8
     +box-shadow
-    .delete
-      display: block
-      position: absolute
-      height: 22px
-      width: 22px
-      background= "transparent" image_url("delete.png") "no-repeat" "scroll" "center" "center"
-      left: -11px
-      top: -11px
+  .delete
+    display: block
+    position: absolute
+    height: 22px
+    width: 22px
+    background= "transparent" image_url("delete.png") "no-repeat" "scroll" "center" "center"
+    left: -11px
+    top: -11px
   .ui-state-disabled, .ui-widget-content .ui-state-disabled
     -moz-box-shadow: none
     -webkit-box-shadow: none
@@ -56,9 +56,13 @@
     position: absolute
     padding: 40px
     background= "transparent" image_url("look-hotspot.png") "no-repeat" "scroll" "center" "center"
+  .delete
+    left: 5px
+    top: 5px
 
 #product-chooser
   position: absolute
+  display: none
   width: 250px
   height: 175px
   overflow-y: auto
