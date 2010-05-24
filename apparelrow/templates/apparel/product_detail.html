@@ -137,6 +137,7 @@
             {% endwith %}
         </div>
 {% else %}
-    <p>No product found!</p>
+    <!-- FIXME: This needs some sort of layout -->
+    <p>{% trans "No product found!" %}</p>
 {% endif %}
 {% endblock body %}
