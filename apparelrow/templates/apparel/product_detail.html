@@ -26,7 +26,10 @@
                 jQuery(this).find('.magnifier').fadeOut('slow');
                 return false;
             });
-            jQuery('.product-image a').overlay({ target: "#gallery" });
+            jQuery('.product-image a').overlay({ 
+                target: "#gallery",
+                fixed: false
+            });
 
             jQuery('#add-to-look').bind('click mouseenter mouseleave', function(event) {
                 var sub_menu = jQuery(this).find('ul');
