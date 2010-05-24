@@ -292,11 +292,13 @@ jQuery(document).ready(function() {
         .focus(function(e) {
             if(this.value == this.defaultValue)
                 this.value = '';
+   
             return true;
         })
         .blur(function(e) {
             if(this.value == '')
                 this.value = this.defaultValue;
+   
             return true;
         });
 });
