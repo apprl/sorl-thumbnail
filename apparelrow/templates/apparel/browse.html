@@ -137,9 +137,12 @@
                 return false;
             });
             jQuery('#product-gender li > a').click(function() {
-                jQuery(this).toggleClass('selected');
-                jQuery(this).parent().siblings().find('a').removeClass('selected');
-                filter(getQuery());
+                $this = jQuery(this);
+                if(! $this.is('.selected')) {
+                    $this.addClass('selected');
+                    $this.parent().siblings().find('a').removeClass('selected');
+                    filter(getQuery());
+                }
                 return false;
             });
             jQuery('#product-category li > a').click(function() {
