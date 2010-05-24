@@ -50,6 +50,7 @@ jQuery(document).ready(function() {
         function() { jQuery(this).find('ul').show(); }, 
         function() { jQuery(this).find('ul').hide(); }
     );
+    jQuery('.share').click(function() { jQuery(this).find('ul').toggle(); return false; })
 });
 
 //

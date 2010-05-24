@@ -28,14 +28,17 @@
             });
             jQuery('.product-image a').overlay({ target: "#gallery" });
 
-            jQuery('#add-to-look').hover(
-                function() { jQuery(this).find('ul').show(); }, 
-                function() { 
-                    jQuery(this).find('ul').hide();
+            jQuery('#add-to-look').bind('click mouseenter mouseleave', function(event) {
+                var sub_menu = jQuery(this).find('ul');
+                if(event.type == 'mouseenter' || (event.type == 'click' && sub_menu.is(':hidden'))) {
+                    sub_menu.show();
+                } else {
+                    sub_menu.hide();
                     jQuery(this).find('#add-to-look-new button').show(); 
                     jQuery(this).find('#add-to-look-new input[name=new_name]').hide(); 
                 }
-            );
+                return false;
+            });
             jQuery('#add-to-look ul').width(jQuery('#add-to-look').width());
             jQuery('#add-to-look>form').hyperSubmit({
                 beforeSend: function(req) {
