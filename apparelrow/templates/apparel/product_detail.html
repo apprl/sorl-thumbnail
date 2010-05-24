@@ -117,13 +117,14 @@
                 <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
                 <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
             </div>
-            <h2>{% trans "Recently viewed" %}</h2>
-            <div id="recentlyviewed">
-                {% with viewed_products as products %}
-                {% include 'apparel/fragments/product_row.html' %}
-                {% endwith %}
-            </div>
-
+            {% if viewed_products %}
+                <h2>{% trans "Recently viewed" %}</h2>
+                <div id="recentlyviewed">
+                    {% with viewed_products as products %}
+                    {% include 'apparel/fragments/product_row.html' %}
+                    {% endwith %}
+                </div>
+            {% endif %}
             <h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
                 {% blocktrans count looks_with_product|length as counter %}
                     <span class="count">{{ counter }}</span> look with this product
@@ -136,6 +137,7 @@
             {% endwith %}
         </div>
 {% else %}
-    <p>No product found!</p>
+    <!-- FIXME: This needs some sort of layout -->
+    <p>{% trans "No product found!" %}</p>
 {% endif %}
 {% endblock body %}

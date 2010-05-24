@@ -38,7 +38,7 @@ jQuery(document).ready(function() {
         .autogrow();
     jQuery('#comments-and-links form').hyperSubmit({
         success: function(data, statusText, req) {
-            comment_area.val();
+            comment_area.val('');
             jQuery('#comments-and-links button').hide();
             jQuery(data.html).hide().appendTo('ul#comments').slideDown('fast');
             increase_counts(jQuery('a.comments > span.count'));
