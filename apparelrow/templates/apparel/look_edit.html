@@ -287,105 +287,119 @@ jQuery(document).ready(function() {
     jQuery('#photo-background a').live('click', function(e) {
         e.preventDefault();
     });
-    function createHotspot(product, top, left) {
-        look.saveComponent({
-            id: product.id,
-            position: {
-                left: left - 40,
-                top: top - 40
-            }
-        }, jQuery('#photo-background'));
-        
-        return;
-    }
     
-    var chooser = {
-        dialog: jQuery('#product-chooser'),
-        show: function(args) {
-            // Renders and displays the dialog 
-            // args:
-            //  callback: routine to run when product has been chosen
-            //  anchor:   (jQuery) element to attach the dialog to
-            //  left
-            //  top
-            
-            this.render(args.anchor);
-            
-            var dialog = this.dialog;
-            args.anchor.append(dialog);
-            dialog.find('li').unbind('click').bind('click', function(e) {
-                args.callback(jQuery(this));
-                dialog.hide();
-                return false;
-            } );
-            this.dialog.css({
-                left: args.left,
-                top: args.top
-            });
-            dialog.show();            
-        },
-        render: function(anchor) {
-            var dialog = this.dialog;
-            dialog.find('li').hide();
-            
-            // Find products already plotted in anchor
-            var existing = jQuery.map(anchor.find('.product'), function(element) {
-                return jQuery(element).attr('id').split('-').pop()
-            });
-            
-            // Find all products in wordrobe and look
-            var ids = jQuery.map(
-                    jQuery('#wardrobe-contents li, #selection li'),
-                    function(li) {
-                        return li.id.split('-').pop();
-                    }
-            );
-            // Weed out duplicates and existing ids
-            ids = jQuery.grep(ids, 
-                function(id, idx) {
-                    return (existing.indexOf(id) > -1 || ids.indexOf(id) < idx) ? false : true;
-                }
-            );   
-                        
-            // Find out what ids needs to be fetched
-            var to_fetch = [];
-            jQuery.each(ids, function(idx, id) {
-                var item = dialog.find('#option-' + id);
-                if(item.length > 0) {
-                    // Display item
-                    item.show();
-                } else {
-                    // Insert after previous item to maintain order
-                    var li = jQuery('<li/>')
-                        .attr('id', 'option-' + id)
-                    ;
-                    
-                    if(idx > 0) {
-                        jQuery('#option-' + ids[idx - 1]).after(li);
-                    } else {
-                        dialog.find('ul').append(li);
-                    }
-                    to_fetch.push(id);
-                }
-            });
-            
-            if(to_fetch.length > 0) {
-                jQuery.getJSON('{% url apparel.views.search "products"  %}', {
-                    '1:p.id:in': to_fetch.join(','),
-                    'page': '-1'
-                }, function(result, status) {
-                    jQuery.each(result.object_list, function(idx, product) {
-                        jQuery('#option-' + product.id)
-                            .append(
-                                jQuery('#product_thumb_template').render({ product: product })
-                            )
-                            .data('product', product);
-                    });
-                });
-            }
-        }
-    };
+    jQuery('#id_title')
+        .focus(function(e) {
+            if(this.value == this.defaultValue)
+                this.value = '';
+            return true;
+        })
+        .blur(function(e) {
+            if(this.value == '')
+                this.value = this.defaultValue;
+            return true;
+        });
 });
+
+function createHotspot(product, top, left) {
+    look.saveComponent({
+        id: product.id,
+        position: {
+            left: left - 40,
+            top: top - 40
+        }
+    }, jQuery('#photo-background'));
+    
+    return;
+}
+
+var chooser = {
+    dialog: jQuery('#product-chooser'),
+    show: function(args) {
+        // Renders and displays the dialog 
+        // args:
+        //  callback: routine to run when product has been chosen
+        //  anchor:   (jQuery) element to attach the dialog to
+        //  left
+        //  top
+        
+        this.render(args.anchor);
+        
+        var dialog = this.dialog;
+        args.anchor.append(dialog);
+        dialog.find('li').unbind('click').bind('click', function(e) {
+            args.callback(jQuery(this));
+            dialog.hide();
+            return false;
+        } );
+        this.dialog.css({
+            left: args.left,
+            top: args.top
+        });
+        dialog.show();            
+    },
+    render: function(anchor) {
+        var dialog = this.dialog;
+        dialog.find('li').hide();
+        
+        // Find products already plotted in anchor
+        var existing = jQuery.map(anchor.find('.product'), function(element) {
+            return jQuery(element).attr('id').split('-').pop()
+        });
+        
+        // Find all products in wordrobe and look
+        var ids = jQuery.map(
+                jQuery('#wardrobe-contents li, #selection li'),
+                function(li) {
+                    return li.id.split('-').pop();
+                }
+        );
+        // Weed out duplicates and existing ids
+        ids = jQuery.grep(ids, 
+            function(id, idx) {
+                return (existing.indexOf(id) > -1 || ids.indexOf(id) < idx) ? false : true;
+            }
+        );   
+                    
+        // Find out what ids needs to be fetched
+        var to_fetch = [];
+        jQuery.each(ids, function(idx, id) {
+            var item = dialog.find('#option-' + id);
+            if(item.length > 0) {
+                // Display item
+                item.show();
+            } else {
+                // Insert after previous item to maintain order
+                var li = jQuery('<li/>')
+                    .attr('id', 'option-' + id)
+                ;
+                
+                if(idx > 0) {
+                    jQuery('#option-' + ids[idx - 1]).after(li);
+                } else {
+                    dialog.find('ul').append(li);
+                }
+                to_fetch.push(id);
+            }
+        });
+        
+        if(to_fetch.length > 0) {
+            jQuery.getJSON('{% url apparel.views.search "products"  %}', {
+                '1:p.id:in': to_fetch.join(','),
+                'page': '-1'
+            }, function(result, status) {
+                jQuery.each(result.object_list, function(idx, product) {
+                    jQuery('#option-' + product.id)
+                        .append(
+                            jQuery('#product_thumb_template').render({ product: product })
+                        )
+                        .data('product', product);
+                });
+            });
+        }
+    }
+};
+
 </script>
 {% endblock 'extra-scripts' %}
 
