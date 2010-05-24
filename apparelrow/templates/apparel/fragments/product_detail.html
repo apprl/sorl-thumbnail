@@ -6,7 +6,6 @@
 <div class="product-left">
     <div class="product-image">
         <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/328x500{{ object.product_image.url }}" /></a>
-        <span class="magnifier"></span>
         <form method="post" action="{% url like-product object.slug "up" %}">
             <button type="submit" name="like" id="like">{% trans "Like" %}</button>
         </form>

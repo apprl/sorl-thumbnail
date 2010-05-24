@@ -515,19 +515,11 @@ div#product-list
   border: 1px solid #dadada
   position: relative
   text-align: center
-  .magnifier
-    position: absolute
-    right: 10px
-    bottom: 10px
-    width: 19px
-    height: 20px
-    background: transparent url(../images/magnifier.png) no-repeat scroll left top
-    display: none
   img
     vertical-align: top
 
 body.product .product-image img
-  cursor: -moz-zoom-in
+  cursor= image_url("magnifier.cur"), image_url("magnifier.png"), -moz-zoom-in
 
 #gallery
   display: none
