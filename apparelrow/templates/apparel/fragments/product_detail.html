@@ -66,8 +66,13 @@
         <li id="add-to-wardrobe" class="last">
             <form action="{% url apparel.views.add_to_wardrobe %}" method="post">
                 <input type="hidden" name="product_id" value="{{ object.id }}" />
-                <!-- FIXME: Use phrase "In wardrobe" if product is already in wardrobe -->
-                <button type="submit">{% trans "Add to wardrobe" %}</a></button>
+                <button type="submit" id="wardobe-button-add">
+                    {% if is_in_wardrobe %}
+                        {% trans "In wardrobe" %}
+                    {% else %}
+                        {% trans "Add to wardrobe" %}                
+                    {% endif %}
+                </button>
             </form>
         </li>
     </ul>

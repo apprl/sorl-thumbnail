@@ -269,8 +269,13 @@ def product_detail(request, slug):
     for p in Product.objects.filter(pk__in=viewed_products):
         viewed_products[viewed_products.index(p.id)] = p
     
-    user_looks = Look.objects.filter(user=request.user) if request.user.is_authenticated() else []
-    
+    if request.user.is_authenticated():
+        user_looks     = Look.objects.filter(user=request.user)
+        is_in_wardrobe = Wardrobe.objects.get(user=request.user).products.filter(pk=product.id).count() > 0
+    else:
+        user_looks     = []
+        is_in_wardrobe = False
+        
     return render_to_response(
             'apparel/product_detail.html',
             {
@@ -279,6 +284,7 @@ def product_detail(request, slug):
                 },
                 'object': product,
                 'user_looks': user_looks,
+                'is_in_wardrobe': is_in_wardrobe,
                 'looks_with_product': Look.objects.filter(products=product),
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri()
