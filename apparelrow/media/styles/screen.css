@@ -104,11 +104,6 @@ body.three-columns #content {
   margin-right: 36px;
 }
 
-/* line 32, ../src/screen.sass */
-*:focus {
-  outline: #d9d9d9 dotted medium;
-}
-
 /* line 1, ../src/partials/_typography.sass */
 body {
   font-family: Helvetica, Arial, sans-serif;
@@ -1150,18 +1145,18 @@ button {
 }
 
 /* line 182, ../src/partials/_application.sass */
-#looks {
+#featured-looks {
   height: 298px;
   position: relative;
 }
 /* line 185, ../src/partials/_application.sass */
-#looks li {
+#featured-looks li {
   position: absolute;
   top: 0;
   left: 0;
 }
 /* line 189, ../src/partials/_application.sass */
-#looks li img {
+#featured-looks li img {
   vertical-align: top;
 }
 

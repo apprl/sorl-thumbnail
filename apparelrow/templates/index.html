@@ -10,7 +10,7 @@
             max: {{ pricerange.max }}
         }
         jQuery(document).ready(function() {
-            jQuery('.tabs').tabs('#looks > li', {
+            jQuery('.tabs').tabs('#featured-looks > li', {
                 effect: 'fade',
                 fadeInSpeed: 1000,
                 fadeOutSpeed: 1000,
@@ -29,7 +29,7 @@
     </div>
     <div id="content">
         <h2>{% trans "Current" %}</h2>
-        <ul id="looks">
+        <ul id="featured-looks">
             <li><img src="{{ MEDIA_URL }}/images/example-look.png" /></li>
             <li><img src="{{ MEDIA_URL }}/images/example-look2.jpg" /></li>
             <li><img src="{{ MEDIA_URL }}/images/example-look3.jpg" /></li>
