@@ -8,16 +8,51 @@
         var pricerange = {
             min: {{ pricerange.min }},
             max: {{ pricerange.max }}
-        }
+        };
+        
+        var MAX_ANIMATE = 7;
+        var ANIMATION_SPEED = 1000;
+        
         jQuery(document).ready(function() {
             jQuery('.tabs').tabs('#featured-looks > li', {
+                initialIndex: 0,
                 effect: 'fade',
-                fadeInSpeed: 1000,
-                fadeOutSpeed: 1000,
+                fadeInSpeed: ANIMATION_SPEED,
+                fadeOutSpeed: ANIMATION_SPEED,
                 rotate: true,
                 history: true
-            }).slideshow({ autoplay: true });
+            })
+            .data('timerImageIndex', 0)
+            .bind('onBeforeClick', function(e, idx) {
+                var tabs = jQuery('.tabs').data('tabs');
+                var tab  = tabs.getCurrentTab();
+                
+                window.clearTimeout(tab.data('tabAnimationTimer'));
+                tab.data('tabAnimationIndex', 1);
+                for(var i = 1; i <= MAX_ANIMATE; i++)
+                    tab.removeClass('tab-animation-' + i);
+            })
+            .bind('onClick', function(e, idx) {
+                animateTab();
+            })
+            .slideshow()
+            ;
         });
+        function animateTab() {
+            var tabs = jQuery('.tabs').data('tabs');
+            var tab  = tabs.getCurrentTab();
+            var i = tab.data('tabAnimationIndex');
+            
+            if(i <= MAX_ANIMATE) {
+                if(i > 1) tab.removeClass('tab-animation-' + (i - 1));
+                tab.addClass('tab-animation-' + i);
+                tab.data('tabAnimationIndex', ++i);
+                tab.data('tabAnimationTimer', window.setTimeout(animateTab, ANIMATION_SPEED));
+                
+                return;
+            }
+            tabs.next();
+        }
     </script>
 {% endblock 'extra-scripts' %}
 

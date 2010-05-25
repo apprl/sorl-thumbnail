@@ -201,39 +201,50 @@ button
     padding-left: 20px
   .nav
     +float-right
-    margin-top: 10px
+    margin-top: 4px
     .backward
-      +replace-text("prev-shadow.png")
+      +replace-text("prev-page.png")
       +float-left
       display: inline-block
       width: 6px
-      height: 16px
+      height: 10px
       margin-right: 20px
+      margin-top: 1px
     .forward
-      +replace-text("next-shadow.png")
+      +replace-text("next-page.png")
       +float-left
       display: inline-block
       width: 6px
-      height: 16px
+      height: 10px
       margin-left: 10px
+      margin-top: 1px
     .tabs
       +float-left
       +horizontal-list(0)
       a
-        +replace-text("switcher.png")
+        +replace-text("switcher-sprite.png")
+        +sprite-background("switcher-sprite.png", "10px")
         display: inline-block
-        width: 10px
-        height: 16px
         margin-right: 10px
-      #l1.current
-        background-image= image_url("switcher-selected-25.png")
-      #l2.current
-        background-image= image_url("switcher-selected-50.png")
-      #l3.current
-        background-image= image_url("switcher-selected-75.png")
-      #l4.current
-        background-image= image_url("switcher-selected-100.png")
-
+        overflow: visible
+        &.current
+          +sprite-position(2, 1, 10px, 10px, 2)
+        &.tab-animation-1
+          +sprite-position(2, 2, 10px, 10px, 2)
+        &.tab-animation-2
+          +sprite-position(2, 3, 10px, 10px, 2)
+        &.tab-animation-3
+          +sprite-position(2, 4, 10px, 10px, 2)
+        &.tab-animation-4
+          +sprite-position(2, 5, 10px, 10px, 2)
+        &.tab-animation-5
+          +sprite-position(2, 6, 10px, 10px, 2)
+        &.tab-animation-6
+          +sprite-position(2, 7, 10px, 10px, 2)
+        &.tab-animation-7
+          +sprite-position(2, 8, 10px, 10px, 2)
+        &:hover
+          +sprite-position(1, 2, 10px, 10px, 2)
 ul.looks
   +horizontal-list(0)
   li
