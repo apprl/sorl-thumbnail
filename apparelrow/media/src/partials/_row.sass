@@ -35,15 +35,17 @@
     width= !width - (16 + 5) * 2
     height= !height
     ul
-      +horizontal-list(5px)
+      +horizontal-list(0)
       position: absolute
       width: 20000em
-      li a
-        +border("all")
-        display: block
-        background: white
-        height: 116px
-        line-height: 116px
-        img
-          vertical-align: middle
+      li
+        margin-right: 10px
+        a
+          +border("all")
+          display: block
+          background: white
+          height: 116px
+          line-height: 116px
+          img
+            vertical-align: middle
 
