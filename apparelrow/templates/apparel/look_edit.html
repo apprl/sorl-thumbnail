@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load thumbnail %}
+
+{% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
+
 {% block 'extra-styles' %}
 <link rel="stylesheet" href="{{ MEDIA_URL }}/styles/jquery.ui.rotatable.css" type="text/css" media="screen, projection">
 {% endblock 'extra-styles' %}

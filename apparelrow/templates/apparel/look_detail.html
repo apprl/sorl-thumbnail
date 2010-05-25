@@ -6,6 +6,8 @@
 {% load tagging_tags %}
 {% load comments %}
 
+{% block extra-title %}{{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
+
 {% block 'extra-styles' %}
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
