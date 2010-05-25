@@ -249,10 +249,11 @@ jQuery(document).ready(function() {
                         return;     // No component to save
                     
                     case 'collage':
+                        var img = jQuery(ui.draggable.find('img')[0]);
                         data['position'] = ui.position;
                         data['size'] = {
-                            height: ui.draggable.height(),
-                            width: ui.draggable.width()                        
+                            height: img.height(),
+                            width: img.width()                        
                         }
                         break;
                     case 'photo-background':
