@@ -4,9 +4,6 @@
 
 {% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
 
-{% block 'extra-styles' %}
-<link rel="stylesheet" href="{{ MEDIA_URL }}/styles/jquery.ui.rotatable.css" type="text/css" media="screen, projection">
-{% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
 <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.ui.rotatable.js"></script>
 <script type="text/javascript">
@@ -25,6 +22,7 @@ var look = {
                     maxWidth: ele.parent().width(),
                     minHeight: 30,
                     minWidth: 30,
+                    zIndex: 100000,
                     //grid: [10, 10],
                     stop: function(event, ui) {
                         look.saveComponent({

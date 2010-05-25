@@ -274,7 +274,7 @@ body.look
 
 #wardrobe-contents
   padding: 10px 8px
-  background= "transparent" image_url("wardrobe-bg.png") scroll repeat-x "center" "center"
+  background= "transparent" image_url("wardrobe-bg.png") "scroll" "repeat-x" "center" "center"
   +row(!content_width + !gutter_width - 12)
   
   li
@@ -282,13 +282,42 @@ body.look
       cursor: move
 
 
-/* Rotatable
-----------------------------------*/
-.ui-rotatable { position: relative; }
-.ui-rotatable-handle { position: absolute; z-index: 99999; display: block; }
-.ui-rotatable-disabled .ui-rotatable-handle, .ui-rotatable-autohide .ui-rotatable-handle { display: none; }
-.ui-rotatable-nw { top: 0; left: 0; width: 12px; height: 12px; background-position: -162px -66px; }
-.ui-rotatable-ne { top: 0; right: 0; width: 12px; height: 12px; background-position: -178px -66px; }
-.ui-rotatable-se { bottom: 0; right: 0; width: 12px; height: 12px; background-position: -130px -66px; }
-.ui-rotatable-sw { bottom: 0; left: 0; width: 12px; height: 12px; background-position: -146px -66px; }
+// Override backgrounds for jQuery UI icons
+.ui-icon
+  background-image: none
+  background-position: 0 0
 
+// Resizable
+.ui-icon-gripsmall-diagonal-se
+  bottom: -11px
+  right: -11px
+  width: 23px
+  height: 23px
+  background= "transparent" image_url("resize.png") "no-repeat" "scroll" "center" "center"
+
+// Rotatable
+.ui-rotatable
+  position: relative
+
+.ui-rotatable-handle
+  position: absolute
+  z-index: 99999
+  display: block
+
+.ui-rotatable-disabled .ui-rotatable-handle,
+.ui-rotatable-autohide .ui-rotatable-handle
+  display: none
+
+.ui-rotatable-ne
+  top: -11px
+  right: -11px
+  width: 23px
+  height: 23px
+  background= "transparent" image_url("rotate-cw.png") "no-repeat" "scroll" "center" "center"
+
+.ui-rotatable-sw
+  bottom: -11px
+  left: -11px
+  width: 23px
+  height: 23px
+  background= "transparent" image_url("rotate-ccw.png") "no-repeat" "scroll" "center" "center"

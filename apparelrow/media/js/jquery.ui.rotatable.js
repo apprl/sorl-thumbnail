@@ -17,7 +17,7 @@ $.widget("ui.rotatable", $.ui.mouse, {
 	options: {
 		handles: "nw",
         autoHide: false,
-		zIndex: 1000,
+		zIndex: 100000,
 		reRotate: /rotate\((-?\d+)deg\)/,
 		cssRules: ['transform', 'WebkitTransform', 'MozTransform']
 	},

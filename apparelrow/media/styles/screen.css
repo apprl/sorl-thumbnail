@@ -899,7 +899,56 @@ body.look #content .collage {
   cursor: move;
 }
 
-/* Rotatable */
+/* line 286, ../src/partials/_look.sass */
+.ui-icon {
+  background-image: none;
+  background-position: 0 0;
+}
+
+/* line 291, ../src/partials/_look.sass */
+.ui-icon-gripsmall-diagonal-se {
+  bottom: -11px;
+  right: -11px;
+  width: 23px;
+  height: 23px;
+  background: transparent url('../images/resize.png?1274788213') no-repeat scroll center center;
+}
+
+/* line 299, ../src/partials/_look.sass */
+.ui-rotatable {
+  position: relative;
+}
+
+/* line 302, ../src/partials/_look.sass */
+.ui-rotatable-handle {
+  position: absolute;
+  z-index: 99999;
+  display: block;
+}
+
+/* line 307, ../src/partials/_look.sass */
+.ui-rotatable-disabled .ui-rotatable-handle,
+.ui-rotatable-autohide .ui-rotatable-handle {
+  display: none;
+}
+
+/* line 311, ../src/partials/_look.sass */
+.ui-rotatable-ne {
+  top: -11px;
+  right: -11px;
+  width: 23px;
+  height: 23px;
+  background: transparent url('../images/rotate-cw.png?1274788198') no-repeat scroll center center;
+}
+
+/* line 318, ../src/partials/_look.sass */
+.ui-rotatable-sw {
+  bottom: -11px;
+  left: -11px;
+  width: 23px;
+  height: 23px;
+  background: transparent url('../images/rotate-ccw.png?1274788205') no-repeat scroll center center;
+}
 
 /* line 8, ../src/partials/_application.sass */
 li {
