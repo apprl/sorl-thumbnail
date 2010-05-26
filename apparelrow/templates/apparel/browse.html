@@ -109,7 +109,15 @@
             min: {{ pricerange.min }},
             max: {{ pricerange.max }}
         };
+
+
         jQuery(document).ready(function() {
+            if(window.location.hash) {
+                jQuery('#content').hide();
+                doFilter(window.location.hash.substr(1), function(response) {
+                    jQuery('#content').show(); renderProducts(response);
+                });
+            }
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
             // Fixed scrolling
