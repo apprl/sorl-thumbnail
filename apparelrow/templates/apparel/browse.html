@@ -17,6 +17,7 @@
     </style>
 {% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.history.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.fixedscroll.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/filtersetup.js"></script>
     <script type="text/javascript">
@@ -112,12 +113,26 @@
 
 
         jQuery(document).ready(function() {
-            if(window.location.hash) {
-                jQuery('#content').hide();
-                doFilter(window.location.hash.substr(1), function(response) {
-                    jQuery('#content').show(); renderProducts(response);
-                });
-            }
+            // Initialize jquery history plugin with our filter
+            var firstLoad = true;
+            jQuery.history.init(function(hash) {
+                // This is slightly contrived. On first load, only filter if we have something in the hash.
+                // If so, hide the content to avoid flashing the products in the page, then show content again
+                // and render products.
+                // If it's not the first load, just filter products.
+                if(firstLoad) {
+                    firstLoad = false;
+                    if(hash != "") {
+                        jQuery('#content').hide();
+                        doFilter(hash, function(response) {
+                            jQuery('#content').show();
+                            renderProducts(response);
+                        });
+                    }
+                } else {
+                    doFilter(hash);
+                }
+            });
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
             // Fixed scrolling
