@@ -2,7 +2,7 @@
 <a class="prev{{if !products.has_previous}} disabled{{/if}}" href="/browse/?page=${ products.previous_page_number }">&lt;</a>
 <div>
 <ol>
-{{if(products.pagination.left)}}
+{{if products.pagination.left}}
     {{each(i, page) products.pagination.left}}
         <li><a href="/browse/?page=${ page }">${ page }</a></li>
     {{/each}}
