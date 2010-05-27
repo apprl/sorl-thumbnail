@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from django.db.models import Q, Max, Min
 from django.template import RequestContext, Template, Context
-from django.template.loader import find_template_source
+from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -352,6 +352,14 @@ def get_template_source(template):
     template_source, template_origin = find_template_source(template)
     return template_source
 
+def widget(request, object_id, template_name, model):
+    instance = get_object_or_404(model, pk=object_id)
+    html     = get_template(template_name).render(RequestContext(request, {'object': instance}))
+    
+    return HttpResponse('ApparelRow.insert(%s)' % json.encode({
+        'domid': request.GET['domid'],
+        'html':  html,
+    }), mimetype='application/json')
 
 
 #def save_look_product(request):

@@ -44,9 +44,19 @@ urlpatterns = patterns('',
     (r'^looks/delete_component/$', 'apparel.views.delete_look_component'),
     (r'^looks/add_product/$', 'apparel.views.add_to_look'),
     (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
-    (r'^looks/(?P<slug>[\w-]+)/edit/$', 'apparel.views.look_edit'),
-    (r'^looks/(?P<slug>[\w-]+)/like/(?P<direction>up|clear)/?$', vote_on_object, like_look_dict, "like-look"),
-    (r'^products/(?P<slug>[\w-]+)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
+    (r'^looks/(?P<slug>[\w-]+?)/edit/$', 'apparel.views.look_edit'),
+    (r'^looks/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_look_dict, "like-look"),
+    (r'^products/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
     (r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
+    
+    (r'^widget/look/(?P<object_id>\d+)/collage/$', 'apparel.views.widget', { 
+        'model': Look,
+        'template_name': 'apparel/fragments/look_collage.html',
+     }),
+    (r'^widget/look/(?P<object_id>\d+)/photo/$', 'apparel.views.widget', { 
+        'model': Look,
+        'template_name': 'apparel/fragments/look_photo.html',
+     }),
 )
+
 
