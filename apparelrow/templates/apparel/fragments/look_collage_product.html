@@ -1,2 +1,2 @@
-<img id="product-{{ component.product.id }}" class="product" style="position: absolute; {{ component.style }}" src="/scale/470{{ component.product.product_image.url }}?trans=true" />
+<img id="product-{{ component.product.id }}" class="product" style="position: absolute; {{ component.style }}" src="http://{{ request.get_host }}{{ component.product.product_image.url }}?trans=true" />
 {% include "apparel/fragments/look_product_tooltip.html" %}
