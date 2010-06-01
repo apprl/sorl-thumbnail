@@ -2,7 +2,7 @@ var ApparelRow ={
     host: 'http://localhost:8000',
     initialized: false,
     initStack: 0,
-    insert: function(response) {
+    insert: function(response, ele) {
         // FIXME: Backtracking would be nice here so we could have one rather  
         // than two replace statements
         
@@ -20,36 +20,32 @@ var ApparelRow ={
                 return 'class="' + c + '"';
             });
         
-        $('#' + response.domid).replaceWith(html)
-        
-        if(--ApparelRow.initStack == 0)
-            ApparelRow.completed();
-    },
-    initializers: {
-        'look-collage': function(root) {
-            var rootId = root.attr('id');
-            var reqUrl = ApparelRow.host + '/widget/look/' + rootId.split('-').pop() + '/collage/?domid=' + rootId + '&callback=?';
+        ele.html(html);
 
-            $.ajax({
-                url: reqUrl,
-                type: 'HEAD', 
-                success: function(response, status, request) {
-                    if(request.statusText == 'OK') {
-                        ApparelRow.initStack++;            
-                        $.getJSON(reqUrl);
-                    }
-                }
-            })
-        }
-    },
-    completed: function() {
-        $('.ar-collage, .ar-product').tooltip({
+        $('.ar-collage, .ar-product', ele).tooltip({
             tipClass: 'ar-tooltip',
             effect: 'slide',
             relative: true,
             delay: 500,
             offset: [30, 0]
         });
+    },
+    initializers: {
+        'look-collage': function(root) {
+            var reqUrl = ApparelRow.host + '/widget/look/' + root.attr('id').split('-').pop() + '/collage/?callback=?';
+
+            $.ajax({
+                url: reqUrl,
+                dataType: 'jsonp',
+                success: function(response, statusText) {
+                    console.log(statusText);
+                    if(response.success)
+                        ApparelRow.insert(response, root);
+                    else
+                        root.remove();
+                }
+            });
+        }
     }
 };
 
