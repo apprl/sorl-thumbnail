@@ -313,10 +313,11 @@ def look_detail(request, slug):
 @seamless_request_handling
 def look_edit(request, slug):
     look = get_object_or_404(Look, slug=slug)
-    
+        
     if request.method == 'POST':
+        
         form = LookForm(request.POST, request.FILES, instance=look)
-        #import pdb; pdb.set_trace()
+        
         if form.is_valid():
             form.save()
     else:
@@ -365,16 +366,6 @@ def widget(request, object_id, template_name, model):
         'success': success,
         'html':  html,
     })), mimetype='application/json')
-
-
-#def save_look_product(request):
-#    try:
-#        lp = LookProduct.objects.get(product__id=request.POST['product'], look__id=request.POST['look'])
-#        form = LookProductForm(request.POST, instance=lp)
-#    except LookProduct.DoesNotExist:
-#        form = LookProductForm(request.POST)
-#    form.save()
-#    return HttpResponseRedirect(reverse('apparel.views.look_detail', args=(request.POST['look'],)))
 
 
 @seamless_request_handling

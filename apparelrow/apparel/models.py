@@ -191,6 +191,10 @@ class VendorProduct(models.Model):
         export_fields = ['__all__', '-product']
 
 
+LOOK_COMPONENT_TYPES = (
+    ('C', 'Collage'),
+    ('P', 'Picture'),
+)
 
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
@@ -203,21 +207,28 @@ class Look(models.Model):
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags        = TagField()
+    component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     
     def photo_components(self):
         return self.components.filter(component_of='P')
-
+    
     def collage_components(self):
         return self.components.filter(component_of='C')
+    
+    @property
+    def display_with_component(self):
+        if self.component: return self.component
+        if self.photo_components().count() > 0: return 'P'
+        return 'C'
     
     @property
     def total_price(self):
         prices = [p.default_vendor.price for p in self.products.all()]
         return sum(prices)
-
+    
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user)
-
+    
     @models.permalink
     def get_absolute_url(self):
         return ('apparel.views.look_detail', [str(self.slug)])
@@ -233,10 +244,7 @@ class LookComponent(models.Model):
     """
     look    = models.ForeignKey(Look, related_name='components')
     product = models.ForeignKey(Product)
-    component_of = models.CharField(max_length=1, choices=(
-        ('C', 'Collage'),
-        ('P', 'Picture'),
-    ))
+    component_of = models.CharField(max_length=1, choices=LOOK_COMPONENT_TYPES)
     top = models.IntegerField(_('CSS top'), blank=True, null=True)
     left = models.IntegerField(_('CSS left'), blank=True, null=True)
     width = models.IntegerField(_('CSS width'), blank=True, null=True)
