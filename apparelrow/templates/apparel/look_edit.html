@@ -319,7 +319,7 @@ function createHotspot(product, top, left) {
 }
 
 var chooser = {
-    dialog: jQuery('#product-chooser'),
+    dialog: null,
     show: function(args) {
         // Renders and displays the dialog 
         // args:
@@ -404,6 +404,10 @@ var chooser = {
         }
     }
 };
+
+jQuery(document).ready(function() {
+    chooser.dialog = jQuery('#product-chooser');
+});
 
 </script>
 {% endblock 'extra-scripts' %}
