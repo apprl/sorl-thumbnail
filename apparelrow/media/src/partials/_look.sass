@@ -99,31 +99,37 @@
   +border-top-radius
   +border("all")
   ul.tabs
-    +horizontal-list(1px)
+    +horizontal-list(0)
     li
-      +button
-      width: 229px
+      +border("all")
+      display: block
       border-style: none solid solid none
-      text-align: center
-      &.current
-        background-image= image_url("gradient-dark-bg.png")
-      &:first-child, &.first
+      &:first-child, &.first, &:first-child a, &.first a
         +border-top-left-radius
-      &:last-child, &.last
+      &:last-child, &.last, &:last-child a, &.last a
         +border-top-right-radius
         border-right: none
       a
+        +button
+        width: 230px
+        text-align: center
         display: block
-        background:
-          color: transparent
-          repeat: no-repeat
-          position: 75px center
-        &.collage
-          background-image= image_url("kollage.png")
+        border: none
         &.photo
+          width: 232px
+        &.current
+          background-image= image_url("gradient-dark-bg.png")
+        span
+          padding-left: 16px
+          background:
+            color: transparent
+            repeat: no-repeat
+            position: left center
+        &.collage span
+          background-image= image_url("kollage.png")
+        &.photo span
           background-image= image_url("foto.png")
-          background-position: 80px center
-        &.selection
+        &.selection span
           background-image= image_url("urval.png")
 
 #look-title
