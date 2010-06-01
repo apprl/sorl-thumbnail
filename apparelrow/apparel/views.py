@@ -353,13 +353,18 @@ def get_template_source(template):
     return template_source
 
 def widget(request, object_id, template_name, model):
-    instance = get_object_or_404(model, pk=object_id)
-    html     = get_template(template_name).render(RequestContext(request, {'object': instance}))
-    
-    return HttpResponse('ApparelRow.insert(%s)' % json.encode({
-        'domid': request.GET['domid'],
+    try:
+        instance = model.objects.get(pk=object_id)
+        html     = get_template(template_name).render(RequestContext(request, {'object': instance}))
+        success  = True
+    except model.DoesNotExist:
+        success  = False
+        html     = 'Not found'
+
+    return HttpResponse('%s(%s)' % (request.GET['callback'], json.encode({
+        'success': success,
         'html':  html,
-    }), mimetype='application/json')
+    })), mimetype='application/json')
 
 
 #def save_look_product(request):
