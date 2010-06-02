@@ -88,42 +88,41 @@
     {% endif %}
 </div>
 <div id="content">
-        {# FIXME: Add a "display_as "whatever" or "dispay_as_whatever" property to thge look object rather than checking the flag #}
-        {% ifequal object.display_with_component 'C' %}
-            <div class="collage">
-            {% include 'apparel/fragments/look_collage.html' %}
-            </div>
-        {% else %}
-            <!-- FIXME: Move tooltip offset to relative of the position of the background image. Consolidate with edit_look page -->
-            <div class="photo">
-            {% include 'apparel/fragments/look_photo.html' %}
-            </div>
-        {% endifequal %}
-        <form method="post" action="{% url like-look object.slug "up" %}">
-            <button type="submit" name="like" id="like">{% trans "Like" %}</button>
-        </form>
-    </div>
-    {% get_trackbacks_for object as trackbacks %}
-    {% include 'apparel/fragments/comments.html' %}
-    {% tags_for_object object as tags %}
-    {% if tags %}
-    <div id="tags">
-        <h2>{% trans "Tags" %}</h2>
-        <ul>
-            {% for tag in tags %}
-            {% tagged_objects tag in apparel.look as looks_with_tag %}
-            <li>{{ tag.name }}<span>{{ looks_with_tag|length }}</span></li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-    {% comment %}
-    <h2>{% trans "Articles in this look" %}</h2>
-    <div id="lookproducts">
-        {% with object.products.all as products %}
-        {% include 'apparel/fragments/product_row.html' %}
-        {% endwith %}
-    </div>
-    {% endcomment %}
+    {# FIXME: Add a "display_as "whatever" or "dispay_as_whatever" property to thge look object rather than checking the flag #}
+    {% ifequal object.display_with_component 'C' %}
+        <div class="collage">
+        {% include 'apparel/fragments/look_collage.html' %}
+        </div>
+    {% else %}
+        <!-- FIXME: Move tooltip offset to relative of the position of the background image. Consolidate with edit_look page -->
+        <div class="photo">
+        {% include 'apparel/fragments/look_photo.html' %}
+        </div>
+    {% endifequal %}
+    <form method="post" action="{% url like-look object.slug "up" %}">
+        <button type="submit" name="like" id="like">{% trans "Like" %}</button>
+    </form>
 </div>
+{% get_trackbacks_for object as trackbacks %}
+{% include 'apparel/fragments/comments.html' %}
+{% tags_for_object object as tags %}
+{% if tags %}
+<div id="tags">
+    <h2>{% trans "Tags" %}</h2>
+    <ul>
+        {% for tag in tags %}
+        {% tagged_objects tag in apparel.look as looks_with_tag %}
+        <li>{{ tag.name }}<span>{{ looks_with_tag|length }}</span></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% comment %}
+<h2>{% trans "Articles in this look" %}</h2>
+<div id="lookproducts">
+    {% with object.products.all as products %}
+    {% include 'apparel/fragments/product_row.html' %}
+    {% endwith %}
+</div>
+{% endcomment %}
 {% endblock body %}
