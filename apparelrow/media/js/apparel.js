@@ -53,6 +53,20 @@ jQuery(document).ready(function() {
     jQuery('.share').click(function() { jQuery(this).find('ul').toggle(); return false; })
 });
 
+
+function makeProductTooltip(selector) {
+    var q = (typeof selector == 'string')
+        ? jQuery(selector)
+        : selector;
+    
+    q.tooltip({
+        effect: 'slide',
+        relative: true,
+        delay: 500,
+        offset: [30, 60]
+    });
+}
+
 //
 //function form_to_ajax(form, callback, error_callback, e) {
 //    query  = jQuery(form).serialize();

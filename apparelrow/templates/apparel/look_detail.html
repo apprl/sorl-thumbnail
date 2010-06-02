@@ -15,14 +15,8 @@
 
 {% block 'extra-scripts' %}
 <script type="text/javascript">
-    jQuery(document).ready(function() { 
-        jQuery('.collage .product, .photo .product').tooltip({
-            effect: 'slide',
-            relative: true,
-            delay: 500,
-            offset: [30, 0]
-        });
-        
+    jQuery(document).ready(function() {
+        makeProductTooltip('.collage .product, .photo .product');        
     });
 </script>
 {% endblock 'extra-scripts' %}
