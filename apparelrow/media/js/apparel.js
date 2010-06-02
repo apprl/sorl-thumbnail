@@ -14,7 +14,7 @@ jQuery(document).ready(function() {
         prefix: '/*',
         suffix: '*/'
     }
-    var likeContainers = 'body.look .collage, body.product .product-image';
+    var likeContainers = 'body.look .collage, body.look .photo, body.product .product-image';
     jQuery(likeContainers).children('form').hide();
     jQuery(likeContainers).hover(
         function() { jQuery(this).find('form').fadeIn(); },

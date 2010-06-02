@@ -16,12 +16,13 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() { 
-        jQuery('.collage .product').tooltip({
+        jQuery('.collage .product, .photo .product').tooltip({
             effect: 'slide',
             relative: true,
             delay: 500,
             offset: [30, 0]
         });
+        
     });
 </script>
 {% endblock 'extra-scripts' %}
@@ -87,8 +88,17 @@
     {% endif %}
 </div>
 <div id="content">
-    <div class="collage">
-        {% include 'apparel/fragments/look_collage.html' %}
+        {# FIXME: Add a "display_as "whatever" or "dispay_as_whatever" property to thge look object rather than checking the flag #}
+        {% ifequal object.display_with_component 'C' %}
+            <div class="collage">
+            {% include 'apparel/fragments/look_collage.html' %}
+            </div>
+        {% else %}
+            <!-- FIXME: Move tooltip offset to relative of the position of the background image. Consolidate with edit_look page -->
+            <div class="photo">
+            {% include 'apparel/fragments/look_photo.html' %}
+            </div>
+        {% endifequal %}
         <form method="post" action="{% url like-look object.slug "up" %}">
             <button type="submit" name="like" id="like">{% trans "Like" %}</button>
         </form>

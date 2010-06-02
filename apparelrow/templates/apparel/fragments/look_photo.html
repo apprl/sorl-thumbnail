@@ -1,51 +1,12 @@
 {% load thumbnail %}
 {% load i18n %}
-<div id="photo">
-    <div id="photo-background"
-        {% if object.image %}
-           {% thumbnail object.image 470x470 as image %}
-           style="background-image: url('{{ image }}'); width: {{ image.width }}px; height: {{ image.height }}px"
-        {% endif %}
-    >
-        {% for component in object.photo_components.all %}
-            {% include "apparel/fragments/look_photo_product.html" %}
-        {% endfor %}
-    </div>
-    
-    <div id="photo-form">
-        <div{% if not object.image %} style="display: block"{% endif %} class="upload-form">
-            {{ form.image }}
-        </div>
-        <div>
-            <button class="upload-form"{% if object.image %} style="display: block"{% endif %}>{% trans "Upload a Photo" %}</button>
-            <button type="submit" class="upload-form"{% if not object.image %} style="display: block"{% endif %}>{% trans "Upload" %}</button>
-        </div>
-    </div>
+<div id="photo-background"
+    {% if object.image %}
+       {% thumbnail object.image 470x470 as image %}
+       style="background-image: url('{{ image }}'); width: {{ image.width }}px; height: {{ image.height }}px"
+    {% endif %}
+>
+    {% for component in object.photo_components.all %}
+        {% include "apparel/fragments/look_photo_product.html" %}
+    {% endfor %}
 </div>
-<script type="text/javascript">
-    /* Upload form interaction */
-    
-    jQuery(document).ready(function() {
-        jQuery('#photo-form button:first').click(function(e) {
-            jQuery('#photo-form .upload-form').toggle();
-            return false;
-        });
-    });
-    jQuery('#photo-form').click(function(e) { e.stopPropagation(); });
-    jQuery('#photo').click(function(e) {
-        // Toggle upload-form elements only if there's a photo and the form is visible
-        
-        if(
-            jQuery('#photo-background').css('background-image') != 'none' 
-            && jQuery('#photo-form > div:first').is(':visible')
-        ) {
-            jQuery('#photo-form .upload-form').toggle();
-        }
-        return true;
-    });
-    
-    jQuery('#photo-form button[type=submit]').click(function(e) {
-        this.form.action += '#photo-tab'
-        return true;
-    });
-</script>

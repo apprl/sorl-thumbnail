@@ -684,7 +684,7 @@ body.look .spread input {
 }
 
 /* line 224, ../src/partials/_look.sass */
-body.look .collage {
+body.look .collage, body.look .photo {
   position: relative;
   height: 524px;
 }
@@ -727,7 +727,7 @@ body.look #content {
   margin-top: -2em;
 }
 /* line 249, ../src/partials/_look.sass */
-body.look #content .collage {
+body.look #content .collage, body.look #content .photo {
   background-color: white;
   margin-right: 2em;
 }
@@ -3094,13 +3094,13 @@ body.product .sidebar {
 }
 
 /* line 684, ../src/partials/_application.sass */
-body.product .product-image form, body.look .collage form {
+body.product .product-image form, body.look .collage form, body.look .photo form {
   position: absolute;
   top: 0px;
   right: 0px;
 }
 /* line 688, ../src/partials/_application.sass */
-body.product .product-image form button, body.look .collage form button {
+body.product .product-image form button, body.look .collage form button, body.look .photo form button {
   margin: 0;
   border: none;
   background: transparent url('../images/like-large.png?1270451570') no-repeat scroll center center;
