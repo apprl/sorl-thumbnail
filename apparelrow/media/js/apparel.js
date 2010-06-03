@@ -9,6 +9,10 @@ function increase_counts(counts, new_count) {
     });
 }
 jQuery(document).ready(function() {
+    // Make all "apparel rows" scrollables
+    jQuery('.row').scrollable().end();
+
+
     // Adding comments to jquery-tmpl, syntax: {{#}}comment{{/#}} Note: the "" are important
     jQuery.tmplcmd['#'] = {
         prefix: '/*',
