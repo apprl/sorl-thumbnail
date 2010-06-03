@@ -67,6 +67,8 @@ function makeProductTooltip(selector) {
     });
 }
 
+
+
 //
 //function form_to_ajax(form, callback, error_callback, e) {
 //    query  = jQuery(form).serialize();
