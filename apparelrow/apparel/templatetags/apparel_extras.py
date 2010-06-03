@@ -135,6 +135,13 @@ class IfInListNode(Node):
         return self.nodes.render(context) if self.negate else ''
         
 
+
+
+
+
+
+
+
 def class_name(o):
     """ Outputs class name of given object (if it is one)
     >>> from django.template.loader import Template, Context
