@@ -734,49 +734,50 @@ body.look #content .collage, body.look #content .photo {
 
 /* line 254, ../src/partials/_look.sass */
 #look-header {
+  margin-top: 1em;
   position: relative;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 257, ../src/partials/_look.sass */
+/* line 258, ../src/partials/_look.sass */
 #look-header .profile-image {
   position: absolute;
   left: 0em;
   top: 0;
 }
-/* line 261, ../src/partials/_look.sass */
+/* line 262, ../src/partials/_look.sass */
 #look-header div {
   margin-left: 70px;
 }
-/* line 263, ../src/partials/_look.sass */
+/* line 264, ../src/partials/_look.sass */
 #look-header div h1 {
   font-size: 1.5em;
   line-height: 2em;
 }
-/* line 266, ../src/partials/_look.sass */
+/* line 267, ../src/partials/_look.sass */
 #look-header div h1 a {
   font-size: 0.75em;
 }
 
-/* line 269, ../src/partials/_look.sass */
+/* line 270, ../src/partials/_look.sass */
 #wardrobe {
   margin: 0 -16px 0 -24px;
   clear: both;
 }
 
-/* line 273, ../src/partials/_look.sass */
+/* line 274, ../src/partials/_look.sass */
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
   background: #f2f2f2 url('../images/gradient-bg.png?1270451570') repeat-x;
   padding: 10px 8px 0 10px;
 }
-/* line 279, ../src/partials/_look.sass */
+/* line 280, ../src/partials/_look.sass */
 #wardrobe-title span {
   background: transparent url('../images/arrow-bg-down.png?1270451570') no-repeat top left;
   padding-left: 14px;
 }
 
-/* line 283, ../src/partials/_look.sass */
+/* line 284, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
   background: transparent url('../images/wardrobe-bg.png?1273248112') scroll repeat-x center center;
@@ -908,18 +909,18 @@ body.look #content .collage, body.look #content .photo {
 #wardrobe-contents div.row ul li a img {
   vertical-align: middle;
 }
-/* line 289, ../src/partials/_look.sass */
+/* line 290, ../src/partials/_look.sass */
 #wardrobe-contents li a {
   cursor: move;
 }
 
-/* line 294, ../src/partials/_look.sass */
+/* line 295, ../src/partials/_look.sass */
 .ui-icon {
   background-image: none;
   background-position: 0 0;
 }
 
-/* line 299, ../src/partials/_look.sass */
+/* line 300, ../src/partials/_look.sass */
 .ui-icon-gripsmall-diagonal-se {
   bottom: -11px;
   right: -11px;
@@ -928,25 +929,25 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('../images/resize.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 307, ../src/partials/_look.sass */
+/* line 308, ../src/partials/_look.sass */
 .ui-rotatable {
   position: relative;
 }
 
-/* line 310, ../src/partials/_look.sass */
+/* line 311, ../src/partials/_look.sass */
 .ui-rotatable-handle {
   position: absolute;
   z-index: 99999;
   display: block;
 }
 
-/* line 315, ../src/partials/_look.sass */
+/* line 316, ../src/partials/_look.sass */
 .ui-rotatable-disabled .ui-rotatable-handle,
 .ui-rotatable-autohide .ui-rotatable-handle {
   display: none;
 }
 
-/* line 319, ../src/partials/_look.sass */
+/* line 320, ../src/partials/_look.sass */
 .ui-rotatable-ne {
   top: -11px;
   right: -11px;
@@ -955,7 +956,7 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('../images/rotate-cw.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 326, ../src/partials/_look.sass */
+/* line 327, ../src/partials/_look.sass */
 .ui-rotatable-sw {
   bottom: -11px;
   left: -11px;
