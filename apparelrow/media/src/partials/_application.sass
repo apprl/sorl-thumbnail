@@ -741,10 +741,13 @@ body.product .product-image, body.look #content
         background-image= image_url("look.png")
       ul
         display: none
-        margin: 0 -1em
+        position: absolute
         border-bottom: none
         border-right: none
+        background: #F2F2F2
         li
+          display: block
+          clear: left
           padding: 0 1em
           border-top: none
           +border("bottom")
