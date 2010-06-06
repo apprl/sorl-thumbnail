@@ -441,6 +441,7 @@ def delete_look_component(request):
 @seamless_request_handling
 @login_required
 def add_to_look(request):
+    
     if 'look' in request.POST:
         look = Look.objects.get(pk=request.POST['look'])
         created = False

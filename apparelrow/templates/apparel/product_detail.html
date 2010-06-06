@@ -40,7 +40,10 @@
                     jQuery(this).find('#add-to-look-new button').show(); 
                     jQuery(this).find('#add-to-look-new input[name=new_name]').hide(); 
                 }
-                return false;
+
+                return (event.type == 'click') 
+                    ? true 
+                    : false;
             });
             //jQuery('#add-to-look ul').width(jQuery('#add-to-look').width());
             jQuery('#add-to-look>form').hyperSubmit({
