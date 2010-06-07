@@ -264,6 +264,12 @@
             
             pagination.data = products;
             pagination.render();
+            
+            if(location.hash && location.hash != '#!') {
+                jQuery('#reset').show()
+            } else {
+                jQuery('#reset').hide()
+            }
         }
         function filterCriteria(criteria_filter) {
             if('manufacturers' in criteria_filter) {
