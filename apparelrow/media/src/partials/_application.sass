@@ -736,17 +736,22 @@ body.product .product-image, body.look #content
     padding-left: 20px
 
 
-#add-menu
+ul.menu
   +clearfix
   +horizontal-list(0)
-  margin-top: 18px
-  li.last
-    margin-right: 0px
+  li.hover
+    +hover_button
   li
     +button
     +border-radius(3px)
     margin-right: 2px
     line-height: 2em
+  li.last
+    margin-right: 0px
+
+#add-menu
+  margin-top: 18px
+  li
     a, button
       display: block
       background: transparent url(../images/add.png) scroll no-repeat 9px center

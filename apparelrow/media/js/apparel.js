@@ -55,6 +55,17 @@ jQuery(document).ready(function() {
         function() { jQuery(this).find('ul').hide(); }
     );
     jQuery('.share').click(function() { jQuery(this).find('ul').toggle(); return false; })
+    
+    jQuery('ul.menu li')
+        .live('mouseenter', function(e) { 
+            jQuery(this).addClass('hover'); 
+            return true;
+        } )
+        .live('mouseleave', function(e) { 
+            jQuery(this).removeClass('hover');
+            return true; 
+        } )
+    ;
 });
 
 
