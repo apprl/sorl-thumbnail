@@ -44,7 +44,7 @@
     </div>
     <ul id="add-menu" class="clearfix">
         {% include 'apparel/fragments/share.html' %}
-        <li id="add-to-look" class="inline-menu">
+        <li id="add-to-look">
             <a href="/apparel/look/">{% trans "Add to look" %}</a>
             <form action="{% url apparel.views.add_to_look %}" method="post">
             <input type="hidden" name="product" value="{{ object.id }}" />
@@ -59,7 +59,7 @@
             </ul>
             </form>
         </li>
-        <li id="add-to-wardrobe" class="last">
+        <li id="add-to-wardrobe" class="top last">
             {% if is_in_wardrobe %}
                 <button>{% trans "In wardrobe" %}</button>
             {% else %}

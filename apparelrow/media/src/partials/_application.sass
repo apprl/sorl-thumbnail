@@ -748,14 +748,15 @@ body.product .product-image, body.look #content
       ul
         display: none
         position: absolute
-        border-bottom: none
-        border-right: none
-        background: #F2F2F2
+        margin-left: -1px
+        margin-top: 0px
+        +border
         li
           display: block
           clear: left
-          padding: 0 1em
-          border-top: none
+          width: 100%
+          padding: 0
+          border: none
           +border("bottom")
           &.last
             border-bottom: none
