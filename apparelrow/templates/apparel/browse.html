@@ -115,7 +115,9 @@
         jQuery(document).ready(function() {
             // Initialize jquery history plugin with our filter
             var firstLoad = true;
+            
             jQuery.history.init(function(hash) {
+                
                 // This is slightly contrived. On first load, only filter if we have something in the hash.
                 // If so, hide the content to avoid flashing the products in the page, then show content again
                 // and render products.
@@ -130,7 +132,8 @@
                         });
                     }
                 } else {
-                    doFilter(hash);
+                    doFilter(hash, this.filterCallback);
+                    this.filterCallback = null;
                 }
             });
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
@@ -172,7 +175,7 @@
                 filter(getQuery({ criterion: 'category'}));
                 return false;
             });
-            jQuery('#pagination a').live('click', function() {
+            jQuery('#pagination a').live('click', function(e) {
                 //filter(getQuery($(this).attr('href').split('=')[1]));
                 // FIXME: Move out logic to section that handles page-swapping
                 var page = parseInt(jQuery(this).attr('href').split('=')[1]);
@@ -224,9 +227,15 @@
         }
         
         function filter(query, callback) {
-            q = jQuery.param(query);
-            window.location.hash = q ? q : "!";
-            doFilter(query, callback);
+            // FIXME: History hack. It is not possible to set location.hash and then call
+            // doFilter(...) as that will invoke the call twice with a different callback
+            // The current workaround is this:
+            // 1) Only let the jQuery.history callback invoke doFilter()
+            // 2) If a callback other than renderProducts is required, set the filterCallback property
+            //    It will be cleaned up after first use
+            // Anyone with a better, cleaner idea how to solve this, just go ahead and implement it. This doesn't feel so nice
+            jQuery.history.filterCallback = callback;
+            window.location.hash = jQuery.param(query) || '!';
         }
         function doFilter(query, callback) {
             jQuery.getJSON('{% url apparel.views.search "products" %}', query, callback || renderProducts);
@@ -245,7 +254,11 @@
                 jQuery('#product-list > ul.list').append(newPage);
             }
             jQuery.each(products.object_list, function(i, product) {
-                jQuery('#product_template').render({ product: product }).appendTo(pageList);
+                try {
+                    jQuery('#product_template').render({ product: product }).appendTo(pageList);
+                } catch(e) {
+                    console.log('Error while rendering template', e);
+                }
             });
             
             pagination.data = products;

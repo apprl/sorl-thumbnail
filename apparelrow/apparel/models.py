@@ -143,6 +143,7 @@ class Product(models.Model):
     
     @property
     def default_vendor(self):
+        if self.vendorproduct.order_by('price').count() == 0: return None
         return self.vendorproduct.order_by('price')[0]
 
     @models.permalink

@@ -91,6 +91,7 @@ def search(request, model):
     left, mid, right = get_pagination(paginator, page)
 
     #FIXME: We don't return the paged result because it's not JSON serializable
+    
     response = {
         'object_list': paged_result.object_list,
         'previous_page_number': paged_result.previous_page_number(),
@@ -441,7 +442,7 @@ def delete_look_component(request):
 @seamless_request_handling
 @login_required
 def add_to_look(request):
-    import pdb; pdb.set_trace()
+
     if request.POST.get('look'):
         look = Look.objects.get(pk=request.POST['look'])
         created = False

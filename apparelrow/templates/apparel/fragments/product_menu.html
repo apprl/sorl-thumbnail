@@ -6,7 +6,7 @@
 <h2>{% trans "Browse articles" %}</h2>
 {% endblock %}
 <ul id="product-gender">
-    <li class="first"><a href="#">{% trans "All" %}</a></li>
+    <li class="first"><a href="{% url apparel.views.browse %}">{% trans "All" %}</a></li>
     <li><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender=M">{% trans "Men" %}</a></li>
     <li class="last"><a id="option-F"{% ifequal selected_gender "F" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender=F">{% trans "Women" %}</a></li>
 </ul>
