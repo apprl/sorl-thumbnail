@@ -462,18 +462,29 @@ a.prev.disabled, a.next.disabled
     display: inline-block
     width: 115px
     height: 30px
-    
+  
   .prev
     float: left
     +replace-text("prev-page.png", "20px", "center")
     +border("right")
+
+  .prev.disabled
+    +replace-text("prev-page-disabled.png", "20px", "center")
 
   .next
     float: right
     +replace-text("next-page.png", "89px", "center")
     +border("left")
 
-  
+  .next.disabled
+    +replace-text("next-page-disabled.png", "89px", "center")
+
+  .next:hover, .prev:hover
+    background-color= !hover_color
+    
+  .next.disabled:hover, prev.disabled:hover
+    background-color: inherit
+
   div
     float: left
     width= !large_width - 2 * (115 + 2) + 1

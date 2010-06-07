@@ -68,16 +68,12 @@
                                 
                 this.data.next_page_number     = (page < num_pages) ? page + 1 : null;
                 this.data.previous_page_number = (page > 1)         ? page - 1 : null;
-                this.data.has_next     = (this.data.next_page_number    ) ? true : false;
-                this.data.has_previous = (this.data.previous_page_number) ? true : false;
                 this.data.number = page;
             },
             /* This variable contains the pagination data. It needs to be populated 
                with before rendering/recalculation may happen. This is the structure:
                 - next_page_number      Integer or null if on last page
                 - previous_page_number  Integer or null if on first page
-                - has_next              true if there is a next page, else false
-                - has_previous          true if there is a previous page, else false
                 - pagination
                     left                Array with page numbers on the left of ... null if there is nothing to display
                     mid                 Array with page numbers on in the middle of the ...
@@ -175,10 +171,15 @@
                 filter(getQuery({ criterion: 'category'}));
                 return false;
             });
+            // jQuery('#pagination a.next, #pagination a.prev').live('hover')
             jQuery('#pagination a').live('click', function(e) {
-                //filter(getQuery($(this).attr('href').split('=')[1]));
                 // FIXME: Move out logic to section that handles page-swapping
-                var page = parseInt(jQuery(this).attr('href').split('=')[1]);
+                
+                var link = jQuery(this);
+                if(link.is('.disabled'))
+                    return false;
+                
+                var page = parseInt(link.attr('href').split('=')[1]);
                 if(jQuery('#page-' + page).length == 0) {
                     filter(getQuery({page: page}), function(response) {
                         renderPage(response, page);
