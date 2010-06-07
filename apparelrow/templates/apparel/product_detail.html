@@ -52,6 +52,9 @@
                     text = link.text();
                     link.text('{% trans "Adding..." %}');
                 },
+                complete: function() {
+                    jQuery('#add-to-look>form>input[type=hidden][name=look]').attr('value', '');
+                },
                 success: function(response, statusText, req) {
                     if(response.data['created']) {
                         jQuery('#add-to-look-new').before(jQuery('#look_button_template').render(response.data));

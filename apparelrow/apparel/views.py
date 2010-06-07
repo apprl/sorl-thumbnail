@@ -441,7 +441,7 @@ def delete_look_component(request):
 @seamless_request_handling
 @login_required
 def add_to_look(request):
-    from pprint import pprint
+    import pdb; pdb.set_trace()
     if request.POST.get('look'):
         look = Look.objects.get(pk=request.POST['look'])
         created = False
