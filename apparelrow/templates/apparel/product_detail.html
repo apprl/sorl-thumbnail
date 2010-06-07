@@ -45,7 +45,7 @@
                     ? true 
                     : false;
             });
-            //jQuery('#add-to-look ul').width(jQuery('#add-to-look').width());
+
             jQuery('#add-to-look>form').hyperSubmit({
                 beforeSend: function(req) {
                     link = jQuery('#add-to-look a[href=/apparel/look/]');
@@ -78,7 +78,9 @@
                     link.text = text;
                 },
             });
-
+            jQuery('#add-to-look button[name=look]').click(function() {
+                this.form.elements.look[0].value = this.value;
+            });
             jQuery('#add-to-look-new button').click(function() {
                 jQuery(this).hide();
                 jQuery(this).siblings('input[name=new_name]').show().focus();
