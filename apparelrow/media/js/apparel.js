@@ -56,7 +56,7 @@ jQuery(document).ready(function() {
     );
     jQuery('.share').click(function() { jQuery(this).find('ul').toggle(); return false; })
     
-    jQuery('ul.menu li')
+    jQuery('ul.hover-menu li[class!=active]')
         .live('mouseenter', function(e) { 
             jQuery(this).addClass('hover'); 
             return true;

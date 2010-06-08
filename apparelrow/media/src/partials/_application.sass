@@ -306,12 +306,29 @@ h2
 
 #product-gender
   +filter("list-item.png", "list-item-radio-selected.png")
+  li.hover
+    +hover_button
+    border-left: none
+    border-bottom: none
+  li.hover.first
+    border-top: none
+  li.hover.last
+    border-bottom: none
 
 #product-options
   +filter("list-item-arrow.png", "list-item-radio-checked.png")
   position: relative
+  li.hover
+    +hover_button
+    border-left: none
+    border-bottom: none
+  li.hover.first
+    border-top: none
+  li.hover.last
+    border-bottom: none
   li.active
     background-image= image_url("gradient-darker-bg.png")
+
   #product-price
     +popup(0)
     #price-slider
@@ -355,6 +372,14 @@ h2
 
 #product-category
   +filter("list-item-check.png", "list-item-check-selected.png")
+  li.hover
+    +hover_button
+    border-left: none
+    border-bottom: none
+  li.hover.first
+    border-top: none
+  li.hover.last
+    border-bottom: none
   li
     ul
       overflow-y: auto
@@ -482,9 +507,12 @@ a.prev.disabled, a.next.disabled
   .next:hover, .prev:hover
     background-color= !hover_color
     
-  .next.disabled:hover, prev.disabled:hover
+  .next.disabled:hover, .prev.disabled:hover
     background-color: inherit
-
+  ol
+    a:hover
+      font-weight: bold
+  
   div
     float: left
     width= !large_width - 2 * (115 + 2) + 1
@@ -737,12 +765,13 @@ body.product .product-image, body.look #content
     background: transparent url(../images/arrow-bg.png) scroll no-repeat left bottom
     padding-left: 20px
 
+ul.hover-menu
+  li.hover
+    +hover_button
 
 ul.menu
   +clearfix
   +horizontal-list(0)
-  li.hover
-    +hover_button
   li
     +button
     +border-radius(3px)
