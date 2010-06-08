@@ -117,8 +117,9 @@
         border: none
         &.photo
           width: 232px
-        &.current
+        &.current, &.current:hover
           background-image= image_url("gradient-darker-bg.png")
+          cursor: default
         &:active, &:hover
           background-image= image_url("gradient-dark-bg.png")
         span
