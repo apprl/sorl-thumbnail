@@ -1,0 +1,19 @@
+@import partials/base.sass
+@import partials/widget.sass
+
+@import compass/css3.sass
+@import compass/utilities.sass
+
+p
+  margin: 0
+
+.apparelrow
+  +font
+  +typography
+  position: relative
+
+.ar-look-collage, .ar-look-photo
+  height= !look_height
+
+.ar-tooltip
+  +apparel_tooltip

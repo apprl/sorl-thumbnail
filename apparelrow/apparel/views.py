@@ -393,7 +393,7 @@ def save_look_component(request):
         # globally somehow.
         for field in form.cleaned_data:
             if form.cleaned_data[field] is None and field not in form.data:
-                form.cleaned_data[field] = form.initial.get(field)
+                setattr(form.instance, field, form.initial.get(field))
         
         form.save()
     else:

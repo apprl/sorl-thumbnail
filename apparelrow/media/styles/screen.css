@@ -104,57 +104,54 @@ body.three-columns #content {
   margin-right: 36px;
 }
 
-/* line 1, ../src/partials/_typography.sass */
+@import url(partials/base.css);
+/* line 3, ../src/partials/_typography.sass */
 body {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 75%;
   line-height: 1.5em;
   color: #333333;
 }
-
-/* line 8, ../src/partials/_typography.sass */
-a {
+/* line 98, ../src/partials/_base.sass */
+body a {
   text-decoration: none;
   color: #333333;
 }
-
-/* line 13, ../src/partials/_typography.sass */
-p a:hover, p a:active {
+/* line 103, ../src/partials/_base.sass */
+body p a:hover, body p a:active {
   text-decoration: underline;
 }
-
-
-/* line 18, ../src/partials/_typography.sass */
-h2, h3 {
+/* line 108, ../src/partials/_base.sass */
+body h2, body h3 {
   font-size: 1em;
 }
-
-/* line 21, ../src/partials/_typography.sass */
-h2 {
+/* line 111, ../src/partials/_base.sass */
+body h2 {
   margin: 30px 0 10px;
   border-bottom: 1px solid #d9d9d9;
 }
-
-/* line 25, ../src/partials/_typography.sass */
-h3 {
+/* line 115, ../src/partials/_base.sass */
+body h3 {
   font-weight: bolder;
 }
 
-/* line 12, ../src/partials/_look.sass */
+/* Contains CSS rules that are used both in external widgets and on the apparelrow site */
+
+/* line 11, ../src/partials/_look.sass */
 #edit-look .panes {
   position: relative;
 }
 
-/* line 15, ../src/partials/_look.sass */
+/* line 14, ../src/partials/_look.sass */
 #photo, #collage {
   height: 524px;
 }
 
-/* line 18, ../src/partials/_look.sass */
+/* line 17, ../src/partials/_look.sass */
 #selection {
   overflow: hidden;
   display: inline-block;
-  background: transparent url('../images/look-selection-row-bg.png?1272385089') no-repeat scroll;
+  background: transparent url('http://localhost:8000/media/images/look-selection-row-bg.png?1272385089') no-repeat scroll;
   padding: 9px 9px 0 9px;
   height: 252px;
 }
@@ -192,7 +189,7 @@ h3 {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-left-radius: 5px;
@@ -205,14 +202,14 @@ h3 {
 }
 /* line 26, ../src/partials/_row.sass */
 #selection a.prev.disabled {
-  background-image: url('../images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
 }
 /* line 28, ../src/partials/_row.sass */
 #selection a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-right-radius: 5px;
@@ -225,7 +222,7 @@ h3 {
 }
 /* line 32, ../src/partials/_row.sass */
 #selection a.next.disabled {
-  background-image: url('../images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
 }
 /* line 34, ../src/partials/_row.sass */
 #selection div.row {
@@ -292,16 +289,16 @@ h3 {
   vertical-align: middle;
 }
 
-/* line 25, ../src/partials/_look.sass */
+/* line 24, ../src/partials/_look.sass */
 #collage, #photo {
   position: relative;
 }
-/* line 27, ../src/partials/_look.sass */
+/* line 26, ../src/partials/_look.sass */
 #collage img.product, #photo img.product {
   position: absolute;
 }
 
-/* line 32, ../src/partials/_look.sass */
+/* line 31, ../src/partials/_look.sass */
 #collage .ui-wrapper, #photo-background .ui-wrapper {
   position: absolute;
   opacity: 0.8;
@@ -312,46 +309,46 @@ h3 {
   /* CSS3 */
   box-shadow: #999999 0px 0px 20px;
 }
-/* line 36, ../src/partials/_look.sass */
+/* line 35, ../src/partials/_look.sass */
 #collage .delete, #photo-background .delete {
   display: block;
   position: absolute;
   height: 22px;
   width: 22px;
-  background: transparent url('../images/delete.png?1273073096') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/delete.png?1273073096') no-repeat scroll center center;
   left: -11px;
   top: -11px;
 }
-/* line 44, ../src/partials/_look.sass */
+/* line 43, ../src/partials/_look.sass */
 #collage .ui-state-disabled, #collage .ui-widget-content .ui-state-disabled, #photo-background .ui-state-disabled, #photo-background .ui-widget-content .ui-state-disabled {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
   opacity: 1.0;
 }
-/* line 49, ../src/partials/_look.sass */
+/* line 48, ../src/partials/_look.sass */
 #collage .ui-state-disabled .close, #collage .ui-widget-content .ui-state-disabled .close, #photo-background .ui-state-disabled .close, #photo-background .ui-widget-content .ui-state-disabled .close {
   display: none;
 }
 
-/* line 52, ../src/partials/_look.sass */
+/* line 51, ../src/partials/_look.sass */
 #photo-background {
   position: relative;
   margin: 0 auto;
 }
-/* line 55, ../src/partials/_look.sass */
+/* line 54, ../src/partials/_look.sass */
 #photo-background .hotspot {
   position: absolute;
   padding: 40px;
-  background: transparent url('../images/look-hotspot.png?1271672587') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/look-hotspot.png?1271672587') no-repeat scroll center center;
 }
-/* line 59, ../src/partials/_look.sass */
+/* line 58, ../src/partials/_look.sass */
 #photo-background .delete {
   left: 5px;
   top: 5px;
 }
 
-/* line 63, ../src/partials/_look.sass */
+/* line 62, ../src/partials/_look.sass */
 #product-chooser {
   position: absolute;
   display: none;
@@ -361,7 +358,7 @@ h3 {
   overflow-x: hidden;
   background-color: white;
 }
-/* line 72, ../src/partials/_look.sass */
+/* line 71, ../src/partials/_look.sass */
 #product-chooser li {
   overflow: hidden;
   display: inline-block;
@@ -371,32 +368,32 @@ h3 {
 #product-chooser li {
   display: block;
 }
-/* line 75, ../src/partials/_look.sass */
+/* line 74, ../src/partials/_look.sass */
 #product-chooser li a {
   display: block;
 }
-/* line 77, ../src/partials/_look.sass */
+/* line 76, ../src/partials/_look.sass */
 #product-chooser li a img {
   float: left;
   margin-right: 10px;
 }
-/* line 80, ../src/partials/_look.sass */
+/* line 79, ../src/partials/_look.sass */
 #product-chooser li a h4, #product-chooser li a p {
   white-space: nowrap;
 }
 
-/* line 83, ../src/partials/_look.sass */
+/* line 82, ../src/partials/_look.sass */
 #photo-form {
   position: absolute;
   top: 10px;
   left: 10px;
   background-color: white;
 }
-/* line 88, ../src/partials/_look.sass */
+/* line 87, ../src/partials/_look.sass */
 #photo-form .upload-form {
   display: none;
 }
-/* line 90, ../src/partials/_look.sass */
+/* line 89, ../src/partials/_look.sass */
 #photo-form button {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -405,7 +402,7 @@ h3 {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   height: 30px;
   width: 200px;
@@ -413,18 +410,18 @@ h3 {
 }
 /* line 79, ../src/partials/_base.sass */
 #photo-form button.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #photo-form button.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 95, ../src/partials/_look.sass */
+/* line 94, ../src/partials/_look.sass */
 #photo-form div {
   padding: 5px;
 }
 
-/* line 98, ../src/partials/_look.sass */
+/* line 97, ../src/partials/_look.sass */
 #edit-look {
   border-top-left-radius: 5px;
   -moz-border-radius-topleft: 5px;
@@ -434,7 +431,7 @@ h3 {
   -webkit-border-top-right-radius: 5px;
   border: 1px solid #d9d9d9;
 }
-/* line 101, ../src/partials/_look.sass */
+/* line 100, ../src/partials/_look.sass */
 #edit-look ul.tabs {
   margin: 0;
   padding: 0;
@@ -465,26 +462,26 @@ h3 {
 #edit-look ul.tabs li:last-child, #edit-look ul.tabs li.last {
   padding-right: 0px;
 }
-/* line 103, ../src/partials/_look.sass */
+/* line 102, ../src/partials/_look.sass */
 #edit-look ul.tabs li {
   border: 1px solid #d9d9d9;
   display: block;
   border-style: none solid solid none;
 }
-/* line 107, ../src/partials/_look.sass */
+/* line 106, ../src/partials/_look.sass */
 #edit-look ul.tabs li:first-child, #edit-look ul.tabs li.first, #edit-look ul.tabs li:first-child a, #edit-look ul.tabs li.first a {
   border-top-left-radius: 5px;
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
 }
-/* line 109, ../src/partials/_look.sass */
+/* line 108, ../src/partials/_look.sass */
 #edit-look ul.tabs li:last-child, #edit-look ul.tabs li.last, #edit-look ul.tabs li:last-child a, #edit-look ul.tabs li.last a {
   border-top-right-radius: 5px;
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
   border-right: none;
 }
-/* line 112, ../src/partials/_look.sass */
+/* line 111, ../src/partials/_look.sass */
 #edit-look ul.tabs li a {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -493,7 +490,7 @@ h3 {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   width: 230px;
   text-align: center;
@@ -502,61 +499,61 @@ h3 {
 }
 /* line 79, ../src/partials/_base.sass */
 #edit-look ul.tabs li a.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #edit-look ul.tabs li a.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 118, ../src/partials/_look.sass */
+/* line 117, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo {
   width: 232px;
 }
-/* line 120, ../src/partials/_look.sass */
+/* line 119, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.current, #edit-look ul.tabs li a.current:hover {
-  background-image: url('../images/gradient-darker-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-darker-bg.png?1270451570');
   cursor: default;
 }
-/* line 123, ../src/partials/_look.sass */
+/* line 122, ../src/partials/_look.sass */
 #edit-look ul.tabs li a:active, #edit-look ul.tabs li a:hover {
-  background-image: url('../images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
 }
-/* line 125, ../src/partials/_look.sass */
+/* line 124, ../src/partials/_look.sass */
 #edit-look ul.tabs li a span {
   padding-left: 16px;
   background-color: transparent;
   background-repeat: no-repeat;
   background-position: left center;
 }
-/* line 131, ../src/partials/_look.sass */
+/* line 130, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.collage span {
-  background-image: url('../images/kollage.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/kollage.png?1270451570');
 }
-/* line 133, ../src/partials/_look.sass */
+/* line 132, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo span {
-  background-image: url('../images/foto.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/foto.png?1270451570');
 }
-/* line 135, ../src/partials/_look.sass */
+/* line 134, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.selection span {
-  background-image: url('../images/urval.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/urval.png?1270451570');
 }
 
-/* line 138, ../src/partials/_look.sass */
+/* line 137, ../src/partials/_look.sass */
 #look-title {
   border: 1px solid #d9d9d9;
   width: 893px;
   height: 27px;
-  background: #f2f2f2 url('../images/gradient-bg.png?1270451570') repeat-x;
+  background: #f2f2f2 url('http://localhost:8000/media/images/gradient-bg.png?1270451570') repeat-x;
   margin: 20px 0 10px -24px;
   padding-top: 3px;
   padding-left: 20px;
 }
-/* line 147, ../src/partials/_look.sass */
+/* line 146, ../src/partials/_look.sass */
 #look-title #id_title, #look-title button {
   color: #408994;
   font-family: "Helvetica", "Arial", sans-serif;
 }
-/* line 151, ../src/partials/_look.sass */
+/* line 150, ../src/partials/_look.sass */
 #look-title #id_title {
   border: 1px solid #92c0c7;
   border-radius: 3px;
@@ -575,12 +572,12 @@ h3 {
   /* CSS3 */
   box-shadow: inset #aed8c6 0 3px 3px;
 }
-/* line 162, ../src/partials/_look.sass */
+/* line 161, ../src/partials/_look.sass */
 #look-title button {
   display: inline;
   float: right;
   margin-right: -21px;
-  background: transparent url('../images/preview-button.png?1270451570') no-repeat scroll;
+  background: transparent url('http://localhost:8000/media/images/preview-button.png?1270451570') no-repeat scroll;
   height: 24px;
   line-height: 24px;
   width: 103px;
@@ -588,7 +585,7 @@ h3 {
   text-align: start;
 }
 
-/* line 172, ../src/partials/_look.sass */
+/* line 171, ../src/partials/_look.sass */
 #id_description,
 #id_tags {
   font-family: "Helvetica", "Arial", sans-serif;
@@ -609,17 +606,17 @@ h3 {
   width: 196px;
 }
 
-/* line 177, ../src/partials/_look.sass */
+/* line 176, ../src/partials/_look.sass */
 #id_description {
   height: 2em;
 }
 
-/* line 180, ../src/partials/_look.sass */
+/* line 179, ../src/partials/_look.sass */
 #id_tags {
   height: 1em;
 }
 
-/* line 185, ../src/partials/_look.sass */
+/* line 184, ../src/partials/_look.sass */
 body.edit-look .sidebar label {
   display: block;
   margin: 20px 0 10px;
@@ -627,11 +624,11 @@ body.edit-look .sidebar label {
   border-bottom: 1px solid #d9d9d9;
 }
 
-/* line 192, ../src/partials/_look.sass */
+/* line 191, ../src/partials/_look.sass */
 body.look .spread {
   margin-top: 20px;
 }
-/* line 194, ../src/partials/_look.sass */
+/* line 193, ../src/partials/_look.sass */
 body.look .spread input {
   font-family: "Helvetica", "Arial", sans-serif;
   font-size: 1em;
@@ -652,11 +649,11 @@ body.look .spread input {
   margin-left: 0.5em;
 }
 
-/* line 199, ../src/partials/_look.sass */
+/* line 198, ../src/partials/_look.sass */
 .tooltip {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
-  background: #efefef url('../images/tooltip-bg.png?1273841888') repeat-x scroll center top;
+  background: #efefef url('http://localhost:8000/media/images/tooltip-bg.png?1273841888') repeat-x scroll center top;
   border-radius: 2px;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -672,125 +669,125 @@ body.look .spread input {
   padding: 10px 10px 8px 10px;
   position: relative;
 }
-/* line 209, ../src/partials/_look.sass */
+/* line 15, ../src/partials/_widget.sass */
 .tooltip h2 {
   margin-top: 0;
   margin-bottom: 1px;
   border-bottom: none;
 }
-/* line 213, ../src/partials/_look.sass */
+/* line 19, ../src/partials/_widget.sass */
 .tooltip p, .tooltip a {
   color: #666666;
   font-size: smaller;
 }
-/* line 216, ../src/partials/_look.sass */
-.tooltip .arrow {
+/* line 22, ../src/partials/_widget.sass */
+.tooltip .arrow, .tooltip .ar-arrow {
   position: absolute;
-  background: transparent url('../images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
   width: 14px;
   height: 8px;
   bottom: -8px;
   left: 16px;
 }
 
-/* line 225, ../src/partials/_look.sass */
+/* line 202, ../src/partials/_look.sass */
 body.look .collage, body.look .photo {
   position: relative;
   height: 524px;
 }
-/* line 228, ../src/partials/_look.sass */
+/* line 205, ../src/partials/_look.sass */
 body.look #comments-and-links {
   float: left;
   width: 452px;
   margin-right: 36px;
 }
-/* line 232, ../src/partials/_look.sass */
+/* line 209, ../src/partials/_look.sass */
 body.look #tags {
   float: left;
   width: 208px;
 }
-/* line 235, ../src/partials/_look.sass */
+/* line 212, ../src/partials/_look.sass */
 body.look #tags li {
   border-bottom: 1px solid #f2f2f2;
 }
-/* line 237, ../src/partials/_look.sass */
+/* line 214, ../src/partials/_look.sass */
 body.look #tags li span {
   float: right;
   color: #999999;
 }
-/* line 240, ../src/partials/_look.sass */
+/* line 217, ../src/partials/_look.sass */
 body.look .sidebar {
   margin-top: 30px;
 }
-/* line 242, ../src/partials/_look.sass */
+/* line 219, ../src/partials/_look.sass */
 body.look .sidebar p {
   border-top: none;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 245, ../src/partials/_look.sass */
+/* line 222, ../src/partials/_look.sass */
 body.look .sidebar .description {
   border-bottom: none;
   padding-top: 1.5em;
 }
-/* line 248, ../src/partials/_look.sass */
+/* line 225, ../src/partials/_look.sass */
 body.look #content {
   margin-top: -2em;
 }
-/* line 250, ../src/partials/_look.sass */
+/* line 227, ../src/partials/_look.sass */
 body.look #content .collage, body.look #content .photo {
   background-color: white;
   margin-right: 2em;
 }
 
-/* line 255, ../src/partials/_look.sass */
+/* line 232, ../src/partials/_look.sass */
 #look-header {
   margin-top: 1em;
   position: relative;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 259, ../src/partials/_look.sass */
+/* line 236, ../src/partials/_look.sass */
 #look-header .profile-image {
   position: absolute;
   left: 0em;
   top: 0;
 }
-/* line 263, ../src/partials/_look.sass */
+/* line 240, ../src/partials/_look.sass */
 #look-header div {
   margin-left: 70px;
 }
-/* line 265, ../src/partials/_look.sass */
+/* line 242, ../src/partials/_look.sass */
 #look-header div h1 {
   font-size: 1.5em;
   line-height: 2em;
 }
-/* line 268, ../src/partials/_look.sass */
+/* line 245, ../src/partials/_look.sass */
 #look-header div h1 a {
   font-size: 0.75em;
 }
 
-/* line 271, ../src/partials/_look.sass */
+/* line 248, ../src/partials/_look.sass */
 #wardrobe {
   margin: 0 -16px 0 -24px;
   clear: both;
 }
 
-/* line 275, ../src/partials/_look.sass */
+/* line 252, ../src/partials/_look.sass */
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
-  background: #f2f2f2 url('../images/gradient-bg.png?1270451570') repeat-x;
+  background: #f2f2f2 url('http://localhost:8000/media/images/gradient-bg.png?1270451570') repeat-x;
   padding: 10px 8px 0 10px;
 }
-/* line 281, ../src/partials/_look.sass */
+/* line 258, ../src/partials/_look.sass */
 #wardrobe-title span {
-  background: transparent url('../images/arrow-bg-down.png?1270451570') no-repeat top left;
+  background: transparent url('http://localhost:8000/media/images/arrow-bg-down.png?1270451570') no-repeat top left;
   padding-left: 14px;
 }
 
-/* line 285, ../src/partials/_look.sass */
+/* line 262, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
-  background: transparent url('../images/wardrobe-bg.png?1273248112') scroll repeat-x center center;
+  background: transparent url('http://localhost:8000/media/images/wardrobe-bg.png?1273248112') scroll repeat-x center center;
   overflow: hidden;
   display: inline-block;
 }
@@ -828,7 +825,7 @@ body.look #content .collage, body.look #content .photo {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-left-radius: 5px;
@@ -841,14 +838,14 @@ body.look #content .collage, body.look #content .photo {
 }
 /* line 26, ../src/partials/_row.sass */
 #wardrobe-contents a.prev.disabled {
-  background-image: url('../images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
 }
 /* line 28, ../src/partials/_row.sass */
 #wardrobe-contents a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-right-radius: 5px;
@@ -861,7 +858,7 @@ body.look #content .collage, body.look #content .photo {
 }
 /* line 32, ../src/partials/_row.sass */
 #wardrobe-contents a.next.disabled {
-  background-image: url('../images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
 }
 /* line 34, ../src/partials/_row.sass */
 #wardrobe-contents div.row {
@@ -927,60 +924,60 @@ body.look #content .collage, body.look #content .photo {
 #wardrobe-contents div.row ul li a img {
   vertical-align: middle;
 }
-/* line 291, ../src/partials/_look.sass */
+/* line 268, ../src/partials/_look.sass */
 #wardrobe-contents li a {
   cursor: move;
 }
 
-/* line 296, ../src/partials/_look.sass */
+/* line 273, ../src/partials/_look.sass */
 .ui-icon {
   background-image: none;
   background-position: 0 0;
 }
 
-/* line 301, ../src/partials/_look.sass */
+/* line 278, ../src/partials/_look.sass */
 .ui-icon-gripsmall-diagonal-se {
   bottom: -11px;
   right: -11px;
   width: 23px;
   height: 23px;
-  background: transparent url('../images/resize.png?1274796492') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/resize.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 309, ../src/partials/_look.sass */
+/* line 286, ../src/partials/_look.sass */
 .ui-rotatable {
   position: relative;
 }
 
-/* line 312, ../src/partials/_look.sass */
+/* line 289, ../src/partials/_look.sass */
 .ui-rotatable-handle {
   position: absolute;
   z-index: 99999;
   display: block;
 }
 
-/* line 317, ../src/partials/_look.sass */
+/* line 294, ../src/partials/_look.sass */
 .ui-rotatable-disabled .ui-rotatable-handle,
 .ui-rotatable-autohide .ui-rotatable-handle {
   display: none;
 }
 
-/* line 321, ../src/partials/_look.sass */
+/* line 298, ../src/partials/_look.sass */
 .ui-rotatable-ne {
   top: -11px;
   right: -11px;
   width: 23px;
   height: 23px;
-  background: transparent url('../images/rotate-cw.png?1274796492') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/rotate-cw.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 328, ../src/partials/_look.sass */
+/* line 305, ../src/partials/_look.sass */
 .ui-rotatable-sw {
   bottom: -11px;
   left: -11px;
   width: 23px;
   height: 23px;
-  background: transparent url('../images/rotate-ccw.png?1274796492') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/rotate-ccw.png?1274796492') no-repeat scroll center center;
 }
 
 /* line 8, ../src/partials/_application.sass */
@@ -1008,17 +1005,17 @@ body .ui-draggable-dragging a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   display: inline-block;
 }
 /* line 79, ../src/partials/_base.sass */
 .button.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 .button.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 
 /* line 22, ../src/partials/_application.sass */
@@ -1042,7 +1039,7 @@ button {
 
 /* line 37, ../src/partials/_application.sass */
 #container {
-  background: transparent url('../images/content-bg.png?1273246177') scroll repeat-y center center;
+  background: transparent url('http://localhost:8000/media/images/content-bg.png?1273246177') scroll repeat-y center center;
 }
 /* line 39, ../src/partials/_application.sass */
 #container .container {
@@ -1065,7 +1062,7 @@ button {
 
 /* line 43, ../src/partials/_application.sass */
 #header {
-  background: transparent url('../images/header-bg.png?1273246177') scroll no-repeat center center;
+  background: transparent url('http://localhost:8000/media/images/header-bg.png?1273246177') scroll no-repeat center center;
   height: 118px;
 }
 /* line 46, ../src/partials/_application.sass */
@@ -1080,7 +1077,7 @@ button {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/logo.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/logo.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   width: 128px;
@@ -1092,7 +1089,7 @@ button {
 
 /* line 58, ../src/partials/_application.sass */
 #footer {
-  background: transparent url('../images/footer-bg.png?1273246177') scroll no-repeat center center;
+  background: transparent url('http://localhost:8000/media/images/footer-bg.png?1273246177') scroll no-repeat center center;
   height: 58px;
 }
 
@@ -1257,14 +1254,14 @@ button {
   background-color: #fafafa;
   height: 36px;
   padding: 16px 10px 10px;
-  background-image: url('../images/gradient-tall-bg.png?1274796492');
+  background-image: url('http://localhost:8000/media/images/gradient-tall-bg.png?1274796492');
   background-repeat: repeat-x;
 }
 /* line 200, ../src/partials/_application.sass */
 #switchlook .info {
   display: inline;
   float: left;
-  background: transparent url('../images/arrow-bg.png?1274796492') no-repeat scroll left 10px;
+  background: transparent url('http://localhost:8000/media/images/arrow-bg.png?1274796492') no-repeat scroll left 10px;
   padding-left: 20px;
 }
 /* line 204, ../src/partials/_application.sass */
@@ -1278,7 +1275,7 @@ button {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   display: inline;
@@ -1294,7 +1291,7 @@ button {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   display: inline;
@@ -1343,10 +1340,10 @@ button {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/switcher-sprite.png?1274796492');
+  background-image: url('http://localhost:8000/media/images/switcher-sprite.png?1274796492');
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background: url('../images/switcher-sprite.png?1274796492') no-repeat;
+  background: url('http://localhost:8000/media/images/switcher-sprite.png?1274796492') no-repeat;
   width: 10px;
   height: 10px;
   overflow: hidden;
@@ -1452,7 +1449,7 @@ ul.looks li span.button {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   line-height: 1.5em;
   border-top: 0;
@@ -1467,11 +1464,11 @@ ul.looks li span.button {
 }
 /* line 79, ../src/partials/_base.sass */
 ul.looks li span.button.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 ul.looks li span.button.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 
 /* line 272, ../src/partials/_application.sass */
@@ -1513,7 +1510,7 @@ ul.looks li span.button.ok:before {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-left-radius: 5px;
@@ -1526,14 +1523,14 @@ ul.looks li span.button.ok:before {
 }
 /* line 26, ../src/partials/_row.sass */
 #lookproducts a.prev.disabled {
-  background-image: url('../images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
 }
 /* line 28, ../src/partials/_row.sass */
 #lookproducts a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-right-radius: 5px;
@@ -1546,7 +1543,7 @@ ul.looks li span.button.ok:before {
 }
 /* line 32, ../src/partials/_row.sass */
 #lookproducts a.next.disabled {
-  background-image: url('../images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
 }
 /* line 34, ../src/partials/_row.sass */
 #lookproducts div.row {
@@ -1664,7 +1661,7 @@ h2 a {
 
 /* line 303, ../src/partials/_application.sass */
 #reset {
-  background: transparent url('../images/logout.png?1270451570') no-repeat scroll right center;
+  background: transparent url('http://localhost:8000/media/images/logout.png?1270451570') no-repeat scroll right center;
   padding-right: 15px;
 }
 
@@ -1690,7 +1687,7 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   border-bottom: none;
   border-left: none;
@@ -1698,11 +1695,11 @@ h2 a {
 }
 /* line 79, ../src/partials/_base.sass */
 #product-gender li.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #product-gender li.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 11, ../src/partials/_filter.sass */
 #product-gender li.first {
@@ -1731,11 +1728,11 @@ h2 a {
 #product-gender li > a {
   display: block;
   padding-left: 25px;
-  background: transparent url('../images/list-item.png?1270451570') no-repeat scroll 10px center;
+  background: transparent url('http://localhost:8000/media/images/list-item.png?1270451570') no-repeat scroll 10px center;
 }
 /* line 22, ../src/partials/_filter.sass */
 #product-gender li > a.selected {
-  background-image: url('../images/list-item-radio-selected.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-radio-selected.png?1270451570');
 }
 /* line 309, ../src/partials/_application.sass */
 #product-gender li.hover {
@@ -1746,18 +1743,18 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
   background-repeat: repeat-x;
   border-left: none;
   border-bottom: none;
 }
 /* line 79, ../src/partials/_base.sass */
 #product-gender li.hover.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #product-gender li.hover.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 313, ../src/partials/_application.sass */
 #product-gender li.hover.first {
@@ -1791,7 +1788,7 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   border-bottom: none;
   border-left: none;
@@ -1799,11 +1796,11 @@ h2 a {
 }
 /* line 79, ../src/partials/_base.sass */
 #product-options li.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #product-options li.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 11, ../src/partials/_filter.sass */
 #product-options li.first {
@@ -1832,11 +1829,11 @@ h2 a {
 #product-options li > a {
   display: block;
   padding-left: 25px;
-  background: transparent url('../images/list-item-arrow.png?1270451570') no-repeat scroll 10px center;
+  background: transparent url('http://localhost:8000/media/images/list-item-arrow.png?1270451570') no-repeat scroll 10px center;
 }
 /* line 22, ../src/partials/_filter.sass */
 #product-options li > a.selected {
-  background-image: url('../images/list-item-radio-checked.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-radio-checked.png?1270451570');
 }
 /* line 321, ../src/partials/_application.sass */
 #product-options li.hover {
@@ -1847,18 +1844,18 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
   background-repeat: repeat-x;
   border-left: none;
   border-bottom: none;
 }
 /* line 79, ../src/partials/_base.sass */
 #product-options li.hover.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #product-options li.hover.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 325, ../src/partials/_application.sass */
 #product-options li.hover.first {
@@ -1870,7 +1867,7 @@ h2 a {
 }
 /* line 329, ../src/partials/_application.sass */
 #product-options li.active {
-  background-image: url('../images/gradient-darker-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-darker-bg.png?1270451570');
 }
 /* line 26, ../src/partials/_filter.sass */
 #product-options #product-price div.options {
@@ -1910,16 +1907,16 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
 }
 /* line 79, ../src/partials/_base.sass */
 #product-options #product-price div.options .buttons button.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #product-options #product-price div.options .buttons button.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 42, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup {
@@ -1936,7 +1933,7 @@ h2 a {
   left: -6px;
   height: 35px;
   width: 7px;
-  background: transparent url('../images/box-arrow-left.png?1270451570') no-repeat scroll left top;
+  background: transparent url('http://localhost:8000/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
 }
 /* line 56, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup form {
@@ -2006,16 +2003,16 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
 }
 /* line 79, ../src/partials/_base.sass */
 #product-options #product-color div.options .buttons button.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #product-options #product-color div.options .buttons button.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 42, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup {
@@ -2032,7 +2029,7 @@ h2 a {
   left: -6px;
   height: 35px;
   width: 7px;
-  background: transparent url('../images/box-arrow-left.png?1270451570') no-repeat scroll left top;
+  background: transparent url('http://localhost:8000/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
 }
 /* line 56, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup form {
@@ -2093,19 +2090,19 @@ h2 a {
 #product-options #product-color ul li:last-child, #product-options #product-color ul li.last {
   padding-right: 0px;
 }
-/* line 93, ../src/partials/_base.sass */
+/* line 122, ../src/partials/_base.sass */
 #product-options #product-color ul li {
   background: none;
   border: none;
   padding: 0;
   height: 19px;
 }
-/* line 98, ../src/partials/_base.sass */
+/* line 127, ../src/partials/_base.sass */
 #product-options #product-color ul li a {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/sprite-colors.png?1271849896');
+  background-image: url('http://localhost:8000/media/images/sprite-colors.png?1271849896');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   padding: 0;
@@ -2114,185 +2111,185 @@ h2 a {
   position: absolute;
   top: 0;
 }
-/* line 107, ../src/partials/_base.sass */
+/* line 136, ../src/partials/_base.sass */
 #product-options #product-color ul li a.black {
   background-position: 0 0;
   left: 0;
 }
-/* line 110, ../src/partials/_base.sass */
+/* line 140, ../src/partials/_base.sass */
 #product-options #product-color ul li a.black.selected {
   background-position: 0 -19px;
 }
-/* line 112, ../src/partials/_base.sass */
+/* line 142, ../src/partials/_base.sass */
 #product-options #product-color ul li a.black.filtered {
   background-position: 0 -38px;
 }
-/* line 114, ../src/partials/_base.sass */
+/* line 144, ../src/partials/_base.sass */
 #product-options #product-color ul li a.grey {
   background-position: -21px top;
   left: 22px;
 }
-/* line 118, ../src/partials/_base.sass */
+/* line 148, ../src/partials/_base.sass */
 #product-options #product-color ul li a.grey.selected {
   background-position: -21px -19px;
 }
-/* line 120, ../src/partials/_base.sass */
+/* line 150, ../src/partials/_base.sass */
 #product-options #product-color ul li a.grey.filtered {
   background-position: -21px -38px;
 }
-/* line 122, ../src/partials/_base.sass */
+/* line 152, ../src/partials/_base.sass */
 #product-options #product-color ul li a.white {
   background-position: -42px top;
   left: 44px;
 }
-/* line 126, ../src/partials/_base.sass */
+/* line 156, ../src/partials/_base.sass */
 #product-options #product-color ul li a.white.selected {
   background-position: -42px -19px;
 }
-/* line 128, ../src/partials/_base.sass */
+/* line 158, ../src/partials/_base.sass */
 #product-options #product-color ul li a.white.filtered {
   background-position: -42px -38px;
 }
-/* line 130, ../src/partials/_base.sass */
+/* line 160, ../src/partials/_base.sass */
 #product-options #product-color ul li a.beige {
   background-position: -63px top;
   left: 73px;
 }
-/* line 134, ../src/partials/_base.sass */
+/* line 164, ../src/partials/_base.sass */
 #product-options #product-color ul li a.beige.selected {
   background-position: -63px -19px;
 }
-/* line 136, ../src/partials/_base.sass */
+/* line 166, ../src/partials/_base.sass */
 #product-options #product-color ul li a.beige.filtered {
   background-position: -63px -38px;
 }
-/* line 138, ../src/partials/_base.sass */
+/* line 168, ../src/partials/_base.sass */
 #product-options #product-color ul li a.brown {
   background-position: -84px top;
   left: 95px;
 }
-/* line 142, ../src/partials/_base.sass */
+/* line 172, ../src/partials/_base.sass */
 #product-options #product-color ul li a.brown.selected {
   background-position: -84px -19px;
 }
-/* line 144, ../src/partials/_base.sass */
+/* line 174, ../src/partials/_base.sass */
 #product-options #product-color ul li a.brown.filtered {
   background-position: -84px -38px;
 }
-/* line 146, ../src/partials/_base.sass */
+/* line 176, ../src/partials/_base.sass */
 #product-options #product-color ul li a.red {
   background-position: -105px top;
   left: 117px;
 }
-/* line 150, ../src/partials/_base.sass */
+/* line 180, ../src/partials/_base.sass */
 #product-options #product-color ul li a.red.selected {
   background-position: -105px -19px;
 }
-/* line 152, ../src/partials/_base.sass */
+/* line 182, ../src/partials/_base.sass */
 #product-options #product-color ul li a.red.filtered {
   background-position: -105px -38px;
 }
-/* line 154, ../src/partials/_base.sass */
+/* line 184, ../src/partials/_base.sass */
 #product-options #product-color ul li a.orange {
   background-position: -126px top;
   left: 139px;
 }
-/* line 158, ../src/partials/_base.sass */
+/* line 188, ../src/partials/_base.sass */
 #product-options #product-color ul li a.orange.selected {
   background-position: -126px -19px;
 }
-/* line 160, ../src/partials/_base.sass */
+/* line 190, ../src/partials/_base.sass */
 #product-options #product-color ul li a.orange.filtered {
   background-position: -126px -38px;
 }
-/* line 162, ../src/partials/_base.sass */
+/* line 192, ../src/partials/_base.sass */
 #product-options #product-color ul li a.yellow {
   background-position: -147px top;
   left: 161px;
 }
-/* line 166, ../src/partials/_base.sass */
+/* line 196, ../src/partials/_base.sass */
 #product-options #product-color ul li a.yellow.selected {
   background-position: -147px -19px;
 }
-/* line 168, ../src/partials/_base.sass */
+/* line 198, ../src/partials/_base.sass */
 #product-options #product-color ul li a.yellow.filtered {
   background-position: -147px -38px;
 }
-/* line 170, ../src/partials/_base.sass */
+/* line 200, ../src/partials/_base.sass */
 #product-options #product-color ul li a.green {
   background-position: -168px top;
   left: 183px;
 }
-/* line 174, ../src/partials/_base.sass */
+/* line 204, ../src/partials/_base.sass */
 #product-options #product-color ul li a.green.selected {
   background-position: -168px -19px;
 }
-/* line 176, ../src/partials/_base.sass */
+/* line 206, ../src/partials/_base.sass */
 #product-options #product-color ul li a.green.filtered {
   background-position: -168px -38px;
 }
-/* line 178, ../src/partials/_base.sass */
+/* line 208, ../src/partials/_base.sass */
 #product-options #product-color ul li a.blue {
   background-position: -189px top;
   left: 205px;
 }
-/* line 182, ../src/partials/_base.sass */
+/* line 212, ../src/partials/_base.sass */
 #product-options #product-color ul li a.blue.selected {
   background-position: -189px -19px;
 }
-/* line 184, ../src/partials/_base.sass */
+/* line 214, ../src/partials/_base.sass */
 #product-options #product-color ul li a.blue.filtered {
   background-position: -189px -38px;
 }
-/* line 186, ../src/partials/_base.sass */
+/* line 216, ../src/partials/_base.sass */
 #product-options #product-color ul li a.magenta {
   background-position: -210px top;
   left: 227px;
 }
-/* line 190, ../src/partials/_base.sass */
+/* line 220, ../src/partials/_base.sass */
 #product-options #product-color ul li a.magenta.selected {
   background-position: -210px -19px;
 }
-/* line 192, ../src/partials/_base.sass */
+/* line 222, ../src/partials/_base.sass */
 #product-options #product-color ul li a.magenta.filtered {
   background-position: -210px -38px;
 }
-/* line 194, ../src/partials/_base.sass */
+/* line 224, ../src/partials/_base.sass */
 #product-options #product-color ul li a.pink {
   background-position: -231px top;
   left: 249px;
 }
-/* line 198, ../src/partials/_base.sass */
+/* line 228, ../src/partials/_base.sass */
 #product-options #product-color ul li a.pink.selected {
   background-position: -231px -19px;
 }
-/* line 200, ../src/partials/_base.sass */
+/* line 230, ../src/partials/_base.sass */
 #product-options #product-color ul li a.pink.filtered {
   background-position: -231px -38px;
 }
-/* line 202, ../src/partials/_base.sass */
+/* line 232, ../src/partials/_base.sass */
 #product-options #product-color ul li a.gold {
   background-position: -252px top;
   left: 278px;
 }
-/* line 206, ../src/partials/_base.sass */
+/* line 236, ../src/partials/_base.sass */
 #product-options #product-color ul li a.gold.selected {
   background-position: -252px -19px;
 }
-/* line 208, ../src/partials/_base.sass */
+/* line 238, ../src/partials/_base.sass */
 #product-options #product-color ul li a.gold.filtered {
   background-position: -252px -38px;
 }
-/* line 210, ../src/partials/_base.sass */
+/* line 240, ../src/partials/_base.sass */
 #product-options #product-color ul li a.silver {
   background-position: -273px top;
   left: 300px;
 }
-/* line 214, ../src/partials/_base.sass */
+/* line 244, ../src/partials/_base.sass */
 #product-options #product-color ul li a.silver.selected {
   background-position: -273px -19px;
 }
-/* line 216, ../src/partials/_base.sass */
+/* line 246, ../src/partials/_base.sass */
 #product-options #product-color ul li a.silver.filtered {
   background-position: -273px -38px;
 }
@@ -2338,16 +2335,16 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
 }
 /* line 79, ../src/partials/_base.sass */
 #product-options #product-manufacturers div.options .buttons button.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #product-options #product-manufacturers div.options .buttons button.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 42, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup {
@@ -2364,7 +2361,7 @@ h2 a {
   left: -6px;
   height: 35px;
   width: 7px;
-  background: transparent url('../images/box-arrow-left.png?1270451570') no-repeat scroll left top;
+  background: transparent url('http://localhost:8000/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
 }
 /* line 56, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup form {
@@ -2439,11 +2436,11 @@ h2 a {
 /* line 367, ../src/partials/_application.sass */
 #product-options #product-manufacturers ul li a {
   margin-left: -10px;
-  background-image: url('../images/list-item-check.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-check.png?1270451570');
 }
 /* line 370, ../src/partials/_application.sass */
 #product-options #product-manufacturers ul li a.selected {
-  background-image: url('../images/list-item-check-selected.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-check-selected.png?1270451570');
 }
 
 /* line 373, ../src/partials/_application.sass */
@@ -2468,7 +2465,7 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   border-bottom: none;
   border-left: none;
@@ -2476,11 +2473,11 @@ h2 a {
 }
 /* line 79, ../src/partials/_base.sass */
 #product-category li.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #product-category li.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 11, ../src/partials/_filter.sass */
 #product-category li.first {
@@ -2509,11 +2506,11 @@ h2 a {
 #product-category li > a {
   display: block;
   padding-left: 25px;
-  background: transparent url('../images/list-item-check.png?1270451570') no-repeat scroll 10px center;
+  background: transparent url('http://localhost:8000/media/images/list-item-check.png?1270451570') no-repeat scroll 10px center;
 }
 /* line 22, ../src/partials/_filter.sass */
 #product-category li > a.selected {
-  background-image: url('../images/list-item-check-selected.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-check-selected.png?1270451570');
 }
 /* line 375, ../src/partials/_application.sass */
 #product-category li.hover {
@@ -2524,18 +2521,18 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
   background-repeat: repeat-x;
   border-left: none;
   border-bottom: none;
 }
 /* line 79, ../src/partials/_base.sass */
 #product-category li.hover.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 #product-category li.hover.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 379, ../src/partials/_application.sass */
 #product-category li.hover.first {
@@ -2555,7 +2552,7 @@ h2 a {
   border: none;
   padding-left: 10px;
   border-top: 1px solid #d9d9d9;
-  background-image: url('../images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
 }
 
 /* line 393, ../src/partials/_application.sass */
@@ -2565,19 +2562,19 @@ h2 a {
 
 /* line 396, ../src/partials/_application.sass */
 a.comments {
-  background: transparent url('../images/comments.png?1270468490') no-repeat scroll left center;
+  background: transparent url('http://localhost:8000/media/images/comments.png?1270468490') no-repeat scroll left center;
   padding-left: 16px;
 }
 
 /* line 400, ../src/partials/_application.sass */
 a.looks {
-  background: transparent url('../images/look.png?1270451570') no-repeat scroll left center;
+  background: transparent url('http://localhost:8000/media/images/look.png?1270451570') no-repeat scroll left center;
   padding-left: 16px;
 }
 
 /* line 405, ../src/partials/_application.sass */
 span.likes {
-  background: transparent url('../images/heart.png?1270451570') no-repeat scroll left center;
+  background: transparent url('http://localhost:8000/media/images/heart.png?1270451570') no-repeat scroll left center;
   padding-left: 16px;
   color: #fa7070;
 }
@@ -2710,7 +2707,7 @@ a.prev.disabled, a.next.disabled {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 20px center;
   border-right: 1px solid #d9d9d9;
@@ -2720,7 +2717,7 @@ a.prev.disabled, a.next.disabled {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
   background-repeat: no-repeat;
   background-position: 20px center;
 }
@@ -2730,7 +2727,7 @@ a.prev.disabled, a.next.disabled {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 89px center;
   border-left: 1px solid #d9d9d9;
@@ -2740,7 +2737,7 @@ a.prev.disabled, a.next.disabled {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
   background-repeat: no-repeat;
   background-position: 89px center;
 }
@@ -2815,7 +2812,7 @@ a.prev.disabled, a.next.disabled {
 /* line 537, ../src/partials/_application.sass */
 #pagination div ol li.current {
   font-weight: bold;
-  background: transparent url('../images/current-page.png?1270479270') no-repeat scroll center bottom;
+  background: transparent url('http://localhost:8000/media/images/current-page.png?1270479270') no-repeat scroll center bottom;
 }
 
 /* line 542, ../src/partials/_application.sass */
@@ -2881,7 +2878,7 @@ a.prev.disabled, a.next.disabled {
 
 /* line 579, ../src/partials/_application.sass */
 body.product .product-image img {
-  cursor: url('../images/magnifier.cur?1274786677'), url('../images/magnifier.png?1270451570'), -moz-zoom-in;
+  cursor: url('http://localhost:8000/media/images/magnifier.cur?1274786677'), url('http://localhost:8000/media/images/magnifier.png?1270451570'), -moz-zoom-in;
 }
 
 /* line 582, ../src/partials/_application.sass */
@@ -2902,7 +2899,7 @@ body.product .product-image img {
 /* line 588, ../src/partials/_application.sass */
 #gallery .close {
   position: absolute;
-  background: transparent url('../images/delete.png?1273073096') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/delete.png?1273073096') no-repeat scroll center center;
   cursor: pointer;
   height: 22px;
   width: 22px;
@@ -2963,7 +2960,7 @@ a.buy-now {
   text-align: center;
   width: 73px;
   height: 30px;
-  background: #d0fae8 url('../images/check-large.png?1270451570') scroll no-repeat center center;
+  background: #d0fae8 url('http://localhost:8000/media/images/check-large.png?1270451570') scroll no-repeat center center;
   border: 1px solid #92c0c7;
   color: #408994;
   text-transform: uppercase;
@@ -3001,7 +2998,7 @@ a.buy-now:hover {
 /* line 668, ../src/partials/_application.sass */
 .product-vendor .vendor {
   float: right;
-  background: transparent url('../images/vendor.png?1271063999') scroll no-repeat left center;
+  background: transparent url('http://localhost:8000/media/images/vendor.png?1271063999') scroll no-repeat left center;
   padding: 0 10px 0 16px;
 }
 
@@ -3158,7 +3155,7 @@ body.product #comments-and-links textarea {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-left-radius: 5px;
@@ -3171,14 +3168,14 @@ body.product #comments-and-links textarea {
 }
 /* line 26, ../src/partials/_row.sass */
 #recentlyviewed a.prev.disabled {
-  background-image: url('../images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
 }
 /* line 28, ../src/partials/_row.sass */
 #recentlyviewed a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('../images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-right-radius: 5px;
@@ -3191,7 +3188,7 @@ body.product #comments-and-links textarea {
 }
 /* line 32, ../src/partials/_row.sass */
 #recentlyviewed a.next.disabled {
-  background-image: url('../images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
 }
 /* line 34, ../src/partials/_row.sass */
 #recentlyviewed div.row {
@@ -3278,7 +3275,7 @@ body.product .product-image form, body.look #content form {
 body.product .product-image form button, body.look #content form button {
   margin: 0;
   border: none;
-  background: transparent url('../images/like-large.png?1270451570') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/like-large.png?1270451570') no-repeat scroll center center;
   color: #fa7070;
   text-transform: uppercase;
   padding-top: 20px;
@@ -3318,16 +3315,16 @@ ul.hover-menu li.hover {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
   background-repeat: repeat-x;
 }
 /* line 79, ../src/partials/_base.sass */
 ul.hover-menu li.hover.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 ul.hover-menu li.hover.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 
 /* line 772, ../src/partials/_application.sass */
@@ -3376,7 +3373,7 @@ ul.menu li {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('../images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   border-radius: 3px;
   -moz-border-radius: 3px;
@@ -3386,11 +3383,11 @@ ul.menu li {
 }
 /* line 79, ../src/partials/_base.sass */
 ul.menu li.cancel:before {
-  content: url('../images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 81, ../src/partials/_base.sass */
 ul.menu li.ok:before {
-  content: url('../images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 780, ../src/partials/_application.sass */
 ul.menu li.last {
@@ -3411,7 +3408,7 @@ ul.menu li.last {
 }
 /* line 793, ../src/partials/_application.sass */
 #add-menu li#add-to-look > a {
-  background-image: url('../images/look.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/look.png?1270451570');
 }
 /* line 795, ../src/partials/_application.sass */
 #add-menu li#add-to-look ul {
@@ -3447,7 +3444,7 @@ ul.menu li.last {
 }
 /* line 818, ../src/partials/_application.sass */
 #add-menu li.share ul li a {
-  background: url('../images/social_bookmarks.png?1270739223') no-repeat;
+  background: url('http://localhost:8000/media/images/social_bookmarks.png?1270739223') no-repeat;
   width: 16;
   height: 16;
   overflow: hidden;
@@ -3466,12 +3463,12 @@ ul.menu li.last {
 }
 /* line 829, ../src/partials/_application.sass */
 #add-menu li.share > a {
-  background-image: url('../images/share.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/share.png?1270451570');
 }
 /* line 831, ../src/partials/_application.sass */
 #add-menu li#add-to-wardrobe button {
   margin-right: 0;
-  background-image: url('../images/embed.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/embed.png?1270451570');
 }
 
 /* line 836, ../src/partials/_application.sass */

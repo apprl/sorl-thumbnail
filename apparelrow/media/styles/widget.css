@@ -1,0 +1,83 @@
+/* Contains CSS rules that are used both in external widgets and on the apparelrow site */
+
+/* line 7, ../src/widget.sass */
+p {
+  margin: 0;
+}
+
+/* line 10, ../src/widget.sass */
+.apparelrow {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 75%;
+  line-height: 1.5em;
+  color: #333333;
+  position: relative;
+}
+/* line 98, ../src/partials/_base.sass */
+.apparelrow a {
+  text-decoration: none;
+  color: #333333;
+}
+/* line 103, ../src/partials/_base.sass */
+.apparelrow p a:hover, .apparelrow p a:active {
+  text-decoration: underline;
+}
+/* line 108, ../src/partials/_base.sass */
+.apparelrow h2, .apparelrow h3 {
+  font-size: 1em;
+}
+/* line 111, ../src/partials/_base.sass */
+.apparelrow h2 {
+  margin: 30px 0 10px;
+  border-bottom: 1px solid #d9d9d9;
+}
+/* line 115, ../src/partials/_base.sass */
+.apparelrow h3 {
+  font-weight: bolder;
+}
+
+/* line 15, ../src/widget.sass */
+.ar-look-collage, .ar-look-photo {
+  height: 524px;
+}
+
+/* line 18, ../src/widget.sass */
+.ar-tooltip {
+  border: 1px solid #d9d9d9;
+  background-color: #fafafa;
+  background: #efefef url('http://localhost:8000/media/images/tooltip-bg.png?1273841888') repeat-x scroll center top;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border: 1px solid #d9d9d9;
+  /* Webkit (Safari, Chrome) */
+  -webkit-box-shadow: #999999 0px 0px 5px;
+  /* Gecko (Firefox, Camino) */
+  -moz-box-shadow: #999999 0px 0px 5px;
+  /* CSS3 */
+  box-shadow: #999999 0px 0px 5px;
+  display: none;
+  z-index: 1100;
+  padding: 10px 10px 8px 10px;
+  position: relative;
+}
+/* line 15, ../src/partials/_widget.sass */
+.ar-tooltip h2 {
+  margin-top: 0;
+  margin-bottom: 1px;
+  border-bottom: none;
+}
+/* line 19, ../src/partials/_widget.sass */
+.ar-tooltip p, .ar-tooltip a {
+  color: #666666;
+  font-size: smaller;
+}
+/* line 22, ../src/partials/_widget.sass */
+.ar-tooltip .arrow, .ar-tooltip .ar-arrow {
+  position: absolute;
+  background: transparent url('http://localhost:8000/media/images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
+  width: 14px;
+  height: 8px;
+  bottom: -8px;
+  left: 16px;
+}

@@ -87,6 +87,35 @@
 !color_width = 21px
 !color_height = 19px
 
+=font
+  font:
+    family: Helvetica, Arial, sans-serif
+    size: 75%
+  line-height: 1.5em
+  color= !font_color
+
+=typography
+  a
+    text-decoration: none
+    color= !font_color
+  
+  p a
+    &:hover, &:active
+      text-decoration: underline
+  
+  h2, h3, h4
+  
+  h2, h3
+    font-size: 1em
+  
+  h2
+    margin: 30px 0 10px
+    border-bottom= 1px solid !border_color
+  
+  h3
+    font-weight: bolder
+
+
 =colors
   +horizontal-list
   position: relative
@@ -107,6 +136,7 @@
       &.black
         background-position: 0 0
         left: 0
+      
         &.selected
           background-position= 0 !y_selected
         &.filtered

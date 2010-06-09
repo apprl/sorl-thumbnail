@@ -6,19 +6,24 @@ var ApparelRow ={
         // FIXME: Backtracking would be nice here so we could have one rather  
         // than two replace statements
         
-        // FIXME: This prepends 'ar-' to all class names
-        // maybe there's a case for doing this on the server, or just always 
-        // have the classes with this prefix?
-        
-        console.log('callback');
-        
-        var html = response.html.replace(/class="(.+?)"/g, function(s) {
-                var c = RegExp.$1.replace(/(.+?)(?:\s|$)/g, function(c) {
-                    return 'ar-' + c;
-                });
-                
-                return 'class="' + c + '"';
-            });
+        var html = response.html
+            .replace(/class="(.+?)"/g, function(s, clsname) {
+                // FIXME: This prepends 'ar-' to all class names
+                // maybe there's a case for doing this on the server, or just always 
+                // have the classes with this prefix?
+                return 'class="'
+                    + clsname.replace(/(.+?)(?:\s+|$)/g, function(c) { return 'ar-' + c; } )
+                    + '"'
+                ;
+            })
+            .replace(/(\bsrc=(?:"|')?)(?=\/)/g, function(s, attr) {
+                // FIXME: This adds the host name to all local variables. This
+                // should be the static host name, not necessarily the same
+                // as ApparelRow.host in the future. Also, this could be done
+                // on the server
+                return attr + ApparelRow.host;
+            })
+        ;
         
         ele.html(html);
 
@@ -27,18 +32,17 @@ var ApparelRow ={
             effect: 'slide',
             relative: true,
             delay: 500,
-            offset: [30, 0]
+            offset: [30, 60]
         });
     },
     initializers: {
-        'look-collage': function(root) {
+        'ar-look-collage': function(root) {
             var reqUrl = ApparelRow.host + '/widget/look/' + root.attr('id').split('-').pop() + '/collage/?callback=?';
 
             $.ajax({
                 url: reqUrl,
                 dataType: 'jsonp',
                 success: function(response, statusText) {
-                    console.log(statusText);
                     if(response.success)
                         ApparelRow.insert(response, root);
                     else
@@ -46,13 +50,21 @@ var ApparelRow ={
                 }
             });
         }
-    }
-};
-
-$(document).ready(function() {
-    if(ApparelRow.initialized == false) {
+    },
+    initialize: function() {
+        if(ApparelRow.initialized)
+            return;
+        
         ApparelRow.initialized = true;
         
+        $('<link/>')
+            .attr('href', ApparelRow.host + '/media/styles/widget.css')
+            .attr('rel', 'stylesheet')
+            .attr('type', 'text/css')
+            .appendTo('head');
+        
+        console.log($('head').html());
+                
         $('.apparelrow').each(function(idx, e) {
             var element = $(e);
             for(var cls in ApparelRow.initializers) {
@@ -61,8 +73,9 @@ $(document).ready(function() {
             }
         });
     }
-});
+};
 
-document.writeln('<script type="text/javascript" src="' + ApparelRow.host + '/media/js/jquery.tools.min.js"></' + 'script>');
-document.writeln('<link rel="stylesheet" type="text/css" href="' + ApparelRow.host + '/media/css/widget.css"/>');
+$(document).ready(function() { ApparelRow.initialize() });
+if(document && document.getElementById && document.getElementById('__ar_widget__'))
+    ApparelRow.initialize();
 
