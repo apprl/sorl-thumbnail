@@ -1,12 +1,41 @@
 /* Contains CSS rules that are used both in external widgets and on the apparelrow site */
 
-/* line 7, ../src/widget.sass */
-p {
-  margin: 0;
+/* line 9, ../src/widget.sass */
+div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#ar-wrapper h5, div#ar-wrapper span, div#ar-wrapper p, div#ar-wrapper div, div#ar-wrapper a {
+  background: none;
+  border: none;
+  bottom: auto;
+  clear: none;
+  cursor: default;
+  float: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px !important;
+  font-style: normal;
+  font-weight: normal;
+  height: auto;
+  left: auto;
+  letter-spacing: normal;
+  line-height: normal;
+  max-height: none;
+  max-width: none;
+  min-height: 0;
+  min-width: 0;
+  overflow: visible;
+  position: static;
+  right: auto;
+  text-align: left;
+  text-decoration: none;
+  text-indent: 0;
+  text-transform: none;
+  top: auto;
+  visibility: visible;
+  white-space: normal;
+  width: auto;
+  z-index: auto;
 }
 
-/* line 10, ../src/widget.sass */
-.apparelrow {
+/* line 41, ../src/widget.sass */
+.apparelrow, #ar-wrapper {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 75%;
   line-height: 1.5em;
@@ -14,35 +43,35 @@ p {
   position: relative;
 }
 /* line 98, ../src/partials/_base.sass */
-.apparelrow a {
+.apparelrow a, #ar-wrapper a {
   text-decoration: none;
   color: #333333;
 }
 /* line 103, ../src/partials/_base.sass */
-.apparelrow p a:hover, .apparelrow p a:active {
+.apparelrow p a:hover, .apparelrow p a:active, #ar-wrapper p a:hover, #ar-wrapper p a:active {
   text-decoration: underline;
 }
-/* line 108, ../src/partials/_base.sass */
-.apparelrow h2, .apparelrow h3 {
+/* line 106, ../src/partials/_base.sass */
+.apparelrow h2, .apparelrow h3, #ar-wrapper h2, #ar-wrapper h3 {
   font-size: 1em;
 }
-/* line 111, ../src/partials/_base.sass */
-.apparelrow h2 {
+/* line 109, ../src/partials/_base.sass */
+.apparelrow h2, #ar-wrapper h2 {
   margin: 30px 0 10px;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 115, ../src/partials/_base.sass */
-.apparelrow h3 {
+/* line 113, ../src/partials/_base.sass */
+.apparelrow h3, #ar-wrapper h3 {
   font-weight: bolder;
 }
 
-/* line 15, ../src/widget.sass */
+/* line 46, ../src/widget.sass */
 .ar-look-collage, .ar-look-photo {
   height: 524px;
 }
 
-/* line 18, ../src/widget.sass */
-.ar-tooltip {
+/* line 49, ../src/widget.sass */
+#ar-wrapper .ar-tooltip {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
   background: #efefef url('http://localhost:8000/media/images/tooltip-bg.png?1273841888') repeat-x scroll center top;
@@ -61,19 +90,27 @@ p {
   padding: 10px 10px 8px 10px;
   position: relative;
 }
+/* line 50, ../src/widget.sass */
+#ar-wrapper .ar-tooltipp {
+  font: smaller/1.5 Arial, Helvetica, sans-serif !important;
+}
+/* line 52, ../src/widget.sass */
+#ar-wrapper .ar-tooltipa {
+  font-size: smaller !important;
+}
 /* line 15, ../src/partials/_widget.sass */
-.ar-tooltip h2 {
+#ar-wrapper .ar-tooltip h2 {
   margin-top: 0;
   margin-bottom: 1px;
   border-bottom: none;
 }
 /* line 19, ../src/partials/_widget.sass */
-.ar-tooltip p, .ar-tooltip a {
+#ar-wrapper .ar-tooltip p, #ar-wrapper .ar-tooltip a {
   color: #666666;
   font-size: smaller;
 }
 /* line 22, ../src/partials/_widget.sass */
-.ar-tooltip .arrow, .ar-tooltip .ar-arrow {
+#ar-wrapper .ar-tooltip .arrow, #ar-wrapper .ar-tooltip .ar-arrow {
   position: absolute;
   background: transparent url('http://localhost:8000/media/images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
   width: 14px;

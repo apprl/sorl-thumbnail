@@ -4,10 +4,41 @@
 @import compass/css3.sass
 @import compass/utilities.sass
 
-p
-  margin: 0
 
-.apparelrow
+div#ar-wrapper
+  h1, h2, h3, h4, h5, span, p, div, a
+    background: none 
+    border: none 
+    bottom: auto 
+    clear: none 
+    cursor: default 
+    float: none 
+    font-family: Arial, Helvetica, sans-serif 
+    font-size: 12px !important
+    font-style: normal 
+    font-weight: normal 
+    height: auto 
+    left: auto 
+    letter-spacing: normal 
+    line-height: normal 
+    max-height: none 
+    max-width: none 
+    min-height: 0 
+    min-width: 0 
+    overflow: visible 
+    position: static 
+    right: auto 
+    text-align: left 
+    text-decoration: none 
+    text-indent: 0 
+    text-transform: none 
+    top: auto 
+    visibility: visible 
+    white-space: normal
+    width: auto 
+    z-index: auto 
+
+.apparelrow, #ar-wrapper
   +font
   +typography
   position: relative
@@ -15,5 +46,10 @@ p
 .ar-look-collage, .ar-look-photo
   height= !look_height
 
-.ar-tooltip
+#ar-wrapper .ar-tooltip
+  &p
+    font: smaller/1.5 Arial, Helvetica, sans-serif !important
+  &a
+    font-size: smaller !important
+  
   +apparel_tooltip
