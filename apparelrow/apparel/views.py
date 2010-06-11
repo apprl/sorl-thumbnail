@@ -395,6 +395,21 @@ def save_look_component(request):
             if form.cleaned_data[field] is None and field not in form.data:
                 setattr(form.instance, field, form.initial.get(field))
         
+        if not form.instance.top and not form.instance.left:
+            left = LookComponent.objects.filter(positioned='A').aggregate(Max('left')).values()[0]
+            top  = LookComponent.objects.filter(positioned='A').aggregate(Max('top')).values()[0]
+            
+            form.instance.left = 0 if left is None else left + 78 
+            form.instance.top  = 0 if top  is None else top 
+            
+            if form.instance.left > 78 * 5:
+                form.instance.top += 150
+                form.instance.left = 0
+            
+            form.instance.positioned = 'A'
+        else:
+            form.instance.positioned = 'M'
+        
         form.save()
     else:
         # FIXME: Return some error response here. Can we just throw an exception?

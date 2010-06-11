@@ -197,6 +197,11 @@ LOOK_COMPONENT_TYPES = (
     ('P', 'Picture'),
 )
 
+LOOK_COMPONENT_POSITIONED = (
+    ('A', 'Automatically'),
+    ('M', 'Manually'),
+)
+
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
     slug  = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
@@ -252,6 +257,8 @@ class LookComponent(models.Model):
     height = models.IntegerField(_('CSS height'), blank=True, null=True)
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
     rotation = models.IntegerField(_('CSS rotation'), blank=True, null=True)
+    positioned = models.CharField(max_length=1, choices=LOOK_COMPONENT_POSITIONED, null=True, blank=True)
+    
     # FIXME: Scale product image on initial save and store height and width
     # properties 
 
@@ -264,7 +271,7 @@ class LookComponent(models.Model):
         if self.rotation:
             s.append('-moz-transform: rotate(%sdeg); ' % self.rotation)
             s.append('-webkit-transform: rotate(%sdeg); ' % self.rotation)
-            
+        
         return " ".join(s)
     
     @property

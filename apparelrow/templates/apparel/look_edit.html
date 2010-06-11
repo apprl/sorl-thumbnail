@@ -43,19 +43,11 @@ var look = {
                         }, pane);
                     }
                 });
+                
                 break;
+                
             case 'photo-background':
-                // FIXME: This is the same as the look product page
                 makeProductTooltip(ele);
-                /*
-                ele.tooltip({
-                    //def: 'mouseenter,mouseleave',
-                    effect: 'slide',
-                    relative: true,
-                    delay: 500,
-                    offset: [15, 60]
-                })
-                */
                 break;
         }
         
@@ -208,8 +200,8 @@ function getContextFromPane(pane) {
 }
 
 jQuery(document).ready(function() {
-    look.initialize(jQuery('#collage > .product'));
     look.initialize(jQuery('#photo-background > .product'));
+    look.initialize(jQuery('#collage > .product'));
     look.disable(jQuery('.ui-draggable'));
 
     jQuery('#id_description, #id_tags').autogrow();
