@@ -6,6 +6,7 @@
        style="background-image: url('{{ image }}'); width: {{ image.width }}px; height: {{ image.height }}px"
     {% endif %}
 >
+    <img src="/media/images/close.png"{% if not object.image %} style="display: none"{% endif %} id="delete-photo">
     {% for component in object.photo_components.all %}
         {% include "apparel/fragments/look_photo_product.html" %}
     {% endfor %}

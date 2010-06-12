@@ -212,7 +212,7 @@ class Look(models.Model):
     image       = models.ImageField(upload_to=LOOKS_BASE, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
-    tags        = TagField()
+    tags        = TagField(null=True, blank=True)
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     
     def photo_components(self):

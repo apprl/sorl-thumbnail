@@ -316,8 +316,9 @@ def look_edit(request, slug):
     look = get_object_or_404(Look, slug=slug)
         
     if request.method == 'POST':
-        
         form = LookForm(request.POST, request.FILES, instance=look)
+        
+        import pdb; pdb.set_trace()
         
         if form.is_valid():
             form.save()

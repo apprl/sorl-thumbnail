@@ -171,6 +171,9 @@ var look = {
                     
                     if(!response.data.in_look)
                         jQuery('#selection-' + id).remove();
+                    
+                    if(pane.attr('id') == 'collage' && jQuery('.product', pane).length == 0)
+                        jQuery('.look-empty', pane).show();
                 }
             }
         );
@@ -248,6 +251,8 @@ jQuery(document).ready(function() {
                             height: img.height(),
                             width: img.width()                        
                         }
+                        jQuery('.look-empty', event.target).hide();
+                        
                         break;
                     case 'photo-background':
                         oy = event.layerY || 0;
@@ -282,6 +287,23 @@ jQuery(document).ready(function() {
         }
     });
     
+    jQuery('#delete-photo').click(function(e) {
+        alert('deleting');
+        
+        jQuery('#photo-background').css({ 
+            'background-image': '',
+            'height': 0,
+            'width': 0
+        });
+        
+        // Remove photo
+        // Remove all components
+        
+        jQuery(this).hide();
+        jQuery('#photo>.look-empty').show();
+        return false;
+    });
+
     jQuery('#photo-background a').live('click', function(e) {
         e.preventDefault();
     });
@@ -402,34 +424,22 @@ var chooser = {
 
 jQuery(document).ready(function() {
     chooser.dialog = jQuery('#product-chooser');
+    
+    jQuery('#photo>.look-empty button[type=submit]').click(function(e) {
+        this.form.action += '#photo-tab'
+        return true;
+    });
+    
+    jQuery('.look-empty button, .look-empty a').hover(
+        function(e) { jQuery(this).addClass('hover') },
+        function(e) { jQuery(this).removeClass('hover') }
+    );
+    
 });
 
 /* Upload form interaction */
 // FIXME: Move this to edit_look page
 
-jQuery(document).ready(function() {
-    jQuery('#photo-form button:first').click(function(e) {
-        jQuery('#photo-form .upload-form').toggle();
-        return false;
-    });
-});
-jQuery('#photo-form').click(function(e) { e.stopPropagation(); });
-jQuery('#photo').click(function(e) {
-    // Toggle upload-form elements only if there's a photo and the form is visible
-    
-    if(
-        jQuery('#photo-background').css('background-image') != 'none' 
-        && jQuery('#photo-form > div:first').is(':visible')
-    ) {
-        jQuery('#photo-form .upload-form').toggle();
-    }
-    return true;
-});
-
-jQuery('#photo-form button[type=submit]').click(function(e) {
-    this.form.action += '#photo-tab'
-    return true;
-});
 
 
 </script>
@@ -465,18 +475,21 @@ jQuery('#photo-form button[type=submit]').click(function(e) {
         </ul>
         <div class="panes">
             <div id="collage">
-            {% include 'apparel/fragments/look_collage.html' %}
+                {% include 'apparel/fragments/look_collage.html' %}
+                <div class="look-empty"{% if object.collage_components.all %} style="display: none"{% endif %}>
+                    <div class="message">{% trans "Drag products here to start building a collage" %}</div>
+                    <div{% if object.photo %} style="display: none"{% endif %}>
+                        <p>- {% trans "or" %} -</p>
+                        <a href="#photo-tab">{% trans "Upload a photo to create a tagged image" %}</a>    
+                    </div>
+                </div>
             </div>
             <div id="photo">
                 {% include 'apparel/fragments/look_photo.html' %}
-                <div id="photo-form">
-                    <div{% if not object.image %} style="display: block"{% endif %} class="upload-form">
-                        {{ form.image }}
-                    </div>
-                    <div>
-                        <button class="upload-form"{% if object.image %} style="display: block"{% endif %}>{% trans "Upload a Photo" %}</button>
-                        <button type="submit" class="upload-form"{% if not object.image %} style="display: block"{% endif %}>{% trans "Upload" %}</button>
-                    </div>
+                
+                <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
+                    {{ form.image }}
+                    <button type="submit">{% trans "Upload a photo to create a tagged image" %}</button>
                 </div>
             </div>
             <div id="selection">

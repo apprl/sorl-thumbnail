@@ -49,6 +49,7 @@
       display: none
 
 #photo-background
+  top: 5px
   position: relative
   margin: 0 auto
   .hotspot
@@ -58,6 +59,12 @@
   .delete
     left: 5px
     top: 5px
+
+#delete-photo
+  position: absolute
+  top: -5px
+  right: -5px
+  cursor: pointer
 
 #product-chooser
   position: absolute
@@ -79,20 +86,23 @@
       h4, p
         white-space: nowrap
 
-#photo-form
-  position: absolute
-  top: 10px
-  left: 10px
-  background-color: white
-  .upload-form
-    display: none
-  button
-    +button
-    height= !button_height
-    width: 200px
-    text-align: left
-  div
-    padding: 5px
+.look-empty
+  width: 300px
+  margin: 150px auto
+  text-align: center
+  button, a
+    +text_input
+    +highlight
+    background-image= image_url("add.png")
+    background-repeat: no-repeat
+    background-position: 10px 7px
+    padding-left: 30px
+    margin-top: 1em
+  .hover
+    +highlight_hover
+  p
+    margin: 1em 0
+    color: #333
 
 #edit-look
   +border-top-radius
