@@ -340,7 +340,7 @@ def look_edit(request, slug):
     }
     # FIXME: Cannot export Form objects as JSON. Fix this and remove this
     # work around
-    json_data = copy.deepcopy(data)
+    json_data = data.copy()
     del json_data['form']
     return (
         json_data,
