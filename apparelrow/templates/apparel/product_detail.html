@@ -63,6 +63,7 @@
                     if(response.data['added']) {
                         increase_counts(jQuery('h2#looks > span.count, a.looks > span.count'));
                         jQuery('h2#looks.hidden, p.hidden:has(a.looks)').fadeIn().removeClass('hidden');
+                        jQuery('<li/>').append(response.data.html).prependTo('ul.looks');
                         /* FIXME uncommented this, for now. We need to do something more smart with templates.
                         jQuery('<li/>').append(response.data.template, { 'object': response.data.look }).prependTo('ul.looks');
                         */

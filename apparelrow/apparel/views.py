@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllow
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from django.db.models import Q, Max, Min
-from django.template import RequestContext, Template, Context
+from django.template import RequestContext, Template, Context, loader
 from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
@@ -464,7 +464,7 @@ def add_to_look(request):
             'look': look,           # The look the product was added to
             'created': created,     # Whether the look was created
             'added': added,         # Whether the product was added to the look or not. If false it was aleady there.
-            'template': js_template(get_template_source('apparel/fragments/look_collage_small.html')),
+            'html': loader.render_to_string('apparel/fragments/look_collage_small.html', {'object': look}),
         }, 
         HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,)))
     )
