@@ -395,9 +395,9 @@ span
 div#product-list
   +clearfix
   +box
-  border: none
-  width= !large_width + 1
-  height: 414px
+  +border-bottom-radius("3px")
+  width= !large_width - 1
+  height: 412px
   position: relative
   overflow: hidden
   ul.list
@@ -416,8 +416,7 @@ div#product-list
 .product-small
   width: 115px
   +border("all")
-  border-bottom: none
-  border-right: none
+  margin: -1px 0 0 -1px
   text-align: center
   h4
     +border("top")
@@ -455,7 +454,7 @@ a.prev.disabled, a.next.disabled
   position: absolute
   bottom: 0
   background-color= !button_color
-  +border("all")
+  +border("top")
   +border-bottom-radius("3px")
 
   .prev, .next
