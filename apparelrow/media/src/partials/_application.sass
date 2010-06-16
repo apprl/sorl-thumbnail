@@ -412,6 +412,11 @@ div#product-list
         li
           display: block
           width: auto
+          &:hover
+            +box-shadow
+            .product-image
+              z-index: 100
+              +box-shadow
 
 .product-small
   width: 115px
