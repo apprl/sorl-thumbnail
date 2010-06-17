@@ -323,11 +323,19 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#delete-photo').click(function(e) {
-        look.deleteAllComponents(jQuery('#photo-background'));
-        return false;
-    });
-
+    jQuery('<img/>')
+        .attr('src', '/media/images/close.png')
+        .attr('id',  'delete-photo')
+        .click(function(e) {
+            look.deleteAllComponents(jQuery('#photo-background'));
+            return false;
+        })
+        .css({
+            'display': (jQuery('#photo-background').css('background-image')) ? 'block' : 'none'
+        })
+        .appendTo('#photo-background')
+    ;
+    
     jQuery('#photo-background a').live('click', function(e) {
         e.preventDefault();
     });
@@ -461,9 +469,6 @@ jQuery(document).ready(function() {
     
 });
 
-/* Upload form interaction */
-// FIXME: Move this to edit_look page
-
 
 
 </script>
@@ -509,8 +514,6 @@ jQuery(document).ready(function() {
                 </div>
             </div>
             <div id="photo">
-                <!-- FIXME: Dynamically add this button -->
-                <img src="/media/images/close.png"{% if not object.image %} style="display: none"{% endif %} id="delete-photo">
                 {% include 'apparel/fragments/look_photo.html' %}
                 
                 <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>

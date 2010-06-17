@@ -345,11 +345,12 @@ body h3 {
 }
 /* line 53, ../src/partials/_look.sass */
 #photo-background .delete {
+  z-index: 10001;
   left: 5px;
   top: 5px;
 }
 
-/* line 57, ../src/partials/_look.sass */
+/* line 58, ../src/partials/_look.sass */
 #delete-photo {
   position: absolute;
   top: -5px;
@@ -357,7 +358,7 @@ body h3 {
   cursor: pointer;
 }
 
-/* line 63, ../src/partials/_look.sass */
+/* line 64, ../src/partials/_look.sass */
 #product-chooser {
   position: absolute;
   display: none;
@@ -367,7 +368,7 @@ body h3 {
   overflow-x: hidden;
   background-color: white;
 }
-/* line 72, ../src/partials/_look.sass */
+/* line 73, ../src/partials/_look.sass */
 #product-chooser li {
   overflow: hidden;
   display: inline-block;
@@ -377,21 +378,21 @@ body h3 {
 #product-chooser li {
   display: block;
 }
-/* line 75, ../src/partials/_look.sass */
+/* line 76, ../src/partials/_look.sass */
 #product-chooser li a {
   display: block;
 }
-/* line 77, ../src/partials/_look.sass */
+/* line 78, ../src/partials/_look.sass */
 #product-chooser li a img {
   float: left;
   margin-right: 10px;
 }
-/* line 80, ../src/partials/_look.sass */
+/* line 81, ../src/partials/_look.sass */
 #product-chooser li a h4, #product-chooser li a p {
   white-space: nowrap;
 }
 
-/* line 83, ../src/partials/_look.sass */
+/* line 84, ../src/partials/_look.sass */
 .look-empty {
   width: 300px;
   position: absolute;
@@ -399,7 +400,7 @@ body h3 {
   left: 197px;
   text-align: center;
 }
-/* line 89, ../src/partials/_look.sass */
+/* line 90, ../src/partials/_look.sass */
 .look-empty button, .look-empty a {
   font-family: "Helvetica", "Arial", sans-serif;
   font-size: 1em;
@@ -425,19 +426,19 @@ body h3 {
   padding-left: 30px;
   margin-top: 1em;
 }
-/* line 97, ../src/partials/_look.sass */
+/* line 98, ../src/partials/_look.sass */
 .look-empty .hover {
   background-color: #94ffd1;
   border-color: #92c0c7;
   color: #408994;
 }
-/* line 99, ../src/partials/_look.sass */
+/* line 100, ../src/partials/_look.sass */
 .look-empty p {
   margin: 1em 0;
   color: #333;
 }
 
-/* line 103, ../src/partials/_look.sass */
+/* line 104, ../src/partials/_look.sass */
 #edit-look {
   border-top-left-radius: 5px;
   -moz-border-radius-topleft: 5px;
@@ -447,7 +448,7 @@ body h3 {
   -webkit-border-top-right-radius: 5px;
   border: 1px solid #d9d9d9;
 }
-/* line 106, ../src/partials/_look.sass */
+/* line 107, ../src/partials/_look.sass */
 #edit-look ul.tabs {
   margin: 0;
   padding: 0;
@@ -478,26 +479,26 @@ body h3 {
 #edit-look ul.tabs li:last-child, #edit-look ul.tabs li.last {
   padding-right: 0px;
 }
-/* line 108, ../src/partials/_look.sass */
+/* line 109, ../src/partials/_look.sass */
 #edit-look ul.tabs li {
   border: 1px solid #d9d9d9;
   display: block;
   border-style: none solid solid none;
 }
-/* line 112, ../src/partials/_look.sass */
+/* line 113, ../src/partials/_look.sass */
 #edit-look ul.tabs li:first-child, #edit-look ul.tabs li.first, #edit-look ul.tabs li:first-child a, #edit-look ul.tabs li.first a {
   border-top-left-radius: 5px;
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
 }
-/* line 114, ../src/partials/_look.sass */
+/* line 115, ../src/partials/_look.sass */
 #edit-look ul.tabs li:last-child, #edit-look ul.tabs li.last, #edit-look ul.tabs li:last-child a, #edit-look ul.tabs li.last a {
   border-top-right-radius: 5px;
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
   border-right: none;
 }
-/* line 117, ../src/partials/_look.sass */
+/* line 118, ../src/partials/_look.sass */
 #edit-look ul.tabs li a {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -521,40 +522,40 @@ body h3 {
 #edit-look ul.tabs li a.ok:before {
   content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 123, ../src/partials/_look.sass */
+/* line 124, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo {
   width: 232px;
 }
-/* line 125, ../src/partials/_look.sass */
+/* line 126, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.current, #edit-look ul.tabs li a.current:hover {
   background-image: url('http://localhost:8000/media/images/gradient-darker-bg.png?1270451570');
   cursor: default;
 }
-/* line 128, ../src/partials/_look.sass */
+/* line 129, ../src/partials/_look.sass */
 #edit-look ul.tabs li a:active, #edit-look ul.tabs li a:hover {
   background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
 }
-/* line 130, ../src/partials/_look.sass */
+/* line 131, ../src/partials/_look.sass */
 #edit-look ul.tabs li a span {
   padding-left: 16px;
   background-color: transparent;
   background-repeat: no-repeat;
   background-position: left center;
 }
-/* line 136, ../src/partials/_look.sass */
+/* line 137, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.collage span {
   background-image: url('http://localhost:8000/media/images/kollage.png?1270451570');
 }
-/* line 138, ../src/partials/_look.sass */
+/* line 139, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo span {
   background-image: url('http://localhost:8000/media/images/foto.png?1270451570');
 }
-/* line 140, ../src/partials/_look.sass */
+/* line 141, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.selection span {
   background-image: url('http://localhost:8000/media/images/urval.png?1270451570');
 }
 
-/* line 143, ../src/partials/_look.sass */
+/* line 144, ../src/partials/_look.sass */
 #look-title {
   border: 1px solid #d9d9d9;
   width: 893px;
@@ -564,12 +565,12 @@ body h3 {
   padding-top: 3px;
   padding-left: 20px;
 }
-/* line 152, ../src/partials/_look.sass */
+/* line 153, ../src/partials/_look.sass */
 #look-title #id_title, #look-title button {
   color: #408994;
   font-family: "Helvetica", "Arial", sans-serif;
 }
-/* line 156, ../src/partials/_look.sass */
+/* line 157, ../src/partials/_look.sass */
 #look-title #id_title {
   border: 1px solid #92c0c7;
   border-radius: 3px;
@@ -588,7 +589,7 @@ body h3 {
   /* CSS3 */
   box-shadow: inset #aed8c6 0 3px 3px;
 }
-/* line 167, ../src/partials/_look.sass */
+/* line 168, ../src/partials/_look.sass */
 #look-title button {
   display: inline;
   float: right;
@@ -601,7 +602,7 @@ body h3 {
   text-align: start;
 }
 
-/* line 177, ../src/partials/_look.sass */
+/* line 178, ../src/partials/_look.sass */
 #id_description,
 #id_tags {
   font-family: "Helvetica", "Arial", sans-serif;
@@ -622,17 +623,17 @@ body h3 {
   width: 196px;
 }
 
-/* line 182, ../src/partials/_look.sass */
+/* line 183, ../src/partials/_look.sass */
 #id_description {
   height: 2em;
 }
 
-/* line 185, ../src/partials/_look.sass */
+/* line 186, ../src/partials/_look.sass */
 #id_tags {
   height: 1em;
 }
 
-/* line 190, ../src/partials/_look.sass */
+/* line 191, ../src/partials/_look.sass */
 body.edit-look .sidebar label {
   display: block;
   margin: 20px 0 10px;
@@ -640,11 +641,11 @@ body.edit-look .sidebar label {
   border-bottom: 1px solid #d9d9d9;
 }
 
-/* line 197, ../src/partials/_look.sass */
+/* line 198, ../src/partials/_look.sass */
 body.look .spread {
   margin-top: 20px;
 }
-/* line 199, ../src/partials/_look.sass */
+/* line 200, ../src/partials/_look.sass */
 body.look .spread input {
   font-family: "Helvetica", "Arial", sans-serif;
   font-size: 1em;
@@ -665,7 +666,7 @@ body.look .spread input {
   margin-left: 0.5em;
 }
 
-/* line 204, ../src/partials/_look.sass */
+/* line 205, ../src/partials/_look.sass */
 .tooltip {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -708,101 +709,101 @@ body.look .spread input {
   left: 16px;
 }
 
-/* line 208, ../src/partials/_look.sass */
+/* line 209, ../src/partials/_look.sass */
 body.look .collage, body.look .photo {
   position: relative;
   height: 524px;
 }
-/* line 211, ../src/partials/_look.sass */
+/* line 212, ../src/partials/_look.sass */
 body.look #comments-and-links {
   float: left;
   width: 452px;
   margin-right: 36px;
 }
-/* line 215, ../src/partials/_look.sass */
+/* line 216, ../src/partials/_look.sass */
 body.look #tags {
   float: left;
   width: 208px;
 }
-/* line 218, ../src/partials/_look.sass */
+/* line 219, ../src/partials/_look.sass */
 body.look #tags li {
   border-bottom: 1px solid #f2f2f2;
 }
-/* line 220, ../src/partials/_look.sass */
+/* line 221, ../src/partials/_look.sass */
 body.look #tags li span {
   float: right;
   color: #999999;
 }
-/* line 223, ../src/partials/_look.sass */
+/* line 224, ../src/partials/_look.sass */
 body.look .sidebar {
   margin-top: 30px;
 }
-/* line 225, ../src/partials/_look.sass */
+/* line 226, ../src/partials/_look.sass */
 body.look .sidebar p {
   border-top: none;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 228, ../src/partials/_look.sass */
+/* line 229, ../src/partials/_look.sass */
 body.look .sidebar .description {
   border-bottom: none;
   padding-top: 1.5em;
 }
-/* line 231, ../src/partials/_look.sass */
+/* line 232, ../src/partials/_look.sass */
 body.look #content {
   margin-top: -2em;
 }
-/* line 233, ../src/partials/_look.sass */
+/* line 234, ../src/partials/_look.sass */
 body.look #content .collage, body.look #content .photo {
   background-color: white;
   margin-right: 2em;
 }
 
-/* line 238, ../src/partials/_look.sass */
+/* line 239, ../src/partials/_look.sass */
 #look-header {
   margin-top: 1em;
   position: relative;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 242, ../src/partials/_look.sass */
+/* line 243, ../src/partials/_look.sass */
 #look-header .profile-image {
   position: absolute;
   left: 0em;
   top: 0;
 }
-/* line 246, ../src/partials/_look.sass */
+/* line 247, ../src/partials/_look.sass */
 #look-header div {
   margin-left: 70px;
 }
-/* line 248, ../src/partials/_look.sass */
+/* line 249, ../src/partials/_look.sass */
 #look-header div h1 {
   font-size: 1.5em;
   line-height: 2em;
 }
-/* line 251, ../src/partials/_look.sass */
+/* line 252, ../src/partials/_look.sass */
 #look-header div h1 a {
   font-size: 0.75em;
 }
 
-/* line 254, ../src/partials/_look.sass */
+/* line 255, ../src/partials/_look.sass */
 #wardrobe {
   margin: 0 -16px 0 -24px;
   clear: both;
 }
 
-/* line 258, ../src/partials/_look.sass */
+/* line 259, ../src/partials/_look.sass */
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
   background: #f2f2f2 url('http://localhost:8000/media/images/gradient-bg.png?1270451570') repeat-x;
   padding: 10px 8px 0 10px;
 }
-/* line 264, ../src/partials/_look.sass */
+/* line 265, ../src/partials/_look.sass */
 #wardrobe-title span {
   background: transparent url('http://localhost:8000/media/images/arrow-bg-down.png?1270451570') no-repeat top left;
   padding-left: 14px;
 }
 
-/* line 268, ../src/partials/_look.sass */
+/* line 269, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
   background: transparent url('http://localhost:8000/media/images/wardrobe-bg.png?1273248112') scroll repeat-x center center;
@@ -942,18 +943,18 @@ body.look #content .collage, body.look #content .photo {
 #wardrobe-contents div.row ul li a img {
   vertical-align: middle;
 }
-/* line 274, ../src/partials/_look.sass */
+/* line 275, ../src/partials/_look.sass */
 #wardrobe-contents li a {
   cursor: move;
 }
 
-/* line 279, ../src/partials/_look.sass */
+/* line 280, ../src/partials/_look.sass */
 .ui-icon {
   background-image: none;
   background-position: 0 0;
 }
 
-/* line 284, ../src/partials/_look.sass */
+/* line 285, ../src/partials/_look.sass */
 .ui-icon-gripsmall-diagonal-se {
   bottom: -11px;
   right: -11px;
@@ -962,25 +963,25 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('http://localhost:8000/media/images/resize.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 292, ../src/partials/_look.sass */
+/* line 293, ../src/partials/_look.sass */
 .ui-rotatable {
   position: relative;
 }
 
-/* line 295, ../src/partials/_look.sass */
+/* line 296, ../src/partials/_look.sass */
 .ui-rotatable-handle {
   position: absolute;
   z-index: 99999;
   display: block;
 }
 
-/* line 300, ../src/partials/_look.sass */
+/* line 301, ../src/partials/_look.sass */
 .ui-rotatable-disabled .ui-rotatable-handle,
 .ui-rotatable-autohide .ui-rotatable-handle {
   display: none;
 }
 
-/* line 304, ../src/partials/_look.sass */
+/* line 305, ../src/partials/_look.sass */
 .ui-rotatable-ne {
   top: -11px;
   right: -11px;
@@ -989,7 +990,7 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('http://localhost:8000/media/images/rotate-cw.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 311, ../src/partials/_look.sass */
+/* line 312, ../src/partials/_look.sass */
 .ui-rotatable-sw {
   bottom: -11px;
   left: -11px;
