@@ -134,6 +134,9 @@
             });
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
+            jQuery('#product-list > ul > li > ul > li').live('mouseenter mouseleave', function(e) {
+                jQuery(this).css({ 'width': (e.type == 'mouseover') ? 'black' : 'transparent'});
+            });
             // Fixed scrolling
             //jQuery('#content').fixedscroll();
             // Reset button
@@ -171,7 +174,6 @@
                 filter(getQuery({ criterion: 'category'}));
                 return false;
             });
-            // jQuery('#pagination a.next, #pagination a.prev').live('hover')
             jQuery('#pagination a').live('click', function(e) {
                 // FIXME: Move out logic to section that handles page-swapping
                 

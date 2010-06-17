@@ -422,7 +422,7 @@ div#product-list
   +box
   border: none
   width= !large_width + 1
-  height: 414px
+  height: 415px
   position: relative
   overflow: hidden
   ul.list
@@ -433,7 +433,7 @@ div#product-list
       width= !large_width + 1
       ul
         +clearfix
-        +border("right")
+        +border("all")
         li
           display: block
           width: auto
@@ -441,9 +441,9 @@ div#product-list
 .product-small
   width: 115px
   +border("all")
-  border-bottom: none
-  border-right: none
   text-align: center
+  margin-right: -1px
+  margin-bottom: -1px
   h4
     +border("top")
     height: 1.5em

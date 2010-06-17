@@ -71,6 +71,19 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 }
 
 /* line 49, ../src/widget.sass */
+#ar-wrapper .ar-look-photo {
+  top: 5px;
+  position: relative;
+  margin: 0 auto;
+}
+/* line 36, ../src/partials/_widget.sass */
+#ar-wrapper .ar-look-photo .hotspot, #ar-wrapper .ar-look-photo .ar-hotspot {
+  position: absolute;
+  padding: 40px;
+  background: transparent url('http://localhost:8000/media/images/look-hotspot.png?1271672587') no-repeat scroll center center;
+}
+
+/* line 52, ../src/widget.sass */
 #ar-wrapper .ar-tooltip {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -90,26 +103,80 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
   padding: 10px 10px 8px 10px;
   position: relative;
 }
-/* line 50, ../src/widget.sass */
-#ar-wrapper .ar-tooltipp {
-  font: smaller/1.5 Arial, Helvetica, sans-serif !important;
+/* line 53, ../src/widget.sass */
+#ar-wrapper .ar-tooltip p {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 75%;
+  line-height: 1.5em;
+  color: #333333;
+  font-size: smaller/1.5 !important;
 }
-/* line 52, ../src/widget.sass */
-#ar-wrapper .ar-tooltipa {
+/* line 103, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip p a {
+  text-decoration: none;
+  color: #333333;
+}
+/* line 108, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip p p a:hover, #ar-wrapper .ar-tooltip p p a:active {
+  text-decoration: underline;
+}
+/* line 111, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip p h2, #ar-wrapper .ar-tooltip p h3 {
+  font-size: 1em;
+}
+/* line 114, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip p h2 {
+  margin: 30px 0 10px;
+  border-bottom: 1px solid #d9d9d9;
+}
+/* line 118, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip p h3 {
+  font-weight: bolder;
+}
+/* line 57, ../src/widget.sass */
+#ar-wrapper .ar-tooltip a {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 75%;
+  line-height: 1.5em;
+  color: #333333;
   font-size: smaller !important;
+}
+/* line 103, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip a a {
+  text-decoration: none;
+  color: #333333;
+}
+/* line 108, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip a p a:hover, #ar-wrapper .ar-tooltip a p a:active {
+  text-decoration: underline;
+}
+/* line 111, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip a h2, #ar-wrapper .ar-tooltip a h3 {
+  font-size: 1em;
+}
+/* line 114, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip a h2 {
+  margin: 30px 0 10px;
+  border-bottom: 1px solid #d9d9d9;
+}
+/* line 118, ../src/partials/_base.sass */
+#ar-wrapper .ar-tooltip a h3 {
+  font-weight: bolder;
 }
 /* line 15, ../src/partials/_widget.sass */
 #ar-wrapper .ar-tooltip h2 {
   margin-top: 0;
   margin-bottom: 1px;
   border-bottom: none;
+  white-space: nowrap;
 }
-/* line 19, ../src/partials/_widget.sass */
+/* line 20, ../src/partials/_widget.sass */
 #ar-wrapper .ar-tooltip p, #ar-wrapper .ar-tooltip a {
   color: #666666;
   font-size: smaller;
+  white-space: nowrap;
 }
-/* line 22, ../src/partials/_widget.sass */
+/* line 24, ../src/partials/_widget.sass */
 #ar-wrapper .ar-tooltip .arrow, #ar-wrapper .ar-tooltip .ar-arrow {
   position: absolute;
   background: transparent url('http://localhost:8000/media/images/tooltip-arrow.png?1273841888') no-repeat scroll center center;

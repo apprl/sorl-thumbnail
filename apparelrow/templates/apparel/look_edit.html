@@ -324,7 +324,7 @@ jQuery(document).ready(function() {
     });
     
     jQuery('#delete-photo').click(function(e) {
-        look.deleteAllComponents(jQuery(this).parent());
+        look.deleteAllComponents(jQuery('#photo-background'));
         return false;
     });
 
@@ -500,15 +500,17 @@ jQuery(document).ready(function() {
         <div class="panes">
             <div id="collage">
                 {% include 'apparel/fragments/look_collage.html' %}
-                <div class="look-empty"{% if object.collage_components.all %} style="display: none"{% endif %}>
+                <div class="look-empty"{% if object.collage_components.all.count > 0 %} style="display: none"{% endif %}>
                     <div class="message">{% trans "Drag products here to start building a collage" %}</div>
-                    <div{% if object.photo %} style="display: none"{% endif %}>
+                    <div{% if object.image %} style="display: none"{% endif %}>
                         <p>- {% trans "or" %} -</p>
                         <a href="#photo-tab">{% trans "Upload a photo to create a tagged image" %}</a>    
                     </div>
                 </div>
             </div>
             <div id="photo">
+                <!-- FIXME: Dynamically add this button -->
+                <img src="/media/images/close.png"{% if not object.image %} style="display: none"{% endif %} id="delete-photo">
                 {% include 'apparel/fragments/look_photo.html' %}
                 
                 <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>

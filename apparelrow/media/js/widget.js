@@ -185,7 +185,7 @@ var ApparelRow = {
     host: 'http://localhost:8000',
     initialized: false,
     initStack: 0,
-    insert: function(response, ele) {
+    insert: function(response, node) {
         // FIXME: Backtracking would be nice here so we could have one rather  
         // than two replace statements
         
@@ -199,18 +199,16 @@ var ApparelRow = {
                     + '"'
                 ;
             })
-            .replace(/(\bsrc=(?:"|')?)(?=\/)/g, function(s, attr) {
-                // FIXME: This adds the host name to all local variables. This
-                // should be the static host name, not necessarily the same
-                // as ApparelRow.host in the future. Also, this could be done
-                // on the server
+            .replace(/((?:\b(?:src|href)=(?:"|')?)|(?:\:\s+url\((?:"|')))(?=\/)/g, function(s, attr) {
+                // FIXME: This adds the host name to all html attributes src or href or
+                // inline css attributes url( whos value starts with /
                 return attr + ApparelRow.host;
             })
         ;
         
-        ele.html('<div id="ar-wrapper">' + html + '</div>');
+        node.html('<div id="ar-wrapper">' + html + '</div>');
         
-        $('.ar-collage, .ar-product', ele).tooltip({
+        $('.ar-collage, .ar-product', node).tooltip({
             tipClass: 'ar-tooltip',
             effect: 'slide',
             relative: true,
@@ -218,19 +216,26 @@ var ApparelRow = {
             offset: [30, 60]
         });
     },
+    request: function(path, node, callback) {
+        callback = callback || function(response, statusText) {
+            if(response.success) 
+                ApparelRow.insert(response, node);
+            else
+                root.remove();        
+        };
+        
+        $.ajax({
+            url: ApparelRow.host + path + '?callback=?',
+            dataType: 'jsonp',
+            success: callback
+        });
+    },
     initializers: {
-        'ar-look-collage': function(root) {
-            var reqUrl = ApparelRow.host + '/widget/look/' + root.attr('id').split('-').pop() + '/collage/?callback=?';
-            $.ajax({
-                url: reqUrl,
-                dataType: 'jsonp',
-                success: function(response, statusText) {
-                    if(response.success)
-                        ApparelRow.insert(response, root);
-                    else
-                        root.remove();
-                }
-            });
+        'ar-look-collage': function(node) {
+            ApparelRow.request('/widget/look/' + node.attr('id').split('-').pop() + '/collage/', node);
+        },
+        'ar-look-photo': function(node) {
+            ApparelRow.request('/widget/look/' + node.attr('id').split('-').pop() + '/photo/', node);
         }
     },
     initialize: function() {
@@ -244,7 +249,7 @@ var ApparelRow = {
             .attr('rel', 'stylesheet')
             .attr('type', 'text/css')
             .appendTo('head');
-        
+
         $('.apparelrow').each(function(idx, e) {
             var element = $(e);
             for(var cls in ApparelRow.initializers) {

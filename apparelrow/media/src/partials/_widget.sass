@@ -16,9 +16,11 @@
     margin-top: 0
     margin-bottom: 1px
     border-bottom: none
+    white-space: nowrap
   p, a
     color= !easy_color
     font-size: smaller
+    white-space: nowrap
   .arrow, .ar-arrow
     position: absolute
     background= "transparent" image_url("tooltip-arrow.png") "no-repeat" "scroll" "center" "center"
@@ -26,3 +28,12 @@
     height: 8px
     bottom: -8px
     left: 16px
+
+=apparel_hotspot
+  top: 5px
+  position: relative
+  margin: 0 auto
+  .hotspot, .ar-hotspot
+    position: absolute
+    padding: 40px
+    background= "transparent" image_url("look-hotspot.png") "no-repeat" "scroll" "center" "center"
