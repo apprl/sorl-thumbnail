@@ -43,7 +43,7 @@
 <div class="sidebar">
     <p>
     <span class="price">
-    {% blocktrans count object.products.all|length as number %}
+    {% blocktrans count object.display_components.count as number %}
         {{ number }} article
     {% plural %}
         {{ number }} articles
