@@ -17,7 +17,10 @@
 !like_color = !box_color - #008a8a
 !button_color = !box_color - #080808
 
+!hover_color = #ebebeb
+
 !highlight_bg_color = #d0fae8
+!hover_highlight_bg_color = #94ffd1
 !highlight_border_color = #92c0c7
 !highlight_color = #408994
 
@@ -46,6 +49,11 @@
 
 =highlight
   background-color= !highlight_bg_color
+  border-color= !highlight_border_color
+  color= !highlight_color
+
+=highlight_hover
+  background-color= !hover_highlight_bg_color
   border-color= !highlight_border_color
   color= !highlight_color
 
@@ -78,8 +86,38 @@
   &.ok:before
     content= image_url("ok.png")
 
+=hover_button(!height = !button_height)
+  +button("gradient-dark-bg.png", !height)
+
 !color_width = 21px
 !color_height = 19px
+
+=font
+  font:
+    family: Helvetica, Arial, sans-serif
+    size: 75%
+  line-height: 1.5em
+  color= !font_color
+
+=typography
+  a
+    text-decoration: none
+    color= !font_color
+  
+  p a
+    &:hover, &:active
+      text-decoration: underline
+  
+  h2, h3
+    font-size: 1em
+  
+  h2
+    margin: 30px 0 10px
+    border-bottom= 1px solid !border_color
+  
+  h3
+    font-weight: bolder
+
 
 =colors
   +horizontal-list
@@ -101,6 +139,7 @@
       &.black
         background-position: 0 0
         left: 0
+      
         &.selected
           background-position= 0 !y_selected
         &.filtered

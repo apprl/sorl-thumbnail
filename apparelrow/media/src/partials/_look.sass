@@ -1,11 +1,10 @@
 @import partials/base.sass
+@import partials/widget.sass
 @import partials/box_shadow_inset.sass
 
 !input_bg_color ||= !highlight_bg_color
 !input_color ||= !highlight_color
 !input_border_color ||= !highlight_border_color
-
-!look_height ||= 524px
 
 // EDIT
 
@@ -50,15 +49,17 @@
       display: none
 
 #photo-background
-  position: relative
-  margin: 0 auto
-  .hotspot
-    position: absolute
-    padding: 40px
-    background= "transparent" image_url("look-hotspot.png") "no-repeat" "scroll" "center" "center"
+  +apparel_hotspot
   .delete
+    z-index: 10001
     left: 5px
     top: 5px
+
+#delete-photo
+  position: absolute
+  top: -5px
+  right: -5px
+  cursor: pointer
 
 #product-chooser
   position: absolute
@@ -80,20 +81,25 @@
       h4, p
         white-space: nowrap
 
-#photo-form
+.look-empty
+  width: 300px
   position: absolute
-  top: 10px
-  left: 10px
-  background-color: white
-  .upload-form
-    display: none
-  button
-    +button
-    height= !button_height
-    width: 200px
-    text-align: left
-  div
-    padding: 5px
+  top: 150px
+  left: 197px
+  text-align: center
+  button, a
+    +text_input
+    +highlight
+    background-image= image_url("add.png")
+    background-repeat: no-repeat
+    background-position: 10px 7px
+    padding-left: 30px
+    margin-top: 1em
+  .hover
+    +highlight_hover
+  p
+    margin: 1em 0
+    color: #333
 
 #edit-look
   +border-top-radius
@@ -117,8 +123,9 @@
         border: none
         &.photo
           width: 232px
-        &.current
+        &.current, &.current:hover
           background-image= image_url("gradient-darker-bg.png")
+          cursor: default
         &:active, &:hover
           background-image= image_url("gradient-dark-bg.png")
         span
@@ -196,29 +203,7 @@ body.look
       margin-left: 0.5em
 
 .tooltip
-  +box
-  background= !box_color - #0b0b0b image_url("tooltip-bg.png") "repeat-x" "scroll" "center" "top"
-  +border-radius(2px)
-  +border("all")
-  +box-shadow(!default_box_shadow_color, !default_box_shadow_h_offset, !default_box_shadow_v_offset, "5px")
-  display: none
-  z-index: 1100
-  padding: 10px 10px 8px 10px
-  position: relative
-  h2
-    margin-top: 0
-    margin-bottom: 1px
-    border-bottom: none
-  p, a
-    color= !easy_color
-    font-size: smaller
-  .arrow
-    position: absolute
-    background= "transparent" image_url("tooltip-arrow.png") "no-repeat" "scroll" "center" "center"
-    width: 14px
-    height: 8px
-    bottom: -8px
-    left: 16px
+  +apparel_tooltip
 
 body.look
   .collage, .photo

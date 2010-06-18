@@ -40,10 +40,7 @@
                     jQuery(this).find('#add-to-look-new button').show(); 
                     jQuery(this).find('#add-to-look-new input[name=new_name]').hide(); 
                 }
-
-                return (event.type == 'click') 
-                    ? true 
-                    : false;
+                return true;
             });
 
             jQuery('#add-to-look>form').hyperSubmit({
@@ -59,6 +56,7 @@
                     if(response.data['created']) {
                         jQuery('#add-to-look-new').before(jQuery('#look_button_template').render(response.data));
                     }
+
                     
                     if(response.data['added']) {
                         increase_counts(jQuery('h2#looks > span.count, a.looks > span.count'));
@@ -73,6 +71,28 @@
                         /* FIXME uncommented this, for now. We need to do something more smart with templates.
                         jQuery('<li/>').append(response.data.template, { 'object': response.data.look }).prependTo('ul.looks');
                         */
+                        
+                        var p = jQuery('#content .product-image img');
+                        var w = 76;                             // FIXME: Read from constant
+                        var h = parseInt(p.height() / (p.width() / w));   // FIXME: At the moment we need both height and width to draw edit pane. This should not be the case really
+
+                        // Add the product to the collage if we're adding the product to the look
+                        jQuery.post('{% url apparel.views.save_look_component %}', {
+                                'component_of': 'C',
+                                'product': jQuery('#add-to-look>form>input[name=product]').attr('value'),
+                                'look': response.data.look.id,
+                                'width': w,
+                                'height': h
+                            },
+                            function(response, status, request) {
+                                if(response.success) {
+                                    console.debug('Added product to collage');
+                                } else {
+                                    console.error('Bad AJAX request', response, status, request);
+                                    return;
+                                }
+                            }
+                        );
                     }
 
                     link.text(text);

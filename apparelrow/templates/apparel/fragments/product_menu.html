@@ -5,12 +5,12 @@
 {% block product_menu_title %}
 <h2>{% trans "Browse articles" %}</h2>
 {% endblock %}
-<ul id="product-gender">
+<ul id="product-gender" class="hover-menu">
     <li class="first"><a href="{% url apparel.views.browse %}">{% trans "All" %}</a></li>
     <li><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender=M">{% trans "Men" %}</a></li>
     <li class="last"><a id="option-F"{% ifequal selected_gender "F" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender=F">{% trans "Women" %}</a></li>
 </ul>
-<ul id="product-options">
+<ul id="product-options" class="hover-menu">
     <li class="first" id="product-price"><a href="{% url apparel.views.browse %}">{% trans "Price" %}</a>
     {% include "apparel/fragments/product_options_price.html" %}
     </li>
@@ -22,7 +22,7 @@
     </li>
 </ul>
 {% for category, structure in categories|tree_info %}
-{% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li{% if forloop.first %} class="first"{% endif %}{% if forloop.last %} class="last"{% endif %}>
+{% if structure.new_level %}<ul{% if forloop.first %} id="product-category" class="hover-menu"{% endif %}>{% else %}</li>{% endif %}<li{% if forloop.first %} class="first"{% endif %}{% if forloop.last %} class="last"{% endif %}>
     <a id="category-{{ category.id }}"{% ifinlist category.id selected_categories %} class="selected"{% endifinlist %} href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
 {% for level in structure.closed_levels %}</li></ul>{% endfor %}
 {% endfor %}

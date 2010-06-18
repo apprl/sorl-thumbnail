@@ -15,7 +15,7 @@
 <div class="product-info">
     <h2>{{ object.categories|join:' \\ ' }} \ {{ object.manufacturer }}</h2>
     <h1>{{ object.product_name }}</h1>
-    <h3>{% trans "by" %} {{ object.manufacturer }}</h3>
+    <h3>{{ object.manufacturer }}</h3>
     {% regroup object.options.all by option_type as option_list %}
     <ul class="product-options">
     {% for option in option_list %}
@@ -42,7 +42,7 @@
         {% endfor %}
         {% endwith %}
     </div>
-    <ul id="add-menu" class="clearfix">
+    <ul id="add-menu" class="menu hover-menu">
         {% include 'apparel/fragments/share.html' %}
         <li id="add-to-look">
             <a href="/apparel/look/">{% trans "Add to look" %}</a>

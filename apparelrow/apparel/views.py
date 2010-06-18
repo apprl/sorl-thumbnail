@@ -297,6 +297,7 @@ def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
     looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id)
     similar_looks = [] #Recommender.objects.get_similar_items(look, User.objects.all(), Look.objects.all(), 0)
+    
     return render_to_response(
             'apparel/look_detail.html',
             {
@@ -316,7 +317,6 @@ def look_edit(request, slug):
     look = get_object_or_404(Look, slug=slug)
         
     if request.method == 'POST':
-        
         form = LookForm(request.POST, request.FILES, instance=look)
         
         if form.is_valid():
@@ -339,9 +339,12 @@ def look_edit(request, slug):
             'look_photo_product':   js_template(get_template_source('apparel/fragments/look_photo_product.html')),
         }
     }
-    
+    # FIXME: Cannot export Form objects as JSON. Fix this and remove this
+    # work around
+    json_data = data.copy()
+    del json_data['form']
     return (
-        data,
+        json_data,
         render_to_response('apparel/look_edit.html', data, context_instance=RequestContext(request))
     )
 
@@ -393,7 +396,22 @@ def save_look_component(request):
         # globally somehow.
         for field in form.cleaned_data:
             if form.cleaned_data[field] is None and field not in form.data:
-                form.cleaned_data[field] = form.initial.get(field)
+                setattr(form.instance, field, form.initial.get(field))
+        
+        if not form.instance.top and not form.instance.left:
+            left = LookComponent.objects.filter(positioned='A').aggregate(Max('left')).values()[0]
+            top  = LookComponent.objects.filter(positioned='A').aggregate(Max('top')).values()[0]
+            
+            form.instance.left = 0 if left is None else left + 78 
+            form.instance.top  = 0 if top  is None else top 
+            
+            if form.instance.left > 78 * 5:
+                form.instance.top += 150
+                form.instance.left = 0
+            
+            form.instance.positioned = 'A'
+        else:
+            form.instance.positioned = 'M'
         
         form.save()
     else:
@@ -405,31 +423,48 @@ def save_look_component(request):
         {'look_component': form.instance, 'added': added },                                       # JSON response 
         HttpResponseRedirect( reverse('apparel.views.look_edit', args=(request.POST['look'],)))   # Browser request response
     )
-    
-
 
 @seamless_request_handling
 @login_required
 def delete_look_component(request):
     """
-    Removes a component from a look. This does *not* remove the product from the
-    look
+    Removes a list of components from for the given look. 
+    Parameters:
+     - product (ID, ID, ...)
+     - component_of C or P
+     - look (ID)
+     - delete_photo (True, False) - removes the associated photo. component_of will have to be P for this to work
+    
+    AJAX return value
+     - component: C or P
+     - in_look:
+        id: True or False,
+        ...
     """
     
-    components = LookComponent.objects.filter(
-        product__id=request.POST['product'],
-        look__id=request.POST['look']
-    )
-    in_look = True
+    # NOTE: This is a workaround because jQuery adds the [] notation to arrays,
+    # rather than just add multiple keys like a normal user agent
+    products = request.POST.getlist('product[]') if 'product[]' in request.POST else request.POST.getlist('product')
+    look     = get_object_or_404(Look, id=request.POST['look'])
     
-    if components.count() > 1:
-        # Remove only selected component
-        components.filter(component_of=request.POST['component_of']).delete()
-    else:
-        # Remove selected component AND product from look
-        components[0].delete()
-        Look.objects.get(pk=request.POST['look']).products.remove(request.POST['product'])
-        in_look = False
+    components = LookComponent.objects.filter(
+        product__id__in=products,
+        look=look
+    )
+    
+    # Delete all components for the current context
+    components.filter(component_of=request.POST['component_of']).delete()
+    
+    # Make a list of which ones are still on the look
+    in_look = dict( map(lambda x: (x, components.filter(product__id=x).exists()), products) )
+    
+    # Remove the ones who aren't
+    look.products.remove(*[x for x in in_look.keys() if not in_look[x]])
+    
+    # Delete photo if told to do so
+    if request.POST.get('delete_photo') and request.POST['component_of'] == 'P':
+        look.image = None
+        look.save()
     
     return (
         {

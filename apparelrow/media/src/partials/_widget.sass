@@ -1,0 +1,39 @@
+/* Contains CSS rules that are used both in external widgets and on the apparelrow site */
+
+!look_height ||= 524px
+
+=apparel_tooltip
+  +box
+  background= !box_color - #0b0b0b image_url("tooltip-bg.png") "repeat-x" "scroll" "center" "top"
+  +border-radius(2px)
+  +border("all")
+  +box-shadow(!default_box_shadow_color, !default_box_shadow_h_offset, !default_box_shadow_v_offset, "5px")
+  display: none
+  z-index: 1100
+  padding: 10px 10px 8px 10px
+  position: relative
+  h2
+    margin-top: 0
+    margin-bottom: 1px
+    border-bottom: none
+    white-space: nowrap
+  p, a
+    color= !easy_color
+    font-size: smaller
+    white-space: nowrap
+  .arrow, .ar-arrow
+    position: absolute
+    background= "transparent" image_url("tooltip-arrow.png") "no-repeat" "scroll" "center" "center"
+    width: 14px
+    height: 8px
+    bottom: -8px
+    left: 16px
+
+=apparel_hotspot
+  top: 5px
+  position: relative
+  margin: 0 auto
+  .hotspot, .ar-hotspot
+    position: absolute
+    padding: 40px
+    background= "transparent" image_url("look-hotspot.png") "no-repeat" "scroll" "center" "center"

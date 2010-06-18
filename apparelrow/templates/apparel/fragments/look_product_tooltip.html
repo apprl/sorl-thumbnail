@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class="tooltip">
     <h2>{{ component.product.product_name }}</h2>
-    <p>{% trans "by" %} {{ component.product.manufacturer.name }}</p>
+    <p>{{ component.product.manufacturer.name }}</p>
     <a href="{{ component.product.default_vendor.buy_url }}" target="_blank">{{ component.product.default_vendor.price }} {{ component.product.default_vendor.currency }} {% trans "at" %} {{ component.product.default_vendor.vendor.name }}</a>
     <span class="arrow"></span>
 </div>

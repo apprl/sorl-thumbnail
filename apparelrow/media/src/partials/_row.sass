@@ -15,6 +15,10 @@
       visibility: visible
       background-color= !box_disabled_color
       border-color= !border_disabled_color
+    &:hover
+      background-color= !hover_color
+    &:hover.disabled
+      background-color= !box_disabled_color
   a.prev
     +replace-text("prev-page.png")
     +border-left-radius

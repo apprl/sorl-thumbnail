@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
+from django.db.models import Sum, Min
 
 from apparel.manager import SearchManager
 
@@ -197,6 +198,11 @@ LOOK_COMPONENT_TYPES = (
     ('P', 'Picture'),
 )
 
+LOOK_COMPONENT_POSITIONED = (
+    ('A', 'Automatically'),
+    ('M', 'Manually'),
+)
+
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
     slug  = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
@@ -207,25 +213,64 @@ class Look(models.Model):
     image       = models.ImageField(upload_to=LOOKS_BASE, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
-    tags        = TagField()
+    tags        = TagField(null=True, blank=True)
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     
+    def total_price(self, component=None):
+        """
+        Returns the total price of the given component, or default if none specified
+        To get the price of all components, specify A
+        """
+        
+        components = None
+        
+        if component == 'C':
+            components = self.collage_components
+        elif components == 'P':
+            components = self.photo_components
+        elif components == 'A':
+            components = self.components
+        else:
+            components = self.display_components
+        
+        return components.annotate(price=Min('product__vendorproduct__price')).aggregate(Sum('price'))['price__sum']
+    
+    
+    @property
     def photo_components(self):
+        """
+        All components in the photo view
+        """
         return self.components.filter(component_of='P')
     
+    @property
     def collage_components(self):
+        """
+        All components in the collage view
+        """
+        
         return self.components.filter(component_of='C')
     
     @property
-    def display_with_component(self):
-        if self.component: return self.component
-        if self.photo_components().count() > 0: return 'P'
-        return 'C'
+    def display_components(self):
+        """
+        All components in the view that should be displayed according to the
+        logic in "display_with_component"
+        """
+        
+        return self.photo_components if self.display_with_component == 'P' else self.collage_components
     
     @property
-    def total_price(self):
-        prices = [p.default_vendor.price for p in self.products.all()]
-        return sum(prices)
+    def display_with_component(self):
+        """
+        Returns the component that should be displayed by default by
+         1) Using the value of "component"
+         2) Checking if there are more than 1 photo component, if so display as photo
+         3) Collage
+        """
+        if self.component: return self.component
+        if self.photo_components.count() > 0: return 'P'
+        return 'C'
     
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user)
@@ -252,6 +297,8 @@ class LookComponent(models.Model):
     height = models.IntegerField(_('CSS height'), blank=True, null=True)
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
     rotation = models.IntegerField(_('CSS rotation'), blank=True, null=True)
+    positioned = models.CharField(max_length=1, choices=LOOK_COMPONENT_POSITIONED, null=True, blank=True)
+    
     # FIXME: Scale product image on initial save and store height and width
     # properties 
 
@@ -264,7 +311,7 @@ class LookComponent(models.Model):
         if self.rotation:
             s.append('-moz-transform: rotate(%sdeg); ' % self.rotation)
             s.append('-webkit-transform: rotate(%sdeg); ' % self.rotation)
-            
+        
         return " ".join(s)
     
     @property

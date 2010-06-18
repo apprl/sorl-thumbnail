@@ -1,6 +1,6 @@
 {% load thumbnail %}
 {% load i18n %}
-<div id="photo-background"
+<div id="photo-background" class="look-photo"
     {% if object.image %}
        {% thumbnail object.image 470x470 as image %}
        style="background-image: url('{{ image }}'); width: {{ image.width }}px; height: {{ image.height }}px"

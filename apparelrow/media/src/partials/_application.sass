@@ -306,12 +306,29 @@ h2
 
 #product-gender
   +filter("list-item.png", "list-item-radio-selected.png")
+  li.hover
+    +hover_button
+    border-left: none
+    border-bottom: none
+  li.hover.first
+    border-top: none
+  li.hover.last
+    border-bottom: none
 
 #product-options
   +filter("list-item-arrow.png", "list-item-radio-checked.png")
   position: relative
+  li.hover
+    +hover_button
+    border-left: none
+    border-bottom: none
+  li.hover.first
+    border-top: none
+  li.hover.last
+    border-bottom: none
   li.active
     background-image= image_url("gradient-darker-bg.png")
+
   #product-price
     +popup(0)
     #price-slider
@@ -355,6 +372,14 @@ h2
 
 #product-category
   +filter("list-item-check.png", "list-item-check-selected.png")
+  li.hover
+    +hover_button
+    border-left: none
+    border-bottom: none
+  li.hover.first
+    border-top: none
+  li.hover.last
+    border-bottom: none
   li
     ul
       overflow-y: auto
@@ -408,7 +433,7 @@ div#product-list
       width= !large_width + 1
       ul
         +clearfix
-        +border("right")
+        +border("all")
         li
           display: block
           width: auto
@@ -422,6 +447,8 @@ div#product-list
   +border("all")
   margin: -1px 0 0 -1px
   text-align: center
+  margin-right: -1px
+  margin-bottom: -1px
   h4
     +border("top")
     height: 1.5em
@@ -465,17 +492,31 @@ a.prev.disabled, a.next.disabled
     display: inline-block
     width: 115px
     height: 30px
-    
+  
   .prev
     float: left
     +replace-text("prev-page.png", "20px", "center")
     +border("right")
+
+  .prev.disabled
+    +replace-text("prev-page-disabled.png", "20px", "center")
 
   .next
     float: right
     +replace-text("next-page.png", "89px", "center")
     +border("left")
 
+  .next.disabled
+    +replace-text("next-page-disabled.png", "89px", "center")
+
+  .next:hover, .prev:hover
+    background-color= !hover_color
+    
+  .next.disabled:hover, .prev.disabled:hover
+    background-color: inherit
+  ol
+    a:hover
+      font-weight: bold
   
   div
     float: left
@@ -607,6 +648,8 @@ a.buy-now
   text-transform: uppercase
   font-weight: bold
 
+a.buy-now:hover
+  background-color= !hover_highlight_bg_color
 
 .product-vendors a.buy-now
   float: right
@@ -631,6 +674,13 @@ a.buy-now
     float: right
     background= "transparent" image_url("vendor.png") "scroll" "no-repeat" "left" "center"
     padding: 0 10px 0 16px
+
+.message
+  color= #408994
+  background-color= !highlight_bg_color
+  padding: 0.5em
+  +border-radius(5px)
+  +box-shadow(#f6f6f6 - #222, 0, 3px, 3px)
 
 #comments-and-links
   img.avatar
@@ -727,18 +777,24 @@ body.product .product-image, body.look #content
     background: transparent url(../images/arrow-bg.png) scroll no-repeat left bottom
     padding-left: 20px
 
+ul.hover-menu
+  li.hover
+    +hover_button
 
-#add-menu
+ul.menu
   +clearfix
   +horizontal-list(0)
-  margin-top: 18px
-  li.last
-    margin-right: 0px
   li
     +button
     +border-radius(3px)
     margin-right: 2px
     line-height: 2em
+  li.last
+    margin-right: 0px
+
+#add-menu
+  margin-top: 18px
+  li
     a, button
       display: block
       background: transparent url(../images/add.png) scroll no-repeat 9px center
@@ -766,7 +822,13 @@ body.product .product-image, body.look #content
     &.share
       ul
         display: none
+        position: absolute
+        margin-left: -1px
+        margin-top: 0px
         width: 60px
+        +border
+        +button
+        +border-radius(3px)
         li
           border: none
           display: inline
@@ -781,7 +843,6 @@ body.product .product-image, body.look #content
               +sprite-column(10, 16)
             &.twitter
               +sprite-column(6, 16)
-
       > a
         background-image= image_url("share.png")
     &#add-to-wardrobe button

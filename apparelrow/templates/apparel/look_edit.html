@@ -43,19 +43,11 @@ var look = {
                         }, pane);
                     }
                 });
+                
                 break;
+                
             case 'photo-background':
-                // FIXME: This is the same as the look product page
                 makeProductTooltip(ele);
-                /*
-                ele.tooltip({
-                    //def: 'mouseenter,mouseleave',
-                    effect: 'slide',
-                    relative: true,
-                    delay: 500,
-                    offset: [15, 60]
-                })
-                */
                 break;
         }
         
@@ -177,8 +169,46 @@ var look = {
                 if(response.success) {
                     product.remove();
                     
-                    if(!response.data.in_look)
+                    if(!response.data.in_look[id])
                         jQuery('#selection-' + id).remove();
+                    
+                    if(pane.attr('id') == 'collage' && jQuery('.product', pane).length == 0)
+                        jQuery('.look-empty', pane).show();
+                }
+            }
+        );
+    },
+    deleteAllComponents: function(pane) {
+        var context = getContextFromPane(pane);
+        var ids = jQuery.map(jQuery('.product', pane), function(e, i) {
+            return e.id.split('-').pop()
+        });
+        
+        jQuery.post(
+            '{% url apparel.views.delete_look_component %}', {
+                look: {{ object.id }},
+                product: ids,
+                component_of: context.component_of,
+                delete_photo: (context.component_of == 'P') ? true : false
+            },
+            function(response, status, request) {
+                if(response.success) {
+                    for(var id in response.data.in_look) {
+                        if(!response.data.in_look[id])
+                            jQuery('#selection-' + id).remove();
+                        
+                        jQuery('#' + context.id_prefix + '-' + id).remove();
+                    }
+                    
+                    switch(pane.attr('id')) {
+                        case 'photo-background':
+                            jQuery('#photo-background').hide();
+                            jQuery('.look-empty', pane.parent()).show();
+                            break;
+                        case 'collage':
+                            jQuery('.look-empty', pane).show();
+                            break;
+                    }
                 }
             }
         );
@@ -195,8 +225,8 @@ var look = {
 
 function getContextFromPane(pane) {
     var context = {
-        'photo-background': { 'template': '#look_photo_product_template', 'component_of': 'P' },
-        'collage': { 'template': '#look_collage_product_template', 'component_of': 'C' }
+        'photo-background': { 'template': '#look_photo_product_template', 'component_of': 'P', 'id_prefix': 'hotspot' },
+        'collage': { 'template': '#look_collage_product_template', 'component_of': 'C', 'id_prefix': 'product' },
     }[pane.attr('id')];
     
     if(!context) {
@@ -208,8 +238,8 @@ function getContextFromPane(pane) {
 }
 
 jQuery(document).ready(function() {
-    look.initialize(jQuery('#collage > .product'));
     look.initialize(jQuery('#photo-background > .product'));
+    look.initialize(jQuery('#collage > .product'));
     look.disable(jQuery('.ui-draggable'));
 
     jQuery('#id_description, #id_tags').autogrow();
@@ -238,8 +268,9 @@ jQuery(document).ready(function() {
                 }
                 
                 if(response.data.added) {
+                    var id      = ui.draggable.attr('id').split('-').pop();
                     var product = ui.draggable.clone();
-                        product.removeAttr('id');
+                        product.attr('id', 'selection-' + id);
                     
                     jQuery('#selection .row ul').append(product);
                 }
@@ -256,6 +287,8 @@ jQuery(document).ready(function() {
                             height: img.height(),
                             width: img.width()                        
                         }
+                        jQuery('.look-empty', event.target).hide();
+                        
                         break;
                     case 'photo-background':
                         oy = event.layerY || 0;
@@ -289,6 +322,19 @@ jQuery(document).ready(function() {
             });
         }
     });
+    
+    jQuery('<img/>')
+        .attr('src', '/media/images/close.png')
+        .attr('id',  'delete-photo')
+        .click(function(e) {
+            look.deleteAllComponents(jQuery('#photo-background'));
+            return false;
+        })
+        .css({
+            'display': (jQuery('#photo-background').css('background-image')) ? 'block' : 'none'
+        })
+        .appendTo('#photo-background')
+    ;
     
     jQuery('#photo-background a').live('click', function(e) {
         e.preventDefault();
@@ -410,34 +456,19 @@ var chooser = {
 
 jQuery(document).ready(function() {
     chooser.dialog = jQuery('#product-chooser');
-});
-
-/* Upload form interaction */
-// FIXME: Move this to edit_look page
-
-jQuery(document).ready(function() {
-    jQuery('#photo-form button:first').click(function(e) {
-        jQuery('#photo-form .upload-form').toggle();
-        return false;
-    });
-});
-jQuery('#photo-form').click(function(e) { e.stopPropagation(); });
-jQuery('#photo').click(function(e) {
-    // Toggle upload-form elements only if there's a photo and the form is visible
     
-    if(
-        jQuery('#photo-background').css('background-image') != 'none' 
-        && jQuery('#photo-form > div:first').is(':visible')
-    ) {
-        jQuery('#photo-form .upload-form').toggle();
-    }
-    return true;
+    jQuery('#photo>.look-empty button[type=submit]').click(function(e) {
+        this.form.action += '#photo-tab'
+        return true;
+    });
+    
+    jQuery('.look-empty button, .look-empty a').hover(
+        function(e) { jQuery(this).addClass('hover') },
+        function(e) { jQuery(this).removeClass('hover') }
+    );
+    
 });
 
-jQuery('#photo-form button[type=submit]').click(function(e) {
-    this.form.action += '#photo-tab'
-    return true;
-});
 
 
 </script>
@@ -446,7 +477,7 @@ jQuery('#photo-form button[type=submit]').click(function(e) {
 {% block body-classes %}edit-look two-columns{% endblock %}
 
 {% block body %}
-<form enctype="multipart/form-data" action="" method="POST">
+<form enctype="multipart/form-data" action="{% url apparel.views.look_edit object.slug %}" method="POST" id="look-form">
 <div id="look-title">
     {{ form.title }}<button type="submit">{% trans "Save" %}</button>
 </div>
@@ -473,18 +504,21 @@ jQuery('#photo-form button[type=submit]').click(function(e) {
         </ul>
         <div class="panes">
             <div id="collage">
-            {% include 'apparel/fragments/look_collage.html' %}
+                {% include 'apparel/fragments/look_collage.html' %}
+                <div class="look-empty"{% if object.collage_components.all.count > 0 %} style="display: none"{% endif %}>
+                    <div class="message">{% trans "Drag products here to start building a collage" %}</div>
+                    <div{% if object.image %} style="display: none"{% endif %}>
+                        <p>- {% trans "or" %} -</p>
+                        <a href="#photo-tab">{% trans "Upload a photo to create a tagged image" %}</a>    
+                    </div>
+                </div>
             </div>
             <div id="photo">
                 {% include 'apparel/fragments/look_photo.html' %}
-                <div id="photo-form">
-                    <div{% if not object.image %} style="display: block"{% endif %} class="upload-form">
-                        {{ form.image }}
-                    </div>
-                    <div>
-                        <button class="upload-form"{% if object.image %} style="display: block"{% endif %}>{% trans "Upload a Photo" %}</button>
-                        <button type="submit" class="upload-form"{% if not object.image %} style="display: block"{% endif %}>{% trans "Upload" %}</button>
-                    </div>
+                
+                <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
+                    {{ form.image }}
+                    <button type="submit">{% trans "Upload a photo to create a tagged image" %}</button>
                 </div>
             </div>
             <div id="selection">
