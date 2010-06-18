@@ -817,7 +817,13 @@ ul.menu
     &.share
       ul
         display: none
+        position: absolute
+        margin-left: -1px
+        margin-top: 0px
         width: 60px
+        +border
+        +button
+        +border-radius(3px)
         li
           border: none
           display: inline
@@ -832,7 +838,6 @@ ul.menu
               +sprite-column(10, 16)
             &.twitter
               +sprite-column(6, 16)
-
       > a
         background-image= image_url("share.png")
     &#add-to-wardrobe button

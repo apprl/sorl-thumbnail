@@ -55,7 +55,7 @@
         <p class="description">{{ object.description }}</p>
     {% endif %}
     <div class="share-created">
-    <ul id="add-menu" class="menu">
+    <ul id="add-menu" class="menu hover-menu">
       {% include 'apparel/fragments/share.html' %}
     </ul>
     <span class="created">{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</span>
