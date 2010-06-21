@@ -433,7 +433,6 @@ div#product-list
       width= !large_width + 1
       ul
         +clearfix
-        +border("all")
         li
           display: block
           width: auto
@@ -443,12 +442,12 @@ div#product-list
               +box-shadow
 
 .product-small
-  width: 115px
+  width: 116px
   +border("all")
-  margin: -1px 0 0 -1px
+  border-right: none
   text-align: center
-  margin-right: -1px
-  margin-bottom: -1px
+  margin-top: -1px
+  margin-left: -1px
   h4
     +border("top")
     height: 1.5em

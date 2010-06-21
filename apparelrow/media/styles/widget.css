@@ -80,14 +80,14 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 #ar-wrapper .ar-look-photo .hotspot, #ar-wrapper .ar-look-photo .ar-hotspot {
   position: absolute;
   padding: 40px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/look-hotspot.png?1271672587') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/look-hotspot.png?1271672587') no-repeat scroll center center;
 }
 
 /* line 52, ../src/widget.sass */
 #ar-wrapper .ar-tooltip {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
-  background: #efefef url('http://apparelrow-dev.hanssonlarsson.se/media/images/tooltip-bg.png?1273841888') repeat-x scroll center top;
+  background: #efefef url('http://localhost:8000/media/images/tooltip-bg.png?1273841888') repeat-x scroll center top;
   border-radius: 2px;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -179,7 +179,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 /* line 24, ../src/partials/_widget.sass */
 #ar-wrapper .ar-tooltip .arrow, #ar-wrapper .ar-tooltip .ar-arrow {
   position: absolute;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
   width: 14px;
   height: 8px;
   bottom: -8px;
