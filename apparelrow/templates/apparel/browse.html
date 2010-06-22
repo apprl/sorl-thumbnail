@@ -134,9 +134,12 @@
             });
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
-            jQuery('#product-list > ul > li > ul > li').live('mouseenter mouseleave', function(e) {
-                jQuery(this).css({ 'width': (e.type == 'mouseover') ? 'black' : 'transparent'});
-            });
+            var hoverProducts = jQuery('<ul/>').attr('id', 'hover-products').appendTo('#container');
+            cloneProducts(jQuery('#product-list > ul > li > ul > li'));
+            jQuery('#product-list > ul > li > ul > li').live('hover',
+                function() { jQuery('#hover-products > li').hide(); jQuery(this).data('clone').show() },
+                function() { jQuery(this).data('clone').hide() }
+            );
             // Fixed scrolling
             //jQuery('#content').fixedscroll();
             // Reset button
@@ -198,6 +201,20 @@
                 items: 'ul.list'
             });
         });
+        function cloneProducts(elements) {
+            elements.each(function(i, ele) {
+                var $this = jQuery(ele);
+                var clone = $this.clone()
+                    .attr('id', $this.attr('id') + '-clone')
+                    .css({
+                        top: $this.offset().top,
+                        left: $this.offset().left
+                    })
+                    .bind('mouseleave', function() { jQuery(this).hide() })
+                    .appendTo('#hover-products');
+                $this.data('clone', clone);
+            });
+        }
         function getQuery(query) {
             index = 0;
             query = query || {};
@@ -263,6 +280,7 @@
                     console.log('Error while rendering template', e);
                 }
             });
+            cloneProducts(jQuery('#product-list > ul > li > ul > li'));
             
             pagination.data = products;
             pagination.render();

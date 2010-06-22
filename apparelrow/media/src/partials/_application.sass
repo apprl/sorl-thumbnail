@@ -433,22 +433,23 @@ div#product-list
       width= !large_width + 1
       ul
         +clearfix
-        +border("all")
         li
           display: block
           width: auto
-          &:hover
-            .product-image
-              z-index: 100
+          .product-small
+            &:hover
               +box-shadow
+
+#hover-products li
+  display: none
+  position: absolute
+  +box-shadow
 
 .product-small
   width: 115px
-  +border("all")
+  +box
   margin: -1px 0 0 -1px
   text-align: center
-  margin-right: -1px
-  margin-bottom: -1px
   h4
     +border("top")
     height: 1.5em
