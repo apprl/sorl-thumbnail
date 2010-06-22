@@ -17,7 +17,13 @@
 <script type="text/javascript">
     jQuery(document).ready(function() {
         makeProductTooltip('.collage .product, .photo .product');        
+        jQuery('#embed-code')
+            .focus(function(e) { this.select(); } )
+            .mouseup(function(e) { e.preventDefault() } )
+        ;
     });
+    
+    
 </script>
 {% endblock 'extra-scripts' %}
 
@@ -66,7 +72,7 @@
       <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
     </div>
     <div class="spread">
-        <label>{% trans "Embed" %}<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}"></label>
+        <label>{% trans "Embed" %}<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code"></label>
     </div>
     {% if looks_by_user %}
     <h2>{% trans "More looks by" %} {{ object.user.get_profile.display_name }}</h2>

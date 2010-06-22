@@ -153,6 +153,7 @@ INSTALLED_APPS = (
     'trackback',
     'recommender',
     'south',
+    'jsmin',
 
     'apparel',
     'scale',
