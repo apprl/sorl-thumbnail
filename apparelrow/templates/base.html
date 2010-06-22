@@ -177,6 +177,7 @@
         <div id="account-dialogue">
             <!-- LOGIN FORM -->
             <form action="/accounts/login/" method="post" id="login-form">
+                {% csrf_token %}
                 <!--
                 <a id="login-forgot-password" href="/accounts/password/reset/">{% trans "Forgot password?" %}</a>
                 <a id="login-create-account" href="/accounts/register/">{% trans "Create account" %}</a>

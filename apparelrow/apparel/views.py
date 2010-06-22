@@ -517,3 +517,12 @@ def add_to_wardrobe(request):
     wardrobe.save() # FIXME: Only save if created?
     
     return wardrobe
+    
+    
+def csrf_failure(request, reason=None):
+    """
+    Display error page for cross site forgery requests
+    """
+    if reason is None: reason = '[None given]'
+    logging.debug("CSRF failure: %s" % reason)
+    return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))

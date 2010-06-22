@@ -47,6 +47,7 @@
         <li id="add-to-look">
             <a href="/apparel/look/">{% trans "Add to look" %}</a>
             <form action="{% url apparel.views.add_to_look %}" method="post">
+            {% csrf_token %}
             <input type="hidden" name="look" />
             <input type="hidden" name="product" value="{{ object.id }}" />
             <ul>
