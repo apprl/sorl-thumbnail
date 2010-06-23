@@ -1,6 +1,6 @@
 import logging, re, math, copy
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from django.db.models import Q, Max, Min
@@ -255,6 +255,13 @@ def js_template(str):
     str = re.sub(r'\{%\s*include "(.+?)"\s*%\}', lambda m: js_template(get_template_source(m.group(1))), str)
 
     return Template(str).render(Context())
+
+def product_redirect(request, pk):
+    """
+    Makes it
+    """
+    product = get_object_or_404(Product, pk=pk)
+    return HttpResponsePermanentRedirect(product.get_absolute_url())
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)

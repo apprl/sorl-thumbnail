@@ -38,25 +38,27 @@ div#ar-wrapper
     width: auto 
     z-index: auto 
 
-.apparelrow, #ar-wrapper
-  +font
-  +typography
-  position: relative
-
 .ar-look-collage, .ar-look-photo
   height= !look_height
 
-#ar-wrapper .ar-look-photo
-  +apparel_hotspot
 
-#ar-wrapper .ar-tooltip
-  & p
-    +font
-    +typography
-    font-size: smaller/1.5 !important
-  & a
-    +font
-    +typography
-    font-size: smaller !important
-  
-  +apparel_tooltip
+#ar-wrapper
+  +font
+  +typography
+  position: relative
+  & .ar-look-photo
+    +apparel_hotspot
+  & .ar-link
+    cursor: pointer
+  & .ar-tooltip
+    +apparel_tooltip
+    & p
+      +font
+      +typography
+      font-size: smaller/1.5 !important
+    & a
+      +font
+      +typography
+      font-size: smaller !important
+      cursor: pointer
+    

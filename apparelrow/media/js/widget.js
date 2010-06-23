@@ -215,6 +215,22 @@ var ApparelRow = {
             delay: 500,
             offset: [30, 60]
         });
+        
+        // Make hotspots/collage products link to ApparelRow
+        $('.ar-product, .ar-hotspot', node)
+            .click(function() {
+                var id = this.id.split('-').pop();
+                location.href = ApparelRow.host + '/products/' + id;
+                return false; 
+             } )
+            .addClass('ar-link')
+        ;
+        
+        // Point tooltip link to ApparelRow. FIXME: Could this be done in the server?
+        $('.ar-tooltip > a').each(function(i, e) {
+            var id = jQuery(e).closest('.ar-tooltip').prev().attr('id').split('-').pop();
+            e.href = ApparelRow.host + '/products/' + id;
+        });
     },
     request: function(path, node, callback) {
         callback = callback || function(response, statusText) {

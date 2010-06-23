@@ -21,9 +21,15 @@
             .focus(function(e) { this.select(); } )
             .mouseup(function(e) { e.preventDefault() } )
         ;
+        jQuery('.product, .hotspot')
+            .click(function(e) {
+                location.href = jQuery('#' + this.id + ' + .tooltip:first > a').attr('href');
+                return false;
+            } )
+            .addClass('link')
+        ;
     });
-    
-    
+
 </script>
 {% endblock 'extra-scripts' %}
 
