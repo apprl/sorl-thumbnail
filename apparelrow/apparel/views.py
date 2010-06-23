@@ -328,6 +328,9 @@ def look_edit(request, slug):
         
         if form.is_valid():
             form.save()
+        else:
+            logging.debug(form.errors.__unicode__())
+
     else:
         form = LookForm(instance=look)
     

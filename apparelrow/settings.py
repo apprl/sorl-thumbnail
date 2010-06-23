@@ -3,6 +3,8 @@
 
 import os.path
 import posixpath
+import logging
+import logging.config
 
 gettext = lambda s: s
 
@@ -13,6 +15,22 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 FORCE_SCRIPT_NAME = ''
+
+LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', 'etc', 'logging.conf') # logging configuration file
+
+if not hasattr(logging, 'initialised'):
+    logging.config.fileConfig(LOGGING_CONFIG)
+    
+    if DEBUG:
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        #ch = logging.StreamHandler()
+        #ch.setLevel(logging.DEBUG)
+        #logger.addHandler(ch)
+        logging.debug('Using debug logger')
+    
+    logging.info('Initialised application logger')
+    logging.initialised = True
 
 
 # tells Pinax to serve media through django.views.static.serve.
