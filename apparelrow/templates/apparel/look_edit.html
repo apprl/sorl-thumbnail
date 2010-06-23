@@ -482,14 +482,6 @@ jQuery(document).ready(function() {
 <div id="look-title">
     {{ form.title }}<button type="submit">{% trans "Save" %}</button>
 </div>
-<div>{{ form.title.errors }}</div>
-<div>{{ form.slug.errors }}</div>
-<div>{{ form.description.errors }}</div>
-<div>{{ form.user.errors }}</div>
-<div>{{ form.image.errors }}</div>
-<div>{{ form.created.errors }}</div>
-<div>{{ form.modified.errors }}</div>
-<div>{{ form.tags.errors }}</div>
 <div class="sidebar">
     <label for="id_description">{% trans "Description (optional):" %}</label>
     {{ form.description }}

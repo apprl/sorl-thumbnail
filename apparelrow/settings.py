@@ -24,13 +24,10 @@ if not hasattr(logging, 'initialised'):
     if DEBUG:
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
-        #ch = logging.StreamHandler()
-        #ch.setLevel(logging.DEBUG)
-        #logger.addHandler(ch)
         logging.debug('Using debug logger')
     
     logging.info('Initialised application logger')
-    logging.initialised = True
+    setattr(logging, 'initialised', True)
 
 
 # tells Pinax to serve media through django.views.static.serve.
