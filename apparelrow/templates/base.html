@@ -69,9 +69,9 @@
             
             
             // Add handlers
-            jQuery('#searchbox').keyup(function(e) {
+            jQuery('#search > input').keyup(function(e) {
                 // FIXME: Ignore if modifier is used (apart from shift)
-                j = jQuery(this);
+                var j = jQuery(this);
                 clearTimeout(j.data('tid'));
                 
                 switch(e.keyCode) {
@@ -87,32 +87,42 @@
                         return false;
                     
                     default:
-                        j.data('tid', setTimeout(search, 1000));
+                        j.data('tid', setTimeout(doSearch, 1000));
                 }
             });
 
         });
         
+        //
+        // SEARCH FUNCTIONALITY
+        // 
         
-        // FIXME: Move these into namespace 
-        function search() {
-            var value = jQuery('#searchbox').val();
+        function doSearch() {
+            var value = jQuery('#search > input').val();
             if(value.length == 0)
-                return
+                return;
             
+            /*
             jQuery.getJSON('{% url apparel.views.wide_search %}', {
                 s: value
             }, display);
+            */
+            console.log('searching with ', value);
+            showSearch();
         }
         
         function hideSearch() {
             jQuery('#search-result').hide();
             jQuery('#search').removeClass('expanded');
         }
-
-        function display(data) {
+        
+        function showSearch() {
             jQuery('#search-result').fadeIn();
             jQuery('#search').addClass('expanded');
+        }
+        
+        /*
+        function display(data) {
             $.each(data.result, function(result_type, result) {
                 var ele = jQuery('#search-result-' + result_type);
                 ele.empty();
@@ -141,10 +151,11 @@
                 for(var i = 0; i < data[name].length; i++)
                     adders[name](elem, data[name][i]);
             }
-            */
         }
+            */
         
         // FIXME: These could be replaced with different templates to process
+        /*
         adders = {
             'products': function(elem, product) {
                 elem.append('<h3>' + product.product_name + '</h3>');
@@ -159,8 +170,7 @@
                 elem.append('<a href="/apparel/products/' + category.id + '">Read more</a>');
             }
         };  
-        
-                
+        */
     </script>
     {% block 'extra-scripts' %}
     {% endblock 'extra-scripts' %}
@@ -199,25 +209,20 @@
                 {% include "facebook/connect_button.html" %}
             {% endwith %}
         </div>
-        <form action="/apparel/search" method="get" onsubmit="return false">
-            <div id="search">
-                <input type="text" name="s" id="searchbox" />
-                <div id="search-result">
-                    <div class="span-11">
-                        <h2>{% trans "Products" %}</h2>
-                        <div class="search-result-container" id="search-result-products">
-                        </div>
-                    </div>
-                    <div class="span-5">
-                        <h2>{% trans "Categories" %}</h2>
-                        <div class="search-result-container" id="search-result-categories">
-                        </div>
-                    </div>
-                    <div class="span-5">
-                        <h2>{% trans "Manufacturers" %}</h2>
-                        <div class="search-result-container" id="search-result-manufacturers">
-                        </div>
-                    </div>
+        <form action="/apparel/search" method="get" onsubmit="return false" id="search">
+            <input type="text" name="s" />
+            <div id="search-result">
+                <div class="">
+                    <h2>{% trans "Matching products" %}</h2>
+                    <ul id="search-result-products"></ul>
+                </div>
+                <div class="">
+                    <h2>{% trans "Matching looks" %}</h2>
+                    <ul id="search-result-looks"></ul>
+                </div>
+                <div class="">
+                    <h2>{% trans "Matching brands" %}</h2>
+                    <ul id="search-result-manufacturers"></ul>
                 </div>
             </div>
         </form>

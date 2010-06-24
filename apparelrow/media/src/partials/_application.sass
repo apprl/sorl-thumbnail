@@ -863,39 +863,38 @@ a.block_link
 #search
   background: transparent url(../images/search.png) scroll no-repeat left center
   top: 31px
-  right: 0px
+  right: -16px
   position: absolute
   width: 163px
   height: 24px
-  padding: 17px 50px 17px 25px
+  padding: 17px 50px 17px 41px
   overflow: visible
   z-index: 1000
 
   &.expanded
-    background: transparent url(../images/searchresult-bg.png) scroll no-repeat center top
+    background: transparent url(../images/searchresult-bg.png) scroll no-repeat right top
     height: 547px
     width: 895px
-
-
-#searchbox
-  position: absolute
-  width: 163px
-  right: 50px
-  margin: 0
-  border: none
-  vertical-align: middle
-  font-size: 1.2em
-  background: transparent
+  
+  & input
+    position: absolute
+    width: 163px
+    right: 50px
+    margin: 0
+    border: none
+    vertical-align: middle
+    font-size: 1.2em
+    background: transparent
 
 
 #search-result
-  margin-top: 140px
+  margin-top: 115px
   display: none
+  border: 1px solid green
 
   h2
     font-size: 1.2em
     font-weight: bold
-
 
 .search-result-container
   margin-left: 5px
