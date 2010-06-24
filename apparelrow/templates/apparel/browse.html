@@ -239,7 +239,7 @@
             window.location.hash = jQuery.param(query) || '!';
         }
         function doFilter(query, callback) {
-            jQuery.getJSON('{% url apparel.views.search "products" %}', query, callback || renderProducts);
+            jQuery.getJSON('{% url apparel.views.browse %}', query, callback || renderProducts);
         }
         function renderPage(products, page) {
             // FIXME: This should probably be moved into a template, but it's kind of simple so it'll do for now
