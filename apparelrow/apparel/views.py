@@ -46,7 +46,10 @@ def search(request, model):
     )
 
 def browse(request):
-    paged_result = get_paged_search_result(request, 'Product')
+    paged_result = get_paged_search_result(request, 
+        class_name='Product', 
+        page_size=BROWSE_PAGE_SIZE
+    )
     
     if request.is_ajax(): return browse_ajax_response(request, paged_result)
     
@@ -455,7 +458,7 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
 
     return left, mid, right
 
-def get_paged_search_result(request, class_name=None, items=BROWSE_PAGE_SIZE):
+def get_paged_search_result(request, class_name=None, page_size=None):
     try:
         model_class = eval(class_name)
     except TypeError:
@@ -463,10 +466,9 @@ def get_paged_search_result(request, class_name=None, items=BROWSE_PAGE_SIZE):
     except:
         raise
     
-    query, page = get_query_and_page(request)
-    if page == -1: items = BROWSE_PAGE_MAX
-    
-    paginator = Paginator(model_class.objects.search(query), items)
+    query, page, size = get_query_and_page(request, page_size)
+        
+    paginator = Paginator(model_class.objects.search(query), size)
     
     try:
         paged_result = paginator.page(page)
@@ -541,11 +543,43 @@ def index(request):
     ctx['categories']    = ctx['categories'].filter(on_front_page=True)
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 
-def get_query_and_page(request):
+def get_query_and_page(request, override_size=None):
+    """
+    Copies the request query to a mutable dict and removes the 'page' and 'size'
+    keys.
+     - 'page' - indicates which page in the paged result should be used
+     - 'size' - indicates page size used. 'max' corresponds to the BROWSE_PAGE_MAX
+                setting.
+    
+    If 'override_size' argument is passed, the 'size' query key have no effect.
+    """
     query = request.GET.copy()
     page  = int(query.pop('page', [1])[0]) # all values are lists in the QueryDict object and we never expect more than one
+    size  = query.pop('size', ['max'])[0]
     
-    return query, page
+    if page == -1:
+        logging.warn('Use of depricated page=-1 query. Use size=MAX instead. Request %s', request)
+        size = 'max'
+        page = 1
+    
+    if override_size is not None:
+        size = override_size
+        logging.debug('Using explicit page size: %s', override_size)
+    elif size == 'max':
+        size = BROWSE_PAGE_MAX
+        logging.debug('Using max page size: %s', size)
+    elif size:
+        try:
+            size = int(size)
+        except ValueError:
+            logging.error('%s is not an intiger, using max setting', size)
+            size = BROWSE_PAGE_MAX
+        else:
+            if size > BROWSE_PAGE_MAX: size = BROWSE_PAGE_MAX
+        
+        logging.debug('Using query page size: %s', size)
+    
+    return query, page, size
 
 
 def js_template(str):

@@ -1,0 +1,7 @@
+{% load i18n %}
+<li>
+    <img src="/scale/72x90{{ product.product_image.url }}" />
+    <h3>{{ product.product_name }}</h3>
+    <span class="price">{{ product.default_vendor.price }} {{ product.default_vendor.currency }}</span>
+    <a href="{{ product.get_absolute_url }}">{% trans "View product" %}</a>
+</li>

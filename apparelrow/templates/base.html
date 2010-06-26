@@ -98,17 +98,63 @@
         // 
         
         function doSearch() {
-            var value = jQuery('#search > input').val();
-            if(value.length == 0)
+            var s = jQuery('#search > input').val();
+            if(s.length == 0)
                 return;
             
+            clearSearchResults();
+            
+            // Find products
+            
+            getSearchResults('products', 
+                {
+                    '1:p.product_name:icontains': s,
+                    '2:p.description:icontains': s,
+                    'o': '1o2',
+                    'size': 6
+                },
+                function(products) {
+                    var list = jQuery('#search-result-products');
+                    jQuery.each(products.object_list, function(i, product) {
+                        try {
+                            jQuery('#product_search_template').render({ product: product }).appendTo(list);
+                        } catch(e) {
+                            console.log('Error while rendering template', e);
+                        }
+                    });
+                    
+                    if(list.children().size() == 0) {
+                        console.log('No results');
+                    }
+                }
+            );
             /*
             jQuery.getJSON('{% url apparel.views.search "products" %}', {
                 s: value
             }, display);
             */
-            console.log('searching with ', value);
+            console.log('searching with ', s);
             showSearch();
+        }
+        
+        function clearSearchResults() {
+            jQuery('#search-result ul').empty();
+        }
+        
+        function getSearchResults(model, query, callback) {
+            jQuery.ajax({
+                type: 'GET',
+                url: '/' + model + '/search',
+                dataType: 'json',
+                data: query,
+                complete: function(request, status) {
+                    console.log('Do cleanup here (hide search result etc)')
+                },
+                success: function(response, status, request) {
+                    // Do some common stuff here
+                    callback(response);
+                }
+            });
         }
         
         function hideSearch() {
@@ -269,6 +315,17 @@
     </div>
 </div>
 {% for template_name,template_string in templates.items %}
+    <script type="text/html" id="{{ template_name }}_template">
+        {{ template_string|safe }}
+    </script>
+{% endfor %}
+{% comment %}
+    FIXME: Would be neat if there is a way of combining templates and default_templates
+    so we do not have to iterate twice. Preferably, this should be done in the
+    context processor (just not sure how to get the current context from the request)
+   or in the template (default_templates.update(template).items or something
+{% endcomment %}
+{% for template_name,template_string in default_templates.items %}
     <script type="text/html" id="{{ template_name }}_template">
         {{ template_string|safe }}
     </script>
