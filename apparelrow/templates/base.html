@@ -114,6 +114,7 @@
                     'size': 6
                 },
                 function(products) {
+                    if(!products) return;
                     var list = jQuery('#search-result-products');
                     jQuery.each(products.object_list, function(i, product) {
                         try {
@@ -258,7 +259,7 @@
         <form action="/apparel/search" method="get" onsubmit="return false" id="search">
             <input type="text" name="s" />
             <div id="search-result">
-                <div class="">
+                <div class="col-2">
                     <h2>{% trans "Matching products" %}</h2>
                     <ul id="search-result-products"></ul>
                 </div>

@@ -887,6 +887,9 @@ a.block_link
     background: transparent
 
 
+!search_col_width = 206px
+!search_col_margin = 36px
+
 #search-result
   margin-top: 115px
   display: none
@@ -895,29 +898,17 @@ a.block_link
   h2
     font-size: 1.2em
     font-weight: bold
-
-.search-result-container
-  margin-left: 5px
-
-  h3
-    font-size: 1em
-    font-weight: bold
-
-  a
-    display: block
-    margin-bottom: 4px
-
-  .product-info
-    border: none
-    text-align: left
-
-  .product-small
-    width: 205px
-
-  .product-image
-    float: left
-    margin-right: 5px
-
+  
+  ul
+    width= !search_col_width
+    li
+      float: left
+      width= !search_col_width
+      h3
+        font-size: small
+  div.col-2
+    ul
+      width= !search_col_width * 2 + !search_col_margin
 
 .facebook-profile-image
   float: left
@@ -951,3 +942,4 @@ a.block_link
   position: relative
   top: -10px
   z-index: -1
+
