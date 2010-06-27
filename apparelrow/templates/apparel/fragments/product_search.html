@@ -1,7 +1,15 @@
 {% load i18n %}
 <li>
     <img src="/scale/72x90{{ product.product_image.url }}" />
-    <h3>{{ product.product_name }}</h3>
-    <span class="price">{{ product.default_vendor.price }} {{ product.default_vendor.currency }}</span>
-    <a href="{{ product.get_absolute_url }}">{% trans "View product" %}</a>
+    <div>
+        <h3>{{ product.product_name }}</h3>
+        <div>
+            <!-- FIXME: Add likes to search result -->
+            <span class="likes">0 {% trans "Likes" %}</span>
+        </div>
+        <div>
+            <span class="price">{{ product.default_vendor.price }}</span> <span class="currency">{{ product.default_vendor.currency }}</span>
+        </div>
+        <a href="{{ product.get_absolute_url }}" class="product-link">{% trans "View product" %}</a>
+    </div>
 </li>

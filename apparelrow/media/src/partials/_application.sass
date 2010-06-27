@@ -770,16 +770,6 @@ body.product .product-image, body.look #content
   .product-summary
     float: left
 
-
-.product-summary
-  a, span
-    display: block
-
-  a
-    text-transform: uppercase
-    background: transparent url(../images/arrow-bg.png) scroll no-repeat left bottom
-    padding-left: 20px
-
 ul.hover-menu
   li.hover
     +hover_button
@@ -893,22 +883,52 @@ a.block_link
 #search-result
   margin-top: 115px
   display: none
-  border: 1px solid green
 
   h2
     font-size: 1.2em
     font-weight: bold
   
-  ul
+  div
     width= !search_col_width
-    li
-      float: left
-      width= !search_col_width
-      h3
-        font-size: small
-  div.col-2
+    float: left
+    margin-right= !search_col_margin
     ul
+      +clearfix
+      li
+        font-size: smaller
+        float: left
+        width= !search_col_width
+        height: 92px
+        margin-right= !search_col_margin / 2
+        margin-bottom: 10px
+        img
+          margin-right: 10px
+          border= 1px solid !border_color
+          float: left
+        div
+          height: 92px
+          width: auto
+          margin-right: auto
+          div
+            +clearfix
+            float: none
+            height: auto
+            .price, .currency
+              color= !font_color
+              vertical-align: middle
+          a
+            +product_link
+            display: block
+            margin-top: 1em
+          h3
+            overflow: hidden
+            font-size: small
+            font-weight: normal
+            text-transform: capitalize
+    &.col-2
       width= !search_col_width * 2 + !search_col_margin
+    &.last
+      margin-right: 0px
 
 .facebook-profile-image
   float: left
