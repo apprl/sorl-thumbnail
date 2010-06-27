@@ -1,0 +1,12 @@
+{{#}}NOTE: This template is identical to look_small.html and the templates it contains{{/#}}
+{{#}}FIXME: We should have an option of returning search results prerendered by the server{{/#}}
+<a href="${ object.get_absolute_url }"><div class="look">
+    {{if object.display_with_component == 'P'}}
+        <img id="look-${ object.id }" class="product" src="/scale/93x72${ object.image.url }?trans=true&crop=true" />
+    {{else}}
+        {{each(i, component) object.collage_components}}
+            <img id="product-${ component.product.id }" class="product collage-image" style="${ component.style_small }" src="/scale/93x72${ component.product.product_image.url }?trans=true" />
+        {{/each}}
+    {{/if}}
+</div>
+</a>

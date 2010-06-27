@@ -901,13 +901,16 @@ a.block_link
         height: 92px
         margin-right= !search_col_margin / 2
         margin-bottom: 10px
-        img
+        div.search-image
           margin-right: 10px
-          border= 1px solid !border_color
           float: left
-        div
+          width: 74px
           height: 92px
-          width: auto
+          text-align: center
+          img
+            border= 1px solid !border_color
+        div
+          width: 122px
           margin-right: auto
           div
             +clearfix
@@ -919,11 +922,13 @@ a.block_link
           a
             +product_link
             display: block
+            padding-top: 3px
             margin-top: 1em
           h3
             overflow: hidden
             font-size: small
             font-weight: normal
+            white-space: nowrap
             text-transform: capitalize
     &.col-2
       width= !search_col_width * 2 + !search_col_margin

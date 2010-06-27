@@ -39,6 +39,7 @@ class QueryParser():
         'Vendor'       : 'v',
         'OptionType'   : 't',
         'VendorProduct': 'vp',
+        'Look'         : 'l',
     }
     
     django_operators = (

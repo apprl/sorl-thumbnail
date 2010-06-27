@@ -216,6 +216,8 @@ class Look(models.Model):
     tags        = TagField(blank=True)
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     
+    objects = SearchManager()
+
     def total_price(self, component=None):
         """
         Returns the total price of the given component, or default if none specified
@@ -280,7 +282,7 @@ class Look(models.Model):
         return ('apparel.views.look_detail', [str(self.slug)])
     
     class Exporter:
-        export_fields = ['__all__']
+        export_fields = ['__all__', 'get_absolute_url', 'photo_components', 'display_with_component', 'collage_components']
 
 
 class LookComponent(models.Model):
@@ -345,7 +347,7 @@ class LookComponent(models.Model):
         unique_together = (('product', 'look', 'component_of'),)
 
     class Exporter:
-        export_fields = ['__all__', 'style']
+        export_fields = ['__all__', 'style', 'style_middle', 'style_small', '-look']
 
 
 

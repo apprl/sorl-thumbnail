@@ -129,6 +129,31 @@
                     }
                 }
             );
+
+            getSearchResults('looks', 
+                {
+                    '1:l.title:icontains': s,
+                    '2:l.description:icontains': s,
+                    'o': '1o2',
+                    'size': 6
+                },
+                function(looks) {
+                    if(!looks) return;
+                    var list = jQuery('#search-result-looks');
+                    jQuery.each(looks.object_list, function(i, look) {
+                        try {
+                            var contents = jQuery('#look_search_template').render({ object: look, hide_like_button: true });
+                            jQuery('<li/>').append(contents).appendTo(list);
+                        } catch(e) {
+                            console.log('Error while rendering template', e);
+                        }
+                    });
+                    
+                    if(list.children().size() == 0) {
+                        console.log('No results');
+                    }
+                }
+            );
             /*
             jQuery.getJSON('{% url apparel.views.search "products" %}', {
                 s: value
@@ -152,7 +177,6 @@
                     console.log('Do cleanup here (hide search result etc)')
                 },
                 success: function(response, status, request) {
-                    // Do some common stuff here
                     callback(response);
                 }
             });

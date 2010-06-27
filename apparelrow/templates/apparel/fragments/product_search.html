@@ -1,7 +1,9 @@
 {% load i18n %}
 <li>
-    <img src="/scale/72x90{{ product.product_image.url }}" />
-    <div>
+    <div class="search-image">
+        <img src="/scale/72x90{{ product.product_image.url }}" />
+    </div>
+    <div class="search-content">
         <h3>{{ product.product_name }}</h3>
         <div>
             <!-- FIXME: Add likes to search result -->

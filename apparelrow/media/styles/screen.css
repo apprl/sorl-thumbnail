@@ -3613,18 +3613,23 @@ a.block_link {
   margin-bottom: 10px;
 }
 /* line 904, ../src/partials/_application.sass */
-#search-result div ul li img {
+#search-result div ul li div.search-image {
   margin-right: 10px;
-  border: 1px solid #d9d9d9;
   float: left;
-}
-/* line 908, ../src/partials/_application.sass */
-#search-result div ul li div {
+  width: 74px;
   height: 92px;
-  width: auto;
-  margin-right: auto;
+  text-align: center;
+}
+/* line 910, ../src/partials/_application.sass */
+#search-result div ul li div.search-image img {
+  border: 1px solid #d9d9d9;
 }
 /* line 912, ../src/partials/_application.sass */
+#search-result div ul li div {
+  width: 122px;
+  margin-right: auto;
+}
+/* line 915, ../src/partials/_application.sass */
 #search-result div ul li div div {
   overflow: hidden;
   display: inline-block;
@@ -3635,43 +3640,45 @@ a.block_link {
 #search-result div ul li div div {
   display: block;
 }
-/* line 916, ../src/partials/_application.sass */
+/* line 919, ../src/partials/_application.sass */
 #search-result div ul li div div .price, #search-result div ul li div div .currency {
   color: #333333;
   vertical-align: middle;
 }
-/* line 919, ../src/partials/_application.sass */
+/* line 922, ../src/partials/_application.sass */
 #search-result div ul li div a {
   text-transform: uppercase;
-  background: transparent url('http://localhost:8000/media/images/arrow-bg.png?1274796492') no-repeat scroll left top;
+  background: transparent url('http://localhost:8000/media/images/arrow-bg.png?1274796492') no-repeat scroll left center;
   padding-left: 15px;
   vertical-align: top;
   display: block;
+  padding-top: 3px;
   margin-top: 1em;
 }
-/* line 923, ../src/partials/_application.sass */
+/* line 927, ../src/partials/_application.sass */
 #search-result div ul li div h3 {
   overflow: hidden;
   font-size: small;
   font-weight: normal;
+  white-space: nowrap;
   text-transform: capitalize;
 }
-/* line 928, ../src/partials/_application.sass */
+/* line 933, ../src/partials/_application.sass */
 #search-result div.col-2 {
   width: 448px;
 }
-/* line 930, ../src/partials/_application.sass */
+/* line 935, ../src/partials/_application.sass */
 #search-result div.last {
   margin-right: 0px;
 }
 
-/* line 933, ../src/partials/_application.sass */
+/* line 938, ../src/partials/_application.sass */
 .facebook-profile-image {
   float: left;
   margin-right: .5em;
 }
 
-/* line 938, ../src/partials/_application.sass */
+/* line 943, ../src/partials/_application.sass */
 #profile-nav li {
   display: block;
   float: left;
@@ -3683,22 +3690,22 @@ a.block_link {
   text-transform: uppercase;
   background: transparent url(../images/profile-nav-bg.png) scroll repeat-x top left;
 }
-/* line 949, ../src/partials/_application.sass */
+/* line 954, ../src/partials/_application.sass */
 #profile-nav li.selected {
   background-image: url(../images/profile-nav-bg-selected.png);
   border-right-color: #ababab;
   border-left-color: #ababab;
 }
-/* line 954, ../src/partials/_application.sass */
+/* line 959, ../src/partials/_application.sass */
 #profile-nav li a {
   line-height: 30px;
 }
-/* line 957, ../src/partials/_application.sass */
+/* line 962, ../src/partials/_application.sass */
 #profile-nav li.profile-image {
   padding: 0;
 }
 
-/* line 961, ../src/partials/_application.sass */
+/* line 966, ../src/partials/_application.sass */
 #profile-nav-dash {
   position: relative;
   top: -10px;
