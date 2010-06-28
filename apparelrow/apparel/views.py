@@ -282,8 +282,9 @@ def save_look_component(request):
                 setattr(form.instance, field, form.initial.get(field))
         
         if not form.instance.top and not form.instance.left:
-            left = LookComponent.objects.filter(positioned='A').aggregate(Max('left')).values()[0]
-            top  = LookComponent.objects.filter(positioned='A').aggregate(Max('top')).values()[0]
+            components = LookComponent.objects.filter(positioned='A', look=form.instance.look, component_of=form.instance.component_of)
+            left = components.aggregate(Max('left')).values()[0]
+            top  = components.aggregate(Max('top')).values()[0]
             
             form.instance.left = 0 if left is None else left + 78 
             form.instance.top  = 0 if top  is None else top 
