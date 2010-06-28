@@ -151,7 +151,7 @@ body h3 {
 #selection {
   overflow: hidden;
   display: inline-block;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/look-selection-row-bg.png?1272385089') no-repeat scroll;
+  background: transparent url('http://localhost:8000/media/images/look-selection-row-bg.png?1272385089') no-repeat scroll;
   padding: 9px 9px 0 9px;
   height: 252px;
 }
@@ -189,7 +189,7 @@ body h3 {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-left-radius: 5px;
@@ -202,14 +202,14 @@ body h3 {
 }
 /* line 26, ../src/partials/_row.sass */
 #selection a.prev.disabled {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
 }
 /* line 28, ../src/partials/_row.sass */
 #selection a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-right-radius: 5px;
@@ -222,7 +222,7 @@ body h3 {
 }
 /* line 32, ../src/partials/_row.sass */
 #selection a.next.disabled {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
 }
 /* line 34, ../src/partials/_row.sass */
 #selection div.row {
@@ -315,7 +315,7 @@ body h3 {
   position: absolute;
   height: 22px;
   width: 22px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/delete.png?1273073096') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/delete.png?1273073096') no-repeat scroll center center;
   left: -11px;
   top: -11px;
 }
@@ -341,7 +341,7 @@ body h3 {
 #photo-background .hotspot, #photo-background .ar-hotspot {
   position: absolute;
   padding: 40px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/look-hotspot.png?1271672587') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/look-hotspot.png?1271672587') no-repeat scroll center center;
 }
 /* line 53, ../src/partials/_look.sass */
 #photo-background .delete {
@@ -420,7 +420,7 @@ body h3 {
   background-color: #d0fae8;
   border-color: #92c0c7;
   color: #408994;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/add.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/add.png?1270451570');
   background-repeat: no-repeat;
   background-position: 10px 7px;
   padding-left: 30px;
@@ -507,7 +507,7 @@ body h3 {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   width: 230px;
   text-align: center;
@@ -516,11 +516,11 @@ body h3 {
 }
 /* line 84, ../src/partials/_base.sass */
 #edit-look ul.tabs li a.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #edit-look ul.tabs li a.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 124, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo {
@@ -528,12 +528,12 @@ body h3 {
 }
 /* line 126, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.current, #edit-look ul.tabs li a.current:hover {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-darker-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-darker-bg.png?1270451570');
   cursor: default;
 }
 /* line 129, ../src/partials/_look.sass */
 #edit-look ul.tabs li a:active, #edit-look ul.tabs li a:hover {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
 }
 /* line 131, ../src/partials/_look.sass */
 #edit-look ul.tabs li a span {
@@ -544,15 +544,15 @@ body h3 {
 }
 /* line 137, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.collage span {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/kollage.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/kollage.png?1270451570');
 }
 /* line 139, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo span {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/foto.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/foto.png?1270451570');
 }
 /* line 141, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.selection span {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/urval.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/urval.png?1270451570');
 }
 
 /* line 144, ../src/partials/_look.sass */
@@ -560,7 +560,7 @@ body h3 {
   border: 1px solid #d9d9d9;
   width: 893px;
   height: 27px;
-  background: #f2f2f2 url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570') repeat-x;
+  background: #f2f2f2 url('http://localhost:8000/media/images/gradient-bg.png?1270451570') repeat-x;
   margin: 20px 0 10px -24px;
   padding-top: 3px;
   padding-left: 20px;
@@ -594,7 +594,7 @@ body h3 {
   display: inline;
   float: right;
   margin-right: -21px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/preview-button.png?1270451570') no-repeat scroll;
+  background: transparent url('http://localhost:8000/media/images/preview-button.png?1270451570') no-repeat scroll;
   height: 24px;
   line-height: 24px;
   width: 103px;
@@ -670,7 +670,7 @@ body.look .spread input {
 .tooltip {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
-  background: #efefef url('http://apparelrow-dev.hanssonlarsson.se/media/images/tooltip-bg.png?1273841888') repeat-x scroll center top;
+  background: #efefef url('http://localhost:8000/media/images/tooltip-bg.png?1273841888') repeat-x scroll center top;
   border-radius: 2px;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -702,7 +702,7 @@ body.look .spread input {
 /* line 24, ../src/partials/_widget.sass */
 .tooltip .arrow, .tooltip .ar-arrow {
   position: absolute;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
   width: 14px;
   height: 8px;
   bottom: -8px;
@@ -794,19 +794,19 @@ body.look #content .collage, body.look #content .photo {
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
-  background: #f2f2f2 url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570') repeat-x;
+  background: #f2f2f2 url('http://localhost:8000/media/images/gradient-bg.png?1270451570') repeat-x;
   padding: 10px 8px 0 10px;
 }
 /* line 265, ../src/partials/_look.sass */
 #wardrobe-title span {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/arrow-bg-down.png?1270451570') no-repeat top left;
+  background: transparent url('http://localhost:8000/media/images/arrow-bg-down.png?1270451570') no-repeat top left;
   padding-left: 14px;
 }
 
 /* line 269, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/wardrobe-bg.png?1273248112') scroll repeat-x center center;
+  background: transparent url('http://localhost:8000/media/images/wardrobe-bg.png?1273248112') scroll repeat-x center center;
   overflow: hidden;
   display: inline-block;
 }
@@ -844,7 +844,7 @@ body.look #content .collage, body.look #content .photo {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-left-radius: 5px;
@@ -857,14 +857,14 @@ body.look #content .collage, body.look #content .photo {
 }
 /* line 26, ../src/partials/_row.sass */
 #wardrobe-contents a.prev.disabled {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
 }
 /* line 28, ../src/partials/_row.sass */
 #wardrobe-contents a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-right-radius: 5px;
@@ -877,7 +877,7 @@ body.look #content .collage, body.look #content .photo {
 }
 /* line 32, ../src/partials/_row.sass */
 #wardrobe-contents a.next.disabled {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
 }
 /* line 34, ../src/partials/_row.sass */
 #wardrobe-contents div.row {
@@ -960,7 +960,7 @@ body.look #content .collage, body.look #content .photo {
   right: -11px;
   width: 23px;
   height: 23px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/resize.png?1274796492') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/resize.png?1274796492') no-repeat scroll center center;
 }
 
 /* line 293, ../src/partials/_look.sass */
@@ -987,7 +987,7 @@ body.look #content .collage, body.look #content .photo {
   right: -11px;
   width: 23px;
   height: 23px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/rotate-cw.png?1274796492') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/rotate-cw.png?1274796492') no-repeat scroll center center;
 }
 
 /* line 312, ../src/partials/_look.sass */
@@ -996,7 +996,7 @@ body.look #content .collage, body.look #content .photo {
   left: -11px;
   width: 23px;
   height: 23px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/rotate-ccw.png?1274796492') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/rotate-ccw.png?1274796492') no-repeat scroll center center;
 }
 
 /* line 8, ../src/partials/_application.sass */
@@ -1015,7 +1015,7 @@ body .ui-draggable-dragging a {
   cursor: move;
 }
 
-/* line 18, ../src/partials/_application.sass */
+/* line 19, ../src/partials/_application.sass */
 .button {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -1024,25 +1024,25 @@ body .ui-draggable-dragging a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   display: inline-block;
 }
 /* line 84, ../src/partials/_base.sass */
 .button.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 .button.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 
-/* line 22, ../src/partials/_application.sass */
+/* line 23, ../src/partials/_application.sass */
 .link {
   cursor: pointer;
 }
 
-/* line 25, ../src/partials/_application.sass */
+/* line 26, ../src/partials/_application.sass */
 button {
   font-family: "Helvetica", "Arial", sans-serif;
   font-size: 1em;
@@ -1055,17 +1055,17 @@ button {
   cursor: pointer;
 }
 
-/* line 36, ../src/partials/_application.sass */
+/* line 37, ../src/partials/_application.sass */
 #content.fixed {
   position: fixed;
   top: 0;
 }
 
-/* line 40, ../src/partials/_application.sass */
+/* line 41, ../src/partials/_application.sass */
 #container {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/content-bg.png?1273246177') scroll repeat-y center center;
+  background: transparent url('http://localhost:8000/media/images/content-bg.png?1273246177') scroll repeat-y center center;
 }
-/* line 42, ../src/partials/_application.sass */
+/* line 43, ../src/partials/_application.sass */
 #container .container {
   overflow: visible;
   display: inline-block;
@@ -1084,24 +1084,24 @@ button {
   display: block;
 }
 
-/* line 46, ../src/partials/_application.sass */
+/* line 47, ../src/partials/_application.sass */
 #header {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/header-bg.png?1273246177') scroll no-repeat center center;
+  background: transparent url('http://localhost:8000/media/images/header-bg.png?1273246177') scroll no-repeat center center;
   height: 118px;
 }
-/* line 49, ../src/partials/_application.sass */
+/* line 50, ../src/partials/_application.sass */
 #header .container {
   position: relative;
   overflow: visible;
 }
-/* line 52, ../src/partials/_application.sass */
+/* line 53, ../src/partials/_application.sass */
 #header h1 {
   display: inline;
   float: left;
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/logo.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/logo.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   width: 128px;
@@ -1111,42 +1111,42 @@ button {
   border-bottom: 1px solid #999999;
 }
 
-/* line 61, ../src/partials/_application.sass */
+/* line 62, ../src/partials/_application.sass */
 #footer {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/footer-bg.png?1273246177') scroll no-repeat center center;
+  background: transparent url('http://localhost:8000/media/images/footer-bg.png?1273246177') scroll no-repeat center center;
   height: 58px;
 }
 
-/* line 65, ../src/partials/_application.sass */
+/* line 66, ../src/partials/_application.sass */
 #login-pane {
   height: 2em;
   line-height: 2em;
   margin: 0 -16px 0 -24px;
   background: transparent url(../images/loggedin-pane-bg.png) scroll repeat-x left top;
 }
-/* line 71, ../src/partials/_application.sass */
+/* line 72, ../src/partials/_application.sass */
 #login-pane.updates {
   background: transparent url(../images/updates-bg.png) scroll repeat-x left top;
 }
 
-/* line 75, ../src/partials/_application.sass */
+/* line 76, ../src/partials/_application.sass */
 #nav-user {
   float: left;
   margin: 0;
 }
 
-/* line 80, ../src/partials/_application.sass */
+/* line 81, ../src/partials/_application.sass */
 #nav-main {
   position: absolute;
   top: 50px;
   left: 450px;
 }
-/* line 85, ../src/partials/_application.sass */
+/* line 86, ../src/partials/_application.sass */
 #nav-main li {
   display: inline;
   margin-left: 2em;
 }
-/* line 89, ../src/partials/_application.sass */
+/* line 90, ../src/partials/_application.sass */
 #nav-main li a {
   text-decoration: none;
   text-transform: uppercase;
@@ -1154,17 +1154,17 @@ button {
   padding-top: 1em;
   padding-bottom: 1em;
 }
-/* line 96, ../src/partials/_application.sass */
+/* line 97, ../src/partials/_application.sass */
 #nav-main li a.selected {
   background: transparent url('../images/nav-main-selected.png') fixed no-repeat center bottom;
 }
 
-/* line 101, ../src/partials/_application.sass */
+/* line 102, ../src/partials/_application.sass */
 #logged-in-as {
   float: left;
 }
 
-/* line 105, ../src/partials/_application.sass */
+/* line 106, ../src/partials/_application.sass */
 #logout {
   display: inline-block;
   float: right;
@@ -1173,7 +1173,7 @@ button {
   background: transparent url('../images/logout.png') fixed no-repeat left center;
 }
 
-/* line 113, ../src/partials/_application.sass */
+/* line 114, ../src/partials/_application.sass */
 #account-dialogue {
   position: absolute;
   width: 482px;
@@ -1185,27 +1185,27 @@ button {
   background: transparent url('../images/login-bg.png') scroll no-repeat left center;
 }
 
-/* line 124, ../src/partials/_application.sass */
+/* line 125, ../src/partials/_application.sass */
 #login-forgot-password {
   color: #fb9292;
 }
 
-/* line 128, ../src/partials/_application.sass */
+/* line 129, ../src/partials/_application.sass */
 #login-create-account {
   color: #92c0c0;
 }
 
-/* line 133, ../src/partials/_application.sass */
+/* line 134, ../src/partials/_application.sass */
 #account-dialogue input.default-value {
   font-style: italic;
 }
-/* line 136, ../src/partials/_application.sass */
+/* line 137, ../src/partials/_application.sass */
 #account-dialogue form {
   margin: 0;
   margin: auto 1em;
 }
 
-/* line 141, ../src/partials/_application.sass */
+/* line 142, ../src/partials/_application.sass */
 #login-username, #login-password, #login-password-placeholder {
   background: transparent url(../images/login-text-bg.png) scroll no-repeat left center;
   width: 108px;
@@ -1218,7 +1218,7 @@ button {
   float: left;
 }
 
-/* line 153, ../src/partials/_application.sass */
+/* line 154, ../src/partials/_application.sass */
 #login-submit {
   width: 40px;
   height: 40px;
@@ -1229,12 +1229,12 @@ button {
   cursor: pointer;
 }
 
-/* line 163, ../src/partials/_application.sass */
+/* line 164, ../src/partials/_application.sass */
 #login-password {
   display: none;
 }
 
-/* line 167, ../src/partials/_application.sass */
+/* line 168, ../src/partials/_application.sass */
 #account-dialogue .fb-connect-button {
   float: right;
   margin-right: 2em;
@@ -1243,63 +1243,63 @@ button {
   padding-top: 6px;
 }
 
-/* line 176, ../src/partials/_application.sass */
+/* line 177, ../src/partials/_application.sass */
 #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
 }
 
-/* line 181, ../src/partials/_application.sass */
+/* line 182, ../src/partials/_application.sass */
 .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {
   border: 1px solid #dadada;
   background-color: #f2f2f2;
 }
 
-/* line 185, ../src/partials/_application.sass */
+/* line 186, ../src/partials/_application.sass */
 #featured-looks {
   height: 298px;
   position: relative;
 }
-/* line 188, ../src/partials/_application.sass */
+/* line 189, ../src/partials/_application.sass */
 #featured-looks li {
   position: absolute;
   top: 0;
   left: 0;
   display: none;
 }
-/* line 193, ../src/partials/_application.sass */
+/* line 194, ../src/partials/_application.sass */
 #featured-looks li img {
   vertical-align: top;
 }
 
-/* line 196, ../src/partials/_application.sass */
+/* line 197, ../src/partials/_application.sass */
 #switchlook {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
   height: 36px;
   padding: 16px 10px 10px;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-tall-bg.png?1274796492');
+  background-image: url('http://localhost:8000/media/images/gradient-tall-bg.png?1274796492');
   background-repeat: repeat-x;
 }
-/* line 203, ../src/partials/_application.sass */
+/* line 204, ../src/partials/_application.sass */
 #switchlook .info {
   display: inline;
   float: left;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/arrow-bg.png?1274796492') no-repeat scroll left 10px;
+  background: transparent url('http://localhost:8000/media/images/arrow-bg.png?1274796492') no-repeat scroll left 10px;
   padding-left: 20px;
 }
-/* line 207, ../src/partials/_application.sass */
+/* line 208, ../src/partials/_application.sass */
 #switchlook .nav {
   display: inline;
   float: right;
   margin-top: 4px;
 }
-/* line 210, ../src/partials/_application.sass */
+/* line 211, ../src/partials/_application.sass */
 #switchlook .nav .backward {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   display: inline;
@@ -1310,12 +1310,12 @@ button {
   margin-right: 20px;
   margin-top: 1px;
 }
-/* line 218, ../src/partials/_application.sass */
+/* line 219, ../src/partials/_application.sass */
 #switchlook .nav .forward {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   display: inline;
@@ -1326,7 +1326,7 @@ button {
   margin-left: 10px;
   margin-top: 1px;
 }
-/* line 226, ../src/partials/_application.sass */
+/* line 227, ../src/partials/_application.sass */
 #switchlook .nav .tabs {
   display: inline;
   float: left;
@@ -1359,15 +1359,15 @@ button {
 #switchlook .nav .tabs li:last-child, #switchlook .nav .tabs li.last {
   padding-right: 0px;
 }
-/* line 229, ../src/partials/_application.sass */
+/* line 230, ../src/partials/_application.sass */
 #switchlook .nav .tabs a {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/switcher-sprite.png?1274796492');
+  background-image: url('http://localhost:8000/media/images/switcher-sprite.png?1274796492');
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background: url('http://apparelrow-dev.hanssonlarsson.se/media/images/switcher-sprite.png?1274796492') no-repeat;
+  background: url('http://localhost:8000/media/images/switcher-sprite.png?1274796492') no-repeat;
   width: 10px;
   height: 10px;
   overflow: hidden;
@@ -1375,44 +1375,44 @@ button {
   margin-right: 10px;
   overflow: visible;
 }
-/* line 235, ../src/partials/_application.sass */
+/* line 236, ../src/partials/_application.sass */
 #switchlook .nav .tabs a.current {
   background-position: -12px 0px;
 }
-/* line 237, ../src/partials/_application.sass */
+/* line 238, ../src/partials/_application.sass */
 #switchlook .nav .tabs a.tab-animation-1 {
   background-position: -12px -12px;
 }
-/* line 239, ../src/partials/_application.sass */
+/* line 240, ../src/partials/_application.sass */
 #switchlook .nav .tabs a.tab-animation-2 {
   background-position: -12px -24px;
 }
-/* line 241, ../src/partials/_application.sass */
+/* line 242, ../src/partials/_application.sass */
 #switchlook .nav .tabs a.tab-animation-3 {
   background-position: -12px -36px;
 }
-/* line 243, ../src/partials/_application.sass */
+/* line 244, ../src/partials/_application.sass */
 #switchlook .nav .tabs a.tab-animation-4 {
   background-position: -12px -48px;
 }
-/* line 245, ../src/partials/_application.sass */
+/* line 246, ../src/partials/_application.sass */
 #switchlook .nav .tabs a.tab-animation-5 {
   background-position: -12px -60px;
 }
-/* line 247, ../src/partials/_application.sass */
+/* line 248, ../src/partials/_application.sass */
 #switchlook .nav .tabs a.tab-animation-6 {
   background-position: -12px -72px;
 }
-/* line 249, ../src/partials/_application.sass */
+/* line 250, ../src/partials/_application.sass */
 #switchlook .nav .tabs a.tab-animation-7 {
   background-position: -12px -84px;
 }
-/* line 251, ../src/partials/_application.sass */
+/* line 252, ../src/partials/_application.sass */
 #switchlook .nav .tabs a:hover {
   background-position: 0px -12px;
 }
 
-/* line 253, ../src/partials/_application.sass */
+/* line 254, ../src/partials/_application.sass */
 ul.looks {
   margin: 0;
   padding: 0;
@@ -1443,16 +1443,16 @@ ul.looks li:first-child, ul.looks li.first {
 ul.looks li:last-child, ul.looks li.last {
   padding-right: 0px;
 }
-/* line 255, ../src/partials/_application.sass */
+/* line 256, ../src/partials/_application.sass */
 ul.looks li {
   margin-right: 18px;
   margin-bottom: 10px;
 }
-/* line 258, ../src/partials/_application.sass */
+/* line 259, ../src/partials/_application.sass */
 ul.looks li.last {
   margin-right: 0;
 }
-/* line 260, ../src/partials/_application.sass */
+/* line 261, ../src/partials/_application.sass */
 ul.looks li .look {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -1460,11 +1460,11 @@ ul.looks li .look {
   height: 72px;
   position: relative;
 }
-/* line 265, ../src/partials/_application.sass */
+/* line 266, ../src/partials/_application.sass */
 ul.looks li .look .collage-image {
   position: absolute;
 }
-/* line 267, ../src/partials/_application.sass */
+/* line 268, ../src/partials/_application.sass */
 ul.looks li span.button {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -1473,7 +1473,7 @@ ul.looks li span.button {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   line-height: 1.5em;
   border-top: 0;
@@ -1488,14 +1488,14 @@ ul.looks li span.button {
 }
 /* line 84, ../src/partials/_base.sass */
 ul.looks li span.button.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 ul.looks li span.button.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 
-/* line 275, ../src/partials/_application.sass */
+/* line 276, ../src/partials/_application.sass */
 #lookproducts {
   overflow: hidden;
   display: inline-block;
@@ -1534,7 +1534,7 @@ ul.looks li span.button.ok:before {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-left-radius: 5px;
@@ -1547,14 +1547,14 @@ ul.looks li span.button.ok:before {
 }
 /* line 26, ../src/partials/_row.sass */
 #lookproducts a.prev.disabled {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
 }
 /* line 28, ../src/partials/_row.sass */
 #lookproducts a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-right-radius: 5px;
@@ -1567,7 +1567,7 @@ ul.looks li span.button.ok:before {
 }
 /* line 32, ../src/partials/_row.sass */
 #lookproducts a.next.disabled {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
 }
 /* line 34, ../src/partials/_row.sass */
 #lookproducts div.row {
@@ -1634,31 +1634,31 @@ ul.looks li span.button.ok:before {
   vertical-align: middle;
 }
 
-/* line 279, ../src/partials/_application.sass */
+/* line 280, ../src/partials/_application.sass */
 .sidebar p {
   border-top: 1px solid #d9d9d9;
   line-height: 2em;
 }
-/* line 282, ../src/partials/_application.sass */
+/* line 283, ../src/partials/_application.sass */
 .sidebar .activity {
   margin-top: 1.5em;
 }
-/* line 284, ../src/partials/_application.sass */
+/* line 285, ../src/partials/_application.sass */
 .sidebar .activity p {
   border-top: none;
 }
-/* line 287, ../src/partials/_application.sass */
+/* line 288, ../src/partials/_application.sass */
 .sidebar .created {
   float: right;
   line-height: 26px;
   color: #999999;
 }
-/* line 291, ../src/partials/_application.sass */
+/* line 292, ../src/partials/_application.sass */
 .sidebar #add-menu {
   float: left;
   margin-top: 0;
 }
-/* line 294, ../src/partials/_application.sass */
+/* line 295, ../src/partials/_application.sass */
 .sidebar .share-created {
   margin-top: 1.5em;
   overflow: hidden;
@@ -1668,28 +1668,28 @@ ul.looks li span.button.ok:before {
 .sidebar .share-created {
   display: block;
 }
-/* line 297, ../src/partials/_application.sass */
+/* line 298, ../src/partials/_application.sass */
 .sidebar .price {
   color: #333333;
 }
-/* line 299, ../src/partials/_application.sass */
+/* line 300, ../src/partials/_application.sass */
 .sidebar .sum {
   color: #999999;
 }
 
-/* line 303, ../src/partials/_application.sass */
+/* line 304, ../src/partials/_application.sass */
 h2 a {
   display: inline;
   float: right;
 }
 
-/* line 306, ../src/partials/_application.sass */
+/* line 307, ../src/partials/_application.sass */
 #reset {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/logout.png?1270451570') no-repeat scroll right center;
+  background: transparent url('http://localhost:8000/media/images/logout.png?1270451570') no-repeat scroll right center;
   padding-right: 15px;
 }
 
-/* line 310, ../src/partials/_application.sass */
+/* line 311, ../src/partials/_application.sass */
 #product-gender {
   border: 1px solid #d9d9d9;
   border-radius: 3px;
@@ -1711,7 +1711,7 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   border-bottom: none;
   border-left: none;
@@ -1719,11 +1719,11 @@ h2 a {
 }
 /* line 84, ../src/partials/_base.sass */
 #product-gender li.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #product-gender li.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 11, ../src/partials/_filter.sass */
 #product-gender li.first {
@@ -1752,13 +1752,13 @@ h2 a {
 #product-gender li > a {
   display: block;
   padding-left: 25px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/list-item.png?1270451570') no-repeat scroll 10px center;
+  background: transparent url('http://localhost:8000/media/images/list-item.png?1270451570') no-repeat scroll 10px center;
 }
 /* line 22, ../src/partials/_filter.sass */
 #product-gender li > a.selected {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/list-item-radio-selected.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-radio-selected.png?1270451570');
 }
-/* line 312, ../src/partials/_application.sass */
+/* line 313, ../src/partials/_application.sass */
 #product-gender li.hover {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -1767,29 +1767,29 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
   background-repeat: repeat-x;
   border-left: none;
   border-bottom: none;
 }
 /* line 84, ../src/partials/_base.sass */
 #product-gender li.hover.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #product-gender li.hover.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 316, ../src/partials/_application.sass */
+/* line 317, ../src/partials/_application.sass */
 #product-gender li.hover.first {
   border-top: none;
 }
-/* line 318, ../src/partials/_application.sass */
+/* line 319, ../src/partials/_application.sass */
 #product-gender li.hover.last {
   border-bottom: none;
 }
 
-/* line 321, ../src/partials/_application.sass */
+/* line 322, ../src/partials/_application.sass */
 #product-options {
   border: 1px solid #d9d9d9;
   border-radius: 3px;
@@ -1812,7 +1812,7 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   border-bottom: none;
   border-left: none;
@@ -1820,11 +1820,11 @@ h2 a {
 }
 /* line 84, ../src/partials/_base.sass */
 #product-options li.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #product-options li.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 11, ../src/partials/_filter.sass */
 #product-options li.first {
@@ -1853,13 +1853,13 @@ h2 a {
 #product-options li > a {
   display: block;
   padding-left: 25px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/list-item-arrow.png?1270451570') no-repeat scroll 10px center;
+  background: transparent url('http://localhost:8000/media/images/list-item-arrow.png?1270451570') no-repeat scroll 10px center;
 }
 /* line 22, ../src/partials/_filter.sass */
 #product-options li > a.selected {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/list-item-radio-checked.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-radio-checked.png?1270451570');
 }
-/* line 324, ../src/partials/_application.sass */
+/* line 325, ../src/partials/_application.sass */
 #product-options li.hover {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -1868,30 +1868,30 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
   background-repeat: repeat-x;
   border-left: none;
   border-bottom: none;
 }
 /* line 84, ../src/partials/_base.sass */
 #product-options li.hover.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #product-options li.hover.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 328, ../src/partials/_application.sass */
+/* line 329, ../src/partials/_application.sass */
 #product-options li.hover.first {
   border-top: none;
 }
-/* line 330, ../src/partials/_application.sass */
+/* line 331, ../src/partials/_application.sass */
 #product-options li.hover.last {
   border-bottom: none;
 }
-/* line 332, ../src/partials/_application.sass */
+/* line 333, ../src/partials/_application.sass */
 #product-options li.active {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-darker-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-darker-bg.png?1270451570');
 }
 /* line 26, ../src/partials/_filter.sass */
 #product-options #product-price div.options {
@@ -1931,16 +1931,16 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
 }
 /* line 84, ../src/partials/_base.sass */
 #product-options #product-price div.options .buttons button.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #product-options #product-price div.options .buttons button.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 42, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup {
@@ -1957,7 +1957,7 @@ h2 a {
   left: -6px;
   height: 35px;
   width: 7px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
+  background: transparent url('http://localhost:8000/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
 }
 /* line 56, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup form {
@@ -1985,7 +1985,7 @@ h2 a {
 #product-options #product-price div.options.popup form button.ok {
   border-left: none;
 }
-/* line 337, ../src/partials/_application.sass */
+/* line 338, ../src/partials/_application.sass */
 #product-options #product-price #price-slider {
   margin: 10px 12px;
 }
@@ -2027,16 +2027,16 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
 }
 /* line 84, ../src/partials/_base.sass */
 #product-options #product-color div.options .buttons button.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #product-options #product-color div.options .buttons button.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 42, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup {
@@ -2053,7 +2053,7 @@ h2 a {
   left: -6px;
   height: 35px;
   width: 7px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
+  background: transparent url('http://localhost:8000/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
 }
 /* line 56, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup form {
@@ -2081,7 +2081,7 @@ h2 a {
 #product-options #product-color div.options.popup form button.ok {
   border-left: none;
 }
-/* line 341, ../src/partials/_application.sass */
+/* line 342, ../src/partials/_application.sass */
 #product-options #product-color ul {
   margin: 0;
   padding: 0;
@@ -2126,7 +2126,7 @@ h2 a {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/sprite-colors.png?1271849896');
+  background-image: url('http://localhost:8000/media/images/sprite-colors.png?1271849896');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   padding: 0;
@@ -2317,7 +2317,7 @@ h2 a {
 #product-options #product-color ul li a.silver.filtered {
   background-position: -273px -38px;
 }
-/* line 344, ../src/partials/_application.sass */
+/* line 345, ../src/partials/_application.sass */
 #product-options #product-color ul li {
   line-height: 1em;
 }
@@ -2359,16 +2359,16 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
 }
 /* line 84, ../src/partials/_base.sass */
 #product-options #product-manufacturers div.options .buttons button.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #product-options #product-manufacturers div.options .buttons button.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 42, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup {
@@ -2385,7 +2385,7 @@ h2 a {
   left: -6px;
   height: 35px;
   width: 7px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
+  background: transparent url('http://localhost:8000/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
 }
 /* line 56, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup form {
@@ -2413,11 +2413,11 @@ h2 a {
 #product-options #product-manufacturers div.options.popup form button.ok {
   border-left: none;
 }
-/* line 348, ../src/partials/_application.sass */
+/* line 349, ../src/partials/_application.sass */
 #product-options #product-manufacturers .option-content {
   background-color: #f2f2f2;
 }
-/* line 350, ../src/partials/_application.sass */
+/* line 351, ../src/partials/_application.sass */
 #product-options #product-manufacturers input {
   font-family: "Helvetica", "Arial", sans-serif;
   font-size: 1em;
@@ -2440,7 +2440,7 @@ h2 a {
   padding-right: 8px;
   font-style: italic;
 }
-/* line 357, ../src/partials/_application.sass */
+/* line 358, ../src/partials/_application.sass */
 #product-options #product-manufacturers ul {
   border-top: 1px solid #d9d9d9;
   border-bottom: 1px solid #d9d9d9;
@@ -2449,7 +2449,7 @@ h2 a {
   padding: 0 12px;
   background-color: #f2f2f2;
 }
-/* line 364, ../src/partials/_application.sass */
+/* line 365, ../src/partials/_application.sass */
 #product-options #product-manufacturers ul li {
   line-height: 20px;
   height: 20px;
@@ -2457,17 +2457,17 @@ h2 a {
   border-bottom: 1px solid #d9d9d9;
   background-image: none;
 }
-/* line 370, ../src/partials/_application.sass */
+/* line 371, ../src/partials/_application.sass */
 #product-options #product-manufacturers ul li a {
   margin-left: -10px;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/list-item-check.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-check.png?1270451570');
 }
-/* line 373, ../src/partials/_application.sass */
+/* line 374, ../src/partials/_application.sass */
 #product-options #product-manufacturers ul li a.selected {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/list-item-check-selected.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-check-selected.png?1270451570');
 }
 
-/* line 376, ../src/partials/_application.sass */
+/* line 377, ../src/partials/_application.sass */
 #product-category {
   border: 1px solid #d9d9d9;
   border-radius: 3px;
@@ -2489,7 +2489,7 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   border-bottom: none;
   border-left: none;
@@ -2497,11 +2497,11 @@ h2 a {
 }
 /* line 84, ../src/partials/_base.sass */
 #product-category li.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #product-category li.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 /* line 11, ../src/partials/_filter.sass */
 #product-category li.first {
@@ -2530,13 +2530,13 @@ h2 a {
 #product-category li > a {
   display: block;
   padding-left: 25px;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/list-item-check.png?1270451570') no-repeat scroll 10px center;
+  background: transparent url('http://localhost:8000/media/images/list-item-check.png?1270451570') no-repeat scroll 10px center;
 }
 /* line 22, ../src/partials/_filter.sass */
 #product-category li > a.selected {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/list-item-check-selected.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/list-item-check-selected.png?1270451570');
 }
-/* line 378, ../src/partials/_application.sass */
+/* line 379, ../src/partials/_application.sass */
 #product-category li.hover {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -2545,76 +2545,76 @@ h2 a {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
   background-repeat: repeat-x;
   border-left: none;
   border-bottom: none;
 }
 /* line 84, ../src/partials/_base.sass */
 #product-category li.hover.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #product-category li.hover.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 382, ../src/partials/_application.sass */
+/* line 383, ../src/partials/_application.sass */
 #product-category li.hover.first {
   border-top: none;
 }
-/* line 384, ../src/partials/_application.sass */
+/* line 385, ../src/partials/_application.sass */
 #product-category li.hover.last {
   border-bottom: none;
 }
-/* line 387, ../src/partials/_application.sass */
+/* line 388, ../src/partials/_application.sass */
 #product-category li ul {
   overflow-y: auto;
   max-height: 124px;
 }
-/* line 390, ../src/partials/_application.sass */
+/* line 391, ../src/partials/_application.sass */
 #product-category li ul li {
   border: none;
   padding-left: 10px;
   border-top: 1px solid #d9d9d9;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
 }
 
-/* line 396, ../src/partials/_application.sass */
+/* line 397, ../src/partials/_application.sass */
 .hidden {
   display: none;
 }
 
-/* line 399, ../src/partials/_application.sass */
+/* line 400, ../src/partials/_application.sass */
 a.comments {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/comments.png?1270468490') no-repeat scroll left center;
+  background: transparent url('http://localhost:8000/media/images/comments.png?1270468490') no-repeat scroll left center;
   padding-left: 16px;
 }
 
-/* line 403, ../src/partials/_application.sass */
+/* line 404, ../src/partials/_application.sass */
 a.looks {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/look.png?1270451570') no-repeat scroll left center;
+  background: transparent url('http://localhost:8000/media/images/look.png?1270451570') no-repeat scroll left center;
   padding-left: 16px;
 }
 
-/* line 408, ../src/partials/_application.sass */
+/* line 409, ../src/partials/_application.sass */
 span.likes {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/heart.png?1270451570') no-repeat scroll left center;
+  background: transparent url('http://localhost:8000/media/images/heart.png?1270451570') no-repeat scroll left center;
   padding-left: 16px;
   color: #fa7070;
 }
-/* line 413, ../src/partials/_application.sass */
+/* line 414, ../src/partials/_application.sass */
 span.price {
   background: transparent url(../images/check.png) no-repeat scroll left bottom;
   color: #999999;
   padding-left: 15px;
 }
 
-/* line 419, ../src/partials/_application.sass */
+/* line 420, ../src/partials/_application.sass */
 .product-photo {
   border: 1px solid #dadada;
 }
 
-/* line 423, ../src/partials/_application.sass */
+/* line 424, ../src/partials/_application.sass */
 div#product-list {
   overflow: hidden;
   display: inline-block;
@@ -2635,18 +2635,18 @@ div#product-list {
 div#product-list {
   display: block;
 }
-/* line 431, ../src/partials/_application.sass */
+/* line 432, ../src/partials/_application.sass */
 div#product-list ul.list {
   width: 20000em;
   position: absolute;
 }
-/* line 434, ../src/partials/_application.sass */
+/* line 435, ../src/partials/_application.sass */
 div#product-list ul.list li {
   display: inline;
   float: left;
   width: 697px;
 }
-/* line 437, ../src/partials/_application.sass */
+/* line 438, ../src/partials/_application.sass */
 div#product-list ul.list li ul {
   overflow: hidden;
   display: inline-block;
@@ -2655,12 +2655,12 @@ div#product-list ul.list li ul {
 div#product-list ul.list li ul {
   display: block;
 }
-/* line 439, ../src/partials/_application.sass */
+/* line 440, ../src/partials/_application.sass */
 div#product-list ul.list li ul li {
   display: block;
   width: auto;
 }
-/* line 443, ../src/partials/_application.sass */
+/* line 444, ../src/partials/_application.sass */
 div#product-list ul.list li ul li:hover .product-image {
   z-index: 100;
   /* Webkit (Safari, Chrome) */
@@ -2671,7 +2671,7 @@ div#product-list ul.list li ul li:hover .product-image {
   box-shadow: #999999 0px 0px 20px;
 }
 
-/* line 447, ../src/partials/_application.sass */
+/* line 448, ../src/partials/_application.sass */
 .product-small {
   width: 116px;
   border: 1px solid #d9d9d9;
@@ -2680,13 +2680,13 @@ div#product-list ul.list li ul li:hover .product-image {
   margin-top: -1px;
   margin-left: -1px;
 }
-/* line 454, ../src/partials/_application.sass */
+/* line 455, ../src/partials/_application.sass */
 .product-small h4 {
   border-top: 1px solid #d9d9d9;
   height: 1.5em;
   overflow: hidden;
 }
-/* line 459, ../src/partials/_application.sass */
+/* line 460, ../src/partials/_application.sass */
 .product-small .product-image {
   border: none;
   border-right: 1px solid #d9d9d9;
@@ -2695,11 +2695,11 @@ div#product-list ul.list li ul li:hover .product-image {
   height: 153px;
   line-height: 153px;
 }
-/* line 466, ../src/partials/_application.sass */
+/* line 467, ../src/partials/_application.sass */
 .product-small .product-image img {
   vertical-align: middle;
 }
-/* line 469, ../src/partials/_application.sass */
+/* line 470, ../src/partials/_application.sass */
 .product-small span.likes {
   display: none;
   position: absolute;
@@ -2711,17 +2711,17 @@ div#product-list ul.list li ul li:hover .product-image {
   background-position: center top;
 }
 
-/* line 480, ../src/partials/_application.sass */
+/* line 481, ../src/partials/_application.sass */
 a.prev, a.next {
   cursor: pointer;
 }
 
-/* line 483, ../src/partials/_application.sass */
+/* line 484, ../src/partials/_application.sass */
 a.prev.disabled, a.next.disabled {
   cursor: default;
 }
 
-/* line 486, ../src/partials/_application.sass */
+/* line 487, ../src/partials/_application.sass */
 #pagination {
   height: 30px;
   position: absolute;
@@ -2735,65 +2735,65 @@ a.prev.disabled, a.next.disabled {
   -moz-border-radius-bottomright: 3px;
   -webkit-border-bottom-right-radius: 3px;
 }
-/* line 494, ../src/partials/_application.sass */
+/* line 495, ../src/partials/_application.sass */
 #pagination .prev, #pagination .next {
   display: inline-block;
   width: 115px;
   height: 30px;
 }
-/* line 499, ../src/partials/_application.sass */
+/* line 500, ../src/partials/_application.sass */
 #pagination .prev {
   float: left;
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 20px center;
   border-right: 1px solid #d9d9d9;
 }
-/* line 504, ../src/partials/_application.sass */
+/* line 505, ../src/partials/_application.sass */
 #pagination .prev.disabled {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
   background-repeat: no-repeat;
   background-position: 20px center;
 }
-/* line 507, ../src/partials/_application.sass */
+/* line 508, ../src/partials/_application.sass */
 #pagination .next {
   float: right;
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 89px center;
   border-left: 1px solid #d9d9d9;
 }
-/* line 512, ../src/partials/_application.sass */
+/* line 513, ../src/partials/_application.sass */
 #pagination .next.disabled {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
   background-repeat: no-repeat;
   background-position: 89px center;
 }
-/* line 515, ../src/partials/_application.sass */
+/* line 516, ../src/partials/_application.sass */
 #pagination .next:hover, #pagination .prev:hover {
   background-color: #ebebeb;
 }
-/* line 518, ../src/partials/_application.sass */
+/* line 519, ../src/partials/_application.sass */
 #pagination .next.disabled:hover, #pagination .prev.disabled:hover {
   background-color: inherit;
 }
-/* line 521, ../src/partials/_application.sass */
+/* line 522, ../src/partials/_application.sass */
 #pagination ol a:hover {
   font-weight: bold;
 }
-/* line 524, ../src/partials/_application.sass */
+/* line 525, ../src/partials/_application.sass */
 #pagination div {
   float: left;
   width: 463px;
@@ -2802,7 +2802,7 @@ a.prev.disabled, a.next.disabled {
   margin: 0 auto;
   position: relative;
 }
-/* line 531, ../src/partials/_application.sass */
+/* line 532, ../src/partials/_application.sass */
 #pagination div ol {
   margin: 0;
   padding: 0;
@@ -2839,23 +2839,23 @@ a.prev.disabled, a.next.disabled {
 #pagination div ol li:last-child, #pagination div ol li.last {
   padding-right: 0px;
 }
-/* line 539, ../src/partials/_application.sass */
+/* line 540, ../src/partials/_application.sass */
 #pagination div ol li {
   right: 50%;
   display: block;
   position: relative;
 }
-/* line 543, ../src/partials/_application.sass */
+/* line 544, ../src/partials/_application.sass */
 #pagination div ol li a {
   display: block;
 }
-/* line 545, ../src/partials/_application.sass */
+/* line 546, ../src/partials/_application.sass */
 #pagination div ol li.current {
   font-weight: bold;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/current-page.png?1270479270') no-repeat scroll center bottom;
+  background: transparent url('http://localhost:8000/media/images/current-page.png?1270479270') no-repeat scroll center bottom;
 }
 
-/* line 550, ../src/partials/_application.sass */
+/* line 551, ../src/partials/_application.sass */
 .product-left {
   display: inline;
   float: left;
@@ -2864,64 +2864,64 @@ a.prev.disabled, a.next.disabled {
   margin-right: 36px;
 }
 
-/* line 556, ../src/partials/_application.sass */
+/* line 557, ../src/partials/_application.sass */
 .activity {
   margin-top: 30px;
   border-top: 1px solid #d9d9d9;
 }
-/* line 559, ../src/partials/_application.sass */
+/* line 560, ../src/partials/_application.sass */
 .activity p {
   line-height: 2em;
   border-bottom: 1px solid #f2f2f2;
 }
-/* line 562, ../src/partials/_application.sass */
+/* line 563, ../src/partials/_application.sass */
 .activity p.last {
   border-color: #d9d9d9;
 }
 
-/* line 565, ../src/partials/_application.sass */
+/* line 566, ../src/partials/_application.sass */
 .product-info {
   display: inline;
   float: left;
   width: 330px;
 }
-/* line 568, ../src/partials/_application.sass */
+/* line 569, ../src/partials/_application.sass */
 .product-info h2 {
   color: #666666;
 }
-/* line 570, ../src/partials/_application.sass */
+/* line 571, ../src/partials/_application.sass */
 .product-info h1 {
   text-transform: uppercase;
   font-size: 1.25em;
 }
-/* line 573, ../src/partials/_application.sass */
+/* line 574, ../src/partials/_application.sass */
 .product-info h3 {
   text-transform: uppercase;
   font-weight: normal;
 }
-/* line 576, ../src/partials/_application.sass */
+/* line 577, ../src/partials/_application.sass */
 .product-info p.description {
   width: 244px;
   margin-bottom: 18px;
 }
 
-/* line 580, ../src/partials/_application.sass */
+/* line 581, ../src/partials/_application.sass */
 .product-image {
   border: 1px solid #dadada;
   position: relative;
   text-align: center;
 }
-/* line 584, ../src/partials/_application.sass */
+/* line 585, ../src/partials/_application.sass */
 .product-image img {
   vertical-align: top;
 }
 
-/* line 587, ../src/partials/_application.sass */
+/* line 588, ../src/partials/_application.sass */
 body.product .product-image img {
-  cursor: url('http://apparelrow-dev.hanssonlarsson.se/media/images/magnifier.cur?1274786677'), url('http://apparelrow-dev.hanssonlarsson.se/media/images/magnifier.png?1270451570'), -moz-zoom-in;
+  cursor: url('http://localhost:8000/media/images/magnifier.cur?1274786677'), url('http://localhost:8000/media/images/magnifier.png?1270451570'), -moz-zoom-in;
 }
 
-/* line 590, ../src/partials/_application.sass */
+/* line 591, ../src/partials/_application.sass */
 #gallery {
   display: none;
   z-index: 10000;
@@ -2932,14 +2932,14 @@ body.product .product-image img {
   /* CSS3 */
   box-shadow: #999999 0px 0px 20px;
 }
-/* line 594, ../src/partials/_application.sass */
+/* line 595, ../src/partials/_application.sass */
 #gallery img {
   vertical-align: top;
 }
-/* line 596, ../src/partials/_application.sass */
+/* line 597, ../src/partials/_application.sass */
 #gallery .close {
   position: absolute;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/delete.png?1273073096') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/delete.png?1273073096') no-repeat scroll center center;
   cursor: pointer;
   height: 22px;
   width: 22px;
@@ -2947,7 +2947,7 @@ body.product .product-image img {
   left: -11px;
 }
 
-/* line 605, ../src/partials/_application.sass */
+/* line 606, ../src/partials/_application.sass */
 table.available-sizes th {
   border: none;
   font-size: 0.8em;
@@ -2956,93 +2956,93 @@ table.available-sizes th {
   text-transform: uppercase;
 }
 
-/* line 613, ../src/partials/_application.sass */
+/* line 614, ../src/partials/_application.sass */
 .product-options {
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 5px;
   list-style: none;
 }
-/* line 619, ../src/partials/_application.sass */
+/* line 620, ../src/partials/_application.sass */
 .product-options ul {
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 5px;
   list-style: none;
 }
-/* line 625, ../src/partials/_application.sass */
+/* line 626, ../src/partials/_application.sass */
 .product-options li ul li {
   float: left;
 }
-/* line 628, ../src/partials/_application.sass */
+/* line 629, ../src/partials/_application.sass */
 .product-options .option-size, .product-options .option-relative-size, .product-options .option-shoe-size, .product-options .option-pants-length, .product-options .option-pants-width {
   border-right: none;
 }
-/* line 631, ../src/partials/_application.sass */
+/* line 632, ../src/partials/_application.sass */
 .product-options .option-size li, .product-options .option-relative-size li, .product-options .option-shoe-size li, .product-options .option-pants-length li, .product-options .option-pants-width li {
   padding: 0 10px;
   border-right: 1px solid #dadada;
 }
-/* line 635, ../src/partials/_application.sass */
+/* line 636, ../src/partials/_application.sass */
 .product-options .option-color {
   background: transparent url(../images/sprite-colors.png) scroll repeat-x left top;
   border-right: 1px solid #dadada;
 }
 
-/* line 639, ../src/partials/_application.sass */
+/* line 640, ../src/partials/_application.sass */
 .product-vendors {
   border-bottom: 1px solid #e7e7e7;
 }
 
-/* line 643, ../src/partials/_application.sass */
+/* line 644, ../src/partials/_application.sass */
 a.buy-now {
   padding: 58px 0 0;
   text-align: center;
   width: 73px;
   height: 30px;
-  background: #d0fae8 url('http://apparelrow-dev.hanssonlarsson.se/media/images/check-large.png?1270451570') scroll no-repeat center center;
+  background: #d0fae8 url('http://localhost:8000/media/images/check-large.png?1270451570') scroll no-repeat center center;
   border: 1px solid #92c0c7;
   color: #408994;
   text-transform: uppercase;
   font-weight: bold;
 }
 
-/* line 654, ../src/partials/_application.sass */
+/* line 655, ../src/partials/_application.sass */
 a.buy-now:hover {
   background-color: #94ffd1;
 }
 
-/* line 657, ../src/partials/_application.sass */
+/* line 658, ../src/partials/_application.sass */
 .product-vendors a.buy-now {
   float: right;
   margin-top: -50px;
 }
 
-/* line 662, ../src/partials/_application.sass */
+/* line 663, ../src/partials/_application.sass */
 .product-vendor {
   border-bottom: none;
   padding: 7px 9px;
   height: 16px;
 }
-/* line 667, ../src/partials/_application.sass */
+/* line 668, ../src/partials/_application.sass */
 .product-vendor .price, .product-vendor .currency {
   vertical-align: middle;
 }
-/* line 670, ../src/partials/_application.sass */
+/* line 671, ../src/partials/_application.sass */
 .product-vendor .price {
   font-size: 2em;
   background: none;
   padding-left: 0;
   padding-right: 5px;
 }
-/* line 676, ../src/partials/_application.sass */
+/* line 677, ../src/partials/_application.sass */
 .product-vendor .vendor {
   float: right;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/vendor.png?1271063999') scroll no-repeat left center;
+  background: transparent url('http://localhost:8000/media/images/vendor.png?1271063999') scroll no-repeat left center;
   padding: 0 10px 0 16px;
 }
 
-/* line 681, ../src/partials/_application.sass */
+/* line 682, ../src/partials/_application.sass */
 .message {
   color: #408994;
   background-color: #d0fae8;
@@ -3058,17 +3058,17 @@ a.buy-now:hover {
   box-shadow: #d4d4d4 0 3px 3px;
 }
 
-/* line 689, ../src/partials/_application.sass */
+/* line 690, ../src/partials/_application.sass */
 #comments-and-links img.avatar {
   border: 1px solid #d9d9d9;
   float: left;
   margin-right: -1px;
 }
-/* line 693, ../src/partials/_application.sass */
+/* line 694, ../src/partials/_application.sass */
 #comments-and-links #comments {
   margin-bottom: 9px;
 }
-/* line 695, ../src/partials/_application.sass */
+/* line 696, ../src/partials/_application.sass */
 #comments-and-links #comments li {
   overflow: hidden;
   display: inline-block;
@@ -3079,25 +3079,25 @@ a.buy-now:hover {
 #comments-and-links #comments li {
   display: block;
 }
-/* line 699, ../src/partials/_application.sass */
+/* line 700, ../src/partials/_application.sass */
 #comments-and-links #comments li img.avatar {
   margin-right: 9px;
 }
-/* line 701, ../src/partials/_application.sass */
+/* line 702, ../src/partials/_application.sass */
 #comments-and-links #comments li h3 {
   font-weight: normal;
 }
-/* line 703, ../src/partials/_application.sass */
+/* line 704, ../src/partials/_application.sass */
 #comments-and-links #comments li h3 span {
   color: #999999;
   float: right;
   font-size: 10px;
 }
-/* line 707, ../src/partials/_application.sass */
+/* line 708, ../src/partials/_application.sass */
 #comments-and-links #comments li p {
   color: #666666;
 }
-/* line 709, ../src/partials/_application.sass */
+/* line 710, ../src/partials/_application.sass */
 #comments-and-links form {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -3116,7 +3116,7 @@ a.buy-now:hover {
 #comments-and-links form {
   display: block;
 }
-/* line 715, ../src/partials/_application.sass */
+/* line 716, ../src/partials/_application.sass */
 #comments-and-links form textarea {
   height: 1em;
   width: 96%;
@@ -3137,7 +3137,7 @@ a.buy-now:hover {
   box-shadow: inset #d4d4d4 0 3px 3px;
   padding: 0.5em 5px;
 }
-/* line 720, ../src/partials/_application.sass */
+/* line 721, ../src/partials/_application.sass */
 #comments-and-links form button {
   float: right;
   font-family: "Helvetica", "Arial", sans-serif;
@@ -3162,17 +3162,17 @@ a.buy-now:hover {
   margin-top: 2px;
 }
 
-/* line 729, ../src/partials/_application.sass */
+/* line 730, ../src/partials/_application.sass */
 body.look #comments-and-links textarea {
   width: 390px;
 }
 
-/* line 734, ../src/partials/_application.sass */
+/* line 735, ../src/partials/_application.sass */
 body.product #comments-and-links textarea {
   width: 268px;
 }
 
-/* line 738, ../src/partials/_application.sass */
+/* line 739, ../src/partials/_application.sass */
 #recentlyviewed {
   overflow: hidden;
   display: inline-block;
@@ -3211,7 +3211,7 @@ body.product #comments-and-links textarea {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-left-radius: 5px;
@@ -3224,14 +3224,14 @@ body.product #comments-and-links textarea {
 }
 /* line 26, ../src/partials/_row.sass */
 #recentlyviewed a.prev.disabled {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/prev-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/prev-page-disabled.png?1270451570');
 }
 /* line 28, ../src/partials/_row.sass */
 #recentlyviewed a.next {
   text-indent: -9999em;
   overflow: hidden;
   text-align: left;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page.png?1270451570');
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-top-right-radius: 5px;
@@ -3244,7 +3244,7 @@ body.product #comments-and-links textarea {
 }
 /* line 32, ../src/partials/_row.sass */
 #recentlyviewed a.next.disabled {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/next-page-disabled.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/next-page-disabled.png?1270451570');
 }
 /* line 34, ../src/partials/_row.sass */
 #recentlyviewed div.row {
@@ -3311,27 +3311,27 @@ body.product #comments-and-links textarea {
   vertical-align: middle;
 }
 
-/* line 742, ../src/partials/_application.sass */
+/* line 743, ../src/partials/_application.sass */
 body.product .sidebar {
   margin-top: 30px;
 }
 
-/* line 745, ../src/partials/_application.sass */
+/* line 746, ../src/partials/_application.sass */
 body.look #content {
   position: relative;
 }
 
-/* line 749, ../src/partials/_application.sass */
+/* line 750, ../src/partials/_application.sass */
 body.product .product-image form, body.look #content form {
   position: absolute;
   top: 0px;
   right: 0px;
 }
-/* line 753, ../src/partials/_application.sass */
+/* line 754, ../src/partials/_application.sass */
 body.product .product-image form button, body.look #content form button {
   margin: 0;
   border: none;
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/like-large.png?1270451570') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/like-large.png?1270451570') no-repeat scroll center center;
   color: #fa7070;
   text-transform: uppercase;
   padding-top: 20px;
@@ -3341,17 +3341,17 @@ body.product .product-image form button, body.look #content form button {
   text-align: center;
 }
 
-/* line 766, ../src/partials/_application.sass */
+/* line 767, ../src/partials/_application.sass */
 .similar-product .product-photo {
   float: left;
   margin-right: 10px;
 }
-/* line 770, ../src/partials/_application.sass */
+/* line 771, ../src/partials/_application.sass */
 .similar-product .product-summary {
   float: left;
 }
 
-/* line 774, ../src/partials/_application.sass */
+/* line 775, ../src/partials/_application.sass */
 ul.hover-menu li.hover {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -3360,19 +3360,19 @@ ul.hover-menu li.hover {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-dark-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
   background-repeat: repeat-x;
 }
 /* line 84, ../src/partials/_base.sass */
 ul.hover-menu li.hover.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 ul.hover-menu li.hover.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
 
-/* line 777, ../src/partials/_application.sass */
+/* line 778, ../src/partials/_application.sass */
 ul.menu {
   overflow: hidden;
   display: inline-block;
@@ -3409,7 +3409,7 @@ ul.menu li:first-child, ul.menu li.first {
 ul.menu li:last-child, ul.menu li.last {
   padding-right: 0px;
 }
-/* line 780, ../src/partials/_application.sass */
+/* line 781, ../src/partials/_application.sass */
 ul.menu li {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -3418,7 +3418,7 @@ ul.menu li {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   border-radius: 3px;
   -moz-border-radius: 3px;
@@ -3428,22 +3428,22 @@ ul.menu li {
 }
 /* line 84, ../src/partials/_base.sass */
 ul.menu li.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 ul.menu li.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 785, ../src/partials/_application.sass */
+/* line 786, ../src/partials/_application.sass */
 ul.menu li.last {
   margin-right: 0px;
 }
 
-/* line 788, ../src/partials/_application.sass */
+/* line 789, ../src/partials/_application.sass */
 #add-menu {
   margin-top: 18px;
 }
-/* line 791, ../src/partials/_application.sass */
+/* line 792, ../src/partials/_application.sass */
 #add-menu li a, #add-menu li button {
   display: block;
   background: transparent url(../images/add.png) scroll no-repeat 9px center;
@@ -3451,11 +3451,11 @@ ul.menu li.last {
   height: 24px;
   line-height: 24px;
 }
-/* line 798, ../src/partials/_application.sass */
+/* line 799, ../src/partials/_application.sass */
 #add-menu li#add-to-look > a {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/look.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/look.png?1270451570');
 }
-/* line 800, ../src/partials/_application.sass */
+/* line 801, ../src/partials/_application.sass */
 #add-menu li#add-to-look ul {
   display: none;
   position: absolute;
@@ -3463,7 +3463,7 @@ ul.menu li.last {
   margin-top: 0px;
   border-none: 1px solid #d9d9d9;
 }
-/* line 806, ../src/partials/_application.sass */
+/* line 807, ../src/partials/_application.sass */
 #add-menu li#add-to-look ul li {
   display: block;
   clear: left;
@@ -3472,11 +3472,11 @@ ul.menu li.last {
   border: none;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 813, ../src/partials/_application.sass */
+/* line 814, ../src/partials/_application.sass */
 #add-menu li#add-to-look ul li.last {
   border-bottom: none;
 }
-/* line 816, ../src/partials/_application.sass */
+/* line 817, ../src/partials/_application.sass */
 #add-menu li.share ul {
   display: none;
   position: absolute;
@@ -3491,7 +3491,7 @@ ul.menu li.last {
   white-space: nowrap;
   cursor: pointer;
   background-color: #f2f2f2;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
   background-repeat: repeat-x;
   border-radius: 3px;
   -moz-border-radius: 3px;
@@ -3499,21 +3499,21 @@ ul.menu li.last {
 }
 /* line 84, ../src/partials/_base.sass */
 #add-menu li.share ul.cancel:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/cancel.png?1270451570');
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
 }
 /* line 86, ../src/partials/_base.sass */
 #add-menu li.share ul.ok:before {
-  content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 825, ../src/partials/_application.sass */
+/* line 826, ../src/partials/_application.sass */
 #add-menu li.share ul li {
   border: none;
   display: inline;
   margin: 3px 0 3px 3px;
 }
-/* line 829, ../src/partials/_application.sass */
+/* line 830, ../src/partials/_application.sass */
 #add-menu li.share ul li a {
-  background: url('http://apparelrow-dev.hanssonlarsson.se/media/images/social_bookmarks.png?1270739223') no-repeat;
+  background: url('http://localhost:8000/media/images/social_bookmarks.png?1270739223') no-repeat;
   width: 16;
   height: 16;
   overflow: hidden;
@@ -3522,25 +3522,25 @@ ul.menu li.last {
   width: 16px;
   height: 16px;
 }
-/* line 835, ../src/partials/_application.sass */
+/* line 836, ../src/partials/_application.sass */
 #add-menu li.share ul li a.facebook {
   background-position: -144px 0px;
 }
-/* line 837, ../src/partials/_application.sass */
+/* line 838, ../src/partials/_application.sass */
 #add-menu li.share ul li a.twitter {
   background-position: -80px 0px;
 }
-/* line 839, ../src/partials/_application.sass */
+/* line 840, ../src/partials/_application.sass */
 #add-menu li.share > a {
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/share.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/share.png?1270451570');
 }
-/* line 841, ../src/partials/_application.sass */
+/* line 842, ../src/partials/_application.sass */
 #add-menu li#add-to-wardrobe button {
   margin-right: 0;
-  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/embed.png?1270451570');
+  background-image: url('http://localhost:8000/media/images/embed.png?1270451570');
 }
 
-/* line 846, ../src/partials/_application.sass */
+/* line 847, ../src/partials/_application.sass */
 a.block_link {
   display: block;
   line-height: 2.5em;
@@ -3548,7 +3548,7 @@ a.block_link {
   text-transform: uppercase;
 }
 
-/* line 853, ../src/partials/_application.sass */
+/* line 854, ../src/partials/_application.sass */
 #search {
   background: transparent url(../images/search.png) scroll no-repeat left center;
   top: 31px;
@@ -3560,13 +3560,13 @@ a.block_link {
   overflow: visible;
   z-index: 1000;
 }
-/* line 864, ../src/partials/_application.sass */
+/* line 865, ../src/partials/_application.sass */
 #search.expanded {
   background: transparent url(../images/searchresult-bg.png) scroll no-repeat right top;
   height: 547px;
   width: 895px;
 }
-/* line 869, ../src/partials/_application.sass */
+/* line 870, ../src/partials/_application.sass */
 #search input {
   position: absolute;
   width: 163px;
@@ -3578,26 +3578,78 @@ a.block_link {
   background: transparent;
 }
 
-/* line 883, ../src/partials/_application.sass */
+/* line 884, ../src/partials/_application.sass */
 #search-result {
   margin-top: 115px;
   display: none;
   margin: 115px -25px auto -15px;
 }
-/* line 888, ../src/partials/_application.sass */
+/* line 889, ../src/partials/_application.sass */
 #search-result h3, #search-result h2, #search-result a {
   font-size: small;
   font-variant: small-caps;
   text-transform: lowercase;
   font-weight: normal;
 }
-/* line 894, ../src/partials/_application.sass */
+/* line 895, ../src/partials/_application.sass */
 #search-result div {
   width: 206px;
   float: left;
   margin-right: 36px;
 }
-/* line 898, ../src/partials/_application.sass */
+/* line 899, ../src/partials/_application.sass */
+#search-result div .more-results {
+  border: 1px solid #d9d9d9;
+  background-color: #fafafa;
+  line-height: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: #f2f2f2;
+  background-image: url('http://localhost:8000/media/images/gradient-bg.png?1270451570');
+  background-repeat: repeat-x;
+  height: 30px;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+/* line 84, ../src/partials/_base.sass */
+#search-result div .more-results.cancel:before {
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
+}
+/* line 86, ../src/partials/_base.sass */
+#search-result div .more-results.ok:before {
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
+}
+/* line 905, ../src/partials/_application.sass */
+#search-result div .more-results.hover {
+  border: 1px solid #d9d9d9;
+  background-color: #fafafa;
+  line-height: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: #f2f2f2;
+  background-image: url('http://localhost:8000/media/images/gradient-dark-bg.png?1270451570');
+  background-repeat: repeat-x;
+}
+/* line 84, ../src/partials/_base.sass */
+#search-result div .more-results.hover.cancel:before {
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
+}
+/* line 86, ../src/partials/_base.sass */
+#search-result div .more-results.hover.ok:before {
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
+}
+/* line 907, ../src/partials/_application.sass */
+#search-result div .more-results span {
+  background: transparent url('http://localhost:8000/media/images/arrow-bg.png?1274796492') no-repeat scroll left center;
+  padding-left: 15px;
+  vertical-align: top;
+  text-transform: lowercase;
+  font-variant: small-caps;
+}
+/* line 911, ../src/partials/_application.sass */
 #search-result div ul {
   overflow: hidden;
   display: inline-block;
@@ -3606,48 +3658,48 @@ a.block_link {
 #search-result div ul {
   display: block;
 }
-/* line 900, ../src/partials/_application.sass */
+/* line 913, ../src/partials/_application.sass */
 #search-result div ul li {
   height: 92px;
   float: left;
   margin-bottom: 10px;
 }
-/* line 904, ../src/partials/_application.sass */
+/* line 917, ../src/partials/_application.sass */
 #search-result div ul li div {
   width: auto;
   margin-right: auto;
   float: none;
 }
-/* line 910, ../src/partials/_application.sass */
+/* line 923, ../src/partials/_application.sass */
 #search-result div ul#search-result-manufacturers li {
   height: auto;
   float: none;
 }
-/* line 913, ../src/partials/_application.sass */
+/* line 926, ../src/partials/_application.sass */
 #search-result div ul#search-result-manufacturers li a {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/arrow-bg.png?1274796492') no-repeat scroll left center;
+  background: transparent url('http://localhost:8000/media/images/arrow-bg.png?1274796492') no-repeat scroll left center;
   padding-left: 15px;
   vertical-align: top;
   white-space: nowrap;
 }
-/* line 917, ../src/partials/_application.sass */
+/* line 930, ../src/partials/_application.sass */
 #search-result div ul#search-result-looks li {
   width: 93px;
   margin-right: 5px;
   margin-left: 5px;
   line-height: 92px;
 }
-/* line 922, ../src/partials/_application.sass */
+/* line 935, ../src/partials/_application.sass */
 #search-result div ul#search-result-looks li a {
   vertical-align: middle;
 }
-/* line 926, ../src/partials/_application.sass */
+/* line 939, ../src/partials/_application.sass */
 #search-result div ul#search-result-products li {
   font-size: smaller;
   width: 206px;
   margin-right: 18px;
 }
-/* line 930, ../src/partials/_application.sass */
+/* line 943, ../src/partials/_application.sass */
 #search-result div ul#search-result-products li div.search-image {
   margin-right: 10px;
   float: left;
@@ -3657,16 +3709,16 @@ a.block_link {
   border: 1px solid #d9d9d9;
   text-align: center;
 }
-/* line 938, ../src/partials/_application.sass */
+/* line 951, ../src/partials/_application.sass */
 #search-result div ul#search-result-products li div.search-image img {
   vertical-align: middle;
 }
-/* line 940, ../src/partials/_application.sass */
+/* line 953, ../src/partials/_application.sass */
 #search-result div ul#search-result-products div {
   width: 122px;
   float: left;
 }
-/* line 943, ../src/partials/_application.sass */
+/* line 956, ../src/partials/_application.sass */
 #search-result div ul#search-result-products div div {
   overflow: hidden;
   display: inline-block;
@@ -3677,21 +3729,21 @@ a.block_link {
 #search-result div ul#search-result-products div div {
   display: block;
 }
-/* line 947, ../src/partials/_application.sass */
+/* line 960, ../src/partials/_application.sass */
 #search-result div ul#search-result-products div div .price, #search-result div ul#search-result-products div div .currency {
   color: #333333;
   vertical-align: middle;
 }
-/* line 950, ../src/partials/_application.sass */
+/* line 963, ../src/partials/_application.sass */
 #search-result div ul#search-result-products div a {
-  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/arrow-bg.png?1274796492') no-repeat scroll left center;
+  background: transparent url('http://localhost:8000/media/images/arrow-bg.png?1274796492') no-repeat scroll left center;
   padding-left: 15px;
   vertical-align: top;
   display: block;
   padding-top: 3px;
   margin-top: 1em;
 }
-/* line 955, ../src/partials/_application.sass */
+/* line 968, ../src/partials/_application.sass */
 #search-result div ul#search-result-products div h3 {
   overflow: hidden;
   font-size: small;
@@ -3700,22 +3752,22 @@ a.block_link {
   white-space: nowrap;
   text-transform: capitalize;
 }
-/* line 962, ../src/partials/_application.sass */
+/* line 975, ../src/partials/_application.sass */
 #search-result div.col-2 {
   width: 448px;
 }
-/* line 964, ../src/partials/_application.sass */
+/* line 977, ../src/partials/_application.sass */
 #search-result div.last {
   margin-right: 0px;
 }
 
-/* line 967, ../src/partials/_application.sass */
+/* line 980, ../src/partials/_application.sass */
 .facebook-profile-image {
   float: left;
   margin-right: .5em;
 }
 
-/* line 972, ../src/partials/_application.sass */
+/* line 985, ../src/partials/_application.sass */
 #profile-nav li {
   display: block;
   float: left;
@@ -3727,22 +3779,22 @@ a.block_link {
   text-transform: uppercase;
   background: transparent url(../images/profile-nav-bg.png) scroll repeat-x top left;
 }
-/* line 983, ../src/partials/_application.sass */
+/* line 996, ../src/partials/_application.sass */
 #profile-nav li.selected {
   background-image: url(../images/profile-nav-bg-selected.png);
   border-right-color: #ababab;
   border-left-color: #ababab;
 }
-/* line 988, ../src/partials/_application.sass */
+/* line 1001, ../src/partials/_application.sass */
 #profile-nav li a {
   line-height: 30px;
 }
-/* line 991, ../src/partials/_application.sass */
+/* line 1004, ../src/partials/_application.sass */
 #profile-nav li.profile-image {
   padding: 0;
 }
 
-/* line 995, ../src/partials/_application.sass */
+/* line 1008, ../src/partials/_application.sass */
 #profile-nav-dash {
   position: relative;
   top: -10px;

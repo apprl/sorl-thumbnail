@@ -15,6 +15,7 @@ body
   .ui-draggable-dragging a
     cursor: move
 
+// FIXME: Should this not apply to all button tags?
 .button
   +button
   display: inline-block
@@ -884,7 +885,7 @@ a.block_link
   margin-top: 115px
   display: none
   margin: 115px -25px auto -15px
-  
+    
   h3, h2, a
     font-size: small
     font-variant: small-caps
@@ -895,6 +896,18 @@ a.block_link
     width= !search_col_width
     float: left
     margin-right= !search_col_margin
+    .more-results
+      +button("gradient-bg.png", "30px")
+      height: 30px
+      display: block
+      width: 100%
+      cursor: pointer
+      &.hover
+        +hover_button
+      span
+        +go_to_link
+        text-transform: lowercase
+        font-variant: small-caps
     ul
       +clearfix
       li
@@ -933,7 +946,7 @@ a.block_link
             width: 72px
             line-height: 92px
             background-color: white
-            border= 1px solid !border_color
+            border= 1px "solid" !border_color
             text-align: center
             img
               vertical-align: middle
