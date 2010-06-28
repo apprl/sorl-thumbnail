@@ -883,10 +883,13 @@ a.block_link
 #search-result
   margin-top: 115px
   display: none
-
-  h2
-    font-size: 1.2em
-    font-weight: bold
+  margin: 115px -25px auto -15px
+  
+  h3, h2, a
+    font-size: small
+    font-variant: small-caps
+    text-transform: lowercase
+    font-weight: normal
   
   div
     width= !search_col_width
@@ -895,25 +898,48 @@ a.block_link
     ul
       +clearfix
       li
-        font-size: smaller
-        float: left
-        width= !search_col_width
         height: 92px
-        margin-right= !search_col_margin / 2
+        float: left
         margin-bottom: 10px
-        div.search-image
-          margin-right: 10px
-          float: left
-          width: 72px
+        div
+          width: auto
+          margin-right: auto
+          float: none
+      
+      &#search-result-manufacturers
+        li
+          height: auto
+          float: none
+          a
+            +go_to_link
+            white-space: nowrap
+      &#search-result-looks
+        li
+          width= !search_col_width / 2 - 10
+          margin-right: 5px
+          margin-left: 5px
           line-height: 92px
-          background-color: white
-          border= 1px solid !border_color
-          text-align: center
-          img
+          a
             vertical-align: middle
+        
+      &#search-result-products
+        li
+          font-size: smaller
+          width= !search_col_width
+          margin-right= !search_col_margin / 2
+          div.search-image
+            margin-right: 10px
+            float: left
+            width: 72px
+            line-height: 92px
+            background-color: white
+            border= 1px solid !border_color
+            text-align: center
+            img
+              vertical-align: middle
         div
           width: 122px
-          margin-right: auto
+          float: left
           div
             +clearfix
             float: none
@@ -922,7 +948,7 @@ a.block_link
               color= !font_color
               vertical-align: middle
           a
-            +product_link
+            +go_to_link
             display: block
             padding-top: 3px
             margin-top: 1em
@@ -930,6 +956,7 @@ a.block_link
             overflow: hidden
             font-size: small
             font-weight: normal
+            font-variant: normal
             white-space: nowrap
             text-transform: capitalize
     &.col-2

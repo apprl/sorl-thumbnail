@@ -90,6 +90,13 @@
                         j.data('tid', setTimeout(doSearch, 1000));
                 }
             });
+            
+            /*
+            jQuery('#search-result-manufacturers li > a').live('click', function(e) {
+                // location.href='/browse/?1:m.id=' + this.id.split('-').pop();
+                return false;
+            });
+            */
 
         });
         
@@ -106,59 +113,40 @@
             
             // Find products
             
-            getSearchResults('products', 
-                {
+            getSearchResults({
+                model: 'products', 
+                query: {
                     '1:p.product_name:icontains': s,
                     '2:p.description:icontains': s,
                     'o': '1o2',
                     'size': 6
                 },
-                function(products) {
-                    if(!products) return;
-                    var list = jQuery('#search-result-products');
-                    jQuery.each(products.object_list, function(i, product) {
-                        try {
-                            jQuery('#product_search_template').render({ product: product }).appendTo(list);
-                        } catch(e) {
-                            console.log('Error while rendering template', e);
-                        }
-                    });
-                    
-                    if(list.children().size() == 0) {
-                        console.log('No results');
-                    }
-                }
-            );
+                selector: '#search-result-products',
+                template: 'product_search_template'
+            });
 
-            getSearchResults('looks', 
-                {
+            getSearchResults({
+                model: 'looks', 
+                query: {
                     '1:l.title:icontains': s,
                     '2:l.description:icontains': s,
                     'o': '1o2',
                     'size': 6
                 },
-                function(looks) {
-                    if(!looks) return;
-                    var list = jQuery('#search-result-looks');
-                    jQuery.each(looks.object_list, function(i, look) {
-                        try {
-                            var contents = jQuery('#look_search_template').render({ object: look, hide_like_button: true });
-                            jQuery('<li/>').append(contents).appendTo(list);
-                        } catch(e) {
-                            console.log('Error while rendering template', e);
-                        }
-                    });
-                    
-                    if(list.children().size() == 0) {
-                        console.log('No results');
-                    }
-                }
-            );
-            /*
-            jQuery.getJSON('{% url apparel.views.search "products" %}', {
-                s: value
-            }, display);
-            */
+                selector: '#search-result-looks',
+                template: 'look_search_template'
+            });
+            
+            getSearchResults({
+                model: 'manufacturers', 
+                query: {
+                    '1:m.name:icontains': s,
+                    'size': 10
+                },
+                selector: '#search-result-manufacturers',
+                template: 'manufacturer_search_template'
+            });
+            
             console.log('searching with ', s);
             showSearch();
         }
@@ -167,17 +155,47 @@
             jQuery('#search-result ul').empty();
         }
         
-        function getSearchResults(model, query, callback) {
+        function getSearchResults(opts) {
+            /*
+             * Options:
+             *  model       Model to search for
+             *  query       Query as dict
+             *  template    Name of template for rendering results
+             *  selector    Selector of UL to add results to
+             */
             jQuery.ajax({
                 type: 'GET',
-                url: '/' + model + '/search',
+                url: '/' + opts.model + '/search',
                 dataType: 'json',
-                data: query,
+                data: opts.query,
                 complete: function(request, status) {
                     console.log('Do cleanup here (hide search result etc)')
                 },
                 success: function(response, status, request) {
-                    callback(response);
+                    if(!response) return;
+                    var list = jQuery(opts.selector);
+                    jQuery.each(response.object_list, function(i, object) {
+                        try {
+                            var args, root;
+                            if(opts.template == 'product_search_template') {
+                                // Product template special casing
+                                args = { 'product': object };
+                                root = list;
+                            } else {
+                                args = { 'object': object };
+                                root = jQuery('<li/>').appendTo(list);
+                            }
+                            
+                            jQuery('#' + opts.template).render(args).appendTo(root);
+                        } catch(e) {
+                            console.log('Error while rendering template', e);
+                        }
+                    });
+                    
+                    if(list.children().size() == 0) {
+                        console.log('No results');
+                    }
+
                 }
             });
         }
@@ -289,7 +307,7 @@
                 </div>
                 <div>
                     <h2>{% trans "Matching looks" %}</h2>
-                    <ul id="search-result-looks"></ul>
+                    <ul id="search-result-looks" class="looks"></ul>
                 </div>
                 <div class="last">
                     <h2>{% trans "Matching brands" %}</h2>

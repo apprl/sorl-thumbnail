@@ -2114,14 +2114,14 @@ h2 a {
 #product-options #product-color ul li:last-child, #product-options #product-color ul li.last {
   padding-right: 0px;
 }
-/* line 132, ../src/partials/_base.sass */
+/* line 131, ../src/partials/_base.sass */
 #product-options #product-color ul li {
   background: none;
   border: none;
   padding: 0;
   height: 19px;
 }
-/* line 137, ../src/partials/_base.sass */
+/* line 136, ../src/partials/_base.sass */
 #product-options #product-color ul li a {
   text-indent: -9999em;
   overflow: hidden;
@@ -2135,185 +2135,185 @@ h2 a {
   position: absolute;
   top: 0;
 }
-/* line 146, ../src/partials/_base.sass */
+/* line 145, ../src/partials/_base.sass */
 #product-options #product-color ul li a.black {
   background-position: 0 0;
   left: 0;
 }
-/* line 150, ../src/partials/_base.sass */
+/* line 149, ../src/partials/_base.sass */
 #product-options #product-color ul li a.black.selected {
   background-position: 0 -19px;
 }
-/* line 152, ../src/partials/_base.sass */
+/* line 151, ../src/partials/_base.sass */
 #product-options #product-color ul li a.black.filtered {
   background-position: 0 -38px;
 }
-/* line 154, ../src/partials/_base.sass */
+/* line 153, ../src/partials/_base.sass */
 #product-options #product-color ul li a.grey {
   background-position: -21px top;
   left: 22px;
 }
-/* line 158, ../src/partials/_base.sass */
+/* line 157, ../src/partials/_base.sass */
 #product-options #product-color ul li a.grey.selected {
   background-position: -21px -19px;
 }
-/* line 160, ../src/partials/_base.sass */
+/* line 159, ../src/partials/_base.sass */
 #product-options #product-color ul li a.grey.filtered {
   background-position: -21px -38px;
 }
-/* line 162, ../src/partials/_base.sass */
+/* line 161, ../src/partials/_base.sass */
 #product-options #product-color ul li a.white {
   background-position: -42px top;
   left: 44px;
 }
-/* line 166, ../src/partials/_base.sass */
+/* line 165, ../src/partials/_base.sass */
 #product-options #product-color ul li a.white.selected {
   background-position: -42px -19px;
 }
-/* line 168, ../src/partials/_base.sass */
+/* line 167, ../src/partials/_base.sass */
 #product-options #product-color ul li a.white.filtered {
   background-position: -42px -38px;
 }
-/* line 170, ../src/partials/_base.sass */
+/* line 169, ../src/partials/_base.sass */
 #product-options #product-color ul li a.beige {
   background-position: -63px top;
   left: 73px;
 }
-/* line 174, ../src/partials/_base.sass */
+/* line 173, ../src/partials/_base.sass */
 #product-options #product-color ul li a.beige.selected {
   background-position: -63px -19px;
 }
-/* line 176, ../src/partials/_base.sass */
+/* line 175, ../src/partials/_base.sass */
 #product-options #product-color ul li a.beige.filtered {
   background-position: -63px -38px;
 }
-/* line 178, ../src/partials/_base.sass */
+/* line 177, ../src/partials/_base.sass */
 #product-options #product-color ul li a.brown {
   background-position: -84px top;
   left: 95px;
 }
-/* line 182, ../src/partials/_base.sass */
+/* line 181, ../src/partials/_base.sass */
 #product-options #product-color ul li a.brown.selected {
   background-position: -84px -19px;
 }
-/* line 184, ../src/partials/_base.sass */
+/* line 183, ../src/partials/_base.sass */
 #product-options #product-color ul li a.brown.filtered {
   background-position: -84px -38px;
 }
-/* line 186, ../src/partials/_base.sass */
+/* line 185, ../src/partials/_base.sass */
 #product-options #product-color ul li a.red {
   background-position: -105px top;
   left: 117px;
 }
-/* line 190, ../src/partials/_base.sass */
+/* line 189, ../src/partials/_base.sass */
 #product-options #product-color ul li a.red.selected {
   background-position: -105px -19px;
 }
-/* line 192, ../src/partials/_base.sass */
+/* line 191, ../src/partials/_base.sass */
 #product-options #product-color ul li a.red.filtered {
   background-position: -105px -38px;
 }
-/* line 194, ../src/partials/_base.sass */
+/* line 193, ../src/partials/_base.sass */
 #product-options #product-color ul li a.orange {
   background-position: -126px top;
   left: 139px;
 }
-/* line 198, ../src/partials/_base.sass */
+/* line 197, ../src/partials/_base.sass */
 #product-options #product-color ul li a.orange.selected {
   background-position: -126px -19px;
 }
-/* line 200, ../src/partials/_base.sass */
+/* line 199, ../src/partials/_base.sass */
 #product-options #product-color ul li a.orange.filtered {
   background-position: -126px -38px;
 }
-/* line 202, ../src/partials/_base.sass */
+/* line 201, ../src/partials/_base.sass */
 #product-options #product-color ul li a.yellow {
   background-position: -147px top;
   left: 161px;
 }
-/* line 206, ../src/partials/_base.sass */
+/* line 205, ../src/partials/_base.sass */
 #product-options #product-color ul li a.yellow.selected {
   background-position: -147px -19px;
 }
-/* line 208, ../src/partials/_base.sass */
+/* line 207, ../src/partials/_base.sass */
 #product-options #product-color ul li a.yellow.filtered {
   background-position: -147px -38px;
 }
-/* line 210, ../src/partials/_base.sass */
+/* line 209, ../src/partials/_base.sass */
 #product-options #product-color ul li a.green {
   background-position: -168px top;
   left: 183px;
 }
-/* line 214, ../src/partials/_base.sass */
+/* line 213, ../src/partials/_base.sass */
 #product-options #product-color ul li a.green.selected {
   background-position: -168px -19px;
 }
-/* line 216, ../src/partials/_base.sass */
+/* line 215, ../src/partials/_base.sass */
 #product-options #product-color ul li a.green.filtered {
   background-position: -168px -38px;
 }
-/* line 218, ../src/partials/_base.sass */
+/* line 217, ../src/partials/_base.sass */
 #product-options #product-color ul li a.blue {
   background-position: -189px top;
   left: 205px;
 }
-/* line 222, ../src/partials/_base.sass */
+/* line 221, ../src/partials/_base.sass */
 #product-options #product-color ul li a.blue.selected {
   background-position: -189px -19px;
 }
-/* line 224, ../src/partials/_base.sass */
+/* line 223, ../src/partials/_base.sass */
 #product-options #product-color ul li a.blue.filtered {
   background-position: -189px -38px;
 }
-/* line 226, ../src/partials/_base.sass */
+/* line 225, ../src/partials/_base.sass */
 #product-options #product-color ul li a.magenta {
   background-position: -210px top;
   left: 227px;
 }
-/* line 230, ../src/partials/_base.sass */
+/* line 229, ../src/partials/_base.sass */
 #product-options #product-color ul li a.magenta.selected {
   background-position: -210px -19px;
 }
-/* line 232, ../src/partials/_base.sass */
+/* line 231, ../src/partials/_base.sass */
 #product-options #product-color ul li a.magenta.filtered {
   background-position: -210px -38px;
 }
-/* line 234, ../src/partials/_base.sass */
+/* line 233, ../src/partials/_base.sass */
 #product-options #product-color ul li a.pink {
   background-position: -231px top;
   left: 249px;
 }
-/* line 238, ../src/partials/_base.sass */
+/* line 237, ../src/partials/_base.sass */
 #product-options #product-color ul li a.pink.selected {
   background-position: -231px -19px;
 }
-/* line 240, ../src/partials/_base.sass */
+/* line 239, ../src/partials/_base.sass */
 #product-options #product-color ul li a.pink.filtered {
   background-position: -231px -38px;
 }
-/* line 242, ../src/partials/_base.sass */
+/* line 241, ../src/partials/_base.sass */
 #product-options #product-color ul li a.gold {
   background-position: -252px top;
   left: 278px;
 }
-/* line 246, ../src/partials/_base.sass */
+/* line 245, ../src/partials/_base.sass */
 #product-options #product-color ul li a.gold.selected {
   background-position: -252px -19px;
 }
-/* line 248, ../src/partials/_base.sass */
+/* line 247, ../src/partials/_base.sass */
 #product-options #product-color ul li a.gold.filtered {
   background-position: -252px -38px;
 }
-/* line 250, ../src/partials/_base.sass */
+/* line 249, ../src/partials/_base.sass */
 #product-options #product-color ul li a.silver {
   background-position: -273px top;
   left: 300px;
 }
-/* line 254, ../src/partials/_base.sass */
+/* line 253, ../src/partials/_base.sass */
 #product-options #product-color ul li a.silver.selected {
   background-position: -273px -19px;
 }
-/* line 256, ../src/partials/_base.sass */
+/* line 255, ../src/partials/_base.sass */
 #product-options #product-color ul li a.silver.filtered {
   background-position: -273px -38px;
 }
@@ -3582,19 +3582,22 @@ a.block_link {
 #search-result {
   margin-top: 115px;
   display: none;
+  margin: 115px -25px auto -15px;
 }
-/* line 887, ../src/partials/_application.sass */
-#search-result h2 {
-  font-size: 1.2em;
-  font-weight: bold;
+/* line 888, ../src/partials/_application.sass */
+#search-result h3, #search-result h2, #search-result a {
+  font-size: small;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  font-weight: normal;
 }
-/* line 891, ../src/partials/_application.sass */
+/* line 894, ../src/partials/_application.sass */
 #search-result div {
   width: 206px;
   float: left;
   margin-right: 36px;
 }
-/* line 895, ../src/partials/_application.sass */
+/* line 898, ../src/partials/_application.sass */
 #search-result div ul {
   overflow: hidden;
   display: inline-block;
@@ -3603,17 +3606,49 @@ a.block_link {
 #search-result div ul {
   display: block;
 }
-/* line 897, ../src/partials/_application.sass */
+/* line 900, ../src/partials/_application.sass */
 #search-result div ul li {
-  font-size: smaller;
-  float: left;
-  width: 206px;
   height: 92px;
-  margin-right: 18px;
+  float: left;
   margin-bottom: 10px;
 }
 /* line 904, ../src/partials/_application.sass */
-#search-result div ul li div.search-image {
+#search-result div ul li div {
+  width: auto;
+  margin-right: auto;
+  float: none;
+}
+/* line 910, ../src/partials/_application.sass */
+#search-result div ul#search-result-manufacturers li {
+  height: auto;
+  float: none;
+}
+/* line 913, ../src/partials/_application.sass */
+#search-result div ul#search-result-manufacturers li a {
+  background: transparent url('http://localhost:8000/media/images/arrow-bg.png?1274796492') no-repeat scroll left center;
+  padding-left: 15px;
+  vertical-align: top;
+  white-space: nowrap;
+}
+/* line 917, ../src/partials/_application.sass */
+#search-result div ul#search-result-looks li {
+  width: 93px;
+  margin-right: 5px;
+  margin-left: 5px;
+  line-height: 92px;
+}
+/* line 922, ../src/partials/_application.sass */
+#search-result div ul#search-result-looks li a {
+  vertical-align: middle;
+}
+/* line 926, ../src/partials/_application.sass */
+#search-result div ul#search-result-products li {
+  font-size: smaller;
+  width: 206px;
+  margin-right: 18px;
+}
+/* line 930, ../src/partials/_application.sass */
+#search-result div ul#search-result-products li div.search-image {
   margin-right: 10px;
   float: left;
   width: 72px;
@@ -3622,34 +3657,33 @@ a.block_link {
   border: 1px solid #d9d9d9;
   text-align: center;
 }
-/* line 912, ../src/partials/_application.sass */
-#search-result div ul li div.search-image img {
+/* line 938, ../src/partials/_application.sass */
+#search-result div ul#search-result-products li div.search-image img {
   vertical-align: middle;
 }
-/* line 914, ../src/partials/_application.sass */
-#search-result div ul li div {
+/* line 940, ../src/partials/_application.sass */
+#search-result div ul#search-result-products div {
   width: 122px;
-  margin-right: auto;
+  float: left;
 }
-/* line 917, ../src/partials/_application.sass */
-#search-result div ul li div div {
+/* line 943, ../src/partials/_application.sass */
+#search-result div ul#search-result-products div div {
   overflow: hidden;
   display: inline-block;
   float: none;
   height: auto;
 }
 /* line 5, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.0.rc1/frameworks/compass/stylesheets/compass/utilities/general/_hacks.sass */
-#search-result div ul li div div {
+#search-result div ul#search-result-products div div {
   display: block;
 }
-/* line 921, ../src/partials/_application.sass */
-#search-result div ul li div div .price, #search-result div ul li div div .currency {
+/* line 947, ../src/partials/_application.sass */
+#search-result div ul#search-result-products div div .price, #search-result div ul#search-result-products div div .currency {
   color: #333333;
   vertical-align: middle;
 }
-/* line 924, ../src/partials/_application.sass */
-#search-result div ul li div a {
-  text-transform: uppercase;
+/* line 950, ../src/partials/_application.sass */
+#search-result div ul#search-result-products div a {
   background: transparent url('http://localhost:8000/media/images/arrow-bg.png?1274796492') no-repeat scroll left center;
   padding-left: 15px;
   vertical-align: top;
@@ -3657,30 +3691,31 @@ a.block_link {
   padding-top: 3px;
   margin-top: 1em;
 }
-/* line 929, ../src/partials/_application.sass */
-#search-result div ul li div h3 {
+/* line 955, ../src/partials/_application.sass */
+#search-result div ul#search-result-products div h3 {
   overflow: hidden;
   font-size: small;
   font-weight: normal;
+  font-variant: normal;
   white-space: nowrap;
   text-transform: capitalize;
 }
-/* line 935, ../src/partials/_application.sass */
+/* line 962, ../src/partials/_application.sass */
 #search-result div.col-2 {
   width: 448px;
 }
-/* line 937, ../src/partials/_application.sass */
+/* line 964, ../src/partials/_application.sass */
 #search-result div.last {
   margin-right: 0px;
 }
 
-/* line 940, ../src/partials/_application.sass */
+/* line 967, ../src/partials/_application.sass */
 .facebook-profile-image {
   float: left;
   margin-right: .5em;
 }
 
-/* line 945, ../src/partials/_application.sass */
+/* line 972, ../src/partials/_application.sass */
 #profile-nav li {
   display: block;
   float: left;
@@ -3692,22 +3727,22 @@ a.block_link {
   text-transform: uppercase;
   background: transparent url(../images/profile-nav-bg.png) scroll repeat-x top left;
 }
-/* line 956, ../src/partials/_application.sass */
+/* line 983, ../src/partials/_application.sass */
 #profile-nav li.selected {
   background-image: url(../images/profile-nav-bg-selected.png);
   border-right-color: #ababab;
   border-left-color: #ababab;
 }
-/* line 961, ../src/partials/_application.sass */
+/* line 988, ../src/partials/_application.sass */
 #profile-nav li a {
   line-height: 30px;
 }
-/* line 964, ../src/partials/_application.sass */
+/* line 991, ../src/partials/_application.sass */
 #profile-nav li.profile-image {
   padding: 0;
 }
 
-/* line 968, ../src/partials/_application.sass */
+/* line 995, ../src/partials/_application.sass */
 #profile-nav-dash {
   position: relative;
   top: -10px;
