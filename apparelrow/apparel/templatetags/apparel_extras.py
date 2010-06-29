@@ -185,6 +185,29 @@ def export_as_json(o):
 
 register.filter('export_as_json', export_as_json)
 
+
+def split(string):
+    """Splits the given strings on "," and returns a list
+    >>> from django.template.loader import Template, Context
+    >>> c = Context({'s': 'one,two'})
+    >>> t = Template('{% load apparel_extras %}{{ s|split }}')
+    >>> t.render(c)
+    u'[&#39;one&#39;, &#39;two&#39;]'
+    >>> t = Template('{% load apparel_extras %}{{ s|split|first }} - {{ s|split|last }}')
+    >>> t.render(c)
+    u'one - two'
+    """
+    
+    try:
+        return string.split(',')
+    except Exception, e:
+        logging.error('Could not split %s', s)
+        logging.exception(e)
+        
+        return ''
+
+register.filter('split', split)
+
 #
 # This is taken from http://www.djangosnippets.org/snippets/743/ and should
 # probably not be included in a live release
