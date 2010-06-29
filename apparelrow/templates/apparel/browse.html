@@ -195,6 +195,56 @@
             jQuery('#product-list').scrollable({
                 items: 'ul.list'
             });
+            
+            /**
+             * BROWSE PAGE DEFAULTS
+             * This allows manipulating the browse page interface on page load 
+             * from the query string.
+             * 
+             * Syntax
+             *  ?defaults=action|argument&...
+             *  
+             *  action      An named action see switch statement below
+             *  argument    Optional argument passed with action
+             * 
+             * Any number of 'defaults' query parameters may be present
+             * The actions will be performed in the same order as they appear in
+             * the query string
+             * 
+             */
+            jQuery.each(location.search.split('&'), function(i, e) {
+                var pair = e.split('=');
+                if(pair[0] != 'defaults') return;
+                var value = unescape(pair[1]).split('|');
+                
+                switch(value[0]) {
+                    case 'manufacturer-dialog':
+                        // Show manufacturers filter dialog
+                        jQuery('#product-manufacturers > a').click();
+                        break;
+                        
+                    case 'manufacturer-dialog-filter':
+                        // Set and perform a filter om the manufacturer dialog
+                        jQuery('#product-manufacturers input[name=brand]')
+                            .attr('value', value[1])
+                            .keyup()
+                            .focus();
+                        break;
+                        
+                    case 'price-dialog':
+                        // Show price dialog
+                        jQuery('#product-price > a').click();
+                        break;
+                        
+                    case 'color-dialog':
+                        // Show colour dialog
+                        jQuery('#product-color > a').click();
+                        break;
+                    
+                    default:
+                        console.error('Action ', value[0], ' not implemented');
+                }
+            });
         });
         function getQuery(query) {
             index = 0;

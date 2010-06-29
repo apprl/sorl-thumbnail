@@ -67,7 +67,6 @@
             });
             
             
-            
             // Add handlers
             jQuery('#search > input').keyup(function(e) {
                 // FIXME: Ignore if modifier is used (apart from shift)
@@ -95,6 +94,52 @@
                 function(e) { jQuery(this).addClass('hover') },
                 function(e) { jQuery(this).removeClass('hover') }
             );
+            jQuery('.more-results').click(function(e) {
+                var list  = jQuery(this).siblings('ul');
+                var query = list.data('last-query');
+                
+                switch(list.attr('id')) {
+                    case 'search-result-products':
+                        if(!query) {
+                            console.error('Could not find search query');
+                            break;
+                        }
+                        
+                        delete(query['size']);
+                        var pairs = [];
+                        for(var key in query) {
+                            pairs.push(
+                               encodeURIComponent(key)
+                                + '=' 
+                                + encodeURIComponent(query[key])
+                            );
+                        }
+                                
+                        location.href = '/browse/?' + pairs.join('&');
+                        break;
+                    
+                    case 'search-result-manufacturers':
+                        // jQuery('li', list).map(function(i, e) {
+                        //     return jQuery('a', e).attr('id').split('-').pop();
+                        // }).get().join(',')
+
+                        var s = query['1:m.name:icontains'];
+                        location.href = 
+                            '/browse/?criterion=manufacturer&'
+                            + encodeURIComponent('1:m.name:icontains')
+                            + '=' + encodeURIComponent(s)
+                            + '&defaults=manufacturer-dialog'
+                            + '&defaults=' 
+                            + encodeURIComponent('manufacturer-dialog-filter|' + s)
+                        
+                        break;
+                    
+                    default:
+                        console.log('No action for ', list.attr('id'));
+                }
+                
+                return false;
+            } );
         });
         
         //
@@ -144,7 +189,6 @@
                 template: 'manufacturer_search_template'
             });
             
-            console.log('searching with ', s);
             showSearch();
         }
                 
@@ -162,7 +206,7 @@
                 dataType: 'json',
                 data: opts.query,
                 complete: function(request, status) {
-                    console.log('Do cleanup here (hide search result etc)')
+                    console.log('Do cleanup here (hide "now searching" visual clue and whatever)')
                 },
                 success: function(response, status, request) {
                     if(!response) return;
@@ -185,13 +229,13 @@
                         }
                     });
                     
-                    console.log(response.paginator.num_pages);
-                    
                     if(list.children().size() == 0) {
                         console.log('No results');
                     } else if(response.paginator.num_pages > 1) {
                         jQuery('.more-results', list.parent()).show();
                     }
+                    
+                    list.data('last-query', opts.query);
                 }
             });
         }
@@ -207,8 +251,11 @@
         }
         
         function clearSearchResults() {
-            jQuery('#search-result ul').empty();
+            jQuery('#search-result ul')
+                .data('last-query', null)
+                .empty();
             jQuery('#search-result .more-results').hide();
+            
         }
 
     </script>
