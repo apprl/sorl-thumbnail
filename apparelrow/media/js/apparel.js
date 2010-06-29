@@ -275,4 +275,6 @@ jQuery(document).ready(function() {
             return false;
         } )
     ;
+    
+    ngettext('gunnar', 'hansson', 10);
 } );

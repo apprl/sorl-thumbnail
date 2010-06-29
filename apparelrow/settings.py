@@ -179,6 +179,7 @@ INSTALLED_APPS = (
     
     # internal (for now)
     'django.contrib.admin',
+    'apparelrow',
 )
 
 CSRF_FAILURE_VIEW = 'apparel.views.csrf_failure'

@@ -17,6 +17,7 @@
         google.load("jquery", "1.4.2");
         google.load("jqueryui", "1.8.0");
     </script>
+    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.autogrow.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/apparel.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.hypersubmit.js"></script>
@@ -107,6 +108,10 @@
         </div>
         <form action="/apparel/search" method="get" onsubmit="return false" id="search">
             <input type="text" name="s" />
+            <div id="search-totals">
+                <div></div>
+                <a href="/browse/">{% trans "Show all products" %}</a>
+            </div>
             <div id="search-result">
                 <div class="col-2">
                     <h2>{% trans "Matching products" %}</h2>
