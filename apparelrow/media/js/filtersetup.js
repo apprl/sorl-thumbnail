@@ -27,17 +27,20 @@ jQuery(document).ready(function() {
         return false;
     });
     // Price slider
-    var rangefield = jQuery("input[name=1:vp.price:range]");
-    //rangefield.hide();
+    
+    var rangemin = jQuery("input[name=pricerange_min]");
+    var rangemax = jQuery("input[name=pricerange_max]");
+    
     jQuery("#price-slider").slider({
         range: true,
         min: pricerange.min,
         max: pricerange.max,
         step: 10,
-        values: rangefield.val().split(","),
+        values: [rangemin.val(), rangemax.val()],
         animate: 'fast',
         slide: function(event, ui) {
-                rangefield.val(jQuery(this).slider('values', 0) + "," + jQuery(this).slider('values', 1));
+            rangemin.val(jQuery(this).slider('values', 0));
+            rangemax.val(jQuery(this).slider('values', 1));
         },
         change: function(event, ui) {
             jQuery(this).addClass('selected');

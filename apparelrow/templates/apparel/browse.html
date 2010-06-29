@@ -266,7 +266,10 @@
                 query[++index + ':o.color:in'] = color_list.join(',');
             }
             if(jQuery('#product-price > a').is('.selected')) {
-                query[++index + ':vp.price:range'] = jQuery('#price-slider').slider('values', 0) + ',' + jQuery('#price-slider').slider('values', 1);
+                query[++index + ':vp.price:range'] = 
+                      jQuery("input[name=pricerange_min]").val()
+                    + ',' 
+                    + jQuery("input[name=pricerange_max]").val();
             }
             
             return query;
