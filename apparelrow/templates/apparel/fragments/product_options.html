@@ -5,6 +5,7 @@
         <div>
             <h3>
                 {% block option_header %}{% endblock %}
+                <a class="reset" href="{% url apparel.views.browse %}">{% trans "Show all" %}</a>
             </h3>
             <div class="option-content">
                 {% block option_content %}{% endblock %}

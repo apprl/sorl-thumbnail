@@ -142,6 +142,29 @@
                 filter(getQuery());
                 return false;
             });
+            jQuery('.options .reset').click(function(e) {
+                var link = jQuery(this);
+                
+                switch(link.closest('li').attr('id')) {
+                    case 'product-price':
+                        // Move slider to min and max
+                        var slider = jQuery('#price-slider').data('slider');
+                            slider.values([slider.option('min'), slider.option('max')]);
+                            return false;
+                        break;
+                    case 'product-color':
+                        // Uncheck all colours
+                        break;
+                    case 'product-manufacturers':
+                        // Uncheck all brands
+                        break;
+                    default:
+                        return false;
+                }
+                
+                jQuery('button[type=submit]', link).click();
+                return false;
+            });
             jQuery('.options li > a').click(function() {
                 jQuery(this).toggleClass('selected');
                 return false;

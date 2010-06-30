@@ -1912,17 +1912,23 @@ h2 a {
   font-weight: normal;
   line-height: 30px;
   padding: 0 12px;
+  position: relative;
 }
-/* line 35, ../src/partials/_filter.sass */
+/* line 36, ../src/partials/_filter.sass */
+#product-options #product-price div.options .reset {
+  position: absolute;
+  right: 12px;
+}
+/* line 39, ../src/partials/_filter.sass */
 #product-options #product-price div.options form {
   border: 1px solid #d9d9d9;
   background-color: white;
 }
-/* line 37, ../src/partials/_filter.sass */
+/* line 41, ../src/partials/_filter.sass */
 #product-options #product-price div.options form > div {
   background: #fff;
 }
-/* line 40, ../src/partials/_filter.sass */
+/* line 44, ../src/partials/_filter.sass */
 #product-options #product-price div.options .buttons button {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -1942,7 +1948,7 @@ h2 a {
 #product-options #product-price div.options .buttons button.ok:before {
   content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 42, ../src/partials/_filter.sass */
+/* line 46, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup {
   display: none;
   position: absolute;
@@ -1950,7 +1956,7 @@ h2 a {
   top: 0px;
   z-index: 10;
 }
-/* line 48, ../src/partials/_filter.sass */
+/* line 52, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup .arrow {
   position: absolute;
   top: 0px;
@@ -1959,7 +1965,7 @@ h2 a {
   width: 7px;
   background: transparent url('http://localhost:8000/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
 }
-/* line 56, ../src/partials/_filter.sass */
+/* line 60, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup form {
   width: 348px;
   /* Webkit (Safari, Chrome) */
@@ -1969,7 +1975,7 @@ h2 a {
   /* CSS3 */
   box-shadow: #999999 0px 0px 20px;
 }
-/* line 59, ../src/partials/_filter.sass */
+/* line 63, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup form .buttons {
   padding: 10px 12px;
   padding-top: 20px;
@@ -1980,7 +1986,7 @@ h2 a {
 #product-options #product-price div.options.popup form .buttons {
   display: block;
 }
-/* line 63, ../src/partials/_filter.sass */
+/* line 67, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup form button {
   width: 94px;
   display: inline;
@@ -2093,17 +2099,23 @@ h2 a {
   font-weight: normal;
   line-height: 30px;
   padding: 0 12px;
+  position: relative;
 }
-/* line 35, ../src/partials/_filter.sass */
+/* line 36, ../src/partials/_filter.sass */
+#product-options #product-color div.options .reset {
+  position: absolute;
+  right: 12px;
+}
+/* line 39, ../src/partials/_filter.sass */
 #product-options #product-color div.options form {
   border: 1px solid #d9d9d9;
   background-color: white;
 }
-/* line 37, ../src/partials/_filter.sass */
+/* line 41, ../src/partials/_filter.sass */
 #product-options #product-color div.options form > div {
   background: #fff;
 }
-/* line 40, ../src/partials/_filter.sass */
+/* line 44, ../src/partials/_filter.sass */
 #product-options #product-color div.options .buttons button {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -2123,7 +2135,7 @@ h2 a {
 #product-options #product-color div.options .buttons button.ok:before {
   content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 42, ../src/partials/_filter.sass */
+/* line 46, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup {
   display: none;
   position: absolute;
@@ -2131,7 +2143,7 @@ h2 a {
   top: 0px;
   z-index: 10;
 }
-/* line 48, ../src/partials/_filter.sass */
+/* line 52, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup .arrow {
   position: absolute;
   top: 30px;
@@ -2140,7 +2152,7 @@ h2 a {
   width: 7px;
   background: transparent url('http://localhost:8000/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
 }
-/* line 56, ../src/partials/_filter.sass */
+/* line 60, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup form {
   width: 348px;
   /* Webkit (Safari, Chrome) */
@@ -2150,7 +2162,7 @@ h2 a {
   /* CSS3 */
   box-shadow: #999999 0px 0px 20px;
 }
-/* line 59, ../src/partials/_filter.sass */
+/* line 63, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup form .buttons {
   padding: 10px 12px;
   padding-top: 20px;
@@ -2161,7 +2173,7 @@ h2 a {
 #product-options #product-color div.options.popup form .buttons {
   display: block;
 }
-/* line 63, ../src/partials/_filter.sass */
+/* line 67, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup form button {
   width: 94px;
   display: inline;
@@ -2429,17 +2441,23 @@ h2 a {
   font-weight: normal;
   line-height: 30px;
   padding: 0 12px;
+  position: relative;
 }
-/* line 35, ../src/partials/_filter.sass */
+/* line 36, ../src/partials/_filter.sass */
+#product-options #product-manufacturers div.options .reset {
+  position: absolute;
+  right: 12px;
+}
+/* line 39, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options form {
   border: 1px solid #d9d9d9;
   background-color: white;
 }
-/* line 37, ../src/partials/_filter.sass */
+/* line 41, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options form > div {
   background: #fff;
 }
-/* line 40, ../src/partials/_filter.sass */
+/* line 44, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options .buttons button {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -2459,7 +2477,7 @@ h2 a {
 #product-options #product-manufacturers div.options .buttons button.ok:before {
   content: url('http://localhost:8000/media/images/ok.png?1270451570');
 }
-/* line 42, ../src/partials/_filter.sass */
+/* line 46, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup {
   display: none;
   position: absolute;
@@ -2467,7 +2485,7 @@ h2 a {
   top: 0px;
   z-index: 10;
 }
-/* line 48, ../src/partials/_filter.sass */
+/* line 52, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup .arrow {
   position: absolute;
   top: 60px;
@@ -2476,7 +2494,7 @@ h2 a {
   width: 7px;
   background: transparent url('http://localhost:8000/media/images/box-arrow-left.png?1270451570') no-repeat scroll left top;
 }
-/* line 56, ../src/partials/_filter.sass */
+/* line 60, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup form {
   width: 348px;
   /* Webkit (Safari, Chrome) */
@@ -2486,7 +2504,7 @@ h2 a {
   /* CSS3 */
   box-shadow: #999999 0px 0px 20px;
 }
-/* line 59, ../src/partials/_filter.sass */
+/* line 63, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup form .buttons {
   padding: 10px 12px;
   padding-top: 20px;
@@ -2497,7 +2515,7 @@ h2 a {
 #product-options #product-manufacturers div.options.popup form .buttons {
   display: block;
 }
-/* line 63, ../src/partials/_filter.sass */
+/* line 67, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup form button {
   width: 94px;
   display: inline;
