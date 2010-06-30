@@ -136,6 +136,7 @@
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
             // Fixed scrolling
             //jQuery('#content').fixedscroll();
+
             // Reset button
             jQuery('#reset').click(function() {
                 $('.selected').removeClass('selected');
@@ -171,7 +172,6 @@
                     default:
                         return false;
                 }
-                
                 
                 filter(getQuery());
                 return false;

@@ -19,11 +19,6 @@ jQuery(document).ready(function() {
         suffix: '*/'
     }
     var likeContainers = 'body.look #content, body.product .product-image';
-    jQuery(likeContainers).children('form').hide();
-    jQuery(likeContainers).hover(
-        function() { jQuery(this).find('form').fadeIn(); },
-        function() { jQuery(this).find('form').fadeOut(); }
-    );
     jQuery(likeContainers).children('form').hyperSubmit({
         success: function(response, statusText, req, form) {
             // Match "/model/slug/like"
@@ -275,6 +270,4 @@ jQuery(document).ready(function() {
             return false;
         } )
     ;
-    
-    ngettext('gunnar', 'hansson', 10);
-} );
+    } );
