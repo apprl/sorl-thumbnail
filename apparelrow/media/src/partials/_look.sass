@@ -88,18 +88,31 @@
   left: 197px
   text-align: center
   button, a
-    +text_input
+    +button("none", !button_height)
+    +border-radius("3px")
     +highlight
+    height= !button_height
+    margin-top: 1em
+  a
     background-image= image_url("add.png")
     background-repeat: no-repeat
     background-position: 10px 7px
     padding-left: 30px
-    margin-top: 1em
   .hover
     +highlight_hover
   p
     margin: 1em 0
     color: #333
+
+#photo .look-empty
+  width: 240px
+  border= "1px" "solid" !border_color
+  padding: 0.5em
+  +border-radius(5px)
+  +box-shadow(#f6f6f6 - #222, 0, 2px, 2px)
+  button
+    width: 226px
+    display: none
 
 #edit-look
   +border-top-radius

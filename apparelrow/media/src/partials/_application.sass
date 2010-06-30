@@ -794,6 +794,42 @@ body.product
 body.look #content
   position: relative
 
+
+form .upload-field
+  position: relative
+  width: 240px
+  height= !button_height
+  input, .button
+    position: absolute
+    height= !button_height
+    line-height= !button_height
+    top: 0px
+    z-index: 1
+    width: 112px
+  input
+    +text_input
+    +box-shadow-inset(#f6f6f6 - #222, 0, 0, 0)
+    right: 0px
+    padding: 0
+    padding-left: 1em
+    width: 100px
+  .button
+    +button
+    +border-radius(3px)
+    background-image= image_url("add.png")
+    background-repeat: no-repeat
+    background-position: 10px 9px
+    padding: 0
+    padding-left: 5px
+    left: 0px
+    cursor: default
+  span input
+    width: 240px
+    left: 0px
+    z-index: 2
+    opacity: 0
+    
+
 body.product .product-image, body.look #content
   form
     position: absolute

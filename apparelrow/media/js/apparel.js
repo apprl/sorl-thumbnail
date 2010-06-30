@@ -61,6 +61,16 @@ jQuery(document).ready(function() {
             return true; 
         } )
     ;
+    
+    jQuery('.upload-field input[type=text], .upload-field .button').click(function(e) {
+        // Forward click events from the fake controls to file object. This doesn't work in FF
+        jQuery('input[type=file]', jQuery(this).parent()).focus();
+        return false;
+    });
+    jQuery('.upload-field input[type=file]').change(function(e) {
+        jQuery('input[type=text]', jQuery(this).closest('.upload-field')).val(this.value);
+    });
+    
 });
 
 

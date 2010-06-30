@@ -353,6 +353,7 @@ jQuery(document).ready(function() {
    
             return true;
         });
+    
 });
 
 function createHotspot(product, top, left) {
@@ -461,7 +462,12 @@ jQuery(document).ready(function() {
         this.form.action += '#photo-tab'
         return true;
     });
-    
+
+    jQuery('#photo input[type=file]').change(function(e) {
+        console.log(jQuery(this).closest('.look-empty'));
+        jQuery('button[type=submit]', jQuery(this).closest('.look-empty')).show();
+    });
+
     jQuery('.look-empty button, .look-empty a').hover(
         function(e) { jQuery(this).addClass('hover') },
         function(e) { jQuery(this).removeClass('hover') }
@@ -510,8 +516,12 @@ jQuery(document).ready(function() {
                 {% include 'apparel/fragments/look_photo.html' %}
                 
                 <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
-                    {{ form.image }}
-                    <button type="submit">{% trans "Upload a photo to create a tagged image" %}</button>
+                    <div class="upload-field">
+                        <input type="text" name="_not_used" />
+                        <span class="button">{% trans "Choose file" %}</span>
+                        <span>{{ form.image }}</span>
+                    </div>
+                    <button type="submit">{% trans "Upload" %}</button>
                 </div>
             </div>
             <div id="selection">
