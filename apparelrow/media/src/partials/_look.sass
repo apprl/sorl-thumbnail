@@ -263,7 +263,19 @@ body.look
       font-size: 1.5em
       line-height: 2em
       a
-        font-size: 0.75em
+        margin-left: 2em
+        +button("none", "20px")
+        +border-radius("2px")
+        +highlight
+        background-image= image_url("edit.png")
+        background-repeat: no-repeat
+        background-position: 6px 6px
+        font-size: .7em
+        padding: 5px
+        padding-left: 22px
+      a:hover
+        +highlight_hover
+        
 
 #wardrobe
   margin: 0 -16px 0 -24px

@@ -811,29 +811,64 @@ body.look #content .collage, body.look #content .photo {
 }
 /* line 265, ../src/partials/_look.sass */
 #look-header div h1 a {
-  font-size: 0.75em;
+  margin-left: 2em;
+  border: 1px solid #d9d9d9;
+  background-color: #fafafa;
+  line-height: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: #f2f2f2;
+  background-image: url('http://localhost:8000/media/images/none');
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  background-color: #d0fae8;
+  border-color: #92c0c7;
+  color: #408994;
+  background-image: url('http://localhost:8000/media/images/edit.png?1277911927');
+  background-repeat: no-repeat;
+  background-position: 6px 6px;
+  font-size: .7em;
+  padding: 5px;
+  padding-left: 22px;
+}
+/* line 85, ../src/partials/_base.sass */
+#look-header div h1 a.cancel:before {
+  content: url('http://localhost:8000/media/images/cancel.png?1270451570');
+}
+/* line 87, ../src/partials/_base.sass */
+#look-header div h1 a.ok:before {
+  content: url('http://localhost:8000/media/images/ok.png?1270451570');
+}
+/* line 276, ../src/partials/_look.sass */
+#look-header div h1 a:hover {
+  background-color: #94ffd1;
+  border-color: #92c0c7;
+  color: #408994;
 }
 
-/* line 268, ../src/partials/_look.sass */
+/* line 280, ../src/partials/_look.sass */
 #wardrobe {
   margin: 0 -16px 0 -24px;
   clear: both;
 }
 
-/* line 272, ../src/partials/_look.sass */
+/* line 284, ../src/partials/_look.sass */
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
   background: #f2f2f2 url('http://localhost:8000/media/images/gradient-bg.png?1270451570') repeat-x;
   padding: 10px 8px 0 10px;
 }
-/* line 278, ../src/partials/_look.sass */
+/* line 290, ../src/partials/_look.sass */
 #wardrobe-title span {
   background: transparent url('http://localhost:8000/media/images/arrow-bg-down.png?1270451570') no-repeat top left;
   padding-left: 14px;
 }
 
-/* line 282, ../src/partials/_look.sass */
+/* line 294, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
   background: transparent url('http://localhost:8000/media/images/wardrobe-bg.png?1273248112') scroll repeat-x center center;
@@ -973,18 +1008,18 @@ body.look #content .collage, body.look #content .photo {
 #wardrobe-contents div.row ul li a img {
   vertical-align: middle;
 }
-/* line 288, ../src/partials/_look.sass */
+/* line 300, ../src/partials/_look.sass */
 #wardrobe-contents li a {
   cursor: move;
 }
 
-/* line 293, ../src/partials/_look.sass */
+/* line 305, ../src/partials/_look.sass */
 .ui-icon {
   background-image: none;
   background-position: 0 0;
 }
 
-/* line 298, ../src/partials/_look.sass */
+/* line 310, ../src/partials/_look.sass */
 .ui-icon-gripsmall-diagonal-se {
   bottom: -11px;
   right: -11px;
@@ -993,25 +1028,25 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('http://localhost:8000/media/images/resize.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 306, ../src/partials/_look.sass */
+/* line 318, ../src/partials/_look.sass */
 .ui-rotatable {
   position: relative;
 }
 
-/* line 309, ../src/partials/_look.sass */
+/* line 321, ../src/partials/_look.sass */
 .ui-rotatable-handle {
   position: absolute;
   z-index: 99999;
   display: block;
 }
 
-/* line 314, ../src/partials/_look.sass */
+/* line 326, ../src/partials/_look.sass */
 .ui-rotatable-disabled .ui-rotatable-handle,
 .ui-rotatable-autohide .ui-rotatable-handle {
   display: none;
 }
 
-/* line 318, ../src/partials/_look.sass */
+/* line 330, ../src/partials/_look.sass */
 .ui-rotatable-ne {
   top: -11px;
   right: -11px;
@@ -1020,7 +1055,7 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('http://localhost:8000/media/images/rotate-cw.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 325, ../src/partials/_look.sass */
+/* line 337, ../src/partials/_look.sass */
 .ui-rotatable-sw {
   bottom: -11px;
   left: -11px;

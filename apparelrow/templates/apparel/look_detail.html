@@ -42,7 +42,7 @@
         <h1>
             {{ object.title }}
             {% ifequal object.user user %}
-                <a href="{% url apparel.views.look_edit object.slug %}">{% trans "(edit)" %}</a>
+                <a href="{% url apparel.views.look_edit object.slug %}">{% trans "Edit" %}</a>
             {% endifequal %}
         </h1>
         <span>
