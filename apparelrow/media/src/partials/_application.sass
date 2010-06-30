@@ -304,7 +304,7 @@ h2
   a
     +float-right
 
-#reset
+.reset
   background= "transparent" image_url("logout.png") "no-repeat" "scroll" "right" "center"
   padding-right: 15px
 
@@ -319,6 +319,8 @@ h2
   li.hover.last
     border-bottom: none
 
+!slider_width = 222px
+!ruler_width = !slider_width + 9px
 #product-options
   +filter("list-item-arrow.png", "list-item-radio-checked.png")
   position: relative
@@ -335,10 +337,29 @@ h2
 
   #product-price
     +popup(0)
+    #price-ruler
+      margin-top: 21px
+      margin-left: 47px
+      width= !ruler_width
+      background= "transparent" image_url("slider-ruler-bg.png") "repeat-x" "scroll" "2px" "top"
+      +clearfix
+      .point
+        width= !ruler_width / 3
+        line-height: 2em
+        font-size: smaller
+        color= !easiest_color
+        &.min
+          float: left
+        &.max
+          float: left
+          text-align: right
+        &.mid
+          float: left
+          text-align: center
     #price-slider
-      margin: 5px 10px
+      margin: 5px 10px 0px
       float: left
-      width: 222px
+      width= !slider_width - 2
       +border-radius("6px")
       border-color= !border_color
       .ui-slider-handle
@@ -346,6 +367,7 @@ h2
         width: 9px
         height: 22px
         border: none
+        margin-left: -4px
         +border-radius("0px")
       .ui-widget-header
         border: none
@@ -356,8 +378,7 @@ h2
       padding-bottom: 0px
     .price-range
       +box
-      +border-bottom-radius("3px")
-      +border-top-radius("3px")
+      +border-radius("3px")
       height: 20px
       width: 36px
       text-align: center

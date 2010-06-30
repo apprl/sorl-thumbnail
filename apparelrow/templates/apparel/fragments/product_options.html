@@ -3,7 +3,9 @@
 <div class="options">
     <form action="{% url apparel.views.browse %}">
         <div>
-            <h3>{% block option_header %}{% endblock %}</h3>
+            <h3>
+                {% block option_header %}{% endblock %}
+            </h3>
             <div class="option-content">
                 {% block option_content %}{% endblock %}
             </div>
@@ -14,4 +16,3 @@
     </form>
     <span class="arrow"></span>
 </div>
-

@@ -7,13 +7,13 @@
 {% block option_content %}
     <input type="text" name="pricerange_min" value="{{ pricerange.min }}" class="price-range">
     <div id="price-slider"></div>
-    <!--
-    <div id="price-ruler">
-        <span>{{ pricerange.min }}</span>
-        <span>{% calc_half pricerange.max pricerange.min %}</span>
-        <span>{{ pricerange.max }}</span>
-    </div>
-    -->
     <input type="text" name="pricerange_max" value="{{ pricerange.max }}" class="price-range">
+ 
+    <div id="price-ruler">
+        <div class="point min">{{ pricerange.min }}</div>
+        <div class="point mid">{% calc_half pricerange.max pricerange.min %}</div>
+        <div class="point max">{{ pricerange.max }}</div>
+    </div>
+
     <input type="hidden" name="1:vp.price:range" value="{{ pricerange.selected  }}">
 {% endblock %}
