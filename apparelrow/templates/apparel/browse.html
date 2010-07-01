@@ -432,7 +432,7 @@
             {% with pages|first as products %}
             <h2><span id="product-count">{% include 'apparel/fragments/product_count.html' %}</span> {% trans "products" %}</h2>
             {% endwith %}
-            <div id="product-list">
+            <div id="product-list" class="product-list">
                 <ul class="list">
                     {% for page in pages %}
                     <li id="page-{{ page.number }}"><ul>

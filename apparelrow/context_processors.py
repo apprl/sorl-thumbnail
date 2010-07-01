@@ -11,7 +11,7 @@ def js_templates(request):
     
     return {
         'default_templates': {
-            'product_search': js_template(get_template_source('apparel/fragments/product_search.html')),
+            'product': js_template(get_template_source('apparel/fragments/product_small.html')),
             'look_search': get_template_source('apparel/fragments/look_search.html'),
             'manufacturer_search': js_template(get_template_source('apparel/fragments/manufacturer_search.html')),
         },

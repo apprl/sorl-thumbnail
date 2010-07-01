@@ -126,6 +126,15 @@
   vertical-align: top
 
 
+=product_list_item
+  display: block
+  width: auto
+  &:hover
+    .product-image
+      z-index: 100
+      +box-shadow
+
+
 =colors
   +horizontal-list
   position: relative

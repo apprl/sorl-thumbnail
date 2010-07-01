@@ -57,7 +57,6 @@
                         jQuery('#add-to-look-new').before(jQuery('#look_button_template').render(response.data));
                     }
 
-                    
                     if(response.data['added']) {
                         increase_counts(jQuery('h2#looks > span.count, a.looks > span.count'));
                         jQuery('h2#looks.hidden, p.hidden:has(a.looks)').fadeIn().removeClass('hidden');

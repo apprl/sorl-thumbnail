@@ -469,7 +469,7 @@ span
   border: 1px solid #dadada
 
 
-div#product-list
+div#product-list, .product-list
   +clearfix
   +box
   +border-bottom-radius("3px")
@@ -486,12 +486,7 @@ div#product-list
       ul
         +clearfix
         li
-          display: block
-          width: auto
-          &:hover
-            .product-image
-              z-index: 100
-              +box-shadow
+          +product_list_item
 
 .product-small
   width: 116px
@@ -937,18 +932,18 @@ a.block_link
 
 
 #search
-  background: transparent url(../images/search.png) scroll no-repeat left center
+  background= "transparent" image_url("search.png") "scroll" "no-repeat" "right" "top"
   top: 31px
   right: -16px
   position: absolute
   width: 163px
   height: 24px
-  padding: 17px 50px 17px 41px
+  padding: 14px 50px 17px 41px
   overflow: visible
   z-index: 1000
 
   &.expanded
-    background: transparent url(../images/searchresult-bg.png) scroll no-repeat right top
+    background= "transparent" image_url("searchresult-bg.png") "scroll" "no-repeat" "right" "top"
     height: 547px
     width: 895px
   
@@ -962,25 +957,22 @@ a.block_link
     font-size: 1.2em
     background: transparent
 
-
-!search_col_width = 206px
-!search_col_margin = 36px
-
 #search-result
-  margin-top: 115px
   display: none
-  margin: 115px -25px auto -15px
+  margin: 60px -25px auto -15px
     
   h3, h2, a
     font-size: small
-    font-variant: small-caps
-    text-transform: lowercase
     font-weight: normal
-  
+  h2
+    background= "transparent" image_url("arrow-bg.png") "scroll" "no-repeat" "right" "center"
+    cursor: pointer
+    &:hover
+      background-image= image_url("arrow-bg-hover.png")
   div
-    width= !search_col_width
+    width: 200px
     float: left
-    margin-right= !search_col_margin
+    margin-right: 30px
     .more-results
       +button("gradient-bg.png", "30px")
       height: 30px
@@ -993,12 +985,17 @@ a.block_link
         +go_to_link
         text-transform: lowercase
         font-variant: small-caps
+    &.product-list
+      background-color: transparent
+      width: auto
+      margin: 0
+      height: auto
+      +border-bottom-radius("0px")
+      border-bottom: none
     ul
       +clearfix
       li
-        height: 92px
         float: left
-        margin-bottom: 10px
         div
           width: auto
           margin-right: auto
@@ -1008,57 +1005,47 @@ a.block_link
         li
           height: auto
           float: none
+          overflow: hidden
+          +border("bottom", "#efefef")
           a
-            +go_to_link
+            padding: 8px 2px
             white-space: nowrap
+            color: #377780
+            display: block
+          &.first
+            margin-top: -8px
+          &.last
+            border-color= !border_color
+          &:hover
+            background-color: #f5f5f5
+            a
+              color: #55b8c8
       &#search-result-looks
         li
-          width= !search_col_width / 2 - 10
-          margin-right: 5px
-          margin-left: 5px
+          width: 95px
+          height: 92px
           line-height: 92px
+          margin-right: 10px
+          &.odd
+            margin-right: 0px
           a
             vertical-align: middle
-        
+          &:hover
+            z-index: 100
+            +box-shadow(#f6f6f6 - #222, 0, 3px, 3px)
+
       &#search-result-products
         li
-          font-size: smaller
-          width= !search_col_width
-          margin-right= !search_col_margin / 2
-          div.search-image
-            margin-right: 10px
-            float: left
-            width: 72px
-            line-height: 92px
-            background-color: white
-            border= 1px "solid" !border_color
-            text-align: center
-            img
-              vertical-align: middle
-        div
-          width: 122px
-          float: left
-          div
-            +clearfix
-            float: none
-            height: auto
-            .price, .currency
-              color= !font_color
-              vertical-align: middle
-          a
-            +go_to_link
-            display: block
-            padding-top: 3px
-            margin-top: 1em
-          h3
-            overflow: hidden
-            font-size: small
-            font-weight: normal
-            font-variant: normal
-            white-space: nowrap
-            text-transform: capitalize
-    &.col-2
-      width= !search_col_width * 2 + !search_col_margin
+          +product_list_item
+          margin: 0
+          height: auto
+          width: 116px
+          &.edge
+            .product-image
+              border-right: none
+    &.wide
+      width: 466px
+
     &.last
       margin-right: 0px
 

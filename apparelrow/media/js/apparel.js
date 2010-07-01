@@ -94,6 +94,12 @@ function makeProductTooltip(selector) {
  *  Search functionality and HTML bindings
  */
 
+// FIXME: These lines are here so Django can pick them up. They're repeated
+// in the _doSearch function
+ngettext('Found %(count)s products', 'Found %(count)s product', 0)
+ngettext('Found %(count)s looks', 'Found %(count)s look', 0)
+ngettext('Found %(count)s matching brands', 'Found %(count)s matching brand', 0)
+
 ApparelSearch = {
     hide: function() {
         jQuery('#search-result').hide();
@@ -117,18 +123,20 @@ ApparelSearch = {
         
         ApparelSearch.clear();
         
-        // Find products
-        
         ApparelSearch._doSearch({
             model: 'products', 
             query: {
                 '1:p.product_name:icontains': s,
                 '2:p.description:icontains': s,
                 'o': '1o2',
-                'size': 6
+                'size': 8
             },
             selector: '#search-result-products',
-            template: 'product_search_template'
+            template: 'product_template',
+            text: {
+                plural: 'Found %(count)s products',
+                singular: 'Found %(count)s product'
+            }
         });
     
         ApparelSearch._doSearch({
@@ -140,7 +148,11 @@ ApparelSearch = {
                 'size': 6
             },
             selector: '#search-result-looks',
-            template: 'look_search_template'
+            template: 'look_search_template',
+            text: {
+                plural: 'Found %(count)s looks',
+                singular: 'Found %(count)s look'
+            }
         });
         
         ApparelSearch._doSearch({
@@ -150,7 +162,11 @@ ApparelSearch = {
                 'size': 10
             },
             selector: '#search-result-manufacturers',
-            template: 'manufacturer_search_template'
+            template: 'manufacturer_search_template',
+            text: {
+                plural: 'Found %(count)s matching brands',
+                singular: 'Found %(count)s matching brand'
+            }
         });
         
         ApparelSearch.show();
@@ -177,28 +193,52 @@ ApparelSearch = {
                 if(!response) return;
                 var list = jQuery(opts.selector);
                 jQuery.each(response.object_list, function(i, object) {
+                    var args, root;
+                    if(opts.template == 'product_template') {
+                        // Product template special casing
+                        args = { 'product': object };
+                        root = list;
+                    } else {
+                        args = { 'object': object };
+                        root = jQuery('<li/>').appendTo(list);
+                    }
+                    
+                    if('score' in object)
+                        args.score = interpolate(ngettext("%(count)s like", "%(count)s likes", object.score.score), { count: object.score.score }, true);
+                    
                     try {
-                        var args, root;
-                        if(opts.template == 'product_search_template') {
-                            // Product template special casing
-                            args = { 'product': object };
-                            root = list;
-                        } else {
-                            args = { 'object': object };
-                            root = jQuery('<li/>').appendTo(list);
-                        }
-                        
                         jQuery('#' + opts.template).render(args).appendTo(root);
+                    
                     } catch(e) {
                         console.log('Error while rendering template', e);
                     }
+                    
+                    var item = list.children(':last');
+                    item.addClass((i % 2 == 0) ? 'even' : 'odd');
+                    if(i == 0)
+                        item.addClass('first');
+                    if(i == response.object_list.length - 1)
+                        item.addClass('last');
+                    
+                    if(opts.template == 'product_template' && i % 4 == 3)
+                        item.addClass('edge');
                 });
-                
+            
                 if(list.children().size() == 0) {
                     console.log('No results');
-                } else if(response.paginator.num_pages > 1) {
-                    jQuery('.more-results', list.parent()).show();
                 }
+                
+                list.closest('.result-container').children('h2').text(
+                    interpolate(
+                        ngettext(
+                            opts.text.singular, 
+                            opts.text.plural, 
+                            response.paginator.count
+                        ), 
+                        { count: response.paginator.count }, 
+                        true
+                    )
+                );
                 
                 list.data('last-query', opts.query);
                 list.data('last-result', response);
@@ -223,7 +263,7 @@ jQuery(document).ready(function() {
             case 224: // command
                 return false;
             case 27: // escape
-                hideSearch();
+                ApparelSearch.hide();
                 return false;
             
             default:
@@ -231,15 +271,11 @@ jQuery(document).ready(function() {
         }
     });
             
-    jQuery('#search .more-results')
-        .hover(
-            function(e) { jQuery(this).addClass('hover') },
-            function(e) { jQuery(this).removeClass('hover') }
-        )
+    jQuery('#search .result-container>h2')
         .click(function(e) {
-            var list  = jQuery(this).siblings('ul');
+            var list  = jQuery(this).parent().find('ul:first');
             var query = list.data('last-query');
-            
+
             switch(list.attr('id')) {
                 case 'search-result-products':
                     if(!query) {

@@ -65,7 +65,6 @@ def browse(request):
         pages     = (paged_result, next_page,),
         templates = {
             'product_count': js_template(get_template_source('apparel/fragments/product_count.html')),
-            'product': js_template(get_template_source('apparel/fragments/product_small.html')),
             'pagination': get_template_source('apparel/fragments/pagination_js.html')
         },
         pagination = {

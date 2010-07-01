@@ -115,20 +115,17 @@
                 </div>
             -->
             <div id="search-result">
-                <div class="col-2">
+                <div class="wide result-container">
                     <h2>{% trans "Matching products" %}</h2>
-                    <ul id="search-result-products"></ul>
-                    <button class="more-results"><span>{% trans "Show more products" %}</span></button>
+                    <div class="product-list"><ul id="search-result-products"></ul></div>
                 </div>
-                <div>
+                <div class="result-container">
                     <h2>{% trans "Matching looks" %}</h2>
                     <ul id="search-result-looks" class="looks"></ul>
-                    <button class="more-results"><span>{% trans "Show more looks" %}</span></button>
                 </div>
-                <div class="last">
+                <div class="last result-container">
                     <h2>{% trans "Matching brands" %}</h2>
                     <ul id="search-result-manufacturers"></ul>
-                    <button class="more-results"><span>{% trans "Show more brands" %}</span></button>
                 </div>
             </div>
         </form>
