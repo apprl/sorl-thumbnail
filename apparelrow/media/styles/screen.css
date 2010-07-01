@@ -827,12 +827,12 @@ body.look #content .collage, body.look #content .photo {
   background-color: #d0fae8;
   border-color: #92c0c7;
   color: #408994;
-  background-image: url('http://localhost:8000/media/images/edit.png?1277911927');
+  background-image: url('http://localhost:8000/media/images/edit.png?1277983454');
   background-repeat: no-repeat;
-  background-position: 6px 6px;
-  font-size: .7em;
+  background-position: 5px 5px;
+  font-size: 10px;
   padding: 5px;
-  padding-left: 22px;
+  padding-left: 20px;
 }
 /* line 85, ../src/partials/_base.sass */
 #look-header div h1 a.cancel:before {
