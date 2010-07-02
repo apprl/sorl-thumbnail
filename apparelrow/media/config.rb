@@ -8,7 +8,7 @@ javascripts_dir = "js"
 # To enable relative paths to assets via compass helper functions. Uncomment:
 # relative_assets = true
 
-static_host = 'http://localhost:8000'
+static_host = 'http://apparelrow-dev.hanssonlarsson.se'
 
 asset_host do |asset|
   static_host

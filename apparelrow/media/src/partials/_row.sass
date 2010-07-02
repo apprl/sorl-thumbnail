@@ -1,43 +1,43 @@
-!default_row_width      ||= !large_width
-!default_row_height     ||= 118px
-!default_browse_height  ||= 8px
+$default_row_width: $large_width !default
+$default_row_height: 118px !default
+$default_browse_height: 8px !default
 
-=row(!width = !default_row_width, !height = !default_row_height)
+=row($width: $default_row_width, $height: $default_row_height)
   +clearfix
   a.prev, a.next
     +float-left
     +box
-    display: block 
+    display: block
     width: 6px
-    height= !default_browse_height
-    padding= (!height - 2 - !default_browse_height) / 2 4px
+    height: $default_browse_height
+    padding: ($height - 2 - $default_browse_height) / 2 4px
     &.disabled
       visibility: visible
-      background-color= !box_disabled_color
-      border-color= !border_disabled_color
+      background-color: $box_disabled_color
+      border-color: $border_disabled_color
     &:hover
-      background-color= !hover_color
+      background-color: $hover_color
     &:hover.disabled
-      background-color= !box_disabled_color
+      background-color: $box_disabled_color
   a.prev
-    +replace-text("prev-page.png")
+    +replace-text(unquote("prev-page.png"))
     +border-left-radius
     margin-right: 5px
     &.disabled
-      background-image= image_url("prev-page-disabled.png")
+      background-image: image_url(unquote("prev-page-disabled.png"))
   a.next
-    +replace-text("next-page.png")
+    +replace-text(unquote("next-page.png"))
     +border-right-radius
     margin-left: 5px
     &.disabled
-      background-image= image_url("next-page-disabled.png")
+      background-image: image_url(unquote("next-page-disabled.png"))
   div.row
     +float-left
     +clearfix
     position: relative
     overflow: hidden
-    width= !width - (16 + 5) * 2
-    height= !height
+    width: $width - (16 + 5) * 2
+    height: $height
     ul
       +horizontal-list(0)
       position: absolute
@@ -45,11 +45,10 @@
       li
         margin-right: 10px
         a
-          +border("all")
+          +border(all)
           display: block
           background: white
           height: 116px
           line-height: 116px
           img
             vertical-align: middle
-
