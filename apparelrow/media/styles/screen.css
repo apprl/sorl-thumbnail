@@ -770,77 +770,86 @@ body.look .spread input {
   left: 16px;
 }
 
-/* line 217, ../src/partials/_look.sass */
+/* line 218, ../src/partials/_look.sass */
+ul.looks li:hover {
+  z-index: 100;
+  -moz-box-shadow: #999999 0px 0px 20px;
+  -webkit-box-shadow: #999999 0px 0px 20px;
+  -o-box-shadow: #999999 0px 0px 20px;
+  box-shadow: #999999 0px 0px 20px;
+}
+
+/* line 223, ../src/partials/_look.sass */
 body.look .collage, body.look .photo {
   position: relative;
   height: 524px;
 }
-/* line 220, ../src/partials/_look.sass */
+/* line 226, ../src/partials/_look.sass */
 body.look #comments-and-links {
   float: left;
   width: 452px;
   margin-right: 36px;
 }
-/* line 224, ../src/partials/_look.sass */
+/* line 230, ../src/partials/_look.sass */
 body.look #tags {
   float: left;
   width: 208px;
 }
-/* line 227, ../src/partials/_look.sass */
+/* line 233, ../src/partials/_look.sass */
 body.look #tags li {
   border-bottom: 1px solid #f2f2f2;
 }
-/* line 229, ../src/partials/_look.sass */
+/* line 235, ../src/partials/_look.sass */
 body.look #tags li span {
   float: right;
   color: #999999;
 }
-/* line 232, ../src/partials/_look.sass */
+/* line 238, ../src/partials/_look.sass */
 body.look .sidebar {
   margin-top: 30px;
 }
-/* line 234, ../src/partials/_look.sass */
+/* line 240, ../src/partials/_look.sass */
 body.look .sidebar p {
   border-top: none;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 237, ../src/partials/_look.sass */
+/* line 243, ../src/partials/_look.sass */
 body.look .sidebar .description {
   border-bottom: none;
   padding-top: 1.5em;
 }
-/* line 240, ../src/partials/_look.sass */
+/* line 246, ../src/partials/_look.sass */
 body.look #content {
   margin-top: -2em;
 }
-/* line 242, ../src/partials/_look.sass */
+/* line 248, ../src/partials/_look.sass */
 body.look #content .collage, body.look #content .photo {
   background-color: white;
   margin-right: 2em;
 }
 
-/* line 246, ../src/partials/_look.sass */
+/* line 252, ../src/partials/_look.sass */
 #look-header {
   margin-top: 1em;
   position: relative;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 250, ../src/partials/_look.sass */
+/* line 256, ../src/partials/_look.sass */
 #look-header .profile-image {
   position: absolute;
   left: 0em;
   top: 0;
 }
-/* line 254, ../src/partials/_look.sass */
+/* line 260, ../src/partials/_look.sass */
 #look-header div {
   margin-left: 70px;
 }
-/* line 256, ../src/partials/_look.sass */
+/* line 262, ../src/partials/_look.sass */
 #look-header div h1 {
   font-size: 1.5em;
   line-height: 2em;
 }
-/* line 259, ../src/partials/_look.sass */
+/* line 265, ../src/partials/_look.sass */
 #look-header div h1 a {
   margin-left: 2em;
   border: 1px solid #d9d9d9;
@@ -876,33 +885,33 @@ body.look #content .collage, body.look #content .photo {
 #look-header div h1 a.ok:before {
   content: url('http://apparelrow-dev.hanssonlarsson.se/media/images/ok.png?1270451570');
 }
-/* line 270, ../src/partials/_look.sass */
+/* line 276, ../src/partials/_look.sass */
 #look-header div h1 a:hover {
   background-color: #94ffd1;
   border-color: #92c0c7;
   color: #408994;
 }
 
-/* line 273, ../src/partials/_look.sass */
+/* line 279, ../src/partials/_look.sass */
 #wardrobe {
   margin: 0 -16px 0 -24px;
   clear: both;
 }
 
-/* line 277, ../src/partials/_look.sass */
+/* line 283, ../src/partials/_look.sass */
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
   background: #f2f2f2 url('http://apparelrow-dev.hanssonlarsson.se/media/images/gradient-bg.png?1270451570') repeat-x;
   padding: 10px 8px 0 10px;
 }
-/* line 282, ../src/partials/_look.sass */
+/* line 288, ../src/partials/_look.sass */
 #wardrobe-title span {
   background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/arrow-bg-down.png?1270451570') no-repeat top left;
   padding-left: 14px;
 }
 
-/* line 286, ../src/partials/_look.sass */
+/* line 292, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
   background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/wardrobe-bg.png?1273248112') scroll repeat-x center center;
@@ -1055,18 +1064,18 @@ body.look #content .collage, body.look #content .photo {
 #wardrobe-contents div.row ul li a img {
   vertical-align: middle;
 }
-/* line 291, ../src/partials/_look.sass */
+/* line 297, ../src/partials/_look.sass */
 #wardrobe-contents li a {
   cursor: move;
 }
 
-/* line 295, ../src/partials/_look.sass */
+/* line 301, ../src/partials/_look.sass */
 .ui-icon {
   background-image: none;
   background-position: 0 0;
 }
 
-/* line 300, ../src/partials/_look.sass */
+/* line 306, ../src/partials/_look.sass */
 .ui-icon-gripsmall-diagonal-se {
   bottom: -11px;
   right: -11px;
@@ -1075,25 +1084,25 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/resize.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 308, ../src/partials/_look.sass */
+/* line 314, ../src/partials/_look.sass */
 .ui-rotatable {
   position: relative;
 }
 
-/* line 311, ../src/partials/_look.sass */
+/* line 317, ../src/partials/_look.sass */
 .ui-rotatable-handle {
   position: absolute;
   z-index: 99999;
   display: block;
 }
 
-/* line 316, ../src/partials/_look.sass */
+/* line 322, ../src/partials/_look.sass */
 .ui-rotatable-disabled .ui-rotatable-handle,
 .ui-rotatable-autohide .ui-rotatable-handle {
   display: none;
 }
 
-/* line 320, ../src/partials/_look.sass */
+/* line 326, ../src/partials/_look.sass */
 .ui-rotatable-ne {
   top: -11px;
   right: -11px;
@@ -1102,7 +1111,7 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/rotate-cw.png?1274796492') no-repeat scroll center center;
 }
 
-/* line 327, ../src/partials/_look.sass */
+/* line 333, ../src/partials/_look.sass */
 .ui-rotatable-sw {
   bottom: -11px;
   left: -11px;
@@ -4171,15 +4180,7 @@ a.block_link {
 #search-result div ul#search-result-looks li a {
   vertical-align: middle;
 }
-/* line 975, ../src/partials/_application.sass */
-#search-result div ul#search-result-looks li:hover {
-  z-index: 100;
-  -moz-box-shadow: #d4d4d4 0 3px 3px;
-  -webkit-box-shadow: #d4d4d4 0 3px 3px;
-  -o-box-shadow: #d4d4d4 0 3px 3px;
-  box-shadow: #d4d4d4 0 3px 3px;
-}
-/* line 979, ../src/partials/_application.sass */
+/* line 976, ../src/partials/_application.sass */
 #search-result div ul#search-result-products li {
   display: block;
   width: auto;
@@ -4195,26 +4196,26 @@ a.block_link {
   -o-box-shadow: #999999 0px 0px 20px;
   box-shadow: #999999 0px 0px 20px;
 }
-/* line 985, ../src/partials/_application.sass */
+/* line 982, ../src/partials/_application.sass */
 #search-result div ul#search-result-products li.edge .product-image {
   border-right: none;
 }
-/* line 987, ../src/partials/_application.sass */
+/* line 984, ../src/partials/_application.sass */
 #search-result div.wide {
   width: 466px;
 }
-/* line 989, ../src/partials/_application.sass */
+/* line 986, ../src/partials/_application.sass */
 #search-result div.last {
   margin-right: 0px;
 }
 
-/* line 992, ../src/partials/_application.sass */
+/* line 989, ../src/partials/_application.sass */
 .facebook-profile-image {
   float: left;
   margin-right: 0.5em;
 }
 
-/* line 996, ../src/partials/_application.sass */
+/* line 993, ../src/partials/_application.sass */
 #profile-nav li {
   display: block;
   float: left;
@@ -4224,24 +4225,24 @@ a.block_link {
   border: 1px solid #d9d9d9;
   border-left-color: white;
   text-transform: uppercase;
-  background: transparent url(../images/profile-nav-bg.png) scroll repeat-x top left;
+  background: transparent url('http://apparelrow-dev.hanssonlarsson.se/media/images/profile-nav-bg.png?1270451570') scroll repeat-x top left;
 }
-/* line 1006, ../src/partials/_application.sass */
+/* line 1003, ../src/partials/_application.sass */
 #profile-nav li.selected {
-  background-image: url(../images/profile-nav-bg-selected.png);
+  background-image: url('http://apparelrow-dev.hanssonlarsson.se/media/images/profile-nav-bg-selected.png?1270451570');
   border-right-color: #ababab;
   border-left-color: #ababab;
 }
-/* line 1010, ../src/partials/_application.sass */
+/* line 1007, ../src/partials/_application.sass */
 #profile-nav li a {
   line-height: 30px;
 }
-/* line 1012, ../src/partials/_application.sass */
+/* line 1009, ../src/partials/_application.sass */
 #profile-nav li.profile-image {
   padding: 0;
 }
 
-/* line 1015, ../src/partials/_application.sass */
+/* line 1012, ../src/partials/_application.sass */
 #profile-nav-dash {
   position: relative;
   top: -10px;
