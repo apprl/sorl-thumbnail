@@ -108,13 +108,8 @@
         </div>
         <form action="/apparel/search" method="get" onsubmit="return false" id="search">
             <input type="text" name="s" />
-            <!--
-                <div id="search-totals">
-                    <div></div>
-                    <a href="/browse/">{% trans "Show all products" %}</a>
-                </div>
-            -->
             <div id="search-result">
+                <a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>
                 <div class="wide result-container">
                     <h2>{% trans "Matching products" %}</h2>
                     <div class="product-list"><ul id="search-result-products"></ul></div>

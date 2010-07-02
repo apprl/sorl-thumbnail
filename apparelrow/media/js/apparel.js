@@ -91,32 +91,41 @@ function makeProductTooltip(selector) {
 
 
 /**
- *  Search functionality and HTML bindings
+ *  Search functionality 
  */
 
 // FIXME: These lines are here so Django can pick them up. They're repeated
-// in the _doSearch function
+// in the _doSearch function. Find a nicer way of doing this
 ngettext('Found %(count)s products', 'Found %(count)s product', 0)
 ngettext('Found %(count)s looks', 'Found %(count)s look', 0)
 ngettext('Found %(count)s matching brands', 'Found %(count)s matching brand', 0)
 
 ApparelSearch = {
     hide: function() {
+        // Hides search result dialog
         jQuery('#search-result').hide();
         jQuery('#search').removeClass('expanded');
     },
     show: function() {
+        // Shows search result dialog
         jQuery('#search-result').fadeIn();
         jQuery('#search').addClass('expanded');
     },
     clear: function() {
+        // Clears displayed results and cached resultsets and queries
         jQuery('#search-result ul')
             .data('last-query', null)
             .data('last-result', null)
             .empty();
-        jQuery('#search-result .more-results').hide();
+    },
+    cancel: function() {
+        // Clears and hides all
+        this.hide();
+        this.clear();
+        jQuery('#search > input').val('');
     },
     search: function() {
+        // Preforms a search
         var s = jQuery('#search > input').val();
         if(s.length == 0)
             return;
@@ -248,29 +257,37 @@ ApparelSearch = {
 };
 
 
+// DOM bindings
+
 jQuery(document).ready(function() {
     jQuery('#search > input').keyup(function(e) {
-        // FIXME: Ignore if modifier is used (apart from shift)
         var j = jQuery(this);
         clearTimeout(j.data('tid'));
         
         switch(e.keyCode) {
             case 0: // command+tab
             case 9: // tab
-            case 13: // enter
             case 17: // ctrl
             case 18: // alt
             case 224: // command
                 return false;
+            case 13: // enter
+                ApparelSearch.search();
+                return false;
             case 27: // escape
-                ApparelSearch.hide();
+                ApparelSearch.cancel();
                 return false;
             
             default:
                 j.data('tid', setTimeout(ApparelSearch.search, 1000));
         }
     });
-            
+    jQuery('#cancel-search')
+        .click(function(e) {
+            ApparelSearch.cancel();
+            return false;
+        })
+    ;
     jQuery('#search .result-container>h2')
         .click(function(e) {
             var list  = jQuery(this).parent().find('ul:first');
