@@ -94,12 +94,6 @@ function makeProductTooltip(selector) {
  *  Search functionality 
  */
 
-// FIXME: These lines are here so Django can pick them up. They're repeated
-// in the _doSearch function. Find a nicer way of doing this
-ngettext('Found %(count)s products', 'Found %(count)s product', 0)
-ngettext('Found %(count)s looks', 'Found %(count)s look', 0)
-ngettext('Found %(count)s matching brands', 'Found %(count)s matching brand', 0)
-
 ApparelSearch = {
     hide: function() {
         // Hides search result dialog
@@ -126,6 +120,7 @@ ApparelSearch = {
     },
     search: function() {
         // Preforms a search
+        
         var s = jQuery('#search > input').val();
         if(s.length == 0)
             return;
@@ -253,7 +248,16 @@ ApparelSearch = {
                 list.data('last-result', response);
             }
         });
-    }
+    },
+    __translations: function() {
+        // FIXME: These lines are here so Django can pick them up. They're repeated
+        // in the _doSearch function. Find a nicer way of doing this
+
+        ngettext('Found %(count)s product', 'Found %(count)s products', 0);
+        ngettext('Found %(count)s look', 'Found %(count)s looks', 0);
+        ngettext('Found %(count)s matching brand', 'Found %(count)s matching brands', 0);
+    },
+
 };
 
 

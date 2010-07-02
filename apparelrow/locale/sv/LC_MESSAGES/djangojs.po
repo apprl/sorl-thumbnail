@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-29 17:13+0200\n"
+"POT-Creation-Date: 2010-07-02 13:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: media/js/apparel.js:276
-msgid "gunnar"
-msgid_plural "hansson"
-msgstr[0] "svensk gunnar"
-msgstr[1] "svensk hansson"
+#: media/js/apparel.js:209
+msgid "%(count)s like"
+msgid_plural "%(count)s likes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: media/js/apparel.js:254
+#, fuzzy
+msgid "Found %(count)s product"
+msgid_plural "Found %(count)s products"
+msgstr[0] "%(count)s träff bland plagg"
+msgstr[1] "%(count)s träffar bland plagg"
+
+#: media/js/apparel.js:255
+#, fuzzy
+msgid "Found %(count)s look"
+msgid_plural "Found %(count)s looks"
+msgstr[0] "%(count)s träff bland looks"
+msgstr[1] "%(count)s träffar bland looks"
+
+#: media/js/apparel.js:256
+#, fuzzy
+msgid "Found %(count)s matching brand"
+msgid_plural "Found %(count)s matching brands"
+msgstr[0] "%(count)s träff bland märken"
+msgstr[1] "%(count)s träffar bland märken"
