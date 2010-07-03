@@ -480,6 +480,16 @@ def get_paged_search_result(request, class_name=None, page_size=None):
 
 def get_criteria_filter(request, result):
     criterion = request.GET.get('criterion')
+    # FIXME: 
+    # The id__in statement belows causes Django to generate a subselect with a limit, which 
+    # doesn't work in MySQL (http://code.djangoproject.com/ticket/12328)
+    # We could iterate over result to get the data out, but that would be very expensive,
+    # as the result set is potentially very large and we do not want to cache it
+    # So, solutions:
+    #   1) Pure SQL
+    #   2) Do an alternative sub select
+    #   3) Iterate over entire result
+    #   4) Downgrade MySQL
     if criterion == 'category':
         return {
             'manufacturers': map(lambda o: str(o['id']), Manufacturer.objects.filter(id__in=result.values('manufacturer__id')).values('id')),
