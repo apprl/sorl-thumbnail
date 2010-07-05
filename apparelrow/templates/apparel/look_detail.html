@@ -21,6 +21,11 @@
             .focus(function(e) { this.select(); } )
             .mouseup(function(e) { e.preventDefault() } )
         ;
+        jQuery('.hotspot').hide();
+        jQuery('#photo-background').hover(
+            function() { jQuery('.hotspot', this).show() }
+            , function() { jQuery('.hotspot', this).hide() }
+        );
         jQuery('.product, .hotspot')
             .click(function(e) {
                 location.href = jQuery('#' + this.id + ' + .tooltip:first > a').attr('href');
