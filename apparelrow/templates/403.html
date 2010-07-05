@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>403 Forbidden</title>
+</head>
+<body>
+    <h1>403 - Forbidden</h1>
+    <p>Access denied to {{ request.path }}</p>
+    {% if debug and is_csrf %}
+        <h2>CSRF details</h2>
+        <p>{{ reason }}</p>
+    {% endif %}
+</body>
+</html>

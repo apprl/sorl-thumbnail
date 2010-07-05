@@ -133,13 +133,29 @@ class IfInListNode(Node):
             return '' if self.negate else self.nodes.render(context)
         
         return self.nodes.render(context) if self.negate else ''
+
+@register.tag(name='calc_half')
+def do_calc_half(parser, token):
+    """
+    Used to calculate what half of two values are. If anyone knows how to make simple expressions in a template, remove this. It's ugly
+    """
+    try:
+        tag_name, var1, var2 = token.split_contents()
+    except ValueError, e:
+        logging.exception(e)
+        raise template.TemplateSyntaxError, "%r tag requires a list as single argument" % token.contents.split()[0]
+    
+    return CalcHalfNode(var1, var2)
+
+class CalcHalfNode(Node):
+    def __init__(self, var1, var2, **kwargs):
+        self.a = Variable(var2)
+        self.b = Variable(var1)
+
+    def render(self, context):
+        l = [int(self.a.resolve(context)), int(self.b.resolve(context))]
+        return int((max(*l) - min(*l)) / 2)
         
-
-
-
-
-
-
 
 
 def class_name(o):
@@ -184,6 +200,29 @@ def export_as_json(o):
         return ''
 
 register.filter('export_as_json', export_as_json)
+
+#
+#def split(string):
+#    """Splits the given strings on "," and returns a list
+#    >>> from django.template.loader import Template, Context
+#    >>> c = Context({'s': 'one,two'})
+#    >>> t = Template('{% load apparel_extras %}{{ s|split }}')
+#    >>> t.render(c)
+#    u'[&#39;one&#39;, &#39;two&#39;]'
+#    >>> t = Template('{% load apparel_extras %}{{ s|split|first }} - {{ s|split|last }}')
+#    >>> t.render(c)
+#    u'one - two'
+#    """
+#    
+#    try:
+#        return string.split(',')
+#    except Exception, e:
+#        logging.error('Could not split %s', s)
+#        logging.exception(e)
+#        
+#        return ''
+#
+#register.filter('split', split)
 
 #
 # This is taken from http://www.djangosnippets.org/snippets/743/ and should

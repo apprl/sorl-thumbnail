@@ -27,20 +27,54 @@ jQuery(document).ready(function() {
         return false;
     });
     // Price slider
-    var rangefield = jQuery("input[name=1:vp.price:range]");
-    //rangefield.hide();
+    
+    var rangemin = jQuery("input[name=pricerange_min]");
+    var rangemax = jQuery("input[name=pricerange_max]");
+    
+    jQuery('#price-slider').siblings('input[type=text]').blur(function(e) {
+        var slider = jQuery('#price-slider').data('slider');
+        var values = [
+            parseInt(jQuery(this).siblings('input[type=text]').val()),
+            (isNaN(this.value)) ? false : parseInt(this.value)
+        ];
+        
+        // values = [min, max]
+        if(this.name == 'pricerange_min') {
+            values.reverse();
+            var min = parseInt(slider.option('min'));
+            if(!values[0] || values[0] < min) {
+                values[0] = min;
+            } else if(values[0] >= values[1]) {
+                values[0] = values[1] - 1;
+            }
+        } else {
+            var max = parseInt(slider.option('max'));
+            if(!values[1] || values[1] > max) {
+                values[1] = max;
+            } else if(values[1] <= values[0]) {
+                values[1] = values[0] + 1;
+            }
+        }
+        
+        slider.option('values', values);
+        return true;
+    });
+    
     jQuery("#price-slider").slider({
         range: true,
         min: pricerange.min,
         max: pricerange.max,
         step: 10,
-        values: rangefield.val().split(","),
+        values: [rangemin.val(), rangemax.val()],
         animate: 'fast',
         slide: function(event, ui) {
-                rangefield.val(jQuery(this).slider('values', 0) + "," + jQuery(this).slider('values', 1));
+            rangemin.val(jQuery(this).slider('values', 0));
+            rangemax.val(jQuery(this).slider('values', 1));
         },
         change: function(event, ui) {
             jQuery(this).addClass('selected');
+            rangemin.val(jQuery(this).slider('values', 0));
+            rangemax.val(jQuery(this).slider('values', 1));
         }
      });
     // Brand search

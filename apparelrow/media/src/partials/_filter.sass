@@ -1,6 +1,6 @@
-=filter(!img, !selected_img)
-  +border("all")
-  +border-radius("3px")
+=filter($img, $selected_img)
+  +border(all)
+  +border-radius(unquote("3px"))
   +no-bullets
   margin-bottom: 10px
   li
@@ -10,59 +10,63 @@
     border-right: none
     &.first
       border-top: none
-      +border-top-radius("3px")
+      +border-top-radius(unquote("3px"))
     &.last
-      +border-bottom-radius("3px")
+      +border-bottom-radius(unquote("3px"))
     &.filtered
       display: none
     > a
       display: block
       padding-left: 25px
-      background= "transparent" image_url(!img) "no-repeat" "scroll" 10px "center"
+      background: transparent image_url($img) no-repeat scroll 10px center
       &.selected
-        background-image= image_url(!selected_img)
+        background-image: image_url($selected_img)
 
-=popup(!n = 1)
+=popup($n: 1)
   div.options
     margin-left: -5px
     .option-content
-      +border("top")
-      +box-shadow-inset(#f6f6f6 - #222, 0, 3px, 3px)
+      +border(top)
+      +box-shadow-inset(#f6f6f6 - #222222, 0, 3px, 3px)
     h3
       font-weight: normal
-      line-height= !button_height
+      line-height: $button_height
       padding: 0 12px
+      position: relative
+    .reset
+      position: absolute
+      right: 12px
     form
-      +box(#fff)
+      +box(white)
       > div
-        background: #fff
+        background: white
     .buttons
       button
         +button
     &.popup
       display: none
       position: absolute
-      left= !aside_width
+      left: $aside_width
       top: 0px
-      z-index: 10
+      z-index: 200
       .arrow
         position: absolute
-        top= !n * 30px
+        top: $n * 30px
         left: -6px
         height: 35px
         width: 7px
-        background= "transparent" image_url("box-arrow-left.png") "no-repeat" "scroll" "left" "top"
-
+        background: transparent image_url(unquote("box-arrow-left.png")) no-repeat scroll left top
       form
         width: 348px
         +box-shadow
         .buttons
           padding: 10px 12px
+          padding-top: 20px
+          +clearfix
         button
-          width: 159px
+          width: 94px
           display: inline
           padding: 0
-          line-height: 30px
-          height: 30px
-          &.ok
-            border-left: none
+          line-height: 24px
+          height: 24px
+          float: right

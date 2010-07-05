@@ -172,8 +172,12 @@ var look = {
                     if(!response.data.in_look[id])
                         jQuery('#selection-' + id).remove();
                     
-                    if(pane.attr('id') == 'collage' && jQuery('.product', pane).length == 0)
+                    if(pane.attr('id') == 'collage' && jQuery('.product', pane).length == 0) {
                         jQuery('.look-empty', pane).show();
+                        
+                        if(jQuery('#photo-background').is(':hidden'))
+                            jQuery('.look-empty a[href=#photo-tab]', pane).parent().show();
+                    }
                 }
             }
         );
@@ -322,16 +326,16 @@ jQuery(document).ready(function() {
             });
         }
     });
-    
+
     jQuery('<img/>')
-        .attr('src', '/media/images/close.png')
+        .attr('src', '/media/images/delete.png')
         .attr('id',  'delete-photo')
         .click(function(e) {
             look.deleteAllComponents(jQuery('#photo-background'));
             return false;
         })
         .css({
-            'display': (jQuery('#photo-background').css('background-image')) ? 'block' : 'none'
+            'display': (jQuery('#photo-background').css('background-image') == 'none') ? 'none' : 'block'
         })
         .appendTo('#photo-background')
     ;
@@ -353,6 +357,7 @@ jQuery(document).ready(function() {
    
             return true;
         });
+    
 });
 
 function createHotspot(product, top, left) {
@@ -461,7 +466,12 @@ jQuery(document).ready(function() {
         this.form.action += '#photo-tab'
         return true;
     });
-    
+
+    jQuery('#photo input[type=file]').change(function(e) {
+        console.log(jQuery(this).closest('.look-empty'));
+        jQuery('button[type=submit]', jQuery(this).closest('.look-empty')).show();
+    });
+
     jQuery('.look-empty button, .look-empty a').hover(
         function(e) { jQuery(this).addClass('hover') },
         function(e) { jQuery(this).removeClass('hover') }
@@ -478,17 +488,10 @@ jQuery(document).ready(function() {
 
 {% block body %}
 <form enctype="multipart/form-data" action="{% url apparel.views.look_edit object.slug %}" method="POST" id="look-form">
+{% csrf_token %}
 <div id="look-title">
     {{ form.title }}<button type="submit">{% trans "Save" %}</button>
 </div>
-<div>{{ form.title.errors }}</div>
-<div>{{ form.slug.errors }}</div>
-<div>{{ form.description.errors }}</div>
-<div>{{ form.user.errors }}</div>
-<div>{{ form.image.errors }}</div>
-<div>{{ form.created.errors }}</div>
-<div>{{ form.modified.errors }}</div>
-<div>{{ form.tags.errors }}</div>
 <div class="sidebar">
     <label for="id_description">{% trans "Description (optional):" %}</label>
     {{ form.description }}
@@ -517,8 +520,17 @@ jQuery(document).ready(function() {
                 {% include 'apparel/fragments/look_photo.html' %}
                 
                 <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
-                    {{ form.image }}
-                    <button type="submit">{% trans "Upload a photo to create a tagged image" %}</button>
+                    <p>
+                        {% trans "Upload a photo to create a tagged image" %}
+                    </p>
+                    <div class="message">
+                        <div class="upload-field">
+                            <input type="text" name="_not_used" />
+                            <span class="button">{% trans "Choose file" %}</span>
+                            <span>{{ form.image }}</span>
+                        </div>
+                        <button type="submit">{% trans "Upload" %}</button>
+                    </div>
                 </div>
             </div>
             <div id="selection">

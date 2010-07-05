@@ -1,6 +1,6 @@
 import logging, re, math, copy
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from django.db.models import Q, Max, Min
@@ -23,202 +23,56 @@ from apparel.forms import *
 
 BROWSE_PAGE_SIZE = 12
 BROWSE_PAGE_MAX  = 100
-WIDE_LIMIT = 4 # FIME: Move to application settings fileI
 
-def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
+
+
+def search(request, model):
     """
-    >>> from django.core.paginator import Paginator
-    >>> from apparel import views
-    >>> p = Paginator(range(22), 2)
-    >>> views.get_pagination(p, 3)
-    (None, [1, 2, 3, 4, 5, 6], [10, 11])
-
-    >>> views.get_pagination(p, 6)
-    (None, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], None)
-
-    >>> views.get_pagination(p, 9)
-    ([1, 2], [6, 7, 8, 9, 10, 11], None)
-
-    >>> p = Paginator(range(100), 2)
-    >>> views.get_pagination(p, 23)
-    ([1, 2], [20, 21, 22, 23, 24, 25, 26], [49, 50])
-
-    >>> views.get_pagination(p, 23, on_ends=5, on_each_side=2)
-    ([1, 2, 3, 4, 5], [21, 22, 23, 24, 25], [46, 47, 48, 49, 50])
+    AJAX-only search results. Results are paginated
     """
-    if paginator.num_pages <= (on_ends * 2) + (on_each_side * 2):
-        return None, paginator.page_range, None
-
-    left, mid, right = None, None, None
-    
-    if page_num <= on_ends + on_each_side + 1:
-        mid = range(1, page_num + 1)
-    else:
-        left = range(1, on_ends + 1)
-        mid = range(page_num - on_each_side, page_num + 1)
-
-    if page_num >= paginator.num_pages - (on_ends + on_each_side + 1):
-        mid.extend(range(page_num + 1, paginator.num_pages + 1))
-    else:
-        mid.extend(range(page_num + 1, on_each_side + page_num + 1))
-        right = range(paginator.num_pages - on_ends + 1, paginator.num_pages + 1)
-
-    return left, mid, right
-
-def search(request, model):    
-    result = None
-    klass  = {
-        'products'     : 'Product',
+    class_name = {
+        'products': 'Product',
         'manufacturers': 'Manufacturer',
-        'categories'   : 'Category',
-        'vendors'      : 'Vendor',
+        'categories': 'Category',
+        'looks': 'Look',
     }.get(model)
     
-    query, page = get_query_and_page(request)
-    if klass:
-        klass  = eval(klass)
-        result = klass.objects.search(query)
-    else:
-        raise Exception('No model to search for')
-    
-    paginator = Paginator(result, BROWSE_PAGE_MAX if page == -1 else BROWSE_PAGE_SIZE)
+    paged_result = get_paged_search_result(request, class_name)
+    response     = get_pagination_as_dict(paged_result)
 
-    try:
-        paged_result = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        paged_result = paginator.page(paginator.num_pages)
-
-    left, mid, right = get_pagination(paginator, page)
-
-    #FIXME: We don't return the paged result because it's not JSON serializable
-    
-    response = {
-        'object_list': paged_result.object_list,
-        'previous_page_number': paged_result.previous_page_number(),
-        'next_page_number': paged_result.next_page_number(),
-        'number': paged_result.number,
-        'paginator': {
-            'num_pages': paged_result.paginator.num_pages,
-            'count': paged_result.paginator.count,
-        },
-        'pagination': {
-            'left': left,
-            'right': right,
-            'mid': mid,
-        },
-        'criteria_filter': get_criteria_filter(request, result),
-    }
     return HttpResponse(
         json.encode(response),
         mimetype='text/json'
     )
 
-
-def get_criteria_filter(request, result):
-    criterion = request.GET.get('criterion')
-    if criterion == 'category':
-        return {
-            'manufacturers': map(lambda o: str(o['id']), Manufacturer.objects.filter(id__in=result.values('manufacturer__id')).values('id')),
-            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=result.values('id')).values('value').distinct()),
-        }
-    elif criterion == 'manufacturer':
-        return {
-            'categories': map(lambda o: str(o['id']), Category.objects.filter(id__in=result.values('category__id')).values('id')),
-            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=result.values('id')).values('value').distinct()),
-        }
-    elif criterion is None:
-        return {
-            'categories': [],
-            'manufacturers': [],
-            'options': [],
-        }
-    
-    return {}
-
-def wide_search(request):
-    query  = request.GET.get('s')
-    result = {
-        'products': Product.objects.filter(product_name__icontains=query, description__icontains=query)[:WIDE_LIMIT],
-        'manufacturers': Manufacturer.objects.filter(name__icontains=query)[:WIDE_LIMIT],
-        'categories': Category.objects.filter(name__icontains=query)[:WIDE_LIMIT],
-        'vendors': Vendor.objects.filter(name__icontains=query)[:WIDE_LIMIT],
-    }
-    templates = {
-        'products': get_template_source('apparel/fragments/product_small.html'),
-    }
-
-    return HttpResponse(
-        json.encode(dict(result=result, templates=templates)),
-        mimetype='text/json'
-    )
-
-def get_pricerange(request):
-    pricerange = VendorProduct.objects.aggregate(min=Min('price'), max=Max('price'))
-    if pricerange['min'] is None:
-        pricerange['min'] = 0
-    else:
-        pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
-    if pricerange['max'] is None:
-        pricerange['max'] = 10000
-    else:
-        pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
-    pricerange['selected'] = request.GET['1:vp.price:range'] if '1:vp.price:range' in request.GET else '%s,%s' % (pricerange['min'],pricerange['max'])
-    return pricerange
-
-def get_filter(request):
-    return {
-        'categories': Category._tree_manager.all(),
-        'manufacturers': Manufacturer.objects.all().order_by('name'),
-        'genders': Option.objects.filter(option_type__name__iexact='gender'),
-        'colors': Option.objects.filter(option_type__name__iexact='color'),
-        'pricerange': get_pricerange(request),
-    }
-
-def index(request):
-    ctx = get_filter(request)
-    # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
-    ctx['popular_looks'] = Vote.objects.get_top(Look, limit=8)
-    ctx['categories']    = ctx['categories'].filter(on_front_page=True)
-    return render_to_response('index.html', ctx, context_instance=RequestContext(request))
-
-def get_query_and_page(request):
-    query = request.GET.copy()
-    page  = int(query.pop('page', [1])[0]) # all values are lists in the QueryDict object and we never expect more than one
-    
-    return query, page
-
 def browse(request):
-    query, page = get_query_and_page(request)
+    paged_result = get_paged_search_result(request, 
+        class_name='Product', 
+        page_size=BROWSE_PAGE_SIZE
+    )
     
-    products = Product.objects.search(query)
-    paginator = Paginator(products, BROWSE_PAGE_SIZE)
+    if request.is_ajax(): return browse_ajax_response(request, paged_result)
     
     try:
-        paged_products = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        paged_products = paginator.page(paginator.num_pages)
-
-    try:
-        next_page = paginator.page(page + 1)
+        next_page = paged_result.paginator.page(paged_result.next_page_number())
     except (EmptyPage, InvalidPage):
         next_page = None
 
-    left, mid, right = get_pagination(paginator, page)
-
-
-    result = get_filter(request)
-    result['pages'] = (paged_products, next_page,)
-    result['templates'] = {
-        'product_count': js_template(get_template_source('apparel/fragments/product_count.html')),
-        'product': js_template(get_template_source('apparel/fragments/product_small.html')),
-        'pagination': get_template_source('apparel/fragments/pagination_js.html')
-    }
-    result['pagination'] = {
-        'left': left,
-        'right': right,
-        'mid': mid,
-    }
+    left, mid, right = get_pagination(paged_result.paginator, paged_result.number)
     
+    result = get_filter(request)
+    result.update(
+        pages     = (paged_result, next_page,),
+        templates = {
+            'product_count': js_template(get_template_source('apparel/fragments/product_count.html')),
+            'pagination': get_template_source('apparel/fragments/pagination_js.html')
+        },
+        pagination = {
+            'left': left,
+            'right': right,
+            'mid': mid,
+        }
+    )
     
     # FIXME: This could perhaps be moved out to a routine on its own. It is used
     # to collect the current query from the command line to enable options to
@@ -241,20 +95,45 @@ def browse(request):
         
         expr['%s.%s' % (short, field)] = qp.prepare_op_val(operator, value)[1]
     
-    result['selected_categories'] = filter(None, map(_to_int, expr.get('c.id') or []))
-    result['selected_colors']     = expr.get('o.color')
-    result['selected_brands']     = filter(None, map(_to_int, expr.get('m.id') or []))
-    result['selected_price']      = expr.get('vp.price')
-    result['selected_gender']     = expr.get('o.gender')
+    result.update(
+        selected_categories = filter(None, map(_to_int, expr.get('c.id') or [])),
+        selected_colors     = expr.get('o.color'),
+        selected_brands     = filter(None, map(_to_int, expr.get('m.id') or [])),
+        selected_price      = expr.get('vp.price'),
+        selected_gender     = expr.get('o.gender'),
+    )
     
     return render_to_response('apparel/browse.html', result, context_instance=RequestContext(request))
 
+def browse_ajax_response(request, result):
+    """
+    Just like browse, but handles AJAX requests
+    """
+    
+    left, mid, right = get_pagination(result.paginator, result.number)
+    response = get_pagination_as_dict(result)
+    response.update(
+        pagination={
+            'left': left,
+            'right': right,
+            'mid': mid,
+        },
+        criteria_filter=get_criteria_filter(request, result.object_list),
+    )
+    
+    return HttpResponse(
+        json.encode(response),
+        mimetype='text/json'
+    )
 
-def js_template(str):
-    str = str.replace('{{', '${').replace('}}', '}')
-    str = re.sub(r'\{%\s*include "(.+?)"\s*%\}', lambda m: js_template(get_template_source(m.group(1))), str)
 
-    return Template(str).render(Context())
+
+def product_redirect(request, pk):
+    """
+    Makes it
+    """
+    product = get_object_or_404(Product, pk=pk)
+    return HttpResponsePermanentRedirect(product.get_absolute_url())
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
@@ -272,7 +151,10 @@ def product_detail(request, slug):
     
     if request.user.is_authenticated():
         user_looks     = Look.objects.filter(user=request.user)
-        is_in_wardrobe = Wardrobe.objects.get(user=request.user).products.filter(pk=product.id).count() > 0
+        try:
+            is_in_wardrobe = Wardrobe.objects.get(user=request.user).products.filter(pk=product.id).count() > 0
+        except Wardrobe.DoesNotExist:
+            is_in_wardrobe = False
     else:
         user_looks     = []
         is_in_wardrobe = False
@@ -321,6 +203,9 @@ def look_edit(request, slug):
         
         if form.is_valid():
             form.save()
+        else:
+            logging.debug('Form errors: %s', form.errors.__unicode__())
+
     else:
         form = LookForm(instance=look)
     
@@ -399,8 +284,9 @@ def save_look_component(request):
                 setattr(form.instance, field, form.initial.get(field))
         
         if not form.instance.top and not form.instance.left:
-            left = LookComponent.objects.filter(positioned='A').aggregate(Max('left')).values()[0]
-            top  = LookComponent.objects.filter(positioned='A').aggregate(Max('top')).values()[0]
+            components = LookComponent.objects.filter(positioned='A', look=form.instance.look, component_of=form.instance.component_of)
+            left = components.aggregate(Max('left')).values()[0]
+            top  = components.aggregate(Max('top')).values()[0]
             
             form.instance.left = 0 if left is None else left + 78 
             form.instance.top  = 0 if top  is None else top 
@@ -499,7 +385,7 @@ def add_to_look(request):
             'look': look,           # The look the product was added to
             'created': created,     # Whether the look was created
             'added': added,         # Whether the product was added to the look or not. If false it was aleady there.
-            'html': loader.render_to_string('apparel/fragments/look_collage_small.html', {'object': look}),
+            'html': loader.render_to_string('apparel/fragments/look_small.html', {'object': look, 'hide_like_button': False}),
         }, 
         HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,)))
     )
@@ -517,3 +403,206 @@ def add_to_wardrobe(request):
     wardrobe.save() # FIXME: Only save if created?
     
     return wardrobe
+    
+    
+def csrf_failure(request, reason=None):
+    """
+    Display error page for cross site forgery requests
+    """
+    if reason is None: reason = '[None given]'
+    logging.debug("CSRF failure: %s" % reason)
+    return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
+
+
+
+
+
+#
+# Utility routines. FIXME: Move these out
+#
+
+def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
+    """
+    >>> from django.core.paginator import Paginator
+    >>> from apparel import views
+    >>> p = Paginator(range(22), 2)
+    >>> views.get_pagination(p, 3)
+    (None, [1, 2, 3, 4, 5, 6], [10, 11])
+
+    >>> views.get_pagination(p, 6)
+    (None, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], None)
+
+    >>> views.get_pagination(p, 9)
+    ([1, 2], [6, 7, 8, 9, 10, 11], None)
+
+    >>> p = Paginator(range(100), 2)
+    >>> views.get_pagination(p, 23)
+    ([1, 2], [20, 21, 22, 23, 24, 25, 26], [49, 50])
+
+    >>> views.get_pagination(p, 23, on_ends=5, on_each_side=2)
+    ([1, 2, 3, 4, 5], [21, 22, 23, 24, 25], [46, 47, 48, 49, 50])
+    """
+    if paginator.num_pages <= (on_ends * 2) + (on_each_side * 2):
+        return None, paginator.page_range, None
+
+    left, mid, right = None, None, None
+    
+    if page_num <= on_ends + on_each_side + 1:
+        mid = range(1, page_num + 1)
+    else:
+        left = range(1, on_ends + 1)
+        mid = range(page_num - on_each_side, page_num + 1)
+
+    if page_num >= paginator.num_pages - (on_ends + on_each_side + 1):
+        mid.extend(range(page_num + 1, paginator.num_pages + 1))
+    else:
+        mid.extend(range(page_num + 1, on_each_side + page_num + 1))
+        right = range(paginator.num_pages - on_ends + 1, paginator.num_pages + 1)
+
+    return left, mid, right
+
+def get_paged_search_result(request, class_name=None, page_size=None):
+    try:
+        model_class = eval(class_name)
+    except TypeError:
+        raise Exception("No model to search for")
+    except:
+        raise
+    
+    query, page, size = get_query_and_page(request, page_size)
+        
+    paginator = Paginator(model_class.objects.search(query), size)
+    
+    try:
+        paged_result = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        paged_result = paginator.page(paginator.num_pages)
+    
+    return paged_result
+    
+
+def get_criteria_filter(request, result):
+    criterion = request.GET.get('criterion')
+    # FIXME: 
+    # The id__in statement belows causes Django to generate a subselect with a limit, which 
+    # doesn't work in MySQL (http://code.djangoproject.com/ticket/12328)
+    # Version were it breaks: Ver 14.14 Distrib 5.1.41, for debian-linux-gnu (i486) using readline 6.1
+    # We could iterate over result to get the data out, but that would be very expensive,
+    # as the result set is potentially very large and we do not want to cache it
+    # So, solutions:
+    #   1) Pure SQL
+    #   2) Do an alternative sub select
+    #   3) Iterate over entire result
+    #   4) Downgrade MySQL
+    
+    
+    qr = result.all()
+    qr.query.clear_limits()
+    
+    if criterion == 'category':
+        return {
+            'manufacturers': map(lambda o: str(o['manufacturer__id']), qr.values('manufacturer__id').distinct()),
+            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=qr.values('id')).values('value').distinct()),
+        }
+    elif criterion == 'manufacturer':
+        return {
+            'categories': map(lambda o: str(o['category__id']), qr.values('category__id').distinct()),
+            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=qr.values('id')).values('value').distinct()),
+        }
+    elif criterion is None:
+        return {
+            'categories': [],
+            'manufacturers': [],
+            'options': [],
+        }
+    
+    return {}
+
+def get_pagination_as_dict(paged_result):
+    # FIXME: This exists because the JSON exporter is unable to serialise
+    # Page and Pagination objects. Perhaps this code could be moved to the 
+    # exporter module instead?
+    return {
+        'object_list': paged_result.object_list,
+        'previous_page_number': paged_result.previous_page_number(),
+        'next_page_number': paged_result.next_page_number(),
+        'number': paged_result.number,
+        'paginator': {
+            'num_pages': paged_result.paginator.num_pages,
+            'count': paged_result.paginator.count,
+        },
+    }
+
+def get_pricerange(request):
+    pricerange = VendorProduct.objects.aggregate(min=Min('price'), max=Max('price'))
+    if pricerange['min'] is None:
+        pricerange['min'] = 0
+    else:
+        pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
+    if pricerange['max'] is None:
+        pricerange['max'] = 10000
+    else:
+        pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
+    pricerange['selected'] = request.GET['1:vp.price:range'] if '1:vp.price:range' in request.GET else '%s,%s' % (pricerange['min'],pricerange['max'])
+    return pricerange
+
+def get_filter(request):
+    return {
+        'categories': Category._tree_manager.all(),
+        'manufacturers': Manufacturer.objects.all().order_by('name'),
+        'genders': Option.objects.filter(option_type__name__iexact='gender'),
+        'colors': Option.objects.filter(option_type__name__iexact='color'),
+        'pricerange': get_pricerange(request),
+    }
+
+def index(request):
+    ctx = get_filter(request)
+    # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
+    ctx['popular_looks'] = Vote.objects.get_top(Look, limit=8)
+    ctx['categories']    = ctx['categories'].filter(on_front_page=True)
+    return render_to_response('index.html', ctx, context_instance=RequestContext(request))
+
+def get_query_and_page(request, override_size=None):
+    """
+    Copies the request query to a mutable dict and removes the 'page' and 'size'
+    keys.
+     - 'page' - indicates which page in the paged result should be used
+     - 'size' - indicates page size used. 'max' corresponds to the BROWSE_PAGE_MAX
+                setting.
+    
+    If 'override_size' argument is passed, the 'size' query key have no effect.
+    """
+    query = request.GET.copy()
+    page  = int(query.pop('page', [1])[0]) # all values are lists in the QueryDict object and we never expect more than one
+    size  = query.pop('size', ['max'])[0]
+    
+    if page == -1:
+        logging.warn('Use of depricated page=-1 query. Use size=MAX instead. Request %s', request)
+        size = 'max'
+        page = 1
+    
+    if override_size is not None:
+        size = override_size
+        logging.debug('Using explicit page size: %s', override_size)
+    elif size == 'max':
+        size = BROWSE_PAGE_MAX
+        logging.debug('Using max page size: %s', size)
+    elif size:
+        try:
+            size = int(size)
+        except ValueError:
+            logging.error('%s is not an intiger, using max setting', size)
+            size = BROWSE_PAGE_MAX
+        else:
+            if size > BROWSE_PAGE_MAX: size = BROWSE_PAGE_MAX
+        
+        logging.debug('Using query page size: %s', size)
+    
+    return query, page, size
+
+
+def js_template(str):
+    str = str.replace('{{', '${').replace('}}', '}')
+    str = re.sub(r'\{%\s*include "(.+?)"\s*%\}', lambda m: js_template(get_template_source(m.group(1))), str)
+
+    return Template(str).render(Context())

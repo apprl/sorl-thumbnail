@@ -11,6 +11,7 @@ from apparel.manager import SearchManager
 import datetime, mptt
 import tagging
 from tagging.fields import TagField
+from voting.models import Vote
 from sorl.thumbnail.main import DjangoThumbnail
 
 from django_extensions.db.fields import AutoSlugField
@@ -213,9 +214,14 @@ class Look(models.Model):
     image       = models.ImageField(upload_to=LOOKS_BASE, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
-    tags        = TagField(null=True, blank=True)
+    tags        = TagField(blank=True)
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     
+    objects = SearchManager()
+    
+    def score(self):
+        return Vote.objects.get_score(self)
+
     def total_price(self, component=None):
         """
         Returns the total price of the given component, or default if none specified
@@ -280,7 +286,7 @@ class Look(models.Model):
         return ('apparel.views.look_detail', [str(self.slug)])
     
     class Exporter:
-        export_fields = ['__all__']
+        export_fields = ['__all__', 'get_absolute_url', 'photo_components', 'display_with_component', 'collage_components', 'score']
 
 
 class LookComponent(models.Model):
@@ -345,7 +351,7 @@ class LookComponent(models.Model):
         unique_together = (('product', 'look', 'component_of'),)
 
     class Exporter:
-        export_fields = ['__all__', 'style']
+        export_fields = ['__all__', 'style', 'style_middle', 'style_small', '-look']
 
 
 

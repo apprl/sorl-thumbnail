@@ -3,6 +3,8 @@
 
 import os.path
 import posixpath
+import logging
+import logging.config
 
 gettext = lambda s: s
 
@@ -13,6 +15,19 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 FORCE_SCRIPT_NAME = ''
+
+LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', 'etc', 'logging.conf') # logging configuration file
+
+if not hasattr(logging, 'initialised'):
+    logging.config.fileConfig(LOGGING_CONFIG)
+    
+    if DEBUG:
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        logging.debug('Using debug logger')
+    
+    logging.info('Initialised application logger')
+    setattr(logging, 'initialised', True)
 
 
 # tells Pinax to serve media through django.views.static.serve.
@@ -93,6 +108,7 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     #'facebook.djangofb.FacebookMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -122,6 +138,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     
     "context_processors.settings",
+    "context_processors.js_templates",
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
 )
@@ -153,6 +170,7 @@ INSTALLED_APPS = (
     'trackback',
     'recommender',
     'south',
+    'jsmin',
 
     'apparel',
     'scale',
@@ -161,7 +179,10 @@ INSTALLED_APPS = (
     
     # internal (for now)
     'django.contrib.admin',
+    'apparelrow',
 )
+
+CSRF_FAILURE_VIEW = 'apparel.views.csrf_failure'
 
 ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/profile/%s/" % o.username,

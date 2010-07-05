@@ -1,5 +1,6 @@
 {% load i18n %}
 <form action="{{ request.path }}" method="post">
+{% csrf_token %}
 <ul>
 {% for field in form %}
     <li>

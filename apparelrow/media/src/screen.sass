@@ -1,9 +1,9 @@
-@import compass/reset.sass
+@import compass/reset
 
 @import partials/base.sass
 
-@import compass/css3.sass
-@import compass/utilities.sass
+@import compass/css3
+@import compass/utilities
 
 // Page layout can be done using mixins applied to your semantic classes and IDs:
 body
@@ -12,24 +12,24 @@ body
     +clearfix
   .sidebar
     +float-left
-    width= !aside_width
-    margin-right= !gutter_width
+    width: $aside_width
+    margin-right: $gutter_width
   .last
     margin-right: 0
   &.two-columns
     #content
       +float-left
-      width= !large_width
+      width: $large_width
   &.right
     #content
-      margin-right= !gutter_width
+      margin-right: $gutter_width
   &.three-columns
     #content
       +float-left
-      width= !middle_width
-      margin-right= !gutter_width
+      width: $middle_width
+      margin-right: $gutter_width
 
-//*:focus
+//:focus
 //  outline= !border_color "dotted" "medium"
 
 @import partials/application.sass

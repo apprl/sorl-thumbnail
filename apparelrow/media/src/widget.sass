@@ -1,62 +1,61 @@
 @import partials/base.sass
 @import partials/widget.sass
 
-@import compass/css3.sass
-@import compass/utilities.sass
-
+@import compass/css3
+@import compass/utilities
 
 div#ar-wrapper
   h1, h2, h3, h4, h5, span, p, div, a
-    background: none 
-    border: none 
-    bottom: auto 
-    clear: none 
-    cursor: default 
-    float: none 
-    font-family: Arial, Helvetica, sans-serif 
+    background: none
+    border: none
+    bottom: auto
+    clear: none
+    cursor: default
+    float: none
+    font-family: Arial, Helvetica, sans-serif
     font-size: 12px !important
-    font-style: normal 
-    font-weight: normal 
-    height: auto 
-    left: auto 
-    letter-spacing: normal 
-    line-height: normal 
-    max-height: none 
-    max-width: none 
-    min-height: 0 
-    min-width: 0 
-    overflow: visible 
-    position: static 
-    right: auto 
-    text-align: left 
-    text-decoration: none 
-    text-indent: 0 
-    text-transform: none 
-    top: auto 
-    visibility: visible 
+    font-style: normal
+    font-weight: normal
+    height: auto
+    left: auto
+    letter-spacing: normal
+    line-height: normal
+    max-height: none
+    max-width: none
+    min-height: 0
+    min-width: 0
+    overflow: visible
+    position: static
+    right: auto
+    text-align: left
+    text-decoration: none
+    text-indent: 0
+    text-transform: none
+    top: auto
+    visibility: visible
     white-space: normal
-    width: auto 
-    z-index: auto 
+    width: auto
+    z-index: auto
 
-.apparelrow, #ar-wrapper
+.ar-look-collage, .ar-look-photo
+  height: $look_height
+
+#ar-wrapper
   +font
   +typography
   position: relative
-
-.ar-look-collage, .ar-look-photo
-  height= !look_height
-
-#ar-wrapper .ar-look-photo
-  +apparel_hotspot
-
-#ar-wrapper .ar-tooltip
-  & p
-    +font
-    +typography
-    font-size: smaller/1.5 !important
-  & a
-    +font
-    +typography
-    font-size: smaller !important
-  
-  +apparel_tooltip
+  & .ar-look-photo
+    +apparel_hotspot
+  & .ar-link
+    cursor: pointer
+  & .ar-tooltip
+    +apparel_tooltip
+    & p
+      +font
+      +typography
+      font-size: smaller / 1.5 !important
+    & a
+      +font
+      +typography
+      font-size: smaller !important
+      cursor: pointer

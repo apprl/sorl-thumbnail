@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     
 #    (r'^about/', include('about.urls')),
     
+    (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', { 'packages': ('apparelrow',),}), 
     # FIXME: Is it possible to include this in some other way? All I want to do
     # is to pass the next_page attribute (and not do it via query)
     (r'^accounts/',         include('registration.backends.default.urls')),

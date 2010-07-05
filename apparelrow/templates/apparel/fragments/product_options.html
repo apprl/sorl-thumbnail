@@ -3,15 +3,17 @@
 <div class="options">
     <form action="{% url apparel.views.browse %}">
         <div>
-            <h3>{% block option_header %}{% endblock %}</h3>
+            <h3>
+                {% block option_header %}{% endblock %}
+                <a class="reset" href="{% url apparel.views.browse %}">{% trans "Show all" %}</a>
+            </h3>
             <div class="option-content">
                 {% block option_content %}{% endblock %}
             </div>
         </div>
         <div class="buttons">
-            <button type="button" class="cancel">{% trans "Cancel" %}</button><button type="submit" class="ok">{% trans "OK" %}</button>
+            <button type="submit" class="ok">{% trans "OK" %}</button>
         </div>
     </form>
     <span class="arrow"></span>
 </div>
-

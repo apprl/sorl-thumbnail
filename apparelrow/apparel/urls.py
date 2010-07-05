@@ -28,10 +28,11 @@ like_look_dict = {
 
 urlpatterns = patterns('',
     (r'^$', 'apparel.views.index'),
-    (r'^search$', 'apparel.views.wide_search'),
+    #(r'^search$', 'apparel.views.wide_search'),
     (r'^products/$', 'django.views.generic.list_detail.object_list', product_dict),
     (r'^(?P<model>\w+)/search$', 'apparel.views.search'),
-    (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'), #'django.views.generic.list_detail.object_detail', product_dict),
+    (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
+    (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
     (r'^manufacturers/$', 'django.views.generic.list_detail.object_list', manufacturer_dict),
     (r'^manufacturers/(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', manufacturer_dict),
     (r'^browse/$', 'apparel.views.browse'),
