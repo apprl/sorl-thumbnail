@@ -2125,7 +2125,7 @@ h2 a {
   position: absolute;
   left: 208px;
   top: 0px;
-  z-index: 10;
+  z-index: 200;
 }
 /* line 52, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup .arrow {
@@ -2319,7 +2319,7 @@ h2 a {
   position: absolute;
   left: 208px;
   top: 0px;
-  z-index: 10;
+  z-index: 200;
 }
 /* line 52, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup .arrow {
@@ -2660,7 +2660,7 @@ h2 a {
   position: absolute;
   left: 208px;
   top: 0px;
-  z-index: 10;
+  z-index: 200;
 }
 /* line 52, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup .arrow {
