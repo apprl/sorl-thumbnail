@@ -231,6 +231,13 @@ var ApparelRow = {
             var id = jQuery(e).closest('.ar-tooltip').prev().attr('id').split('-').pop();
             e.href = ApparelRow.host + '/products/' + id;
         });
+
+        // Hide hotspots and only show them on mouseover
+        $('.ar-hotspot').hide();
+        $('.ar-look-photo').hover(
+            function() { $('.ar-hotspot', this).show() }
+            , function() { $('.ar-hotspot', this).hide() }
+        );
     },
     request: function(path, node, callback) {
         callback = callback || function(response, statusText) {
