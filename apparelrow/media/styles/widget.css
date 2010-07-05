@@ -70,11 +70,10 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 }
 /* line 47, ../src/widget.sass */
 #ar-wrapper .ar-look-photo {
-  top: 5px;
   position: relative;
   margin: 0 auto;
 }
-/* line 36, ../src/partials/_widget.sass */
+/* line 35, ../src/partials/_widget.sass */
 #ar-wrapper .ar-look-photo .hotspot, #ar-wrapper .ar-look-photo .ar-hotspot {
   position: absolute;
   padding: 40px;
