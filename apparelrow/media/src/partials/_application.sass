@@ -447,12 +447,14 @@ span
 .product-photo
   border: 1px solid #dadada
 
-div#product-list, .product-list
-  +clearfix
-  +box
+div#product-list
   +border-bottom-radius(unquote("3px"))
   width: $large_width - 1
   height: 412px
+
+div#product-list, .product-list
+  +clearfix
+  +box
   position: relative
   overflow: hidden
   ul.list
@@ -465,11 +467,6 @@ div#product-list, .product-list
         +clearfix
         li
           +product_list_item
-          display: block
-          width: auto
-          .product-small
-            &:hover
-              +box-shadow
 
 #hover-products li
   display: none
@@ -487,7 +484,6 @@ div#product-list, .product-list
     overflow: hidden
   .product-image
     border: none
-    +border(right)
     background-color: white
     position: relative
     height: 153px
@@ -937,7 +933,7 @@ a.block_link
     cursor: pointer
     &:hover
       background-image: image_url(unquote("arrow-bg-hover.png"))
-  div
+  .result-container
     width: 200px
     float: left
     margin-right: 30px
@@ -953,21 +949,13 @@ a.block_link
         +go_to_link
         text-transform: lowercase
         font-variant: small-caps
-    &.product-list
-      background-color: transparent
-      width: auto
-      margin: 0
-      height: auto
-      +border-bottom-radius(unquote("0px"))
-      border-bottom: none
+    .product-list
+      border-left: none
+      width: 464px
     ul
       +clearfix
       li
         float: left
-        div
-          width: auto
-          margin-right: auto
-          float: none
       &#search-result-manufacturers
         li
           height: auto
@@ -1000,12 +988,8 @@ a.block_link
       &#search-result-products
         li
           +product_list_item
-          margin: 0
-          height: auto
-          width: 116px
-          &.edge
-            .product-image
-              border-right: none
+          .product-small
+            margin: -1px -1px -1px 0
     &.wide
       width: 466px
     &.last
