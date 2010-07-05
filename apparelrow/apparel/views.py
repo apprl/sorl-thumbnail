@@ -494,15 +494,20 @@ def get_criteria_filter(request, result):
     #   2) Do an alternative sub select
     #   3) Iterate over entire result
     #   4) Downgrade MySQL
+    
+    
+    qr = result.all()
+    qr.query.clear_limits()
+    
     if criterion == 'category':
         return {
-            'manufacturers': map(lambda o: str(o['id']), Manufacturer.objects.filter(id__in=result.values('manufacturer__id')).values('id')),
-            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=result.values('id')).values('value').distinct()),
+            'manufacturers': map(lambda o: str(o['manufacturer__id']), qr.values('manufacturer__id').distinct()),
+            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=qr.values('id')).values('value').distinct()),
         }
     elif criterion == 'manufacturer':
         return {
-            'categories': map(lambda o: str(o['id']), Category.objects.filter(id__in=result.values('category__id')).values('id')),
-            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=result.values('id')).values('value').distinct()),
+            'categories': map(lambda o: str(o['category__id']), qr.values('category__id').distinct()),
+            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=qr.values('id')).values('value').distinct()),
         }
     elif criterion is None:
         return {
