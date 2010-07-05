@@ -678,11 +678,13 @@ a.buy-now:hover
     padding: 0 10px 0 16px
 
 .message
-  color: #408994
-  background-color: $highlight_bg_color
+  border: unquote("1px") solid $border_color
   padding: 0.5em
   +border-radius(5px)
-  +box-shadow(#f6f6f6 - #222222, 0, 3px, 3px)
+  +box-shadow(#f6f6f6 - #222222, 0, 2px, 2px)
+  .highlight
+    color: #408994
+    background-color: $highlight_bg_color
 
 #comments-and-links
   img.avatar

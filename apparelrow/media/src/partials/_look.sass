@@ -93,23 +93,22 @@ $input_border_color: $highlight_border_color !default
     +highlight
     height: $button_height
     margin-top: 1em
+    &:hover
+      +highlight_hover
   a
     background-image: image_url(unquote("add.png"))
     background-repeat: no-repeat
-    background-position: 10px 7px
+    background-position: 10px 9px
     padding-left: 30px
-  .hover
-    +highlight_hover
+    display: block
   p
     margin: 1em 0
     color: #333333
 
 #photo .look-empty
-  width: 240px
-  border: unquote("1px") solid $border_color
-  padding: 0.5em
-  +border-radius(5px)
-  +box-shadow(#f6f6f6 - #222222, 0, 2px, 2px)
+  .message
+    width: 240px
+    margin: 0 auto
   button
     width: 226px
     display: none

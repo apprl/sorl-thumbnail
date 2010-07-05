@@ -172,8 +172,12 @@ var look = {
                     if(!response.data.in_look[id])
                         jQuery('#selection-' + id).remove();
                     
-                    if(pane.attr('id') == 'collage' && jQuery('.product', pane).length == 0)
+                    if(pane.attr('id') == 'collage' && jQuery('.product', pane).length == 0) {
                         jQuery('.look-empty', pane).show();
+                        
+                        if(jQuery('#photo-background').is(':hidden'))
+                            jQuery('.look-empty a[href=#photo-tab]', pane).parent().show();
+                    }
                 }
             }
         );
@@ -322,7 +326,7 @@ jQuery(document).ready(function() {
             });
         }
     });
-    
+
     jQuery('<img/>')
         .attr('src', '/media/images/delete.png')
         .attr('id',  'delete-photo')
@@ -331,7 +335,7 @@ jQuery(document).ready(function() {
             return false;
         })
         .css({
-            'display': (jQuery('#photo-background').css('background-image')) ? 'block' : 'none'
+            'display': (jQuery('#photo-background').css('background-image') == 'none') ? 'none' : 'block'
         })
         .appendTo('#photo-background')
     ;
@@ -516,12 +520,17 @@ jQuery(document).ready(function() {
                 {% include 'apparel/fragments/look_photo.html' %}
                 
                 <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
-                    <div class="upload-field">
-                        <input type="text" name="_not_used" />
-                        <span class="button">{% trans "Choose file" %}</span>
-                        <span>{{ form.image }}</span>
+                    <p>
+                        {% trans "Upload a photo to create a tagged image" %}
+                    </p>
+                    <div class="message">
+                        <div class="upload-field">
+                            <input type="text" name="_not_used" />
+                            <span class="button">{% trans "Choose file" %}</span>
+                            <span>{{ form.image }}</span>
+                        </div>
+                        <button type="submit">{% trans "Upload" %}</button>
                     </div>
-                    <button type="submit">{% trans "Upload" %}</button>
                 </div>
             </div>
             <div id="selection">
