@@ -151,7 +151,10 @@ def product_detail(request, slug):
     
     if request.user.is_authenticated():
         user_looks     = Look.objects.filter(user=request.user)
-        is_in_wardrobe = Wardrobe.objects.get(user=request.user).products.filter(pk=product.id).count() > 0
+        try:
+            is_in_wardrobe = Wardrobe.objects.get(user=request.user).products.filter(pk=product.id).count() > 0
+        except Wardrobe.DoesNotExist:
+            is_in_wardrobe = False
     else:
         user_looks     = []
         is_in_wardrobe = False
@@ -483,6 +486,7 @@ def get_criteria_filter(request, result):
     # FIXME: 
     # The id__in statement belows causes Django to generate a subselect with a limit, which 
     # doesn't work in MySQL (http://code.djangoproject.com/ticket/12328)
+    # Version were it breaks: Ver 14.14 Distrib 5.1.41, for debian-linux-gnu (i486) using readline 6.1
     # We could iterate over result to get the data out, but that would be very expensive,
     # as the result set is potentially very large and we do not want to cache it
     # So, solutions:
