@@ -3764,12 +3764,12 @@ body.product .product-image form, body.look #content form {
 body.product .product-image form button, body.look #content form button {
   margin: 0;
   border: none;
-  background: transparent url('http://localhost:8000/media/images/like-medium.png?1277902910') no-repeat scroll center center;
+  background: transparent url('http://localhost:8000/media/images/like-medium.png?1278357892') no-repeat scroll center center;
   color: #fa7070;
   text-transform: uppercase;
   padding-top: 18px;
-  height: 67px;
-  width: 60px;
+  height: 48px;
+  width: 56px;
   cursor: pointer;
   text-align: center;
 }
