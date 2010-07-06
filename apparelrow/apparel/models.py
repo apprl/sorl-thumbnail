@@ -143,6 +143,9 @@ class Product(models.Model):
     
     objects = SearchManager()
     
+    def score(self):
+        return Vote.objects.get_score(self)
+    
     @property
     def default_vendor(self):
         if self.vendorproduct.order_by('price').count() == 0: return None
@@ -178,7 +181,7 @@ class Product(models.Model):
         ordering = ('-date_added',)
     
     class Exporter:
-        export_fields = ['__all__', 'get_absolute_url', 'default_vendor']
+        export_fields = ['__all__', 'get_absolute_url', 'default_vendor', 'score']
 
 class VendorProduct(models.Model):
     vendor     = models.ForeignKey(Vendor)
