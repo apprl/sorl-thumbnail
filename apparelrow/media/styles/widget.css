@@ -1,5 +1,34 @@
 /* Contains CSS rules that are used both in external widgets and on the apparelrow site */
-/* line 8, ../src/widget.sass */
+@import url(shared.css);
+@font-face {
+  font-family: "Gotham Book";
+  src: url('../fonts/gotham-book.eot');
+  src: local("Gotham Book"), local("gotham-book"), url('../fonts/gotham-book.woff') format('woff'), url('../fonts/gotham-book.ttf') format('truetype'), url('../fonts/gotham-book.svg') format('svg');
+}
+
+@font-face {
+  font-family: "Gotham Book Italic";
+  font-style: "italic";
+  src: url('../fonts/gotham-bookitalic.eot');
+  src: local("Gotham Book Italic"), local("gotham-bookitalic"), url('../fonts/gotham-bookitalic.woff') format('woff'), url('../fonts/gotham-bookitalic.ttf') format('truetype'), url('../fonts/gotham-bookitalic.svg') format('svg');
+}
+
+@font-face {
+  font-family: "Gotham Medium";
+  font-weight: "bold";
+  src: url('../fonts/gotham-medium.eot');
+  src: local("Gotham Medium"), local("gotham-medium"), url('../fonts/gotham-medium.woff') format('woff'), url('../fonts/gotham-medium.ttf') format('truetype'), url('../fonts/gotham-medium.svg') format('svg');
+}
+
+@font-face {
+  font-family: "Gotham Medium Italic";
+  font-style: "italic";
+  font-weight: "bold";
+  src: url('../fonts/gotham-mediumitalic.eot');
+  src: local("Gotham Medium Italic"), local("gotham-mediumitalic"), url('../fonts/gotham-mediumitalic.woff') format('woff'), url('../fonts/gotham-mediumitalic.ttf') format('truetype'), url('../fonts/gotham-mediumitalic.svg') format('svg');
+}
+
+/* line 11, ../src/widget.sass */
 div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#ar-wrapper h5, div#ar-wrapper span, div#ar-wrapper p, div#ar-wrapper div, div#ar-wrapper a {
   background: none;
   border: none;
@@ -33,12 +62,12 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
   z-index: auto;
 }
 
-/* line 40, ../src/widget.sass */
+/* line 43, ../src/widget.sass */
 .ar-look-collage, .ar-look-photo {
   height: 524px;
 }
 
-/* line 43, ../src/widget.sass */
+/* line 46, ../src/widget.sass */
 #ar-wrapper {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
   font-size: 75%;
@@ -46,48 +75,49 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
   color: #333333;
   position: relative;
 }
-/* line 108, ../src/partials/_base.sass */
+/* line 115, ../src/partials/_base.sass */
 #ar-wrapper a {
   text-decoration: none;
   color: #333333;
 }
-/* line 112, ../src/partials/_base.sass */
+/* line 119, ../src/partials/_base.sass */
 #ar-wrapper p a:hover, #ar-wrapper p a:active {
   text-decoration: underline;
 }
-/* line 114, ../src/partials/_base.sass */
+/* line 121, ../src/partials/_base.sass */
 #ar-wrapper h2, #ar-wrapper h3 {
   font-size: 1em;
 }
-/* line 116, ../src/partials/_base.sass */
+/* line 123, ../src/partials/_base.sass */
 #ar-wrapper h2 {
   margin: 30px 0 10px;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 119, ../src/partials/_base.sass */
+/* line 126, ../src/partials/_base.sass */
 #ar-wrapper h3 {
   font-weight: bolder;
 }
-/* line 47, ../src/widget.sass */
+/* line 50, ../src/widget.sass */
 #ar-wrapper .ar-look-photo {
   position: relative;
   margin: 0 auto;
 }
-/* line 35, ../src/partials/_widget.sass */
+/* line 50, ../src/partials/_widget.sass */
 #ar-wrapper .ar-look-photo .hotspot, #ar-wrapper .ar-look-photo .ar-hotspot {
   position: absolute;
   padding: 40px;
-  background: transparent url('http://localhost:8000/media/images/look-hotspot.png?1271665350') no-repeat scroll center center;
+  background: transparent url('../images/look-hotspot.png?1271672587') no-repeat scroll center center;
 }
-/* line 49, ../src/widget.sass */
+/* line 52, ../src/widget.sass */
 #ar-wrapper .ar-link {
   cursor: pointer;
 }
-/* line 51, ../src/widget.sass */
-#ar-wrapper .ar-tooltip {
+/* line 54, ../src/widget.sass */
+#ar-wrapper a.ar-tooltip {
+  cursor: pointer !important;
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
-  background: #efefef url('http://localhost:8000/media/images/tooltip-bg.png?1273840367') repeat-x scroll center top;
+  background-color: #efefef;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   -o-border-radius: 2px;
@@ -101,89 +131,127 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
   box-shadow: #999999 0px 0px 5px;
   display: none;
   z-index: 1100;
-  padding: 10px 10px 8px 10px;
+  padding: 4px !important;
   position: relative;
+  width: 242px;
+  white-space: nowrap;
 }
-/* line 15, ../src/partials/_widget.sass */
-#ar-wrapper .ar-tooltip h2 {
-  margin-top: 0;
-  margin-bottom: 1px;
+/* line 18, ../src/partials/_widget.sass */
+#ar-wrapper a.ar-tooltip .product-image, #ar-wrapper a.ar-tooltip .ar-product-image {
+  border: 1px solid #dadada;
+  text-align: center;
+  background-color: white;
+  float: left;
+  width: 90px;
+  line-height: 115px;
+  height: 115px;
+  margin-right: 10px;
+}
+/* line 27, ../src/partials/_widget.sass */
+#ar-wrapper a.ar-tooltip .product-image img, #ar-wrapper a.ar-tooltip .ar-product-image img {
+  vertical-align: middle;
+}
+/* line 29, ../src/partials/_widget.sass */
+#ar-wrapper a.ar-tooltip h2 {
+  margin-top: 1em;
+  margin-bottom: 0px;
   border-bottom: none;
   white-space: nowrap;
+  overflow: hidden;
 }
-/* line 20, ../src/partials/_widget.sass */
-#ar-wrapper .ar-tooltip p, #ar-wrapper .ar-tooltip a {
+/* line 35, ../src/partials/_widget.sass */
+#ar-wrapper a.ar-tooltip h3 {
   color: #666666;
   font-size: smaller;
-  white-space: nowrap;
 }
-/* line 24, ../src/partials/_widget.sass */
-#ar-wrapper .ar-tooltip .arrow, #ar-wrapper .ar-tooltip .ar-arrow {
+/* line 39, ../src/partials/_widget.sass */
+#ar-wrapper a.ar-tooltip .arrow, #ar-wrapper a.ar-tooltip .ar-arrow {
   position: absolute;
-  background: transparent url('http://localhost:8000/media/images/tooltip-arrow.png?1273840466') no-repeat scroll center center;
+  background: transparent url('../images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
   width: 14px;
   height: 8px;
   bottom: -8px;
-  left: 16px;
+  left: 116px;
 }
-/* line 53, ../src/widget.sass */
-#ar-wrapper .ar-tooltip p {
+/* line 57, ../src/widget.sass */
+#ar-wrapper a.ar-tooltip div, #ar-wrapper a.ar-tooltip h3 {
+  margin: 0.5em 0;
+}
+/* line 59, ../src/widget.sass */
+#ar-wrapper a.ar-tooltip p {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
   font-size: 75%;
   line-height: 1.5em;
   color: #333333;
   font-size: smaller/1.5 !important;
 }
-/* line 108, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip p a {
+/* line 115, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip p a {
   text-decoration: none;
   color: #333333;
 }
-/* line 112, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip p p a:hover, #ar-wrapper .ar-tooltip p p a:active {
+/* line 119, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip p p a:hover, #ar-wrapper a.ar-tooltip p p a:active {
   text-decoration: underline;
 }
-/* line 114, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip p h2, #ar-wrapper .ar-tooltip p h3 {
+/* line 121, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip p h2, #ar-wrapper a.ar-tooltip p h3 {
   font-size: 1em;
 }
-/* line 116, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip p h2 {
+/* line 123, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip p h2 {
   margin: 30px 0 10px;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 119, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip p h3 {
+/* line 126, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip p h3 {
   font-weight: bolder;
 }
-/* line 57, ../src/widget.sass */
-#ar-wrapper .ar-tooltip a {
+/* line 63, ../src/widget.sass */
+#ar-wrapper a.ar-tooltip h2 {
+  margin-top: 1em;
+  font-size: 120% !important;
+}
+/* line 66, ../src/widget.sass */
+#ar-wrapper a.ar-tooltip h3 {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
   font-size: 75%;
   line-height: 1.5em;
   color: #333333;
-  font-size: smaller !important;
-  cursor: pointer;
+  font-size: 90% !important;
+  color: #666666;
 }
-/* line 108, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip a a {
+/* line 115, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip h3 a {
   text-decoration: none;
   color: #333333;
 }
-/* line 112, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip a p a:hover, #ar-wrapper .ar-tooltip a p a:active {
+/* line 119, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip h3 p a:hover, #ar-wrapper a.ar-tooltip h3 p a:active {
   text-decoration: underline;
 }
-/* line 114, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip a h2, #ar-wrapper .ar-tooltip a h3 {
+/* line 121, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip h3 h2, #ar-wrapper a.ar-tooltip h3 h3 {
   font-size: 1em;
 }
-/* line 116, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip a h2 {
+/* line 123, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip h3 h2 {
   margin: 30px 0 10px;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 119, ../src/partials/_base.sass */
-#ar-wrapper .ar-tooltip a h3 {
+/* line 126, ../src/partials/_base.sass */
+#ar-wrapper a.ar-tooltip h3 h3 {
   font-weight: bolder;
+}
+/* line 71, ../src/widget.sass */
+#ar-wrapper a.ar-tooltip .ar-likes {
+  background: transparent url('../images/heart.png?1270451570') no-repeat scroll left center;
+  padding-left: 16px;
+  color: #fa7070;
+}
+/* line 73, ../src/widget.sass */
+#ar-wrapper a.ar-tooltip .ar-price {
+  background: transparent url(../images/check.png) no-repeat scroll left bottom;
+  color: #999999;
+  padding-left: 15px;
 }

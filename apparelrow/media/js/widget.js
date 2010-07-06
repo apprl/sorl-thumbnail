@@ -213,8 +213,10 @@ var ApparelRow = {
             effect: 'slide',
             relative: true,
             delay: 500,
-            offset: [30, 60]
+            offset: [15, 0]
         });
+        
+        
         
         // Make hotspots/collage products link to ApparelRow
         $('.ar-product, .ar-hotspot', node)

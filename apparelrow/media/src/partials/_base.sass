@@ -42,6 +42,13 @@ $font_family_bold: "Gotham Medium", "Helvetica", "Arial", sans-serif
 $font_family_italic: "Gotham Book Italic", "Helvetica", "Arial", sans-serif
 $font_family_bold_italic: "Gotham Medium Italic", "Helvetica", "Arial", sans-serif
 
+
+=custom_fonts
+  +font-face("Gotham Book", font-files("gotham-book.woff", woff, "gotham-book.ttf", truetype, "gotham-book.svg", svg), "gotham-book.eot", "gotham-book")
+  +font-face("Gotham Book Italic", font-files("gotham-bookitalic.woff", woff, "gotham-bookitalic.ttf", truetype, "gotham-bookitalic.svg", svg), "gotham-bookitalic.eot", "gotham-bookitalic", "italic")
+  +font-face-extended("Gotham Medium", font-files("gotham-medium.woff", woff, "gotham-medium.ttf", truetype, "gotham-medium.svg", svg), "gotham-medium.eot", "gotham-medium", false, "bold")
+  +font-face-extended("Gotham Medium Italic", font-files("gotham-mediumitalic.woff", woff, "gotham-mediumitalic.ttf", truetype, "gotham-mediumitalic.svg", svg), "gotham-mediumitalic.eot", "gotham-mediumitalic", "italic", "bold")
+
 =text_input
   font-family: $font_family
   font-size: 1em

@@ -441,13 +441,9 @@ a.looks
 
 span
   &.likes
-    background: transparent image_url(unquote("heart.png")) no-repeat scroll left center
-    padding-left: 16px
-    color: $like_color
+    +apparel_likes
   &.price
-    background: transparent url(../images/check.png) no-repeat scroll left bottom
-    color: $easier_color
-    padding-left: 15px
+    +apparel_price
 
 .product-photo
   border: 1px solid #dadada

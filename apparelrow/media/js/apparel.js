@@ -83,7 +83,7 @@ function makeProductTooltip(selector) {
         effect: 'slide',
         relative: true,
         delay: 500,
-        offset: [30, 60]
+        offset: [15, 0]
     });
 }
 

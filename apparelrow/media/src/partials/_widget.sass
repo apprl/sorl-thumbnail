@@ -1,33 +1,48 @@
 /* Contains CSS rules that are used both in external widgets and on the apparelrow site */
 
 $look_height: 524px !default
+$tooltip_width: 242px
 
 =apparel_tooltip
   +box
-  background: $box_color - #0b0b0b image_url(unquote("tooltip-bg.png")) repeat-x scroll center top
+  background-color: $box_color - #0b0b0b
   +border-radius(2px)
   +border(all)
   +box-shadow($default_box_shadow_color, $default_box_shadow_h_offset, $default_box_shadow_v_offset, unquote("5px"))
   display: none
   z-index: 1100
-  padding: 10px 10px 8px 10px
+  padding: 4px !important
   position: relative
+  width: $tooltip_width
+  white-space: nowrap
+  .product-image, .ar-product-image
+    border: 1px solid #dadada
+    text-align: center
+    background-color: white
+    float: left
+    width: 90px
+    line-height: 115px
+    height: 115px
+    margin-right: 10px
+    img
+      vertical-align: middle
   h2
-    margin-top: 0
-    margin-bottom: 1px
+    margin-top: 1em
+    margin-bottom: 0px
     border-bottom: none
     white-space: nowrap
-  p, a
+    overflow: hidden
+  h3
     color: $easy_color
     font-size: smaller
-    white-space: nowrap
+  div
   .arrow, .ar-arrow
     position: absolute
     background: transparent image_url(unquote("tooltip-arrow.png")) no-repeat scroll center center
     width: 14px
     height: 8px
     bottom: -8px
-    left: 16px
+    left: $tooltip_width / 2 - 5
 
 =apparel_hotspot
   position: relative
@@ -36,3 +51,14 @@ $look_height: 524px !default
     position: absolute
     padding: 40px
     background: transparent image_url(unquote("look-hotspot.png")) no-repeat scroll center center
+
+=apparel_likes
+  background: transparent image_url(unquote("heart.png")) no-repeat scroll left center
+  padding-left: 16px
+  color: $like_color
+  
+=apparel_price
+  background: transparent url(../images/check.png) no-repeat scroll left bottom
+  color: $easier_color
+  padding-left: 15px
+

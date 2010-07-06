@@ -1,8 +1,11 @@
 @import partials/base.sass
 @import partials/widget.sass
+@import partials/font_face_extended.scss
 
 @import compass/css3
 @import compass/utilities
+
++custom_fonts
 
 div#ar-wrapper
   h1, h2, h3, h4, h5, span, p, div, a
@@ -48,14 +51,25 @@ div#ar-wrapper
     +apparel_hotspot
   & .ar-link
     cursor: pointer
-  & .ar-tooltip
+  & a.ar-tooltip
+    cursor: pointer !important
     +apparel_tooltip
+    & div, & h3
+      margin: .5em 0
     & p
       +font
       +typography
       font-size: smaller / 1.5 !important
-    & a
+    & h2
+      margin-top: 1em
+      font-size: 120% !important
+    & h3
       +font
       +typography
-      font-size: smaller !important
-      cursor: pointer
+      font-size: 90% !important
+      color: $easy_color
+    & .ar-likes
+      +apparel_likes
+    & .ar-price
+      +apparel_price
+    
