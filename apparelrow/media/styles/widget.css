@@ -7,7 +7,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
   clear: none;
   cursor: default;
   float: none;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
   font-size: 12px !important;
   font-style: normal;
   font-weight: normal;
@@ -40,31 +40,31 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 
 /* line 43, ../src/widget.sass */
 #ar-wrapper {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
   font-size: 75%;
   line-height: 1.5em;
   color: #333333;
   position: relative;
 }
-/* line 103, ../src/partials/_base.sass */
+/* line 108, ../src/partials/_base.sass */
 #ar-wrapper a {
   text-decoration: none;
   color: #333333;
 }
-/* line 107, ../src/partials/_base.sass */
+/* line 112, ../src/partials/_base.sass */
 #ar-wrapper p a:hover, #ar-wrapper p a:active {
   text-decoration: underline;
 }
-/* line 109, ../src/partials/_base.sass */
+/* line 114, ../src/partials/_base.sass */
 #ar-wrapper h2, #ar-wrapper h3 {
   font-size: 1em;
 }
-/* line 111, ../src/partials/_base.sass */
+/* line 116, ../src/partials/_base.sass */
 #ar-wrapper h2 {
   margin: 30px 0 10px;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 114, ../src/partials/_base.sass */
+/* line 119, ../src/partials/_base.sass */
 #ar-wrapper h3 {
   font-weight: bolder;
 }
@@ -128,62 +128,62 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 }
 /* line 53, ../src/widget.sass */
 #ar-wrapper .ar-tooltip p {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
   font-size: 75%;
   line-height: 1.5em;
   color: #333333;
   font-size: smaller/1.5 !important;
 }
-/* line 103, ../src/partials/_base.sass */
+/* line 108, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip p a {
   text-decoration: none;
   color: #333333;
 }
-/* line 107, ../src/partials/_base.sass */
+/* line 112, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip p p a:hover, #ar-wrapper .ar-tooltip p p a:active {
   text-decoration: underline;
 }
-/* line 109, ../src/partials/_base.sass */
+/* line 114, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip p h2, #ar-wrapper .ar-tooltip p h3 {
   font-size: 1em;
 }
-/* line 111, ../src/partials/_base.sass */
+/* line 116, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip p h2 {
   margin: 30px 0 10px;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 114, ../src/partials/_base.sass */
+/* line 119, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip p h3 {
   font-weight: bolder;
 }
 /* line 57, ../src/widget.sass */
 #ar-wrapper .ar-tooltip a {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
   font-size: 75%;
   line-height: 1.5em;
   color: #333333;
   font-size: smaller !important;
   cursor: pointer;
 }
-/* line 103, ../src/partials/_base.sass */
+/* line 108, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip a a {
   text-decoration: none;
   color: #333333;
 }
-/* line 107, ../src/partials/_base.sass */
+/* line 112, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip a p a:hover, #ar-wrapper .ar-tooltip a p a:active {
   text-decoration: underline;
 }
-/* line 109, ../src/partials/_base.sass */
+/* line 114, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip a h2, #ar-wrapper .ar-tooltip a h3 {
   font-size: 1em;
 }
-/* line 111, ../src/partials/_base.sass */
+/* line 116, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip a h2 {
   margin: 30px 0 10px;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 114, ../src/partials/_base.sass */
+/* line 119, ../src/partials/_base.sass */
 #ar-wrapper .ar-tooltip a h3 {
   font-weight: bolder;
 }

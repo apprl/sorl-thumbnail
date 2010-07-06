@@ -4,6 +4,7 @@ http_path = "/media"
 css_dir = "styles"
 sass_dir = "src"
 images_dir = "images"
+fonts_dir = "fonts"
 javascripts_dir = "js"
 # To enable relative paths to assets via compass helper functions. Uncomment:
 # relative_assets = true

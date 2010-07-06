@@ -37,8 +37,13 @@ $default_box_shadow_h_offset: 0px !default
 $default_box_shadow_v_offset: 0px !default
 $default_box_shadow_blur: 20px !default
 
+$font_family: "Gotham Book", "Helvetica", "Arial", sans-serif
+$font_family_bold: "Gotham Medium", "Helvetica", "Arial", sans-serif
+$font_family_italic: "Gotham Book Italic", "Helvetica", "Arial", sans-serif
+$font_family_bold_italic: "Gotham Medium Italic", "Helvetica", "Arial", sans-serif
+
 =text_input
-  font-family: "Helvetica", "Arial", sans-serif
+  font-family: $font_family
   font-size: 1em
   +border-radius(3px)
   +border(all, #d9d9d9)
@@ -94,7 +99,7 @@ $color_height: 19px
 
 =font
   font:
-    family: Helvetica, Arial, sans-serif
+    family: $font_family
     size: 75%
   line-height: 1.5em
   color: $font_color

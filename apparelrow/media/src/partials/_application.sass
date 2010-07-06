@@ -26,7 +26,7 @@ body
   cursor: pointer
 
 button
-  font-family: "Helvetica", "Arial", sans-serif
+  font-family: $font_family
   font-size: 1em
   color: $font_color
   box-sizing: content-box
@@ -121,13 +121,14 @@ button
 
 #account-dialogue
   input.default-value
+    font-family: $font_family_italic
     font-style: italic
   form
     margin: 0
     margin: auto 1em
 
 #login-username, #login-password, #login-password-placeholder
-  background: transparent url(../images/login-text-bg.png) scroll no-repeat left center
+  background: transparent image_url("../images/login-text-bg.png") scroll no-repeat left center
   width: 108px
   height: 24px
   margin: 0
@@ -186,6 +187,9 @@ button
     +float-left
     background: transparent image_url(unquote("arrow-bg.png")) no-repeat scroll left 10px
     padding-left: 20px
+    h3
+      font-family: $font_family_bold
+      font-weight: bold
   .nav
     +float-right
     margin-top: 4px
@@ -383,6 +387,7 @@ $ruler_width: $slider_width + 9px
       margin: 4px 3px 3px
       padding-left: 8px
       padding-right: 8px
+      font-family: $font_family_italic
       font-style: italic
     ul
       +border(top)
@@ -535,6 +540,7 @@ a.prev.disabled, a.next.disabled
     background-color: inherit
   ol
     a:hover
+      font-family: $font_family_bold
       font-weight: bold
   div
     float: left
@@ -558,6 +564,7 @@ a.prev.disabled, a.next.disabled
         a
           display: block
         &.current
+          font-family: $font_family_bold
           font-weight: bold
           background: transparent image_url(unquote("current-page.png")) no-repeat scroll center bottom
 
@@ -656,6 +663,7 @@ a.buy-now
   +border(all, $highlight_border_color)
   color: $highlight_color
   text-transform: uppercase
+  font-family: $font_family_bold
   font-weight: bold
 
 a.buy-now:hover

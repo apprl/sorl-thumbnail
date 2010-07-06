@@ -1,9 +1,15 @@
 @import compass/reset
 
 @import partials/base.sass
+@import partials/font_face_extended.scss
 
 @import compass/css3
 @import compass/utilities
+
++font-face("Gotham Book", font-files("gotham-book.woff", woff, "gotham-book.ttf", truetype, "gotham-book.svg", svg), "gotham-book.eot", "gotham-book")
++font-face("Gotham Book Italic", font-files("gotham-bookitalic.woff", woff, "gotham-bookitalic.ttf", truetype, "gotham-bookitalic.svg", svg), "gotham-bookitalic.eot", "gotham-bookitalic", "italic")
++font-face-extended("Gotham Medium", font-files("gotham-medium.woff", woff, "gotham-medium.ttf", truetype, "gotham-medium.svg", svg), "gotham-medium.eot", "gotham-medium", false, "bold")
++font-face-extended("Gotham Medium Italic", font-files("gotham-mediumitalic.woff", woff, "gotham-mediumitalic.ttf", truetype, "gotham-mediumitalic.svg", svg), "gotham-mediumitalic.eot", "gotham-mediumitalic", "italic", "bold")
 
 // Page layout can be done using mixins applied to your semantic classes and IDs:
 body
