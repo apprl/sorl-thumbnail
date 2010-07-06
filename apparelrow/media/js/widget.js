@@ -235,8 +235,12 @@ var ApparelRow = {
         // Hide hotspots and only show them on mouseover
         $('.ar-hotspot').hide();
         $('.ar-look-photo').hover(
-            function() { $('.ar-hotspot', this).show() }
-            , function() { $('.ar-hotspot', this).hide() }
+              function(e) { jQuery('.ar-hotspot', this).fadeIn() }
+            , function(e) { 
+                if(!e.originalTarget || e.originalTarget.id != this.id)
+                    return true;
+                jQuery('.ar-hotspot', this).fadeOut();
+            }
         );
     },
     request: function(path, node, callback) {

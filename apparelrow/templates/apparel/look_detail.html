@@ -23,8 +23,12 @@
         ;
         jQuery('.hotspot').hide();
         jQuery('#photo-background').hover(
-            function() { jQuery('.hotspot', this).show() }
-            , function() { jQuery('.hotspot', this).hide() }
+              function(e) { jQuery('.hotspot', this).fadeIn() }
+            , function(e) { 
+                if(!e.originalTarget || e.originalTarget.id != this.id)
+                    return true;
+                jQuery('.hotspot', this).fadeOut();
+            }
         );
         jQuery('.product, .hotspot')
             .click(function(e) {
