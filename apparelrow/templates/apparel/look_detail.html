@@ -30,9 +30,9 @@
                 jQuery('.hotspot', this).fadeOut();
             }
         );
-        jQuery('.product, .hotspot')
+        jQuery('#content .product, #content .hotspot')
             .click(function(e) {
-                location.href = jQuery('#' + this.id + ' + .tooltip:first > a').attr('href');
+                location.href = jQuery('#' + this.id + ' + .tooltip').attr('href');
                 return false;
             } )
             .addClass('link')

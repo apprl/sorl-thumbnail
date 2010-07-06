@@ -370,7 +370,7 @@ body h3 {
   margin: 0 auto;
   top: 12px;
 }
-/* line 50, ../src/partials/_widget.sass */
+/* line 51, ../src/partials/_widget.sass */
 #photo-background .hotspot, #photo-background .ar-hotspot {
   position: absolute;
   padding: 40px;
@@ -795,8 +795,9 @@ body.look .spread input {
 .tooltip h3 {
   color: #666666;
   font-size: smaller;
+  font-weight: normal;
 }
-/* line 39, ../src/partials/_widget.sass */
+/* line 40, ../src/partials/_widget.sass */
 .tooltip .arrow, .tooltip .ar-arrow {
   position: absolute;
   background: transparent url('../images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
@@ -856,7 +857,7 @@ body.look .sidebar .description {
 }
 /* line 247, ../src/partials/_look.sass */
 body.look #content {
-  margin-top: -2em;
+  margin-top: -1.8em;
 }
 /* line 249, ../src/partials/_look.sass */
 body.look #content .collage, body.look #content .photo {

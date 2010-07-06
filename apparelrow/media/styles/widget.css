@@ -102,7 +102,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
   position: relative;
   margin: 0 auto;
 }
-/* line 50, ../src/partials/_widget.sass */
+/* line 51, ../src/partials/_widget.sass */
 #ar-wrapper .ar-look-photo .hotspot, #ar-wrapper .ar-look-photo .ar-hotspot {
   position: absolute;
   padding: 40px;
@@ -163,8 +163,9 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 #ar-wrapper a.ar-tooltip h3 {
   color: #666666;
   font-size: smaller;
+  font-weight: normal;
 }
-/* line 39, ../src/partials/_widget.sass */
+/* line 40, ../src/partials/_widget.sass */
 #ar-wrapper a.ar-tooltip .arrow, #ar-wrapper a.ar-tooltip .ar-arrow {
   position: absolute;
   background: transparent url('../images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
