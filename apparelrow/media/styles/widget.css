@@ -156,7 +156,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
   margin-top: 1em;
   margin-bottom: 0px;
   border-bottom: none;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
 }
 /* line 35, ../src/partials/_widget.sass */
@@ -253,6 +253,6 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 /* line 73, ../src/widget.sass */
 #ar-wrapper a.ar-tooltip .ar-price {
   background: transparent url(../images/check.png) no-repeat scroll left bottom;
-  color: #999999;
+  color: #333333;
   padding-left: 15px;
 }

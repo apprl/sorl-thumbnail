@@ -788,7 +788,7 @@ body.look .spread input {
   margin-top: 1em;
   margin-bottom: 0px;
   border-bottom: none;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
 }
 /* line 35, ../src/partials/_widget.sass */
@@ -2968,7 +2968,7 @@ span.likes {
 /* line 445, ../src/partials/_application.sass */
 span.price {
   background: transparent url(../images/check.png) no-repeat scroll left bottom;
-  color: #999999;
+  color: #333333;
   padding-left: 15px;
 }
 
