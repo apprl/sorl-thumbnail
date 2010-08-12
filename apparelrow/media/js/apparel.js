@@ -256,6 +256,7 @@ ApparelSearch = {
         ngettext('Found %(count)s product', 'Found %(count)s products', 0);
         ngettext('Found %(count)s look', 'Found %(count)s looks', 0);
         ngettext('Found %(count)s matching brand', 'Found %(count)s matching brands', 0);
+        ngettext('%s product', '%s products', 0);
     },
 
 };
