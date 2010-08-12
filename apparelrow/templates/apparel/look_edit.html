@@ -5,7 +5,6 @@
 {% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
 
 {% block 'extra-scripts' %}
-<script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.ui.rotatable.js"></script>
 <script type="text/javascript">
 
 var look = {
@@ -471,6 +470,8 @@ jQuery(document).ready(function() {
         function(e) { jQuery(this).removeClass('hover') }
     );
     
+    if('{{ object.display_with_component }}' == 'P' && location.hash == '')
+        jQuery('a[href=photo-tab]').click();
 });
 
 
