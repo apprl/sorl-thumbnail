@@ -40,7 +40,9 @@
                     jQuery(this).find('#add-to-look-new button').show(); 
                     jQuery(this).find('#add-to-look-new input[name=new_name]').hide(); 
                 }
-                return event.type != 'click';
+                // Should prevent default only when #add-to-look button is clicked
+                if(event.type == 'click' && event.target == jQuery('#add-to-look > a').get(0))
+                    event.preventDefault();
             });
 
             jQuery('#add-to-look>form').hyperSubmit({
@@ -63,9 +65,9 @@
                         jQuery('<li/>').append(response.data.html).prependTo('ul.looks');
                         jQuery('ul.looks > li').each(function(i, item) {
                             if(i % 2 == 0)
-                                jQuery(item).removeClass('last');
-                            else
                                 jQuery(item).addClass('last');
+                            else
+                                jQuery(item).removeClass('last');
                         });
                         /* FIXME uncommented this, for now. We need to do something more smart with templates.
                         jQuery('<li/>').append(response.data.template, { 'object': response.data.look }).prependTo('ul.looks');
