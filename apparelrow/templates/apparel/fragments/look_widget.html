@@ -16,7 +16,7 @@
         s.type  = 'text/javascript';
         s.async = true;
         s.id    = '__ar_widget__';
-        s.src = 'http://{{ request.get_host }}/media/js/widget.js';
+        s.src = 'http://{{ request.get_host }}/media/js/compiled/widget.js';
         var x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
     }
