@@ -31,6 +31,9 @@ class Manufacturer(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        verbose_name = _("Manufacturer")
+
     class Exporter:
         export_fields = ['__all__', '-active']
 
@@ -77,6 +80,9 @@ class Vendor(models.Model):
     logotype = models.ImageField(upload_to=LOGOTYPE_BASE, help_text=_('Logotype')) 
 
     objects = SearchManager()
+
+    class Meta:
+        verbose_name = _("Vendor")
 
     def __unicode__(self):
         return u"%s" % (self.name) 
@@ -140,6 +146,7 @@ class Product(models.Model):
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True)
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, help_text=_('Product image')) 
+    vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
     
     objects = SearchManager()
     
@@ -185,13 +192,16 @@ class Product(models.Model):
 
 class VendorProduct(models.Model):
     vendor     = models.ForeignKey(Vendor)
-    product    = models.ForeignKey(Product, related_name='vendorproduct')
+    product    = models.ForeignKey(Product, related_name='vendorproduct', verbose_name='Vendor Product')
     buy_url    = models.URLField(_('Buy URL'), null=True, blank=True, )
     price      = models.DecimalField(_('Numeric price'), null=True, blank=True, max_digits=10, decimal_places=2)
     currency   = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
     
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)
+
+    class Meta:
+        verbose_name = _("Vendor Product")
 
     class Exporter:
         export_fields = ['__all__', '-product']

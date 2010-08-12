@@ -9,6 +9,7 @@ admin.site.register(Manufacturer)
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'manufacturer', 'sku',)
+    list_filter = ['date_added', 'vendors']
 
 admin.site.register(Product, ProductAdmin)
 
