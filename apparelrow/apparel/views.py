@@ -196,6 +196,13 @@ def look_detail(request, slug):
 #@login_required - FIXME: Find out why this isn't working anymore
 @seamless_request_handling
 def look_edit(request, slug):
+    """
+    GET  - Display edit look page
+    POST - Save changes to a look
+            - if in AJAX mode, return the look as JSON
+            - else redirect to look's view page (unless a new image has been uploaded)
+    """
+    
     look = get_object_or_404(Look, slug=slug)
         
     if request.method == 'POST':
@@ -203,9 +210,11 @@ def look_edit(request, slug):
         
         if form.is_valid():
             form.save()
+            if not request.is_ajax() and not request.FILES:
+                return HttpResponseRedirect(form.instance.get_absolute_url())
         else:
             logging.debug('Form errors: %s', form.errors.__unicode__())
-
+    
     else:
         form = LookForm(instance=look)
     
