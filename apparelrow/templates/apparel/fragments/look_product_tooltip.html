@@ -1,20 +1,22 @@
 {% load i18n %}
-<a href="{{ component.product.get_absolute_url }}" class="tooltip">
-    <!--
-        <a href="{{ component.product.default_vendor.buy_url }}" target="_blank" class="tooltip">
-    -->
-    <div class="product-image">
+<div class="tooltip">
+    <a href="{{ component.product.get_absolute_url }}" class="product-image">
         <img src="/scale/90x115{{ component.product.product_image.url }}" />
-    </div>
+    </a>
     <div>
-        <h2>{{ component.product.product_name }}</h2>
-        <h3>{{ component.product.manufacturer.name }}</h3>
-        <div>
-            <span class="likes">{{ component.product.score.score }} {% trans "Likes" %}</span>
-        </div>
-        <div>
-            <span class="price">{{ component.product.default_vendor.price }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
-        </div>
+        <a href="{{ component.product.get_absolute_url }}">
+            <h2>{{ component.product.product_name }}</h2>
+            <h3>{{ component.product.manufacturer.name }}</h3>
+            <div>
+                <span class="likes">{{ component.product.score.score }} {% trans "Likes" %}</span>
+            </div>
+            <div>
+                <span class="price">{{ component.product.default_vendor.price }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
+            </div>
+        </a>
+        <!-- FIXME: Make this buy button look good 
+            <a href="{{ component.product.default_vendor.buy_url }}" target="_new" class="buy-now small">{% trans "Buy" %}</a>
+        -->
     </div>
     <span class="arrow"></span>
-</a>
+</div>
