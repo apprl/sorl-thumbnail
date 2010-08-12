@@ -16,7 +16,6 @@ function cloneProducts(elements) {
         jQuery('<ul/>').attr('id', 'hover-products').appendTo('#container');
     elements.each(function(i, ele) {
         var $this = jQuery(ele);
-        console.log('cloning ' + $this);
         if($this.data('clone'))
             return;
         var clone = $this.clone()
