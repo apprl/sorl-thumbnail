@@ -404,15 +404,16 @@ body h3 {
   -o-box-shadow: #999999 0px 0px 20px;
   box-shadow: #999999 0px 0px 20px;
   background-color: white;
+  cursor: auto;
 }
-/* line 73, ../src/partials/_look.sass */
+/* line 74, ../src/partials/_look.sass */
 #product-chooser h3 {
   margin-left: 1em;
   font-weight: normal;
   font-style: italic;
   line-height: 3.5em;
 }
-/* line 78, ../src/partials/_look.sass */
+/* line 79, ../src/partials/_look.sass */
 #product-chooser ul {
   border: 1px solid #c1c1c1;
   background-color: #fafafa;
@@ -429,7 +430,7 @@ body h3 {
   height: 204px;
   padding: 0 9px;
 }
-/* line 88, ../src/partials/_look.sass */
+/* line 89, ../src/partials/_look.sass */
 #product-chooser ul li a {
   display: block;
   overflow: hidden;
@@ -442,22 +443,22 @@ body h3 {
 #product-chooser ul li a {
   display: block;
 }
-/* line 94, ../src/partials/_look.sass */
+/* line 95, ../src/partials/_look.sass */
 #product-chooser ul li a:hover {
   background-image: url('../images/arrow-bg-hover.png?1274795259');
 }
-/* line 96, ../src/partials/_look.sass */
+/* line 97, ../src/partials/_look.sass */
 #product-chooser ul li a img {
   float: left;
   margin-right: 10px;
   border: 1px solid #c1c1c1;
 }
-/* line 100, ../src/partials/_look.sass */
+/* line 101, ../src/partials/_look.sass */
 #product-chooser ul li a h4, #product-chooser ul li a p {
   white-space: nowrap;
 }
 
-/* line 103, ../src/partials/_look.sass */
+/* line 104, ../src/partials/_look.sass */
 .look-empty {
   width: 300px;
   position: absolute;
@@ -465,7 +466,7 @@ body h3 {
   left: 197px;
   text-align: center;
 }
-/* line 109, ../src/partials/_look.sass */
+/* line 110, ../src/partials/_look.sass */
 .look-empty button, .look-empty a {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -496,13 +497,13 @@ body h3 {
 .look-empty button.ok:before, .look-empty a.ok:before {
   content: url('../images/ok.png?1265910786');
 }
-/* line 115, ../src/partials/_look.sass */
+/* line 116, ../src/partials/_look.sass */
 .look-empty button:hover, .look-empty a:hover {
   background-color: #94ffd1;
   border-color: #92c0c7;
   color: #408994;
 }
-/* line 117, ../src/partials/_look.sass */
+/* line 118, ../src/partials/_look.sass */
 .look-empty a {
   background-image: url('../images/add.png?1265910786');
   background-repeat: no-repeat;
@@ -510,24 +511,24 @@ body h3 {
   padding-left: 30px;
   display: block;
 }
-/* line 123, ../src/partials/_look.sass */
+/* line 124, ../src/partials/_look.sass */
 .look-empty p {
   margin: 1em 0;
   color: #333333;
 }
 
-/* line 128, ../src/partials/_look.sass */
+/* line 129, ../src/partials/_look.sass */
 #photo .look-empty .message {
   width: 240px;
   margin: 0 auto;
 }
-/* line 131, ../src/partials/_look.sass */
+/* line 132, ../src/partials/_look.sass */
 #photo .look-empty button {
   width: 226px;
   display: none;
 }
 
-/* line 135, ../src/partials/_look.sass */
+/* line 136, ../src/partials/_look.sass */
 #edit-look {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
@@ -543,11 +544,11 @@ body h3 {
   border-top-right-radius: 5px;
   border: 1px solid #d9d9d9;
 }
-/* line 138, ../src/partials/_look.sass */
+/* line 139, ../src/partials/_look.sass */
 #edit-look #photo-background {
   cursor: pointer;
 }
-/* line 140, ../src/partials/_look.sass */
+/* line 141, ../src/partials/_look.sass */
 #edit-look ul.tabs {
   margin: 0;
   padding: 0;
@@ -579,13 +580,13 @@ body h3 {
 #edit-look ul.tabs li:last-child, #edit-look ul.tabs li.last {
   padding-right: 0px;
 }
-/* line 142, ../src/partials/_look.sass */
+/* line 143, ../src/partials/_look.sass */
 #edit-look ul.tabs li {
   border: 1px solid #d9d9d9;
   display: block;
   border-style: none solid solid none;
 }
-/* line 146, ../src/partials/_look.sass */
+/* line 147, ../src/partials/_look.sass */
 #edit-look ul.tabs li:first-child, #edit-look ul.tabs li.first, #edit-look ul.tabs li:first-child a, #edit-look ul.tabs li.first a {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
@@ -594,7 +595,7 @@ body h3 {
   -khtml-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
 }
-/* line 148, ../src/partials/_look.sass */
+/* line 149, ../src/partials/_look.sass */
 #edit-look ul.tabs li:last-child, #edit-look ul.tabs li.last, #edit-look ul.tabs li:last-child a, #edit-look ul.tabs li.last a {
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
@@ -604,7 +605,7 @@ body h3 {
   border-top-right-radius: 5px;
   border-right: none;
 }
-/* line 151, ../src/partials/_look.sass */
+/* line 152, ../src/partials/_look.sass */
 #edit-look ul.tabs li a {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -628,40 +629,40 @@ body h3 {
 #edit-look ul.tabs li a.ok:before {
   content: url('../images/ok.png?1265910786');
 }
-/* line 157, ../src/partials/_look.sass */
+/* line 158, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo {
   width: 232px;
 }
-/* line 159, ../src/partials/_look.sass */
+/* line 160, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.current, #edit-look ul.tabs li a.current:hover {
   background-image: url('../images/gradient-darker-bg.png?1265910786');
   cursor: default;
 }
-/* line 162, ../src/partials/_look.sass */
+/* line 163, ../src/partials/_look.sass */
 #edit-look ul.tabs li a:active, #edit-look ul.tabs li a:hover {
   background-image: url('../images/gradient-dark-bg.png?1265910786');
 }
-/* line 164, ../src/partials/_look.sass */
+/* line 165, ../src/partials/_look.sass */
 #edit-look ul.tabs li a span {
   padding-left: 16px;
   background-color: transparent;
   background-repeat: no-repeat;
   background-position: left center;
 }
-/* line 170, ../src/partials/_look.sass */
+/* line 171, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.collage span {
   background-image: url('../images/kollage.png?1267020375');
 }
-/* line 172, ../src/partials/_look.sass */
+/* line 173, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo span {
   background-image: url('../images/foto.png?1267020375');
 }
-/* line 174, ../src/partials/_look.sass */
+/* line 175, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.selection span {
   background-image: url('../images/urval.png?1267020375');
 }
 
-/* line 177, ../src/partials/_look.sass */
+/* line 178, ../src/partials/_look.sass */
 #look-title {
   border: 1px solid #d9d9d9;
   width: 893px;
@@ -671,12 +672,12 @@ body h3 {
   padding-top: 3px;
   padding-left: 20px;
 }
-/* line 185, ../src/partials/_look.sass */
+/* line 186, ../src/partials/_look.sass */
 #look-title #id_title, #look-title button {
   color: #408994;
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
 }
-/* line 188, ../src/partials/_look.sass */
+/* line 189, ../src/partials/_look.sass */
 #look-title #id_title {
   border: 1px solid #92c0c7;
   -moz-border-radius: 3px;
@@ -698,7 +699,7 @@ body h3 {
   /* CSS3 */
   box-shadow: inset #aed8c6 0 3px 3px;
 }
-/* line 198, ../src/partials/_look.sass */
+/* line 199, ../src/partials/_look.sass */
 #look-title button {
   display: inline;
   float: right;
@@ -711,7 +712,7 @@ body h3 {
   text-align: start;
 }
 
-/* line 208, ../src/partials/_look.sass */
+/* line 209, ../src/partials/_look.sass */
 #id_description,
 #id_tags {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
@@ -735,17 +736,17 @@ body h3 {
   width: 196px;
 }
 
-/* line 213, ../src/partials/_look.sass */
+/* line 214, ../src/partials/_look.sass */
 #id_description {
   height: 2em;
 }
 
-/* line 216, ../src/partials/_look.sass */
+/* line 217, ../src/partials/_look.sass */
 #id_tags {
   height: 1em;
 }
 
-/* line 221, ../src/partials/_look.sass */
+/* line 222, ../src/partials/_look.sass */
 body.edit-look .sidebar label {
   display: block;
   margin: 20px 0 10px;
@@ -753,11 +754,11 @@ body.edit-look .sidebar label {
   border-bottom: 1px solid #d9d9d9;
 }
 
-/* line 228, ../src/partials/_look.sass */
+/* line 229, ../src/partials/_look.sass */
 body.look .spread {
   margin-top: 20px;
 }
-/* line 230, ../src/partials/_look.sass */
+/* line 231, ../src/partials/_look.sass */
 body.look .spread input {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
   font-size: 1em;
@@ -781,7 +782,7 @@ body.look .spread input {
   margin-left: 0.5em;
 }
 
-/* line 235, ../src/partials/_look.sass */
+/* line 236, ../src/partials/_look.sass */
 .tooltip {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -843,7 +844,7 @@ body.look .spread input {
   left: 116px;
 }
 
-/* line 240, ../src/partials/_look.sass */
+/* line 241, ../src/partials/_look.sass */
 ul.looks li:hover {
   z-index: 100;
   -moz-box-shadow: #999999 0px 0px 20px;
@@ -852,77 +853,77 @@ ul.looks li:hover {
   box-shadow: #999999 0px 0px 20px;
 }
 
-/* line 245, ../src/partials/_look.sass */
+/* line 246, ../src/partials/_look.sass */
 body.look .collage, body.look .photo {
   position: relative;
   height: 524px;
 }
-/* line 248, ../src/partials/_look.sass */
+/* line 249, ../src/partials/_look.sass */
 body.look #comments-and-links {
   float: left;
   width: 452px;
   margin-right: 36px;
 }
-/* line 252, ../src/partials/_look.sass */
+/* line 253, ../src/partials/_look.sass */
 body.look #tags {
   float: left;
   width: 208px;
 }
-/* line 255, ../src/partials/_look.sass */
+/* line 256, ../src/partials/_look.sass */
 body.look #tags li {
   border-bottom: 1px solid #f2f2f2;
 }
-/* line 257, ../src/partials/_look.sass */
+/* line 258, ../src/partials/_look.sass */
 body.look #tags li span {
   float: right;
   color: #999999;
 }
-/* line 260, ../src/partials/_look.sass */
+/* line 261, ../src/partials/_look.sass */
 body.look .sidebar {
   margin-top: 30px;
 }
-/* line 262, ../src/partials/_look.sass */
+/* line 263, ../src/partials/_look.sass */
 body.look .sidebar p {
   border-top: none;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 265, ../src/partials/_look.sass */
+/* line 266, ../src/partials/_look.sass */
 body.look .sidebar .description {
   border-bottom: none;
   padding-top: 1.5em;
 }
-/* line 268, ../src/partials/_look.sass */
+/* line 269, ../src/partials/_look.sass */
 body.look #content {
   margin-top: -1.8em;
 }
-/* line 270, ../src/partials/_look.sass */
+/* line 271, ../src/partials/_look.sass */
 body.look #content .collage, body.look #content .photo {
   background-color: white;
   margin-right: 2em;
 }
 
-/* line 274, ../src/partials/_look.sass */
+/* line 275, ../src/partials/_look.sass */
 #look-header {
   margin-top: 1em;
   position: relative;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 278, ../src/partials/_look.sass */
+/* line 279, ../src/partials/_look.sass */
 #look-header .profile-image {
   position: absolute;
   left: 0em;
   top: 0;
 }
-/* line 282, ../src/partials/_look.sass */
+/* line 283, ../src/partials/_look.sass */
 #look-header div {
   margin-left: 70px;
 }
-/* line 284, ../src/partials/_look.sass */
+/* line 285, ../src/partials/_look.sass */
 #look-header div h1 {
   font-size: 1.5em;
   line-height: 2em;
 }
-/* line 287, ../src/partials/_look.sass */
+/* line 288, ../src/partials/_look.sass */
 #look-header div h1 a {
   margin-left: 2em;
   border: 1px solid #d9d9d9;
@@ -958,33 +959,33 @@ body.look #content .collage, body.look #content .photo {
 #look-header div h1 a.ok:before {
   content: url('../images/ok.png?1265910786');
 }
-/* line 298, ../src/partials/_look.sass */
+/* line 299, ../src/partials/_look.sass */
 #look-header div h1 a:hover {
   background-color: #94ffd1;
   border-color: #92c0c7;
   color: #408994;
 }
 
-/* line 301, ../src/partials/_look.sass */
+/* line 302, ../src/partials/_look.sass */
 #wardrobe {
   margin: 0 -16px 0 -24px;
   clear: both;
 }
 
-/* line 305, ../src/partials/_look.sass */
+/* line 306, ../src/partials/_look.sass */
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
   background: #f2f2f2 url('../images/gradient-bg.png?1270043905') repeat-x;
   padding: 10px 8px 0 10px;
 }
-/* line 310, ../src/partials/_look.sass */
+/* line 311, ../src/partials/_look.sass */
 #wardrobe-title span {
   background: transparent url('../images/arrow-bg-down.png?1272964037') no-repeat top left;
   padding-left: 14px;
 }
 
-/* line 314, ../src/partials/_look.sass */
+/* line 315, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
   background: transparent url('../images/wardrobe-bg.png?1273247149') scroll repeat-x center center;
@@ -1137,18 +1138,18 @@ body.look #content .collage, body.look #content .photo {
 #wardrobe-contents div.row ul li a img {
   vertical-align: middle;
 }
-/* line 319, ../src/partials/_look.sass */
+/* line 320, ../src/partials/_look.sass */
 #wardrobe-contents li a {
   cursor: move;
 }
 
-/* line 323, ../src/partials/_look.sass */
+/* line 324, ../src/partials/_look.sass */
 .ui-icon {
   background-image: none;
   background-position: 0 0;
 }
 
-/* line 328, ../src/partials/_look.sass */
+/* line 329, ../src/partials/_look.sass */
 .ui-icon-gripsmall-diagonal-se {
   bottom: -11px;
   right: -11px;
@@ -1157,25 +1158,25 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('../images/resize.png?1274788213') no-repeat scroll center center;
 }
 
-/* line 336, ../src/partials/_look.sass */
+/* line 337, ../src/partials/_look.sass */
 .ui-rotatable {
   position: relative;
 }
 
-/* line 339, ../src/partials/_look.sass */
+/* line 340, ../src/partials/_look.sass */
 .ui-rotatable-handle {
   position: absolute;
   z-index: 99999;
   display: block;
 }
 
-/* line 344, ../src/partials/_look.sass */
+/* line 345, ../src/partials/_look.sass */
 .ui-rotatable-disabled .ui-rotatable-handle,
 .ui-rotatable-autohide .ui-rotatable-handle {
   display: none;
 }
 
-/* line 348, ../src/partials/_look.sass */
+/* line 349, ../src/partials/_look.sass */
 .ui-rotatable-ne {
   top: -11px;
   right: -11px;
@@ -1184,7 +1185,7 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('../images/rotate-cw.png?1274788198') no-repeat scroll center center;
 }
 
-/* line 355, ../src/partials/_look.sass */
+/* line 356, ../src/partials/_look.sass */
 .ui-rotatable-sw {
   bottom: -11px;
   left: -11px;
