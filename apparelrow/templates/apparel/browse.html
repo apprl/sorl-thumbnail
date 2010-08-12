@@ -417,8 +417,15 @@
         }
         
         function renderProducts(products) {
-            $('#product-count').empty();
-            $('#product_count_template').render({ products: products }).appendTo('#product-count');
+            console.log(products.paginator.count);
+            $('#product-count').text(
+                interpolate(ngettext(
+                    '%s product', 
+                    '%s products', 
+                    products.paginator.count
+                ), [products.paginator.count])
+            );
+            // $('#product_count_template').render({ products: products }).appendTo('#product-count');
             jQuery('#product-list > ul').empty();
             renderPage(products, 1);
             jQuery('#product-list').data('scrollable').begin();
@@ -436,7 +443,9 @@
         </div>
         <div id="content">
             {% with pages|first as products %}
-            <h2><span id="product-count">{% include 'apparel/fragments/product_count.html' %}</span> {% trans "products" %}</h2>
+            <h2 id="product-count">
+                {% blocktrans count products.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}
+            </h2>
             {% endwith %}
             <div id="product-list" class="product-list">
                 <ul class="list">

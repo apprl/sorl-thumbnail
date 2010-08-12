@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-02 13:31+0200\n"
+"POT-Creation-Date: 2010-08-12 15:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,22 +24,26 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: media/js/apparel.js:254
-#, fuzzy
 msgid "Found %(count)s product"
 msgid_plural "Found %(count)s products"
 msgstr[0] "%(count)s träff bland plagg"
 msgstr[1] "%(count)s träffar bland plagg"
 
 #: media/js/apparel.js:255
-#, fuzzy
 msgid "Found %(count)s look"
 msgid_plural "Found %(count)s looks"
 msgstr[0] "%(count)s träff bland looks"
 msgstr[1] "%(count)s träffar bland looks"
 
 #: media/js/apparel.js:256
-#, fuzzy
 msgid "Found %(count)s matching brand"
 msgid_plural "Found %(count)s matching brands"
-msgstr[0] "%(count)s träff bland märken"
-msgstr[1] "%(count)s träffar bland märken"
+msgstr[0] "%(count)s träff bland varumärken"
+msgstr[1] "%(count)s träffar bland varumärken"
+
+#: media/js/apparel.js:257
+#, perl-format
+msgid "%s product"
+msgid_plural "%s products"
+msgstr[0] "%s produkt"
+msgstr[1] "%s produkter"
