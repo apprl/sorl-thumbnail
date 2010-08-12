@@ -512,6 +512,10 @@ body h3 {
   border: 1px solid #d9d9d9;
 }
 /* line 119, ../src/partials/_look.sass */
+#edit-look #photo-background {
+  cursor: pointer;
+}
+/* line 121, ../src/partials/_look.sass */
 #edit-look ul.tabs {
   margin: 0;
   padding: 0;
@@ -543,13 +547,13 @@ body h3 {
 #edit-look ul.tabs li:last-child, #edit-look ul.tabs li.last {
   padding-right: 0px;
 }
-/* line 121, ../src/partials/_look.sass */
+/* line 123, ../src/partials/_look.sass */
 #edit-look ul.tabs li {
   border: 1px solid #d9d9d9;
   display: block;
   border-style: none solid solid none;
 }
-/* line 125, ../src/partials/_look.sass */
+/* line 127, ../src/partials/_look.sass */
 #edit-look ul.tabs li:first-child, #edit-look ul.tabs li.first, #edit-look ul.tabs li:first-child a, #edit-look ul.tabs li.first a {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
@@ -558,7 +562,7 @@ body h3 {
   -khtml-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
 }
-/* line 127, ../src/partials/_look.sass */
+/* line 129, ../src/partials/_look.sass */
 #edit-look ul.tabs li:last-child, #edit-look ul.tabs li.last, #edit-look ul.tabs li:last-child a, #edit-look ul.tabs li.last a {
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
@@ -568,7 +572,7 @@ body h3 {
   border-top-right-radius: 5px;
   border-right: none;
 }
-/* line 130, ../src/partials/_look.sass */
+/* line 132, ../src/partials/_look.sass */
 #edit-look ul.tabs li a {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -592,40 +596,40 @@ body h3 {
 #edit-look ul.tabs li a.ok:before {
   content: url('../images/ok.png?1265910786');
 }
-/* line 136, ../src/partials/_look.sass */
+/* line 138, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo {
   width: 232px;
 }
-/* line 138, ../src/partials/_look.sass */
+/* line 140, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.current, #edit-look ul.tabs li a.current:hover {
   background-image: url('../images/gradient-darker-bg.png?1265910786');
   cursor: default;
 }
-/* line 141, ../src/partials/_look.sass */
+/* line 143, ../src/partials/_look.sass */
 #edit-look ul.tabs li a:active, #edit-look ul.tabs li a:hover {
   background-image: url('../images/gradient-dark-bg.png?1265910786');
 }
-/* line 143, ../src/partials/_look.sass */
+/* line 145, ../src/partials/_look.sass */
 #edit-look ul.tabs li a span {
   padding-left: 16px;
   background-color: transparent;
   background-repeat: no-repeat;
   background-position: left center;
 }
-/* line 149, ../src/partials/_look.sass */
+/* line 151, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.collage span {
   background-image: url('../images/kollage.png?1267020375');
 }
-/* line 151, ../src/partials/_look.sass */
+/* line 153, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.photo span {
   background-image: url('../images/foto.png?1267020375');
 }
-/* line 153, ../src/partials/_look.sass */
+/* line 155, ../src/partials/_look.sass */
 #edit-look ul.tabs li a.selection span {
   background-image: url('../images/urval.png?1267020375');
 }
 
-/* line 156, ../src/partials/_look.sass */
+/* line 158, ../src/partials/_look.sass */
 #look-title {
   border: 1px solid #d9d9d9;
   width: 893px;
@@ -635,12 +639,12 @@ body h3 {
   padding-top: 3px;
   padding-left: 20px;
 }
-/* line 164, ../src/partials/_look.sass */
+/* line 166, ../src/partials/_look.sass */
 #look-title #id_title, #look-title button {
   color: #408994;
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
 }
-/* line 167, ../src/partials/_look.sass */
+/* line 169, ../src/partials/_look.sass */
 #look-title #id_title {
   border: 1px solid #92c0c7;
   -moz-border-radius: 3px;
@@ -662,7 +666,7 @@ body h3 {
   /* CSS3 */
   box-shadow: inset #aed8c6 0 3px 3px;
 }
-/* line 177, ../src/partials/_look.sass */
+/* line 179, ../src/partials/_look.sass */
 #look-title button {
   display: inline;
   float: right;
@@ -675,7 +679,7 @@ body h3 {
   text-align: start;
 }
 
-/* line 187, ../src/partials/_look.sass */
+/* line 189, ../src/partials/_look.sass */
 #id_description,
 #id_tags {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
@@ -699,17 +703,17 @@ body h3 {
   width: 196px;
 }
 
-/* line 192, ../src/partials/_look.sass */
+/* line 194, ../src/partials/_look.sass */
 #id_description {
   height: 2em;
 }
 
-/* line 195, ../src/partials/_look.sass */
+/* line 197, ../src/partials/_look.sass */
 #id_tags {
   height: 1em;
 }
 
-/* line 200, ../src/partials/_look.sass */
+/* line 202, ../src/partials/_look.sass */
 body.edit-look .sidebar label {
   display: block;
   margin: 20px 0 10px;
@@ -717,11 +721,11 @@ body.edit-look .sidebar label {
   border-bottom: 1px solid #d9d9d9;
 }
 
-/* line 207, ../src/partials/_look.sass */
+/* line 209, ../src/partials/_look.sass */
 body.look .spread {
   margin-top: 20px;
 }
-/* line 209, ../src/partials/_look.sass */
+/* line 211, ../src/partials/_look.sass */
 body.look .spread input {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
   font-size: 1em;
@@ -745,7 +749,7 @@ body.look .spread input {
   margin-left: 0.5em;
 }
 
-/* line 214, ../src/partials/_look.sass */
+/* line 216, ../src/partials/_look.sass */
 .tooltip {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
@@ -807,7 +811,7 @@ body.look .spread input {
   left: 116px;
 }
 
-/* line 219, ../src/partials/_look.sass */
+/* line 221, ../src/partials/_look.sass */
 ul.looks li:hover {
   z-index: 100;
   -moz-box-shadow: #999999 0px 0px 20px;
@@ -816,77 +820,77 @@ ul.looks li:hover {
   box-shadow: #999999 0px 0px 20px;
 }
 
-/* line 224, ../src/partials/_look.sass */
+/* line 226, ../src/partials/_look.sass */
 body.look .collage, body.look .photo {
   position: relative;
   height: 524px;
 }
-/* line 227, ../src/partials/_look.sass */
+/* line 229, ../src/partials/_look.sass */
 body.look #comments-and-links {
   float: left;
   width: 452px;
   margin-right: 36px;
 }
-/* line 231, ../src/partials/_look.sass */
+/* line 233, ../src/partials/_look.sass */
 body.look #tags {
   float: left;
   width: 208px;
 }
-/* line 234, ../src/partials/_look.sass */
+/* line 236, ../src/partials/_look.sass */
 body.look #tags li {
   border-bottom: 1px solid #f2f2f2;
 }
-/* line 236, ../src/partials/_look.sass */
+/* line 238, ../src/partials/_look.sass */
 body.look #tags li span {
   float: right;
   color: #999999;
 }
-/* line 239, ../src/partials/_look.sass */
+/* line 241, ../src/partials/_look.sass */
 body.look .sidebar {
   margin-top: 30px;
 }
-/* line 241, ../src/partials/_look.sass */
+/* line 243, ../src/partials/_look.sass */
 body.look .sidebar p {
   border-top: none;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 244, ../src/partials/_look.sass */
+/* line 246, ../src/partials/_look.sass */
 body.look .sidebar .description {
   border-bottom: none;
   padding-top: 1.5em;
 }
-/* line 247, ../src/partials/_look.sass */
+/* line 249, ../src/partials/_look.sass */
 body.look #content {
   margin-top: -1.8em;
 }
-/* line 249, ../src/partials/_look.sass */
+/* line 251, ../src/partials/_look.sass */
 body.look #content .collage, body.look #content .photo {
   background-color: white;
   margin-right: 2em;
 }
 
-/* line 253, ../src/partials/_look.sass */
+/* line 255, ../src/partials/_look.sass */
 #look-header {
   margin-top: 1em;
   position: relative;
   border-bottom: 1px solid #d9d9d9;
 }
-/* line 257, ../src/partials/_look.sass */
+/* line 259, ../src/partials/_look.sass */
 #look-header .profile-image {
   position: absolute;
   left: 0em;
   top: 0;
 }
-/* line 261, ../src/partials/_look.sass */
+/* line 263, ../src/partials/_look.sass */
 #look-header div {
   margin-left: 70px;
 }
-/* line 263, ../src/partials/_look.sass */
+/* line 265, ../src/partials/_look.sass */
 #look-header div h1 {
   font-size: 1.5em;
   line-height: 2em;
 }
-/* line 266, ../src/partials/_look.sass */
+/* line 268, ../src/partials/_look.sass */
 #look-header div h1 a {
   margin-left: 2em;
   border: 1px solid #d9d9d9;
@@ -922,33 +926,33 @@ body.look #content .collage, body.look #content .photo {
 #look-header div h1 a.ok:before {
   content: url('../images/ok.png?1265910786');
 }
-/* line 277, ../src/partials/_look.sass */
+/* line 279, ../src/partials/_look.sass */
 #look-header div h1 a:hover {
   background-color: #94ffd1;
   border-color: #92c0c7;
   color: #408994;
 }
 
-/* line 280, ../src/partials/_look.sass */
+/* line 282, ../src/partials/_look.sass */
 #wardrobe {
   margin: 0 -16px 0 -24px;
   clear: both;
 }
 
-/* line 284, ../src/partials/_look.sass */
+/* line 286, ../src/partials/_look.sass */
 #wardrobe-title {
   border: 1px solid #d9d9d9;
   height: 27px;
   background: #f2f2f2 url('../images/gradient-bg.png?1270043905') repeat-x;
   padding: 10px 8px 0 10px;
 }
-/* line 289, ../src/partials/_look.sass */
+/* line 291, ../src/partials/_look.sass */
 #wardrobe-title span {
   background: transparent url('../images/arrow-bg-down.png?1272964037') no-repeat top left;
   padding-left: 14px;
 }
 
-/* line 293, ../src/partials/_look.sass */
+/* line 295, ../src/partials/_look.sass */
 #wardrobe-contents {
   padding: 10px 8px;
   background: transparent url('../images/wardrobe-bg.png?1273247149') scroll repeat-x center center;
@@ -1101,18 +1105,18 @@ body.look #content .collage, body.look #content .photo {
 #wardrobe-contents div.row ul li a img {
   vertical-align: middle;
 }
-/* line 298, ../src/partials/_look.sass */
+/* line 300, ../src/partials/_look.sass */
 #wardrobe-contents li a {
   cursor: move;
 }
 
-/* line 302, ../src/partials/_look.sass */
+/* line 304, ../src/partials/_look.sass */
 .ui-icon {
   background-image: none;
   background-position: 0 0;
 }
 
-/* line 307, ../src/partials/_look.sass */
+/* line 309, ../src/partials/_look.sass */
 .ui-icon-gripsmall-diagonal-se {
   bottom: -11px;
   right: -11px;
@@ -1121,25 +1125,25 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('../images/resize.png?1274788213') no-repeat scroll center center;
 }
 
-/* line 315, ../src/partials/_look.sass */
+/* line 317, ../src/partials/_look.sass */
 .ui-rotatable {
   position: relative;
 }
 
-/* line 318, ../src/partials/_look.sass */
+/* line 320, ../src/partials/_look.sass */
 .ui-rotatable-handle {
   position: absolute;
   z-index: 99999;
   display: block;
 }
 
-/* line 323, ../src/partials/_look.sass */
+/* line 325, ../src/partials/_look.sass */
 .ui-rotatable-disabled .ui-rotatable-handle,
 .ui-rotatable-autohide .ui-rotatable-handle {
   display: none;
 }
 
-/* line 327, ../src/partials/_look.sass */
+/* line 329, ../src/partials/_look.sass */
 .ui-rotatable-ne {
   top: -11px;
   right: -11px;
@@ -1148,7 +1152,7 @@ body.look #content .collage, body.look #content .photo {
   background: transparent url('../images/rotate-cw.png?1274788198') no-repeat scroll center center;
 }
 
-/* line 334, ../src/partials/_look.sass */
+/* line 336, ../src/partials/_look.sass */
 .ui-rotatable-sw {
   bottom: -11px;
   left: -11px;
