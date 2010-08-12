@@ -134,16 +134,7 @@
             });
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
-            var hoverProducts = jQuery('<ul/>').attr('id', 'hover-products').appendTo('#container');
             cloneProducts(jQuery('#product-list > ul > li > ul > li'));
-            jQuery('#product-list > ul > li > ul > li').live('hover',
-                function() {
-                    var $this = jQuery(this);
-                    jQuery('#hover-products > li').hide();
-                    $this.data('clone').css({top: $this.offset().top, left: $this.offset().left}).show();
-                },
-                function() { jQuery(this).data('clone').hide() }
-            );
             // Fixed scrolling
             //jQuery('#content').fixedscroll();
 
@@ -291,18 +282,6 @@
                 }
             });
         });
-        function cloneProducts(elements) {
-            elements.each(function(i, ele) {
-                var $this = jQuery(ele);
-                if($this.data('clone'))
-                    return;
-                var clone = $this.clone()
-                    .attr('id', $this.attr('id') + '-clone')
-                    .bind('mouseleave', function() { jQuery(this).hide() })
-                    .appendTo('#hover-products');
-                $this.data('clone', clone);
-            });
-        }
         function getQuery(query) {
             index = 0;
             query = query || {};
