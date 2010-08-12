@@ -68,6 +68,7 @@ $input_border_color: $highlight_border_color !default
   width: 350px
   padding-bottom: 2em
   +box
+  +box-shadow
   background-color: white
   h3
     margin-left: 1em
@@ -75,7 +76,7 @@ $input_border_color: $highlight_border_color !default
     font-style: italic
     line-height: 3.5em
   ul
-    +box
+    +box($box_color, $dark_border_color)
     +box-shadow-inset($default_box_shadow_color, 0, 3px)
     border-right: none
     border-left: none
@@ -95,7 +96,7 @@ $input_border_color: $highlight_border_color !default
         img
           float: left
           margin-right: 10px
-          +border("all")
+          +border("all", $dark_border_color)
         h4, p
           white-space: nowrap
 
