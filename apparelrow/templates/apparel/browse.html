@@ -137,7 +137,11 @@
             var hoverProducts = jQuery('<ul/>').attr('id', 'hover-products').appendTo('#container');
             cloneProducts(jQuery('#product-list > ul > li > ul > li'));
             jQuery('#product-list > ul > li > ul > li').live('hover',
-                function() { jQuery('#hover-products > li').hide(); jQuery(this).data('clone').show() },
+                function() {
+                    var $this = jQuery(this);
+                    jQuery('#hover-products > li').hide();
+                    $this.data('clone').css({top: $this.offset().top, left: $this.offset().left}).show();
+                },
                 function() { jQuery(this).data('clone').hide() }
             );
             // Fixed scrolling
@@ -289,12 +293,10 @@
         function cloneProducts(elements) {
             elements.each(function(i, ele) {
                 var $this = jQuery(ele);
+                if($this.data('clone'))
+                    return;
                 var clone = $this.clone()
                     .attr('id', $this.attr('id') + '-clone')
-                    .css({
-                        top: $this.offset().top,
-                        left: $this.offset().left
-                    })
                     .bind('mouseleave', function() { jQuery(this).hide() })
                     .appendTo('#hover-products');
                 $this.data('clone', clone);
@@ -352,12 +354,15 @@
             // FIXME: This should probably be moved into a template, but it's kind of simple so it'll do for now
             var pageList = jQuery('<ul></ul>');
             var newPage = jQuery('<li></li>').attr('id', 'page-' + page).append(pageList);
-            var existingPages = jQuery('#product-list > ul.list > li')
+            var existingPages = jQuery('#product-list > ul.list > li');
             var nextPage = existingPages.filter(function(i) { return this.id.split('-')[1] > parseInt(page) }).first();
+            // There are pages that should be after this one in the list
             if(nextPage.length == 1) {
                 nextPage.before(newPage);
+            // This should be the last page in the list
             } else if(existingPages.length > 0) {
                 existingPages.last().after(newPage);
+            // There are no other pages
             } else {
                 jQuery('#product-list > ul.list').append(newPage);
             }
