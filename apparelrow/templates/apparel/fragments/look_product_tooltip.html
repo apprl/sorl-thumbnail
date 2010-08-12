@@ -1,5 +1,8 @@
 {% load i18n %}
-<a href="{{ component.product.default_vendor.buy_url }}" target="_blank" class="tooltip">
+<a href="{{ component.product.get_absolute_url }}" class="tooltip">
+    <!--
+        <a href="{{ component.product.default_vendor.buy_url }}" target="_blank" class="tooltip">
+    -->
     <div class="product-image">
         <img src="/scale/90x115{{ component.product.product_image.url }}" />
     </div>
