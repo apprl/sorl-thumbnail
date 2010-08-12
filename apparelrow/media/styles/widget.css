@@ -70,7 +70,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 /* line 46, ../src/widget.sass */
 #ar-wrapper {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
-  font-size: 75%;
+  font-size: 70%;
   line-height: 1.5em;
   color: #333333;
   position: relative;
@@ -156,7 +156,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
   margin-top: 1em;
   margin-bottom: 0px;
   border-bottom: none;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
 }
 /* line 35, ../src/partials/_widget.sass */
@@ -181,7 +181,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 /* line 59, ../src/widget.sass */
 #ar-wrapper a.ar-tooltip p {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
-  font-size: 75%;
+  font-size: 70%;
   line-height: 1.5em;
   color: #333333;
   font-size: smaller/1.5 !important;
@@ -216,7 +216,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 /* line 66, ../src/widget.sass */
 #ar-wrapper a.ar-tooltip h3 {
   font-family: "Gotham Book", "Helvetica", "Arial", sans-serif;
-  font-size: 75%;
+  font-size: 70%;
   line-height: 1.5em;
   color: #333333;
   font-size: 90% !important;
@@ -253,6 +253,6 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 /* line 73, ../src/widget.sass */
 #ar-wrapper a.ar-tooltip .ar-price {
   background: transparent url(../images/check.png) no-repeat scroll left bottom;
-  color: #999999;
+  color: #333333;
   padding-left: 15px;
 }
