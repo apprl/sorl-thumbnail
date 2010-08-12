@@ -199,6 +199,7 @@ COMPRESS_JS = {
         'source_filenames': ('js/jquery/jquery.hypersubmit.js',
                              'js/jquery/jquery.tools.min.js',
                              'js/jquery/jquery.tmpl.js',
+                             'js/jquery/jquery.history.js',
                              'js/jquery/jquery.ui.rotatable.js',
                              'js/jquery/jquery.autogrow.js'),
         'output_filename': 'js/compiled/jquery.js',
