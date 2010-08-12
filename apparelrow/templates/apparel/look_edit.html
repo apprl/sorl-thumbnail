@@ -345,12 +345,14 @@ jQuery(document).ready(function() {
     });
     
     jQuery('#id_title')
+        /*
         .focus(function(e) {
             if(this.value == this.defaultValue)
                 this.value = '';
    
             return true;
         })
+        */
         .blur(function(e) {
             if(this.value == '')
                 this.value = this.defaultValue;
