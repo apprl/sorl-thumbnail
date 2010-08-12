@@ -190,17 +190,18 @@ INSTALLED_APPS = (
 COMPRESS_CSS = {}
 COMPRESS_JS = {
     'widget': {
-        'source_filenames': ('js/jquery/jquery-1.4.2.js', 
-                             'js/jquery/jquery.tools.min.js', 
+        'source_filenames': ('js/jquery/jquery-1.4.2.js',
+                             'js/jquery/jquery.tools.min.js',
                              'js/widget.js'),
         'output_filename': 'js/compiled/widget.js',
     },
     'jquery': {
-        'source_filenames': ('js/jquery/jquery.hypersubmit.js', 
-                             'js/jquery/jquery.tools.min.js', 
+        'source_filenames': ('js/jquery/jquery.hypersubmit.js',
+                             'js/jquery/jquery.tools.min.js',
                              'js/jquery/jquery.tmpl.js',
+                             'js/jquery/jquery.ui.rotatable.js',
                              'js/jquery/jquery.autogrow.js'),
-        'output_filename': 'js/compiled/jquery.js', 
+        'output_filename': 'js/compiled/jquery.js',
     },
 }
 
