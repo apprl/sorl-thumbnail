@@ -106,7 +106,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 #ar-wrapper .ar-look-photo .hotspot, #ar-wrapper .ar-look-photo .ar-hotspot {
   position: absolute;
   padding: 40px;
-  background: transparent url('../images/look-hotspot.png?1271672587') no-repeat scroll center center;
+  background: transparent url('../images/look-hotspot.png?1271665350') no-repeat scroll center center;
 }
 /* line 52, ../src/widget.sass */
 #ar-wrapper .ar-link {
@@ -168,7 +168,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 /* line 40, ../src/partials/_widget.sass */
 #ar-wrapper a.ar-tooltip .arrow, #ar-wrapper a.ar-tooltip .ar-arrow {
   position: absolute;
-  background: transparent url('../images/tooltip-arrow.png?1273841888') no-repeat scroll center center;
+  background: transparent url('../images/tooltip-arrow.png?1273840466') no-repeat scroll center center;
   width: 14px;
   height: 8px;
   bottom: -8px;
@@ -246,7 +246,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 }
 /* line 71, ../src/widget.sass */
 #ar-wrapper a.ar-tooltip .ar-likes {
-  background: transparent url('../images/heart.png?1270451570') no-repeat scroll left center;
+  background: transparent url('../images/heart.png?1269530868') no-repeat scroll left center;
   padding-left: 16px;
   color: #fa7070;
 }
