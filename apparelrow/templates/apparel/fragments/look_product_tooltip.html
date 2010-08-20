@@ -3,20 +3,18 @@
     <a href="{{ component.product.get_absolute_url }}" class="product-image">
         <img src="/scale/90x115{{ component.product.product_image.url }}" />
     </a>
-    <div>
+    <div class="product-meta">
         <a href="{{ component.product.get_absolute_url }}">
             <h2>{{ component.product.product_name }}</h2>
             <h3>{{ component.product.manufacturer.name }}</h3>
             <div>
-                <span class="likes">{{ component.product.score.score }} {% trans "Likes" %}</span>
+                {% with component.product as object %}{% include 'apparel/fragments/likes.html' %}{% endwith %}
             </div>
             <div>
                 <span class="price">{{ component.product.default_vendor.price }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
             </div>
         </a>
-        <!-- FIXME: Make this buy button look good 
-            <a href="{{ component.product.default_vendor.buy_url }}" target="_new" class="buy-now small">{% trans "Buy" %}</a>
-        -->
+        <div class="vendors"><a class="vendor" href="{{ component.product.default_vendor.buy_url }}">{{ component.product.default_vendor.vendor }}</a><a href="{{ component.product.default_vendor.buy_url }}" target="_new" class="buy-now">{% trans "Buy" %}</a></div>
     </div>
     <span class="arrow"></span>
 </div>

@@ -308,22 +308,31 @@ jQuery(document).ready(function() {
         }
     });
     jQuery('#photo-background').live('click', function(e) {
-        var offset = jQuery(e.target).offset();
+        var $target = jQuery(e.target);
+        // Ignore clicks in tooltips
+        if($target.parents('.tooltip').length > 0) {
+            return false;
+        } else if($target.is('.reset')) {
+            chooser.dialog.hide();
+            return false;
+        } else if($target.parents('#product-chooser').length > 0) {
+            return true;
+        }
+        var offset = $target.offset();
         var left   = e.pageX - offset.left;
         var top    = e.pageY - offset.top;
         
         if(chooser.dialog.is(':visible')) {
             chooser.dialog.hide();
-        } else {            
-            chooser.show({
-                anchor: jQuery(this),
-                callback: function(li) {
-                    createHotspot(li.data('product'), top, left);
-                },
-                left: left,
-                top: top
-            });
         }
+        chooser.show({
+            anchor: jQuery(this),
+            callback: function(li) {
+                createHotspot(li.data('product'), top, left);
+            },
+            left: left,
+            top: top
+        });
     });
 
     jQuery('<img/>')
@@ -409,7 +418,7 @@ var chooser = {
         // Weed out duplicates and existing ids
         ids = jQuery.grep(ids, 
             function(id, idx) {
-                return (existing.indexOf(id) > -1 || ids.indexOf(id) < idx) ? false : true;
+                return !(existing.indexOf(id) > -1 || ids.indexOf(id) < idx);
             }
         );   
                     
@@ -551,5 +560,5 @@ jQuery(document).ready(function() {
         {% endwith %}
     </div>
 </div>
-<div id="product-chooser"><h3>{% trans "Products" %}</h3><ul></ul></div>
+<div id="product-chooser"><h3>{% trans "Products" %}<a class="reset" href="#">{% trans "Close" %}</a></h3><ul></ul></div>
 {% endblock body %}

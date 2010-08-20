@@ -13,7 +13,6 @@ $tooltip_width: 242px
   z-index: 1100
   padding: 4px !important
   position: relative
-  width: $tooltip_width
   white-space: nowrap
   .product-image, .ar-product-image
     border: 1px solid #dadada
@@ -26,26 +25,38 @@ $tooltip_width: 242px
     margin-right: 10px
     img
       vertical-align: middle
-  h2
-    margin-top: 1em
-    margin-bottom: 0px
-    border-bottom: none
-    white-space: normal
-    overflow: hidden
-  h3
-    color: $easy_color
-    font-size: smaller
-    font-weight: normal
-  a.buy-now
-    padding: 1
-  div
-  .arrow, .ar-arrow
-    position: absolute
-    background: transparent image_url(unquote("tooltip-arrow.png")) no-repeat scroll center center
-    width: 14px
-    height: 8px
-    bottom: -8px
-    left: $tooltip_width / 2 - 5
+  .product-meta
+    float: left
+    h2
+      margin-top: 1em
+      margin-bottom: 0px
+      border-bottom: none
+      white-space: normal
+      overflow: hidden
+    h3
+      color: $easy_color
+      font-size: smaller
+      font-weight: normal
+    div.vendors
+      margin-top: 0.5em
+      a.vendor
+        display: inline-block
+        color: $easy_color
+        font-size: smaller
+      a.buy-now
+        background-image: none
+        padding: 5px
+        display: inline
+        font-size: smaller
+        font-weight: normal
+        margin-left: 5px
+    .arrow, .ar-arrow
+      position: absolute
+      background: transparent image_url(unquote("tooltip-arrow.png")) no-repeat scroll center center
+      width: 14px
+      height: 8px
+      bottom: -8px
+      left: $tooltip_width / 2 - 5
 
 =apparel_hotspot
   position: relative
