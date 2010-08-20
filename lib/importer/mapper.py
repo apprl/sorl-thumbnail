@@ -233,8 +233,13 @@ class DataMapper():
         )
         
         logging.info("Created product %s", product)
-        product.save()
         
+        try:
+            product.save()
+        except Exception, e:
+            logging.exception(e)
+            raise SkipRecord('Error while saving product')
+            
         return product
     
     def update_product(self):
