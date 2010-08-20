@@ -103,6 +103,9 @@ class DataMapper():
             self.fields[attr] = _trim(value)
             
             logging.debug('Mapped product field %s to %s', attr, value)
+        
+        if not self.fields['product_image_url']:
+            raise SkipRecord("Missing field product_image_url, skipping product")
     
     def map_manufacturer(self):
         """
@@ -166,8 +169,12 @@ class DataMapper():
             raise SkipRecord('Require at least one valid category')
         
         for category in categories:
-            category.save()
-        
+            try:
+                category.save()
+            except Exception, e:
+                logging.exception(e)
+                raise SkipRecord('Error while saving category')
+                
         self.category = categories[-1]
         
         logging.debug('Assigned category %s to product', self.category.name)
@@ -257,7 +264,12 @@ class DataMapper():
         # hitting save, if Django doesn't do that itself
         
         logging.info("Updated product %s", self.product)
-        self.product.save()
+        try:
+            self.product.save()
+        except Exception, e:
+            logging.exception(e)
+            raise SkipRecord('Error while saving product')
+            
         
     def map_vendor_options(self):
         """
