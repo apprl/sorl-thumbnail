@@ -55,7 +55,7 @@ def fetch(url, localpath=None, username=None, password=None):
     
     f = urllib2.urlopen(url)
     
-    local_fh = open(localpath, 'w')
+    local_fh = os.fdopen(fh, 'w')
     local_fh.write(f.read())
     local_fh.close()
     local_fh = None
