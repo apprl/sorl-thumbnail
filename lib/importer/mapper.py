@@ -316,34 +316,58 @@ class DataMapper():
         # 1 Get a list of option types from categories
         # FIXME: Retrieve these objects in only one query
         
-        for option_type in self.product.category.option_types.all():
+        #for option_type in self.product.category.option_types.all():
+        for option_type in OptionType.objects.all():
             key = re.sub(r'\W', '', option_type.name.lower())
             
             # 2 Collect raw data by calling set_[typename], or use field in self.data
             
-            value = None
+            values = None
             
             if hasattr(self, 'set_option_%s' % key):
-                value = getattr(self, 'set_option_%s' % key)()
+                values = getattr(self, 'set_option_%s' % key)()
             elif key in self.data:
-                value = self.data[key]
+                values = self.data[key]
             else:
                 logging.debug('No product option %s mapped from source', key)
             
-            if not value:
+            if not values or len(values) == 0:
                 continue
             
-            value = _trim(value)
+            if not isinstance(values, list):
+                values = [values]
             
-            # FIXME: One could move this code to the Option or Product class
-            opt, created = Option.objects.get_or_create(option_type=option_type, value=value)
+            for value in values:
+                value = _trim(value)
             
-            if created:
-                logging.info("Created option '%s: %s'", option_type.name, value)
+                # FIXME: One could move this code to the Option or Product class
+                opt, created = Option.objects.get_or_create(option_type=option_type, value=value)
+                
+                if created:
+                    logging.info("Created option '%s: %s'", option_type.name, value)
+                
+                if not self.product.options.filter(pk=opt.pk):
+                    logging.debug("Attaching option '%s: %s'", option_type.name, value)
+                    self.product.options.add(opt)
+    
+    
+    def set_option_color(self):
+        """
+        Default color mapper.
+        """
+        v = []
+        
+        for ot in Option.objects.filter(option_type__name='color'):
+            ptrn = re.compile('(?:^|\W)' + ot.value + '(?:\W|$)', re.I)
             
-            if not self.product.options.filter(pk=opt.pk):
-                logging.debug("Attaching option '%s: %s'", option_type.name, value)
-                self.product.options.add(opt)
+            if self.product.product_name and re.search(ptrn, self.product.product_name):
+                logging.debug('Mapped %s from %s' % (ot.value, self.product.product_name))
+                v.append(ot.value)
+            if self.product.description and re.search(ptrn, self.product.description):
+                logging.debug('Mapped %s from %s' % (ot.value, self.product.description))
+                v.append(ot.value)
+        
+        return v
     
     def map_product_image(self):
         """
