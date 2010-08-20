@@ -308,22 +308,31 @@ jQuery(document).ready(function() {
         }
     });
     jQuery('#photo-background').live('click', function(e) {
-        var offset = jQuery(e.target).offset();
+        var $target = jQuery(e.target);
+        // Ignore clicks in tooltips
+        if($target.parents('.tooltip').length > 0) {
+            return false;
+        } else if($target.is('.reset')) {
+            chooser.dialog.hide();
+            return false;
+        } else if($target.parents('#product-chooser').length > 0) {
+            return true;
+        }
+        var offset = $target.offset();
         var left   = e.pageX - offset.left;
         var top    = e.pageY - offset.top;
         
         if(chooser.dialog.is(':visible')) {
             chooser.dialog.hide();
-        } else {            
-            chooser.show({
-                anchor: jQuery(this),
-                callback: function(li) {
-                    createHotspot(li.data('product'), top, left);
-                },
-                left: left,
-                top: top
-            });
         }
+        chooser.show({
+            anchor: jQuery(this),
+            callback: function(li) {
+                createHotspot(li.data('product'), top, left);
+            },
+            left: left,
+            top: top
+        });
     });
 
     jQuery('<img/>')

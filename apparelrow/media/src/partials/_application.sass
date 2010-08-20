@@ -668,12 +668,6 @@ a.buy-now
 a.buy-now:hover
   background-color: $hover_highlight_bg_color
 
-a.buy-now.small
-  font-size: smaller
-  width: 36px
-  height: 20px
-  font-weight: normal
-
 .product-vendors a.buy-now
   float: right
   margin-top: -50px
@@ -691,8 +685,11 @@ a.buy-now.small
     padding-right: 5px
   .vendor
     float: right
-    background: transparent image_url(unquote("vendor.png")) scroll no-repeat left center
-    padding: 0 10px 0 16px
+    padding-right: 10px
+
+.vendor
+  background: transparent image_url(unquote("vendor.png")) scroll no-repeat left center
+  padding-left: 15px
 
 .message
   border: unquote("1px") solid $border_color
