@@ -409,7 +409,7 @@ var chooser = {
         // Weed out duplicates and existing ids
         ids = jQuery.grep(ids, 
             function(id, idx) {
-                return (existing.indexOf(id) > -1 || ids.indexOf(id) < idx) ? false : true;
+                return !(existing.indexOf(id) > -1 || ids.indexOf(id) < idx);
             }
         );   
                     
@@ -551,5 +551,5 @@ jQuery(document).ready(function() {
         {% endwith %}
     </div>
 </div>
-<div id="product-chooser"><h3>{% trans "Products" %}</h3><ul></ul></div>
+<div id="product-chooser"><h3>{% trans "Products" %}<a class="reset" href="#">{% trans "Close" %}</a></h3><ul></ul></div>
 {% endblock body %}

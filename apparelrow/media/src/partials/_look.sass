@@ -75,7 +75,11 @@ $input_border_color: $highlight_border_color !default
     margin-left: 1em
     font-weight: normal
     font-style: italic
-    line-height: 3.5em
+    line-height: $button_height
+    a.reset
+      font-style: normal
+      position: absolute
+      right: 12px
   ul
     +box($box_color, $dark_border_color)
     +box-shadow-inset($default_box_shadow_color, 0, 3px)
@@ -91,9 +95,8 @@ $input_border_color: $highlight_border_color !default
         +clearfix
         +border("bottom", $dark_border_color)
         padding: 10px 0
-        background: transparent image_url("arrow-bg.png") no-repeat scroll right center
         &:hover
-          background-image: image_url("arrow-bg-hover.png")
+          color: $easy_color
         img
           float: left
           margin-right: 10px
