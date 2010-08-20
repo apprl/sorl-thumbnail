@@ -110,6 +110,9 @@ class GrandpaDataMapper(DataMapper):
         return (None, None)
 
 
+# THESE MAPPINGS ARE VALID FOR
+#   2010-08-20.csv
+
 invalid_manufacturers = (
     u'ACCESOARER',
     u'Prylar',
@@ -168,47 +171,6 @@ category_name_map = {
     u'Wallts': u'Pl\u00e5nb\u00f6cker',
     u'Bags': u'V\u00e4skor',
 }
-
-#category_name_map = {
-#    u'Blusar':  'Blouses',
-#    u'Byxor':  'Pants',
-#    u'Ekologiskt-T-shirts':  'T-Shirts',
-#    u'Glas\u00f6gon':  'Glasses',
-#    u'Halsdukar':  'Scarfs',
-#    u'Handskar':  'Gloves',
-#    u'Hattar':  'Hats',
-#    u'Jackor':  'Jackets',
-#    u'Jeans-Strumpbyxor':  'Pantyhoses',
-#    u'Kappor':  'Coat',
-#    u'Kappor-Kavajer':  'Jackets',
-#    u'Kavajer':  'Jackets',
-#    u'Kavajer-Kl\u00e4nning':  'Dresses',
-#    u'Kavajer-Tr\u00f6jor':  'Sweaters',
-#    u'Kjolar':  'Skirts',
-#    u'Klockor':  'Watches',
-#    u'Kl\u00e4nning':  'Dresses',
-#    u'Linnen':  'Linen',
-#    u'M\u00f6ssor':  'Caps',
-#    u'Pl\u00e5nb\u00f6cker':  'Wallets',
-#    u'Rockar':  'Coats',
-#    u'Skjortor':  'Shirts',
-#    u'Skor':  'Shoes',
-#    u'Sk\u00e4rp':  'Belts',
-#    u'Smycken':  'Jewellry',
-#    u'Solglas\u00f6gon':  'Sunglasses',
-#    u'Spel':  'Games',
-#    u'Stickat':  'Knitted',
-#    u'Strumpbyxor':  'Pantyhoses',
-#    u'Strumpor':  'Socks',
-#    u'Toppar':  'Tops',
-#    u'Tr\u00f6jor':  'Sweaters',
-#    u'Vantar':  'Gloves',
-#    u'V\u00e4skor':  'Bags',
-#    u'skjortor':  'Shirts',
-#    u'skjortor-Kl\u00e4nning':  'Dresses',
-#    u'Jewellry': 'Jewelry',
-#    u'Coat': 'Coats',
-#}
 
 def translate_category(name):
     return category_name_map.get(name, name)

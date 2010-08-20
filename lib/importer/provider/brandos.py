@@ -30,16 +30,18 @@ class BrandosDataMapper(PriceRunnerMapper):
         Remove any brand name in front of category name
         Remove duplicate category listings
         """
-        categories = []
+        
+        category = None
+        
         for c in value:
             m = re.match(re_split_name, c)
             if m: c = m.group(1)
             
-            if not c in categories: 
-                categories.append(c)
-            
-        return categories
-
+            if c in valid_categories:
+                return ['Skor', c]
+        
+        return None
+    
     def set_product_name(self, value):
         """
         Remove brand name in front of product name
@@ -50,5 +52,18 @@ class BrandosDataMapper(PriceRunnerMapper):
         if m: name = m.group(1)
         
         return name
+    
+    def set_option_gender(self):
+        for c in self.data['categories']:
+            if c == u'Herrskor': return 'M'
+            if c == u'Damskor': return 'F'
 
 re_split_name = re.compile(r'^.+?: (.+?)$')
+valid_categories = [
+    u'Sneakers',
+    u'Flip-Flops',
+    u'H\u00f6gklackade skor',
+    u'L\u00e5gklackade skor',
+    u'Boots & K\u00e4ngor',
+    u'Loafers',
+]
