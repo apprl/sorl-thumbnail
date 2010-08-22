@@ -6,9 +6,8 @@ fi
 
 PROJNAME='apparelrow'                           # Django project name
 
-export PYTHONPATH="$PROJDIR/$PROJNAME"
+export PYTHONPATH="$PROJDIR/$PROJNAME:$PROJDIR"
 export DJANGO_SETTINGS_MODULE=settings
-
 
 if [[ -e $PROJDIR/bin/activate ]]; then
     . $PROJDIR/bin/activate
@@ -16,5 +15,3 @@ fi
 cd $PROJDIR/lib
 
 python runner.py $@
-
-
