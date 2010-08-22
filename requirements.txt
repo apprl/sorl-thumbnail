@@ -5,6 +5,7 @@ sorl-thumbnail==3.2.2
 PyYAML==3.09
 flup==1.0.2
 south==0.7
+python-memcached==1.45
 -f http://bitbucket.org/ubernostrum/django-registration/downloads/django-registration-0.8-alpha-1.tar.gz
 django-registration==0.8.0-alpha-1
 -e git://github.com/sciyoshi/pyfacebook.git#egg=pyfacebook
