@@ -17,6 +17,7 @@
     <h1>{{ object.product_name }}</h1>
     <h3>{{ object.manufacturer }}</h3>
     {% regroup object.options.all by option_type as option_list %}
+    <!-- FIXME: Style this properly. See ticket #300 
     <ul class="product-options">
     {% for option in option_list %}
         <li>{{ option.grouper }}
@@ -28,6 +29,7 @@
         </li>
     {% endfor %}
     </ul>
+    -->
     <p class="description">{{ object.description }}</p>
     <div class="product-vendors">
         {% with object.vendorproduct.all|dictsort:'price' as vendorproducts %}
