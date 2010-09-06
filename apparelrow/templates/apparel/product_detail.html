@@ -164,13 +164,13 @@
                     {% endwith %}
                 </div>
             {% endif %}
-            <h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
+            <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
                 {% blocktrans count looks_with_product|length as counter %}
                     <span class="count">{{ counter }}</span> look with this product
                 {% plural %}
                     <span class="count">{{ counter }}</span> looks with this product
                 {% endblocktrans %}
-            </h2>
+            </h2></a>
             {% with looks_with_product as looks %}
             {% include 'apparel/fragments/looks.html' %}
             {% endwith %}

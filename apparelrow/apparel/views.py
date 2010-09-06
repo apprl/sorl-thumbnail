@@ -176,10 +176,15 @@ def product_detail(request, slug):
             context_instance=RequestContext(request),
             )
 
-def look_list(request, page=0):
+def look_list(request, profile=None, contains=None, page=0):
+    queryset = Look.objects.all()
+    if profile:
+        queryset = Look.objects.filter(user__username=profile)
+    elif contains:
+        queryset = Look.objects.filter(products__slug=contains)
     return list_detail.object_list(
         request,
-        queryset=Look.objects.all(),
+        queryset=queryset,
         paginate_by=20,
         page=page
     )
