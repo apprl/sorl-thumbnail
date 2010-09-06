@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.db.models import Sum, Min
 
-from apparel.manager import SearchManager
+from apparel.manager import SearchManager, FeaturedManager
 
 import datetime, mptt
 import tagging
@@ -95,7 +95,7 @@ class Category(models.Model):
     active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
     option_types  = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
     on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'))
-
+    
     def save(self, force_insert=False, force_update=False):
         if not self.key and self.name:
             self.key = self.key_for_name(self.name)
@@ -229,8 +229,11 @@ class Look(models.Model):
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags        = TagField(blank=True)
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
+    is_featured = models.BooleanField(default=False, help_text=_('The look will be shown on the front page'))
     
-    objects = SearchManager()
+    
+    objects  = SearchManager()
+    featured = FeaturedManager()
     
     def score(self):
         return Vote.objects.get_score(self)
@@ -339,7 +342,7 @@ class LookComponent(models.Model):
 
     @property
     def style_middle(self):
-        return self._style(0.65)
+        return self._style(0.72)
 
     @property
     def style(self):

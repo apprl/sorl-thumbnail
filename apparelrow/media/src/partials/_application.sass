@@ -166,34 +166,42 @@ button
     background-color: #f2f2f2
 
 #featured-looks
-  height: 298px
   position: relative
-  li
-    position: absolute
-    top: 0
-    left: 0
-    display: none
-    img
-      vertical-align: top
+  height: 412px
+  #contents
+    li
+      position: absolute
+      top: 0
+      left: 0
+      display: none
+      .look
+        height: 348px
+        width: 452px
+        position: relative
+        .collage-image
+          position: absolute
+      .info-box
+        +box
+        height: 36px
+        padding: 16px 10px 10px
+        background:
+          image= image_url("gradient-tall-bg.png")
+          repeat: repeat-x
+        .info
+          display: block
+          h3
+            font-family: $font_family_bold
+            font-weight: bold
+          background= "transparent" image_url("arrow-bg.png") "no-repeat" "scroll" "left" 10px
+          padding-left: 20px
 
-#switchlook
-  +box
-  height: 36px
-  padding: 16px 10px 10px
-  background:
-    image: image_url(unquote("gradient-tall-bg.png"))
-    repeat: repeat-x
-  .info
-    +float-left
-    background: transparent image_url(unquote("arrow-bg.png")) no-repeat scroll left 10px
-    padding-left: 20px
-    h3
-      font-family: $font_family_bold
-      font-weight: bold
-  .nav
-    +float-right
-    margin-top: 4px
+  #switchlook
+    +clearfix
+    position: absolute
+    bottom: 32px
+    right: 10px
     .backward
+      position: relative
       +replace-text(unquote("prev-page.png"))
       +float-left
       display: inline-block
