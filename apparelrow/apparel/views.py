@@ -569,7 +569,7 @@ def index(request):
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
     ctx['popular_looks']  = Vote.objects.get_top(Look, limit=8)
     ctx['categories']     = ctx['categories'].filter(on_front_page=True)
-    ctx['featured_looks'] = Look.featured.all().order_by('-created')[:settings.APPAREL_LOOK_FEATURED]
+    ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
     
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 
