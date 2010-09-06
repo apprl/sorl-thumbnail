@@ -90,7 +90,7 @@
         <ul class="looks">
         {% for look in popular_looks %}
             {% with look|first as object %}
-            {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_small.html' %}</li>
+            {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_small_sidebar.html' %}</li>
             {% endwith %}
         {% endfor %}
         </ul>

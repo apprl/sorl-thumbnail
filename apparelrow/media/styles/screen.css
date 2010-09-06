@@ -1,4 +1,4 @@
-/* line 14, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 14, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -18,42 +18,42 @@ table, caption, tbody, tfoot, thead, tr, th, td {
   vertical-align: baseline;
 }
 
-/* line 17, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 17, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 body {
   line-height: 1;
   color: black;
   background: white;
 }
 
-/* line 19, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 19, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 21, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 21, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: separate;
   border-spacing: 0;
   vertical-align: middle;
 }
 
-/* line 23, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 23, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 25, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 25, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: "" "";
 }
-/* line 96, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 96, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
 }
 
-/* line 27, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 27, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
@@ -62,14 +62,13 @@ a img {
 @font-face {
   font-family: "Gotham Book";
   src: url('../fonts/gotham-book.eot');
-  src: local("Gotham Book"), local("gotham-book"), url('../fonts/gotham-book.woff') format('woff'), url('../fonts/gotham-book.ttf') format('truetype'), url('../fonts/gotham-book.svg') format('svg');
+  src: local("☺"), url('../fonts/gotham-book.woff') format('woff'), url('../fonts/gotham-book.ttf') format('truetype'), url('../fonts/gotham-book.svg') format('svg');
 }
 
 @font-face {
   font-family: "Gotham Book Italic";
-  font-style: "italic";
   src: url('../fonts/gotham-bookitalic.eot');
-  src: local("Gotham Book Italic"), local("gotham-bookitalic"), url('../fonts/gotham-bookitalic.woff') format('woff'), url('../fonts/gotham-bookitalic.ttf') format('truetype'), url('../fonts/gotham-bookitalic.svg') format('svg');
+  src: local("☺"), url('../fonts/gotham-bookitalic.woff') format('woff'), url('../fonts/gotham-bookitalic.ttf') format('truetype'), url('../fonts/gotham-bookitalic.svg') format('svg');
 }
 
 @font-face {
@@ -92,11 +91,7 @@ body .container {
   margin: 0 auto;
   width: 940px;
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-body .container {
-  display: block;
+  *zoom: 1;
 }
 /* line 17, ../src/screen.sass */
 body .sidebar {
@@ -172,14 +167,10 @@ body h3 {
 /* line 17, ../src/partials/_look.sass */
 #selection {
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   background: transparent url('../images/look-selection-row-bg.png?1272369973') no-repeat scroll;
   padding: 9px 9px 0 9px;
   height: 252px;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#selection {
-  display: block;
 }
 /* line 7, ../src/partials/_row.sass */
 #selection a.prev, #selection a.next {
@@ -208,7 +199,7 @@ body h3 {
 }
 /* line 22, ../src/partials/_row.sass */
 #selection a.prev {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/prev-page.png?1265910786');
@@ -234,7 +225,7 @@ body h3 {
 }
 /* line 28, ../src/partials/_row.sass */
 #selection a.next {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/next-page.png?1265910786');
@@ -263,15 +254,11 @@ body h3 {
   display: inline;
   float: left;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   position: relative;
   overflow: hidden;
   width: 634px;
   height: 118px;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#selection div.row {
-  display: block;
 }
 /* line 41, ../src/partials/_row.sass */
 #selection div.row ul {
@@ -280,15 +267,11 @@ body h3 {
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   position: absolute;
   width: 20000em;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#selection div.row ul {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #selection div.row ul li {
   list-style-image: none;
   list-style-type: none;
@@ -299,11 +282,11 @@ body h3 {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #selection div.row ul li:first-child, #selection div.row ul li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #selection div.row ul li:last-child, #selection div.row ul li.last {
   padding-right: 0px;
 }
@@ -337,10 +320,10 @@ body h3 {
 #collage .ui-wrapper, #photo-background .ui-wrapper {
   position: absolute;
   opacity: 0.8;
-  -moz-box-shadow: #999999 0px 0px 20px;
-  -webkit-box-shadow: #999999 0px 0px 20px;
-  -o-box-shadow: #999999 0px 0px 20px;
-  box-shadow: #999999 0px 0px 20px;
+  -moz-box-shadow: #999999 0px 0px 20px 0;
+  -webkit-box-shadow: #999999 0px 0px 20px 0;
+  -o-box-shadow: #999999 0px 0px 20px 0;
+  box-shadow: #999999 0px 0px 20px 0;
 }
 /* line 34, ../src/partials/_look.sass */
 #collage .delete, #photo-background .delete {
@@ -399,10 +382,10 @@ body h3 {
   padding-bottom: 2em;
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
-  -moz-box-shadow: #999999 0px 0px 20px;
-  -webkit-box-shadow: #999999 0px 0px 20px;
-  -o-box-shadow: #999999 0px 0px 20px;
-  box-shadow: #999999 0px 0px 20px;
+  -moz-box-shadow: #999999 0px 0px 20px 0;
+  -webkit-box-shadow: #999999 0px 0px 20px 0;
+  -o-box-shadow: #999999 0px 0px 20px 0;
+  box-shadow: #999999 0px 0px 20px 0;
   background-color: white;
   cursor: auto;
 }
@@ -440,13 +423,9 @@ body h3 {
 #product-chooser ul li a {
   display: block;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   border-bottom: 1px solid #c1c1c1;
   padding: 10px 0;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#product-chooser ul li a {
-  display: block;
 }
 /* line 98, ../src/partials/_look.sass */
 #product-chooser ul li a:hover {
@@ -560,13 +539,9 @@ body h3 {
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#edit-look ul.tabs {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #edit-look ul.tabs li {
   list-style-image: none;
   list-style-type: none;
@@ -577,11 +552,11 @@ body h3 {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #edit-look ul.tabs li:first-child, #edit-look ul.tabs li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #edit-look ul.tabs li:last-child, #edit-look ul.tabs li.last {
   padding-right: 0px;
 }
@@ -799,10 +774,10 @@ body.look .spread input {
   -khtml-border-radius: 2px;
   border-radius: 2px;
   border: 1px solid #d9d9d9;
-  -moz-box-shadow: #999999 0px 0px 5px;
-  -webkit-box-shadow: #999999 0px 0px 5px;
-  -o-box-shadow: #999999 0px 0px 5px;
-  box-shadow: #999999 0px 0px 5px;
+  -moz-box-shadow: #999999 0px 0px 5px 0;
+  -webkit-box-shadow: #999999 0px 0px 5px 0;
+  -o-box-shadow: #999999 0px 0px 5px 0;
+  box-shadow: #999999 0px 0px 5px 0;
   display: none;
   z-index: 1100;
   padding: 4px !important;
@@ -874,10 +849,10 @@ body.look .spread input {
 /* line 244, ../src/partials/_look.sass */
 ul.looks li:hover {
   z-index: 100;
-  -moz-box-shadow: #999999 0px 0px 20px;
-  -webkit-box-shadow: #999999 0px 0px 20px;
-  -o-box-shadow: #999999 0px 0px 20px;
-  box-shadow: #999999 0px 0px 20px;
+  -moz-box-shadow: #999999 0px 0px 20px 0;
+  -webkit-box-shadow: #999999 0px 0px 20px 0;
+  -o-box-shadow: #999999 0px 0px 20px 0;
+  box-shadow: #999999 0px 0px 20px 0;
 }
 
 /* line 249, ../src/partials/_look.sass */
@@ -1017,11 +992,7 @@ body.look #content .collage, body.look #content .photo {
   padding: 10px 8px;
   background: transparent url('../images/wardrobe-bg.png?1273247149') scroll repeat-x center center;
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#wardrobe-contents {
-  display: block;
+  *zoom: 1;
 }
 /* line 7, ../src/partials/_row.sass */
 #wardrobe-contents a.prev, #wardrobe-contents a.next {
@@ -1050,7 +1021,7 @@ body.look #content .collage, body.look #content .photo {
 }
 /* line 22, ../src/partials/_row.sass */
 #wardrobe-contents a.prev {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/prev-page.png?1265910786');
@@ -1076,7 +1047,7 @@ body.look #content .collage, body.look #content .photo {
 }
 /* line 28, ../src/partials/_row.sass */
 #wardrobe-contents a.next {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/next-page.png?1265910786');
@@ -1105,15 +1076,11 @@ body.look #content .collage, body.look #content .photo {
   display: inline;
   float: left;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   position: relative;
   overflow: hidden;
   width: 922px;
   height: 118px;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#wardrobe-contents div.row {
-  display: block;
 }
 /* line 41, ../src/partials/_row.sass */
 #wardrobe-contents div.row ul {
@@ -1122,15 +1089,11 @@ body.look #content .collage, body.look #content .photo {
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   position: absolute;
   width: 20000em;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#wardrobe-contents div.row ul {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #wardrobe-contents div.row ul li {
   list-style-image: none;
   list-style-type: none;
@@ -1141,11 +1104,11 @@ body.look #content .collage, body.look #content .photo {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #wardrobe-contents div.row ul li:first-child, #wardrobe-contents div.row ul li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #wardrobe-contents div.row ul li:last-child, #wardrobe-contents div.row ul li.last {
   padding-right: 0px;
 }
@@ -1219,6 +1182,22 @@ body.look #content .collage, body.look #content .photo {
   width: 23px;
   height: 23px;
   background: transparent url('../images/rotate-ccw.png?1274788205') no-repeat scroll center center;
+}
+
+/* line 368, ../src/partials/_look.sass */
+body.look-list ul.looks li {
+  display: block;
+  padding: none;
+  float: none;
+  margin-right: 0;
+  overflow: hidden;
+  *zoom: 1;
+}
+/* line 374, ../src/partials/_look.sass */
+body.look-list ul.looks li div.look {
+  display: inline;
+  float: left;
+  margin-right: 18px;
 }
 
 /* line 7, ../src/partials/_application.sass */
@@ -1295,20 +1274,16 @@ button {
 /* line 45, ../src/partials/_application.sass */
 #container .container {
   overflow: visible;
-  display: inline-block;
+  *zoom: 1;
 }
-/* line 25, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 22, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 #container .container:after {
-  content: " ";
+  content: "\0020";
   display: block;
   height: 0;
   clear: both;
   overflow: hidden;
   visibility: hidden;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#container .container {
-  display: block;
 }
 
 /* line 49, ../src/partials/_application.sass */
@@ -1325,7 +1300,7 @@ button {
 #header h1 {
   display: inline;
   float: left;
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/logo.png?1265910786');
@@ -1529,7 +1504,7 @@ button {
 }
 /* line 196, ../src/partials/_application.sass */
 #switchlook .nav .backward {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/prev-page.png?1265910786');
@@ -1545,7 +1520,7 @@ button {
 }
 /* line 204, ../src/partials/_application.sass */
 #switchlook .nav .forward {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/next-page.png?1265910786');
@@ -1568,13 +1543,9 @@ button {
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#switchlook .nav .tabs {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #switchlook .nav .tabs li {
   list-style-image: none;
   list-style-type: none;
@@ -1585,17 +1556,17 @@ button {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #switchlook .nav .tabs li:first-child, #switchlook .nav .tabs li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #switchlook .nav .tabs li:last-child, #switchlook .nav .tabs li.last {
   padding-right: 0px;
 }
 /* line 215, ../src/partials/_application.sass */
 #switchlook .nav .tabs a {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/switcher-sprite.png?1274796216');
@@ -1653,13 +1624,9 @@ ul.looks {
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-ul.looks {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 ul.looks li {
   list-style-image: none;
   list-style-type: none;
@@ -1670,11 +1637,11 @@ ul.looks li {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 ul.looks li:first-child, ul.looks li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 ul.looks li:last-child, ul.looks li.last {
   padding-right: 0px;
 }
@@ -1739,11 +1706,7 @@ ul.looks li span.button.ok:before {
 /* line 262, ../src/partials/_application.sass */
 #lookproducts {
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#lookproducts {
-  display: block;
+  *zoom: 1;
 }
 /* line 7, ../src/partials/_row.sass */
 #lookproducts a.prev, #lookproducts a.next {
@@ -1772,7 +1735,7 @@ ul.looks li span.button.ok:before {
 }
 /* line 22, ../src/partials/_row.sass */
 #lookproducts a.prev {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/prev-page.png?1265910786');
@@ -1798,7 +1761,7 @@ ul.looks li span.button.ok:before {
 }
 /* line 28, ../src/partials/_row.sass */
 #lookproducts a.next {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/next-page.png?1265910786');
@@ -1827,15 +1790,11 @@ ul.looks li span.button.ok:before {
   display: inline;
   float: left;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   position: relative;
   overflow: hidden;
   width: 654px;
   height: 118px;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#lookproducts div.row {
-  display: block;
 }
 /* line 41, ../src/partials/_row.sass */
 #lookproducts div.row ul {
@@ -1844,15 +1803,11 @@ ul.looks li span.button.ok:before {
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   position: absolute;
   width: 20000em;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#lookproducts div.row ul {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #lookproducts div.row ul li {
   list-style-image: none;
   list-style-type: none;
@@ -1863,11 +1818,11 @@ ul.looks li span.button.ok:before {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #lookproducts div.row ul li:first-child, #lookproducts div.row ul li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #lookproducts div.row ul li:last-child, #lookproducts div.row ul li.last {
   padding-right: 0px;
 }
@@ -1916,11 +1871,7 @@ ul.looks li span.button.ok:before {
 .sidebar .share-created {
   margin-top: 1.5em;
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-.sidebar .share-created {
-  display: block;
+  *zoom: 1;
 }
 /* line 283, ../src/partials/_application.sass */
 .sidebar .price {
@@ -1955,7 +1906,7 @@ h2 a {
   list-style: none;
   margin-bottom: 10px;
 }
-/* line 11, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_bullets.scss */
+/* line 11, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_bullets.scss */
 #product-gender li {
   list-style-image: none;
   list-style-type: none;
@@ -2073,7 +2024,7 @@ h2 a {
   margin-bottom: 10px;
   position: relative;
 }
-/* line 11, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_bullets.scss */
+/* line 11, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_bullets.scss */
 #product-options li {
   list-style-image: none;
   list-style-type: none;
@@ -2257,21 +2208,17 @@ h2 a {
 /* line 60, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup form {
   width: 348px;
-  -moz-box-shadow: #999999 0px 0px 20px;
-  -webkit-box-shadow: #999999 0px 0px 20px;
-  -o-box-shadow: #999999 0px 0px 20px;
-  box-shadow: #999999 0px 0px 20px;
+  -moz-box-shadow: #999999 0px 0px 20px 0;
+  -webkit-box-shadow: #999999 0px 0px 20px 0;
+  -o-box-shadow: #999999 0px 0px 20px 0;
+  box-shadow: #999999 0px 0px 20px 0;
 }
 /* line 63, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup form .buttons {
   padding: 10px 12px;
   padding-top: 20px;
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#product-options #product-price div.options.popup form .buttons {
-  display: block;
+  *zoom: 1;
 }
 /* line 67, ../src/partials/_filter.sass */
 #product-options #product-price div.options.popup form button {
@@ -2289,11 +2236,7 @@ h2 a {
   width: 231px;
   background: transparent url('../images/slider-ruler-bg.png?1278362236') repeat-x scroll 2px top;
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#product-options #product-price #price-ruler {
-  display: block;
+  *zoom: 1;
 }
 /* line 331, ../src/partials/_application.sass */
 #product-options #product-price #price-ruler .point {
@@ -2351,13 +2294,9 @@ h2 a {
 /* line 360, ../src/partials/_application.sass */
 #product-options #product-price .option-content {
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   padding: 12px;
   padding-bottom: 0px;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#product-options #product-price .option-content {
-  display: block;
 }
 /* line 364, ../src/partials/_application.sass */
 #product-options #product-price .price-range {
@@ -2452,21 +2391,17 @@ h2 a {
 /* line 60, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup form {
   width: 348px;
-  -moz-box-shadow: #999999 0px 0px 20px;
-  -webkit-box-shadow: #999999 0px 0px 20px;
-  -o-box-shadow: #999999 0px 0px 20px;
-  box-shadow: #999999 0px 0px 20px;
+  -moz-box-shadow: #999999 0px 0px 20px 0;
+  -webkit-box-shadow: #999999 0px 0px 20px 0;
+  -o-box-shadow: #999999 0px 0px 20px 0;
+  box-shadow: #999999 0px 0px 20px 0;
 }
 /* line 63, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup form .buttons {
   padding: 10px 12px;
   padding-top: 20px;
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#product-options #product-color div.options.popup form .buttons {
-  display: block;
+  *zoom: 1;
 }
 /* line 67, ../src/partials/_filter.sass */
 #product-options #product-color div.options.popup form button {
@@ -2484,15 +2419,11 @@ h2 a {
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   position: relative;
   margin: 10px 12px;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#product-options #product-color ul {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #product-options #product-color ul li {
   list-style-image: none;
   list-style-type: none;
@@ -2503,11 +2434,11 @@ h2 a {
   padding-left: 4px;
   padding-right: 4px;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #product-options #product-color ul li:first-child, #product-options #product-color ul li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #product-options #product-color ul li:last-child, #product-options #product-color ul li.last {
   padding-right: 0px;
 }
@@ -2520,7 +2451,7 @@ h2 a {
 }
 /* line 147, ../src/partials/_base.sass */
 #product-options #product-color ul li a {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/sprite-colors.png?1271708003');
@@ -2794,21 +2725,17 @@ h2 a {
 /* line 60, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup form {
   width: 348px;
-  -moz-box-shadow: #999999 0px 0px 20px;
-  -webkit-box-shadow: #999999 0px 0px 20px;
-  -o-box-shadow: #999999 0px 0px 20px;
-  box-shadow: #999999 0px 0px 20px;
+  -moz-box-shadow: #999999 0px 0px 20px 0;
+  -webkit-box-shadow: #999999 0px 0px 20px 0;
+  -o-box-shadow: #999999 0px 0px 20px 0;
+  box-shadow: #999999 0px 0px 20px 0;
 }
 /* line 63, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup form .buttons {
   padding: 10px 12px;
   padding-top: 20px;
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#product-options #product-manufacturers div.options.popup form .buttons {
-  display: block;
+  *zoom: 1;
 }
 /* line 67, ../src/partials/_filter.sass */
 #product-options #product-manufacturers div.options.popup form button {
@@ -2889,7 +2816,7 @@ h2 a {
   list-style: none;
   margin-bottom: 10px;
 }
-/* line 11, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_bullets.scss */
+/* line 11, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_bullets.scss */
 #product-category li {
   list-style-image: none;
   list-style-type: none;
@@ -3031,9 +2958,9 @@ span.likes {
 }
 /* line 445, ../src/partials/_application.sass */
 span.price {
-  background: transparent url(../images/check.png) no-repeat scroll left bottom;
+  background: transparent url(../images/check.png) no-repeat scroll 1px center;
   color: #333333;
-  padding-left: 15px;
+  padding-left: 16px;
 }
 
 /* line 448, ../src/partials/_application.sass */
@@ -3062,14 +2989,10 @@ div#product-list {
 /* line 456, ../src/partials/_application.sass */
 div#product-list, .product-list {
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
   position: relative;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-div#product-list, .product-list {
-  display: block;
 }
 /* line 460, ../src/partials/_application.sass */
 div#product-list ul.list, .product-list ul.list {
@@ -3085,11 +3008,7 @@ div#product-list ul.list li, .product-list ul.list li {
 /* line 466, ../src/partials/_application.sass */
 div#product-list ul.list li ul, .product-list ul.list li ul {
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-div#product-list ul.list li ul, .product-list ul.list li ul {
-  display: block;
+  *zoom: 1;
 }
 /* line 468, ../src/partials/_application.sass */
 div#product-list ul.list li ul li, .product-list ul.list li ul li {
@@ -3102,10 +3021,10 @@ div#product-list ul.list li ul li, .product-list ul.list li ul li {
   z-index: 100;
   display: none;
   position: absolute;
-  -moz-box-shadow: #999999 0px 0px 20px;
-  -webkit-box-shadow: #999999 0px 0px 20px;
-  -o-box-shadow: #999999 0px 0px 20px;
-  box-shadow: #999999 0px 0px 20px;
+  -moz-box-shadow: #999999 0px 0px 20px 0;
+  -webkit-box-shadow: #999999 0px 0px 20px 0;
+  -o-box-shadow: #999999 0px 0px 20px 0;
+  box-shadow: #999999 0px 0px 20px 0;
 }
 
 /* line 479, ../src/partials/_application.sass */
@@ -3185,7 +3104,7 @@ a.prev.disabled, a.next.disabled {
 /* line 523, ../src/partials/_application.sass */
 #pagination .prev {
   float: left;
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/prev-page.png?1265910786');
@@ -3195,7 +3114,7 @@ a.prev.disabled, a.next.disabled {
 }
 /* line 527, ../src/partials/_application.sass */
 #pagination .prev.disabled {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/prev-page-disabled.png?1265910786');
@@ -3205,7 +3124,7 @@ a.prev.disabled, a.next.disabled {
 /* line 529, ../src/partials/_application.sass */
 #pagination .next {
   float: right;
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/next-page.png?1265910786');
@@ -3215,7 +3134,7 @@ a.prev.disabled, a.next.disabled {
 }
 /* line 533, ../src/partials/_application.sass */
 #pagination .next.disabled {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/next-page-disabled.png?1265910786');
@@ -3251,7 +3170,7 @@ a.prev.disabled, a.next.disabled {
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   clear: left;
   float: left;
   left: 50%;
@@ -3259,11 +3178,7 @@ a.prev.disabled, a.next.disabled {
   position: relative;
   overflow: visible;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#pagination div ol {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #pagination div ol li {
   list-style-image: none;
   list-style-type: none;
@@ -3274,11 +3189,11 @@ a.prev.disabled, a.next.disabled {
   padding-left: 5px;
   padding-right: 5px;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #pagination div ol li:first-child, #pagination div ol li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #pagination div ol li:last-child, #pagination div ol li.last {
   padding-right: 0px;
 }
@@ -3369,10 +3284,10 @@ body.product .product-image img {
 #gallery {
   display: none;
   z-index: 10000;
-  -moz-box-shadow: #999999 0px 0px 20px;
-  -webkit-box-shadow: #999999 0px 0px 20px;
-  -o-box-shadow: #999999 0px 0px 20px;
-  box-shadow: #999999 0px 0px 20px;
+  -moz-box-shadow: #999999 0px 0px 20px 0;
+  -webkit-box-shadow: #999999 0px 0px 20px 0;
+  -o-box-shadow: #999999 0px 0px 20px 0;
+  box-shadow: #999999 0px 0px 20px 0;
 }
 /* line 613, ../src/partials/_application.sass */
 #gallery img {
@@ -3501,10 +3416,10 @@ a.buy-now:hover {
   -ms-border-radius: 5px;
   -khtml-border-radius: 5px;
   border-radius: 5px;
-  -moz-box-shadow: #d4d4d4 0 2px 2px;
-  -webkit-box-shadow: #d4d4d4 0 2px 2px;
-  -o-box-shadow: #d4d4d4 0 2px 2px;
-  box-shadow: #d4d4d4 0 2px 2px;
+  -moz-box-shadow: #d4d4d4 0 2px 2px 0;
+  -webkit-box-shadow: #d4d4d4 0 2px 2px 0;
+  -o-box-shadow: #d4d4d4 0 2px 2px 0;
+  box-shadow: #d4d4d4 0 2px 2px 0;
 }
 /* line 699, ../src/partials/_application.sass */
 .message .highlight {
@@ -3525,13 +3440,9 @@ a.buy-now:hover {
 /* line 710, ../src/partials/_application.sass */
 #comments-and-links #comments li {
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   padding: 9px 0;
   border-bottom: 1px solid #d9d9d9;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#comments-and-links #comments li {
-  display: block;
 }
 /* line 714, ../src/partials/_application.sass */
 #comments-and-links #comments li img.avatar {
@@ -3556,7 +3467,7 @@ a.buy-now:hover {
   border: 1px solid #d9d9d9;
   background-color: #fafafa;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   -moz-border-radius-topright: 3px;
   -webkit-border-top-right-radius: 3px;
   -o-border-top-right-radius: 3px;
@@ -3571,10 +3482,6 @@ a.buy-now:hover {
   border-bottom-right-radius: 3px;
   margin: 15px 0 0 -1px;
   padding: 3px 2px 3px 3px;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#comments-and-links form {
-  display: block;
 }
 /* line 730, ../src/partials/_application.sass */
 #comments-and-links form textarea {
@@ -3641,11 +3548,7 @@ body.product #comments-and-links textarea {
 /* line 752, ../src/partials/_application.sass */
 #recentlyviewed {
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#recentlyviewed {
-  display: block;
+  *zoom: 1;
 }
 /* line 7, ../src/partials/_row.sass */
 #recentlyviewed a.prev, #recentlyviewed a.next {
@@ -3674,7 +3577,7 @@ body.product #comments-and-links textarea {
 }
 /* line 22, ../src/partials/_row.sass */
 #recentlyviewed a.prev {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/prev-page.png?1265910786');
@@ -3700,7 +3603,7 @@ body.product #comments-and-links textarea {
 }
 /* line 28, ../src/partials/_row.sass */
 #recentlyviewed a.next {
-  text-indent: -9999em;
+  text-indent: -119988px;
   overflow: hidden;
   text-align: left;
   background-image: url('../images/next-page.png?1265910786');
@@ -3729,15 +3632,11 @@ body.product #comments-and-links textarea {
   display: inline;
   float: left;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   position: relative;
   overflow: hidden;
   width: 166px;
   height: 118px;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#recentlyviewed div.row {
-  display: block;
 }
 /* line 41, ../src/partials/_row.sass */
 #recentlyviewed div.row ul {
@@ -3746,15 +3645,11 @@ body.product #comments-and-links textarea {
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   position: absolute;
   width: 20000em;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#recentlyviewed div.row ul {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #recentlyviewed div.row ul li {
   list-style-image: none;
   list-style-type: none;
@@ -3765,11 +3660,11 @@ body.product #comments-and-links textarea {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #recentlyviewed div.row ul li:first-child, #recentlyviewed div.row ul li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 #recentlyviewed div.row ul li:last-child, #recentlyviewed div.row ul li.last {
   padding-right: 0px;
 }
@@ -3942,23 +3837,15 @@ ul.hover-menu li.hover.ok:before {
 /* line 825, ../src/partials/_application.sass */
 ul.menu {
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
   margin: 0;
   padding: 0;
   border: 0;
   outline: 0;
   overflow: hidden;
-  display: inline-block;
+  *zoom: 1;
 }
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-ul.menu {
-  display: block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-ul.menu {
-  display: block;
-}
-/* line 50, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 51, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 ul.menu li {
   list-style-image: none;
   list-style-type: none;
@@ -3969,11 +3856,11 @@ ul.menu li {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 41, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 43, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 ul.menu li:first-child, ul.menu li.first {
   padding-left: 0px;
 }
-/* line 43, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
+/* line 44, ../../../../../../.gem/ruby/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/lists/_horizontal-list.scss */
 ul.menu li:last-child, ul.menu li.last {
   padding-right: 0px;
 }
@@ -4252,11 +4139,7 @@ a.block_link {
 /* line 964, ../src/partials/_application.sass */
 #search-result .result-container ul {
   overflow: hidden;
-  display: inline-block;
-}
-/* line 8, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.2/frameworks/compass/stylesheets/compass/utilities/general/_hacks.scss */
-#search-result .result-container ul {
-  display: block;
+  *zoom: 1;
 }
 /* line 966, ../src/partials/_application.sass */
 #search-result .result-container ul li {

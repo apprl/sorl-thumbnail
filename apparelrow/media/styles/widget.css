@@ -3,14 +3,13 @@
 @font-face {
   font-family: "Gotham Book";
   src: url('../fonts/gotham-book.eot');
-  src: local("Gotham Book"), local("gotham-book"), url('../fonts/gotham-book.woff') format('woff'), url('../fonts/gotham-book.ttf') format('truetype'), url('../fonts/gotham-book.svg') format('svg');
+  src: local("☺"), url('../fonts/gotham-book.woff') format('woff'), url('../fonts/gotham-book.ttf') format('truetype'), url('../fonts/gotham-book.svg') format('svg');
 }
 
 @font-face {
   font-family: "Gotham Book Italic";
-  font-style: "italic";
   src: url('../fonts/gotham-bookitalic.eot');
-  src: local("Gotham Book Italic"), local("gotham-bookitalic"), url('../fonts/gotham-bookitalic.woff') format('woff'), url('../fonts/gotham-bookitalic.ttf') format('truetype'), url('../fonts/gotham-bookitalic.svg') format('svg');
+  src: local("☺"), url('../fonts/gotham-bookitalic.woff') format('woff'), url('../fonts/gotham-bookitalic.ttf') format('truetype'), url('../fonts/gotham-bookitalic.svg') format('svg');
 }
 
 @font-face {
@@ -125,10 +124,10 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
   -khtml-border-radius: 2px;
   border-radius: 2px;
   border: 1px solid #d9d9d9;
-  -moz-box-shadow: #999999 0px 0px 5px;
-  -webkit-box-shadow: #999999 0px 0px 5px;
-  -o-box-shadow: #999999 0px 0px 5px;
-  box-shadow: #999999 0px 0px 5px;
+  -moz-box-shadow: #999999 0px 0px 5px 0;
+  -webkit-box-shadow: #999999 0px 0px 5px 0;
+  -o-box-shadow: #999999 0px 0px 5px 0;
+  box-shadow: #999999 0px 0px 5px 0;
   display: none;
   z-index: 1100;
   padding: 4px !important;
@@ -274,7 +273,7 @@ div#ar-wrapper h1, div#ar-wrapper h2, div#ar-wrapper h3, div#ar-wrapper h4, div#
 }
 /* line 73, ../src/widget.sass */
 #ar-wrapper a.ar-tooltip .ar-price {
-  background: transparent url(../images/check.png) no-repeat scroll left bottom;
+  background: transparent url(../images/check.png) no-repeat scroll 1px center;
   color: #333333;
-  padding-left: 15px;
+  padding-left: 16px;
 }

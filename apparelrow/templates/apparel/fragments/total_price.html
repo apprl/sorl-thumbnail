@@ -1,0 +1,11 @@
+{% load i18n %}
+<p>
+<span class="price">
+{% blocktrans count object.display_components.count as number %}
+    {{ number }} article
+{% plural %}
+    {{ number }} articles
+{% endblocktrans %}
+</span>
+<span class="sum"> - {{ object.total_price }} SEK</span>
+</p>

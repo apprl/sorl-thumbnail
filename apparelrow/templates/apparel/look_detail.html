@@ -62,16 +62,7 @@
     </div>
 </div>
 <div class="sidebar">
-    <p>
-    <span class="price">
-    {% blocktrans count object.display_components.count as number %}
-        {{ number }} article
-    {% plural %}
-        {{ number }} articles
-    {% endblocktrans %}
-    </span>
-    <span class="sum"> - {{ object.total_price }} SEK</span>
-    </p>
+    {% include 'apparel/fragments/total_price.html' %}
     {% if object.description %}
         <p class="description">{{ object.description }}</p>
     {% endif %}

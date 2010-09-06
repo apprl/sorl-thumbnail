@@ -9,6 +9,7 @@ from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django.views.generic import list_detail
 
 from sorl.thumbnail.main import DjangoThumbnail
 from hanssonlarsson.django.exporter import json
@@ -174,6 +175,14 @@ def product_detail(request, slug):
             },
             context_instance=RequestContext(request),
             )
+
+def look_list(request, page=0):
+    return list_detail.object_list(
+        request,
+        queryset=Look.objects.all(),
+        paginate_by=20,
+        page=page
+    )
 
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
