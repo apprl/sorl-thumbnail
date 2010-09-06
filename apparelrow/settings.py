@@ -170,7 +170,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'trackback',
     'recommender',
-    'south',
+    #'south',
     'jsmin',
     'compress',
 
@@ -266,6 +266,7 @@ EMAIL_USE_TLS       = True
 APPAREL_DEFAULT_AVATAR     = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
 APPAREL_PRODUCT_IMAGE_ROOT = 'products'
 APPAREL_LOOK_MAX_SIZE      = 470
+APPAREL_LOOK_FEATURED      = 3
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

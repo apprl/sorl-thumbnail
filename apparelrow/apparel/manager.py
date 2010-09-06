@@ -27,6 +27,17 @@ class SearchManager(models.Manager):
         
         return qs
 
+
+
+class FeaturedManager(models.Manager):
+    """
+    Limits the query set to instances that should be displayed on the front page.
+    """
+    
+    def get_query_set(self):
+        return super(FeaturedManager, self).get_query_set().filter(is_featured=True)
+
+
 class QueryParser():
 
     model_shorthands = {

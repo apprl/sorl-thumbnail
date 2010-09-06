@@ -14,7 +14,7 @@
         var ANIMATION_SPEED = 1000;
         
         jQuery(document).ready(function() {
-            jQuery('.tabs').tabs('#featured-looks > li', {
+            jQuery('.tabs').tabs('#featured-looks>ul > li', {
                 initialIndex: null,
                 effect: 'fade',
                 fadeInSpeed: ANIMATION_SPEED,
@@ -41,7 +41,7 @@
         function animateTab() {
             var tabs = jQuery('.tabs').data('tabs');
             var tab  = tabs.getCurrentTab();
-            var i = tab.data('tabAnimationIndex');
+            var i = tab.data('tabAnimationIndex') || 1;
             
             if(i <= MAX_ANIMATE) {
                 if(i > 1) tab.removeClass('tab-animation-' + (i - 1));
@@ -64,22 +64,36 @@
     </div>
     <div id="content">
         <h2>{% trans "News" %}</h2>
-        <ul id="featured-looks">
-            <li><img src="{{ MEDIA_URL }}/images/example-look.png" /></li>
-            <li><img src="{{ MEDIA_URL }}/images/example-look2.jpg" /></li>
-            <li><img src="{{ MEDIA_URL }}/images/example-look3.jpg" /></li>
-        </ul>
-        <div id="switchlook">
-            <div class="info">
-                <h3>{% trans "Best looks of the month" %}</h3>
-                <p>{% trans "Take a look at the highlights of last month" %}</p>
-            </div>
-            <div class="nav">
+        <div id="featured-looks">
+            <ul id="contents">
+            {% for look in featured_looks %}
+                <li>
+                    <a href="{{ object.get_absolute_url }}">
+                        <div class="look">
+                        {% with look as object %}
+                        {% ifequal object.display_with_component 'P' %}
+                            {% include 'apparel/fragments/look_photo_featured.html' %}
+                        {% else %}
+                            {% include 'apparel/fragments/look_collage_featured.html' %}
+                        {% endifequal %}
+                        {% endwith %}
+                        </div>
+                    </a>
+                    <div class="info-box">
+                        <div class="info">
+                            <h3>{{ look.title }} {% trans "by" %} {{ look.user }}</h3>
+                            <p>{{ look.description }}</p>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+            <div id="switchlook">
                 <a class="backward" href="#prev">{% trans "Previous" %}</a>
                 <ul class="tabs">
-                    <li><a id="l1" href="#look1">Look 1</a></li>
-                    <li><a id="l2" href="#look2">Look 2</a></li>
-                    <li><a id="l3" href="#look3">Look 3</a></li>
+                {% for look in featured_looks %}
+                    <li><a id="l{{ forloop.counter }}" href="#featured{{ forloop.counter }}">{{ look.title }}</a></li>
+                {% endfor %}
                 </ul>
                 <a class="forward" href="#next">{% trans "Next" %}</a>
             </div>
