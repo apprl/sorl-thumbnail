@@ -68,7 +68,7 @@
             <ul id="contents">
             {% for look in featured_looks %}
                 <li>
-                    <a href="{{ object.get_absolute_url }}">
+                    <a href="{{ look.get_absolute_url }}">
                         <div class="look">
                         {% with look as object %}
                         {% ifequal object.display_with_component 'P' %}
@@ -80,10 +80,10 @@
                         </div>
                     </a>
                     <div class="info-box">
-                        <div class="info">
+                        <a href="{{ look.get_absolute_url }}" class="info">
                             <h3>{{ look.title }} {% trans "by" %} {{ look.user }}</h3>
                             <p>{{ look.description }}</p>
-                        </div>
+                        </a>
                     </div>
                 </li>
             {% endfor %}
