@@ -1,12 +1,7 @@
-{% load i18n %}
-<a href="{{ object.get_absolute_url }}"><div class="look">
+<div class="look">
     {% ifequal object.display_with_component 'P' %}
         {% include 'apparel/fragments/look_photo_small.html' %}
     {% else %}
         {% include 'apparel/fragments/look_collage_small.html' %}
     {% endifequal %}
 </div>
-{% if not hide_like_button %}
-    <span class="button">{% include 'apparel/fragments/likes.html' %}</span>
-{% endif %}
-</a>
