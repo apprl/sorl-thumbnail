@@ -135,13 +135,7 @@ INSTALLED_APPS = (
     'pagination',
     'mptt',
     'sorl.thumbnail',
-<<<<<<< HEAD:apparelrow/settings.py
-    'apparelrow.apparel',
-    'apparelrow.scale',
-    'apparelrow.watcher',
-    'apparelrow.profile',
-    'apparelrow.importer',
-=======
+    
     'tagging',
     'pagination',
     'voting',
@@ -152,8 +146,9 @@ INSTALLED_APPS = (
     'scale',
     'watcher',
     'profile',
->>>>>>> 021142f3f90de00b51ca8c3332e86cb620095e8a:apparelrow/settings.py
+    'importer',
     
+        
     # internal (for now)
     'django.contrib.admin',
 )
