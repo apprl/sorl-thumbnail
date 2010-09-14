@@ -96,13 +96,13 @@ class Category(models.Model):
     option_types  = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
     on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'))
     
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
         if not self.key and self.name:
             self.key = self.key_for_name(self.name)
         
         # FIXME: Can you get Django to auto truncate fields?
         self.name = self.name[:100]
-        super(Category, self).save(force_insert=force_insert, force_update=force_update)
+        super(Category, self).save(*args, **kwargs)
     
     def __unicode__(self):
         return self.name
@@ -173,14 +173,14 @@ class Product(models.Model):
         
         return categories
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
         if not self.pk:
             self.date_added = datetime.date.today()
 
         if not self.sku:
             self.sku = self.slug
 
-        super(Product, self).save(force_insert=force_insert, force_update=force_update)
+        super(Product, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return u"%s %s" % (self.manufacturer, self.product_name)
