@@ -357,15 +357,15 @@ class TestProductImage(TestCase):
     
     def tearDown(self):
         # FIXME: Remove local image if it eixsts
-        fp = os.path.join(settings.MEDIA_ROOT, settings.APPAREL_PROD_IMG_ROOT, 'cool-clothes-store', '__image.jpg')
+        fp = os.path.join(settings.MEDIA_ROOT, settings.APPAREL_PRODUCT_IMAGE_ROOT, 'cool-clothes-store', '__image.jpg')
         if os.path.exists(fp):
             os.remove(fp)
     
     
     def test_product_image_path(self):
-        self.assertTrue(settings.APPAREL_PROD_IMG_ROOT, 'APPAREL_PROD_IMG_ROOT setting exists')
+        self.assertTrue(settings.APPAREL_PRODUCT_IMAGE_ROOT, 'APPAREL_PRODUCT_IMAGE_ROOT setting exists')
         self.assertEqual(self.api.product_image_path, '%s/%s/%s' % (
-            settings.APPAREL_PROD_IMG_ROOT, 
+            settings.APPAREL_PRODUCT_IMAGE_ROOT, 
             'cool-clothes-store', 
             '__image.png'
         ))

@@ -353,7 +353,7 @@ class API(object):
         Read-only property to retrieve the path to the image for the current
         dataset.
         
-        AR_PROD_IMG_BASE/vendor_name/orignal_image
+        APPAREL_PRODUCT_IMAGE_ROOT/vendor_name/orignal_image
     
         If the image already exists, it will not be downloaded. Returns None if
         no image is specified
@@ -373,7 +373,7 @@ class API(object):
             return None
         
         return '%s/%s/%s' % (
-            settings.APPAREL_PROD_IMG_ROOT, 
+            settings.APPAREL_PRODUCT_IMAGE_ROOT, 
             slugify(self.vendor.name), 
             m.group(1)
         )
