@@ -1,15 +1,58 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load apparel_extras %}
 
 {% block 'extra-scripts' %}
-    <script type="text/javascript" src="/site_media/static/js/filtersetup.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/filtersetup.js"></script>
     <script type="text/javascript">
+        var pricerange = {
+            min: {{ pricerange.min }},
+            max: {{ pricerange.max }}
+        };
+        
+        var MAX_ANIMATE = 7;
+        var ANIMATION_SPEED = 1000;
+        
         jQuery(document).ready(function() {
-                jQuery('.tabs').tabs('#looks > li', {
-                    effect: 'fade',
-                    rotate: true
-                }).slideshow({ autoplay: true }).history();
+            jQuery('.tabs').tabs('#featured-looks>ul > li', {
+                initialIndex: null,
+                effect: 'fade',
+                fadeInSpeed: ANIMATION_SPEED,
+                fadeOutSpeed: ANIMATION_SPEED,
+                rotate: true,
+                history: true
+            })
+            .data('timerImageIndex', 0)
+            .bind('onBeforeClick', function(e, idx) {
+                var tabs = jQuery('.tabs').data('tabs');
+                var tab  = tabs.getCurrentTab();
+                
+                window.clearTimeout(tab.data('tabAnimationTimer'));
+                tab.data('tabAnimationIndex', 1);
+                for(var i = 1; i <= MAX_ANIMATE; i++)
+                    tab.removeClass('tab-animation-' + i);
+            })
+            .bind('onClick', function(e, idx) {
+                animateTab();
+            })
+            .slideshow()
+            ;
         });
+        function animateTab() {
+            var tabs = jQuery('.tabs').data('tabs');
+            var tab  = tabs.getCurrentTab();
+            var i = tab.data('tabAnimationIndex') || 1;
+            
+            if(i <= MAX_ANIMATE) {
+                if(i > 1) tab.removeClass('tab-animation-' + (i - 1));
+                tab.addClass('tab-animation-' + i);
+                tab.data('tabAnimationIndex', ++i);
+                tab.data('tabAnimationTimer', window.setTimeout(animateTab, ANIMATION_SPEED));
+                
+                return;
+            }
+            tabs.next();
+        }
     </script>
 {% endblock 'extra-scripts' %}
 
@@ -20,23 +63,37 @@
         {% include 'apparel/fragments/product_menu.html' %}
     </div>
     <div id="content">
-        <h2>{% trans "Current" %}</h2>
-        <ul id="looks">
-            <li><img src="/site_media/static/images/example-look.png" /></li>
-            <li><img src="/site_media/static/images/example-look2.jpg" /></li>
-            <li><img src="/site_media/static/images/example-look3.jpg" /></li>
-        </ul>
-        <div id="switchlook">
-            <div class="info">
-                <h3>{% trans "Best looks of the month" %}</h3>
-                <p>{% trans "Take a look at the highlights of last month" %}</p>
-            </div>
-            <div class="nav">
+        <h2>{% trans "News" %}</h2>
+        <div id="featured-looks">
+            <ul id="contents">
+            {% for look in featured_looks %}
+                <li>
+                    <a href="{{ look.get_absolute_url }}">
+                        <div class="look">
+                        {% with look as object %}
+                        {% ifequal object.display_with_component 'P' %}
+                            {% include 'apparel/fragments/look_photo_featured.html' %}
+                        {% else %}
+                            {% include 'apparel/fragments/look_collage_featured.html' %}
+                        {% endifequal %}
+                        {% endwith %}
+                        </div>
+                    </a>
+                    <div class="info-box">
+                        <a href="{{ look.get_absolute_url }}" class="info">
+                            <h3>{{ look.title }} {% trans "by" %} {{ look.user }}</h3>
+                            <p>{{ look.description }}</p>
+                        </a>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+            <div id="switchlook">
                 <a class="backward" href="#prev">{% trans "Previous" %}</a>
                 <ul class="tabs">
-                    <li><a id="l1" href="#look1">Look 1</a></li>
-                    <li><a id="l2" href="#look2">Look 2</a></li>
-                    <li><a id="l3" href="#look3">Look 3</a></li>
+                {% for look in featured_looks %}
+                    <li><a id="l{{ forloop.counter }}" href="#featured{{ forloop.counter }}">{{ look.title }}</a></li>
+                {% endfor %}
                 </ul>
                 <a class="forward" href="#next">{% trans "Next" %}</a>
             </div>
@@ -45,9 +102,11 @@
     <div class="sidebar last">
         <h2>{% trans "Popular looks" %}</h2>
         <ul class="looks">
-            {% for object in popular_looks %}
-            {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_collage_small.html' %}</li>
-            {% endfor %}
+        {% for look in popular_looks %}
+            {% with look|first as object %}
+            {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_small_sidebar.html' %}</li>
+            {% endwith %}
+        {% endfor %}
         </ul>
     </div>
 {% endblock body %}

@@ -1,6 +1,6 @@
-=filter(!img, !selected_img)
-  +border("all")
-  +border-radius("3px")
+=filter($img, $selected_img)
+  +border(all)
+  +border-radius(unquote("3px"))
   +no-bullets
   margin-bottom: 10px
   li
@@ -10,46 +10,64 @@
     border-right: none
     &.first
       border-top: none
-      +border-top-radius("3px")
+      +border-top-radius(unquote("3px"))
     &.last
-      +border-bottom-radius("3px")
+      +border-bottom-radius(unquote("3px"))
+    &.filtered
+      display: none
     > a
       display: block
       padding-left: 25px
-      background= "transparent" image_url(!img) "no-repeat" "scroll" 10px "center"
+      background: transparent image_url($img) no-repeat scroll 10px center
       &.selected
-        background-image= image_url(!selected_img)
+        background-image: image_url($selected_img)
 
-=popup(!n = 1)
-  position: relative
-  li
-    div.options
-      margin-left: -10px
-      div.box
-        +box(#fff)
-        > div
-          padding: 10px
-          background: #fff
-      &.popup
-        background:
-          color: transparent
-          image= image_url("box-arrow-left.png")
-          repeat: no-repeat
-          position= !n * 30px "left"
-        padding-left: 7px
-        display: none
+=popup($n: 1)
+  div.options
+    margin-left: -5px
+    cursor: auto
+    .option-content
+      +border(top)
+      +box-shadow-inset(#f6f6f6 - #222222, 0, 3px, 3px)
+    h3
+      font-weight: normal
+      line-height: $button_height
+      padding: 0 12px
+      position: relative
+    .reset
+      position: absolute
+      right: 12px
+    form
+      +box(white)
+      > div
+        background: white
+    .buttons
+      button
+        +button
+    &.popup
+      display: none
+      position: absolute
+      left: $aside_width
+      top: 0px
+      z-index: 200
+      .arrow
         position: absolute
-        left= !aside_width
-        top: 0px
-        z-index: 10
-        div.box
-          width: 500px
-          +box-shadow
-          a.button
-            width: 249px
-      a.button
-        border: none
-        +border("top")
-        text-align: center
-      a.ok
-        +border("left")
+        top: $n * 30px
+        left: -6px
+        height: 35px
+        width: 7px
+        background: transparent image_url(unquote("box-arrow-left.png")) no-repeat scroll left top
+      form
+        width: 348px
+        +box-shadow
+        .buttons
+          padding: 10px 12px
+          padding-top: 20px
+          +clearfix
+        button
+          width: 94px
+          display: inline
+          padding: 0
+          line-height: 24px
+          height: 24px
+          float: right

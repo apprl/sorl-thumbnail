@@ -1,0 +1,9 @@
+{% extends 'apparel/fragments/product_menu.html' %}
+{% load i18n %}
+
+{% block product_menu_title %}
+<h2>
+    {% trans "Browse articles" %}
+    <a id="reset" class="reset" href="{% url apparel.views.browse %}"{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Show all" %}</a>
+</h2>
+{% endblock %}

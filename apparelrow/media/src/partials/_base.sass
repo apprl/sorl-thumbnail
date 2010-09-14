@@ -1,54 +1,266 @@
-!page_width = 980px
-!margin_width = 20px
-!gutter_width = 36px
-!content_width = !page_width - 2 * !margin_width
+$page_width: 980px
+$margin_width: 20px
+$gutter_width: 36px
+$content_width: $page_width - 2 * $margin_width
 
-!aside_width = 208px
-!small_width = 1.5 * !aside_width + !gutter_width / 2
-!middle_width = 2 * !aside_width + !gutter_width
-!large_width = !aside_width + !middle_width + !gutter_width
+$aside_width: 208px
+$small_width: 1.5 * $aside_width + $gutter_width / 2
+$middle_width: 2 * $aside_width + $gutter_width
+$large_width: $aside_width + $middle_width + $gutter_width
 
-!box_color = #fafafa
-!border_color = !box_color - #212121
-!easy_border_color = !box_color - #080808
-!font_color = !box_color - #bababa
-!easy_color = !box_color - #999
-!like_color = !box_color - #008a8a
-!price_color = !box_color - #878787
+$box_color: #fafafa
+$border_color: $box_color - #212121
+$easy_border_color: $box_color - #080808
+$dark_border_color: $box_color - #393939
+$font_color: $box_color - #c7c7c7
+$easy_color: $box_color - #949494
+$easier_color: $box_color - #616161
+$easiest_color: #d9d9d9
+$like_color: $box_color - #008a8a
+$button_color: $box_color - #080808
 
-!border_width = 1px
+$hover_color: #ebebeb
 
-!box_disabled_color = !box_color + #aaa
-!border_disabled_color = !border_color + #1e1e1e
+$highlight_bg_color: #d0fae8
+$hover_highlight_bg_color: #94ffd1
+$highlight_border_color: #92c0c7
+$highlight_color: #408994
 
-!default_box_shadow_color     ||= #999
-!default_box_shadow_h_offset  ||= 0px
-!default_box_shadow_v_offset  ||= 0px
-!default_box_shadow_blur      ||= 20px
+$border_width: 1px
 
+$button_height: 30px
+
+$box_disabled_color: $box_color + #aaaaaa
+$border_disabled_color: $border_color + #1e1e1e
+
+$default_box_shadow_color: #999999 !default
+$default_box_shadow_h_offset: 0px !default
+$default_box_shadow_v_offset: 0px !default
+$default_box_shadow_blur: 20px !default
+
+$font_family: "Gotham Book", "Helvetica", "Arial", sans-serif
+$font_family_bold: "Gotham Medium", "Helvetica", "Arial", sans-serif
+$font_family_italic: "Gotham Book Italic", "Helvetica", "Arial", sans-serif
+$font_family_bold_italic: "Gotham Medium Italic", "Helvetica", "Arial", sans-serif
+
+
+=custom_fonts
+  +font-face("Gotham Book", font-files("gotham-book.woff", woff, "gotham-book.ttf", truetype, "gotham-book.svg", svg), "gotham-book.eot", "gotham-book")
+  +font-face("Gotham Book Italic", font-files("gotham-bookitalic.woff", woff, "gotham-bookitalic.ttf", truetype, "gotham-bookitalic.svg", svg), "gotham-bookitalic.eot", "gotham-bookitalic", "italic")
+  +font-face-extended("Gotham Medium", font-files("gotham-medium.woff", woff, "gotham-medium.ttf", truetype, "gotham-medium.svg", svg), "gotham-medium.eot", "gotham-medium", false, "bold")
+  +font-face-extended("Gotham Medium Italic", font-files("gotham-mediumitalic.woff", woff, "gotham-mediumitalic.ttf", truetype, "gotham-mediumitalic.svg", svg), "gotham-mediumitalic.eot", "gotham-mediumitalic", "italic", "bold")
+
+=text_input
+  font-family: $font_family
+  font-size: 1em
+  +border-radius(3px)
+  +border(all, #d9d9d9)
+  background-color: #f6f6f6
+  color: #666666
+  +box-shadow-inset(#f6f6f6 - #222222, 0, 3px, 3px)
+  padding: 0.5em 5px
+
+=highlight
+  background-color: $highlight_bg_color
+  border-color: $highlight_border_color
+  color: $highlight_color
+
+=highlight_hover
+  background-color: $hover_highlight_bg_color
+  border-color: $highlight_border_color
+  color: $highlight_color
 
 =container
   margin: 0 auto
-  width= !content_width
+  width: $content_width
 
-=border(!side = "none", !color = !border_color)
-  @if !side == "all"
-    border= !border_width "solid" !color
+=border($side: none, $color: $border_color)
+  @if $side == "all"
+    border: $border_width solid $color
   @else
-    border-#{!side}= !border_width "solid" !color
+    border-#{$side}: $border_width solid $color
 
-=box(!bg = !box_color, !border = !border_color)
-  +border("all", !border)
-  background-color= !bg
+=box($bg: $box_color, $border: $border_color)
+  +border(all, $border)
+  background-color: $bg
 
-=button(!bg = "gradient-bg.png")
+=button($bg: unquote("gradient-bg.png"), $height: $button_height)
   +box
-  line-height: 30px
+  line-height: $height
+  overflow: hidden
+  white-space: nowrap
+  cursor: pointer
   background:
-    color: #f3f3f3
-    image= image_url(!bg)
+    color: $button_color
+    image: image_url($bg)
     repeat: repeat-x
   &.cancel:before
-    content= image_url("cancel.png")
+    content: image_url(unquote("cancel.png"))
   &.ok:before
-    content= image_url("ok.png")
+    content: image_url(unquote("ok.png"))
+
+=hover_button($height: $button_height)
+  +button(unquote("gradient-dark-bg.png"), $height)
+
+$color_width: 21px
+$color_height: 19px
+
+=font
+  font:
+    family: $font_family
+    size: 70%
+  line-height: 1.5em
+  color: $font_color
+
+=typography
+  a
+    text-decoration: none
+    color: $font_color
+  p a
+    &:hover, &:active
+      text-decoration: underline
+  h2, h3
+    font-size: 1em
+  h2
+    margin: 30px 0 10px
+    border-bottom: 1px solid $border_color
+  h3
+    font-weight: bolder
+
+=go_to_link
+  background: transparent image_url(unquote("arrow-bg.png")) no-repeat scroll left center
+  padding-left: 15px
+  vertical-align: top
+
+=product_list_item
+  display: block
+  width: auto
+
+=colors
+  +horizontal-list
+  position: relative
+  li
+    background: none
+    border: none
+    padding: 0
+    height: $color_height
+    a
+      $y_selected: -$color_height
+      $y_filtered: -$color_height + $y_selected
+      +replace-text(unquote("sprite-colors.png"))
+      padding: 0
+      width: $color_width
+      height: $color_height
+      position: absolute
+      top: 0
+      &.black
+        background-position: 0 0
+        left: 0
+        &.selected
+          background-position: 0 $y_selected
+        &.filtered
+          background-position: 0 $y_filtered
+      &.grey
+        $x: -$color_width
+        background-position: $x top
+        left: $color_width + 1
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.white
+        $x: -$color_width * 2
+        background-position: $x top
+        left: ($color_width + 1) * 2
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.beige
+        $x: -$color_width * 3
+        background-position: $x top
+        left: ($color_width + 1) * 3 + 7
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.brown
+        $x: -$color_width * 4
+        background-position: $x top
+        left: ($color_width + 1) * 4 + 7
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.red
+        $x: -$color_width * 5
+        background-position: $x top
+        left: ($color_width + 1) * 5 + 7
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.orange
+        $x: -$color_width * 6
+        background-position: $x top
+        left: ($color_width + 1) * 6 + 7
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.yellow
+        $x: -$color_width * 7
+        background-position: $x top
+        left: ($color_width + 1) * 7 + 7
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.green
+        $x: -$color_width * 8
+        background-position: $x top
+        left: ($color_width + 1) * 8 + 7
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.blue
+        $x: -$color_width * 9
+        background-position: $x top
+        left: ($color_width + 1) * 9 + 7
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.magenta
+        $x: -$color_width * 10
+        background-position: $x top
+        left: ($color_width + 1) * 10 + 7
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.pink
+        $x: -$color_width * 11
+        background-position: $x top
+        left: ($color_width + 1) * 11 + 7
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.gold
+        $x: -$color_width * 12
+        background-position: $x top
+        left: ($color_width + 1) * 12 + 14
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.silver
+        $x: -$color_width * 13
+        background-position: $x top
+        left: ($color_width + 1) * 13 + 14
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered

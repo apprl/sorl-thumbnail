@@ -1,0 +1,4 @@
+<a title="{{ object.title }}" href="{{ object.get_absolute_url }}">
+{% include 'apparel/fragments/look_small.html' %}
+{% if not hide_like_button %}<span class="button">{% include 'apparel/fragments/likes.html' %}</span>{% endif %}
+</a>

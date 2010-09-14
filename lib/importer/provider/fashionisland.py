@@ -81,11 +81,8 @@ class FashionIslandDataMapper(DataMapper):
         # Strip useless pre/suffixes
         value = re.sub(ur'-?(?:F.rstasidan|erbjudanden)-?', '', value)
         
-        # Remove double "T-shirt"
-        value = re.sub(r'T-shirt-(?=T-shirts)', '', value)
-        
-        # Always in plural
-        value = re.sub(r'^T-shirt$', 'T-shirts', value)
+        if value in ignore_category:
+            return None
         
         return [translate_category(value)]
     
@@ -194,30 +191,46 @@ re_pant_size = re.compile('^(\d+)-(\d+)$')
 
 
 category_name_map = {
-    u'Halsdukar': 'Scarfs',
-    u'Farfars': 'Grandpas',
-    u'Flugor': 'Bow tie',
-    u'Handskar': 'Gloves',
-    u'Hattar': 'Hats',
-    u'Klockor': 'Watches',
-    u'L\u00E5ng \u00E4rm': 'Long Sleeve',
-    u'Linne': 'Vest',
-    u'M\u00F6ssor': 'Caps',
-    u'Pik\u00E9': 'Polo shirt',
-    u'Rockar':  'Coats',
-    u'Slipsar': 'Ties',
-    u'Smycken': 'Jewelry',
-    u'Solglas\u00F6gon': 'Sunglasses',
-    u'Sommarjackor':  'Summer Jackets',
-    u'V\u00E4skor':   'Bags',
-    u'Ziptr\u00F6ja': 'Zip shirt',
+    u'Cardigan-F\u00f6rstasidan': u'Cardigans',
+    u'Cardigan': u'Cardigans',
+    u'Wallets': u'Pl\u00e5nb\u00f6cker',
+    u'Pants': u'Byxor',
+    u'Bomber': u'Jackor',
+    u'Sweatshirt': u'Tr\u00f6jor',
+    u'Tr\u00f6ja': u'Tr\u00f6jor',
+    u'Skor': u'Skor',
+    u'Tank top': u'Toppar',
+    u'Jackor-Skjortor': u'Skjortor',
+    u'T-shirt': u'T-shirts',
+    u'Bermuda shorts-Shorts': u'Shorts',
+    u'Hoodie': u'Tr\u00f6jor',
+    u'Belts': u'B\u00e4lten',
+    u'Chinos': u'Byxor',
+    u'Trunks': u'Trunks',
+    u'Scarves': u'Halsdukar',
+    u'Gloves': u'Handskar',
+    u'Fickn\u00e4sduk': u'Accessories',
+    u'Pik\u00E9': u'Shirts',
+    u'Ziptr\u00f6ja': u'Tr\u00f6ja',
+    u'Socks': u'Strumpor',
+    u'Pullover': u'Tr\u00f6jor',
+    u'Jeansskjortor-L\u00e5ng \u00e4': u'L\u00e5ng \u00e4rmat',
+    u'ChinosJeans': u'Byxor',
+    u'Halsdukar-M\u00f6ssor': u'M\u00f6ssor',
+    u'Linne': u'Linnen',
+    u'L\u00e5ng \u00e4rm': u'L\u00e5ng \u00e4rmat',
+    u'Shirts': u'Skjortor',
+    
 }
 
-def translate_category(name):
-    if name in category_name_map:
-        return category_name_map[name]
-    
-    return name
+ignore_category = [
+    u'Lap top skins',
+    u'F\u00f6rstasidan',
+    u'INTERNAL',
+    u'Trunks',
+]
 
+def translate_category(name):
+    return category_name_map.get(name, name)
 
 

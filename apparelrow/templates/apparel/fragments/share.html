@@ -1,0 +1,13 @@
+{% load i18n %}
+<li class="share">
+<a href="#">{% trans "Share" %}</a>
+<ul>
+  <li>
+  <a href="http://www.facebook.com/share.php?u={% filter urlencode %}{{ object_url }}{% endfilter %}" class="facebook">Facebook</a>
+  </li>
+  <li>
+  <a href="http://twitter.com/home/?status={% filter urlencode %}{% trans "Check out" %} {{ object }} at ApparelRow {{ object_url }}{% endfilter %}" class="twitter">Twitter</a>
+  </li>
+</ul>
+</li>
+ 

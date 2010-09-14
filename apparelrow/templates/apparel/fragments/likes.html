@@ -1,7 +1,6 @@
 {% load i18n %}
 {% load humanize %}
 {% load voting_tags %}
+{% load apparel_extras %}
 
-{% score_for_object object as score %}
-{#<span class="likes">{% blocktrans count score.score as counter and score.score|apnumber as likes %}<span>{{ likes }}</span> like{% plural %}<span>{{ likes }}</span> likes{% endblocktrans %}</span>#}
-<span class="likes">{% blocktrans count score.score as counter %}<span>{{ counter }}</span> like{% plural %}<span>{{ counter }}</span> likes{% endblocktrans %}</span>
+<span class="likes" id="like-{{ object|class_name|lower }}s-{{ object.slug }}">{% blocktrans count object.score.score as counter %}<span class="count">{{ counter }}</span> like{% plural %}<span class="count">{{ counter }}</span> likes{% endblocktrans %}</span>

@@ -1,31 +1,23 @@
 {% load i18n %}
 {% load humanize %}
 {% load comments %}
+{% load apparel_extras %}
+{% if object and object.product_image %}
 <div class="product-left">
     <div class="product-image">
-        <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/328x500/site_media/media/{{ object.product_image }}" /></a>
-        <span class="magnifier"></span>
+        <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/328x500{{ object.product_image.url }}" /></a>
         <form method="post" action="{% url like-product object.slug "up" %}">
             <button type="submit" name="like" id="like">{% trans "Like" %}</button>
         </form>
     </div>
-    <h2>{% trans "Comments & links" %}</h2>
-    {% get_comment_list for object as comments %}
-    <ul id="comments">
-    {% for comment in comments %}
-    <li>
-      <h3>{{ comment.user_name }}<span>{{ comment.submit_date|naturalday:"Y-m-d" }}</span></h3>
-      <p>{{ comment.comment }}</p>
-    </li>
-    {% endfor %}
-    </ul>
-    {% render_comment_form for object %}
+    {% include 'apparel/fragments/comments.html' %}
 </div>
 <div class="product-info">
-    <h2>{{ object.category.all|join:' \\ ' }} \ {{ object.manufacturer }}</h2>
+    <h2>{{ object.categories|join:' \\ ' }} \ {{ object.manufacturer }}</h2>
     <h1>{{ object.product_name }}</h1>
-    <h3>{% trans "by" %} {{ object.manufacturer }}</h3>
+    <h3>{{ object.manufacturer }}</h3>
     {% regroup object.options.all by option_type as option_list %}
+    <!-- FIXME: Style this properly. See ticket #300 
     <ul class="product-options">
     {% for option in option_list %}
         <li>{{ option.grouper }}
@@ -37,12 +29,13 @@
         </li>
     {% endfor %}
     </ul>
+    -->
     <p class="description">{{ object.description }}</p>
     <div class="product-vendors">
         {% with object.vendorproduct.all|dictsort:'price' as vendorproducts %}
         {% for vendorproduct in vendorproducts %}
             {% if forloop.first %}
-            <a href="{{ vendorproduct.buy_url }}" class="buy-now">{% trans "Buy" %}</a>
+            <a href="{{ vendorproduct.buy_url }}" target="_new" class="buy-now">{% trans "Buy" %}</a>
             {% endif %}
             <div class="product-vendor">
                 <span class="price">{{ vendorproduct.price }}</span><span class="currency">{{ vendorproduct.currency }}</span>
@@ -51,16 +44,38 @@
         {% endfor %}
         {% endwith %}
     </div>
-    <ul id="add-menu" class="clearfix">
-        <li class="share"><a href="#">{% trans "Share" %}</a></li>
-        <li id="add-to-look"><a href="/apparel/look/">{% trans "Add to look" %}</a>
+    <ul id="add-menu" class="menu hover-menu">
+        {% include 'apparel/fragments/share.html' %}
+        <li id="add-to-look">
+            <a href="/apparel/look/">{% trans "Add to look" %}</a>
+            <form action="{% url apparel.views.add_to_look %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="look" />
+            <input type="hidden" name="product" value="{{ object.id }}" />
             <ul>
-                {% for look in looks %}
-                <li><a id="look-{{ look.id }}" href="{{ look.get_absolute_url }}">{{ look.title }}</a></li>
-                {% endfor %}
-                <li><a href="/apparel/look/new/">{% trans "New look" %}</a></li>
+            {% for look in user_looks %}
+                {% include "apparel/fragments/look_button.html" %}
+            {% endfor %}
+                <li id="add-to-look-new" class="last">
+                    <input type="text" name="new_name" value="{% trans "Enter look name" %}" />
+                    <button type="submit" name="new" value="1">{% trans "New look" %}</button>
+                </li>
             </ul>
+            </form>
         </li>
-        <li id="add-to-wardrobe"><a href="#">{% trans "Add to wardrobe" %}</a></li>
+        <li id="add-to-wardrobe" class="top last">
+            {% if is_in_wardrobe %}
+                <button>{% trans "In wardrobe" %}</button>
+            {% else %}
+                <form action="{% url apparel.views.add_to_wardrobe %}" method="post">
+                    <input type="hidden" name="product_id" value="{{ object.id }}" />
+                    <button type="submit" id="wardobe-button-add">
+                        {% trans "Add to wardrobe" %}                
+                    </button>
+                </form>
+            {% endif %}
+        </li>
     </ul>
 </div>
+{% endif %}
+

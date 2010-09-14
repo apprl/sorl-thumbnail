@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     
 #    (r'^about/', include('about.urls')),
     
+    (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', { 'domain': 'djangojs', 'packages': ('apparelrow',),}), 
     # FIXME: Is it possible to include this in some other way? All I want to do
     # is to pass the next_page attribute (and not do it via query)
     (r'^accounts/',         include('registration.backends.default.urls')),
@@ -34,9 +35,10 @@ urlpatterns = patterns('',
     (r'^comments/', include('django.contrib.comments.urls')),
     (r'^ping/', include('trackback.urls')),
     (r'^admin/(.*)', admin.site.root),
-    (r'^site_media/media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT + '/../site_media/media/static' } ),
-    (r'^site_media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
-    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
+    #(r'^site_media/media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT + '/../site_media/media/static' } ),
+    #(r'^site_media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
+    #(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
     
     (r'', include('apparel.urls')),
 )

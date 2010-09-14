@@ -1,12 +1,19 @@
 {% load i18n %}
 
 <div class="options">
-    <div class="box">
+    <form action="{% url apparel.views.browse %}">
         <div>
-            <h3>{% block option_header %}{% endblock %}</h3>
-            {% block option_content %}{% endblock %}
+            <h3>
+                {% block option_header %}{% endblock %}
+                <a class="reset" href="{% url apparel.views.browse %}">{% trans "Show all" %}</a>
+            </h3>
+            <div class="option-content">
+                {% block option_content %}{% endblock %}
+            </div>
         </div>
-        <a class="button cancel">{% trans "Cancel" %}</a><a class="button ok">{% trans "OK" %}</a>
-    </div>
+        <div class="buttons">
+            <button type="submit" class="ok">{% trans "OK" %}</button>
+        </div>
+    </form>
+    <span class="arrow"></span>
 </div>
-

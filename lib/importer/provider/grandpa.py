@@ -68,16 +68,17 @@ class GrandpaDataMapper(DataMapper):
         
         categories = value.split('/')
         
-        if categories[-1] in invalid_categories:
-            raise SkipRecord("Invalid category %s" % categories[-1])
-        
+        for category in categories:
+            if category in invalid_categories:
+                raise SkipRecord("Invalid category %s" % categories[-1])
+            
         return map(lambda x: translate_category(x), categories)
     
     def set_description(self, value):
         if not value:
             return
         
-        value = re.sub(ur'-{2,}', '', value) # Remove occurances or ---
+        value = re.sub(ur'-|_{2,}', '', value) # Remove occurances or --- or ___
         # FIXME: Remove embedded HTML
         return value
     
@@ -88,11 +89,6 @@ class GrandpaDataMapper(DataMapper):
 
         return re.sub(r'/images/(\w)/', '/images/XL/', value)
     
-    
-    def set_option_gender(self):
-        # Does not exist
-        pass    
-        
     def set_vendor_option_currency(self):        
         price = self._get_price_currency()
         return price[1]
@@ -104,7 +100,6 @@ class GrandpaDataMapper(DataMapper):
     def set_vendor_option_buy_url(self):
         return self.data.get('product_url')
     
-    
     def _get_price_currency(self):
         price = self.data.get('price')
         
@@ -115,11 +110,16 @@ class GrandpaDataMapper(DataMapper):
         return (None, None)
 
 
+# THESE MAPPINGS ARE VALID FOR
+#   2010-08-20.csv
+
 invalid_manufacturers = (
     u'ACCESOARER',
     u'Prylar',
     u'AUTOUPPLAGD',
     u'\u00D6VRIGA',
+    u'BIC NORDIC AB',
+    u'Pan Vision',
 )
 
 invalid_categories = (
@@ -132,52 +132,48 @@ invalid_categories = (
     u'Cyklar',
     u'B\u00F6cker',
     u'B\u00F6cker-Presenter',
+    u'Grandpa vintage',
+    u'CD',
+    u'DVD-Visa alla',
+    u'Prylar-Visa alla',
+    u'B\u00F6cker-Visa alla',
+    u'Presenter-Prylar-Visa alla',
+    u'Presenter-Spel-Visa alla',
 )
-    
+
+
 category_name_map = {
-    u'Blusar':  'Blouses',
-    u'Byxor':  'Pants',
-    u'Ekologiskt-T-shirts':  'T-Shirts',
-    u'Glas\u00f6gon':  'Glasses',
-    u'Halsdukar':  'Scarfs',
-    u'Handskar':  'Gloves',
-    u'Hattar':  'Hats',
-    u'Jackor':  'Jackets',
-    u'Jeans-Strumpbyxor':  'Pantyhoses',
-    u'Kappor':  'Coat',
-    u'Kappor-Kavajer':  'Jackets',
-    u'Kavajer':  'Jackets',
-    u'Kavajer-Kl\u00e4nning':  'Dresses',
-    u'Kavajer-Tr\u00f6jor':  'Sweaters',
-    u'Kjolar':  'Skirts',
-    u'Klockor':  'Watches',
-    u'Kl\u00e4nning':  'Dresses',
-    u'Linnen':  'Linen',
-    u'M\u00f6ssor':  'Caps',
-    u'Pl\u00e5nb\u00f6cker':  'Wallts',
-    u'Rockar':  'Coats',
-    u'Skjortor':  'Shirts',
-    u'Skor':  'Shoes',
-    u'Sk\u00e4rp':  'Belts',
-    u'Smycken':  'Jewellry',
-    u'Solglas\u00f6gon':  'Sunglasses',
-    u'Spel':  'Games',
-    u'Stickat':  'Knitted',
-    u'Strumpbyxor':  'Pantyhoses',
-    u'Strumpor':  'Socks',
-    u'Toppar':  'Tops',
-    u'Tr\u00f6jor':  'Sweaters',
-    u'Vantar':  'Gloves',
-    u'V\u00e4skor':  'Bags',
-    u'skjortor':  'Shirts',
-    u'skjortor-Kl\u00e4nning':  'Dresses',
+    u'Kl\u00e4nning': u'Kl\u00e4nningar',
+    u'Ekologiskt-T-shirts': u'T-shirts',
+    u'Hats': u'Hattar',
+    u'Belts': u'Sk\u00e4rp',
+    u'Knitted': u'Stickat',
+    u'Sweaters': u'Tr\u00f6jor',
+    u'Coat': u'Kappor',
+    u'Coats': u'Kappor',
+    u'Jackets': u'Jackor',
+    u'Pants': u'Byxor',
+    u'Dresses': u'Kl\u00e4nningar',
+    u'Shirts': u'Skjortor',
+    u'Blouses': u'Blusar',
+    u'Presenter-Skor': u'Skor',
+    u'Skirts': u'Kjolar',
+    u'Strumpor-Strumpor': u'Strumpor',
+    u'Pantyhoses': u'Strumpbyxor',
+    u'Socks': u'Strumpor',
+    u'Shoes': u'Skor',
+    u'Sunglasses': u'Solglas\u00f6gon',
+    u'Glasses': u'Glas\u00f6gon',
+    u'Linen': u'Linnen',
+    u'Tops': u'Toppar',
+    u'T-Shirts': u'T-shirts',
+    u'Jewellry': u'Smycken',
+    u'Wallts': u'Pl\u00e5nb\u00f6cker',
+    u'Bags': u'V\u00e4skor',
 }
 
 def translate_category(name):
-    if name in category_name_map:
-        return category_name_map[name]
-    
-    return name
+    return category_name_map.get(name, name)
 
 
 

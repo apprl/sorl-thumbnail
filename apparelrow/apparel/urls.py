@@ -28,22 +28,37 @@ like_look_dict = {
 
 urlpatterns = patterns('',
     (r'^$', 'apparel.views.index'),
-    (r'^search$', 'apparel.views.wide_search'),
+    #(r'^search$', 'apparel.views.wide_search'),
     (r'^products/$', 'django.views.generic.list_detail.object_list', product_dict),
     (r'^(?P<model>\w+)/search$', 'apparel.views.search'),
-    (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'), #'django.views.generic.list_detail.object_detail', product_dict),
+    (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
+    (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
+    (r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list'),
     (r'^manufacturers/$', 'django.views.generic.list_detail.object_list', manufacturer_dict),
     (r'^manufacturers/(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', manufacturer_dict),
     (r'^browse/$', 'apparel.views.browse'),
+    
+    (r'^wardrobe/add_product/$', 'apparel.views.add_to_wardrobe'),
 
     (r'^likes/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
-    (r'^looks/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
-    (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
-    (r'^looks/(?P<slug>[\w-]+)/edit/$', 'apparel.views.look_edit'),
+    (r'^looks/$', 'apparel.views.look_list'), #'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
+    (r'^looks/save_component/$', 'apparel.views.save_look_component'),
+    (r'^looks/delete_component/$', 'apparel.views.delete_look_component'),
     (r'^looks/add_product/$', 'apparel.views.add_to_look'),
-    (r'^looks/save_product/$', 'apparel.views.save_look_product'),
-    (r'^looks/(?P<slug>[\w-]+)/like/(?P<direction>up|clear)/?$', vote_on_object, like_look_dict, "like-look"),
-    (r'^products/(?P<slug>[\w-]+)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
+    (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
+    (r'^looks/(?P<slug>[\w-]+?)/edit/$', 'apparel.views.look_edit'),
+    (r'^looks/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_look_dict, "like-look"),
+    (r'^products/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
     (r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
+    
+    (r'^widget/look/(?P<object_id>\d+)/collage/$', 'apparel.views.widget', { 
+        'model': Look,
+        'template_name': 'apparel/fragments/look_collage.html',
+     }),
+    (r'^widget/look/(?P<object_id>\d+)/photo/$', 'apparel.views.widget', { 
+        'model': Look,
+        'template_name': 'apparel/fragments/look_photo.html',
+     }),
 )
+
 

@@ -1,84 +1,208 @@
 @import partials/base.sass
+@import partials/widget.sass
 @import partials/box_shadow_inset.sass
 
-!input_bg_color ||= #d0fae8
-!input_color ||= #408993
-!input_border_color ||= #80bba2
+$input_bg_color: $highlight_bg_color !default
+$input_color: $highlight_color !default
+$input_border_color: $highlight_border_color !default
 
 // EDIT
 
-#photo, #collage
+#edit-look .panes
   position: relative
-  height: 500px
-  .look
+
+#photo, #collage
+  height: $look_height
+
+#selection
+  $row_width: $large_width - 20
+  +row($row_width)
+  background: transparent image_url(unquote("look-selection-row-bg.png")) no-repeat scroll
+  padding: 9px 9px 0 9px
+  height: 252px
+
+#collage, #photo
+  position: relative
+  img.product
     position: absolute
+
+#collage, #photo-background
   .ui-wrapper
     position: absolute
     opacity: 0.8
     +box-shadow
+  .delete
+    display: block
+    position: absolute
+    height: 22px
+    width: 22px
+    background: transparent image_url(unquote("delete.png")) no-repeat scroll center center
+    left: -11px
+    top: -11px
   .ui-state-disabled, .ui-widget-content .ui-state-disabled
     -moz-box-shadow: none
     -webkit-box-shadow: none
     box-shadow: none
-    opacity: 1.0
+    opacity: 1
+    .close
+      display: none
+
+#photo-background
+  +apparel_hotspot
+  top: 12px
+
+  .delete
+    z-index: 10001
+    left: 5px
+    top: 5px
+
+#delete-photo
+  position: absolute
+  top: -11px
+  left: -11px
+  cursor: pointer
+
+#product-chooser
+  position: absolute
+  display: none
+  width: 350px
+  padding-bottom: 2em
+  +box
+  +box-shadow
+  background-color: white
+  cursor: auto
+  h3
+    margin-left: 1em
+    font-weight: normal
+    font-style: italic
+    line-height: $button_height
+    a.reset
+      font-style: normal
+      position: absolute
+      right: 12px
+  ul
+    +box($box_color, $dark_border_color)
+    +box-shadow-inset($default_box_shadow_color, 0, 3px)
+    border-right: none
+    border-left: none
+    overflow-y: auto
+    overflow-x: hidden
+    height: 204px
+    padding: 0 9px
+    li
+      a
+        display: block
+        +clearfix
+        +border("bottom", $dark_border_color)
+        padding: 10px 0
+        &:hover
+          color: $easy_color
+        img
+          float: left
+          margin-right: 10px
+          +border("all", $dark_border_color)
+        h4, p
+          white-space: nowrap
+
+.look-empty
+  width: 300px
+  position: absolute
+  top: 150px
+  left: 197px
+  text-align: center
+  button, a
+    +button(none, $button_height)
+    +border-radius(unquote("3px"))
+    +highlight
+    height: $button_height
+    margin-top: 1em
+    &:hover
+      +highlight_hover
+  a
+    background-image: image_url(unquote("add.png"))
+    background-repeat: no-repeat
+    background-position: 10px 9px
+    padding-left: 30px
+    display: block
+  p
+    margin: 1em 0
+    color: #333333
+
+#photo .look-empty
+  .message
+    width: 240px
+    margin: 0 auto
+  button
+    width: 226px
+    display: none
 
 #edit-look
   +border-top-radius
-  +border("all")
-  height: 500px
+  +border(all)
+  #photo-background
+    cursor: pointer
   ul.tabs
-    +horizontal-list
+    +horizontal-list(0)
     li
-      +button
-      width: 222px
+      +border(all)
+      display: block
       border-style: none solid solid none
-      text-align: center
-      &.current
-        background-image= image_url("gradient-dark-bg.png")
-      &:last
+      &:first-child, &.first, &:first-child a, &.first a
+        +border-top-left-radius
+      &:last-child, &.last, &:last-child a, &.last a
+        +border-top-right-radius
         border-right: none
       a
+        +button
+        width: 230px
+        text-align: center
         display: block
-        background:
-          color: transparent
-          repeat: no-repeat
-          position: 75px center
-        &.collage
-          background-image= image_url("kollage.png")
+        border: none
         &.photo
-          background-image= image_url("foto.png")
-          background-position: 80px center
-        &.selection
-          background-image= image_url("urval.png")
+          width: 232px
+        &.current, &.current:hover
+          background-image: image_url(unquote("gradient-darker-bg.png"))
+          cursor: default
+        &:active, &:hover
+          background-image: image_url(unquote("gradient-dark-bg.png"))
+        span
+          padding-left: 16px
+          background:
+            color: transparent
+            repeat: no-repeat
+            position: left center
+        &.collage span
+          background-image: image_url(unquote("kollage.png"))
+        &.photo span
+          background-image: image_url(unquote("foto.png"))
+        &.selection span
+          background-image: image_url(unquote("urval.png"))
 
 #look-title
-  +border("all")
+  +border(all)
   width: 893px
   height: 27px
-  background= "transparent" image_url("gradient-bg.png") "repeat-x"
-  margin: 20px 0 10px -20px
+  background: $button_color image_url(unquote("gradient-bg.png")) repeat-x
+  margin: 20px 0 10px -24px
   padding-top: 3px
   padding-left: 20px
-
   #id_title, button
-    color= !input_color
-    font-family: "Helvetica", "Arial", sans-serif
-    
+    color: $input_color
+    font-family: $font_family
   #id_title
-    +border("all", !input_border_color)
+    +border(all, $input_border_color)
     +border-radius(3px)
-    background-color= !input_bg_color
+    background-color: $input_bg_color
     line-height: 20px
     height: 14px
-    width: 203px
+    width: 210px
     text-align: center
     padding-top: 6px
-    +box-shadow-inset(!input_bg_color - #222, 0, 3px, 3px)
-
+    +box-shadow-inset($input_bg_color - #222222, 0, 3px, 3px)
   button
     +float-right
     margin-right: -21px
-    background= "transparent" image_url("preview-button.png") "no-repeat" "scroll"
+    background: transparent image_url(unquote("preview-button.png")) no-repeat scroll
     height: 24px
     line-height: 24px
     width: 103px
@@ -87,27 +211,166 @@
 
 #id_description,
 #id_tags
-  font-family: "Helvetica", "Arial", sans-serif
-  font-size: 1em
-  width: 193px
-  +border-radius(3px)
-  +border("all", #d9d9d9)
-  background-color: #f6f6f6
-  color: #666
-  +box-shadow-inset(#f6f6f6 - #222, 0, 3px, 3px)
-  padding: 0.5em 5px
+  +text_input
+  width: 196px
 
 #id_description
   height: 2em
 
-.sidebar label
-  display: block
-  margin: 20px 0 10px
-  padding: 0 0 5px
-  +border("bottom")
+#id_tags
+  height: 1em
 
-.look
+body.edit-look
+  .sidebar
+    label
+      display: block
+      margin: 20px 0 10px
+      padding: 0 0 5px
+      +border(bottom)
+
+body.look
+  .spread
+    margin-top: 20px
+    input
+      +text_input
+      width: 140px
+      margin-left: 0.5em
+
+.tooltip
+  +apparel_tooltip
+
+ul.looks
+  li
+    &:hover
+      z-index: 100
+      +box-shadow
+  
+body.look
+  .collage, .photo
+    position: relative
+    height: $look_height
+  #comments-and-links
+    float: left
+    width: $middle_width
+    margin-right: $gutter_width
+  #tags
+    float: left
+    width: $aside_width
+    li
+      +border(bottom, $easy_border_color)
+      span
+        float: right
+        color: $easier_color
+  .sidebar
+    margin-top: 30px
+    p
+      border-top: none
+      +border(bottom)
+    .description
+      border-bottom: none
+      padding-top: 1.5em
+  #content
+    margin-top: -1.8em
+    .collage, .photo
+      background-color: white
+      margin-right: 2em
+
+#look-header
+  margin-top: 1em
   position: relative
-  img.product
+  +border(bottom)
+  .profile-image
     position: absolute
+    left: 0em
+    top: 0
+  div
+    margin-left: 70px
+    h1
+      font-size: 1.5em
+      line-height: 2em
+      a
+        margin-left: 2em
+        +button(none, unquote("20px"))
+        +border-radius(unquote("2px"))
+        +highlight
+        background-image: image_url(unquote("edit.png"))
+        background-repeat: no-repeat
+        background-position: 5px 5px
+        font-size: 10px
+        padding: 5px
+        padding-left: 20px
+      a:hover
+        +highlight_hover
 
+#wardrobe
+  margin: 0 -16px 0 -24px
+  clear: both
+
+#wardrobe-title
+  +border(all)
+  height: 27px
+  background: $button_color image_url(unquote("gradient-bg.png")) repeat-x
+  padding: 10px 8px 0 10px
+  span
+    background: transparent image_url(unquote("arrow-bg-down.png")) no-repeat unquote("top left")
+    padding-left: 14px
+
+#wardrobe-contents
+  padding: 10px 8px
+  background: transparent image_url(unquote("wardrobe-bg.png")) scroll repeat-x center center
+  +row($content_width + $gutter_width - 12)
+  li
+    a
+      cursor: move
+
+// Override backgrounds for jQuery UI icons
+.ui-icon
+  background-image: none
+  background-position: 0 0
+
+// Resizable
+.ui-icon-gripsmall-diagonal-se
+  bottom: -11px
+  right: -11px
+  width: 23px
+  height: 23px
+  background: transparent image_url(unquote("resize.png")) no-repeat scroll center center
+
+// Rotatable
+.ui-rotatable
+  position: relative
+
+.ui-rotatable-handle
+  position: absolute
+  z-index: 99999
+  display: block
+
+.ui-rotatable-disabled .ui-rotatable-handle,
+.ui-rotatable-autohide .ui-rotatable-handle
+  display: none
+
+.ui-rotatable-ne
+  top: -11px
+  right: -11px
+  width: 23px
+  height: 23px
+  background: transparent image_url(unquote("rotate-cw.png")) no-repeat scroll center center
+
+.ui-rotatable-sw
+  bottom: -11px
+  left: -11px
+  width: 23px
+  height: 23px
+  background: transparent image_url(unquote("rotate-ccw.png")) no-repeat scroll center center
+
+body.look-list
+  ul.looks
+    li
+      display: block
+      padding: none
+      float: none
+      margin-right: 0
+      +clearfix
+      div.look
+        +float-left
+        margin-right: 18px

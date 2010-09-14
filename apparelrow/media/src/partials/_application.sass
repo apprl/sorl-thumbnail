@@ -4,81 +4,104 @@
 @import partials/row.sass
 @import partials/look.sass
 
-body
-  background:
-    color: white
-    image= image_url("header-bg.png")
-    repeat: no-repeat
-    position: center top
+li
+  list-style: none
+  margin: 0
+  padding: 0
 
-button, a.button
+input, textarea
+  outline: none
+
+body
+  background-color: #e6e6e6
+  .ui-draggable-dragging a
+    cursor: move
+
+// FIXME: Should this not apply to all button tags?
+.button
   +button
   display: inline-block
+
+.link
+  cursor: pointer
+
+button
+  font-family: $font_family
+  font-size: 1em
+  color: $font_color
+  box-sizing: content-box
+  -webkit-box-sizing: content-box
+  -moz-box-sizing: content-box
+  display: block
+  border: none
+  cursor: pointer
 
 #content.fixed
   position: fixed
   top: 0
 
+#container
+  background: transparent image_url(unquote("content-bg.png")) scroll repeat-y center center
+  .container
+    overflow: visible
+    +pie-clearfix
+
 #header
-  height: 140px
-  overflow: visible
-  position: relative
+  background: transparent image_url(unquote("header-bg.png")) scroll no-repeat center center
+  height: 118px
+  .container
+    position: relative
+    overflow: visible
   h1
     +float-left
-    +replace-text("logo.png")
+    +replace-text(unquote("logo.png"))
     width: 128px
     height: 13px
     padding: 20px
-    margin-top: 38px
-    +border("bottom", #999)
+    margin-top: 32px
+    +border(bottom, #999999)
 
+#footer
+  background: transparent image_url(unquote("footer-bg.png")) scroll no-repeat center center
+  height: 58px
 
 #login-pane
   height: 2em
   line-height: 2em
+  margin: 0 -16px 0 -24px
   background: transparent url(../images/loggedin-pane-bg.png) scroll repeat-x left top
-
   &.updates
     background: transparent url(../images/updates-bg.png) scroll repeat-x left top
-
 
 #nav-user
   float: left
   margin: 0
 
-
 #nav-main
   position: absolute
   top: 50px
   left: 450px
-
   li
     display: inline
     margin-left: 2em
-
     a
       text-decoration: none
       text-transform: uppercase
       color: white
       padding-top: 1em
       padding-bottom: 1em
-
       &.selected
-        background: transparent url('../images/nav-main-selected.png') fixed no-repeat center bottom
-
-
+        background: transparent url("../images/nav-main-selected.png") fixed no-repeat center bottom
 
 #logged-in-as
   float: left
-
 
 #logout
   display: inline-block
   float: right
   text-decoration: none
   padding-left: 20px
-  background: transparent url('../images/logout.png') fixed no-repeat left center
-
+  background: transparent url("../images/logout.png") fixed no-repeat left center
 
 #account-dialogue
   position: absolute
@@ -88,28 +111,24 @@ button, a.button
   top: 37px
   left: 200px
   display: none
-  background: transparent url('../images/login-bg.png') scroll no-repeat left center
-
+  background: transparent url("../images/login-bg.png") scroll no-repeat left center
 
 #login-forgot-password
   color: #fb9292
 
-
 #login-create-account
   color: #92c0c0
 
-
 #account-dialogue
   input.default-value
+    font-family: $font_family_italic
     font-style: italic
-
   form
     margin: 0
     margin: auto 1em
 
-
 #login-username, #login-password, #login-password-placeholder
-  background: transparent url(../images/login-text-bg.png) scroll no-repeat left center
+  background: transparent image_url("../images/login-text-bg.png") scroll no-repeat left center
   width: 108px
   height: 24px
   margin: 0
@@ -118,7 +137,6 @@ button, a.button
   padding: 8px 16px
   font-size: 1.2em
   float: left
-
 
 #login-submit
   width: 40px
@@ -129,10 +147,8 @@ button, a.button
   float: left
   cursor: pointer
 
-
 #login-password
   display: none
-
 
 #account-dialogue .fb-connect-button
   float: right
@@ -141,227 +157,349 @@ button, a.button
   height: 100%
   padding-top: 6px
 
-
-
-.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
+#product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
   +box
-
 
 .product-options
   .option-size, .option-relative-size, .option-shoe-size, .option-pants-length, .option-pants-width
     border: 1px solid #dadada
     background-color: #f2f2f2
 
-#featured-looks ul 
-  .info-box
-    +box
-    height: 36px
-    padding: 16px 10px 10px
-    background:
-      image= image_url("gradient-tall-bg.png")
-      repeat: repeat-x
-    .info
-      background= "transparent" image_url("arrow-bg.png") "no-repeat" "scroll" "left" 10px
-      padding-left: 20px
+#featured-looks
+  position: relative
+  height: 412px
+  #contents
+    li
+      position: absolute
+      top: 0
+      left: 0
+      display: none
+      .look
+        height: 348px
+        width: 452px
+        position: relative
+        .collage-image
+          position: absolute
+      .info-box
+        +box
+        height: 36px
+        padding: 16px 10px 10px
+        background:
+          image= image_url("gradient-tall-bg.png")
+          repeat: repeat-x
+        .info
+          display: block
+          h3
+            font-family: $font_family_bold
+            font-weight: bold
+          background= "transparent" image_url("arrow-bg.png") "no-repeat" "scroll" "left" 10px
+          padding-left: 20px
 
-
-#switchlook
-  position: absolute
-  margin-top: 10px
-  .backward
-    +replace-text("prev-shadow.png")
-    +float-left
-    display: inline-block
-    width: 6px
-    height: 16px
-    margin-right: 20px
-  .forward
-    +replace-text("next-shadow.png")
-    +float-left
-    display: inline-block
-    width: 6px
-    height: 16px
-    margin-left: 10px
-  .tabs
-    +float-left
-    +horizontal-list(0)
-    a
-      +replace-text("switcher.png")
+  #switchlook
+    +clearfix
+    position: absolute
+    bottom: 32px
+    right: 10px
+    .backward
+      position: relative
+      +replace-text(unquote("prev-page.png"))
+      +float-left
       display: inline-block
-      width: 10px
-      height: 16px
-      margin-right: 10px
-      &.current
-        background-image= image_url("switcher-selected.png")
+      width: 6px
+      height: 10px
+      margin-right: 20px
+      margin-top: 1px
+    .forward
+      +replace-text(unquote("next-page.png"))
+      +float-left
+      display: inline-block
+      width: 6px
+      height: 10px
+      margin-left: 10px
+      margin-top: 1px
+    .tabs
+      +float-left
+      +horizontal-list(0)
+      a
+        +replace-text(unquote("switcher-sprite.png"))
+        +sprite-background(unquote("switcher-sprite.png"), unquote("10px"))
+        display: inline-block
+        margin-right: 10px
+        overflow: visible
+        &.current
+          +sprite-position(2, 1, 10px, 10px, 2)
+        &.tab-animation-1
+          +sprite-position(2, 2, 10px, 10px, 2)
+        &.tab-animation-2
+          +sprite-position(2, 3, 10px, 10px, 2)
+        &.tab-animation-3
+          +sprite-position(2, 4, 10px, 10px, 2)
+        &.tab-animation-4
+          +sprite-position(2, 5, 10px, 10px, 2)
+        &.tab-animation-5
+          +sprite-position(2, 6, 10px, 10px, 2)
+        &.tab-animation-6
+          +sprite-position(2, 7, 10px, 10px, 2)
+        &.tab-animation-7
+          +sprite-position(2, 8, 10px, 10px, 2)
+        &:hover
+          +sprite-position(1, 2, 10px, 10px, 2)
 
 ul.looks
   +horizontal-list(0)
   li
-    margin-right= !gutter_width / 2
+    margin-right: $gutter_width / 2
     margin-bottom: 10px
     &.last
       margin-right: 0
     .look
       +box
-      width= !aside_width / 2 - !gutter_width / 4 - 2
+      width: $aside_width / 2 - $gutter_width / 4 - 2
       height: 72px
+      position: relative
+      .collage-image
+        position: absolute
     span.button
       +button
       line-height: 1.5em
       border-top: 0
       display: block
-      +border-bottom-radius("3px")
+      +border-bottom-radius(unquote("3px"))
       text-align: center
 
 #lookproducts
   +row
 
-#sidebar ul
-  padding: 0
+.sidebar
+  p
+    +border(top)
+  .activity
+    margin-top: 1.5em
+    p
+      border-top: none
+  .created
+    float: right
+    line-height: 24 + 2 * $border_width
+    color: $easier_color
+  #add-menu
+    float: left
+    margin-top: 0
+  .share-created
+    margin-top: 1.5em
+    +clearfix
+  .price
+    color: $font_color
+  .sum
+    color: $easier_color
 
 h2
   a
     +float-right
 
-#reset
-  background= "transparent" image_url("logout.png") "no-repeat" "scroll" "right" "center"
+.reset
+  background: transparent image_url(unquote("logout.png")) no-repeat scroll right center
   padding-right: 15px
 
-!color_width = 39px
-!color_height = 20px
-
-=colors
-  +horizontal-list
-  li
-    background: none
-    border: none
-    a
-      +replace-text("colors.png")
-      padding: 0
-      background= "transparent" image_url("colors.png") "no-repeat" "scroll" 0 0
-      width= !color_width
-      height= !color_height
-      &.black
-        &.selected
-          background-position= 0 -!color_height
-      &.grey
-        background-position= -!color_width "top"
-        &.selected
-          background-position= -!color_width -!color_height
-      &.white
-        background-position= -!color_width * 2 "top"
-        &.selected
-          background-position= -!color_width * 2 -!color_height
-      &.beige
-        background-position= -!color_width * 3 "top"
-        &.selected
-          background-position= -!color_width * 3 !color_height
-      &.brown
-        background-position= -!color_width * 4 "top"
-        &.selected
-          background-position= -!color_width * 4 !color_height
-      &.red
-        background-position= -!color_width * 5 "top"
-        &.selected
-          background-position= -!color_width * 5 !color_height
-      &.yellow
-        background-position= -!color_width * 6 "top"
-        &.selected
-          background-position= -!color_width * 6 !color_height
-      &.green
-        background-position= -!color_width * 7 "top"
-        &.selected
-          background-position= -!color_width * 7 !color_height
-      &.blue
-        background-position= -!color_width * 8 "top"
-        &.selected
-          background-position= -!color_width * 8 !color_height
-      &.magenta
-        background-position= -!color_width * 9 "top"
-        &.selected
-          background-position= -!color_width * 9 !color_height
-      &.pink
-        background-position= -!color_width * 10 "top"
-        &.selected
-          background-position= -!color_width * 10 !color_height
-
 #product-gender
-  +filter("list-item.png", "list-item-radio-selected.png")
+  +filter(unquote("list-item.png"), unquote("list-item-radio-selected.png"))
+  li.hover
+    +hover_button
+    border-left: none
+    border-bottom: none
+  li.hover.first
+    border-top: none
+  li.hover.last
+    border-bottom: none
+
+$slider_width: 222px
+$ruler_width: $slider_width + 9px
 
 #product-options
-  +filter("list-item-arrow.png", "list-item-radio-checked.png")
-  +popup
+  +filter(unquote("list-item-arrow.png"), unquote("list-item-radio-checked.png"))
+  position: relative
+  li.hover
+    +hover_button
+    border-left: none
+    border-bottom: none
+  li.hover.first
+    border-top: none
+  li.hover.last
+    border-bottom: none
   li.active
-    background-image= image_url("gradient-darker-bg.png")
+    background-image: image_url(unquote("gradient-darker-bg.png"))
+  #product-price
+    +popup(0)
+    #price-ruler
+      margin-top: 21px
+      margin-left: 47px
+      width: $ruler_width
+      background: transparent image_url(unquote("slider-ruler-bg.png")) repeat-x scroll unquote("2px") top
+      +clearfix
+      .point
+        width: $ruler_width / 3
+        line-height: 2em
+        font-size: smaller
+        color: $easiest_color
+        &.min
+          float: left
+        &.max
+          float: left
+          text-align: right
+        &.mid
+          float: left
+          text-align: center
+    #price-slider
+      margin: 5px 10px 0px
+      float: left
+      width: $slider_width - 2
+      +border-radius(unquote("6px"))
+      border-color: $border_color
+      .ui-slider-handle
+        background: transparent image_url(unquote("slider-handle.png")) no-repeat scroll center center
+        width: 9px
+        height: 22px
+        border: none
+        margin-left: -4px
+        +border-radius(unquote("0px"))
+      .ui-widget-header
+        border: none
+        background-image: image_url(unquote("slider-range-bg.png"))
+    .option-content
+      +clearfix
+      padding: 12px
+      padding-bottom: 0px
+    .price-range
+      +box
+      +border-radius(unquote("3px"))
+      height: 20px
+      width: 36px
+      text-align: center
+      float: left
+      color: $easier_color
+      font-size: smaller
   #product-color
-    +colors
+    +popup(1)
+    ul
+      +colors
+      margin: 10px 12px
+      li
+        line-height: 1em
   #product-manufacturers
-    height: 300px
-    overflow-y: scroll
+    +popup(2)
+    .option-content
+      background-color: $button_color
+    input
+      +text_input
+      width: 323px
+      margin: 4px 3px 3px
+      padding-left: 8px
+      padding-right: 8px
+      font-family: $font_family_italic
+      font-style: italic
+    ul
+      +border(top)
+      +border(bottom)
+      height: 205px
+      overflow-y: auto
+      padding: 0 12px
+      background-color: $button_color
+      li
+        line-height: 20px
+        height: 20px
+        border: none
+        +border(bottom)
+        background-image: none
+        a
+          margin-left: -10px
+          background-image: image_url(unquote("list-item-check.png"))
+          &.selected
+            background-image: image_url(unquote("list-item-check-selected.png"))
 
 #product-category
-  +filter("list-item-check.png", "list-item-check-selected.png")
+  +filter(unquote("list-item-check.png"), unquote("list-item-check-selected.png"))
+  li.hover
+    +hover_button
+    border-left: none
+    border-bottom: none
+  li.hover.first
+    border-top: none
+  li.hover.last
+    border-bottom: none
   li
     ul
-      margin-left: -10px
+      overflow-y: auto
+      max-height: ($button_height + $border_width) * 4
       li
         border: none
-        padding-left: 20px
-        +border("top")
-        background-image= image_url("gradient-dark-bg.png")
+        padding-left: 10px
+        +border(top)
+        background-image: image_url(unquote("gradient-dark-bg.png"))
+
+.hidden
+  display: none
 
 a.comments
-  background= "transparent" image_url("comments.png") "no-repeat" "scroll" "left" "center"
+  background: transparent image_url(unquote("comments.png")) no-repeat scroll left center
   padding-left: 16px
 
 a.looks
-  background= "transparent" image_url("look.png") "no-repeat" "scroll" "left" "center"
+  background: transparent image_url(unquote("look.png")) no-repeat scroll left center
   padding-left: 16px
 
 span
   &.likes
-    background= "transparent" image_url("heart.png") "no-repeat" "scroll" "left" "center"
-    padding-left: 16px
-    color= !like_color
-
+    +apparel_likes
   &.price
-    background: transparent url(../images/check.png) no-repeat scroll left bottom
-    color= !price_color
-    padding-left: 15px
-
+    +apparel_price
 
 .product-photo
   border: 1px solid #dadada
 
-
 div#product-list
+  +border-bottom-radius(unquote("3px"))
+  width: $large_width - 1
+  height: 404px
+
+div#product-list, .product-list
   +clearfix
   +box
-  border: none
-  width: 697px
-  ul
-    +clearfix
-    +border("right")
+  position: relative
+  ul.list
+    width: 20000em
+    position: absolute
     li
-      display: block
+      +float(left)
+      width: $large_width + 1
+      ul
+        +clearfix
+        li
+          +product_list_item
+
+#hover-products
+
+#hover-products li
+  z-index: 100
+  display: none
+  position: absolute
+  +box-shadow
 
 .product-small
   width: 115px
-  background-color: white
-  +border("all")
-  border-bottom: none
-  border-right: none
+  +box
+  margin: -1px 0 0 -1px
   text-align: center
-  float: left
   h4
-    +border("top")
+    +border(top)
     height: 1.5em
     overflow: hidden
-
   .product-image
+    border: none
+    background-color: white
     position: relative
     height: 153px
-
+    line-height: 153px
+    img
+      vertical-align: middle
   span.likes
     display: none
     position: absolute
@@ -372,31 +510,46 @@ div#product-list
     min-width: 10px
     background-position: center top
 
+a.prev, a.next
+  cursor: pointer
+
+a.prev.disabled, a.next.disabled
+  cursor: default
 
 #pagination
   height: 30px
-  +border("all")
-  +border-bottom-radius("3px")
-
+  position: absolute
+  bottom: 0
+  background-color: $button_color
+  +border(top)
+  +border-bottom-radius(unquote("3px"))
   .prev, .next
     display: inline-block
     width: 115px
     height: 30px
-    
   .prev
     float: left
-    +replace-text("prev-page.png", "20px", "center")
-    +border("right")
-
+    +replace-text(unquote("prev-page.png"), unquote("20px"), center)
+    +border(right)
+  .prev.disabled
+    +replace-text(unquote("prev-page-disabled.png"), unquote("20px"), center)
   .next
     float: right
-    +replace-text("next-page.png", "89px", "center")
-    +border("left")
-
-  
+    +replace-text(unquote("next-page.png"), unquote("89px"), center)
+    +border(left)
+  .next.disabled
+    +replace-text(unquote("next-page-disabled.png"), unquote("89px"), center)
+  .next:hover, .prev:hover
+    background-color: $hover_color
+  .next.disabled:hover, .prev.disabled:hover
+    background-color: inherit
+  ol
+    a:hover
+      font-family: $font_family_bold
+      font-weight: bold
   div
     float: left
-    width= !large_width - 2 * (115 + 2)
+    width: $large_width - 2 * (115 + 2) + 1
     line-height: 30px
     text-align: center
     margin: 0 auto
@@ -416,28 +569,30 @@ div#product-list
         a
           display: block
         &.current
+          font-family: $font_family_bold
           font-weight: bold
-          background= "transparent" image_url("current-page.png") "no-repeat" "scroll" "center" "bottom"
-      
+          background: transparent image_url(unquote("current-page.png")) no-repeat scroll center bottom
 
 .product-left
   +float-left
   margin-top: 30px
-  width= !small_width
-  margin-right= !gutter_width
+  width: $small_width
+  margin-right: $gutter_width
 
 .activity
   margin-top: 30px
-  +border("top")
+  +border(top)
   p
-    line-height: 26px
-    +border("bottom", !easy_border_color)
+    line-height: 2em
+    +border(bottom, $easy_border_color)
+    &.last
+      border-color: $border_color
 
 .product-info
   +float-left
-  width= !small_width
+  width: $small_width
   h2
-    color= !easy_color
+    color: $easy_color
   h1
     text-transform: uppercase
     font-size: 1.25em
@@ -445,23 +600,33 @@ div#product-list
     text-transform: uppercase
     font-weight: normal
   p.description
-    width= !aside_width + !gutter_width
+    width: $aside_width + $gutter_width
     margin-bottom: 18px
 
 .product-image
   border: 1px solid #dadada
   position: relative
-  .magnifier
-    position: absolute
-    right: 10px
-    bottom: 10px
-    width: 19px
-    height: 20px
-    background: transparent url(../images/magnifier.png) no-repeat scroll left top
-    display: none
+  text-align: center
   img
     vertical-align: top
 
+body.product .product-image img
+  cursor: image_url(unquote("magnifier.cur")), image_url(unquote("magnifier.png")), -moz-zoom-in
+
+#gallery
+  display: none
+  z-index: 10000
+  +box-shadow
+  img
+    vertical-align: top
+  .close
+    position: absolute
+    background: transparent image_url(unquote("delete.png")) no-repeat scroll center center
+    cursor: pointer
+    height: 22px
+    width: 22px
+    top: -11px
+    left: -11px
 
 table.available-sizes th
   border: none
@@ -470,116 +635,191 @@ table.available-sizes th
   text-align: center
   text-transform: uppercase
 
-
 .product-options
   margin-left: 0
   margin-right: 0
   margin-bottom: 5px
   list-style: none
-
   ul
     margin-left: 0
     margin-right: 0
     margin-bottom: 5px
     list-style: none
-
   li ul li
     float: left
-
   .option-size, .option-relative-size, .option-shoe-size, .option-pants-length, .option-pants-width
     border-right: none
-
   .option-size li, .option-relative-size li, .option-shoe-size li, .option-pants-length li, .option-pants-width li
     padding: 0 10px
     border-right: 1px solid #dadada
-
   .option-color
-    background: transparent url(../images/option-color-bg.png) scroll repeat-x left top
+    background: transparent url(../images/sprite-colors.png) scroll repeat-x left top
     border-right: 1px solid #dadada
-
-    li
-      background: transparent scroll no-repeat left top
-      width: 39px
-      height: 20px
-      text-indent: -10000em
-
-      &.black
-        background-image: url(../images/option-color-black.png)
-
-      &.yellow
-        background-image: url(../images/option-color-yellow.png)
-
-      &.green
-        background-image: url(../images/option-color-green.png)
-
-      &.magenta
-        background-image: url(../images/option-color-magenta.png)
-
 
 .product-vendors
   border-bottom: 1px solid #e7e7e7
-
 
 a.buy-now
   padding: 58px 0 0
   text-align: center
   width: 73px
   height: 30px
-  background: #d0fae8 url(../images/check-large.png) scroll no-repeat center center
-  border: 1px solid #92c0c7
-  color: #408994
+  background: $highlight_bg_color image_url(unquote("check-large.png")) scroll no-repeat center center
+  +border(all, $highlight_border_color)
+  color: $highlight_color
   text-transform: uppercase
+  font-family: $font_family_bold
   font-weight: bold
+  display: block
 
+a.buy-now:hover
+  background-color: $hover_highlight_bg_color
 
 .product-vendors a.buy-now
   float: right
   margin-top: -50px
 
-
 .product-vendor
   border-bottom: none
   padding: 7px 9px
   height: 16px
-
   .price, .currency
     vertical-align: middle
-
   .price
     font-size: 2em
     background: none
     padding-left: 0
     padding-right: 5px
-
   .vendor
     float: right
-    background= "transparent" image_url("vendor-three-quarters.png") "scroll" "no-repeat" "left" "center"
-    padding: 0 10px 0 16px
+    padding-right: 10px
 
-#comments
-  li
-    h3
-      span
-        float: right
+.vendor
+  background: transparent image_url(unquote("vendor.png")) scroll no-repeat left center
+  padding-left: 15px
+
+.message
+  border: unquote("1px") solid $border_color
+  padding: 0.5em
+  +border-radius(5px)
+  +box-shadow(#f6f6f6 - #222222, 0, 2px, 2px)
+  .highlight
+    color: #408994
+    background-color: $highlight_bg_color
+
+#comments-and-links
+  img.avatar
+    +border(all)
+    float: left
+    margin-right: -1px
+  #comments
+    margin-bottom: 9px
+    li
+      +clearfix
+      padding: 9px 0
+      +border(bottom)
+      img.avatar
+        margin-right: 9px
+      h3
         font-weight: normal
+        span
+          color: $easier_color
+          float: right
+          font-size: 10px
+      p
+        color: $easy_color
+  form
+    +box
+    +clearfix
+    +border-right-radius(3px)
+    margin: 15px 0 0 -1px
+    padding: 3px 2px 3px 3px
+    textarea
+      height: 1em
+      width: 96%
+      display: block
+      +text_input
+    button
+      float: right
+      +text_input
+      +highlight
+      background-image: none
+      margin-top: 2px
+
+body.look
+  #comments-and-links
+    textarea
+      width: $middle_width - 62px
+
+body.product
+  #comments-and-links
+    textarea
+      width: $small_width - 62px
 
 #recentlyviewed
-  +row(!aside_width)
+  +row($aside_width)
 
-body.product .product-image, body.look .collage
+body.product
+  .sidebar
+    margin-top: 30px
+
+a h2
+  background: transparent image_url("arrow-bg.png") scroll no-repeat right center
+  &:hover
+    background-image: image_url("arrow-bg-hover.png")
+
+body.look #content
+  position: relative
+
+form .upload-field
+  position: relative
+  width: 240px
+  height: $button_height
+  input, .button
+    position: absolute
+    height: $button_height
+    line-height: $button_height
+    top: 0px
+    z-index: 1
+    width: 112px
+  input
+    +text_input
+    +box-shadow-inset(#f6f6f6 - #222222, 0, 0, 0)
+    right: 0px
+    padding: 0
+    padding-left: 1em
+    width: 100px
+  .button
+    +button
+    +border-radius(3px)
+    background-image: image_url(unquote("add.png"))
+    background-repeat: no-repeat
+    background-position: 10px 9px
+    padding: 0
+    padding-left: 5px
+    left: 0px
+    cursor: default
+  span input
+    width: 240px
+    left: 0px
+    z-index: 2
+    opacity: 0
+
+body.product .product-image, body.look #content
   form
     position: absolute
     top: 0px
     right: 0px
+    font-size: smaller
     button
       margin: 0
       border: none
-      background= "transparent" image_url("like-large.png") "no-repeat" "scroll" "center" "center"
-      color= !like_color
+      background: transparent image_url(unquote("like-medium.png")) no-repeat scroll center center
+      color: $like_color
       text-transform: uppercase
-      padding-top: 20px
-      height: 100px
-      width: 89px
+      padding-top: 18px
+      height: 48px
+      width: 56px
       cursor: pointer
       text-align: center
 
@@ -587,53 +827,80 @@ body.product .product-image, body.look .collage
   .product-photo
     float: left
     margin-right: 10px
-
   .product-summary
     float: left
 
+ul.hover-menu
+  li.hover
+    +hover_button
 
-.product-summary
-  a, span
-    display: block
-
-  a
-    text-transform: uppercase
-    background: transparent url(../images/arrow-bg.png) scroll no-repeat left bottom
-    padding-left: 20px
-
-
-#add-menu
+ul.menu
   +clearfix
   +horizontal-list(0)
-  margin-top: 18px
   li
     +button
     +border-radius(3px)
+    margin-right: 2px
     line-height: 2em
-    padding: 0 10px
-    margin-right: 8px
-    a
-      background: transparent url(../images/add.png) scroll no-repeat left center
-      padding-left: 20px
+  li.last
+    margin-right: 0px
+
+#add-menu
+  margin-top: 18px
+  li
+    a, button
+      display: block
+      background: transparent url(../images/add.png) scroll no-repeat 9px center
+      padding: 0 10px 0 29px
+      height: 24px
+      line-height: 24px
     &#add-to-look
       > a
-        background-image= image_url("look.png")
+        background-image: image_url(unquote("look.png"))
       ul
         display: none
-        margin: 0 -1em
-        border-bottom: none
-        border-right: none
+        position: absolute
+        margin-left: -1px
+        margin-top: 0px
+        +border
         li
-          padding: 0 1em
-          border-bottom: 1px solid #dadada
+          display: block
+          clear: left
+          width: 100%
+          padding: 0
+          border: none
+          +border(bottom)
+          &.last
+            border-bottom: none
+    &.share
+      ul
+        display: none
+        position: absolute
+        margin-left: -1px
+        margin-top: 0px
+        width: 60px
+        +border
+        +button
+        +border-radius(3px)
+        li
+          border: none
+          display: inline
+          margin: 3px 0 3px 3px
           a
-            display: block
-    &.share > a
-      background-image= image_url("share.png")
-    &#add-to-wardrobe > a
+            +sprite-background(unquote("social_bookmarks.png"), 16, 16)
+            padding: 0
+            text-indent: -9000px
+            width: 16px
+            height: 16px
+            &.facebook
+              +sprite-column(10, 16)
+            &.twitter
+              +sprite-column(6, 16)
+      > a
+        background-image: image_url(unquote("share.png"))
+    &#add-to-wardrobe button
       margin-right: 0
-      background-image= image_url("embed.png")
-
+      background-image: image_url(unquote("embed.png"))
 
 a.block_link
   display: block
@@ -642,108 +909,134 @@ a.block_link
   text-transform: uppercase
 
 
+#cancel-search
+  background: transparent image_url(unquote("close-large.png")) scroll no-repeat center center
+  display: block
+  position: absolute
+  right: 38px
+  top: 18px
+  height: 12px
+  width: 12px
+  text-indent: -100em
+  &:hover
+    background-image: image_url(unquote("close-large-hover.png"))
 #search
-  background: transparent url(../images/search.png) scroll no-repeat left center
+  background: transparent image_url(unquote("search.png")) scroll no-repeat right top
   top: 31px
-  right: 0px
+  right: -16px
   position: absolute
   width: 163px
   height: 24px
-  padding: 17px 50px 17px 25px
+  padding: 14px 50px 17px 41px
   overflow: visible
   z-index: 1000
-
   &.expanded
-    background: transparent url(../images/searchresult-bg.png) scroll no-repeat center top
+    background: transparent image_url(unquote("searchresult-bg.png")) scroll no-repeat right top
     height: 547px
     width: 895px
-
-
-#searchbox
-  position: absolute
-  width: 163px
-  right: 50px
-  margin: 0
-  border: none
-  vertical-align: middle
-  font-size: 1.2em
-  background: transparent
-
+  & input
+    position: absolute
+    width: 163px
+    right: 50px
+    margin: 0
+    border: none
+    vertical-align: middle
+    font-size: 1.2em
+    background: transparent
 
 #search-result
-  margin-top: 140px
   display: none
-
+  margin: 60px -25px auto -15px
+  h3, h2, a
+    font-weight: normal
   h2
-    font-size: 1.2em
-    font-weight: bold
-
-
-.search-result-container
-  margin-left: 5px
-
-  h3
-    font-size: 1em
-    font-weight: bold
-
-  a
-    display: block
-    margin-bottom: 4px
-
-  .product-info
-    border: none
-    text-align: left
-
-  .product-small
-    width: 205px
-
-  .product-image
+    background: transparent image_url(unquote("arrow-bg.png")) scroll no-repeat right center
+    cursor: pointer
+    &:hover
+      background-image: image_url(unquote("arrow-bg-hover.png"))
+  .result-container
+    width: 200px
     float: left
-    margin-right: 5px
-
-
-#content form
-  margin-left: .5em
-  padding-top: -.5em
-
-  label
-    display: block
-    margin-top: .5em
-
-  button
-    margin-top: 1em
-
-  .errorlist
-    color: #990000
-
+    margin-right: 30px
+    .more-results
+      +button(unquote("gradient-bg.png"), unquote("30px"))
+      height: 30px
+      display: block
+      width: 100%
+      cursor: pointer
+      &.hover
+        +hover_button
+      span
+        +go_to_link
+        text-transform: lowercase
+        font-variant: small-caps
+    .product-list
+      border-left: none
+      width: 464px
+    ul
+      +clearfix
+      li
+        float: left
+      &#search-result-manufacturers
+        margin-top: -8px
+        li
+          height: auto
+          float: none
+          overflow: hidden
+          +border(bottom, unquote("#efefef"))
+          a
+            padding: 8px 2px
+            white-space: nowrap
+            color: #377780
+            display: block
+          &.last
+            border-color: $border_color
+          &:hover
+            background-color: #f5f5f5
+            a
+              color: #55b8c8
+      &#search-result-looks
+        li
+          width: 95px
+          height: 92px
+          line-height: 92px
+          margin-right: 10px
+          &.odd
+            margin-right: 0px
+          a
+            vertical-align: middle
+      &#search-result-products
+        li
+          +product_list_item
+          .product-small
+            margin: -1px -1px -1px 0
+    &.wide
+      width: 466px
+    &.last
+      margin-right: 0px
 
 .facebook-profile-image
   float: left
-  margin-right: .5em
-
+  margin-right: 0.5em
 
 #profile-nav li
   display: block
   float: left
   height: 30px
-  padding-left: .5em
-  padding-right: .5em
+  padding-left: 0.5em
+  padding-right: 0.5em
   border: 1px solid #d9d9d9
   border-left-color: white
   text-transform: uppercase
-  background: transparent url(../images/profile-nav-bg.png) scroll repeat-x top left
-
+  background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x top left
   &.selected
-    background-image: url(../images/profile-nav-bg-selected.png)
+    background-image: image_url(unquote("profile-nav-bg-selected.png"))
     border-right-color: #ababab
     border-left-color: #ababab
-
   a
     line-height: 30px
-
   &.profile-image
     padding: 0
-
 
 #profile-nav-dash
   position: relative

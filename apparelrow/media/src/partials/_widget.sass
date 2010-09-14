@@ -1,0 +1,78 @@
+/* Contains CSS rules that are used both in external widgets and on the apparelrow site */
+
+$look_height: 524px !default
+$tooltip_width: 242px
+
+=apparel_tooltip
+  +box
+  background-color: $box_color - #0b0b0b
+  +border-radius(2px)
+  +border(all)
+  +box-shadow($default_box_shadow_color, $default_box_shadow_h_offset, $default_box_shadow_v_offset, unquote("5px"))
+  display: none
+  z-index: 1100
+  padding: 4px !important
+  position: relative
+  white-space: nowrap
+  .product-image, .ar-product-image
+    border: 1px solid #dadada
+    text-align: center
+    background-color: white
+    float: left
+    width: 90px
+    line-height: 115px
+    height: 115px
+    margin-right: 10px
+    img
+      vertical-align: middle
+  .product-meta
+    float: left
+    h2
+      margin-top: 1em
+      margin-bottom: 0px
+      border-bottom: none
+      white-space: normal
+      overflow: hidden
+    h3
+      color: $easy_color
+      font-size: smaller
+      font-weight: normal
+    div.vendors
+      margin-top: 0.5em
+      a.vendor
+        display: inline-block
+        color: $easy_color
+        font-size: smaller
+      a.buy-now
+        background-image: none
+        padding: 5px
+        display: inline
+        font-size: smaller
+        font-weight: normal
+        margin-left: 5px
+    .arrow, .ar-arrow
+      position: absolute
+      background: transparent image_url(unquote("tooltip-arrow.png")) no-repeat scroll center center
+      width: 14px
+      height: 8px
+      bottom: -8px
+      left: $tooltip_width / 2 - 5
+
+=apparel_hotspot
+  position: relative
+  margin: 0 auto
+  .hotspot, .ar-hotspot
+    position: absolute
+    padding: 40px
+    background: transparent image_url(unquote("look-hotspot.png")) no-repeat scroll center center
+
+=apparel_likes
+  background: transparent image_url(unquote("heart.png")) no-repeat scroll left center
+  padding-left: 16px
+  color: $like_color
+  
+=apparel_price
+  background: transparent url(../images/check.png) no-repeat scroll 1px center
+  color: $font_color
+  padding-left: 16px
+

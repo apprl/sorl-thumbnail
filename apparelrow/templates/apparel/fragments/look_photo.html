@@ -1,0 +1,12 @@
+{% load thumbnail %}
+{% load i18n %}
+<div id="photo-background" class="look-photo"
+    {% if object.image %}
+       {% thumbnail object.image 694x512 as image %}
+       style="background-image: url('{{ image }}'); width: {{ image.width }}px; height: {{ image.height }}px"
+    {% endif %}
+>
+    {% for component in object.photo_components.all %}
+        {% include "apparel/fragments/look_photo_product.html" %}
+    {% endfor %}
+</div>

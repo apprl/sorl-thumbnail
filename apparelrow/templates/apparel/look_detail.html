@@ -3,70 +3,132 @@
 {% load humanize %}
 {% load voting_tags %}
 {% load trackback_tags %}
+{% load tagging_tags %}
+{% load comments %}
+
+{% block extra-title %}{{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
 
 {% block 'extra-styles' %}
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
-    <style type="text/css">
-        .collage {
-            position: relative;
-            height: 450px;
-            overflow: hidden;
-        }
-        .tooltip {
-            display: none;
-            z-index: 1100;
-            padding: 1em;
-        }
-    </style>
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery('.product').tooltip({
-            effect: 'slide',
-            relative: true,
-            delay: 500,
-            offset: [30, 0],
-        });
+        makeProductTooltip('.collage .product, .photo .product');        
+        jQuery('#embed-code')
+            .focus(function(e) { this.select(); } )
+            .mouseup(function(e) { e.preventDefault() } )
+        ;
+        jQuery('.hotspot').hide();
+        jQuery('#photo-background').hover(
+              function(e) { jQuery('.hotspot', this).fadeIn() }
+            , function(e) { 
+                if(!e.originalTarget || e.originalTarget.id != this.id)
+                    return true;
+                jQuery('.hotspot', this).fadeOut();
+            }
+        );
+        jQuery('#content .product, #content .hotspot')
+            .click(function(e) {
+                location.href = jQuery('#' + this.id + ' + .tooltip').attr('href');
+                return false;
+            } )
+            .addClass('link')
+        ;
     });
+
 </script>
 {% endblock 'extra-scripts' %}
 
 {% block body-classes %}look two-columns{% endblock %}
 
 {% block body %}
+<div id="look-header">
+    <img src="/scale/52{{ object.user.get_profile.avatar }}" class="profile-image" />
+    <div>
+        <h1>
+            {{ object.title }}
+            {% ifequal object.user user %}
+                <a href="{% url apparel.views.look_edit object.slug %}">{% trans "Edit" %}</a>
+            {% endifequal %}
+        </h1>
+        <span>
+            {% blocktrans with object.user.get_profile.display_name as name %}
+                {{name}}'s looks
+            {% endblocktrans %}
+        </span>
+    </div>
+</div>
 <div class="sidebar">
-    <h2>Sidebar</h2>
-    <p>
-    {% blocktrans count object.look_products.all|length as number %}
-    {{ number }} article
-    {% plural %}
-    {{ number }} articles
-    {% endblocktrans %}
-    {{ object.total_price }} SEK
-    </p>
-    {% if object.description %}<p>{{ object.description }}</p>{% endif %}
-    <p>{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</p>
-    <p>{% include 'apparel/fragments/likes.html' %}</p>
+    {% include 'apparel/fragments/total_price.html' %}
+    {% if object.description %}
+        <p class="description">{{ object.description }}</p>
+    {% endif %}
+    <div class="share-created">
+    <ul id="add-menu" class="menu hover-menu">
+      {% include 'apparel/fragments/share.html' %}
+    </ul>
+    <span class="created">{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</span>
+    </div>
+    {% get_comment_count for object as comment_count %}
+    <div class="activity">
+      {% include 'apparel/fragments/comment_count.html' %}
+      <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
+    </div>
+    <div class="spread">
+        <label>{% trans "Embed" %}<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code"></label>
+    </div>
+    {% if looks_by_user %}
+    <a href="{{ object.user.get_profile.get_looks_url }}"><h2>{% trans "More looks by" %} {{ object.user.get_profile.display_name }}</h2></a>
+    {% with looks_by_user as looks %}
+    {% include 'apparel/fragments/looks.html' %}
+    {% endwith %}
+    {% endif %}
+    {% if similar_looks %}
+    <h2>{% trans "Similar looks" %}</h2>
+    {% with similar_looks as looks %}
+    {% include 'apparel/fragments/looks.html' %}
+    {% endwith %}
+    {% endif %}
 </div>
 <div id="content">
-    <h2>{{ object.title }}</h2>
-    <div class="collage">
+    {# FIXME: Add a "display_as "whatever" or "dispay_as_whatever" property to thge look object rather than checking the flag #}
+    {% ifequal object.display_with_component 'C' %}
+        <div class="collage">
         {% include 'apparel/fragments/look_collage.html' %}
-        <form method="post" action="{% url like-look object.slug "up" %}">
-            <button type="submit" name="like" id="like">{% trans "Like" %}</button>
-        </form>
-    </div>
-    {% ifequal object.user user %}
-    <a href="{% url apparel.views.look_edit object.id %}">{% trans "Edit look" %}</a>
+        </div>
+    {% else %}
+        <!-- FIXME: Move tooltip offset to relative of the position of the background image. Consolidate with edit_look page -->
+        <div class="photo">
+        {% include 'apparel/fragments/look_photo.html' %}
+        </div>
     {% endifequal %}
-    <h2>{% trans "Articles in this look" %}</h2>
-    <div id="lookproducts">
-        {% with object.products.all as products %}
-        {% include 'apparel/fragments/product_row.html' %}
-        {% endwith %}
-    </div>
+    <form method="post" action="{% url like-look object.slug "up" %}">
+        <button type="submit" name="like" id="like">{% trans "Like" %}</button>
+    </form>
 </div>
+{% get_trackbacks_for object as trackbacks %}
+{% include 'apparel/fragments/comments.html' %}
+{% tags_for_object object as tags %}
+{% if tags %}
+<div id="tags">
+    <h2>{% trans "Tags" %}</h2>
+    <ul>
+        {% for tag in tags %}
+        {% tagged_objects tag in apparel.look as looks_with_tag %}
+        <li>{{ tag.name }}<span>{{ looks_with_tag|length }}</span></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% comment %}
+<h2>{% trans "Articles in this look" %}</h2>
+<div id="lookproducts">
+    {% with object.products.all as products %}
+    {% include 'apparel/fragments/product_row.html' %}
+    {% endwith %}
+</div>
+{% endcomment %}
 {% endblock body %}

@@ -1,0 +1,7 @@
+<div class="look">
+    {% ifequal object.display_with_component 'P' %}
+        {% include 'apparel/fragments/look_photo_small.html' %}
+    {% else %}
+        {% include 'apparel/fragments/look_collage_small.html' %}
+    {% endifequal %}
+</div>

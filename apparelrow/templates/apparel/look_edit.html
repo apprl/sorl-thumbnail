@@ -1,32 +1,92 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load thumbnail %}
+
+{% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
+
 {% block 'extra-scripts' %}
 <script type="text/javascript">
+
 var look = {
-    initialize: function(ele, type) {
-        ele.resizable({
-            aspectRatio: 'true',
-            maxHeight: ele.parent().height(),
-            maxWidth: ele.parent().width(),
-            minHeight: 30,
-            minWidth: 30,
-            //grid: [10, 10],
-            stop: function(event, ui) {
-                look.saveProduct(ui, type);
-            },
-        });
-        ele.parent('.ui-wrapper').draggable({
-            stack: { group: '.ui-wrapper', min: 50 },
-            containment: 'parent',
-            //snap: true,
-            //grid: [10, 10],
-            stop: function(event, ui) {
-                look.saveProduct(ui, type);
-            },
-        });
+    initialize: function(ele) {
+        var pane    = ele.parent();
+        var wrapper = ele;
+        
+        switch(pane.attr('id')) {
+            case 'collage':
+                ele.resizable({
+                    aspectRatio: true,
+                    autoHide: true,
+                    maxHeight: ele.parent().height(),
+                    maxWidth: ele.parent().width(),
+                    minHeight: 30,
+                    minWidth: 30,
+                    zIndex: 100000,
+                    //grid: [10, 10],
+                    stop: function(event, ui) {
+                        look.saveComponent({
+                            id: ui.element.find('.product').attr('id').split('-').pop(),
+                            position: ui.position,
+                            size: ui.size
+                        }, pane);
+                    }
+                });
+                wrapper = ele.parent('.ui-wrapper');
+                wrapper.rotatable({ 
+                    handles: 'ne',
+                    autoHide: true,
+                    stop: function(event, ui) {
+                        look.saveComponent({
+                            id: ui.element.find('.product').attr('id').split('-').pop(),
+                            rotation: ui.rotation
+                        }, pane);
+                    }
+                });
+                
+                break;
+                
+            case 'photo-background':
+                makeProductTooltip(ele);
+                break;
+        }
+        
+        wrapper
+            .append(jQuery('<div/>').addClass('delete'))
+            .draggable({
+                    stack: '.ui-wrapper',
+                    containment: 'parent',
+                    //snap: true,
+                    //grid: [10, 10],
+                    stop: function(event, ui) {
+                        //var id = ui.helper.
+                        var p = (ui.helper.hasClass('product')) ? ui.helper : ui.helper.find('.product');
+                        //console.log('drag', ui);
+                        look.saveComponent({
+                            id: p.attr('id').split('-').pop(),
+                            position: ui.position
+                        }, pane);
+                        //look.saveComponent(ui, pane);
+                    },
+                    start: function(event, ui) {
+                        var tp = ui.helper.data('tooltip');
+                        if(tp) tp.hide();
+                    }
+            })            
+            .hover(
+                function() {
+                    look.disable(jQuery('.ui-draggable'));
+                    look.enable(jQuery(this));
+                    return true;
+                },
+                function() {
+                    look.disable(jQuery(this));
+                    return true;
+                }
+            );
+
+        
         jQuery.fn.reverse = jQuery.fn.reverse || [].reverse;
-        ele.parent('.ui-wrapper').reverse().each(function() {
+        wrapper.reverse().each(function() {
             var el = jQuery(this);
             position = el.position();
             el.css({
@@ -35,78 +95,407 @@ var look = {
                 marginRight: 0,
                 top: position.top,
                 left: position.left,
+                overflow:'visible'
             });
         });
+        
+        if(pane.attr('id') == 'collage') {
+            ele.siblings('.delete').bind('click', function(e) {
+                look.deleteComponent(
+                    jQuery(e.currentTarget).closest('.ui-wrapper').find('.product'),
+                    pane
+                );
+            });
+        } else {
+            ele.children('.delete').bind('click', function(e) {
+                var p = jQuery(e.currentTarget).parent('.product')
+                    p.tooltip().hide();
+                look.deleteComponent(p, pane);
+                return false;
+            });
+        }
     },
-    saveProduct: function(ui, type) {
-        product = ui.helper.find('.product');
+    saveComponent: function(args, pane) {
+        var context = getContextFromPane(pane);
+                
         data = {
             look: {{ object.id }},
-            product: product.attr('id').split('-')[1],
-            type: type,
-            top: parseInt(ui.position.top),
-            left: parseInt(ui.position.left),
-            z_index: product.parent('.ui-wrapper').css('z-index'),
+            product: args.id,    // product.attr('id').split('-').pop(),
+            component_of: context.component_of,
+            z_index: 50 // FIXME: We need to create a stack
         }
-        if('size' in ui) {
-            data['width'] = parseInt(ui.size.width);
-            data['height'] = parseInt(ui.size.height);
+        
+        if('position' in args) {
+            data['top']  = parseInt(args.position.top);
+            data['left'] = parseInt(args.position.left);
         }
-        else {
-            data['width'] = product.width();
-            data['height'] = product.height();
+        
+        if('rotation' in args) {
+            data['rotation'] = parseInt(args.rotation);
         }
-        jQuery.post('{% url apparel.views.save_look_product %}', data,
-        function(response) {
-            //alert('saved! ' + response);
+        
+        if('size' in args) {
+            data['width'] = parseInt(args.size.width);
+            data['height'] = parseInt(args.size.height);
+        }
+        
+        jQuery.post('{% url apparel.views.save_look_component %}', data,
+            function(response, status, request) {
+                var component = response.data.look_component;
+                
+                if(!response.success) {
+                    console.error('Bad AJAX request', response, status, request);
+                    return;
+                }
+                
+                if(response.data.added) {
+                    var new_product = jQuery(context.template).render({component: component}).appendTo(pane);
+                    look.initialize(new_product.first());
+                }
+            }
+        );
+    },
+    deleteComponent: function(product, pane) {
+        var context = getContextFromPane(pane);
+        var id = product.attr('id').split('-').pop();
+        jQuery.post(
+            '{% url apparel.views.delete_look_component %}', {
+                look: {{ object.id }},
+                product: id,
+                component_of: context.component_of
+            },
+            function(response, status, request) {
+                if(response.success) {
+                    product.remove();
+                    
+                    if(!response.data.in_look[id])
+                        jQuery('#selection-' + id).remove();
+                    
+                    if(pane.attr('id') == 'collage' && jQuery('.product', pane).length == 0) {
+                        jQuery('.look-empty', pane).show();
+                        
+                        if(jQuery('#photo-background').is(':hidden'))
+                            jQuery('.look-empty a[href=#photo-tab]', pane).parent().show();
+                    }
+                }
+            }
+        );
+    },
+    deleteAllComponents: function(pane) {
+        var context = getContextFromPane(pane);
+        var ids = jQuery.map(jQuery('.product', pane), function(e, i) {
+            return e.id.split('-').pop()
         });
+        
+        jQuery.post(
+            '{% url apparel.views.delete_look_component %}', {
+                look: {{ object.id }},
+                product: ids,
+                component_of: context.component_of,
+                delete_photo: (context.component_of == 'P') ? true : false
+            },
+            function(response, status, request) {
+                if(response.success) {
+                    for(var id in response.data.in_look) {
+                        if(!response.data.in_look[id])
+                            jQuery('#selection-' + id).remove();
+                        
+                        jQuery('#' + context.id_prefix + '-' + id).remove();
+                    }
+                    
+                    switch(pane.attr('id')) {
+                        case 'photo-background':
+                            jQuery('#photo-background').hide();
+                            jQuery('.look-empty', pane.parent()).show();
+                            break;
+                        case 'collage':
+                            jQuery('.look-empty', pane).show();
+                            break;
+                    }
+                }
+            }
+        );
     },
     disable: function(ele) {
-        ele.resizable('disable');
-        ele.parent('.ui-wrapper').draggable('disable');
+        ele.children('.delete').hide();
+        ele.draggable('disable');
     },
     enable: function(ele) {
-        ele.resizable('enable');
-        ele.parent('.ui-wrapper').draggable('enable');
-    },
+        ele.children('.delete').show();
+        ele.draggable('enable');
+    }
 };
-    jQuery(document).ready(function() {
-        look.initialize(jQuery('#collage .product'), 'C'); // FIXME: We should get look product type from the model
-        look.initialize(jQuery('#photo .product'), 'P');
-        look.disable(jQuery('.product'));
-        jQuery('.product').hover(
-            function() {
-                look.disable(jQuery('.product'));
-                look.enable(jQuery(this));
-                return false;
-            },
-            function() {
-                look.disable(jQuery(this));
-                return false;
-            });
-        jQuery('#collage').click(function() {
-            look.disable(jQuery('.product'));
-        });
-        jQuery('ul.tabs').tabs('div.panes > div');
+
+function getContextFromPane(pane) {
+    var context = {
+        'photo-background': { 'template': '#look_photo_product_template', 'component_of': 'P', 'id_prefix': 'hotspot' },
+        'collage': { 'template': '#look_collage_product_template', 'component_of': 'C', 'id_prefix': 'product' },
+    }[pane.attr('id')];
+    
+    if(!context) {
+        console.error('Unknown pane', pane);
+        return;
+    }
+    
+    return context;
+}
+
+jQuery(document).ready(function() {
+    look.initialize(jQuery('#photo-background > .product'));
+    look.initialize(jQuery('#collage > .product'));
+    look.disable(jQuery('.ui-draggable'));
+
+    jQuery('#id_description, #id_tags').autogrow();
+    jQuery('ul.tabs').tabs('div.panes > div', {'history': true});
+    jQuery('#wardrobe-contents li').draggable({
+        'zIndex': 100,
+        'disabled': false,
+        'addClasses': false,
+        'helper': 'clone',
+        'cursor': 'move',
+        'revert': 'invalid',
+        'appendTo': '#edit-look .panes'
     });
+    jQuery('#selection,#photo-background,#collage').droppable({
+        'accept': '#wardrobe-contents li',
+        'drop': function(event, ui) {
+            var product_id = ui.draggable.attr('id').split('-').pop();
+
+            jQuery.post('{% url apparel.views.add_to_look %}', {
+                'look': '{{ object.id }}',
+                'product': product_id
+            }, function(response, status, request) {
+                if(response.success == false) {
+                    alert('something went wrong');
+                    return;
+                }
+                
+                if(response.data.added) {
+                    var id      = ui.draggable.attr('id').split('-').pop();
+                    var product = ui.draggable.clone();
+                        product.attr('id', 'selection-' + id);
+                    
+                    jQuery('#selection .row ul').append(product);
+                }
+                
+                var data = { id: product_id }
+                switch(event.target.id) {
+                    case 'selection':
+                        return;     // No component to save
+                    
+                    case 'collage':
+                        var img = jQuery(ui.draggable.find('img')[0]);
+                        data['position'] = ui.position;
+                        data['size'] = {
+                            height: img.height(),
+                            width: img.width()                        
+                        }
+                        jQuery('.look-empty', event.target).hide();
+                        
+                        break;
+                    case 'photo-background':
+                        oy = event.layerY || 0;
+                        ox = event.layerX || 0;
+                        data['position'] = {
+                            top: ui.position.top + oy - 40,
+                            left: ui.position.left + ox - event.target.offsetLeft - 40
+                        }
+                        break;
+                }
+                
+                look.saveComponent(data, $(event.target));
+            } );
+        }
+    });
+    jQuery('#photo-background').live('click', function(e) {
+        var $target = jQuery(e.target);
+        // Ignore clicks in tooltips
+        if($target.parents('.tooltip').length > 0) {
+            return false;
+        } else if($target.is('.reset')) {
+            chooser.dialog.hide();
+            return false;
+        } else if($target.parents('#product-chooser').length > 0) {
+            return true;
+        }
+        var offset = $target.offset();
+        var left   = e.pageX - offset.left;
+        var top    = e.pageY - offset.top;
+        
+        if(chooser.dialog.is(':visible')) {
+            chooser.dialog.hide();
+        }
+        chooser.show({
+            anchor: jQuery(this),
+            callback: function(li) {
+                createHotspot(li.data('product'), top, left);
+            },
+            left: left,
+            top: top
+        });
+    });
+
+    jQuery('<img/>')
+        .attr('src', '/media/images/delete.png')
+        .attr('id',  'delete-photo')
+        .click(function(e) {
+            look.deleteAllComponents(jQuery('#photo-background'));
+            return false;
+        })
+        .css({
+            'display': (jQuery('#photo-background').css('background-image') == 'none') ? 'none' : 'block'
+        })
+        .appendTo('#photo-background')
+    ;
+    
+    jQuery('#photo-background a').live('click', function(e) {
+        e.preventDefault();
+    });
+    
+    jQuery('#id_title')
+        .blur(function(e) {
+            if(this.value == '')
+                this.value = this.defaultValue;
+   
+            return true;
+        });
+    
+});
+
+function createHotspot(product, top, left) {
+    look.saveComponent({
+        id: product.id,
+        position: {
+            left: left - 40,
+            top: top - 40
+        }
+    }, jQuery('#photo-background'));
+    
+    return;
+}
+
+var chooser = {
+    dialog: null,
+    show: function(args) {
+        // Renders and displays the dialog 
+        // args:
+        //  callback: routine to run when product has been chosen
+        //  anchor:   (jQuery) element to attach the dialog to
+        //  left
+        //  top
+        
+        this.render(args.anchor);
+        
+        var dialog = this.dialog;
+        args.anchor.append(dialog);
+        dialog.find('li').unbind('click').bind('click', function(e) {
+            args.callback(jQuery(this));
+            dialog.hide();
+            return false;
+        } );
+        this.dialog.css({
+            left: args.left,
+            top: args.top
+        });
+        dialog.show();            
+    },
+    render: function(anchor) {
+        var dialog = this.dialog;
+        dialog.find('li').hide();
+        
+        // Find products already plotted in anchor
+        var existing = jQuery.map(anchor.find('.product'), function(element) {
+            return jQuery(element).attr('id').split('-').pop()
+        });
+        
+        // Find all products in wordrobe and look
+        var ids = jQuery.map(
+                jQuery('#wardrobe-contents li, #selection li'),
+                function(li) {
+                    return li.id.split('-').pop();
+                }
+        );
+        // Weed out duplicates and existing ids
+        ids = jQuery.grep(ids, 
+            function(id, idx) {
+                return !(existing.indexOf(id) > -1 || ids.indexOf(id) < idx);
+            }
+        );   
+                    
+        // Find out what ids needs to be fetched
+        var to_fetch = [];
+        jQuery.each(ids, function(idx, id) {
+            var item = dialog.find('#option-' + id);
+            if(item.length > 0) {
+                // Display item
+                item.show();
+            } else {
+                // Insert after previous item to maintain order
+                var li = jQuery('<li/>')
+                    .attr('id', 'option-' + id)
+                ;
+                
+                if(idx > 0) {
+                    jQuery('#option-' + ids[idx - 1]).after(li);
+                } else {
+                    dialog.find('ul').append(li);
+                }
+                to_fetch.push(id);
+            }
+        });
+        
+        if(to_fetch.length > 0) {
+            jQuery.getJSON('{% url apparel.views.search "products"  %}', {
+                '1:p.id:in': to_fetch.join(','),
+                'page': '-1'
+            }, function(result, status) {
+                jQuery.each(result.object_list, function(idx, product) {
+                    jQuery('#option-' + product.id)
+                        .append(
+                            jQuery('#product_thumb_template').render({ product: product })
+                        )
+                        .data('product', product);
+                });
+            });
+        }
+    }
+};
+
+jQuery(document).ready(function() {
+    chooser.dialog = jQuery('#product-chooser');
+    
+    jQuery('#photo>.look-empty button[type=submit]').click(function(e) {
+        this.form.action += '#photo-tab'
+        return true;
+    });
+
+    jQuery('#photo input[type=file]').change(function(e) {
+        console.log(jQuery(this).closest('.look-empty'));
+        jQuery('button[type=submit]', jQuery(this).closest('.look-empty')).show();
+    });
+
+    jQuery('.look-empty button, .look-empty a').hover(
+        function(e) { jQuery(this).addClass('hover') },
+        function(e) { jQuery(this).removeClass('hover') }
+    );
+    
+    if('{{ object.display_with_component }}' == 'P' && location.hash == '')
+        jQuery('a[href=photo-tab]').click();
+});
+
+
+
 </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}two-columns{% endblock %}
+{% block body-classes %}edit-look two-columns{% endblock %}
 
 {% block body %}
-<form enctype="multipart/form-data" action="" method="POST">
+<form enctype="multipart/form-data" action="{% url apparel.views.look_edit object.slug %}" method="POST" id="look-form">
+{% csrf_token %}
 <div id="look-title">
     {{ form.title }}<button type="submit">{% trans "Save" %}</button>
 </div>
-<div>{{ form.title.errors }}</div>
-<div>{{ form.slug.errors }}</div>
-<div>{{ form.description.errors }}</div>
-<div>{{ form.user.errors }}</div>
-<div>{{ form.image.errors }}</div>
-<div>{{ form.created.errors }}</div>
-<div>{{ form.modified.errors }}</div>
-<div>{{ form.tags.errors }}</div>
 <div class="sidebar">
     <label for="id_description">{% trans "Description (optional):" %}</label>
     {{ form.description }}
@@ -116,18 +505,60 @@ var look = {
 <div id="content">
     <div id="edit-look">
         <ul class="tabs">
-            <li><a class="collage" href="#collage">{% trans "Collage" %}</a></li>
-            <li><a class="photo" href="#photo">{% trans "Photo" %}</a></li>
-            <li><a class="selection" href="#selection">{% trans "Selection" %}</a></li>
+            <li class="first"><a class="collage" href="collage-tab"><span>{% trans "Collage" %}</span></a></li>
+            <li><a class="photo" href="photo-tab"><span>{% trans "Photo" %}</span></a></li>
+            <li class="last"><a class="selection" href="selection-tab"><span>{% trans "Selection" %}</span></a></li>
         </ul>
         <div class="panes">
             <div id="collage">
-            {% include 'apparel/fragments/look_collage.html' %}
+                {% include 'apparel/fragments/look_collage.html' %}
+                <div class="look-empty"{% if object.collage_components.all.count > 0 %} style="display: none"{% endif %}>
+                    <div class="message">{% trans "Drag products here to start building a collage" %}</div>
+                    <div{% if object.image %} style="display: none"{% endif %}>
+                        <p>- {% trans "or" %} -</p>
+                        <a href="#photo-tab">{% trans "Upload a photo to create a tagged image" %}</a>    
+                    </div>
+                </div>
             </div>
-            {% include 'apparel/fragments/look_picture.html' %}
-            <div id="selection"></div>
+            <div id="photo">
+                {% include 'apparel/fragments/look_photo.html' %}
+                
+                <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
+                    <p>
+                        {% trans "Upload a photo to create a tagged image" %}
+                    </p>
+                    <div class="message">
+                        <div class="upload-field">
+                            <input type="text" name="_not_used" />
+                            <span class="button">{% trans "Choose file" %}</span>
+                            <span>{{ form.image }}</span>
+                        </div>
+                        <button type="submit">{% trans "Upload" %}</button>
+                    </div>
+                </div>
+            </div>
+            <div id="selection">
+            {% with "selection" as id_prefix %}
+            {% with object.products.all as products %}
+            {% include 'apparel/fragments/product_row.html' %}
+            {% endwith %}
+            {% endwith %}
+            </div>
         </div>
     </div>
 </div>
 </form>
+<div id="wardrobe">
+    <div id="wardrobe-title">
+        <span>{% trans "Your wardrobe" %}</span>
+    </div>
+    <div id="wardrobe-contents">
+        {% with "wardrobe" as id_prefix %}
+        {% with wardrobe as products %}
+        {% include 'apparel/fragments/product_row.html' %}
+        {% endwith %}
+        {% endwith %}
+    </div>
+</div>
+<div id="product-chooser"><h3>{% trans "Products" %}<a class="reset" href="#">{% trans "Close" %}</a></h3><ul></ul></div>
 {% endblock body %}

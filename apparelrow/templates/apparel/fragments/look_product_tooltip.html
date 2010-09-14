@@ -1,0 +1,20 @@
+{% load i18n %}
+<div class="tooltip">
+    <a href="{{ component.product.get_absolute_url }}" class="product-image">
+        <img src="/scale/90x115{{ component.product.product_image.url }}" />
+    </a>
+    <div class="product-meta">
+        <a href="{{ component.product.get_absolute_url }}">
+            <h2>{{ component.product.product_name }}</h2>
+            <h3>{{ component.product.manufacturer.name }}</h3>
+            <div>
+                {% with component.product as object %}{% include 'apparel/fragments/likes.html' %}{% endwith %}
+            </div>
+            <div>
+                <span class="price">{{ component.product.default_vendor.price }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
+            </div>
+        </a>
+        <div class="vendors"><a class="vendor" href="{{ component.product.default_vendor.buy_url }}">{{ component.product.default_vendor.vendor }}</a><a href="{{ component.product.default_vendor.buy_url }}" target="_new" class="buy-now">{% trans "Buy" %}</a></div>
+    </div>
+    <span class="arrow"></span>
+</div>

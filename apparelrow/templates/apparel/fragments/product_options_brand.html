@@ -1,13 +1,13 @@
 {% extends "apparel/fragments/product_options.html" %}
 {% load i18n %}
-
+{% load apparel_extras %}
 {% block option_header %}{% trans "Select one or many brands" %}{% endblock %}
 
 {% block option_content %}
 <input type="text" name="brand" />
-<ul id="product-manufacturers">
+<ul>
     {% for manufacturer in manufacturers %}
-    <li><a id="manufacturer-{{ manufacturer.id }}" href="{% url apparel.views.browse %}?1:m.id:in={{ manufacturer.id }}">{{ manufacturer.name }}</a></li>
+    <li><a id="manufacturer-{{ manufacturer.id }}"{% ifinlist manufacturer.id selected_brands %} class="selected"{% endifinlist %} href="{% url apparel.views.browse %}?1:m.id:in={{ manufacturer.id }}">{{ manufacturer.name }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}

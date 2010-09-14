@@ -3,20 +3,21 @@
 {% load thumbnail %}
 {% load comments %}
 {% load trackback_tags %}
+{% load apparel_extras %}
 
 {# FIXME: we should reverse the list of categories. I think we need to create a filter for this #}
-{% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.category.all|join:'|' }} | {% endblock %}
+{% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.categories|join:' | ' }} | {% endblock %}
 
 {% block 'extra-styles' %}
-    <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-basic.css" media="screen" />
-    <link rel="stylesheet" href="http://flowplayer.org/tools/css/overlay-gallery.css" media="screen" />
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
-    <script src="http://cdn.jquerytools.org/1.1.1/full/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.hypersubmit.js"></script>
     <script type="text/javascript">
+    
+    
         jQuery(document).ready(function() {
             jQuery('.product-image').mouseenter(function() {
                 jQuery(this).find('.magnifier').fadeIn('slow');
@@ -25,21 +26,112 @@
                 jQuery(this).find('.magnifier').fadeOut('slow');
                 return false;
             });
-            jQuery('.product-image a').overlay({ target: "#gallery" }).gallery({ speed: 800 });
-
-            jQuery('#add-to-look').mouseenter(function() {
-                jQuery(this).find('ul').show();
-            }).mouseleave(function() {
-                jQuery(this).find('ul').hide();
+            jQuery('.product-image a').overlay({ 
+                target: "#gallery",
+                fixed: false
             });
-            jQuery('#add-to-look > ul > li > a').click(function() {
-                args = {};
-                args['product_id'] = {{ object.id }};
-                if(this.id) {
-                    args['look_id'] = this.id.split('-')[1];
+
+            jQuery('#add-to-look').bind('click mouseenter mouseleave', function(event) {
+                var sub_menu = jQuery(this).find('ul');
+                if(event.type == 'mouseenter' || (event.type == 'click' && sub_menu.is(':hidden'))) {
+                    sub_menu.show();
+                } else {
+                    sub_menu.hide();
+                    jQuery(this).find('#add-to-look-new button').show(); 
+                    jQuery(this).find('#add-to-look-new input[name=new_name]').hide(); 
                 }
-                jQuery.post("{% url apparel.views.add_to_look %}", args);
+                // Should prevent default only when #add-to-look button is clicked
+                if(event.type == 'click' && event.target == jQuery('#add-to-look > a').get(0))
+                    event.preventDefault();
+            });
+
+            jQuery('#add-to-look>form').hyperSubmit({
+                beforeSend: function(req) {
+                    link = jQuery('#add-to-look a[href=/apparel/look/]');
+                    text = link.text();
+                    link.text('{% trans "Adding..." %}');
+                },
+                complete: function() {
+                    jQuery('#add-to-look>form>input[type=hidden][name=look]').attr('value', '');
+                },
+                success: function(response, statusText, req) {
+                    if(response.data['created']) {
+                        jQuery('#add-to-look-new').before(jQuery('#look_button_template').render(response.data));
+                    }
+
+                    if(response.data['added']) {
+                        increase_counts(jQuery('h2#looks > span.count, a.looks > span.count'));
+                        jQuery('h2#looks.hidden, p.hidden:has(a.looks)').fadeIn().removeClass('hidden');
+                        jQuery('<li/>').append(response.data.html).prependTo('ul.looks');
+                        jQuery('ul.looks > li').each(function(i, item) {
+                            if(i % 2 == 0)
+                                jQuery(item).addClass('last');
+                            else
+                                jQuery(item).removeClass('last');
+                        });
+                        /* FIXME uncommented this, for now. We need to do something more smart with templates.
+                        jQuery('<li/>').append(response.data.template, { 'object': response.data.look }).prependTo('ul.looks');
+                        */
+                        
+                        var p = jQuery('#content .product-image img');
+                        var w = 76;                             // FIXME: Read from constant
+                        var h = parseInt(p.height() / (p.width() / w));   // FIXME: At the moment we need both height and width to draw edit pane. This should not be the case really
+
+                        // Add the product to the collage if we're adding the product to the look
+                        jQuery.post('{% url apparel.views.save_look_component %}', {
+                                'component_of': 'C',
+                                'product': jQuery('#add-to-look>form>input[name=product]').attr('value'),
+                                'look': response.data.look.id,
+                                'width': w,
+                                'height': h
+                            },
+                            function(response, status, request) {
+                                if(response.success) {
+                                    console.debug('Added product to collage');
+                                } else {
+                                    console.error('Bad AJAX request', response, status, request);
+                                    return;
+                                }
+                            }
+                        );
+                    }
+
+                    link.text(text);
+                    input = jQuery('#add-to-look-new input[name=new_name]');
+                    input.hide();
+                    input.value = input.defaultValue;
+                    
+                    jQuery('#add-to-look-new button').show();
+                    return false;
+                    // FIXME: Show the new look in list. Should we reload or just display?
+                },
+                error: function(error, req) {
+                    link.text = text;
+                },
+            });
+            jQuery('#add-to-look button[name=look]').click(function() {
+                this.form.elements.look[0].value = this.value;
+            });
+            jQuery('#add-to-look-new button').click(function() {
+                jQuery(this).hide();
+                jQuery(this).siblings('input[name=new_name]').show().focus();
                 return false;
+            });
+            jQuery('#add-to-look-new input[name=new_name]')
+                .hide()
+                .focus(function() { if(this.value == this.defaultValue) this.select() })
+                .blur(function()  { if(this.value == '') this.value = this.defaultValue })
+                .bind('keypress', function(e) { if(e.keyCode == 13) { jQuery('#add-to-look>form').submit(); return false } return true})
+            
+            jQuery('#add-to-wardrobe>form').hyperSubmit({
+                beforeSend: function(req) {
+                    btn = jQuery('#add-to-wardrobe form button[type=submit]');
+                    btn.text('{% trans "Adding..." %}');
+                },
+                success: function(data, statusText, req) {
+                    btn.text('{% trans "In wardrobe" %}');
+                    btn.click( function() { return false } );
+                },
             });
         });
     </script>
@@ -53,65 +145,38 @@
             {% get_trackbacks_for object as trackbacks %}
             {% include 'apparel/fragments/product_detail.html' %}
             <!-- overlay element -->
-            <div class="simple_overlay" id="gallery">
-                <!-- "previous image" action -->
-                <a class="prev">prev</a>
-                <!-- "next image" action -->
-                <a class="next">next</a>
-                <!-- image information -->
-                <div class="info"></div>
-            
-                <!-- load indicator (animated gif) -->
-                <img class="progress" src="http://static.flowplayer.org/tools/img/overlay/loading.gif" />
+            <div id="gallery">
+                <img src="{{object.product_image.url}}">
             </div>
         </div>
         <div class="sidebar last">
-            <!--
-            <div class="last-shown">
-                <h2>{% trans "Recently viewed products" %}</h2>
-            </div>
-            <div class="similar-products">
-                <h2>{% trans "Similar products" %}</h2>
-                <div class="similar-product clearfix">
-                    <img class="product-photo" />
-                    <div class="product-summary">
-                        <h5>Marc Jacobs</h5>
-                        <span class="likes">9 likes</span>
-                        <span class="price">959 SEK</span>
-                        <a href="">Till plagget</a>
-                    </div>
-                </div>
-            </div>
-            -->
             {% get_comment_count for object as comment_count %}
             <div class="activity">
-                <p><a class="comments" href="#comments">{{ trackbacks|length|add:comment_count }} {% trans "comments and links" %}</a></p>
-                <p><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to {{ counter }} look{% plural %}Added to {{ counter }} looks{% endblocktrans %}</a></p>
-                <p>{% include 'apparel/fragments/likes.html' %}</p>
+                {% include 'apparel/fragments/comment_count.html' %}
+                <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
+                <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
             </div>
-            <h2>{% trans "Recently viewed" %}</h2>
-            <div id="recentlyviewed">
-                {% with viewed_products as products %}
-                {% include 'apparel/fragments/product_row.html' %}
-                {% endwith %}
-            </div>
-
-            {% if looks_with_product %}
-            <h2 id="looks">
-                {% blocktrans count looks_with_product|length as counter %}
-                    {{ counter }} look with this product
-                {% plural %}
-                    {{ counter }} looks with this product
-                {% endblocktrans %}
-            </h2>
-            <ul class="looks">
-                {% for object in looks_with_product %}
-                {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_collage_small.html' %}</li>
-                {% endfor %}
-            </ul>
+            {% if viewed_products %}
+                <h2>{% trans "Recently viewed" %}</h2>
+                <div id="recentlyviewed">
+                    {% with viewed_products as products %}
+                    {% include 'apparel/fragments/product_row.html' %}
+                    {% endwith %}
+                </div>
             {% endif %}
+            <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
+                {% blocktrans count looks_with_product|length as counter %}
+                    <span class="count">{{ counter }}</span> look with this product
+                {% plural %}
+                    <span class="count">{{ counter }}</span> looks with this product
+                {% endblocktrans %}
+            </h2></a>
+            {% with looks_with_product as looks %}
+            {% include 'apparel/fragments/looks.html' %}
+            {% endwith %}
         </div>
 {% else %}
-    <p>No product found!</p>
+    <!-- FIXME: This needs some sort of layout -->
+    <p>{% trans "No product found!" %}</p>
 {% endif %}
 {% endblock body %}

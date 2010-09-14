@@ -1,0 +1,30 @@
+{% load i18n %}
+{% spaceless %}
+{% load jsminify %}
+<ul class="apparelrow ar-look-{% if object.display_with_component == 'P' %}photo{% else %}collage{% endif %}" id="apparelrow-look-{{ object.id }}">
+{% for component in object.display_components %}
+    <li>
+        <a href="http://{{ request.get_host }}{{ component.product.get_absolute_url }}">{{ component.product.product_name }} {% trans "By" %} {{ component.product.manufacturer.name }}</a>
+    </li>
+{% endfor %}
+</ul>
+<script type="text/javascript">
+{% minifyjs %}
+(function() {function async_load() {
+        if(document.getElementById('__ar_widget__')) return;
+        var s = document.createElement('script');
+        s.type  = 'text/javascript';
+        s.async = true;
+        s.id    = '__ar_widget__';
+        s.src = 'http://{{ request.get_host }}/media/js/compiled/widget.js';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(s, x);
+    }
+    if (window.attachEvent)
+        window.attachEvent('onload', async_load);
+    else
+        window.addEventListener('load', async_load, false);
+})();
+{% endminifyjs %}
+</script>
+{% endspaceless %}

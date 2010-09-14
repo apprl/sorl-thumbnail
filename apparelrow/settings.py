@@ -3,6 +3,10 @@
 
 import os.path
 import posixpath
+import logging
+import logging.config
+
+gettext = lambda s: s
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -11,6 +15,19 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 FORCE_SCRIPT_NAME = ''
+
+LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', 'etc', 'logging.conf') # logging configuration file
+
+if not hasattr(logging, 'initialised'):
+    logging.config.fileConfig(LOGGING_CONFIG)
+    
+    if DEBUG:
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        logging.debug('Using debug logger')
+    
+    logging.info('Initialised application logger')
+    setattr(logging, 'initialised', True)
 
 
 # tells Pinax to serve media through django.views.static.serve.
@@ -39,21 +56,26 @@ TIME_ZONE = 'Europe/Stockholm'
 # Language code for this installation. All choices can be found here:
 # http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
 # http://blogs.law.harvard.edu/tech/stories/storyReader$15
-LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
+LANGUAGE_CODE = 'sv'
+LANGUAGES = (
+#    ('en', gettext('English')), 
+    ('sv', gettext('Swedish')), 
+)
+
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'media')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
-MEDIA_URL = '/site_media/media/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory that holds static files like app media.
 # Example: "/home/media/media.lawrence.com/apps/"
@@ -85,10 +107,12 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'facebook.djangofb.FacebookMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    #'facebook.djangofb.FacebookMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'facebookconnect.middleware.FacebookConnectMiddleware',
+    #'facebookconnect.middleware.FacebookConnectMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'trackback.middleware.PingbackUrlInjectionMiddleware',
@@ -106,6 +130,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
 )
 
+
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.auth",
     "django.core.context_processors.debug",
@@ -113,6 +138,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     
+    "context_processors.settings",
+    "context_processors.js_templates",
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
 )
@@ -140,8 +167,14 @@ INSTALLED_APPS = (
     'pagination',
     'voting',
     'django.contrib.comments',
+    'ajaxcomments',
     'django_extensions',
     'trackback',
+    'recommender',
+    #'south',
+    'jsmin',
+    'compress',
+
     'apparel',
     'scale',
     'watcher',
@@ -151,7 +184,34 @@ INSTALLED_APPS = (
         
     # internal (for now)
     'django.contrib.admin',
+    'apparelrow',
 )
+
+
+
+# - COMPRESS SETTINGS -
+COMPRESS_CSS = {}
+COMPRESS_JS = {
+    'widget': {
+        'source_filenames': ('js/jquery/jquery-1.4.2.js',
+                             'js/jquery/jquery.tools.min.js',
+                             'js/widget.js'),
+        'output_filename': 'js/compiled/widget.js',
+    },
+    'jquery': {
+        'source_filenames': ('js/jquery/jquery.hypersubmit.js',
+                             'js/jquery/jquery.tools.min.js',
+                             'js/jquery/jquery.tmpl.js',
+                             'js/jquery/jquery.history.js',
+                             'js/jquery/jquery.ui.rotatable.js',
+                             'js/jquery/jquery.autogrow.js'),
+        'output_filename': 'js/compiled/jquery.js',
+    },
+}
+
+COMPRESS = True
+
+CSRF_FAILURE_VIEW = 'apparel.views.csrf_failure'
 
 ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/profile/%s/" % o.username,
@@ -198,17 +258,18 @@ DUMMY_FACEBOOK_INFO = {
     'proxied_email':None,
 }
 
-EMAIL_HOST          = 'mail.hanssonlarsson.se'
+EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587
-EMAIL_HOST_USER     = 'outgoing@hanssonlarsson.se'
+EMAIL_HOST_USER     = 'postman@hanssonlarsson.se'
 EMAIL_HOST_PASSWORD = 'K6kb4Lle'
-EMAIL_USE_TLS       = False
+EMAIL_USE_TLS       = True
 
 
 
-APPAREL_DEFAULT_AVATAR = os.path.join('/', 'site_media', 'static', 'images', 'avatar.jpg')
-APPAREL_PROD_IMG_ROOT = 'static/product'
-
+APPAREL_DEFAULT_AVATAR     = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
+APPAREL_PRODUCT_IMAGE_ROOT = 'products'
+APPAREL_LOOK_MAX_SIZE      = 470
+APPAREL_LOOK_FEATURED      = 3
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

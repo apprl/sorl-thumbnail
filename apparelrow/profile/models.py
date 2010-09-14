@@ -23,6 +23,10 @@ class ApparelProfile(models.Model):
     name  = models.CharField(max_length=50, unique=True, blank=True, null=True)
     image = models.ImageField(upload_to=PROFILE_BASE, help_text=_('User profile image'), blank=True, null=True) 
 
+    @models.permalink
+    def get_looks_url(self):
+        return ('looks_by_user', [str(self.user.username)])
+
     @property
     def display_name(self):
         if self.name is not None:
@@ -35,11 +39,12 @@ class ApparelProfile(models.Model):
     
     @property
     def avatar(self):
+        if self.image:
+            return self.image
+
         if hasattr(self.user, 'facebook_profile'):
             if self.user.facebook_profile.picture_url:
                 return self.user.facebook_profile.picture_url
-        if self.image:
-            return self.image
         
         return settings.APPAREL_DEFAULT_AVATAR
 

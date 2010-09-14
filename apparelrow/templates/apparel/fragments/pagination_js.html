@@ -1,28 +1,28 @@
-<% /* NOTE: If you change this, also change products.pagination_js.html */ %>
-<a class="prev<% if(!products.has_previous) { %> disabled<% } %>" href="/browse/?page=<%= products.previous_page_number %>">&lt;</a>
+{{#}}NOTE: If you change this, also change pagination_js.html{{/#}}
+<a class="prev{{if !products.previous_page_number}} disabled{{/if}}" href="/browse/?page=${ products.previous_page_number }">&lt;</a>
 <div>
 <ol>
-<% if(products.pagination.left) { %>
-    <% for(var i = 0; i < products.pagination.left.length; i++) { %>
-        <li><a href="/browse/?page=<%= products.pagination.left[i] %>"><%= products.pagination.left[i] %></a></li>
-    <% } %>
+{{if products.pagination.left}}
+    {{each(i, page) products.pagination.left}}
+        <li><a href="/browse/?page=${ page }">${ page }</a></li>
+    {{/each}}
     <li class="pagination-dots">&hellip;</li>
-<% } %>
+{{/if}}
 
-<% for(var i = 0; i < products.pagination.mid.length; i++) { %>
-    <% if(products.pagination.mid[i] == products.number) { %>
-        <li class="current"><%=products.pagination.mid[i] %></li>
-    <% } else { %>
-        <li><a href="/browse/?page=<%=products.pagination.mid[i] %>"><%=products.pagination.mid[i] %></a></li>
-    <% } %>
-<% } %>
+{{each(i, page) products.pagination.mid}}
+    {{if page == products.number}}
+        <li class="current">${ page }</li>
+    {{else}}
+        <li><a href="/browse/?page=${ page }">${ page }</a></li>
+    {{/if}}
+{{/each}}
 
-<% if(products.pagination.right) { %>
+{{if products.pagination.right}}
     <li class="pagination-dots">&hellip;</li>
-    <% for(var i = 0; i < products.pagination.right.length; i++) { %>
-        <li><a href="/browse/?page=<%=products.pagination.right[i] %>"><%=products.pagination.right[i] %></a></li>
-    <% } %>
-<% } %>
+    {{each(i, page) products.pagination.right}}
+        <li><a href="/browse/?page=${ page }">${ page }</a></li>
+    {{/each}}
+{{/if}}
 </ol>
 </div>
-<a class="next<% if(! products.has_next) { %> disabled<% } %>" href="/browse/?page=<%= products.next_page_number %>">&gt;</a>
+<a class="next{{if !products.next_page_number || products.next_page_number > products.paginator.num_pages }} disabled{{/if}}" href="/browse/?page=${ products.next_page_number }">&gt;</a>

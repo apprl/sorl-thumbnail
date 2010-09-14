@@ -1,8 +1,8 @@
-<li>
+<li id="product-{{ product.id }}">
 <a href="{{ product.get_absolute_url }}">
 <div class="product-small">
     <div class="product-image">
-        <img src="/scale/115x153/site_media/media/{{ product.product_image }}" alt="{{ product.product_name }}" />
+        <img src="/scale/115x153{{ product.product_image.url }}" alt="{{ product.product_name }}" />
         <span class="likes">x</span>
     </div>
     <h4>{{ product.product_name }}</h4>

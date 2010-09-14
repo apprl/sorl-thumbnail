@@ -1,0 +1,75 @@
+@import partials/base.sass
+@import partials/widget.sass
+@import partials/font_face_extended.scss
+
+@import compass/css3
+@import compass/utilities
+
++custom_fonts
+
+div#ar-wrapper
+  h1, h2, h3, h4, h5, span, p, div, a
+    background: none
+    border: none
+    bottom: auto
+    clear: none
+    cursor: default
+    float: none
+    font-family: $font_family
+    font-size: 12px !important
+    font-style: normal
+    font-weight: normal
+    height: auto
+    left: auto
+    letter-spacing: normal
+    line-height: normal
+    max-height: none
+    max-width: none
+    min-height: 0
+    min-width: 0
+    overflow: visible
+    position: static
+    right: auto
+    text-align: left
+    text-decoration: none
+    text-indent: 0
+    text-transform: none
+    top: auto
+    visibility: visible
+    white-space: normal
+    width: auto
+    z-index: auto
+
+.ar-look-collage, .ar-look-photo
+  height: $look_height
+
+#ar-wrapper
+  +font
+  +typography
+  position: relative
+  & .ar-look-photo
+    +apparel_hotspot
+  & .ar-link
+    cursor: pointer
+  & a.ar-tooltip
+    cursor: pointer !important
+    +apparel_tooltip
+    & div, & h3
+      margin: .5em 0
+    & p
+      +font
+      +typography
+      font-size: smaller / 1.5 !important
+    & h2
+      margin-top: 1em
+      font-size: 120% !important
+    & h3
+      +font
+      +typography
+      font-size: 90% !important
+      color: $easy_color
+    & .ar-likes
+      +apparel_likes
+    & .ar-price
+      +apparel_price
+    

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body-classes %}look-list two-columns{% endblock body-classes %}
+
+{% block body %}
+    <div id="content">
+        <h2>{% trans "Looks" %}</h2>
+        <ul class="looks">
+        {% for object in object_list %}
+             <a title="{{ object.title }}" href="{{ object.get_absolute_url }}">
+                 <li>
+                     {% include 'apparel/fragments/look_small.html' %}
+                     <h3>{{ object.title }} {% trans "by" %} {{ object.user.get_profile.display_name }}</h3>
+                     <p>{{ object.description }}</p>
+                     {% include 'apparel/fragments/total_price.html' %}
+                     <p>{% include 'apparel/fragments/likes.html' %}</p>
+                 </li>
+             </a>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock body %}
