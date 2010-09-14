@@ -1,3 +1,4 @@
+import re
 from django.test import TestCase, TransactionTestCase
 
 from importer.framework.mapper import DataMapper, SkipField
@@ -37,23 +38,26 @@ class DummyDataMapper(DataMapper):
     
     def set_currency(self):
         raise SkipField('I do not care about this field')
+    
 
 class DummyProvider(Provider):
+    def __init__(self):
+        self.name = 'The Vendor'
+    
     pass
 
-class DataMapperTest(TestCase):
+class FieldMapperTest(TestCase):
     def setUp(self):
         self.mapper = DummyDataMapper(DummyProvider(), record={
             'product_id': 'the id',
             'name': 'the name',
-            'product_url': 'the url',
-            
-            'unitcost': 1023
+            'product-url': 'the url',
         })
     
     
     def test_map_field_record(self):
-        self.assertEqual(self.mapper.map_field('product_url'), 'the url')
+        self.assertEqual(self.mapper.map_field('product-url'), 'the url', 'Mapped field to data dict')
+        self.assertEqual(self.mapper.map_field('product_url'), None, 'The - to / conversion does not apply to fields')
     
     def test_map_field_method(self):
         self.assertEqual(self.mapper.map_field('product-name'), 'the name')
@@ -63,6 +67,20 @@ class DataMapperTest(TestCase):
     
     def test_map_field_skip(self):
         self.assertRaises(SkipField, self.mapper.map_field, 'currency')
+    
+    def test_map_fields(self):
+        f = self.mapper.map_fields()
+        self.assertTrue(isinstance(f, dict))
+        self.assertTrue('product' in f)
+        self.assertTrue('version' in f)
+        self.assertTrue(re.match(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z(?:.+?)?', f.get('date')))
+        self.assertEqual(f['vendor'], self.mapper.provider.name, 'Vendor name')
+
+        p = f['product']
+        self.assertFalse('currency' in p, 'SkipField is causing field to be ignored')
+        self.assertEqual(p['price'], None, 'Missing field is filled with None value')
+        self.assertEqual(p['variances'], [], 'variances defaults to empty array')
+        
     
 
 if __name__ == '__main__':

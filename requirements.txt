@@ -1,0 +1,18 @@
+Django==1.1.1
+PIL==1.1.7
+MySQL-python==1.2.3c1
+sorl-thumbnail==3.2.2
+flup==1.0.2
+-f http://bitbucket.org/ubernostrum/django-registration/downloads/django-registration-0.8-alpha-1.tar.gz
+django-registration==0.8.0-alpha-1
+-e git://github.com/sciyoshi/pyfacebook.git#egg=pyfacebook
+-e svn+http://django-facebookconnect.googlecode.com/svn/tags/v0.1/#egg=django-facebookconnect
+django-notification==0.1.5
+django-announcements==0.1.0
+-e svn+http://django-mptt.googlecode.com/svn/trunk/@116#egg=django-mptt
+-e svn+http://django-voting.googlecode.com/svn/trunk/@71#egg=django-voting
+-e svn+http://code.hanssonlarsson.se/svn_public/hanssonlarsson_utils-svn/tags/hanssonlarsson-django-exporter-0.2.3/#egg=hanssonlarsson-django-exporter
+django-tagging==0.3.1
+django-pagination==1.0.5
+-e git://github.com/django-extensions/django-extensions.git#egg=django-extensions
+-e svn+http://django-trackback.googlecode.com/svn/trunk/@15#egg=django-trackback

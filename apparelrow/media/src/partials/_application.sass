@@ -2,6 +2,7 @@
 @import partials/typography.sass
 @import partials/filter.sass
 @import partials/row.sass
+@import partials/look.sass
 
 body
   background:
@@ -142,9 +143,8 @@ button, a.button
 
 
 
-.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #pagination, #add-menu, #add-to-look ul, .product-info, .product-vendor
-  border: 1px solid #dadada
-  background-color: #f2f2f2
+.collage .tooltip, #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
+  +box
 
 
 .product-options
@@ -152,45 +152,66 @@ button, a.button
     border: 1px solid #dadada
     background-color: #f2f2f2
 
+#featured-looks ul 
+  .info-box
+    +box
+    height: 36px
+    padding: 16px 10px 10px
+    background:
+      image= image_url("gradient-tall-bg.png")
+      repeat: repeat-x
+    .info
+      background= "transparent" image_url("arrow-bg.png") "no-repeat" "scroll" "left" 10px
+      padding-left: 20px
+
+
 #switchlook
-  +box
-  height: 36px
-  padding: 16px 10px 10px
-  background:
-    image= image_url("gradient-tall-bg.png")
-    repeat: repeat-x
-  .info
+  position: absolute
+  margin-top: 10px
+  .backward
+    +replace-text("prev-shadow.png")
     +float-left
-    background= "transparent" image_url("arrow-bg.png") "no-repeat" "scroll" "left" 10px
-    padding-left: 20px
-  .nav
-    +float-right
-    margin-top: 10px
-    .backward
-      +replace-text("prev-shadow.png")
-      +float-left
+    display: inline-block
+    width: 6px
+    height: 16px
+    margin-right: 20px
+  .forward
+    +replace-text("next-shadow.png")
+    +float-left
+    display: inline-block
+    width: 6px
+    height: 16px
+    margin-left: 10px
+  .tabs
+    +float-left
+    +horizontal-list(0)
+    a
+      +replace-text("switcher.png")
       display: inline-block
-      width: 6px
+      width: 10px
       height: 16px
-      margin-right: 20px
-    .forward
-      +replace-text("next-shadow.png")
-      +float-left
-      display: inline-block
-      width: 6px
-      height: 16px
-      margin-left: 10px
-    .tabs
-      +float-left
-      +horizontal-list(0)
-      a
-        +replace-text("switcher.png")
-        display: inline-block
-        width: 10px
-        height: 16px
-        margin-right: 10px
-        &.current
-          background-image= image_url("switcher-selected.png")
+      margin-right: 10px
+      &.current
+        background-image= image_url("switcher-selected.png")
+
+ul.looks
+  +horizontal-list(0)
+  li
+    margin-right= !gutter_width / 2
+    margin-bottom: 10px
+    &.last
+      margin-right: 0
+    .look
+      +box
+      width= !aside_width / 2 - !gutter_width / 4 - 2
+      height: 72px
+    span.button
+      +button
+      line-height: 1.5em
+      border-top: 0
+      display: block
+      +border-bottom-radius("3px")
+      text-align: center
 
 #lookproducts
   +row
@@ -224,43 +245,43 @@ h2
         &.selected
           background-position= 0 -!color_height
       &.grey
-        background-position= -!color_width top
+        background-position= -!color_width "top"
         &.selected
           background-position= -!color_width -!color_height
       &.white
-        background-position= -!color_width * 2 top
+        background-position= -!color_width * 2 "top"
         &.selected
           background-position= -!color_width * 2 -!color_height
       &.beige
-        background-position= -!color_width * 3 top
+        background-position= -!color_width * 3 "top"
         &.selected
           background-position= -!color_width * 3 !color_height
       &.brown
-        background-position= -!color_width * 4 top
+        background-position= -!color_width * 4 "top"
         &.selected
           background-position= -!color_width * 4 !color_height
       &.red
-        background-position= -!color_width * 5 top
+        background-position= -!color_width * 5 "top"
         &.selected
           background-position= -!color_width * 5 !color_height
       &.yellow
-        background-position= -!color_width * 6 top
+        background-position= -!color_width * 6 "top"
         &.selected
           background-position= -!color_width * 6 !color_height
       &.green
-        background-position= -!color_width * 7 top
+        background-position= -!color_width * 7 "top"
         &.selected
           background-position= -!color_width * 7 !color_height
       &.blue
-        background-position= -!color_width * 8 top
+        background-position= -!color_width * 8 "top"
         &.selected
           background-position= -!color_width * 8 !color_height
       &.magenta
-        background-position= -!color_width * 9 top
+        background-position= -!color_width * 9 "top"
         &.selected
           background-position= -!color_width * 9 !color_height
       &.pink
-        background-position= -!color_width * 10 top
+        background-position= -!color_width * 10 "top"
         &.selected
           background-position= -!color_width * 10 !color_height
 
@@ -289,35 +310,57 @@ h2
         +border("top")
         background-image= image_url("gradient-dark-bg.png")
 
+a.comments
+  background= "transparent" image_url("comments.png") "no-repeat" "scroll" "left" "center"
+  padding-left: 16px
+
+a.looks
+  background= "transparent" image_url("look.png") "no-repeat" "scroll" "left" "center"
+  padding-left: 16px
+
 span
   &.likes
-    background: transparent url(../images/heart.png) no-repeat scroll left bottom
-    padding-left: 20px
-    color: #fa7070
+    background= "transparent" image_url("heart.png") "no-repeat" "scroll" "left" "center"
+    padding-left: 16px
+    color= !like_color
 
   &.price
     background: transparent url(../images/check.png) no-repeat scroll left bottom
-    padding-left: 20px
+    color= !price_color
+    padding-left: 15px
 
 
 .product-photo
   border: 1px solid #dadada
 
 
-#product-list
-  border-bottom: 1px solid #dadada
-  height: 360px
-
+div#product-list
+  +clearfix
+  +box
+  border: none
+  width: 697px
+  ul
+    +clearfix
+    +border("right")
+    li
+      display: block
 
 .product-small
-  width: 139px
-  height: 180px
+  width: 115px
+  background-color: white
+  +border("all")
+  border-bottom: none
+  border-right: none
+  text-align: center
   float: left
+  h4
+    +border("top")
+    height: 1.5em
+    overflow: hidden
 
   .product-image
-    text-align: center
     position: relative
-    height: 138px
+    height: 153px
 
   span.likes
     display: none
@@ -329,54 +372,95 @@ span
     min-width: 10px
     background-position: center top
 
-  .product-info
-    text-align: center
-    border-bottom: none
-    padding-bottom: 5px
-
 
 #pagination
   height: 30px
-  border-top: none
+  +border("all")
+  +border-bottom-radius("3px")
 
+  .prev, .next
+    display: inline-block
+    width: 115px
+    height: 30px
+    
   .prev
     float: left
-    display: inline-block
-    width: 138px
-    height: 30px
-    background: transparent url(../images/prev-page.png) no-repeat scroll 20px center
-    border-right: 1px solid #dadada
+    +replace-text("prev-page.png", "20px", "center")
+    +border("right")
 
   .next
     float: right
-    display: inline-block
-    width: 138px
-    height: 30px
-    background: transparent url(../images/next-page.png) no-repeat scroll 120px center
-    border-left: 1px solid #dadada
+    +replace-text("next-page.png", "89px", "center")
+    +border("left")
 
-  .current
+  
+  div
     float: left
+    width= !large_width - 2 * (115 + 2)
     line-height: 30px
     text-align: center
+    margin: 0 auto
+    position: relative
+    ol
+      +horizontal-list(5px)
+      clear: left
+      float: left
+      left: 50%
+      text-align: center
+      position: relative
+      overflow: visible
+      li
+        right: 50%
+        display: block
+        position: relative
+        a
+          display: block
+        &.current
+          font-weight: bold
+          background= "transparent" image_url("current-page.png") "no-repeat" "scroll" "center" "bottom"
+      
 
+.product-left
+  +float-left
+  margin-top: 30px
+  width= !small_width
+  margin-right= !gutter_width
 
-.tooltip .product-image, #product .product-image
-  height: 500px
+.activity
+  margin-top: 30px
+  +border("top")
+  p
+    line-height: 26px
+    +border("bottom", !easy_border_color)
+
+.product-info
+  +float-left
+  width= !small_width
+  h2
+    color= !easy_color
+  h1
+    text-transform: uppercase
+    font-size: 1.25em
+  h3
+    text-transform: uppercase
+    font-weight: normal
+  p.description
+    width= !aside_width + !gutter_width
+    margin-bottom: 18px
+
+.product-image
   border: 1px solid #dadada
-  float: left
-  margin-top: -12px
   position: relative
-
-
-.tooltip .product-image .magnifier, #product .product-image .magnifier
-  position: absolute
-  right: 10px
-  bottom: 10px
-  width: 19px
-  height: 20px
-  background: transparent url(../images/magnifier.png) no-repeat scroll left top
-  display: none
+  .magnifier
+    position: absolute
+    right: 10px
+    bottom: 10px
+    width: 19px
+    height: 20px
+    background: transparent url(../images/magnifier.png) no-repeat scroll left top
+    display: none
+  img
+    vertical-align: top
 
 
 table.available-sizes th
@@ -385,20 +469,6 @@ table.available-sizes th
   font-weight: normal
   text-align: center
   text-transform: uppercase
-
-
-.product-info
-  border-left: none
-  overflow: visible
-
-
-.tooltip .product-info, #product .product-info
-  background: #fafafa
-  height: 478px
-
-.product-info .box
-  padding: 1.5em
-  background-color: inherit
 
 
 .product-options
@@ -451,7 +521,10 @@ table.available-sizes th
 
 
 a.buy-now
-  padding: 50px 10px 5px
+  padding: 58px 0 0
+  text-align: center
+  width: 73px
+  height: 30px
   background: #d0fae8 url(../images/check-large.png) scroll no-repeat center center
   border: 1px solid #92c0c7
   color: #408994
@@ -461,16 +534,16 @@ a.buy-now
 
 .product-vendors a.buy-now
   float: right
+  margin-top: -50px
 
 
 .product-vendor
   border-bottom: none
-  padding: 5px 10px
-  height: 30px
-  line-height: 30px
+  padding: 7px 9px
+  height: 16px
 
   .price, .currency
-    line-height: 30px
+    vertical-align: middle
 
   .price
     font-size: 2em
@@ -480,11 +553,35 @@ a.buy-now
 
   .vendor
     float: right
-    background: transparent url(../images/vendor.png) scroll no-repeat left center
-    padding: 0 10px
+    background= "transparent" image_url("vendor-three-quarters.png") "scroll" "no-repeat" "left" "center"
+    padding: 0 10px 0 16px
+
+#comments
+  li
+    h3
+      span
+        float: right
+        font-weight: normal
 
 #recentlyviewed
   +row(!aside_width)
+
+body.product .product-image, body.look .collage
+  form
+    position: absolute
+    top: 0px
+    right: 0px
+    button
+      margin: 0
+      border: none
+      background= "transparent" image_url("like-large.png") "no-repeat" "scroll" "center" "center"
+      color= !like_color
+      text-transform: uppercase
+      padding-top: 20px
+      height: 100px
+      width: 89px
+      cursor: pointer
+      text-align: center
 
 .similar-product
   .product-photo
@@ -506,40 +603,36 @@ a.buy-now
 
 
 #add-menu
-  margin-top: 4em
   +clearfix
-
-  > li
-    position: relative
-    float: left
-    line-height: 2.5em
-    padding-right: 1em
-    padding-left: 1em
-
-
-#add-menu > li > a
-  background: transparent url(../images/add.png) scroll no-repeat left center
-  padding-left: 20px
-
-
-li
-  &#add-to-look
-    +border("right")
-    > a
-      background-image: url(../images/add.png)
-    ul
-      display: none
-      margin: 0 -1em
-      border-bottom: none
-      border-right: none
-      li
-        padding: 0 1em
-        border-bottom: 1px solid #dadada
-        a
-          display: block
-
-  &#add-to-wardrobe > a
-    background-image: url(../images/embed.png)
+  +horizontal-list(0)
+  margin-top: 18px
+  li
+    +button
+    +border-radius(3px)
+    line-height: 2em
+    padding: 0 10px
+    margin-right: 8px
+    a
+      background: transparent url(../images/add.png) scroll no-repeat left center
+      padding-left: 20px
+    &#add-to-look
+      > a
+        background-image= image_url("look.png")
+      ul
+        display: none
+        margin: 0 -1em
+        border-bottom: none
+        border-right: none
+        li
+          padding: 0 1em
+          border-bottom: 1px solid #dadada
+          a
+            display: block
+    &.share > a
+      background-image= image_url("share.png")
+    &#add-to-wardrobe > a
+      margin-right: 0
+      background-image= image_url("embed.png")
 
 
 a.block_link

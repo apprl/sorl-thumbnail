@@ -1,34 +1,10 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load thumbnail %}
-{% block 'extra-styles' %}
-<style type="text/css">
-    #look {
-        position: relative;
-    }
-    #collage {
-        height: 500px;
-        border: 1px dotted black;
-        position: relative;
-    }
-    .look {
-        position: absolute;
-    }
-    .ui-wrapper {
-        float: left;
-        position: absolute;
-        opacity: 0.8;
-    }
-    .ui-state-disabled, .ui-widget-content .ui-state-disabled {
-        opacity: 1.0;
-    }
-</style>
-{% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
 <script type="text/javascript">
 var look = {
-    initialize: function(ele) {
+    initialize: function(ele, type) {
         ele.resizable({
             aspectRatio: 'true',
             maxHeight: ele.parent().height(),
@@ -37,7 +13,7 @@ var look = {
             minWidth: 30,
             //grid: [10, 10],
             stop: function(event, ui) {
-                look.saveProduct(ui);
+                look.saveProduct(ui, type);
             },
         });
         ele.parent('.ui-wrapper').draggable({
@@ -46,12 +22,12 @@ var look = {
             //snap: true,
             //grid: [10, 10],
             stop: function(event, ui) {
-                look.saveProduct(ui);
+                look.saveProduct(ui, type);
             },
         });
-        jQuery.fn.reverse = [].reverse;
+        jQuery.fn.reverse = jQuery.fn.reverse || [].reverse;
         ele.parent('.ui-wrapper').reverse().each(function() {
-            var el = $(this);
+            var el = jQuery(this);
             position = el.position();
             el.css({
                 position: 'absolute',
@@ -62,11 +38,12 @@ var look = {
             });
         });
     },
-    saveProduct: function(ui) {
-        product = ui.helper.find('.look');
+    saveProduct: function(ui, type) {
+        product = ui.helper.find('.product');
         data = {
             look: {{ object.id }},
             product: product.attr('id').split('-')[1],
+            type: type,
             top: parseInt(ui.position.top),
             left: parseInt(ui.position.left),
             z_index: product.parent('.ui-wrapper').css('z-index'),
@@ -94,16 +71,23 @@ var look = {
     },
 };
     jQuery(document).ready(function() {
-        look.initialize(jQuery('.look'));
-        look.disable(jQuery('.look'));
-        jQuery('.look').click(function() {
-            look.disable(jQuery('.look'));
-            look.enable(jQuery(this));
-            return false;
-        });
+        look.initialize(jQuery('#collage .product'), 'C'); // FIXME: We should get look product type from the model
+        look.initialize(jQuery('#photo .product'), 'P');
+        look.disable(jQuery('.product'));
+        jQuery('.product').hover(
+            function() {
+                look.disable(jQuery('.product'));
+                look.enable(jQuery(this));
+                return false;
+            },
+            function() {
+                look.disable(jQuery(this));
+                return false;
+            });
         jQuery('#collage').click(function() {
-            look.disable(jQuery('.look'));
+            look.disable(jQuery('.product'));
         });
+        jQuery('ul.tabs').tabs('div.panes > div');
     });
 </script>
 {% endblock 'extra-scripts' %}
@@ -111,20 +95,39 @@ var look = {
 {% block body-classes %}two-columns{% endblock %}
 
 {% block body %}
+<form enctype="multipart/form-data" action="" method="POST">
+<div id="look-title">
+    {{ form.title }}<button type="submit">{% trans "Save" %}</button>
+</div>
+<div>{{ form.title.errors }}</div>
+<div>{{ form.slug.errors }}</div>
+<div>{{ form.description.errors }}</div>
+<div>{{ form.user.errors }}</div>
+<div>{{ form.image.errors }}</div>
+<div>{{ form.created.errors }}</div>
+<div>{{ form.modified.errors }}</div>
+<div>{{ form.tags.errors }}</div>
 <div class="sidebar">
-    <h2>Sidebar</h2>
+    <label for="id_description">{% trans "Description (optional):" %}</label>
+    {{ form.description }}
+    <label for="id_tags">{% trans "Tags:" %}</label>
+    {{ form.tags }}
 </div>
 <div id="content">
-    <h2>{% trans "Edit look" %}</h2>
-    <form enctype="multipart/form-data" action="" method="POST">
-        <ul>
-        {{ form.as_ul }}
+    <div id="edit-look">
+        <ul class="tabs">
+            <li><a class="collage" href="#collage">{% trans "Collage" %}</a></li>
+            <li><a class="photo" href="#photo">{% trans "Photo" %}</a></li>
+            <li><a class="selection" href="#selection">{% trans "Selection" %}</a></li>
         </ul>
-        <button type="submit">{% trans "Save look" %}</button>
-    </form>
-    {# include 'apparel/fragments/look_picture.html' #}
-    <div id="collage">
-    {% include 'apparel/fragments/look_collage.html' %}
+        <div class="panes">
+            <div id="collage">
+            {% include 'apparel/fragments/look_collage.html' %}
+            </div>
+            {% include 'apparel/fragments/look_picture.html' %}
+            <div id="selection"></div>
+        </div>
     </div>
 </div>
+</form>
 {% endblock body %}

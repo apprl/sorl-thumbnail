@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load mptt_tags %}
+
+<h2>{% trans "Browse articles" %}<a id="reset" href="{% url apparel.views.browse %}">{% trans "Show all" %}</a></h2>
+<ul id="product-gender">
+    <li class="first"><a href="#">{% trans "All" %}</a></li>
+    {% for gender in genders %}
+    <li{% if forloop.last %} class="last"{% endif %}><a id="option-{{ gender.value }}" href="{% url apparel.views.browse %}?1:o.gender={{ gender.value }}">{{ gender.value }}</a></li>
+    {% endfor %}
+</ul>
+<ul id="product-options">
+    <li class="first" id="product-price"><a href="{% url apparel.views.browse %}">{% trans "Price" %} (<span id="min-price"></span>-<span id="max-price"></span>)</a>
+    {% include "apparel/fragments/product_options_price.html" %}
+    </li>
+    <li><a href="{% url apparel.views.browse %}">{% trans "Color" %}</a>
+    {% include "apparel/fragments/product_options_color.html" %}
+    </li>
+    <li class="last"><a href="{% url apparel.views.browse %}">{% trans "Brand" %}</a>
+    {% include "apparel/fragments/product_options_brand.html" %}
+    </li>
+</ul>
+{% for category, structure in categories|tree_info %}
+{% if structure.new_level %}<ul{% if forloop.first %} id="product-category"{% endif %}>{% else %}</li>{% endif %}<li>
+    <a id="category-{{ category.id }}" href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
+{% for level in structure.closed_levels %}</li></ul>{% endfor %}
+{% endfor %}
+

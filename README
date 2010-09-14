@@ -5,15 +5,11 @@ virtualenv-2.6 --no-site-packages apparelrow
 cd apparelrow
 source bin/activate
 
-= buildout =
-* Run the bootstrap.py script (it will set up buildout)
-  (it is already checked-in, but bootstrap.py can be downloaded from
-    http://svn.zope.org/*checkout*/zc.buildout/tags/1.4.3/bootstrap/bootstrap.py)
-  python bootstrap.py (if it complains about setuptools, easy_install setuptools)
-* Run the buildout
-  ./bin/buildout -v (fika...)
-* Start the server
-  ./bin/django-1.1.1 runserver
+= pip =
+easy_install pip
+pip install -r requirements.txt # ... fika ...
+
+Now you can start django, either with the django-admin.py in bin, or the regular manage.py
 
 = Directory Structure =
 .               This directory

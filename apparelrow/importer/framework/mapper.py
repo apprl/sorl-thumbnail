@@ -1,4 +1,4 @@
-import re, traceback, sys, logging
+import re, logging, datetime
 from apparelrow.importer.api import API, SkipProduct, ImporterException
 
 
@@ -25,8 +25,6 @@ class DataMapper():
         p = None
         
         try:
-            self.add_variances()
-
             p = API().import_dataset( self.map_fields() )
         
         except SkipRecord, e:
@@ -63,7 +61,28 @@ class DataMapper():
         Returns a hash of correctly formatted fields
         """
         
-        return {}
+        # Product fields
+        
+        api_dict = {
+            'version': '0.1',
+            'date':    self.map_field('date') or datetime.datetime.now().strftime('%Y-%m-%dT%H:%m:%SZ%z'),
+            'vendor':  self.provider.name,
+            'product': {}
+        }
+        
+        # FIXME: Get field list from somewhere else
+        for field in ['product-id', 'product-name', 'categories', 'manufacturer', 
+                  'price', 'currency', 'delivery-cost', 'delivery-time', 
+                  'image-url', 'product-url', 'description']:
+            try:
+                api_dict['product'][field] = self.map_field(field)
+            except SkipField:
+                logging.debug('Skipping field %s' % field)
+                continue
+        
+        api_dict['product']['variances'] = self.add_variances() or []
+        
+        return api_dict
         
     def map_field(self, field_name):
         """
@@ -72,7 +91,11 @@ class DataMapper():
         
             self.set_[field_name]
         
-        and if that does not exist it will try use a value stored in
+        (Note: Any occurence of - in the field name is represented by _ in the
+        method name. So for field 'product-name', this method will attempt to
+        call 'set_product_name')
+        
+        and if that does not exist it will try use a value stored in:
         
             self.record[field_name]
         

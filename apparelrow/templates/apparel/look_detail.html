@@ -1,29 +1,30 @@
 {% extends 'profile/base.html' %}
 {% load i18n %}
+{% load humanize %}
+{% load voting_tags %}
+{% load trackback_tags %}
 
 {% block 'extra-styles' %}
-<style type="text/css">
-    .collage {
-        position: relative;
-        height: 450px;
-        overflow: hidden;
-    }
-    .look {
-        position: absolute;
-        cursor: pointer;
-    }
-    .tooltip {
-        display: none;
-        z-index: 1100;
-        padding: 1em;
-    }
-</style>
+    <link rel="pingback" href="{% get_pingback_url %}" />
+    {% get_trackback_rdf_for object %}
+    <style type="text/css">
+        .collage {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+        }
+        .tooltip {
+            display: none;
+            z-index: 1100;
+            padding: 1em;
+        }
+    </style>
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery('.look').tooltip({
+        jQuery('.product').tooltip({
             effect: 'slide',
             relative: true,
             delay: 500,
@@ -33,7 +34,7 @@
 </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}two-columns{% endblock %}
+{% block body-classes %}look two-columns{% endblock %}
 
 {% block body %}
 <div class="sidebar">
@@ -46,10 +47,18 @@
     {% endblocktrans %}
     {{ object.total_price }} SEK
     </p>
+    {% if object.description %}<p>{{ object.description }}</p>{% endif %}
+    <p>{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</p>
+    <p>{% include 'apparel/fragments/likes.html' %}</p>
 </div>
 <div id="content">
     <h2>{{ object.title }}</h2>
-    <ul class="collage">{% include 'apparel/fragments/look_collage.html' %}</ul>
+    <div class="collage">
+        {% include 'apparel/fragments/look_collage.html' %}
+        <form method="post" action="{% url like-look object.slug "up" %}">
+            <button type="submit" name="like" id="like">{% trans "Like" %}</button>
+        </form>
+    </div>
     {% ifequal object.user user %}
     <a href="{% url apparel.views.look_edit object.id %}">{% trans "Edit look" %}</a>
     {% endifequal %}

@@ -18,18 +18,22 @@
 {% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
     <script type="text/javascript" src="/site_media/static/js/jquery.fixedscroll.js"></script>
+    <script type="text/javascript" src="/site_media/static/js/jquery.jqote2.js"></script>
+    <script type="text/javascript" src="/site_media/static/js/resig.js"></script>
     <script type="text/javascript" src="/site_media/static/js/filtersetup.js"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function() {
-            // Tooltips
-            jQuery('#product-list > a').tooltip({ effect: 'slide', position: 'bottom left', offset: [170, 0], relative: true });
-            // Fixed scrolling
-            jQuery('#content').fixedscroll();
-            /*
+        /*
+        jQuery(window).load(function() {
             if(window.location.hash) {
                 doFilter(window.location.hash.substr(1));
             }
-            */
+        });
+        */
+        jQuery(document).ready(function() {
+            // Tooltips
+            jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
+            // Fixed scrolling
+            //jQuery('#content').fixedscroll();
             // Reset button
             jQuery('#reset').click(function() {
                 $('.selected').removeClass('selected');
@@ -40,7 +44,7 @@
                 filter(getQuery());
                 return false;
             });
-            jQuery('#product-options li > a').click(function() {
+            jQuery('.options li > a').click(function() {
                 jQuery(this).toggleClass('selected');
                 return false;
             });
@@ -54,12 +58,8 @@
                 filter(getQuery());
                 return false;
             });
-            jQuery('#pagination .prev').click(function() {
-                filter(getQuery({{ products.previous_page_number }}));
-                return false;
-            });
-            jQuery('#pagination .next').click(function() {
-                filter(getQuery({{ products.next_page_number }}));
+            jQuery('#pagination a').live('click', function() {
+                filter(getQuery($(this).attr('href').split('=')[1]));
                 return false;
             });
             product_template = jQuery.template('{{ product_template|escapejs }}');
@@ -76,6 +76,7 @@
                     jQuery("#max-price").html(jQuery(this).slider('values', 1));
                 },
                 change: function(event, ui) {
+                    jQuery(this).addClass('selected');
                     //filter(getQuery());
                 }
             });
@@ -115,10 +116,11 @@
             doFilter(query);
         }
         function doFilter(query) {
-            jQuery.getJSON('/apparel/products/search', query, renderProducts);
+            jQuery.getJSON('{% url apparel.views.search "products" %}', query, renderProducts);
         }
         function renderProducts(products) {
-            jQuery('#product-list').empty();
+            jQuery('#product-list > ul').empty();
+            /*
             template.render(jQuery('#product-list'), products, product_template,
                 function(obj) {
                     return template.getTemplateContext({
@@ -128,7 +130,22 @@
                         },
                     });
                 }
-            );
+            );*/
+            $('#product-count').empty();
+            $('#product-count').append(tmpl('product_count_template', { products: products }));
+            try {
+                $('#pagination').empty();
+                $('#pagination').append(tmpl('pagination_template', { products: products }));
+            } catch(e) {
+                console.log(e)
+            }
+            $.each(products.object_list, function(i, product) {
+                    try {
+                    $('#product-list > ul').append(tmpl('product_template', { product: product }));
+                    } catch (e) {
+                    console.log(e);
+                    }
+            });
         }
     </script>
 {% endblock 'extra-scripts' %}
@@ -137,11 +154,12 @@
 
 {% block body %}
         <div class="sidebar">
-            {% include 'fragments/product_menu.html' %}
+            {% include 'apparel/fragments/product_menu.html' %}
         </div>
         <div id="content">
-            <h2>{{ products.paginator.count }} produkter</h2>
-            <div id="product-list" class="clearfix">
+            <h2><span id="product-count">{% include 'apparel/fragments/product_count.html' %}</span> {% trans "products" %}</h2>
+            <div id="product-list">
+                <ul>
                 {% for product in products.object_list %}
                     {% include 'apparel/fragments/product_small.html' %}
                     {% with product as object %}
@@ -150,9 +168,25 @@
                     </div>
                     {% endwith %}
                 {% endfor %}
-            </div>
+            </ul>
             <div id="pagination">
                 {% include 'apparel/fragments/pagination.html' %}
             </div>
         </div>
+        </div>
+        <script type="text/html" id="product_count_template">
+        <![CDATA[
+            {{ product_count_template|safe }}
+        ]]>
+        </script>
+        <script type="text/html" id="pagination_template">
+        <![CDATA[
+            {{ pagination_template|safe }}
+        ]]>
+        </script>
+        <script type="text/html" id="product_template">
+        <![CDATA[
+            {{ product_template|safe }}
+        ]]>
+        </script>
 {% endblock body %}

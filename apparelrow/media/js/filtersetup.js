@@ -6,6 +6,12 @@ jQuery(document).ready(function() {
         $(this).parents('li.active').removeClass('active');
         return false;
     });
+    jQuery('.options a.ok').click(function() {
+        if($(this).parents('.options').find('.selected').length > 0) {
+            $(this).parents('.options').siblings('a').addClass('selected');
+        }
+        return false;
+    });
     jQuery('#product-options > li > a').click(function() {
         $(this).parent().toggleClass('active');
         $(this).next('.options').slideToggle('fast');

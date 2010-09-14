@@ -1,6 +1,7 @@
 {% load i18n %}
+<div class="look">
     {% for product in object.look_products.all %}
-        <img id="product-{{ product.product.id }}" class="look" style="{{ product.style }}" src="/scale/500x500{{ product.product.product_image.url }}?trans=true" />
+        <img id="product-{{ product.product.id }}" class="product" style="{{ product.style }}" src="/scale/500x500{{ product.product.product_image.url }}?trans=true" />
         {% if tooltips %}
             {% with product.product as product %}
                 <div class="tooltip">
@@ -13,4 +14,4 @@
             {% endwith %}
         {% endif %}
     {% endfor %}
-
+</div>

@@ -408,6 +408,7 @@ class API(object):
             try:
                 temppath = fetch(url)
             except HTTPError, e:
+                # FIXME: Raise error and roll back
                 logging.error('%s (while downloading %s', e, url)
                 return
             

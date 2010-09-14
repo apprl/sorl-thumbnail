@@ -7,6 +7,10 @@ from django.template.defaultfilters import slugify
 from apparel.manager import SearchManager
 
 import datetime, mptt
+import tagging
+from tagging.fields import TagField
+
+from django_extensions.db.fields import AutoSlugField
 
 # FIXME: Move to Django settings directory
 PRODUCT_IMAGE_BASE = 'static/product'
@@ -124,7 +128,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, blank=True)
     #models.ManyToManyField(Category, blank=True, verbose_name=_("Category"))
     options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
-    slug = models.SlugField(_("Slug Name"), blank=True,
+    slug = AutoSlugField(_("Slug Name"), populate_from=("manufacturer", "product_name",), blank=True,
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
         help_text=_("Has to be unique with the manufacturer"))
@@ -147,9 +151,6 @@ class Product(models.Model):
         if not self.pk:
             self.date_added = datetime.date.today()
 
-        if self.product_name and not self.slug:
-            self.slug = slugify(self.manufacturer.name + " " + self.product_name)
-
         if not self.sku:
             self.sku = self.slug
 
@@ -159,7 +160,7 @@ class Product(models.Model):
         return u"%s %s" % (self.manufacturer, self.product_name)
     
     class Exporter:
-        export_fields = ['__all__', 'get_absolute_url']
+        export_fields = ['__all__', 'get_absolute_url', 'default_vendor']
 
 class VendorProduct(models.Model):
     vendor     = models.ForeignKey(Vendor)
@@ -170,6 +171,9 @@ class VendorProduct(models.Model):
     
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)
+
+    class Exporter:
+        export_fields = ['__all__', '-product']
 
 
 
@@ -199,16 +203,15 @@ class VendorProductVariation(models.Model):
 
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
-    slug = models.SlugField(_('Slug Name'), blank=True,
+    slug = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
         help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
+    description   = models.TextField(_('Look description'), null=True, blank=True)
     products = models.ManyToManyField(Product, through='LookProduct')
     user = models.ForeignKey(User)
     image = models.ImageField(upload_to=LOOKS_BASE, blank=True)
-
-    def save(self, force_insert=False, force_update=False):
-        if self.title and not self.slug:
-            self.slug = slugify(self.title)
-        super(Look, self).save(force_insert=force_insert, force_update=force_update)
+    created    = models.DateTimeField(_("Time created"), auto_now_add=True)
+    modified    = models.DateTimeField(_("Time modified"), auto_now=True)
+    tags = TagField()
 
     @property
     def total_price(self):
@@ -222,9 +225,15 @@ class Look(models.Model):
     def get_absolute_url(self):
         return ('apparel.views.look_detail', [str(self.slug)])
 
+LOOK_PRODUCT_TYPE_CHOICES = (
+    ('C', 'Collage'),
+    ('P', 'Picture'),
+)
+
 class LookProduct(models.Model):
     product = models.ForeignKey(Product)
     look = models.ForeignKey(Look, related_name='look_products')
+    type = models.CharField(max_length=1, choices=LOOK_PRODUCT_TYPE_CHOICES)
     top = models.IntegerField(_('CSS top'), blank=True, null=True)
     left = models.IntegerField(_('CSS left'), blank=True, null=True)
     width = models.IntegerField(_('CSS width'), blank=True, null=True)
@@ -233,7 +242,7 @@ class LookProduct(models.Model):
 
     @property
     def style_small(self):
-        return self.style(0.2)
+        return self.style(1.0 / 7.0)
 
     @property
     def style_middle(self):

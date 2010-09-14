@@ -1,15 +1,22 @@
 !page_width = 980px
 !margin_width = 20px
-!gutter_width = 40px
+!gutter_width = 36px
 !content_width = !page_width - 2 * !margin_width
 
-!aside_width = 205px
-!middle_width = 450px
-!large_width = 695px
+!aside_width = 208px
+!small_width = 1.5 * !aside_width + !gutter_width / 2
+!middle_width = 2 * !aside_width + !gutter_width
+!large_width = !aside_width + !middle_width + !gutter_width
 
 !box_color = #fafafa
 !border_color = !box_color - #212121
+!easy_border_color = !box_color - #080808
 !font_color = !box_color - #bababa
+!easy_color = !box_color - #999
+!like_color = !box_color - #008a8a
+!price_color = !box_color - #878787
+
+!border_width = 1px
 
 !box_disabled_color = !box_color + #aaa
 !border_disabled_color = !border_color + #1e1e1e
@@ -26,9 +33,9 @@
 
 =border(!side = "none", !color = !border_color)
   @if !side == "all"
-    border= 1px "solid" !color
+    border= !border_width "solid" !color
   @else
-    border-#{!side}= 1px "solid" !color
+    border-#{!side}= !border_width "solid" !color
 
 =box(!bg = !box_color, !border = !border_color)
   +border("all", !border)
@@ -38,6 +45,7 @@
   +box
   line-height: 30px
   background:
+    color: #f3f3f3
     image= image_url(!bg)
     repeat: repeat-x
   &.cancel:before

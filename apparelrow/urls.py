@@ -15,10 +15,6 @@ admin.autodiscover()
 #    signup_view = "signup_codes.views.signup"
 
 urlpatterns = patterns('',
-    url(r'^$', direct_to_template, {
-        "template": "homepage.html",
-    }, name="home"),
-
 #    url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),
 #    url(r'^account/signup/$', signup_view, name="acct_signup"),
     
@@ -34,12 +30,15 @@ urlpatterns = patterns('',
     
     (r'^notices/', include('notification.urls')),
     (r'^announcements/', include('announcements.urls')),
-    (r'^apparel/', include('apparel.urls')),
     (r'^scale/', include('scale.urls')),
+    (r'^comments/', include('django.contrib.comments.urls')),
+    (r'^ping/', include('trackback.urls')),
     (r'^admin/(.*)', admin.site.root),
     (r'^site_media/media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT + '/../site_media/media/static' } ),
     (r'^site_media/static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
+    
+    (r'', include('apparel.urls')),
 )
 
 

@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="/site_media/static/styles/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="/site_media/static/styles/print.css" type="text/css" media="print">
-    <link type="text/css" href="http://jqueryui.com/latest/themes/base/ui.all.css" rel="stylesheet" />
+    <link type="text/css" href="/site_media/static/styles/smoothness/jquery-ui-1.8rc3.custom.css" rel="stylesheet" />
     {% block 'extra-styles' %}
     {% endblock 'extra-styles' %}
     
@@ -16,6 +16,7 @@
         google.load("jquery", "1.4.1");
         google.load("jqueryui", "1.7.2");
     </script>
+    <script type="text/javascript" src="/site_media/static/js/apparel.js"></script>
     <script type="text/javascript" src="/site_media/static/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="/site_media/static/js/jquery.template.js"></script>
     <script type="text/javascript" src="/site_media/static/js/dump.js"></script>
@@ -100,7 +101,7 @@
             if(value.length == 0)
                 return
             
-            jQuery.getJSON('/apparel/search', {
+            jQuery.getJSON('{% url apparel.views.wide_search %}', {
                 s: value
             }, display);
         }

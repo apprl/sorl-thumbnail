@@ -1,0 +1,113 @@
+@import partials/base.sass
+@import partials/box_shadow_inset.sass
+
+!input_bg_color ||= #d0fae8
+!input_color ||= #408993
+!input_border_color ||= #80bba2
+
+// EDIT
+
+#photo, #collage
+  position: relative
+  height: 500px
+  .look
+    position: absolute
+  .ui-wrapper
+    position: absolute
+    opacity: 0.8
+    +box-shadow
+  .ui-state-disabled, .ui-widget-content .ui-state-disabled
+    -moz-box-shadow: none
+    -webkit-box-shadow: none
+    box-shadow: none
+    opacity: 1.0
+
+#edit-look
+  +border-top-radius
+  +border("all")
+  height: 500px
+  ul.tabs
+    +horizontal-list
+    li
+      +button
+      width: 222px
+      border-style: none solid solid none
+      text-align: center
+      &.current
+        background-image= image_url("gradient-dark-bg.png")
+      &:last
+        border-right: none
+      a
+        display: block
+        background:
+          color: transparent
+          repeat: no-repeat
+          position: 75px center
+        &.collage
+          background-image= image_url("kollage.png")
+        &.photo
+          background-image= image_url("foto.png")
+          background-position: 80px center
+        &.selection
+          background-image= image_url("urval.png")
+
+#look-title
+  +border("all")
+  width: 893px
+  height: 27px
+  background= "transparent" image_url("gradient-bg.png") "repeat-x"
+  margin: 20px 0 10px -20px
+  padding-top: 3px
+  padding-left: 20px
+
+  #id_title, button
+    color= !input_color
+    font-family: "Helvetica", "Arial", sans-serif
+    
+  #id_title
+    +border("all", !input_border_color)
+    +border-radius(3px)
+    background-color= !input_bg_color
+    line-height: 20px
+    height: 14px
+    width: 203px
+    text-align: center
+    padding-top: 6px
+    +box-shadow-inset(!input_bg_color - #222, 0, 3px, 3px)
+
+  button
+    +float-right
+    margin-right: -21px
+    background= "transparent" image_url("preview-button.png") "no-repeat" "scroll"
+    height: 24px
+    line-height: 24px
+    width: 103px
+    border: none
+    text-align: start
+
+#id_description,
+#id_tags
+  font-family: "Helvetica", "Arial", sans-serif
+  font-size: 1em
+  width: 193px
+  +border-radius(3px)
+  +border("all", #d9d9d9)
+  background-color: #f6f6f6
+  color: #666
+  +box-shadow-inset(#f6f6f6 - #222, 0, 3px, 3px)
+  padding: 0.5em 5px
+
+#id_description
+  height: 2em
+
+.sidebar label
+  display: block
+  margin: 20px 0 10px
+  padding: 0 0 5px
+  +border("bottom")
+
+.look
+  position: relative
+  img.product
+    position: absolute
+

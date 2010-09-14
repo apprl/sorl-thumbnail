@@ -52,13 +52,14 @@ def fetch(url, localpath=None, username=None, password=None):
     
     if not localpath:
         (fh, localpath) = tempfile.mkstemp(prefix='ar_importer_', suffix='.tmp')
+        local_fh = os.fdopen(fh, 'w')
+    else:
+        local_fh = open(localpath, 'w')
     
     f = urllib2.urlopen(url)
     
-    local_fh = open(localpath, 'w')
     local_fh.write(f.read())
     local_fh.close()
     local_fh = None
     
     return localpath
-

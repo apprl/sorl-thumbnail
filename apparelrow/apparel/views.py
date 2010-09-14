@@ -17,8 +17,48 @@ import math
 # Create your views here.
 from pprint import pprint
 
-
+BROWSE_PAGE_SIZE = 12
 WIDE_LIMIT = 4 # FIME: Move to application settings fileI
+
+def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
+    """
+    >>> from django.core.paginator import Paginator
+    >>> from apparel import views
+    >>> p = Paginator(range(22), 2)
+    >>> views.get_pagination(p, 3)
+    (None, [1, 2, 3, 4, 5, 6], [10, 11])
+
+    >>> views.get_pagination(p, 6)
+    (None, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], None)
+
+    >>> views.get_pagination(p, 9)
+    ([1, 2], [6, 7, 8, 9, 10, 11], None)
+
+    >>> p = Paginator(range(100), 2)
+    >>> views.get_pagination(p, 23)
+    ([1, 2], [20, 21, 22, 23, 24, 25, 26], [49, 50])
+
+    >>> views.get_pagination(p, 23, on_ends=5, on_each_side=2)
+    ([1, 2, 3, 4, 5], [21, 22, 23, 24, 25], [46, 47, 48, 49, 50])
+    """
+    if paginator.num_pages <= (on_ends * 2) + (on_each_side * 2):
+        return None, paginator.page_range, None
+
+    left, mid, right = None, None, None
+    
+    if page_num <= on_ends + on_each_side + 1:
+        mid = range(1, page_num + 1)
+    else:
+        left = range(1, on_ends + 1)
+        mid = range(page_num - on_each_side, page_num + 1)
+
+    if page_num >= paginator.num_pages - (on_ends + on_each_side + 1):
+        mid.extend(range(page_num + 1, paginator.num_pages + 1))
+    else:
+        mid.extend(range(page_num + 1, on_each_side + page_num + 1))
+        right = range(paginator.num_pages - on_ends + 1, paginator.num_pages + 1)
+
+    return left, mid, right
 
 def search(request, model):
     result = None
@@ -35,7 +75,7 @@ def search(request, model):
     else:
         raise Exception('No model to search for')
     
-    paginator = Paginator(result, 10) #FIXME: Make results per page configurable
+    paginator = Paginator(result, BROWSE_PAGE_SIZE)
 
     try:
         page = int(request.GET.get('page', '1'))
@@ -47,9 +87,26 @@ def search(request, model):
     except (EmptyPage, InvalidPage):
         paged_result = paginator.page(paginator.num_pages)
 
+    left, mid, right = get_pagination(paginator, page)
+
     #FIXME: We don't return the paged result because it's not JSON serializable
+    response = {
+        'object_list': paged_result.object_list,
+        'previous_page_number': paged_result.previous_page_number(),
+        'next_page_number': paged_result.next_page_number(),
+        'number': paged_result.number,
+        'paginator': {
+            'num_pages': paged_result.paginator.num_pages,
+            'count': paged_result.paginator.count,
+        },
+        'pagination': {
+            'left': left,
+            'right': right,
+            'mid': mid,
+        }    
+    }
     return HttpResponse(
-        json.encode(paged_result.object_list),
+        json.encode(response),
         mimetype='text/json'
     )
 
@@ -90,44 +147,59 @@ def get_filter():
     }
 
 def index(request):
-    return render_to_response('index.html', get_filter())
+    ctx = get_filter()
+    ctx['popular_looks'] = Look.objects.all()[:8]
+    return render_to_response('index.html', ctx)
 
-def filter(request):
-    if len(request.GET):
-        products = Product.objects.search(request.GET)
+def browse(request):
+    query = request.GET.copy()
+    page  = int(query.pop('page', [1])[0]) # all values are lists in the QueryDict object and we never expect more than one
+    
+    if len(query):
+        products = Product.objects.search(query)
     else:
         products = Product.objects.all()
+    
     #FIXME: Create a generic way of getting relevant templates and putting them into the context
+    product_count_template = get_template_source('apparel/fragments/product_count.html')
     product_template = get_template_source('apparel/fragments/product_small.html')
-    paginator = Paginator(products, 10) #FIXME: Make number per page configurable
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
+    pagination_template = get_template_source('apparel/fragments/pagination.html')
+    paginator = Paginator(products, BROWSE_PAGE_SIZE)
+    
     try:
         paged_products = paginator.page(page)
     except (EmptyPage, InvalidPage):
         paged_products = paginator.page(paginator.num_pages)
+
+    left, mid, right = get_pagination(paginator, page)
+
+
     result = get_filter()
     result['products'] = paged_products
-    result['product_template'] = product_template
-    return render_to_response('filter.html', result)
+    result['product_count_template'] = js_template(product_count_template)
+    result['product_template'] = js_template(product_template)
+    result['pagination_template'] = get_template_source('apparel/fragments/pagination_js.html')
+    result['pagination'] = {
+        'left': left,
+        'right': right,
+        'mid': mid,
+    }    
+        
+    return render_to_response('apparel/browse.html', result)
+
+def js_template(str):
+    return str.replace('{%', '<%').replace('%}', '%>').replace('{{', '<%=').replace('}}', '%>')
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
     viewed_products = request.session.get('viewed_products', [])
     viewed_products.append(product.id)
     request.session['viewed_products'] = viewed_products
-    looks_with_product = Look.objects.filter(products=product)
-    looks = []
-    if request.user.is_authenticated():
-        looks = Look.objects.filter(user=request.user)
     return render_to_response(
             'apparel/product_detail.html',
             {
                 'object': product,
-                'looks': looks,
-                'looks_with_product': looks_with_product,
+                'looks_with_product': Look.objects.filter(products=product),
                 'viewed_products': Product.objects.filter(pk__in=viewed_products),
             })
 
@@ -161,6 +233,7 @@ def look_edit(request, slug):
         form = LookForm(request.POST, request.FILES, instance=look)
         if form.is_valid():
             form.save()
+            return HttpResponseRedirect(look.get_absolute_url())
     else:
         form = LookForm(instance=look)
 

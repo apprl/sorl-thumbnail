@@ -4,7 +4,7 @@ from apparel.models import *
 class LookForm(ModelForm):
     class Meta:
         model = Look
-        exclude = ('products',)
+        exclude = ('products','user')
 
 class LookProductForm(ModelForm):
     class Meta:

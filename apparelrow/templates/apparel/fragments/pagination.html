@@ -1,3 +1,28 @@
-<a class="prev" href="/apparel/filter/?page={{products.previous_page_number }}"> </a>
-<div class="current">{{ products.number }} of {{ products.paginator.num_pages }}</div>
-<a class="next" href="/apparel/filter/?page={{products.next_page_number }}"> </a>
+{# NOTE: If you change this, also change pagination_js.html #}
+<a class="prev{% if not products.has_previous %} disabled{% endif %}" href="/browse/?page={{ products.previous_page_number }}">&lt;</a>
+<div>
+<ol>
+{% if pagination.left %}
+    {% for page in pagination.left %}
+        <li><a href="/browse/?page={{ page }}">{{ page }}</a></li>
+    {% endfor %}
+    <li class="pagination-dots">&hellip;</li>
+{% endif %}
+
+{% for page in pagination.mid %}
+    {% ifequal page products.number %}
+        <li class="current">{{ page }}</li>
+    {% else %}
+        <li><a href="/browse/?page={{ page }}">{{ page }}</a></li>
+    {% endifequal %}
+{% endfor %}
+
+{% if pagination.right %}
+    <li class="pagination-dots">&hellip;</li>
+    {% for page in pagination.right %}
+        <li><a href="/browse/?page={{ page }}">{{ page }}</a></li>
+    {% endfor %}
+{% endif %}
+</ol>
+</div>
+<a class="next{% if not products.has_next %} disabled{% endif %}" href="/browse/?page={{ products.next_page_number }}">&gt;</a>
