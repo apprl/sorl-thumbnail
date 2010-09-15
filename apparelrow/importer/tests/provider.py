@@ -22,7 +22,7 @@ class ProviderBaseTest(TestCase):
             provider_class='DummyProvider',
         )
         self.test_date = datetime.date(2010, 9, 15)
-        self._dummy_path = os.path.join(settings.APPAREL_IMPORTER_WAREHOUSE, 'sample', '%s.csv' % self.test_date.strftime('%Y-%m-%d'))
+        self._dummy_path = os.path.join(settings.APPAREL_IMPORTER_WAREHOUSE, 'my_vendor', '%s.csv' % self.test_date.strftime('%Y-%m-%d'))
         
         if not os.path.exists(os.path.split(self._dummy_path)[0]):
             os.makedirs(os.path.split(self._dummy_path)[0])
@@ -47,6 +47,7 @@ class ProviderBaseTest(TestCase):
         self.assertEquals(p.url,      'http://example.com/feed.csv', 'URL set from feed')
         self.assertEquals(p.feed, self.feed, 'Reference to VendorFeed')
         self.assertEquals(p.file, None, 'file defaults to None')
+        self.assertEquals(p.name, 'my_vendor', 'name constructed from vendor')
         self.assertEquals(p.extension, None, 'extension defaults to None')
         
         self.assertRaises(Exception, p.run)

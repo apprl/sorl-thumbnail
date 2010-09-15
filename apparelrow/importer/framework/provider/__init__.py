@@ -1,4 +1,4 @@
-import datetime, os, logging
+import datetime, os, logging, re
 
 from django.conf import settings
 
@@ -6,10 +6,8 @@ from importer.framework import fetcher
 
 def load_provider(name, feed):
     module = __import__('importer.framework.provider.%s' % name, fromlist = ['Provider'])   
-    p = module.Provider(feed)
-    p.name = name
-    return p
-
+    
+    return module.Provider(feed)
 
 class Provider(object):
     """
@@ -31,7 +29,7 @@ class Provider(object):
     
     def __init__(self, feed, **kwargs):
         self.feed      = feed
-        self.name      = None
+        self.name      = re.sub(r'[^a-z0-9_]', '_', feed.vendor.name.lower())
         self.file      = None
         self.extension = None
     
