@@ -50,7 +50,7 @@ class Provider(object):
         return self.feed.password
     
     
-    def run(self, **kwargs):
+    def run(self, from_warehouse=False, for_date=None, **kwargs):
         """
         Entry point for the import process. This will retrieve the file from
         the Internet or the warehouse, then hand it to the process() method
@@ -59,10 +59,11 @@ class Provider(object):
          - from_warehouse  - load the file from the warehouse, not the url property
          - for_date        - use this as_of_date. Format: YYYY-MM-DD
         
+        Other parameters are passed on unchanged to process.
         """
         
-        self.fetch(**kwargs)
-        return self.process()
+        self.fetch(from_warehouse=from_warehouse, for_date=for_date)
+        return self.process(**kwargs)
     
     def fetch(self, from_warehouse=False, for_date=None):
         """
@@ -104,7 +105,7 @@ class Provider(object):
         self.file = open(path, 'r')
         return True
         
-    def process(self):
+    def process(self, **kwargs):
         """
         Processes the file and calls the data mapper for each record
         """
