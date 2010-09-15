@@ -443,31 +443,3 @@ class IncompleteDataSet(ImporterException):
     """
     pass
 
-
-
-#
-# FIXME: Use routine from lib/importer/fetcher.py instead
-##
-#
-#def fetch(url, localpath=None, username=None, password=None):
-#    """
-#    Retrieves given URL and stores it in the given location. The path of the
-#    downloaded file is returned. If localpath is not defined, a temporary path
-#    is generated.
-#    """
-#    
-#    # FIXE: Add authentication
-#    
-#    if not localpath:
-#        (fh, localpath) = tempfile.mkstemp(prefix='ar_importer_', suffix='.tmp')
-#    
-#    f = urllib2.urlopen(url)
-#    
-#    local_fh = open(localpath, 'w')
-#    local_fh.write(f.read())
-#    local_fh.close()
-#    local_fh = None
-#    
-#    return localpath
-#
-#
