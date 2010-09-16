@@ -270,6 +270,7 @@ APPAREL_DEFAULT_AVATAR     = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg'
 APPAREL_PRODUCT_IMAGE_ROOT = 'products'
 APPAREL_LOOK_MAX_SIZE      = 470
 APPAREL_LOOK_FEATURED      = 3
+APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', 'warehouse')
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
