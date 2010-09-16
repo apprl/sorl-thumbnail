@@ -2,7 +2,8 @@ import datetime, os, logging, re
 
 from django.conf import settings
 
-from importer.framework import fetcher
+from importer.framework import fetcher, parser
+from apparelrow.importer.api import API, SkipProduct, ImporterException
 
 def load_provider(name, feed):
     module = __import__('importer.framework.provider.%s' % name, fromlist = ['Provider'])   
@@ -17,7 +18,8 @@ class Provider(object):
      - feed         importer.models.VendorFeed instance
      - file         File handle pointing to the downloaded feed file
      - name         Name of the module the provider belongs to
-     - extension    File extensions used when saving the file 
+     - extension    File extensions used when saving the file
+     - mapper       Data mapper class
     
     
     Synopsis
@@ -32,6 +34,7 @@ class Provider(object):
         self.name      = re.sub(r'[^a-z0-9_]', '_', feed.vendor.name.lower())
         self.file      = None
         self.extension = None
+        self.mapper    = None
     
     def __del__(self, *args, **kwargs):
         if self.file and not self.file.closed:
@@ -50,7 +53,7 @@ class Provider(object):
         return self.feed.password
     
     
-    def run(self, from_warehouse=False, for_date=None, **kwargs):
+    def run(self, from_warehouse=False, for_date=None):
         """
         Entry point for the import process. This will retrieve the file from
         the Internet or the warehouse, then hand it to the process() method
@@ -59,11 +62,10 @@ class Provider(object):
          - from_warehouse  - load the file from the warehouse, not the url property
          - for_date        - use this as_of_date. Format: YYYY-MM-DD
         
-        Other parameters are passed on unchanged to process.
         """
         
         self.fetch(from_warehouse=from_warehouse, for_date=for_date)
-        return self.process(**kwargs)
+        return self.process()
     
     def fetch(self, from_warehouse=False, for_date=None):
         """
@@ -91,7 +93,7 @@ class Provider(object):
             logging.debug("Created warehouse dir %s" % os.path.split(path)[0])
         except OSError, e:
             if not e.errno == 17:
-                # 17 = file or directory already exists. 
+                # 17 = file or directory already exists. Is there a constant for this?
                 # Ignore these errors, re-throw all others
                 raise
         
@@ -105,10 +107,94 @@ class Provider(object):
         self.file = open(path, 'r')
         return True
         
-    def process(self, **kwargs):
+    def process(self):
         """
-        Processes the file and calls the data mapper for each record
+        Processes the file and calls the data mapper for each record. This will
+        in turn call import_data with the mapped record
+        
         """
         # FIXME: Let this be fatal
         raise Exception("process() has to be implemented by subclass")
+    
+    def import_data(self, data):
+        """
+        Imports the data into Apparel using the API
+        """
+        p = None
+        
+        try:
+            p = API().import_dataset( data )
+        
+        except SkipProduct, e:
+            # FIXME: Add ImportLogMessage that the message was skipped
+            logging.info('Record skipped: %s', e)
+        
+        except ImporterException, e:
+            # FIXME: Add ImportLogMessage that the message was there was errors
+            logging.error('Record skipped due to importer errors: %s', e)
+
+        except Exception, e:
+            # FIXME: No need to add anything here as the process will terminate
+            logging.critical('Translation failed with uncaught exception: %s', e)
+            raise 
+        else:
+            # FIXME: Should we count number of products imported? If so, do this
+            # here. Then add it to the ImportLog instance in when process() 
+            # finishes in run()
+            logging.info('Imported product %s', p)
+    
+
+
+class CSVProvider(Provider):
+    """
+    A provider that parses CSV files. 
+    Example usage:
+    
+        from importer.framework.parser import utils
+        
+        class MyProvider(ProviderCSV):
+            def __init__(self, *args, **kwargs):
+                super(MyProvider, self).__init__(*args, **kwargs)
+                self.dialect = utils.CSVPipeDelimited
+                self.encoding = 'latin-1',
+                self.fieldnames = (
+                    'list', 'of', '#ignore1', 'column', '#ignore2', 'headers'
+                )
+    
+    New fields
+    
+     - fieldnames       List of fieldnames that will map the column values. They need to be unique.
+     - dialect          CSV dialect used to parse the source. See importer.framework.parser and csv.Dialect
+     - encoding         Defaults to "utf-8".
+    
+    """
+    
+    def __init__(self, *args, **kwargs):
+        super(CSVProvider, self).__init__(*args, **kwargs)
+        
+        self.extension  = 'csv'
+        self.fieldnames = None
+        self.dialect    = None
+        self.encoding   = 'utf-8'
+    
+    def process(self):
+        if not self.fieldnames:
+            # FIXME: Read first line of CSV file and use as headers
+            pass
+        
+        csv_reader = parser.CSVParser(self.file, 
+            dialect=self.dialect, 
+            fieldnames=self.fieldnames,
+            encoding=self.encoding,
+        )
+        
+        for row in csv_reader:
+            # Instantiate mapper
+            # map raw data to API-format
+            # Import mapped data using API
+            mapper = self.mapper(self, row)
+            self.import_data( mapper.translate() )
+
+
+
 

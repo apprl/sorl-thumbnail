@@ -6,4 +6,6 @@ class Provider(ProviderBase):
         super(Provider, self).__init__(*args, **kwargs)
         self.extension = 'csv'
     
+    def process(self, **kwargs):
+        pass
 
