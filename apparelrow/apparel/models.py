@@ -191,12 +191,37 @@ class Product(models.Model):
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'default_vendor', 'score']
 
+
+# Maps products for a specific vendor 
+# This is used for importing stuff - when this category is changed,
+# all related products will be updated to reflect the category
+class VendorCategory(models.Model):
+    category = models.OneToOneField(Category, _('Category'), null=True)
+    name     = models.CharField(_('Name'))
+
+    # Update all related products to point to the category
+    def save(self, *args, **kwargs):
+        if self.category:
+            Product.objects.filter(vendorproduct__vendor_category=self).update(category=self.category)
+            # NOTE: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
+
+        super(VendorCategory, self).save(*args, **kwargs)
+    
+    @property
+    def vendor(self):
+        return self.vendorproducts.all()[0]
+
+    def __unicode__(self):
+        return u'%s: %s <-> %s' % (self.vendor, self.name, self.category)
+
+
 class VendorProduct(models.Model):
-    vendor     = models.ForeignKey(Vendor)
-    product    = models.ForeignKey(Product, related_name='vendorproduct', verbose_name='Vendor Product')
-    buy_url    = models.URLField(_('Buy URL'), null=True, blank=True, )
-    price      = models.DecimalField(_('Numeric price'), null=True, blank=True, max_digits=10, decimal_places=2)
-    currency   = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
+    vendor            = models.ForeignKey(Vendor)
+    product           = models.ForeignKey(Product, related_name='vendorproduct', verbose_name='Vendor Product')
+    vendor_category   = models.ForeignKey(VendorCategory, related_name='vendorproducts')
+    buy_url           = models.URLField(_('Buy URL'), null=True, blank=True, )
+    price             = models.DecimalField(_('Numeric price'), null=True, blank=True, max_digits=10, decimal_places=2)
+    currency          = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
     
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)
