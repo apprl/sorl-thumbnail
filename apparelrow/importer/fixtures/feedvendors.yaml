@@ -1,0 +1,19 @@
+# - Vendor -
+
+- model: apparel.vendor
+  pk: 1
+  fields:
+    name: Grandpa
+    homepage: http://www.grandpa.se
+
+
+# - VendorFeed -
+- model: importer.vendorfeed
+  pk: 1
+  fields:
+    vendor: 1
+    name: grandpa
+    provider_class: grandpa
+    url: http://www.grandpa.se/system/tools/kelkoo/product-feed.asp
+
+

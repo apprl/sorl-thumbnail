@@ -1,14 +1,16 @@
+from datetime import datetime
+
 from django.db import models
 from django.utils.translation import get_language, ugettext_lazy as _
 
-from datetime import datetime
-
 from apparel import models as apparel
+from importer.framework.provider import load_provider
 
 
 
 class VendorFeed(models.Model):
     vendor   = models.ForeignKey(apparel.Vendor)
+    name     = models.CharField(max_length=15, unique=True, help_text=_('a-z, 0-9 and _'))
     url      = models.CharField(max_length=255)
     username = models.CharField(max_length=50, null=True, blank=True)
     password = models.CharField(max_length=50, null=True, blank=True)
@@ -28,13 +30,15 @@ class VendorFeed(models.Model):
     def __unicode__(self):
         return u'%s' % self.vendor.name
     
-    def run_import(self):
-        log = self.import_logs.create()
-                        
+    def run_import(self, from_warehouse=False, for_date=None):
+        log = self.import_log.create()
+        
         try:
-            pass
+            load_provider(self.provider_class, self).run(from_warehouse=from_warehouse, for_date=for_date)
         except Exception, e:
-            log.messages.add(status='error', message='Fatal exception: %s' % e)
+            import sys, traceback
+            traceback.print_tb(sys.exc_info()[2])
+            log.messages.create(status='error', message='Fatal exception: %s' % e)
             log.status = 'failed'
         else:
             log.status = 'completed'

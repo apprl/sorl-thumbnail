@@ -1,4 +1,4 @@
-import datetime, os, logging, re
+import datetime, os, logging, re, traceback, sys
 
 from django.conf import settings
 
@@ -79,7 +79,7 @@ class Provider(object):
         #  change between providers.
         
         if not for_date:
-            for_date = datetime.utcnow()
+            for_date = datetime.datetime.utcnow()
         
         date = for_date.strftime('%Y-%m-%d')
         path = os.path.join(
@@ -100,7 +100,7 @@ class Provider(object):
         if from_warehouse:
             logging.debug("Reading file from warehouse %s" % path)
         else:
-            logging.info("Downloading %s to %s" % self.url, path)
+            logging.info("Downloading %s to %s" % (self.url, path))
             logging.debug("Storing file in warehouse at %s" % path)
             fetcher.fetch(self.url, path, self.username, self.password)
         
@@ -144,11 +144,11 @@ class Provider(object):
         
         except Exception, e:
             # FIXME: No need to add anything here as the process will terminate
-            logging.critical('Translation failed with uncaught exception: %s', e)
+            logging.critical('Translation failed with uncaught exception: %s', unicode( e.__str__(), "utf-8" ))
             self.feed.latest_import_log.messages.create(
                 status='error', 
-                message="Aborting import due to unhandled error.\nProduct: %s\nError:%s" % (
-                    prod_id, e
+                message="Aborting import due to unhandled error.\nProduct: %s\nError:%s\n\n%s" % (
+                    prod_id, e, repr(traceback.format_stack(sys.exc_info()[2]))
                 )
             )
             raise 
@@ -204,9 +204,6 @@ class CSVProvider(Provider):
         )
         
         for row in csv_reader:
-            # Instantiate mapper
-            # map raw data to API-format
-            # Import mapped data using API
             mapper = self.mapper(self, row)
             self.import_data( mapper.translate() )
 
