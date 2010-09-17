@@ -3,14 +3,18 @@ from django.test import TestCase, TransactionTestCase
 
 from importer.framework.mapper import DataMapper, SkipField
 from importer.framework.provider import Provider
+from importer.models import VendorFeed
+from apparel import models as apparel
 
-#    'version': '0.1',
+
+#    'version': '0.2',
 #    'date': '2010-02-11 15:41:01 UTC',
 #    'vendor': 'Cali Roots',
 #    'product': {
 #        'product-id': '375512-162',
 #        'product-name': 'Flight 45',
 #        'categories': 'Sneakers',
+#        'category': 'Sneakers',
 #        'manufacturer': 'Jordan',
 #        'price': 1399.00,
 #        'currency': 'SEK',
@@ -41,14 +45,18 @@ class DummyDataMapper(DataMapper):
     
 
 class DummyProvider(Provider):
-    def __init__(self):
-        self.name = 'The Vendor'
-    
     pass
 
 class FieldMapperTest(TestCase):
     def setUp(self):
-        self.mapper = DummyDataMapper(DummyProvider(), record={
+        self.feed = VendorFeed.objects.create(
+            vendor=apparel.Vendor.objects.create(name='My Vendor'),
+            url='http://example.com/feed.csv',
+            username='the username',
+            password='the password',
+            provider_class='DummyProvider',
+        )
+        self.mapper = DummyDataMapper(DummyProvider(self.feed), record={
             'product_id': 'the id',
             'name': 'the name',
             'product-url': 'the url',
@@ -69,7 +77,7 @@ class FieldMapperTest(TestCase):
         self.assertRaises(SkipField, self.mapper.map_field, 'currency')
     
     def test_map_fields(self):
-        f = self.mapper.map_fields()
+        f = self.mapper.translate()
         self.assertTrue(isinstance(f, dict))
         self.assertTrue('product' in f)
         self.assertTrue('version' in f)
