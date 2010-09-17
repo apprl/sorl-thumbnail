@@ -138,7 +138,7 @@ class CSVProviderTest(TestCase):
             self.fail('Parse CSV file')
         else:
             self.assertTrue(True, 'Parsed and imported CSV file')
-                
+        
         self.assertEquals(
             p.imported_data,
             [{'myfield1': u'one',

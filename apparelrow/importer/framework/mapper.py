@@ -11,8 +11,6 @@ class DataMapper():
         self.variances    = []          # Product variances
     
     
-
-    
     def add_variances(self):
         """
         Adds a list of variances to the 'variances' array.

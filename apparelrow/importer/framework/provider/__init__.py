@@ -121,21 +121,36 @@ class Provider(object):
         Imports the data into Apparel using the API
         """
         p = None
+        prod_id = data['product']['product-id'] if 'product' in data and 'product-id' in data['product'] else '[unknown]'
+
         
         try:
-            p = API().import_dataset( data )
+            p = API(import_log=self.feed.latest_import_log).import_dataset( data )
         
         except SkipProduct, e:
-            # FIXME: Add ImportLogMessage that the message was skipped
+            self.feed.latest_import_log.messages.create(
+                status='info', 
+                message="Skipping product\nProduct: %s\nError:%s" % (prod_id, e)
+            )
             logging.info('Record skipped: %s', e)
         
         except ImporterException, e:
-            # FIXME: Add ImportLogMessage that the message was there was errors
-            logging.error('Record skipped due to importer errors: %s', e)
-
+            self.feed.latest_import_log.messages.create(
+                status='error', 
+                message="Product skipped due to unexpected errors\nProduct: %s\nError:%s" % (
+                    prod_id, e
+                )
+            )
+        
         except Exception, e:
             # FIXME: No need to add anything here as the process will terminate
             logging.critical('Translation failed with uncaught exception: %s', e)
+            self.feed.latest_import_log.messages.create(
+                status='error', 
+                message="Aborting import due to unhandled error.\nProduct: %s\nError:%s" % (
+                    prod_id, e
+                )
+            )
             raise 
         else:
             # FIXME: Should we count number of products imported? If so, do this
