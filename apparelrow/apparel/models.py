@@ -136,8 +136,7 @@ class CategoryAlias(models.Model):
 
 class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
-    category = models.ForeignKey(Category, blank=True)
-    #models.ManyToManyField(Category, blank=True, verbose_name=_("Category"))
+    category = models.ForeignKey(Category, blank=True, null=True)
     options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
     slug = AutoSlugField(_("Slug Name"), populate_from=("manufacturer", "product_name",), blank=True,
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
@@ -148,6 +147,7 @@ class Product(models.Model):
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, help_text=_('Product image')) 
     vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
+    published     = models.BooleanField(default=True)
     
     objects = SearchManager()
     
@@ -179,6 +179,9 @@ class Product(models.Model):
 
         if not self.sku:
             self.sku = self.slug
+        
+        if not self.category:
+            self.published = False
 
         super(Product, self).save(*args, **kwargs)
 

@@ -65,7 +65,7 @@ class API(object):
         self._category      = None
         self._manufacturer  = None
         self._vendor        = None
-    
+        
     @transaction.commit_on_success
     def import_dataset(self, data=None):
         """
@@ -84,6 +84,8 @@ class API(object):
         except ImporterException, e:
             # Log ImporterException
             logging.error('%s, record skipped', e)
+            raise
+        except Exception, e:
             raise
         else:
             logging.info('Imported %s', p)
@@ -197,8 +199,7 @@ class API(object):
             db_variation.save()
 
     @property
-    def vendorproduct:
-
+    def vendorproduct(self):
         if not self._vendorproduct:
             vp, created = VendorProduct.objects.get_or_create( product=product, vendor=self.vendor )
             
@@ -286,7 +287,7 @@ class API(object):
                 )
                 logging.debug('Creating new vendor category: %s', category_names)
 
-        return self._category
+        return self._category.category
             
     @property 
     def manufacturer(self):
