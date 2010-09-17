@@ -14,6 +14,17 @@ class VendorFeed(models.Model):
     password = models.CharField(max_length=50, null=True, blank=True)
     provider_class = models.CharField(max_length=50)
     
+    @property
+    def latest_import_log(self):
+        """
+        Returns the ImportLog for lastest import, completed or running
+        """
+        
+        try:
+            return self.import_log.latest()
+        except ImportLog.DoesNotExist:
+            pass        
+    
     def __unicode__(self):
         return u'%s' % self.vendor.name
     
@@ -68,7 +79,10 @@ class ImportLog(models.Model):
         return super(ImportLog, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return u'%s - %s' % (self.vendor_feed, dict(STATUS)[self.status])
+        return u'%s - %s' % (self.vendor_feed, dict(self.STATUS)[self.status])
+    
+    class Meta:
+        get_latest_by = 'start_time'
 
 
 class ImportLogMessage(models.Model):

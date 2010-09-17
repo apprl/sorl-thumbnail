@@ -73,6 +73,34 @@ class VendorFeedTest(TestCase):
         self.assertEquals(feed, log.vendor_feed, 'Relationship OK')
         self.assertEquals(feed.import_log.count(), 1, 'Added ImportLog')
     
+    def test_lastest_log(self):
+        feed1 = VendorFeed.objects.create(
+            vendor=apparel.Vendor.objects.create(name='Vendor 1'),
+            url='http://example.com/feed.xml',
+            provider_class='DummyProvider',
+        )
+        feed2 = VendorFeed.objects.create(
+            vendor=apparel.Vendor.objects.create(name='Vendor 2'),
+            url='http://example.com/feed.xml',
+            provider_class='DummyProvider',
+        )
+        
+        self.assertEquals(feed1.latest_import_log, None, 'No import logs available')
+        
+        log1 = feed1.import_log.create()
+        self.assertEquals(feed1.latest_import_log, log1, 'Returns lastest log object')
+        time.sleep(1)
+        log2 = feed1.import_log.create()
+        self.assertEquals(feed1.import_log.count(), 2, 'Two logs associated with feed')
+        self.assertEquals(feed1.latest_import_log, log2, 'Only the latest returned by latest_log accessor')
+        
+        time.sleep(1)
+        log3 = feed2.import_log.create()
+        self.assertEquals(feed1.latest_import_log, log2, "Feed1's import log unchanged")
+        self.assertEquals(feed2.latest_import_log, log3, "Feed2's import log correct")
+        
+        
+    
 if __name__ == '__main__':
     unittest.main()
 

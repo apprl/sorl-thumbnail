@@ -1,7 +1,7 @@
 import cStringIO, sys, re, csv
 from importer.framework.parser.utils import UTF8Recoder
 
-class CSVParser(Parser):
+class CSVParser():
     """
     Simple CSV parser.
     """
@@ -22,7 +22,7 @@ class CSVParser(Parser):
     
     def from_latin(self, s):
         return u'' if s is None else unicode(s, "utf-8") 
-        
+
     def __iter__(self):
         return self
 

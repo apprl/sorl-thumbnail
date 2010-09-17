@@ -11,35 +11,6 @@ class DataMapper():
         self.variances    = []          # Product variances
     
     
-    def translate(self):
-        """
-        Maps a record (a flat dict) parsed from source file to a hash readable
-        by the API. The mapping follows the following procedure
-        
-            add_variances()     Returns list of variances extracted from record
-            map_fields()        Returns the API friendly data structure
-            store_product()     Calls the API with the product
-        
-        """
-        
-        p = None
-        
-        try:
-            p = API().import_dataset( self.map_fields() )
-        
-        except SkipRecord, e:
-            logging.info('Record skipped: %s', e)
-        
-        except ImporterException, e:
-            logging.error('Record skipped due to importer errors: %s', e)
-
-        except Exception, e:
-            logging.critical('Translation failed with uncaught exception: %s', e)
-            raise 
-        else:
-            logging.info('Imported product %s', p)
-
-    
     def add_variances(self):
         """
         Adds a list of variances to the 'variances' array.
@@ -56,7 +27,7 @@ class DataMapper():
         pass
         
     
-    def map_fields(self):
+    def translate(self):
         """
         Returns a hash of correctly formatted fields
         """
