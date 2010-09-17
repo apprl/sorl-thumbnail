@@ -57,13 +57,14 @@ Required Data Structure
 class API(object):
     re_url = re.compile(r'^.+/(.+)$')
     
-    def __init__(self, dataset=None):
-        self.version       = "0.1"
-        self._dataset      = dataset        
-        self._product      = None
-        self._category     = None
-        self._manufacturer = None
-        self._vendor       = None
+    def __init__(self, dataset=None, import_log=None):
+        self.version        = "0.1"
+        self._dataset       = dataset
+        self._import_log    = import_log
+        self._vendorproduct = None
+        self._category      = None
+        self._manufacturer  = None
+        self._vendor        = None
     
     @transaction.commit_on_success
     def import_dataset(self, data=None):
@@ -195,17 +196,26 @@ class API(object):
             db_variation.in_stock = in_stock
             db_variation.save()
 
+    @property
+    def vendorproduct:
+
+        if not self._vendorproduct:
+            vp, created = VendorProduct.objects.get_or_create( product=product, vendor=self.vendor )
+            
+            if created:
+                vp.vendor_category = self.category
+                logging.debug('Added product data to vendor: %s', vp)
+
+        return self._vendorproduct
+        
+
     def __vendor_options(self, product):
         """
         Private method that adds, update and maintain vendor data and options
         for a particular product
         """
         
-        
-        vp, created = VendorProduct.objects.get_or_create( product=product, vendor=self.vendor )
-        
-        if created:
-            logging.debug('Added product data to vendor: %s', vp)
+        vp = self._vendorproduct
         
         # FIXME: Map
         #   - delivery time
@@ -257,50 +267,25 @@ class API(object):
         the property is accessed.
         """
         
-        if not self._category:        
+        if not self._category:
             category_names = self.dataset['product'].get('categories')
             
             if not category_names:
                 raise IncompleteDataSet('No category')
             
-            # Force list
-            if not isinstance(category_names, list):
-                category_names = [category_names]
-            else:
-                category_names.reverse()
+            # Force string
+            if isinstance(category_names, list):
+                category_names = ' '.join(category_names)
             
-            categories = []
-            
-            for name in category_names:
-                try:
-                    category = Category.objects.get(key=Category.key_for_name(name))
-                except ObjectDoesNotExist:
-                    logging.debug('Creating new category: %s', name)
-                    # FIXME: Mark this as new and inactive. 
-                    # FIXME: Create a workflow ticket for someone to approve the category
-                    # and all products related to it
-                    category = Category( name=name )
-                else:
-                    logging.debug('Using existing category: %s', category.name)
-                    break
-                finally:
-                    if len(categories) > 0:
-                        logging.debug('Assigning child category %s to %s', category, categories[0].parent)
-                        categories[0].parent = category
-                    
-                    categories.insert(0, category)
-            
-            if len(categories) == 0:
-                raise ImporterException('Could not retrieve or create any categories')
-            
-            for category in categories:
-                # FIXME: Is this required?
-                category.save()
-            
-            logging.debug('Using category %s', categories[-1])
-            
-            self._category = categories[-1]
-        
+            self._category, created = VendorCategory.objects.get_or_create(vendor=self.vendor, name=category_names)
+
+            if created:
+                self._import_log.messages.create(
+                    status='attention',
+                    message='New VendorCategory: %s, add mapping to Category to update related products' % self._category,
+                )
+                logging.debug('Creating new vendor category: %s', category_names)
+
         return self._category
             
     @property 

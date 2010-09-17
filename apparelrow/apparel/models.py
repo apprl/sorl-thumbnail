@@ -196,8 +196,9 @@ class Product(models.Model):
 # This is used for importing stuff - when this category is changed,
 # all related products will be updated to reflect the category
 class VendorCategory(models.Model):
-    category = models.OneToOneField(Category, _('Category'), null=True)
-    name     = models.CharField(_('Name'))
+    category = models.OneToOneField(Category, verbose_name=_('category'), null=True)
+    name     = models.CharField(_('Name'), max_length=255)
+    vendor   = models.ForeignKey(Vendor)
 
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
@@ -207,12 +208,11 @@ class VendorCategory(models.Model):
 
         super(VendorCategory, self).save(*args, **kwargs)
     
-    @property
-    def vendor(self):
-        return self.vendorproducts.all()[0]
-
     def __unicode__(self):
         return u'%s: %s <-> %s' % (self.vendor, self.name, self.category)
+
+    class Meta:
+        unique_together = (('vendor', 'name'),)
 
 
 class VendorProduct(models.Model):
