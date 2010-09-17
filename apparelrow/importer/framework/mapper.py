@@ -37,14 +37,14 @@ class DataMapper():
         api_dict = {
             'version': '0.1',
             'date':    self.map_field('date') or datetime.datetime.now().strftime('%Y-%m-%dT%H:%m:%SZ%z'),
-            'vendor':  self.provider.name,
+            'vendor':  self.provider.feed.vendor.name,
             'product': {}
         }
         
         # FIXME: Get field list from somewhere else
         for field in ['product-id', 'product-name', 'categories', 'manufacturer', 
                   'price', 'currency', 'delivery-cost', 'delivery-time', 
-                  'image-url', 'product-url', 'description']:
+                  'image-url', 'product-url', 'description', 'availability']:
             try:
                 api_dict['product'][field] = self.map_field(field)
             except SkipField:
@@ -60,11 +60,11 @@ class DataMapper():
         Returns a value for the given field. This method will first try to call
         a method called
         
-            self.set_[field_name]
+            self.get_[field_name]
         
         (Note: Any occurence of - in the field name is represented by _ in the
         method name. So for field 'product-name', this method will attempt to
-        call 'set_product_name')
+        call 'get_product_name')
         
         and if that does not exist it will try use a value stored in:
         
@@ -76,7 +76,7 @@ class DataMapper():
         skipped, but the process to continue.
         """
         
-        method_name = 'set_%s' % field_name.replace('-', '_')
+        method_name = 'get_%s' % field_name.replace('-', '_')
         
         if hasattr(self, method_name):
             return getattr(self, method_name)()

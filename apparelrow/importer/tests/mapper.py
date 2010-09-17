@@ -37,10 +37,10 @@ from apparel import models as apparel
 
 
 class DummyDataMapper(DataMapper):
-    def set_product_name(self):
+    def get_product_name(self):
         return self.record.get('name')
     
-    def set_currency(self):
+    def get_currency(self):
         raise SkipField('I do not care about this field')
     
 
@@ -60,8 +60,7 @@ class FieldMapperTest(TestCase):
             'product_id': 'the id',
             'name': 'the name',
             'product-url': 'the url',
-        })
-    
+        })        
     
     def test_map_field_record(self):
         self.assertEqual(self.mapper.map_field('product-url'), 'the url', 'Mapped field to data dict')
@@ -82,7 +81,7 @@ class FieldMapperTest(TestCase):
         self.assertTrue('product' in f)
         self.assertTrue('version' in f)
         self.assertTrue(re.match(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z(?:.+?)?', f.get('date')))
-        self.assertEqual(f['vendor'], self.mapper.provider.name, 'Vendor name')
+        self.assertEqual(f['vendor'], 'My Vendor', 'Vendor name')
 
         p = f['product']
         self.assertFalse('currency' in p, 'SkipField is causing field to be ignored')
