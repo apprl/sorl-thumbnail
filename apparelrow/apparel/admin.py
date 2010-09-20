@@ -18,6 +18,11 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 
+class VendorCategoryAdmin(admin.ModelAdmin):
+    list_display = ('vendor', 'name', 'category',)
+
+admin.site.register(VendorCategory, VendorCategoryAdmin)
+
 class OptionTypeAdmin(admin.ModelAdmin):
     list_display = ['name']
 
