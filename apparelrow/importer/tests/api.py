@@ -105,7 +105,6 @@ class TestImporterAPIBasic(TestCase):
         
         self.assertRaises(IncompleteDataSet, lambda: a.vendor)
         
-        sample_dict['vendor'] = 'Temp Vendor'
         a.dataset = self.dataset
         
         v = a.vendor

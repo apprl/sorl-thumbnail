@@ -10,6 +10,7 @@ from apparel import models as apparel
 class ImportLogTest(TestCase):
     def setUp(self):
         self.feed = VendorFeed.objects.create(
+            name='myvendor',
             vendor=apparel.Vendor.objects.create(name='My Vendor'),
             url='http://example.com/feed.xml',
             provider_class='DummyProvider',
@@ -64,6 +65,7 @@ class VendorFeedTest(TestCase):
     
     def test_import_log(self):
         feed = VendorFeed.objects.create(
+            name='myvendor',
             vendor=apparel.Vendor.objects.create(name='Vendor'),
             url='http://example.com/feed.xml',
             provider_class='DummyProvider',
@@ -75,11 +77,13 @@ class VendorFeedTest(TestCase):
     
     def test_lastest_log(self):
         feed1 = VendorFeed.objects.create(
+            name='vendor1',
             vendor=apparel.Vendor.objects.create(name='Vendor 1'),
             url='http://example.com/feed.xml',
             provider_class='DummyProvider',
         )
         feed2 = VendorFeed.objects.create(
+            name='vendor2',
             vendor=apparel.Vendor.objects.create(name='Vendor 2'),
             url='http://example.com/feed.xml',
             provider_class='DummyProvider',
