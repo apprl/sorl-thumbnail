@@ -1,3 +1,4 @@
+import sys, traceback, logging
 from datetime import datetime
 
 from django.db import models
@@ -36,8 +37,8 @@ class VendorFeed(models.Model):
         try:
             load_provider(self.provider_class, self).run(from_warehouse=from_warehouse, for_date=for_date)
         except Exception, e:
-            import sys, traceback
-            traceback.print_tb(sys.exc_info()[2])
+            logging.fatal(unicode(e.__str__()))
+            logging.debug(traceback.format_tb(sys.exc_info()[2]))
             log.messages.create(status='error', message='Fatal exception: %s' % e)
             log.status = 'failed'
         else:

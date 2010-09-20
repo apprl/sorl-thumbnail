@@ -394,9 +394,11 @@ class API(object):
             try:
                 temppath = fetch(url)
             except HTTPError, e:
-                # FIXME: Raise error and roll back
-                logging.error('%s (while downloading %s', e, url)
-                return
+                # FIXME: We could have a re-try loop for certain errors
+                # FIXME: We could create the product, and mark it as unpublished
+                #        until the image has been added
+                logging.error('%s (while downloading %s)', e, url)
+                raise IncompleteDataSet('Could not download product image')
             
             default_storage.save(self.product_image_path, File(open(temppath)))
             logging.debug('Stored image at %s', self.product_image_path)

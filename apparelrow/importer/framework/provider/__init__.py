@@ -73,7 +73,7 @@ class Provider(object):
         opens it for reading. The open file object is stored in the file property
         """
         
-        # FIXME: 
+        # NOTE: 
         #  If anyone needs to override "fetch", it might be a good idea to
         #  move the warehouse bit out so it can be re-used. It won't really
         #  change between providers.
@@ -99,6 +99,8 @@ class Provider(object):
         
         if from_warehouse:
             logging.debug("Reading file from warehouse %s" % path)
+            if not os.path.exists(path):
+                raise Exception('File %s not in warehouse. Try importing file vendor instead' % path)
         else:
             logging.info("Downloading %s to %s" % (self.url, path))
             logging.debug("Storing file in warehouse at %s" % path)
@@ -111,9 +113,7 @@ class Provider(object):
         """
         Processes the file and calls the data mapper for each record. This will
         in turn call import_data with the mapped record
-        
         """
-        # FIXME: Let this be fatal
         raise Exception("process() has to be implemented by subclass")
     
     def import_data(self, data):
@@ -122,7 +122,6 @@ class Provider(object):
         """
         p = None
         prod_id = data['product']['product-id'] if 'product' in data and 'product-id' in data['product'] else '[unknown]'
-
         
         try:
             p = API(import_log=self.feed.latest_import_log).import_dataset( data )
