@@ -221,7 +221,7 @@ class VendorCategory(models.Model):
 class VendorProduct(models.Model):
     vendor            = models.ForeignKey(Vendor)
     product           = models.ForeignKey(Product, related_name='vendorproduct', verbose_name='Vendor Product')
-    vendor_category   = models.ForeignKey(VendorCategory, related_name='vendorproducts')
+    vendor_category   = models.ForeignKey(VendorCategory, related_name='vendorproducts', null=True,)
     buy_url           = models.URLField(_('Buy URL'), null=True, blank=True, )
     price             = models.DecimalField(_('Numeric price'), null=True, blank=True, max_digits=10, decimal_places=2)
     currency          = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))

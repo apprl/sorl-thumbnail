@@ -4,7 +4,7 @@ from django.test import TestCase, TransactionTestCase
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-from apparel.models import Vendor, Manufacturer, Category, VendorCategory
+from apparel.models import Vendor, Manufacturer, Category, VendorCategory, OptionType
 from importer.models import ImportLog, VendorFeed
 from importer.api import API, IncompleteDataSet, ImporterException
 
@@ -16,7 +16,7 @@ sample_dict = {
     'product': {
         'product-id': u'c001',
         'product-name': u'A cool pair of Jeans',
-        'categories': [u'Jeans'],
+        'categories': u'Jeans',
         'manufacturer': u'WhateverMan',
         'price': '239.0',
         'currency': 'GBP',
@@ -192,14 +192,22 @@ class TestImporterAPIProduct(TransactionTestCase):
     """        
     
     def setUp(self):
+        log = ImportLog.objects.create(
+             vendor_feed=VendorFeed.objects.create(
+                 name='testfeed',
+                 url='http://example.com',
+                 vendor=Vendor.objects.create(name='Cool Clothes Store'),
+                 provider_class='sample',
+             ),
+        )
         self.dataset = copy.deepcopy(sample_dict)
-        self.api = API()
+        self.api = API(import_log=log)
         self.api.dataset = self.dataset
         
         self.type_size  = OptionType.objects.create(name='size', description='Size')
         self.type_color = OptionType.objects.create(name='color', description='The colour')
         
-        self.category = Category.objects.create(name=self.dataset['product']['categories'][0])
+        self.category = Category.objects.create(name=self.dataset['product']['categories'])
         self.category.option_types.add(self.type_size)
         self.category.option_types.add(self.type_color)
         
@@ -214,7 +222,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         
         self.assertTrue(isinstance(p, Product), 'Returned product')
         self.assertEqual(p.manufacturer.id, self.api.manufacturer.id, 'Manufacturer assigned')
-        self.assertEqual(p.category.id, self.api.category.id, 'Category set')
+        self.assertEqual(p.category, None, 'Category (not) mapped')
         self.assertEqual(p.sku, self.dataset['product'].get('product-id'), 'SKU property populated')
         self.assertEqual(p.product_name, self.dataset['product'].get('product-name'), 'product name property populated')
         self.assertEqual(p.description,  self.dataset['product'].get('description'),  'Description populated')
