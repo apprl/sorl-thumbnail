@@ -384,7 +384,15 @@ class TestImporterAPIProduct(TransactionTestCase):
 
 class TestProductImage(TestCase):
     def setUp(self):
-        self.api = API()
+        self.log = ImportLog.objects.create(
+             vendor_feed=VendorFeed.objects.create(
+                 name='testfeed',
+                 url='http://example.com',
+                 vendor=Vendor.objects.create(name='Cool Clothes Store'),
+                 provider_class='sample',
+             ),
+        )
+        self.api = API(import_log=self.log)
         self.api.dataset = copy.deepcopy(sample_dict)
         
         # Create sample directory at 
@@ -429,7 +437,8 @@ class TestProductImage(TestCase):
         #
     def test_product_image_http_error(self):
         self.api.dataset['product']['image-url'] = 'http://www.example.com/404.jpg'
-        self.assertEqual(self.api.product_image(), None, 'HTTP error returns None')
+        
+        self.assertRaises(IncompleteDataSet, self.api.product_image)
     
     def test_product_image_exists(self):
         target_file = os.path.join(settings.MEDIA_ROOT, self.api.product_image_path)

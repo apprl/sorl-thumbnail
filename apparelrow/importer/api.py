@@ -150,7 +150,7 @@ class API(object):
         try:
             self.dataset['product']['variations']
         except KeyError, e:
-            raise IncompleteDataset('Missing variations')
+            raise IncompleteDataSet('Missing variations')
         
         for variation in self.dataset['product']['variations']:
             options = []

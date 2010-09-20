@@ -143,11 +143,14 @@ class Provider(object):
         
         except Exception, e:
             # FIXME: No need to add anything here as the process will terminate
-            logging.critical('Translation failed with uncaught exception: %s', unicode( e.__str__(), "utf-8" ))
+            #tb = sys.exc_info()[2]
+            #logging.fatal('Translation failed with uncought exception: [%s]', unicode(e.__str__(), 'utf-8'))
+            #logging.debug(traceback.format_tb(tb))
+            
             self.feed.latest_import_log.messages.create(
                 status='error', 
-                message="Aborting import due to unhandled error.\nProduct: %s\nError:%s\n\n%s" % (
-                    prod_id, e, repr(traceback.format_stack(sys.exc_info()[2]))
+                message="Aborting import due to unhandled error.\nProduct: %s\nError: %s\n\nStacktrace:\n%s" % (
+                    prod_id, e, ''.join(traceback.format_tb(sys.exc_info()[2]))
                 )
             )
             raise 
