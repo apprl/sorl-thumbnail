@@ -29,7 +29,7 @@ class Manufacturer(models.Model):
     objects = SearchManager()
 
     def __unicode__(self):
-        return self.name
+        return u"%s" % self.name
 
     class Meta:
         verbose_name = _("Manufacturer")
@@ -44,7 +44,7 @@ class OptionType(models.Model):
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
 
     def __unicode__(self):
-        return self.name
+        return u"%s" % self.name
 
     class Meta:
         ordering = ['name']
@@ -85,7 +85,7 @@ class Vendor(models.Model):
         verbose_name = _("Vendor")
 
     def __unicode__(self):
-        return u"%s" % (self.name) 
+        return u"%s" % self.name
 
 
 class Category(models.Model):
@@ -105,8 +105,7 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return self.name
-    
+        return u"%s" % self.name
     
     @staticmethod
     def key_for_name(name):
@@ -132,7 +131,7 @@ class CategoryAlias(models.Model):
     alias    = models.CharField(_('Alias'), max_length=255, unique=True, blank=True)
     
     def __unicode__(self):
-        return '%s alias to %s' % (self.alias, self.category.name)
+        return u'%s alias to %s' % (self.alias, self.category.name)
 
 class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
@@ -267,7 +266,7 @@ class VendorProductVariation(models.Model):
         else:
             s = '%i %s' % (self.in_stock, _('items in stock'))
         
-        return s
+        return unicode(s)
 
 
 class Look(models.Model):
@@ -429,4 +428,4 @@ class Wardrobe(models.Model):
     products = models.ManyToManyField(Product)
     
     def __unicode__(self):
-        return 'Wardrobe for %s' % self.user
+        return u'Wardrobe for %s' % self.user
