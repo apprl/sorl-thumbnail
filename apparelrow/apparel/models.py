@@ -205,6 +205,7 @@ class VendorCategory(models.Model):
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
         if self.category:
+            #import pdb; pdb.set_trace()
             Product.objects.filter(vendorproduct__vendor_category=self).update(category=self.category)
             # NOTE: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
 

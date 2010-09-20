@@ -402,7 +402,6 @@ class TestProductImage(TestCase):
         if os.path.exists(fp):
             os.remove(fp)
     
-    
     def test_product_image_path(self):
         self.assertTrue(settings.APPAREL_PRODUCT_IMAGE_ROOT, 'APPAREL_PRODUCT_IMAGE_ROOT setting exists')
         self.assertEqual(

@@ -136,7 +136,7 @@ class Provider(object):
         except ImporterException, e:
             self.feed.latest_import_log.messages.create(
                 status='error', 
-                message="Product skipped due to unexpected errors\nProduct: %s\nError:%s" % (
+                message="Product skipped due to unexpected errors\nProduct: %s\nError: %s" % (
                     prod_id, e
                 )
             )
@@ -149,8 +149,8 @@ class Provider(object):
             
             self.feed.latest_import_log.messages.create(
                 status='error', 
-                message="Aborting import due to unhandled error.\nProduct: %s\nError: %s\n\nStacktrace:\n%s" % (
-                    prod_id, e, ''.join(traceback.format_tb(sys.exc_info()[2]))
+                message=u"Aborting import due to unhandled error.\nProduct: %s\nError: %s\n\nStacktrace:\n%s" % (
+                    prod_id, unicode(e.__str__(), 'utf-8'), ''.join(traceback.format_tb(sys.exc_info()[2]))
                 )
             )
             raise 
