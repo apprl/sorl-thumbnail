@@ -1,12 +1,12 @@
 import logging, re, tempfile, urllib2, os
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.core.files.storage import default_storage
+from django.core.files import storage, File
 from django.template.defaultfilters import slugify
 from django.db import transaction
 from django.db.models import Count
 from django.conf import settings
-from urllib2 import HTTPError
+from urllib2 import HTTPError, URLError
 
 from apparel.models import *
 from importer.framework.fetcher import fetch
@@ -116,7 +116,7 @@ class API(object):
             self.product = Product.objects.create(
                 manufacturer=self.manufacturer, 
                 sku=self.dataset['product']['product-id'],
-                product_image=self.download_product_image(),
+                product_image=self.product_image,
                 **fields
             )
 
@@ -386,20 +386,20 @@ class API(object):
             if not os.path.exists(os.path.join(settings.MEDIA_ROOT, d)):
                 os.makedirs(os.path.join(settings.MEDIA_ROOT, d))
             
-            if not default_storage.exists(self._product_image):
+            if not storage.default_storage.exists(self._product_image):
                 logging.info('Downloading product image %s', url)
                 temppath = None
                 
                 try:
                     temppath = fetch(url)
-                except HTTPError, e:
+                except (URLError, HTTPError), e:
                     # FIXME: We could have a re-try loop for certain errors
                     # FIXME: We could create the product, and mark it as unpublished
                     #        until the image has been added
                     logging.error('%s (while downloading %s)', e, url)
-                    raise IncompleteDataSet('Could not download product image')
-                
-                default_storage.save(self._product_image, File(open(temppath)))
+                    raise SkipProduct('Could not download product image')
+                                
+                storage.default_storage.save(self._product_image, File(open(temppath)))
                 logging.debug('Stored image at %s', self._product_image)
             else:
                 logging.debug('Image %s already exists, will not download', self._product_image)
