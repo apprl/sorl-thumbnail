@@ -158,9 +158,7 @@ class Provider(object):
             # FIXME: Should we count number of products imported? If so, do this
             # here. Then add it to the ImportLog instance in when process() 
             # finishes in run()
-            logging.info(u'Imported product %s', p)
-    
-
+            pass
 
 class CSVProvider(Provider):
     """

@@ -8,22 +8,12 @@ class DataMapper():
     def __init__(self, provider, record={}):
         self.provider     = provider    # Reference to the provider instance
         self.record       = record      # Raw data record source file
-        self.variations   = []          # Product variances
-    
     
     def add_variations(self):
         """
-        Adds a list of variances to the 'variances' array.
+        Should return an array with variations, see the API documentation for
+        format. This method should be implemented by any sub class.
         """
-        # FIXME: Should we simply let the parser to this, and leave it out
-        # of here. Something along the lines of
-        #   for record in parse_source:
-        #       m = Mapper(record)
-        #       m.variances.append(record['var1'])
-        #       m.variances.append(record['var2'])
-        #       m.translate()
-        
-        # Currently the base class implementation does nothing
         pass
         
     
@@ -41,7 +31,6 @@ class DataMapper():
             'product': {}
         }
         
-        # FIXME: Get field list from somewhere else
         for field in ['product-id', 'product-name', 'categories', 'manufacturer', 
                   'price', 'currency', 'delivery-cost', 'delivery-time', 
                   'image-url', 'product-url', 'description', 'availability']:
@@ -52,7 +41,7 @@ class DataMapper():
                 continue
         
         api_dict['product']['variations'] = self.add_variations() or []
-        
+
         return api_dict
         
     def map_field(self, field_name):

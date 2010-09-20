@@ -86,7 +86,7 @@ class FieldMapperTest(TestCase):
         p = f['product']
         self.assertFalse('currency' in p, 'SkipField is causing field to be ignored')
         self.assertEqual(p['price'], None, 'Missing field is filled with None value')
-        self.assertEqual(p['variances'], [], 'variances defaults to empty array')
+        self.assertEqual(p['variations'], [], 'variances defaults to empty array')
         
     
 

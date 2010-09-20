@@ -43,7 +43,7 @@ class GrandpaMapper(DataMapper):
     
     def get_image_url(self):
         # FIXME: Do a HEAD for the resulting URL to ensure it exists before returning this URI
-        return re.sub('r/images/(\w)/', '/images/XL/', self.record.get('image-url'))
+        return re.sub(r'/images/\w/', '/images/XL/', self.record.get('image-url'))
 
     def get_price(self):
         return self._split_price()[0]

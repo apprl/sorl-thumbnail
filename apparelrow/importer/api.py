@@ -66,7 +66,8 @@ class API(object):
         self._category      = None
         self._manufacturer  = None
         self._vendor        = None
-        
+        self._product_image = None
+            
     @transaction.commit_on_success
     def import_dataset(self, data=None):
         """
@@ -115,6 +116,7 @@ class API(object):
             self.product = Product.objects.create(
                 manufacturer=self.manufacturer, 
                 sku=self.dataset['product']['product-id'],
+                product_image=self.download_product_image(),
                 **fields
             )
 
@@ -236,6 +238,31 @@ class API(object):
             setattr(self.vendorproduct, f, fields[f])
         
         self.vendorproduct.save()
+
+    def product_image_path(self, url):
+        """
+        Returns the local path for the given URL.
+        
+        APPAREL_PRODUCT_IMAGE_ROOT/vendor_name/orignal_image
+    
+        If the image already exists, it will not be downloaded. Returns None if
+        no image is specified
+        """
+        
+        try:
+            m = self.re_url.match(url)
+        except TypeError:
+            raise IncompleteDataSet('url [%s] is not a string', url)
+
+        if not m:
+            raise IncompleteDataSet('product image URL [%s] does not match [%s]', url, self.re_url)
+        
+        return '%s/%s/%s' % (
+            settings.APPAREL_PRODUCT_IMAGE_ROOT, 
+            slugify(self.vendor.name),
+            m.group(1)
+        )
+        
     
     def validate(self):
         """
@@ -337,80 +364,47 @@ class API(object):
 
     
     @property
-    # FIXME: Cache this
-    def product_image_path(self):
-        """
-        Read-only property to retrieve the path to the image for the current
-        dataset.
-        
-        APPAREL_PRODUCT_IMAGE_ROOT/vendor_name/orignal_image
-    
-        If the image already exists, it will not be downloaded. Returns None if
-        no image is specified
-        """
-        
-        try:
-           url = self.dataset['product']['image-url'] 
-        except KeyError:
-            raise IncompleteDataSet('Missing image-url property')
-        
-        if url is None:
-            return None
-        
-        m = self.re_url.match(url)
-        if not m:
-            logging.warn('%s does not match %s', url, self.re_url)
-            return None
-        
-        return '%s/%s/%s' % (
-            settings.APPAREL_PRODUCT_IMAGE_ROOT, 
-            slugify(self.vendor.name), 
-            m.group(1)
-        )
-        
-                
-    
     def product_image(self):
         """
         Downloads the product image and stores it in the appropriate location. 
-        Returns None if no image URL exists in url, otherwise it returns the
-        path to the image.
+        Returns the relative path to the stored image.
         """
         
-        if self.product_image_path is None:
-            return None
-            
-        url = self.dataset['product']['image-url']
-        
-        
-        # FIXME: This ensures that the vendor's directory is present. 
-        # Re-implement this when a ProductImageStorage backend has been developed
-        # Possibly, move this out
-        m = re.match('(.+)/', self.product_image_path)
-        d = m.group(1)
-        if not os.path.exists(os.path.join(settings.MEDIA_ROOT, d)):
-            os.makedirs(os.path.join(settings.MEDIA_ROOT, d))
-        
-        if not default_storage.exists(self.product_image_path):
-            logging.info('Downloading product image %s', url)
-            temppath = None
-            
+        if not self._product_image:        
             try:
-                temppath = fetch(url)
-            except HTTPError, e:
-                # FIXME: We could have a re-try loop for certain errors
-                # FIXME: We could create the product, and mark it as unpublished
-                #        until the image has been added
-                logging.error('%s (while downloading %s)', e, url)
-                raise IncompleteDataSet('Could not download product image')
+                url = self.dataset['product']['image-url']
+            except KeyError, e:
+                raise IncompleteDataSet('Missing image-url property')
             
-            default_storage.save(self.product_image_path, File(open(temppath)))
-            logging.debug('Stored image at %s', self.product_image_path)
-        else:
-            logging.debug('Image %s already exists, will not download', self.product_image_path)
+            # FIXME: This ensures that the vendor's directory is present. 
+            # Re-implement this when a ProductImageStorage backend has been developed
+            # Possibly, move this out
+            self._product_image = self.product_image_path(url)
+            m = re.match('(.+)/', self._product_image)
+            d = m.group(1)
+            
+            if not os.path.exists(os.path.join(settings.MEDIA_ROOT, d)):
+                os.makedirs(os.path.join(settings.MEDIA_ROOT, d))
+            
+            if not default_storage.exists(self._product_image):
+                logging.info('Downloading product image %s', url)
+                temppath = None
+                
+                try:
+                    temppath = fetch(url)
+                except HTTPError, e:
+                    # FIXME: We could have a re-try loop for certain errors
+                    # FIXME: We could create the product, and mark it as unpublished
+                    #        until the image has been added
+                    logging.error('%s (while downloading %s)', e, url)
+                    raise IncompleteDataSet('Could not download product image')
+                
+                default_storage.save(self._product_image, File(open(temppath)))
+                logging.debug('Stored image at %s', self._product_image)
+            else:
+                logging.debug('Image %s already exists, will not download', self._product_image)
         
-        return self.product_image_path
-
+        return self._product_image
 
 class ImporterException(Exception):
     """

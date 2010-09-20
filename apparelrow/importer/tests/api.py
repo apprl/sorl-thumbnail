@@ -405,25 +405,17 @@ class TestProductImage(TestCase):
     
     def test_product_image_path(self):
         self.assertTrue(settings.APPAREL_PRODUCT_IMAGE_ROOT, 'APPAREL_PRODUCT_IMAGE_ROOT setting exists')
-        self.assertEqual(self.api.product_image_path, '%s/%s/%s' % (
-            settings.APPAREL_PRODUCT_IMAGE_ROOT, 
-            'cool-clothes-store', 
-            '__image.png'
-        ))
+        self.assertEqual(
+            self.api.product_image_path(self.api.dataset['product']['image-url']), 
+            '%s/%s/%s' % (
+                settings.APPAREL_PRODUCT_IMAGE_ROOT, 
+                'cool-clothes-store', 
+                '__image.png'
+            )
+        )
         
-    
-    # FIXME: Clean up paths for these tests
-    # FIXME: Let the test add the file to prod dir during setup
-    
-    def test_product_image_path_missing_url(self):
-        del self.api.dataset['product']['image-url']
-        
-        self.assertRaises(IncompleteDataSet, lambda: self.api.product_image_path)
-    
-    def test_product_image_path_no_url(self):
-        self.api.dataset['product']['image-url'] = None
-
-        self.assertEqual(self.api.product_image_path, None, 'No URL available')
+    def test_product_image_no_url(self):
+        self.assertRaises(IncompleteDataSet, self.api.product_image_path, None)
         
     def test_product_image(self):
         print 'Currently no way of testing a request against testserver using urllib2.'
@@ -437,20 +429,35 @@ class TestProductImage(TestCase):
     def test_product_image_http_error(self):
         self.api.dataset['product']['image-url'] = 'http://www.example.com/404.jpg'
         
-        self.assertRaises(IncompleteDataSet, self.api.product_image)
+        try:
+            # FIXME: assertRaises only works on callables
+            self.api.product_image
+        except IncompleteDataSet:
+            self.assertTrue(True, 'Require URL to exist')
+        else:
+            self.fail('Require URL to eist')
     
     def test_product_image_exists(self):
-        target_file = os.path.join(settings.MEDIA_ROOT, self.api.product_image_path)
+        target_file = os.path.join(
+            settings.MEDIA_ROOT, 
+            self.api.product_image_path(self.api.dataset['product']['image-url'])
+        )
         shutil.copy(os.path.join(settings.STATIC_ROOT, '_test', '__image.png'), target_file)
         stat = os.stat(target_file)
         time.sleep(2) # Wait for time from 
         
-        p = self.api.product_image()
+        p = self.api.product_image
         self.assertEqual(stat.st_mtime, os.stat(os.path.join(settings.MEDIA_ROOT, p)).st_mtime, 'File not change after downloading')
         
     def test_product_image_missing(self):
-        self.api.dataset['product']['image-url'] = None
-        self.assertEqual(self.api.product_image(), None, 'Returns Null if no URL was available')
+        del self.api.dataset['product']['image-url']
+         
+        try:
+            self.api.product_image
+        except IncompleteDataSet:
+            self.assertTrue(True, 'Require URL property to be a string')
+        else:
+            self.fail('Require URL property to be a string')
     
     def test_product_image_import(self):
         """
