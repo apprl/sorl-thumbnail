@@ -4,7 +4,7 @@ from django.test import TestCase, TransactionTestCase
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-from apparel.models import Vendor, Manufacturer, Category, VendorCategory, OptionType
+from apparel.models import *
 from importer.models import ImportLog, VendorFeed
 from importer.api import API, IncompleteDataSet, ImporterException
 
@@ -192,7 +192,7 @@ class TestImporterAPIProduct(TransactionTestCase):
     """        
     
     def setUp(self):
-        log = ImportLog.objects.create(
+        self.log = ImportLog.objects.create(
              vendor_feed=VendorFeed.objects.create(
                  name='testfeed',
                  url='http://example.com',
@@ -201,7 +201,7 @@ class TestImporterAPIProduct(TransactionTestCase):
              ),
         )
         self.dataset = copy.deepcopy(sample_dict)
-        self.api = API(import_log=log)
+        self.api = API(import_log=self.log)
         self.api.dataset = self.dataset
         
         self.type_size  = OptionType.objects.create(name='size', description='Size')
@@ -230,7 +230,7 @@ class TestImporterAPIProduct(TransactionTestCase):
 
     def test_product_modify(self):
         p = Product.objects.create(product_name='A name', manufacturer=self.manufacturer, sku=self.dataset['product']['product-id'], category=self.category)
-        a = API()
+        a = API(import_log=self.log)
         a.dataset = self.dataset
         a.dataset['product']['product_name'] = 'A Brand New Name'
         a.dataset['product']['description'] = 'The new description'
@@ -240,7 +240,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.assertEqual(p2.id, p.id, 'Product updated')
         self.assertNotEqual(p2.product_name, p.product_name, 'Product name NOT changed')
         self.assertEqual(p2.description, 'The new description', 'Product descrption changed')
-        self.assertNotEqual(p2.category.id, p.category.id, 'Product category changed')
+        self.assertNotEqual(p2.category, p.category, 'Product category changed')
     
         
     def test_product_vendor(self):
@@ -355,7 +355,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.dataset['product']['variations'][1]['color'] = 'black'
         
         # Run import again
-        a = API()
+        a = API(import_log=self.log)
         a.dataset = self.dataset
         p  = a.import_product()
         vp = VendorProduct.objects.get(product=p, vendor=a.vendor)

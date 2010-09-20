@@ -145,20 +145,25 @@ class API(object):
         """
         
         vp = VendorProduct.objects.get( product=self.product, vendor=self.vendor )
-        types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in self.product.category.option_types.all()])
+        types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in OptionType.objects.all()])
+        
+        try:
+            self.dataset['product']['variations']
+        except KeyError, e:
+            raise IncompleteDataset('Missing variations')
         
         for variation in self.dataset['product']['variations']:
             options = []
             
-            # Create a list of options used for each variation            
+            # Create a list of options used for each variation
             for key in filter(lambda k: k in types.keys(), variation.keys()):
                 option, created = Option.objects.get_or_create(option_type=types[key], value=variation[key])
                 
                 if created:
-                    logging.debug('Created option %s', option)
+                    logging.debug(u'Created option %s', option)
                 
                 if not self.product.options.filter(pk=option.pk):
-                    logging.debug("Attaching option %s", option)
+                    logging.debug(u"Attaching option %s", option)
                     self.product.options.add(option)
                 
                 options.append(option)
@@ -199,11 +204,14 @@ class API(object):
     @property
     def vendorproduct(self):
         if not self._vendorproduct:
-            vp, created = VendorProduct.objects.get_or_create( product=self.product, vendor=self.vendor )
+            self._vendorproduct, created = VendorProduct.objects.get_or_create( 
+                product=self.product, 
+                vendor=self.vendor,
+            )
             
             if created:
-                vp.vendor_category = self.category
-                logging.debug('Added product data to vendor: %s', vp)
+                self._vendorproduct.vendor_category = self.category
+                logging.debug('Added product data to vendor: %s', self._vendorproduct)
 
         return self._vendorproduct
         
@@ -213,8 +221,6 @@ class API(object):
         Private method that adds, update and maintain vendor data and options
         for a particular product
         """
-        
-        vp = self.vendorproduct
         
         # FIXME: Map
         #   - delivery time
@@ -227,9 +233,9 @@ class API(object):
         }
         
         for f in fields:
-            setattr(vp, f, fields[f])
+            setattr(self.vendorproduct, f, fields[f])
         
-        vp.save()
+        self.vendorproduct.save()
     
     def validate(self):
         """
