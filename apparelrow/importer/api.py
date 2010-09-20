@@ -59,6 +59,7 @@ class API(object):
     
     def __init__(self, dataset=None, import_log=None):
         self.version        = "0.1"
+        self.product        = None
         self._dataset       = dataset
         self._import_log    = import_log
         self._vendorproduct = None
@@ -79,7 +80,7 @@ class API(object):
                 self.dataset = data
             
             self.validate()
-            p = self.import_product()
+            self.import_product()
         
         except ImporterException, e:
             # Log ImporterException
@@ -88,8 +89,8 @@ class API(object):
         except Exception, e:
             raise
         else:
-            logging.info('Imported %s', p)
-            return p
+            logging.info('Imported %s', self.product)
+            return self.product
     
     
     def import_product(self):
@@ -106,13 +107,12 @@ class API(object):
 
         
         try:
-            p = Product.objects.get(
+            self.product = Product.objects.get(
                 manufacturer__id__exact=self.manufacturer.id,
                 sku__exact=self.dataset['product']['product-id']
             )
         except ObjectDoesNotExist:
-            # Create product
-            p = Product.objects.create(
+            self.product = Product.objects.create(
                 manufacturer=self.manufacturer, 
                 sku=self.dataset['product']['product-id'],
                 **fields
@@ -127,27 +127,25 @@ class API(object):
         else:
             # Update product
             for f in fields:
-                setattr(p, f, fields.get(f))
-            
+                setattr(self.product, f, fields.get(f))
             
             # FIXME: How do we deal with category? Re-assign?
             logging.debug('Updated product')
         
+        self.__vendor_options()
+        self.__product_options()
         
-        self.__vendor_options(p)
-        self.__product_options(p)
-        
-        p.save()
-        return p
+        self.product.save()
+        return self.product
     
     
-    def __product_options(self, product):
+    def __product_options(self):
         """
         Private method that adds, update and maintain vendor product options
         """
         
-        vp = VendorProduct.objects.get( product=product, vendor=self.vendor )
-        types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in product.category.option_types.all()])
+        vp = VendorProduct.objects.get( product=self.product, vendor=self.vendor )
+        types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in self.product.category.option_types.all()])
         
         for variation in self.dataset['product']['variations']:
             options = []
@@ -159,9 +157,9 @@ class API(object):
                 if created:
                     logging.debug('Created option %s', option)
                 
-                if not product.options.filter(pk=option.pk):
+                if not self.product.options.filter(pk=option.pk):
                     logging.debug("Attaching option %s", option)
-                    product.options.add(option)
+                    self.product.options.add(option)
                 
                 options.append(option)
             
@@ -201,7 +199,7 @@ class API(object):
     @property
     def vendorproduct(self):
         if not self._vendorproduct:
-            vp, created = VendorProduct.objects.get_or_create( product=product, vendor=self.vendor )
+            vp, created = VendorProduct.objects.get_or_create( product=self.product, vendor=self.vendor )
             
             if created:
                 vp.vendor_category = self.category
@@ -210,13 +208,13 @@ class API(object):
         return self._vendorproduct
         
 
-    def __vendor_options(self, product):
+    def __vendor_options(self):
         """
         Private method that adds, update and maintain vendor data and options
         for a particular product
         """
         
-        vp = self._vendorproduct
+        vp = self.vendorproduct
         
         # FIXME: Map
         #   - delivery time
@@ -269,9 +267,9 @@ class API(object):
         """
         
         if not self._category:
-            category_names = self.dataset['product'].get('categories')
-            
-            if not category_names:
+            try:
+                category_names = self.dataset['product']['categories']
+            except KeyError, e:
                 raise IncompleteDataSet('No category')
             
             # Force string

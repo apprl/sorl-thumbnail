@@ -4,8 +4,9 @@ from django.test import TestCase, TransactionTestCase
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-from apparelrow.apparel.models import *
-from apparelrow.importer.api import API, IncompleteDataSet, ImporterException
+from apparel.models import Vendor, Manufacturer, Category, VendorCategory
+from importer.models import ImportLog, VendorFeed
+from importer.api import API, IncompleteDataSet, ImporterException
 
 
 sample_dict = {
@@ -50,9 +51,17 @@ class TestImporterAPIBasic(TestCase):
     """
     def setUp(self):
         self.dataset = copy.deepcopy(sample_dict)
+        self.log     = ImportLog.objects.create(
+                            vendor_feed=VendorFeed.objects.create(
+                                name='testfeed',
+                                url='http://example.com',
+                                vendor=Vendor.objects.create(name='Cool Clothes Store'),
+                                provider_class='sample',
+                            ),
+                       )
         
     def test_validation(self):
-        a = API()
+        a = API(import_log=self.log)
         a.dataset = self.dataset
         self.assertTrue(a.validate(), 'Validate dataset')
         
@@ -63,7 +72,7 @@ class TestImporterAPIBasic(TestCase):
     # MANUFACTURER
     #    
     def test_manufacturer(self):
-        a = API()
+        a = API(import_log=self.log)
         
         self.dataset['product']['manufacturer'] = 'The Manufacturer'
         a.dataset = self.dataset
@@ -72,7 +81,7 @@ class TestImporterAPIBasic(TestCase):
         
     def test_manufacturer_retrieve(self):
         m = Manufacturer.objects.create(name='My name')
-        a = API()
+        a = API(import_log=self.log)
         a.dataset = self.dataset
         a.dataset['product']['manufacturer'] = m.name
         
@@ -81,7 +90,7 @@ class TestImporterAPIBasic(TestCase):
         self.assertEqual(m.id, api_m.id, 'Got the same object back')
 
     def test_manufacturer_validation(self):
-        a = API()
+        a = API(import_log=self.log)
         
         del self.dataset['product']['manufacturer']
         a.dataset = self.dataset
@@ -92,19 +101,19 @@ class TestImporterAPIBasic(TestCase):
     # VENDOR
     #
     def test_vendor(self):
-        a = API()
+        a = API(import_log=self.log)
         
         self.assertRaises(IncompleteDataSet, lambda: a.vendor)
         
-        self.dataset['vendor'] = 'The Vendor'
+        sample_dict['vendor'] = 'Temp Vendor'
         a.dataset = self.dataset
         
         v = a.vendor
         self.assertTrue(isinstance(v, Vendor), 'Created vendor')
     
     def test_vendor_retrieve(self):
-        v = Vendor.objects.create(name='My Vendor Name')
-        a = API()
+        v = self.log.vendor_feed.vendor
+        a = API(import_log=self.log)
         a.dataset = self.dataset
         a.dataset['vendor'] = v.name
         
@@ -112,7 +121,7 @@ class TestImporterAPIBasic(TestCase):
         self.assertEqual(a.vendor.id, v.id, 'Got the same object back')
     
     def test_vendor_validation(self):
-        a = API()
+        a = API(import_log=self.log)
         del self.dataset['vendor']
         a.dataset = self.dataset
         
@@ -122,31 +131,48 @@ class TestImporterAPIBasic(TestCase):
     #
     # CATEGORIES
     #        
-    def test_category_single(self):
+    def test_new_category(self):
         self.dataset['product']['categories'] = 'Single Category'
         
-        a = API()
+        a = API(import_log=self.log)
         a.dataset = self.dataset
-        c = a.category
+                
+        self.assertTrue(a.category is None, 'No category returned')
         
-        self.assertTrue(isinstance(c, Category), 'Created category (single)')
-        self.assertEqual(c.name, 'Single Category', 'Got correct category')
+        try:
+            v = VendorCategory.objects.get(vendor=a.vendor, name='Single Category')
+        except:
+            self.fail('VendorCategoy created with new category')
+        else:
+            self.assertTrue(True, 'VendorCategory created for category')
+        
+        self.assertTrue(self.log.messages.get(status='attention', message__contains=v.__unicode__()), 'Log message created')
     
-    def test_category_list(self):
-        root = Category.objects.create(name='Root')
-        a = API()
+    def test_existing_category(self):
+        self.dataset['product']['categories'] = 'Existing Category'
+        vc = VendorCategory.objects.create(
+            vendor=self.log.vendor_feed.vendor, 
+            name='Existing Category',
+            category=Category.objects.create(name='The Category')
+        )
+        
+        a = API(import_log=self.log)
         a.dataset = self.dataset
-        a.dataset['product']['categories'] = [root.name, 'Sub 1', 'Sub 2']
         
-        c = a.category
-        self.assertTrue(isinstance(c, Category), 'Got category')
-        self.assertEqual(c.name,        'Sub 2', 'Returned last category')
-        self.assertEqual(c.parent.name, 'Sub 1', 'Created parent category')
-        self.assertEqual(c.parent.parent.name, root.name, 'Parent assigned to root')
-        self.assertEqual(c.parent.parent.id, root.id, 'Root category retrieved from database')
+        self.assertEquals(a.category, vc.category, 'Found category through VendorCategory')
+        self.assertEquals(a._category, vc, 'Found VendorCategory from name')
     
+    def test_multiple_categorues(self):
+        self.dataset['product']['categories'] = ['Cat 1', 'Cat 2']
+        
+        a = API(import_log=self.log)
+        a.dataset = self.dataset
+        
+        self.assertTrue(a.category is None, 'No category mapped')
+        self.assertEquals(a._category.name, 'Cat 1 Cat 2', 'Multiple categories joined')
+
     def test_category_validate(self):
-        a = API()
+        a = API(import_log=self.log)
         a.dataset = self.dataset
         del a.dataset['product']['categories']
         self.assertRaises(IncompleteDataSet, lambda: a.category)
