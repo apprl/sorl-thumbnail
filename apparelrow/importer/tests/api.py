@@ -466,7 +466,15 @@ class TestProductImage(TestCase):
 
 class TestDataSetImport(TransactionTestCase):
     def setUp(self):
-        self.api = API()
+        self.log = ImportLog.objects.create(
+             vendor_feed=VendorFeed.objects.create(
+                 name='testfeed',
+                 url='http://example.com',
+                 vendor=Vendor.objects.create(name='Cool Clothes Store'),
+                 provider_class='sample',
+             ),
+        )
+        self.api = API(import_log=self.log)
         self.dataset = copy.deepcopy(sample_dict)
     
     def test_import_successful(self):
