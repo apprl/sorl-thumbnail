@@ -84,12 +84,12 @@ class API(object):
         
         except ImporterException, e:
             # Log ImporterException
-            logging.error('%s, record skipped', e)
+            logging.error(u'%s, record skipped', e)
             raise
         except Exception, e:
             raise
         else:
-            logging.info('Imported %s', self.product)
+            logging.info(u'Imported %s', self.product)
             return self.product
     
     
@@ -119,9 +119,9 @@ class API(object):
             )
 
             logging.debug('Created new product')
-            
+        
         except MultipleObjectsReturned:
-            s = 'There are more than one product with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku'])
+            s = u'There are more than one product with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku'])
             logging.error(s)
             raise SkipRecord(s)
         else:
@@ -191,7 +191,7 @@ class API(object):
                 for o in options:
                     db_variation.options.add(o)
             
-                logging.debug('Added availability for combination %s', db_variation)
+                logging.debug(u'Added availability for combination %s', db_variation)
 
             in_stock = variation.get('availability')
             
@@ -211,7 +211,7 @@ class API(object):
             
             if created:
                 self._vendorproduct.vendor_category = self.category
-                logging.debug('Added product data to vendor: %s', self._vendorproduct)
+                logging.debug(u'Added product data to vendor: %s', self._vendorproduct)
 
         return self._vendorproduct
         
@@ -419,7 +419,8 @@ class ImporterException(Exception):
     However, a client should continue its execution and attempt to import 
     subsequent datasets.
     """
-    pass
+    def __unicode__(self):
+        return unicode(self.__str__(), 'utf-8')
 
 class SkipProduct(ImporterException):
     """

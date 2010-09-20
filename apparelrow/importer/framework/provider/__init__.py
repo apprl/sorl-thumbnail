@@ -131,7 +131,7 @@ class Provider(object):
                 status='info', 
                 message="Skipping product\nProduct: %s\nError:%s" % (prod_id, e)
             )
-            logging.info('Record skipped: %s', e)
+            logging.info(u'Record skipped: %s', e)
         
         except ImporterException, e:
             self.feed.latest_import_log.messages.create(
@@ -158,7 +158,7 @@ class Provider(object):
             # FIXME: Should we count number of products imported? If so, do this
             # here. Then add it to the ImportLog instance in when process() 
             # finishes in run()
-            logging.info('Imported product %s', p)
+            logging.info(u'Imported product %s', p)
     
 
 
