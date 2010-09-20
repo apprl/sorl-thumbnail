@@ -4,36 +4,6 @@ from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
 
-
-#  {
-#      'version': '0.1',
-#      'date': '2010-02-11 15:41:01 UTC',
-#      'vendor': 'Cali Roots',
-#      'product': {
-#          'product-id': '375512-162',
-#          'product-name': 'Flight 45',
-#          'categories': 'Sneakers',
-#          'manufacturer': 'Jordan',
-#          'price': 1399.00,
-#          'currency': 'SEK',
-#          'delivery-cost': 99.00,
-#          'delivery-time': '3-5 D',
-#          'availability': True OR a number (0 for not available),
-#          'product-url': 'http://caliroots.com/system/search/product_vert.asp?id=20724',
-#          'image-url': 'http://caliroots.com/data/product/images/20724200911114162028734214_L.jpg',
-#          'description': 'Classic Flight 45',
-#          'variations':
-#          [
-#              {
-#                  'size': '10',
-#                  'color': 'red',
-#                  'availability': true OR a number
-#              },
-#              ...
-#          ]
-#      }
-#  }
-
 class GrandpaMapper(DataMapper):
     def get_description(self):
         d = self.record.get('description')
