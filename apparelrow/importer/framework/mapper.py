@@ -8,10 +8,10 @@ class DataMapper():
     def __init__(self, provider, record={}):
         self.provider     = provider    # Reference to the provider instance
         self.record       = record      # Raw data record source file
-        self.variances    = []          # Product variances
+        self.variations   = []          # Product variances
     
     
-    def add_variances(self):
+    def add_variations(self):
         """
         Adds a list of variances to the 'variances' array.
         """
@@ -51,7 +51,7 @@ class DataMapper():
                 logging.debug('Skipping field %s' % field)
                 continue
         
-        api_dict['product']['variances'] = self.add_variances() or []
+        api_dict['product']['variations'] = self.add_variations() or []
         
         return api_dict
         
