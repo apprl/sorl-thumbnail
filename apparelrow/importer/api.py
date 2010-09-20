@@ -212,10 +212,6 @@ class API(object):
             )
             
             if created:
-                # NOTE: This is a bit deceiving: 
-                #   self.catetory  - Returns a apparel.Category instance, or None if none could be mapped
-                #   self._category - Returns the apparel.VendorCategory that maps the source category with the apparel.Category. This will always exist.
-                
                 self._vendor_product.vendor_category = self.vendor_category
                 self._vendor_product.save()
                 logging.debug(u'Added product data to vendor: %s', self._vendor_product)
