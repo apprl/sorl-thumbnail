@@ -58,15 +58,15 @@ class API(object):
     re_url = re.compile(r'^.+/(.+)$')
     
     def __init__(self, dataset=None, import_log=None):
-        self.version        = "0.1"
-        self.product        = None
-        self._dataset       = dataset
-        self._import_log    = import_log
-        self._vendorproduct = None
-        self._category      = None
-        self._manufacturer  = None
-        self._vendor        = None
-        self._product_image = None
+        self.version          = "0.1"
+        self.product          = None
+        self._dataset         = dataset
+        self._import_log      = import_log
+        self._vendor_product  = None
+        self._vendor_category = None
+        self._manufacturer    = None
+        self._vendor          = None
+        self._product_image   = None
             
     @transaction.commit_on_success
     def import_dataset(self, data=None):
@@ -205,18 +205,22 @@ class API(object):
 
     @property
     def vendorproduct(self):
-        if not self._vendorproduct:
-            self._vendorproduct, created = VendorProduct.objects.get_or_create( 
+        if not self._vendor_product:
+            self._vendor_product, created = VendorProduct.objects.get_or_create( 
                 product=self.product, 
                 vendor=self.vendor,
             )
             
             if created:
-                self._vendorproduct.vendor_category = self.category
-                self._vendorproduct.save()
-                logging.debug(u'Added product data to vendor: %s', self._vendorproduct)
+                # NOTE: This is a bit deceiving: 
+                #   self.catetory  - Returns a apparel.Category instance, or None if none could be mapped
+                #   self._category - Returns the apparel.VendorCategory that maps the source category with the apparel.Category. This will always exist.
+                
+                self._vendor_product.vendor_category = self.vendor_category
+                self._vendor_product.save()
+                logging.debug(u'Added product data to vendor: %s', self._vendor_product)
 
-        return self._vendorproduct
+        return self._vendor_product
         
 
     def __vendor_options(self):
@@ -294,13 +298,13 @@ class API(object):
     
         
     @property
-    def category(self):
+    def vendor_category(self):
         """
-        Returns category. Category hierarchy is retrieved or created first time
-        the property is accessed.
+        Returns the VendorCategory instance that maps the extracted category
+        to manually defined one ApparelRow.
         """
         
-        if not self._category:
+        if not self._vendor_category:
             try:
                 category_names = self.dataset['product']['categories']
             except KeyError, e:
@@ -310,16 +314,23 @@ class API(object):
             if isinstance(category_names, list):
                 category_names = ' '.join(category_names)
             
-            self._category, created = VendorCategory.objects.get_or_create(vendor=self.vendor, name=category_names)
+            self._vendor_category, created = VendorCategory.objects.get_or_create(vendor=self.vendor, name=category_names)
 
             if created:
                 self._import_log.messages.create(
                     status='attention',
-                    message='New VendorCategory: %s, add mapping to Category to update related products' % self._category,
+                    message='New VendorCategory: %s, add mapping to Category to update related products' % self._vendor_category,
                 )
                 logging.debug('Creating new vendor category: %s', category_names)
 
-        return self._category.category
+        return self._vendor_category
+    
+    @property
+    def category(self):
+        """
+        Returns the mapped category for the product. This may return None
+        """
+        return self.vendor_category.category
             
     @property 
     def manufacturer(self):
