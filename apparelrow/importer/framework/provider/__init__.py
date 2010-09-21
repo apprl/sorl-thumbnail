@@ -181,6 +181,18 @@ class CSVProvider(Provider):
      - fieldnames       List of fieldnames that will map the column values. They need to be unique.
      - dialect          CSV dialect used to parse the source. See importer.framework.parser and csv.Dialect
      - encoding         Defaults to "utf-8".
+         
+    Merging
+    It's possible to merge a row from the source file with a previous row by 
+    implementing two methods in the sub class:
+    
+    - should_merge(self, new_record)
+    Return True if new_record should merge with the base record (in self.record)
+    
+    - merge(self, new_record)
+    Merge new_record into self.record. This routine will only be invoked if we 
+    should merge. It will also be invoked for the first element, to allow for 
+    setting up the required data structure.
     
     """
     
@@ -191,6 +203,7 @@ class CSVProvider(Provider):
         self.fieldnames = None
         self.dialect    = None
         self.encoding   = 'utf-8'
+        self.record     = None   # Used for merging
     
     def process(self):
         if not self.fieldnames:
@@ -203,10 +216,34 @@ class CSVProvider(Provider):
             encoding=self.encoding,
         )
         
+        # FIXME: Add merge test for parsing using mockobejcts
+        
         for row in csv_reader:
-            mapper = self.mapper(self, row)
-            self.import_data( mapper.translate() )
-
-
-
+            if self.record:
+                if self.should_merge(row):
+                    # If this record doesn't match the previous one, import it
+                    self.merge(row)
+                    continue
+                    
+                # Otherwise, import base record
+                self.__import(self.record)
+                self.record = None # To avoid importing a single last record twice
+            
+            # Use this record as base record
+            self.record = row
+            self.merge(row) # Call merge so data can be arranged in the same order
+        else:
+            if self.record:
+                self.__import(self.record)
+    
+    def __import(self, record):
+        mapper = self.mapper(self, record)
+        self.import_data( mapper.translate() )
+    
+    def merge(self, new_record):
+        pass
+    
+    def should_merge(self, new_record):
+        return False
+    
 

@@ -6,8 +6,15 @@
     name: Grandpa
     homepage: http://www.grandpa.se
 
+- model: apparel.vendor
+  pk: 2
+  fields:
+    name: Fashionisland
+    homepage: http://www.fashionisland.se/
+
 
 # - VendorFeed -
+
 - model: importer.vendorfeed
   pk: 1
   fields:
@@ -15,5 +22,13 @@
     name: grandpa
     provider_class: grandpa
     url: http://www.grandpa.se/system/tools/kelkoo/product-feed.asp
+
+- model: importer.vendorfeed
+  pk: 2
+  fields:
+    vendor: 2
+    name: fashionisland
+    provider_class: kelkoo
+    url: http://www.fashionisland.se/system/tools/dbexport/kelkoo.asp
 
 

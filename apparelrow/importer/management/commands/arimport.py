@@ -66,7 +66,7 @@ class Command(BaseCommand):
         try:
             feed = VendorFeed.objects.get(name=name)
         except VendorFeed.DoesNotExist:
-            raise CommandError('Feed named %s does not exist' % args[0])
+            raise CommandError('Feed named %s does not exist' % name)
         
         feed.run_import(
             from_warehouse=options['warehouse'], 

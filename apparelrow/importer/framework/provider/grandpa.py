@@ -3,7 +3,7 @@ import re
 from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
-
+    
 class GrandpaMapper(DataMapper):
     def get_description(self):
         d = self.record.get('description')
@@ -48,7 +48,5 @@ class Provider(CSVProvider):
             'image-url',         # 9 
             'description',       # 10
         )
-
-
-
+    
 

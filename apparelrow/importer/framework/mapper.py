@@ -9,10 +9,9 @@ class DataMapper():
         self.provider     = provider    # Reference to the provider instance
         self.record       = record      # Raw data record source file
     
-    def add_variations(self):
+    def map_variations(self):
         """
-        Should return an array with variations, see the API documentation for
-        format. This method should be implemented by any sub class.
+        Should map variations and store them in self.record['variations']
         """
         pass
         
@@ -31,17 +30,27 @@ class DataMapper():
             'product': {}
         }
         
-        for field in ['product-id', 'product-name', 'categories', 'manufacturer', 
-                  'price', 'currency', 'delivery-cost', 'delivery-time', 
-                  'image-url', 'product-url', 'description', 'availability']:
+        for field in ['product-id', 
+                      'product-name', 
+                      'categories', 
+                      'manufacturer', 
+                      'price', 
+                      'currency', 
+                      'delivery-cost', 
+                      'delivery-time', 
+                      'image-url', 
+                      'product-url', 
+                      'description', 
+                      'availability']:
             try:
                 api_dict['product'][field] = self.map_field(field)
             except SkipField:
                 logging.debug('Skipping field %s' % field)
                 continue
         
-        api_dict['product']['variations'] = self.add_variations() or []
-
+        self.map_variations()
+        api_dict['product']['variations'] = self.record.get('variations', [])
+        
         return api_dict
         
     def map_field(self, field_name):
