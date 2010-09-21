@@ -87,6 +87,11 @@ class FieldMapperTest(TestCase):
         self.assertFalse('currency' in p, 'SkipField is causing field to be ignored')
         self.assertEqual(p['price'], None, 'Missing field is filled with None value')
         self.assertEqual(p['variations'], [], 'variances defaults to empty array')
+    
+    def test_map_colors(self):
+        
+        c = self.mapper.map_colors(u'Here is a string with Black, navy and red')
+        self.assertEqual(c, [u'black', u'blue', u'red'], 'Mapped colors')
         
     
 

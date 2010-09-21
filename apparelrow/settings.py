@@ -271,6 +271,22 @@ APPAREL_PRODUCT_IMAGE_ROOT = 'products'
 APPAREL_LOOK_MAX_SIZE      = 470
 APPAREL_LOOK_FEATURED      = 3
 APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', 'warehouse')
+APPAREL_IMPORTER_COLORS = (
+    (u'black'  , (u'svart',)),
+    (u'grey'   , (u'grå', u'gray')),
+    (u'white'  , (u'vit',)),
+    (u'beige'  , (u'khaki',)),
+    (u'brown'  , (u'brun',)),
+    (u'red'    , (u'röd',)),
+    (u'yellow' , (u'gul',)),
+    (u'green'  , (u'grön', u'olive', u'oliv')),
+    (u'blue'   , (u'blå', u'navy')),
+    (u'silver' , (u'silver',)),
+    (u'gold'   , (u'guld',)),
+    (u'pink'   , (u'rosa',)),
+    (u'orange' , ()),
+    (u'magenta', (u'magenta',)),
+)
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

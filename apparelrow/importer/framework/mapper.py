@@ -1,4 +1,7 @@
 import re, logging, datetime
+
+from django.conf import settings
+
 from apparelrow.importer.api import API, SkipProduct, ImporterException
 
 
@@ -14,7 +17,21 @@ class DataMapper():
         Should map variations and store them in self.record['variations']
         """
         pass
+    
+    def map_colors(self, value=""):   
+        """
+        Helper method that appempts to extract colour names from the given string
+        and returns a list of names known by apparelrow.
         
+        Example
+        
+        >>> mapper = DataMapper()
+        >>> list = mapper.map_colors(u'Here is a string with Black, navy and red')
+        ['black', 'blue', 'red']
+        """
+        
+        c = dict(settings.APPAREL_IMPORTER_COLORS)
+        import pdb; pdb.set_trace()
     
     def translate(self):
         """
