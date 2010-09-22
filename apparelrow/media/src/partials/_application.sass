@@ -167,21 +167,24 @@ button
 
 #featured-looks
   position: relative
-  height: 412px
+  height: 393px
   #contents
     li
       position: absolute
       top: 0
       left: 0
       display: none
+      +border("all")
       .look
-        height: 348px
-        width: 452px
+        height: 328px
+        width: 450px
         position: relative
         .collage-image
           position: absolute
       .info-box
         +box
+        border: none
+        +border("top")
         height: 36px
         padding: 16px 10px 10px
         background:
@@ -255,7 +258,7 @@ ul.looks
     .look
       +box
       width: $aside_width / 2 - $gutter_width / 4 - 2
-      height: 72px
+      height: 69px
       position: relative
       .collage-image
         position: absolute
