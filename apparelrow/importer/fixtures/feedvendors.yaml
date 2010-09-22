@@ -12,6 +12,12 @@
     name: Fashionisland
     homepage: http://www.fashionisland.se/
 
+- model: apparel.vendor
+  pk: 3
+  fields:
+    name: Nelly
+    homepage: http://nelly.com/
+
 
 # - VendorFeed -
 
@@ -30,5 +36,13 @@
     name: fashionisland
     provider_class: kelkoo
     url: http://www.fashionisland.se/system/tools/dbexport/kelkoo.asp
+
+- model: importer.vendorfeed
+  pk: 3
+  fields:
+    vendor: 3
+    name: nelly
+    provider_class: tradedoubler
+    url: http://pf.tradedoubler.com/export/export?myFeed=12822969211771212&myFormat=12649335281771212
 
 
