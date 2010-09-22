@@ -14,6 +14,14 @@ class DataMapper():
         self.provider     = provider    # Reference to the provider instance
         self.record       = record      # Raw data record source file
     
+    def preprocess(self):
+        """
+        This method is called immidiately before field mapping begins. The 
+        current record can be found in self.record.
+        Does not expect any return value.
+        """
+        pass
+    
     def map_variations(self):
         """
         Should map variations and store them in self.record['variations']
@@ -47,7 +55,7 @@ class DataMapper():
         Returns a hash of correctly formatted fields
         """
         
-        # Product fields
+        self.preprocess()
         
         api_dict = {
             'version': '0.1',
