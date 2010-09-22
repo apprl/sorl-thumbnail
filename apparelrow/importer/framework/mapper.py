@@ -8,6 +8,8 @@ from apparelrow.importer.api import API, SkipProduct, ImporterException
 
 class DataMapper():
     
+    color_regexes = None
+    
     def __init__(self, provider, record={}):
         self.provider     = provider    # Reference to the provider instance
         self.record       = record      # Raw data record source file
@@ -30,8 +32,15 @@ class DataMapper():
         ['black', 'blue', 'red']
         """
         
-        c = dict(settings.APPAREL_IMPORTER_COLORS)
-        import pdb; pdb.set_trace()
+        if not self.color_regexes:
+            # Compile regular expression matching all aliases to a color first time
+            # this method is accessed.
+            self.color_regexes = dict(
+                (c[0], re.compile(r'\b(?:%s)\b' % '|'.join(c), re.I))
+                for c in settings.APPAREL_IMPORTER_COLORS
+            )
+        
+        return [c for c, r in self.color_regexes.items() if r.search(value)]
     
     def translate(self):
         """

@@ -91,7 +91,7 @@ class FieldMapperTest(TestCase):
     def test_map_colors(self):
         
         c = self.mapper.map_colors(u'Here is a string with Black, navy and red')
-        self.assertEqual(c, [u'black', u'blue', u'red'], 'Mapped colors')
+        self.assertEqual(set(c), set((u'black', u'blue', u'red',)), 'Mapped colors')
         
     
 
