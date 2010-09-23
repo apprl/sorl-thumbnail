@@ -18,6 +18,12 @@
     name: Nelly
     homepage: http://nelly.com/
 
+- model: apparel.vendor
+  pk: 4
+  fields:
+    name: Fifth Avenue
+    homepage: http://shoerepair.se/
+
 
 # - VendorFeed -
 
@@ -44,5 +50,13 @@
     name: nelly
     provider_class: tradedoubler
     url: http://pf.tradedoubler.com/export/export?myFeed=12822969211771212&myFormat=12649335281771212
+
+- model: importer.vendorfeed
+  pk: 4
+  fields:
+    vendor: 4
+    name: fifthavenue
+    provider_class: apparel-xml
+    url: http://fifthfeed.www1.panagora.se/feed.asp
 
 
