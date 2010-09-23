@@ -30,7 +30,7 @@ class Provider(CSVProvider):
         self.dialect=utils.CSVPipeDelimited
         self.encoding='iso-8859-1'
         self.fieldnames=(
-            'categories',        # 0 
+            'category',          # 0 
             'manufacturer',      # 1 
             'product-name',      # 2 
             'size',              # 3 

@@ -302,7 +302,7 @@ class API(object):
         
         if not self._vendor_category:
             try:
-                category_names = self.dataset['product']['categories']
+                category_names = self.dataset['product']['category']
             except KeyError, e:
                 raise IncompleteDataSet('No category')
             

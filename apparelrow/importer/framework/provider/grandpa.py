@@ -36,7 +36,7 @@ class Provider(CSVProvider):
         self.mapper=GrandpaMapper
         self.dialect=utils.CSVSemiColonDelimited
         self.fieldnames=(
-            'categories',        # 0 
+            'category',          # 0 
             'manufacturer',      # 1 
             'product-name',      # 2 
             'product-id',        # 3 

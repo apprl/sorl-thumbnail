@@ -66,13 +66,13 @@ class TradeDoublerMapper(DataMapper):
     def get_product_id(self):
         return self.record.get('TDProductId')
     
-    def get_categories(self):
+    def get_category(self):
         return self.record.get('merchantCategoryName', self.record.get('TDCategoryName'))
     
     def get_manufacturer(self):
         return self.record.get('manufacturer', self.record.get('brand'))
     
-    def get_product_url(self)
+    def get_product_url(self):
         return self.record.get('product-url')
     
     def get_delivery_cost(self):
@@ -80,13 +80,13 @@ class TradeDoublerMapper(DataMapper):
         
     def get_delivery_time(self):
         return self.record.get('deliveryTime')
-    
+        
     def get_availability(self):
         return True if self.record.get('availability') else False
-    
+        
     def get_image_url(self):
         return self.record.get('extraImageProductLarge', self.record.get('extraImageProductSmall'))
-    
+        
     # FIXME: Parse HTML entities in description
     
 class Provider(CSVProvider):

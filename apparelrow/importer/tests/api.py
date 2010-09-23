@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from apparel.models import *
 from importer.models import ImportLog, VendorFeed
-from importer.api import API, IncompleteDataSet, ImporterException
+from importer.api import API, IncompleteDataSet, ImporterException, SkipProduct
 
 
 sample_dict = {
@@ -16,7 +16,7 @@ sample_dict = {
     'product': {
         'product-id': u'c001',
         'product-name': u'A cool pair of Jeans',
-        'categories': u'Jeans',
+        'category': u'Jeans',
         'manufacturer': u'WhateverMan',
         'price': '239.0',
         'currency': 'GBP',
@@ -131,7 +131,7 @@ class TestImporterAPIBasic(TestCase):
     # CATEGORIES
     #        
     def test_new_category(self):
-        self.dataset['product']['categories'] = 'Single Category'
+        self.dataset['product']['category'] = 'Single Category'
         
         a = API(import_log=self.log)
         a.dataset = self.dataset
@@ -148,7 +148,7 @@ class TestImporterAPIBasic(TestCase):
         self.assertTrue(self.log.messages.get(status='attention', message__contains=v.__unicode__()), 'Log message created')
     
     def test_existing_category(self):
-        self.dataset['product']['categories'] = 'Existing Category'
+        self.dataset['product']['category'] = 'Existing Category'
         vc = VendorCategory.objects.create(
             vendor=self.log.vendor_feed.vendor, 
             name='Existing Category',
@@ -159,21 +159,21 @@ class TestImporterAPIBasic(TestCase):
         a.dataset = self.dataset
         
         self.assertEquals(a.category, vc.category, 'Found category through VendorCategory')
-        self.assertEquals(a._category, vc, 'Found VendorCategory from name')
+        self.assertEquals(a.vendor_category, vc, 'Found VendorCategory from name')
     
-    def test_multiple_categorues(self):
-        self.dataset['product']['categories'] = ['Cat 1', 'Cat 2']
+    def test_multiple_categories(self):
+        self.dataset['product']['category'] = ['Cat 1', 'Cat 2']
         
         a = API(import_log=self.log)
         a.dataset = self.dataset
         
         self.assertTrue(a.category is None, 'No category mapped')
-        self.assertEquals(a._category.name, 'Cat 1 Cat 2', 'Multiple categories joined')
+        self.assertEquals(a.vendor_category.name, 'Cat 1 Cat 2', 'Multiple categories joined')
 
     def test_category_validate(self):
         a = API(import_log=self.log)
         a.dataset = self.dataset
-        del a.dataset['product']['categories']
+        del a.dataset['product']['category']
         self.assertRaises(IncompleteDataSet, lambda: a.category)
     
     
@@ -206,7 +206,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.type_size  = OptionType.objects.create(name='size', description='Size')
         self.type_color = OptionType.objects.create(name='color', description='The colour')
         
-        self.category = Category.objects.create(name=self.dataset['product']['categories'])
+        self.category = Category.objects.create(name=self.dataset['product']['category'])
         self.category.option_types.add(self.type_size)
         self.category.option_types.add(self.type_color)
         
@@ -233,7 +233,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         a.dataset = self.dataset
         a.dataset['product']['product_name'] = 'A Brand New Name'
         a.dataset['product']['description'] = 'The new description'
-        a.dataset['product']['categories'] = ['A Brand New Category']
+        a.dataset['product']['category'] = ['A Brand New Category']
         
         p2 = a.import_product()
         self.assertEqual(p2.id, p.id, 'Product updated')
@@ -431,7 +431,7 @@ class TestProductImage(TestCase):
         try:
             # FIXME: assertRaises only works on callables
             self.api.product_image
-        except IncompleteDataSet:
+        except SkipProduct:
             self.assertTrue(True, 'Require URL to exist')
         else:
             self.fail('Require URL to eist')
