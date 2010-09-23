@@ -76,6 +76,7 @@ class ImportLog(models.Model):
     end_time     = models.DateTimeField(_('End time'), null=True)
     status       = models.CharField(max_length=10, choices=STATUS, default='running')
     vendor_feed  = models.ForeignKey(VendorFeed, related_name='import_log')
+    #products_imported = models.IntegerField(_('Products imported'), default=0, help_text=_('Number of products created or updated'))
     
     def save(self, *args, **kwargs):
         if self.status != 'running':
@@ -88,6 +89,7 @@ class ImportLog(models.Model):
     
     class Meta:
         get_latest_by = 'start_time'
+        ordering = ['-start_time']
 
 
 class ImportLogMessage(models.Model):

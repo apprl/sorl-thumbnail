@@ -66,7 +66,7 @@ class DataMapper():
         
         for field in ['product-id', 
                       'product-name', 
-                      'categories', 
+                      'category',
                       'manufacturer', 
                       'price', 
                       'currency', 
