@@ -109,17 +109,16 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    #'facebook.djangofb.FacebookMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'facebookconnect.middleware.FacebookConnectMiddleware',
+    'socialregistration.middleware.FacebookMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'trackback.middleware.PingbackUrlInjectionMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
-    'facebookconnect.models.FacebookBackend',
+    'socialregistration.auth.FacebookAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -155,7 +154,7 @@ INSTALLED_APPS = (
     
     # external
     'notification', # must be first
-    'facebookconnect',
+    'socialregistration',
     'registration',
 #    'mailer',          # FIXME: Includes e-mail manager, set this up later
     'announcements',
@@ -246,8 +245,9 @@ AUTH_PROFILE_MODULE='profile.ApparelProfile'
 # FACEBOOK CONFIGURATION
 FACEBOOK_API_KEY = '44d47ef3e7285cace9a4c7c88f645742'
 FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
-FACEBOOK_INTERNAL = True
-FACEBOOK_CACHE_TIMEOUT = 1800
+SOCIALREGISTRATION_GENERATE_USERNAME = True
+#FACEBOOK_INTERNAL = True
+#FACEBOOK_CACHE_TIMEOUT = 1800
 DUMMY_FACEBOOK_INFO = {
     'uid':0,
     'name':'(Private)',

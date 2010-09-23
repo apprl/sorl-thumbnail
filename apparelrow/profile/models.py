@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.db.models.signals import post_save
-from facebookconnect.models import FacebookProfile
+from socialregistration.models import FacebookProfile
 import settings
 
 
@@ -32,8 +32,9 @@ class ApparelProfile(models.Model):
         if self.name is not None:
             return self.name
             
-        if hasattr(self.user, 'facebook_profile'):
-            return self.user.facebook_profile.first_name
+        # FIXME Right now, we seem to only be able to get this in the view
+        #if hasattr(self.user, 'facebook_profile'):
+        #    return self.user.facebook_profile.first_name
         
         return u'%s' % self.user
     
@@ -42,11 +43,17 @@ class ApparelProfile(models.Model):
         if self.image:
             return self.image
 
-        if hasattr(self.user, 'facebook_profile'):
-            if self.user.facebook_profile.picture_url:
-                return self.user.facebook_profile.picture_url
-        
+        if self.facebook_profile:
+            return 'http://graph.facebook.com/%s/picture' % self.facebook_profile.uid
+
         return settings.APPAREL_DEFAULT_AVATAR
+
+    @property
+    def facebook_profile(self):
+        try:
+            return FacebookProfile.objects.get(user=self.user)
+        except DoesNotExist:
+            return None
 
     def __unicode__(self):
         return self.display_name
