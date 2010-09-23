@@ -103,7 +103,8 @@ class API(object):
         fields = {
             'product_name': self.dataset['product'].get('product-name'),
             'description': self.dataset['product'].get('description'),
-            'category': self.category
+            'category': self.category,
+            'product_image': self.product_image,
         }
 
         
@@ -116,7 +117,6 @@ class API(object):
             self.product = Product.objects.create(
                 manufacturer=self.manufacturer, 
                 sku=self.dataset['product']['product-id'],
-                product_image=self.product_image,
                 **fields
             )
 
@@ -258,9 +258,10 @@ class API(object):
         if not m:
             raise IncompleteDataSet('product image URL [%s] does not match [%s]', url, self.re_url)
         
-        return '%s/%s/%s' % (
+        return '%s/%s/%s.%s' % (
             settings.APPAREL_PRODUCT_IMAGE_ROOT, 
             slugify(self.vendor.name),
+            self.dataset['product']['product-id'],
             m.group(1)
         )
         
