@@ -21,7 +21,6 @@ class Provider(object):
      - extension    File extensions used when saving the file
      - mapper       Data mapper class
     
-    
     Synopsis
     
         provider = load_provider('grandpa')
@@ -181,6 +180,8 @@ class CSVProvider(Provider):
      - fieldnames       List of fieldnames that will map the column values. They need to be unique.
      - dialect          CSV dialect used to parse the source. See importer.framework.parser and csv.Dialect
      - encoding         Defaults to "utf-8".
+    
+    If fieldnames is omitted in subclass, the first row will be used as headers
          
     Merging
     It's possible to merge a row from the source file with a previous row by 
@@ -206,12 +207,9 @@ class CSVProvider(Provider):
         self.record     = None   # Used for merging
     
     def process(self):
-        if not self.fieldnames:
-            # FIXME: Read first line of CSV file and use as headers
-            pass
         
         csv_reader = parser.CSVParser(self.file, 
-            dialect=self.dialect, 
+            dialect=self.dialect,
             fieldnames=self.fieldnames,
             encoding=self.encoding,
         )

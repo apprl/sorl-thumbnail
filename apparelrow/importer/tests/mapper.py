@@ -1,10 +1,13 @@
 import re
+from mock import Mock
+
 from django.test import TestCase, TransactionTestCase
 
 from importer.framework.mapper import DataMapper, SkipField
 from importer.framework.provider import Provider
 from importer.models import VendorFeed
 from apparel import models as apparel
+
 
 
 #    'version': '0.2',
@@ -46,7 +49,43 @@ class DummyDataMapper(DataMapper):
 
 class DummyProvider(Provider):
     pass
-
+    
+class MapperProcessTest(TestCase):
+    def setUp(self):
+        feed = Mock(spec=VendorFeed)
+        feed.vendor = Mock(spec=apparel.Vendor)
+        feed.vendor.name = 'whatever'
+        
+        self.mapper = DataMapper(Mock(spec=DummyProvider(feed)))
+        self.mapper.preprocess     = Mock()
+        self.mapper.map_field      = Mock()
+        self.mapper.map_variations = Mock()
+        
+    def test_translate(self):
+        self.mapper.translate()
+        self.assertTrue(self.mapper.preprocess.called, 'Called preprocess()')
+        self.assertTrue(self.mapper.map_variations.called, 'Called map_variations()')
+        self.assertEquals(
+            self.mapper.map_field.call_args_list, 
+            [
+                (('date',), {}),
+                (('product-id',), {}), 
+                (('product-name',), {}), 
+                (('categories',), {}), 
+                (('manufacturer',), {}), 
+                (('price',), {}), 
+                (('currency',), {}), 
+                (('delivery-cost',), {}), 
+                (('delivery-time',), {}), 
+                (('image-url',), {}), 
+                (('product-url',), {}), 
+                (('description',), {}), 
+                (('availability',), {}),
+            ],
+            'Called map_field() with each field'
+        )
+                
+    
 class FieldMapperTest(TestCase):
     def setUp(self):
         self.feed = VendorFeed.objects.create(

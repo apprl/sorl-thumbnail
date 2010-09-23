@@ -10,6 +10,10 @@ class CSVSemiColonDelimited(csv.Dialect):
     lineterminator = '\n'
     delimiter = ';'
     quoting = csv.QUOTE_NONE
+
+class CSVPipeDelimitedQuoted(CSVPipeDelimited):
+    quoting = csv.QUOTE_MINIMAL
+    quotechar = '"'
     
 class UTF8Recoder:
     """
