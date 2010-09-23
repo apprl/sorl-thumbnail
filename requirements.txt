@@ -9,8 +9,10 @@ south==0.7
 python-memcached==1.45
 -f http://bitbucket.org/ubernostrum/django-registration/downloads/django-registration-0.8-alpha-1.tar.gz
 django-registration==0.8.0-alpha-1
--e git://github.com/sciyoshi/pyfacebook.git#egg=pyfacebook
--e svn+http://django-facebookconnect.googlecode.com/svn/tags/v0.1/#egg=django-facebookconnect
+-e git+http://github.com/flashingpumpkin/django-socialregistration.git@v0.4-tag#egg=django-socialregistration
+-e git+http://github.com/facebook/python-sdk.git@2da0f678f0c0c5a5ddc77b7456dde232e9b98bd9#egg=facebook-sdk
+oauth2==1.1.3
+python-openid==2.2.5
 django-notification==0.1.5
 django-announcements==0.1.0
 -e svn+http://django-mptt.googlecode.com/svn/trunk/@116#egg=django-mptt
