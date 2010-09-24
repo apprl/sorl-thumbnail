@@ -28,14 +28,14 @@ class ImportLogInline(admin.TabularInline):
     model = ImportLog
     extra = 0
     can_delete = False
-    readonly_fields = ('status', 'start_time', 'end_time',)
+    readonly_fields = ('imported_products', 'status', 'start_time', 'end_time',)
 
 
 class ImportLogAdmin(admin.ModelAdmin):
     inlines = [
         ImportLogMessageInline
     ]
-    readonly_fields = ('start_time', 'end_time', 'status', 'vendor_feed',)
+    readonly_fields = ('imported_products', 'start_time', 'end_time', 'status', 'vendor_feed',)
 
 
 class VendorFeedAdmin(admin.ModelAdmin):

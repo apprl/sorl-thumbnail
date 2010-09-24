@@ -33,16 +33,21 @@ class VendorFeed(models.Model):
     
     def run_import(self, from_warehouse=False, for_date=None):
         log = self.import_log.create()
+        provider = None
         
         try:
-            load_provider(self.provider_class, self).run(from_warehouse=from_warehouse, for_date=for_date)
+            provider = load_provider(self.provider_class, self)
+            provider.run(from_warehouse=from_warehouse, for_date=for_date)
         except Exception, e:
             logging.fatal(unicode(e.__str__(), 'utf-8'))
             logging.debug(''.join(traceback.format_tb(sys.exc_info()[2])))
-            log.messages.create(status='error', message='Fatal exception: %s' % e)
+            log.messages.create(status='error', message='Fatal exception:\n%s' % e)
             log.status = 'failed'
         else:
             log.status = 'completed'
+        finally:
+            if provider:
+                log.imported_products = provider.count
         
         log.save()
 
@@ -76,7 +81,7 @@ class ImportLog(models.Model):
     end_time     = models.DateTimeField(_('End time'), null=True)
     status       = models.CharField(max_length=10, choices=STATUS, default='running')
     vendor_feed  = models.ForeignKey(VendorFeed, related_name='import_log')
-    #products_imported = models.IntegerField(_('Products imported'), default=0, help_text=_('Number of products created or updated'))
+    imported_products = models.IntegerField(_('Products imported'), default=0, help_text=_('Number of products created or updated'))
     
     def save(self, *args, **kwargs):
         if self.status != 'running':

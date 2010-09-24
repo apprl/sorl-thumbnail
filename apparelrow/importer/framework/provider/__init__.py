@@ -14,12 +14,16 @@ class Provider(object):
     """
     Base class for data providers.
     
-    Fields:
+    Properties:
      - feed         importer.models.VendorFeed instance
      - file         File handle pointing to the downloaded feed file
      - name         Name of the module the provider belongs to
      - extension    File extensions used when saving the file
-     - mapper       Data mapper class
+     - mapper       Data mapper class.
+     - count        Number of products successfully imported
+     - url          The feed URL
+     - username     Username used to download feed
+     - password     Password used to download feed
     
     Synopsis
     
@@ -34,6 +38,7 @@ class Provider(object):
         self.file      = None
         self.extension = None
         self.mapper    = None
+        self.count     = 0
     
     def __del__(self, *args, **kwargs):
         if self.file and not self.file.closed:
@@ -64,7 +69,7 @@ class Provider(object):
         """
         
         self.fetch(from_warehouse=from_warehouse, for_date=for_date)
-        return self.process()
+        self.process()
     
     def fetch(self, from_warehouse=False, for_date=None):
         """
@@ -120,8 +125,11 @@ class Provider(object):
         Imports the data into Apparel using the API
         """
         p = None
-        prod_id = data['product']['product-id'] if 'product' in data and 'product-id' in data['product'] else '[unknown]'
-        
+        try:
+            prod_id = data['product']['product-id']
+        except KeyError:
+            prod_id = '[unknown]'
+                
         try:
             p = API(import_log=self.feed.latest_import_log).import_dataset( data )
         
@@ -154,10 +162,7 @@ class Provider(object):
             )
             raise 
         else:
-            # FIXME: Should we count number of products imported? If so, do this
-            # here. Then add it to the ImportLog instance in when process() 
-            # finishes in run()
-            pass
+            self.count += 1
 
 class CSVProvider(Provider):
     """
