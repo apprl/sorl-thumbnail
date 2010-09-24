@@ -198,14 +198,13 @@ class Product(models.Model):
 # This is used for importing stuff - when this category is changed,
 # all related products will be updated to reflect the category
 class VendorCategory(models.Model):
-    category = models.OneToOneField(Category, verbose_name=_('category'), null=True)
+    category = models.ForeignKey(Category, verbose_name=_('category'), null=True)
     name     = models.CharField(_('Name'), max_length=255)
     vendor   = models.ForeignKey(Vendor)
-
+    
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
         if self.category:
-            #import pdb; pdb.set_trace()
             Product.objects.filter(vendorproduct__vendor_category=self).update(category=self.category)
             # NOTE: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
 
@@ -248,7 +247,7 @@ LOOK_COMPONENT_POSITIONED = (
 
 class VendorProductVariation(models.Model):
     """
-    This class prepresents product combinations sold at a particular vendor
+    This class represents product combinations sold at a particular vendor
     """
     vendor_product = models.ForeignKey(VendorProduct, related_name='variations')
     # Negative value means it is in stock, but we have no information about how many
