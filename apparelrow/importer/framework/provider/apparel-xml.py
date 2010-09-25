@@ -1,4 +1,4 @@
-import libxml2
+import libxml2, logging
 from xml.sax.saxutils import unescape
 
 from importer.framework.provider import Provider as BaseProvider
@@ -10,7 +10,11 @@ class ApparelMapper(DataMapper):
         for v in self.record['variations']:
             if 'color' in v:
                 c = self.map_colors(v['color'])
-                if len(c): v['color'] = c[0]
+                if len(c):
+                    v['color'] = c[0]
+                else:
+                    logging.debug('Color %s not recogised' % v['color'])
+                    del v['color']
 
 class Provider(BaseProvider):
     def __init__(self, *args, **kwargs):
