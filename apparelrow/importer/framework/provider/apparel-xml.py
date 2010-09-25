@@ -19,7 +19,7 @@ class ApparelMapper(DataMapper):
 class Provider(BaseProvider):
     def __init__(self, *args, **kwargs):
         super(Provider, self).__init__(*args, **kwargs)
-        self.mapper=DataMapper
+        self.mapper=ApparelMapper
 
 
     def process(self):
