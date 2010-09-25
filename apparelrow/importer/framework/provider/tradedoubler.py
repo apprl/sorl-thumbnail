@@ -52,25 +52,32 @@ class TradeDoublerMapper(DataMapper):
     
     def preprocess(self):
         self.record.update([self.re_split.split(v) for v in self.record.get('fields', '').split(';')])
+
     
     def map_variations(self):
-        c = self.map_colors(self.record.get('color'))
-        self.record['variations'] = [{
-            'color': c[0] if len(c) else None,
-            'gender': self.genders.get(self.record.get('gender'), 'U'),
-        }]
-    
+        self.record['variations'] = []
+        gender = self.record.get('gender') or 'U'
+        colors = self.map_colors(self.record.get('color', ''))
+        if len(colors):
+            for color in colors:
+                self.record['variations'].append({
+                    'gender': gender,
+                    'color':  color
+                })
+        else:
+            self.record['variations'].append({ 'gender': gender })
+     
     def get_product_name(self):
-        return self.record.get('product-name')
+        return self.record.get('name')
     
     def get_product_id(self):
         return self.record.get('TDProductId')
     
     def get_category(self):
-        return self.record.get('merchantCategoryName', self.record.get('TDCategoryName'))
+        return self.record.get('merchantCategoryName') or self.record.get('TDCategoryName')
     
     def get_manufacturer(self):
-        return self.record.get('manufacturer', self.record.get('brand'))
+        return self.record.get('brand') or self.record.get('manufacturer')
     
     def get_product_url(self):
         return self.record.get('product-url')
@@ -85,7 +92,7 @@ class TradeDoublerMapper(DataMapper):
         return True if self.record.get('availability') else False
         
     def get_image_url(self):
-        return self.record.get('extraImageProductLarge', self.record.get('extraImageProductSmall'))
+        return self.record.get('extraImageProductLarge') or self.record.get('extraImageProductSmall')
         
     # FIXME: Parse HTML entities in description
     
