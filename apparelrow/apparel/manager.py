@@ -305,7 +305,10 @@ class QueryParser():
         Like _assemble_expression, but accepts a key/value pair from a query
         that is validated.
         """
-        label, short, field, oper = self.parse_key(pair[0]) 
+        try:
+            label, short, field, oper = self.parse_key(pair[0]) 
+        except InvalidExpression:
+            return
         
         if short.lower() == 'p' and field.lower() == 'published':
             # Do not allow setting the published field of products from query string
