@@ -1,17 +1,30 @@
 #!/bin/bash
 
+#
+# Bash script to kick off the ApparelRow Product Importer with the correct
+# environment.
+#
+# Usage:
+#   bin/import
+# - or -
+#   bin/import name-of-feed-vendor
+#
+# Feeds from all configured FeedVendors will be imported, unless a name is specified
+# as sole argument.
+#
+
 if [[ -z $PROJDIR ]]; then
     PROJDIR=`pwd`
 fi
 
-PROJNAME='apparelrow'                           # Django project name
-
-export PYTHONPATH="$PROJDIR/$PROJNAME:$PROJDIR"
-export DJANGO_SETTINGS_MODULE=settings
-
 if [[ -e $PROJDIR/bin/activate ]]; then
     . $PROJDIR/bin/activate
 fi
-cd $PROJDIR/lib
 
-python runner.py $@
+cd "$PROJDIR/apparelrow"
+
+if [[ -z "$1" ]]; then
+    python manage.py arimport --all
+else
+    python manage.py arimport $1
+fi
