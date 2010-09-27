@@ -52,7 +52,7 @@ class ApparelProfile(models.Model):
     def facebook_profile(self):
         try:
             return FacebookProfile.objects.get(user=self.user)
-        except DoesNotExist:
+        except FacebookProfile.DoesNotExist:
             return None
 
     def __unicode__(self):

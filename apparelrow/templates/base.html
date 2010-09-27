@@ -67,7 +67,6 @@
     </script>
     {% block 'extra-scripts' %}
     {% endblock 'extra-scripts' %}
-    {% facebook_js %}
 </head>
 <body class="{% block body-classes %}{% endblock %}">
 
@@ -98,6 +97,7 @@
             </form>
             {# Facebook connect button #}
             {% facebook_button %}
+            {% facebook_js %}
         </div>
         <form action="/apparel/search" method="get" onsubmit="return false" id="search">
             <input type="text" name="s" />
