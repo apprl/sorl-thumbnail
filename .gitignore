@@ -3,7 +3,12 @@
 *.db
 *~
 *#*#
-/settings_local.py
+settings_local.py
+/apparelrow/media/js/compiled/
+/apparelrow/media/styles/ie.css
+/apparelrow/media/styles/print.css
+/apparelrow/media/styles/screen.css
+/apparelrow/media/styles/widget.css
 /apparelrow/media/products
 /warehouse
 /eggs
