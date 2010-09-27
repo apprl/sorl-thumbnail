@@ -205,8 +205,15 @@ class VendorCategory(models.Model):
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
         if self.category:
-            Product.objects.filter(vendorproduct__vendor_category=self).update(category=self.category)
-            # NOTE: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
+            Product.objects.filter(vendorproduct__vendor_category=self).update(
+                category=self.category,
+                published=True
+            )
+            # NOTE 1: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
+            # NOTE 2: If we do not want to explicitly publish all related products (perhaps they are 
+            #   unpublished for a different reason?) we may want to do one of two things:
+            #   1) Run code for each product to assess whether it should remain unpublished or not (see NOTE 1)
+            #   2) Run a separate update query for all affected products who's category is None and set published=True
 
         super(VendorCategory, self).save(*args, **kwargs)
     
