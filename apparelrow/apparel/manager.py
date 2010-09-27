@@ -106,7 +106,7 @@ class QueryParser():
         """
         
         if not isinstance(query_dict, QueryDict):
-            raise NoQuery('query_dict is not a django.http.QueryDict')    
+            raise NoQuery('query_dict is not a django.http.QueryDict')
         
         self.query_dict  = query_dict
         self.expressions = self.parse_expressions()
@@ -116,7 +116,7 @@ class QueryParser():
         
         for group_index, group in enumerate(self.grouping):
             # Create new group Q-expression for groups with first named expression
-                
+            
             grp_query = self.get_expression(label=group[0])
             
             for offset in range(1, len(group), 2):
@@ -140,7 +140,7 @@ class QueryParser():
                     # Use it to add to the db query
                     operand = grouping[group_index - 1][-1]
                     query   = self.__merge_q_objects(query, group_exp, operand)
-                        
+                    
         return query
 
 
@@ -178,14 +178,11 @@ class QueryParser():
             isnull      1 for true, 0 for false
         
         """
-
-        return dict(
-            filter(
-                None, 
-                map(self.__expr_from_item, self.query_dict.items())
-            )
-        )
-    
+        
+        pairs = map(self._parse_key_pair, self.query_dict.items())
+        pairs.append(self._assemble_expression(u'0', 'p', 'published', 'exact', 1))
+        
+        return dict(filter(None, pairs))
     
     def parse_grouping(self):
         """
@@ -303,21 +300,44 @@ class QueryParser():
         return m.groups()
     
     # FIXME: Might make this public so it can be properly tested
-    def __expr_from_item(self, pair):
+    def _parse_key_pair(self, pair):
         """
-        Extracts an expression from a key/value pair. 
+        Like _assemble_expression, but accepts a key/value pair from a query
+        that is validated.
+        """
+        try:
+            label, short, field, oper = self.parse_key(pair[0]) 
+        except InvalidExpression:
+            return
+        
+        if short.lower() == 'p' and field.lower() == 'published':
+            # Do not allow setting the published field of products from query string
+            # FIXME: 
+            #   Perhaps it would  be an idea to introduce a 'searchable' field
+            #   in the models' Meta class to indicate what fields can be specified
+            #   in a query
+            raise InvalidExpression('Illegal query p.published')
+        
+        
+        return self._assemble_expression(label, short, field, oper, pair[1])
+
+    
+    def _assemble_expression(self, label, short, field, oper, value):
+        """
+        Assembles a Q-object from the following parts (positional arguments):
+        
+         label      The query label, used for ordering
+         short      Model shorthand (ex. "p" for "Product")
+         field      Model field
+         oper       Unvalidated operator
+         value      Raw unvalidated value
         
         A two-tuple is returned where the first element is the expression label 
         and the second a django.db.models.Q instance for the expression.
         
         None is returned if the key isn't properly formatted
         """
-        
-        try:
-            label, short, field, oper = self.parse_key(pair[0]) 
-        except InvalidExpression:
-            return
-                
+                     
         (model_class, model_field) = self.django_models.get(short, (None, None))
         
         if not model_class:
@@ -326,7 +346,7 @@ class QueryParser():
         if self.model and model_class == self.model.__name__:
             model_field = None
         
-        operator, value = self.prepare_op_val(oper, pair[1])
+        operator, value = self.prepare_op_val(oper, value)
         q = None
         
         if model_class == 'Option':

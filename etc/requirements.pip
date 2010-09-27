@@ -6,6 +6,7 @@ PyYAML==3.09
 flup==1.0.2
 mock==0.7.0b3
 south==0.7
+django-debug-toolbar==0.8.3
 python-memcached==1.45
 -f http://bitbucket.org/ubernostrum/django-registration/downloads/django-registration-0.8-alpha-1.tar.gz
 django-registration==0.8.0-alpha-1
