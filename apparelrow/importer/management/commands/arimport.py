@@ -26,12 +26,21 @@ class Command(BaseCommand):
             help='List all available feeds',
             default=False,
         ),
+        make_option('--all',
+            action='store_true',
+            dest='all',
+            help='Import all configured feeds',
+            default=False
+        ),
     )
     
     def handle(self, *args, **options):
         
         if options['list']:
             return self.list_feeds()
+        
+        if options['all']:
+            return self.import_all_feeds(**options)
         
         if len(args) > 0:
             self.import_feed(args[0], **options)
@@ -74,5 +83,12 @@ class Command(BaseCommand):
         )
         
         print "Finished: %s\n" % feed.latest_import_log.status
-        
     
+    def import_all_feeds(self, **options):
+        for feed in VendorFeed.objects.all():
+            print "Importing %s" % feed.name
+            try:
+                self.import_feed(feed.name, **options)
+            except Exception, e:
+                print "Error importing feed %s: %s" % (feed.name, e)
+
