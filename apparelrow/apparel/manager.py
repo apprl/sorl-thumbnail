@@ -179,14 +179,10 @@ class QueryParser():
         
         """
         
-        return dict(
-            filter(
-                None, 
-                [map(self.__parse_key_pair, self.query_dict.items()),
-                self.__assemble_expression('0', 'p', 'published', 'exact', 1)]
-            ),
-        )
-    
+        pairs = map(self._parse_key_pair, self.query_dict.items())
+        pairs.append(self._assemble_expression(u'0', 'p', 'published', 'exact', 1))
+        
+        return dict(filter(None, pairs))
     
     def parse_grouping(self):
         """
@@ -304,9 +300,9 @@ class QueryParser():
         return m.groups()
     
     # FIXME: Might make this public so it can be properly tested
-    def __parse_key_pair(self, pair):
+    def _parse_key_pair(self, pair):
         """
-        Like __assemble_expression, but accepts a key/value pair from a query
+        Like _assemble_expression, but accepts a key/value pair from a query
         that is validated.
         """
         label, short, field, oper = self.parse_key(pair[0]) 
@@ -320,10 +316,10 @@ class QueryParser():
             raise InvalidExpression('Illegal query p.published')
         
         
-        return self.__assemble_expression(label, short, field, oper, pair[0])
+        return self._assemble_expression(label, short, field, oper, pair[1])
 
     
-    def __assemble_expression(self, label, short, field, oper, value):
+    def _assemble_expression(self, label, short, field, oper, value):
         """
         Assembles a Q-object from the following parts (positional arguments):
         
