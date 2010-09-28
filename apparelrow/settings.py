@@ -10,10 +10,9 @@ gettext = lambda s: s
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-# tells Pinax to use the default theme
-
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+
 FORCE_SCRIPT_NAME = ''
 
 LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', 'etc', 'logging.conf') # logging configuration file
@@ -308,7 +307,7 @@ except ImportError:
 
 
 # FIXME: Do NOT add this in production
-#INSTALLED_APPS += ( 'debug_toolbar', )
-#MIDDLEWARE_CLASSES += ( 'debug_toolbar.middleware.DebugToolbarMiddleware', )
-#INTERNAL_IPS = ('127.0.0.1', )
+INSTALLED_APPS += ( 'debug_toolbar', )
+MIDDLEWARE_CLASSES += ( 'debug_toolbar.middleware.DebugToolbarMiddleware', )
+INTERNAL_IPS = ('127.0.0.1', )
 
