@@ -133,11 +133,11 @@ def product_redirect(request, pk):
     """
     Makes it
     """
-    product = get_object_or_404(Product, pk=pk)
+    product = get_object_or_404(Product, pk=pk, published=True)
     return HttpResponsePermanentRedirect(product.get_absolute_url())
 
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug)
+    product = get_object_or_404(Product, slug=slug, published=True)
     viewed_products = request.session.get('viewed_products', [])
     try:
         viewed_products.remove(product.id)

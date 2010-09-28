@@ -4,14 +4,8 @@ from apparel.models import *
 from django.db.models import Q
 
 
-product_dict = {
-    'queryset': Product.objects.all(),
-}
-
-manufacturer_dict = {
-    'queryset': Manufacturer.objects.all(),
-}
-
+# FIXME: There's currently no way for django-voting to limit the Product queryset
+# to only contain published products
 like_product_dict = {
     'model': Product,
     'template_object_name': 'product',
@@ -28,14 +22,12 @@ like_look_dict = {
 
 urlpatterns = patterns('',
     (r'^$', 'apparel.views.index'),
-    #(r'^search$', 'apparel.views.wide_search'),
-    (r'^products/$', 'django.views.generic.list_detail.object_list', product_dict),
     (r'^(?P<model>\w+)/search$', 'apparel.views.search'),
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
     (r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list'),
-    (r'^manufacturers/$', 'django.views.generic.list_detail.object_list', manufacturer_dict),
-    (r'^manufacturers/(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', manufacturer_dict),
+    (r'^products/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
+    
     (r'^browse/$', 'apparel.views.browse'),
     
     (r'^wardrobe/add_product/$', 'apparel.views.add_to_wardrobe'),
@@ -48,7 +40,6 @@ urlpatterns = patterns('',
     (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
     (r'^looks/(?P<slug>[\w-]+?)/edit/$', 'apparel.views.look_edit'),
     (r'^looks/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_look_dict, "like-look"),
-    (r'^products/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
     (r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
     
     (r'^widget/look/(?P<object_id>\d+)/collage/$', 'apparel.views.widget', { 
