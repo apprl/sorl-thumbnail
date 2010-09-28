@@ -138,8 +138,8 @@ class QueryParser():
                 else:
                     # Get the last operand (previous group, last element)
                     # Use it to add to the db query
-                    operand = grouping[group_index - 1][-1]
-                    query   = self.__merge_q_objects(query, group_exp, operand)
+                    operand = self.grouping[group_index - 1][-1]
+                    query   = self.__merge_q_objects(query, grp_query, operand)
                     
         return query
 
@@ -177,10 +177,13 @@ class QueryParser():
             range       Split in two at the first found comma
             isnull      1 for true, 0 for false
         
+        Also not that internal expressions are may be added to the query here.
+        Internal expressions are labelled "_[number]"
+        
         """
         
         pairs = map(self._parse_key_pair, self.query_dict.items())
-        pairs.append(self._assemble_expression(u'0', 'p', 'published', 'exact', 1))
+        pairs.append(self._assemble_expression(u'_0', 'p', 'published', 'exact', 1))
         
         return dict(filter(None, pairs))
     
@@ -218,12 +221,16 @@ class QueryParser():
             b) (1 or 2) and (3 or 4 or 5) and not 6 and 7
         """
         
-        pattern  = self.query_dict['o'] if 'o' in self.query_dict else 'a'.join(self.expressions.keys())
+        if 'o' in self.query_dict:
+            pattern = self.query_dict['o'] + ',a_0'
+        else:
+            pattern = 'a'.join(self.expressions.keys())
+        
         grouping = []      # Sort order list
         append   = True    # If true, will not group statements
         
         #   (operand, expression_label, end of group)
-        for (op, oid, group) in re.compile('(^|(?:a|o)n?)(\d)(,)?').findall(pattern):
+        for (op, oid, group) in re.compile('(^|(?:a|o)n?)(_?\d+)(,)?').findall(pattern):
             if op:
                 grouping[-1] += (op,)
             
