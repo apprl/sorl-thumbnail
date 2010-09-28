@@ -229,7 +229,7 @@ class VendorProduct(models.Model):
     product           = models.ForeignKey(Product, related_name='vendorproduct', verbose_name='Vendor Product')
     vendor_category   = models.ForeignKey(VendorCategory, related_name='vendorproducts', null=True,)
     buy_url           = models.URLField(_('Buy URL'), null=True, blank=True, )
-    price             = models.DecimalField(_('Numeric price'), null=True, blank=True, max_digits=10, decimal_places=2)
+    price             = models.DecimalField(_('Numeric price'), null=True, blank=True, max_digits=10, decimal_places=2, db_index=True,)
     currency          = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
     
     def __unicode__(self):
@@ -237,6 +237,7 @@ class VendorProduct(models.Model):
 
     class Meta:
         verbose_name = _("Vendor Product")
+        
 
     class Exporter:
         export_fields = ['__all__', '-product']
