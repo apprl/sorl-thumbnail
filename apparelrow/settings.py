@@ -100,10 +100,21 @@ ADMIN_MEDIA_PREFIX = '/admin_media/'
 SECRET_KEY = 'zb*p6d^l!by6hhugm+^f34m@-yex9c90yz)c_71t=+lxo%mn(3'
 
 # List of callables that know how to import templates from various sources.
+# FIXME: We should be using the templates below, but our JavaScript templates
+# stops us from doing that. Once they're replaced, uncomment the following lines.
+# See ticket #341
+#TEMPLATE_LOADERS = (
+#    #('django.template.loaders.cached.Loader', (
+#        'django.template.loaders.filesystem.Loader',
+#        'django.template.loaders.app_directories.Loader',
+#    #)),
+#)
+
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
 )
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -297,7 +308,7 @@ except ImportError:
 
 
 # FIXME: Do NOT add this in production
-INSTALLED_APPS += ( 'debug_toolbar', )
-MIDDLEWARE_CLASSES += ( 'debug_toolbar.middleware.DebugToolbarMiddleware', )
-INTERNAL_IPS = ('127.0.0.1', )
+#INSTALLED_APPS += ( 'debug_toolbar', )
+#MIDDLEWARE_CLASSES += ( 'debug_toolbar.middleware.DebugToolbarMiddleware', )
+#INTERNAL_IPS = ('127.0.0.1', )
 
