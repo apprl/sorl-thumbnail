@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load apparel_extras %}
+{% load cache %}
 
 {% block 'extra-scripts' %}
     <script type="text/javascript" src="{{ MEDIA_URL }}/js/filtersetup.js"></script>
@@ -62,6 +63,7 @@
     <div class="sidebar">
         {% include 'apparel/fragments/product_menu.html' %}
     </div>
+    {% cache CACHE_TIMEOUT index LANGUAGE_CODE %}
     <div id="content">
         <h2>{% trans "News" %}</h2>
         <div id="featured-looks">
@@ -99,6 +101,7 @@
             </div>
         </div>
     </div>
+    {% endcache %}
     <div class="sidebar last">
         <h2>{% trans "Popular looks" %}</h2>
         <ul class="looks">

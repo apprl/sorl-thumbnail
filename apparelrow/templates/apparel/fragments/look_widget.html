@@ -1,4 +1,6 @@
 {% load i18n %}
+{% load cache %}
+{% cache CACHE_TIMEOUT look_widget object.id LANGUAGE_CODE %}
 {% spaceless %}
 {% load jsminify %}
 <ul class="apparelrow ar-look-{% if object.display_with_component == 'P' %}photo{% else %}collage{% endif %}" id="apparelrow-look-{{ object.id }}">
@@ -28,3 +30,4 @@
 {% endminifyjs %}
 </script>
 {% endspaceless %}
+{% endcache %}

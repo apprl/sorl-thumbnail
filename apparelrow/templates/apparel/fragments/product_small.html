@@ -1,3 +1,5 @@
+{% load cache %}
+{% cache CACHE_TIMEOUT product_small "en" %}
 <li id="product-{{ product.id }}">
 <a href="{{ product.get_absolute_url }}">
 <div class="product-small">
@@ -10,3 +12,4 @@
 </div>
 </a>
 </li>
+{% endcache %}
