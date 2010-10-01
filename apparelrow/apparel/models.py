@@ -7,9 +7,9 @@ from django.conf import settings
 from django.db.models import Sum, Min
 
 from apparel.manager import SearchManager, FeaturedManager
+from apparel import cache
 
-import datetime, mptt
-import tagging
+import datetime, mptt, tagging
 from tagging.fields import TagField
 from voting.models import Vote
 from sorl.thumbnail.main import DjangoThumbnail
@@ -120,10 +120,13 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'categories'
 
+
 try:
     mptt.register(Category, order_insertion_by=['name'])
 except mptt.AlreadyRegistered:
     logging.debug("Attempt to register category, but it's already registered")
+
+models.signals.post_save.connect(cache.invalidate_model_handler, sender=Category)
 
 
 class CategoryAlias(models.Model):
@@ -193,6 +196,8 @@ class Product(models.Model):
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'default_vendor', 'score']
 
+models.signals.post_save.connect(cache.invalidate_model_handler, sender=Product)
+
 
 # Maps products for a specific vendor 
 # This is used for importing stuff - when this category is changed,
@@ -214,7 +219,8 @@ class VendorCategory(models.Model):
             #   unpublished for a different reason?) we may want to do one of two things:
             #   1) Run code for each product to assess whether it should remain unpublished or not (see NOTE 1)
             #   2) Run a separate update query for all affected products who's category is None and set published=True
-
+        
+        # FIXME: Manually release cache for these objects
         super(VendorCategory, self).save(*args, **kwargs)
     
     def __unicode__(self):
@@ -237,10 +243,11 @@ class VendorProduct(models.Model):
 
     class Meta:
         verbose_name = _("Vendor Product")
-        
-
+    
     class Exporter:
         export_fields = ['__all__', '-product']
+
+models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProduct)
 
 
 LOOK_COMPONENT_TYPES = (
@@ -275,6 +282,8 @@ class VendorProductVariation(models.Model):
             s = '%i %s' % (self.in_stock, _('items in stock'))
         
         return unicode(s)
+
+models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
 
 
 class Look(models.Model):
@@ -364,6 +373,8 @@ class Look(models.Model):
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'photo_components', 'display_with_component', 'collage_components', 'score']
 
+models.signals.post_save.connect(cache.invalidate_model_handler, sender=Look)
+
 
 class LookComponent(models.Model):
     """
@@ -428,6 +439,8 @@ class LookComponent(models.Model):
 
     class Exporter:
         export_fields = ['__all__', 'style', 'style_middle', 'style_small', '-look']
+
+models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookComponent)
 
 
 
