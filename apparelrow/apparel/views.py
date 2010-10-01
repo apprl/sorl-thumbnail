@@ -242,9 +242,7 @@ def look_edit(request, slug):
         'form': form,
         'wardrobe': wardrobe,
         'templates': {
-            'look_collage_product': js_template(get_template_source('apparel/fragments/look_collage_product.html')),
             'product_thumb':        js_template(get_template_source('apparel/fragments/product_thumb.html')),
-            'look_photo_product':   js_template(get_template_source('apparel/fragments/look_photo_product.html')),
         }
     }
     # FIXME: Cannot export Form objects as JSON. Fix this and remove this
@@ -328,8 +326,13 @@ def save_look_component(request):
         raise Exception('Validaton errors %s' % form.errors)
     
     
+    template = 'look_collage_product' if form.instance.component_of == 'C' else 'look_photo_product'
     return (
-        {'look_component': form.instance, 'added': added },                                       # JSON response 
+        {
+            'look_component': form.instance,
+            'added': added,
+            'html': loader.render_to_string('apparel/fragments/%s.html' % template, {'object': form.instance}),
+        },                                                                                        # JSON response 
         HttpResponseRedirect( reverse('apparel.views.look_edit', args=(request.POST['look'],)))   # Browser request response
     )
 

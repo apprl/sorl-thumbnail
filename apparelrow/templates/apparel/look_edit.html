@@ -149,7 +149,7 @@ var look = {
                 }
                 
                 if(response.data.added) {
-                    var new_product = jQuery(context.template).render({component: component}).appendTo(pane);
+                    var new_product = jQuery(response.data.html).appendTo(pane);
                     look.initialize(new_product.first());
                 }
             }
@@ -228,8 +228,8 @@ var look = {
 
 function getContextFromPane(pane) {
     var context = {
-        'photo-background': { 'template': '#look_photo_product_template', 'component_of': 'P', 'id_prefix': 'hotspot' },
-        'collage': { 'template': '#look_collage_product_template', 'component_of': 'C', 'id_prefix': 'product' },
+        'photo-background': { 'component_of': 'P', 'id_prefix': 'hotspot' },
+        'collage': { 'component_of': 'C', 'id_prefix': 'product' },
     }[pane.attr('id')];
     
     if(!context) {
