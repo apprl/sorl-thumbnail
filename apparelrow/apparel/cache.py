@@ -67,7 +67,6 @@ def invalidate_model_handler(sender, **kwargs):
             cache_args = [] if fragment in class_level_map else [kwargs['instance'].id]
             
             for lang in settings.LANGUAGES:
-                import pdb; pdb.set_trace()
                 cache_args.append(lang[0])
                 invalidate_template_cache(fragment, *cache_args)
     
