@@ -335,7 +335,7 @@ def save_look_component(request):
         {
             'look_component': form.instance,
             'added': added,
-            'html': loader.render_to_string('apparel/fragments/%s.html' % template, {'object': form.instance}),
+            'html': loader.render_to_string('apparel/fragments/%s.html' % template, {'component': form.instance}, context_instance=RequestContext(request)),
         },                                                                                        # JSON response 
         HttpResponseRedirect( reverse('apparel.views.look_edit', args=(request.POST['look'],)))   # Browser request response
     )
@@ -415,8 +415,8 @@ def add_to_look(request):
             'look': look,           # The look the product was added to
             'created': created,     # Whether the look was created
             'added': added,         # Whether the product was added to the look or not. If false it was aleady there.
-            'html': loader.render_to_string('apparel/fragments/look_small_sidebar.html', {'object': look, 'hide_like_button': False}),
-        }, 
+            'html': loader.render_to_string('apparel/fragments/look_small_sidebar.html', {'object': look, 'hide_like_button': False}, context_instance=RequestContext(request)),
+        },
         HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,)))
     )
     
