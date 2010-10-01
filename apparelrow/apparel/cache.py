@@ -33,7 +33,7 @@ template_cache_map = {
         'product_detail1', 'product_detail2', 'product_search', 
         'look_widget', 'look_small',
     ),
-    'VendorProductVariation': (
+    'VendorProductVariation': (  # Fixme: Validate these
         'product_detail1', 'product_detail2', 'product_search', 
         'look_widget', 'look_small',
     ),
@@ -52,6 +52,11 @@ template_cache_map = {
     ),
 }
 
+class_level_map = (
+    'filter_menu',
+    'index',   
+)
+
 
 def invalidate_model_handler(sender, **kwargs):
     if kwargs['created']:
@@ -59,8 +64,12 @@ def invalidate_model_handler(sender, **kwargs):
     
     try:
         for fragment in template_cache_map[sender.__name__]:
+            cache_args = [] if fragment in class_level_map else [kwargs['instance'].id]
+            
             for lang in settings.LANGUAGES:
-                invalidate_template_cache(fragment, kwargs['instance'].id, lang[0])
+                import pdb; pdb.set_trace()
+                cache_args.append(lang[0])
+                invalidate_template_cache(fragment, *cache_args)
     
     except KeyError, e:
         pass

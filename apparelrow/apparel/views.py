@@ -219,6 +219,7 @@ def look_edit(request, slug):
             - else redirect to look's view page (unless a new image has been uploaded)
     """
     
+    # FIXME: Ensure user owns look
     look = get_object_or_404(Look, slug=slug)
         
     if request.method == 'POST':
@@ -288,7 +289,7 @@ def save_look_component(request):
     """
     This view adds or updates a component for a look and product
     """
-    
+    # FIXME: Ensure user owns look
     try:
         lc = LookComponent.objects.get(
                     product__id=request.POST['product'],
