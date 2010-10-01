@@ -220,7 +220,7 @@ def look_edit(request, slug):
     """
     
     # FIXME: Ensure user owns look
-    look = get_object_or_404(Look, slug=slug)
+    look = get_object_or_404(Look, slug=slug, user=request.user)
         
     if request.method == 'POST':
         form = LookForm(request.POST, request.FILES, instance=look)
@@ -291,11 +291,13 @@ def save_look_component(request):
     """
     This view adds or updates a component for a look and product
     """
-    # FIXME: Ensure user owns look
+    
+    look = get_object_or_404(Look, pk=request.POST['look'], user=request.user)
+    
     try:
         lc = LookComponent.objects.get(
+                    look=look,
                     product__id=request.POST['product'],
-                    look__id=request.POST['look'],
                     component_of=request.POST['component_of']
         )
         form  = LookComponentForm(request.POST, instance=lc)
@@ -312,7 +314,7 @@ def save_look_component(request):
                 setattr(form.instance, field, form.initial.get(field))
         
         if not form.instance.top and not form.instance.left:
-            components = LookComponent.objects.filter(positioned='A', look=form.instance.look, component_of=form.instance.component_of)
+            components = LookComponent.objects.filter(positioned='A', look=look, component_of=form.instance.component_of)
             left = components.aggregate(Max('left')).values()[0]
             top  = components.aggregate(Max('top')).values()[0]
             
@@ -359,7 +361,7 @@ def delete_look_component(request):
     # NOTE: This is a workaround because jQuery adds the [] notation to arrays,
     # rather than just add multiple keys like a normal user agent
     products = request.POST.getlist('product[]') if 'product[]' in request.POST else request.POST.getlist('product')
-    look     = get_object_or_404(Look, id=request.POST['look'])
+    look     = get_object_or_404(Look, pk=request.POST['look'], user=request.user)
     
     components = LookComponent.objects.filter(
         product__id__in=products,
@@ -393,7 +395,7 @@ def delete_look_component(request):
 def add_to_look(request):
 
     if request.POST.get('look'):
-        look = Look.objects.get(pk=request.POST['look'])
+        look = get_object_or_404(Look, pk=request.POST['look'], user=request.user)
         created = False
     else:
         look = Look(user=request.user, title=request.POST.get('new_name'))
