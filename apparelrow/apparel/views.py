@@ -247,9 +247,7 @@ def look_edit(request, slug):
         'form': form,
         'wardrobe': wardrobe,
         'templates': {
-            'look_collage_product': js_template(get_template_source('apparel/fragments/look_collage_product.html'), context=context),
             'product_thumb':        js_template(get_template_source('apparel/fragments/product_thumb.html'), context=context),
-            'look_photo_product':   js_template(get_template_source('apparel/fragments/look_photo_product.html'), context=context),
         }
     }
     # FIXME: Cannot export Form objects as JSON. Fix this and remove this
@@ -335,8 +333,13 @@ def save_look_component(request):
         raise Exception('Validaton errors %s' % form.errors)
     
     
+    template = 'look_collage_product' if form.instance.component_of == 'C' else 'look_photo_product'
     return (
-        {'look_component': form.instance, 'added': added },                                       # JSON response 
+        {
+            'look_component': form.instance,
+            'added': added,
+            'html': loader.render_to_string('apparel/fragments/%s.html' % template, {'component': form.instance}, context_instance=RequestContext(request)),
+        },                                                                                        # JSON response 
         HttpResponseRedirect( reverse('apparel.views.look_edit', args=(request.POST['look'],)))   # Browser request response
     )
 
@@ -415,8 +418,8 @@ def add_to_look(request):
             'look': look,           # The look the product was added to
             'created': created,     # Whether the look was created
             'added': added,         # Whether the product was added to the look or not. If false it was aleady there.
-            'html': loader.render_to_string('apparel/fragments/look_small_sidebar.html', {'object': look, 'hide_like_button': False}),
-        }, 
+            'html': loader.render_to_string('apparel/fragments/look_small_sidebar.html', {'object': look, 'hide_like_button': False}, context_instance=RequestContext(request)),
+        },
         HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,)))
     )
     
