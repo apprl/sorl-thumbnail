@@ -4,6 +4,7 @@
 {% load comments %}
 {% load trackback_tags %}
 {% load apparel_extras %}
+{% load cache %}
 
 {# FIXME: we should reverse the list of categories. I think we need to create a filter for this #}
 {% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.categories|join:' | ' }} | {% endblock %}
@@ -140,7 +141,9 @@
 {% block body-classes %}product two-columns right{% endblock %}
 
 {% block body %}
+
 {% if object %}
+    {% cache CACHE_TIMEOUT product_detail1 object.id LANGUAGE_CODE %}
         <div id="content">
             {% get_trackbacks_for object as trackbacks %}
             {% include 'apparel/fragments/product_detail.html' %}
@@ -156,6 +159,7 @@
                 <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
                 <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
             </div>
+    {% endcache %}
             {% if viewed_products %}
                 <h2>{% trans "Recently viewed" %}</h2>
                 <div id="recentlyviewed">
@@ -164,6 +168,7 @@
                     {% endwith %}
                 </div>
             {% endif %}
+    {% cache CACHE_TIMEOUT product_detail2 object.id LANGUAGE_CODE %}
             <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
                 {% blocktrans count looks_with_product|length as counter %}
                     <span class="count">{{ counter }}</span> look with this product
@@ -175,8 +180,10 @@
             {% include 'apparel/fragments/looks.html' %}
             {% endwith %}
         </div>
+    {% endcache %}
 {% else %}
     <!-- FIXME: This needs some sort of layout -->
     <p>{% trans "No product found!" %}</p>
 {% endif %}
 {% endblock body %}
+

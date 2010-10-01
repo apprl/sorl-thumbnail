@@ -159,12 +159,14 @@ def product_detail(request, slug):
     else:
         user_looks     = []
         is_in_wardrobe = False
-        
+    
+    context = RequestContext(request)
+    
     return render_to_response(
             'apparel/product_detail.html',
             {
                 'templates': {
-                    'look_button': js_template(get_template_source('apparel/fragments/look_button.html'))
+                    'look_button': js_template(get_template_source('apparel/fragments/look_button.html'), context=context)
                 },
                 'object': product,
                 'user_looks': user_looks,
@@ -173,7 +175,7 @@ def product_detail(request, slug):
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri()
             },
-            context_instance=RequestContext(request),
+            context_instance=context,
             )
 
 def look_list(request, profile=None, contains=None, page=0):
@@ -237,12 +239,14 @@ def look_edit(request, slug):
     except Wardrobe.DoesNotExist:
         wardrobe = []
     
+    context = RequestContext(request)
+    
     data = {
         'object': form.instance, 
         'form': form,
         'wardrobe': wardrobe,
         'templates': {
-            'product_thumb':        js_template(get_template_source('apparel/fragments/product_thumb.html')),
+            'product_thumb':        js_template(get_template_source('apparel/fragments/product_thumb.html'), context=context),
         }
     }
     # FIXME: Cannot export Form objects as JSON. Fix this and remove this
@@ -251,7 +255,7 @@ def look_edit(request, slug):
     del json_data['form']
     return (
         json_data,
-        render_to_response('apparel/look_edit.html', data, context_instance=RequestContext(request))
+        render_to_response('apparel/look_edit.html', data, context_instance=context)
     )
 
 
@@ -629,8 +633,11 @@ def get_query_and_page(request, override_size=None):
     return query, page, size
 
 
-def js_template(str):
+def js_template(str, request=None, context=None):
+    if context is None:
+        context = RequestContext(request)
+    
     str = str.replace('{{', '${').replace('}}', '}')
-    str = re.sub(r'\{%\s*include "(.+?)"\s*%\}', lambda m: js_template(get_template_source(m.group(1))), str)
+    str = re.sub(r'\{%\s*include "(.+?)"\s*%\}', lambda m: js_template(get_template_source(m.group(1)), context=context), str)
 
-    return Template(str).render(Context())
+    return Template(str).render(context)

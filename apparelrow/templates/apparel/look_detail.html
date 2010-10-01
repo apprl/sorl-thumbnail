@@ -5,6 +5,7 @@
 {% load trackback_tags %}
 {% load tagging_tags %}
 {% load comments %}
+{% load cache %}
 
 {% block extra-title %}{{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
 
@@ -61,6 +62,8 @@
         </span>
     </div>
 </div>
+
+{% cache CACHE_TIMEOUT look_detail object.id LANGUAGE_CODE %}
 <div class="sidebar">
     {% include 'apparel/fragments/total_price.html' %}
     {% if object.description %}
@@ -131,4 +134,6 @@
     {% endwith %}
 </div>
 {% endcomment %}
+{% endcache %}
+
 {% endblock body %}

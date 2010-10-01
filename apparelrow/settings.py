@@ -29,9 +29,6 @@ if not hasattr(logging, 'initialised'):
     setattr(logging, 'initialised', True)
 
 
-# tells Pinax to serve media through django.views.static.serve.
-SERVE_MEDIA = DEBUG
-
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
@@ -147,8 +144,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     
-    "context_processors.settings",
-    "context_processors.js_templates",
+    "context_processors.cache_vars",
+    #"context_processors.js_templates",
+    
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
 )
@@ -274,7 +272,8 @@ EMAIL_HOST_USER     = 'postman@hanssonlarsson.se'
 EMAIL_HOST_PASSWORD = 'K6kb4Lle'
 EMAIL_USE_TLS       = True
 
-
+CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
+CACHE_TEMPLATE_TIMEOUT = 60 * 15
 
 APPAREL_DEFAULT_AVATAR     = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
 APPAREL_PRODUCT_IMAGE_ROOT = 'products'
@@ -298,6 +297,8 @@ APPAREL_IMPORTER_COLORS = (
     (u'magenta', u'magenta',),
 )
 
+
+
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:
@@ -307,7 +308,7 @@ except ImportError:
 
 
 # FIXME: Do NOT add this in production
-INSTALLED_APPS += ( 'debug_toolbar', )
-MIDDLEWARE_CLASSES += ( 'debug_toolbar.middleware.DebugToolbarMiddleware', )
-INTERNAL_IPS = ('127.0.0.1', )
+#INSTALLED_APPS += ( 'debug_toolbar', )
+#MIDDLEWARE_CLASSES += ( 'debug_toolbar.middleware.DebugToolbarMiddleware', )
+#INTERNAL_IPS = ('127.0.0.1', )
 
