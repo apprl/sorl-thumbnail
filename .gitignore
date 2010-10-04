@@ -22,5 +22,5 @@ settings_local.py
 !/bin/django-server
 /pip-log.txt
 /src
-/var/*
+/var
 

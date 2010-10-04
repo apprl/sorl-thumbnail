@@ -3,7 +3,7 @@
  */
 
 var ApparelRow = {
-    host: 'http://localhost:8000',
+    host: 'http://apparelrow-dev.hanssonlarsson.se',
     initialized: false,
     initStack: 0,
     insert: function(response, node) {

@@ -159,21 +159,32 @@
     <div class="container">
     </div>
 </div>
+
 {% for template_name,template_string in templates.items %}
     <script type="text/html" id="{{ template_name }}_template">
         {{ template_string|safe }}
     </script>
 {% endfor %}
-{% comment %}
-    FIXME: Would be neat if there is a way of combining templates and default_templates
-    so we do not have to iterate twice. Preferably, this should be done in the
-    context processor (just not sure how to get the current context from the request)
-   or in the template (default_templates.update(template).items or something
-{% endcomment %}
-{% for template_name,template_string in default_templates.items %}
-    <script type="text/html" id="{{ template_name }}_template">
-        {{ template_string|safe }}
+
+    <script type="text/html" id="manufacturer_search_template">
+        <a href="/browse/?1:m.id=${ object.id}" id="manufacturer-${ object.id }">${ object.name }</a>
     </script>
-{% endfor %}
+
+    <script type="text/html" id="product_template">
+        <li id="product-${ product.id }">
+<a href="${ product.get_absolute_url }">
+<div class="product-small">
+    <div class="product-image">
+        <img src="/scale/115x153${ product.product_image.url }" alt="${ product.product_name }" />
+        <span class="likes">x</span>
+    </div>
+    <h4>${ product.product_name }</h4>
+    <span class="price">${ product.default_vendor.price } ${ product.default_vendor.currency }</span>
+</div>
+</a>
+</li>
+
+    </script>
+
 </body>
 </html>
