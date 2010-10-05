@@ -3,7 +3,7 @@ import datetime, os, logging, re, traceback, sys
 from django.conf import settings
 
 from importer.framework import fetcher, parser
-from apparelrow.importer.api import API, SkipProduct, ImporterException
+from importer.api import API, SkipProduct, ImporterError, IncompleteDataSet
 
 def load_provider(name, feed):
     module = __import__('importer.framework.provider.%s' % name, fromlist = ['Provider'])   
@@ -120,27 +120,29 @@ class Provider(object):
         """
         raise Exception("process() has to be implemented by subclass")
     
-    def import_data(self, data):
+    def import_data(self, record):
         """
-        Imports the data into Apparel using the API
+        Imports the given record using the API. The record is first mapped
+        using the configured data mapper.
         """
         p = None
         try:
-            prod_id = data['product']['product-id']
+            prod_id = record['product']['product-id']
         except KeyError:
             prod_id = '[unknown]'
                 
         try:
-            p = API(import_log=self.feed.latest_import_log).import_dataset( data )
+            d = self.mapper(self, record).translate()
+            p = API(import_log=self.feed.latest_import_log).import_dataset( d )
         
-        except SkipProduct, e:
+        except (SkipProduct, IncompleteDataSet) as e:
             self.feed.latest_import_log.messages.create(
                 status='info', 
                 message="Skipping product\nProduct: %s\nError:%s" % (prod_id, e)
             )
             logging.info(u'Record skipped: %s', e)
         
-        except ImporterException, e:
+        except ImporterError as e:
             self.feed.latest_import_log.messages.create(
                 status='error', 
                 message="Product skipped due to unexpected errors\nProduct: %s\nError: %s" % (
@@ -148,12 +150,8 @@ class Provider(object):
                 )
             )
         
-        except Exception, e:
+        except Exception as e:
             # FIXME: No need to add anything here as the process will terminate
-            #tb = sys.exc_info()[2]
-            #logging.fatal('Translation failed with uncought exception: [%s]', unicode(e.__str__(), 'utf-8'))
-            #logging.debug(traceback.format_tb(tb))
-            
             self.feed.latest_import_log.messages.create(
                 status='error', 
                 message=u"Aborting import due to unhandled error.\nProduct: %s\nError: %s\n\nStacktrace:\n%s" % (
@@ -229,7 +227,7 @@ class CSVProvider(Provider):
                     continue
                     
                 # Otherwise, import base record
-                self.__import(self.record)
+                self.import_data(self.record)
                 self.record = None # To avoid importing a single last record twice
             
             # Use this record as base record
@@ -237,12 +235,8 @@ class CSVProvider(Provider):
             self.merge(row) # Call merge so data can be arranged in the same order
         else:
             if self.record:
-                self.__import(self.record)
-    
-    def __import(self, record):
-        mapper = self.mapper(self, record)
-        self.import_data( mapper.translate() )
-    
+                self.import_data(self.record)
+     
     def merge(self, new_record):
         pass
     

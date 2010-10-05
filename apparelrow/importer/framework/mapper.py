@@ -2,7 +2,7 @@ import re, logging, datetime
 
 from django.conf import settings
 
-from apparelrow.importer.api import API, SkipProduct, ImporterException
+from apparelrow.importer.api import API, SkipProduct
 
 
 
@@ -81,7 +81,7 @@ class DataMapper():
             except SkipField:
                 logging.debug('Skipping field %s' % field)
                 continue
-        
+            
         self.map_variations()
         api_dict['product']['variations'] = self.record.get('variations', [])
         

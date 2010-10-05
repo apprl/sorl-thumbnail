@@ -1,5 +1,6 @@
 import re
 
+from importer.api import SkipProduct
 from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
@@ -80,8 +81,8 @@ class TradeDoublerMapper(DataMapper):
         return self.record.get('brand') or self.record.get('manufacturer')
     
     def get_product_url(self):
-        return self.record.get('product-url')
-    
+        return self.record.get('productUrl')
+        
     def get_delivery_cost(self):
         return self.record.get('shippingCost', '').split(' ')[0]
         

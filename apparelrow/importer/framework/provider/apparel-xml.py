@@ -44,8 +44,7 @@ class Provider(BaseProvider):
                     ])
                 )
             
-            mapper = self.mapper(self, record)
-            self.import_data( mapper.translate() )
-    
+            self.import_data(record)
+        
     def process_text(self, text):
         return unicode( unescape( text ), 'utf-8')
