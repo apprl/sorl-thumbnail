@@ -29,7 +29,7 @@ Required Data Structure
     'product': {
         'product-id': '375512-162',
         'product-name': 'Flight 45',
-        'categories': 'Sneakers',
+        'category': 'Sneakers',
         'manufacturer': 'Jordan',
         'price': 1399.00,
         'currency': 'SEK',
@@ -83,8 +83,7 @@ class API(object):
             self.validate()
             self.import_product()
         
-        except ImporterException, e:
-            # Log ImporterException
+        except ImporterError, e:
             logging.error(u'%s, record skipped', e)
             raise
         except Exception, e:
@@ -148,11 +147,6 @@ class API(object):
         
         vp = VendorProduct.objects.get( product=self.product, vendor=self.vendor )
         types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in OptionType.objects.all()])
-        
-        try:
-            self.dataset['product']['variations']
-        except KeyError, e:
-            raise IncompleteDataSet('Missing variations')
         
         for variation in self.dataset['product']['variations']:
             options = []
@@ -230,11 +224,11 @@ class API(object):
         #   - delivery cost (Property of vendor?)
         
         fields = {
-            'buy_url': self.dataset['product'].get('product-url'),
-            'price': self.dataset['product'].get('price'),
-            'currency': self.dataset['product'].get('currency'),            
+            'buy_url': self.dataset['product']['product-url'],
+            'price': self.dataset['product']['price'],
+            'currency': self.dataset['product']['currency'],            
         }
-        
+
         for f in fields:
             setattr(self.vendorproduct, f, fields[f])
         
@@ -253,10 +247,10 @@ class API(object):
         try:
             m = self.re_url.match(url)
         except TypeError:
-            raise IncompleteDataSet('url [%s] is not a string', url)
+            raise IncompleteDataSet('product-url', 'url [%s] is not a string' % url)
 
         if not m:
-            raise IncompleteDataSet('product image URL [%s] does not match [%s]', url, self.re_url)
+            raise IncompleteDataSet('product-url', 'product image URL [%s] does not match [%s]' % (url, self.re_url))
         
         return '%s/%s/%s.%s' % (
             settings.APPAREL_PRODUCT_IMAGE_ROOT, 
@@ -267,13 +261,46 @@ class API(object):
         
     
     def validate(self):
+        #        'version': '0.1',
+        #    'date': '2010-02-11 15:41:01 UTC',
+        #    'vendor': 'Cali Roots',
+        #    'product': {
+        #        'product-id': '375512-162',
+        #        'product-name': 'Flight 45',
+        #        'categories': 'Sneakers',
+        #        'manufacturer': 'Jordan',
+        #        'price': 1399.00,
+        #        'currency': 'SEK',
+        #        'delivery-cost': 99.00,
+        #        'delivery-time': '3-5 D',
+        #        'availability': True OR a number (0 for not available),
+        #        'product-url': 'http://caliroots.com/system/search/product_vert.asp?id=20724',
+        #        'image-url': 'http://caliroots.com/data/product/images/20724200911114162028734214_L.jpg',
+        #        'description': 'Classic Flight 45',
+        #        'variations':
+
         """
         Validates a data structure. Returns True on success, will otherwise throw
         an exception
         """
         
-        if self.dataset.get('version') != self.version:
-            raise ImporterException('Incompatable version number "%s" (this is version %s)', self.dataset.get('version'), self.version)
+        try:
+            # Just all keys existrs.
+            [self.dataset[f] for f in ('version', 'date', 'vendor', 'product',)]
+            [self.dataset['product'][f] for f in (
+                'product-id', 'product-name', 'category', 'manufacturer', 
+                'price', 'currency', 'delivery-cost', 'delivery-time', 'availability',
+                'product-url', 'image-url', 'description', 'variations')
+            ]
+        
+        except KeyError, key:
+            raise IncompleteDataSet(key)
+        
+        if self.dataset['version'] != self.version:
+            raise ImporterError('Incompatable version number "%s" (this is version %s)', self.dataset.get('version'), self.version)
+        
+        if not isinstance(self.dataset['product']['variations'], list):
+            raise IncompleteDataSet('variations', 'Variations must be a list, not %s' % type(self.dataset['product']['variations']))
         
         logging.debug('Dataset is valid')
         return True
@@ -285,7 +312,7 @@ class API(object):
         data property.
         """
         if not self._dataset:
-            raise IncompleteDataSet('No dataset')
+            raise IncompleteDataSet(None, 'No dataset')
         
         return self._dataset
     
@@ -302,11 +329,8 @@ class API(object):
         """
         
         if not self._vendor_category:
-            try:
-                category_names = self.dataset['product']['category']
-            except KeyError, e:
-                raise IncompleteDataSet('No category')
-            
+            category_names = self.dataset['product']['category']
+                        
             # Force string
             if isinstance(category_names, list):
                 category_names = ' '.join(category_names)
@@ -336,17 +360,14 @@ class API(object):
         """
         
         if not self._manufacturer:
-            name = self.dataset['product'].get('manufacturer')
-            
-            if not name: 
-                raise IncompleteDataSet('Missing manufacturer name')
+            name = self.dataset['product']['manufacturer']
             
             self._manufacturer, created = Manufacturer.objects.get_or_create(name=name)
             
             if created: 
-                logging.debug('Created new manufacturer')
-            
-            logging.debug('Using manufacturer %s', name)
+                logging.debug('Created new manufacturer %s' % name)
+            else:
+                logging.debug('Using manufacturer %s' % name)
         
         return self._manufacturer
     
@@ -357,17 +378,17 @@ class API(object):
         """
         
         if not self._vendor:
-            name = self.dataset.get('vendor')
-         
-            if not name:
-                raise IncompleteDataSet('Missing vendor name')
+            try:
+                name = self.dataset['vendor']
+            except KeyError, key:
+                raise IncompleteDataSet(key)
             
             self._vendor, created = Vendor.objects.get_or_create(name=name)
             
             if created:
-                logging.debug('Created new vendor')
-            
-            logging.debug('Using vendor %s', name)
+                logging.debug('Created new vendor %s' % name)
+            else:
+                logging.debug('Using vendor %s' % name)
         
         return self._vendor
 
@@ -380,10 +401,7 @@ class API(object):
         """
         
         if not self._product_image:        
-            try:
-                url = self.dataset['product']['image-url']
-            except KeyError, e:
-                raise IncompleteDataSet('Missing image-url property')
+            url = self.dataset['product']['image-url']
             
             # FIXME: This ensures that the vendor's directory is present. 
             # Re-implement this when a ProductImageStorage backend has been developed
@@ -415,7 +433,7 @@ class API(object):
         
         return self._product_image
 
-class ImporterException(Exception):
+class ImporterError(Exception):
     """
     An exception base class that will prevent the current data to be imported
     and any change to be rolled back.
@@ -425,17 +443,26 @@ class ImporterException(Exception):
     def __unicode__(self):
         return unicode(self.__str__(), 'utf-8')
 
-class SkipProduct(ImporterException):
+class SkipProduct(ImporterError):
     """
     Raising this exception indicates that the product should be skipped, but
     this should not be considered an error.
     """
     pass
 
-class IncompleteDataSet(ImporterException):
+class IncompleteDataSet(ImporterError):
     """
     The product could not be imported because required data is missing or 
     malformatted.
     """
-    pass
-
+    def __init__(self, field=None, msg=None):
+        self.field = field
+        self.msg   = msg
+        
+        return super(IncompleteDataSet, self).__init__()
+    
+    def __str__(self):
+        if self.field:
+            return 'Missing field %s' % self.field
+    
+        return '[No reason given]' if self.msg is None else self.msg

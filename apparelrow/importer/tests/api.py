@@ -1,4 +1,4 @@
-import re, decimal, copy, os, shutil, time
+import re, decimal, copy, os, shutil, time, copy
 
 from django.test import TestCase, TransactionTestCase
 from django.conf import settings
@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from apparel.models import *
 from importer.models import ImportLog, VendorFeed
-from importer.api import API, IncompleteDataSet, ImporterException, SkipProduct
+from importer.api import API, IncompleteDataSet, ImporterError, SkipProduct
 
 
 sample_dict = {
@@ -60,13 +60,43 @@ class TestImporterAPIBasic(TestCase):
                             ),
                        )
         
-    def test_validation(self):
+    def test_validate_ok(self):
         a = API(import_log=self.log)
         a.dataset = self.dataset
         self.assertTrue(a.validate(), 'Validate dataset')
+    
+    def test_validate_fields(self):
+        a = API(import_log=self.log)
         
+        for f in ('date', 'version', 'vendor', 'product', ):
+            a.dataset = copy.deepcopy(self.dataset)
+            del a.dataset[f]
+            
+            self.assertRaises(IncompleteDataSet, a.validate)
+        
+        for f in ('product-id', 'product-name', 'category', 'manufacturer', 
+                  'price', 'currency', 'delivery-cost', 'delivery-time', 
+                  'availability', 'image-url', 'product-url', 'description', 
+                  'variations',
+        ):
+            a.dataset = copy.deepcopy(self.dataset)
+            del a.dataset['product'][f]
+            
+            self.assertRaises(IncompleteDataSet, a.validate)
+        
+    def test_validate_variations(self):
+        a = API(import_log=self.log)
+        a.dataset = self.dataset
+        a.dataset['product']['variations'] = 'Not a list'
+        
+        self.assertRaises(IncompleteDataSet, a.validate)
+    
+    def test_validate_version(self):
+        a = API(import_log=self.log)
+        a.dataset = self.dataset
         a.dataset['version'] = 'xxx'
-        self.assertRaises(ImporterException, a.validate)
+        self.assertRaises(ImporterError, a.validate)
+        
     
     #
     # MANUFACTURER
@@ -88,13 +118,6 @@ class TestImporterAPIBasic(TestCase):
         api_m = a.manufacturer
         self.assertTrue(isinstance(api_m, Manufacturer), 'Retrieved manufacturer')
         self.assertEqual(m.id, api_m.id, 'Got the same object back')
-
-    def test_manufacturer_validation(self):
-        a = API(import_log=self.log)
-        
-        del self.dataset['product']['manufacturer']
-        a.dataset = self.dataset
-        self.assertRaises(IncompleteDataSet, lambda: a.manufacturer)
 
 
     #
@@ -119,14 +142,7 @@ class TestImporterAPIBasic(TestCase):
         self.assertTrue(isinstance(a.vendor, Vendor), 'Retrieved vendor')
         self.assertEqual(a.vendor.id, v.id, 'Got the same object back')
     
-    def test_vendor_validation(self):
-        a = API(import_log=self.log)
-        del self.dataset['vendor']
-        a.dataset = self.dataset
-        
-        self.assertRaises(IncompleteDataSet, lambda: a.vendor)
     
-
     #
     # CATEGORIES
     #        
@@ -168,15 +184,8 @@ class TestImporterAPIBasic(TestCase):
         a.dataset = self.dataset
         
         self.assertTrue(a.category is None, 'No category mapped')
-        self.assertEquals(a.vendor_category.name, 'Cat 1 Cat 2', 'Multiple categories joined')
-
-    def test_category_validate(self):
-        a = API(import_log=self.log)
-        a.dataset = self.dataset
-        del a.dataset['product']['category']
-        self.assertRaises(IncompleteDataSet, lambda: a.category)
-    
-    
+        self.assertEquals(a.vendor_category.name, 'Cat 1 Cat 2', 'Multiple  joined')
+        
     def test_import_product_image(self):
         # Check that dummy URL is downloaded and Image object created
         # Create FileFetcher class for this.
@@ -449,16 +458,6 @@ class TestProductImage(TestCase):
         p = self.api.product_image
         self.assertEqual(stat.st_mtime, os.stat(os.path.join(settings.MEDIA_ROOT, p)).st_mtime, 'File not change after downloading')
         
-    def test_product_image_missing(self):
-        del self.api.dataset['product']['image-url']
-         
-        try:
-            self.api.product_image
-        except IncompleteDataSet:
-            self.assertTrue(True, 'Require URL property to be a string')
-        else:
-            self.fail('Require URL property to be a string')
-    
     def test_product_image_import(self):
         """
         Product image is downloaded during import
@@ -498,12 +497,12 @@ class TestDataSetImport(TransactionTestCase):
     
     def test_import_validation(self):
         self.dataset['version'] = 'xxx'
-        self.assertRaises(ImporterException, self.api.import_dataset, self.dataset)
+        self.assertRaises(ImporterError, self.api.import_dataset, self.dataset)
     
     def test_import_rollback(self):
         self.dataset['product']['manufacturer'] = None
         
-        self.assertRaises(IncompleteDataSet, self.api.import_dataset, self.dataset)
+        self.assertRaises(Exception, self.api.import_dataset, self.dataset)
         
         if Category.objects.count() > 0:
             self.fail('Objects not rolled back, are all product-related tables created with the InnoDB engine?')
