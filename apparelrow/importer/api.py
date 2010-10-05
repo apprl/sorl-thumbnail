@@ -11,6 +11,13 @@ from urllib2 import HTTPError, URLError
 from apparel.models import *
 from importer.framework.fetcher import fetch
 
+try:
+    from MySQLdb import MySQLError as DBError
+except ImportError:
+    class DBError(Exception):
+        pass
+
+
 """
 Provides an API for importing and setting up product data for the ApparelRow
 web application
@@ -86,8 +93,8 @@ class API(object):
         except ImporterError, e:
             logging.error(u'%s, record skipped', e)
             raise
-        except Exception, e:
-            raise
+        except DBError, e:
+            raise SkipProduct('Could not insert product: %s' % e)
         else:
             logging.info(u'Imported %s', self.product)
             return self.product
@@ -228,12 +235,12 @@ class API(object):
             'price': self.dataset['product']['price'],
             'currency': self.dataset['product']['currency'],            
         }
-
+        
         for f in fields:
             setattr(self.vendorproduct, f, fields[f])
         
         self.vendorproduct.save()
-
+    
     def product_image_path(self, url):
         """
         Returns the local path for the given URL.
