@@ -1,4 +1,5 @@
-from datetime import date
+import re, datetime
+#from datetime import date
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
@@ -66,11 +67,11 @@ class Command(BaseCommand):
     
     def import_feed(self, name, **options):                
         if options['date']:
-            m = options['date'].match(r'^(\d{4})-(\d{2})-(\d{2})')
+            m = re.match(r'^(\d{4})-(\d{2})-(\d{2})', options['date'])
             if not m:
                 raise CommandError('Date not recognized')
             
-            options['date'] = date.date(*[int(i) for i in m.groups(0)])
+            options['date'] = datetime.date(*[int(i) for i in m.groups(0)])
         
         try:
             feed = VendorFeed.objects.get(name=name)
