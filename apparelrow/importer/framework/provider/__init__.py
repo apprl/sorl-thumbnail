@@ -5,6 +5,9 @@ from django.conf import settings
 from importer.framework import fetcher, parser
 from importer.api import API, SkipProduct, ImporterError, IncompleteDataSet
 
+logger = logging.getLogger('apparel.importer.provider')
+
+
 def load_provider(name, feed):
     module = __import__('importer.framework.provider.%s' % name, fromlist = ['Provider'])   
     
@@ -94,7 +97,7 @@ class Provider(object):
         
         try:
             os.makedirs(os.path.split(path)[0])
-            logging.debug("Created warehouse dir %s" % os.path.split(path)[0])
+            logger.debug("Created warehouse directory %s" % os.path.split(path)[0])
         except OSError, e:
             if not e.errno == 17:
                 # 17 = file or directory already exists. Is there a constant for this?
@@ -102,12 +105,11 @@ class Provider(object):
                 raise
         
         if from_warehouse:
-            logging.debug("Reading file from warehouse %s" % path)
+            logger.debug("Reading file from warehouse %s" % path)
             if not os.path.exists(path):
                 raise Exception('File %s not in warehouse. Try importing file vendor instead' % path)
         else:
-            logging.info("Downloading %s to %s" % (self.url, path))
-            logging.debug("Storing file in warehouse at %s" % path)
+            logger.info("Downloading %s to %s" % (self.url, path))
             fetcher.fetch(self.url, path, self.username, self.password)
         
         self.file = open(path, 'r')
@@ -140,7 +142,7 @@ class Provider(object):
                 status='info', 
                 message="Skipping product\nProduct: %s\nError:%s" % (prod_id, e)
             )
-            logging.info(u'Record skipped: %s', e)
+            logger.info(u'Record skipped: %s', e)
         
         except ImporterError as e:
             self.feed.latest_import_log.messages.create(

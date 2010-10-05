@@ -18,6 +18,9 @@ except ImportError:
         pass
 
 
+logger = logging.getLogger('apparel.importer.api')
+
+
 """
 Provides an API for importing and setting up product data for the ApparelRow
 web application
@@ -81,6 +84,7 @@ class API(object):
         Imports the Product and related data specified in the data structure. 
         """
         
+        logging.debug('****** About to import dataset ******')
         p = None
         
         try:
@@ -91,12 +95,13 @@ class API(object):
             self.import_product()
         
         except ImporterError, e:
-            logging.error(u'%s, record skipped', e)
+            logger.error(u'%s, record skipped' % e)
             raise
         except DBError, e:
+            logger.debug(u'Cought exception from database driver: %s' % e)
             raise ImporterError('Could not insert product: %s' % e)
         else:
-            logging.info(u'Imported %s', self.product)
+            logger.info(u'Imported %s' % self.product)
             return self.product
     
     
@@ -107,38 +112,33 @@ class API(object):
         
         # Download and store product image 
         fields = {
-            'product_name': self.dataset['product'].get('product-name'),
-            'description': self.dataset['product'].get('description'),
+            'product_name': self.dataset['product']['product-name'],
+            'description': self.dataset['product']['description'],
             'category': self.category,
             'product_image': self.product_image,
         }
-
         
         try:
             self.product = Product.objects.get(
                 manufacturer__id__exact=self.manufacturer.id,
                 sku__exact=self.dataset['product']['product-id']
             )
+            logger.debug('Found product in database')
         except ObjectDoesNotExist:
             self.product = Product.objects.create(
                 manufacturer=self.manufacturer, 
                 sku=self.dataset['product']['product-id'],
                 **fields
             )
-
-            logging.debug('Created new product')
+            logger.debug('Created new product')
         
         except MultipleObjectsReturned:
-            s = u'There are more than one product with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku'])
-            logging.error(s)
-            raise SkipRecord(s)
+            raise SkipRecord(u'There are more than one product with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku']))
+            
         else:
             # Update product
             for f in fields:
                 setattr(self.product, f, fields.get(f))
-            
-            # FIXME: How do we deal with category? Re-assign?
-            logging.debug('Updated product')
         
         self.__vendor_options()
         self.__product_options()
@@ -163,10 +163,10 @@ class API(object):
                 option, created = Option.objects.get_or_create(option_type=types[key], value=variation[key])
                 
                 if created:
-                    logging.debug(u'Created option %s', option)
+                    logger.debug(u'Created option %s', option)
                 
                 if not self.product.options.filter(pk=option.pk):
-                    logging.debug(u"Attaching option %s", option)
+                    logger.debug(u"Attaching option %s", option)
                     self.product.options.add(option)
                 
                 options.append(option)
@@ -194,7 +194,7 @@ class API(object):
                 for o in options:
                     db_variation.options.add(o)
             
-                logging.debug(u'Added availability for combination %s', db_variation)
+                logger.debug(u'Added availability for combination %s', db_variation)
 
             in_stock = variation.get('availability')
             
@@ -215,7 +215,7 @@ class API(object):
             if created:
                 self._vendor_product.vendor_category = self.vendor_category
                 self._vendor_product.save()
-                logging.debug(u'Added product data to vendor: %s', self._vendor_product)
+                logger.debug(u'Added product data to vendor: %s', self._vendor_product)
 
         return self._vendor_product
         
@@ -268,24 +268,6 @@ class API(object):
         
     
     def validate(self):
-        #        'version': '0.1',
-        #    'date': '2010-02-11 15:41:01 UTC',
-        #    'vendor': 'Cali Roots',
-        #    'product': {
-        #        'product-id': '375512-162',
-        #        'product-name': 'Flight 45',
-        #        'categories': 'Sneakers',
-        #        'manufacturer': 'Jordan',
-        #        'price': 1399.00,
-        #        'currency': 'SEK',
-        #        'delivery-cost': 99.00,
-        #        'delivery-time': '3-5 D',
-        #        'availability': True OR a number (0 for not available),
-        #        'product-url': 'http://caliroots.com/system/search/product_vert.asp?id=20724',
-        #        'image-url': 'http://caliroots.com/data/product/images/20724200911114162028734214_L.jpg',
-        #        'description': 'Classic Flight 45',
-        #        'variations':
-
         """
         Validates a data structure. Returns True on success, will otherwise throw
         an exception
@@ -309,7 +291,7 @@ class API(object):
         if not isinstance(self.dataset['product']['variations'], list):
             raise IncompleteDataSet('variations', 'Variations must be a list, not %s' % type(self.dataset['product']['variations']))
         
-        logging.debug('Dataset is valid')
+        logger.debug('Dataset is valid')
         return True
     
     @property
@@ -349,7 +331,7 @@ class API(object):
                     status='attention',
                     message='New VendorCategory: %s, add mapping to Category to update related products' % self._vendor_category,
                 )
-                logging.debug('Creating new vendor category: %s', category_names)
+                logger.debug('Creating new vendor category: %s' % category_names)
 
         return self._vendor_category
     
@@ -372,9 +354,9 @@ class API(object):
             self._manufacturer, created = Manufacturer.objects.get_or_create(name=name)
             
             if created: 
-                logging.debug('Created new manufacturer %s' % name)
+                logger.debug('Created new manufacturer %s' % name)
             else:
-                logging.debug('Using manufacturer %s' % name)
+                logger.debug('Using manufacturer %s' % name)
         
         return self._manufacturer
     
@@ -393,9 +375,9 @@ class API(object):
             self._vendor, created = Vendor.objects.get_or_create(name=name)
             
             if created:
-                logging.debug('Created new vendor %s' % name)
+                logger.debug('Created new vendor %s' % name)
             else:
-                logging.debug('Using vendor %s' % name)
+                logger.debug('Using vendor %s' % name)
         
         return self._vendor
 
@@ -421,7 +403,7 @@ class API(object):
                 os.makedirs(os.path.join(settings.MEDIA_ROOT, d))
             
             if not storage.default_storage.exists(self._product_image):
-                logging.info('Downloading product image %s', url)
+                logger.info('Downloading product image %s', url)
                 temppath = None
                 
                 try:
@@ -430,13 +412,13 @@ class API(object):
                     # FIXME: We could have a re-try loop for certain errors
                     # FIXME: We could create the product, and mark it as unpublished
                     #        until the image has been added
-                    logging.error('%s (while downloading %s)', e, url)
+                    logger.error('%s (while downloading %s)', e, url)
                     raise SkipProduct('Could not download product image')
                                 
                 storage.default_storage.save(self._product_image, File(open(temppath)))
-                logging.debug('Stored image at %s', self._product_image)
+                logger.debug('Stored image at %s', self._product_image)
             else:
-                logging.debug('Image %s already exists, will not download', self._product_image)
+                logger.debug('Image %s already exists, will not download', self._product_image)
         
         return self._product_image
 

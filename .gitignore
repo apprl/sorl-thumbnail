@@ -23,3 +23,5 @@ settings_local.py
 /pip-log.txt
 /src
 /var
+/etc/logging.conf
+/etc/lighttpd.conf

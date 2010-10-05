@@ -4,6 +4,7 @@ from xml.sax.saxutils import unescape
 from importer.framework.provider import Provider as BaseProvider
 from importer.framework.mapper import DataMapper
 
+logger = logging.getLogger('apparel.importer')
 
 class ApparelMapper(DataMapper):
     def map_variations(self):
@@ -13,7 +14,7 @@ class ApparelMapper(DataMapper):
                 if len(c):
                     v['color'] = c[0]
                 else:
-                    logging.debug('Color %s not recogised' % v['color'])
+                    logger.debug('Color %s not recogised' % v['color'])
                     del v['color']
 
 class Provider(BaseProvider):

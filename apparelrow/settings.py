@@ -17,6 +17,7 @@ FORCE_SCRIPT_NAME = ''
 
 LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', 'etc', 'logging.conf') # logging configuration file
 
+
 if not hasattr(logging, 'initialised'):
     logging.config.fileConfig(LOGGING_CONFIG)
     

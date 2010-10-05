@@ -4,6 +4,7 @@ from django.conf import settings
 
 from apparelrow.importer.api import API, SkipProduct
 
+logger = logging.getLogger('apparel.importer.mapper')
 
 
 class DataMapper():
@@ -79,7 +80,7 @@ class DataMapper():
             try:
                 api_dict['product'][field] = self.map_field(field)
             except SkipField:
-                logging.debug('Skipping field %s' % field)
+                logger.debug('Skipping field %s' % field)
                 continue
             
         self.map_variations()
@@ -131,4 +132,7 @@ def _trim(value):
     return value
 
 class SkipField(Exception):
+    """
+    This is raised by a field mapper causing the field not to be mapped.
+    """
     pass
