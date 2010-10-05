@@ -18,7 +18,10 @@ class SearchManager(models.Manager):
         qs = self.get_query_set()
         
         try:
-            qs = qs.filter(qp.parse(query_dict))
+            # FIXME: I'm not entirly sure if we're always need to do distinct
+            # This is required when joining tables. Perhaps we could check wether
+            # the query references a model other than self.model
+            qs = qs.filter(qp.parse(query_dict)).distinct()
         except NoQuery:
             pass
         
@@ -140,7 +143,7 @@ class QueryParser():
                     # Use it to add to the db query
                     operand = self.grouping[group_index - 1][-1]
                     query   = self.__merge_q_objects(query, grp_query, operand)
-                    
+        
         return query
 
 

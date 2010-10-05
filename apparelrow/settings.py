@@ -145,7 +145,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     
     "context_processors.cache_vars",
-    #"context_processors.js_templates",
     
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
