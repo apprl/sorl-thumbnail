@@ -94,7 +94,7 @@ class API(object):
             logging.error(u'%s, record skipped', e)
             raise
         except DBError, e:
-            raise SkipProduct('Could not insert product: %s' % e)
+            raise ImporterError('Could not insert product: %s' % e)
         else:
             logging.info(u'Imported %s', self.product)
             return self.product

@@ -192,7 +192,6 @@ class TestImporterAPIBasic(TestCase):
         pass        
         
         
-        
     
 class TestImporterAPIProduct(TransactionTestCase):
     """
@@ -469,6 +468,7 @@ class TestProductImage(TestCase):
         #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, self.api.product_image_path)), 'Image downloaded during import')
         #self.assertEqual(p.product_image, self.api.product_image_path, 'image_path stored in product')
 
+
 class TestDataSetImport(TransactionTestCase):
     def setUp(self):
         self.log = ImportLog.objects.create(
@@ -506,4 +506,8 @@ class TestDataSetImport(TransactionTestCase):
         
         if Category.objects.count() > 0:
             self.fail('Objects not rolled back, are all product-related tables created with the InnoDB engine?')
+    
+    def test_import_dberror(self):
+        self.dataset['product']['product-url'] = 'x' * 300
         
+        self.assertRaises(ImporterError, self.api.import_dataset, self.dataset)
