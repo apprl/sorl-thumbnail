@@ -179,11 +179,16 @@ def product_detail(request, slug):
             )
 
 def look_list(request, profile=None, contains=None, page=0):
-    queryset = Look.objects.all()
+    
     if profile:
         queryset = Look.objects.filter(user__username=profile)
     elif contains:
         queryset = Look.objects.filter(products__slug=contains)
+    elif len(request.GET):
+        queryset = Look.objects.search(request.GET)
+    else:
+        queryset = Look.objects.all()
+    
     return list_detail.object_list(
         request,
         queryset=queryset,
@@ -195,8 +200,6 @@ def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
     looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id)
     similar_looks = [] #Recommender.objects.get_similar_items(look, User.objects.all(), Look.objects.all(), 0)
-    
-    import pdb; pdb.set_trace()
     
     return render_to_response(
             'apparel/look_detail.html',

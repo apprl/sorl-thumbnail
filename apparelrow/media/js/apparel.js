@@ -288,7 +288,25 @@ ApparelSearch = {
         ngettext('Found %(count)s matching brand', 'Found %(count)s matching brands', 0);
         ngettext('%s product', '%s products', 0);
     },
-
+    
+    format_query: function(query) {
+        // Takes a query as an object and stringifies if after removing the 
+        // size-property
+        
+        if('size' in query)
+            delete(query['size']);
+        
+        var pairs = [];
+        for(var key in query) {
+            pairs.push(
+               encodeURIComponent(key)
+                + '=' 
+                + encodeURIComponent(query[key])
+            );
+        }
+        
+        return pairs.join('&')
+    },
 };
 
 
@@ -335,17 +353,16 @@ jQuery(document).ready(function() {
                         break;
                     }
                     
-                    delete(query['size']);
-                    var pairs = [];
-                    for(var key in query) {
-                        pairs.push(
-                           encodeURIComponent(key)
-                            + '=' 
-                            + encodeURIComponent(query[key])
-                        );
+                    location.href = '/browse/?' + ApparelSearch.format_query(query);
+                    break;
+                
+                case 'search-result-looks':
+                    if(!query) {
+                        console.error('Could not find search query');
+                        break;
                     }
-                            
-                    location.href = '/browse/?' + pairs.join('&');
+                    
+                    location.href = '/looks/?' + ApparelSearch.format_query(query);
                     break;
                 
                 case 'search-result-manufacturers':
@@ -368,4 +385,4 @@ jQuery(document).ready(function() {
             return false;
         } )
     ;
-    } );
+} );
