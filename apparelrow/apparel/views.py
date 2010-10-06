@@ -183,11 +183,16 @@ def product_detail(request, slug):
             )
 
 def look_list(request, profile=None, contains=None, page=0):
-    queryset = Look.objects.all()
+    
     if profile:
         queryset = Look.objects.filter(user__username=profile)
     elif contains:
         queryset = Look.objects.filter(products__slug=contains)
+    elif len(request.GET):
+        queryset = Look.objects.search(request.GET)
+    else:
+        queryset = Look.objects.all()
+    
     return list_detail.object_list(
         request,
         queryset=queryset,
