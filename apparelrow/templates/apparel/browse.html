@@ -346,13 +346,7 @@
             } else {
                 jQuery('#product-list > ul.list').append(newPage);
             }
-            jQuery.each(products.object_list, function(i, product) {
-                try {
-                    jQuery('#product_template').render({ product: product }).appendTo(pageList);
-                } catch(e) {
-                    console.log('Error while rendering template', e);
-                }
-            });
+            jQuery(products.products_html).appendTo(pageList);
             cloneProducts(jQuery('#product-list > ul > li > ul > li'));
             
             pagination.data = products;

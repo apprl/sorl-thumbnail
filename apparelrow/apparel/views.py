@@ -106,6 +106,9 @@ def browse(request):
     
     return render_to_response('apparel/browse.html', result, context_instance=RequestContext(request))
 
+def get_html_for_objects(template, object_name, object_list, context_instance):
+    return [loader.render_to_string(template, {object_name: o}, context_instance=context_instance) for o in object_list]
+
 def browse_ajax_response(request, result):
     """
     Just like browse, but handles AJAX requests
@@ -114,6 +117,7 @@ def browse_ajax_response(request, result):
     left, mid, right = get_pagination(result.paginator, result.number)
     response = get_pagination_as_dict(result)
     response.update(
+        products_html=get_html_for_objects('apparel/fragments/product_small.html', 'product', result.object_list, RequestContext(request)),
         pagination={
             'left': left,
             'right': right,
