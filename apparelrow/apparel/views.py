@@ -196,8 +196,6 @@ def look_detail(request, slug):
     looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id)
     similar_looks = [] #Recommender.objects.get_similar_items(look, User.objects.all(), Look.objects.all(), 0)
     
-    import pdb; pdb.set_trace()
-    
     return render_to_response(
             'apparel/look_detail.html',
             {
