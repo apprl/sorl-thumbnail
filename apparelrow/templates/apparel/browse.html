@@ -295,7 +295,7 @@
             }
             gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
             if(gender_list.length > 0) {
-                query[++index + ':o.gender:in'] = gender_list.join(',');
+                query[++index + ':p.gender'] = gender_list[0];
             }
             color_list = getElementIds(jQuery('#product-color li > a.selected'));
             if(color_list.length > 0) {

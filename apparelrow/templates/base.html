@@ -167,7 +167,7 @@
 {% endfor %}
 
     <script type="text/html" id="manufacturer_search_template">
-        <a href="/browse/?1:m.id=${ object.id}" id="manufacturer-${ object.id }">${ object.name }</a>
+        <a href="/browse/?1:m.id:in=${ object.id}" id="manufacturer-${ object.id }">${ object.name }</a>
     </script>
 
     <script type="text/html" id="product_template">
