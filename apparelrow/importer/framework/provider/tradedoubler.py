@@ -49,25 +49,24 @@ from importer.framework.mapper import DataMapper
 
 class TradeDoublerMapper(DataMapper):
     re_split = re.compile(r'(?<!http):')
-    genders  = {'Man': 'M', 'Kvinna': 'F'}
+    genders  = {'Man': 'M', 'Kvinna': 'W'}
     
     def preprocess(self):
         self.record.update([self.re_split.split(v) for v in self.record.get('fields', '').split(';')])
 
     
     def map_variations(self):
-        self.record['variations'] = []
-        gender = self.record.get('gender') or 'U'
+        v = []
+        
         colors = self.map_colors(self.record.get('color', ''))
         if len(colors):
-            for color in colors:
-                self.record['variations'].append({
-                    'gender': gender,
-                    'color':  color
-                })
-        else:
-            self.record['variations'].append({ 'gender': gender })
-     
+            v = [{'color': c } for c in colors]
+        
+        return v
+    
+    def get_gender(self):
+        return self.genders.get(self.record.get('gender'))
+    
     def get_product_name(self):
         return self.record.get('name')
     
@@ -88,14 +87,13 @@ class TradeDoublerMapper(DataMapper):
         
     def get_delivery_time(self):
         return self.record.get('deliveryTime')
-        
+    
     def get_availability(self):
         return True if self.record.get('availability') else False
         
     def get_image_url(self):
         return self.record.get('extraImageProductLarge') or self.record.get('extraImageProductSmall')
-        
-    # FIXME: Parse HTML entities in description
+
     
 class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):

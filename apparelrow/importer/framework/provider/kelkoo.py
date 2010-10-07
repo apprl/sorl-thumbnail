@@ -5,6 +5,8 @@ from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
 
 class KelkooMapper(DataMapper):
+    genders = {'Mens': 'M', 'Womens': 'W'}
+
     def get_variations(self):
         for variation in self.record['variations']:
             variation['availability'] = self.record.get('available') or True
@@ -17,6 +19,9 @@ class KelkooMapper(DataMapper):
     
     def get_currency(self):
         return 'SEK'
+    
+    def get_gender(self):
+        return self.genders.get(self.record.get('gender'))
     
     def get_image_url(self):
         try:
