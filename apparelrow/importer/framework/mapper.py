@@ -159,16 +159,16 @@ class DataMapper():
         of strings which will be trimmed.
         """
         
-        if text is None:
-            return text
-        
         repl = lambda x: self.re_trunc_ws.sub(' ', self.re_trim.sub('', x))
         
-        if isinstance(text, list):
-            text = map(repl, text)
-        else:
-            text = repl(text)
-        
+        try:
+            if isinstance(text, list):
+                text = map(repl, text)
+            else:
+                text = repl(text)
+        except TypeError:
+            pass
+                
         return text
 
 def expand_entities(text):

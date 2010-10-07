@@ -173,6 +173,21 @@ class HelperMethodsTest(TestCase):
         self.assertEqual(self.mapper.trim('xxx xx xxx   '), 'xxx xx xxx', 'Trimmed tailing whitespaces')
         self.assertEqual(self.mapper.trim('   xxx xx xxx'), 'xxx xx xxx', 'Trimmed leading whitespaces')
     
+    def test_trim_type(self):
+        """
+        Pass in anything to trim without it failing
+        """
+        
+        self.assertEqual(self.mapper.trim(None),  None,  'Call trim() with None')
+        self.assertEqual(self.mapper.trim(False), False, 'Call trim() with Boolean')
+        self.assertEqual(self.mapper.trim(121),   121,   'Call trim() with intiger')
+        self.assertEqual(self.mapper.trim(11.12), 11.12, 'Call trim() with float')
+        
+        self.assertEqual(self.mapper.trim(['  je h ', 'a   a a']), ['je h', 'a a a'], 'Call trim() with list of strings')
+        self.assertEqual(self.mapper.trim([' ja a ', [' b ah']]), [' ja a ', [' b ah']], 'Call trim() with list of mixed data types')
+        self.assertEqual(self.mapper.trim('  c c'), 'c c', 'Call trim() with string')
+        self.assertEqual(self.mapper.trim({'a': 'A', 'b ': 'B '}), {'a': 'A', 'b ': 'B '}, 'Call trim() with dict')
+    
     def test_strip_html(self):
         
         self.assertEqual(self.mapper.strip_html(u"""
