@@ -22,6 +22,7 @@ class ApparelMapper(DataMapper):
 class Provider(BaseProvider):
     def __init__(self, *args, **kwargs):
         super(Provider, self).__init__(*args, **kwargs)
+        self.extension = 'xml'
         self.mapper=ApparelMapper
 
 
