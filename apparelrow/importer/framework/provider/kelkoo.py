@@ -5,12 +5,14 @@ from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
 
 class KelkooMapper(DataMapper):
-    def map_variations(self):
+    def get_variations(self):
         for variation in self.record['variations']:
             variation['availability'] = self.record.get('available') or True
             
             c = self.map_colors(self.record.get('product-name'))
             if len(c): variation['color'] = c[0]
+        
+        return self.record['variations']
     
     
     def get_currency(self):

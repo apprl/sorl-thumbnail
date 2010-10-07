@@ -7,7 +7,7 @@ from importer.framework.mapper import DataMapper
 logger = logging.getLogger('apparel.importer')
 
 class ApparelMapper(DataMapper):
-    def map_variations(self):
+    def get_variations(self):
         for v in self.record['variations']:
             if 'color' in v:
                 c = self.map_colors(v['color'])
@@ -16,6 +16,8 @@ class ApparelMapper(DataMapper):
                 else:
                     logger.debug('Color %s not recogised' % v['color'])
                     del v['color']
+        
+        return self.record['variations']
 
 class Provider(BaseProvider):
     def __init__(self, *args, **kwargs):

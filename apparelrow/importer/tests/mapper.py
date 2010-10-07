@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 from mock import Mock
 
@@ -58,13 +60,13 @@ class MapperProcessTest(TestCase):
         
         self.mapper = DataMapper(Mock(spec=DummyProvider(feed)))
         self.mapper.preprocess     = Mock()
+        self.mapper.postprocess    = Mock()
         self.mapper.map_field      = Mock()
-        self.mapper.map_variations = Mock()
         
     def test_translate(self):
         self.mapper.translate()
         self.assertTrue(self.mapper.preprocess.called, 'Called preprocess()')
-        self.assertTrue(self.mapper.map_variations.called, 'Called map_variations()')
+        self.assertTrue(self.mapper.postprocess.called, 'Called postprocess()')
         self.assertEquals(
             self.mapper.map_field.call_args_list, 
             [
@@ -81,11 +83,12 @@ class MapperProcessTest(TestCase):
                 (('product-url',), {}), 
                 (('description',), {}), 
                 (('availability',), {}),
+                (('variations',), {}),
             ],
             'Called map_field() with each field'
         )
-                
-    
+
+
 class FieldMapperTest(TestCase):
     def setUp(self):
         self.feed = VendorFeed.objects.create(
@@ -99,6 +102,11 @@ class FieldMapperTest(TestCase):
             'product_id': 'the id',
             'name': 'the name',
             'product-url': 'the url',
+            'price': ' the    price   ',
+            'description': """
+                Some <b>funky</b> description<br/> containing 
+                HTML and n&aring;gra entities
+            """
         })        
     
     def test_map_field_record(self):
@@ -121,18 +129,65 @@ class FieldMapperTest(TestCase):
         self.assertTrue('version' in f)
         self.assertTrue(re.match(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z(?:.+?)?', f.get('date')))
         self.assertEqual(f['vendor'], 'My Vendor', 'Vendor name')
-
+        
         p = f['product']
+        
         self.assertFalse('currency' in p, 'SkipField is causing field to be ignored')
-        self.assertEqual(p['price'], None, 'Missing field is filled with None value')
+        self.assertEqual(p['delivery-time'], None, 'Missing field is filled with None value')
         self.assertEqual(p['variations'], [], 'variances defaults to empty array')
     
+    def test_postprocess(self):
+        f = self.mapper.translate()
+        self.assertEqual(
+            f['product']['description'],
+            u'Some funky description containing \n HTML and n\xe5gra entities',
+            'HTML stripped from description'
+        )
+        self.assertEqual(
+            f['product']['price'],
+            u'the price',
+            'Whitespaces stripped from all fields'
+        )
+
+class HelperMethodsTest(TestCase):
+    def setUp(self):
+        self.feed = VendorFeed.objects.create(
+            vendor=apparel.Vendor.objects.create(name='My Vendor'),
+            url='http://example.com/feed.csv',
+            username='the username',
+            password='the password',
+            provider_class='DummyProvider',
+        )
+        self.mapper = DummyDataMapper(DummyProvider(self.feed), record={
+            'product_id': 'the id',
+            'name': 'the name',
+            'product-url': 'the url',
+        })        
+    
     def test_map_colors(self):
-        
         c = self.mapper.map_colors(u'Here is a string with Black, navy and red')
         self.assertEqual(set(c), set((u'black', u'blue', u'red',)), 'Mapped colors')
-        
     
+    def test_trim(self):
+        self.assertEqual(self.mapper.trim('   xxx xx xxx   '), 'xxx xx xxx', 'Trimmed leading and tailing whitespaces')
+        self.assertEqual(self.mapper.trim('xxx xx xxx   '), 'xxx xx xxx', 'Trimmed tailing whitespaces')
+        self.assertEqual(self.mapper.trim('   xxx xx xxx'), 'xxx xx xxx', 'Trimmed leading whitespaces')
+    
+    def test_strip_html(self):
+        
+        self.assertEqual(self.mapper.strip_html(u"""
+            blah\n<p attr="value"
+        >n&aring;got roligt
+        </p>
+        <b>&#160;hej&#x0046;</b>
+        hej<br>d&aring;
+        
+        
+            """),
+            u'blah\n n\xe5got roligt\n \n \xa0hejF \n hej d\xe5',
+            'Removed HTML and expanded entities'
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

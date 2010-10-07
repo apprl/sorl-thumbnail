@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Django settings for basic pinax project.
 
 import os.path
 import posixpath
