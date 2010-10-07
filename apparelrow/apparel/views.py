@@ -101,7 +101,7 @@ def browse(request):
         selected_colors     = expr.get('o.color'),
         selected_brands     = filter(None, map(_to_int, expr.get('m.id') or [])),
         selected_price      = expr.get('vp.price'),
-        selected_gender     = expr.get('o.gender'),
+        selected_gender     = expr.get('p.gender'),
     )
     
     return render_to_response('apparel/browse.html', result, context_instance=RequestContext(request))
@@ -341,7 +341,6 @@ def save_look_component(request):
         # FIXME: Return some error response here. Can we just throw an exception?
         raise Exception('Validaton errors %s' % form.errors)
     
-    
     template = 'look_collage_product' if form.instance.component_of == 'C' else 'look_photo_product'
     return (
         {
@@ -526,7 +525,7 @@ def get_paged_search_result(request, class_name=None, page_size=None):
 def get_criteria_filter(request, result):
     criterion = request.GET.get('criterion')
     # FIXME: 
-    # The id__in statement belows causes Django to generate a subselect with a limit, which 
+    # The id__in statement below causes Django to generate a subselect with a limit, which 
     # doesn't work in MySQL (http://code.djangoproject.com/ticket/12328)
     # Version were it breaks: Ver 14.14 Distrib 5.1.41, for debian-linux-gnu (i486) using readline 6.1
     # We could iterate over result to get the data out, but that would be very expensive,
@@ -592,7 +591,6 @@ def get_filter(request):
     return {
         'categories': Category._tree_manager.all(),
         'manufacturers': Manufacturer.objects.filter(product__published=True).distinct().order_by('name'),
-        'genders': Option.objects.filter(option_type__name__iexact='gender'),
         'colors': Option.objects.filter(option_type__name__iexact='color'),
         'pricerange': get_pricerange(request),
     }

@@ -49,6 +49,7 @@ Required Data Structure
         'product-url': 'http://caliroots.com/system/search/product_vert.asp?id=20724',
         'image-url': 'http://caliroots.com/data/product/images/20724200911114162028734214_L.jpg',
         'description': 'Classic Flight 45',
+        'gender': 'F',
         'variations':
         [
             {
@@ -116,6 +117,7 @@ class API(object):
             'description': self.dataset['product']['description'],
             'category': self.category,
             'product_image': self.product_image,
+            'gender': self.dataset['product']['gender'],
         }
         
         try:
@@ -145,7 +147,6 @@ class API(object):
         
         self.product.save()
         return self.product
-    
     
     def __product_options(self):
         """
@@ -203,7 +204,9 @@ class API(object):
             
             db_variation.in_stock = in_stock
             db_variation.save()
-
+        
+        
+    
     @property
     def vendorproduct(self):
         if not self._vendor_product:
@@ -273,11 +276,11 @@ class API(object):
         an exception
         """
         
+        # Check that dataset contains all required keys
         try:
-            # Just all keys existrs.
             [self.dataset[f] for f in ('version', 'date', 'vendor', 'product',)]
             [self.dataset['product'][f] for f in (
-                'product-id', 'product-name', 'category', 'manufacturer', 
+                'product-id', 'product-name', 'category', 'manufacturer', 'gender',
                 'price', 'currency', 'delivery-cost', 'delivery-time', 'availability',
                 'product-url', 'image-url', 'description', 'variations')
             ]
@@ -285,9 +288,18 @@ class API(object):
         except KeyError, key:
             raise IncompleteDataSet(key)
         
+        # Check that we support this version
         if self.dataset['version'] != self.version:
             raise ImporterError('Incompatable version number "%s" (this is version %s)', self.dataset.get('version'), self.version)
         
+        # Check that the gender field is valid (it may be None)
+        if self.dataset['product']['gender'] is not None:
+            try:
+                dict(PRODUCT_GENDERS)[self.dataset['product']['gender']]
+            except KeyError, key:
+                raise IncompleteDataSet('gender', '%s is not a recognised gender' % key)
+        
+        # Make sure the variations is a list
         if not isinstance(self.dataset['product']['variations'], list):
             raise IncompleteDataSet('variations', 'Variations must be a list, not %s' % type(self.dataset['product']['variations']))
         

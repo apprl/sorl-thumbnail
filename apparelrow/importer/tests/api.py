@@ -23,6 +23,7 @@ sample_dict = {
         'delivery-cost': '10',
         'delivery-time': '1-2 D',
         'availability': '35',
+        'gender': 'W',
         'image-url': 'http://localhost:8000/site_media/static/_test/__image.png',
         'product-url': 'https://www.example.com/c001',
         'description': u'This is a cool par of whatever',
@@ -77,7 +78,7 @@ class TestImporterAPIBasic(TestCase):
         for f in ('product-id', 'product-name', 'category', 'manufacturer', 
                   'price', 'currency', 'delivery-cost', 'delivery-time', 
                   'availability', 'image-url', 'product-url', 'description', 
-                  'variations',
+                  'variations', 'gender', 
         ):
             a.dataset = copy.deepcopy(self.dataset)
             del a.dataset['product'][f]
@@ -96,7 +97,18 @@ class TestImporterAPIBasic(TestCase):
         a.dataset = self.dataset
         a.dataset['version'] = 'xxx'
         self.assertRaises(ImporterError, a.validate)
-        
+    
+    def test_validate_gender(self):
+        a = API(import_log=self.log)
+        a.dataset = self.dataset
+        a.dataset['product']['gender'] = 'Not valid'
+        self.assertRaises(IncompleteDataSet, a.validate)
+
+        a.dataset['product']['gender'] = None
+        self.assertTrue(a.validate())
+
+        a.dataset['product']['gender'] = 'W'
+        self.assertTrue(a.validate())
     
     #
     # MANUFACTURER
@@ -233,6 +245,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.assertEqual(p.sku, self.dataset['product'].get('product-id'), 'SKU property populated')
         self.assertEqual(p.product_name, self.dataset['product'].get('product-name'), 'product name property populated')
         self.assertEqual(p.description,  self.dataset['product'].get('description'),  'Description populated')
+        self.assertEqual(p.gender,       self.dataset['product'].get('gender'),  'Gender populated')
         
 
     def test_product_modify(self):

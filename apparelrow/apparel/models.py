@@ -136,6 +136,12 @@ class CategoryAlias(models.Model):
     def __unicode__(self):
         return u'%s alias to %s' % (self.alias, self.category.name)
 
+PRODUCT_GENDERS = (
+    ('W', 'Women',),
+    ('M', 'Men',),
+    ('U', 'Unisex',),
+)
+
 class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
     category = models.ForeignKey(Category, blank=True, null=True)
@@ -149,6 +155,7 @@ class Product(models.Model):
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, help_text=_('Product image')) 
     vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
+    gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     published     = models.BooleanField(default=True)
     
     objects = SearchManager()

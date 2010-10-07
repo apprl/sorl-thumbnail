@@ -9,8 +9,8 @@
 {% cache CACHE_TIMEOUT filter_menu LANGUAGE_CODE %}
 <ul id="product-gender" class="hover-menu">
     <li class="first"><a href="{% url apparel.views.browse %}">{% trans "All" %}</a></li>
-    <li><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender=M">{% trans "Men" %}</a></li>
-    <li class="last"><a id="option-F"{% ifequal selected_gender "F" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:o.gender=F">{% trans "Women" %}</a></li>
+    <li><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:gender=M">{% trans "Men" %}</a></li>
+    <li class="last"><a id="option-W"{% ifequal selected_gender "W" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:gender=W">{% trans "Women" %}</a></li>
 </ul>
 <ul id="product-options" class="hover-menu">
     <li class="first" id="product-price"><a href="{% url apparel.views.browse %}">{% trans "Price" %}</a>
@@ -29,3 +29,5 @@
 {% for level in structure.closed_levels %}</li></ul>{% endfor %}
 {% endfor %}
 {% endcache %}
+
+

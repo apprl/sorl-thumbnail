@@ -65,6 +65,7 @@ class DataMapper():
                       'category',
                       'manufacturer', 
                       'price', 
+                      'gender',
                       'currency', 
                       'delivery-cost', 
                       'delivery-time', 

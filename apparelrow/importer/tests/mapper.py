@@ -76,6 +76,7 @@ class MapperProcessTest(TestCase):
                 (('category',), {}), 
                 (('manufacturer',), {}), 
                 (('price',), {}), 
+                (('gender',), {}), 
                 (('currency',), {}), 
                 (('delivery-cost',), {}), 
                 (('delivery-time',), {}), 
