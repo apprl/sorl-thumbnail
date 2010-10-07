@@ -53,8 +53,6 @@ class VendorFeed(models.Model):
             log = None
 
 
-
-
 class ImportLog(models.Model):
     """
     Synopsis

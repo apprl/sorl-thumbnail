@@ -591,7 +591,7 @@ def get_pricerange(request):
 def get_filter(request):
     return {
         'categories': Category._tree_manager.all(),
-        'manufacturers': Manufacturer.objects.all().order_by('name'),
+        'manufacturers': Manufacturer.objects.filter(product__published=True).distinct().order_by('name'),
         'genders': Option.objects.filter(option_type__name__iexact='gender'),
         'colors': Option.objects.filter(option_type__name__iexact='color'),
         'pricerange': get_pricerange(request),
