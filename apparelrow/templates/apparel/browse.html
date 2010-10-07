@@ -107,10 +107,23 @@
             max: {{ pricerange.max }}
         };
 
-
+        var baseQuery = {};
+        var baseIndex = 0;
+        
         jQuery(document).ready(function() {
             // Initialize jquery history plugin with our filter
             var firstLoad = true;
+            if(location.search.length > 1) {
+                
+                var pairs = location.search.substr(1).split('&');
+                for(var i = 0; i < pairs.length; i++) {
+                    keyval = pairs[i].split('=');
+                    if(/^(\d+):/.test(unescape(keyval[0])))
+                        baseIndex = Math.max(RegExp.$1, baseIndex);
+                    
+                    baseQuery[unescape(keyval[0])] = unescape(keyval[1])
+                }
+            }
             
             jQuery.history.init(function(hash) {
                 
@@ -141,6 +154,8 @@
             // Reset button
             jQuery('#reset').click(function() {
                 $('.selected').removeClass('selected');
+                baseQuery = {};
+                baseIndex = 0;
                 filter(getQuery());
                 return false;
             });
@@ -283,29 +298,42 @@
             });
         });
         function getQuery(query) {
-            index = 0;
-            query = query || {};
+            index = baseIndex;
+            query = query || {}
+            for(var key in baseQuery)
+                query[key] = baseQuery[key]
+            
             category_list = getElementIds(jQuery('#product-category li > a.selected'));
             if(category_list.length > 0) {
                 query[++index + ':c.id:in'] = category_list.join(',');
+                if('o' in query)
+                    query['o'] += 'a' + index
             }
             manufacturer_list = getElementIds(jQuery('#product-manufacturers li > a.selected'));
             if(manufacturer_list.length > 0) {
                 query[++index + ':m.id:in'] = manufacturer_list.join(',');
+                if('o' in query)
+                    query['o'] += 'a' + index
             }
             gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
             if(gender_list.length > 0) {
                 query[++index + ':p.gender'] = gender_list[0];
+                if('o' in query)
+                    query['o'] += 'a' + index
             }
             color_list = getElementIds(jQuery('#product-color li > a.selected'));
             if(color_list.length > 0) {
                 query[++index + ':o.color:in'] = color_list.join(',');
+                if('o' in query)
+                    query['o'] += 'a' + index
             }
             if(jQuery('#product-price > a').is('.selected')) {
                 query[++index + ':vp.price:range'] = 
                       jQuery("input[name=pricerange_min]").val()
                     + ',' 
                     + jQuery("input[name=pricerange_max]").val();
+                if('o' in query)
+                    query['o'] += 'a' + index
             }
             
             return query;
@@ -411,7 +439,6 @@
         }
         
         function renderProducts(products) {
-            console.log(products.paginator.count);
             $('#product-count').text(
                 interpolate(ngettext(
                     '%s product', 
