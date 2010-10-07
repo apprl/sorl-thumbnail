@@ -48,8 +48,9 @@ class VendorFeed(models.Model):
         finally:
             if provider:
                 log.imported_products = provider.count
-        
-        log.save()
+                        
+            log.save()
+            log = None
 
 
 
@@ -90,7 +91,7 @@ class ImportLog(models.Model):
         return super(ImportLog, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return u'%s - %s' % (self.vendor_feed, dict(self.STATUS)[self.status])
+        return u'%s - %s' % (self.vendor_feed, self.get_status_display())
     
     class Meta:
         get_latest_by = 'start_time'
@@ -108,5 +109,8 @@ class ImportLogMessage(models.Model):
     status     = models.CharField(_('Status'), max_length=10, choices=STATUS, default='info')
     message    = models.TextField(_('Message'), null=True, blank=True)
     datetime   = models.DateTimeField(_('Date'), auto_now_add=True)
+    
+    def __unicode__(self):
+        return u'[%20s] %s' % (self.get_status_display(), self.message)
 
 

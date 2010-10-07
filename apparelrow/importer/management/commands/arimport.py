@@ -3,7 +3,7 @@ import re, datetime
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
-from importer.models import VendorFeed
+from importer.models import VendorFeed, ImportLog
 
 class Command(BaseCommand):
     args = "<name>"
@@ -78,12 +78,22 @@ class Command(BaseCommand):
         except VendorFeed.DoesNotExist:
             raise CommandError('Feed named %s does not exist' % name)
         
-        feed.run_import(
-            from_warehouse=options['warehouse'], 
-            for_date=options['date']
-        )
+        try:
+            feed.run_import(
+                from_warehouse=options['warehouse'], 
+                for_date=options['date']
+            )
+        except KeyboardInterrupt:
+            print "\nInterrupt - Aborting import"
+            # NOTE: When accessing the log through feed.latest_import_log.pk it 
+            # doesn't return a new object, hence this workaround
+            # FIXME: Should we move this fix to the accessor instead?
+            log = ImportLog.objects.get(pk=feed.latest_import_log.pk)
+            log.messages.create(status='info', message='Processes halted by user')
+            log.status = 'failed' 
+            log.save()
         
-        print "Finished: %s\n" % feed.latest_import_log.status
+        print "Import finished: %s\n" % feed.latest_import_log.status
     
     def import_all_feeds(self, **options):
         for feed in VendorFeed.objects.all():
