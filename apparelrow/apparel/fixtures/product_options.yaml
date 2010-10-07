@@ -82,20 +82,3 @@
   fields:
     value: magenta
     option_type: 1
-
-#   genders
-- model: apparel.option
-  pk: 15
-  fields:
-    value: M
-    option_type: 2
-- model: apparel.option
-  pk: 16
-  fields:
-    value: F
-    option_type: 2
-- model: apparel.option
-  pk: 17
-  fields:
-    value: U
-    option_type: 2
