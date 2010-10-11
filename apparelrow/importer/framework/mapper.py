@@ -76,7 +76,7 @@ class DataMapper():
             try:
                 self.mapped_record['product'][field] = self.map_field(field)
             except SkipField:
-                logger.debug('Skipping field %s' % field)
+                logger.debug(u'Skipping field %s' % field)
                 continue
         
         self.mapped_record['product']['variations'] = self.map_field('variations') or []

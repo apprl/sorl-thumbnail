@@ -7,6 +7,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from apparel import models as apparel
 from importer.framework.provider import load_provider
 
+logger = logging.getLogger('apparel.importer.models')
 
 
 class VendorFeed(models.Model):
@@ -39,8 +40,8 @@ class VendorFeed(models.Model):
             provider = load_provider(self.provider_class, self)
             provider.run(from_warehouse=from_warehouse, for_date=for_date)
         except Exception, e:
-            logging.fatal(unicode(e.__str__(), 'utf-8'))
-            logging.debug(''.join(traceback.format_tb(sys.exc_info()[2])))
+            logger.fatal(unicode(e.__str__(), 'utf-8'))
+            logger.debug(''.join(traceback.format_tb(sys.exc_info()[2])))
             log.messages.create(status='error', message='Fatal exception:\n%s' % e)
             log.status = 'failed'
         else:

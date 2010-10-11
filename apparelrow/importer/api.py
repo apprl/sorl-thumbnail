@@ -85,7 +85,7 @@ class API(object):
         Imports the Product and related data specified in the data structure. 
         """
         
-        logging.debug('****** About to import dataset ******')
+        logger.debug('****** About to import dataset ******')
         p = None
         
         try:
@@ -93,17 +93,24 @@ class API(object):
                 self.dataset = data
             
             self.validate()
+
+            logger.debug('ID [%s] Name [%s] Man. [%s]  ' % (
+                self.dataset['product']['product-id'],
+                self.dataset['product']['product-name'],
+                self.dataset['product']['manufacturer']
+            ))
+            
             self.import_product()
         
         except ImporterError, e:
-            logger.error(u'%s, record skipped' % e)
+            logger.error(u'Record skipped: %s' % e)
             raise
         except DBError, e:
             logger.debug(u'Cought exception from database driver: %s' % e)
             raise ImporterError('Could not insert product: %s' % e)
-        else:
-            logger.info(u'Imported %s' % self.product)
-            return self.product
+        
+        logger.info(u'Imported %s' % self.product)
+        return self.product
     
     
     def import_product(self):
@@ -125,17 +132,17 @@ class API(object):
                 manufacturer__id__exact=self.manufacturer.id,
                 sku__exact=self.dataset['product']['product-id']
             )
-            logger.debug('Found product in database')
+            logger.debug(u'Found existing product: [id %s] %s' % (self.product.id, self.product))
         except ObjectDoesNotExist:
             self.product = Product.objects.create(
                 manufacturer=self.manufacturer, 
                 sku=self.dataset['product']['product-id'],
                 **fields
             )
-            logger.debug('Created new product')
+            logger.debug(u'Created new product: [id %s] %s' % (self.product.id, self.product))
         
         except MultipleObjectsReturned:
-            raise SkipRecord(u'There are more than one product with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku']))
+            raise SkipRecord(u'Multiple products found with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku']))
             
         else:
             # Update product
@@ -164,10 +171,10 @@ class API(object):
                 option, created = Option.objects.get_or_create(option_type=types[key], value=variation[key])
                 
                 if created:
-                    logger.debug(u'Created option %s', option)
+                    logger.debug(u'Created option %s' % option)
                 
                 if not self.product.options.filter(pk=option.pk):
-                    logger.debug(u"Attaching option %s", option)
+                    logger.debug(u"Attaching option %s" % option)
                     self.product.options.add(option)
                 
                 options.append(option)
@@ -303,7 +310,7 @@ class API(object):
         if not isinstance(self.dataset['product']['variations'], list):
             raise IncompleteDataSet('variations', 'Variations must be a list, not %s' % type(self.dataset['product']['variations']))
         
-        logger.debug('Dataset is valid')
+        logger.debug(u'Dataset is valid')
         return True
     
     @property
@@ -343,7 +350,7 @@ class API(object):
                     status='attention',
                     message='New VendorCategory: %s, add mapping to Category to update related products' % self._vendor_category,
                 )
-                logger.debug('Creating new vendor category: %s' % category_names)
+                logger.debug(u'Creating new vendor category: %s' % category_names)
 
         return self._vendor_category
     
@@ -366,9 +373,9 @@ class API(object):
             self._manufacturer, created = Manufacturer.objects.get_or_create(name=name)
             
             if created: 
-                logger.debug('Created new manufacturer %s' % name)
+                logger.debug(u'Created new manufacturer [id: %s] %s' % (self._manufacturer.id, self._manufacturer))
             else:
-                logger.debug('Using manufacturer %s' % name)
+                logger.debug(u'Using manufacturer [id: %s] %s' % (self._manufacturer.id, self._manufacturer))
         
         return self._manufacturer
     
@@ -386,10 +393,10 @@ class API(object):
             
             self._vendor, created = Vendor.objects.get_or_create(name=name)
             
-            if created:
-                logger.debug('Created new vendor %s' % name)
+            if created: 
+                logger.debug(u'Created new vendor [id: %s] %s' % (self._vendor.id, self._vendor))
             else:
-                logger.debug('Using vendor %s' % name)
+                logger.debug(u'Using vendor [id: %s] %s' % (self._vendor.id, self._vendor))
         
         return self._vendor
 
@@ -415,7 +422,7 @@ class API(object):
                 os.makedirs(os.path.join(settings.MEDIA_ROOT, d))
             
             if not storage.default_storage.exists(self._product_image):
-                logger.info('Downloading product image %s', url)
+                logger.info(u'Downloading product image %s' % url)
                 temppath = None
                 
                 try:
@@ -424,13 +431,13 @@ class API(object):
                     # FIXME: We could have a re-try loop for certain errors
                     # FIXME: We could create the product, and mark it as unpublished
                     #        until the image has been added
-                    logger.error('%s (while downloading %s)', e, url)
+                    logger.error(u'%s (while downloading %s)' % (e, url))
                     raise SkipProduct('Could not download product image')
                                 
                 storage.default_storage.save(self._product_image, File(open(temppath)))
-                logger.debug('Stored image at %s', self._product_image)
+                logger.debug(u'Stored image at %s' % self._product_image)
             else:
-                logger.debug('Image %s already exists, will not download', self._product_image)
+                logger.debug(u'Image already exists, will not download [%s]' % self._product_image)
         
         return self._product_image
 
