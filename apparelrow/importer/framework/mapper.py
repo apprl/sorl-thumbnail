@@ -78,6 +78,9 @@ class DataMapper():
             except SkipField:
                 logger.debug(u'Skipping field %s' % field)
                 continue
+            else:
+                if self.mapped_record['product'][field] is not None:
+                    self.mapped_record['product'][field] = self.mapped_record['product'][field].encode('utf8')
         
         self.mapped_record['product']['variations'] = self.map_field('variations') or []
         

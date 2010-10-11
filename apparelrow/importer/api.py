@@ -93,8 +93,7 @@ class API(object):
                 self.dataset = data
             
             self.validate()
-
-            logger.debug('ID [%s] Name [%s] Man. [%s]  ' % (
+            logger.debug('ID [%s] Name [%s] Man. [%s]' % (
                 self.dataset['product']['product-id'],
                 self.dataset['product']['product-name'],
                 self.dataset['product']['manufacturer']
