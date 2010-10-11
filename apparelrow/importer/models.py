@@ -40,7 +40,7 @@ class VendorFeed(models.Model):
             provider = load_provider(self.provider_class, self)
             provider.run(from_warehouse=from_warehouse, for_date=for_date)
         except Exception, e:
-            logger.fatal(unicode(e.__str__(), 'utf-8'))
+            #logger.fatal(unicode(e.__str__(), 'utf-8'))
             logger.debug(''.join(traceback.format_tb(sys.exc_info()[2])))
             log.messages.create(status='error', message='Fatal exception:\n%s' % e)
             log.status = 'failed'
