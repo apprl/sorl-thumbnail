@@ -95,13 +95,12 @@ class API(object):
             self.validate()
 
             logger.debug('ID [%s]  Name [%s] Manufacturer [%s]  ' % (
-                self.dataset['product']['product-id'],
-                self.dataset['product']['product-name'],
-                self.dataset['product']['manufacturer']
+                self.dataset['product']['product-id'].encode('utf8'),
+                self.dataset['product']['product-name'].encode('utf8'),
+                self.dataset['product']['manufacturer'].encode('utf8')
             ))
             
             self.import_product()
-        
         except ImporterError, e:
             logger.error(u'Record skipped: %s' % e)
             raise
@@ -109,7 +108,7 @@ class API(object):
             logger.debug(u'Cought exception from database driver: %s' % e)
             raise ImporterError('Could not insert product: %s' % e)
         
-        logger.info(u'Imported %s' % self.product)
+        logger.info('Imported %s' % self.product)
         return self.product
     
     
@@ -132,17 +131,17 @@ class API(object):
                 manufacturer__id__exact=self.manufacturer.id,
                 sku__exact=self.dataset['product']['product-id']
             )
-            logger.debug(u'Found existing product: [id %s] %s' % (self.product.id, self.product))
+            logger.debug('Found existing product: [id %s] %s' % (self.product.id, self.product))
         except ObjectDoesNotExist:
             self.product = Product.objects.create(
                 manufacturer=self.manufacturer, 
                 sku=self.dataset['product']['product-id'],
                 **fields
             )
-            logger.debug(u'Created new product: [id %s] %s' % (self.product.id, self.product))
+            logger.debug('Created new product: [id %s] %s' % (self.product.id, self.product))
         
         except MultipleObjectsReturned:
-            raise SkipRecord(u'Multiple products found with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku']))
+            raise SkipRecord('Multiple products found with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku']))
             
         else:
             # Update product
@@ -171,10 +170,10 @@ class API(object):
                 option, created = Option.objects.get_or_create(option_type=types[key], value=variation[key])
                 
                 if created:
-                    logger.debug(u'Created option %s' % option)
+                    logger.debug('Created option %s' % option)
                 
                 if not self.product.options.filter(pk=option.pk):
-                    logger.debug(u"Attaching option %s" % option)
+                    logger.debug("Attaching option %s" % option)
                     self.product.options.add(option)
                 
                 options.append(option)
@@ -202,7 +201,7 @@ class API(object):
                 for o in options:
                     db_variation.options.add(o)
             
-                logger.debug(u'Added availability for combination %s', db_variation)
+                logger.debug('Added availability for combination %s', db_variation)
 
             in_stock = variation.get('availability')
             
@@ -225,7 +224,7 @@ class API(object):
             if created:
                 self._vendor_product.vendor_category = self.vendor_category
                 self._vendor_product.save()
-                logger.debug(u'Added product data to vendor: %s', self._vendor_product)
+                logger.debug('Added product data to vendor: %s', self._vendor_product)
 
         return self._vendor_product
         
@@ -310,7 +309,7 @@ class API(object):
         if not isinstance(self.dataset['product']['variations'], list):
             raise IncompleteDataSet('variations', 'Variations must be a list, not %s' % type(self.dataset['product']['variations']))
         
-        logger.debug(u'Dataset is valid')
+        logger.debug('Dataset is valid')
         return True
     
     @property
@@ -350,7 +349,7 @@ class API(object):
                     status='attention',
                     message='New VendorCategory: %s, add mapping to Category to update related products' % self._vendor_category,
                 )
-                logger.debug(u'Creating new vendor category: %s' % category_names)
+                logger.debug('Creating new vendor category: %s' % category_names)
 
         return self._vendor_category
     
@@ -373,9 +372,9 @@ class API(object):
             self._manufacturer, created = Manufacturer.objects.get_or_create(name=name)
             
             if created: 
-                logger.debug(u'Created new manufacturer [id: %s] %s' % (self._manufacturer.id, self._manufacturer))
+                logger.debug('Created new manufacturer [id: %s] %s' % (self._manufacturer.id, self._manufacturer))
             else:
-                logger.debug(u'Using manufacturer [id: %s] %s' % (self._manufacturer.id, self._manufacturer))
+                logger.debug('Using manufacturer [id: %s] %s' % (self._manufacturer.id, self._manufacturer))
         
         return self._manufacturer
     
@@ -394,9 +393,9 @@ class API(object):
             self._vendor, created = Vendor.objects.get_or_create(name=name)
             
             if created: 
-                logger.debug(u'Created new vendor [id: %s] %s' % (self._vendor.id, self._vendor))
+                logger.debug('Created new vendor [id: %s] %s' % (self._vendor.id, self._vendor))
             else:
-                logger.debug(u'Using vendor [id: %s] %s' % (self._vendor.id, self._vendor))
+                logger.debug('Using vendor [id: %s] %s' % (self._vendor.id, self._vendor))
         
         return self._vendor
 
