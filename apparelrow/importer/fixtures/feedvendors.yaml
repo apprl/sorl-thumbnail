@@ -24,6 +24,12 @@
     name: Fifth Avenue
     homepage: http://shoerepair.se/
 
+- model: apparel.vendor
+  pk: 5
+  fields:
+    name: YOOX
+    homepage: http://www.yoox.com/
+
 
 # - VendorFeed -
 
@@ -58,5 +64,16 @@
     name: fifthavenue
     provider_class: apparel-xml
     url: http://fifthfeed.www1.panagora.se/feed.asp
+
+- model: importer.vendorfeed
+  pk: 5
+  fields:
+    vendor: 5
+    name: yoox
+    provider_class: cj
+    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/70436/YOOX-Product_Catalog_large.txt.gz
+    username: 3131851
+    password: MrpG7TgL
+    decompress: gzip
 
 

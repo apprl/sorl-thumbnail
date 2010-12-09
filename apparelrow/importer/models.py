@@ -1,6 +1,7 @@
 import sys, traceback, logging
 from datetime import datetime
 
+from django.conf import settings
 from django.db import models
 from django.utils.translation import get_language, ugettext_lazy as _
 
@@ -9,6 +10,7 @@ from importer.framework.provider import load_provider
 
 logger = logging.getLogger('apparel.importer.models')
 
+AVAILABLE_UTILS = [(v, v,) for v in settings.APPAREL_DECOMPRESS_UTILS.keys()]
 
 class VendorFeed(models.Model):
     vendor   = models.ForeignKey(apparel.Vendor)
@@ -16,6 +18,7 @@ class VendorFeed(models.Model):
     url      = models.CharField(max_length=255)
     username = models.CharField(max_length=50, null=True, blank=True)
     password = models.CharField(max_length=50, null=True, blank=True)
+    decompress = models.CharField(max_length=10, choices=AVAILABLE_UTILS, null=True, blank=True, help_text=_('Decompress the file before importing it'))
     provider_class = models.CharField(max_length=50)
     
     @property
