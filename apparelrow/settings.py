@@ -295,7 +295,10 @@ APPAREL_IMPORTER_COLORS = (
     (u'orange' , ),
     (u'magenta', u'magenta',),
 )
-
+APPAREL_DECOMPRESS_UTILS = {
+    'gzip': '/usr/bin/gunzip',
+    'zip':  '/usr/bin/unzip',
+}
 
 
 # local_settings.py can be used to override environment-specific settings

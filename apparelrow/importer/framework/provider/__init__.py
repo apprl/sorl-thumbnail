@@ -59,6 +59,10 @@ class Provider(object):
     def password(self):
         return self.feed.password
     
+    @property
+    def decompress(self):
+        return self.feed.decompress
+    
     
     def run(self, from_warehouse=False, for_date=None):
         """
@@ -95,22 +99,12 @@ class Provider(object):
             '%s.%s' % (date, self.extension) if self.extension else date
         )
         
-        try:
-            os.makedirs(os.path.split(path)[0])
-            logger.debug("Created warehouse directory %s" % os.path.split(path)[0])
-        except OSError, e:
-            if not e.errno == 17:
-                # 17 = file or directory already exists. Is there a constant for this?
-                # Ignore these errors, re-throw all others
-                raise
-        
-        if from_warehouse:
-            logger.debug("Reading file from warehouse %s" % path)
-            if not os.path.exists(path):
-                raise Exception('File %s not in warehouse. Try importing file vendor instead' % path)
-        else:
-            logger.info("Downloading %s to %s" % (self.url, path))
-            fetcher.fetch(self.url, path, self.username, self.password)
+        fetcher.fetch_feed(self.url, path, 
+            from_warehouse=from_warehouse,
+            username=self.username,
+            password=self.password,
+            decompress=self.decompress
+        )
         
         self.file = open(path, 'r')
         return True
