@@ -3,6 +3,11 @@
 {% cache CACHE_TIMEOUT look_widget object.id LANGUAGE_CODE %}
 {% spaceless %}
 {% load jsminify %}
+
+{% comment %}
+FIXME: Change request.get_host in this document to settings.MEDIA_URL. Maybe add a template tag that returns either request.get_host (or current_site.domain) + settings.MEDIA_URL or just settings.MEDIA_URL, depending on whether MEDIA_URL contains a host part
+{% endcomment %}
+
 <ul class="apparelrow ar-look-{% if object.display_with_component == 'P' %}photo{% else %}collage{% endif %}" id="apparelrow-look-{{ object.id }}">
 {% for component in object.display_components %}
     <li>
@@ -14,6 +19,7 @@
 {% minifyjs %}
 (function() {function async_load() {
         if(document.getElementById('__ar_widget__')) return;
+        window.__ar_host__ = 'http://{{ request.get_host }}';
         var s = document.createElement('script');
         s.type  = 'text/javascript';
         s.async = true;

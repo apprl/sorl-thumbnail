@@ -3,7 +3,7 @@
  */
 
 var ApparelRow = {
-    host: 'http://apparelrow-dev.hanssonlarsson.se',
+    host: __ar_host__ || 'http://www.apparelrow.com',
     initialized: false,
     initStack: 0,
     insert: function(response, node) {
