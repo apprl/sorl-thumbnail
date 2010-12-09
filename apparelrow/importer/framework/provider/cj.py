@@ -3,26 +3,101 @@ import re
 from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
-    
-class CJMapper(DataMapper):
-    pass
 
+# Columns:
+#    ADVERTISERCATEGORY
+#    ARTIST
+#    AUTHOR
+#    BUYURL
+#    CATALOGNAME
+#    CONDITION
+#    CURRENCY
+#    DESCRIPTION
+#    ENDDATE
+#    FORMAT
+#    FROMPRICE
+#    GIFT
+#    IMAGEURL
+#    IMPRESSIONURL
+#    INSTOCK
+#    ISBN
+#    KEYWORDS
+#    LABEL
+#    LASTUPDATED
+#    MANUFACTURER
+#    MANUFACTURERID
+#    NAME
+#    OFFLINE
+#    ONLINE
+#    PRICE
+#    PROGRAMNAME
+#    PROGRAMURL
+#    PROMOTIONALTEXT
+#    PUBLISHER
+#    RETAILPRICE
+#    SALEPRICE
+#    SKU
+#    SPECIAL
+#    STANDARDSHIPPINGCOST
+#    STARTDATE
+#    THIRDPARTYCATEGORY
+#    THIRDPARTYID
+#    TITLE
+#    UPC
+#    WARRANTY
+#   
+
+
+
+class CJMapper(DataMapper):
+    re_cdata = re.compile(r'<!\[CDATA\[(.+?)\]\]>')
+    re_quote = re.compile(r'"')
+    re_yes   = re.compile(r'^yes$', re.I)
+    
+    def preprocess(self):
+        for k, v in self.record.items():
+            self.record[k.lower()] = self.re_cdata.sub(r'\1', self.record[k])
+            del self.record[k]
+        
+    
+    def get_description(self):
+        return self.re_quote.sub('', self.record['description'])
+    
+    def get_image_url(self):
+        return self.record['imageurl']
+    
+    def get_product_id(self):
+        return self.record['sku']
+    
+    def get_gender(self):
+        keyword = self.record['keywords'].split(',')[0]
+        
+        if keyword == 'WOMAN' or keyword == 'GIRL':
+            return 'W'
+        if keyword == 'MAN' or keyword == 'BOY':
+            return 'M'
+        
+        return 'U'
+    
+    def get_product_name(self):
+        return self.record['name']
+    
+    def get_availability(self):
+    
+        if  self.re_yes.match(self.record['instock']) and self.re_yes.match(self.record['online']):
+            return True
+        
+        return False
+    
+    def get_product_url(self):
+        return self.record['buyurl']
+    
+    def get_category(self):
+        return self.record['advertisercategory']
+    
 class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):
         super(Provider, self).__init__(*args, **kwargs)
         self.mapper=CJMapper
-        self.dialect=utils.CSVStandard
-        self.fieldnames=(
-            'category',          # 0 
-            'manufacturer',      # 1 
-            'product-name',      # 2 
-            'product-id',        # 3 
-            'price',             # 4 
-            'UNKNOWN#1',         # 5
-            'delivery-time',     # 6 
-            'UNKNOWN#2',         # 7
-            'product-url',       # 8 
-            'image-url',         # 9 
-            'description',       # 10
-        )
-
+        self.dialect=utils.CSVPipeDelimitedQuoted
+    

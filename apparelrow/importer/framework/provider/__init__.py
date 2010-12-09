@@ -200,7 +200,7 @@ class CSVProvider(Provider):
         super(CSVProvider, self).__init__(*args, **kwargs)
         
         self.extension  = 'csv'
-        self.fieldnames = None
+        self.fieldnames = None   # If none, read from first line
         self.dialect    = None
         self.encoding   = 'utf-8'
         self.record     = None   # Used for merging
