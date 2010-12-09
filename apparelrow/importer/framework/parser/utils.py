@@ -1,5 +1,11 @@
 import csv, codecs
 
+class CSVStandard(csv.Dialect):
+    lineterminator = '\n'
+    delimiter = ','
+    quoting = csv.QUOTE_MINIMAL
+    quotechar = '"'
+
 class CSVPipeDelimited(csv.Dialect):
     lineterminator = '\n'
     delimiter = '|'

@@ -88,6 +88,7 @@ def fetch_feed(url, path, from_warehouse=False, username=None, password=None, de
 
 
 class Decompressor():
+    # FIXME: Add better error handling and move this to separate module
     """
     decompressed_path = Decompressor('gzip').decompress(original_path)
     """
