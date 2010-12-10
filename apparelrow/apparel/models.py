@@ -89,7 +89,6 @@ class Vendor(models.Model):
 
 
 class Category(models.Model):
-    key           = models.CharField(max_length=100, unique=True, blank=True)
     name          = models.CharField(max_length=100)
     parent        = models.ForeignKey('self', null=True, blank=True, related_name='children')
     active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
@@ -108,12 +107,7 @@ class Category(models.Model):
         return u"%s" % self.name
     
     @staticmethod
-    def key_for_name(name):
-        field = Category._meta.get_field_by_name('key')[0]
-        key   = slugify(name)
-        
-        return key[:field.max_length]
-        
+            
     class Exporter:
         export_fields = ['name', 'option_types']
     
@@ -127,14 +121,6 @@ except mptt.AlreadyRegistered:
     logging.debug("Attempt to register category, but it's already registered")
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Category)
-
-
-class CategoryAlias(models.Model):
-    category = models.ForeignKey(Category)
-    alias    = models.CharField(_('Alias'), max_length=255, unique=True, blank=True)
-    
-    def __unicode__(self):
-        return u'%s alias to %s' % (self.alias, self.category.name)
 
 PRODUCT_GENDERS = (
     ('W', 'Women',),
@@ -235,6 +221,7 @@ class VendorCategory(models.Model):
 
     class Meta:
         unique_together = (('vendor', 'name'),)
+        verbose_name_plural = 'vendor categories'
 
 
 class VendorProduct(models.Model):
