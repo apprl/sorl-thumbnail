@@ -96,9 +96,6 @@ class Category(models.Model):
     on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'))
     
     def save(self, *args, **kwargs):
-        if not self.key and self.name:
-            self.key = self.key_for_name(self.name)
-        
         # FIXME: Can you get Django to auto truncate fields?
         self.name = self.name[:100]
         super(Category, self).save(*args, **kwargs)
