@@ -4,7 +4,10 @@ from django.template import Library, Variable, TemplateSyntaxError, Node, Variab
 from django import template
 from django.template.defaultfilters import linebreaksbr
 from django.utils.html import escape
+from django.utils.timesince import timesince
+from django.utils.translation import ugettext as _
 from django.conf import settings
+
 try:
     from django.utils.safestring import mark_safe
 except ImportError: # v0.96 and 0.97-pre-autoescaping compat
@@ -158,6 +161,7 @@ class CalcHalfNode(Node):
         
 
 
+@register.filter('class_name')
 def class_name(o):
     """ Outputs class name of given object (if it is one)
     >>> from django.template.loader import Template, Context
@@ -178,7 +182,12 @@ def class_name(o):
     except:
         return ''
 
-register.filter('class_name', class_name)
+
+
+@register.filter(name='since')
+def since(date):
+    since = timesince(date)
+    return "%s %s" % (since.split(",")[0], _("ago"))
 
 
 def export_as_json(o):
@@ -201,28 +210,6 @@ def export_as_json(o):
 
 register.filter('export_as_json', export_as_json)
 
-#
-#def split(string):
-#    """Splits the given strings on "," and returns a list
-#    >>> from django.template.loader import Template, Context
-#    >>> c = Context({'s': 'one,two'})
-#    >>> t = Template('{% load apparel_extras %}{{ s|split }}')
-#    >>> t.render(c)
-#    u'[&#39;one&#39;, &#39;two&#39;]'
-#    >>> t = Template('{% load apparel_extras %}{{ s|split|first }} - {{ s|split|last }}')
-#    >>> t.render(c)
-#    u'one - two'
-#    """
-#    
-#    try:
-#        return string.split(',')
-#    except Exception, e:
-#        logging.error('Could not split %s', s)
-#        logging.exception(e)
-#        
-#        return ''
-#
-#register.filter('split', split)
 
 #
 # This is taken from http://www.djangosnippets.org/snippets/743/ and should
