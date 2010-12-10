@@ -104,13 +104,7 @@
     {% endcache %}
     <div class="sidebar last">
         <h2>{% trans "Popular looks" %}</h2>
-        <ul class="looks">
-        {% for look in popular_looks %}
-            {% with look|first as object %}
-            {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/look_small_sidebar.html' %}</li>
-            {% endwith %}
-        {% endfor %}
-        </ul>
+        {% include 'apparel/fragments/looks_popular.html' %}
     </div>
 {% endblock body %}
 

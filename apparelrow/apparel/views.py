@@ -193,11 +193,18 @@ def look_list(request, profile=None, contains=None, page=0):
     else:
         queryset = Look.objects.all().order_by('-modified')
     
+    
+    popular = Vote.objects.get_top(Look, limit=8)   # FIXME: This is used elsewhere, we should
+                                                    # move it out to a utils module
+    
     return list_detail.object_list(
         request,
         queryset=queryset,
         paginate_by=20,
-        page=page
+        page=page,
+        extra_context={
+            "popular_looks": popular
+        }
     )
 
 def look_detail(request, slug):
