@@ -263,10 +263,10 @@ class API(object):
         try:
             m = self.re_url.match(url)
         except TypeError:
-            raise IncompleteDataSet('product-url', 'url [%s] is not a string' % url)
+            raise IncompleteDataSet('image-url', 'url [%s] is not a string' % url)
 
         if not m:
-            raise IncompleteDataSet('product-url', 'product image URL [%s] does not match [%s]' % (url, self.re_url))
+            raise IncompleteDataSet('image-url', 'product image URL [%s] does not match [%s]' % (url, self.re_url))
         
         return '%s/%s/%s.%s' % (
             settings.APPAREL_PRODUCT_IMAGE_ROOT, 
