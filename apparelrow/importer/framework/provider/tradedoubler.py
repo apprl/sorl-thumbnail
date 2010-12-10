@@ -92,7 +92,7 @@ class TradeDoublerMapper(DataMapper):
         return True if self.record.get('availability') else False
         
     def get_image_url(self):
-        return self.record.get('extraImageProductLarge') or self.record.get('extraImageProductSmall')
+        return self.record.get('extraImageProductLarge') or self.record.get('extraImageProductSmall') or self.record.get('imageUrl')
 
     
 class Provider(CSVProvider):
