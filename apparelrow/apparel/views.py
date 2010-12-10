@@ -191,7 +191,7 @@ def look_list(request, profile=None, contains=None, page=0):
     elif len(request.GET):
         queryset = Look.objects.search(request.GET)
     else:
-        queryset = Look.objects.all()
+        queryset = Look.objects.all().order_by('-modified')
     
     return list_detail.object_list(
         request,

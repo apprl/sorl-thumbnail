@@ -546,7 +546,7 @@ msgstr ""
 
 #: templates/apparel/look_list.html:11
 msgid "Latest Looks"
-msgstr ""
+msgstr "Senaste looks"
 
 #: templates/apparel/product_detail.html:53
 #: templates/apparel/product_detail.html:130
