@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-10 15:14+0100\n"
+"POT-Creation-Date: 2010-12-11 16:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -361,7 +361,7 @@ msgstr "Föregående"
 msgid "Next"
 msgstr "Nästa"
 
-#: templates/index.html:106
+#: templates/index.html:106 templates/apparel/look_list.html:24
 msgid "Popular looks"
 msgstr "Populära looks"
 
@@ -845,15 +845,9 @@ msgstr ""
 msgid "Log out"
 msgstr "Logga ut"
 
-#: templates/registration/logout.html:7
-msgid ""
-"\n"
-"        You have logged out\n"
-"    "
-msgstr ""
-"\n"
-"        Du har loggat ut\n"
-"    "
+#: templates/registration/logout.html:8
+msgid "You have logged out"
+msgstr "Du har loggat ut"
 
 #: templates/registration/password_reset_complete.html:6
 msgid "Password reset complete"
