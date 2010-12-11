@@ -1,12 +1,12 @@
 {% load i18n %}
-<form action="{{ request.path }}" method="post">
+<form action="{{ request.path }}" method="post" class="standard-form">
 {% csrf_token %}
 <ul>
 {% for field in form %}
     <li>
         {{ field.label_tag }}
-        {{ field.errors }}
         {{ field }}
+        {{ field.errors }}
     </li>
 {% endfor %}
     <li>

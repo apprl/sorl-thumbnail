@@ -816,6 +816,22 @@ form .upload-field
     left: 0px
     z-index: 2
     opacity: 0
+  
+form.standard-form
+  li
+    margin: .5em auto
+    .errorlist
+      +horizontal-list
+      li
+        margin: 0
+        color: $error_color
+    button
+      +button
+      height: $button_height
+      margin-top: 1em
+    label
+      float: left
+      width: 150px
 
 body.product .product-image, body.look #content
   form
