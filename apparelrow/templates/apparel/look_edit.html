@@ -58,14 +58,11 @@ var look = {
                     //snap: true,
                     //grid: [10, 10],
                     stop: function(event, ui) {
-                        //var id = ui.helper.
                         var p = (ui.helper.hasClass('product')) ? ui.helper : ui.helper.find('.product');
-                        //console.log('drag', ui);
                         look.saveComponent({
                             id: p.attr('id').split('-').pop(),
                             position: ui.position
                         }, pane);
-                        //look.saveComponent(ui, pane);
                     },
                     start: function(event, ui) {
                         var tp = ui.helper.data('tooltip');
@@ -120,7 +117,7 @@ var look = {
                 
         data = {
             look: {{ object.id }},
-            product: args.id,    // product.attr('id').split('-').pop(),
+            product: args.id,
             component_of: context.component_of,
             z_index: 50 // FIXME: We need to create a stack
         }

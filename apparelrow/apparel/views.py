@@ -428,6 +428,8 @@ def add_to_look(request):
         added = True
         look.products.add(p)
     
+    add_to_wardrobe(request)        # Also, add the product to user's wardrobe
+    
     return (
         {
             'look': look,           # The look the product was added to
@@ -447,7 +449,7 @@ def add_to_wardrobe(request):
     """
     
     wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
-    wardrobe.products.add(Product.objects.get(pk=request.POST.get('product_id')))
+    wardrobe.products.add(Product.objects.get(pk=request.POST.get('product')))
     wardrobe.save() # FIXME: Only save if created?
     
     return wardrobe
