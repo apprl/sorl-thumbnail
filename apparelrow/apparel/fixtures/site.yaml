@@ -1,0 +1,6 @@
+# - OPTION TYPES -
+- model: sites.site
+  pk: 1
+  fields:
+    name: 'ApparelRow'
+    domain: 'apparelrow.com'
