@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-11 18:45+0100\n"
+"POT-Creation-Date: 2010-12-11 19:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -843,6 +843,14 @@ msgstr "Klicka <a href=\"/accounts/login/\">här för att logga in</a>."
 msgid "Your username and password did not match. Please try again."
 msgstr "Ditt lösenord och användarnamn stämde inte. Försök igen."
 
+#: templates/registration/login.html:17
+msgid "Forgot your password?"
+msgstr "Glömt lösenordet?"
+
+#: templates/registration/login.html:18
+msgid "Need an account?"
+msgstr "Behäver du ett konto?"
+
 #: templates/registration/logout.html:6
 msgid "Log out"
 msgstr "Logga ut"
@@ -851,47 +859,49 @@ msgstr "Logga ut"
 msgid "You have logged out"
 msgstr "Du har loggat ut"
 
-#: templates/registration/password_reset_complete.html:6
+#: templates/registration/password_reset_complete.html:7
 msgid "Password reset complete"
 msgstr "Lösenordet är återställt"
 
-#: templates/registration/password_reset_complete.html:7
+#: templates/registration/password_reset_complete.html:8
 msgid "Your password has been set.  You may go ahead and log in now."
 msgstr "Ditt lösenord har sparats. Nu kan du logga in med ditt nya lösenord"
 
-#: templates/registration/password_reset_complete.html:8
+#: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr "Logga in"
 
-#: templates/registration/password_reset_confirm.html:8
+#: templates/registration/password_reset_confirm.html:9
 msgid "Enter new password"
 msgstr "Ange nytt lösenord"
 
-#: templates/registration/password_reset_confirm.html:9
+#: templates/registration/password_reset_confirm.html:10
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
 msgstr ""
 "Ange ditt nya lösenord två gånger så att vi kan verifiera att det är korrekt."
 
-#: templates/registration/password_reset_confirm.html:17
+#: templates/registration/password_reset_confirm.html:18
 msgid "Password reset unsuccessful"
 msgstr "Kunde inte återställa lösenordet"
 
-#: templates/registration/password_reset_confirm.html:18
+#: templates/registration/password_reset_confirm.html:19
+#, fuzzy
 msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a new password reset."
-msgstr ""
-"Den här länken är inte giltig, formodligen har den redan blivit använd. "
-"Begär en ny länk för att återställa lösenordet."
+"The password reset link was invalid, possibly because it has already been used."
+msgstr "Den här länken är inte giltig, formodligen har den redan blivit använd."
 
-#: templates/registration/password_reset_done.html:7
+#: templates/registration/password_reset_confirm.html:19
+msgid "Please request a new password reset."
+msgstr "Begär en ny länk för att återställa lösenordet."
+
+#: templates/registration/password_reset_done.html:8
 #: templates/registration/password_reset_form.html:7
 msgid "Password reset"
 msgstr "Återställ lösenord"
 
-#: templates/registration/password_reset_done.html:8
+#: templates/registration/password_reset_done.html:9
 msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
