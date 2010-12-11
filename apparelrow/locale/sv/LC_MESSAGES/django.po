@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-11 18:26+0100\n"
+"POT-Creation-Date: 2010-12-11 18:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -297,7 +297,7 @@ msgid "Password"
 msgstr "Lösenord"
 
 #: templates/base.html:90 templates/base.html.py:131
-#: templates/registration/login.html:6
+#: templates/registration/login.html:8
 msgid "Login"
 msgstr "Logga in"
 
@@ -837,6 +837,11 @@ msgstr ""
 #: templates/registration/activation_complete.html:13
 msgid "Click <a href=\"/accounts/login/\">here to login</a>."
 msgstr "Klicka <a href=\"/accounts/login/\">här för att logga in</a>."
+
+#: templates/registration/login.html:10
+#, fuzzy
+msgid "Your username and password did not match. Please try again."
+msgstr "Ditt lösenord och användarnamn stämde inte. Försök igen."
 
 #: templates/registration/logout.html:6
 msgid "Log out"

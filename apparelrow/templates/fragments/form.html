@@ -1,6 +1,7 @@
 {% load i18n %}
 <form action="{{ request.path }}" method="post" class="standard-form">
 {% csrf_token %}
+{% block extra_fields %}{% endblock %}
 <ul>
 {% for field in form %}
     <li>

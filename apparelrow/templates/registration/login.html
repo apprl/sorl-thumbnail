@@ -1,11 +1,21 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block body-classes %}one-column{% endblock body-classes %}
 {% block body %}
-<div class="container">
+
+<div id="content">
     <h2>{% trans "Login" %}</h2>
+    {% if form.errors %}
+        <p class="errorlist">{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
+    {% endif %}
     {% with "Login" as submit_text %}
-        {% include "fragments/form.html" %}
+        {% include "registration/fragments/login_form.html" %}
     {% endwith %}
+
+    <p>
+        <a href="{% url auth_password_reset %}">Forgot</a> your password?
+        <a href="{% url registration_register %}">Need an account</a>?
+    </p>
 </div>
 {% endblock %}
