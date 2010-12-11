@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-11 16:22+0100\n"
+"POT-Creation-Date: 2010-12-11 18:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -326,8 +326,8 @@ msgstr "Hem"
 msgid "My Profile"
 msgstr "Min profil"
 
-#: templates/base.html:132 templates/registration/registration_complete.html:6
-#: templates/registration/registration_form.html:8
+#: templates/base.html:132 templates/registration/registration_complete.html:8
+#: templates/registration/registration_form.html:9
 msgid "Sign up"
 msgstr "Bli medlem"
 
@@ -806,12 +806,12 @@ msgstr ""
 "            Du kan prenumerera på en särskiljd sökning genom...\n"
 "        "
 
-#: templates/registration/activate.html:6
-#: templates/registration/activation_complete.html:6
+#: templates/registration/activate.html:8
+#: templates/registration/activation_complete.html:8
 msgid "Activate account"
 msgstr "Aktivera konto"
 
-#: templates/registration/activate.html:7
+#: templates/registration/activate.html:9
 #, python-format
 msgid ""
 "\n"
@@ -821,10 +821,10 @@ msgid ""
 msgstr ""
 "\n"
 "        Aktiveringsnyckeln %(activation_key)s är felaktig eller har gått ut. "
-"Du måste signa upp igen.\n"
+"Du måste registrera dig igen.\n"
 "    "
 
-#: templates/registration/activation_complete.html:7
+#: templates/registration/activation_complete.html:9
 msgid ""
 "\n"
 "        Done! Your account at ApparelRow is now active.\n"
@@ -834,12 +834,9 @@ msgstr ""
 "        Klar! Ditt konto på ApparelRow är nu aktiverat.\n"
 "    "
 
-#: templates/registration/activation_complete.html:11
-msgid ""
-"\n"
-"        Click <a href=\"/accounts/login/\">here to login</a>.\n"
-"    "
-msgstr ""
+#: templates/registration/activation_complete.html:13
+msgid "Click <a href=\"/accounts/login/\">here to login</a>."
+msgstr "Klicka <a href=\"/accounts/login/\">här för att logga in</a>."
 
 #: templates/registration/logout.html:6
 msgid "Log out"
@@ -922,7 +919,7 @@ msgstr ""
 "Glömt ditt lösenord? Ange ditt lösenord här och vi skickar instruktioner för "
 "att ange ett nytt"
 
-#: templates/registration/registration_complete.html:8
+#: templates/registration/registration_complete.html:10
 msgid ""
 "\n"
 "        Thank you for signing up. An e-mail has been sent to you with an "
@@ -934,7 +931,7 @@ msgstr ""
 "en aktiveringsnyckel. När du följt länken i mejlet kan du logga in.\n"
 "    "
 
-#: templates/registration/registration_form.html:13
+#: templates/registration/registration_form.html:14
 msgid "... or sign up using your Facebook ID"
 msgstr ".... eller registrera dig med ditt Facebook ID"
 
