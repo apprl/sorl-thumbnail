@@ -33,8 +33,8 @@ class ApparelProfile(models.Model):
             return self.name
             
         # FIXME Right now, we seem to only be able to get this in the view
-        #if hasattr(self.user, 'facebook_profile'):
-        #    return self.user.facebook_profile.first_name
+        if hasattr(self, 'facebook_profile') and self.facebook_profile and self.facebook_profile.first_name:
+            return self.facebook_profile.first_name
         
         return u'%s' % self.user
     
