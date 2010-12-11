@@ -517,12 +517,24 @@ a.prev, a.next
 a.prev.disabled, a.next.disabled
   cursor: default
 
-#pagination
+body.two-columns .pagination
+  div
+    width: $large_width - 2 * (115 + 2) + 1
+
+body.three-columns .pagination
+  div
+    width: $middle_width - 2 * (115 + 2)
+
+.pagination
+  &#pagination
+    position: absolute
+    border-bottom: none
+    border-left: none
+    border-right: none
   height: 30px
-  position: absolute
   bottom: 0
   background-color: $button_color
-  +border(top)
+  +border(all)
   +border-bottom-radius(unquote("3px"))
   .prev, .next
     display: inline-block
@@ -550,7 +562,6 @@ a.prev.disabled, a.next.disabled
       font-weight: bold
   div
     float: left
-    width: $large_width - 2 * (115 + 2) + 1
     line-height: 30px
     text-align: center
     margin: 0 auto

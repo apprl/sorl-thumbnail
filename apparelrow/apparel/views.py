@@ -200,7 +200,7 @@ def look_list(request, profile=None, contains=None, page=0):
     return list_detail.object_list(
         request,
         queryset=queryset,
-        paginate_by=20,
+        paginate_by=10,
         page=page,
         extra_context={
             "popular_looks": popular

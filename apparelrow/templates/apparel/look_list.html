@@ -5,7 +5,7 @@
 
 {% block body %}
     <div class="sidebar">
-        Hej!
+        &nbsp;
     </div>
     <div id="content">
         <h2>{% trans "Latest Looks" %}</h2>
@@ -16,6 +16,9 @@
             </li>
         {% endfor %}
         </ul>
+        <div class="pagination">
+            {% include 'apparel/fragments/pagination_simple.html' %}
+        </div>
     </div>
     <div class="sidebar last">
         <h2>{% trans "Popular looks" %}</h2>
