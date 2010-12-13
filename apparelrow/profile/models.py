@@ -32,10 +32,9 @@ class ApparelProfile(models.Model):
         if self.name is not None:
             return self.name
         
-        if hasattr(self, 'facebook_profile') and self.facebook_profile:
-            # FIXME: Should we fetch and store the user name from Facebook here? 
-            return self.facebook_profile.uid
-        
+        if self.user.first_name:
+            return u'%s %s' % (self.user.first_name, self.user.last_name)
+         
         return u'%s' % self.user
     
     @property
