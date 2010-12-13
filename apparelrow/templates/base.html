@@ -123,10 +123,7 @@
             <li><a href="/">{% trans "Home" %}</a></li>            
         -->
         {% if user.is_authenticated %}
-            <!-- FIXME: Put this back as soon as we've got the whole profile thing working
-                <li><a href="/profile/"{% ifequal request.path "/apparel/profile/" %} class="selected"{% endifequal %}>{% trans "My Profile" %}</a></li>
-            <li><a href="#">{% trans "My Profile" %}</a></li>            
-         -->
+            <li><a href="/profile/"{% ifequal request.path "/apparel/profile/" %} class="selected"{% endifequal %}>{% trans "My Profile" %}</a></li>
         {% else %}
             <li><a href="/accounts/login/" id="login">{% trans "Login" %}</a></li>
             <li><a href="/accounts/register/" id="login">{% trans "Sign up" %}</a></li>
@@ -150,9 +147,7 @@
     </div>
 </div>
 {% endif %}
-
-    {% block body %}
-    {% endblock %}
+    {% block body %}{% endblock %}
     </div>
 </div>
 <div id="footer">

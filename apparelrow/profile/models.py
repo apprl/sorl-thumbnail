@@ -31,10 +31,10 @@ class ApparelProfile(models.Model):
     def display_name(self):
         if self.name is not None:
             return self.name
-            
-        # FIXME Right now, we seem to only be able to get this in the view
-        if hasattr(self, 'facebook_profile') and self.facebook_profile and self.facebook_profile.first_name:
-            return self.facebook_profile.first_name
+        
+        if hasattr(self, 'facebook_profile') and self.facebook_profile:
+            # FIXME: Should we fetch and store the user name from Facebook here? 
+            return self.facebook_profile.uid
         
         return u'%s' % self.user
     
