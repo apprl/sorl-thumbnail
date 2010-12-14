@@ -30,6 +30,12 @@
     name: YOOX
     homepage: http://www.yoox.com/
 
+- model: apparel.vendor
+  pk: 6
+  fields:
+    name: Shopbop
+    homepage: http://shopbop.com
+
 
 # - VendorFeed -
 
@@ -72,6 +78,17 @@
     name: yoox
     provider_class: cj
     url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/70436/YOOX-Product_Catalog_large.txt.gz
+    username: 3131851
+    password: MrpG7TgL
+    decompress: gzip
+
+- model: importer.vendorfeed
+  pk: 6
+  fields:
+    vendor: 6
+    name: shopbop
+    provider_class: cj
+    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71190/Shopbop_com-Shopbop_Product_Catalog.txt.gz
     username: 3131851
     password: MrpG7TgL
     decompress: gzip

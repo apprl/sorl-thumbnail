@@ -253,17 +253,6 @@ AUTH_PROFILE_MODULE='profile.ApparelProfile'
 FACEBOOK_API_KEY = '44d47ef3e7285cace9a4c7c88f645742'
 FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
 SOCIALREGISTRATION_GENERATE_USERNAME = True
-#FACEBOOK_INTERNAL = True
-#FACEBOOK_CACHE_TIMEOUT = 1800
-DUMMY_FACEBOOK_INFO = {
-    'uid':0,
-    'name':'(Private)',
-    'first_name':'(Private)',
-    'pic_square_with_logo':'http://www.facebook.com/pics/t_silhouette.gif',
-    'affiliations':None,
-    'status':None,
-    'proxied_email':None,
-}
 
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587

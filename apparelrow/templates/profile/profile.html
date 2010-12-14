@@ -1,6 +1,46 @@
-{% extends "profile/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
-{% block profile_content %}
-    Hey!
+{% block body-classes %}three-columns profile{% endblock body-classes %}
+{% block body %}
+    <div id="profile-nav">
+        <ul>
+            <li>
+                <a href="/profile/" class="selected">{% trans "Profile" %}</a>
+            </li>
+            {% include 'profile/fragments/menu_items.html' %}
+        </ul>
+    </div>
+    <div class="sidebar">
+        <img src="{{ user.get_profile.avatar_large }}" class="avatar large">
+        <h1>{{ user.get_profile.display_name }}</h1>
+        <p>
+            {% trans "Member since" %} {{ user.date_joined|date:"SHORT_DATE_FORMAT" }}
+        </p>
+        <p>
+        {% blocktrans count user.get_profile.likes as likes %}
+            {{ likes }} like
+        {% plural %}
+            {{ likes }} likes
+        {% endblocktrans %}
+        </p>
+        <p>
+        {% blocktrans count user.get_profile.looks as looks %}
+            {{ looks }} look
+        {% plural %}
+            {{ looks }} looks
+        {% endblocktrans %}
+        </p>      
+        <h2>{% trans "Links" %}</h2>
+    </div>
+    <div id="content">
+        <h2>{% trans "Latest updates" %}</h2>
+    </div>
+    <div class="sidebar last">
+        <h2>{% trans "Latest looks" %}</h2>
+        {% with recent_looks as looks %}
+            {% include 'apparel/fragments/looks_sidebar.html' %}
+        {% endwith %}
+    </div>
+</div>
 {% endblock %}

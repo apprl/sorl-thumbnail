@@ -150,12 +150,10 @@ button
 #login-password
   display: none
 
-#account-dialogue .fb-connect-button
-  float: right
+#account-dialogue .connect-button
+  float: left
   margin-right: 2em
-  margin-top: auto
-  height: 100%
-  padding-top: 6px
+  margin-top: 10px
 
 #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
   +box
@@ -607,7 +605,6 @@ body.three-columns .pagination
     color: $easy_color
   h1
     text-transform: uppercase
-    font-size: 1.25em
   h3
     text-transform: uppercase
     font-weight: normal
@@ -1047,29 +1044,54 @@ a.block_link
   float: left
   margin-right: 0.5em
 
-#profile-nav li
-  display: block
-  float: left
-  height: 30px
-  padding-left: 0.5em
-  padding-right: 0.5em
-  border: 1px solid #d9d9d9
-  border-left-color: white
-  text-transform: uppercase
-  background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x top left
-  &.selected
-    background-image: image_url(unquote("profile-nav-bg-selected.png"))
-    border-right-color: #ababab
-    border-left-color: #ababab
-  a
-    line-height: 30px
-  &.profile-image
-    padding: 0
+body.profile
+  #profile-nav
+    margin-left: $aside_width
+  .sidebar
+    .avatar
+      margin-top: -30px
+    p
+      border: none
+      color: $easier_color
+      &.description
+        margin-top: 1em
+        color: $font-color
 
-#profile-nav-dash
+#profile-nav
   position: relative
-  top: -10px
-  z-index: -1
+  margin-top: 1em
+  ul
+    +horizontal-list(0)
+    display: inline
+    li
+      a
+        display: block
+        height: 28px
+        line-height: 28px
+        padding-left: 1em
+        padding-right: 1em
+        border: 1px solid #d9d9d9
+        border-left-color: white
+        text-transform: uppercase
+        background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x top left
+        &.selected
+          background-image: image_url(unquote("profile-nav-bg-selected.png"))
+          border-right-color: #ababab
+          border-left-color: #ababab
+        &.profile-image
+          padding: 0
+          img
+            height: 30px
+            width: 30px
+        &.profile-link
+          border-left: 0
+          text-transform: none
+  hr
+    position: absolute
+    width: 500px
+    height: 1px
+    top: 10px
+    z-index: -1
   
 .inline-date
   float: right

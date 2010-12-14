@@ -1,0 +1,7 @@
+{% load i18n %}
+<li>
+    <a{% ifequal request.path "/profile/looks/" %} class="selected"{% endifequal %} href="/profile/looks/">{% trans "Looks" %}</a>
+</li>
+<li>
+    <a{% ifequal request.path "/profile/wardrobe/" %} class="selected"{% endifequal %} href="/profile/wardrobe/">{% trans "Wardrobe" %}</a>
+</li>
