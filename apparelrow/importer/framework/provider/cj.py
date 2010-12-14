@@ -58,11 +58,7 @@ class CJMapper(DataMapper):
     def preprocess(self):
         for k, v in self.record.items():
             self.record[k.lower()] = self.re_cdata.sub(r'\1', self.record[k])
-            del self.record[k]
-        
-        from pprint import pprint
-        pprint(self.record)
-        
+            del self.record[k]    
     
     def get_description(self):
         return self.re_quote.sub('', self.record['description'])
