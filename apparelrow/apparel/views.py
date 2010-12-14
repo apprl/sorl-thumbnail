@@ -52,27 +52,29 @@ def browse(request):
         page_size=BROWSE_PAGE_SIZE
     )
     
-    if request.is_ajax(): return browse_ajax_response(request, paged_result)
-    
     try:
         next_page = paged_result.paginator.page(paged_result.next_page_number())
     except (EmptyPage, InvalidPage):
         next_page = None
 
+    pages = (paged_result, next_page,)
     left, mid, right = get_pagination(paged_result.paginator, paged_result.number)
+    pagination = {
+        'left': left,
+        'mid': mid,
+        'right': right
+    }
+
+    if request.is_ajax(): return browse_ajax_response(request, paged_result, pages, pagination)
     
     result = get_filter(request)
     result.update(
-        pages     = (paged_result, next_page,),
+        pages     = pages,
         templates = {
             #'product_count': js_template(get_template_source('apparel/fragments/product_count.html')),
             'pagination': get_template_source('apparel/fragments/pagination_js.html')
         },
-        pagination = {
-            'left': left,
-            'right': right,
-            'mid': mid,
-        }
+        pagination = pagination,
     )
     
     # FIXME: This could perhaps be moved out to a routine on its own. It is used
@@ -106,25 +108,23 @@ def browse(request):
     
     return render_to_response('apparel/browse.html', result, context_instance=RequestContext(request))
 
-def get_html_for_objects(template, object_name, object_list, context_instance):
-    return [loader.render_to_string(template, {object_name: o}, context_instance=context_instance) for o in object_list]
-
-def browse_ajax_response(request, result):
+def browse_ajax_response(request, result, pages, pagination):
     """
     Just like browse, but handles AJAX requests
     """
     
-    left, mid, right = get_pagination(result.paginator, result.number)
-    response = get_pagination_as_dict(result)
-    response.update(
-        products_html=get_html_for_objects('apparel/fragments/product_small.html', 'product', result.object_list, RequestContext(request)),
-        pagination={
-            'left': left,
-            'right': right,
-            'mid': mid,
-        },
-        criteria_filter=get_criteria_filter(request, result.object_list),
-    )
+    response = {
+        'html': loader.render_to_string('apparel/fragments/product_list.html',
+            {
+                'pages': pages,
+                'pagination': pagination,
+            },
+            context_instance=RequestContext(request)
+        ),
+        'criteria_filter': get_criteria_filter(request, result.object_list),
+        'pagination': pagination,
+    }
+    response.update(get_pagination_as_dict(result))
     
     return HttpResponse(
         json.encode(response),

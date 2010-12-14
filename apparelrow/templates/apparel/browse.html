@@ -232,7 +232,7 @@
                 
                 if(jQuery('#page-' + page).length == 0) {
                     filter(getQuery({page: page}), function(response) {
-                        renderPage(response, page);
+                        renderPage(response);
                         jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 400);
                     });
                 } else {
@@ -358,27 +358,33 @@
         function doFilter(query, callback) {
             jQuery.getJSON('{% url apparel.views.browse %}', query, callback || renderProducts);
         }
-        function renderPage(products, page) {
-            // FIXME: This should probably be moved into a template, but it's kind of simple so it'll do for now
-            var pageList = jQuery('<ul></ul>');
-            var newPage = jQuery('<li></li>').attr('id', 'page-' + page).append(pageList);
-            var existingPages = jQuery('#product-list > ul.list > li');
-            var nextPage = existingPages.filter(function(i) { return this.id.split('-')[1] > parseInt(page) }).first();
-            // There are pages that should be after this one in the list
-            if(nextPage.length == 1) {
-                nextPage.before(newPage);
-            // This should be the last page in the list
-            } else if(existingPages.length > 0) {
-                existingPages.last().after(newPage);
-            // There are no other pages
-            } else {
-                jQuery('#product-list > ul.list').append(newPage);
-            }
-            jQuery(products.products_html).appendTo(pageList);
+        function renderPage(products) {
+            // Find the pages in the response
+            jQuery('ul.list > li', products.html)
+            // Filter out pages that we already have
+            .filter(function(i) { return jQuery('#' + this.id).length == 0 })
+            // Iterate over each page
+            .each(function(i, page) {
+                // Find the correct place for the page
+                var existingPages = jQuery('#product-list > ul.list > li');
+                var nextPage = existingPages.filter(function(i) {
+                    return this.id.split('-')[1] > parseInt(page.id.split('-')[1])
+                }).first();
+
+                if(nextPage.length == 1) {
+                    // There are pages that should be after this one in the list
+                    nextPage.before(page);
+                } else if(existingPages.length > 0) {
+                    // This should be the last page in the list
+                    existingPages.last().after(page);
+                } else {
+                    // There are no other pages
+                    jQuery('#product-list > ul.list').append(page);
+                }
+            });
             cloneProducts(jQuery('#product-list > ul > li > ul > li'));
             
-            pagination.data = products;
-            pagination.render();
+            jQuery('#pagination').replaceWith(jQuery('#pagination', products.html));
             
             if(location.hash && location.hash != '#!') {
                 jQuery('#reset').show()
@@ -448,7 +454,7 @@
             );
             // $('#product_count_template').render({ products: products }).appendTo('#product-count');
             jQuery('#product-list > ul').empty();
-            renderPage(products, 1);
+            renderPage(products);
             jQuery('#product-list').data('scrollable').begin();
             filterCriteria(products.criteria_filter);
             
@@ -468,29 +474,6 @@
                 {% blocktrans count products.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}
             </h2>
             {% endwith %}
-            <div id="product-list" class="product-list">
-                <ul class="list">
-                    {% for page in pages %}
-                    <li id="page-{{ page.number }}"><ul>
-                        {% for product in page.object_list %}
-                            {% include 'apparel/fragments/product_small.html' %}
-                        {% endfor %}
-                    </ul></li>
-                    {% endfor %}
-                    {% comment %}
-                    FIXME: Fix this so it works with ajax fetched stuff and looks nice
-                    {% with product as object %}
-                    <div class="tooltip">
-                        {% include 'apparel/fragments/product_detail.html' %}
-                    </div>
-                    {% endwith %}
-                    {% endcomment %}
-                </ul>
-                <div id="pagination" class="pagination">
-                {% with pages|first as products %}
-                    {% include 'apparel/fragments/pagination.html' %}
-                {% endwith %}
-                </div>
-            </div>
+            {% include 'apparel/fragments/product_list.html' %}
         </div>
 {% endblock body %}
