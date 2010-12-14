@@ -1,6 +1,18 @@
-{% extends "profile/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
-{% block profile_content %}
-    
+{% block body-classes %}two-columns{% endblock body-classes %}
+{% block body %}
+<div class="sidebar">
+    Large Profile
+</div>
+<div id="content">
+    <ul id="profile-nav">
+        <li>
+            <a href="/profile/" class="selected">{% trans "Profile" %}</a>
+        </li>
+        {% include 'profile/fragments/menu_items.html' %}
+    </ul>
+    {% block profile_content %}{% endblock %}
+</div>
 {% endblock %}

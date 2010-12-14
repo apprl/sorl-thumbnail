@@ -1,34 +1,25 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block body-classes %}three-columns{% endblock body-classes %}
+{% block body-classes %}two-columns{% endblock body-classes %}
 {% block body %}
-<div class="sidebar">
-    &nbsp;
+    <div id="profile-nav">
+        <ul id="profile-nav">
+            <li>
+                <a href="/profile/" class="profile-image"><img src="{{ user.get_profile.avatar }}" width="30" height="30"></a>
+            </li>
+            <li>
+                <a href="/profile/" class="profile-link">{{ user.get_profile.display_name }}</a>
+            </li>
+            {% include 'profile/fragments/menu_items.html' %}
+        </ul>
+    </div>
+    <div class="sidebar">
+    {% block profile_sidebar %}{% endblock %}
+    </div>
+    <div class="container">
+    {% block profile_content %}{% endblock %}    
+    </div>
 </div>
-<div id="content">
-    <ul id="profile-nav">
-    {% if user.is_authenticated %}
-        <li class="profile-image">
-            <img src="{{ user.get_profile.avatar }}" width="30" height="30" />
-        </li>
-        <li{% ifequal request.path "/profile/" %} class="selected"{% endifequal %}>
-            <a href="/profile/">{% trans "Profile" %}</a>
-        </li>
-        <li{% ifequal request.path "/profile/looks/" %} class="selected"{% endifequal %}>
-            <a href="/profile/looks/">{% trans "Looks" %}</a>
-        </li>
-        <li{% ifequal request.path "/profile/wardrobe/" %} class="selected"{% endifequal %}>
-            <a href="/profile/wardrobe/">{% trans "Wardrobe" %}</a>
-        </li>
-    {% else %}
-        <li>Menu for people who are not authenticated</li>
-    {% endif %}
-    </ul>
-    {% block profile_content %}{% endblock %}
-</div>
-<div class="sidebar last">
-    <h2>{% trans "Popular looks" %}</h2>
-    {% include 'apparel/fragments/looks_popular.html' %}
-</div>
+
 {% endblock %}
