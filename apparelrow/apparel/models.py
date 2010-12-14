@@ -103,8 +103,6 @@ class Category(models.Model):
     def __unicode__(self):
         return u"%s" % self.name
     
-    @staticmethod
-            
     class Exporter:
         export_fields = ['name', 'option_types']
     
