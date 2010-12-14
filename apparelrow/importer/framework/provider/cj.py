@@ -53,11 +53,15 @@ class CJMapper(DataMapper):
     re_cdata = re.compile(r'<!\[CDATA\[(.+?)\]\]>')
     re_quote = re.compile(r'"')
     re_yes   = re.compile(r'^yes$', re.I)
+    re_price = re.compile(r'[^\d\.]')
     
     def preprocess(self):
         for k, v in self.record.items():
             self.record[k.lower()] = self.re_cdata.sub(r'\1', self.record[k])
             del self.record[k]
+        
+        from pprint import pprint
+        pprint(self.record)
         
     
     def get_description(self):
@@ -84,7 +88,7 @@ class CJMapper(DataMapper):
     
     def get_availability(self):
     
-        if  self.re_yes.match(self.record['instock']) and self.re_yes.match(self.record['online']):
+        if self.re_yes.match(self.record['instock']) and self.re_yes.match(self.record['online']):
             return True
         
         return False
@@ -94,6 +98,13 @@ class CJMapper(DataMapper):
     
     def get_category(self):
         return self.record['advertisercategory']
+    
+    def get_price(self):
+        price = self.record.get('price')
+        if price is None:
+            return
+        
+        return self.re_price.sub('', price)
     
 class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):
