@@ -366,7 +366,6 @@ class Look(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Look)
 
-
 class LookComponent(models.Model):
     """
     This class maps a product to a collage or uploaded image of a look and 
@@ -433,11 +432,12 @@ class LookComponent(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookComponent)
 
-
-
 class Wardrobe(models.Model):
     user     = models.ForeignKey(User)
     products = models.ManyToManyField(Product)
     
     def __unicode__(self):
         return u'Wardrobe for %s' % self.user
+
+
+import apparel.activity

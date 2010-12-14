@@ -169,6 +169,7 @@ INSTALLED_APPS = (
     'mptt',
     'sorl.thumbnail',
     
+    'actstream',
     'tagging',
     'pagination',
     'voting',
