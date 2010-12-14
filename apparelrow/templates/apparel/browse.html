@@ -360,28 +360,17 @@
         }
         function renderPage(products) {
             // Find the pages in the response
-            jQuery('ul.list > li', products.html)
-            // Filter out pages that we already have
-            .filter(function(i) { return jQuery('#' + this.id).length == 0 })
-            // Iterate over each page
-            .each(function(i, page) {
-                // Find the correct place for the page
-                var existingPages = jQuery('#product-list > ul.list > li');
-                var nextPage = existingPages.filter(function(i) {
-                    return this.id.split('-')[1] > parseInt(page.id.split('-')[1])
-                }).first();
+            var pages = jQuery('ul.list > li', products.html)
+                // Filter out pages that we already have
+                .filter(function(i) { return jQuery('#' + this.id).length == 0 })
+                // Append to existing product list
+                .appendTo('#product-list > ul.list');
 
-                if(nextPage.length == 1) {
-                    // There are pages that should be after this one in the list
-                    nextPage.before(page);
-                } else if(existingPages.length > 0) {
-                    // This should be the last page in the list
-                    existingPages.last().after(page);
-                } else {
-                    // There are no other pages
-                    jQuery('#product-list > ul.list').append(page);
-                }
-            });
+            // Sort the list
+            jQuery('#product-list > ul.list > li')
+                .sort(function(a, b) { return a.id > b.id ? 1 : -1 })
+                .appendTo('#product-list > ul.list');
+
             cloneProducts(jQuery('#product-list > ul > li > ul > li'));
             
             jQuery('#pagination').replaceWith(jQuery('#pagination', products.html));
