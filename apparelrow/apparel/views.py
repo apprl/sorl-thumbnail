@@ -194,8 +194,8 @@ def look_list(request, profile=None, contains=None, page=0):
         queryset = Look.objects.all().order_by('-modified')
     
     
-    popular = Vote.objects.get_top(Look, limit=8)   # FIXME: This is used elsewhere, we should
-                                                    # move it out to a utils module
+    # FIXME: This is used elsewhere, we should move it out to a utils module
+    popular = Vote.objects.get_top(Look, limit=8)
     
     return list_detail.object_list(
         request,
@@ -607,7 +607,7 @@ def get_filter(request):
 def index(request):
     ctx = get_filter(request)
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
-    ctx['popular_looks']  = Vote.objects.get_top(Look, limit=8)
+    ctx['popular_looks']  = Vote.objects.get_top(Look, limit=8)    
     ctx['categories']     = ctx['categories'].filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
     
