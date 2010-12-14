@@ -77,7 +77,7 @@ class Option(models.Model):
 class Vendor(models.Model):
     name     = models.CharField(max_length=100)
     homepage = models.URLField(_('Home page'))
-    logotype = models.ImageField(upload_to=LOGOTYPE_BASE, help_text=_('Logotype')) 
+    logotype = models.ImageField(upload_to=LOGOTYPE_BASE, help_text=_('Logotype'), blank=True, null=True) 
 
     objects = SearchManager()
 
