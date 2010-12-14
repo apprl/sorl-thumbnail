@@ -1,0 +1,9 @@
+{% load apparel_extras %}
+{% load cache %}
+{% cache CACHE_TIMEOUT activity object.id LANGUAGE_CODE %}
+    {% with object.action_object|class_name|lower as object_name %}
+        {% with 'apparel/fragments/activity/'|add:object_name|add:'.html' as template_name %}
+            {% include template_name %}
+        {% endwith %}
+    {% endwith %}
+{% endcache %}

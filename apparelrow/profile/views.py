@@ -7,6 +7,8 @@ from apparel.decorators import seamless_request_handling
 from apparel.models import *
 from apparel.forms import *
 
+from actstream.models import actor_stream
+
 
 
 
@@ -16,14 +18,10 @@ def profile(request):
     """
     user = request.user
     
-    activity = []
-    recent_looks = Look.objects.filter(user=user).order_by('-modified')[:4]
-    
     context = {
-        'activitiy': activity,
-        'recent_looks': recent_looks,
+        'updates': actor_stream(user),
+        'recent_looks': Look.objects.filter(user=user).order_by('-modified')[:4],
         #'recent_likes': recent_likes
     }
     
     return render_to_response('profile/profile.html', context, context_instance=RequestContext(request))
-    

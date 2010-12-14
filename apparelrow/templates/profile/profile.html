@@ -31,10 +31,20 @@
             {{ looks }} looks
         {% endblocktrans %}
         </p>      
-        <h2>{% trans "Links" %}</h2>
     </div>
     <div id="content">
         <h2>{% trans "Latest updates" %}</h2>
+        <ul class="activity-list">
+        {% for update in updates %}
+            <li>
+            {% with update as object %}
+                {% include 'apparel/fragments/activity/activity.html' %}
+            {% endwith %}
+            </li>
+        {% empty %}
+            <li>{% trans "No updates" %}</li>
+        {% endfor %}
+        </ul>
     </div>
     <div class="sidebar last">
         <h2>{% trans "Latest looks" %}</h2>

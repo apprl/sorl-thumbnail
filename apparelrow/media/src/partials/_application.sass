@@ -254,12 +254,7 @@ ul.looks
     &.last
       margin-right: 0
     .look
-      +box
-      width: $aside_width / 2 - $gutter_width / 4 - 2
-      height: 69px
-      position: relative
-      .collage-image
-        position: absolute
+      +look_small
     span.button
       +button
       line-height: 1.5em
@@ -1097,3 +1092,37 @@ body.profile
 .inline-date
   float: right
   color: $easy_color
+
+.activity-list
+  li
+    .activity
+      +clearfix
+      border: none
+      position: relative
+      .inline-date
+        position: absolute
+        right: 0
+      .activity-image,.activity-icon,.activity-content
+        float: left
+        margin
+        padding: 0 .5em
+      .activity-image
+        width: $aside_width / 2 - $gutter_width / 4 - 2
+        padding-left: 0
+        .look
+          +look_small
+      .activity-content
+        padding-right: 0
+        h2
+          margin: 0
+          border: 0
+          background-image: none
+          font-size: 1.1em
+          display: inline
+        p
+          border: none
+        span
+          color: $easier_color
+        .price, .sum
+          background-image: none
+          padding-left: 0

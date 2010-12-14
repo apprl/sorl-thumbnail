@@ -1,0 +1,34 @@
+{% extends 'apparel/fragments/activity/base.html' %}
+{% load apparel_extras %}
+{% load i18n %}
+{% block activity_link %}
+    {{ object.action_object.object.get_absolute_url }}
+{% endblock %}
+{% block activity_image %}
+    {% with object.action_object.object as object %}
+        {% include 'apparel/fragments/activity/choose_image.html' %}
+    {% endwith %}
+{% endblock %}
+
+{% block activity_icon %}
+    <img src="/media/images/activity_heart.png">
+{% endblock %}
+
+{% block activity_content %}
+    <h2 class="like">
+        {% blocktrans with object.actor.get_profile.display_name as name %}
+            {{ name }} like
+        {% endblocktrans %}
+    </h2>
+    <p>
+        {{ object.action_object.object }}
+    </p>
+    {% if object.action_object.object|class_name == "Product" %}
+    <p>
+        <span class="price">{{ object.action_object.object.default_vendor.price }}</span> <span class="currency">{{ object.action_object.object.default_vendor.currency }}</span>
+    </p>
+    {% endif %}
+    {% if object.action_object.object|class_name == 'Look' %}
+        {% include 'apparel/fragments/total_price.html' %}
+    {% endif %}
+{% endblock %}

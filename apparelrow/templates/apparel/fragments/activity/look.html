@@ -1,0 +1,23 @@
+{% extends 'apparel/fragments/activity/base.html' %}
+{% load apparel_extras %}
+{% load i18n %}
+{% block activity_image %}
+    {% with object.action_object as object %}
+        {% include 'apparel/fragments/look_small.html' %}
+    {% endwith %}
+{% endblock %}
+
+{% block activity_icon %}
+    <img src="/media/images/activity_new.png">
+{% endblock %}
+
+{% block activity_content %}
+    <h2>{{ object.action_object.title }}</h2>
+    <p>{% blocktrans with object.actor.get_profile.display_name as name %}
+        {{name}} created a new look
+    {% endblocktrans %}
+    </p>
+    {% with object.action_object as object %}
+        {% include 'apparel/fragments/total_price.html' %}
+    {% endwith %}
+{% endblock %}
