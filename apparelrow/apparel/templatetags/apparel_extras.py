@@ -161,6 +161,34 @@ class CalcHalfNode(Node):
         
 
 
+@register.filter('as_list')
+def as_list(o):
+    """ Returns the object as a list, if it isn't already one. Tuples are converted 
+    to lists
+    >>> from django.template.loader import Template, Context
+    >>> from apparel.models import Product
+    >>> from apparel.templatetags import apparel_extras
+    >>> c = Context({'v1': ('b', 'c',), 'v2': "hello", 'v3': [1, 2, 3]})
+    >>> t = Template('{% load apparel_extras %}{{ v1|as_list }}')
+    >>> t.render(c)
+    u'[&#39;b&#39;, &#39;c&#39;]'
+    
+    >>> t = Template('{% load apparel_extras %}{{ v2|as_list }}')
+    >>> t.render(c)
+    u'[&#39;hello&#39;]'
+    
+    >>> t = Template('{% load apparel_extras %}{{ v3|as_list }}')
+    >>> t.render(c)
+    u'[1, 2, 3]'
+    
+    """
+    if isinstance(o, tuple):
+        return list(o)
+    if isinstance(o, list):
+        return o
+    
+    return [o]
+
 @register.filter('class_name')
 def class_name(o):
     """ Outputs class name of given object (if it is one)
@@ -181,6 +209,8 @@ def class_name(o):
         return mark_safe(o.__class__.__name__)
     except:
         return ''
+
+
 
 
 
