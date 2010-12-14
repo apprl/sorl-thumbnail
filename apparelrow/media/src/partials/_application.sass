@@ -605,7 +605,6 @@ body.three-columns .pagination
     color: $easy_color
   h1
     text-transform: uppercase
-    font-size: 1.25em
   h3
     text-transform: uppercase
     font-weight: normal
@@ -1045,9 +1044,22 @@ a.block_link
   float: left
   margin-right: 0.5em
 
+body.profile
+  #profile-nav
+    margin-left: $aside_width
+  .sidebar
+    .avatar
+      margin-top: -30px
+    p
+      border: none
+      color: $easier_color
+      &.description
+        margin-top: 1em
+        color: $font-color
+
 #profile-nav
   position: relative
-  margin: 1em 0
+  margin-top: 1em
   ul
     +horizontal-list(0)
     display: inline
@@ -1068,6 +1080,9 @@ a.block_link
           border-left-color: #ababab
         &.profile-image
           padding: 0
+          img
+            height: 30px
+            width: 30px
         &.profile-link
           border-left: 0
           text-transform: none

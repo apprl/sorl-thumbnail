@@ -6,6 +6,9 @@ from django.db.models.signals import post_save
 from socialregistration.models import FacebookProfile
 import settings
 
+from voting.models import Vote
+from apparel.models import Look
+
 
 import datetime, mptt
 
@@ -22,10 +25,22 @@ class ApparelProfile(models.Model):
     
     name  = models.CharField(max_length=50, unique=True, blank=True, null=True)
     image = models.ImageField(upload_to=PROFILE_BASE, help_text=_('User profile image'), blank=True, null=True) 
+    about = models.TextField(_('About'), null=True, blank=True)
 
     @models.permalink
     def get_looks_url(self):
         return ('looks_by_user', [str(self.user.username)])
+
+    # FIXME: Extract number of looks and and likes
+
+    @property
+    def looks(self):
+        # Number of looks
+        return Look.objects.filter(user=self.user).count()
+    
+    @property
+    def likes(self):
+        return Vote.objects.filter(user=self.user).count()
 
     @property
     def display_name(self):
@@ -39,11 +54,22 @@ class ApparelProfile(models.Model):
     
     @property
     def avatar(self):
+        # FIXME: Scale to 30x30
         if self.image:
             return self.image
 
         if self.facebook_profile:
-            return 'http://graph.facebook.com/%s/picture' % self.facebook_profile.uid
+            return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_profile.uid
+
+        return settings.APPAREL_DEFAULT_AVATAR
+
+    @property
+    def avatar_large(self):
+        if self.image:
+            return self.image
+
+        if self.facebook_profile:
+            return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_profile.uid
 
         return settings.APPAREL_DEFAULT_AVATAR
 

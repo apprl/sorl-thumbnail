@@ -4,9 +4,9 @@
 {% block body-classes %}two-columns{% endblock body-classes %}
 {% block body %}
     <div id="profile-nav">
-        <ul id="profile-nav">
+        <ul>
             <li>
-                <a href="/profile/" class="profile-image"><img src="{{ user.get_profile.avatar }}" width="30" height="30"></a>
+                <a href="/profile/" class="profile-image"><img src="{{ user.get_profile.avatar }}" class="avatar"></a>
             </li>
             <li>
                 <a href="/profile/" class="profile-link">{{ user.get_profile.display_name }}</a>
