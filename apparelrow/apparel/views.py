@@ -57,7 +57,6 @@ def browse(request):
     except (EmptyPage, InvalidPage):
         next_page = None
 
-    pages = (paged_result, next_page,)
     left, mid, right = get_pagination(paged_result.paginator, paged_result.number)
     pagination = {
         'left': left,
@@ -65,11 +64,21 @@ def browse(request):
         'right': right
     }
 
-    if request.is_ajax(): return browse_ajax_response(request, paged_result, pages, pagination)
+    pages = []
+    for p in range(1, paged_result.paginator.num_pages + 1):
+        if p == paged_result.number:
+            pages.append(paged_result)
+        elif next_page and p == next_page.number:
+            pages.append(next_page)
+        else:
+            pages.append({'number': p})
+
+    if request.is_ajax(): return browse_ajax_response(request, paged_result, (paged_result, next_page,), pagination)
     
     result = get_filter(request)
     result.update(
-        pages     = pages,
+        current_page = paged_result,
+        pages = pages,
         templates = {
             #'product_count': js_template(get_template_source('apparel/fragments/product_count.html')),
             'pagination': get_template_source('apparel/fragments/pagination_js.html')
@@ -116,6 +125,7 @@ def browse_ajax_response(request, result, pages, pagination):
     response = {
         'html': loader.render_to_string('apparel/fragments/product_list.html',
             {
+                'current_page': result,
                 'pages': pages,
                 'pagination': pagination,
             },
