@@ -16,11 +16,12 @@
         <hr>
     </div>
     <div class="sidebar">
-    {% block profile_sidebar %}{% endblock %}
+    {% block profile_left_sidebar %}{% endblock %}
     </div>
-    <div class="container">
+    <div class="container" id="content">
     {% block profile_content %}{% endblock %}    
     </div>
+    {% block profile_right_sidebar %}{% endblock %}    
 </div>
 
 {% endblock %}
