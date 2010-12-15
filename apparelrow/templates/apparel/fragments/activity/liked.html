@@ -29,6 +29,8 @@
     </p>
     {% endif %}
     {% if object.action_object.object|class_name == 'Look' %}
-        {% include 'apparel/fragments/total_price.html' %}
+        {% with object.action_object.object as object %}
+            {% include 'apparel/fragments/total_price.html' %}
+        {% endwith %}
     {% endif %}
 {% endblock %}

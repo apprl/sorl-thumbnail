@@ -17,7 +17,11 @@ def comments_handler(sender, **kwargs):
     if not hasattr(kwargs['request'], 'user'):
         return
     
-    action.send(kwargs['request'].user, verb='commented', action_object=kwargs['comment'])
+    action.send(
+        kwargs['request'].user, 
+        verb='commented', 
+        action_object=kwargs['comment']
+    )
 
 comments_signals.comment_was_posted.connect(comments_handler)
 
@@ -27,9 +31,14 @@ def post_save_handler(sender, **kwargs):
         logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % instance)
         return
     
+    if not kwargs['created']:
+        return
+    
+    verb = 'liked' if isinstance(instance, Vote) else 'created'
+    
     action.send(
         instance.user, 
-        verb='created' if kwargs['created'] else 'updated', 
+        verb=verb,
         action_object=instance
     )
 
@@ -48,12 +57,13 @@ def m2m_handler(sender, **kwargs):
     if not hasattr(instance, 'user'):
         logging.warning('Trying to register an activity on m2m_change (%s), but %s has not user attribute' % (sender, instance))
         return
-        
+    
     for pk in kwargs['pk_set']:
         action.send(
             instance.user, 
             verb='added', 
-            action_object=kwargs['model'].objects.get(pk=pk)
+            action_object=kwargs['model'].objects.get(pk=pk),
+            target=instance
         )
 
 models.signals.m2m_changed.connect(m2m_handler, sender=Wardrobe.products.through)
