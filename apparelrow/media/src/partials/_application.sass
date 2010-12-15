@@ -1046,6 +1046,8 @@ body.profile
     margin-left: $aside_width
   .sidebar
     .avatar
+      z-index: 1
+      position: relative
       margin-top: -30px
     p
       border: none
@@ -1060,17 +1062,24 @@ body.profile
   ul
     +horizontal-list(0)
     display: inline
+    z-index: 1
+    position: relative
     li
       a
         display: block
-        height: 28px
-        line-height: 28px
+        height: 26px
+        line-height: 26px
         padding-left: 1em
         padding-right: 1em
+        padding-top: 2px
         border: 1px solid #d9d9d9
         border-left-color: white
         text-transform: uppercase
         background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x top left
+        &.last
+          +border-right-radius(3px)
+        &.first
+          +border-left-radius(3px)
         &.selected
           background-image: image_url(unquote("profile-nav-bg-selected.png"))
           border-right-color: #ababab
@@ -1084,11 +1093,20 @@ body.profile
           border-left: 0
           text-transform: none
   hr
+    top: 16px
+    z-index: 0
     position: absolute
-    width: 500px
+    width: $content_width
+    color: $easiest_color
+    background-color: $easiest_color
     height: 1px
-    top: 10px
-    z-index: -1
+    border: none
+
+body.profile
+  #profile-nav
+    hr
+      left: -$aside_width
+
   
 .inline-date
   float: right
@@ -1105,7 +1123,6 @@ body.profile
         right: 0
       .activity-image,.activity-icon,.activity-content
         float: left
-        margin
         padding: 0 .5em
       .activity-image
         width: $aside_width / 2 - $gutter_width / 4 - 2

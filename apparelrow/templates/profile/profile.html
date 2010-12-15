@@ -6,10 +6,11 @@
     <div id="profile-nav">
         <ul>
             <li>
-                <a href="/profile/" class="selected">{% trans "Profile" %}</a>
+                <a href="/profile/" class="first selected">{% trans "Profile" %}</a>
             </li>
             {% include 'profile/fragments/menu_items.html' %}
         </ul>
+        <hr>
     </div>
     <div class="sidebar">
         <img src="{{ user.get_profile.avatar_large }}" class="avatar large">

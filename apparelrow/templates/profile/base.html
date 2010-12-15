@@ -6,13 +6,14 @@
     <div id="profile-nav">
         <ul>
             <li>
-                <a href="/profile/" class="profile-image"><img src="{{ user.get_profile.avatar }}" class="avatar"></a>
+                <a href="/profile/" class="first profile-image"><img src="{{ user.get_profile.avatar }}" class="avatar"></a>
             </li>
             <li>
                 <a href="/profile/" class="profile-link">{{ user.get_profile.display_name }}</a>
             </li>
             {% include 'profile/fragments/menu_items.html' %}
         </ul>
+        <hr>
     </div>
     <div class="sidebar">
     {% block profile_sidebar %}{% endblock %}
