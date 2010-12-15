@@ -944,7 +944,7 @@ a.block_link
 #search
   background: transparent image_url(unquote("search.png")) scroll no-repeat right top
   top: 31px
-  right: -16px
+  right: -21px
   position: absolute
   width: 163px
   height: 24px
@@ -1029,6 +1029,7 @@ a.block_link
       &#search-result-products
         li
           +product_list_item
+          z-index: 1100
           .product-small
             margin: -1px -1px -1px 0
     &.wide
