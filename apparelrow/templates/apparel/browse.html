@@ -243,8 +243,15 @@
             jQuery('#product-list').scrollable({
                 items: 'ul.list',
                 onBeforeSeek: function(event, index) {
-                    pagination.data.number = jQuery('#product-list > ul.list > li:eq(' + index + ')').attr('id').split('-')[1];
-                    pagination.render();
+                    var target = jQuery('#product-list > ul.list > li:eq(' + index + ')');
+                    pagination.data.number = target.attr('id').split('-')[1];
+                    if(target.is(':empty')) {
+                        filter(getQuery({page: pagination.data.number}), function(response) {
+                            renderPage(response);
+                        });
+                    } else {
+                        pagination.render();
+                    }
                 }
             });
             
@@ -360,22 +367,14 @@
             jQuery.getJSON('{% url apparel.views.browse %}', query, callback || renderProducts);
         }
         function renderPage(products) {
-            // Find the pages in the response
-            var pages = jQuery('ul.list > li', products.html)
-                // Filter out pages that we already have
-                .filter(function(i) { return jQuery('#' + this.id).length == 0 })
-                // Append to existing product list
-                .appendTo('#product-list > ul.list');
-
-            // Sort the list
-            jQuery('#product-list > ul.list > li')
-                .sort(function(a, b) { return a.id > b.id ? 1 : -1 })
-                .appendTo('#product-list > ul.list');
-
             pagination.data = products;
             pagination.render();
-            //jQuery('#pagination').replaceWith(jQuery('#pagination', products.html));
-            
+
+            // Find the pages in the response
+            var pages = jQuery('ul.list > li', products.html)
+                // Append each page to appropriate place
+                .each(function(i, page) { jQuery('#' + this.id).append(page.innerHTML) });
+
             if(location.hash && location.hash != '#!') {
                 jQuery('#reset').show()
             } else {
@@ -443,7 +442,11 @@
                 ), [products.paginator.count])
             );
             // $('#product_count_template').render({ products: products }).appendTo('#product-count');
+            // FIXME: This is because we want a li place holder with correct id. We should have a nicer way to do this.
             jQuery('#product-list > ul').empty();
+            for(var i = 1, l = products.paginator.num_pages; i <= l; i++) {
+                jQuery('#product-list > ul').append('<li id="page-' + i + '"></li>');
+            }
             renderPage(products);
             jQuery('#product-list').data('scrollable').begin();
             filterCriteria(products.criteria_filter);
@@ -459,11 +462,9 @@
             {% include 'apparel/fragments/product_menu_browse.html' %}
         </div>
         <div id="content">
-            {% with pages|first as products %}
             <h2 id="product-count">
-                {% blocktrans count products.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}
+                {% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}
             </h2>
-            {% endwith %}
             {% include 'apparel/fragments/product_list.html' %}
         </div>
 {% endblock body %}

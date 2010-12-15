@@ -1,3 +1,4 @@
+{% spaceless %}
 <div id="product-list" class="product-list">
     <ul class="list">
         {% for page in pages %}
@@ -23,8 +24,7 @@
         {% endcomment %}
     </ul>
     <div id="pagination" class="pagination">
-    {% with pages|first as products %}
         {% include 'apparel/fragments/pagination.html' %}
-    {% endwith %}
     </div>
 </div>
+{% endspaceless %}
