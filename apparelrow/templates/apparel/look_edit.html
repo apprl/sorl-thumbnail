@@ -243,7 +243,13 @@ jQuery(document).ready(function() {
     look.disable(jQuery('.ui-draggable'));
 
     jQuery('#id_description, #id_tags').autogrow();
-    jQuery('ul.tabs').tabs('div.panes > div', {'history': true});
+    jQuery('ul.tabs').tabs('div.panes > div', {
+        history: true,
+        onClick: function(index) {
+            var buttonTexts = ['{% trans "Save collage" %}', '{% trans "Save photo" %}', '{% trans "Save selection" %}'];
+            jQuery('#look-title button').text(buttonTexts[index]);
+        }
+    });
     jQuery('#wardrobe-contents li').draggable({
         'zIndex': 100,
         'disabled': false,
