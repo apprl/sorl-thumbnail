@@ -3,7 +3,7 @@
 {% load i18n %}
 {% block activity_image %}
     {% with object.action_object as object %}
-        {% include 'apparel/fragments/look_small.html' %}
+        {% include 'apparel/fragments/activity/choose_image.html' %}
     {% endwith %}
 {% endblock %}
 
@@ -21,3 +21,4 @@
         {% include 'apparel/fragments/total_price.html' %}
     {% endwith %}
 {% endblock %}
+

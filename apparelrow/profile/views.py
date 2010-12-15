@@ -19,7 +19,7 @@ def profile(request):
     user = request.user
     
     context = {
-        'updates': actor_stream(user),
+        'updates': actor_stream(user)[:10],
         'recent_looks': Look.objects.filter(user=user).order_by('-modified')[:4],
         #'recent_likes': recent_likes
     }

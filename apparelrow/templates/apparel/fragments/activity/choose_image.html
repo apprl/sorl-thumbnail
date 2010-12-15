@@ -1,7 +1,7 @@
 {% load apparel_extras %}
 {% if object|class_name == 'Product' %}
     <!-- FIXME: We need a product image in this format -->
-    <img src="/scale/79{{ object.product_image.url }}">
+    <img src="/scale/93x69{{ object.product_image.url }}?crop=true">
 {% else %}
     {% if object|class_name == 'Look' %}
         {% include 'apparel/fragments/look_small.html' %}

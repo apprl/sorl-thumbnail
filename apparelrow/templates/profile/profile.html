@@ -35,11 +35,9 @@
     <div id="content">
         <h2>{% trans "Latest updates" %}</h2>
         <ul class="activity-list">
-        {% for update in updates %}
+        {% for object in updates %}
             <li>
-            {% with update as object %}
-                {% include 'apparel/fragments/activity/activity.html' %}
-            {% endwith %}
+            {% include 'apparel/fragments/activity/activity.html' %}
             </li>
         {% empty %}
             <li>{% trans "No updates" %}</li>
