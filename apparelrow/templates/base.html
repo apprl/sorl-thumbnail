@@ -140,7 +140,7 @@
     <div class="container">
     <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
     <span id="logged-in-as">
-        {% trans "Logged in as" %}: <strong>{{ user.get_profile.display_name }}</strong>
+        {% trans "Logged in as" %}: <a href="/profile/">{{ user.get_profile.display_name }}</a>
     </span>
     <ul id="nav-user">
     </ul>
