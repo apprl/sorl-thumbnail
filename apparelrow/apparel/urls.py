@@ -32,8 +32,7 @@ urlpatterns = patterns('',
     
     (r'^wardrobe/add_product/$', 'apparel.views.add_to_wardrobe'),
 
-    # (r'^likes/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
-    (r'^looks/$', 'apparel.views.look_list'), #'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
+    (r'^looks/$', 'apparel.views.look_list'),
     (r'^looks/save_component/$', 'apparel.views.save_look_component'),
     (r'^looks/delete_component/$', 'apparel.views.delete_look_component'),
     (r'^looks/add_product/$', 'apparel.views.add_to_look'),

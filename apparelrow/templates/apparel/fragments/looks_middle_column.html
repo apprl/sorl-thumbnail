@@ -1,0 +1,15 @@
+{# This template displays looks in the middle column of a three column view#}
+{# Following parameters are required:                                      #}
+{#  - page_obj      Page object                                            #}
+{#  - object_list   QuerySet with the looks                                #}
+{#                                                                         #}
+<ul class="looks wide">
+{% for object in object_list %}
+    <li>
+        {% include 'apparel/fragments/look_wide.html' %}
+    </li>
+{% endfor %}
+</ul>
+<div class="pagination">
+    {% include 'apparel/fragments/pagination_simple.html' %}
+</div>

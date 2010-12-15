@@ -8,17 +8,8 @@
         &nbsp;
     </div>
     <div id="content">
-        <h2>{% trans "Latest Looks" %}</h2>
-        <ul class="looks wide">
-        {% for object in object_list %}
-            <li>
-                {% include 'apparel/fragments/look_wide.html' %}
-            </li>
-        {% endfor %}
-        </ul>
-        <div class="pagination">
-            {% include 'apparel/fragments/pagination_simple.html' %}
-        </div>
+        <h2>{% trans "Latest looks" %}</h2>
+        {% include 'apparel/fragments/looks_middle_column.html' %}
     </div>
     <div class="sidebar last">
         <h2>{% trans "Popular looks" %}</h2>
