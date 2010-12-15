@@ -468,7 +468,6 @@ div#product-list, .product-list
       width: $large_width + 1
       ul
         +clearfix
-        overflow: visible
         li
           +product_list_item
 
@@ -1086,12 +1085,13 @@ body.profile
           border-right-color: #ababab
           border-left-color: #ababab
         &.profile-image
+          border-right: none
           padding: 0
           img
             height: 30px
             width: 30px
         &.profile-link
-          border-left: 0
+          border-left: none
           text-transform: none
   hr
     top: 16px
