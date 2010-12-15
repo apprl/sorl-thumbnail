@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.template import RequestContext
 from django.db import connection
+from django.views.generic import list_detail
 
 from apparel.decorators import seamless_request_handling
 from apparel.models import *
@@ -28,19 +29,25 @@ def profile(request):
     return render_to_response('profile/profile.html', context, context_instance=RequestContext(request))
 
 
-def looks(request):
+def looks(request, page=0):
     
     user = request.user
     
-    context = {
-        'looks': Look.objects.filter(user=user).order_by('-modified'),
-        'popular_looks': get_top_looks(user, 10)
-    }
+    queryset = Look.objects.filter(user=user).order_by('-modified')
+    popular  = get_top_looks(user, 10)
     
-    return render_to_response('profile/looks.html', context, context_instance=RequestContext(request))
-
-
-
+    return list_detail.object_list(
+        request,
+        queryset=queryset,
+        template_name='profile/looks.html',
+        paginate_by=10,
+        page=page,
+        extra_context={
+            "popular_looks": popular
+            # FIXME: Add the most used brand to display in the left column
+        }
+    )
+    
 
 def get_top_looks(user, limit=10):
     """
