@@ -1147,3 +1147,16 @@ body.profile
         .price, .sum
           background-image: none
           padding-left: 0
+
+a#create-look
+  +button(none, unquote("20px"))
+  +border-radius(unquote("2px"))
+  +highlight
+  width: $aside_width
+  background-repeat: no-repeat
+  background-position: 5px 5px
+  font-size: 10px
+  padding: 5px
+  text-align: center
+  &:hover
+    +highlight_hover
