@@ -147,7 +147,6 @@
             });
             // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
             // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
-            cloneProducts(jQuery('#product-list > ul > li > ul > li'));
             // Fixed scrolling
             //jQuery('#content').fixedscroll();
 
@@ -371,8 +370,6 @@
                 .sort(function(a, b) { return a.id > b.id ? 1 : -1 })
                 .appendTo('#product-list > ul.list');
 
-            cloneProducts(jQuery('#product-list > ul > li > ul > li'));
-            
             jQuery('#pagination').replaceWith(jQuery('#pagination', products.html));
             
             if(location.hash && location.hash != '#!') {

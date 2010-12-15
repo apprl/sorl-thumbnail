@@ -9,31 +9,6 @@ function increase_counts(counts, new_count) {
     });
 }
 
-// Clone products for hovering in browse and search results
-function cloneProducts(elements) {
-    // Add container if it's not present
-    if(jQuery('ul#hover-products').length == 0)
-        jQuery('<ul/>').attr('id', 'hover-products').appendTo('#container');
-    elements.each(function(i, ele) {
-        var $this = jQuery(ele);
-        if($this.data('clone'))
-            return;
-        var clone = $this.clone()
-            .attr('id', $this.attr('id') + '-clone')
-            .bind('mouseleave', function() { jQuery(this).hide() })
-            .appendTo('ul#hover-products');
-        $this.data('clone', clone);
-    });
-    elements.live('hover',
-        function() {
-            var $this = jQuery(this);
-            jQuery('#hover-products > li').hide();
-            $this.data('clone').css({top: $this.offset().top, left: $this.offset().left}).show();
-        },
-        function() { jQuery(this).data('clone').hide() }
-    );
-}
-
 jQuery(document).ready(function() {
     // Make all "apparel rows" scrollables
     jQuery('.row').scrollable().end();
