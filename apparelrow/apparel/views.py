@@ -273,7 +273,7 @@ def look_edit(request, slug):
         'form': form,
         'wardrobe': wardrobe,
         'templates': {
-            'product_thumb':        js_template(get_template_source('apparel/fragments/product_thumb.html'), context=context),
+            'product_thumb': js_template(get_template_source('apparel/fragments/product_thumb.html'), context=context),
         }
     }
     # FIXME: Cannot export Form objects as JSON. Fix this and remove this
@@ -285,6 +285,32 @@ def look_edit(request, slug):
         render_to_response('apparel/look_edit.html', data, context_instance=context)
     )
 
+
+@login_required
+@seamless_request_handling
+# FIXME: Require a POST to this page
+def look_create(request):
+    """
+    POST - Save changes to a look
+            - if in AJAX mode, return the look as JSON
+            - else redirect to look's edit page (unless a new image has been uploaded)
+    GET - Display create page
+            - if in AJAX mode, this won't work  
+    """
+    
+    if request.method == 'GET':
+        return render_to_response('apparel/look_create.html', {}, context_instance=RequestContext(request))
+    
+    look = Look.objects.create(
+        user=request.user, 
+        title=request.POST.get('title'),
+        description=request.POST.get('description')
+    )
+    
+    return (
+        look,
+        HttpResponseRedirect( reverse('apparel.views.look_edit', args=(look.slug,)))
+    )
 
 
 def looks():
