@@ -1,11 +1,11 @@
 import logging
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.template import RequestContext
 from django.db import connection
 from django.views.generic import list_detail
 
-from apparel.decorators import seamless_request_handling
+from apparel.decorators import get_current_user
 from apparel.models import *
 from apparel.forms import *
 from voting.models import Vote
@@ -13,28 +13,26 @@ from actstream.models import actor_stream
 
 
 
-
-def profile(request):
+@get_current_user
+def profile(request, profile):
     """
     Displays the profile page
     """
-    user = request.user
     
     context = {
-        'updates': actor_stream(user)[:10],
-        'recent_looks': Look.objects.filter(user=user).order_by('-modified')[:4],
+        "profile": profile,
+        'updates': actor_stream(profile.user)[:10],
+        'recent_looks': Look.objects.filter(user=profile.user).order_by('-modified')[:4],
         #'recent_likes': recent_likes
     }
     
     return render_to_response('profile/profile.html', context, context_instance=RequestContext(request))
 
 
-def looks(request, page=0):
-    
-    user = request.user
-    
-    queryset = Look.objects.filter(user=user).order_by('-modified')
-    popular  = get_top_looks(user, 10)
+@get_current_user
+def looks(request, profile, page=0):
+    queryset = Look.objects.filter(user=profile.user).order_by('-modified')
+    popular  = get_top_looks(profile.user, 10)
     
     return list_detail.object_list(
         request,
@@ -43,6 +41,7 @@ def looks(request, page=0):
         paginate_by=10,
         page=page,
         extra_context={
+            "profile": profile,
             "popular_looks": popular
             # FIXME: Add the most used brand to display in the left column
         }

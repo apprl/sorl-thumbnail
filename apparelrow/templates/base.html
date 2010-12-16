@@ -121,9 +121,6 @@
         </form>
         
         <ul id="nav-main">
-        <!--
-            <li><a href="/">{% trans "Home" %}</a></li>            
-        -->
         {% if user.is_authenticated %}
             <li><a href="/profile/"{% ifequal request.path "/apparel/profile/" %} class="selected"{% endifequal %}>{% trans "My Profile" %}</a></li>
         {% else %}
@@ -166,7 +163,9 @@
     <script type="text/html" id="error_dialog_template">
         <div class="dialog error">
             <h2>${ header }</h2>
-            <p>${ message }</p>
+            {% templatetag openvariable %}each(i, message) messages{% templatetag closevariable %}
+                <p>${ message }</p>
+            {% templatetag openvariable %}/each{% templatetag closevariable %}
             <div class="buttons"><button class="ok">{% trans "OK" %}</button></div>
         </div>
     </script>

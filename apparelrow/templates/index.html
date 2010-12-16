@@ -15,29 +15,61 @@
         var ANIMATION_SPEED = 1000;
         
         jQuery(document).ready(function() {
-            jQuery('.tabs').tabs('#featured-looks>ul > li', {
-                initialIndex: null,
-                effect: 'fade',
-                fadeInSpeed: ANIMATION_SPEED,
-                fadeOutSpeed: ANIMATION_SPEED,
-                rotate: true,
-                history: true
-            })
-            .data('timerImageIndex', 0)
-            .bind('onBeforeClick', function(e, idx) {
-                var tabs = jQuery('.tabs').data('tabs');
-                var tab  = tabs.getCurrentTab();
-                
-                window.clearTimeout(tab.data('tabAnimationTimer'));
-                tab.data('tabAnimationIndex', 1);
-                for(var i = 1; i <= MAX_ANIMATE; i++)
-                    tab.removeClass('tab-animation-' + i);
-            })
-            .bind('onClick', function(e, idx) {
-                animateTab();
-            })
-            .slideshow()
+            jQuery('.tabs')
+                .tabs('#featured-looks>ul > li', {
+                    initialIndex: null,
+                    effect: 'fade',
+                    fadeInSpeed: ANIMATION_SPEED,
+                    fadeOutSpeed: ANIMATION_SPEED,
+                    rotate: true,
+                    history: true
+                })
+                .data('timerImageIndex', 0)
+                .bind('onBeforeClick', function(e, idx) {
+                    var tabs = jQuery('.tabs').data('tabs');
+                    var tab  = tabs.getCurrentTab();
+                    
+                    window.clearTimeout(tab.data('tabAnimationTimer'));
+                    tab.data('tabAnimationIndex', 1);
+                    for(var i = 1; i <= MAX_ANIMATE; i++)
+                        tab.removeClass('tab-animation-' + i);
+                })
+                .bind('onClick', function(e, idx) {
+                    animateTab();
+                })
+                .slideshow()
             ;
+            
+            // var dialog;
+            jQuery('#create-look').click(function(event) {
+                if(!isAuthenticated) {
+                    jQuery('#error_dialog_template')
+                        .render({
+                            header: '{% trans "Log in" %}',
+                            messages: [
+                                '{% trans "With ApparelRow you can create Looks as a collage, tagged image or a selection of clothes. You can share the Look at your blog, Facebook page or other site." %}',
+                                '{% trans "To create a look you have you log in to your account."%}'
+                            ]
+                        })
+                        .appendTo('body')
+                        .overlay({
+                            mask: {
+                                color: '#000',
+                                loadSpeed: 200,
+                                opacity: 0.5
+                            },
+                            load: true,
+                            closeOnClick: false,
+                            close: '.ok',
+                            top: 200,
+                            onClose: function(e) { this.getTrigger().remove() }
+                        })
+                    ;
+                    return false;
+                }
+                
+                return true;
+            });
         });
         function animateTab() {
             var tabs = jQuery('.tabs').data('tabs');
@@ -53,7 +85,11 @@
                 return;
             }
             tabs.next();
-        }        
+        }
+        
+        /*
+
+        */
     </script>
 {% endblock 'extra-scripts' %}
 
