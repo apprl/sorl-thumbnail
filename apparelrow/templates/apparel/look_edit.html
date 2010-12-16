@@ -238,21 +238,6 @@ function getContextFromPane(pane) {
 }
 
 jQuery(document).ready(function() {
-        {% if not user.is_authenticated %}
-        jQuery('#error_dialog_template').render({
-            header: '{% trans "Log in" %},
-            message: '{% trans "You have to log in" %}'
-        })
-        .appendTo('body')
-        .overlay({
-            mask: {
-                color: '#000',
-                loadSpeed: 200,
-                opacity: 0.5
-            },
-            closeOnClick: false
-        });
-        {% endif %}
     look.initialize(jQuery('#photo-background > .product'));
     look.initialize(jQuery('#collage > .product'));
     look.disable(jQuery('.ui-draggable'));
