@@ -75,6 +75,12 @@ jQuery(document).ready(function() {
         jQuery('input[type=text]', jQuery(this).closest('.upload-field')).val(this.value);
     });
     
+    /*jQuery('.dialog .buttons>.ok').live('click', function(e) {
+        // FIXME: Remove shade and stuff
+        jQuery(this).closest('.dialog').remove();
+    });
+    */
+    
 });
 
 
