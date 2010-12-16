@@ -160,6 +160,14 @@
     </script>
 {% endfor %}
 
+    <script type="text/html" id="error_dialog_template">
+        <div class="dialog error">
+            <h2>${ header }</h2>
+            <p>${ message }</p>
+            <div class="buttons"><button class="ok">{% trans "OK" %}</button></div>
+        </div>
+    </script>
+
     <script type="text/html" id="manufacturer_search_template">
         <a href="/browse/?1:m.id:in=${ object.id}" id="manufacturer-${ object.id }">${ object.name }</a>
     </script>
