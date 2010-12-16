@@ -16,6 +16,8 @@
     <script type="text/javascript">
         google.load("jquery", "1.4.2");
         google.load("jqueryui", "1.8.0");
+        
+        var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
     </script>
     <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/compiled/jquery.js"></script>
