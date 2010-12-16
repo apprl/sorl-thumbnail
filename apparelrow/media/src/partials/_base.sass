@@ -272,3 +272,21 @@ $color_height: 19px
           background-position: $x $y_selected
         &.filtered
           background-position: $x $y_filtered
+ 
+=dialog
+  +box-shadow
+  overflow: hidden
+  &.error
+    h2
+      padding-left: 30px
+      background: transparent image_url('cancel.png') no-repeat scroll 10px center
+  h2
+    +box-shadow
+    line-height: 44px
+    padding: 0 10px
+  p
+    padding: 10px
+  .buttons
+    +border(top)
+    height: 32px
+    margin-top: -4px
