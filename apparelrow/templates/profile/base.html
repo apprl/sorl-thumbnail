@@ -6,10 +6,10 @@
     <div id="profile-nav">
         <ul>
             <li>
-                <a href="/profile/" class="first profile-image"><img src="{{ user.get_profile.avatar }}" class="avatar"></a>
+                <a href="{{ profile.get_absolute_url }}" class="first profile-image"><img src="{{ profile.avatar }}" class="avatar"></a>
             </li>
             <li>
-                <a href="/profile/" class="profile-link">{{ user.get_profile.display_name }}</a>
+                <a href="{{ profile.get_absolute_url }}" class="profile-link">{{ profile.display_name }}</a>
             </li>
             {% include 'profile/fragments/menu_items.html' %}
         </ul>

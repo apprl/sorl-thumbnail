@@ -51,7 +51,7 @@ class ApparelProfile(models.Model):
             return u'%s %s' % (self.user.first_name, self.user.last_name)
          
         return u'%s' % self.user
-    
+
     @property
     def avatar(self):
         # FIXME: Scale to 30x30
@@ -80,6 +80,10 @@ class ApparelProfile(models.Model):
         except FacebookProfile.DoesNotExist:
             return None
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('profile.views.profile', [str(self.user.username)])
+    
     def __unicode__(self):
         return self.display_name
 

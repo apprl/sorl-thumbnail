@@ -1,7 +1,7 @@
 {% load i18n %}
 <li>
-    <a{% ifequal request.path "/profile/wardrobe/" %} class="selected"{% endifequal %} href="/profile/wardrobe/">{% trans "Wardrobe" %}</a>
+    <a{% ifequal request.path profile.get_absolute_url|add:"wardrobe/" %} class="selected"{% endifequal %} href="{{ profile.get_absolute_url }}wardrobe/">{% trans "Wardrobe" %}</a>
 </li>
 <li>
-    <a class="last{% ifequal request.path "/profile/looks/" %} selected{% endifequal %}" href="/profile/looks/">{% trans "Looks" %}</a>
+    <a class="last{% ifequal request.path profile.get_absolute_url|add:"looks/" %} selected{% endifequal %}" href="{{ profile.get_absolute_url }}looks/">{% trans "Looks" %}</a>
 </li>

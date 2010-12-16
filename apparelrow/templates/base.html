@@ -121,9 +121,6 @@
         </form>
         
         <ul id="nav-main">
-        <!--
-            <li><a href="/">{% trans "Home" %}</a></li>            
-        -->
         {% if user.is_authenticated %}
             <li><a href="/profile/"{% ifequal request.path "/apparel/profile/" %} class="selected"{% endifequal %}>{% trans "My Profile" %}</a></li>
         {% else %}
