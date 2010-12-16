@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block extra-title %}{% trans "Create new look | " %}{% endblock %}
+
+{% block 'extra-scripts' %}{% endblock 'extra-scripts' %}
+
+{% block body-classes %}create-look one-column{% endblock %}
+
+{% block body %}
+<div id="content">
+    <h2>{% trans "Create a new look" %}</h2>
+    <form action="{{ request.path }}" method="post" class="standard-form">
+        {% csrf_token %}
+        <ul>
+        <li>
+            <label for="id_title">{% trans "Title" %}</label>
+            <input type="text" name="title" id="id_title">
+        </li>
+        <li>
+            <label for="id_description">{% trans "Description (optional):" %}</label>
+            <textarea name="description" cols="40" rows="10" id="id_description" style="overflow: hidden; display: block;"></textarea>
+        </li>
+        <li>
+            <button type="submit">{% trans "Create" %}</button>
+        </li>
+    </ul>    
+    </form>
+</div>
+{% endblock body %}

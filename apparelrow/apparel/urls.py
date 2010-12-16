@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     (r'^wardrobe/add_product/$', 'apparel.views.add_to_wardrobe'),
 
     (r'^looks/$', 'apparel.views.look_list'),
+    (r'^looks/create/$', 'apparel.views.look_create'),
     (r'^looks/save_component/$', 'apparel.views.save_look_component'),
     (r'^looks/delete_component/$', 'apparel.views.delete_look_component'),
     (r'^looks/add_product/$', 'apparel.views.add_to_look'),
