@@ -101,17 +101,17 @@ button
   float: right
   text-decoration: none
   padding-left: 20px
-  background: transparent url("../images/logout.png") fixed no-repeat left center
+  background: transparent image_url("logout.png") fixed no-repeat left center
 
 #account-dialogue
   position: absolute
-  width: 482px
+  width: 454px
   height: 36px
   padding: 3px 0
   top: 37px
   left: 200px
   display: none
-  background: transparent url("../images/login-bg.png") scroll no-repeat left center
+  background: transparent image_url("login-bg.png") scroll no-repeat left center
 
 #login-forgot-password
   color: #fb9292
@@ -125,13 +125,14 @@ button
     font-style: italic
   form
     margin: 0
-    margin: auto 1em
+    padding: 0 1px 0 3px
 
 #login-username, #login-password, #login-password-placeholder
-  background: transparent image_url("../images/login-text-bg.png") scroll no-repeat left center
-  width: 108px
+  background: transparent image_url("login-text-bg.png") scroll no-repeat left center
+  color: $easier_color
+  width: 176px
   height: 24px
-  margin: 0
+  margin: 0 0 0 -2px
   border: none
   vertical-align: middle
   padding: 8px 16px
@@ -141,7 +142,9 @@ button
 #login-submit
   width: 40px
   height: 40px
-  background: transparent url(../images/login-button.png) scroll no-repeat left center
+  padding: 0
+  margin: 0 0 0 -2px
+  background: transparent image_url("login-button.png") scroll no-repeat center center
   text-indent: -10000em
   border: none
   float: left
@@ -150,10 +153,20 @@ button
 #login-password
   display: none
 
-#account-dialogue .connect-button
-  float: left
-  margin-right: 2em
-  margin-top: 10px
+.connect-button
+  display: inline
+  position: relative
+  top: 4px
+  left: -16px
+
+#login-more
+  text-align: center
+  color: $easier_color
+  a
+    color: $easier_color
+  .connect-button
+    top: 5px
+    left: 0
 
 #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
   +box

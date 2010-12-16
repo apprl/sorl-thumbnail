@@ -25,12 +25,15 @@
     <script type="text/javascript">
         
         jQuery(document).ready(function() {
-             jQuery('#login').click(function() {
+             function toggleLoginDialog() {
                 jQuery('#nav-main').animate({ opacity: 'toggle' }, 'fast');
                 jQuery('#account-dialogue').animate({ opacity: 'toggle' }, 'fast');
                 
                 return false;
-            });
+            };
+
+            jQuery('#login').click(toggleLoginDialog);
+            jQuery('#account-dialogue .cancel').click(toggleLoginDialog);
             
             /* Toggle text field texts */
             jQuery('#account-dialogue input[type=text]').each(function() {
@@ -97,9 +100,9 @@
                     {% endifequal %}
                 </div>
             </form>
-            {# Facebook connect button #}
-            {% facebook_button %}
-            {% facebook_js %}
+            <div id="login-more">
+                <a href="{% url registration_register %}">{% trans "Create account" %}</a> | <a href="{% url auth_password_reset %}">{% trans "Forgot password" %}</a> | {% facebook_button %} | <a href="{{ request.url }}" class="cancel">{% trans "Cancel" %}</a>
+            </div>
         </div>
         <form action="/apparel/search" method="get" onsubmit="return false" id="search">
             <input type="text" name="s" />
@@ -124,8 +127,13 @@
         {% if user.is_authenticated %}
             <li><a href="/profile/"{% ifequal request.path "/apparel/profile/" %} class="selected"{% endifequal %}>{% trans "My Profile" %}</a></li>
         {% else %}
-            <li><a href="/accounts/login/" id="login">{% trans "Login" %}</a></li>
-            <li><a href="/accounts/register/" id="login">{% trans "Sign up" %}</a></li>
+            <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
+            <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>
+            <li>
+            {# Facebook connect button #}
+            {% facebook_button %}
+            {% facebook_js %}
+            </li>
         {% endif %}
         </ul>
     </div>
