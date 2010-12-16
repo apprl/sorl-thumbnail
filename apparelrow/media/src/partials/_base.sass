@@ -283,10 +283,11 @@ $color_height: 19px
   &.error
     h2
       padding-left: 30px
-      background: transparent image_url('cancel.png') no-repeat scroll 10px center
+      background: transparent image_url('warn.png') no-repeat scroll 10px center
   h2
     +box-shadow
     line-height: 44px
+    margin-top: 0
     padding: 0 10px
   p
     padding: 10px
@@ -294,3 +295,10 @@ $color_height: 19px
     +border(top)
     height: 32px
     margin-top: -4px
+    padding: 0 10px
+    button
+      +button
+      height: $button_height
+      margin-top: -5px
+      float: right
+
