@@ -1,43 +1,10 @@
-# - Vendor -
 
+# - Granpa -
 - model: apparel.vendor
   pk: 1
   fields:
     name: Grandpa
     homepage: http://www.grandpa.se
-
-- model: apparel.vendor
-  pk: 2
-  fields:
-    name: Fashionisland
-    homepage: http://www.fashionisland.se/
-
-- model: apparel.vendor
-  pk: 3
-  fields:
-    name: Nelly
-    homepage: http://nelly.com/
-
-- model: apparel.vendor
-  pk: 4
-  fields:
-    name: Fifth Avenue
-    homepage: http://shoerepair.se/
-
-- model: apparel.vendor
-  pk: 5
-  fields:
-    name: YOOX
-    homepage: http://www.yoox.com/
-
-- model: apparel.vendor
-  pk: 6
-  fields:
-    name: Shopbop
-    homepage: http://shopbop.com
-
-
-# - VendorFeed -
 
 - model: importer.vendorfeed
   pk: 1
@@ -47,6 +14,14 @@
     provider_class: grandpa
     url: http://www.grandpa.se/system/tools/kelkoo/product-feed.asp
 
+
+# - Fashionisland -
+- model: apparel.vendor
+  pk: 2
+  fields:
+    name: Fashionisland
+    homepage: http://www.fashionisland.se/
+
 - model: importer.vendorfeed
   pk: 2
   fields:
@@ -54,6 +29,14 @@
     name: fashionisland
     provider_class: kelkoo
     url: http://www.fashionisland.se/system/tools/dbexport/kelkoo.asp
+
+
+# - Nelly -
+- model: apparel.vendor
+  pk: 3
+  fields:
+    name: Nelly
+    homepage: http://nelly.com/
 
 - model: importer.vendorfeed
   pk: 3
@@ -63,6 +46,14 @@
     provider_class: tradedoubler
     url: http://pf.tradedoubler.com/export/export?myFeed=12822969211771212&myFormat=12649335281771212
 
+
+# - Fifth Avenue -
+- model: apparel.vendor
+  pk: 4
+  fields:
+    name: Fifth Avenue
+    homepage: http://shoerepair.se/
+
 - model: importer.vendorfeed
   pk: 4
   fields:
@@ -70,6 +61,14 @@
     name: fifthavenue
     provider_class: apparel-xml
     url: http://fifthfeed.www1.panagora.se/feed.asp
+
+
+# - YOOX -
+- model: apparel.vendor
+  pk: 5
+  fields:
+    name: YOOX
+    homepage: http://www.yoox.com/
 
 - model: importer.vendorfeed
   pk: 5
@@ -82,6 +81,14 @@
     password: MrpG7TgL
     decompress: gzip
 
+
+# - Shopbop -
+- model: apparel.vendor
+  pk: 6
+  fields:
+    name: Shopbop
+    homepage: http://shopbop.com
+
 - model: importer.vendorfeed
   pk: 6
   fields:
@@ -92,5 +99,88 @@
     username: 3131851
     password: MrpG7TgL
     decompress: gzip
+
+
+# - Luisaviaroma -
+- model: apparel.vendor
+  pk: 7
+  fields:
+    name: Luisaviaroma
+    homepage: http://www.luisaviaroma.com/
+
+- model: importer.vendorfeed
+  pk: 7
+  fields:
+    vendor: 7
+    name: luisaviaroma
+    provider_class: cj
+    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71252/LUISAVIAROMA_Affiliate_Program-Complete_Catalog.txt.gz
+    username: 3131851
+    password: MrpG7TgL
+    decompress: gzip
+
+
+# - La Senza -
+- model: apparel.vendor
+  pk: 8
+  fields:
+    name: La Senza
+    homepage: http://www.lasenza.co.uk
+
+- model: importer.vendorfeed
+  pk: 8
+  fields:
+    vendor: 8
+    name: lasenza
+    provider_class: tradedoubler
+    url: http://pf.tradedoubler.com/export/export?myFeed=12919846971897050&myFormat=12919846971897050
+
+
+# - Happy Socks -
+- model: apparel.vendor
+  pk: 9
+  fields:
+    name: Happy Socks
+    homepage: http://www.happysocks.se
+
+- model: importer.vendorfeed
+  pk: 9
+  fields:
+    vendor: 9
+    name: cj_happysocks
+    provider_class: cj
+    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71197/Happy_Socks-SEK_Product_Catalog.txt.gz
+
+
+# - Stayhard -
+- model: apparel.vendor
+  pk: 10
+  fields:
+    name: Stayhard
+    homepage: http://stayhard.se
+
+- model: importer.vendorfeed
+  pk: 10
+  fields:
+    vendor: 10
+    name: stayhard
+    provider_class: cj
+    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71193/Stayhard-Produkter.txt.gz
+
+
+# - Frank Dandy -
+- model: apparel.vendor
+  pk: 11
+  fields:
+    name: Frank Dandy
+    homepage: http://www.frankdandy.com
+
+- model: importer.vendorfeed
+  pk: 11
+  fields:
+    vendor: 11
+    name: cj_frankdandy
+    provider_class: cj
+    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71195/Frank_Dandy-SEK.txt.gz
 
 
