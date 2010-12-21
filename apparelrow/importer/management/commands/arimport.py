@@ -1,5 +1,4 @@
-import re, datetime
-#from datetime import date
+import re, datetime, sys
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
@@ -92,6 +91,7 @@ class Command(BaseCommand):
             log.messages.create(status='info', message='Processes halted by user')
             log.status = 'failed' 
             log.save()
+            sys.exit(1)
         
         print "Import finished: %s\n" % feed.latest_import_log.status
     
