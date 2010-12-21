@@ -2,6 +2,8 @@ import re, datetime, sys
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
+
 from importer.models import VendorFeed, ImportLog
 
 class Command(BaseCommand):
@@ -32,10 +34,22 @@ class Command(BaseCommand):
             help='Import all configured feeds',
             default=False
         ),
+        make_option('--debug',
+            action='store_true',
+            dest='debug',
+            help='Force run when settings variable DEBUG is True',
+            default=False
+        ),
     )
     
     def handle(self, *args, **options):
         
+        if settings.DEBUG:
+            if not options['debug']:
+                raise CommandError('Settings variable DEBUG is True. Override with --debug (Be warned: This is will use a lot of memory)')
+            
+            print "WARNING: Settings variable DEBUG is True. This is likely to cause memory related errors\n"
+                    
         if options['list']:
             return self.list_feeds()
         

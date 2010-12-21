@@ -121,15 +121,17 @@ class Provider(object):
         Imports the given record using the API. The record is first mapped
         using the configured data mapper.
         """
-        p = None
+        None
         try:
             prod_id = record['product']['product-id']
         except KeyError:
             prod_id = '[unknown]'
                 
         try:
-            d = self.mapper(self, record).translate()
-            p = API(import_log=self.feed.latest_import_log).import_dataset( d )
+            d   = self.mapper(self, record).translate()
+            api = API(import_log=self.feed.latest_import_log)
+            api.import_dataset( d )
+            del api
         
         except (SkipProduct, IncompleteDataSet) as e:
             self.feed.latest_import_log.messages.create(

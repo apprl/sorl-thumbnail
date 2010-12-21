@@ -109,6 +109,7 @@ class API(object):
             raise ImporterError('Could not insert product: %s' % e)
         
         logger.info('Imported %s' % self.product)
+        
         return self.product
     
     
