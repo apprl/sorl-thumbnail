@@ -10,7 +10,6 @@ from beta.models import *
 def unlock(request):
     if request.method == 'POST':
         try:
-            import pdb; pdb.set_trace()
             invitee = Invitee.objects.get(email=request.POST.get('email'), invite__code=request.POST.get('code'))
             invitee.seen = datetime.utcnow()
             invitee.save() # Update seen attribute
