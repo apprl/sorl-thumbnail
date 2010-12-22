@@ -1,0 +1,18 @@
+{% load i18n %}
+<!doctype html>
+<html lang="{{ lang }}">
+    <head>
+        <title>Beta | Apparel Row</title>
+        <link rel="stylesheet" href="{{ MEDIA_URL }}/styles/beta.css" type="text/css" media="screen, projection">
+    </head>
+    <body>
+        <form method="POST" action="{% url beta.views.unlock %}">
+            <h1>{% trans "Welcome to ApparelRow beta" %}</h1>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="/">
+            <label>{% trans "E-mail" %}<input type="text" name="email"></label>
+            <label>{% trans "Invite code" %}<input type="text" name="code"></label>
+            <button>{% trans "Unlock beta" %}</button>
+        </form>
+    </body>
+</html>
