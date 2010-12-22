@@ -118,6 +118,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'beta.middleware.BetaMiddleware',
     'socialregistration.middleware.FacebookMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
@@ -183,6 +184,7 @@ INSTALLED_APPS = (
     'compress',
 
     'apparel',
+    'beta',
     'scale',
     'watcher',
     'profile',

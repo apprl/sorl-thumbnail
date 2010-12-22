@@ -41,6 +41,7 @@ urlpatterns = patterns('',
     #(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
     
     (r'', include('apparel.urls')),
+    (r'^beta/', include('beta.urls')),
 )
 
 
