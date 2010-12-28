@@ -2,7 +2,7 @@
 {% load cache %}
 {% load apparel_extras %}
 
-{% cache CACHE_TIMEOUT look_small object.id LANGUAGE_CODE %}
+{% cache CACHE_TIMEOUT look_wide object.id LANGUAGE_CODE %}
 <a title="{{ object.title }}" href="{{ object.get_absolute_url }}">
     {% include 'apparel/fragments/look_small.html' %}
     <span class="inline-date">{{ object.modified|since }}</span>
