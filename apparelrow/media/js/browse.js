@@ -173,7 +173,7 @@ jQuery(document).ready(function() {
         // FIXME: Move out logic to section that handles page-swapping
         
         var link = jQuery(this);
-        var page = parseInt(link.attr('href').split('=')[1]);
+        var page = parseInt(link.attr('href').split('=')[1], 10);
         
         if(page == 0 || page > pagination.data.paginator.num_pages)
             return false;
@@ -184,8 +184,6 @@ jQuery(document).ready(function() {
                 jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 400);
             });
         } else {
-            pagination.recalculate(page);
-            pagination.render();
             jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 400);
         }
         return false;
@@ -194,13 +192,15 @@ jQuery(document).ready(function() {
         items: 'ul.list',
         onBeforeSeek: function(event, index) {
             var target = jQuery('#product-list > ul.list > li:eq(' + index + ')');
-            pagination.data.number = target.attr('id').split('-')[1];
+            var pageNum = parseInt(target.attr('id').split('-')[1], 10);
             if(target.is(':empty')) {
-                filter(getQuery({page: pagination.data.number}), function(response) {
+                filter(getQuery({page: pageNum}), function(response) {
                     renderPage(response);
+                    pagination.recalculate(pageNum);
+                    pagination.render();
                 });
             } else {
-                pagination.recalculate(pagination.data.number);
+                pagination.recalculate(pageNum);
                 pagination.render();
             }
         }
@@ -318,8 +318,6 @@ function doFilter(query, callback) {
     jQuery.getJSON(browse_url, query, callback || renderProducts);
 }
 function renderPage(products) {
-    pagination.data = products;
-    pagination.render();
 
     // Find the pages in the response
     var pages = jQuery('ul.list > li', products.html)
