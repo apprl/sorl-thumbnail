@@ -250,6 +250,10 @@ jQuery(document).ready(function() {
             jQuery('#look-title button').text(buttonTexts[index]);
         }
     });
+    jQuery('#wardrobe-title').click(function() {
+        jQuery('#wardrobe-contents').slideToggle('fast');
+        return false;
+    });
     jQuery('#wardrobe-contents li').draggable({
         'zIndex': 100,
         'disabled': false,

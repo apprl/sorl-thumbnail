@@ -314,10 +314,12 @@ body.look
         +highlight_hover
 
 #wardrobe
-  margin: 0 -21px 0 -23px
   clear: both
   position: fixed
   bottom: 0px
+  left: 0px
+  width: 100%
+  z-index: 50
 
 #wardrobe-title
   +border(all)
@@ -332,6 +334,15 @@ body.look
   padding: 10px 8px
   background: transparent image_url(unquote("wardrobe-bg.png")) scroll repeat-x center center
   +row($content_width + $gutter_width - 12)
+  .prev
+    position: absolute
+    left: 8px
+  .next
+    position: absolute
+    right: 8px
+  .row
+    width: 98%
+    margin: 0 19px
   li
     a
       cursor: move
