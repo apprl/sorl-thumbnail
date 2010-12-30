@@ -56,7 +56,7 @@ class ApparelProfile(models.Model):
     def avatar(self):
         # FIXME: Scale to 30x30
         if self.image:
-            return self.image
+            return '/scale/52%s' % self.image
 
         if self.facebook_profile:
             return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_profile.uid

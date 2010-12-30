@@ -47,7 +47,7 @@
 
 {% block body %}
 <div id="look-header">
-    <img src="/scale/52{{ object.user.get_profile.avatar }}" class="profile-image" />
+    <img src="{{ object.user.get_profile.avatar }}" class="profile-image" />
     <div>
         <h1>
             {{ object.title }}
