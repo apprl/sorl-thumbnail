@@ -27,6 +27,34 @@ BROWSE_PAGE_MAX  = 100
 
 
 
+def _to_int(s):
+    try:
+        return int(s)
+    except ValueError:
+        return None
+    
+# Used to collect the current query from the command line to enable options to
+# be pre-checked. The conversion from string to int for id-fields is required
+# to check wether they exist using the in-operator
+def update_with_selected(context, request): 
+    qp   = QueryParser(Product)
+    expr = {}
+    for key, value in request.GET.items():
+        try:
+            label, short, field, operator = qp.parse_key(key)
+        except InvalidExpression:
+            continue
+        
+        expr['%s.%s' % (short, field)] = qp.prepare_op_val(operator, value)[1]
+    
+    context.update(
+        selected_categories = filter(None, map(_to_int, expr.get('c.id') or [])),
+        selected_colors     = expr.get('o.color'),
+        selected_brands     = filter(None, map(_to_int, expr.get('m.id') or [])),
+        selected_price      = expr.get('vp.price'),
+        selected_gender     = expr.get('p.gender'),
+    )
+
 def search(request, model):
     """
     AJAX-only search results. Results are paginated
@@ -86,35 +114,8 @@ def browse(request):
         pagination = pagination,
     )
     
-    # FIXME: This could perhaps be moved out to a routine on its own. It is used
-    # to collect the current query from the command line to enable options to
-    # be pre-checked. The conversion from string to int for id-fields is required
-    # to check wether they exist using the in-operator
-    
-    def _to_int(s):
-        try:
-            return int(s)
-        except ValueError:
-            return None
-    
-    qp   = QueryParser(Product)
-    expr = {}
-    for key, value in request.GET.items():
-        try:
-            label, short, field, operator = qp.parse_key(key)
-        except InvalidExpression:
-            continue
-        
-        expr['%s.%s' % (short, field)] = qp.prepare_op_val(operator, value)[1]
-    
-    result.update(
-        selected_categories = filter(None, map(_to_int, expr.get('c.id') or [])),
-        selected_colors     = expr.get('o.color'),
-        selected_brands     = filter(None, map(_to_int, expr.get('m.id') or [])),
-        selected_price      = expr.get('vp.price'),
-        selected_gender     = expr.get('p.gender'),
-    )
-    
+    update_with_selected(result, request)
+
     return render_to_response('apparel/browse.html', result, context_instance=RequestContext(request))
 
 def browse_ajax_response(request, result, pages, pagination):
@@ -647,6 +648,8 @@ def index(request):
     ctx['categories']     = ctx['categories'].filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
     
+    update_with_selected(ctx, request)
+
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 
 def get_query_and_page(request, override_size=None):
