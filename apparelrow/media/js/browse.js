@@ -324,10 +324,22 @@ function renderPage(products) {
         // Append each page to appropriate place
         .each(function(i, page) {
             var existing = jQuery('#' + this.id);
-            if(existing.length == 0)
-                jQuery('#product-list > ul.list').append(page); 
-            else
+            if(existing.length == 0) {
+                var existingPages = jQuery('#product-list > ul.list > li');
+                var nextPage = existingPages.filter(function(i) { return this.id > page.id }).first();
+                // There are pages that should be after this one in the list
+                if(nextPage.length == 1) {
+                    nextPage.before(page);
+                // This should be the last page in the list
+                } else if(existingPages.length > 0) {
+                    existingPages.last().after(page);
+                // There are no other pages
+                } else {
+                    jQuery('#product-list > ul.list').append(page);
+                }
+            } else {
                 existing.replaceWith(page);
+            }
         });
 
     if(location.hash && location.hash != '#!') {
