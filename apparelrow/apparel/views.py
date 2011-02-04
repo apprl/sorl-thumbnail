@@ -92,14 +92,7 @@ def browse(request):
         'right': right
     }
 
-    pages = []
-    for p in range(1, paged_result.paginator.num_pages + 1):
-        if p == paged_result.number:
-            pages.append(paged_result)
-        elif next_page and p == next_page.number:
-            pages.append(next_page)
-        else:
-            pages.append({'number': p})
+    pages = (paged_result, next_page,)
 
     if request.is_ajax(): return browse_ajax_response(request, paged_result, (paged_result, next_page,), pagination)
     

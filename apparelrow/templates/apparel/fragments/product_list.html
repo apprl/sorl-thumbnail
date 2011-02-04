@@ -2,17 +2,13 @@
 <div id="product-list" class="product-list">
     <ul class="list">
         {% for page in pages %}
-            {% if page %}
             <li id="page-{{ page.number }}">
-                {% if page.object_list %}
                 <ul>
                     {% for product in page.object_list %}
                         {% include 'apparel/fragments/product_small.html' %}
                     {% endfor %}
                 </ul>
-                {% endif %}
             </li>
-            {% endif %}
         {% endfor %}
         {% comment %}
         FIXME: Fix this so it works with ajax fetched stuff and looks nice

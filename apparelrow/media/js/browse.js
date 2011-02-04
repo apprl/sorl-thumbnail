@@ -322,7 +322,13 @@ function renderPage(products) {
     // Find the pages in the response
     var pages = jQuery('ul.list > li', products.html)
         // Append each page to appropriate place
-        .each(function(i, page) { jQuery('#' + this.id).append(page.innerHTML) });
+        .each(function(i, page) {
+            var existing = jQuery('#' + this.id);
+            if(existing.length == 0)
+                jQuery('#product-list > ul.list').append(page); 
+            else
+                existing.replaceWith(page);
+        });
 
     if(location.hash && location.hash != '#!') {
         jQuery('#reset').show()
