@@ -4,7 +4,7 @@
 {% block 'extra-scripts' %}
     {% include 'apparel/fragments/browse_scripts.html' %}
     <script type="text/javascript">
-        var browse_url = '{% url apparel.views.wardrobe %}';
+        var browse_url = '{% url apparel.views.wardrobe user.get_profile %}';
     </script>
 {% endblock 'extra-scripts' %}
 
