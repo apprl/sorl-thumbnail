@@ -16,7 +16,7 @@ from hanssonlarsson.django.exporter import json
 from recommender.models import Recommender
 from voting.models import Vote
 
-from apparel.decorators import seamless_request_handling
+from apparel.decorators import seamless_request_handling, get_current_user
 from apparel.manager import QueryParser, InvalidExpression
 from apparel.models import *
 from apparel.forms import *
@@ -74,10 +74,15 @@ def search(request, model):
         mimetype='text/json'
     )
 
-def browse(request):
+@get_current_user
+def wardrobe(request, profile):
+    return browse(request, template='profile/wardrobe.html', wardrobe__user=profile.user)
+
+def browse(request, template='apparel/browse.html', **kwargs):
     paged_result = get_paged_search_result(request, 
         class_name='Product', 
-        page_size=BROWSE_PAGE_SIZE
+        page_size=BROWSE_PAGE_SIZE,
+        **kwargs
     )
     
     try:
@@ -109,7 +114,7 @@ def browse(request):
     
     update_with_selected(result, request)
 
-    return render_to_response('apparel/browse.html', result, context_instance=RequestContext(request))
+    return render_to_response(template, result, context_instance=RequestContext(request))
 
 def browse_ajax_response(request, result, pages, pagination):
     """
@@ -541,7 +546,7 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
 
     return left, mid, right
 
-def get_paged_search_result(request, class_name=None, page_size=None):
+def get_paged_search_result(request, class_name=None, page_size=None, **kwargs):
     try:
         model_class = eval(class_name)
     except TypeError:
@@ -551,7 +556,7 @@ def get_paged_search_result(request, class_name=None, page_size=None):
     
     query, page, size = get_query_and_page(request, page_size)
         
-    paginator = Paginator(model_class.objects.search(query), size)
+    paginator = Paginator(model_class.objects.search(query).filter(**kwargs), size)
     
     try:
         paged_result = paginator.page(page)

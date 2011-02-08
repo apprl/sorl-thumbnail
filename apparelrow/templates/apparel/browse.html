@@ -17,42 +17,11 @@
     </style>
 {% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
-    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery/jquery.history.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery/jquery.fixedscroll.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}/js/filtersetup.js"></script>
+    {% include 'apparel/fragments/browse_scripts.html' %}
     <script type="text/javascript">
-        /* This variable contains the pagination data. It needs to be populated 
-           with before rendering/recalculation may happen. This is the structure:
-            - next_page_number      Integer or null if on last page
-            - previous_page_number  Integer or null if on first page
-            - pagination
-                left                Array with page numbers on the left of ... null if there is nothing to display
-                mid                 Array with page numbers on in the middle of the ...
-                right               Array with page numbers on the right of ... null if there is nothing to display
-            - paginator
-                count               ?
-                num_pages           Total number of pages
-            - number                Current page number
-        */
-        var pagination_data = {
-            pagination: {{ pagination|export_as_json}},
-            paginator: {
-                {# The Pagination object is not currently exportable... #}
-                count: {{ pages.0.paginator.count }},
-                num_pages: {{ pages.0.paginator.num_pages }}
-            },
-            number: {{ pages.0.number }}
-        };
-
-        var pricerange = {
-            min: {{ pricerange.min }},
-            max: {{ pricerange.max }}
-        };
-
         var browse_url = '{% url apparel.views.browse %}';
-
     </script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}/js/browse.js"></script>
+
 {% endblock 'extra-scripts' %}
 
 {% block body-classes %}two-columns{% endblock body-classes %}
