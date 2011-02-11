@@ -24,7 +24,6 @@ urlpatterns = patterns('',
     # FIXME: Is it possible to include this in some other way? All I want to do
     # is to pass the next_page attribute (and not do it via query)
     (r'^accounts/',         include('registration.backends.default.urls')),
-    (r'^socialregistration/',  include('socialregistration.urls')),    
     
     (r'^profile/', include('profile.urls')),
     (r'^watcher/', include('watcher.urls')),

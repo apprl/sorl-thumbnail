@@ -118,15 +118,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_facebook.middleware.FacebookMiddleware',
     'beta.middleware.BetaMiddleware',
-    'socialregistration.middleware.FacebookMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'trackback.middleware.PingbackUrlInjectionMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
-    'socialregistration.auth.FacebookAuth',
+    'django_facebook.auth.FacebookBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -162,7 +162,7 @@ INSTALLED_APPS = (
     
     # external
     'notification', # must be first
-    'socialregistration',
+    'django_facebook',
     'registration',
 #    'mailer',          # FIXME: Includes e-mail manager, set this up later
     'announcements',
@@ -253,9 +253,12 @@ LOGIN_REDIRECT_URL = "/"
 AUTH_PROFILE_MODULE='profile.ApparelProfile'
 
 # FACEBOOK CONFIGURATION
+FACEBOOK_APP_ID = '177090790853'
 FACEBOOK_API_KEY = '44d47ef3e7285cace9a4c7c88f645742'
 FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
-SOCIALREGISTRATION_GENERATE_USERNAME = True
+
+FACEBOOK_PREPOPULATE_USER_DATA = True
+FACEBOOK_EXTENDED_PERMISSIONS = []
 
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587

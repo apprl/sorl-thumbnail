@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.db.models.signals import post_save
-from socialregistration.models import FacebookProfile
+from django_facebook.models import FacebookProfile
 import settings
 
 from voting.models import Vote
@@ -14,11 +14,6 @@ import datetime, mptt
 
 # FIXME: Move to Django settings directory
 PROFILE_BASE      = 'static/profile'
-
-# 
-# FIXME: Let the facebook profile automatically update this object on authentication
-# rather than constantly checking these properties
-# 
 
 class ApparelProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
@@ -92,4 +87,12 @@ def create_profile(signal, instance, **kwargs):
         p = ApparelProfile(user=instance)
         p.save()
 
+def create_profile_from_facebook(signal, instance, **kwargs):
+    if kwargs['created']:
+        p = ApparelProfile(user=instance.user)
+        p.name = instance.name
+        p.about = instance.bio
+        p.save()
+
 post_save.connect(create_profile, sender=User)
+post_save.connect(create_profile_from_facebook, sender=FacebookProfile)
