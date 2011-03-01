@@ -96,10 +96,10 @@
 {% block body-classes %}three-columns{% endblock body-classes %}
 
 {% block body %}
+    {% cache CACHE_TIMEOUT index LANGUAGE_CODE %}
     <div class="sidebar">
         {% include 'apparel/fragments/product_menu.html' %}
     </div>
-    {% cache CACHE_TIMEOUT index LANGUAGE_CODE %}
     <div id="content">
         <h2>{% trans "News" %}</h2>
         <div id="featured-looks">

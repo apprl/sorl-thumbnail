@@ -28,7 +28,9 @@
 
 {% block body %}
         <div class="sidebar">
+        {% cache CACHE_TIMEOUT filter_menu LANGUAGE_CODE %}
             {% include 'apparel/fragments/product_menu_browse.html' %}
+        {% endcache %}
         </div>
         <div id="content">
             <h2 id="product-count">
