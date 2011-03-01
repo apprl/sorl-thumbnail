@@ -408,13 +408,10 @@ function renderProducts(products) {
             products.paginator.count
         ), [products.paginator.count])
     );
-    // $('#product_count_template').render({ products: products }).appendTo('#product-count');
-    // FIXME: This is because we want a li place holder with correct id. We should have a nicer way to do this.
-    jQuery('#product-list > ul').empty();
-    for(var i = 1, l = products.paginator.num_pages; i <= l; i++) {
-        jQuery('#product-list > ul').append('<li id="page-' + i + '"></li>');
-    }
     renderPage(products);
+    pagination.data = products;
+    pagination.recalculate(0);
+    pagination.render();
     jQuery('#product-list').data('scrollable').begin();
     filterCriteria(products.criteria_filter);
 }
