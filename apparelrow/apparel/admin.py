@@ -14,7 +14,11 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'on_front_page',)
+    list_display = ('name', 'ancestors', 'on_front_page',)
+    
+    
+    def ancestors(self, category):
+        return ' > '.join([c.name for c in category.get_ancestors()])
 
 admin.site.register(Category, CategoryAdmin)
 
