@@ -153,7 +153,7 @@ def copy_config():
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
-        run('cd ./releases/%(release)s/apparelrow; python ./manage synccompress' % env, pty=True)
+        run('cd ./releases/%(release)s/apparelrow; python ./manage.py synccompress' % env, pty=True)
         run('cd ./media; /var/lib/gems/1.8/bin/compass compile' % env, pty=True)
         run('ln -s ../../../shared/static static', pty=True)
 
