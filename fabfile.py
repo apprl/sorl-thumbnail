@@ -85,6 +85,7 @@ def deploy(param=''):
     install_site()
     copy_bin()
     copy_config()
+    build_styles_and_scripts()
     symlink_current_release()
 #    migrate(param)
     restart_django()
@@ -148,6 +149,14 @@ def copy_config():
         run('cp -n ./releases/%(release)s/etc/* ./etc' % env, pty=True)
         run('cp -n ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
         run('cd releases/%(release)s/apparelrow; cp settings_local.py.default settings_local.py' % env, pty=True)
+
+def build_styles_and_scripts():
+    require('release', provided_by=[deploy, setup])
+    with cd(env.path):
+        run('cd ./releases/%(release)s/apparelrow; python ./manage synccompress' % env, pty=True)
+        run('cd ./media; /var/lib/gems/1.8/bin/compass compile' % env, pty=True)
+        run('ln -s ../../../shared/static static', pty=True)
+
     
 def symlink_current_release():
     "Symlink our current release"
