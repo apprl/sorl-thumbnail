@@ -5,13 +5,13 @@ if [[ -z $DEPLROOT ]]; then
 fi
 
 # Generate these names
-DEPLNAME='apparelrow-trunk'                     # Deployment name
+DEPLBASE="$DEPLROOT/apparelrow"
 PROJNAME='apparelrow'                           # Django project name
 
 # Static, should not be touched
-PROJDIR="$DEPLROOT/$DEPLNAME/$PROJNAME"         # Django project directory
-PIDFILE="$PROJDIR/../var/$PROJNAME.pid"         # PID file for controlling instance
-SOCKET="$PROJDIR/../var/$PROJNAME.sock"         # FCGI socket
+PROJDIR="$DEPLBASE/releases/current/$PROJNAME"  # Django project directory
+PIDFILE="$DEPLBASE/var/$PROJNAME.pid"         # PID file for controlling instance
+SOCKET="$DEPLBASE/var/$PROJNAME.sock"         # FCGI socket
 
 if [ -z $1 ]; then
     echo "Missing argument"
@@ -20,7 +20,7 @@ if [ -z $1 ]; then
 fi
 
 # FIXME: Check that this path exists
-. $PROJDIR/../bin/activate
+. $DEPLBASE/bin/activate
 cd $PROJDIR
 
 if ([[ "$1" == "restart" ]] || [[ "$1" == "stop" ]]); then
