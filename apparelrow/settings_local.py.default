@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+# Django settings for development server 
+
+
+DATABASE_ENGINE = 'mysql'
+DATABASE_NAME = 'apparelrow_demo_03'
+DATABASE_USER = 'apparelrow_demo'
+DATABASE_PASSWORD = 'ashwe3'
+DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+
+APPAREL_DECOMPRESS_UTILS = {
+    'gzip': '/bin/gunzip',
+    'zip':  '/bin/zip',
+}
+
+#FACEBOOK_API_KEY = '177090790853'
+#FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
+
+CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
+CACHE_MIDDLEWARE_KEY_PREFIX = 'ar-demo'
+CACHE_MIDDLEWARE_SECONDS = 120
+
