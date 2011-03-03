@@ -12,10 +12,16 @@ level=NOTSET
 handlers=core_view_handler
 propagate=0
 
-[logger_importer_handler]
+[logger_importer_logger]
 level=INFO
 handlers=consoleHandler
 qualname=apparel.importer
+propagage=1
+
+[logger_importer_logger_api]
+level=INFO
+handlers=consoleHandler
+qualname=apparel.importer.api
 propagage=1
 
 [logger_core_view_logger]
