@@ -270,10 +270,12 @@ CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_TEMPLATE_TIMEOUT = 60 * 15
 
 APPAREL_DEFAULT_AVATAR     = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
-APPAREL_PRODUCT_IMAGE_ROOT = 'products'
+APPAREL_PRODUCT_IMAGE_ROOT = 'static/products'
+APPAREL_LOOK_IMAGE_ROOT = 'static/looks'
+APPAREL_LOGO_IMAGE_ROOT = 'static/logos'
 APPAREL_LOOK_MAX_SIZE      = 470
 APPAREL_LOOK_FEATURED      = 3
-APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', 'warehouse')
+APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'shared', 'warehouse')
 APPAREL_IMPORTER_COLORS = (
     (u'black'  , u'svart',),
     (u'grey'   , u'grå', u'gray'),

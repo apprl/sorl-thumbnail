@@ -16,14 +16,10 @@ from sorl.thumbnail.main import DjangoThumbnail
 
 from django_extensions.db.fields import AutoSlugField
 
-# FIXME: Move to Django settings directory
-LOGOTYPE_BASE      = 'static/logos'
-LOOKS_BASE         = 'static/looks'
-
 class Manufacturer(models.Model):
     name   = models.CharField(max_length=50, unique=True)
     active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
-    logotype = models.ImageField(upload_to=LOGOTYPE_BASE, help_text=_('Logotype')) 
+    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype')) 
     homepage = models.URLField(_('Home page'))
 
     objects = SearchManager()
@@ -282,7 +278,7 @@ class Look(models.Model):
     description = models.TextField(_('Look description'), null=True, blank=True)
     products    = models.ManyToManyField(Product)
     user        = models.ForeignKey(User)
-    image       = models.ImageField(upload_to=LOOKS_BASE, blank=True)
+    image       = models.ImageField(upload_to=settings.APPAREL_LOOK_IMAGE_ROOT, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags        = TagField(blank=True)
