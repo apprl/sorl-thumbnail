@@ -15,7 +15,7 @@ def unlock(request):
             invitee.save() # Update seen attribute
             request.session['in_beta'] = True
             return HttpResponseRedirect(request.POST.get('next', '/'))
-        except (DoesNotExist):
+        except Invitee.DoesNotExist:
             return render_to_response('beta/beta.html', context_instance=RequestContext(request))
     else:
         return render_to_response('beta/beta.html', context_instance=RequestContext(request))

@@ -1,17 +1,16 @@
 #!/bin/bash
 
-if [[ -z $DEPLROOT ]]; then
-    DEPLROOT='/opt/hanssonlarsson'              # Deployment root dir
+if [[ -z $HL_APP_ROOT ]]; then
+    HL_APP_ROOT=$(pwd)
 fi
 
-# Generate these names
-DEPLBASE="$DEPLROOT/apparelrow"
-PROJNAME='apparelrow'                           # Django project name
+if [[ -z $HL_APP_NAME ]]; then
+    HL_APP_NAME='apparelrow'
+fi
 
 # Static, should not be touched
-PROJDIR="$DEPLBASE/releases/current/$PROJNAME"  # Django project directory
-PIDFILE="$DEPLBASE/var/$PROJNAME.pid"         # PID file for controlling instance
-SOCKET="$DEPLBASE/var/$PROJNAME.sock"         # FCGI socket
+PIDFILE="$HL_APP_ROOT/var/$HL_APP_NAME.pid"         # PID file for controlling instance
+SOCKET="$HL_APP_ROOT/var/$HL_APP_NAME.sock"         # FCGI socket
 
 if [ -z $1 ]; then
     echo "Missing argument"
@@ -20,8 +19,8 @@ if [ -z $1 ]; then
 fi
 
 # FIXME: Check that this path exists
-. $DEPLBASE/bin/activate
-cd $PROJDIR
+. $HL_APP_ROOT/bin/activate
+cd $HL_APP_ROOT/releases/current/$HL_APP_NAME
 
 if ([[ "$1" == "restart" ]] || [[ "$1" == "stop" ]]); then
     for pfile in "$PIDFILE" "$PIDFILE-admin"
@@ -47,10 +46,10 @@ if [[ "$1" == "restart" ]] || [[ "$1" == "start" ]]; then
 
     echo "Starting FCGI process"
     ./manage.py runfcgi method=threaded socket=$SOCKET pidfile=$PIDFILE \
-        maxspare=4 workdir=$PROJDIR
+        maxspare=4 workdir=$HL_APP_ROOT
         
     echo "Starting FCGI process (admin)"
     ./manage.py runfcgi method=threaded socket=$SOCKET-admin pidfile=$PIDFILE-admin \
-        maxchildren=1 workdir=$PROJDIR
+        maxchildren=1 workdir=$HL_APP_ROOT
 fi
 

@@ -440,12 +440,22 @@ $ruler_width: $slider_width + 9px
   li
     ul
       overflow-y: auto
-      max-height: ($button_height + $border_width) * 4
       li
         border: none
-        padding-left: 10px
         +border(top)
         background-image: image_url(unquote("gradient-dark-bg.png"))
+    ul.level-1
+      max-height: ($button_height + $border_width) * 4
+      li
+        padding-left: 10px
+    ul.level-2
+      margin-left: -10px
+      li
+        padding-left: 20px
+    ul.level-3
+      margin-left: -20px
+      li
+        padding-left: 30px
 
 .hidden
   display: none
