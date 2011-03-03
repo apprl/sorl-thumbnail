@@ -14,7 +14,7 @@ TEMPLATE_DEBUG = DEBUG
 
 FORCE_SCRIPT_NAME = ''
 
-LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', 'etc', 'logging.conf') # logging configuration file
+LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', '..', '..', 'etc', 'logging.conf') # logging configuration file
 
 
 if not hasattr(logging, 'initialised'):

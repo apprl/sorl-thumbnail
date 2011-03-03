@@ -65,7 +65,7 @@ def setup():
     with cd(env.path):
         run('virtualenv .')
         with settings(warn_only=True):
-            run('mkdir -m a+w -p var/logs; mkdir -p releases shared packages backup;', pty=True)
+            run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared packages backup;', pty=True)
             sudo('chown -R %(run_user)s:%(run_user)s var;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     deploy('first')
@@ -144,7 +144,9 @@ def copy_bin():
 
 def copy_config():
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s/releases/%(release)s/etc; cp -n logging.conf.default logging.conf' % env, pty=True)
+    with cd(env.path):
+        run('cp -n ./releases/%(release)s/etc/* ./etc' % env, pty=True)
+        run('cp -n ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
     
 def symlink_current_release():
     "Symlink our current release"
