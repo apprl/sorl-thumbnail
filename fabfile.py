@@ -152,10 +152,11 @@ def copy_config():
 
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
-    with cd(env.path):
-        sudo('cd ./releases/%(release)s/apparelrow; python ./manage.py synccompress' % env, pty=True, user=env.run_user)
+    with cd('%(path)s/releases/current/%(project_name)s' % env):
+        sudo('chown -R %(run_user)s:%(run_user)s ./media' % env, pty=True)
+        sudo('python ./manage.py synccompress' % env, pty=True, user=env.run_user)
         sudo('cd ./media; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
-        sudo('ln -s ../../../shared/static static', pty=True, user=env.run_user)
+        sudo('ln -s ../../../shared/static media/static', pty=True, user=env.run_user)
 
     
 def symlink_current_release():
