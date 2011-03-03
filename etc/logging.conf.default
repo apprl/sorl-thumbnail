@@ -34,13 +34,13 @@ args=(sys.stdout,)
 class=handlers.RotatingFileHandler
 level=NOTSET
 formatter=simpleFormatter
-args=('../var/logs/app_logger.log', 'a', 1000000, 4)
+args=('../../../var/logs/app_logger.log', 'a', 1000000, 4)
 
 [handler_importer_handler]
 level=NOTSET
 class=handlers.RotatingFileHandler
 formatter=simpleFormatter
-args=('../var/logs/importer.log', 'a', 1000000, 4)
+args=('../../../var/logs/importer.log', 'a', 1000000, 4)
 
 [formatter_simpleFormatter]
 format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
