@@ -583,24 +583,34 @@ def get_criteria_filter(request, result):
     
     qr = result.all()
     qr.query.clear_limits()
-    
-    if criterion == 'category':
-        return {
-            'manufacturers': map(lambda o: str(o['manufacturer__id']), qr.values('manufacturer__id').distinct()),
-            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=qr.values('id')).values('value').distinct()),
-        }
-    elif criterion == 'manufacturer':
-        return {
-            'categories': map(lambda o: str(o['category__id']), qr.values('category__id').distinct()),
-            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=qr.values('id')).values('value').distinct()),
-        }
-    elif criterion is None:
+
+    if criterion is None:
         return {
             'categories': [],
             'manufacturers': [],
             'options': [],
         }
     
+    if criterion in ['category', 'manufacturer']:
+        pricerange = map(lambda o: o['price'], VendorProduct.objects.filter(product__id__in=qr.values('id')).values('price').distinct())
+        pricerange.sort()
+    
+        criteria_filter = {
+            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=qr.values('id')).values('value').distinct()),
+            'pricerange': {
+                'min': pricerange[0],
+                'max': pricerange[-1],
+            },
+        }
+    
+        if criterion == 'category':
+            criteria_filter['manufacturers'] = map(lambda o: str(o['manufacturer__id']), qr.values('manufacturer__id').distinct()),
+    
+        elif criterion == 'manufacturer':
+            criteria_filter['categories'] = map(lambda o: str(o['category__id']), qr.values('category__id').distinct()),
+        
+        return criteria_filter
+
     return {}
 
 def get_pagination_as_dict(paged_result):

@@ -386,6 +386,22 @@ function filterCriteria(criteria_filter) {
 
         // FIXME: Add size here aswell
     }
+
+    if('pricerange' in criteria_filter) {
+        var min = criteria_filter.pricerange.min,
+            max = criteria_filter.pricerange,max;
+        var mid = min + (max - min) / 2;
+
+        $('input[name="pricerange_min"]').val(min);
+        $('input[name="pricerange_max"]').val(max);
+
+        $('#price-ruler .min').text(min);
+        $('#price-ruler .mid').text(mid);
+        $('#price-ruler .max').text(max);
+
+        $('#price-slider').slider('option', 'min', min);
+        $('#price-slider').slider('option', 'max', max);
+    }
 }
 
 function applyCriteriaFilter(args) {
