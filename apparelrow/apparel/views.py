@@ -99,7 +99,7 @@ def browse(request, template='apparel/browse.html', **kwargs):
 
     pages = (paged_result, next_page,)
 
-    if request.is_ajax(): return browse_ajax_response(request, paged_result, (paged_result, next_page,), pagination)
+    if request.is_ajax(): return browse_ajax_response(request, paged_result, pages, pagination)
     
     result = get_filter(request)
     result.update(
