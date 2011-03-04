@@ -43,7 +43,7 @@ def setup():
     sudo('apt-get update')
     sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev')
     # install some version control systems, since we need Django modules in development
-    sudo('apt-get install -y git-core')
+    sudo('apt-get install -y git-core subversion')
         
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
