@@ -41,7 +41,7 @@ def setup():
     require('path')
     # install Python environment
     sudo('apt-get update')
-    sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev')
+    sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev libxslt1-dev')
     # install some version control systems, since we need Django modules in development
     sudo('apt-get install -y git-core subversion')
         
