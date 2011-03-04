@@ -293,6 +293,10 @@ except ImportError:
     pass
 
 
+# --- Application wide init code goes here. 
+# It would be nice to move this somewhere, but I'm not sure where to put it
+# to ensure it is executed only *once* and after all settings has been evaluated
+
 
 if not hasattr(logging, 'initialised'):
     logging.config.fileConfig(LOGGING_CONFIG)
@@ -304,10 +308,3 @@ if not hasattr(logging, 'initialised'):
     
     logging.info('Initialised application logger')
     setattr(logging, 'initialised', True)
-
-
-# FIXME: Do NOT add this in production
-#INSTALLED_APPS += ( 'debug_toolbar', )
-#MIDDLEWARE_CLASSES += ( 'debug_toolbar.middleware.DebugToolbarMiddleware', )
-#INTERNAL_IPS = ('127.0.0.1', )
-
