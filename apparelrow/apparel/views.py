@@ -585,10 +585,15 @@ def get_criteria_filter(request, result):
     qr.query.clear_limits()
 
     if criterion is None:
+        pricerange = VendorProduct.objects.aggregate(Min('price'), Max('price'))
         return {
             'categories': [],
             'manufacturers': [],
             'options': [],
+            'pricerange': {
+                'min': pricerange['price__min'],
+                'max': pricerange['price__max'],
+            },
         }
     
     if criterion in ['category', 'manufacturer']:
