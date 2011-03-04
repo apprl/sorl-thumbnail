@@ -95,19 +95,25 @@ jQuery(document).ready(function() {
     jQuery('#product-category li > ul').hide();
     jQuery('#product-category li > a').click(function() {
         var $this = jQuery(this);
-            $this.toggleClass('selected');
-        
+                
         var subCategories = $this.next();
         
         if(subCategories.length > 0) {
             if($this.hasClass('selected')) {
-                subCategories.find('a').addClass('selected');
+                if(subCategories.is(':visible')) {
+                    subCategories.find('a').removeClass('selected');
+                    $this.removeClass('selected');
+                }
             } else {
-                subCategories.find('a').removeClass('selected');
+                subCategories.find('a').addClass('selected');
+                if(subCategories.is(':hidden'))
+                    $this.toggleClass('selected');
             }
             
             subCategories.slideToggle();
             return false;
+        } else {
+            $this.toggleClass('selected');
         }
         return true;
     });
