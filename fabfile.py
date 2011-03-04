@@ -52,7 +52,7 @@ def setup():
     if env.webserver=='lighttpd':
         sudo('apt-get install -y lighttpd')
     if env.dbserver=='mysql':
-        sudo('apt-get install -y mysql-server')
+        sudo('apt-get install -y mysql-server libmysqlclient-dev')
     elif env.dbserver=='postgresql':
         sudo('apt-get install -y postgresql python-psycopg2')
         
