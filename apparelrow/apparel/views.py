@@ -592,14 +592,13 @@ def get_criteria_filter(request, result):
         }
     
     if criterion in ['category', 'manufacturer']:
-        pricerange = map(lambda o: o['price'], VendorProduct.objects.filter(product__id__in=qr.values('id')).values('price').distinct())
-        pricerange.sort()
+        pricerange = VendorProduct.objects.filter(product__id__in=qr.values('id')).aggregate(Min('price'), Max('price'))
     
         criteria_filter = {
             'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=qr.values('id')).values('value').distinct()),
             'pricerange': {
-                'min': pricerange[0],
-                'max': pricerange[-1],
+                'min': pricerange['price__min'],
+                'max': pricerange['price__max'],
             },
         }
     
