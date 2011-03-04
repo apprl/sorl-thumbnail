@@ -388,9 +388,9 @@ function filterCriteria(criteria_filter) {
     }
 
     if('pricerange' in criteria_filter) {
-        var min = criteria_filter.pricerange.min,
-            max = criteria_filter.pricerange.max;
-        var mid = min + (max - min) / 2;
+        var min = parseInt(criteria_filter.pricerange.min, 10),
+            max = parseInt(criteria_filter.pricerange.max, 10),
+            mid = parseInt(min + (max - min) / 2, 10);
 
         $('input[name="pricerange_min"]').val(min);
         $('input[name="pricerange_max"]').val(max);
