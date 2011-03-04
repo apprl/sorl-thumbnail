@@ -16,19 +16,6 @@ FORCE_SCRIPT_NAME = ''
 
 LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', '..', '..', 'etc', 'logging.conf') # logging configuration file
 
-
-if not hasattr(logging, 'initialised'):
-    logging.config.fileConfig(LOGGING_CONFIG)
-    
-    if DEBUG:
-        logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
-        logging.debug('Using debug logger')
-    
-    logging.info('Initialised application logger')
-    setattr(logging, 'initialised', True)
-
-
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
@@ -304,6 +291,19 @@ try:
     from settings_local import *
 except ImportError:
     pass
+
+
+
+if not hasattr(logging, 'initialised'):
+    logging.config.fileConfig(LOGGING_CONFIG)
+    
+    if DEBUG:
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        logging.debug('Using debug logger')
+    
+    logging.info('Initialised application logger')
+    setattr(logging, 'initialised', True)
 
 
 # FIXME: Do NOT add this in production
