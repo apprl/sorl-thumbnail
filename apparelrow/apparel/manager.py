@@ -108,8 +108,8 @@ class QueryParser():
         Parses the given QueryDict object and returns a django.models.Q object.
         """
         
-        if not isinstance(query_dict, QueryDict):
-            raise NoQuery('query_dict is not a django.http.QueryDict')
+        #if not isinstance(query_dict, QueryDict):
+        #    raise NoQuery('query_dict is not a django.http.QueryDict')
         
         self.query_dict  = query_dict
         self.expressions = self.parse_expressions()
@@ -351,6 +351,7 @@ class QueryParser():
         (model_class, model_field) = self.django_models.get(short, (None, None))
         
         if not model_class:
+            import pdb; pdb.set_trace()
             raise InvalidExpression('Unknown model label %s' % short)
         
         if self.model and model_class == self.model.__name__:

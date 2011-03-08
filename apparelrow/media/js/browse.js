@@ -364,14 +364,7 @@ function filterCriteria(criteria_filter) {
             'criteria': criteria_filter['categories'],
             'add': function(o) { o.parent().addClass('filtered'); },
             'remove': function(o) { 
-                o.parent().removeClass('filtered');
-                if(o.parent().parent().attr('id') != 'product-category') {
-                    // If the element is part of a sub category, ensure its
-                    // parent is also not filtered. 
-                    // FIXME: This does currently only work for a one level deep hierarchy
-                    // FIXME: Is there an easier way to look up in the hierarchy?
-                    o.parent().parent().parent().removeClass('filtered');
-                }
+                o.parents('.filtered').removeClass('filtered');
             },
         });
     }
@@ -408,7 +401,7 @@ function applyCriteriaFilter(args) {
     //selector, criteria, cb_add, cb_remove) {
     jQuery(args.selector).each(function() {
         $this = jQuery(this);
-        if (args.criteria.length == 0 || jQuery.inArray(this.id.split('-')[1], args.criteria) >= 0) {
+        if (args.criteria.length == 0 || jQuery.inArray(parseInt(this.id.split('-')[1], 10), args.criteria) >= 0) {
             args.remove($this);
         } else {
             args.add($this);
@@ -429,5 +422,5 @@ function renderProducts(products) {
     pagination.recalculate(0);
     pagination.render();
     jQuery('#product-list').data('scrollable').begin();
-    filterCriteria(products.criteria_filter);
+    filterCriteria(products);
 }

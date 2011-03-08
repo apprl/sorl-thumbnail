@@ -36,7 +36,7 @@ def _to_int(s):
 # Used to collect the current query from the command line to enable options to
 # be pre-checked. The conversion from string to int for id-fields is required
 # to check wether they exist using the in-operator
-def update_with_selected(context, request): 
+def update_with_selected(context, request):
     qp   = QueryParser(Product)
     expr = {}
     for key, value in request.GET.items():
@@ -78,9 +78,14 @@ def search(request, model):
 def wardrobe(request, profile):
     return browse(request, template='profile/wardrobe.html', wardrobe__user=profile.user)
 
+def without(query, model_shorthand):
+    r = re.compile(r"^\d:%s\." % model_shorthand)
+
+    return dict((k, v) for k, v in query.items() if not r.match(k))
+
 def browse(request, template='apparel/browse.html', **kwargs):
-    paged_result = get_paged_search_result(request, 
-        class_name='Product', 
+    paged_result = get_paged_search_result(request,
+        class_name='Product',
         page_size=BROWSE_PAGE_SIZE,
         **kwargs
     )
@@ -90,6 +95,8 @@ def browse(request, template='apparel/browse.html', **kwargs):
     except (EmptyPage, InvalidPage):
         next_page = None
 
+    pages = (paged_result, next_page,)
+
     left, mid, right = get_pagination(paged_result.paginator, paged_result.number)
     pagination = {
         'left': left,
@@ -97,50 +104,39 @@ def browse(request, template='apparel/browse.html', **kwargs):
         'right': right
     }
 
-    pages = (paged_result, next_page,)
+    result = get_filter(request, **kwargs)
 
-    if request.is_ajax(): return browse_ajax_response(request, paged_result, pages, pagination)
+    result.update(pagination=pagination)
+
+    update_with_selected(result, request)
+
+    if request.is_ajax():
+        result.update(
+            html = loader.render_to_string('apparel/fragments/product_list.html',
+                {
+                    'current_page': paged_result,
+                    'pages': pages,
+                    'pagination': pagination
+                },
+                context_instance=RequestContext(request)
+            ),
+        )
+        result.update(get_pagination_as_dict(paged_result))
+
+        return HttpResponse(
+            json.encode(result),
+            mimetype='text/json'
+        )
     
-    result = get_filter(request)
     result.update(
         current_page = paged_result,
         pages = pages,
         templates = {
-            #'product_count': js_template(get_template_source('apparel/fragments/product_count.html')),
             'pagination': get_template_source('apparel/fragments/pagination_js.html')
         },
-        pagination = pagination,
     )
-    
-    update_with_selected(result, request)
 
     return render_to_response(template, result, context_instance=RequestContext(request))
-
-def browse_ajax_response(request, result, pages, pagination):
-    """
-    Just like browse, but handles AJAX requests
-    """
-    
-    response = {
-        'html': loader.render_to_string('apparel/fragments/product_list.html',
-            {
-                'current_page': result,
-                'pages': pages,
-                'pagination': pagination,
-            },
-            context_instance=RequestContext(request)
-        ),
-        'criteria_filter': get_criteria_filter(request, result.object_list),
-        'pagination': pagination,
-    }
-    response.update(get_pagination_as_dict(result))
-    
-    return HttpResponse(
-        json.encode(response),
-        mimetype='text/json'
-    )
-
-
 
 def product_redirect(request, pk):
     """
@@ -565,58 +561,6 @@ def get_paged_search_result(request, class_name=None, page_size=None, **kwargs):
     
     return paged_result
     
-
-def get_criteria_filter(request, result):
-    criterion = request.GET.get('criterion')
-    # FIXME: 
-    # The id__in statement below causes Django to generate a subselect with a limit, which 
-    # doesn't work in MySQL (http://code.djangoproject.com/ticket/12328)
-    # Version were it breaks: Ver 14.14 Distrib 5.1.41, for debian-linux-gnu (i486) using readline 6.1
-    # We could iterate over result to get the data out, but that would be very expensive,
-    # as the result set is potentially very large and we do not want to cache it
-    # So, solutions:
-    #   1) Pure SQL
-    #   2) Do an alternative sub select
-    #   3) Iterate over entire result
-    #   4) Downgrade MySQL
-    
-    
-    qr = result.all()
-    qr.query.clear_limits()
-
-    if criterion is None:
-        pricerange = VendorProduct.objects.aggregate(Min('price'), Max('price'))
-        return {
-            'categories': [],
-            'manufacturers': [],
-            'options': [],
-            'pricerange': {
-                'min': pricerange['price__min'],
-                'max': pricerange['price__max'],
-            },
-        }
-    
-    if criterion in ['category', 'manufacturer']:
-        pricerange = VendorProduct.objects.filter(product__id__in=qr.values('id')).aggregate(Min('price'), Max('price'))
-    
-        criteria_filter = {
-            'options': map(lambda o: o['value'], Option.objects.filter(product__id__in=qr.values('id')).values('value').distinct()),
-            'pricerange': {
-                'min': pricerange['price__min'],
-                'max': pricerange['price__max'],
-            },
-        }
-    
-        if criterion == 'category':
-            criteria_filter['manufacturers'] = map(lambda o: str(o['manufacturer__id']), qr.values('manufacturer__id').distinct()),
-    
-        elif criterion == 'manufacturer':
-            criteria_filter['categories'] = map(lambda o: str(o['category__id']), qr.values('category__id').distinct()),
-        
-        return criteria_filter
-
-    return {}
-
 def get_pagination_as_dict(paged_result):
     # FIXME: This exists because the JSON exporter is unable to serialise
     # Page and Pagination objects. Perhaps this code could be moved to the 
@@ -632,8 +576,8 @@ def get_pagination_as_dict(paged_result):
         },
     }
 
-def get_pricerange(request):
-    pricerange = VendorProduct.objects.aggregate(min=Min('price'), max=Max('price'))
+def get_pricerange(query, **kwargs):
+    pricerange = VendorProduct.objects.filter(product__in=Product.objects.search(query)).filter(**kwargs).aggregate(min=Min('price'), max=Max('price'))
     if pricerange['min'] is None:
         pricerange['min'] = 0
     else:
@@ -642,26 +586,47 @@ def get_pricerange(request):
         pricerange['max'] = 10000
     else:
         pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
-    pricerange['selected'] = request.GET['1:vp.price:range'] if '1:vp.price:range' in request.GET else '%s,%s' % (pricerange['min'],pricerange['max'])
+    pricerange['selected'] = query['1:vp.price:range'] if '1:vp.price:range' in query else '%s,%s' % (pricerange['min'],pricerange['max'])
     return pricerange
 
-def get_filter(request):
-    return {
-        'categories': Category._tree_manager.all(),
-        'manufacturers': Manufacturer.objects.filter(product__published=True).distinct().order_by('name'),
-        'colors': Option.objects.filter(option_type__name__iexact='color'),
-        'pricerange': get_pricerange(request),
-    }
+def get_filter(request, **kwargs):
+    query = request.GET.copy()
+    if 'criterion' in query:
+        del query['criterion']
+    if 'page' in query:
+        del query['page']
+
+    manufacturers = Product.objects.search(without(query, 'm')).filter(published=True).filter(**kwargs).distinct().values_list('manufacturer', flat=True)
+    colors = Option.objects.filter(product__in=Product.objects.search(without(query, 'o')), option_type__name__iexact='color', product__published=True).filter(**kwargs)
+
+    result = {}
+
+    if request.is_ajax():
+        colors = colors.values_list('value', flat=True)
+    else:
+        manufacturers = Manufacturer.objects.filter(id__in=manufacturers)
+        result.update(categories_all=Category._tree_manager.all())
+
+    if query or kwargs:
+        result.update(
+            categories = Product.objects.search(without(query, 'c')).filter(published=True).filter(**kwargs).distinct().values_list('category', flat=True)
+        )
+
+    result.update(
+        manufacturers = manufacturers,
+        colors = colors,
+        pricerange = get_pricerange(without(query, 'vp'), **kwargs),
+    )
+
+    return result
 
 def index(request):
     ctx = get_filter(request)
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
     ctx['popular_looks']  = Vote.objects.get_top(Look, limit=6)    
-    ctx['categories']     = ctx['categories'].filter(on_front_page=True)
+    ctx['categories_all']     = ctx['categories_all'].filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
     
-    update_with_selected(ctx, request)
-
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 
 def get_query_and_page(request, override_size=None):
