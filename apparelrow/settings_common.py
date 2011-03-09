@@ -161,7 +161,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'trackback',
     'recommender',
-    #'south',
+    'south',
     'jsmin',
     'compress',
 
