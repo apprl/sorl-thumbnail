@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+# Django settings for development server 
+
+import os.path
+import logging
+import logging.config
+
+from settings_common import *
+
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+DATABASE_ENGINE = 'sqlite3'
+DATABASE_NAME = 'dev.db'
+
+APPAREL_DECOMPRESS_UTILS = {
+    'gzip': '/bin/gunzip',
+    'zip':  '/bin/zip',
+}
+
+LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', 'etc', 'logging.conf')
+APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', 'warehouse')
+
+#FACEBOOK_API_KEY = '177090790853'
+#FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
+
+#CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
+#CACHE_MIDDLEWARE_KEY_PREFIX = 'ar-demo'
+#CACHE_MIDDLEWARE_SECONDS = 120
+
+# --- Application wide init code goes here. 
+# It would be nice to move this somewhere, but I'm not sure where to put it
+# to ensure it is executed only *once* and after all settings has been evaluated
+
+if not hasattr(logging, 'initialised'):
+    logging.config.fileConfig(LOGGING_CONFIG)
+    
+    if DEBUG:
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        logging.debug('Using debug logger')
+    
+    logging.info('Initialised application logger')
+    setattr(logging, 'initialised', True)

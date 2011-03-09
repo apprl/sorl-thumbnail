@@ -148,7 +148,7 @@ def copy_config():
     with cd(env.path):
         run('cp -n ./releases/%(release)s/etc/* ./etc' % env, pty=True)
         run('cp -n ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
-        run('cd releases/%(release)s/apparelrow; cp settings_local.py.default settings_local.py' % env, pty=True)
+        run('cd releases/%(release)s/apparelrow; cp production.py.default production.py' % env, pty=True)
 
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
