@@ -577,7 +577,16 @@ def get_pagination_as_dict(paged_result):
     }
 
 def get_pricerange(query, **kwargs):
-    pricerange = VendorProduct.objects.filter(product__in=Product.objects.search(query)).filter(**kwargs).aggregate(min=Min('price'), max=Max('price'))
+    query_set = VendorProduct.objects.filter(product__published=True)
+    filter_query = without(query, 'vp')
+
+    if filter_query:
+        query_set = query_set.filter(product__in=Product.objects.search(filter_query))
+    if kwargs:
+        query_set = query_set.filter(**kwargs)
+
+    pricerange = query_set.aggregate(min=Min('price'), max=Max('price'))
+
     if pricerange['min'] is None:
         pricerange['min'] = 0
     else:
@@ -587,6 +596,7 @@ def get_pricerange(query, **kwargs):
     else:
         pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
     pricerange['selected'] = query['1:vp.price:range'] if '1:vp.price:range' in query else '%s,%s' % (pricerange['min'],pricerange['max'])
+
     return pricerange
 
 def get_filter(request, **kwargs):
@@ -596,15 +606,32 @@ def get_filter(request, **kwargs):
     if 'page' in query:
         del query['page']
 
-    manufacturers = Product.objects.search(without(query, 'm')).filter(published=True).filter(**kwargs).distinct().values_list('manufacturer', flat=True)
-    colors = Option.objects.filter(product__in=Product.objects.search(without(query, 'o')), option_type__name__iexact='color', product__published=True).filter(**kwargs)
+    colors = Option.objects.filter(option_type__name__iexact='color', product__published=True)
+
+    if query or kwargs:
+        if query:
+            manufacturers = Product.objects.search(without(query, 'm')).filter(published=True)
+            colors = colors.filter(product__in=Product.objects.search(without(query, 'o')))
+        else:
+            manufacturers = Product.objects.filter(published=True)
+
+        if kwargs:
+            manufacturers = manufacturers.filter(**kwargs)
+            colors = colors.filter(**kwargs)
+
+        manufacturers = manufacturers.distinct().values_list('manufacturer', flat=True)
+
+        if not request.is_ajax():
+            manufacturers = Manufacturer.objects.filter(id__in=manufacturers)
+
+    else:
+        manufacturers = Manufacturer.objects.filter(product__published=True).distinct()
 
     result = {}
 
     if request.is_ajax():
         colors = colors.values_list('value', flat=True)
     else:
-        manufacturers = Manufacturer.objects.filter(id__in=manufacturers)
         result.update(categories_all=Category._tree_manager.all())
 
     if query or kwargs:
@@ -615,7 +642,7 @@ def get_filter(request, **kwargs):
     result.update(
         manufacturers = manufacturers,
         colors = colors,
-        pricerange = get_pricerange(without(query, 'vp'), **kwargs),
+        pricerange = get_pricerange(query, **kwargs),
     )
 
     return result
