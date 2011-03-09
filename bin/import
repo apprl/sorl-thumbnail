@@ -13,6 +13,10 @@
 # as sole argument.
 #
 
+if [[ -z DJANGO_SETTINGS_MODULE ]]; then
+    DJANGO_SETTINGS_MODULE=production
+fi
+
 if [[ -z $PROJDIR ]]; then
     PROJDIR=`pwd`
 fi
@@ -24,7 +28,7 @@ fi
 cd "$PROJDIR/apparelrow"
 
 if [[ -z "$1" ]]; then
-    python manage.py arimport --all
+    python manage.py arimport --all --settings $DJANGO_SETTINGS_MODULE
 else
-    python manage.py arimport $1
+    python manage.py arimport $1 --settings $DJANGO_SETTINGS_MODULE
 fi

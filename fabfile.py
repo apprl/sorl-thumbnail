@@ -29,7 +29,7 @@ def demo():
 
 def test():
     "Run the test suite and bail out if it fails"
-    local("cd %(path)s; python manage.py test" % env)
+    local("cd %(path)s; python manage.py test --settings production" % env)
     
     
 def setup():
@@ -154,7 +154,7 @@ def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         sudo('chown -R %(run_user)s:%(run_user)s ./media' % env, pty=True)
-        sudo('python ./manage.py synccompress' % env, pty=True, user=env.run_user)
+        sudo('python ./manage.py synccompress --settings production' % env, pty=True, user=env.run_user)
         sudo('cd ./media; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
 
@@ -172,10 +172,10 @@ def migrate(param=''):
     require('path')
     env.southparam = '--auto'
     if param=='first':
-        run('cd %(path)s/releases/current/%(project_name)s; %(path)s/bin/python manage.py syncdb --noinput' % env, pty=True)
+        run('cd %(path)s/releases/current/%(project_name)s; %(path)s/bin/python manage.py syncdb --noinput --settings production' % env, pty=True)
         env.southparam = '--initial'
     with cd('%(path)s/releases/current/%(project_name)s' % env):
-        run('%(path)s/bin/python manage.py schemamigration %(project_name)s %(southparam)s && %(path)s/bin/python manage.py migrate %(project_name)s' % env)
+        run('%(path)s/bin/python manage.py schemamigration %(project_name)s %(southparam)s --settings production && %(path)s/bin/python manage.py migrate %(project_name)s --settings production' % env)
         # TODO: should also migrate other apps! get migrations from previous releases
     
 def restart_django():
