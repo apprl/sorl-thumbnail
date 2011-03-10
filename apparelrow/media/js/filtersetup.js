@@ -97,6 +97,10 @@ jQuery(document).ready(function() {
     jQuery('#product-category li > ul').hide();
     // Except those with selected categories inside
     jQuery('> ul', '#product-category li:has(li > a.selected)').show();
+    // Also show those which should not be filtered
+    jQuery('#product-category li:not(.to_filter)').parents('ul').show().end().parents('.to_filter').removeClass('to_filter');
+    // And filter all others
+    jQuery('#product-category li.to_filter').removeClass('to_filter').addClass('filtered');
 
     jQuery('#product-category li > a').click(function() {
         var $this = jQuery(this);

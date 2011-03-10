@@ -31,8 +31,8 @@
         {% else %}
             </li>
         {% endif %}
-            <li{% if forloop.first %} class="first"{% endif %}{% if forloop.last %} class="last"{% endif %}>
-            <a id="category-{{ category.id }}" class="{% if category.id in selected_categories %}selected {% else %}{% if categories and category.id not in categories %}filtered{% endif %}{% endif %}" href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
+           <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}{% if categories and category.id not in categories %} to_filter{% endif %}">
+            <a id="category-{{ category.id }}"{% if category.id in selected_categories %} class="selected"{% endif %} href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
         {% for level in structure.closed_levels %}</li></ul>{% endfor %}
     {% endif %}
 {% endfor %}
