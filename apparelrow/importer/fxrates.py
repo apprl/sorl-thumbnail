@@ -2,28 +2,32 @@ import libxml2, logging, re
 from decimal import Decimal
 from xml.sax.saxutils import unescape
 
-from django.conf import settings
-
 from importer.framework import fetcher
 from importer.models import FXRate
 
-# http://themoneyconverter.com/SEK/rss.xml
-
 class FXRateImporter():
-    def run(self):
-        parse_feed(fetcher.fetch(settings.APPAREL_FXRATES_URL))
+    def __init__(self, file=None, url=None, base_currency=None):
+        self.file = file
+        self.url  = url
+        self.base_currency = base_currency
     
+    def run(self):
+        if self.file:
+            return self.import_feed(self.file)
+        else:
+            return self.import_feed(fetcher.fetch(self.url))
+        
     def import_fx_rate(self, currency, rate):
         fxrate = None
         try:
             fxrate = FXRate.objects.get(
                 currency=currency, 
-                base_currency=settings.APPAREL_BASE_CURRENCY
+                base_currency=self.base_currency
             )
         except FXRate.DoesNotExist:
             fxrate = FXRate(
                 currency=currency, 
-                base_currency=settings.APPAREL_BASE_CURRENCY
+                base_currency=self.base_currency
             )
         
         # FIXME: Loggin
