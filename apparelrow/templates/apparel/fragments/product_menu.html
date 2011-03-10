@@ -12,13 +12,13 @@
     <li class="last"><a id="option-W"{% ifequal selected_gender "W" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:gender=W">{% trans "Women" %}</a></li>
 </ul>
 <ul id="product-options" class="hover-menu">
-    <li class="first" id="product-price"><a href="{% url apparel.views.browse %}">{% trans "Price" %}</a>
+    <li class="first" id="product-price"><a {% if selected_price %}class="selected" {% endif %}href="{% url apparel.views.browse %}">{% trans "Price" %}</a>
     {% include "apparel/fragments/product_options_price.html" %}
     </li>
-    <li id="product-color"><a href="{% url apparel.views.browse %}">{% trans "Color" %}</a>
+    <li id="product-color"><a {% if selected_colors %}class="selected" {% endif %}href="{% url apparel.views.browse %}">{% trans "Color" %}</a>
     {% include "apparel/fragments/product_options_color.html" %}
     </li>
-    <li class="last" id="product-manufacturers"><a href="{% url apparel.views.browse %}">{% trans "Brand" %}</a>
+    <li class="last" id="product-manufacturers"><a {% if selected_brands %}class="selected" {% endif %}href="{% url apparel.views.browse %}">{% trans "Brand" %}</a>
     {% include "apparel/fragments/product_options_brand.html" %}
     </li>
 </ul>
@@ -31,8 +31,8 @@
         {% else %}
             </li>
         {% endif %}
-            <li{% if forloop.first %} class="first"{% endif %}{% if forloop.last %} class="last"{% endif %}>
-            <a id="category-{{ category.id }}" class="{% if category.id in selected_categories %}selected {% else %}{% if categories and category.id not in categories %}filtered{% endif %}{% endif %}" href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
+           <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}{% if categories and category.id not in categories %} to_filter{% endif %}">
+            <a id="category-{{ category.id }}"{% if category.id in selected_categories %} class="selected"{% endif %} href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
         {% for level in structure.closed_levels %}</li></ul>{% endfor %}
     {% endif %}
 {% endfor %}

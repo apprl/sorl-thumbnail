@@ -627,6 +627,8 @@ def get_filter(request, **kwargs):
     else:
         manufacturers = Manufacturer.objects.filter(product__published=True).distinct()
 
+    colors = colors.distinct()
+
     result = {}
 
     if request.is_ajax():

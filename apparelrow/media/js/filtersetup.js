@@ -91,8 +91,17 @@ jQuery(document).ready(function() {
             return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) >= 0;
         }).show();
     });
+    // Toggle selected on categories with selected subcategories
+    jQuery('> a', '#product-category li:has(li > a.selected)').addClass('selected');
     // Initially hide all subcategories
     jQuery('#product-category li > ul').hide();
+    // Except those with selected categories inside
+    jQuery('> ul', '#product-category li:has(li > a.selected)').show();
+    // Also show those which should not be filtered
+    jQuery('#product-category li:not(.to_filter)').parents('.to_filter').removeClass('to_filter').find('ul').show();
+    // And filter all others
+    jQuery('#product-category li.to_filter').removeClass('to_filter').addClass('filtered');
+
     jQuery('#product-category li > a').click(function() {
         var $this = jQuery(this);
                 
