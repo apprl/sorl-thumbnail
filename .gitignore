@@ -25,3 +25,4 @@ settings_local.py
 /var
 /etc/logging.conf
 /etc/lighttpd.conf
+/apparelrow/development.py

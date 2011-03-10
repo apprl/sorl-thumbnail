@@ -116,3 +116,40 @@ class ImportLogMessage(models.Model):
         return u'[%20s] %s' % (self.get_status_display(), self.message)
 
 
+
+class FXRate(models.Model):
+    base_currency = models.CharField(_('Base currency'), max_length=3, null=False, blank=False)
+    currency      = models.CharField(_('Currency'), max_length=3, null=False, blank=False)
+    rate          = models.DecimalField(_('Exchange rate'), max_digits=10, decimal_places=6)
+    
+    
+    #    def convert_from(currency, amount):
+    #        # Class method that converts the given currency to the configured base currency
+    #        # FIXME: Implement caching:
+    #        #   - Store all fxrates in cache under fxrate[currency] = rate
+    #        #   - Always read from cache
+    #        #   - Check if currency is in cache, otherwise transform it
+    #        
+    #        try:
+    #            fxrate = FXRate.objects.get(
+    #                        base_currency=settings.APPAREL_BASE_CURRENCY,
+    #                        currency=currency
+    #                    )
+    #        except FXRate.DoesNotExist:
+    #            return None
+    #        
+    #        return fxrate.convert(amount)
+    #        
+    #    def convert(self, number):
+    #        return number * self.rate
+    
+    def __unicode__(self):
+        return u'1 %s in %s = %f' % (
+            self.base_currency,
+            self.currency,
+            self.rate
+        )
+    
+    class Meta:
+        unique_together = (('base_currency', 'currency'),)
+    

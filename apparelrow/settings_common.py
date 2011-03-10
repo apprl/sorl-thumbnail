@@ -251,6 +251,9 @@ EMAIL_USE_TLS       = True
 CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_TEMPLATE_TIMEOUT = 60 * 15
 
+
+APPAREL_BASE_CURRENCY = 'SEK'
+APPAREL_FXRATES_URL = 'http://themoneyconverter.com/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR     = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
 APPAREL_PRODUCT_IMAGE_ROOT = 'static/products'
 APPAREL_LOOK_IMAGE_ROOT = 'static/looks'
