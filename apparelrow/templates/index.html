@@ -96,10 +96,12 @@
 {% block body-classes %}three-columns{% endblock body-classes %}
 
 {% block body %}
-    {% cache CACHE_TIMEOUT index LANGUAGE_CODE %}
+    {% cache CACHE_TIMEOUT index_filter LANGUAGE_CODE request.META.QUERY_STRING %}
     <div class="sidebar">
         {% include 'apparel/fragments/product_menu.html' %}
     </div>
+    {% endcache %}
+    {% cache CACHE_TIMEOUT index LANGUAGE_CODE %}
     <div id="content">
         <h2>{% trans "News" %}</h2>
         <div id="featured-looks">
@@ -138,6 +140,7 @@
         </div>
     </div>
     {% endcache %}
+    {% cache CACHE_TIMEOUT index_looks LANGUAGE_CODE %}
     <div class="sidebar last">
         <h2>{% trans "Popular looks" %}</h2>
         {% with popular_looks as looks %}
@@ -145,5 +148,6 @@
         {% endwith %}
         <a href="/looks/create/" id="create-look" class="button">{% trans "Create a look" %}</a>
     </div>
+    {% endcache %}
 {% endblock body %}
 
