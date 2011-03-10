@@ -91,8 +91,13 @@ jQuery(document).ready(function() {
             return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) >= 0;
         }).show();
     });
+    // Toggle selected on categories with selected subcategories
+    jQuery('> a', '#product-category li:has(li > a.selected)').addClass('selected');
     // Initially hide all subcategories
     jQuery('#product-category li > ul').hide();
+    // Except those with selected categories inside
+    jQuery('> ul', '#product-category li:has(li > a.selected)').show();
+
     jQuery('#product-category li > a').click(function() {
         var $this = jQuery(this);
                 
