@@ -93,7 +93,12 @@ button
       &.selected
         background: transparent url("../images/nav-main-selected.png") fixed no-repeat center bottom
       &.fb_button
-        padding: none
+        padding: 0
+
+
+a.fb_button
+  width: 18px
+  overflow: hidden
 
 #logged-in-as
   float: left
@@ -761,7 +766,7 @@ a.buy-now:hover
     +box
     +clearfix
     +border-right-radius(3px)
-    margin: 15px 0 0 -1px
+    margin: 15px 0 0 51px
     padding: 3px 2px 3px 3px
     textarea
       height: 1em
@@ -777,13 +782,17 @@ a.buy-now:hover
 
 body.look
   #comments-and-links
+    form
+      width: $middle_width - 59px
     textarea
-      width: $middle_width - 62px
+      width: $middle_width - 73px
 
 body.product
   #comments-and-links
+    form
+      width: $small_width - 59px
     textarea
-      width: $small_width - 62px
+      width: $small_width - 73px
 
 #recentlyviewed
   +row($aside_width)

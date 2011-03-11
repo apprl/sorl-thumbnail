@@ -96,7 +96,7 @@ jQuery(document).ready(function() {
     // Initially hide all subcategories
     jQuery('#product-category li > ul').hide();
     // Except those with selected categories inside
-    jQuery('> ul', '#product-category li:has(li > a.selected)').show();
+    jQuery('> ul', '#product-category li:has(a.selected)').show();
     // Also show those which should not be filtered
     jQuery('#product-category li:not(.to_filter)').parents('.to_filter').removeClass('to_filter').find('ul').show();
     // And filter all others

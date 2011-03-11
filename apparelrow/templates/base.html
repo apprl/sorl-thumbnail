@@ -104,7 +104,7 @@
                 </div>
             </form>
             <div id="login-more">
-                <a href="{% url registration_register %}">{% trans "Create account" %}</a> | <a href="{% url auth_password_reset %}">{% trans "Forgot password" %}</a> | <fb:login-button show-faces="false" width="22" max-rows="1" size="small" perms="{% facebook_perms %}"></fb:login-button> | <a href="{{ request.url }}" class="cancel">{% trans "Cancel" %}</a>
+                <a href="{% url registration_register %}">{% trans "Create account" %}</a> | <a href="{% url auth_password_reset %}">{% trans "Forgot password" %}</a> | <fb:login-button show-faces="false" width="18" max-rows="1" size="small" perms="{% facebook_perms %}"></fb:login-button> | <a href="{{ request.url }}" class="cancel">{% trans "Cancel" %}</a>
             </div>
         </div>
         <form action="/apparel/search" method="get" onsubmit="return false" id="search">
@@ -134,7 +134,7 @@
             <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>
             <li>
             {# Facebook connect button #}
-            <fb:login-button show-faces="false" width="22" max-rows="1" size="small" perms="{% facebook_perms %}"></fb:login-button>
+            <fb:login-button show-faces="false" width="18" max-rows="1" size="small" perms="{% facebook_perms %}"></fb:login-button>
             </li>
         {% endif %}
         </ul>
