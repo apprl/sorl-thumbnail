@@ -608,6 +608,8 @@ def get_filter(request, **kwargs):
 
     colors = Option.objects.filter(option_type__name__iexact='color', product__published=True)
 
+    product_args = {}
+
     if query or kwargs:
         if query:
             manufacturers = Product.objects.search(without(query, 'm')).filter(published=True)
@@ -617,7 +619,10 @@ def get_filter(request, **kwargs):
 
         if kwargs:
             manufacturers = manufacturers.filter(**kwargs)
-            colors = colors.filter(**kwargs)
+            for key in kwargs:
+                product_args['product__%s' % key] = kwargs[key]
+
+            colors = colors.filter(**product_args)
 
         manufacturers = manufacturers.distinct().values_list('manufacturer', flat=True)
 
@@ -644,7 +649,7 @@ def get_filter(request, **kwargs):
     result.update(
         manufacturers = manufacturers,
         colors = colors,
-        pricerange = get_pricerange(query, **kwargs),
+        pricerange = get_pricerange(query, **product_args),
     )
 
     return result
