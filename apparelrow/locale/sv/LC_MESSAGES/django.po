@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-11 13:12+0100\n"
+"POT-Creation-Date: 2011-03-11 15:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,13 +79,13 @@ msgstr "Kategorin visas på förstasidan"
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:126 apparel/models.py:276
+#: apparel/models.py:126 apparel/models.py:278
 msgid "Slug Name"
 msgstr "Slug"
 
-#: apparel/models.py:127 apparel/models.py:277
+#: apparel/models.py:127 apparel/models.py:279
 msgid "Used for URLs, auto-generated from name if blank"
-msgstr "Används i URLer. Om den är tom, auto-genereas den från namnet "
+msgstr "Används i URLer. Om den är tom, auto-genereras den från namnet"
 
 #: apparel/models.py:128
 msgid "Stock Keeping Unit"
@@ -125,89 +125,107 @@ msgstr "Slug"
 msgid "Buy URL"
 msgstr "URL till köpsida"
 
+#: apparel/models.py:223 templates/apparel/fragments/product_menu.html:15
+msgid "Price"
+msgstr "Pris"
+
 #: apparel/models.py:223
-msgid "Numeric price"
-msgstr "Pris som decimaltal"
+msgid "Price converted to base currency"
+msgstr "Pris konverterat till basvaluta"
 
 #: apparel/models.py:224 importer/models.py:122
 msgid "Currency"
 msgstr "Valuta"
 
 #: apparel/models.py:224
+#, fuzzy
+msgid "Base currency as three-letter ISO code"
+msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
+
+#: apparel/models.py:225
+msgid "Original price"
+msgstr "Ursprungligt pris"
+
+#: apparel/models.py:226
+#, fuzzy
+msgid "Original currency"
+msgstr "Ursprunglig valuta"
+
+#: apparel/models.py:226
 msgid "Currency as three-letter ISO code"
 msgstr "Valuta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:230
+#: apparel/models.py:232
 #, fuzzy
 msgid "Vendor Product"
 msgstr "Butiksprodukt"
 
-#: apparel/models.py:256
+#: apparel/models.py:258
 msgid "Items in stock"
 msgstr "Antal i lager"
 
-#: apparel/models.py:261
+#: apparel/models.py:263
 msgid "No information available"
 msgstr "Ingen information tillgänglig"
 
-#: apparel/models.py:263
+#: apparel/models.py:265
 msgid "Out of stock"
 msgstr "Ej i lager"
 
-#: apparel/models.py:265
+#: apparel/models.py:267
 msgid "In stock"
 msgstr "I lager"
 
-#: apparel/models.py:267
+#: apparel/models.py:269
 msgid "items in stock"
 msgstr "i lager"
 
-#: apparel/models.py:275 templates/apparel/look_create.html:18
+#: apparel/models.py:277 templates/apparel/look_create.html:18
 msgid "Title"
 msgstr "Titel"
 
-#: apparel/models.py:278
+#: apparel/models.py:280
 msgid "Look description"
 msgstr "Beskrivning"
 
-#: apparel/models.py:282 beta/models.py:6 beta/models.py:14
+#: apparel/models.py:284 beta/models.py:6 beta/models.py:14
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:283
+#: apparel/models.py:285
 msgid "Time modified"
 msgstr "Tid ändrad"
 
-#: apparel/models.py:285
+#: apparel/models.py:287
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:286
+#: apparel/models.py:288
 #, fuzzy
 msgid "The look will be shown on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:371
+#: apparel/models.py:373
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:372
+#: apparel/models.py:374
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:373
+#: apparel/models.py:375
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:374
+#: apparel/models.py:376
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:375
+#: apparel/models.py:377
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:376
+#: apparel/models.py:378
 msgid "CSS rotation"
 msgstr ""
 
@@ -510,8 +528,9 @@ msgstr[0] "%(counter)s produkt"
 msgstr[1] "%(counter)s produkter"
 
 #: templates/apparel/look_create.html:5
-msgid "Create new look | "
-msgstr "Skapa ny look | "
+#, fuzzy
+msgid "Create new look"
+msgstr "Skapa ny look"
 
 #: templates/apparel/look_create.html:13
 msgid "Create a new look"
@@ -642,7 +661,7 @@ msgid "Close"
 msgstr ""
 
 #: templates/apparel/look_list.html:11 templates/profile/looks.html:9
-#: templates/profile/profile.html:49
+#: templates/profile/profile.html:46
 #, fuzzy
 msgid "Latest looks"
 msgstr "Senaste looks"
@@ -750,10 +769,6 @@ msgstr "Man"
 #: templates/apparel/fragments/product_menu.html:12
 msgid "Women"
 msgstr "Kvinna"
-
-#: templates/apparel/fragments/product_menu.html:15
-msgid "Price"
-msgstr "Pris"
 
 #: templates/apparel/fragments/product_menu.html:18
 msgid "Color"
@@ -910,16 +925,11 @@ msgstr "Logga in med endat Facebook"
 msgid "Most popular looks"
 msgstr "Populära looks"
 
-#: templates/profile/profile.html:9
-#, fuzzy
-msgid "Profile"
-msgstr "Min profil"
-
-#: templates/profile/profile.html:19
+#: templates/profile/profile.html:16
 msgid "Member since"
 msgstr "Medlem sedan"
 
-#: templates/profile/profile.html:22
+#: templates/profile/profile.html:19
 #, fuzzy, python-format
 msgid ""
 "\n"
@@ -938,7 +948,7 @@ msgstr[1] ""
 "                Looks av %(name)s\n"
 "            "
 
-#: templates/profile/profile.html:29
+#: templates/profile/profile.html:26
 #, fuzzy, python-format
 msgid ""
 "\n"
@@ -957,12 +967,12 @@ msgstr[1] ""
 "                Looks av %(name)s\n"
 "            "
 
-#: templates/profile/profile.html:37
+#: templates/profile/profile.html:34
 #, fuzzy
 msgid "Latest updates"
 msgstr "Senaste händelser"
 
-#: templates/profile/profile.html:44
+#: templates/profile/profile.html:41
 msgid "No updates"
 msgstr "Inga händelser"
 
@@ -1086,8 +1096,8 @@ msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
 msgstr ""
-"Vi har skickat instruktioner hur du kan återställa ditt "
-"lösenord till e-postadressen du angivit."
+"Vi har skickat instruktioner hur du kan återställa ditt lösenord till e-"
+"postadressen du angivit."
 
 #: templates/registration/password_reset_email.html:4
 msgid "You're receiving this e-mail because you requested a password reset"
@@ -1146,26 +1156,36 @@ msgstr "Mejl skickat"
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
 
-msgid "Home"
-msgstr "Hem"
+#~ msgid "Numeric price"
+#~ msgstr "Pris som decimaltal"
 
-msgid "Following"
-msgstr "Följer"
+#~ msgid "Create new look | "
+#~ msgstr "Skapa ny look | "
 
-msgid "Followers"
-msgstr "Följd av"
+#, fuzzy
+#~ msgid "Profile"
+#~ msgstr "Min profil"
 
-msgid "Product Watch"
-msgstr "Bevakning"
+#~ msgid "Home"
+#~ msgstr "Hem"
 
-msgid "Alias"
-msgstr "Alias"
+#~ msgid "Following"
+#~ msgstr "Följer"
 
-msgid "at"
-msgstr "på"
+#~ msgid "Followers"
+#~ msgstr "Följd av"
 
-msgid "English"
-msgstr "engelska"
+#~ msgid "Product Watch"
+#~ msgstr "Bevakning"
 
-msgid "(edit)"
-msgstr "(redigera)"
+#~ msgid "Alias"
+#~ msgstr "Alias"
+
+#~ msgid "at"
+#~ msgstr "på"
+
+#~ msgid "English"
+#~ msgstr "engelska"
+
+#~ msgid "(edit)"
+#~ msgstr "(redigera)"
