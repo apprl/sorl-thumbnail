@@ -42,6 +42,7 @@ class Command(BaseCommand):
         kwargs['base_currency'] = options['base_currency'] or settings.APPAREL_BASE_CURRENCY
         
         importer = FXRateImporter(**kwargs)
+        
         try:
             importer.run()
         except urllib2.HTTPError, e:

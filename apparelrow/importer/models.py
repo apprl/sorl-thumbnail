@@ -1,4 +1,4 @@
-import sys, traceback, logging
+import sys, traceback, logging, decimal
 from datetime import datetime
 
 from django.conf import settings
@@ -123,25 +123,22 @@ class FXRate(models.Model):
     rate          = models.DecimalField(_('Exchange rate'), max_digits=10, decimal_places=6)
     
     
-    #    def convert_from(currency, amount):
-    #        # Class method that converts the given currency to the configured base currency
-    #        # FIXME: Implement caching:
-    #        #   - Store all fxrates in cache under fxrate[currency] = rate
-    #        #   - Always read from cache
-    #        #   - Check if currency is in cache, otherwise transform it
-    #        
-    #        try:
-    #            fxrate = FXRate.objects.get(
-    #                        base_currency=settings.APPAREL_BASE_CURRENCY,
-    #                        currency=currency
-    #                    )
-    #        except FXRate.DoesNotExist:
-    #            return None
-    #        
-    #        return fxrate.convert(amount)
-    #        
-    #    def convert(self, number):
-    #        return number * self.rate
+    def update_prices(self):
+        """
+        Update the price of all products whose original currency matches this
+        """
+        
+        apparel.VendorProduct.objects.filter(
+            original_currency=self.currency
+        ).update( 
+            # NOTE: This rounding has, obviously, an impact on the result and should be dropped
+            # However MySQLs handling of the Decimal type is flawed. This issue
+            # is described here http://bugs.mysql.com/bug.php?id=24541 and seems 
+            # to be fixed in MySQL 5.5, so maybe we whould update
+            
+            price=round(1 / self.rate, 2) * models.F('original_price'),
+            currency=self.base_currency
+        )
     
     def __unicode__(self):
         return u'1 %s in %s = %f' % (
