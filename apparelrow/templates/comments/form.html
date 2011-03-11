@@ -1,5 +1,5 @@
 {% load comments i18n %}
-<img class="avatar" src="{{ user.get_profile.avatar }}" />
+<img class="avatar" src="{% if user.is_authenticated %}{{ user.get_profile.avatar }}{% else %}{{ DEFAULT_AVATAR }}{% endif %}" />
 <form action="{% comment_form_target %}" method="post">
   {% csrf_token %}
   {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}

@@ -2,13 +2,14 @@ import logging
 from apparel.views import js_template, get_template_source
 from django.conf import settings as django_settings
 
-
-def cache_vars(request):
+def exposed_settings(request):
     return {
-        'CACHE_TIMEOUT': django_settings.CACHE_TEMPLATE_TIMEOUT
+        'CACHE_TIMEOUT': django_settings.CACHE_TEMPLATE_TIMEOUT,
+        'DEFAULT_AVATAR': django_settings.APPAREL_DEFAULT_AVATAR,
+        'DEFAULT_AVATAR_LARGE': django_settings.APPAREL_DEFAULT_AVATAR_LARGE,
     }
 
-def js_templates(request):    
+def js_templates(request):
     return {
         'default_templates': {
             'product': js_template(get_template_source('apparel/fragments/product_small.html'), context=RequestContext(request)),

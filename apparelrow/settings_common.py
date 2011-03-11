@@ -127,7 +127,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     
-    "context_processors.cache_vars",
+    "context_processors.exposed_settings",
     
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
@@ -254,7 +254,8 @@ CACHE_TEMPLATE_TIMEOUT = 60 * 15
 
 APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/SEK/rss.xml'
-APPAREL_DEFAULT_AVATAR     = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
+APPAREL_DEFAULT_AVATAR       = os.path.join('/', MEDIA_URL, 'images', 'avatar_small.png')
+APPAREL_DEFAULT_AVATAR_LARGE = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
 APPAREL_PRODUCT_IMAGE_ROOT = 'static/products'
 APPAREL_LOOK_IMAGE_ROOT = 'static/looks'
 APPAREL_LOGO_IMAGE_ROOT = 'static/logos'
