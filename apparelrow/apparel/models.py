@@ -19,7 +19,7 @@ from django_extensions.db.fields import AutoSlugField
 class Manufacturer(models.Model):
     name   = models.CharField(max_length=50, unique=True)
     active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
-    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype')) 
+    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype')) 
     homepage = models.URLField(_('Home page'))
 
     objects = SearchManager()
@@ -73,7 +73,7 @@ class Option(models.Model):
 class Vendor(models.Model):
     name     = models.CharField(max_length=100)
     homepage = models.URLField(_('Home page'))
-    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype'), blank=True, null=True) 
+    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype'), max_length=127, blank=True, null=True) 
 
     objects = SearchManager()
 
@@ -130,7 +130,7 @@ class Product(models.Model):
     product_name  = models.CharField(max_length=200)
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True)
     description   = models.TextField(_('Product description'), null=True, blank=True)
-    product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, help_text=_('Product image')) 
+    product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image')) 
     vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
     gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     published     = models.BooleanField(default=True)
@@ -280,7 +280,7 @@ class Look(models.Model):
     description = models.TextField(_('Look description'), null=True, blank=True)
     products    = models.ManyToManyField(Product)
     user        = models.ForeignKey(User)
-    image       = models.ImageField(upload_to=settings.APPAREL_LOOK_IMAGE_ROOT, blank=True)
+    image       = models.ImageField(upload_to=settings.APPAREL_LOOK_IMAGE_ROOT, max_length=255, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags        = TagField(blank=True)
