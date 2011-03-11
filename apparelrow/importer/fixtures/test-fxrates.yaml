@@ -1,0 +1,93 @@
+- model: apparel.vendor
+  pk: 1
+  fields:
+    name: Vendor 1
+    homepage: http://www.example.com
+
+- model: apparel.vendor
+  pk: 2
+  fields:
+    name: Vendor 2
+    homepage: http://www.example.net
+
+- model: apparel.manufacturer
+  pk: 1
+  fields:
+    name: The Factory
+
+- model: apparel.product
+  pk: 1
+  fields:
+    manufacturer: 1
+    sku: hej1
+    product_name: Product 1
+    
+- model: apparel.product
+  pk: 2
+  fields:
+    manufacturer: 1
+    sku: hej2
+    product_name: Product 2
+    
+
+- model: apparel.vendorproduct
+  pk: 1
+  fields:
+    vendor: 1
+    product: 1
+    price: ~
+    currency: ~
+    original_price: 1000
+    original_currency: BRL
+
+- model: apparel.vendorproduct
+  pk: 2
+  fields:
+    vendor: 2
+    product: 1
+    price: ~
+    currency: ~
+    original_price: 500
+    original_currency: GBP
+
+- model: apparel.vendorproduct
+  pk: 3
+  fields:
+    vendor: 1
+    product: 2
+    price: ~
+    currency: ~
+    original_price: 1100
+    original_currency: BRL
+
+- model: apparel.vendorproduct
+  pk: 4
+  fields:
+    vendor: 2
+    product: 2
+    price: ~
+    currency: ~
+    original_price: 300
+    original_currency: GBP
+
+- model: importer.fxrate
+  pk: 1
+  fields:
+    base_currency: SEK
+    currency: BRL
+    rate: "0.259600"
+
+- model: importer.fxrate
+  pk: 2
+  fields:
+    base_currency: SEK
+    currency: GBP
+    rate: "0.097250"
+
+- model: importer.fxrate
+  pk: 3
+  fields:
+    base_currency: SEK
+    currency: EUR
+    rate: "0.113160"
+

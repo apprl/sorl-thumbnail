@@ -6,6 +6,7 @@ from django.conf import settings
 
 from importer.fxrates import FXRateImporter
 from importer.models import FXRate
+from apparel.models import VendorProduct
 
 class FXRateImporterTest(TestCase):
     def setUp(self):
@@ -81,15 +82,31 @@ class FXRateImporterTest(TestCase):
         
 
 class FXRateModelTest(TestCase):
+    fixtures = ['test-fxrates.yaml']
     
-    def test_model_defaults(self):
-        fxrate = FXRate(
-            currency='BRL',
-            base_currency='SEK',
-            rate=0.259767159
-        )
-        
+    def test_model_unicode(self):
         self.assertEqual(
-            u'%s' % fxrate,
-            u'1 SEK in BRL = 0.259767'
+            u'%s' % FXRate.objects.get(pk=1),
+            u'1 SEK in BRL = 0.259600'
         )
+    
+    def test_update_prices(self):
+        
+        self.assertEqual(4, VendorProduct.objects.filter(currency=None).count())
+        
+        brl = FXRate.objects.get(pk=1)
+        brl.update_prices()
+        
+        self.assertEqual(2, VendorProduct.objects.filter(currency=None).count())
+        self.assertEqual(Decimal('3850.00'), VendorProduct.objects.get(pk=1).price)
+        self.assertEqual('SEK', VendorProduct.objects.get(pk=1).currency)
+        self.assertEqual(Decimal('4235.00'), VendorProduct.objects.get(pk=3).price)
+        self.assertEqual('SEK', VendorProduct.objects.get(pk=3).currency)
+        
+        VendorProduct.objects.filter(pk=1).update(original_price=1050)
+        brl.update_prices()
+        
+        self.assertEqual(2, VendorProduct.objects.filter(currency=None).count())
+        self.assertEqual(Decimal('4042.50'), VendorProduct.objects.get(pk=1).price)
+        self.assertEqual('SEK', VendorProduct.objects.get(pk=1).currency)
+        

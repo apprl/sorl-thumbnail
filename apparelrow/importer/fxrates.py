@@ -77,3 +77,4 @@ class FXRateImporter():
 
 class FXRateImporterParseError(Exception):
     pass
+
