@@ -76,14 +76,17 @@ def search(request, model):
 
 @get_current_user
 def wardrobe(request, profile):
-    return browse(request, template='profile/wardrobe.html', wardrobe__user=profile.user)
+    return browse(request,
+            template='profile/wardrobe.html',
+            extra_context={ 'profile': profile },
+            wardrobe__user=profile.user)
 
 def without(query, model_shorthand):
     r = re.compile(r"^\d:%s\." % model_shorthand)
 
     return dict((k, v) for k, v in query.items() if not r.match(k))
 
-def browse(request, template='apparel/browse.html', **kwargs):
+def browse(request, template='apparel/browse.html', extra_context=None, **kwargs):
     paged_result = get_paged_search_result(request,
         class_name='Product',
         page_size=BROWSE_PAGE_SIZE,
@@ -105,6 +108,9 @@ def browse(request, template='apparel/browse.html', **kwargs):
     }
 
     result = get_filter(request, **kwargs)
+
+    if extra_context:
+        result.update(extra_context)
 
     result.update(pagination=pagination)
 
