@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-11 19:00+0100\n"
+"POT-Creation-Date: 2011-03-11 13:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,202 +18,233 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: settings.py:64
+#: settings_common.py:47
 msgid "Swedish"
 msgstr "svenska"
 
-#: apparel/models.py:25
+#: apparel/models.py:21
 msgid "Products can only be displayed for an active manufactorer"
 msgstr "Produkter visas endast för aktiva tillverkare"
 
-#: apparel/models.py:26 apparel/models.py:80
+#: apparel/models.py:22 apparel/models.py:76
 msgid "Logotype"
 msgstr "Logotype"
 
-#: apparel/models.py:27 apparel/models.py:79
+#: apparel/models.py:23 apparel/models.py:75
 msgid "Home page"
 msgstr "Hem"
 
-#: apparel/models.py:35
+#: apparel/models.py:31
 #, fuzzy
 msgid "Manufacturer"
 msgstr "Tillverkare"
 
-#: apparel/models.py:51
+#: apparel/models.py:47
 msgid "Option Type"
 msgstr ""
 
-#: apparel/models.py:52
+#: apparel/models.py:48
 msgid "Option Types"
 msgstr ""
 
-#: apparel/models.py:60
+#: apparel/models.py:56
 msgid "Option value"
 msgstr ""
 
-#: apparel/models.py:69
+#: apparel/models.py:65
 msgid "Option Item"
 msgstr ""
 
-#: apparel/models.py:70
+#: apparel/models.py:66
 msgid "Option Items"
 msgstr ""
 
-#: apparel/models.py:85
+#: apparel/models.py:81
 msgid "Vendor"
-msgstr ""
+msgstr "Butik"
 
-#: apparel/models.py:94
+#: apparel/models.py:90
 msgid "Only active categories are visible and searchable on the website"
 msgstr "Endast aktiva kategorier visas och är sökbara på sajten"
 
-#: apparel/models.py:95
+#: apparel/models.py:91
 msgid "Option types"
 msgstr ""
 
-#: apparel/models.py:96
+#: apparel/models.py:92
 msgid "The category is visible on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:131
+#: apparel/models.py:125
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:132 apparel/models.py:282
+#: apparel/models.py:126 apparel/models.py:276
 msgid "Slug Name"
 msgstr "Slug"
 
-#: apparel/models.py:133 apparel/models.py:283
+#: apparel/models.py:127 apparel/models.py:277
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr "Används i URLer. Om den är tom, auto-genereas den från namnet "
 
-#: apparel/models.py:134
+#: apparel/models.py:128
 msgid "Stock Keeping Unit"
 msgstr "Produkt ID (SKU)"
 
-#: apparel/models.py:135
+#: apparel/models.py:129
 msgid "Has to be unique with the manufacturer"
 msgstr "Måste vara unikt för tillverkaren"
 
-#: apparel/models.py:137
+#: apparel/models.py:131
 msgid "Time added"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:138
+#: apparel/models.py:132
 msgid "Product description"
 msgstr "Produktbeskrivning"
 
-#: apparel/models.py:139
+#: apparel/models.py:133
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:141
+#: apparel/models.py:135
 msgid "Gender"
 msgstr ""
 
-#: apparel/models.py:196
+#: apparel/models.py:190
 #, fuzzy
 msgid "category"
 msgstr "Kategorier"
 
-#: apparel/models.py:197
+#: apparel/models.py:191
 #, fuzzy
 msgid "Name"
 msgstr "Slug"
 
-#: apparel/models.py:228
+#: apparel/models.py:222
 msgid "Buy URL"
 msgstr "URL till köpsida"
 
-#: apparel/models.py:229
+#: apparel/models.py:223
 msgid "Numeric price"
 msgstr "Pris som decimaltal"
 
-#: apparel/models.py:230
+#: apparel/models.py:224 importer/models.py:122
 msgid "Currency"
 msgstr "Valuta"
 
-#: apparel/models.py:230
+#: apparel/models.py:224
 msgid "Currency as three-letter ISO code"
 msgstr "Valuta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:236
+#: apparel/models.py:230
 #, fuzzy
 msgid "Vendor Product"
-msgstr "Se produkt"
+msgstr "Butiksprodukt"
 
-#: apparel/models.py:262
+#: apparel/models.py:256
 msgid "Items in stock"
-msgstr "Stycken på lager"
+msgstr "Antal i lager"
 
-#: apparel/models.py:267
+#: apparel/models.py:261
 msgid "No information available"
 msgstr "Ingen information tillgänglig"
 
-#: apparel/models.py:269
+#: apparel/models.py:263
 msgid "Out of stock"
-msgstr ""
+msgstr "Ej i lager"
 
-#: apparel/models.py:271
+#: apparel/models.py:265
 msgid "In stock"
 msgstr "I lager"
 
-#: apparel/models.py:273
+#: apparel/models.py:267
 msgid "items in stock"
-msgstr "stycken på lager"
+msgstr "i lager"
 
-#: apparel/models.py:281
+#: apparel/models.py:275 templates/apparel/look_create.html:18
 msgid "Title"
 msgstr "Titel"
 
-#: apparel/models.py:284
+#: apparel/models.py:278
 msgid "Look description"
 msgstr "Beskrivning"
 
-#: apparel/models.py:288
+#: apparel/models.py:282 beta/models.py:6 beta/models.py:14
 msgid "Time created"
-msgstr "Tid tillagt"
+msgstr "Tid tillagd"
 
-#: apparel/models.py:289
+#: apparel/models.py:283
 msgid "Time modified"
 msgstr "Tid ändrad"
 
-#: apparel/models.py:291
+#: apparel/models.py:285
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:292
+#: apparel/models.py:286
 #, fuzzy
 msgid "The look will be shown on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:378
+#: apparel/models.py:371
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:379
+#: apparel/models.py:372
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:380
+#: apparel/models.py:373
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:381
+#: apparel/models.py:374
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:382
+#: apparel/models.py:375
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:383
+#: apparel/models.py:376
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:190
+#: apparel/templatetags/apparel_extras.py:220
 msgid "ago"
 msgstr "sedan"
+
+#: beta/models.py:5
+msgid "beta code"
+msgstr ""
+
+#: beta/models.py:12
+#, fuzzy
+msgid "e-mail address"
+msgstr "Epostadresser"
+
+#: beta/models.py:15
+#, fuzzy
+msgid "Time seen"
+msgstr "Tid tillagt"
+
+#: beta/templates/beta/beta.html:10
+#, fuzzy
+msgid "Welcome to ApparelRow beta"
+msgstr "Välkommen till ApparelRow beta"
+
+#: beta/templates/beta/beta.html:13
+msgid "E-mail"
+msgstr "E-post"
+
+#: beta/templates/beta/beta.html:14
+msgid "Invite code"
+msgstr "Inbjudningskod"
+
+#: beta/templates/beta/beta.html:15
+msgid "Unlock beta"
+msgstr "Lås upp beta"
 
 #: importer/models.py:17
 msgid "a-z, 0-9 and _"
@@ -276,94 +307,133 @@ msgstr "Meddelande"
 msgid "Date"
 msgstr "Datum"
 
-#: profile/models.py:24
+#: importer/models.py:121
+#, fuzzy
+msgid "Base currency"
+msgstr "Valuta"
+
+#: importer/models.py:123
+msgid "Exchange rate"
+msgstr ""
+
+#: profile/models.py:22
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: templates/base.html:83
+#: profile/models.py:23
+msgid "About"
+msgstr ""
+
+#: templates/base.html:91
 msgid "Forgot password?"
 msgstr "Glömt lösenord?"
 
-#: templates/base.html:84
+#: templates/base.html:92 templates/base.html.py:107
 msgid "Create account"
 msgstr "Skapa konto"
 
-#: templates/base.html:87
+#: templates/base.html:95
 msgid "Username"
 msgstr "Användarnamn"
 
-#: templates/base.html:88
+#: templates/base.html:96
 msgid "Password"
 msgstr "Lösenord"
 
-#: templates/base.html:90 templates/base.html.py:131
+#: templates/base.html:98 templates/base.html.py:133
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr "Logga in"
 
-#: templates/base.html:105
+#: templates/base.html:107
+#, fuzzy
+msgid "Forgot password"
+msgstr "Glömt lösenord?"
+
+#: templates/base.html:107 templates/base.html.py:113
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:107
+#: templates/base.html:115
 #, fuzzy
 msgid "Matching products"
-msgstr "produkter"
+msgstr "Träffar bland produkter"
 
-#: templates/base.html:111
+#: templates/base.html:119
 msgid "Matching looks"
-msgstr ""
-
-#: templates/base.html:115
-msgid "Matching brands"
-msgstr ""
+msgstr "Träffar bland looks"
 
 #: templates/base.html:123
-msgid "Home"
-msgstr "Hem"
+msgid "Matching brands"
+msgstr "Träffar bland varumärken"
 
-#: templates/base.html:127 templates/base.html.py:128
+#: templates/base.html:131
 msgid "My Profile"
 msgstr "Min profil"
 
-#: templates/base.html:132 templates/registration/registration_complete.html:8
+#: templates/base.html:134 templates/registration/registration_complete.html:8
 #: templates/registration/registration_form.html:9
 msgid "Sign up"
 msgstr "Bli medlem"
 
-#: templates/base.html:144
+#: templates/base.html:150
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:146
+#: templates/base.html:152
 msgid "Logged in as"
 msgstr "Inloggad som"
+
+#: templates/base.html:179 templates/apparel/fragments/product_options.html:15
+msgid "OK"
+msgstr "OK"
 
 #: templates/homepage.html:5
 msgid "Welcome"
 msgstr "Välkommen"
 
-#: templates/index.html:68
+#: templates/index.html:48
+#: templates/registration/password_reset_complete.html:9
+msgid "Log in"
+msgstr "Logga in"
+
+#: templates/index.html:50
+msgid ""
+"With ApparelRow you can create Looks as a collage, tagged image or a "
+"selection of clothes. You can share the Look at your blog, Facebook page or "
+"other site."
+msgstr ""
+
+#: templates/index.html:51
+msgid "To create a look you have you log in to your account."
+msgstr ""
+
+#: templates/index.html:106
 msgid "News"
 msgstr "Aktuellt"
 
-#: templates/index.html:86 templates/apparel/look_detail.html:10
+#: templates/index.html:124 templates/apparel/look_detail.html:10
 #: templates/apparel/look_edit.html:5 templates/apparel/product_detail.html:10
 #: templates/apparel/fragments/look_wide.html:9
 msgid "by"
 msgstr "av"
 
-#: templates/index.html:94 templates/apparel/fragments/product_row.html:2
+#: templates/index.html:132 templates/apparel/fragments/product_row.html:2
 msgid "Previous"
 msgstr "Föregående"
 
-#: templates/index.html:100 templates/apparel/fragments/product_row.html:10
+#: templates/index.html:138 templates/apparel/fragments/product_row.html:10
 msgid "Next"
 msgstr "Nästa"
 
-#: templates/index.html:106 templates/apparel/look_list.html:24
+#: templates/index.html:145 templates/apparel/look_list.html:15
 msgid "Popular looks"
 msgstr "Populära looks"
+
+#: templates/index.html:149
+#, fuzzy
+msgid "Create a look"
+msgstr "Gör en look"
 
 #: templates/account/base.html:10
 msgid "E-Mail Addresses"
@@ -428,19 +498,36 @@ msgstr "Nytt lösenord (bekräfta)"
 msgid "Update password"
 msgstr "Ändra lösenord"
 
-#: templates/apparel/browse.html:5
+#: templates/apparel/browse.html:7
 msgid "Browse"
 msgstr "Bläddra"
 
-#: templates/apparel/browse.html:468
+#: templates/apparel/browse.html:39 templates/profile/wardrobe.html:16
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
 msgstr[0] "%(counter)s produkt"
 msgstr[1] "%(counter)s produkter"
 
+#: templates/apparel/look_create.html:5
+msgid "Create new look | "
+msgstr "Skapa ny look | "
+
+#: templates/apparel/look_create.html:13
+msgid "Create a new look"
+msgstr "Skapa en ny look"
+
+#: templates/apparel/look_create.html:22 templates/apparel/look_edit.html:507
+msgid "Description (optional):"
+msgstr "Beskrivning (valfritt)"
+
+#: templates/apparel/look_create.html:26
+#, fuzzy
+msgid "Create"
+msgstr "Skapa"
+
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
-#: templates/profile/base.html:15
+#: templates/profile/fragments/menu_items.html:6
 msgid "Looks"
 msgstr "Looks"
 
@@ -488,64 +575,76 @@ msgstr "Taggar"
 msgid "Articles in this look"
 msgstr "Artiklar i denna look"
 
-#: templates/apparel/look_edit.html:497
+#: templates/apparel/look_edit.html:249
+#, fuzzy
+msgid "Save collage"
+msgstr "Kollage"
+
+#: templates/apparel/look_edit.html:249
+msgid "Save photo"
+msgstr ""
+
+#: templates/apparel/look_edit.html:249
+#, fuzzy
+msgid "Save selection"
+msgstr "Urval"
+
+#: templates/apparel/look_edit.html:504
 msgid "Save"
 msgstr "Spara"
 
-#: templates/apparel/look_edit.html:500
-msgid "Description (optional):"
-msgstr "Beskrivning (valfritt)"
-
-#: templates/apparel/look_edit.html:502
+#: templates/apparel/look_edit.html:509
 msgid "Tags:"
 msgstr "Taggar (valfritt)"
 
-#: templates/apparel/look_edit.html:508
+#: templates/apparel/look_edit.html:515
 msgid "Collage"
 msgstr "Kollage"
 
-#: templates/apparel/look_edit.html:509
+#: templates/apparel/look_edit.html:516
 msgid "Photo"
 msgstr "Foto"
 
-#: templates/apparel/look_edit.html:510
+#: templates/apparel/look_edit.html:517
 msgid "Selection"
 msgstr "Urval"
 
-#: templates/apparel/look_edit.html:516
+#: templates/apparel/look_edit.html:523
 msgid "Drag products here to start building a collage"
 msgstr "Dra produkter hit för att börja skapa ditt kollage"
 
-#: templates/apparel/look_edit.html:518
+#: templates/apparel/look_edit.html:525
 msgid "or"
 msgstr "eller"
 
-#: templates/apparel/look_edit.html:519 templates/apparel/look_edit.html:528
+#: templates/apparel/look_edit.html:526 templates/apparel/look_edit.html:535
 msgid "Upload a photo to create a tagged image"
 msgstr "Ladda upp ett foto för att skapa en taggad bild"
 
-#: templates/apparel/look_edit.html:533
+#: templates/apparel/look_edit.html:540
 msgid "Choose file"
 msgstr "Välj bild"
 
-#: templates/apparel/look_edit.html:536
+#: templates/apparel/look_edit.html:543
 msgid "Upload"
 msgstr "Ladda upp"
 
-#: templates/apparel/look_edit.html:553
+#: templates/apparel/look_edit.html:560
 msgid "Your wardrobe"
 msgstr "Din garderob"
 
-#: templates/apparel/look_edit.html:563
+#: templates/apparel/look_edit.html:570
 msgid "Products"
 msgstr "Produkter"
 
-#: templates/apparel/look_edit.html:563
+#: templates/apparel/look_edit.html:570
 msgid "Close"
 msgstr ""
 
-#: templates/apparel/look_list.html:11
-msgid "Latest Looks"
+#: templates/apparel/look_list.html:11 templates/profile/looks.html:9
+#: templates/profile/profile.html:49
+#, fuzzy
+msgid "Latest looks"
 msgstr "Senaste looks"
 
 #: templates/apparel/product_detail.html:53
@@ -640,27 +739,27 @@ msgstr "Lägg i garderob"
 msgid "Browse articles"
 msgstr "Filtrera resultat"
 
-#: templates/apparel/fragments/product_menu.html:11
+#: templates/apparel/fragments/product_menu.html:10
 msgid "All"
 msgstr "Alla"
 
-#: templates/apparel/fragments/product_menu.html:12
+#: templates/apparel/fragments/product_menu.html:11
 msgid "Men"
 msgstr "Man"
 
-#: templates/apparel/fragments/product_menu.html:13
+#: templates/apparel/fragments/product_menu.html:12
 msgid "Women"
 msgstr "Kvinna"
 
-#: templates/apparel/fragments/product_menu.html:16
+#: templates/apparel/fragments/product_menu.html:15
 msgid "Price"
 msgstr "Pris"
 
-#: templates/apparel/fragments/product_menu.html:19
+#: templates/apparel/fragments/product_menu.html:18
 msgid "Color"
 msgstr "Färg"
 
-#: templates/apparel/fragments/product_menu.html:22
+#: templates/apparel/fragments/product_menu.html:21
 msgid "Brand"
 msgstr "Varumärke"
 
@@ -668,10 +767,6 @@ msgstr "Varumärke"
 #: templates/apparel/fragments/product_options.html:8
 msgid "Show all"
 msgstr "Visa alla"
-
-#: templates/apparel/fragments/product_options.html:15
-msgid "OK"
-msgstr "OK"
 
 #: templates/apparel/fragments/product_options_brand.html:4
 msgid "Select one or many brands"
@@ -719,6 +814,44 @@ msgstr[1] ""
 "\n"
 "        %(number)s artiklar\n"
 "    "
+
+#: templates/apparel/fragments/activity/added.html:17
+#, fuzzy
+msgid "Added to wardrobe"
+msgstr "Lägg i garderob"
+
+#: templates/apparel/fragments/activity/commented.html:19
+#, fuzzy, python-format
+msgid ""
+"\n"
+"            Commented on %(commented_on)s\n"
+"        "
+msgstr ""
+"\n"
+"                Looks av %(name)s\n"
+"            "
+
+#: templates/apparel/fragments/activity/created.html:16
+#, fuzzy, python-format
+msgid ""
+"\n"
+"        %(name)s created a new look\n"
+"    "
+msgstr ""
+"\n"
+"                Looks av %(name)s\n"
+"            "
+
+#: templates/apparel/fragments/activity/liked.html:19
+#, fuzzy, python-format
+msgid ""
+"\n"
+"            %(name)s like\n"
+"        "
+msgstr ""
+"\n"
+"                Looks av %(name)s\n"
+"            "
 
 #: templates/comments/form.html:24
 msgid "Comment"
@@ -772,21 +905,66 @@ msgstr "Endast Facebook"
 msgid "Connect with facebook only"
 msgstr "Logga in med endat Facebook"
 
-#: templates/profile/base.html:18
-msgid "Wardrobe"
-msgstr "Garderob"
+#: templates/profile/looks.html:14
+#, fuzzy
+msgid "Most popular looks"
+msgstr "Populära looks"
 
-#: templates/profile/base.html:21
-msgid "Following"
-msgstr "Följer"
+#: templates/profile/profile.html:9
+#, fuzzy
+msgid "Profile"
+msgstr "Min profil"
 
-#: templates/profile/base.html:24
-msgid "Followers"
-msgstr "Följd av"
+#: templates/profile/profile.html:19
+msgid "Member since"
+msgstr "Medlem sedan"
 
-#: templates/profile/base.html:27
-msgid "Product Watch"
-msgstr "Bevakning"
+#: templates/profile/profile.html:22
+#, fuzzy, python-format
+msgid ""
+"\n"
+"            %(likes)s like\n"
+"        "
+msgid_plural ""
+"\n"
+"            %(likes)s likes\n"
+"        "
+msgstr[0] ""
+"\n"
+"                Looks av %(name)s\n"
+"            "
+msgstr[1] ""
+"\n"
+"                Looks av %(name)s\n"
+"            "
+
+#: templates/profile/profile.html:29
+#, fuzzy, python-format
+msgid ""
+"\n"
+"            %(looks)s look\n"
+"        "
+msgid_plural ""
+"\n"
+"            %(looks)s looks\n"
+"        "
+msgstr[0] ""
+"\n"
+"                Looks av %(name)s\n"
+"            "
+msgstr[1] ""
+"\n"
+"                Looks av %(name)s\n"
+"            "
+
+#: templates/profile/profile.html:37
+#, fuzzy
+msgid "Latest updates"
+msgstr "Senaste händelser"
+
+#: templates/profile/profile.html:44
+msgid "No updates"
+msgstr "Inga händelser"
 
 #: templates/profile/watcher.html:13
 msgid "Search now"
@@ -805,6 +983,10 @@ msgstr ""
 "\n"
 "            Du kan prenumerera på en särskiljd sökning genom...\n"
 "        "
+
+#: templates/profile/fragments/menu_items.html:3
+msgid "Wardrobe"
+msgstr "Garderob"
 
 #: templates/registration/activate.html:8
 #: templates/registration/activation_complete.html:8
@@ -841,7 +1023,7 @@ msgstr "Klicka <a href=\"/accounts/login/\">här för att logga in</a>."
 #: templates/registration/login.html:10
 #, fuzzy
 msgid "Your username and password did not match. Please try again."
-msgstr "Ditt lösenord och användarnamn stämde inte. Försök igen."
+msgstr "Fel användarnamn eller lösenord. Försök igen."
 
 #: templates/registration/login.html:17
 msgid "Forgot your password?"
@@ -849,7 +1031,7 @@ msgstr "Glömt lösenordet?"
 
 #: templates/registration/login.html:18
 msgid "Need an account?"
-msgstr "Behäver du ett konto?"
+msgstr "Behöver du ett konto?"
 
 #: templates/registration/logout.html:6
 msgid "Log out"
@@ -866,10 +1048,6 @@ msgstr "Lösenordet är återställt"
 #: templates/registration/password_reset_complete.html:8
 msgid "Your password has been set.  You may go ahead and log in now."
 msgstr "Ditt lösenord har sparats. Nu kan du logga in med ditt nya lösenord"
-
-#: templates/registration/password_reset_complete.html:9
-msgid "Log in"
-msgstr "Logga in"
 
 #: templates/registration/password_reset_confirm.html:9
 msgid "Enter new password"
@@ -889,8 +1067,10 @@ msgstr "Kunde inte återställa lösenordet"
 #: templates/registration/password_reset_confirm.html:19
 #, fuzzy
 msgid ""
-"The password reset link was invalid, possibly because it has already been used."
-msgstr "Den här länken är inte giltig, formodligen har den redan blivit använd."
+"The password reset link was invalid, possibly because it has already been "
+"used."
+msgstr ""
+"Återställningslänken är inte giltig, förmodligen har den redan använts."
 
 #: templates/registration/password_reset_confirm.html:19
 msgid "Please request a new password reset."
@@ -906,8 +1086,8 @@ msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
 msgstr ""
-"Vi har skickat ett e-post med instruktioner för hur du kan återställa ditt "
-"lösenord till adressen du angivit."
+"Vi har skickat instruktioner hur du kan återställa ditt "
+"lösenord till e-postadressen du angivit."
 
 #: templates/registration/password_reset_email.html:4
 msgid "You're receiving this e-mail because you requested a password reset"
@@ -932,7 +1112,7 @@ msgid ""
 "instructions for setting a new one."
 msgstr ""
 "Glömt ditt lösenord? Ange ditt lösenord här och vi skickar instruktioner för "
-"att ange ett nytt"
+"att ange ett nytt!"
 
 #: templates/registration/registration_complete.html:10
 msgid ""
@@ -942,7 +1122,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Tack för att du registrerat dig. Ett mejl har skickats till dig med "
+"        Tack för att du registrerat dig! Ett mejl har skickats till dig med "
 "en aktiveringsnyckel. När du följt länken i mejlet kan du logga in.\n"
 "    "
 
@@ -956,7 +1136,7 @@ msgstr "Sök"
 
 #: watcher/models.py:29
 msgid "Time last checked"
-msgstr "Tid senast kollad"
+msgstr "Senast kollad"
 
 #: watcher/models.py:30
 msgid "E-mail successfully sent"
@@ -966,14 +1146,26 @@ msgstr "Mejl skickat"
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
 
-#~ msgid "Alias"
-#~ msgstr "Alias"
+msgid "Home"
+msgstr "Hem"
 
-#~ msgid "at"
-#~ msgstr "på"
+msgid "Following"
+msgstr "Följer"
 
-#~ msgid "English"
-#~ msgstr "engelska"
+msgid "Followers"
+msgstr "Följd av"
 
-#~ msgid "(edit)"
-#~ msgstr "(redigera)"
+msgid "Product Watch"
+msgstr "Bevakning"
+
+msgid "Alias"
+msgstr "Alias"
+
+msgid "at"
+msgstr "på"
+
+msgid "English"
+msgstr "engelska"
+
+msgid "(edit)"
+msgstr "(redigera)"
