@@ -90,6 +90,10 @@ class FXRateModelTest(TestCase):
             u'1 SEK in BRL = 0.259600'
         )
     
+    def test_convert_amount(self):
+        brl = FXRate.objects.get(pk=1)
+        self.assertEqual(Decimal('3852.080123'), brl.convert(1000))
+    
     def test_update_prices(self):
         
         self.assertEqual(4, VendorProduct.objects.filter(currency=None).count())

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from apparel.models import *
-from importer.models import ImportLog, VendorFeed
+from importer.models import ImportLog, VendorFeed, FXRate
 from importer.api import API, IncompleteDataSet, ImporterError, SkipProduct
 
 
@@ -211,6 +211,7 @@ class TestImporterAPIProduct(TransactionTestCase):
     """        
     
     def setUp(self):
+        self.fxrate = FXRate.objects.create(base_currency=settings.APPAREL_BASE_CURRENCY, currency='GBP', rate=decimal.Decimal('0.098'))
         self.log = ImportLog.objects.create(
              vendor_feed=VendorFeed.objects.create(
                  name='testfeed',
@@ -222,6 +223,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.dataset = copy.deepcopy(sample_dict)
         self.api = API(import_log=self.log)
         self.api.dataset = self.dataset
+        self.api._product_image = '/dummy/path.jpeg'    # This prevent the tests from trying to download non-existant images
         
         self.type_size  = OptionType.objects.create(name='size', description='Size')
         self.type_color = OptionType.objects.create(name='color', description='The colour')
@@ -229,9 +231,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.category = Category.objects.create(name=self.dataset['product']['category'])
         self.category.option_types.add(self.type_size)
         self.category.option_types.add(self.type_color)
-        
-        self.manufacturer = Manufacturer.objects.create(name=self.dataset['product']['manufacturer'])
-    
+        self.manufacturer = Manufacturer.objects.create(name=self.dataset['product']['manufacturer'])    
     
     # 
     # PRODUCT
@@ -255,6 +255,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         a.dataset['product']['product_name'] = 'A Brand New Name'
         a.dataset['product']['description'] = 'The new description'
         a.dataset['product']['category'] = ['A Brand New Category']
+        a._product_image = '/dummy/path.jpeg'
         
         p2 = a.import_product()
         self.assertEqual(p2.id, p.id, 'Product updated')
@@ -267,10 +268,19 @@ class TestImporterAPIProduct(TransactionTestCase):
         p = self.api.import_product()
         vp = VendorProduct.objects.get( product=p, vendor=self.api.vendor )
         
+        
         self.assertTrue(isinstance(vp, VendorProduct), 'Created vendor product')
-        self.assertEqual(vp.buy_url,    self.dataset['product']['product-url'], 'buy_url property')
-        self.assertEqual(vp.price,      decimal.Decimal(self.dataset['product']['price']),    'price property')
-        self.assertEqual(vp.currency,   self.dataset['product']['currency'], 'currency property')
+        self.assertEqual(vp.buy_url, self.dataset['product']['product-url'], 'buy_url property')
+        self.assertEqual(vp.currency, settings.APPAREL_BASE_CURRENCY, 'currency property')
+        self.assertEqual(vp.original_price, decimal.Decimal(self.dataset['product']['price']), 'original_price property')
+        self.assertEqual(vp.original_currency, self.dataset['product']['currency'], 'original_currency property')
+        
+        self.assertAlmostEqual(
+            vp.price, 
+            self.fxrate.convert(float(self.dataset['product']['price'])),
+            2,
+            'price property'
+        )
         
         
     def test_product_vendor_modify(self):
@@ -377,6 +387,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         # Run import again
         a = API(import_log=self.log)
         a.dataset = self.dataset
+        a._product_image = '/dummy/path.jpeg'
         p  = a.import_product()
         vp = VendorProduct.objects.get(product=p, vendor=a.vendor)
         
@@ -448,15 +459,19 @@ class TestProductImage(TestCase):
         #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, p)), 'File downloaded')
         #
     def test_product_image_http_error(self):
-        self.api.dataset['product']['image-url'] = 'http://www.example.com/404.jpg'
+        self.api.dataset['product']['image-url'] = 'http://www.hanssonlarsson.se/test/404.jpg'
+        self.api._product_image = None
         
         try:
             # FIXME: assertRaises only works on callables
             self.api.product_image
         except SkipProduct:
             self.assertTrue(True, 'Require URL to exist')
+        except e:
+            print "%s" % e
+            self.fail('Require URL to exist')
         else:
-            self.fail('Require URL to eist')
+            self.fail('Require URL to exist')
     
     def test_product_image_exists(self):
         target_file = os.path.join(
