@@ -5,9 +5,6 @@
 {% block body %}
     <div id="profile-nav">
         <ul>
-            <li>
-                <a href="{{ profile.get_absolute_url }}" class="first selected">{% trans "Profile" %}</a>
-            </li>
             {% include 'profile/fragments/menu_items.html' %}
         </ul>
         <hr>
