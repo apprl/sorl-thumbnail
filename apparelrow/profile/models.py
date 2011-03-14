@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.db.models.signals import post_save
 from django_facebook.models import FacebookProfile
-import settings
+from django.conf import settings
 
 from voting.models import Vote
 from apparel.models import Look
@@ -12,14 +12,11 @@ from apparel.models import Look
 
 import datetime, mptt
 
-# FIXME: Move to Django settings directory
-PROFILE_BASE      = 'static/profile'
-
 class ApparelProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     
     name  = models.CharField(max_length=50, unique=True, blank=True, null=True)
-    image = models.ImageField(upload_to=PROFILE_BASE, help_text=_('User profile image'), blank=True, null=True) 
+    image = models.ImageField(upload_to=settings.APPAREL_PROFILE_IMAGE_ROOT, help_text=_('User profile image'), blank=True, null=True) 
     about = models.TextField(_('About'), null=True, blank=True)
 
     @models.permalink
