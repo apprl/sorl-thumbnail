@@ -258,7 +258,7 @@ class API(object):
             
             elif fields['original_currency'] in rates:
                 fields['price'] = rates[fields['original_currency']].convert(float(fields['original_price']))
-                logger.debug('%f %s = %f %s', fields['original_price'], fields['original_currency'], fields['price'], fields['currency'])
+                logger.debug('Setting price to %s %s (= %f %s)', fields['original_price'], fields['original_currency'], fields['price'], fields['currency'])
             else:
                 self._import_log.messages.create(
                     status='attention',
