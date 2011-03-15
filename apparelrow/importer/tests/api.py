@@ -450,9 +450,9 @@ class TestProductImage(TestCase):
         self.assertRaises(IncompleteDataSet, self.api.product_image_path, None)
         
     def test_product_image(self):
-        print 'Currently no way of testing a request against testserver using urllib2.'
-        # FIXME: Implement this test somehow.
-        #
+        pass
+        
+        # FIXME: I cannot figure out how to connect to a test server and execute this test.
         #p = self.api.product_image()
         #
         #self.assertEqual(p, self.api.product_image_path, "Returns product_image_path property")
@@ -468,8 +468,7 @@ class TestProductImage(TestCase):
         except SkipProduct:
             self.assertTrue(True, 'Require URL to exist')
         except e:
-            print "%s" % e
-            self.fail('Require URL to exist')
+            self.fail('Require URL to exist, error was %s' % s)
         else:
             self.fail('Require URL to exist')
     
@@ -489,9 +488,9 @@ class TestProductImage(TestCase):
         """
         Product image is downloaded during import
         """
-        print 'Currently no way of testing a request against testserver using urllib2.'
-        # FIXME: Implement this test somehow.
-        #
+        pass
+        # FIXME: I cannot figure out how to connect to a test server and execute this test.
+        
         #p = self.api.import_product()
         #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, self.api.product_image_path)), 'Image downloaded during import')
         #self.assertEqual(p.product_image, self.api.product_image_path, 'image_path stored in product')
