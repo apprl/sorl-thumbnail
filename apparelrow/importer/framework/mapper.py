@@ -7,8 +7,7 @@ from apparelrow.importer.api import API, SkipProduct
 logger = logging.getLogger('apparel.importer.mapper')
 
 
-class DataMapper():
-    
+class DataMapper(object):
     color_regexes = None
     re_html     = re.compile(r'<.+?>', re.S)
     re_trunc_ws = re.compile(r'[ \t\r]{2,}')

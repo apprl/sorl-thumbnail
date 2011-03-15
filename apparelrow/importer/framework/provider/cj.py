@@ -45,20 +45,32 @@ from importer.framework.mapper import DataMapper
 #    TITLE
 #    UPC
 #    WARRANTY
+#
+# Note: Column names are lower cased
 #   
 
 
 
 class CJMapper(DataMapper):
     re_cdata = re.compile(r'<!\[CDATA\[(.+?)\]\]>')
-    re_quote = re.compile(r'"')
+    re_quote = re.compile(r'^"*|(?<!\d)"|"*$')          # The middle segment preserves inches
     re_yes   = re.compile(r'^yes$', re.I)
     re_price = re.compile(r'[^\d\.]')
+    #re_list  = re.compile(r'(?<=\.\s)\s*\*\s+(?=[A-Z])')
     
     def preprocess(self):
         for k, v in self.record.items():
             self.record[k.lower()] = self.re_cdata.sub(r'\1', self.record[k])
             del self.record[k]    
+    
+    def map_variations(self):
+        v = []
+        
+        colors = self.map_colors(self.record.get('description', ''))
+        if len(colors):
+            v = [{'color': c } for c in colors]
+        
+        return v
     
     def get_description(self):
         return self.re_quote.sub('', self.record['description'])
