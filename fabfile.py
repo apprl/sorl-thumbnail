@@ -63,7 +63,7 @@ def setup():
     # new project setup
     sudo('mkdir -p %(path)s; chown %(user)s:%(user)s %(path)s;' % env, pty=True)
     with cd(env.path):
-        run('virtualenv .')
+        run('virtualenv --no-site-packages .')
         with settings(warn_only=True):
             run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared packages backup;', pty=True)
             sudo('chown -R %(run_user)s:%(run_user)s var;' % env, pty=True)
