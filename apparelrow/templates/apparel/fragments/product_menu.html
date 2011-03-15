@@ -24,16 +24,13 @@
 </ul>
 
 {% for category, structure in categories_all|tree_info %}
-    {# If we want to allow more than three levels of     depth, remove this condition #}
-    {% if category.get_ancestors.count < 3 %}
-        {% if structure.new_level %}
-            <ul{% if forloop.first %} id="product-category"{% endif %} class="level-{{ category.get_ancestors.count }}{% if forloop.first %} hover-menu{% endif %}">
-        {% else %}
-            </li>
-        {% endif %}
-           <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}{% if categories and category.id not in categories %} to_filter{% endif %}">
-            <a id="category-{{ category.id }}"{% if category.id in selected_categories %} class="selected"{% endif %} href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
-        {% for level in structure.closed_levels %}</li></ul>{% endfor %}
+    {% if structure.new_level %}
+        <ul{% if forloop.first %} id="product-category"{% endif %} class="level-{{ category.get_ancestors.count }}{% if forloop.first %} hover-menu{% endif %}">
+    {% else %}
+        </li>
     {% endif %}
+        <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}{% if categories and category.id not in categories %} to_filter{% endif %}">
+        <a id="category-{{ category.id }}"{% if category.id in selected_categories %} class="selected"{% endif %} href="{% url apparel.views.browse %}?1:c.id:in={{ category.id }}">{{ category.name }}</a>
+    {% for level in structure.closed_levels %}</li></ul>{% endfor %}
 {% endfor %}
 
