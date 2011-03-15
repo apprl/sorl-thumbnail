@@ -66,8 +66,10 @@ Required Data Structure
 """
 
 class API(object):
-    re_url = re.compile(r'^.+/(.+)$')
+    re_url   = re.compile(r'^.+/(.+)$')
+    _fxrates = None
     
+        
     def __init__(self, dataset=None, import_log=None):
         self.version          = "0.1"
         self.product          = None
@@ -242,9 +244,26 @@ class API(object):
         
         fields = {
             'buy_url': self.dataset['product']['product-url'],
-            'price': self.dataset['product']['price'],
-            'currency': self.dataset['product']['currency'],            
+            'original_price': self.dataset['product']['price'],
+            'original_currency': self.dataset['product']['currency'],
         }
+        
+        rates = self.fxrates()
+        
+        if len(rates.keys()) > 0:
+            fields['currency'] = settings.APPAREL_BASE_CURRENCY
+            
+            if settings.APPAREL_BASE_CURRENCY == fields['original_currency']:
+                fields['price'] = fields['original_price']
+            
+            elif fields['original_currency'] in rates:
+                fields['price'] = rates[fields['original_currency']].convert(float(fields['original_price']))
+                logger.debug('%f %s = %f %s', fields['original_price'], fields['original_currency'], fields['price'], fields['currency'])
+            else:
+                self._import_log.messages.create(
+                    status='attention',
+                    message='Missing exchange rate for %s. Add and run the arfxrates --update command' % fields['original_currency'],
+                )
         
         for f in fields:
             setattr(self.vendorproduct, f, fields[f])
@@ -440,6 +459,20 @@ class API(object):
                 logger.debug(u'Image already exists, will not download [%s]' % self._product_image)
         
         return self._product_image
+    
+        
+    def fxrates(self):
+        from importer.models import FXRate
+        
+        if not API._fxrates:
+            if hasattr(settings, 'APPAREL_BASE_CURRENCY'):
+                API._fxrates = dict([(c.currency, c) for c in FXRate.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY)])
+            else:
+                logger.warning('Missing APPAREL_BASE_CURRENCY setting, prices will not be converted')
+                API._fxrates = {}
+        
+        return API._fxrates
+
 
 class ImporterError(Exception):
     """

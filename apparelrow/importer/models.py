@@ -135,10 +135,17 @@ class FXRate(models.Model):
             # However MySQLs handling of the Decimal type is flawed. This issue
             # is described here http://bugs.mysql.com/bug.php?id=24541 and seems 
             # to be fixed in MySQL 5.5, so maybe we whould update
-            
             price=round(1 / self.rate, 2) * models.F('original_price'),
             currency=self.base_currency
         )
+    
+    def convert(self, amount):
+        """
+        Converts the amount from currency to base_currency according to rate
+        """
+        # FIXME 2.7: Switch the two lines below once upgraded to 2.7 
+        #return decimal.Decimal.from_float(float(1 / self.rate) * amount)
+        return decimal.Decimal('%f' % (float(1 / self.rate) * amount))
     
     def __unicode__(self):
         return u'1 %s in %s = %f' % (
