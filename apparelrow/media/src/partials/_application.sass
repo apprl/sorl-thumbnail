@@ -692,7 +692,7 @@ table.available-sizes th
 
 .product-vendors
   border-bottom: 1px solid #e7e7e7
-
+  
 a.buy-now
   padding: 58px 0 0
   text-align: center
@@ -712,11 +712,15 @@ a.buy-now:hover
 .product-vendors a.buy-now
   float: right
   margin-top: -50px
+  &.higher
+    margin-top: -38px
 
 .product-vendor
   border-bottom: none
   padding: 7px 9px
   height: 16px
+  &.higher
+    height: 28px
   .price, .currency
     vertical-align: middle
   .price
@@ -727,6 +731,9 @@ a.buy-now:hover
   .vendor
     float: right
     padding-right: 10px
+  .original-price, .original-price .price
+    font-size: 1em
+    color: $easy_color
 
 .vendor
   background: transparent image_url(unquote("vendor.png")) scroll no-repeat left center

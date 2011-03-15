@@ -35,11 +35,16 @@
         {% with object.vendorproduct.all|dictsort:'price' as vendorproducts %}
         {% for vendorproduct in vendorproducts %}
             {% if forloop.first %}
-            <a href="{{ vendorproduct.buy_url }}" target="_new" class="buy-now">{% trans "Buy" %}</a>
+            <a href="{{ vendorproduct.buy_url }}" target="_new" class="buy-now{% if vendorproduct.price != vendorproduct.original_price %} higher{% endif %}">{% trans "Buy" %}</a>
             {% endif %}
-            <div class="product-vendor">
+            <div class="product-vendor{% if vendorproduct.price != vendorproduct.original_price %} higher{% endif %}">
                 <span class="price">{{ vendorproduct.price }}</span><span class="currency">{{ vendorproduct.currency }}</span>
                 <a class="vendor" href="{{ vendorproduct.buy_url }}">{{ vendorproduct.vendor }}</a>
+                {% if vendorproduct.price != vendorproduct.original_price %}
+                <div class="original-price">
+                    <span class="price">{{ vendorproduct.original_price }}</span><span class="currency">{{ vendorproduct.original_currency }}</span>
+                </div>
+                {% endif %}
             </div>
         {% endfor %}
         {% endwith %}
