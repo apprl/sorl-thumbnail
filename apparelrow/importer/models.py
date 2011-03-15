@@ -2,7 +2,7 @@ import sys, traceback, logging, decimal
 from datetime import datetime
 
 from django.conf import settings
-from django.db import models
+from django.db import models, connection, transaction
 from django.utils.translation import get_language, ugettext_lazy as _
 
 from apparel import models as apparel
@@ -128,16 +128,42 @@ class FXRate(models.Model):
         Update the price of all products whose original currency matches this
         """
         
-        apparel.VendorProduct.objects.filter(
-            original_currency=self.currency
-        ).update( 
-            # NOTE: This rounding has, obviously, an impact on the result and should be dropped
-            # However MySQLs handling of the Decimal type is flawed. This issue
-            # is described here http://bugs.mysql.com/bug.php?id=24541 and seems 
-            # to be fixed in MySQL 5.5, so maybe we whould update
-            price=round(1 / self.rate, 2) * models.F('original_price'),
-            currency=self.base_currency
-        )
+        # NOTE: We should really execute the statement below, however MySQLs 
+        # handling of the Decimal type is flawed. This issue is described here 
+        # http://bugs.mysql.com/bug.php?id=24541 and seems to be fixed in 
+        # MySQL 5.5, so maybe we whould update.
+        # In the mean time, we execute this raw MySQL-specific query, rounding 
+        # the result.
+        
+        #apparel.VendorProduct.objects.filter(
+        #    original_currency=self.currency
+        #).update( 
+        #    price=1 / self.rate * models.F('original_price'),
+        #    currency=self.base_currency
+        #)
+        
+        cursor   = connection.cursor()
+        affected = cursor.execute("""
+            UPDATE
+              %(table)s
+            SET
+                price    = Round(%(price)f * original_price, 2)
+              , currency = '%(base_currency)s'
+            WHERE
+              original_currency = '%(currency)s'
+        """ % {
+            'table': apparel.VendorProduct._meta.db_table,
+            'currency': self.currency,
+            'base_currency': self.base_currency,
+            'price': 1 / self.rate
+        })
+        transaction.commit_unless_managed()
+        
+        logger.info('Converted %i prices in %s to %s' % (
+            affected,
+            self.currency,
+            self.base_currency
+        ))
     
     def convert(self, amount):
         """

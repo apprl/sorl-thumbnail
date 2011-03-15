@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 from importer.fxrates import *
+from apparel.models import VendorProduct
 
 class Command(BaseCommand):
     args = "<name>"
@@ -104,13 +105,15 @@ class Command(BaseCommand):
                     options['currency']
                 ))
         else:
-            fxrates = FXRate.objects.filter(base_currency=options['base_currency'])
+            fxrates = FXRate.objects.filter(
+                currency__in=VendorProduct.objects.all().distinct('original_currency').values_list('original_currency', flat=True),
+                base_currency=options['base_currency']
+            )
             if len(fxrates) == 0:
                 raise CommandError('No fx rate matching base currency %s' % options['base_currency'])
         
         
         for fxrate in fxrates:
-            print u"Converting prices in %s to %s" % (fxrate.currency, fxrate.base_currency)
             fxrate.update_prices() 
         
         print "Prices successfully updated"
