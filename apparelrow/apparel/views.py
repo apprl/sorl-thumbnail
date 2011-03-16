@@ -633,7 +633,7 @@ def get_filter(request, **kwargs):
         manufacturers = manufacturers.distinct().values_list('manufacturer', flat=True)
 
         if not request.is_ajax():
-            manufacturers = Manufacturer.objects.filter(id__in=manufacturers)
+            manufacturers = Manufacturer.objects.filter(id__in=manufacturers).order_by('name')
 
     else:
         manufacturers = Manufacturer.objects.filter(product__published=True).distinct()
