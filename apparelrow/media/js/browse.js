@@ -390,6 +390,10 @@ function filterCriteria(criteria_filter) {
         $('#price-ruler .max').text(max);
 
         var values = $('#price-slider').slider('values');
+        if(values[0] > max)
+            values[0] = min;
+        if(values[1] < min)
+            values[1] = max;
         $('#price-slider').slider('option', 'min', min);
         $('#price-slider').slider('option', 'max', max);
         $('#price-slider').slider('values', values);
