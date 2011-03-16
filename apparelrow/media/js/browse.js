@@ -385,15 +385,14 @@ function filterCriteria(criteria_filter) {
             max = parseInt(criteria_filter.pricerange.max, 10),
             mid = parseInt(min + (max - min) / 2, 10);
 
-        $('input[name="pricerange_min"]').val(min);
-        $('input[name="pricerange_max"]').val(max);
-
         $('#price-ruler .min').text(min);
         $('#price-ruler .mid').text(mid);
         $('#price-ruler .max').text(max);
 
+        var values = $('#price-slider').slider('values');
         $('#price-slider').slider('option', 'min', min);
         $('#price-slider').slider('option', 'max', max);
+        $('#price-slider').slider('values', values);
     }
 }
 
