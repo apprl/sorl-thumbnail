@@ -252,8 +252,9 @@ EMAIL_USE_TLS       = True
 CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_TEMPLATE_TIMEOUT = 60 * 15
 
+APPAREL_DOMAIN = '.apparelrow.com' # FIXME: We should probably get this from the Sites framework
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-21990268-1'
-GOOGLE_ANALYTICS_DOMAIN = '.apparelrow.com'
+GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 
 
 APPAREL_BASE_CURRENCY = 'SEK'
