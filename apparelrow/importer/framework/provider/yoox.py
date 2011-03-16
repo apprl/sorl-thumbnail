@@ -2,6 +2,8 @@ import re
 
 from importer.framework.provider.cj import CJMapper, Provider as CJProvider
 
+# See documentation in cj.py for info on feed format
+
 class YooxMapper(CJMapper):
     re_name = re.compile('\s+-\s+at\s+yoox\.com\s*', re.I)
     re_list = re.compile('(?<=\w)\s+(?=[A-Z])')         # Matches the space between a words followed by a capitalised word

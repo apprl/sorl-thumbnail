@@ -56,7 +56,6 @@ class CJMapper(DataMapper):
     re_quote = re.compile(r'^"*|(?<!\d)"|"*$')          # The middle segment preserves inches
     re_yes   = re.compile(r'^yes$', re.I)
     re_price = re.compile(r'[^\d\.]')
-    #re_list  = re.compile(r'(?<=\.\s)\s*\*\s+(?=[A-Z])')
     
     def preprocess(self):
         for k, v in self.record.items():
@@ -71,7 +70,7 @@ class CJMapper(DataMapper):
             v = [{'color': c } for c in colors]
         
         return v
-    
+
     def get_description(self):
         return self.re_quote.sub('', self.record['description'])
     
@@ -95,7 +94,6 @@ class CJMapper(DataMapper):
         return self.record['name']
     
     def get_availability(self):
-    
         if self.re_yes.match(self.record['instock']) and self.re_yes.match(self.record['online']):
             return True
         
