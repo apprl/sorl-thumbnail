@@ -71,7 +71,10 @@
     
     </script>
     {% facebook_init %}
-      {% block facebook_code %}{% endblock %}
+        {% block facebook_code %}
+        // Reload page on Facebook login
+        FB.Event.subscribe('auth.login', function() { location.reload() });
+        {% endblock %}
     {% endfacebook %}
     {% block 'extra-scripts' %}
     {% endblock 'extra-scripts' %}
