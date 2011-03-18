@@ -1078,6 +1078,26 @@ a.block_link
   float: left
   margin-right: 0.5em
 
+.following
+  .follow
+    display: none
+
+.not_following
+  .unfollow
+    display: none
+
+a.follow, a.unfollow
+  +button(none, 1em)
+  +border-radius(2px)
+  +highlight
+  line-height: 0.75
+  padding: 2px
+  span
+    display: none
+  &:hover
+    span
+      display: inline
+
 body.profile
   #profile-nav
     margin-left: $aside_width

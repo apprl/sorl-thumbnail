@@ -81,6 +81,17 @@ jQuery(document).ready(function() {
     });
     */
     
+    jQuery('a.follow, a.unfollow').click(function() {
+        $this = $(this);
+        $parent = $this.parent();
+        $.post($this.attr('href'), function(response) {
+            if($parent.is('.following'))
+                $parent.removeClass('following').addClass('not_following');
+            else
+                $parent.removeClass('not_following').addClass('following');
+        });
+        return false;
+    });
 });
 
 
