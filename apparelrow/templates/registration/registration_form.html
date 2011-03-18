@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load facebook_tags %}
+{% load facebook %}
 
 {% block body-classes %}one-column{% endblock body-classes %}
 {% block body %}
@@ -13,7 +13,7 @@
 
     <h2>{% trans "... or sign up using your Facebook ID" %}</h2>
     <p>
-        {% facebook_button %}
+        <fb:login-button show-faces="false" width="18" max-rows="1" size="small" perms="{% facebook_perms %}"></fb:login-button>
     </p>
 </div>
 
