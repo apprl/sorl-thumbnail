@@ -86,8 +86,8 @@ def deploy(param=''):
     copy_bin()
     copy_config()
     build_styles_and_scripts()
-    symlink_current_release()
     migrate(param)
+    symlink_current_release()
     restart_django()
     restart_webserver()
     
