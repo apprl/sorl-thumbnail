@@ -11,7 +11,7 @@
     </div>
     <div class="sidebar">
         <img src="{{ profile.avatar_large }}" class="avatar large">
-        <h1>{{ profile.display_name }}</h1>
+        <h1>{% include 'apparel/fragments/profile_link.html' %}</h1>
         <p>
             {% trans "Member since" %} {{ profile.user.date_joined|date:"SHORT_DATE_FORMAT" }}
         </p>
