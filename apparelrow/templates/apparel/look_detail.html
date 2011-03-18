@@ -40,7 +40,7 @@
 
 {% block body %}
 <div id="look-header">
-    <img src="{{ object.user.get_profile.avatar }}" class="profile-image" />
+    <a href="{% url profile.views.profile object.user.get_profile %}"><img src="{{ object.user.get_profile.avatar }}" class="profile-image" /></a>
     <div>
         <h1>
             {{ object.title }}
@@ -49,8 +49,9 @@
             {% endifequal %}
         </h1>
         <span>
+            {% url profile.views.looks object.user.get_profile as looks_url %}
             {% blocktrans with object.user.get_profile.display_name as name %}
-                {{name}}'s looks
+                <a href="{{ looks_url }}">{{name}}'s looks</a>
             {% endblocktrans %}
         </span>
     </div>
@@ -77,7 +78,7 @@
         <label>{% trans "Embed" %}<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code"></label>
     </div>
     {% if looks_by_user %}
-    <a href="{{ object.user.get_profile.get_looks_url }}"><h2>{% trans "More looks by" %} {{ object.user.get_profile.display_name }}</h2></a>
+    <a href="{{ looks_url }}"><h2>{% trans "More looks by" %} {{ object.user.get_profile.display_name }}</h2></a>
     {% with looks_by_user as looks %}
     {% include 'apparel/fragments/looks.html' %}
     {% endwith %}

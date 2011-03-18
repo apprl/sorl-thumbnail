@@ -6,7 +6,7 @@
 <a title="{{ object.title }}" href="{{ object.get_absolute_url }}">
     {% include 'apparel/fragments/look_small.html' %}
     <span class="inline-date">{{ object.modified|since }}</span>
-    <h3>{{ object.title }} {% trans "by" %} {{ object.user.get_profile.display_name }}</h3>
+    <h3>{{ object.title }} {% trans "by" %} {% with object.user.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %}</h3>
     <p>{{ object.description }}</p>
     {% include 'apparel/fragments/total_price.html' %}
     <p>{% include 'apparel/fragments/likes.html' %}</p>

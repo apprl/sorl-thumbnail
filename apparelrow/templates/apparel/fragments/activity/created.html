@@ -13,9 +13,8 @@
 
 {% block activity_content %}
     <h2>{{ object.action_object.title }}</h2>
-    <p>{% blocktrans with object.actor.get_profile.display_name as name %}
-        {{name}} created a new look
-    {% endblocktrans %}
+    <p>
+        {% with object.actor.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %} {% trans "created a new look" %}
     </p>
     {% with object.action_object as object %}
         {% include 'apparel/fragments/total_price.html' %}

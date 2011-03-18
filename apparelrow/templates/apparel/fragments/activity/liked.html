@@ -16,9 +16,7 @@
 
 {% block activity_content %}
     <h2 class="like">
-        {% blocktrans with object.actor.get_profile.display_name as name %}
-            {{ name }} like
-        {% endblocktrans %}
+        {% with object.actor.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %} {% trans "liked" %}
     </h2>
     <p>
         {{ object.action_object.object }}

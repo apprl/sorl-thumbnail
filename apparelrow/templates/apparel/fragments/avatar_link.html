@@ -1,0 +1,4 @@
+{% load cache %}
+{% cache CACHE_TIMEOUT avatar_link profile %}
+<a href="{% url profile.views.profile profile %}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}" /></a>
+{% endcache %}
