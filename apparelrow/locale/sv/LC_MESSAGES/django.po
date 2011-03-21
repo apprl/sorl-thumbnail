@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-11 15:32+0100\n"
+"POT-Creation-Date: 2011-03-21 17:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,9 +226,13 @@ msgstr ""
 msgid "ago"
 msgstr "sedan"
 
+#: apparel_comments/__init__.py:6
+msgid "E-mail address"
+msgstr "epostadress"
+
 #: beta/models.py:5
 msgid "beta code"
-msgstr ""
+msgstr "inbjudningskod"
 
 #: beta/models.py:12
 msgid "e-mail address"
@@ -322,73 +326,73 @@ msgstr "Basvaluta"
 msgid "Exchange rate"
 msgstr ""
 
-#: profile/models.py:22
+#: profile/models.py:19
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:23
+#: profile/models.py:20
 msgid "About"
 msgstr ""
 
-#: templates/base.html:91
+#: templates/base.html:94
 msgid "Forgot password?"
 msgstr "Glömt lösenord?"
 
-#: templates/base.html:92 templates/base.html.py:107
+#: templates/base.html:95 templates/base.html.py:110
 msgid "Create account"
 msgstr "Skapa konto"
 
-#: templates/base.html:95
+#: templates/base.html:98
 msgid "Username"
 msgstr "Användarnamn"
 
-#: templates/base.html:96
+#: templates/base.html:99
 msgid "Password"
 msgstr "Lösenord"
 
-#: templates/base.html:98 templates/base.html.py:133
+#: templates/base.html:101 templates/base.html.py:136
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr "Logga in"
 
-#: templates/base.html:107
+#: templates/base.html:110
 msgid "Forgot password"
 msgstr "Glömt lösenord?"
 
-#: templates/base.html:107 templates/base.html.py:113
+#: templates/base.html:110 templates/base.html.py:116
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:115
+#: templates/base.html:118
 msgid "Matching products"
 msgstr "Träffar bland produkter"
 
-#: templates/base.html:119
+#: templates/base.html:122
 msgid "Matching looks"
 msgstr "Träffar bland looks"
 
-#: templates/base.html:123
+#: templates/base.html:126
 msgid "Matching brands"
 msgstr "Träffar bland varumärken"
 
-#: templates/base.html:131
+#: templates/base.html:134
 msgid "My Profile"
 msgstr "Min profil"
 
-#: templates/base.html:134 templates/registration/registration_complete.html:8
+#: templates/base.html:137 templates/registration/registration_complete.html:8
 #: templates/registration/registration_form.html:9
 msgid "Sign up"
 msgstr "Bli medlem"
 
-#: templates/base.html:150
+#: templates/base.html:153
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:152
+#: templates/base.html:155
 msgid "Logged in as"
 msgstr "Inloggad som"
 
-#: templates/base.html:179 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:182 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr "OK"
 
@@ -533,47 +537,40 @@ msgstr "Skapa"
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/apparel/look_detail.html:55 templates/apparel/look_edit.html:5
+#: templates/apparel/look_detail.html:48 templates/apparel/look_edit.html:5
 msgid "Edit"
 msgstr "Redigera"
 
-#: templates/apparel/look_detail.html:59
-#, python-format
-msgid ""
-"\n"
-"                %(name)s's looks\n"
-"            "
-msgstr ""
-"\n"
-"                Looks av %(name)s\n"
-"            "
+#: templates/apparel/look_detail.html:53
+msgid "%(name)s's looks"
+msgstr "%(name)ss looks"
 
-#: templates/apparel/look_detail.html:76
+#: templates/apparel/look_detail.html:68
 msgid "Created"
 msgstr "Skapad"
 
-#: templates/apparel/look_detail.html:84
+#: templates/apparel/look_detail.html:76
 msgid "Embed"
 msgstr "Bädda in"
 
-#: templates/apparel/look_detail.html:87
+#: templates/apparel/look_detail.html:79
 msgid "More looks by"
 msgstr "Fler looks av"
 
-#: templates/apparel/look_detail.html:93
+#: templates/apparel/look_detail.html:85
 msgid "Similar looks"
 msgstr "Liknande looks"
 
-#: templates/apparel/look_detail.html:112
+#: templates/apparel/look_detail.html:104
 #: templates/apparel/fragments/product_detail.html:10
 msgid "Like"
 msgstr "Like"
 
-#: templates/apparel/look_detail.html:120
+#: templates/apparel/look_detail.html:112
 msgid "Tags"
 msgstr "Taggar"
 
-#: templates/apparel/look_detail.html:130
+#: templates/apparel/look_detail.html:122
 msgid "Articles in this look"
 msgstr "Artiklar i denna look"
 
@@ -646,28 +643,28 @@ msgstr ""
 msgid "Latest looks"
 msgstr "Senaste looks"
 
-#: templates/apparel/product_detail.html:53
-#: templates/apparel/product_detail.html:130
+#: templates/apparel/product_detail.html:52
+#: templates/apparel/product_detail.html:129
 msgid "Adding..."
 msgstr "Lägger till..."
 
-#: templates/apparel/product_detail.html:133
-#: templates/apparel/fragments/product_detail.html:68
+#: templates/apparel/product_detail.html:132
+#: templates/apparel/fragments/product_detail.html:73
 msgid "In wardrobe"
 msgstr "Finns i garderob"
 
-#: templates/apparel/product_detail.html:159
+#: templates/apparel/product_detail.html:158
 #, python-format
 msgid "Added to <span class=\"count\">%(counter)s</span> look"
 msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] "Tillagd i <span class=\"count\">%(counter)s</span> look"
 msgstr[1] "Tillagd i <span class=\"count\">%(counter)s</span> looks"
 
-#: templates/apparel/product_detail.html:164
+#: templates/apparel/product_detail.html:163
 msgid "Recently viewed"
 msgstr "Senast besökta"
 
-#: templates/apparel/product_detail.html:173
+#: templates/apparel/product_detail.html:172
 #, python-format
 msgid ""
 "\n"
@@ -688,7 +685,7 @@ msgstr[1] ""
 "                    <span class=\"count\">%(counter)s</span> looks med denna "
 "produkt                "
 
-#: templates/apparel/product_detail.html:186
+#: templates/apparel/product_detail.html:185
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
@@ -699,6 +696,14 @@ msgstr "kommentarer och länkar"
 #: templates/apparel/fragments/comments.html:4
 msgid "Comments & links"
 msgstr "Kommentarer och länkar"
+
+#: templates/apparel/fragments/follow.html:6
+msgid "unfollow"
+msgstr "sluta följa"
+
+#: templates/apparel/fragments/follow.html:7
+msgid "follow"
+msgstr "följ"
 
 #: templates/apparel/fragments/likes.html:6
 #, python-format
@@ -716,19 +721,19 @@ msgstr "Köp"
 msgid "By"
 msgstr "från"
 
-#: templates/apparel/fragments/product_detail.html:50
+#: templates/apparel/fragments/product_detail.html:55
 msgid "Add to look"
 msgstr "Lägg i look"
 
-#: templates/apparel/fragments/product_detail.html:60
+#: templates/apparel/fragments/product_detail.html:65
 msgid "Enter look name"
 msgstr "Ange lookens namn"
 
-#: templates/apparel/fragments/product_detail.html:61
+#: templates/apparel/fragments/product_detail.html:66
 msgid "New look"
 msgstr "Ny look"
 
-#: templates/apparel/fragments/product_detail.html:73
+#: templates/apparel/fragments/product_detail.html:78
 msgid "Add to wardrobe"
 msgstr "Lägg i garderob"
 
@@ -791,6 +796,7 @@ msgid "Check out"
 msgstr "Kolla in"
 
 #: templates/apparel/fragments/total_price.html:4
+#, python-format
 msgid ""
 "\n"
 "    %(number)s article\n"
@@ -815,30 +821,18 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"                Looks av %(name)s\n"
+"                Kommenterade %(commented_on)s\n"
 "            "
 
-#: templates/apparel/fragments/activity/created.html:16
-msgid ""
-"\n"
-"        %(name)s created a new look\n"
-"    "
-msgstr ""
-"\n"
-"                %(name)s skapade en ny look\n"
-"            "
+#: templates/apparel/fragments/activity/created.html:17
+msgid "created a new look"
+msgstr "skapade en look"
 
 #: templates/apparel/fragments/activity/liked.html:19
-msgid ""
-"\n"
-"            %(name)s like\n"
-"        "
-msgstr ""
-"\n"
-"                %(name)s gillar\n"
-"            "
+msgid "liked"
+msgstr "gillade"
 
-#: templates/comments/form.html:24
+#: templates/comments/form.html:20
 msgid "Comment"
 msgstr "Kommentera"
 
@@ -899,6 +893,7 @@ msgid "Member since"
 msgstr "Medlem sedan"
 
 #: templates/profile/profile.html:19
+#, python-format
 msgid ""
 "\n"
 "            %(likes)s like\n"
@@ -917,6 +912,7 @@ msgstr[1] ""
 "            "
 
 #: templates/profile/profile.html:26
+#, python-format
 msgid ""
 "\n"
 "            %(looks)s look\n"
@@ -1120,6 +1116,34 @@ msgstr "Mejl skickat"
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
 
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "                <a href=\"%(looks_url)s\">%(name)s's looks</a>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "                Looks av %(name)s\n"
+#~ "            "
+
+#~ msgid ""
+#~ "\n"
+#~ "        %(name)s created a new look\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "                %(name)s skapade en ny look\n"
+#~ "            "
+
+#~ msgid ""
+#~ "\n"
+#~ "            %(name)s like\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "                %(name)s gillar\n"
+#~ "            "
+
 #~ msgid "Numeric price"
 #~ msgstr "Pris som decimaltal"
 
@@ -1131,9 +1155,6 @@ msgstr "Varför mejlet inte skickades"
 
 #~ msgid "Home"
 #~ msgstr "Hem"
-
-#~ msgid "Following"
-#~ msgstr "Följer"
 
 #~ msgid "Followers"
 #~ msgstr "Följd av"
