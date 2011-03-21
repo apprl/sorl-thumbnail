@@ -50,9 +50,7 @@
         </h1>
         <span>
             {% url profile.views.looks object.user.username as looks_url %}
-            {% blocktrans with object.user.get_profile.display_name as name %}
-                <a href="{{ looks_url }}">{{name}}'s looks</a>
-            {% endblocktrans %}
+            <a href="{{ looks_url }}">{% blocktrans with object.user.get_profile.display_name as name %}{{name}}'s looks{% endblocktrans %}</a>
         </span>
     </div>
 </div>
