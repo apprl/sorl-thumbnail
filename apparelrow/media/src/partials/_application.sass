@@ -1106,7 +1106,7 @@ body.profile
   #profile-nav
     margin-left: $aside_width
   .sidebar
-    .avatar
+    .avatar.large
       z-index: 1
       position: relative
       margin-top: -30px
@@ -1122,6 +1122,17 @@ ul.users
     vertical-align: middle
   .following, .not_following
     float: right
+
+ul.suggested-friends
+  img.avatar
+    vertical-align: top
+  .profile-name
+    display: inline-block
+    width: $aside_width - 55
+  .following, .not_following
+    display: block
+    .follow span, .unfollow span
+      display: inline
 
 #profile-nav
   +clearfix

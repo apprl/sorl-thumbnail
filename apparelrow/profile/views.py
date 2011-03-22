@@ -11,6 +11,7 @@ from apparel.models import *
 from apparel.forms import *
 from voting.models import Vote
 from actstream.models import user_stream, actor_stream, Follow
+from models import ApparelProfile
 
 
 @get_current_user
@@ -106,8 +107,8 @@ def following(request, profile, page=0):
 def get_facebook_friends(request):
     if request.facebook:
         friends = request.facebook.graph.get_connections('me', 'friends')
-        friends_uids = [f.uid for f in friends]
-        FacebookProfile.objects.filter(uid__in=friends_uids)
+        friends_uids = [f['id'] for f in friends['data']]
+        return ApparelProfile.objects.filter(user__facebookprofile__uid__in=friends_uids)
 
 def get_top_looks(user, limit=10):
     """

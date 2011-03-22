@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-21 17:08+0100\n"
+"POT-Creation-Date: 2011-03-22 19:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -533,7 +533,7 @@ msgid "Create"
 msgstr "Skapa"
 
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
-#: templates/profile/fragments/menu_items.html:6
+#: templates/profile/fragments/menu_items.html:10
 msgid "Looks"
 msgstr "Looks"
 
@@ -542,6 +542,7 @@ msgid "Edit"
 msgstr "Redigera"
 
 #: templates/apparel/look_detail.html:53
+#, python-format
 msgid "%(name)s's looks"
 msgstr "%(name)ss looks"
 
@@ -815,6 +816,7 @@ msgid "Added to wardrobe"
 msgstr "Tillagd i garderob"
 
 #: templates/apparel/fragments/activity/commented.html:19
+#, python-format
 msgid ""
 "\n"
 "            Commented on %(commented_on)s\n"
@@ -884,6 +886,16 @@ msgstr "Endast Facebook"
 msgid "Connect with facebook only"
 msgstr "Logga in med endat Facebook"
 
+#: templates/profile/followers.html:5
+#: templates/profile/fragments/menu_items.html:13
+msgid "Followers"
+msgstr "Följs av"
+
+#: templates/profile/following.html:5
+#: templates/profile/fragments/menu_items.html:16
+msgid "Following"
+msgstr "Följer"
+
 #: templates/profile/looks.html:14
 msgid "Most popular looks"
 msgstr "Populära looks"
@@ -938,6 +950,10 @@ msgstr "Senaste händelser"
 msgid "No updates"
 msgstr "Inga händelser"
 
+#: templates/profile/profile.html:51
+msgid "Your friends are here!"
+msgstr "Hitta dina vänner!"
+
 #: templates/profile/watcher.html:13
 msgid "Search now"
 msgstr "Sök nu"
@@ -956,7 +972,7 @@ msgstr ""
 "            Du kan prenumerera på en särskiljd sökning genom...\n"
 "        "
 
-#: templates/profile/fragments/menu_items.html:3
+#: templates/profile/fragments/menu_items.html:7
 msgid "Wardrobe"
 msgstr "Garderob"
 
@@ -1155,9 +1171,6 @@ msgstr "Varför mejlet inte skickades"
 
 #~ msgid "Home"
 #~ msgstr "Hem"
-
-#~ msgid "Followers"
-#~ msgstr "Följd av"
 
 #~ msgid "Product Watch"
 #~ msgstr "Bevakning"
