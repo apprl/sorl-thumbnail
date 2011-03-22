@@ -1,0 +1,16 @@
+{% extends "profile/base.html" %}
+{% load i18n %}
+
+{% block profile_content %}
+    <h2>{% trans "Following" %}</h2>
+    <ul class="users">
+    {% for following in object_list %}
+    <li>
+    {% with following.actor.get_profile as profile %}
+        {% include 'apparel/fragments/avatar_link.html' %}
+        {% include 'apparel/fragments/profile_link.html' %}
+    {% endwith %}
+    </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

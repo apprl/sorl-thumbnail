@@ -1,7 +1,17 @@
 {% load i18n %}
+{% url apparel.views.wardrobe profile.user.username as wardrobe_url %}
+{% url profile.views.looks profile.user.username as looks_url %}
+{% url profile.views.followers profile.user.username as followers_url %}
+{% url profile.views.following profile.user.username as following_url %}
 <li>
-    <a{% ifequal request.path profile.get_absolute_url|add:"wardrobe/" %} class="selected"{% endifequal %} href="{{ profile.get_absolute_url }}wardrobe/">{% trans "Wardrobe" %}</a>
+    <a{% ifequal request.path wardrobe_url %} class="selected"{% endifequal %} href="{{ wardrobe_url }}">{% trans "Wardrobe" %}</a>
 </li>
 <li>
-    <a class="last{% ifequal request.path profile.get_absolute_url|add:"looks/" %} selected{% endifequal %}" href="{{ profile.get_absolute_url }}looks/">{% trans "Looks" %}</a>
+    <a class="{% ifequal request.path looks_url %} selected{% endifequal %}" href="{{ looks_url }}">{% trans "Looks" %}</a>
+</li>
+<li>
+    <a class="{% ifequal request.path followers_url %} selected{% endifequal %}" href="{{ followers_url }}">{% trans "Followers" %}</a>
+</li>
+<li>
+    <a class="last{% ifequal request.path following_url %} selected{% endifequal %}" href="{{ following_url }}">{% trans "Following" %}</a>
 </li>

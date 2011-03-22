@@ -9,5 +9,7 @@ urlpatterns = patterns('',
  #   url(r'^(?P<profile>.*)/looks$', view='apparel.views.look_list', name='looks_by_user'),
  #    (r'^watcher/$', 'watcher.views.manage'),
     (r'^(?:([^\/]+?)/)?wardrobe/$', 'apparel.views.wardrobe'),
+    (r'^(?:([^\/]+?)/)?followers/$', 'profile.views.followers'),
+    (r'^(?:([^\/]+?)/)?following/$', 'profile.views.following'),
 )
 

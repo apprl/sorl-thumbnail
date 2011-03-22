@@ -4,12 +4,13 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllow
 from django.template import RequestContext
 from django.db import connection
 from django.views.generic import list_detail
+from django.contrib.contenttypes.models import ContentType
 
 from apparel.decorators import get_current_user
 from apparel.models import *
 from apparel.forms import *
 from voting.models import Vote
-from actstream.models import actor_stream
+from actstream.models import actor_stream, Follow
 
 
 
@@ -47,6 +48,37 @@ def looks(request, profile, page=0):
         }
     )
     
+@get_current_user
+def followers(request, profile, page=0):
+    content_type = ContentType.objects.get_for_model(User)
+    queryset = Follow.objects.filter(content_type=content_type, object_id=profile.user.id)
+
+    return list_detail.object_list(
+        request,
+        queryset=queryset,
+        template_name="profile/followers.html",
+        paginate_by=10,
+        page=page,
+        extra_context={
+            "profile": profile
+        }
+    )
+
+@get_current_user
+def following(request, profile, page=0):
+    content_type = ContentType.objects.get_for_model(User)
+    queryset = Follow.objects.filter(content_type=content_type, user=profile.user)
+
+    return list_detail.object_list(
+        request,
+        queryset=queryset,
+        template_name="profile/following.html",
+        paginate_by=10,
+        page=page,
+        extra_context={
+            "profile": profile
+        }
+    )
 
 def get_top_looks(user, limit=10):
     """
