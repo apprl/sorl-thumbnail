@@ -10,24 +10,47 @@ from apparel.decorators import get_current_user
 from apparel.models import *
 from apparel.forms import *
 from voting.models import Vote
-from actstream.models import actor_stream, Follow
-
+from actstream.models import user_stream, actor_stream, Follow
 
 
 @get_current_user
-def profile(request, profile):
+def home(request, profile, page=0):
+    """
+    Displays the logged in user's page
+    """
+    queryset = user_stream(request.user)
+    
+    return list_detail.object_list(
+        request,
+        queryset=queryset,
+        template_name="profile/profile.html",
+        paginate_by=10,
+        page=page,
+        extra_context={
+            "profile": profile,
+            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+            "facebook_friends": get_facebook_friends(request)
+        }
+    )
+
+@get_current_user
+def profile(request, profile, page=0):
     """
     Displays the profile page
     """
+    queryset = actor_stream(profile.user)
     
-    context = {
-        "profile": profile,
-        'updates': actor_stream(profile.user)[:10],
-        'recent_looks': Look.objects.filter(user=profile.user).order_by('-modified')[:4],
-        #'recent_likes': recent_likes
-    }
-    
-    return render_to_response('profile/profile.html', context, context_instance=RequestContext(request))
+    return list_detail.object_list(
+        request,
+        queryset=queryset,
+        template_name="profile/profile.html",
+        paginate_by=10,
+        page=page,
+        extra_context={
+            "profile": profile,
+            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+        }
+    )
 
 
 @get_current_user
@@ -79,6 +102,12 @@ def following(request, profile, page=0):
             "profile": profile
         }
     )
+
+def get_facebook_friends(request):
+    if request.facebook:
+        friends = request.facebook.graph.get_connections('me', 'friends')
+        friends_uids = [f.uid for f in friends]
+        FacebookProfile.objects.filter(uid__in=friends_uids)
 
 def get_top_looks(user, limit=10):
     """

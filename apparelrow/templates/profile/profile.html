@@ -33,7 +33,7 @@
     <div id="content">
         <h2>{% trans "Latest updates" %}</h2>
         <ul class="activity-list">
-        {% for object in updates %}
+        {% for object in object_list %}
             <li>
             {% include 'apparel/fragments/activity/activity.html' %}
             </li>
