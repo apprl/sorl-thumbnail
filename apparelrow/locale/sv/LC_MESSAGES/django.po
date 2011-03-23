@@ -813,7 +813,7 @@ msgstr[1] ""
 
 #: templates/apparel/fragments/activity/added.html:17
 msgid "Added to wardrobe"
-msgstr "Tillagd i garderob"
+msgstr "Lade till i garderob"
 
 #: templates/apparel/fragments/activity/commented.html:19
 #, python-format
