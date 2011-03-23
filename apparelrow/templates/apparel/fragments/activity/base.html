@@ -1,4 +1,5 @@
 {% load apparel_extras %}
+<div class="activity-header">{%  block activity_header %}{% endblock %}</div>
 <a href="{% block activity_link %}{{ object.action_object.get_absolute_url }}{% endblock %}" class="activity">
     <span class="inline-date">{{ object.timestamp|since }}</span>
     <div class="activity-image">{%   block activity_image   %}{% endblock %}</div>

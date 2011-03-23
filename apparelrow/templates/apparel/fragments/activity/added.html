@@ -12,10 +12,13 @@
     <div style="position: relative; width: 23px; height: 23px"></div>
 {% endblock %}
 
-{% block activity_content %}
+{% block activity_header %}
     {% if object.target|class_name == 'Wardrobe' %}
         <h2>{% trans "Added to wardrobe" %}</h2>
     {% endif %}
+{% endblock %}
+
+{% block activity_content %}
     <p>
         {{ object.action_object }}
     </p>

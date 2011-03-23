@@ -1,9 +1,9 @@
 {% extends 'apparel/fragments/activity/base.html' %}
 {% load apparel_extras %}
 {% load i18n %}
-{% block activity_link %}
-    {{ object.action_object.object.get_absolute_url }}
-{% endblock %}
+
+{% block activity_link %}{{ object.action_object.object.get_absolute_url }}{% endblock %}
+
 {% block activity_image %}
     {% with object.action_object.object as object %}
         {% include 'apparel/fragments/activity/choose_image.html' %}
@@ -14,10 +14,13 @@
     <img src="/media/images/activity_heart.png">
 {% endblock %}
 
+{% block activity_header %}
+<h2 class="like">
+    {% with object.actor.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %} {% trans "liked" %}
+</h2>
+{% endblock %}
+
 {% block activity_content %}
-    <h2 class="like">
-        {% with object.actor.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %} {% trans "liked" %}
-    </h2>
     <p>
         {{ object.action_object.object }}
     </p>
