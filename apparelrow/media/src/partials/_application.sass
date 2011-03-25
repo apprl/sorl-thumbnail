@@ -65,17 +65,81 @@ button
   background: transparent image_url(unquote("footer-bg.png")) scroll no-repeat center center
   height: 58px
 
-#login-pane
-  height: 2em
-  line-height: 2em
-  margin: 0 -21px 0 -19px
-  background: transparent url(../images/loggedin-pane-bg.png) scroll repeat-x left top
-  &.updates
-    background: transparent url(../images/updates-bg.png) scroll repeat-x left top
 
-#nav-user
-  float: left
-  margin: 0
+#login-pane
+  height: 28px
+  line-height: 28px
+  background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x left top
+  border: 1px solid $border_color
+  border-left: none
+  border-right: none
+  margin: 0px -20px
+  padding: 0px 20px
+  font-size: smaller
+  a
+    font-family: $font_family_bold
+  div
+    &.left
+      float: left
+      color: $easy_color
+      font-family: $font_family
+      min-width: 200px
+    &.right
+      float: right
+      text-align: right
+    #logout
+      display: inline-block
+      color: $easy-color
+      background: transparent image_url(unquote("logout.png")) scroll no-repeat right center
+      padding-top: 1px
+      padding-right: 16px
+      height: 12px
+      line-height: 12px
+    
+  ul
+    float: left
+    +horizontal-list(0)
+    z-index: 10
+    position: relative
+    margin-top: -1px
+    margin-left: 1em
+    li
+      a, span
+        padding-top: 1px
+        display: block
+        height: 28px
+        line-height: 28px
+        padding-left: 1em
+        padding-right: 1em
+        border-right: 1px solid $border_color
+        position: relative
+        &.selected
+          background-image: image_url(unquote("profile-nav-bg-selected.png"))
+          border-top: none
+          border-bottom: none
+          height: 29px
+          line-height: 29px
+          border-right-color: #ababab
+          border-left: 1px solid #ababab
+          border-bottom: none
+          .arrow
+            display: block
+        &.empty
+          width: 50px
+        &.first
+          border-left: 1px solid $border_color
+          &.selected
+            border-left-color: #ababab
+            
+        
+        .arrow
+          display: none
+          background: transparent image_url(unquote("box-arrow-bottom.png")) scroll no-repeat bottom center
+          position: absolute
+          height: 6px
+          left: 0
+          bottom: 0
+          right: 0
 
 #nav-main
   position: absolute
@@ -99,16 +163,6 @@ button
 a.fb_button
   width: 18px
   overflow: hidden
-
-#logged-in-as
-  float: left
-
-#logout
-  display: inline-block
-  float: right
-  text-decoration: none
-  padding-left: 20px
-  background: transparent image_url("logout.png") fixed no-repeat left center
 
 #account-dialogue
   position: absolute

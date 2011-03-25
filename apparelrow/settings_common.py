@@ -269,19 +269,19 @@ APPAREL_LOOK_MAX_SIZE      = 470
 APPAREL_LOOK_FEATURED      = 3
 APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'shared', 'warehouse')
 APPAREL_IMPORTER_COLORS = (
-    (u'black'  , u'svart',),
-    (u'grey'   , u'grå', u'gray'),
-    (u'white'  , u'vit',),
-    (u'beige'  , u'khaki',),
-    (u'brown'  , u'brun',),
-    (u'red'    , u'röd',),
+    (u'black'  , u'svart', u'night', u'coal',),
+    (u'grey'   , u'grå', u'mörkgrå', u'ljusgrå', u'gray', u'smut', u'charcoal', u'meadow', u'thyme', u'stone', u'cement', u'slate', u'salvia',),
+    (u'white'  , u'vit', u'chalk',),
+    (u'beige'  , u'khaki', u'sand', u'creme', u'camel', u'rye', u'chino', u'oatmeal',),
+    (u'brown'  , u'brun', u'mörkbrun', u'ljusbrun', u'chocolate', u'hickory', u'chicory', u'rum', u'herb',),
+    (u'red'    , u'röd', u'mörkröd', u'merlot', u'wine', u'bubble gum',),
     (u'yellow' , u'gul',),
-    (u'green'  , u'grön', u'olive', u'oliv'),
-    (u'blue'   , u'blå', u'navy'),
+    (u'green'  , u'grön', u'ljusgrön', u'mörkgrön', u'olive', u'oliv', u'arme', u'army', u'armé', u'sage', u'fatigue', u'military',),
+    (u'blue'   , u'blå', u'navy', u'bahama', u'sapphire', u'mörkblå', u'ljusblå'),
     (u'silver' , u'silver',),
     (u'gold'   , u'guld',),
-    (u'pink'   , u'rosa',),
-    (u'orange' , ),
+    (u'pink'   , u'rosa', u'cerise', u'ceris',),
+    (u'orange' , u'tangerine', ),
     (u'magenta', u'magenta',),
 )
 APPAREL_DECOMPRESS_UTILS = {

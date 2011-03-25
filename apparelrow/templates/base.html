@@ -148,14 +148,52 @@
 <div id="container">
     <div class="container">
 {% if user.is_authenticated and user.get_profile %}
+    {% url apparel.views.wardrobe profile.user.username as wardrobe_url %}
+    {# FIXME: Why are these not accessible from outside the profile pages? #}
+    {% url profile.views.looks profile.user.username as looks_url %}
+    {% url profile.views.followers profile.user.username as followers_url %}
+    {% url profile.views.following profile.user.username as following_url %}
 <div id="login-pane">
-    <div class="container">
-    <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
-    <span id="logged-in-as">
-        {% trans "Logged in as" %}: <a href="/profile/">{{ user.get_profile.display_name }}</a>
-    </span>
-    <ul id="nav-user">
+    <div class="left">
+        {% trans "Logged in as" %} <a href="/profile/">{{ user.get_profile.display_name }}</a>
+    </div>
+    <ul>
+        <li>
+            <a class="first{% ifequal request.path wardrobe_url %} selected{% endifequal %}" href="{{ wardrobe_url }}">
+                {% trans "Wardrobe" %}
+                <div class="arrow"></div>
+            </a>
+        </li>
+        <li>
+            <a class="{% ifequal request.path looks_url %} selected{% endifequal %}" href="{{ looks_url }}">
+                {% trans "Looks" %}
+                <div class="arrow"></div>
+            </a>
+        </li>
+        <li>
+            <a class="{% ifequal request.path followers_url %} selected{% endifequal %}" href="{{ followers_url }}">
+                {% trans "Followers" %}
+                <div class="arrow"></div>
+            </a>
+        </li>
+        <li>
+            <a class="{% ifequal request.path following_url %} selected{% endifequal %}" href="{{ following_url }}">
+                {% trans "Following" %}
+                <div class="arrow"></div>
+            </a>
+        </li>
+        <li>
+            <span class="empty"></span>
+        </li>
+        <li>
+            <a class="last{% ifequal request.path "/looks/create/" %} selected{% endifequal %}" href="/looks/create/">
+                {% trans "Create a look" %}
+                <div class="arrow"></div>
+            </a>
+        </li>
     </ul>
+    <div class="right">
+        <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
     </div>
 </div>
 {% endif %}
