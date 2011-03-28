@@ -148,11 +148,11 @@
 <div id="container">
     <div class="container">
 {% if user.is_authenticated and user.get_profile %}
-    {% url apparel.views.wardrobe profile.user.username as wardrobe_url %}
-    {# FIXME: Why are these not accessible from outside the profile pages? #}
-    {% url profile.views.looks profile.user.username as looks_url %}
-    {% url profile.views.followers profile.user.username as followers_url %}
-    {% url profile.views.following profile.user.username as following_url %}
+    {% url apparel.views.wardrobe user.username as wardrobe_url %}
+    {% url profile.views.looks user.username as looks_url %}
+    {% url profile.views.followers user.username as followers_url %}
+    {% url profile.views.following user.username as following_url %}
+    
 <div id="login-pane">
     <div class="left">
         {% trans "Logged in as" %} <a href="/profile/">{{ user.get_profile.display_name }}</a>
