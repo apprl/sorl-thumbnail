@@ -5,9 +5,9 @@
 
 {% block option_content %}
 <input type="text" name="brand" />
-<ul>
+<ul id="available-manufacturers">
     {% for manufacturer in manufacturers %}
-    <li><a id="manufacturer-{{ manufacturer.id }}"{% ifinlist manufacturer.id selected_brands %} class="selected"{% endifinlist %} href="{% url apparel.views.browse %}?1:m.id:in={{ manufacturer.id }}">{{ manufacturer.name }}</a></li>
+    <li><a id="available-manufacturer-{{ manufacturer.id }}"{% ifinlist manufacturer.id selected_brands %} class="selected"{% endifinlist %} href="{% url apparel.views.browse %}?1:m.id:in={{ manufacturer.id }}">{{ manufacturer.name }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}

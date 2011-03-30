@@ -102,6 +102,7 @@ jQuery(document).ready(function() {
     // Reset button
     jQuery('#reset').click(function() {
         $('.selected').removeClass('selected');
+        $('#product-manufacturers .reset').click();
         baseQuery = {};
         baseIndex = 0;
         filter(getQuery());
@@ -128,9 +129,11 @@ jQuery(document).ready(function() {
                     .val('')
                     .keyup();
                 
-                jQuery('ul > li', link.closest('.popup'))
-                    .find('.selected')
+                jQuery('#available-manufacturers > li > a.selected')
                     .removeClass('selected');
+                
+                jQuery('#selected-manufacturers > li')
+                    .remove();
                 
                 break;
             default:
@@ -140,10 +143,7 @@ jQuery(document).ready(function() {
         filter(getQuery());
         return false;
     });
-    jQuery('.options li > a').click(function() {
-        jQuery(this).toggleClass('selected');
-        return false;
-    });
+
     jQuery('#product-price form').submit(function() {
         filter(getQuery({criterion: 'price'}));
         return false;
@@ -152,10 +152,45 @@ jQuery(document).ready(function() {
         filter(getQuery({criterion: 'color'}));
         return false;
     });
+
     jQuery('#product-manufacturers form').submit(function() {
-        filter(getQuery({criterion: 'manufacturer'}));
         return false;
     });
+    jQuery('#available-manufacturers a').live('click', function(e) {
+        var $this = jQuery(this);
+        var $ul   = jQuery('#selected-manufacturers');
+        var id    = 'manufacturer-' + this.id.split('-').pop();
+        
+        if($this.is('.selected')) {
+            jQuery('#' + id, $ul).click();
+        } else {
+            $this
+                .clone()
+                .attr('id', id)
+                .appendTo(
+                    $('<li>')
+                        .prependTo($ul)
+                );
+            
+            filter(getQuery({criterion: 'manufacturer'}));
+        }
+        
+        $this.toggleClass('selected');
+        return false;
+    });
+    jQuery('#selected-manufacturers a').live('click', function(e) {
+        var $li = jQuery(this).closest('li');
+        
+        if($li.siblings().length == 0) 
+            jQuery('#product-manufacturers>a').removeClass('selected');
+        
+        $li.remove();
+        filter(getQuery({criterion: 'manufacturer'}));
+        
+        return false;
+    });
+    
+
     jQuery('#product-gender li > a').click(function() {
         $this = jQuery(this);
         if(! $this.is('.selected')) {
@@ -268,7 +303,7 @@ function getQuery(query) {
         if('o' in query)
             query['o'] += 'a' + index
     }
-    manufacturer_list = getElementIds(jQuery('#product-manufacturers li > a.selected'));
+    manufacturer_list = getElementIds(jQuery('#selected-manufacturers li > a'));
     if(manufacturer_list.length > 0) {
         query[++index + ':m.id:in'] = manufacturer_list.join(',');
         if('o' in query)
@@ -299,7 +334,7 @@ function getQuery(query) {
 }
 function getElementIds(elements) {
     return jQuery.map(elements, function(element) {
-        return element.id.split('-')[1];
+        return element.id.split('-').pop();
     });
 }
 
@@ -348,19 +383,20 @@ function renderPage(products) {
         jQuery('#reset').hide()
     }
 }
+
+
 function filterCriteria(criteria_filter) {
-    if('manufacturers' in criteria_filter) {
-        applyCriteriaFilter({ 
-            'selector': '#product-manufacturers .option-content li > a', 
-            'criteria': criteria_filter['manufacturers'],
-            'add': function(o) { o.parent().addClass('filtered'); },
-            'remove': function(o) { o.parent().removeClass('filtered');  },
+    if('manufacturers' in criteria_filter && !jQuery('#product-manufacturers').hasClass('active')) {
+        ManufacturerBrowser.reset();
+        
+        jQuery.each(criteria_filter['manufacturers'], function(i, manufacturer) {
+            ManufacturerBrowser.renderItem(manufacturer);
         });
     }
     
     if('categories' in criteria_filter) {
         applyCriteriaFilter({ 
-            'selector': '#product-category li > a', 
+            'selector': '#product-category li > a',
             'criteria': criteria_filter['categories'],
             'add': function(o) { o.parent().addClass('filtered'); },
             'remove': function(o) { 
@@ -425,5 +461,6 @@ function renderProducts(products) {
     pagination.recalculate(0);
     pagination.render();
     jQuery('#product-list').data('scrollable').begin();
+    
     filterCriteria(products);
 }

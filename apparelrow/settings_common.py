@@ -105,6 +105,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'trackback.middleware.PingbackUrlInjectionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -151,7 +152,8 @@ INSTALLED_APPS = (
     'pagination',
     'mptt',
     'sorl.thumbnail',
-    
+    'debug_toolbar',
+        
     'actstream',
     'tagging',
     'pagination',
@@ -179,6 +181,20 @@ INSTALLED_APPS = (
     'apparelrow',
 )
 
+#####
+#INTERNAL_IPS = ('127.0.0.1',)
+DEBUG_TOOLBAR_PANELS = (
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+    'debug_toolbar.panels.headers.HeaderDebugPanel',
+    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+    'debug_toolbar.panels.template.TemplateDebugPanel',
+    'debug_toolbar.panels.sql.SQLDebugPanel',
+    'debug_toolbar.panels.signals.SignalDebugPanel',
+    'debug_toolbar.panels.logger.LoggingPanel',
+)
+####
 COMMENTS_APP = 'apparel_comments'
 
 # - COMPRESS SETTINGS -
@@ -257,6 +273,7 @@ GOOGLE_ANALYTICS_ACCOUNT = 'UA-21990268-1'
 GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 
 
+APPAREL_MANUFACTURERS_PAGE_SIZE = 20
 APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR       = os.path.join('/', MEDIA_URL, 'images', 'avatar_small.png')

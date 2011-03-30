@@ -19,7 +19,9 @@
     {% include "apparel/fragments/product_options_color.html" %}
     </li>
     <li class="last" id="product-manufacturers"><a {% if selected_brands %}class="selected" {% endif %}href="{% url apparel.views.browse %}">{% trans "Brand" %}</a>
-    {% include "apparel/fragments/product_options_brand.html" %}
+        {% include "apparel/fragments/product_options_brand.html" %}
+        <ul id="selected-manufacturers" class="level-1">
+        </ul>
     </li>
 </ul>
 

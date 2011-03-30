@@ -77,7 +77,11 @@ jQuery(document).ready(function() {
             rangemax.val(jQuery(this).slider('values', 1));
         }
      });
+    
+    
+    ManufacturerBrowser.init();    
     // Brand search
+    /*
     jQuery("input[name=brand]").keyup(function(e) {
         var s = jQuery(this).val();
         if(s == "") {
@@ -87,10 +91,12 @@ jQuery(document).ready(function() {
         jQuery('#product-manufacturers ul > li').filter(function(index) {
             return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) < 0;
         }).hide();
-        jQuery('#product-manufacturers ul > li').filter(function(index) {
+        jQuery('#product-category ul > li').filter(function(index) {
             return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) >= 0;
         }).show();
     });
+    */
+    
     // Toggle selected on categories with selected subcategories
     jQuery('> a', '#product-category li:has(li > a.selected)').addClass('selected');
     // Initially hide all subcategories
@@ -127,3 +133,70 @@ jQuery(document).ready(function() {
         return true;
     });
 });
+
+var ManufacturerBrowser = {
+    canFetch: false,
+    brandPage: 1,
+    reloadTimeout: null,
+    $availableList: null,
+    $selectedList: null,
+    
+    init: function() {
+        var self = ManufacturerBrowser;
+        this.$availableList = jQuery('#available-manufacturers');
+        this.$selectedList  = jQuery('#selected-manufacturers');
+        
+        this.$availableList.scroll(function() {
+            var $this = jQuery(this);
+            
+            if(self.canFetch && $this.scrollTop() >= this.scrollHeight - $this.innerHeight() - $('li:first', $this).height() * 10) {
+               self.fetchNextPage();
+            }
+        });
+    },
+    
+    reset: function() {
+        this.$availableList.html('');
+        this.canFetch = true;
+        this.brandPage = 1;
+    },
+    
+    renderItem: function(item, $list) {
+        // FIXME: When we render template on server, drop this method all together
+        var $a = jQuery('<a>')
+            .attr('href', '/browse/?1:m.id:in=' + item.id)
+            .attr('id', 'available-manufacturer-' + item.id)
+            .text(item.name)
+        ;
+        
+        if(jQuery('#manufacturer-' + item.id).length > 0)
+            $a.addClass('selected');
+        
+        jQuery('<li>')
+            .append($a)
+            .appendTo(this.$availableList)
+        ;
+    },
+    
+    fetchNextPage: function() {
+        var self = this;
+        
+        self.canFetch = false;
+        query = (typeof getQuery == 'function') ? '&' + jQuery.param(getQuery()) : '';
+        
+        jQuery.getJSON(
+            '/browse/manufacturers/?mpage='+ (++self.brandPage) + query,
+            function(response) {
+                if(jQuery.isArray(response) && response.length > 0) {
+                    jQuery.each(response, function(i, manufacturer) {
+                        self.renderItem(manufacturer);
+                    });
+                    self.canFetch = true;
+                }
+            }
+        );        
+    }
+};
+
+
+

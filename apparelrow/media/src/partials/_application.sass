@@ -463,7 +463,7 @@ $ruler_width: $slider_width + 9px
       padding-right: 8px
       font-family: $font_family_italic
       font-style: italic
-    ul
+    #available-manufacturers
       +border(top)
       +border(bottom)
       height: 205px
@@ -492,25 +492,30 @@ $ruler_width: $slider_width + 9px
     border-top: none
   li.hover.last
     border-bottom: none
+
+#selected-manufacturers 
   li
-    ul
-      overflow-y: auto
-      li
-        border: none
-        +border(top)
-        background-image: image_url(unquote("gradient-dark-bg.png"))
-    ul.level-1
-      max-height: ($button_height + $border_width) * 4
-      li
-        padding-left: 10px
-    ul.level-2
-      margin-left: -10px
-      li
-        padding-left: 20px
-    ul.level-3
-      margin-left: -20px
-      li
-        padding-left: 30px
+    a
+      background-image: image_url(unquote("list-item-check-selected.png"))
+
+#product-category li ul, #selected-manufacturers
+  overflow-y: auto
+  li
+    border: none
+    +border(top)
+    background-image: image_url(unquote("gradient-dark-bg.png"))
+  &.level-1
+    max-height: ($button_height + $border_width) * 4
+    li
+      padding-left: 10px
+  &.level-2
+    margin-left: -10px
+    li
+      padding-left: 20px
+  &.level-3
+    margin-left: -20px
+    li
+      padding-left: 30px
 
 .hidden
   display: none
