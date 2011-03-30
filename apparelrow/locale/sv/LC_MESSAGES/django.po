@@ -440,7 +440,7 @@ msgstr "Populära looks"
 
 #: templates/index.html:149
 msgid "Create a look"
-msgstr "Gör en look"
+msgstr "Skapa en look!"
 
 #: templates/account/base.html:10
 msgid "E-Mail Addresses"
