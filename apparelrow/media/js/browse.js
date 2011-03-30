@@ -145,11 +145,11 @@ jQuery(document).ready(function() {
     });
 
     jQuery('#product-price form').submit(function() {
-        filter(getQuery({criterion: 'price'}));
+        filter(getQuery());
         return false;
     });
     jQuery('#product-color form').submit(function() {
-        filter(getQuery({criterion: 'color'}));
+        filter(getQuery());
         return false;
     });
 
@@ -172,8 +172,7 @@ jQuery(document).ready(function() {
                         .prependTo($ul)
                 );
             
-            
-            delayedFilter(getQuery({criterion: 'manufacturer'}));
+            delayedFilter(getQuery());
         }
         
         $this.toggleClass('selected');
@@ -186,7 +185,7 @@ jQuery(document).ready(function() {
             jQuery('#product-manufacturers>a').removeClass('selected');
         
         $li.remove();
-        delayedFilter(getQuery({criterion: 'manufacturer'}));
+        delayedFilter(getQuery());
         
         return false;
     });
@@ -202,7 +201,7 @@ jQuery(document).ready(function() {
         return false;
     });
     jQuery('#product-category li > a').click(function() {
-        filter(getQuery({ criterion: 'category'}));
+        filter(getQuery());
         return false;
     });
     jQuery('#pagination a').live('click', function(e) {
