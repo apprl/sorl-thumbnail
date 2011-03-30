@@ -173,6 +173,7 @@ jQuery(document).ready(function() {
                 );
             
             delayedFilter(getQuery());
+            jQuery('#product-manufacturers>a').addClass('selected');
         }
         
         $this.toggleClass('selected');
