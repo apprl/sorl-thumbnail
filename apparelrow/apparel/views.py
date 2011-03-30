@@ -16,6 +16,10 @@ from hanssonlarsson.django.exporter import json
 from recommender.models import Recommender
 from voting.models import Vote
 
+from actstream.models import user_stream
+
+from profile.models import ApparelProfile
+
 from apparel.decorators import seamless_request_handling, get_current_user
 from apparel.manager import QueryParser, InvalidExpression
 from apparel.models import *
@@ -685,6 +689,32 @@ def index(request):
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
     
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
+
+@get_current_user
+@login_required
+def home(request, profile, page=0):
+    """
+    Displays the logged in user's page
+    """
+    queryset = user_stream(request.user)
+    
+    return list_detail.object_list(
+        request,
+        queryset=queryset,
+        template_name="apparel/user_home.html",
+        paginate_by=10,
+        page=page,
+        extra_context={
+            "profile": profile,
+            "facebook_friends": get_facebook_friends(request)
+        }
+    )
+
+def get_facebook_friends(request):
+    if request.facebook:
+        friends = request.facebook.graph.get_connections('me', 'friends')
+        friends_uids = [f['id'] for f in friends['data']]
+        return ApparelProfile.objects.filter(user__facebookprofile__uid__in=friends_uids)
 
 def get_query_and_page(request, override_size=None):
     """

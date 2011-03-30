@@ -47,17 +47,6 @@
         {% with recent_looks as looks %}
             {% include 'apparel/fragments/looks_sidebar.html' %}
         {% endwith %}
-        {% if facebook_friends %}
-        <h2>{% trans "Your friends are here!" %}</h2>
-        <ul class="suggested-friends">
-            {% for profile in facebook_friends %}
-            <li>
-                {% include 'apparel/fragments/avatar_link.html' %}
-                <div class="profile-name">{% include 'apparel/fragments/profile_link.html' %}</div>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

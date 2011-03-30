@@ -148,42 +148,29 @@
 <div id="container">
     <div class="container">
 {% if user.is_authenticated and user.get_profile %}
-    {% url apparel.views.wardrobe user.username as wardrobe_url %}
-    {% url profile.views.looks user.username as looks_url %}
-    {% url profile.views.followers user.username as followers_url %}
-    {% url profile.views.following user.username as following_url %}
+    {% url apparel.views.home as home_url %}
+    {% url profile.views.profile as profile_url %}
+    {% url apparel.views.look_create as look_create_url %}
     
 <div id="login-pane">
     <div class="left">
-        {% trans "Logged in as" %} <a href="/profile/">{{ user.get_profile.display_name }}</a>
+        {% trans "Logged in as" %} <a href="{{ home_url }}">{{ user.get_profile.display_name }}</a>
     </div>
     <ul>
         <li>
-            <a class="first{% ifequal request.path wardrobe_url %} selected{% endifequal %}" href="{{ wardrobe_url }}">
-                {% trans "Wardrobe" %}
+            <a class="first{% ifequal request.path home_url %} selected{% endifequal %}" href="{{ home_url }}">
+                {% trans "Overview" %}
                 <div class="arrow"></div>
             </a>
         </li>
         <li>
-            <a class="{% ifequal request.path looks_url %} selected{% endifequal %}" href="{{ looks_url }}">
-                {% trans "Looks" %}
+            <a class="{% ifequal request.path profile_url %} selected{% endifequal %}" href="{{ profile_url }}">
+                {% trans "My profile" %}
                 <div class="arrow"></div>
             </a>
         </li>
         <li>
-            <a class="{% ifequal request.path followers_url %} selected{% endifequal %}" href="{{ followers_url }}">
-                {% trans "Followers" %}
-                <div class="arrow"></div>
-            </a>
-        </li>
-        <li>
-            <a class="{% ifequal request.path following_url %} selected{% endifequal %}" href="{{ following_url }}">
-                {% trans "Following" %}
-                <div class="arrow"></div>
-            </a>
-        </li>
-        <li>
-            <a class="last{% ifequal request.path "/looks/create/" %} selected{% endifequal %}" href="/looks/create/">
+            <a class="last{% ifequal request.path look_create_url %} selected{% endifequal %}" href="{{ look_create_url }}">
                 {% trans "Create a look" %}
                 <div class="arrow"></div>
             </a>

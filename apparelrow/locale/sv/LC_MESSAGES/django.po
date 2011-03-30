@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-22 19:06+0100\n"
+"POT-Creation-Date: 2011-03-30 14:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -384,15 +384,28 @@ msgstr "Min profil"
 msgid "Sign up"
 msgstr "Bli medlem"
 
-#: templates/base.html:153
-msgid "Logout"
-msgstr "Logga ut"
-
-#: templates/base.html:155
+#: templates/base.html:157
 msgid "Logged in as"
 msgstr "Inloggad som"
 
-#: templates/base.html:182 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:162
+msgid "Overview"
+msgstr "Översikt"
+
+#: templates/base.html:168
+msgid "My profile"
+msgstr "Min profil"
+
+#: templates/base.html:174
+#, fuzzy
+msgid "Create a look"
+msgstr "Skapa en look"
+
+#: templates/base.html:180
+msgid "Logout"
+msgstr "Logga ut"
+
+#: templates/base.html:204 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr "OK"
 
@@ -439,7 +452,7 @@ msgid "Popular looks"
 msgstr "Populära looks"
 
 #: templates/index.html:149
-msgid "Create a look"
+msgid "Create a look!"
 msgstr "Skapa en look!"
 
 #: templates/account/base.html:10
@@ -537,41 +550,41 @@ msgstr "Skapa"
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/apparel/look_detail.html:48 templates/apparel/look_edit.html:5
+#: templates/apparel/look_detail.html:39 templates/apparel/look_edit.html:5
 msgid "Edit"
 msgstr "Redigera"
 
-#: templates/apparel/look_detail.html:53
+#: templates/apparel/look_detail.html:44
 #, python-format
 msgid "%(name)s's looks"
 msgstr "%(name)ss looks"
 
-#: templates/apparel/look_detail.html:68
+#: templates/apparel/look_detail.html:59
 msgid "Created"
 msgstr "Skapad"
 
-#: templates/apparel/look_detail.html:76
+#: templates/apparel/look_detail.html:67
 msgid "Embed"
 msgstr "Bädda in"
 
-#: templates/apparel/look_detail.html:79
+#: templates/apparel/look_detail.html:70
 msgid "More looks by"
 msgstr "Fler looks av"
 
-#: templates/apparel/look_detail.html:85
+#: templates/apparel/look_detail.html:76
 msgid "Similar looks"
 msgstr "Liknande looks"
 
-#: templates/apparel/look_detail.html:104
+#: templates/apparel/look_detail.html:95
 #: templates/apparel/fragments/product_detail.html:10
 msgid "Like"
 msgstr "Like"
 
-#: templates/apparel/look_detail.html:112
+#: templates/apparel/look_detail.html:102
 msgid "Tags"
 msgstr "Taggar"
 
-#: templates/apparel/look_detail.html:122
+#: templates/apparel/look_detail.html:113
 msgid "Articles in this look"
 msgstr "Artiklar i denna look"
 
@@ -689,6 +702,18 @@ msgstr[1] ""
 #: templates/apparel/product_detail.html:185
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
+
+#: templates/apparel/user_home.html:10 templates/profile/profile.html:34
+msgid "Latest updates"
+msgstr "Senaste händelser"
+
+#: templates/apparel/user_home.html:16 templates/profile/profile.html:41
+msgid "No updates"
+msgstr "Inga händelser"
+
+#: templates/apparel/user_home.html:21
+msgid "Your friends are here!"
+msgstr "Hitta dina vänner!"
 
 #: templates/apparel/fragments/comment_count.html:2
 msgid "comments and links"
@@ -941,18 +966,6 @@ msgstr[1] ""
 "\n"
 "                %(looks)s looks\n"
 "            "
-
-#: templates/profile/profile.html:34
-msgid "Latest updates"
-msgstr "Senaste händelser"
-
-#: templates/profile/profile.html:41
-msgid "No updates"
-msgstr "Inga händelser"
-
-#: templates/profile/profile.html:51
-msgid "Your friends are here!"
-msgstr "Hitta dina vänner!"
 
 #: templates/profile/watcher.html:13
 msgid "Search now"
