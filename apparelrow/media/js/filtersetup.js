@@ -137,7 +137,6 @@ jQuery(document).ready(function() {
 var ManufacturerBrowser = {
     canFetch: false,
     brandPage: 1,
-    reloadTimeout: null,
     $availableList: null,
     $selectedList: null,
     

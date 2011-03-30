@@ -172,7 +172,8 @@ jQuery(document).ready(function() {
                         .prependTo($ul)
                 );
             
-            filter(getQuery({criterion: 'manufacturer'}));
+            
+            delayedFilter(getQuery({criterion: 'manufacturer'}));
         }
         
         $this.toggleClass('selected');
@@ -185,7 +186,7 @@ jQuery(document).ready(function() {
             jQuery('#product-manufacturers>a').removeClass('selected');
         
         $li.remove();
-        filter(getQuery({criterion: 'manufacturer'}));
+        delayedFilter(getQuery({criterion: 'manufacturer'}));
         
         return false;
     });
@@ -336,6 +337,15 @@ function getElementIds(elements) {
     return jQuery.map(elements, function(element) {
         return element.id.split('-').pop();
     });
+}
+
+
+var _delayedFilterTimerID;
+function delayedFilter(query) {
+    if(_delayedFilterTimerID)
+        clearTimeout(_delayedFilterTimerID);
+    
+    _delayedFilterTimerID = setTimeout(function() { filter(query) }, 1000); 
 }
 
 function filter(query, callback) {
