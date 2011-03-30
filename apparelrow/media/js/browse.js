@@ -403,6 +403,8 @@ function filterCriteria(criteria_filter) {
                 o.parents('.filtered').removeClass('filtered');
             },
         });
+        jQuery('#product-category>li.first').removeClass('first');
+        jQuery('#product-category>li[class!=filtered]:first').addClass('first');
     }
     
     if('options' in criteria_filter) {            
