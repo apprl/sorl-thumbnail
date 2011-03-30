@@ -71,7 +71,7 @@ def search(request, model):
 
     return HttpResponse(
         json.encode(response),
-        mimetype='text/json'
+        mimetype='application/json'
     )
 
 @get_current_user
@@ -85,6 +85,16 @@ def without(query, model_shorthand):
     r = re.compile(r"^\d:%s\." % model_shorthand)
 
     return dict((k, v) for k, v in query.items() if not r.match(k))
+
+
+def browse_manufacturers(request, **kwargs):
+    result = get_filter(request, **kwargs)
+    
+    return HttpResponse(
+            json.encode(result.get('manufacturers', [])),
+            mimetype='application/json'
+        )
+    
 
 def browse(request, template='apparel/browse.html', extra_context=None, **kwargs):
     paged_result = get_paged_search_result(request,
@@ -108,12 +118,12 @@ def browse(request, template='apparel/browse.html', extra_context=None, **kwargs
     }
 
     result = get_filter(request, **kwargs)
-
+    
     if extra_context:
         result.update(extra_context)
 
     result.update(pagination=pagination)
-
+    
     update_with_selected(result, request)
 
     if request.is_ajax():
@@ -592,7 +602,8 @@ def get_pricerange(query, **kwargs):
         query_set = query_set.filter(**kwargs)
 
     pricerange = query_set.aggregate(min=Min('price'), max=Max('price'))
-
+    #pricerange = { 'min': 0, 'max': 10 }
+    
     if pricerange['min'] is None:
         pricerange['min'] = 0
     else:
@@ -605,13 +616,14 @@ def get_pricerange(query, **kwargs):
 
     return pricerange
 
+
 def get_filter(request, **kwargs):
     query = request.GET.copy()
-    if 'criterion' in query:
-        del query['criterion']
-    if 'page' in query:
-        del query['page']
-
+    mpage = query.get('mpage', 1)
+    
+    for k in filter(lambda k: k in query, ['criterion', 'page', 'mpage']):
+        del query[k]
+    
     colors = Option.objects.filter(option_type__name__iexact='color', product__published=True)
 
     product_args = {}
@@ -629,17 +641,22 @@ def get_filter(request, **kwargs):
                 product_args['product__%s' % key] = kwargs[key]
 
             colors = colors.filter(**product_args)
-
-        manufacturers = manufacturers.distinct().values_list('manufacturer', flat=True)
-
-        if not request.is_ajax():
-            manufacturers = Manufacturer.objects.filter(id__in=manufacturers).order_by('name')
-
+        
+        manufacturers = Manufacturer.objects.filter(id__in=manufacturers.distinct().values_list('manufacturer', flat=True))
     else:
         manufacturers = Manufacturer.objects.filter(product__published=True).distinct()
-
+    
     colors = colors.distinct()
-
+    
+    
+    mp = Paginator(manufacturers.order_by('name'), settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
+    try:
+        manufacturers = mp.page(mpage).object_list
+    except EmptyPage:
+        manufacturers = []
+    except InvalidPage:
+        manufacturers = mp.page(1).object_list
+    
     result = {}
 
     if request.is_ajax():
@@ -651,7 +668,7 @@ def get_filter(request, **kwargs):
         result.update(
             categories = Product.objects.search(without(query, 'c')).filter(published=True).filter(**kwargs).distinct().values_list('category', flat=True)
         )
-
+    
     result.update(
         manufacturers = manufacturers,
         colors = colors,
@@ -664,7 +681,7 @@ def index(request):
     ctx = get_filter(request)
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
     ctx['popular_looks']  = Vote.objects.get_top(Look, limit=6)    
-    ctx['categories_all']     = ctx['categories_all'].filter(on_front_page=True)
+    ctx['categories_all'] = ctx['categories_all'].filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
     
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
