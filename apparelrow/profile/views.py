@@ -11,28 +11,7 @@ from apparel.models import *
 from apparel.forms import *
 from voting.models import Vote
 from actstream.models import user_stream, actor_stream, Follow
-from models import ApparelProfile
 
-
-@get_current_user
-def home(request, profile, page=0):
-    """
-    Displays the logged in user's page
-    """
-    queryset = user_stream(request.user)
-    
-    return list_detail.object_list(
-        request,
-        queryset=queryset,
-        template_name="profile/profile.html",
-        paginate_by=10,
-        page=page,
-        extra_context={
-            "profile": profile,
-            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
-            "facebook_friends": get_facebook_friends(request)
-        }
-    )
 
 @get_current_user
 def profile(request, profile, page=0):
@@ -103,12 +82,6 @@ def following(request, profile, page=0):
             "profile": profile
         }
     )
-
-def get_facebook_friends(request):
-    if request.facebook:
-        friends = request.facebook.graph.get_connections('me', 'friends')
-        friends_uids = [f['id'] for f in friends['data']]
-        return ApparelProfile.objects.filter(user__facebookprofile__uid__in=friends_uids)
 
 def get_top_looks(user, limit=10):
     """

@@ -22,6 +22,7 @@ like_look_dict = {
 
 urlpatterns = patterns('',
     (r'^$', 'apparel.views.index'),
+    (r'^home/$', 'apparel.views.home'),
     (r'^(?P<model>\w+)/search$', 'apparel.views.search'),
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
