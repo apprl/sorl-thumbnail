@@ -624,14 +624,15 @@ def get_pricerange(query, **kwargs):
 def get_filter(request, **kwargs):
     query = request.GET.copy()
     mpage = query.get('mpage', 1)
+    mname = query.get('mname')
     
-    for k in filter(lambda k: k in query, ['criterion', 'page', 'mpage']):
+    for k in filter(lambda k: k in query, ['page', 'mpage', 'mname']):
         del query[k]
     
     colors = Option.objects.filter(option_type__name__iexact='color', product__published=True)
-
+    
     product_args = {}
-
+    
     if query or kwargs:
         if query:
             manufacturers = Product.objects.search(without(query, 'm')).filter(published=True)
@@ -652,6 +653,9 @@ def get_filter(request, **kwargs):
     
     colors = colors.distinct()
     
+    
+    if mname:
+        manufacturers = manufacturers.filter(name__istartswith=mname)
     
     mp = Paginator(manufacturers.order_by('name'), settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
     try:

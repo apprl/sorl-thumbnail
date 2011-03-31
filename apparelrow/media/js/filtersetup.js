@@ -81,21 +81,22 @@ jQuery(document).ready(function() {
     
     ManufacturerBrowser.init();    
     // Brand search
-    /*
-    jQuery("input[name=brand]").keyup(function(e) {
-        var s = jQuery(this).val();
-        if(s == "") {
-            jQuery('#product-manufacturers ul > li').show();
-            return;
-        }
-        jQuery('#product-manufacturers ul > li').filter(function(index) {
-            return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) < 0;
-        }).hide();
-        jQuery('#product-category ul > li').filter(function(index) {
-            return jQuery(this).text().toLowerCase().indexOf(s.toLowerCase()) >= 0;
-        }).show();
-    });
-    */
+
+    var _manufacturerSearchTimeout;
+    jQuery("input[name=brand]")
+        .keyup(function(e) {
+            var self = this;
+            if(_manufacturerSearchTimeout)
+                clearTimeout(_manufacturerSearchTimeout);
+        
+            _manufacturerSearchTimeout = setTimeout(
+                function() { ManufacturerBrowser.filterByName(self.value) },
+                500
+            );
+        })
+        .focus(function(e) { if(this.value == this.defaultValue) this.value = '' })
+        .blur( function(e) { if(this.value == '') this.value = this.defaultValue })
+    ;
     
     // Toggle selected on categories with selected subcategories
     jQuery('> a', '#product-category li:has(li > a.selected)').addClass('selected');
@@ -178,13 +179,24 @@ var ManufacturerBrowser = {
     },
     
     fetchNextPage: function() {
+        this.fetchManufacturers('mpage=' + (++self.brandPage));
+    },
+    
+    filterByName: function(name) {
+        this.reset();
+        this.fetchManufacturers('mpage=' + this.brandPage + '&mname=' + name);
+    },
+    
+    fetchManufacturers: function(query) {
         var self = this;
         
+        if(typeof getQuery == 'function')
+            query += '&' + jQuery.param(getQuery());
+        
         self.canFetch = false;
-        query = (typeof getQuery == 'function') ? '&' + jQuery.param(getQuery()) : '';
         
         jQuery.getJSON(
-            '/browse/manufacturers/?mpage='+ (++self.brandPage) + query,
+            '/browse/manufacturers/?' + query,
             function(response) {
                 if(jQuery.isArray(response) && response.length > 0) {
                     jQuery.each(response, function(i, manufacturer) {
@@ -193,8 +205,8 @@ var ManufacturerBrowser = {
                     self.canFetch = true;
                 }
             }
-        );        
-    }
+        );
+    },
 };
 
 
