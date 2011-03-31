@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-30 14:55+0200\n"
+"POT-Creation-Date: 2011-03-31 13:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -795,6 +795,10 @@ msgstr "Visa alla"
 #: templates/apparel/fragments/product_options_brand.html:4
 msgid "Select one or many brands"
 msgstr "Välj ett eller flera varumärken"
+
+#: templates/apparel/fragments/product_options_brand.html:7
+msgid "Search brands"
+msgstr "Sök bland varumärken"
 
 #: templates/apparel/fragments/product_options_color.html:4
 msgid "Select one or more colors"
