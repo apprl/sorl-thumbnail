@@ -518,7 +518,7 @@ jQuery(document).ready(function() {
         </ul>
         <div class="panes">
             <div id="collage">
-                {% include 'apparel/fragments/look_collage.html' %}
+                {% include 'apparel/fragments/look_collage_edit.html' %}
                 <div class="look-empty"{% if object.collage_components.all.count > 0 %} style="display: none"{% endif %}>
                     <div class="message">{% trans "Drag products here to start building a collage" %}</div>
                     <div{% if object.image %} style="display: none"{% endif %}>
