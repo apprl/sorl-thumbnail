@@ -397,7 +397,6 @@ msgid "My profile"
 msgstr "Min profil"
 
 #: templates/base.html:174
-#, fuzzy
 msgid "Create a look"
 msgstr "Skapa en look"
 
