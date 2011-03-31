@@ -20,9 +20,9 @@ def localhost():
 def demo():
     "Use the actual webserver"
     env.hosts = ['demo.apparelrow.com']
-    env.user = 'linus'
+    env.user = 'hanssonlarsson'
     env.run_user = 'www-data'
-    env.path = '/opt/hanssonlarsson/%(project_name)s' % env
+    env.path = '/home/hanssonlarsson/%(project_name)s' % env
     env.virtualhost_path = env.path
    
 # tasks
