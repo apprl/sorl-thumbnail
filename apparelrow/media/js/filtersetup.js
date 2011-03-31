@@ -85,17 +85,27 @@ jQuery(document).ready(function() {
     var _manufacturerSearchTimeout;
     jQuery("input[name=brand]")
         .keyup(function(e) {
-            var self = this;
+            var name = this.value; 
             if(_manufacturerSearchTimeout)
                 clearTimeout(_manufacturerSearchTimeout);
         
             _manufacturerSearchTimeout = setTimeout(
-                function() { ManufacturerBrowser.filterByName(self.value) },
+                function() { ManufacturerBrowser.filterByName(name) },
                 500
             );
         })
-        .focus(function(e) { if(this.value == this.defaultValue) this.value = '' })
-        .blur( function(e) { if(this.value == '') this.value = this.defaultValue })
+        .focus(function(e) { 
+            if(this.value == this.defaultValue) {
+                this.value = '';
+                jQuery(this).removeClass('default');
+            }
+        })
+        .blur(function(e) { 
+            if(this.value == '') {
+                this.value = this.defaultValue; 
+                jQuery(this).addClass('default');
+            }
+        });
     ;
     
     // Toggle selected on categories with selected subcategories

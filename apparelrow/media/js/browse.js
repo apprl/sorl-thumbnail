@@ -127,7 +127,9 @@ jQuery(document).ready(function() {
             case 'product-manufacturers':
                 jQuery("input[name=brand]")
                     .val('')
-                    .keyup();
+                    .keyup()
+                    .blur()
+                ;
                 
                 jQuery('#available-manufacturers > li > a.selected')
                     .removeClass('selected');
