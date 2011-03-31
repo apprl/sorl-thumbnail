@@ -146,8 +146,9 @@ jQuery(document).ready(function() {
 });
 
 var ManufacturerBrowser = {
-    canFetch: false,
+    canFetch: true,
     brandPage: 1,
+    brandName: '',
     $availableList: null,
     $selectedList: null,
     
@@ -158,6 +159,8 @@ var ManufacturerBrowser = {
         
         this.$availableList.scroll(function() {
             var $this = jQuery(this);
+            
+            console.log(self.canFetch, $this.scrollTop(), this.scrollHeight, $this.innerHeight());
             
             if(self.canFetch && $this.scrollTop() >= this.scrollHeight - $this.innerHeight() - $('li:first', $this).height() * 10) {
                self.fetchNextPage();
@@ -189,16 +192,22 @@ var ManufacturerBrowser = {
     },
     
     fetchNextPage: function() {
-        this.fetchManufacturers('mpage=' + (++self.brandPage));
+        this.brandPage++;
+        this.fetchManufacturers();
     },
     
     filterByName: function(name) {
         this.reset();
-        this.fetchManufacturers('mpage=' + this.brandPage + '&mname=' + name);
+        this.brandName = name;
+        this.fetchManufacturers();
     },
     
-    fetchManufacturers: function(query) {
-        var self = this;
+    fetchManufacturers: function() {
+        var self  = this;
+        var query = 'mpage=' + this.brandPage;
+        
+        if(this.brandName && this.brandName.length > 0)
+            query += '&mname=' + this.brandName;
         
         if(typeof getQuery == 'function')
             query += '&' + jQuery.param(getQuery());
