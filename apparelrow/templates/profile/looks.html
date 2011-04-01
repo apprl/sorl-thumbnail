@@ -1,19 +1,8 @@
-{% extends "profile/base.html" %}
+{% extends "profile/base_profile.html" %}
 {% load i18n %}
 
-{% block body-classes %}three-columns{% endblock body-classes %}
-{% block profile_left_sidebar %}
-    &nbsp;
-{% endblock %}
-{% block profile_content %}
+{% block body-classes %}three-columns profile profile-looks{% endblock body-classes %}
+{% block content %}
     <h2>{% trans "Latest looks" %}</h2>
     {% include 'apparel/fragments/looks_middle_column.html' %}
-{% endblock %}
-{% block profile_right_sidebar %}
-<div class="sidebar last">
-    <h2>{% trans "Most popular looks" %}</h2>
-    {% with popular_looks as looks %}
-        {% include 'apparel/fragments/looks_sidebar.html' %}
-    {% endwith %}
-</div>
 {% endblock %}

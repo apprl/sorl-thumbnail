@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body-classes %}three-columns profile{% endblock body-classes %}
+{% block body %}
+    <div id="profile-nav">
+        <ul>
+            {% include 'profile/fragments/menu_items.html' %}
+        </ul>
+        <hr>
+    </div>
+    <div class="sidebar">
+        <img src="{{ profile.avatar_large }}" class="avatar large">
+        <h1>{% include 'apparel/fragments/profile_link.html' %}</h1>
+        <p>
+            {% trans "Member since" %} {{ profile.user.date_joined|date:"SHORT_DATE_FORMAT" }}
+        </p>
+        <p>
+        {% blocktrans count profile.likes as likes %}
+            {{ likes }} like
+        {% plural %}
+            {{ likes }} likes
+        {% endblocktrans %}
+        </p>
+        <p>
+        {% blocktrans count profile.looks as looks %}
+            {{ looks }} look
+        {% plural %}
+            {{ looks }} looks
+        {% endblocktrans %}
+        </p>      
+        {% if profile.about %}<p class="description">{{ profile.about }}</p>{% endif %}
+    </div>
+    <div id="content">
+    {% block content %}
+    {% endblock content %}
+    </div>
+    <div class="sidebar last">
+        <h2>{% trans "Latest looks" %}</h2>
+        {% with recent_looks as looks %}
+            {% include 'apparel/fragments/looks_sidebar.html' %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}

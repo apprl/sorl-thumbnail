@@ -1,7 +1,8 @@
-{% extends "profile/base.html" %}
+{% extends "profile/base_profile.html" %}
 {% load i18n %}
 
-{% block profile_content %}
+{% block body-classes %}three-columns profile profile-following{% endblock body-classes %}
+{% block content %}
     <h2>{% trans "Following" %}</h2>
     <ul class="users">
     {% for following in object_list %}
