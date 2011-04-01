@@ -29,6 +29,7 @@
             {{ looks }} looks
         {% endblocktrans %}
         </p>      
+        {% if profile.about %}<p class="description">{{ profile.about }}</p>{% endif %}
     </div>
     <div id="content">
         <h2>{% trans "Latest updates" %}</h2>
