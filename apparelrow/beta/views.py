@@ -15,8 +15,7 @@ def unlock(request):
             invitee.seen = datetime.utcnow()
             invitee.save() # Update seen attribute
             response = HttpResponseRedirect(request.POST.get('next', '/'))
-            expires = invitee.seen + timedelta(365)
-            response.set_cookie('in_beta', value='1', expires=expires)
+            response.set_cookie('in_beta', value='1', max_age=365 * 24 * 60 * 60)
             return response
         except Invitee.DoesNotExist:
             return render_to_response('beta/beta.html', {'next': request.POST.get('next', '/')}, context_instance=RequestContext(request))
