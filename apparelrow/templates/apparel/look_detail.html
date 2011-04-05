@@ -46,7 +46,7 @@
     </div>
 </div>
 
-{% cache CACHE_TIMEOUT look_detail object.id LANGUAGE_CODE %}
+{% cache CACHE_TIMEOUT look_detail1 object.id LANGUAGE_CODE %}
 <div class="sidebar">
     {% include 'apparel/fragments/total_price.html' %}
     {% if object.description %}
@@ -58,11 +58,13 @@
     </ul>
     <span class="created">{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</span>
     </div>
+{% endcache %}
     {% get_comment_count for object as comment_count %}
     <div class="activity">
       {% include 'apparel/fragments/comment_count.html' %}
       <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
     </div>
+{% cache CACHE_TIMEOUT look_detail2 object.id LANGUAGE_CODE %}
     <div class="spread">
         <label>{% trans "Embed" %}<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code"></label>
     </div>
@@ -94,8 +96,10 @@
     <form method="post" class="like" action="{% url like-look object.slug "up" %}">
         <button type="submit" name="like" id="like">{% trans "Like" %}</button>
     </form>
+{% endcache %}
     {% get_trackbacks_for object as trackbacks %}
     {% include 'apparel/fragments/comments.html' %}
+{% cache CACHE_TIMEOUT look_detail3 object.id LANGUAGE_CODE %}
     {% tags_for_object object as tags %}
     {% if tags %}
     <div id="tags">

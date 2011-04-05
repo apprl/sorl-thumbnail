@@ -142,7 +142,6 @@
 {% block body %}
 
 {% if object %}
-    {% cache CACHE_TIMEOUT product_detail1 object.id LANGUAGE_CODE %}
         <div id="content">
             {% get_trackbacks_for object as trackbacks %}
             {% include 'apparel/fragments/product_detail.html' %}
@@ -158,7 +157,6 @@
                 <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
                 <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
             </div>
-    {% endcache %}
             {% if viewed_products %}
                 <h2>{% trans "Recently viewed" %}</h2>
                 <div id="recentlyviewed">
