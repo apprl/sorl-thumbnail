@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block activity_header %}
-    {% with object.actor.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %} {% trans "liked" %}
+    {{ object.actor.get_profile.display_name }} {% trans "liked" %}
 {% endblock %}
 
 {% block activity_content %}

@@ -12,9 +12,7 @@
 {% endblock %}
 
 {% block activity_content %}
-    <p>
-        {% with object.actor.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %} {% trans "created a new look" %}
-    </p>
+    <p>{{ object.actor.get_profile.display_name }} {% trans "created a new look" %}</p>
     {% with object.action_object as object %}
         {% include 'apparel/fragments/total_price.html' %}
     {% endwith %}

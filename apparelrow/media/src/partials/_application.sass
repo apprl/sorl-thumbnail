@@ -1275,8 +1275,12 @@ body.profile
       float: left
     .activity-image
       width: $aside_width / 2 - $gutter_width / 4 - 2
+      +border("all")
       .look
         +look_small
+        border: none
+      img
+        vertical-align: top
     .activity-content
       h3
         margin: 0
