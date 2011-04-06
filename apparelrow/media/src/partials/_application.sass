@@ -671,14 +671,15 @@ body.three-columns .pagination
   width: $small_width
   margin-right: $gutter_width
 
-.activity
-  margin-top: 30px
-  +border(top)
-  p
-    line-height: 2em
-    +border(bottom, $easy_border_color)
-    &.last
-      border-color: $border_color
+.sidebar
+  .activity
+    margin-top: 30px
+    +border(top)
+    p
+      line-height: 2em
+      +border(bottom, $easy_border_color)
+      &.last
+        border-color: $border_color
 
 .product-info
   +float-left
@@ -1251,52 +1252,55 @@ body.profile
   color: $easy_color
 
 .activity-list
-  li.activity
-    background-color: transparent
-    background-repeat: no-repeat
-    background-attachment: scroll
-    background-position: 104px top
-    &.liked
-      background-image: image_url("activity_heart.png")
-    &.commented
-      background-image: image_url("activity_talk.png")
-    &.created
-      background-image: image_url("activity_new.png")
-    &.added
-      background-image: image_url("activity_add.png")
-    +clearfix
-    border: none
-    position: relative
-    .inline-date
-      color: $easier_color
-      float: right
-    .activity-image
-      margin-right: 45px
-      float: left
-    .activity-image
-      width: $aside_width / 2 - $gutter_width / 4 - 2
-      +border("all")
-      .look
-        +look_small
-        border: none
-      img
-        vertical-align: top
-    .activity-content
-      h3
-        margin: 0
-        border: 0
-        width: 240px
-        background-image: none
-        font-size: 1.1em
-        display: inline
-        overflow: hidden
-      p
-        border: none
-      span
+  a.activity
+    display: block
+    margin: 1.5em 0
+    &:hover
+      +box_shadow
+    li.activity
+      background-color: transparent
+      background-repeat: no-repeat
+      background-attachment: scroll
+      background-position: 104px top
+      &.liked
+        background-image: image_url("activity_heart.png")
+      &.commented
+        background-image: image_url("activity_talk.png")
+      &.created
+        background-image: image_url("activity_new.png")
+      &.added
+        background-image: image_url("activity_add.png")
+      +clearfix
+      border: none
+      position: relative
+      .inline-date
         color: $easier_color
-      .price, .sum
-        background-image: none
-        padding-left: 0
+        float: right
+      .activity-image
+        margin-right: 45px
+        float: left
+      .activity-image
+        width: $aside_width / 2 - $gutter_width / 4 - 2
+        +border("all")
+        .look
+          +look_small
+          border: none
+        img
+          vertical-align: top
+      .activity-content
+        h3
+          margin: 0 0 1em
+          border: 0
+          width: 240px
+          background-image: none
+          font-size: 1.1em
+          display: inline
+          overflow: hidden
+        span
+          color: $easier_color
+        .price, .sum
+          background-image: none
+          padding-left: 0
 
 a#create-look
   +button(none, unquote("32px"))
