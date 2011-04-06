@@ -1264,6 +1264,8 @@ body.profile
       background-position: 104px top
       &.liked
         background-image: image_url("activity_heart.png")
+        h3
+          color: $like_color
       &.commented
         background-image: image_url("activity_talk.png")
       &.created
@@ -1287,7 +1289,7 @@ body.profile
           border: none
         img
           vertical-align: top
-      .activity-content
+      .activity-info
         h3
           margin: 0 0 1em
           border: 0
@@ -1301,6 +1303,8 @@ body.profile
         .price, .sum
           background-image: none
           padding-left: 0
+        .activity-content
+          margin-top: 0.5em
 
 a#create-look
   +button(none, unquote("32px"))

@@ -2,10 +2,10 @@
 <a href="{% block activity_link %}{{ object.action_object.get_absolute_url }}{% endblock %}" class="activity">
     <li class="activity {{ object.verb }}">
         <div class="activity-image">{% block activity_image %}{% endblock %}</div>
-        <div class="activity-content">
+        <div class="activity-info">
             <h3 class="activity-header">{% block activity_header %}{% endblock %}</h3>
             <span class="inline-date">{{ object.timestamp|since }}</span>
-            {% block activity_content %}{% endblock %}
+            <div class="activity-content">{% block activity_content %}{% endblock %}</div>
         </div>
     </li>
 </a>
