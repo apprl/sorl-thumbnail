@@ -1,20 +1,16 @@
 {% extends 'apparel/fragments/activity/base.html' %}
 {% load apparel_extras %}
 {% load i18n %}
+
 {% block activity_image %}
     {% with object.action_object as object %}
         {% include 'apparel/fragments/activity/choose_image.html' %}
     {% endwith %}
 {% endblock %}
 
-{% block activity_icon %}
-    <!-- <img src="/media/images/activity_added.png" width="23">-->
-    <div style="position: relative; width: 23px; height: 23px"></div>
-{% endblock %}
-
 {% block activity_header %}
     {% if object.target|class_name == 'Wardrobe' %}
-        <h2>{% trans "Added to wardrobe" %}</h2>
+        {% trans "Added to wardrobe" %}
     {% endif %}
 {% endblock %}
 

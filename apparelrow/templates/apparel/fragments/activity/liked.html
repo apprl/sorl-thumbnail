@@ -10,14 +10,8 @@
     {% endwith %}
 {% endblock %}
 
-{% block activity_icon %}
-    <img src="/media/images/activity_heart.png">
-{% endblock %}
-
 {% block activity_header %}
-<h2 class="like">
     {% with object.actor.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %} {% trans "liked" %}
-</h2>
 {% endblock %}
 
 {% block activity_content %}

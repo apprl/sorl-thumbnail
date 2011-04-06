@@ -7,12 +7,11 @@
     {% endwith %}
 {% endblock %}
 
-{% block activity_icon %}
-    <img src="/media/images/activity_new.png">
+{% block activity_header %}
+    {{ object.action_object.title }}
 {% endblock %}
 
 {% block activity_content %}
-    <h2>{{ object.action_object.title }}</h2>
     <p>
         {% with object.actor.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %} {% trans "created a new look" %}
     </p>

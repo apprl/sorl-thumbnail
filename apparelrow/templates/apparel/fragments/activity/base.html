@@ -1,8 +1,11 @@
 {% load apparel_extras %}
-<div class="activity-header">{%  block activity_header %}{% endblock %}</div>
 <a href="{% block activity_link %}{{ object.action_object.get_absolute_url }}{% endblock %}" class="activity">
-    <span class="inline-date">{{ object.timestamp|since }}</span>
-    <div class="activity-image">{%   block activity_image   %}{% endblock %}</div>
-    <div class="activity-icon">{%    block activity_icon    %}{% endblock %}</div>
-    <div class="activity-content">{% block activity_content %}{% endblock %}</div>
+    <li class="activity {{ object.verb }}">
+        <div class="activity-image">{% block activity_image %}{% endblock %}</div>
+        <div class="activity-content">
+            <h3 class="activity-header">{% block activity_header %}{% endblock %}</h3>
+            <span class="inline-date">{{ object.timestamp|since }}</span>
+            {% block activity_content %}{% endblock %}
+        </div>
+    </li>
 </a>

@@ -9,9 +9,7 @@
     <div id="content">
         <h2>{% trans "Latest updates" %}</h2>
         {% for object in object_list %}
-            <li>
             {% include 'apparel/fragments/activity/activity.html' %}
-            </li>
         {% empty %}
             <li>{% trans "No updates" %}</li>
         {% endfor %}

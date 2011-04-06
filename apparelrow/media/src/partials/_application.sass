@@ -1251,39 +1251,48 @@ body.profile
   color: $easy_color
 
 .activity-list
-  li
-    .activity
-      +clearfix
-      border: none
-      position: relative
-      .inline-date
-        position: absolute
-        right: 0
-      .activity-image,.activity-icon,.activity-content
-        float: left
-        padding: 0 .5em
-      .activity-image
-        width: $aside_width / 2 - $gutter_width / 4 - 2
+  li.activity
+    background-color: transparent
+    background-repeat: no-repeat
+    background-attachment: scroll
+    background-position: 104px top
+    &.liked
+      background-image: image_url("activity_heart.png")
+    &.commented
+      background-image: image_url("activity_talk.png")
+    &.created
+      background-image: image_url("activity_new.png")
+    &.added
+      background-image: image_url("activity_add.png")
+    +clearfix
+    border: none
+    position: relative
+    .inline-date
+      color: $easier_color
+      float: right
+    .activity-image
+      margin-right: 45px
+      float: left
+    .activity-image
+      width: $aside_width / 2 - $gutter_width / 4 - 2
+      .look
+        +look_small
+    .activity-content
+      h3
+        margin: 0
+        border: 0
+        width: 240px
+        background-image: none
+        font-size: 1.1em
+        display: inline
+        overflow: hidden
+      p
+        border: none
+      span
+        color: $easier_color
+      .price, .sum
+        background-image: none
         padding-left: 0
-        .look
-          +look_small
-      .activity-content
-        padding-right: 0
-        width: 264px
-        h2
-          margin: 0
-          border: 0
-          background-image: none
-          font-size: 1.1em
-          display: inline
-          overflow: hidden
-        p
-          border: none
-        span
-          color: $easier_color
-        .price, .sum
-          background-image: none
-          padding-left: 0
 
 a#create-look
   +button(none, unquote("32px"))

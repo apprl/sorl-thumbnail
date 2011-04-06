@@ -1,6 +1,7 @@
 {% extends 'apparel/fragments/activity/base.html' %}
 {% load apparel_extras %}
 {% load i18n %}
+
 {% block activity_link %}
     {{ object.action_object.content_object.get_absolute_url }}
 {% endblock %}
@@ -10,19 +11,12 @@
     {% endwith %}
 {% endblock %}
 
-{% block activity_icon %}
-    <img src="/media/images/activity_talk.png">
+{% block activity_header %}
+    {% blocktrans with object.action_object.content_object as commented_on %}
+        Commented on {{ commented_on }}
+    {% endblocktrans %}
 {% endblock %}
 
-{% block activity_header %}
-    <h2>
-        {% blocktrans with object.action_object.content_object as commented_on %}
-            Commented on {{ commented_on }}
-        {% endblocktrans %}
-    </h2>
-{% endblock %}
 {% block activity_content %}
-    <p>
-        {{ object.action_object.comment }}
-    </p>
+    <p>{{ object.action_object.comment }}</p>
 {% endblock %}
