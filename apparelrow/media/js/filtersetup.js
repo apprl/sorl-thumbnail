@@ -158,11 +158,7 @@ var ManufacturerBrowser = {
         this.$selectedList  = jQuery('#selected-manufacturers');
         
         this.$availableList.scroll(function() {
-            var $this = jQuery(this);
-            
-            console.log(self.canFetch, $this.scrollTop(), this.scrollHeight, $this.innerHeight());
-            
-            if(self.canFetch && $this.scrollTop() >= this.scrollHeight - $this.innerHeight() - $('li:first', $this).height() * 10) {
+            if(self.canFetch && self.$availableList.scrollTop() > this.scrollHeight / 2) {
                self.fetchNextPage();
             }
         });
