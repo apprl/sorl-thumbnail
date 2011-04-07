@@ -1153,6 +1153,7 @@ a.follow, a.unfollow
   span
     display: none
   &:hover
+    +highlight_hover
     span
       display: inline
 
@@ -1168,6 +1169,16 @@ body.profile
       z-index: 1
       position: relative
       margin-top: -30px
+    .following, .not_following
+      display: block
+      margin-top: 0.5em
+      a.follow, a.unfollow
+        +border-radius(0.25em)
+        padding: 1em
+        span
+          display: inline
+    .following .unfollow, .not_following .follow
+      display: block
     p
       border: none
       color: $easier_color
@@ -1210,14 +1221,16 @@ ul.suggested-friends
         padding-left: 1em
         padding-right: 1em
         padding-top: 2px
-        border: 1px solid #d9d9d9
-        border-left-color: white
+        border-style: solid
+        border-color: #d9d9d9
+        border-width: 1px 1px 1px 0
         text-transform: uppercase
         background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x top left
         &.last
           +border-right-radius(3px)
         &.first
           +border-left-radius(3px)
+          border-width: 1px
         &.selected
           background-image: image_url(unquote("profile-nav-bg-selected.png"))
           border-right-color: #ababab
@@ -1261,7 +1274,7 @@ body.profile
       background-color: transparent
       background-repeat: no-repeat
       background-attachment: scroll
-      background-position: 104px top
+      background-position: 104px 6px
       &.liked
         background-image: image_url("activity_heart.png")
         h3
@@ -1290,6 +1303,7 @@ body.profile
         img
           vertical-align: top
       .activity-info
+        padding: 0.5em
         h3
           margin: 0 0 1em
           border: 0

@@ -4,7 +4,7 @@
 {% url profile.views.followers profile.user.username as followers_url %}
 {% url profile.views.following profile.user.username as following_url %}
 <li>
-    <a{% ifequal request.path wardrobe_url %} class="selected"{% endifequal %} href="{{ wardrobe_url }}">{% trans "Wardrobe" %}</a>
+<a class="{% if request.path == wardrobe_url %}selected{% else %}first{% endif %}" href="{{ wardrobe_url }}">{% trans "Wardrobe" %}</a>
 </li>
 <li>
     <a class="{% ifequal request.path looks_url %} selected{% endifequal %}" href="{{ looks_url }}">{% trans "Looks" %}</a>
