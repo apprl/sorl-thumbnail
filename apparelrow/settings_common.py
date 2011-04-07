@@ -212,7 +212,7 @@ COMPRESS_JS = {
                              'js/jquery/jquery.tmpl.js',
                              'js/jquery/jquery.history.js',
                              'js/jquery/jquery.ui.rotatable.js',
-                             'js/jquery/jquery.autogrow.js'),
+                             'js/jquery/autoresize.jquery.min.js'),
         'output_filename': 'js/compiled/jquery.js',
     },
 }

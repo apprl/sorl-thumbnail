@@ -38,7 +38,7 @@ jQuery(document).ready(function() {
     comment_area
         .focus(function() { jQuery('#comments-and-links button').show() })
         .blur(function() { if(jQuery(this).val() == '') jQuery('#comments-and-links button').hide() })
-        .autogrow();
+        .autoResize();
     jQuery('#comments-and-links form').hyperSubmit({
         success: function(data, statusText, req) {
             comment_area.val('');
