@@ -26,35 +26,36 @@ def invalidate_template_cache(fragment_name, *variables):
 
 template_cache_map = {
     'Product':  (
-        'product_detail1', 'product_detail2', 'product_search', 
-        'product_small', 'product_thumb', 'look_widget', 'look_small',
+        'product_detail_fragment1', 'product_detail_fragment2', 'product_detail2',
+        'product_search', 'product_small', 'product_thumb', 'look_widget', 'look_small',
     ),
     'VendorProduct': (
-        'product_detail1', 'product_detail2', 'product_search', 
-        'look_widget', 'look_small',
+        'product_detail_fragment1', 'product_detail_fragment2', 'product_detail2',
+        'product_search', 'look_widget', 'look_small',
     ),
     'VendorProductVariation': (  # Fixme: Validate these
-        'product_detail1', 'product_detail2', 'product_search', 
-        'look_widget', 'look_small',
+        'product_detail_fragment1', 'product_detail_fragment2', 'product_detail2',
+        'product_search', 'look_widget', 'look_small',
     ),
     'Option': (
         'filter_menu',
     ),
     'Category': (
-        'filter_menu',  
+        'filter_menu',
     ),
     'Look': (
-        'look_detail', 'look_small', 'product_detail', 'look_widget', 'look_small',
+        'look_detail1', 'look_detail2', 'look_detail3', 'look_small',
+        'product_detail2', 'look_widget', 'look_small',
         'index',
     ), # < only if featured was changed
     'LookComponent': (
-        'look_detail', 'look_widget', 'look_small',
+        'look_detail1', 'look_detail2', 'look_detail3', 'look_widget', 'look_small',
     ),
 }
 
 class_level_map = (
     'filter_menu',
-    'index',   
+    'index',
 )
 
 
