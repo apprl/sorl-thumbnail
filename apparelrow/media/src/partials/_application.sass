@@ -1162,6 +1162,8 @@ a.follow, a.unfollow
       display: inline
 
 a.profile-link
+  img.avatar
+    margin-right: 0.5em
   &:hover
     text-decoration: underline
 
@@ -1203,9 +1205,7 @@ ul.users
 ul.suggested-friends
   img.avatar
     vertical-align: top
-  .profile-name
-    display: inline-block
-    width: $aside_width - 55
+    float: left
   .following, .not_following
     display: block
     .follow span, .unfollow span

@@ -2,6 +2,5 @@
 {% load humanize %}
 
 {% block image %}{% with comment.user.get_profile as profile %}{% include 'apparel/fragments/avatar_link.html' %}{% endwith %}{% endblock %}
-{% block title %}{% with comment.user.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %}{% endblock %}
 {% block submit_date %}{{ comment.submit_date|naturalday:"Y-m-d" }} {{ comment.submit_date|date:"H:i"}}{% endblock %}
 {% block content %}{{ comment.comment }}{% endblock %}
