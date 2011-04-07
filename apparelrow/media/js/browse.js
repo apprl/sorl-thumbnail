@@ -111,6 +111,11 @@ jQuery(document).ready(function() {
     jQuery('.options .reset').click(function(e) {
         var link = jQuery(this);
         
+        link
+            .parents('.options').hide()
+            .parents('li.active').removeClass('active')
+            .find('a.selected').removeClass('selected');
+
         switch(link.closest('li').attr('id')) {
             case 'product-price':
                 // Move slider to min and max
@@ -201,6 +206,10 @@ jQuery(document).ready(function() {
             $this.parent().siblings().find('a').removeClass('selected');
             filter(getQuery());
         }
+        return false;
+    });
+    jQuery('#product-color li > a').click(function() {
+        jQuery(this).toggleClass('selected');
         return false;
     });
     jQuery('#product-category li > a').click(function() {
