@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-07 10:27+0200\n"
+"POT-Creation-Date: 2011-04-07 11:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -701,15 +701,15 @@ msgstr[1] ""
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
-#: templates/apparel/user_home.html:10 templates/profile/profile.html:6
+#: templates/apparel/user_home.html:11 templates/profile/profile.html:6
 msgid "Latest updates"
 msgstr "Senaste händelser"
 
-#: templates/apparel/user_home.html:15 templates/profile/profile.html:11
+#: templates/apparel/user_home.html:16 templates/profile/profile.html:11
 msgid "No updates"
 msgstr "Inga händelser"
 
-#: templates/apparel/user_home.html:21
+#: templates/apparel/user_home.html:22
 msgid "Your friends are here!"
 msgstr "Hitta dina vänner!"
 
@@ -838,27 +838,42 @@ msgstr[1] ""
 "\n"
 "        %(number)s artiklar\n"
 
-#: templates/apparel/fragments/activity/added.html:13
+#: templates/apparel/fragments/activity/added.html:14
 msgid "Added to wardrobe"
 msgstr "Lade till i garderob"
 
-#: templates/apparel/fragments/activity/commented.html:15
-msgid ""
-"\n"
-"        Commented on %(commented_on)s\n"
-"    "
-msgstr ""
-"\n"
-"                Kommenterade %(commented_on)s\n"
-"            "
+#: templates/apparel/fragments/activity/added.html:16
+#, python-format
+msgid "%(name)s added to wardrobe"
+msgstr "%(name)s lade till i garderob"
 
-#: templates/apparel/fragments/activity/created.html:15
+#: templates/apparel/fragments/activity/commented.html:16
+#, python-format
+msgid "Commented on %(commented_on)s"
+msgstr "Kommenterade på %(commented_on)s"
+
+#: templates/apparel/fragments/activity/commented.html:18
+#, python-format
+msgid "%(name)s commented on %(commented_on)s"
+msgstr "%(name)s kommenterade på %(commented_on)s"
+
+#: templates/apparel/fragments/activity/created.html:14
+#, python-format
+msgid "%(name)s added %(object.action_object.title)s"
+msgstr "%(name)s lade till %(object.action_object.title)s"
+
+#: templates/apparel/fragments/activity/created.html:19
 msgid "created a new look"
 msgstr "skapade en look"
 
-#: templates/apparel/fragments/activity/liked.html:14
-msgid "liked"
-msgstr "gillade"
+#: templates/apparel/fragments/activity/liked.html:15
+msgid "likes"
+msgstr "Likes"
+
+#: templates/apparel/fragments/activity/liked.html:17
+#, python-format
+msgid "%(name)s likes"
+msgstr "%(name)s gillar"
 
 #: templates/comments/form.html:20
 msgid "Comment"
@@ -954,7 +969,8 @@ msgstr[1] ""
 "                %(looks)s looks\n"
 "            "
 
-#: templates/profile/base_profile.html:39
+#: templates/profile/base_profile.html:40
+#, python-format
 msgid "%(name)s's latest looks"
 msgstr "%(name)ss senaste looks"
 
@@ -1146,6 +1162,29 @@ msgstr "Mejl skickat"
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
 
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "            %(name)s added to wardrobe\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "                %(name)s gillar\n"
+#~ "            "
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "            %(name)s likes\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "                %(name)s gillar\n"
+#~ "            "
+
+#~ msgid "liked"
+#~ msgstr "gillade"
+
 #~ msgid "Most popular looks"
 #~ msgstr "Populära looks"
 
@@ -1166,15 +1205,6 @@ msgstr "Varför mejlet inte skickades"
 #~ msgstr ""
 #~ "\n"
 #~ "                %(name)s skapade en ny look\n"
-#~ "            "
-
-#~ msgid ""
-#~ "\n"
-#~ "            %(name)s like\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "                %(name)s gillar\n"
 #~ "            "
 
 #~ msgid "Numeric price"

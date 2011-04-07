@@ -11,7 +11,11 @@
 {% endblock %}
 
 {% block activity_header %}
-    {{ object.actor.get_profile.display_name }} {% trans "liked" %}
+    {% if profile.user == object.actor %}
+        {% trans "likes" %}
+    {% else %}
+        {% blocktrans with object.actor.get_profile.display_name as name %}{{ name }} likes{% endblocktrans %}
+    {% endif %}
 {% endblock %}
 
 {% block activity_content %}

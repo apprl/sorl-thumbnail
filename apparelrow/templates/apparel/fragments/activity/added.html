@@ -10,7 +10,11 @@
 
 {% block activity_header %}
     {% if object.target|class_name == 'Wardrobe' %}
-        {% trans "Added to wardrobe" %}
+        {% if profile.user == object.actor %}
+            {% trans "Added to wardrobe" %}
+        {% else %}
+            {% blocktrans with object.actor.get_profile.display_name as name %}{{ name }} added to wardrobe{% endblocktrans %}
+        {% endif %}
     {% endif %}
 {% endblock %}
 

@@ -8,7 +8,11 @@
 {% endblock %}
 
 {% block activity_header %}
-    {{ object.action_object.title }}
+    {% if profile.user == object.actor %}
+        {{ object.action_object.title }}
+    {% else %}
+        {% blocktrans with object.actor.get_profile.display_name as name %}{{ name }} added {{ object.action_object.title }}{% endblocktrans %}
+    {% endif %}
 {% endblock %}
 
 {% block activity_content %}
