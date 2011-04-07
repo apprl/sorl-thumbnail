@@ -11,7 +11,7 @@
     {% if profile.user == object.actor %}
         {{ object.action_object.title }}
     {% else %}
-        {% blocktrans with object.actor.get_profile.display_name as name %}{{ name }} added {{ object.action_object.title }}{% endblocktrans %}
+        {% blocktrans with object.actor.get_profile.display_name as name and object.action_object.title as object %}{{ name }} added {{ object }}{% endblocktrans %}
     {% endif %}
 {% endblock %}
 

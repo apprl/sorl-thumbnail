@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-07 18:08+0200\n"
+"POT-Creation-Date: 2011-04-08 01:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -619,43 +619,44 @@ msgstr "Foto"
 msgid "Selection"
 msgstr "Urval"
 
-#: templates/apparel/look_edit.html:522
-msgid "Drag products here to start building a collage"
-msgstr "Dra produkter hit för att börja skapa ditt kollage"
-
-#: templates/apparel/look_edit.html:524
-msgid "or"
-msgstr "eller"
-
-#: templates/apparel/look_edit.html:525 templates/apparel/look_edit.html:534
-msgid "Upload a photo to create a tagged image"
-msgstr "Ladda upp ett foto för att skapa en taggad bild"
-
-#: templates/apparel/look_edit.html:539
-msgid "Choose file"
-msgstr "Välj bild"
-
-#: templates/apparel/look_edit.html:542
-msgid "Upload"
-msgstr "Ladda upp"
-
-#: templates/apparel/look_edit.html:559
-msgid "Your wardrobe"
-msgstr "Din garderob"
-
-#: templates/apparel/look_edit.html:560
+#: templates/apparel/look_edit.html:523
 msgid "To create a look, you need to have products in your wardrobe."
-msgstr "För att skapa en look behöver du först lägga till plagg i din garderob."
+msgstr ""
+"För att skapa en look behöver du först lägga till plagg i din garderob."
 
-#: templates/apparel/look_edit.html:560
+#: templates/apparel/look_edit.html:523
 msgid "Find products!"
 msgstr "Hitta plagg!"
 
-#: templates/apparel/look_edit.html:570
+#: templates/apparel/look_edit.html:525
+msgid "Drag products here to start building a collage"
+msgstr "Dra produkter hit för att börja skapa ditt kollage"
+
+#: templates/apparel/look_edit.html:527
+msgid "or"
+msgstr "eller"
+
+#: templates/apparel/look_edit.html:528 templates/apparel/look_edit.html:538
+msgid "Upload a photo to create a tagged image"
+msgstr "Ladda upp ett foto för att skapa en taggad bild"
+
+#: templates/apparel/look_edit.html:543
+msgid "Choose file"
+msgstr "Välj bild"
+
+#: templates/apparel/look_edit.html:546
+msgid "Upload"
+msgstr "Ladda upp"
+
+#: templates/apparel/look_edit.html:563
+msgid "Your wardrobe"
+msgstr "Din garderob"
+
+#: templates/apparel/look_edit.html:573
 msgid "Products"
 msgstr "Produkter"
 
-#: templates/apparel/look_edit.html:570
+#: templates/apparel/look_edit.html:573
 msgid "Close"
 msgstr ""
 
@@ -867,8 +868,8 @@ msgstr "%(name)s kommenterade på %(commented_on)s"
 
 #: templates/apparel/fragments/activity/created.html:14
 #, python-format
-msgid "%(name)s added %(object.action_object.title)s"
-msgstr "%(name)s lade till %(object.action_object.title)s"
+msgid "%(name)s added %(object)s"
+msgstr "%(name)s lade till %(object)s"
 
 #: templates/apparel/fragments/activity/created.html:19
 msgid "created a new look"
