@@ -1163,7 +1163,9 @@ a.profile-link
 
 body.profile
   #profile-nav
-    margin-left: $aside_width
+    ul
+      display: block
+      margin-left: $aside_width
   .sidebar
     .avatar.large
       z-index: 1
@@ -1254,12 +1256,6 @@ ul.suggested-friends
     height: 1px
     border: none
 
-body.profile
-  #profile-nav
-    hr
-      left: -$aside_width
-
-  
 .inline-date
   float: right
   color: $easy_color
