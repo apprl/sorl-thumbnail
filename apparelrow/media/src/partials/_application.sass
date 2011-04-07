@@ -1204,13 +1204,16 @@ ul.users
     float: right
 
 ul.suggested-friends
-  img.avatar
-    vertical-align: top
-    float: left
-  .following, .not_following
-    display: block
-    .follow span, .unfollow span
-      display: inline
+  li
+    +clearfix
+    margin-bottom: 1em
+    img.avatar
+      vertical-align: top
+      float: left
+    .following, .not_following
+      display: block
+      .follow span, .unfollow span
+        display: inline
 
 #profile-nav
   +clearfix
