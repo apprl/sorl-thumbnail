@@ -13,6 +13,9 @@ jQuery(document).ready(function() {
     // Make all "apparel rows" scrollables
     jQuery('.row').scrollable().end();
 
+    // Make all textareas autogrow
+    jQuery('textarea').autoResize();
+
 
     // Adding comments to jquery-tmpl, syntax: {{#}}comment{{/#}} Note: the "" are important
     jQuery.tmplcmd['#'] = {
@@ -37,8 +40,7 @@ jQuery(document).ready(function() {
         jQuery('#comments-and-links button').hide();
     comment_area
         .focus(function() { jQuery('#comments-and-links button').show() })
-        .blur(function() { if(jQuery(this).val() == '') jQuery('#comments-and-links button').hide() })
-        .autoResize();
+        .blur(function() { if(jQuery(this).val() == '') jQuery('#comments-and-links button').hide() });
     jQuery('#comments-and-links form').hyperSubmit({
         success: function(data, statusText, req) {
             comment_area.val('');
