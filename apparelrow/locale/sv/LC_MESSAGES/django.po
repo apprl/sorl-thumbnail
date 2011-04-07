@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-07 11:44+0200\n"
+"POT-Creation-Date: 2011-04-07 11:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -701,9 +701,9 @@ msgstr[1] ""
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
-#: templates/apparel/user_home.html:11 templates/profile/profile.html:6
-msgid "Latest updates"
-msgstr "Senaste händelser"
+#: templates/apparel/user_home.html:11
+msgid "Your friend's latest updates"
+msgstr "Senaste händelser bland dina vänner"
 
 #: templates/apparel/user_home.html:16 templates/profile/profile.html:11
 msgid "No updates"
@@ -983,6 +983,10 @@ msgstr "Följs av"
 #: templates/profile/fragments/menu_items.html:16
 msgid "Following"
 msgstr "Följer"
+
+#: templates/profile/profile.html:6
+msgid "Latest updates"
+msgstr "Senaste händelser"
 
 #: templates/profile/watcher.html:13
 msgid "Search now"
