@@ -1156,6 +1156,7 @@ a.follow, a.unfollow
   span
     display: none
   &:hover
+    text-decoration: none
     +highlight_hover
     span
       display: inline
@@ -1174,16 +1175,6 @@ body.profile
       z-index: 1
       position: relative
       margin-top: -30px
-    .following, .not_following
-      display: block
-      margin-top: 0.5em
-      a.follow, a.unfollow
-        +border-radius(0.25em)
-        padding: 1em
-        span
-          display: inline
-    .following .unfollow, .not_following .follow
-      display: block
     p
       border: none
       color: $easier_color
@@ -1191,6 +1182,17 @@ body.profile
       &.description
         margin-top: 1em
         color: $font-color
+      &.large_follow
+        .following, .not_following
+          display: block
+          margin-top: 0.5em
+          a.follow, a.unfollow
+            +border-radius(0.25em)
+            padding: 1em
+            span
+              display: inline
+        .following .unfollow, .not_following .follow
+          display: block
 
 ul.users
   img.avatar
