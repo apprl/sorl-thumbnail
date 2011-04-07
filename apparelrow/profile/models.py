@@ -81,15 +81,20 @@ class ApparelProfile(models.Model):
 
 def create_profile(signal, instance, **kwargs):
     if kwargs['created']:
-        p = ApparelProfile(user=instance)
-        p.save()
+        p, created = ApparelProfile.objects.get_or_create(user=instance)
 
 def create_profile_from_facebook(signal, instance, **kwargs):
     if kwargs['created']:
-        p = ApparelProfile(user=instance.user)
-        p.name = instance.name
-        p.about = instance.bio
-        p.save()
+        fb_properties = {
+            'name': instance.name,
+            'about': instance.bio,
+        }
+        p, created = ApparelProfile.objects.get_or_create(user=instance.user, defaults=fb_properties)
+
+        if not created:
+            p.name = instance.name
+            p.about = instance.bio
+            p.save()
 
 post_save.connect(create_profile, sender=User)
 post_save.connect(create_profile_from_facebook, sender=FacebookProfile)
