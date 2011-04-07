@@ -556,7 +556,8 @@ jQuery(document).ready(function() {
 </form>
 <div id="wardrobe">
     <div id="wardrobe-title">
-        <span>{% trans "Your wardrobe" %}</span>
+        <span class="title">{% trans "Your wardrobe" %}</span>
+        {% if wardrobe|length == 0 %}<span class="warning">{% trans "To create a look, you need to have products in your wardrobe." %} <a href="{% url apparel.views.browse %}">{% trans "Find products!" %}</a></span>{% endif %}
     </div>
     <div id="wardrobe-contents">
         {% with "wardrobe" as id_prefix %}

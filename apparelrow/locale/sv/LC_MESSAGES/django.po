@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-07 11:51+0200\n"
+"POT-Creation-Date: 2011-04-07 18:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -536,7 +536,7 @@ msgstr "Skapa ny look"
 msgid "Create a new look"
 msgstr "Skapa en ny look"
 
-#: templates/apparel/look_create.html:22 templates/apparel/look_edit.html:507
+#: templates/apparel/look_create.html:22 templates/apparel/look_edit.html:506
 msgid "Description (optional):"
 msgstr "Beskrivning (valfritt)"
 
@@ -587,61 +587,69 @@ msgstr "Taggar"
 msgid "Articles in this look"
 msgstr "Artiklar i denna look"
 
-#: templates/apparel/look_edit.html:249
+#: templates/apparel/look_edit.html:248
 msgid "Save collage"
 msgstr "Spara kollage"
 
-#: templates/apparel/look_edit.html:249
+#: templates/apparel/look_edit.html:248
 msgid "Save photo"
 msgstr ""
 
-#: templates/apparel/look_edit.html:249
+#: templates/apparel/look_edit.html:248
 msgid "Save selection"
 msgstr "Spara urval"
 
-#: templates/apparel/look_edit.html:504
+#: templates/apparel/look_edit.html:503
 msgid "Save"
 msgstr "Spara"
 
-#: templates/apparel/look_edit.html:509
+#: templates/apparel/look_edit.html:508
 msgid "Tags:"
 msgstr "Taggar (valfritt)"
 
-#: templates/apparel/look_edit.html:515
+#: templates/apparel/look_edit.html:514
 msgid "Collage"
 msgstr "Kollage"
 
-#: templates/apparel/look_edit.html:516
+#: templates/apparel/look_edit.html:515
 msgid "Photo"
 msgstr "Foto"
 
-#: templates/apparel/look_edit.html:517
+#: templates/apparel/look_edit.html:516
 msgid "Selection"
 msgstr "Urval"
 
-#: templates/apparel/look_edit.html:523
+#: templates/apparel/look_edit.html:522
 msgid "Drag products here to start building a collage"
 msgstr "Dra produkter hit för att börja skapa ditt kollage"
 
-#: templates/apparel/look_edit.html:525
+#: templates/apparel/look_edit.html:524
 msgid "or"
 msgstr "eller"
 
-#: templates/apparel/look_edit.html:526 templates/apparel/look_edit.html:535
+#: templates/apparel/look_edit.html:525 templates/apparel/look_edit.html:534
 msgid "Upload a photo to create a tagged image"
 msgstr "Ladda upp ett foto för att skapa en taggad bild"
 
-#: templates/apparel/look_edit.html:540
+#: templates/apparel/look_edit.html:539
 msgid "Choose file"
 msgstr "Välj bild"
 
-#: templates/apparel/look_edit.html:543
+#: templates/apparel/look_edit.html:542
 msgid "Upload"
 msgstr "Ladda upp"
 
-#: templates/apparel/look_edit.html:560
+#: templates/apparel/look_edit.html:559
 msgid "Your wardrobe"
 msgstr "Din garderob"
+
+#: templates/apparel/look_edit.html:560
+msgid "To create a look, you need to have products in your wardrobe."
+msgstr "För att skapa en look behöver du först lägga till plagg i din garderob."
+
+#: templates/apparel/look_edit.html:560
+msgid "Find products!"
+msgstr "Hitta plagg!"
 
 #: templates/apparel/look_edit.html:570
 msgid "Products"
