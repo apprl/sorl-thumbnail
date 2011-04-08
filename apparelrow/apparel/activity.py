@@ -67,5 +67,6 @@ def m2m_handler(sender, **kwargs):
         )
 
 models.signals.m2m_changed.connect(m2m_handler, sender=Wardrobe.products.through)
+models.signals.m2m_changed.connect(m2m_handler, sender=Look.products.through)
 
 

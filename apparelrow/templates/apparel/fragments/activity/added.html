@@ -2,6 +2,8 @@
 {% load apparel_extras %}
 {% load i18n %}
 
+{% block activity_link %}{% if object.target|class_name == 'Look' %}{{ object.target.get_absolute_url }}{% else %}{{ object.action_object.get_absolute_url }}{% endif %}{% endblock %}
+
 {% block activity_image %}
     {% with object.action_object as object %}
         {% include 'apparel/fragments/activity/choose_image.html' %}
@@ -9,11 +11,17 @@
 {% endblock %}
 
 {% block activity_header %}
-    {% if object.target|class_name == 'Wardrobe' %}
-        {% if profile.user == object.actor %}
+    {% if profile.user == object.actor %}
+        {% if object.target|class_name == 'Wardrobe' %}
             {% trans "Added to wardrobe" %}
         {% else %}
+            {% blocktrans with object.target.title as title %}Added to {{ title }}{% endblocktrans %}
+        {% endif %}
+    {% else %}
+        {% if object.target|class_name == 'Wardrobe' %}
             {% blocktrans with object.actor.get_profile.display_name as name %}{{ name }} added to wardrobe{% endblocktrans %}
+        {% else %}
+            {% blocktrans with object.actor.get_profile.display_name as name and object.target.title as title %}{{ name }} added to {{ title }}{% endblocktrans %}
         {% endif %}
     {% endif %}
 {% endblock %}

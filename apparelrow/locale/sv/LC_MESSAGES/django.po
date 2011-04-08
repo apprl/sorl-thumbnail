@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-08 01:44+0200\n"
+"POT-Creation-Date: 2011-04-08 12:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -847,14 +847,24 @@ msgstr[1] ""
 "\n"
 "        %(number)s artiklar\n"
 
-#: templates/apparel/fragments/activity/added.html:14
+#: templates/apparel/fragments/activity/added.html:16
 msgid "Added to wardrobe"
 msgstr "Lade till i garderob"
 
-#: templates/apparel/fragments/activity/added.html:16
+#: templates/apparel/fragments/activity/added.html:18
+#, python-format
+msgid "Added to %(title)s"
+msgstr "Lade till i %(title)s"
+
+#: templates/apparel/fragments/activity/added.html:22
 #, python-format
 msgid "%(name)s added to wardrobe"
 msgstr "%(name)s lade till i garderob"
+
+#: templates/apparel/fragments/activity/added.html:24
+#, python-format
+msgid "%(name)s added to %(title)s"
+msgstr "%(name)s lade till i %(title)s"
 
 #: templates/apparel/fragments/activity/commented.html:16
 #, python-format
@@ -1174,6 +1184,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Added to look"
+#~ msgstr "Lade till i look"
 
 #, fuzzy
 #~ msgid ""
