@@ -13,6 +13,11 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 
+class LookAdmin(admin.ModelAdmin):
+    raw_id_fields = ('products',)
+
+admin.site.register(Look, LookAdmin)
+
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'ancestors', 'on_front_page',)
     
@@ -40,7 +45,6 @@ admin.site.register(VendorProduct)
 # User data
 #
 
-admin.site.register(Look)
 admin.site.register(LookComponent)
 admin.site.register(Wardrobe)
 
