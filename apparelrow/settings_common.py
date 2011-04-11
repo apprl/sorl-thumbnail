@@ -43,8 +43,8 @@ SITE_ID = 1
 USE_I18N = True
 LANGUAGE_CODE = 'sv'
 LANGUAGES = (
-#    ('en', gettext('English')), 
-    ('sv', gettext('Swedish')), 
+    ('en', gettext('English')),
+    ('sv', gettext('Swedish')),
 )
 
 
