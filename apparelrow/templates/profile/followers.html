@@ -8,7 +8,7 @@
     {% for follower in object_list %}
     <li>
     {% with follower.user.get_profile as profile %}
-        {% include 'apparel/fragments/avatar_link.html' %}
+        {% include 'profile/fragments/follow_profile.html' %}
     {% endwith %}
     </li>
     {% endfor %}

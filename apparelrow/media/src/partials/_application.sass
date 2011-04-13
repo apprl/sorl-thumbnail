@@ -1152,8 +1152,9 @@ a.follow, a.unfollow
   +button(none, 1em)
   +border-radius(2px)
   +highlight
-  line-height: 0.75
-  padding: 2px
+  line-height: 1
+  padding: 0 2px
+  display: inline-block
   span
     display: none
   &:hover
@@ -1197,11 +1198,48 @@ body.profile
         .following .unfollow, .not_following .follow
           display: block
 
-ul.users
-  img.avatar
-    vertical-align: middle
-  .following, .not_following
-    float: right
+  ul.users
+    li
+      +clearfix
+      +border("bottom")
+      margin: 10px 0
+      padding-bottom: 10px
+      img.avatar
+        float: left
+        +border("all")
+        margin-right: 20px
+      .profile-info
+        padding-top: 10px
+        h3
+          display: inline-block
+          font-weight: bold
+          font-family: $font_family_bold
+          font-size: 1.25em
+          line-height: 1.5
+        .user_is_following
+          float: right
+          margin-right: 1em
+          padding: 0 8px
+          +button(none, 1em)
+          +border-radius(2px)
+          +highlight
+          border-color: $highlight_bg_color
+          display: inline-block
+          line-height: 1.75
+          cursor: auto
+        .following, .not_following
+          float: right
+          .follow, .unfollow
+            line-height: 1.75
+            padding: 0 8px
+            span
+              max-width: 150px
+              overflow: hidden
+              display: inline-block
+        .member_since, .follower_count, .following_count
+          color: $easier_color
+        .follower_count, .following_count
+          float: right
 
 ul.suggested-friends
   li
