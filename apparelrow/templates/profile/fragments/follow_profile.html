@@ -9,11 +9,13 @@
         {% include 'apparel/fragments/follow.html' %}
         {% if_user_is_following profile.user %}<span class="user_is_following">{% trans "Following you" %}</span>{% endif %}
     {% endif %}
-    {% if profile.about %}<p class="about">{{ profile.about }}</p>{% endif %}
-    <span class="member_since">{% blocktrans with profile.user.date_joined|naturalday:"Y-m-d" as date_joined %}Member since {{ date_joined }}{% endblocktrans %}</span>
-    <span class="follower_count">
-        {% get_follower_count for profile.user %}
-        {% blocktrans %}Followed by {{ follower_count }}{% endblocktrans %}
-    </span>
-    <span class="following_count"></span>
+    <p class="about">{% if profile.about %}{{ profile.about }}{% endif %}</p>
+    <p>
+      <span class="member_since">{% blocktrans with profile.user.date_joined|naturalday:"Y-m-d" as date_joined %}Member since {{ date_joined }}{% endblocktrans %}</span>
+      <span class="follower_count">
+          {% get_follower_count for profile.user %}
+          {% blocktrans %}Followed by {{ follower_count }}{% endblocktrans %}
+      </span>
+      <span class="following_count"></span>
+    </p>
 </div>

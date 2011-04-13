@@ -1203,12 +1203,11 @@ body.profile
       +clearfix
       +border("bottom")
       margin: 10px 0
-      padding-bottom: 10px
       img.avatar
         float: left
         +border("all")
-        margin-right: 20px
       .profile-info
+        margin-left: 75px
         padding-top: 10px
         h3
           display: inline-block
@@ -1216,6 +1215,8 @@ body.profile
           font-family: $font_family_bold
           font-size: 1.25em
           line-height: 1.5
+        p
+          margin: 1em 0
         .user_is_following
           float: right
           margin-right: 1em
@@ -1238,6 +1239,7 @@ body.profile
               display: inline-block
         .member_since, .follower_count, .following_count
           color: $easier_color
+          white-space: nowrap
         .follower_count, .following_count
           float: right
 
