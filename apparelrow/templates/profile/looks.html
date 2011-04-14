@@ -6,3 +6,10 @@
     <h2>{% trans "Latest looks" %}</h2>
     {% include 'apparel/fragments/looks_middle_column.html' %}
 {% endblock %}
+
+{% block profile_right_sidebar %}
+    <h2>{% blocktrans with profile.display_name as name %}{{ name }}'s popular looks{% endblocktrans %}</h2>
+    {% with popular_looks as looks %}
+        {% include 'apparel/fragments/looks_sidebar.html' %}
+    {% endwith %}
+{% endblock %}

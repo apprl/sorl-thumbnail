@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-14 12:16+0200\n"
+"POT-Creation-Date: 2011-04-14 12:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -966,7 +966,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/base_profile.html:40
+#: templates/profile/base_profile.html:41
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr ""
@@ -979,6 +979,11 @@ msgstr ""
 #: templates/profile/following.html:6
 #: templates/profile/fragments/menu_items.html:16
 msgid "Following"
+msgstr ""
+
+#: templates/profile/looks.html:11
+#, python-format
+msgid "%(name)s's popular looks"
 msgstr ""
 
 #: templates/profile/profile.html:6

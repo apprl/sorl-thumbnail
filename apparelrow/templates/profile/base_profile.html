@@ -37,10 +37,12 @@
     {% endblock content %}
     </div>
     <div class="sidebar last">
+    {% block profile_right_sidebar %}
         <h2>{% blocktrans with profile.display_name as name %}{{ name }}'s latest looks{% endblocktrans %}</h2>
         {% with recent_looks as looks %}
             {% include 'apparel/fragments/looks_sidebar.html' %}
         {% endwith %}
+    {% endblock %}
     </div>
 </div>
 {% endblock %}
