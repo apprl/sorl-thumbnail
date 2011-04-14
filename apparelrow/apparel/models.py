@@ -169,6 +169,12 @@ class Product(models.Model):
         if not self.category:
             self.published = False
 
+        if not self.gender:
+            try:
+                self.gender = self.vendorproduct.get().vendor_category.default_gender
+            except:
+                pass
+
         super(Product, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -190,6 +196,7 @@ class VendorCategory(models.Model):
     category = models.ForeignKey(Category, verbose_name=_('category'), null=True)
     name     = models.CharField(_('Name'), max_length=255)
     vendor   = models.ForeignKey(Vendor)
+    default_gender = models.CharField(_('Default gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
