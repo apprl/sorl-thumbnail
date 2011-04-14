@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load cache %}
+
+{% block extra-title %}{% trans "Welcome to our beta!" %} | {% endblock %}
+{% block body-classes %}beta about{% endblock %}
+
+{% block body %}
+    {% cache CACHE_TIMEOUT about_beta LANGUAGE_CODE %}
+    <div id="content">
+        <h2>{% trans "Welcome to the ApparelRow beta!" %}</h2>
+    </div>
+    {% endcache %}
+{% endblock %}

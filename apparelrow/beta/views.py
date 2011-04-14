@@ -21,3 +21,6 @@ def unlock(request):
             return render_to_response('beta/beta.html', {'next': request.POST.get('next', '/')}, context_instance=RequestContext(request))
     else:
         return render_to_response('beta/beta.html', {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+
+def about(request):
+    return render_to_response('beta/about.html', context_instance=RequestContext(request))
