@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-11 17:03+0200\n"
+"POT-Creation-Date: 2011-04-14 11:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,7 +112,7 @@ msgstr "Produktbild"
 
 #: apparel/models.py:135
 msgid "Gender"
-msgstr ""
+msgstr "Kön"
 
 #: apparel/models.py:190
 msgid "category"
@@ -246,6 +246,14 @@ msgstr "epostadress"
 msgid "Time seen"
 msgstr "Sågs senast"
 
+#: beta/templates/beta/about.html:5
+msgid "Welcome to our beta!"
+msgstr "Välkommen till vår beta!"
+
+#: beta/templates/beta/about.html:11
+msgid "Welcome to the ApparelRow beta!"
+msgstr "Välkommen till ApparelRow beta!"
+
 #: beta/templates/beta/beta.html:10
 msgid "Welcome to ApparelRow beta"
 msgstr "Välkommen till ApparelRow beta"
@@ -336,7 +344,7 @@ msgstr "Profilbild"
 
 #: profile/models.py:20
 msgid "About"
-msgstr ""
+msgstr "Om"
 
 #: templates/base.html:94
 msgid "Forgot password?"
@@ -354,7 +362,7 @@ msgstr "Användarnamn"
 msgid "Password"
 msgstr "Lösenord"
 
-#: templates/base.html:101 templates/base.html.py:136
+#: templates/base.html:101 templates/base.html.py:137
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr "Logga in"
@@ -379,36 +387,44 @@ msgstr "Träffar bland looks"
 msgid "Matching brands"
 msgstr "Träffar bland varumärken"
 
-#: templates/base.html:134
-msgid "My Profile"
-msgstr "Min profil"
+#: templates/base.html:133 templates/apparel/fragments/product_menu.html:12
+msgid "Women"
+msgstr "Dam"
 
-#: templates/base.html:137 templates/registration/registration_complete.html:8
+#: templates/base.html:134 templates/apparel/fragments/product_menu.html:11
+msgid "Men"
+msgstr "Herr"
+
+#: templates/base.html:135
+msgid "About the beta"
+msgstr "Om betaversionen"
+
+#: templates/base.html:138 templates/registration/registration_complete.html:8
 #: templates/registration/registration_form.html:9
 msgid "Sign up"
 msgstr "Bli medlem"
 
-#: templates/base.html:157
+#: templates/base.html:158
 msgid "Logged in as"
 msgstr "Inloggad som"
 
-#: templates/base.html:162
+#: templates/base.html:163
 msgid "Overview"
 msgstr "Översikt"
 
-#: templates/base.html:168
+#: templates/base.html:169
 msgid "My profile"
 msgstr "Min profil"
 
-#: templates/base.html:174
+#: templates/base.html:175
 msgid "Create a look"
 msgstr "Skapa en look"
 
-#: templates/base.html:180
+#: templates/base.html:181
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:204 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:205 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr "OK"
 
@@ -426,11 +442,13 @@ msgid ""
 "With ApparelRow you can create Looks as a collage, tagged image or a "
 "selection of clothes. You can share the Look at your blog, Facebook page or "
 "other site."
-msgstr ""
+msgstr "På ApparelRow kan du skapa Looks som collage, taggade bilder eller "
+"ett urval av kläder. Du kan dela Looken på din blogg, Facebook-sida och "
+"andra webbplatser."
 
 #: templates/index.html:51
 msgid "To create a look you have you log in to your account."
-msgstr ""
+msgstr "Du måste logga in för att kunna skapa en look."
 
 #: templates/index.html:106
 msgid "News"
@@ -597,7 +615,7 @@ msgstr "Spara kollage"
 
 #: templates/apparel/look_edit.html:248
 msgid "Save photo"
-msgstr ""
+msgstr "Spara foto"
 
 #: templates/apparel/look_edit.html:248
 msgid "Save selection"
@@ -662,7 +680,7 @@ msgstr "Produkter"
 
 #: templates/apparel/look_edit.html:573
 msgid "Close"
-msgstr ""
+msgstr "Stäng"
 
 #: templates/apparel/look_list.html:11 templates/profile/looks.html:6
 msgid "Latest looks"
@@ -738,6 +756,11 @@ msgstr "Kommentarer och länkar"
 msgid "unfollow"
 msgstr "sluta följa"
 
+#: templates/apparel/fragments/follow.html:6
+#, python-format
+msgid "you are following %(name)s"
+msgstr "du följer %(name)s"
+
 #: templates/apparel/fragments/follow.html:7
 msgid "follow"
 msgstr "följ"
@@ -782,14 +805,6 @@ msgstr "Filtrera resultat"
 #: templates/apparel/fragments/product_menu.html:10
 msgid "All"
 msgstr "Alla"
-
-#: templates/apparel/fragments/product_menu.html:11
-msgid "Men"
-msgstr "Man"
-
-#: templates/apparel/fragments/product_menu.html:12
-msgid "Women"
-msgstr "Kvinna"
 
 #: templates/apparel/fragments/product_menu.html:18
 msgid "Color"
@@ -1029,6 +1044,20 @@ msgstr ""
 "            Du kan prenumerera på en särskiljd sökning genom...\n"
 "        "
 
+#: templates/profile/fragments/follow_profile.html:10
+msgid "Following you"
+msgstr "Följer dig"
+
+#: templates/profile/fragments/follow_profile.html:14
+#, python-format
+msgid "Member since %(date_joined)s"
+msgstr "Medlem sedan %(date_joined)s"
+
+#: templates/profile/fragments/follow_profile.html:17
+#, python-format
+msgid "Followed by %(follower_count)s"
+msgstr "Följs av %(follower_count)s"
+
 #: templates/profile/fragments/menu_items.html:7
 msgid "Wardrobe"
 msgstr "Garderob"
@@ -1188,6 +1217,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "My Profile"
+#~ msgstr "Min profil"
 
 #~ msgid "Added to look"
 #~ msgstr "Lade till i look"

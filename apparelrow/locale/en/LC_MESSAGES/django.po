@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-11 17:07+0200\n"
+"POT-Creation-Date: 2011-04-14 11:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -245,6 +245,14 @@ msgstr ""
 msgid "Time seen"
 msgstr ""
 
+#: beta/templates/beta/about.html:5
+msgid "Welcome to our beta!"
+msgstr ""
+
+#: beta/templates/beta/about.html:11
+msgid "Welcome to the ApparelRow beta!"
+msgstr ""
+
 #: beta/templates/beta/beta.html:10
 msgid "Welcome to ApparelRow beta"
 msgstr ""
@@ -353,7 +361,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: templates/base.html:101 templates/base.html.py:136
+#: templates/base.html:101 templates/base.html.py:137
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr ""
@@ -378,36 +386,44 @@ msgstr ""
 msgid "Matching brands"
 msgstr ""
 
-#: templates/base.html:134
-msgid "My Profile"
+#: templates/base.html:133 templates/apparel/fragments/product_menu.html:12
+msgid "Women"
 msgstr ""
 
-#: templates/base.html:137 templates/registration/registration_complete.html:8
+#: templates/base.html:134 templates/apparel/fragments/product_menu.html:11
+msgid "Men"
+msgstr ""
+
+#: templates/base.html:135
+msgid "About the beta"
+msgstr ""
+
+#: templates/base.html:138 templates/registration/registration_complete.html:8
 #: templates/registration/registration_form.html:9
 msgid "Sign up"
 msgstr ""
 
-#: templates/base.html:157
+#: templates/base.html:158
 msgid "Logged in as"
 msgstr ""
 
-#: templates/base.html:162
+#: templates/base.html:163
 msgid "Overview"
 msgstr ""
 
-#: templates/base.html:168
+#: templates/base.html:169
 msgid "My profile"
 msgstr ""
 
-#: templates/base.html:174
+#: templates/base.html:175
 msgid "Create a look"
 msgstr ""
 
-#: templates/base.html:180
+#: templates/base.html:181
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:204 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:205 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr ""
 
@@ -723,6 +739,11 @@ msgstr ""
 msgid "unfollow"
 msgstr ""
 
+#: templates/apparel/fragments/follow.html:6
+#, python-format
+msgid "you are following %(name)s"
+msgstr ""
+
 #: templates/apparel/fragments/follow.html:7
 msgid "follow"
 msgstr ""
@@ -766,14 +787,6 @@ msgstr ""
 
 #: templates/apparel/fragments/product_menu.html:10
 msgid "All"
-msgstr ""
-
-#: templates/apparel/fragments/product_menu.html:11
-msgid "Men"
-msgstr ""
-
-#: templates/apparel/fragments/product_menu.html:12
-msgid "Women"
 msgstr ""
 
 #: templates/apparel/fragments/product_menu.html:18
@@ -981,6 +994,20 @@ msgid ""
 "\n"
 "            You can subscribe in a particular search by...\n"
 "        "
+msgstr ""
+
+#: templates/profile/fragments/follow_profile.html:10
+msgid "Following you"
+msgstr ""
+
+#: templates/profile/fragments/follow_profile.html:14
+#, python-format
+msgid "Member since %(date_joined)s"
+msgstr ""
+
+#: templates/profile/fragments/follow_profile.html:17
+#, python-format
+msgid "Followed by %(follower_count)s"
 msgstr ""
 
 #: templates/profile/fragments/menu_items.html:7
