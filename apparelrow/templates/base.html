@@ -130,9 +130,10 @@
         </form>
         
         <ul id="nav-main">
-        {% if user.is_authenticated %}
-            <li><a href="/profile/"{% ifequal request.path "/apparel/profile/" %} class="selected"{% endifequal %}>{% trans "My Profile" %}</a></li>
-        {% else %}
+            <li><a href="{% url apparel.views.browse %}?1:p.gender=W">{% trans "Women" %}</a></li>
+            <li><a href="{% url apparel.views.browse %}?1:p.gender=M">{% trans "Men" %}</a></li>
+            <li><a href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
+        {% if not user.is_authenticated %}
             <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
             <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>
             <li>
