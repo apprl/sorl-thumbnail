@@ -1163,6 +1163,11 @@ a.follow, a.unfollow
     span
       display: inline
 
+a.unfollow
+  background: #f0f0f0 image_url("check.png") scroll no-repeat left center
+  border-color: #f0f0f0
+  color: $font_color
+
 a.profile-link
   img.avatar
     margin-right: 0.5em
@@ -1219,22 +1224,27 @@ body.profile
           margin: 1em 0
         .user_is_following
           float: right
-          margin-right: 1em
-          padding: 0 8px
+          margin-right: 10px
           +button(none, 1em)
-          +border-radius(2px)
+          +border-radius(4px)
           +highlight
+          padding: 0 8px 0 25px
           border-color: $highlight_bg_color
+          background-image: image_url("check.png")
+          background-repeat: no-repeat
+          background-attachment: scroll
+          background-position: 8px center
           display: inline-block
           line-height: 1.75
           cursor: auto
         .following, .not_following
           float: right
           .follow, .unfollow
+            +border-radius(4px)
             line-height: 1.75
             padding: 0 8px
             span
-              max-width: 150px
+              max-width: 100px
               overflow: hidden
               display: inline-block
         .member_since, .follower_count, .following_count
