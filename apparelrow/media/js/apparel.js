@@ -93,6 +93,14 @@ jQuery(document).ready(function() {
                 $parent.removeClass('not_following').addClass('following');
         });
         return false;
+    })
+    .hover(function() {
+        $this = $(this);
+        $this.attr("data-original-text", $this.text());
+        $this.text($this.attr("data-hover-text"));
+    }, function() {
+        $this = $(this);
+        $this.text($this.attr("data-original-text"));
     });
 });
 

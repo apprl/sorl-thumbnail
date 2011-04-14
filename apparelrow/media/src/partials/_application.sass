@@ -1167,7 +1167,10 @@ a.follow, a.unfollow
   +border-radius(2px)
   +highlight
   line-height: 1
-  padding: 0 2px
+  background-repeat: no-repeat
+  background-attachment: scroll
+  background-position: 2px center
+  padding: 0 2px 0 11px
   display: inline-block
   span
     display: none
@@ -1177,10 +1180,19 @@ a.follow, a.unfollow
     span
       display: inline
 
+a.follow
+  background-image: image_url("follow.png")
+
 a.unfollow
-  background: #f0f0f0 image_url("check.png") scroll no-repeat left center
+  background-color: #f0f0f0
+  background-image: image_url("following.png")
   border-color: #f0f0f0
   color: $font_color
+  &:hover
+    background-color: $like_color + #666666
+    background-image: image_url("unfollow.png")
+    border-color: $like_color
+    color: $font_color
 
 a.profile-link
   img.avatar
@@ -1212,6 +1224,8 @@ body.profile
           a.follow, a.unfollow
             +border-radius(0.25em)
             padding: 1em
+            background-position: 8px center
+            padding-left: 24px
             span
               display: inline
         .following .unfollow, .not_following .follow
@@ -1233,7 +1247,7 @@ body.profile
           font-weight: bold
           font-family: $font_family_bold
           font-size: 1.25em
-          line-height: 1.5
+          line-height: 2
         p
           margin: 1em 0
         .user_is_following
@@ -1244,7 +1258,7 @@ body.profile
           +highlight
           padding: 0 8px 0 25px
           border-color: $highlight_bg_color
-          background-image: image_url("check.png")
+          background-image: image_url("following_you.png")
           background-repeat: no-repeat
           background-attachment: scroll
           background-position: 8px center
@@ -1255,10 +1269,11 @@ body.profile
           float: right
           .follow, .unfollow
             +border-radius(4px)
+            background-position: 8px center
             line-height: 1.75
-            padding: 0 8px
+            padding: 0 8px 0 25px
             span
-              max-width: 100px
+              max-width: 75px
               overflow: hidden
               display: inline-block
         .member_since, .follower_count, .following_count
