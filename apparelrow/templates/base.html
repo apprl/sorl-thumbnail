@@ -111,7 +111,7 @@
             </div>
         </div>
         <form action="/apparel/search" method="get" onsubmit="return false" id="search">
-            <input type="text" name="s" />
+            <input type="text" name="s" placeholder="{% trans 'Search for products' %}" />
             <div id="search-result">
                 <a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>
                 <div class="wide result-container">

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-14 11:21+0200\n"
+"POT-Creation-Date: 2011-04-14 12:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -375,6 +375,10 @@ msgstr "Glömt lösenord?"
 msgid "Cancel"
 msgstr "Avbryt"
 
+#: templates/base.html:114
+msgid "Search for products"
+msgstr "Sök efter plagg"
+
 #: templates/base.html:118
 msgid "Matching products"
 msgstr "Träffar bland produkter"
@@ -442,9 +446,10 @@ msgid ""
 "With ApparelRow you can create Looks as a collage, tagged image or a "
 "selection of clothes. You can share the Look at your blog, Facebook page or "
 "other site."
-msgstr "På ApparelRow kan du skapa Looks som collage, taggade bilder eller "
-"ett urval av kläder. Du kan dela Looken på din blogg, Facebook-sida och "
-"andra webbplatser."
+msgstr ""
+"På ApparelRow kan du skapa Looks som collage, taggade bilder eller ett urval "
+"av kläder. Du kan dela Looken på din blogg, Facebook-sida och andra "
+"webbplatser."
 
 #: templates/index.html:51
 msgid "To create a look you have you log in to your account."
