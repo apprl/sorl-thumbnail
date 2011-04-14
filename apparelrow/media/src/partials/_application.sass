@@ -25,6 +25,12 @@ body
 .link
   cursor: pointer
 
+input::-webkit-input-placeholder
+  color: $easy_color
+
+input:-moz-placeholder
+  color: $easy_color
+
 button
   font-family: $font_family
   font-size: 1em
@@ -58,7 +64,7 @@ button
     width: 128px
     height: 13px
     padding: 20px
-    margin-top: 32px
+    margin-top: 23px
     +border(bottom, #999999)
 
 #footer
@@ -146,7 +152,7 @@ button
 
 #nav-main
   position: absolute
-  top: 50px
+  top: 42px
   right: 235px
   li
     display: inline
@@ -1050,12 +1056,12 @@ a.block_link
     background-image: image_url(unquote("close-large-hover.png"))
 #search
   background: transparent image_url(unquote("search.png")) scroll no-repeat right top
-  top: 31px
+  top: 26px
   right: -21px
   position: absolute
   width: 163px
   height: 24px
-  padding: 14px 50px 17px 41px
+  padding: 16px 50px 16px 41px
   overflow: visible
   z-index: 1000
   &.expanded
