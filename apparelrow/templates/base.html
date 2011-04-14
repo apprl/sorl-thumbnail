@@ -130,6 +130,7 @@
         </form>
         
         <ul id="nav-main">
+            <li>{% include 'apparel/fragments/set_language.html' %}</li>
             <li><a href="{% url apparel.views.browse %}?1:p.gender=W">{% trans "Women" %}</a></li>
             <li><a href="{% url apparel.views.browse %}?1:p.gender=M">{% trans "Men" %}</a></li>
             <li><a href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
