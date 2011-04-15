@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-14 18:56+0200\n"
+"POT-Creation-Date: 2011-04-15 13:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -762,18 +762,18 @@ msgid "Comments & links"
 msgstr "Kommentarer och länkar"
 
 #: templates/apparel/fragments/follow.html:6
-#, python-format
-msgid "stop following %(name)s"
-msgstr "sluta följa %(name)s"
+msgid "Stop following"
+msgstr "Sluta följa"
 
 #: templates/apparel/fragments/follow.html:6
-#, python-format
-msgid "you are following %(name)s"
-msgstr "du följer %(name)s"
+#: templates/profile/following.html:6
+#: templates/profile/fragments/menu_items.html:16
+msgid "Following"
+msgstr "Följer"
 
 #: templates/apparel/fragments/follow.html:7
-msgid "follow"
-msgstr "följ"
+msgid "Follow"
+msgstr "Följ"
 
 #: templates/apparel/fragments/likes.html:6
 #, python-format
@@ -1027,11 +1027,6 @@ msgstr "%(name)ss senaste looks"
 msgid "Followers"
 msgstr "Följs av"
 
-#: templates/profile/following.html:6
-#: templates/profile/fragments/menu_items.html:16
-msgid "Following"
-msgstr "Följer"
-
 #: templates/profile/looks.html:11
 #, python-format
 msgid "%(name)s's popular looks"
@@ -1232,6 +1227,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "you are following %(name)s"
+#~ msgstr "du följer %(name)s"
 
 #~ msgid "unfollow"
 #~ msgstr "sluta följa"

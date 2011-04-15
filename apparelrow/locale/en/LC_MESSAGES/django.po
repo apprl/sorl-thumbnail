@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-14 18:56+0200\n"
+"POT-Creation-Date: 2011-04-15 13:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -744,17 +744,17 @@ msgid "Comments & links"
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:6
-#, python-format
-msgid "stop following %(name)s"
+msgid "Stop following"
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:6
-#, python-format
-msgid "you are following %(name)s"
+#: templates/profile/following.html:6
+#: templates/profile/fragments/menu_items.html:16
+msgid "Following"
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:7
-msgid "follow"
+msgid "Follow"
 msgstr ""
 
 #: templates/apparel/fragments/likes.html:6
@@ -979,11 +979,6 @@ msgstr ""
 #: templates/profile/followers.html:6
 #: templates/profile/fragments/menu_items.html:13
 msgid "Followers"
-msgstr ""
-
-#: templates/profile/following.html:6
-#: templates/profile/fragments/menu_items.html:16
-msgid "Following"
 msgstr ""
 
 #: templates/profile/looks.html:11
