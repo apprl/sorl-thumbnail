@@ -6,15 +6,6 @@ $HTTP["host"] =~ "^demo.apparelrow.com$" {
 
     server.document-root = var.deploy-dir + "/" + var.project-name
     
-    auth.backend = "htpasswd"
-    auth.backend.htpasswd.userfile = var.deploy-base + "/etc/htpasswd"
-    auth.debug = 2
-    auth.require = ( "/" => (
-           "method" => "basic",
-           "realm"  => "ApparelRow Development Server",
-           "require" => "valid-user"
-       )
-    )
     fastcgi.server = (
         "/apparelrow.fcgi" => (
             "main" => (
