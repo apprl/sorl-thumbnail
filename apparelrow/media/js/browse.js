@@ -62,7 +62,7 @@ var baseIndex = 0;
 jQuery(document).ready(function() {
     // Initialize jquery history plugin with our filter
     var firstLoad = true;
-    if(location.search.length > 1) {
+    if(location.search.length > 1 && location.hash.length == 0) {
         
         var pairs = location.search.substr(1).split('&');
         for(var i = 0; i < pairs.length; i++) {
