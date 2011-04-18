@@ -322,7 +322,7 @@ function getQuery(query) {
             query['o'] += 'a' + index
     }
     gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
-    if(gender_list.length > 0) {
+    if(gender_list.length > 0 && gender_list[0]) {
         query[++index + ':p.gender'] = gender_list[0];
         if('o' in query)
             query['o'] += 'a' + index
