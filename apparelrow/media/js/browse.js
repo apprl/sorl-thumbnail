@@ -472,6 +472,7 @@ function applyCriteriaFilter(args) {
 }
 
 function renderProducts(products) {
+    $('#product-list > ul.list').empty();
     $('#product-count').text(
         interpolate(ngettext(
             '%s product', 
