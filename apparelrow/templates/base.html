@@ -67,6 +67,35 @@
                     txtField.toggle();
                 }
             });            
+
+            jQuery('#about-beta').click(function(event) {
+                jQuery('#error_dialog_template')
+                    .render({
+                        header: "{% trans "About ApparelRow beta" %}",
+                        messages: [
+                            "{% trans "Hi beta tester!" %}",
+                            "{% trans "Right now, this site is only available to a few select individuals, who we believe can help make it better together with us. We appreciate all questions, suggestions, praise and problems we can get from you, the more the better! Just click on the 'Feedback' link to the right and share your thoughts." %}",
+                            "{% trans "What's more, we're not sure we've found the right name for the site yet and we'd love your suggestion! If you have ideas for what to call the site, just click the button next to our logo and type in your suggestion. A top secret prize will be awarded to whoever suggests the name we eventually choose." %}",
+                            "{% trans "Feel free to e-mail us at info@apparelrow.com." %}",
+                            "{% trans "Have fun! /The team" %}"
+                        ]
+                    })
+                    .appendTo('body')
+                    .overlay({
+                        mask: {
+                            color: '#000',
+                            loadSpeed: 200,
+                            opacity: 0.5
+                        },
+                        load: true,
+                        closeOnClick: false,
+                        close: '.ok',
+                        top: 100,
+                        onClose: function(e) { this.getTrigger().remove() }
+                    })
+                ;
+                event.preventDefault();
+            });
         });
     
     </script>
@@ -132,7 +161,7 @@
         <ul id="nav-main">
             <li><a href="{% url apparel.views.browse %}?1:p.gender=W">{% trans "Women" %}</a></li>
             <li><a href="{% url apparel.views.browse %}?1:p.gender=M">{% trans "Men" %}</a></li>
-            <li><a href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
+            <li><a id="about-beta" href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
         {% if not user.is_authenticated %}
             <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
             <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>

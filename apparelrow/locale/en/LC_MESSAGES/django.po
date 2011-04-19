@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-19 16:49+0200\n"
+"POT-Creation-Date: 2011-04-19 17:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -349,89 +349,122 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: templates/base.html:94
+#: templates/base.html:74
+msgid "About ApparelRow beta"
+msgstr ""
+
+#: templates/base.html:76
+msgid "Hi beta tester!"
+msgstr ""
+
+#: templates/base.html:77
+msgid ""
+"Right now, this site is only available to a few select individuals, who we "
+"believe can help make it better together with us. We appreciate all "
+"questions, suggestions, praise and problems we can get from you, the more "
+"the better! Just click on the 'Feedback' link to the right and share your "
+"thoughts."
+msgstr ""
+
+#: templates/base.html:78
+msgid ""
+"What's more, we're not sure we've found the right name for the site yet and "
+"we'd love your suggestion! If you have ideas for what to call the site, just "
+"click the button next to our logo and type in your suggestion. A top secret "
+"prize will be awarded to whoever suggests the name we eventually choose."
+msgstr ""
+
+#: templates/base.html:79
+msgid "Feel free to e-mail us at info@apparelrow.com."
+msgstr ""
+
+#: templates/base.html:80
+msgid "Have fun! /The team"
+msgstr ""
+
+#: templates/base.html:123
 msgid "Forgot password?"
 msgstr ""
 
-#: templates/base.html:95 templates/base.html.py:110
+#: templates/base.html:124 templates/base.html.py:139
 msgid "Create account"
 msgstr ""
 
-#: templates/base.html:98
+#: templates/base.html:127
 msgid "Username"
 msgstr ""
 
-#: templates/base.html:99
+#: templates/base.html:128
 msgid "Password"
 msgstr ""
 
-#: templates/base.html:101 templates/base.html.py:137
+#: templates/base.html:130 templates/base.html.py:166
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr ""
 
-#: templates/base.html:110
+#: templates/base.html:139
 msgid "Forgot password"
 msgstr ""
 
-#: templates/base.html:110 templates/base.html.py:116
+#: templates/base.html:139 templates/base.html.py:145
 msgid "Cancel"
 msgstr ""
 
-#: templates/base.html:114
+#: templates/base.html:143
 msgid "Search for products"
 msgstr ""
 
-#: templates/base.html:118
+#: templates/base.html:147
 msgid "Matching products"
 msgstr ""
 
-#: templates/base.html:122
+#: templates/base.html:151
 msgid "Matching looks"
 msgstr ""
 
-#: templates/base.html:126
+#: templates/base.html:155
 msgid "Matching brands"
 msgstr ""
 
-#: templates/base.html:133 templates/apparel/fragments/product_menu.html:11
+#: templates/base.html:162 templates/apparel/fragments/product_menu.html:11
 msgid "Women"
 msgstr ""
 
-#: templates/base.html:134 templates/apparel/fragments/product_menu.html:12
+#: templates/base.html:163 templates/apparel/fragments/product_menu.html:12
 msgid "Men"
 msgstr ""
 
-#: templates/base.html:135
+#: templates/base.html:164
 msgid "About the beta"
 msgstr ""
 
-#: templates/base.html:138 templates/registration/registration_complete.html:8
+#: templates/base.html:167 templates/registration/registration_complete.html:8
 #: templates/registration/registration_form.html:9
 msgid "Sign up"
 msgstr ""
 
-#: templates/base.html:159
+#: templates/base.html:188
 msgid "Logged in as"
 msgstr ""
 
-#: templates/base.html:164
+#: templates/base.html:193
 msgid "Overview"
 msgstr ""
 
-#: templates/base.html:170
+#: templates/base.html:199
 msgid "My profile"
 msgstr ""
 
-#: templates/base.html:176
+#: templates/base.html:205
 msgid "Create a look"
 msgstr ""
 
-#: templates/base.html:182
+#: templates/base.html:211
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:206 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:235 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr ""
 
