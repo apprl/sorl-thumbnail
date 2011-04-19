@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-15 13:48+0200\n"
+"POT-Creation-Date: 2011-04-19 16:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -366,7 +366,7 @@ msgstr "Användarnamn"
 msgid "Password"
 msgstr "Lösenord"
 
-#: templates/base.html:101 templates/base.html.py:138
+#: templates/base.html:101 templates/base.html.py:137
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr "Logga in"
@@ -395,19 +395,19 @@ msgstr "Träffar bland looks"
 msgid "Matching brands"
 msgstr "Träffar bland varumärken"
 
-#: templates/base.html:134 templates/apparel/fragments/product_menu.html:11
+#: templates/base.html:133 templates/apparel/fragments/product_menu.html:11
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:135 templates/apparel/fragments/product_menu.html:12
+#: templates/base.html:134 templates/apparel/fragments/product_menu.html:12
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:136
+#: templates/base.html:135
 msgid "About the beta"
 msgstr "Om betaversionen"
 
-#: templates/base.html:139 templates/registration/registration_complete.html:8
+#: templates/base.html:138 templates/registration/registration_complete.html:8
 #: templates/registration/registration_form.html:9
 msgid "Sign up"
 msgstr "Bli medlem"
@@ -456,7 +456,7 @@ msgstr ""
 "webbplatser."
 
 #: templates/index.html:51
-msgid "To create a look you have you log in to your account."
+msgid "To create a look you have to log in to your account."
 msgstr "Du måste logga in för att kunna skapa en look."
 
 #: templates/index.html:106
