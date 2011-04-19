@@ -205,6 +205,10 @@ class VendorCategory(models.Model):
                 category=self.category,
                 published=True
             )
+        if self.default_gender:
+            Product.objects.filter(vendorproduct__vendor_category=self, gender__isnull=True).update(
+                gender=self.default_gender
+            )
             # NOTE 1: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
             # NOTE 2: If we do not want to explicitly publish all related products (perhaps they are 
             #   unpublished for a different reason?) we may want to do one of two things:
