@@ -39,7 +39,7 @@ def fetch(url, localpath=None, username=None, password=None):
     else:
         local_fh = open(localpath, 'w')
     
-    f = urllib2.urlopen(url)
+    f = urllib2.urlopen(urllib2.quote(url, ":/"))
     
     local_fh.write(f.read())
     local_fh.close()
