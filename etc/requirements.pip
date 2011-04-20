@@ -30,3 +30,5 @@ django-ajaxcomments==0.2
 libxml2-python==2.6.15
 -e svn+http://django-compress.googlecode.com/svn/trunk/#egg=django-compress
 -e git+https://github.com/hanssonlarsson/django-activity-stream.git#egg=django-activity-stream
+-f http://django-modeltranslation.googlecode.com/files/django-modeltranslation-0.2.tar.gz
+django-modeltranslation==0.2

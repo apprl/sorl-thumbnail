@@ -1,5 +1,6 @@
 from apparel.models import *
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 
 
 #
@@ -18,7 +19,7 @@ class LookAdmin(admin.ModelAdmin):
 
 admin.site.register(Look, LookAdmin)
 
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(TranslationAdmin):
     list_display = ('name', 'ancestors', 'on_front_page',)
     
     def ancestors(self, category):

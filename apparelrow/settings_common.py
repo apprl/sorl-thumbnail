@@ -164,6 +164,7 @@ INSTALLED_APPS = (
     'trackback',
     'recommender',
     'south',
+    'modeltranslation',
     'jsmin',
     'compress',
 
@@ -251,6 +252,9 @@ LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 
 AUTH_PROFILE_MODULE='profile.ApparelProfile'
+
+# django-modeltranslation
+TRANSLATION_REGISTRY='translation'
 
 # FACEBOOK CONFIGURATION
 FACEBOOK_APP_ID = '177090790853'
