@@ -27,7 +27,7 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 
 class VendorCategoryAdmin(admin.ModelAdmin):
-    list_display = ('vendor', 'name', 'category',)
+    list_display = ('vendor', 'name', 'default_gender', 'category',)
 
 admin.site.register(VendorCategory, VendorCategoryAdmin)
 
