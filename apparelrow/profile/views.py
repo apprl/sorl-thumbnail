@@ -63,7 +63,8 @@ def followers(request, profile, page=0):
         paginate_by=10,
         page=page,
         extra_context={
-            "profile": profile
+            "profile": profile,
+            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
         }
     )
 
@@ -79,7 +80,8 @@ def following(request, profile, page=0):
         paginate_by=10,
         page=page,
         extra_context={
-            "profile": profile
+            "profile": profile,
+            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
         }
     )
 
