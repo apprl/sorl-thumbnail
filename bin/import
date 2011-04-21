@@ -18,17 +18,17 @@ if [[ -z DJANGO_SETTINGS_MODULE ]]; then
 fi
 
 if [[ -z $PROJDIR ]]; then
-    PROJDIR=`pwd`
+    PROJDIR="`dirname $0`/.."
 fi
 
 if [[ -e $PROJDIR/bin/activate ]]; then
     . $PROJDIR/bin/activate
 fi
 
-cd "$PROJDIR/apparelrow"
+cd "$PROJDIR/releases/current/apparelrow"
 
 if [[ -z "$1" ]]; then
-    python manage.py arimport --all --settings $DJANGO_SETTINGS_MODULE
+    $PROJDIR/bin/python manage.py arimport --all --settings $DJANGO_SETTINGS_MODULE
 else
-    python manage.py arimport $1 --settings $DJANGO_SETTINGS_MODULE
+    $PROJDIR/bin/python manage.py arimport $1 --settings $DJANGO_SETTINGS_MODULE
 fi
