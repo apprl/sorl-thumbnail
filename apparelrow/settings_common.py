@@ -105,7 +105,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'trackback.middleware.PingbackUrlInjectionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -141,6 +141,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.humanize',
+    'django.contrib.flatpages',
     
     
     # external
@@ -177,7 +178,8 @@ INSTALLED_APPS = (
     'apparel_comments',
     
         
-    # internal (for now)
+    'tinymce',
+    'flatpages_tinymce',
     'django.contrib.admin',
     'apparelrow',
 )
@@ -255,6 +257,11 @@ AUTH_PROFILE_MODULE='profile.ApparelProfile'
 
 # django-modeltranslation
 TRANSLATION_REGISTRY='translation'
+
+# django-tinymce
+TINYMCE_DEFAULT_CONFIG = {
+    'theme': 'advanced'
+}
 
 # FACEBOOK CONFIGURATION
 FACEBOOK_APP_ID = '177090790853'

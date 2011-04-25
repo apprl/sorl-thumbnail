@@ -9,6 +9,7 @@ from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django.contrib.flatpages.models import FlatPage
 from django.views.generic import list_detail
 
 from sorl.thumbnail.main import DjangoThumbnail
@@ -688,6 +689,7 @@ def get_filter(request, **kwargs):
 def index(request):
     ctx = get_filter(request)
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
+    ctx['pages'] = FlatPage.objects.filter(url__startswith='index')
     ctx['popular_looks']  = Vote.objects.get_top(Look, limit=6)    
     ctx['categories_all'] = ctx['categories_all'].filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]

@@ -106,8 +106,14 @@
         <h2>{% trans "News" %}</h2>
         <div id="featured-looks">
             <ul id="contents">
+            {% for page in pages %}
+                <li class="feature">
+                    <div class="page">{{ page.content|safe }}</div>
+                    <div class="info-box"><h3>{{ page.title }}</h3></div>
+                </li>
+            {% endfor %}
             {% for look in featured_looks %}
-                <li>
+                <li class="feature">
                     <a href="{{ look.get_absolute_url }}">
                         <div class="look">
                         {% with look as object %}
@@ -131,8 +137,11 @@
             <div id="switchlook">
                 <a class="backward" href="#prev">{% trans "Previous" %}</a>
                 <ul class="tabs">
+                {% for page in pages %}
+                    <li><a id="p{{ forloop.counter }}" href="#featured-page{{ forloop.counter }}">{{ page.title }}</a></li>
+                {% endfor %}
                 {% for look in featured_looks %}
-                    <li><a id="l{{ forloop.counter }}" href="#featured{{ forloop.counter }}">{{ look.title }}</a></li>
+                    <li><a id="l{{ forloop.counter }}" href="#featured-look{{ forloop.counter }}">{{ look.title }}</a></li>
                 {% endfor %}
                 </ul>
                 <a class="forward" href="#next">{% trans "Next" %}</a>

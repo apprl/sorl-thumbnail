@@ -258,13 +258,15 @@ a.fb_button
   position: relative
   height: 393px
   #contents
-    li
+    li.feature
       position: absolute
       top: 0
       left: 0
       display: none
-      +border("all")
       .look
+        +border("all")
+        border-bottom: none
+      .look, .page
         height: 328px
         width: 450px
         position: relative
@@ -272,8 +274,6 @@ a.fb_button
           position: absolute
       .info-box
         +box
-        border: none
-        +border("top")
         height: 36px
         padding: 16px 10px 10px
         background:
