@@ -149,6 +149,7 @@ def copy_config():
         run('cp -n ./releases/%(release)s/etc/* ./etc' % env, pty=True)
         run('cp -n ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
         run('cd releases/%(release)s/apparelrow; cp production.py.default production.py' % env, pty=True)
+        sudo('cp -n ./releases/%(release)s/etc/arimport.cron /etc/cron.daily/arimport' % env, pty=True)
 
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])

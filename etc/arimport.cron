@@ -1,0 +1,4 @@
+#!/bin/sh
+# Run import for all configured apparelrow providers
+
+su -s /bin/sh -c "/home/hanssonlarsson/apparelrow/bin/import" www-data
