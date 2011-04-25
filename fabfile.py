@@ -157,6 +157,7 @@ def build_styles_and_scripts():
         sudo('%(path)s/bin/python manage.py synccompress --settings production' % env, pty=True, user=env.run_user)
         sudo('cd ./media; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
+        sudo('ln -s ../../../../lib/python2.6/site-packages/tinymce/media/tiny_mce media/js/tiny_mce', pty=True, user=env.run_user)
 
     
 def symlink_current_release():
