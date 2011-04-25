@@ -13,7 +13,7 @@
 # as sole argument.
 #
 
-if [[ -z DJANGO_SETTINGS_MODULE ]]; then
+if [[ -z $DJANGO_SETTINGS_MODULE ]]; then
     DJANGO_SETTINGS_MODULE=production
 fi
 
