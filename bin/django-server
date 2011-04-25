@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if [[ -z $HL_APP_ROOT ]]; then
+if [[ -z "$HL_APP_ROOT" ]]; then
     HL_APP_ROOT=$(pwd)
 fi
 
-if [[ -z $HL_APP_NAME ]]; then
+if [[ -z "$HL_APP_NAME" ]]; then
     HL_APP_NAME='apparelrow'
 fi
 
@@ -12,7 +12,7 @@ fi
 PIDFILE="$HL_APP_ROOT/var/$HL_APP_NAME.pid"         # PID file for controlling instance
 SOCKET="$HL_APP_ROOT/var/$HL_APP_NAME.sock"         # FCGI socket
 
-if [ -z $1 ]; then
+if [ -z "$1" ]; then
     echo "Missing argument"
     echo "./django-server stop|start|restart"
     exit 1
