@@ -11,6 +11,9 @@ class LinkshareMapper(DataMapper):
     def get_gender(self):
         return self.genders.get(self.record.get('gender'))
 
+    def get_price(self):
+        return self.record.get('discount-price') or self.record.get('retail-price')
+
 class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):
         super(Provider, self).__init__(*args, **kwargs)
@@ -30,7 +33,7 @@ class Provider(CSVProvider):
             'long-description',
             'discount',
             'discount-type',
-            'price',                # Sale price, includes discount
+            'discount-price',       # Sale price, includes discount
             'retail-price',
             'available-from',
             'available-to',
