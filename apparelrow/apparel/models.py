@@ -232,7 +232,7 @@ class VendorCategory(models.Model):
 
 class VendorProduct(models.Model):
     vendor            = models.ForeignKey(Vendor)
-    product           = models.ForeignKey(Product, related_name='vendorproduct', verbose_name='Vendor Product')
+    product           = models.ForeignKey(Product, related_name='vendorproduct')
     vendor_category   = models.ForeignKey(VendorCategory, related_name='vendorproducts', null=True,)
     buy_url           = models.URLField(_('Buy URL'), null=True, blank=True, max_length=255,)
     price             = models.DecimalField(_('Price'), null=True, blank=True, max_digits=10, decimal_places=2, db_index=True, help_text=_('Price converted to base currency'))
@@ -244,7 +244,7 @@ class VendorProduct(models.Model):
         return u'%s (%s)' % (self.product, self.vendor)
 
     class Meta:
-        verbose_name = _("Vendor Product")
+        ordering = ['vendor', 'product']
     
     class Exporter:
         export_fields = ['__all__', '-product']
