@@ -28,6 +28,7 @@ class Manufacturer(models.Model):
         return u"%s" % self.name
 
     class Meta:
+        ordering = ['name']
         verbose_name = _("Manufacturer")
 
     class Exporter:
@@ -78,6 +79,7 @@ class Vendor(models.Model):
     objects = SearchManager()
 
     class Meta:
+        ordering = ['name']
         verbose_name = _("Vendor")
 
     def __unicode__(self):
@@ -103,6 +105,7 @@ class Category(models.Model):
         export_fields = ['name', 'option_types']
     
     class Meta:
+        ordering = ['name']
         verbose_name_plural = 'categories'
 
 
@@ -222,6 +225,7 @@ class VendorCategory(models.Model):
         return u'%s: %s <-> %s' % (self.vendor, self.name, self.category)
 
     class Meta:
+        ordering = ['name']
         unique_together = (('vendor', 'name'),)
         verbose_name_plural = 'vendor categories'
 
@@ -368,6 +372,9 @@ class Look(models.Model):
     def get_absolute_url(self):
         return ('apparel.views.look_detail', [str(self.slug)])
     
+    class Meta:
+        ordering = ['user', 'title']
+
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'photo_components', 'display_with_component', 'collage_components', 'score']
 
