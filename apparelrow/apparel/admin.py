@@ -21,6 +21,7 @@ admin.site.register(Look, LookAdmin)
 
 class CategoryAdmin(TranslationAdmin):
     list_display = ('name', 'ancestors', 'on_front_page',)
+    list_filter = ['parent', 'on_front_page']
     
     def ancestors(self, category):
         return ' > '.join([c.name for c in category.get_ancestors()])
