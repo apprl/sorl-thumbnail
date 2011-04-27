@@ -8,8 +8,8 @@ from modeltranslation.admin import TranslationAdmin
 #
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('product_name', 'manufacturer', 'sku',)
-    list_filter = ['date_added', 'vendors']
+    list_display = ('product_name', 'category', 'gender', 'manufacturer', 'sku',)
+    list_filter = ['category', 'gender', 'manufacturer', 'vendors']
 
 admin.site.register(Product, ProductAdmin)
 
@@ -54,7 +54,12 @@ class OptionAdmin(admin.ModelAdmin):
 admin.site.register(Option, OptionAdmin)
 
 admin.site.register(Vendor)
-admin.site.register(VendorProduct)
+
+class VendorProductAdmin(admin.ModelAdmin):
+    list_display = ['product', 'vendor', 'price']
+    list_filter = ['vendor']
+
+admin.site.register(VendorProduct, VendorProductAdmin)
 
 
 #
