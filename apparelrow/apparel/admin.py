@@ -6,7 +6,6 @@ from modeltranslation.admin import TranslationAdmin
 #
 # Products
 #
-admin.site.register(Manufacturer)
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'manufacturer', 'sku',)
@@ -20,6 +19,12 @@ class LookAdmin(admin.ModelAdmin):
     list_filter = ['is_featured']
 
 admin.site.register(Look, LookAdmin)
+
+class ManufacturerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'active',)
+    list_filter = ['active']
+
+admin.site.register(Manufacturer, ManufacturerAdmin)
 
 class CategoryAdmin(TranslationAdmin):
     list_display = ('name', 'ancestors', 'on_front_page',)
@@ -39,8 +44,13 @@ admin.site.register(VendorCategory, VendorCategoryAdmin)
 class OptionTypeAdmin(admin.ModelAdmin):
     list_display = ['name']
 
-admin.site.register(Option)
 admin.site.register(OptionType, OptionTypeAdmin)
+
+class OptionAdmin(admin.ModelAdmin):
+    list_display = ['value', 'option_type']
+    list_filter = ['option_type']
+
+admin.site.register(Option, OptionAdmin)
 
 admin.site.register(Vendor)
 admin.site.register(VendorProduct)
