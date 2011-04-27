@@ -471,6 +471,21 @@ function applyCriteriaFilter(args) {
     });
 }
 
+function updateSelected(products) {
+    function setSelected(list, selectorPrefix) {
+        if(list)
+            $.each(list, function(i, id){ $('#' + selectorPrefix + id).addClass('selected') });
+    }
+    setSelected(products.selected_brands, 'available-manufacturer-');
+    setSelected(products.selected_categories, 'category-');
+    setSelected(products.selected_colors, 'option-');
+    setSelected(products.selected_gender, 'option-');
+    if(products.selected_price) {
+        var slider = jQuery('#price-slider').data('slider');
+        slider.values(products.selected_price);
+    }
+}
+
 function renderProducts(products) {
     $('#product-list > ul.list').empty();
     $('#product-count').text(
@@ -486,5 +501,6 @@ function renderProducts(products) {
     pagination.render();
     jQuery('#product-list').data('scrollable').begin();
     
+    updateSelected(products);
     filterCriteria(products);
 }
