@@ -42,7 +42,8 @@ class VendorCategoryAdmin(admin.ModelAdmin):
 admin.site.register(VendorCategory, VendorCategoryAdmin)
 
 class OptionTypeAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ['name', 'parent']
+    list_filter = ['parent']
 
 admin.site.register(OptionType, OptionTypeAdmin)
 
