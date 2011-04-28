@@ -3,7 +3,7 @@ function increase_counts(counts, new_count) {
     counts.each(function() {
         $(this)
             .hide()
-            .html(new_count ? new_count : parseInt($(this).html()) + 1)
+            .html(typeof new_count != "undefined" ? new_count : parseInt($(this).html()) + 1)
             .fadeIn()
             ;
     });
@@ -25,11 +25,23 @@ jQuery(document).ready(function() {
 
     // Clone products for hovering in browse and search results
 
-    var likeContainers = 'body.look #content, body.product .product-image';
-    jQuery(likeContainers).children('form').hyperSubmit({
+    jQuery('form.like').hyperSubmit({
         success: function(response, statusText, req, form) {
             // Match "/model/slug/like"
-            if(/^\/(\w+)\/([\w-]+)\/like/.test(form.attr('action'))) {
+            var action = form.attr('action');
+            var newAction = form.attr('data-alternate-action');
+            form.attr('action', newAction).attr('data-alternate-action', action);
+
+            var button = jQuery('button', form);
+            var doneText = button.attr('data-done-text');
+            var newDoneText = button.attr('data-alternate-done-text');
+            var buttonText = button.text();
+            var newButtonText = button.attr('data-alternate-text');
+            button.attr('data-alternate-text', buttonText)
+                  .attr('data-alternate-done-text', doneText)
+                  .attr('data-done-text', newDoneText)
+                  .text(doneText).delay(1000).text(newButtonText);
+            if(/^\/(\w+)\/([\w-]+)\/like/.test(action)) {
                 increase_counts(jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count'), response.score.score);
             }
         },

@@ -93,9 +93,9 @@
         {% include 'apparel/fragments/look_photo.html' %}
         </div>
     {% endifequal %}
-    <form method="post" class="like" action="{% url like-look object.slug "up" %}">
-        <button type="submit" name="like" id="like">{% trans "Like" %}</button>
-    </form>
+    {% url like-look object.slug "up" as like_url %}
+    {% url like-look object.slug "clear" as unlike_url %}
+    {% include 'apparel/fragments/like_button.html' %}
 {% endcache %}
     {% get_trackbacks_for object as trackbacks %}
     {% include 'apparel/fragments/comments.html' %}

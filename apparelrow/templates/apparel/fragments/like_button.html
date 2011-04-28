@@ -1,0 +1,17 @@
+{% load i18n %}
+{% load voting_tags %}
+
+{# see relevant js in media/js/apparel.js #}
+
+{% vote_by_user user on object as vote %}
+{% if vote and vote.is_upvote %}
+<form method="post" class="like" action="{{ unlike_url }}" data-alternate-action="{{ like_url }}">
+    {% csrf_token %}
+    <button type="submit" name="like" id="like" data-done-text="{% trans "Unliked!" %}" data-alternate-done-text="{% trans "Liked!" %}" data-alternate-text="{% trans "Like" %}">{% trans "Unlike" %}</button>
+</form>
+{% else %}
+<form method="post" class="like" action="{{ like_url }}" data-alternate-action="{{ unlike_url }}">
+    {% csrf_token %}
+    <button type="submit" name="like" id="like" data-done-text="{% trans "Liked!" %}" data-alternate-done-text="{% trans "Unliked!" %}" data-alternate-text="{% trans "Unlike" %}">{% trans "Like" %}</button>
+</form>
+{% endif %}
