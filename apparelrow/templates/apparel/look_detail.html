@@ -93,10 +93,10 @@
         {% include 'apparel/fragments/look_photo.html' %}
         </div>
     {% endifequal %}
+{% endcache %}
     {% url like-look object.slug "up" as like_url %}
     {% url like-look object.slug "clear" as unlike_url %}
     {% include 'apparel/fragments/like_button.html' %}
-{% endcache %}
     {% get_trackbacks_for object as trackbacks %}
     {% include 'apparel/fragments/comments.html' %}
 {% cache CACHE_TIMEOUT look_detail3 object.id LANGUAGE_CODE %}
