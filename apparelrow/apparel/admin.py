@@ -8,8 +8,17 @@ from modeltranslation.admin import TranslationAdmin
 #
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('product_name', 'category', 'gender', 'manufacturer', 'sku',)
-    list_filter = ['category', 'gender', 'manufacturer', 'vendors']
+    list_display = ('product_name', 'category', 'gender', 'manufacturer', 'sku', 'published',)
+    list_filter = ['category', 'gender', 'manufacturer', 'vendors', 'published']
+    actions = ['publish', 'hide']
+
+    def publish(self, request, queryset):
+        queryset.update(published=True)
+    publish.short_description = "Publish selected products"
+    
+    def hide(self, request, queryset):
+        queryset.update(published=False)
+    hide.short_description = "Hide selected products"
 
 admin.site.register(Product, ProductAdmin)
 
@@ -36,7 +45,7 @@ class CategoryAdmin(TranslationAdmin):
     publish_on_front_page.short_description = "Publish selected on front page"
     
     def hide_on_front_page(self, request, queryset):
-        queryset.update(on_front_page=True)
+        queryset.update(on_front_page=False)
     hide_on_front_page.short_description = "Hide selected on front page"
     
     def ancestors(self, category):
