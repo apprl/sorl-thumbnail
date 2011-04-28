@@ -71,11 +71,28 @@
                 return true;
             });
 
-            jQuery('.sidebar a').click(function(event) {
+            jQuery('#product-gender a, #product-options a').click(function(event) {
                 var target = $(this).attr('href');
                 if(target.indexOf('?') > 0) {
                     event.preventDefault();
                     window.location = target.replace('?', '#');
+                }
+            });
+
+            jQuery('#product-category a').click(function(event) {
+                var $this = $(this);
+                var target = $this.attr('href');
+                if(target.indexOf('?') > 0) {
+                    event.preventDefault();
+                    var url = target.replace('?', '#');
+                    var subCategories = $this.siblings('ul');
+                    if(subCategories.length > 0) {
+                        var categories = subCategories.map(function(i, cat) {
+                            return $("a", cat).attr("href").split("=").pop();
+                        });
+                        url += "," + categories.get().join(",");
+                    }
+                    window.location = url;
                 }
             });
         });
