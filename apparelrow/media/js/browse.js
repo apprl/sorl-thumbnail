@@ -476,6 +476,17 @@ function updateSelected(products) {
         jQuery(selector).addClass('selected');
     }
 
+    function selectCategories(list) {
+        if(list && list.length > 0) {
+            var $cat;
+            $.each(list, function(i, id) {
+                $cat = $('#category-' + id);
+                setSelected($cat);
+                $cat.siblings('ul').show();
+            });
+        }
+    }
+
     function selectList(list, selectorPrefix, parentSelector) {
         if(list && list.length > 0) {
             $.each(list, function(i, id) { setSelected(selectorPrefix + '-' + id) });
@@ -485,10 +496,10 @@ function updateSelected(products) {
         }
     }
 
-    selectList(products.selected_categories, '#category');
+    selectCategories(products.selected_categories);
     selectList(products.selected_brands, '#available-manufacturer', '#product-manufacturers > a');
     selectList(products.selected_colors, '#option', '#product-color > a');
-    selectList(products.selected_gender, '#option', '#product-gender > a');
+    selectList(products.selected_gender, '#option');
 
     if(products.selected_price) {
         setSelected('#product-price > a');
