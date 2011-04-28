@@ -29,6 +29,15 @@ admin.site.register(Manufacturer, ManufacturerAdmin)
 class CategoryAdmin(TranslationAdmin):
     list_display = ('name', 'ancestors', 'on_front_page',)
     list_filter = ['parent', 'on_front_page']
+    actions = ['publish_on_front_page', 'hide_on_front_page']
+
+    def publish_on_front_page(self, request, queryset):
+        queryset.update(on_front_page=True)
+    publish_on_front_page.short_description = "Publish selected on front page"
+    
+    def hide_on_front_page(self, request, queryset):
+        queryset.update(on_front_page=True)
+    hide_on_front_page.short_description = "Hide selected on front page"
     
     def ancestors(self, category):
         return ' > '.join([c.name for c in category.get_ancestors()])
