@@ -87,8 +87,8 @@
                     var url = target.replace('?', '#');
                     var subCategories = $this.siblings('ul');
                     if(subCategories.length > 0) {
-                        var categories = subCategories.map(function(i, cat) {
-                            return $("a", cat).attr("href").split("=").pop();
+                        var categories = $("a", subCategories).map(function(i, cat) {
+                            return $(cat).attr("href").split("=").pop();
                         });
                         url += "," + categories.get().join(",");
                     }
