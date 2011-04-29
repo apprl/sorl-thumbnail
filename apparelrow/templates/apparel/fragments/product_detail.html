@@ -7,7 +7,7 @@
 {% cache CACHE_TIMEOUT product_detail_fragment1 object.id LANGUAGE_CODE %}
 <div class="product-left">
     <div class="product-image">
-        <a href="{{ object.product_image.url }}" title="{{ object.product_name }}"><img src="/scale/328x500{{ object.product_image.url }}" /></a>
+        <a href="{{ object.product_image.url }}" title="{{ object.manufacturer }} - {{ object.product_name }}"><img src="/scale/328x500{{ object.product_image.url }}" /></a>
 {% endcache %}
         {% url like-product object.slug "up" as like_url %}
         {% url like-product object.slug "clear" as unlike_url %}
@@ -18,8 +18,8 @@
 </div>
 <div class="product-info">
     <h2>{{ object.categories|join:' \\ ' }} \ {{ object.manufacturer }}</h2>
-    <h1>{{ object.product_name }}</h1>
-    <h3>{{ object.manufacturer }}</h3>
+    <h1>{{ object.manufacturer }}</h1>
+    {% if object.product_name %}<h3>{{ object.product_name }}</h3>{% endif %}
     {% regroup object.options.all by option_type as option_list %}
     <!-- FIXME: Style this properly. See ticket #300 
     <ul class="product-options">

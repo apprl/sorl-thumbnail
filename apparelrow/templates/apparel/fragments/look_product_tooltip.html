@@ -5,8 +5,8 @@
     </a>
     <div class="product-meta">
         <a href="{{ component.product.get_absolute_url }}">
-            <h2>{{ component.product.product_name }}</h2>
-            <h3>{{ component.product.manufacturer.name }}</h3>
+            <h2>{{ component.product.manufacturer.name }}</h2>
+            {% if component.product.product_name %}<h3>{{ component.product.product_name }}</h3>{% endif %}
             <div>
                 {% with component.product as object %}{% include 'apparel/fragments/likes.html' %}{% endwith %}
             </div>

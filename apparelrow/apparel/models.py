@@ -130,7 +130,7 @@ class Product(models.Model):
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
         help_text=_("Has to be unique with the manufacturer"))
-    product_name  = models.CharField(max_length=200)
+    product_name  = models.CharField(max_length=200, null=True, blank=True)
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True)
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image')) 
