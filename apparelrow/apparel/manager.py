@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from django.db import models
 from django.db.models import Q
 from django.http import QueryDict
@@ -435,4 +436,6 @@ class InvalidExpression(Exception):
 class NoQuery(Exception):
     pass
 
-
+class FirstPageManager(models.Manager):
+    def get_query_set(self):
+        return super(FirstPageManager, self).get_query_set().filter(published=True, pub_date__lte=datetime.now())

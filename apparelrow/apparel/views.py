@@ -689,7 +689,7 @@ def get_filter(request, **kwargs):
 def index(request):
     ctx = get_filter(request)
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
-    ctx['pages'] = FlatPage.objects.filter(url__startswith='index')
+    ctx['pages'] = FirstPageContent.published_objects.all()
     ctx['popular_looks']  = Vote.objects.get_top(Look, limit=6)    
     ctx['categories_all'] = ctx['categories_all'].filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]

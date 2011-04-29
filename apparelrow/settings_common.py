@@ -290,6 +290,7 @@ APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR       = os.path.join('/', MEDIA_URL, 'images', 'avatar_small.png')
 APPAREL_DEFAULT_AVATAR_LARGE = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
+APPAREL_MISC_IMAGE_ROOT = 'static/images'
 APPAREL_PRODUCT_IMAGE_ROOT = 'static/products'
 APPAREL_LOOK_IMAGE_ROOT = 'static/looks'
 APPAREL_LOGO_IMAGE_ROOT = 'static/logos'

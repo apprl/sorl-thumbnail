@@ -87,3 +87,11 @@ admin.site.register(VendorProduct, VendorProductAdmin)
 admin.site.register(LookComponent)
 admin.site.register(Wardrobe)
 
+# Front Page
+
+class FirstPageContentAdmin(admin.ModelAdmin):
+    list_display = ['title', 'pub_date', 'published']
+    list_filter = ['published']
+
+admin.site.register(FirstPageContent, FirstPageContentAdmin)
+
