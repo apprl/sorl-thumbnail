@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.db.models import Sum, Min
 
-from apparel.manager import SearchManager, FeaturedManager
+from apparel.manager import SearchManager, FeaturedManager, FirstPageManager
 from apparel import cache
 
 import datetime, mptt, tagging
@@ -453,5 +453,23 @@ class Wardrobe(models.Model):
     def __unicode__(self):
         return u'Wardrobe for %s' % self.user
 
+class FirstPageContent(models.Model):
+    title     = models.CharField(_('Title'), max_length=127, blank=True)
+    content   = models.TextField(_('Content'), null=True, blank=True, help_text=_('HTML allowed'))
+    url       = models.URLField(_('URL'), max_length=255, null=True, blank=True,)
+    image     = models.ImageField(_('Image'), upload_to=settings.APPAREL_MISC_IMAGE_ROOT, max_length=255, null=True, blank=True, help_text=_('Publish size 450x327'))
+    published = models.BooleanField(default=False)
+    pub_date  = models.DateTimeField(_("Publish date"), auto_now_add=True)
+    created   = models.DateTimeField(_("Time created"), auto_now_add=True)
+    modified  = models.DateTimeField(_("Time modified"), auto_now=True)
+
+    objects = models.Manager()
+    published_objects = FirstPageManager()
+
+    def __unicode__(self):
+        return u'%s' % (self.title,)
+
+    class Meta:
+        ordering = ['-pub_date']
 
 import apparel.activity

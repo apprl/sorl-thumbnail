@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load apparel_extras %}
 {% load cache %}
+{% load thumbnail %}
 
 {% block 'extra-scripts' %}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/filtersetup.js"></script>
@@ -133,7 +134,15 @@
             <ul id="contents">
             {% for page in pages %}
                 <li class="feature">
-                    <div class="page">{{ page.content|safe }}</div>
+                    <div class="page">
+                        {% if page.url %}<a href="{{ page.url }}">{% endif %}
+                            {% if page.image %}
+                                <img src="{% thumbnail page.image "450x327" crop="center" %}" width="450" height="327" alt="{{ page.title }}" />
+                            {% else %}
+                                {{ page.content|safe }}
+                            {% endif %}
+                        {% if page.url %}</a>{% endif %}
+                    </div>
                     <div class="info-box"><h3>{{ page.title }}</h3></div>
                 </li>
             {% endfor %}
