@@ -459,7 +459,7 @@ class FirstPageContent(models.Model):
     url       = models.URLField(_('URL'), max_length=255, null=True, blank=True,)
     image     = models.ImageField(_('Image'), upload_to=settings.APPAREL_MISC_IMAGE_ROOT, max_length=255, null=True, blank=True, help_text=_('Publish size 450x327'))
     published = models.BooleanField(default=False)
-    pub_date  = models.DateTimeField(_("Publish date"), auto_now_add=True, editable=True)
+    pub_date  = models.DateTimeField(_("Publish date"))
     created   = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified  = models.DateTimeField(_("Time modified"), auto_now=True)
 
