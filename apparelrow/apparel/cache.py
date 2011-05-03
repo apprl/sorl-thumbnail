@@ -51,6 +51,9 @@ template_cache_map = {
     'LookComponent': (
         'look_detail1', 'look_detail2', 'look_detail3', 'look_widget', 'look_small',
     ),
+    'FirstPageContent': (
+        'index'
+    ),
 }
 
 class_level_map = (

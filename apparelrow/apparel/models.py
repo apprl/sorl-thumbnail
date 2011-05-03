@@ -472,4 +472,6 @@ class FirstPageContent(models.Model):
     class Meta:
         ordering = ['-pub_date']
 
+models.signals.post_save.connect(cache.invalidate_model_handler, sender=FirstPageContent)
+
 import apparel.activity
