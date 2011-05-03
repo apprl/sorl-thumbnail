@@ -115,6 +115,7 @@ except mptt.AlreadyRegistered:
     logging.debug("Attempt to register category, but it's already registered")
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Category)
+models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Category)
 
 PRODUCT_GENDERS = (
     ('W', 'Women',),
@@ -190,6 +191,7 @@ class Product(models.Model):
         export_fields = ['__all__', 'get_absolute_url', 'default_vendor', 'score']
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Product)
+models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Product)
 
 
 # Maps products for a specific vendor 
@@ -250,6 +252,7 @@ class VendorProduct(models.Model):
         export_fields = ['__all__', '-product']
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProduct)
+models.signals.post_delete.connect(cache.invalidate_model_handler, sender=VendorProduct)
 
 
 LOOK_COMPONENT_TYPES = (
@@ -286,6 +289,7 @@ class VendorProductVariation(models.Model):
         return unicode(s)
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
+models.signals.post_delete.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
 
 
 class Look(models.Model):
@@ -379,6 +383,7 @@ class Look(models.Model):
         export_fields = ['__all__', 'get_absolute_url', 'photo_components', 'display_with_component', 'collage_components', 'score']
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Look)
+models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Look)
 
 class LookComponent(models.Model):
     """
@@ -445,6 +450,7 @@ class LookComponent(models.Model):
         export_fields = ['__all__', 'style', 'style_middle', 'style_small', '-look']
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookComponent)
+models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookComponent)
 
 class Wardrobe(models.Model):
     user     = models.ForeignKey(User)
@@ -473,5 +479,6 @@ class FirstPageContent(models.Model):
         ordering = ['-pub_date']
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=FirstPageContent)
+models.signals.post_delete.connect(cache.invalidate_model_handler, sender=FirstPageContent)
 
 import apparel.activity
