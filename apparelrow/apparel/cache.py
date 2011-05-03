@@ -46,7 +46,7 @@ template_cache_map = {
     'Look': (
         'look_detail1', 'look_detail2', 'look_detail3', 'look_small',
         'product_detail2', 'look_widget', 'look_small',
-        'index',
+        'index', 'index_looks'
     ), # < only if featured was changed
     'LookComponent': (
         'look_detail1', 'look_detail2', 'look_detail3', 'look_widget', 'look_small',
