@@ -137,6 +137,14 @@ jQuery(document).ready(function() {
             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
         }
     });
+
+    jQuery('#nav-main a').click(function(event) {
+        var target = $(this).attr('href');
+        if(target.indexOf('/browse/?') >= 0) {
+            event.preventDefault();
+            window.location = target.replace('?', '#');
+        }
+    });
 });
 
 
