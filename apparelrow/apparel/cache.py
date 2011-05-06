@@ -69,8 +69,8 @@ def invalidate_model_handler(sender, **kwargs):
             cache_args = [] if fragment in class_level_map else [kwargs['instance'].id]
             
             for lang in settings.LANGUAGES:
-                cache_args.append(lang[0])
-                invalidate_template_cache(fragment, *cache_args)
+                temp_cache_args = cache_args + [lang[0]]
+                invalidate_template_cache(fragment, *temp_cache_args)
     
     except KeyError, e:
         pass
