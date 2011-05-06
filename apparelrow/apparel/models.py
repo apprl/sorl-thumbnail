@@ -12,6 +12,7 @@ from apparel import cache
 import datetime, mptt, tagging
 from tagging.fields import TagField
 from voting.models import Vote
+from voting.signals import delete_votes
 from sorl.thumbnail.main import DjangoThumbnail
 
 from django_extensions.db.fields import AutoSlugField
@@ -192,6 +193,7 @@ class Product(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Product)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Product)
+models.signals.post_delete.connect(delete_votes, sender=Product)
 
 
 # Maps products for a specific vendor 
@@ -384,6 +386,7 @@ class Look(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Look)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Look)
+models.signals.post_delete.connect(delete_votes, sender=Look)
 
 class LookComponent(models.Model):
     """
