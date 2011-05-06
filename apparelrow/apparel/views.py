@@ -400,7 +400,7 @@ def save_look_component(request):
         # FIXME: Return some error response here. Can we just throw an exception?
         raise Exception('Validaton errors %s' % form.errors)
     
-    template = 'look_collage_product' if form.instance.component_of == 'C' else 'look_photo_product'
+    template = 'look_collage_product_image' if form.instance.component_of == 'C' else 'look_photo_product'
     return (
         {
             'look_component': form.instance,
