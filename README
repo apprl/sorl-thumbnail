@@ -20,6 +20,10 @@ apt-get install libcompass-ruby
 cd apparelrow/media
 compass compile
 
+= build js =
+cd apparelrow
+./manage.py synccompress --settings development
+
 = Set up database =
 cd apparelrow
 ./manage.py syncdb --settings development
