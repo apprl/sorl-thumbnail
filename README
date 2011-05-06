@@ -9,6 +9,10 @@ source bin/activate
 easy_install pip
 pip install -r etc/requirements.pip # ... fika ...
 
+= settings =
+cp etc/logging.conf.default etc/logging.conf
+cp apparelrow/development.py.default apparelrow/development.py
+
 Now you can start django, either with the django-admin.py in bin, or the regular manage.py
 
 = Directory Structure =
