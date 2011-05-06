@@ -63,9 +63,6 @@ class_level_map = (
 
 
 def invalidate_model_handler(sender, **kwargs):
-    if kwargs['created']:
-        return
-    
     try:
         for fragment in template_cache_map[sender.__name__]:
             cache_args = [] if fragment in class_level_map else [kwargs['instance'].id]
