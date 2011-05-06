@@ -59,6 +59,7 @@ template_cache_map = {
 class_level_map = (
     'filter_menu',
     'index',
+    'index_looks'
 )
 
 
