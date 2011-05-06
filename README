@@ -15,6 +15,18 @@ cp apparelrow/development.py.default apparelrow/development.py
 
 mkdir -p var/logs
 
+= install compass =
+apt-get install libcompass-ruby
+cd apparelrow/media
+compass compile
+
+= Set up database =
+cd apparelrow
+./manage.py syncdb --settings development
+./manage.py migrate --settings development
+./manage.py loaddata apparel/fixtures/* --settings development
+./manage.py loaddata importer/fixtures/* --settings development
+
 Now you can start django, either with the django-admin.py in bin, or the regular manage.py
 
 = Directory Structure =
