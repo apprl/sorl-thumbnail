@@ -19,7 +19,6 @@ class Provider(CSVProvider):
         super(Provider, self).__init__(*args, **kwargs)
         self.mapper=LinkshareMapper
         self.dialect=utils.CSVPipeDelimited
-        self.encoding='iso-8859-1'
         self.fieldnames=(
             'product-id',
             'product-name',
