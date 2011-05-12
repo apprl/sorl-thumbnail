@@ -1,8 +1,13 @@
 import re
 
+from django.template.defaultfilters import slugify
+
 from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
+
+def parse_product_id(record):
+    return record.get('product-id') or slugify(record.get('product-url'))
 
 class KelkooMapper(DataMapper):
     genders = {'Mens': 'M', 'Womens': 'W'}
@@ -15,7 +20,9 @@ class KelkooMapper(DataMapper):
             if len(c): variation['color'] = c[0]
         
         return self.record['variations']
-    
+   
+    def get_product_id(self):
+        return parse_product_id(self.record)
     
     def get_currency(self):
         return 'SEK'
@@ -54,7 +61,7 @@ class Provider(CSVProvider):
     
     
     def should_merge(self, new_record):
-        return self.record.get('product-url') == new_record.get('product-url')
+        return parse_product_id(self.record) == parse_product_id(new_record)
     
     def merge(self, new_record):
         if not 'variations' in self.record:
