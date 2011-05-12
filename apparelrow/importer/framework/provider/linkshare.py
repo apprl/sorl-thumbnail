@@ -17,6 +17,13 @@ class LinkshareMapper(DataMapper):
     def get_price(self):
         return self.record.get('discount-price') or self.record.get('retail-price')
 
+    def get_category(self):
+        category = self.record.get('category')
+        if self.record.get('secondary-category'):
+            category = category + ' > ' + self.record.get('secondary-category')
+
+        return category
+
 class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):
         super(Provider, self).__init__(*args, **kwargs)
