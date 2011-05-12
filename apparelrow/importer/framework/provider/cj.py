@@ -62,14 +62,8 @@ class CJMapper(DataMapper):
             self.record[k.lower()] = self.re_cdata.sub(r'\1', self.record[k])
             del self.record[k]    
     
-    def map_variations(self):
-        v = []
-        
-        colors = self.map_colors(self.record.get('description', ''))
-        if len(colors):
-            v = [{'color': c } for c in colors]
-        
-        return v
+    def get_variations(self):
+        return [{'color': c} for c in self.map_colors(self.record.get('description', ''))]
 
     def get_description(self):
         return self.re_quote.sub('', self.record['description'])
