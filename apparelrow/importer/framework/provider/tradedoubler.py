@@ -5,48 +5,6 @@ from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
 
-# Columns:
-#   warranty
-#   isbn
-#   weight
-#   currency
-#   productUrl
-#   TDProductId
-#   shortDescription
-#   availability
-#   manufacturer
-#   merchantCategoryName
-#   sku
-#   shippingCost
-#   TDCategoryName
-#   previousPrice
-#   inStock
-#   size
-#   price
-#   description
-#   ean
-#   mpn
-#   extraImageProductLarge
-#   brand
-#   extraImageProductSmall
-#   programId
-#   programLogoPath
-#   color
-#   programName
-#   date
-#   promoText
-#   condition
-#   advertiserProductUrl
-#   techSpecs
-#   name
-#   deliveryTime
-#   fields
-#   imageUrl
-#   upc
-#   TDCategoryID
-#   gender
-#   model
-
 class TradeDoublerMapper(DataMapper):
     re_split = re.compile(r'(?<!http):')
     genders  = {'Man': 'M', 'Kvinna': 'W'}
@@ -55,14 +13,8 @@ class TradeDoublerMapper(DataMapper):
         self.record.update([self.re_split.split(v) for v in self.record.get('fields', '').split(';')])
 
     
-    def map_variations(self):
-        v = []
-        
-        colors = self.map_colors(self.record.get('color', ''))
-        if len(colors):
-            v = [{'color': c } for c in colors]
-        
-        return v
+    def get_variations(self):
+        return [{'color': c} for c in self.map_colors(self.record.get('name', ''))]
     
     def get_gender(self):
         return self.genders.get(self.record.get('gender'))
