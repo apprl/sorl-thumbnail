@@ -1,6 +1,7 @@
 from apparel.models import *
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
+from sorl.thumbnail.main import DjangoThumbnail
 
 
 #
@@ -8,9 +9,17 @@ from modeltranslation.admin import TranslationAdmin
 #
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('product_name', 'category', 'gender', 'manufacturer', 'sku', 'published',)
+    list_display = ('image', 'product_name', 'category', 'gender', 'manufacturer', 'sku', 'published',)
     list_filter = ['category', 'gender', 'manufacturer', 'vendors', 'published']
+    list_editable = ['category', 'gender', 'published']
+    list_display_links = ['product_name']
     actions = ['publish', 'hide']
+
+    def image(self, obj):
+        thumbnail = DjangoThumbnail(obj.product_image, (50, 50))
+        return u'<a href="%s"><img src="%s" /></a>' % (obj.product_image.url, thumbnail.absolute_url,)
+    image.short_description = 'Image'
+    image.allow_tags = True
 
     def publish(self, request, queryset):
         queryset.update(published=True)
