@@ -5,7 +5,10 @@ from importer.framework.mapper import DataMapper
 class LinkshareMapper(DataMapper):
     genders = {'Female': 'W', 'Male': 'M'}
 
-    def map_variations(self):
+    def get_variations(self):
+        if self.record.get('color'):
+            return [{'color': c} for c in self.map_colors(self.record.get('color'))]
+
         return [{'color': c} for c in self.map_colors(self.record.get('product-name'))]
 
     def get_gender(self):
@@ -52,7 +55,7 @@ class Provider(CSVProvider):
             'attribute2',
             'size',                 # attribute 3
             'attribute4',
-            'attribute5',
+            'color',
             'gender',
             'attribute7',
             'agegroup',
