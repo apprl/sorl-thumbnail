@@ -60,12 +60,18 @@ button
     overflow: visible
   h1
     +float-left
-    +replace-text(unquote("logo.png"))
+    +replace-text("logo.png")
     width: 128px
     height: 13px
     padding: 20px
     margin-top: 23px
     +border(bottom, #999999)
+    &.beta
+      +replace-text("logo_beta.png")
+      background-position: center right
+      width: 149px
+      padding-right: 0
+
 
 #footer
   background: transparent image_url(unquote("footer-bg.png")) scroll no-repeat center center
