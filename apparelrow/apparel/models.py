@@ -18,7 +18,7 @@ from sorl.thumbnail.main import DjangoThumbnail
 from django_extensions.db.fields import AutoSlugField
 
 class Manufacturer(models.Model):
-    name   = models.CharField(max_length=50, unique=True, db_index=True)
+    name   = models.CharField(max_length=50, unique=True)
     active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
     logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype')) 
     homepage = models.URLField(_('Home page'))
@@ -37,7 +37,7 @@ class Manufacturer(models.Model):
 
 
 class OptionType(models.Model):
-    name = models.CharField(max_length=100, unique=True, db_index=True)
+    name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=100)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
 
