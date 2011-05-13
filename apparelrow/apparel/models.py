@@ -73,7 +73,7 @@ class Option(models.Model):
 
 
 class Vendor(models.Model):
-    name     = models.CharField(max_length=100)
+    name     = models.CharField(max_length=100, db_index=True)
     homepage = models.URLField(_('Home page'))
     logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype'), max_length=127, blank=True, null=True) 
 
@@ -88,11 +88,11 @@ class Vendor(models.Model):
 
 
 class Category(models.Model):
-    name          = models.CharField(max_length=100)
+    name          = models.CharField(max_length=100, db_index=True)
     parent        = models.ForeignKey('self', null=True, blank=True, related_name='children')
-    active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'))
+    active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'), db_index=True)
     option_types  = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
-    on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'))
+    on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'), db_index=True)
     
     def save(self, *args, **kwargs):
         # FIXME: Can you get Django to auto truncate fields?
