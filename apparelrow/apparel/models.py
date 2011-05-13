@@ -275,7 +275,7 @@ class VendorProductVariation(models.Model):
     # Negative value means it is in stock, but we have no information about how many
     # Null means we have no information about availability
     # 0 means it is sold out
-    in_stock = models.IntegerField(_('Items in stock'), null=True, blank=True)
+    in_stock = models.IntegerField(_('Items in stock'), null=True, blank=True, help_text=_('Negative value means it is in stock, but we have no information about how many. Null means we have no information about availability. 0 means it is sold out'))
     options = models.ManyToManyField(Option)
     
     def __unicode__(self):

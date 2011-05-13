@@ -84,9 +84,14 @@ admin.site.register(Option, OptionAdmin)
 
 admin.site.register(Vendor)
 
+class VendorProductVariationInline(admin.StackedInline):
+    model = VendorProductVariation
+    extra = 0
+
 class VendorProductAdmin(admin.ModelAdmin):
     list_display = ['product', 'vendor', 'price']
     list_filter = ['vendor']
+    inlines = [VendorProductVariationInline]
 
 admin.site.register(VendorProduct, VendorProductAdmin)
 
