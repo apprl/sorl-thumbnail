@@ -144,6 +144,11 @@ def browse(request, template='apparel/browse.html', extra_context=None, **kwargs
         )
         result.update(get_pagination_as_dict(paged_result))
 
+        # FIXME This lets us avoid looking up all properties for all objects in the db
+        # We might want to refactor this a bit, but this is a very nice speedup!
+        del result['object_list']
+        del result['manufacturers']
+
         return HttpResponse(
             json.encode(result),
             mimetype='text/json'
