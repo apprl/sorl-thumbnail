@@ -375,6 +375,10 @@ function doFilter(query, callback) {
 }
 function renderPage(products) {
 
+    function getId(el) {
+        return parseInt(el.id.split('-').pop(), 10);
+    }
+
     // Find the pages in the response
     var pages = jQuery('ul.list > li', products.html)
         // Append each page to appropriate place
@@ -382,7 +386,7 @@ function renderPage(products) {
             var existing = jQuery('#' + this.id);
             if(existing.length == 0) {
                 var existingPages = jQuery('#product-list > ul.list > li');
-                var nextPage = existingPages.filter(function(i) { return this.id > page.id }).first();
+                var nextPage = existingPages.filter(function(i) { return getId(this) > getId(page) }).first();
                 // There are pages that should be after this one in the list
                 if(nextPage.length == 1) {
                     nextPage.before(page);
