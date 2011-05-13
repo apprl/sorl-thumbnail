@@ -133,12 +133,12 @@ class Product(models.Model):
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
         help_text=_("Has to be unique with the manufacturer"))
     product_name  = models.CharField(max_length=200, null=True, blank=True)
-    date_added    = models.DateTimeField(_("Time added"), null=True, blank=True)
+    date_added    = models.DateTimeField(_("Time added"), null=True, blank=True, db_index=True)
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image')) 
     vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
-    gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
-    published     = models.BooleanField(default=True)
+    gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
+    published     = models.BooleanField(default=True, db_index=True)
     
     objects = SearchManager()
     
