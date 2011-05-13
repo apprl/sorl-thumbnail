@@ -1,3 +1,5 @@
+import itertools
+
 from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
@@ -6,10 +8,26 @@ class LinkshareMapper(DataMapper):
     genders = {'Female': 'W', 'Male': 'M'}
 
     def get_variations(self):
-        if self.record.get('color'):
-            return [{'color': c} for c in self.map_colors(self.record.get('color'))]
+        availability = self.get_availability()
+        
+        colors = []
+        if self.record.get('color', ''):
+            colors = self.map_colors(self.record.get('color', ''))
 
-        return [{'color': c} for c in self.map_colors(self.record.get('product-name'))]
+        sizes = []
+        if self.record.get('size', ''):
+            sizes = [size.strip() for size in self.record.get('size', '').split(',')]
+
+        variations = []
+        for color, size in itertools.product(colors, sizes):
+            variations.append({'color': color, 'size': size, 'availability': availability})
+        
+        return variations
+
+        #if self.record.get('color'):
+            #return [{'color': c} for c in self.map_colors(self.record.get('color'))]
+
+        #return [{'color': c} for c in self.map_colors(self.record.get('product-name'))]
 
     def get_gender(self):
         return self.genders.get(self.record.get('gender'))
@@ -23,6 +41,14 @@ class LinkshareMapper(DataMapper):
             category = category + ' > ' + self.record.get('secondary-category')
 
         return category
+
+    def get_availability(self):
+        #return True if self.record.get('availability') else False
+        if self.record.get('availability').lower().strip() == 'in stock':
+            return True
+
+        return False
+
 
 class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):
