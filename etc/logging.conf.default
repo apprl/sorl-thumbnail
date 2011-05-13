@@ -8,7 +8,7 @@ keys=consoleHandler,core_view_handler,importer_handler
 keys=simpleFormatter
 
 [logger_root]
-level=NOTSET
+level=ERROR
 handlers=core_view_handler
 propagate=0
 
