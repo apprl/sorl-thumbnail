@@ -89,6 +89,7 @@ class VendorProductVariationInline(admin.StackedInline):
     extra = 0
 
 class VendorProductAdmin(admin.ModelAdmin):
+    raw_id_fields = ['product', 'vendor_category']
     list_display = ['product', 'vendor', 'price']
     list_filter = ['vendor']
     inlines = [VendorProductVariationInline]
