@@ -630,14 +630,14 @@ def get_filter(request, **kwargs):
     for k in filter(lambda k: k in query, ['page', 'mpage', 'mname']):
         del query[k]
     
-    colors = Option.objects.filter(option_type__name__iexact='color', product__published=True)
+    colors = Option.objects.filter(option_type__name='color')
     
     product_args = {}
     
     if query or kwargs:
         if query:
             manufacturers = Product.objects.search(without(query, 'm')).filter(published=True)
-            colors = colors.filter(product__in=Product.objects.search(without(query, 'o')))
+            colors = colors.filter(product__in=Product.objects.search(without(query, 'o')).filter(published=True))
         else:
             manufacturers = Product.objects.filter(published=True)
 
