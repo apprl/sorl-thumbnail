@@ -216,12 +216,8 @@ jQuery(document).ready(function() {
         filter(getQuery());
         return false;
     });
-    jQuery('#pagination a').live('click', function(e) {
-        // FIXME: Move out logic to section that handles page-swapping
-        
-        var link = jQuery(this);
-        var page = parseInt(link.attr('href').split('=')[1], 10);
-        
+
+    function scrollTo(page) {
         if(page == 0 || page > pagination.data.paginator.num_pages)
             return false;
         
@@ -233,10 +229,32 @@ jQuery(document).ready(function() {
         } else {
             jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 400);
         }
+    }
+
+    jQuery(document).keydown(function(e) {
+        if(e.keyCode == 37 || e.keyCode == 39) {
+            var index = jQuery('#product-list').data('scrollable').getIndex(),
+                currentPageId = parseInt(jQuery('#product-list > ul.list > li:eq(' + index + ')').attr('id').split('-').pop(), 10),
+                page = e.keyCode == 37 ? currentPageId - 1 : currentPageId + 1;
+
+            console.log(index, page);
+
+            scrollTo(page);
+        }
+    });
+
+    jQuery('#pagination a').live('click', function(e) {
+        // FIXME: Move out logic to section that handles page-swapping
+        
+        var link = jQuery(this);
+        var page = parseInt(link.attr('href').split('=')[1], 10);
+        
+        scrollTo(page);
         return false;
     });
     jQuery('#product-list').scrollable({
         items: 'ul.list',
+        keyboard: false,
         onBeforeSeek: function(event, index) {
             var target = jQuery('#product-list > ul.list > li:eq(' + index + ')');
             var pageNum = parseInt(target.attr('id').split('-')[1], 10);
