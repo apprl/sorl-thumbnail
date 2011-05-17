@@ -147,7 +147,7 @@ class FXRate(models.Model):
             UPDATE
               %(table)s
             SET
-                price    = Round(%(price)f * original_price, 2)
+                price    = Round(%(price)f * original_price)
               , currency = '%(base_currency)s'
             WHERE
               original_currency = '%(currency)s'
