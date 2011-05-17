@@ -200,7 +200,7 @@ models.signals.post_delete.connect(delete_votes, sender=Product)
 # This is used for importing stuff - when this category is changed,
 # all related products will be updated to reflect the category
 class VendorCategory(models.Model):
-    category = models.ForeignKey(Category, verbose_name=_('category'), null=True)
+    category = models.ForeignKey(Category, verbose_name=_('category'), blank=True, null=True)
     name     = models.CharField(_('Name'), max_length=255)
     vendor   = models.ForeignKey(Vendor)
     default_gender = models.CharField(_('Default gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
