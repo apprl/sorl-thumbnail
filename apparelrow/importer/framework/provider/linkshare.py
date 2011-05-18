@@ -36,6 +36,12 @@ class LinkshareMapper(DataMapper):
         discount_price = self.record.get('discount-price') or '0.00'
         return discount_price if float(discount_price) else self.record.get('retail-price')
 
+    def get_manufacturer(self):
+        return self.record.get('manufacturer') or self.record.get('brand')
+
+    def get_description(self):
+        return self.record.get('long-description') or self.record.get('description')
+
     def get_category(self):
         category = self.record.get('category')
         if self.record.get('secondary-category'):
