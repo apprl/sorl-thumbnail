@@ -40,7 +40,12 @@ class LinkshareMapper(DataMapper):
         return self.record.get('manufacturer') or self.record.get('brand')
 
     def get_description(self):
-        return self.record.get('long-description') or self.record.get('description')
+        description = self.record.get('long-description') or self.record.get('description')
+
+        if self.record.get('material'):
+            description += " (%s)" % self.record.get('material')
+
+        return description
 
     def get_category(self):
         category = self.record.get('category')
@@ -49,8 +54,6 @@ class LinkshareMapper(DataMapper):
             category += ' > %s' % self.record.get('secondary-category')
         if self.record.get('type'):
             category += ' > %s' % self.record.get('type')
-        if self.record.get('material'):
-            category += ' (%s)' % self.record.get('material')
 
         return category
 
