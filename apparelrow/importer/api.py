@@ -120,7 +120,6 @@ class API(object):
         Imports the product
         """
         
-        import pdb; pdb.set_trace()
         # Download and store product image 
         fields = {
             'product_name': self.dataset['product']['product-name'],
