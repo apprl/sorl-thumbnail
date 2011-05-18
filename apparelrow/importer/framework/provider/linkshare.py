@@ -44,8 +44,13 @@ class LinkshareMapper(DataMapper):
 
     def get_category(self):
         category = self.record.get('category')
+
         if self.record.get('secondary-category'):
-            category = category + ' > ' + self.record.get('secondary-category')
+            category += ' > %s' % self.record.get('secondary-category')
+        if self.record.get('type'):
+            category += ' > %s' % self.record.get('type')
+        if self.record.get('material'):
+            category += ' (%s)' % self.record.get('material')
 
         return category
 
@@ -94,10 +99,10 @@ class Provider(CSVProvider):
             'miscellaneous-attribute',
             'attribute2',
             'size',                 # attribute 3
-            'attribute4',
+            'material',             # attribute 4
             'color',
             'gender',
-            'attribute7',
+            'type',                 # attribute 7
             'agegroup',
             'attribute9',
         )
