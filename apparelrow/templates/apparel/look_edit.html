@@ -476,7 +476,6 @@ jQuery(document).ready(function() {
     });
 
     jQuery('#photo input[type=file]').change(function(e) {
-        console.log(jQuery(this).closest('.look-empty'));
         jQuery('button[type=submit]', jQuery(this).closest('.look-empty')).show();
     });
 
