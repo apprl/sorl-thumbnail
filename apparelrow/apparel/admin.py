@@ -2,6 +2,7 @@ from apparel.models import *
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 from sorl.thumbnail.main import DjangoThumbnail
+from django.db.models import Count
 
 
 #
@@ -63,10 +64,18 @@ class CategoryAdmin(TranslationAdmin):
 admin.site.register(Category, CategoryAdmin)
 
 class VendorCategoryAdmin(admin.ModelAdmin):
-    list_display = ('vendor', 'name', 'default_gender', 'category',)
+    list_display = ('vendor', 'name', 'default_gender', 'category', 'category_ancestors', 'num_products',)
     list_filter = ['vendor', 'category', 'default_gender']
     list_editable = ['default_gender', 'category']
     list_display_links = ['name']
+
+    def category_ancestors(self, vendor_category):
+        return ' > '.join([c.name for c in vendor_category.category.get_ancestors()])
+
+    def num_products(self, vendor_category):
+        result = VendorProduct.objects.values('vendor_category').filter(vendor_category=vendor_category).annotate(Count('vendor_category')).get()
+        if result and 'vendor_category__count' in result:
+            return result['vendor_category__count']
 
 admin.site.register(VendorCategory, VendorCategoryAdmin)
 
