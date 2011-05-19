@@ -24,11 +24,6 @@ class LinkshareMapper(DataMapper):
         
         return variations
 
-        #if self.record.get('color'):
-            #return [{'color': c} for c in self.map_colors(self.record.get('color'))]
-
-        #return [{'color': c} for c in self.map_colors(self.record.get('product-name'))]
-
     def get_gender(self):
         return self.genders.get(self.record.get('gender'))
 
@@ -58,7 +53,6 @@ class LinkshareMapper(DataMapper):
         return category
 
     def get_availability(self):
-        #return True if self.record.get('availability') else False
         if self.record.get('availability').lower().strip() == 'in stock':
             return True
 
