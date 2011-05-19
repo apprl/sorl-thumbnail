@@ -219,11 +219,9 @@ def look_list(request, profile=None, contains=None, page=0):
         queryset = Look.objects.filter(user__username=profile)
     elif contains:
         queryset = Look.objects.filter(products__slug=contains)
-    elif len(request.GET):
-        queryset = Look.objects.search(request.GET)
     else:
         queryset = Look.objects.all().order_by('-modified')
-    
+
     
     # FIXME: This is used elsewhere, we should move it out to a utils module
     popular = Vote.objects.get_top(Look, limit=8)
@@ -232,7 +230,6 @@ def look_list(request, profile=None, contains=None, page=0):
         request,
         queryset=queryset,
         paginate_by=10,
-        page=page,
         extra_context={
             "popular_looks": popular
         }
