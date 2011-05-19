@@ -237,8 +237,6 @@ jQuery(document).ready(function() {
                 currentPageId = parseInt(jQuery('#product-list > ul.list > li:eq(' + index + ')').attr('id').split('-').pop(), 10),
                 page = e.keyCode == 37 ? currentPageId - 1 : currentPageId + 1;
 
-            console.log(index, page);
-
             scrollTo(page);
         }
     });
