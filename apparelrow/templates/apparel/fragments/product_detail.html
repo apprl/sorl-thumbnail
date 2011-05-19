@@ -77,6 +77,7 @@
                 <button>{% trans "In wardrobe" %}</button>
             {% else %}
                 <form action="{% url apparel.views.add_to_wardrobe %}" method="post">
+                    {% csrf_token %}
                     <input type="hidden" name="product" value="{{ object.id }}" />
                     <button type="submit" id="wardobe-button-add">
                         {% trans "Add to wardrobe" %}                
