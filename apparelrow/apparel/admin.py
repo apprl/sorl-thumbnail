@@ -63,10 +63,13 @@ class CategoryAdmin(TranslationAdmin):
 admin.site.register(Category, CategoryAdmin)
 
 class VendorCategoryAdmin(admin.ModelAdmin):
-    list_display = ('vendor', 'name', 'default_gender', 'category',)
+    list_display = ('vendor', 'name', 'default_gender', 'category', 'category_ancestors',)
     list_filter = ['vendor', 'category', 'default_gender']
     list_editable = ['default_gender', 'category']
     list_display_links = ['name']
+
+    def category_ancestors(self, vendor_category):
+        return ' > '.join([c.name for c in vendor_category.category.get_ancestors()])
 
 admin.site.register(VendorCategory, VendorCategoryAdmin)
 
