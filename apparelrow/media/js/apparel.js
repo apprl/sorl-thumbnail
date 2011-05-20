@@ -145,6 +145,16 @@ jQuery(document).ready(function() {
             window.location = target.replace('?', '#');
         }
     });
+
+    // Sort categories in client, this is a solution to the problem where the category tree is only sorted for one language.
+    function sort_lexical(a, b) {
+        return jQuery('a', a).text() > jQuery('a', b).text() ? 1 : -1;
+    }
+    jQuery('ul.level-0 > li').sort(sort_lexical).appendTo('ul.level-0').find('ul.level-1').each(function(index, level_one) {
+        jQuery('> li', level_one).sort(sort_lexical).appendTo(level_one).find('ul.level-2').each(function(index, level_two) {
+            jQuery('> li', level_two).sort(sort_lexical).appendTo(level_two);
+        });
+    });
 });
 
 
