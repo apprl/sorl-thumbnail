@@ -108,8 +108,6 @@ jQuery(document).ready(function() {
         });
     ;
     
-    // Toggle selected on categories with selected subcategories
-    jQuery('> a', '#product-category li:has(li > a.selected)').addClass('selected');
     // Initially hide all subcategories
     jQuery('#product-category li > ul').hide();
     // Except those with selected categories inside
@@ -121,25 +119,31 @@ jQuery(document).ready(function() {
 
     jQuery('#product-category li > a').click(function() {
         var $this = jQuery(this);
-                
-        var subCategories = $this.next();
-        
-        if(subCategories.length > 0) {
-            if($this.hasClass('selected')) {
-                if(subCategories.is(':visible')) {
-                    subCategories.find('a').removeClass('selected');
-                    $this.removeClass('selected');
-                }
-            } else {
-                subCategories.find('a').addClass('selected');
-                if(subCategories.is(':hidden'))
-                    $this.toggleClass('selected');
+        if($this.hasClass('selected')) {
+            $this.removeClass('selected').parent().find('a').removeClass('selected');
+
+            var subCategories = $this.next();
+            if(subCategories.length > 0) {
+                subCategories.slideUp('slow', function() {
+                    jQuery(this).find('ul').hide()
+                });
+                return false;
             }
-            
-            subCategories.slideToggle();
-            return false;
         } else {
-            $this.toggleClass('selected');
+            // Deselect parent category
+            $this.parent().parent().prev().removeClass('selected');
+            // Hide too deep categories
+            $this.parent().find('ul ul').slideUp();
+            // Deselect all children
+            $this.parent().find('a').removeClass('selected');
+            // Select this
+            $this.addClass('selected');
+            // Show subcategories
+            var subCategories = $this.next();
+            if(subCategories.length > 0) {
+                subCategories.slideDown();
+                return false;
+            }
         }
         return true;
     });

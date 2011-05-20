@@ -324,12 +324,26 @@ function getQuery(query) {
     query = query || {}
     for(var key in baseQuery)
         query[key] = baseQuery[key]
-    
-    category_list = getElementIds(jQuery('#product-category li > a.selected'));
+   
+    var category_list = [];
+    jQuery('#product-category li > a.selected').each(function(i, elem) {
+        var subCategories = jQuery(elem).next();
+        if(subCategories.find('a.selected').length <= 0) {
+            category_list = category_list.concat(getElementIds(subCategories.find('li > a')), getElementIds(jQuery(elem)));
+        }
+    });
     if(category_list.length > 0) {
         query[++index + ':c.id:in'] = category_list.join(',');
-        if('o' in query)
-            query['o'] += 'a' + index
+        if('o' in query) {
+            query['o'] += 'a' + index;
+        }
+    }
+
+    // Add a new query called shown, contains all categories that appears to be
+    // selected for the user
+    shown_category_list = getElementIds(jQuery('#product-category li > a.selected'));
+    if(shown_category_list.length > 0) {
+        query['shown'] = shown_category_list.join(',');
     }
     manufacturer_list = getElementIds(jQuery('#selected-manufacturers li > a'));
     if(manufacturer_list.length > 0) {
@@ -384,7 +398,7 @@ function filter(query, callback) {
     //    It will be cleaned up after first use
     // Anyone with a better, cleaner idea how to solve this, just go ahead and implement it. This doesn't feel so nice
     jQuery.history.filterCallback = callback;
-    window.location.hash = jQuery.param(query) || '!';
+    window.location.hash = decodeURIComponent(jQuery.param(query, true)) || '!';
 }
 function doFilter(query, callback) {
     jQuery.getJSON(browse_url, query, callback || renderProducts);
@@ -496,13 +510,12 @@ function updateSelected(products) {
         jQuery(selector).addClass('selected');
     }
 
-    function selectCategories(list) {
+    function showCategories(list) {
         if(list && list.length > 0) {
-            var $cat;
-            $.each(list, function(i, id) {
-                $cat = $('#category-' + id);
-                setSelected($cat);
-                $cat.siblings('ul').show();
+            jQuery.each(list, function(i, id) {
+                var category = jQuery('#category-' + id).addClass('selected');
+                category.siblings('ul').show();
+                category.parent().parent().show().parent().parent().show(); // TODO: better solution?
             });
         }
     }
@@ -516,7 +529,7 @@ function updateSelected(products) {
         }
     }
 
-    selectCategories(products.selected_categories);
+    showCategories(products.selected_shown_categories);
     selectList(products.selected_brands, '#available-manufacturer', '#product-manufacturers > a');
     selectList(products.selected_colors, '#option', '#product-color > a');
     selectList(products.selected_gender, '#option');

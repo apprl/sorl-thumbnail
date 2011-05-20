@@ -51,13 +51,14 @@ def update_with_selected(context, request):
             continue
         
         expr['%s.%s' % (short, field)] = qp.prepare_op_val(operator, value)[1]
-    
+
     context.update(
         selected_categories = filter(None, map(_to_int, expr.get('c.id') or [])),
         selected_colors     = expr.get('o.color'),
         selected_brands     = filter(None, map(_to_int, expr.get('m.id') or [])),
         selected_price      = expr.get('vp.price'),
         selected_gender     = expr.get('p.gender'),
+        selected_shown_categories = filter(None, map(_to_int, request.GET.get('shown', '').split(',')))
     )
 
 def search(request, model):
@@ -107,7 +108,7 @@ def browse(request, template='apparel/browse.html', extra_context=None, **kwargs
         page_size=BROWSE_PAGE_SIZE,
         **kwargs
     )
-    
+
     try:
         next_page = paged_result.paginator.page(paged_result.next_page_number())
     except (EmptyPage, InvalidPage):
