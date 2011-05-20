@@ -372,7 +372,7 @@ class Look(models.Model):
         return 'C'
     
     def __unicode__(self):
-        return u"%s by %s" % (self.title, self.user)
+        return u"%s by %s" % (self.title, self.user.get_profile().display_name)
     
     @models.permalink
     def get_absolute_url(self):
@@ -460,7 +460,7 @@ class Wardrobe(models.Model):
     products = models.ManyToManyField(Product)
     
     def __unicode__(self):
-        return u'Wardrobe for %s' % self.user
+        return u'Wardrobe for %s' % self.user.get_profile().display_name
 
 class FirstPageContent(models.Model):
     title     = models.CharField(_('Title'), max_length=127, blank=True)
