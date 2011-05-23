@@ -159,8 +159,8 @@
         </form>
         
         <ul id="nav-main">
-            <li><a href="{% url apparel.views.browse %}?1:p.gender=W">{% trans "Women" %}</a></li>
-            <li><a href="{% url apparel.views.browse %}?1:p.gender=M">{% trans "Men" %}</a></li>
+            <li><a class="women" href="{% url apparel.views.browse %}?1:p.gender=W">{% trans "Women" %}</a></li>
+            <li><a class="men" href="{% url apparel.views.browse %}?1:p.gender=M">{% trans "Men" %}</a></li>
             <li><a href="http://blog.apparelrow.com/">{% trans "Blog" %}</a></li>
             <li><a id="about-beta" href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
         {% if not user.is_authenticated %}

@@ -8,8 +8,8 @@
 {% endblock %}
 <ul id="product-gender" class="hover-menu">
     <li class="first"><a href="{% url apparel.views.browse %}">{% trans "All" %}</a></li>
-    <li><a id="option-W"{% ifequal selected_gender "W" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:p.gender=W">{% trans "Women" %}</a></li>
-    <li class="last"><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:p.gender=M">{% trans "Men" %}</a></li>
+    <li class="women"><a id="option-W"{% ifequal selected_gender "W" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:p.gender=W">{% trans "Women" %}</a></li>
+    <li class="last men"><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:p.gender=M">{% trans "Men" %}</a></li>
 </ul>
 <ul id="product-options" class="hover-menu">
     <li class="first" id="product-price"><a {% if selected_price %}class="selected" {% endif %}href="{% url apparel.views.browse %}">{% trans "Price" %}</a>

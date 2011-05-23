@@ -197,15 +197,30 @@ jQuery(document).ready(function() {
         
         return false;
     });
-    
 
-    jQuery('#product-gender li > a').click(function() {
-        $this = jQuery(this);
-        if(! $this.is('.selected')) {
-            $this.addClass('selected');
-            $this.parent().siblings().find('a').removeClass('selected');
+    // Set selected and clear selected from related element and then call filter
+    function singleSelection(element) {
+        if(!element.hasClass('.selected')) {
+            element.addClass('selected');
+            element.parent().siblings().find('a').removeClass('selected');
             filter(getQuery());
         }
+    }
+
+    // Handles click on women in main navigation on browse page
+    jQuery('#nav-main .women').click(function() {
+        singleSelection(jQuery('#product-gender li.women > a'));
+        return false;
+    });
+
+    // Handles click on men in main navigation on browse page
+    jQuery('#nav-main .men').click(function() {
+        singleSelection(jQuery('#product-gender li.men > a'));
+        return false;
+    });
+
+    jQuery('#product-gender li > a').click(function() {
+        singleSelection(jQuery(this));
         return false;
     });
     jQuery('#product-color li > a').click(function() {
