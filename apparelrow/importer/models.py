@@ -20,7 +20,8 @@ class VendorFeed(models.Model):
     password = models.CharField(max_length=50, null=True, blank=True)
     decompress = models.CharField(max_length=10, choices=AVAILABLE_UTILS, null=True, blank=True, help_text=_('Decompress the file before importing it'))
     provider_class = models.CharField(max_length=50)
-    
+    comment  = models.TextField(blank=True, default='')
+
     @property
     def latest_import_log(self):
         """

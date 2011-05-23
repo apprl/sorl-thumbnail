@@ -42,7 +42,7 @@ class VendorFeedAdmin(admin.ModelAdmin):
     inlines = [
         ImportLogInline
     ]
-    list_display = ['name', 'provider_class', 'vendor']
+    list_display = ['name', 'provider_class', 'vendor', 'comment']
         
 
 admin.site.register(VendorFeed, VendorFeedAdmin)
