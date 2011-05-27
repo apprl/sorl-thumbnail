@@ -102,8 +102,9 @@ jQuery(document).ready(function() {
 
     // Reset button
     jQuery('#reset').click(function() {
-        $('.selected').removeClass('selected');
-        $('#product-manufacturers .reset').click();
+        jQuery('.selected').removeClass('selected');
+        jQuery('#product-category .level-1, #product-category .level-2').hide();
+        jQuery('#product-manufacturers .reset').click();
         baseQuery = {};
         baseIndex = 0;
         filter(getQuery());
@@ -200,28 +201,33 @@ jQuery(document).ready(function() {
     });
 
     // Set selected and clear selected from related element and then call filter
-    function singleSelection(element) {
+    function resetGender(element) {
         if(!element.hasClass('.selected')) {
+            jQuery('#reset').click(); // XXX: might want to create a reset function
             element.addClass('selected');
-            element.parent().siblings().find('a').removeClass('selected');
             filter(getQuery());
         }
     }
 
     // Handles click on women in main navigation on browse page
     jQuery('#nav-main .women').click(function() {
-        singleSelection(jQuery('#product-gender li.women > a'));
+        resetGender(jQuery('#product-gender li.women > a'));
         return false;
     });
 
     // Handles click on men in main navigation on browse page
     jQuery('#nav-main .men').click(function() {
-        singleSelection(jQuery('#product-gender li.men > a'));
+        resetGender(jQuery('#product-gender li.men > a'));
         return false;
     });
 
     jQuery('#product-gender li > a').click(function() {
-        singleSelection(jQuery(this));
+        var element = jQuery(this);
+        if(!element.hasClass('.selected')) {
+            element.addClass('selected');
+            element.parent().siblings().find('a').removeClass('selected');
+            filter(getQuery());
+        }
         return false;
     });
     jQuery('#product-color li > a').click(function() {
