@@ -46,7 +46,7 @@ class ManufacturerAdmin(admin.ModelAdmin):
 admin.site.register(Manufacturer, ManufacturerAdmin)
 
 class CategoryAdmin(TranslationAdmin):
-    list_display = ('name', 'ancestors', 'on_front_page',)
+    list_display = ('name', 'ancestors', 'on_front_page', 'num_products')
     list_filter = ['parent', 'on_front_page']
     actions = ['publish_on_front_page', 'hide_on_front_page']
 
@@ -60,6 +60,11 @@ class CategoryAdmin(TranslationAdmin):
     
     def ancestors(self, category):
         return ' > '.join([c.name for c in category.get_ancestors()])
+
+    def num_products(self, category):
+        result = Product.objects.values('category').filter(category=category).annotate(Count('category')).get()
+        if result and 'category__count' in result:
+            return result['category__count']
 
 admin.site.register(Category, CategoryAdmin)
 
