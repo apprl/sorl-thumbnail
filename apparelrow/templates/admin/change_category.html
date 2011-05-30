@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+<p>Select cateory to apply:</p>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ category_form }}
+    <p>The category will be applied to:</p>
+    <ul>{{ products|unordered_list }}</ul>
+    <input type="hidden" name="action" value="change_category" />
+    <input type="submit" name="apply" value="Apply category" />
+</form>
+
+{% endblock %}

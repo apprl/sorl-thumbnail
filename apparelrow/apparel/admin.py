@@ -1,9 +1,14 @@
-from apparel.models import *
+from django.http import HttpResponseRedirect
 from django.contrib import admin
+from django.db.models import Count
+from django.forms import Form, CharField, MultipleHiddenInput, ModelChoiceField, ModelMultipleChoiceField
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+
+from apparel.models import *
 from modeltranslation.admin import TranslationAdmin
 from sorl.thumbnail.main import DjangoThumbnail
-from django.db.models import Count
-
+from mptt.forms import TreeNodeChoiceField
 
 #
 # Products
@@ -14,7 +19,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['category', 'gender', 'manufacturer', 'vendors', 'published']
     list_editable = ['category', 'gender', 'published']
     list_display_links = ['product_name']
-    actions = ['publish', 'hide']
+    actions = ['publish', 'hide', 'change_category', 'change_options']
 
     def image(self, obj):
         thumbnail = DjangoThumbnail(obj.product_image, (50, 50))
@@ -29,6 +34,59 @@ class ProductAdmin(admin.ModelAdmin):
     def hide(self, request, queryset):
         queryset.update(published=False)
     hide.short_description = "Hide selected products"
+
+    class ChangeCategoryForm(Form):
+        _selected_action = CharField(widget=MultipleHiddenInput)
+        category = TreeNodeChoiceField(queryset=Category.objects.all())
+
+    def change_category(self, request, queryset):
+        form = None
+        if 'apply' in request.POST:
+            form = self.ChangeCategoryForm(request.POST)
+            if form.is_valid():
+                category = form.cleaned_data['category']
+                count = 0
+                for product in queryset:
+                    product.category = category
+                    product.save()
+                    count += 1
+                plural = 's' if count != 1 else ''
+                self.message_user(request, "Successfully changed category to %s for %d product%s." % (category, count, plural))
+                return HttpResponseRedirect(request.get_full_path())
+
+        if not form:
+            form = self.ChangeCategoryForm(initial={'_selected_action': request.POST.getlist(admin.ACTION_CHECKBOX_NAME)})
+
+        return render_to_response('admin/change_category.html', 
+                {'products': queryset, 'category_form': form}, context_instance=RequestContext(request))
+
+    change_category.short_description = "Change category for selected products"
+
+    class ChangeOptionsForm(Form):
+        _selected_action = CharField(widget=MultipleHiddenInput)
+        options = ModelMultipleChoiceField(queryset=Option.objects.all())
+
+    def change_options(self, request, queryset):
+        form = None
+        if 'change' in request.POST:
+            form = self.ChangeOptionsForm(request.POST)
+            if form.is_valid():
+                count = 0
+                for product in queryset:
+                    product.options = form.cleaned_data['options']
+                    product.save()
+                    count += 1
+                plural = 's' if count != 1 else ''
+                self.message_user(request, "Successfully changed options for %d product%s." % (count, plural))
+                return HttpResponseRedirect(request.get_full_path())
+
+        if not form:
+            form = self.ChangeOptionsForm(initial={'_selected_action': request.POST.getlist(admin.ACTION_CHECKBOX_NAME)})
+
+        return render_to_response('admin/change_options.html', 
+                {'products': queryset, 'options_form': form}, context_instance=RequestContext(request))
+
+    change_options.short_description = "Change options for selected products"
 
 admin.site.register(Product, ProductAdmin)
 

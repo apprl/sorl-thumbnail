@@ -16,6 +16,7 @@ from voting.signals import delete_votes
 from sorl.thumbnail.main import DjangoThumbnail
 
 from django_extensions.db.fields import AutoSlugField
+from mptt.models import TreeForeignKey
 
 class Manufacturer(models.Model):
     name   = models.CharField(max_length=50, unique=True)
@@ -86,10 +87,9 @@ class Vendor(models.Model):
     def __unicode__(self):
         return u"%s" % self.name
 
-
 class Category(models.Model):
     name          = models.CharField(max_length=100, db_index=True)
-    parent        = models.ForeignKey('self', null=True, blank=True, related_name='children')
+    parent        = TreeForeignKey('self', null=True, blank=True, related_name='children')
     active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'), db_index=True)
     option_types  = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
     on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'), db_index=True)
@@ -106,7 +106,7 @@ class Category(models.Model):
         export_fields = ['name', 'option_types']
     
     class Meta:
-        ordering = ['name']
+        ordering = ('lft', 'rght', 'name')
         verbose_name_plural = 'categories'
 
 
@@ -124,9 +124,11 @@ PRODUCT_GENDERS = (
     ('U', 'Unisex',),
 )
 
+
+
 class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
-    category = models.ForeignKey(Category, blank=True, null=True)
+    category = TreeForeignKey(Category, blank=True, null=True)
     options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
     slug = AutoSlugField(_("Slug Name"), populate_from=("manufacturer", "product_name",), blank=True,
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
