@@ -89,6 +89,10 @@ jQuery(document).ready(function() {
                     renderProducts(response);
                     updateSelected(response);
                 });
+            } else {
+                // First load, no hash, but we must set the gender to all
+                // TODO: Move this to a function if more functionality is needed.
+                jQuery('#product-gender li:first > a').addClass('selected');
             }
         } else {
             doFilter(hash, this.filterCallback);
@@ -105,6 +109,7 @@ jQuery(document).ready(function() {
         jQuery('.selected').removeClass('selected');
         jQuery('#product-category .level-1, #product-category .level-2').hide();
         jQuery('#product-manufacturers .reset').click();
+        jQuery('#product-gender li:first > a').addClass('selected'); // Select all genders
         baseQuery = {};
         baseIndex = 0;
         filter(getQuery());
@@ -203,7 +208,11 @@ jQuery(document).ready(function() {
     // Set selected and clear selected from related element and then call filter
     function resetGender(element) {
         if(!element.hasClass('.selected')) {
-            jQuery('#reset').click(); // XXX: might want to create a reset function
+            // XXX: might want to create a reset function
+            jQuery('#reset').click();
+            // Reset call above will select all genders, deselect all genders
+            // and only select men or women.
+            jQuery('#product-gender li:first > a').removeClass('selected');
             element.addClass('selected');
             filter(getQuery());
         }
@@ -485,10 +494,18 @@ function updateSelected(products) {
         }
     }
 
+    function selectGenderList(list, selectorPrefix) {
+        if(list && list.length > 0) {
+            jQuery.each(list, function(i, id) { setSelected(selectorPrefix + '-' + id) });
+        } else {
+            setSelected(jQuery('#product-gender li:first > a'));
+        }
+    }
+
     showCategories(products.selected_shown_categories);
     selectList(products.selected_brands, '#available-manufacturer', '#product-manufacturers > a');
     selectList(products.selected_colors, '#option', '#product-color > a');
-    selectList(products.selected_gender, '#option');
+    selectGenderList(products.selected_gender, '#option');
 
     if(products.selected_price) {
         setSelected('#product-price > a');
