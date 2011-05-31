@@ -13,7 +13,7 @@ class GrandpaMapper(DataMapper):
 
     def get_variations(self):
         variations = []
-        for color in self.map_colors(self.get_description()):
+        for color in self.map_colors(self.record.get('product-name', '')):
             variations.append({'color': color, 'availability': True}) #FIXME: should do a check for availability instead of just True
         return variations
     

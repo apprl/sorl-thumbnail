@@ -16,7 +16,7 @@ class KelkooMapper(DataMapper):
         for variation in self.record['variations']:
             variation['availability'] = self.record.get('available') or True
             
-            c = self.map_colors(self.record.get('product-name', '') + self.record.get('description', ''))
+            c = self.map_colors(self.record.get('product-name', ''))
             if len(c): variation['color'] = c[0]
         
         return self.record['variations']

@@ -14,7 +14,7 @@ class LinkshareMapper(DataMapper):
         if self.record.get('color', ''):
             colors.extend(self.map_colors(self.record.get('color', '')))
         else:
-            colors.extend(self.map_colors(self.get_description()))
+            colors.extend(self.map_colors(self.record.get('product-name', '')))
 
         sizes = ['']
         if self.record.get('size', ''):
