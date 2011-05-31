@@ -11,10 +11,12 @@ class TradeDoublerMapper(DataMapper):
     
     def preprocess(self):
         self.record.update([self.re_split.split(v) for v in self.record.get('fields', '').split(';')])
-
-    
+ 
     def get_variations(self):
-        return [{'color': c} for c in self.map_colors(self.record.get('name', ''))]
+        variations = [{'color': c} for c in self.map_colors(self.record.get('name', ''))]
+        for variation in variations:
+            variation['availability'] = True if self.record.get('availability') else False
+        return variations
     
     def get_gender(self):
         return self.genders.get(self.record.get('gender'))

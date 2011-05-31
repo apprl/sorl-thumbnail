@@ -10,18 +10,21 @@ class LinkshareMapper(DataMapper):
     def get_variations(self):
         availability = self.get_availability()
         
-        colors = []
+        colors = ['']
         if self.record.get('color', ''):
-            colors = self.map_colors(self.record.get('color', ''))
+            colors.extend(self.map_colors(self.record.get('color', '')))
+        else:
+            colors.extend(self.map_colors(self.get_description()))
 
-        sizes = []
+        sizes = ['']
         if self.record.get('size', ''):
-            sizes = [size.strip() for size in self.record.get('size', '').split(',')]
+            sizes.extend([size.strip() for size in self.record.get('size', '').split(',')])
 
         variations = []
         for color, size in itertools.product(colors, sizes):
-            variations.append({'color': color, 'size': size, 'availability': availability})
-        
+            if color or size:
+                variations.append({'color': color, 'size': size, 'availability': availability})
+
         return variations
 
     def get_gender(self):

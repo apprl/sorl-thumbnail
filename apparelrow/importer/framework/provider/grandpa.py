@@ -10,6 +10,12 @@ class GrandpaMapper(DataMapper):
         # FIXME: Remove embedded HTML.
         # FIXME: Should that be done generically?
         return re.sub(ur'-|_{2,}', '', d)
+
+    def get_variations(self):
+        variations = []
+        for color in self.map_colors(self.get_description()):
+            variations.append({'color': color, 'availability': True}) #FIXME: should do a check for availability instead of just True
+        return variations
     
     def get_image_url(self):
         # FIXME: Do a HEAD for the resulting URL to ensure it exists before returning this URI
