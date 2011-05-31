@@ -183,4 +183,15 @@ class FXRate(models.Model):
     
     class Meta:
         unique_together = (('base_currency', 'currency'),)
-    
+
+
+class ColorMapping(models.Model):
+    color = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    aliases = models.TextField(null=False, blank=False,
+            help_text=_('Aliases should be separated with a single comma and no spaces, example: "svart,night,coal"'))
+
+    def color_list(self):
+        return [self.color] + self.aliases.split(',')
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.color, self.aliases)

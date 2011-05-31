@@ -48,4 +48,5 @@ class VendorFeedAdmin(admin.ModelAdmin):
 admin.site.register(VendorFeed, VendorFeedAdmin)
 admin.site.register(ImportLog, ImportLogAdmin)
 admin.site.register(ImportLogMessage)
+admin.site.register(ColorMapping)
 

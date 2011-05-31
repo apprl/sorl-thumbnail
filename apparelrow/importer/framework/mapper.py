@@ -3,9 +3,16 @@ import re, logging, datetime, htmlentitydefs
 from django.conf import settings
 
 from apparelrow.importer.api import API, SkipProduct
+from apparelrow.importer.models import ColorMapping
 
 logger = logging.getLogger('apparel.importer.mapper')
 
+# Compile regular expression matching all aliases to a color, should only be
+# compiled once on import.
+COLOR_REGEXES = dict(
+    (cm.color, re.compile(r'\b(?:%s)\b' % '|'.join(cm.color_list()), re.I))
+    for cm in ColorMapping.objects.all()
+)
 
 class DataMapper(object):
     color_regexes = None
@@ -116,7 +123,7 @@ class DataMapper(object):
     # - Helper methods -
     #
     
-    def map_colors(self, value=""):   
+    def map_colors(self, value=''):
         """
         Helper method that appempts to extract colour names from the given string
         and returns a list of names known by apparelrow.
@@ -127,16 +134,7 @@ class DataMapper(object):
         >>> list = mapper.map_colors(u'Here is a string with Black, navy and red')
         ['black', 'blue', 'red']
         """
-        
-        if not self.color_regexes:
-            # Compile regular expression matching all aliases to a color first time
-            # this method is accessed.
-            self.color_regexes = dict(
-                (c[0], re.compile(r'\b(?:%s)\b' % '|'.join(c), re.I))
-                for c in settings.APPAREL_IMPORTER_COLORS
-            )
-        
-        return [c for c, r in self.color_regexes.items() if r.search(value)]
+        return [c for c, r in COLOR_REGEXES.items() if r.search(value)]
     
     
     def strip_html(self, text):
