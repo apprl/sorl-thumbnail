@@ -195,6 +195,9 @@ jQuery(document).ready(function() {
     });
     jQuery('#selected-manufacturers a').live('click', function(e) {
         var $li = jQuery(this).closest('li');
+
+        var id = parseInt(jQuery(this).attr('id').split('-').pop(), 10);
+        jQuery('#available-manufacturer-' + id).removeClass('selected');
         
         if($li.siblings().length == 0) 
             jQuery('#product-manufacturers>a').removeClass('selected');
@@ -502,10 +505,26 @@ function updateSelected(products) {
         }
     }
 
+    function selectBrandList(list, selectorPrefix, parentSelector) {
+        if(list && list.length > 0) {
+            jQuery.each(list, function(i, id) {
+                var element = jQuery(selectorPrefix + '-' + id).addClass('selected');
+                jQuery('<li>').append(
+                    jQuery('<a>').attr({id: 'manufacturer-' + id, href: element.attr('href')}).text(element.text())
+                ).prependTo('#selected-manufacturers');
+            });
+            if(parentSelector) {
+                setSelected(parentSelector);
+            }
+        }
+    }
+
     showCategories(products.selected_shown_categories);
-    selectList(products.selected_brands, '#available-manufacturer', '#product-manufacturers > a');
+    selectBrandList(products.selected_brands, '#available-manufacturer', '#product-manufacturers > a');
     selectList(products.selected_colors, '#option', '#product-color > a');
     selectGenderList(products.selected_gender, '#option');
+
+
 
     if(products.selected_price) {
         setSelected('#product-price > a');
@@ -528,4 +547,10 @@ function renderProducts(products) {
     pagination.recalculate(0);
     pagination.render();
     jQuery('#product-list').data('scrollable').begin();
+
+    // Update manufacturers
+    ManufacturerBrowser.reset();
+    jQuery.each(products.manufacturers, function(i, manufacturer) {
+        ManufacturerBrowser.renderItem(manufacturer);
+    });
 }

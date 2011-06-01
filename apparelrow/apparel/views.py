@@ -148,7 +148,8 @@ def browse(request, template='apparel/browse.html', extra_context=None, **kwargs
         # FIXME This lets us avoid looking up all properties for all objects in the db
         # We might want to refactor this a bit, but this is a very nice speedup!
         del result['object_list']
-        del result['manufacturers']
+        # Still needed when updating the list of manufacturers
+        #del result['manufacturers']
 
         return HttpResponse(
             json.encode(result),
@@ -630,7 +631,7 @@ def get_filter(request, **kwargs):
     mpage = query.get('mpage', 1)
     mname = query.get('mname')
     
-    for k in filter(lambda k: k in query, ['page', 'mpage', 'mname']):
+    for k in filter(lambda k: k in query, ['page', 'mpage', 'mname', 'shown']):
         del query[k]
     
     colors = Option.objects.filter(option_type__name='color')
