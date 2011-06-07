@@ -43,7 +43,7 @@
             {% endif %}
             <div class="product-vendor">
                 <span class="price">{{ vendorproduct.price }}</span><span class="currency">{{ vendorproduct.currency }}</span>
-                <a class="vendor" href="{{ vendorproduct.buy_url }}">{{ vendorproduct.vendor }}</a>
+                <a class="vendor" target="_new" href="{{ vendorproduct.buy_url }}">{{ vendorproduct.vendor }}</a>
                 {% if vendorproduct.currency != vendorproduct.original_currency %}
                 <div class="original-price">
                     <span class="price">{{ vendorproduct.original_price }}</span><span class="currency">{{ vendorproduct.original_currency }}</span>
