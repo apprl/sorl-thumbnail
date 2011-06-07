@@ -9,6 +9,7 @@ from apparel.models import *
 from modeltranslation.admin import TranslationAdmin
 from sorl.thumbnail.main import DjangoThumbnail
 from mptt.forms import TreeNodeChoiceField
+from mptt.admin import MPTTModelAdmin
 
 #
 # Products
@@ -103,7 +104,6 @@ class ManufacturerAdmin(admin.ModelAdmin):
 
 admin.site.register(Manufacturer, ManufacturerAdmin)
 
-from mptt.admin import MPTTModelAdmin
 class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
     list_display = ('name', 'ancestors', 'on_front_page', 'num_products')
     list_filter = ['parent', 'on_front_page']
