@@ -5,7 +5,7 @@ from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
 
 class LinkshareMapper(DataMapper):
-    genders = {'Female': 'W', 'Male': 'M'}
+    genders = {'FEMALE': 'W', 'MALE': 'M', 'WOMEN': 'W', 'MEN': 'M'}
 
     def get_variations(self):
         availability = self.get_availability()
@@ -28,7 +28,12 @@ class LinkshareMapper(DataMapper):
         return variations
 
     def get_gender(self):
-        return self.genders.get(self.record.get('gender'))
+        if self.record.get('gender'):
+            return self.genders.get(self.record.get('gender', '').upper())
+
+        # Gender can be in category (for example in Stylebop feed)
+        if self.record.get('category'):
+            return self.genders.get(self.record.get('category', '').upper())
 
     def get_price(self):
         discount_price = self.record.get('discount-price') or '0.00'
