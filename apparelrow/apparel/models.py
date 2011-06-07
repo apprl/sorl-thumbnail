@@ -16,7 +16,7 @@ from voting.signals import delete_votes
 from sorl.thumbnail.main import DjangoThumbnail
 
 from django_extensions.db.fields import AutoSlugField
-from mptt.models import TreeForeignKey
+from mptt.models import MPTTModel, TreeForeignKey
 
 class Manufacturer(models.Model):
     name   = models.CharField(max_length=50, unique=True)
@@ -87,7 +87,7 @@ class Vendor(models.Model):
     def __unicode__(self):
         return u"%s" % self.name
 
-class Category(models.Model):
+class Category(MPTTModel):
     name          = models.CharField(max_length=100, db_index=True)
     parent        = TreeForeignKey('self', null=True, blank=True, related_name='children')
     active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'), db_index=True)
@@ -106,14 +106,11 @@ class Category(models.Model):
         export_fields = ['name', 'option_types']
     
     class Meta:
-        ordering = ('lft', 'rght', 'name')
+        ordering = ('tree_id', 'lft')
         verbose_name_plural = 'categories'
 
-
-try:
-    mptt.register(Category, order_insertion_by=['name'])
-except mptt.AlreadyRegistered:
-    logging.debug("Attempt to register category, but it's already registered")
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Category)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Category)
@@ -202,7 +199,7 @@ models.signals.post_delete.connect(delete_votes, sender=Product)
 # This is used for importing stuff - when this category is changed,
 # all related products will be updated to reflect the category
 class VendorCategory(models.Model):
-    category = models.ForeignKey(Category, verbose_name=_('category'), blank=True, null=True)
+    category = TreeForeignKey(Category, verbose_name=_('category'), blank=True, null=True)
     name     = models.CharField(_('Name'), max_length=255)
     vendor   = models.ForeignKey(Vendor)
     default_gender = models.CharField(_('Default gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)

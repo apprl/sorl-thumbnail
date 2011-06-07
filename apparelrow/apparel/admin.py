@@ -103,7 +103,8 @@ class ManufacturerAdmin(admin.ModelAdmin):
 
 admin.site.register(Manufacturer, ManufacturerAdmin)
 
-class CategoryAdmin(TranslationAdmin):
+from mptt.admin import MPTTModelAdmin
+class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
     list_display = ('name', 'ancestors', 'on_front_page', 'num_products')
     list_filter = ['parent', 'on_front_page']
     actions = ['publish_on_front_page', 'hide_on_front_page']
