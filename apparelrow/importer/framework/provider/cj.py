@@ -97,7 +97,9 @@ class CJMapper(DataMapper):
         return self.record['buyurl']
     
     def get_category(self):
-        return self.record['advertisercategory']
+        keyword = self.record['keywords'].split(',')[0]
+
+        return self.record['advertisercategory'] + ' > ' + keyword 
     
     def get_price(self):
         price = self.record.get('price')
