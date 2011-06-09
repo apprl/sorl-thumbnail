@@ -31,7 +31,8 @@ class Manufacturer(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name = _("Manufacturer")
+        verbose_name = 'Brand'
+        verbose_name_plural = 'Brands'
 
     class Exporter:
         export_fields = ['__all__', '-active']
@@ -82,7 +83,8 @@ class Vendor(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name = _("Vendor")
+        verbose_name = 'Vendor'
+        verbose_name_plural = 'Vendors'
 
     def __unicode__(self):
         return u"%s" % self.name
