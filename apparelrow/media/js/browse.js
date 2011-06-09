@@ -473,6 +473,69 @@ function renderPage(products) {
     }
 }
 
+function filterCriteria(criteria_filter) {
+    if('manufacturers' in criteria_filter && !jQuery('#product-manufacturers').hasClass('active')) {
+        ManufacturerBrowser.reset();
+
+        jQuery.each(criteria_filter['manufacturers'], function(i, manufacturer) {
+            ManufacturerBrowser.renderItem(manufacturer);
+        });
+    }
+
+    if('categories' in criteria_filter) {
+        applyCriteriaFilter({
+            'selector': '#product-category li > a',
+            'criteria': criteria_filter['categories'],
+            'add': function(o) { o.parent().addClass('filtered'); },
+            'remove': function(o) {
+                o.parents('.filtered').removeClass('filtered');
+            },
+        });
+        jQuery('#product-category>li.first').removeClass('first');
+        jQuery('#product-category>li[class!=filtered]:first').addClass('first');
+    }
+
+    if('options' in criteria_filter) {
+        applyCriteriaFilter({
+            'selector': '#product-color .option-content li > a',
+            'criteria': criteria_filter['options'],
+            'add': function(o) { o.addClass('filtered'); },
+            'remove': function(o) { o.removeClass('filtered');  },
+        });
+    }
+
+    if('pricerange' in criteria_filter) {
+        var min = parseInt(criteria_filter.pricerange.min, 10),
+            max = parseInt(criteria_filter.pricerange.max, 10),
+            mid = parseInt(min + (max - min) / 2, 10);
+
+        $('#price-ruler .min').text(min);
+        $('#price-ruler .mid').text(mid);
+        $('#price-ruler .max').text(max);
+
+        var values = $('#price-slider').slider('values');
+        if(values[0] > max)
+            values[0] = min;
+        if(values[1] < min)
+            values[1] = max;
+        $('#price-slider').slider('option', 'min', min);
+        $('#price-slider').slider('option', 'max', max);
+        $('#price-slider').slider('values', values);
+    }
+}
+
+function applyCriteriaFilter(args) {
+    //selector, criteria, cb_add, cb_remove) {
+    jQuery(args.selector).each(function() {
+        $this = jQuery(this);
+        if (args.criteria.length == 0 || jQuery.inArray(parseInt(this.id.split('-')[1], 10), args.criteria) >= 0) {
+            args.remove($this);
+        } else {
+            args.add($this);
+        }
+    });
+}
+
 function updateSelected(products) {
     function setSelected(selector) {
         jQuery(selector).addClass('selected');
@@ -548,9 +611,5 @@ function renderProducts(products) {
     pagination.render();
     jQuery('#product-list').data('scrollable').begin();
 
-    // Update manufacturers
-    ManufacturerBrowser.reset();
-    jQuery.each(products.manufacturers, function(i, manufacturer) {
-        ManufacturerBrowser.renderItem(manufacturer);
-    });
+    filterCriteria(products);
 }
