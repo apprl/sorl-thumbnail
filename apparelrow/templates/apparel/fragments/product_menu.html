@@ -25,9 +25,9 @@
     </li>
 </ul>
 
-{% for category, structure in categories_all|tree_info %}
+{% for category, structure in categories_all|tree_info 'ancestors' %}
     {% if structure.new_level %}
-        <ul{% if forloop.first %} id="product-category"{% endif %} class="level-{{ category.get_ancestors.count }}{% if forloop.first %} hover-menu{% endif %}">
+        <ul{% if forloop.first %} id="product-category"{% endif %} class="level-{{ structure.ancestors|length }}{% if forloop.first %} hover-menu{% endif %}">
     {% else %}
         </li>
     {% endif %}
