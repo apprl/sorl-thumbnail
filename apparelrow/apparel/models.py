@@ -190,7 +190,7 @@ class Product(models.Model):
         return u"%s %s" % (self.manufacturer, self.product_name)
     
     class Meta:
-        ordering = ('-date_added',)
+        ordering = ('-id',)
     
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'default_vendor', 'score']
