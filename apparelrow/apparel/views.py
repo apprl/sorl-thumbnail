@@ -577,7 +577,9 @@ def get_paged_search_result(request, class_name=None, page_size=None, **kwargs):
     
     query, page, size = get_query_and_page(request, page_size)
         
-    paginator = Paginator(model_class.objects.search(query).select_related(depth=1).filter(**kwargs), size)
+    # FIXME: When adding a search engine and refactoring SearchManager, we
+    # might want to add a select_related somewhere here
+    paginator = Paginator(model_class.objects.search(query).filter(**kwargs), size)
     
     try:
         paged_result = paginator.page(page)
