@@ -148,7 +148,9 @@ class Product(models.Model):
     
     @property
     def default_vendor(self):
-        if self.vendorproduct.order_by('price').count() == 0: return None
+        #if self.vendorproduct.order_by('price').count() == 0: return None
+        # FIXME: Removed the above. Creates another count() query and we should
+        # always have a vendorproduct.
         return self.vendorproduct.order_by('price')[0]
 
     @models.permalink
