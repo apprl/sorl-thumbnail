@@ -138,6 +138,7 @@ class Product(models.Model):
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image')) 
     vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
+    # FIXME: Could we have ForeignKey to VendorProduct instead?
     gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
     published     = models.BooleanField(default=True, db_index=True)
     
