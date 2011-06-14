@@ -3,21 +3,23 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
-from django.db.models import Q, Max, Min
+from django.db.models import Q, Max, Min, connection
 from django.template import RequestContext, Template, Context, loader
 from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.flatpages.models import FlatPage
+from django.contrib.contenttypes.models import ContentType
 from django.views.generic import list_detail
+from django.conf import settings
 
 from sorl.thumbnail.main import DjangoThumbnail
 from hanssonlarsson.django.exporter import json
 from recommender.models import Recommender
 from voting.models import Vote
 
-from actstream.models import user_stream
+from actstream.models import user_stream, Follow
 
 from profile.models import ApparelProfile
 
@@ -702,6 +704,45 @@ def index(request):
     
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 
+
+def get_top_in_network(Model, user, limit=2):
+    """
+    Get top objects of type Model which was created by followers to user. Based on get_top
+    from the django-voting plugin. Also requires the django-activity-stream plugin.
+    """
+    if settings.DATABASE_ENGINE == 'mysql':
+        having_score = connection.ops.quote_name('score')
+    else:
+        having_score = 'SUM(v.vote)'
+
+    query = """
+    SELECT v.object_id, SUM(v.vote) as %(having_score_name)s
+    FROM %(vote_table_name)s AS v
+    WHERE v.content_type_id = %%s
+    AND v.object_id IN (
+        SELECT vv.object_id FROM %(vote_table_name)s AS vv
+        INNER JOIN %(follow_table_name)s AS f ON vv.user_id = f.object_id
+        WHERE f.content_type_id = 3 AND vv.content_type_id = %%s AND f.user_id = %%s
+        UNION
+        SELECT object_id FROM %(vote_table_name)s WHERE content_type_id = %%s AND user_id = %%s)
+    GROUP BY v.object_id
+    HAVING %(having_score)s > 0 ORDER BY %(having_score)s DESC LIMIT %%s""" % {
+            'having_score_name': connection.ops.quote_name('score'),
+            'having_score': having_score,
+            'vote_table_name': connection.ops.quote_name(Vote._meta.db_table),
+            'model_table_name': connection.ops.quote_name(Model._meta.db_table),
+            'follow_table_name': connection.ops.quote_name(Follow._meta.db_table)
+        }
+
+    content_type_id = ContentType.objects.get_for_model(Model).id
+    cursor = connection.cursor()
+    cursor.execute(query, [content_type_id, content_type_id, user.id, content_type_id, user.id, limit])
+    results = cursor.fetchall()
+    objects = Model.objects.in_bulk([id for id, score in results])
+    for id, score in results:
+        if id in objects:
+            yield objects[id], int(score)
+
 @get_current_user
 @login_required
 def home(request, profile, page=0):
@@ -709,16 +750,18 @@ def home(request, profile, page=0):
     Displays the logged in user's page
     """
     queryset = user_stream(request.user)
-    
+
     return list_detail.object_list(
         request,
         queryset=queryset,
-        template_name="apparel/user_home.html",
+        template_name='apparel/user_home.html',
         paginate_by=10,
         page=page,
         extra_context={
-            "profile": profile,
-            "facebook_friends": get_facebook_friends(request)
+            'profile': profile,
+            'facebook_friends': get_facebook_friends(request),
+            'popular_looks_in_network': get_top_in_network(Look, request.user, limit=2),
+            'popular_products_in_network': get_top_in_network(Product, request.user, limit=2)
         }
     )
 

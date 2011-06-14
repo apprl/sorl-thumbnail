@@ -5,7 +5,15 @@
 
 {% block body %}
     <div class="sidebar">
-        &nbsp;
+        <h2>{% trans "Popular products in your network" %}</h2>
+        {% with popular_products_in_network as products %}
+            {% include 'apparel/fragments/products_sidebar.html' %}
+        {% endwith %}
+
+        <h2>{% trans "Popular looks in your network" %}</h2>
+        {% with popular_looks_in_network as looks %}
+            {% include 'apparel/fragments/looks_sidebar.html' %}
+        {% endwith %}
     </div>
     <div id="content">
         <h2>{% trans "Your friend's latest updates" %}</h2>

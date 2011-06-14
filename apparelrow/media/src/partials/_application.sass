@@ -361,6 +361,19 @@ ul.looks
       +border-bottom-radius(unquote("3px"))
       text-align: center
 
+ul.products
+  +horizontal-list(0)
+  overflow: visible
+  li
+    margin-right: $gutter_width / 2
+    margin-bottom: 10px
+    &.last
+      margin-right: 0
+    .product-small
+      width: 93px
+      .product-image
+        line-height: 124px
+
 #lookproducts
   +row
 
@@ -888,6 +901,7 @@ body.product
 
 a h2
   background: transparent image_url("arrow-bg.png") scroll no-repeat right center
+  clear: both
   &:hover
     background-image: image_url("arrow-bg-hover.png")
 

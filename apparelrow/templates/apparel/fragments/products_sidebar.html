@@ -1,0 +1,8 @@
+{% load apparel_extras %}
+<ul class="products">
+{% for product in products %}
+    {% with product|as_list|first as object %}
+    {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/product_small_sidebar.html' %}</li>
+    {% endwith %}
+{% endfor %}
+</ul>
