@@ -19,7 +19,7 @@ def localhost():
 
 def demo():
     "Use the actual webserver"
-    env.hosts = ['demo.apparelrow.com']
+    env.hosts = ['demo.apparelrow.com:32744']
     env.user = 'hanssonlarsson'
     env.run_user = 'www-data'
     env.path = '/home/hanssonlarsson/%(project_name)s' % env
