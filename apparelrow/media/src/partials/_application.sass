@@ -388,8 +388,13 @@ ul.products
     +border(top)
   .activity
     margin-top: 1.5em
+    +border(top)
     p
       border-top: none
+      line-height: 2em
+      +border(bottom, $easy_border_color)
+      &.last
+        border-color: $border_color
   .created
     float: right
     line-height: 24 + 2 * $border_width
@@ -711,16 +716,6 @@ body.three-columns .pagination
   margin-top: 30px
   width: $small_width
   margin-right: $gutter_width
-
-.sidebar
-  .activity
-    margin-top: 30px
-    +border(top)
-    p
-      line-height: 2em
-      +border(bottom, $easy_border_color)
-      &.last
-        border-color: $border_color
 
 .product-info
   +float-left
