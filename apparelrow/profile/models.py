@@ -67,7 +67,7 @@ class ApparelProfile(models.Model):
     @property
     def avatar_large(self):
         if self.image:
-            return self.image
+            return '/scale/200%s' % self.image
 
         if self.facebook_profile:
             return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_profile.uid
