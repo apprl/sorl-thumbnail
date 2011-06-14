@@ -12,25 +12,39 @@ from apparel.forms import *
 from voting.models import Vote
 from actstream.models import user_stream, actor_stream, Follow
 
+from profile.forms import *
+
 
 @get_current_user
 def profile(request, profile, page=0):
     """
     Displays the profile page
     """
-    queryset = actor_stream(profile.user)
-    
-    return list_detail.object_list(
-        request,
-        queryset=queryset,
-        template_name="profile/profile.html",
-        paginate_by=10,
-        page=page,
-        extra_context={
-            "profile": profile,
-            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
-        }
-    )
+    if request.method == 'POST':
+        if profile.user != request.user:
+            return HttpResponseForbidden()
+
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(form.instance.get_absolute_url())
+    else:
+        form = ProfileForm(instance=profile)
+
+        queryset = actor_stream(profile.user)
+
+        return list_detail.object_list(
+            request,
+            queryset=queryset,
+            template_name="profile/profile.html",
+            paginate_by=10,
+            page=page,
+            extra_context={
+                "form": form,
+                "profile": profile,
+                "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+            }
+        )
 
 
 @get_current_user
