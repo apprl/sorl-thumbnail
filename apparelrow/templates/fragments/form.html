@@ -1,5 +1,5 @@
 {% load i18n %}
-<form action="{{ request.path }}" method="post" class="standard-form">
+<form action="{{ request.path }}" method="post" class="standard-form"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %}>
 {% csrf_token %}
 {% block extra_fields %}{% endblock %}
 <ul>

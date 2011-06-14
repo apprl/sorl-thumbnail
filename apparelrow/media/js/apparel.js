@@ -155,6 +155,16 @@ jQuery(document).ready(function() {
             jQuery('> li', level_two).sort(sort_lexical).appendTo(level_two);
         });
     });
+
+    // Profile image
+    jQuery('#profile-image').hover(
+        function() { $('button.edit', this).show() },
+        function() { $('button.edit', this).hide() }
+    ); 
+    jQuery('#profile-image button.edit').click(function() {
+        $(this).siblings('form').show();
+        return false;
+    });
 });
 
 

@@ -10,7 +10,15 @@
         <hr>
     </div>
     <div class="sidebar">
-        <img src="{{ profile.avatar_large }}" class="avatar large">
+        <div id="profile-image">
+            <img src="{{ profile.avatar_large }}" class="avatar large">
+            {% if user.is_authenticated and user == profile.user %}
+                <button class="edit">{% trans "Change picture" %}</button>
+                {% with "multipart/form-data" as form_enctype %}
+                {% include 'fragments/form.html' %}
+                {% endwith %}
+            {% endif %}
+        </div>
         <h1>{{ profile.display_name }}</h1>
         <p>
             {% trans "Member since" %} {{ profile.user.date_joined|date:"SHORT_DATE_FORMAT" }}

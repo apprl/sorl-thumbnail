@@ -1226,10 +1226,28 @@ body.profile
       display: block
       margin-left: $aside_width
   .sidebar
-    .avatar.large
-      z-index: 1
+    #profile-image
       position: relative
       margin-top: -30px
+      width: 200px
+      .avatar.large
+        z-index: 1
+      button.edit
+        display: none
+        position: absolute
+        top: 0
+        right: 0
+        z-index: 2
+        +button(none, unquote("20px"))
+        +border-radius(unquote("2px"))
+        +highlight
+        +edit_button
+        padding-top: 0
+        padding-bottom: 0
+        &:hover
+          +highlight_hover
+      form
+        display: none
     p
       border: none
       color: $easier_color
