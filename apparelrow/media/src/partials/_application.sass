@@ -1251,6 +1251,23 @@ body.profile
           +highlight_hover
       form
         display: none
+        li.upload-field
+          width: 198px
+          input
+            width: 188px
+            position: relative
+            padding-left: 10px
+        button.submit
+          width: 198px
+          margin-bottom: 20px
+          z-index: 2
+          +button(none, unquote("20px"))
+          +border-radius(unquote("2px"))
+          +highlight
+          padding: 0
+          &:hover
+            +highlight_hover
+
     p
       border: none
       color: $easier_color

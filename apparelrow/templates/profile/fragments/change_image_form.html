@@ -1,0 +1,16 @@
+{% load i18n %}
+<form action="{{ request.path }}" method="post" class="standard-form"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %}>
+{% csrf_token %}
+{% block extra_fields %}{% endblock %}
+<ul>
+{% for field in form %}
+    <li class="upload-field">
+        {{ field }}
+        {{ field.errors }}
+    </li>
+{% endfor %}
+    <li>
+        <button type="submit" class="submit" style="display: block;">{% trans "Change picture" %}</button>
+    </li>
+</ul>    
+</form>

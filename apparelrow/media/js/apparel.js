@@ -162,7 +162,7 @@ jQuery(document).ready(function() {
         function() { $('button.edit', this).hide() }
     ); 
     jQuery('#profile-image button.edit').click(function() {
-        $(this).siblings('form').show();
+        $(this).siblings('form').toggle();
         return false;
     });
 });

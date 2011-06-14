@@ -24,12 +24,12 @@ def profile(request, profile, page=0):
         if profile.user != request.user:
             return HttpResponseForbidden()
 
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        form = ProfileImageForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(form.instance.get_absolute_url())
     else:
-        form = ProfileForm(instance=profile)
+        form = ProfileImageForm(instance=profile)
 
         queryset = actor_stream(profile.user)
 

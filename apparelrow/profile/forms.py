@@ -1,7 +1,8 @@
 from django.forms import ModelForm
-from profile.models import *
 
-class ProfileForm(ModelForm):
+from apparelrow.profile.models import ApparelProfile
+
+class ProfileImageForm(ModelForm):
     class Meta:
         model = ApparelProfile
-        exclude = ('user', 'name')
+        fields = ('image',)
