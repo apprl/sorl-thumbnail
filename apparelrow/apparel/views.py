@@ -722,9 +722,7 @@ def get_top_in_network(Model, user, limit=2):
     AND v.object_id IN (
         SELECT vv.object_id FROM %(vote_table_name)s AS vv
         INNER JOIN %(follow_table_name)s AS f ON vv.user_id = f.object_id
-        WHERE f.content_type_id = 3 AND vv.content_type_id = %%s AND f.user_id = %%s
-        UNION
-        SELECT object_id FROM %(vote_table_name)s WHERE content_type_id = %%s AND user_id = %%s)
+        WHERE f.content_type_id = 3 AND vv.content_type_id = %%s AND f.user_id = %%s)
     GROUP BY v.object_id
     HAVING %(having_score)s > 0 ORDER BY %(having_score)s DESC LIMIT %%s""" % {
             'having_score_name': connection.ops.quote_name('score'),
@@ -736,7 +734,7 @@ def get_top_in_network(Model, user, limit=2):
 
     content_type_id = ContentType.objects.get_for_model(Model).id
     cursor = connection.cursor()
-    cursor.execute(query, [content_type_id, content_type_id, user.id, content_type_id, user.id, limit])
+    cursor.execute(query, [content_type_id, content_type_id, user.id, limit])
     results = cursor.fetchall()
     objects = Model.objects.in_bulk([id for id, score in results])
     for id, score in results:
