@@ -3,14 +3,14 @@
 {% csrf_token %}
 {% block extra_fields %}{% endblock %}
 <ul>
-{% for field in form %}
+{% for field in change_image_form %}
     <li class="upload-field">
         {{ field }}
         {{ field.errors }}
     </li>
 {% endfor %}
     <li>
-        <button type="submit" class="submit" style="display: block;">{% trans "Change picture" %}</button>
+        <button type="submit" class="submit" style="display: none;">{% trans "Change picture" %}</button>
     </li>
 </ul>    
 </form>

@@ -157,13 +157,25 @@ jQuery(document).ready(function() {
     });
 
     // Profile image
+    var hover_edit_button = true;
     jQuery('#profile-image').hover(
-        function() { $('button.edit', this).show() },
-        function() { $('button.edit', this).hide() }
+        function() { if (hover_edit_button) $('button.edit', this).show() },
+        function() { if (hover_edit_button) $('button.edit', this).hide() }
     ); 
     jQuery('#profile-image button.edit').click(function() {
-        $(this).siblings('form').toggle();
+        jQuery('#profile-image button.cancel-edit').show();
+        jQuery(this).hide().siblings('form').show();
+        hover_edit_button = false;
         return false;
+    });
+    jQuery('#profile-image button.cancel-edit').click(function() {
+        jQuery('#profile-image button.edit').show();
+        jQuery(this).hide().siblings('form').hide();
+        hover_edit_button = true;
+        return false;
+    });
+    jQuery('#profile-image input[type=file]').change(function(e) {
+        jQuery('button[type=submit]', jQuery(this).closest('ul')).show();
     });
 });
 

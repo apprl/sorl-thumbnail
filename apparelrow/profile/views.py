@@ -14,12 +14,10 @@ from actstream.models import user_stream, actor_stream, Follow
 
 from profile.forms import *
 
-
-@get_current_user
-def profile(request, profile, page=0):
-    """
-    Displays the profile page
-    """
+# TODO && FIXME: build a better solution, right now we use this in
+# profile/looks/following/followers. Should create a view for the submit form
+# maybe?
+def handle_change_image(request, profile):
     if request.method == 'POST':
         if profile.user != request.user:
             return HttpResponseForbidden()
@@ -31,24 +29,35 @@ def profile(request, profile, page=0):
     else:
         form = ProfileImageForm(instance=profile)
 
-        queryset = actor_stream(profile.user)
+    return form
 
-        return list_detail.object_list(
-            request,
-            queryset=queryset,
-            template_name="profile/profile.html",
-            paginate_by=10,
-            page=page,
-            extra_context={
-                "form": form,
-                "profile": profile,
-                "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
-            }
-        )
+
+@get_current_user
+def profile(request, profile, page=0):
+    """
+    Displays the profile page
+    """
+    form = handle_change_image(request, profile)
+
+    queryset = actor_stream(profile.user)
+
+    return list_detail.object_list(
+        request,
+        queryset=queryset,
+        template_name="profile/profile.html",
+        paginate_by=10,
+        page=page,
+        extra_context={
+            "change_image_form": form,
+            "profile": profile,
+            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+        }
+    )
 
 
 @get_current_user
 def looks(request, profile, page=0):
+    form = handle_change_image(request, profile)
     queryset = Look.objects.filter(user=profile.user).order_by('-modified')
     popular  = get_top_looks(profile.user, 10)
     
@@ -59,6 +68,7 @@ def looks(request, profile, page=0):
         paginate_by=10,
         page=page,
         extra_context={
+            "change_image_form": form,
             "profile": profile,
             "popular_looks": popular
             # FIXME: Add the most used brand to display in the left column
@@ -67,6 +77,7 @@ def looks(request, profile, page=0):
     
 @get_current_user
 def followers(request, profile, page=0):
+    form = handle_change_image(request, profile)
     content_type = ContentType.objects.get_for_model(User)
     queryset = Follow.objects.filter(content_type=content_type, object_id=profile.user.id)
 
@@ -77,6 +88,7 @@ def followers(request, profile, page=0):
         paginate_by=10,
         page=page,
         extra_context={
+            "change_image_form": form,
             "profile": profile,
             "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
         }
@@ -84,6 +96,7 @@ def followers(request, profile, page=0):
 
 @get_current_user
 def following(request, profile, page=0):
+    form = handle_change_image(request, profile)
     content_type = ContentType.objects.get_for_model(User)
     queryset = Follow.objects.filter(content_type=content_type, user=profile.user)
 
@@ -94,6 +107,7 @@ def following(request, profile, page=0):
         paginate_by=10,
         page=page,
         extra_context={
+            "change_image_form": form,
             "profile": profile,
             "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
         }

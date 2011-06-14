@@ -1241,7 +1241,7 @@ body.profile
         display: none
         position: absolute
         top: 0
-        right: 0
+        left: 0
         z-index: 2
         +button(none, unquote("20px"))
         +border-radius(unquote("2px"))
@@ -1251,6 +1251,22 @@ body.profile
         padding-bottom: 0
         &:hover
           +highlight_hover
+      button.cancel-edit
+        display: none
+        position: absolute
+        top: 0
+        left: 0
+        z-index: 2
+        +button(none, unquote("20px"))
+        +border-radius(unquote("2px"))
+        +highlight
+        +cancel_button
+        height: 19px
+        padding-top: 1px
+        padding-bottom: 0
+        color: #000000
+        background-color: #FFD6D6
+        border-color: #FA7070
       form
         display: none
         li.upload-field
