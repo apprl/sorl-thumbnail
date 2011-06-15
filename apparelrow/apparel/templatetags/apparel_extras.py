@@ -17,6 +17,14 @@ from pprint import pformat
 register = Library()
 
 
+@register.filter
+def category_descendants_id(category, include_self=True):
+    """
+    Takes a category (MPTT model) and returns a string with alla descendants id
+    including itself separated with comma.
+    """
+    return ','.join([str(cat.id) for cat in category.get_descendants(include_self=include_self)])
+
 
 # FIXME: When we've bumped up Django, we should replace the use of these two
 # tags with the operator support in the {% if %} template tag:
