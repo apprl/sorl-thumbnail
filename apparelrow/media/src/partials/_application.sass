@@ -46,16 +46,26 @@ button
   position: fixed
   top: 0
 
+#outer
+  width: 1016px
+  margin: 0 auto
+
 #container
   background: transparent image_url(unquote("content-bg.png")) scroll repeat-y center center
-  .container
-    overflow: visible
+  #inner-container
+    width: 940px
+    margin-left: 18px
+    padding: 0 20px
+    clear: both
     +pie-clearfix
+    overflow: hidden
 
 #header
   background: transparent image_url(unquote("header-bg.png")) scroll no-repeat center center
   height: 118px
-  .container
+  #inner-header
+    width: 940px
+    margin-left: 38px
     position: relative
     overflow: visible
   h1
@@ -80,13 +90,14 @@ button
 
 #login-pane
   clear: left
+  width: 940px
   height: 28px
   line-height: 28px
   background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x left top
   border: 1px solid $border_color
   border-left: none
   border-right: none
-  margin: 0px -20px
+  margin: 0px 0px 0px 18px
   padding: 0px 20px
   font-size: smaller
   a
