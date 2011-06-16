@@ -583,8 +583,8 @@ def get_paged_search_result(request, class_name=None, page_size=None, **kwargs):
     # vendorproduct. Emits one very simple query per product. Also, this will
     # not be used for searching in the future only for browsing products. It
     # will probably be completely reworked.
-    if class_name == 'product':
-        queryset = [x for x in queryset if x.vendors.exists()]
+    #if class_name == 'product':
+        #queryset = [x for x in queryset if x.vendors.exists()]
     paginator = Paginator(queryset, size)
     
     try:
