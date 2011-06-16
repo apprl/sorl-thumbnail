@@ -71,7 +71,7 @@ var ApparelRow = {
             if(response.success) 
                 ApparelRow.insert(response, node);
             else
-                root.remove();        
+                node.remove();        
         };
         
         $.ajax({
