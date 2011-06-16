@@ -40,15 +40,15 @@ $tooltip_width: 242px
     div.vendors
       margin-top: 0.5em
       a.vendor
+        +vendor
         display: inline-block
         color: $easy_color
         font-size: smaller
       a.buy-now
-        background-image: none
-        padding: 5px
+        +buy_now
         display: inline
+        padding: 5px
         font-size: smaller
-        font-weight: normal
         margin-left: 5px
     .arrow, .ar-arrow
       position: absolute
@@ -58,6 +58,19 @@ $tooltip_width: 242px
       bottom: -8px
       left: $tooltip_width / 2 - 5
 
+=vendor
+  background: transparent image_url(unquote("vendor.png")) scroll no-repeat left center
+  padding-left: 15px
+
+=buy_now
+  text-align: center
+  background-color: $highlight_bg_color
+  +border(all, $highlight_border_color)
+  color: $highlight_color
+  text-transform: uppercase
+  &:hover
+    background-color: $hover_highlight_bg_color
+  
 =apparel_hotspot
   position: relative
   margin: 0 auto

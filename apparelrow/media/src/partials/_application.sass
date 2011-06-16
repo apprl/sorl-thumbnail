@@ -799,24 +799,18 @@ table.available-sizes th
   border-bottom: 1px solid #e7e7e7
   
 a.buy-now
-  padding: 58px 0 0
-  text-align: center
-  width: 73px
-  height: 30px
-  background: $highlight_bg_color image_url(unquote("check-large.png")) scroll no-repeat center center
-  +border(all, $highlight_border_color)
-  color: $highlight_color
-  text-transform: uppercase
-  font-family: $font_family_bold
-  font-weight: bold
-  display: block
-
-a.buy-now:hover
-  background-color: $hover_highlight_bg_color
+  +buy_now
 
 .product-vendors a.buy-now
   float: right
   margin-top: -50px
+  padding: 58px 0 0
+  display: block
+  width: 73px
+  height: 30px
+  background: $highlight_bg_color image_url(unquote("check-large.png")) scroll no-repeat center center
+  font-family: $font_family_bold
+  font-weight: bold
   &.higher
     margin-top: -32px
 
@@ -838,8 +832,7 @@ a.buy-now:hover
     color: $easy_color
 
 .vendor
-  background: transparent image_url(unquote("vendor.png")) scroll no-repeat left center
-  padding-left: 15px
+  +vendor
 
 .message
   border: unquote("1px") solid $border_color
