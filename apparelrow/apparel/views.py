@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
-from django.db.models import Q, Max, Min, connection
+from django.db.models import Q, Max, Min, connection, get_model
 from django.template import RequestContext, Template, Context, loader
 from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -570,18 +570,22 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
     return left, mid, right
 
 def get_paged_search_result(request, class_name=None, page_size=None, **kwargs):
-    try:
-        model_class = eval(class_name)
-    except TypeError:
-        raise Exception("No model to search for")
-    except:
-        raise
-    
+    class_name = class_name.lower()
+    model_class = get_model('apparel', class_name)
+    if model_class is None:
+        raise Exception('No model to search for')
+
     query, page, size = get_query_and_page(request, page_size)
-        
     # FIXME: When adding a search engine and refactoring SearchManager, we
     # might want to add a select_related somewhere here
-    paginator = Paginator(model_class.objects.search(query).filter(**kwargs), size)
+    queryset = model_class.objects.search(query).filter(**kwargs)
+    # FIXME: This is an ugly solution for removing products with no
+    # vendorproduct. Emits one very simple query per product. Also, this will
+    # not be used for searching in the future only for browsing products. It
+    # will probably be completely reworked.
+    if class_name == 'product':
+        queryset = [x for x in queryset if x.vendors.exists()]
+    paginator = Paginator(queryset, size)
     
     try:
         paged_result = paginator.page(page)
