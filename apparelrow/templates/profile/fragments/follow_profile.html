@@ -2,7 +2,7 @@
 {% load follower_tags %}
 {% load humanize %}
 
-<a href="{{ profile.get_absolute_url }}"><img class="avatar" src="{{ profile.avatar_medium }}" alt="{{ profile.display_name }}"/></a>
+<a href="{{ profile.get_absolute_url }}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/></a>
 <div class="profile-info">
     <a href="{{ profile.get_absolute_url }}"><h3>{{ profile.display_name }}</h3></a>
     {% if user.is_authenticated %}
