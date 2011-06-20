@@ -751,6 +751,7 @@ def home(request, profile, page=0):
     Displays the logged in user's page
     """
     queryset = user_stream(request.user)
+    queryset = queryset.filter(verb__in=['liked', 'added', 'commented', 'created'])
 
     return list_detail.object_list(
         request,

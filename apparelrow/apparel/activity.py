@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.contrib.comments import signals as comments_signals
+from django.contrib.contenttypes.models import ContentType
 
 from django.db import models
 from apparel.models import *
 from actstream import action
+from actstream.models import Action
 from voting.models import Vote
 
 import logging
@@ -25,6 +27,7 @@ def comments_handler(sender, **kwargs):
 
 comments_signals.comment_was_posted.connect(comments_handler)
 
+
 def post_save_handler(sender, **kwargs):
     instance = kwargs['instance']
     if not hasattr(instance, 'user'):
@@ -35,7 +38,7 @@ def post_save_handler(sender, **kwargs):
         return
     
     verb = 'liked' if isinstance(instance, Vote) else 'created'
-    
+
     action.send(
         instance.user, 
         verb=verb,
@@ -46,6 +49,25 @@ models.signals.post_save.connect(post_save_handler, sender=Look)
 models.signals.post_save.connect(post_save_handler, sender=Vote)
 
 
+def post_delete_handler(sender, **kwargs):
+    instance = kwargs['instance']
+    if not hasattr(instance, 'user'):
+        logging.warning('Trying to remove an activity on post_delete, but %s has not user attribute' % instance)
+        return
+
+    verb = 'liked' if isinstance(instance, Vote) else 'created'
+
+    action_object = Action.objects.filter(actor_object_id=instance.user.pk,
+                                          verb=verb,
+                                          action_object_content_type=ContentType.objects.get_for_model(instance),
+                                          action_object_object_id=instance.pk)
+    action_object.delete()
+
+models.signals.post_delete.connect(post_delete_handler, sender=Look)
+models.signals.post_delete.connect(post_delete_handler, sender=Vote)
+
+
+# TODO: When you can remove products from the wardrobe and remove looks, make sure that this actions is also removed
 def m2m_handler(sender, **kwargs):
     """
     Stores an action when an object is added to a manytomany relationship.

@@ -24,6 +24,9 @@
             <li>{% trans "No updates" %}</li>
         {% endfor %}
         </ul>
+        <div class="pagination">
+            {% include 'apparel/fragments/pagination_simple.html' %}
+        </div>
     </div>
     <div class="sidebar last">
         {% if facebook_friends %}
