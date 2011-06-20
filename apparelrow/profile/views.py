@@ -40,6 +40,7 @@ def profile(request, profile, page=0):
     form = handle_change_image(request, profile)
 
     queryset = actor_stream(profile.user)
+    queryset = queryset.filter(verb__in=['liked', 'added', 'commented', 'created'])
 
     return list_detail.object_list(
         request,
