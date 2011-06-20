@@ -582,8 +582,9 @@ def get_paged_search_result(request, class_name=None, page_size=None, **kwargs):
     # If we are searching for a product, make sure that every product in our
     # result has a corresponding vendorproduct in the database.
     if class_name == 'product':
-        queryset = queryset.filter(vendorproduct__isnull=False)
-    
+        queryset = queryset.filter(vendorproduct__isnull=False,
+                                   category__isnull=False)
+
     paginator = Paginator(queryset, size)
 
     try:
