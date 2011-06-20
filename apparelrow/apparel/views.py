@@ -579,19 +579,18 @@ def get_paged_search_result(request, class_name=None, page_size=None, **kwargs):
     # FIXME: When adding a search engine and refactoring SearchManager, we
     # might want to add a select_related somewhere here
     queryset = model_class.objects.search(query).filter(**kwargs)
-    # FIXME: This is an ugly solution for removing products with no
-    # vendorproduct. Emits one very simple query per product. Also, this will
-    # not be used for searching in the future only for browsing products. It
-    # will probably be completely reworked.
-    #if class_name == 'product':
-        #queryset = [x for x in queryset if x.vendors.exists()]
-    paginator = Paginator(queryset, size)
+    # If we are searching for a product, make sure that every product in our
+    # result has a corresponding vendorproduct in the database.
+    if class_name == 'product':
+        queryset = queryset.filter(vendorproduct__isnull=False)
     
+    paginator = Paginator(queryset, size)
+
     try:
         paged_result = paginator.page(page)
     except (EmptyPage, InvalidPage):
         paged_result = paginator.page(paginator.num_pages)
-    
+
     return paged_result
     
 def get_pagination_as_dict(paged_result):
