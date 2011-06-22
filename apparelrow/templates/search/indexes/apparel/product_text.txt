@@ -1,4 +1,4 @@
 {{ object.product_name }}
 {{ object.description }}
 {{ object.category.name }} ({{ object.category.name_sv }} / {{ object.category.name_en }})
-{{ object.vendor.name }}
+{{ object.manufacturer.name }}
