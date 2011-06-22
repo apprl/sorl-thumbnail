@@ -424,7 +424,7 @@ jQuery(document).ready(function() {
                 
                 case 'search-result-manufacturers':
 
-                    var s = query['1:m.name:icontains'];
+                    var s = query.q;
                     location.href = 
                         '/browse/?criterion=manufacturer&'
                         + encodeURIComponent('1:m.name:icontains')
