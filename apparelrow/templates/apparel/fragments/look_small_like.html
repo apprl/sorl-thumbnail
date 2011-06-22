@@ -1,0 +1,4 @@
+{% load cache %}
+{% cache CACHE_TIMEOUT look_small_like object.id LANGUAGE_CODE %}
+{% include 'apparel/fragments/look_small_like_content.html' %}
+{% endcache %}
