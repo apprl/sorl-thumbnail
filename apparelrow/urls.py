@@ -44,6 +44,8 @@ urlpatterns = patterns('',
     
     (r'', include('apparel.urls')),
     (r'^beta/', include('beta.urls')),
+    (r'^haystack_search/', include('haystack.urls')),
+    (r'^search/(?P<model>\w+)/', 'apparelrow.search.search_view'),
 )
 
 

@@ -31,6 +31,14 @@ cd apparelrow
 ./manage.py loaddata apparel/fixtures/* --settings development
 ./manage.py loaddata importer/fixtures/* --settings development
 
+= Set up search (beta) =
+wget http://apache.mirrors.spacedump.net//lucene/solr/3.2.0/apache-solr-3.2.0.tgz
+tar zxvf apache-solr-3.2.0.tgz
+./manage.py build_solr_schema --settings development > apache-solr-3.2.0/example/solr/conf/schema.xml
+cd apache-solr-3.2.0/example
+java -jar start.jar
+./manage.py rebuild_index --settings development
+
 Now you can start django, either with the django-admin.py in bin, or the regular manage.py
 
 = Directory Structure =

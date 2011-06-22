@@ -153,7 +153,8 @@ INSTALLED_APPS = (
     'pagination',
     'mptt',
     'sorl.thumbnail',
-        
+
+    'haystack',
     'actstream',
     'tagging',
     'pagination',

@@ -31,6 +31,10 @@ FACEBOOK_SECRET_KEY = '0e53ad32bdd85a49bb972fa2f6985908'
 #CACHE_MIDDLEWARE_KEY_PREFIX = 'ar-demo'
 #CACHE_MIDDLEWARE_SECONDS = 120
 
+HAYSTACK_SITECONF = 'apparelrow.search'
+HAYSTACK_SEARCH_ENGINE = 'solr'
+HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr'
+
 # --- Application wide init code goes here. 
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated
