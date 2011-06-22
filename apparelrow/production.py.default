@@ -28,6 +28,10 @@ CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_MIDDLEWARE_KEY_PREFIX = 'ar-demo'
 CACHE_MIDDLEWARE_SECONDS = 120
 
+HAYSTACK_SITECONF = 'apparelrow.search'
+HAYSTACK_SEARCH_ENGINE = 'solr'
+HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr'
+
 LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', '..', '..', 'etc', 'logging.conf') # logging configuration file
 
 # --- Application wide init code goes here. 
