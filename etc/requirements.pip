@@ -35,5 +35,5 @@ libxml2-python==2.6.15
 django-modeltranslation==0.2
 django-tinymce==1.5.1a1
 django-flatpages-tinymce==0.1.1
-pysolr
-django-haystack
+pysolr==2.0.15
+django-haystack==1.2.4
