@@ -240,7 +240,6 @@ ApparelSearch = {
                 'limit': 8
             },
             selector: '#search-result-products',
-            template: 'product_template',
             text: {
                 plural: 'Found %(count)s products',
                 singular: 'Found %(count)s product'
@@ -254,7 +253,6 @@ ApparelSearch = {
                 'limit': 6
             },
             selector: '#search-result-looks',
-            template: 'look_search_template',
             text: {
                 plural: 'Found %(count)s looks',
                 singular: 'Found %(count)s look'
@@ -268,7 +266,6 @@ ApparelSearch = {
                 'limit': 10
             },
             selector: '#search-result-manufacturers',
-            template: 'manufacturer_search_template',
             text: {
                 plural: 'Found %(count)s matching brands',
                 singular: 'Found %(count)s matching brand'
@@ -306,19 +303,6 @@ ApparelSearch = {
                         root = jQuery('<li/>').appendTo(list);
                     }
                     root.append(object)
-                    /* 
-                    if('score' in object)
-                        args.score = interpolate(ngettext("%(count)s like", "%(count)s likes", object.score.score), { count: object.score.score }, true);
-                    
-                    try {
-                        jQuery('#' + opts.template).render(args).appendTo(root);
-                        opts.model == 'products' && cloneProducts(jQuery('#search-result-products > li'));
-                    
-                    } catch(e) {
-                        console.log('Error while rendering template', e);
-                    }
-                    */
-
                     
                     var item = list.children(':last');
                     item.addClass((i % 2 == 0) ? 'even' : 'odd');
