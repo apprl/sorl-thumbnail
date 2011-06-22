@@ -234,12 +234,10 @@ ApparelSearch = {
         ApparelSearch.clear();
         
         ApparelSearch._doSearch({
-            model: 'products', 
+            model: 'product', 
             query: {
-                '1:p.product_name:icontains': s,
-                '2:p.description:icontains': s,
-                'o': '1o2',
-                'size': 8
+                'q': s,
+                'limit': 8
             },
             selector: '#search-result-products',
             template: 'product_template',
@@ -250,12 +248,10 @@ ApparelSearch = {
         });
     
         ApparelSearch._doSearch({
-            model: 'looks', 
+            model: 'look', 
             query: {
-                '1:l.title:icontains': s,
-                '2:l.description:icontains': s,
-                'o': '1o2',
-                'size': 6
+                'q': s,
+                'limit': 6
             },
             selector: '#search-result-looks',
             template: 'look_search_template',
@@ -266,10 +262,10 @@ ApparelSearch = {
         });
         
         ApparelSearch._doSearch({
-            model: 'manufacturers', 
+            model: 'manufacturer',
             query: {
-                '1:m.name:icontains': s,
-                'size': 10
+                'q': s,
+                'limit': 10
             },
             selector: '#search-result-manufacturers',
             template: 'manufacturer_search_template',
@@ -293,7 +289,7 @@ ApparelSearch = {
          */
         jQuery.ajax({
             type: 'GET',
-            url: '/' + opts.model + '/search',
+            url: '/search/' + opts.model,
             dataType: 'json',
             data: opts.query,
             complete: function(request, status) {
@@ -303,16 +299,14 @@ ApparelSearch = {
                 if(!response) return;
                 var list = jQuery(opts.selector);
                 jQuery.each(response.object_list, function(i, object) {
-                    var args, root;
-                    if(opts.template == 'product_template') {
-                        // Product template special casing
-                        args = { 'product': object };
+                    var root;
+                    if(opts.model == 'product') {
                         root = list;
                     } else {
-                        args = { 'object': object };
                         root = jQuery('<li/>').appendTo(list);
                     }
-                    
+                    root.append(object)
+                    /* 
                     if('score' in object)
                         args.score = interpolate(ngettext("%(count)s like", "%(count)s likes", object.score.score), { count: object.score.score }, true);
                     
@@ -323,6 +317,8 @@ ApparelSearch = {
                     } catch(e) {
                         console.log('Error while rendering template', e);
                     }
+                    */
+
                     
                     var item = list.children(':last');
                     item.addClass((i % 2 == 0) ? 'even' : 'odd');

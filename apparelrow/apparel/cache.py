@@ -27,15 +27,15 @@ def invalidate_template_cache(fragment_name, *variables):
 template_cache_map = {
     'Product':  (
         'product_detail_fragment1', 'product_detail_fragment2', 'product_detail2',
-        'product_search', 'product_small', 'product_thumb', 'look_widget', 'look_small',
+        'product_small', 'product_thumb', 'look_widget', 'look_small',
     ),
     'VendorProduct': (
         'product_detail_fragment1', 'product_detail_fragment2', 'product_detail2',
-        'product_search', 'look_widget', 'look_small',
+        'look_widget', 'look_small',
     ),
     'VendorProductVariation': (  # Fixme: Validate these
         'product_detail_fragment1', 'product_detail_fragment2', 'product_detail2',
-        'product_search', 'look_widget', 'look_small',
+        'look_widget', 'look_small',
     ),
     'Option': (
         'filter_menu',

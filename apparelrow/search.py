@@ -29,6 +29,7 @@ class ProductIndex(SearchIndex):
     text = CharField(document=True, use_template=True, model_attr='product_name')
     description = CharField(model_attr='description')
     created = DateTimeField(model_attr='date_added')
+    template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_content.html')
 
     def index_queryset(self):
         return Product.objects.filter(category__isnull=False, vendorproduct__isnull=False, published=True)
@@ -39,6 +40,7 @@ class ManufacturerIndex(SearchIndex):
     Search index for manufacturer model.
     """
     text = CharField(document=True, use_template=True, model_attr='name')
+    template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/manufacturer_search.html')
 
     def index_queryset(self):
         return Manufacturer.objects.filter(product__published=True)
@@ -52,6 +54,7 @@ class LookIndex(SearchIndex):
     created = DateTimeField(model_attr='created')
     modified = DateTimeField(model_attr='modified')
     user = CharField(model_attr='user__username')
+    template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/look_small_like_content.html')
 
     def index_queryset(self):
         return Look.objects.all()
@@ -105,7 +108,8 @@ def get_pagination_as_dict(paged_result):
     # Page and Pagination objects. Perhaps this code could be moved to the
     # exporter module instead?
     return {
-        'object_list': [o.object for o in paged_result.object_list],
+        #'object_list': [o.object for o in paged_result.object_list],
+        'object_list': [o.template for o in paged_result.object_list],
         'previous_page_number': paged_result.previous_page_number(),
         'next_page_number': paged_result.next_page_number(),
         'number': paged_result.number,

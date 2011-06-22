@@ -238,25 +238,6 @@
         </div>
     </script>
 
-    <script type="text/html" id="manufacturer_search_template">
-        <a href="/browse/?1:m.id:in=${ object.id}" id="manufacturer-${ object.id }">${ object.name }</a>
-    </script>
-
-    <script type="text/html" id="product_template">
-        <li id="product-${ product.id }">
-<a href="${ product.get_absolute_url }">
-<div class="product-small">
-    <div class="product-image">
-        <img src="/scale/115x153${ product.product_image.url }" alt="${ product.product_name }" />
-        <span class="likes">x</span>
-    </div>
-    <h4>${ product.product_name }</h4>
-    <span class="price">${ product.default_vendor.price } ${ product.default_vendor.currency }</span>
-</div>
-</a>
-</li>
-
-    </script>
     {% facebook_load %}
 
 <script type="text/javascript">

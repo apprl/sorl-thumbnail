@@ -1,15 +1,4 @@
 {% load cache %}
-{% cache CACHE_TIMEOUT product_small product.id "en" %}
-<li id="product-{{ product.id }}">
-<a href="{{ product.get_absolute_url }}">
-<div class="product-small">
-    <div class="product-image">
-        <img src="/scale/115x153{{ product.product_image.url }}?crop=1" alt="{{ product.product_name }}" />
-        <span class="likes">x</span>
-    </div>
-    <h4>{{ product.manufacturer }}</h4>
-    <span class="price">{{ product.default_vendor.price }} {{ product.default_vendor.currency }}</span>
-</div>
-</a>
-</li>
+{% cache CACHE_TIMEOUT product_small object.id "en" %}
+{% include 'apparel/fragments/product_small_content.html' %}
 {% endcache %}

@@ -29,6 +29,7 @@
                     {% if result.model_name == 'look' %}
                     L: <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
                     {% endif %}
+                    {{ result.template|safe }}
                 </p>
             {% empty %}
                 <p>No results found.</p>

@@ -1,10 +1,4 @@
 {% load cache %}
 {% cache CACHE_TIMEOUT look_small object.id LANGUAGE_CODE %}
-<div class="look">
-    {% ifequal object.display_with_component 'P' %}
-        {% include 'apparel/fragments/look_photo_small.html' %}
-    {% else %}
-        {% include 'apparel/fragments/look_collage_small.html' %}
-    {% endifequal %}
-</div>
+{% include 'apparel/fragments/look_small_content.html' %}
 {% endcache %}

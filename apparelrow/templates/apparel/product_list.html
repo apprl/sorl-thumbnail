@@ -4,8 +4,8 @@
 {% if object_list %}
 <div class="container">
     <ul>
-    {% for product in object_list %}
-        <li><a href="{{ product.id }}">{{ product.product_name }}</a>
+    {% for object in object_list %}
+        <li><a href="{{ object.id }}">{{ object.product_name }}</a>
         {% include 'apparel/fragments/product_small.html' %}</li>
     {% endfor %}
     </ul>

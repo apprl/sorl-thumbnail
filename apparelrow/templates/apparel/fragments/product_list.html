@@ -4,7 +4,7 @@
         {% for page in pages %}
             <li id="page-{{ page.number }}">
                 <ul>
-                    {% for product in page.object_list %}
+                    {% for object in page.object_list %}
                         {% include 'apparel/fragments/product_small.html' %}
                     {% endfor %}
                 </ul>
