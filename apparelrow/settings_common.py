@@ -13,7 +13,8 @@ TEMPLATE_DEBUG = DEBUG
 FORCE_SCRIPT_NAME = ''
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('Hansson & Larsson', 'admin@hanssonlarsson.se'),
+    ('Joel Bohman', 'joelboh@gmail.com'),
 )
 
 MANAGERS = ADMINS
