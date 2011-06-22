@@ -43,7 +43,7 @@ class ManufacturerIndex(SearchIndex):
     template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/manufacturer_search.html')
 
     def index_queryset(self):
-        return Manufacturer.objects.filter(product__published=True)
+        return Manufacturer.objects.filter(product__published=True).distinct()
 
 
 class LookIndex(SearchIndex):
