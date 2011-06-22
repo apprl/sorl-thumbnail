@@ -10,12 +10,3 @@ def exposed_settings(request):
         'GOOGLE_ANALYTICS_ACCOUNT': django_settings.GOOGLE_ANALYTICS_ACCOUNT,
         'GOOGLE_ANALYTICS_DOMAIN': django_settings.GOOGLE_ANALYTICS_DOMAIN,
     }
-
-def js_templates(request):
-    return {
-        'default_templates': {
-            'product': js_template(get_template_source('apparel/fragments/product_small.html'), context=RequestContext(request)),
-            #'look_search': get_template_source('apparel/fragments/look_search.html'),
-            #'manufacturer_search': js_template(get_template_source('apparel/fragments/manufacturer_search.html')),
-        },
-    }
