@@ -31,7 +31,7 @@ class ProductIndex(SearchIndex):
     created = DateTimeField(model_attr='date_added')
 
     def index_queryset(self):
-        return Product.objects.filter(category__isnull=False, vendorproduct__isnull=False)
+        return Product.objects.filter(category__isnull=False, vendorproduct__isnull=False, published=True)
 
 
 class ManufacturerIndex(SearchIndex):
