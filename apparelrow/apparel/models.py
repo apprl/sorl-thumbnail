@@ -493,8 +493,9 @@ models.signals.post_delete.connect(cache.invalidate_model_handler, sender=FirstP
 
 def save_synonym_file(sender, **kwargs):
     instance = kwargs['instance']
+    import pdb; pdb.set_trace()
     synonym_file = open(settings.SEARCH_SYNONYM_FILE, "w")
-    synonym_file.write(instance.content)
+    synonym_file.write(instance.content.encode("utf-8"))
     synonym_file.close()
 
 class SynonymFile(models.Model):
