@@ -6,6 +6,8 @@ from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.db.models import Sum, Min
 
+from django.forms import ValidationError
+
 from apparel.manager import SearchManager, FeaturedManager, FirstPageManager
 from apparel import cache
 
@@ -487,5 +489,39 @@ class FirstPageContent(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=FirstPageContent)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=FirstPageContent)
+
+def save_synonym_file(sender, **kwargs):
+    instance = kwargs['instance']
+    synonym_file = open(settings.SEARCH_SYNONYM_FILE, "w")
+    synonym_file.write(instance.content)
+    synonym_file.close()
+
+class SynonymFile(models.Model):
+    content = models.TextField(_('Synonyms'), null=True, blank=True, help_text=_('Place all synonyms on their own line, comma-separated. Comments start with "#".'))
+
+    def __unicode__(self):
+        return u'%s...' % (self.content[0:20],)
+
+    def clean(self):
+        if not hasattr(settings, "SEARCH_SYNONYM_FILE"):
+            raise ValidationError("You must define the SEARCH_SYNONYM_FILE before using synonyms.")
+
+        if self.__class__.objects.count() > 1:
+            raise ValidationError("Only one synonym file is allowed.")
+
+        for line in self.content.split("\n"):
+            line = line.strip()
+
+            # Don't bother with empty lines or comments
+            if line == "" or line.startswith("#"):
+                continue
+
+            if not ("," in line or "=>" in line):
+                raise ValidationError('Lines must contain at least one comma (or "=>")')
+
+            if line.startswith(",") or line.endswith(",") or line.startswith("=>") or line.endswith("=>"):
+                raise ValidationError('Lines can not start or end with "," or "=>"')
+
+models.signals.post_save.connect(save_synonym_file, sender=SynonymFile)
 
 import apparel.activity

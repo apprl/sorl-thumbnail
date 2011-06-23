@@ -183,5 +183,9 @@ class FirstPageContentAdmin(admin.ModelAdmin):
     list_display = ['title', 'pub_date', 'published']
     list_filter = ['published']
 
+# Search synonyms
+
+admin.site.register(SynonymFile)
+
 admin.site.register(FirstPageContent, FirstPageContentAdmin)
 

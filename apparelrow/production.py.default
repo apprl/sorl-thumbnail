@@ -32,6 +32,8 @@ HAYSTACK_SITECONF = 'apparelrow.search'
 HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr'
 
+SEARCH_SYNONYM_FILE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'etc', 'synonyms.txt')
+
 LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', '..', '..', 'etc', 'logging.conf') # logging configuration file
 
 # --- Application wide init code goes here. 
