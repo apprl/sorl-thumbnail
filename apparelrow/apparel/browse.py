@@ -90,7 +90,7 @@ def browse_products(request):
     if request.is_ajax():
         colors = [_to_int(x[0]) for x in facet['fields']['color'] if x[1] > 0]
     else:
-        colors = Option.objects.filter(option_type__name='color').filter(pk__in=[x[0] for x in facet['fields']['color'] if x[1] > 0])
+        colors = Option.objects.filter(option_type__name='color').all()
 
     # Calculate category
     categories = [_to_int(x[0]) for x in facet['fields']['category'] if x[1] > 0]
