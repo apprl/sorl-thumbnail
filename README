@@ -34,7 +34,7 @@ cd apparelrow
 = Set up search (beta) =
 wget http://apache.mirrors.spacedump.net//lucene/solr/3.2.0/apache-solr-3.2.0.tgz
 tar zxvf apache-solr-3.2.0.tgz
-./manage.py build_solr_schema --settings development > apache-solr-3.2.0/example/solr/conf/schema.xml
+mv ./etc/schema.xml apache-solr-3.2.0/example/solr/conf/schema.xml
 cd apache-solr-3.2.0/example
 java -jar start.jar
 ./manage.py rebuild_index --settings development
@@ -48,4 +48,9 @@ Now you can start django, either with the django-admin.py in bin, or the regular
 ./conf          Non-Django related configuration files, such as webserver config
 ./docs          General documentation
 
+= If rebuilding schema.xml =
+./manage.py build_solr_schema --settings development > schema.xml
+Replace field type with name slong with: 
+    <fieldType name="slong" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
 
+Field with name name should have type string not text 

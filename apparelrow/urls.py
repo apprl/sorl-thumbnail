@@ -8,7 +8,6 @@ admin.autodiscover()
 
 #from account.openid_consumer import PinaxConsumer
 
-
 #if settings.ACCOUNT_OPEN_SIGNUP:
 #    signup_view = "account.views.signup"
 #else:
@@ -44,7 +43,7 @@ urlpatterns = patterns('',
     
     (r'', include('apparel.urls')),
     (r'^beta/', include('beta.urls')),
-    (r'^haystack_search/', include('haystack.urls')),
+
     (r'^search/(?P<model>\w+)/', 'apparelrow.search.search_view'),
 )
 

@@ -15,9 +15,59 @@
         </table>
 
         {% if query %}
-            <h3>Results</h3>
+            <!-- Begin faceting. -->
+            <h2>By Category</h2>
+
+            <div>
+                <dl>
+                    {% if facets.fields.category %}
+                        <dt>Category</dt>
+                        {# Provide only the top 5 authors #}
+                        {% for category in facets.fields.category|slice:":5" %}
+                            <dd><a href="{{ request.get_full_path }}&amp;selected_facets=category_exact:{{ category.0|urlencode }}">{{ category.0 }}</a> ({{ category.1 }})</dd>
+                        {% endfor %}
+                    {% else %}
+                        <p>No category facets.</p>
+                    {% endif %}
+                </dl>
+            </div>
+
+            <h2>By Color</h2>
+
+            <div>
+                <dl>
+                    {% if facets.fields.category %}
+                        <dt>Color</dt>
+                        {# Provide only the top 5 authors #}
+                        {% for color in facets.fields.color|slice:":5" %}
+                            <dd><a href="{{ request.get_full_path }}&amp;selected_facets=color_exact:{{ color.0|urlencode }}">{{ color.0 }}</a> ({{ color.1 }})</dd>
+                        {% endfor %}
+                    {% else %}
+                        <p>No color facets.</p>
+                    {% endif %}
+                </dl>
+            </div>
 
 
+            <h2>By Manufacturer</h2>
+
+            <div>
+                <dl>
+                    {% if facets.fields.category %}
+                        <dt>Manufacturer</dt>
+                        {# Provide only the top 5 authors #}
+                        {% for manufacturer in facets.fields.manufacturer|slice:":5" %}
+                            <dd><a href="{{ request.get_full_path }}&amp;selected_facets=manufacturer_exact:{{ manufacturer.0|urlencode }}">{{ manufacturer.0 }}</a> ({{ manufacturer.1 }})</dd>
+                        {% endfor %}
+                    {% else %}
+                        <p>No manufactuer facets.</p>
+                    {% endif %}
+                </dl>
+            </div>
+            <!-- End faceting -->
+
+
+            <h2>Results</h2>
             {% for result in page.object_list %}
                 <p>
                     {% if result.model_name == 'product' %}

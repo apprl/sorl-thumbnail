@@ -75,7 +75,6 @@ jQuery(document).ready(function() {
     }
     
     jQuery.history.init(function(hash) {
-        
         // This is slightly contrived. On first load, only filter if we have something in the hash.
         // If so, hide the content to avoid flashing the products in the page, then show content again
         // and render products.
@@ -354,11 +353,10 @@ jQuery(document).ready(function() {
     });
 });
 function getQuery(query) {
-    index = baseIndex;
     query = query || {}
     for(var key in baseQuery)
         query[key] = baseQuery[key]
-   
+
     var category_list = [];
     jQuery('#product-category li > a.selected').each(function(i, elem) {
         var subCategories = jQuery(elem).next();
@@ -367,10 +365,7 @@ function getQuery(query) {
         }
     });
     if(category_list.length > 0) {
-        query[++index + ':c.id:in'] = category_list.join(',');
-        if('o' in query) {
-            query['o'] += 'a' + index;
-        }
+        query['category'] = category_list.join(',');
     }
 
     // Add a new query called shown, contains all categories that appears to be
@@ -379,33 +374,39 @@ function getQuery(query) {
     if(shown_category_list.length > 0) {
         query['shown'] = shown_category_list.join(',');
     }
+
     manufacturer_list = getElementIds(jQuery('#selected-manufacturers li > a'));
     if(manufacturer_list.length > 0) {
-        query[++index + ':m.id:in'] = manufacturer_list.join(',');
-        if('o' in query)
-            query['o'] += 'a' + index
+        query['manufacturer'] = manufacturer_list.join(',');
     }
+
     gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
     if(gender_list.length > 0 && gender_list[0]) {
-        query[++index + ':p.gender'] = gender_list[0];
-        if('o' in query)
-            query['o'] += 'a' + index
+        query['gender'] = gender_list[0];
     }
+
     color_list = getElementIds(jQuery('#product-color li > a.selected'));
     if(color_list.length > 0) {
-        query[++index + ':o.color:in'] = color_list.join(',');
-        if('o' in query)
-            query['o'] += 'a' + index
+        query['color'] = color_list.join(',');
     }
+
     if(jQuery('#product-price > a').is('.selected')) {
-        query[++index + ':vp.price:range'] = 
+        query['price'] = 
               jQuery("input[name=pricerange_min]").val()
             + ',' 
             + jQuery("input[name=pricerange_max]").val();
-        if('o' in query)
-            query['o'] += 'a' + index
     }
-    
+
+    if(location.hash.length > 0) { 
+        var pairs = location.hash.substr(1).split('&');
+        for(var i = 0; i < pairs.length; i++) {
+            keyval = pairs[i].split('=');
+            if(keyval[0] == 'q') {
+                query['q'] = keyval[1];
+            }
+        }
+    }
+
     return query;
 }
 function getElementIds(elements) {
@@ -495,10 +496,10 @@ function filterCriteria(criteria_filter) {
         jQuery('#product-category>li[class!=filtered]:first').addClass('first');
     }
 
-    if('options' in criteria_filter) {
+    if('colors' in criteria_filter) {
         applyCriteriaFilter({
             'selector': '#product-color .option-content li > a',
-            'criteria': criteria_filter['options'],
+            'criteria': criteria_filter['colors'],
             'add': function(o) { o.addClass('filtered'); },
             'remove': function(o) { o.removeClass('filtered');  },
         });
@@ -586,8 +587,6 @@ function updateSelected(products) {
     selectBrandList(products.selected_brands, '#available-manufacturer', '#product-manufacturers > a');
     selectList(products.selected_colors, '#option', '#product-color > a');
     selectGenderList(products.selected_gender, '#option');
-
-
 
     if(products.selected_price) {
         setSelected('#product-price > a');

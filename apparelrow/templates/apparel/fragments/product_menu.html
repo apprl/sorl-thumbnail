@@ -7,18 +7,18 @@
 <h2>{% trans "Browse articles" %}</h2>
 {% endblock %}
 <ul id="product-gender" class="hover-menu">
-    <li class="first"><a href="{% url apparel.views.browse %}">{% trans "All" %}</a></li>
-    <li class="women"><a id="option-W"{% ifequal selected_gender "W" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:p.gender=W">{% trans "Women" %}</a></li>
-    <li class="last men"><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.views.browse %}?1:p.gender=M">{% trans "Men" %}</a></li>
+    <li class="first"><a href="{% url apparel.browse.browse_products %}">{% trans "All" %}</a></li>
+    <li class="women"><a id="option-W"{% ifequal selected_gender "W" %} class="selected"{% endifequal %} href="{% url apparel.browse.browse_products %}?gender=W">{% trans "Women" %}</a></li>
+    <li class="last men"><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
 </ul>
 <ul id="product-options" class="hover-menu">
-    <li class="first" id="product-price"><a {% if selected_price %}class="selected" {% endif %}href="{% url apparel.views.browse %}">{% trans "Price" %}</a>
+    <li class="first" id="product-price"><a {% if selected_price %}class="selected" {% endif %}href="{% url apparel.browse.browse_products %}">{% trans "Price" %}</a>
     {% include "apparel/fragments/product_options_price.html" %}
     </li>
-    <li id="product-color"><a {% if selected_colors %}class="selected" {% endif %}href="{% url apparel.views.browse %}">{% trans "Color" %}</a>
+    <li id="product-color"><a {% if selected_colors %}class="selected" {% endif %}href="{% url apparel.browse.browse_products %}">{% trans "Color" %}</a>
     {% include "apparel/fragments/product_options_color.html" %}
     </li>
-    <li class="last" id="product-manufacturers"><a {% if selected_brands %}class="selected" {% endif %}href="{% url apparel.views.browse %}">{% trans "Brand" %}</a>
+    <li class="last" id="product-manufacturers"><a {% if selected_brands %}class="selected" {% endif %}href="{% url apparel.browse.browse_products %}">{% trans "Brand" %}</a>
         {% include "apparel/fragments/product_options_brand.html" %}
         <ul id="selected-manufacturers" class="level-1">
         </ul>
@@ -32,7 +32,7 @@
         </li>
     {% endif %}
         <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}{% if categories and category.id not in categories %} to_filter{% endif %}">
-        <a id="category-{{ category.id }}"{% if category.id in selected_categories %} class="selected"{% endif %} href="{% url apparel.views.browse %}?shown={{ category.id }}&1:c.id:in={{ category|category_descendants_id }}">{{ category.name }}</a>
+        <a id="category-{{ category.id }}"{% if category.id in selected_categories %} class="selected"{% endif %} href="{% url apparel.browse.browse_products %}?shown={{ category.id }}&category={{ category|category_descendants_id }}">{{ category.name }}</a>
     {% for level in structure.closed_levels %}</li></ul>{% endfor %}
 {% endfor %}
 

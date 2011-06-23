@@ -350,8 +350,8 @@ ApparelSearch = {
         // Takes a query as an object and stringifies if after removing the 
         // size-property
         
-        if('size' in query)
-            delete(query['size']);
+        if('limit' in query)
+            delete(query['limit']);
         
         var pairs = [];
         for(var key in query) {
@@ -410,7 +410,7 @@ jQuery(document).ready(function() {
                         break;
                     }
                     
-                    location.href = '/browse/?' + ApparelSearch.format_query(query);
+                    location.href = '/browse/#' + ApparelSearch.format_query(query);
                     break;
                 
                 case 'search-result-looks':
@@ -438,6 +438,14 @@ jQuery(document).ready(function() {
                 default:
                     console.log('No action for ', list.attr('id'));
             }
+
+            ApparelSearch.cancel();
+
+            // From reset click handler in browse.js
+            jQuery('.selected').removeClass('selected');
+            jQuery('#product-category .level-1, #product-category .level-2').hide();
+            //jQuery('#product-manufacturers .reset').click();
+            jQuery('#product-gender li:first > a').addClass('selected');
             
             return false;
         } )

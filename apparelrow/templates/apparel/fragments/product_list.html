@@ -4,8 +4,8 @@
         {% for page in pages %}
             <li id="page-{{ page.number }}">
                 <ul>
-                    {% for object in page.object_list %}
-                        {% include 'apparel/fragments/product_small.html' %}
+                    {% for html in page.html %}
+                        {{ html|safe }}
                     {% endfor %}
                 </ul>
             </li>

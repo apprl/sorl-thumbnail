@@ -29,8 +29,10 @@ urlpatterns = patterns('',
     (r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list'),
     (r'^products/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
     
-    (r'^browse/$', 'apparel.views.browse'),
-    (r'^browse/manufacturers/$', 'apparel.views.browse_manufacturers'),
+    #(r'^browse/$', 'apparel.views.browse'),
+    #(r'^browse/manufacturers/$', 'apparel.views.browse_manufacturers'),
+    (r'^browse/$', 'apparel.browse.browse_products'),
+    (r'^browse/manufacturers/$', 'apparel.browse.browse_manufacturers'),
     
     (r'^wardrobe/add_product/$', 'apparel.views.add_to_wardrobe'),
 
