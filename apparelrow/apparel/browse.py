@@ -1,28 +1,29 @@
-import logging, re, math, copy
-#import json
-from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext
-from django.template import RequestContext, Template, Context, loader
-from django.template.loader import find_template_source, get_template
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import login_required
-from django.contrib.flatpages.models import FlatPage
-from django.contrib.contenttypes.models import ContentType
-from django.views.generic import list_detail
+import re
+import math
+
+from django.http import HttpResponse
 from django.conf import settings
+from django.shortcuts import render_to_response
+from django.db.models import Max
+from django.db.models import Min
+from django.template import RequestContext
+from django.template import Template
+from django.template import loader
+from django.template.loader import get_template
+from django.template.loader import find_template_source
+from django.core.paginator import Paginator
+from django.core.paginator import InvalidPage
+from django.core.paginator import EmptyPage
 
 from hanssonlarsson.django.exporter import json
+
+from pysolr import Solr
 
 from haystack.forms import FacetedSearchForm
 from haystack.query import EmptySearchQuerySet
 from haystack.query import SearchQuerySet
 
-from apparel.manager import QueryParser, InvalidExpression
 from apparel.models import Product
-from apparel.models import Category
 from apparel.models import Manufacturer
 from apparel.models import Option
 from apparel.models import Category
@@ -40,19 +41,24 @@ def _to_int(s):
 
 def filter_query(query, params):
     for field in FACET_FILTER_OPTIONS:
-        #query = query.facet('%s_exact' % (field,))
-        query = query.facet('%s' % (field,))
+        if field == 'category':
+            query = query.facet('{!ex=category}%s' % (field,))
+        else:
+            query = query.facet('%s' % (field,))
+
         if field in params:
             if field == 'price':
                 price = params[field].split(',')
-                kwargs = {field + '_exact__gte': query.query.clean(price[0]),
-                          field + '_exact__lte': query.query.clean(price[1])}
+                query = query.narrow('%s:[%s TO %s]' % (field + '_exact', query.query.clean(price[0]), query.query.clean(price[1])))
+            elif field == 'category':
+                query = query.narrow('{!tag=category}%s:(%s)' % (field + '_exact', ' OR '.join([query.query.clean(x) for x in params[field].split(',')])))
             else:
-                kwargs = {field + '_exact__in': [query.query.clean(x) for x in params[field].split(',')]}
-            query = query.filter(**kwargs)
+                query = query.narrow('%s:(%s)' % (field + '_exact', ' OR '.join([query.query.clean(x) for x in params[field].split(',')])))
 
     if 'gender' in params and len(params.get('gender')) == 1:
-        query = query.filter(gender=query.query.clean(params.get('gender')))
+        query = query.narrow('gender:%s' % (query.query.clean(params.get('gender')),))
+    else:
+        query = query.narrow('gender:(W OR M)')
 
     if 'q' in params:
         query = query.filter(content=query.query.clean(params.get('q', '')))
@@ -69,19 +75,20 @@ def browse_products(request):
 
     facet = sqs.facet_counts()
 
-    # Calculate price range
-    prices = [float(x[0]) for x in facet['fields']['price']]
-    if prices:
-        max_price = int(round(max(prices) + 50, -2))
-        min_price = int(round(min(prices) - 50, -2))
-        if min_price < 0:
-            min_price = 0
+    # Calculate price range. Using Solr directly because haystack have no
+    # support for stats component.
+    solr = Solr(settings.HAYSTACK_SOLR_URL)
+    price_result = solr.search(q=sqs.query.build_query(), fq=list(sqs.query.narrow_queries), **{'stats': 'on', 'stats.field': 'price'})
+    if price_result:
+        pricerange = {
+            'max': int(round(price_result.stats['stats_fields']['price']['max'] + 50, -2)),
+            'min': int(round(price_result.stats['stats_fields']['price']['min'] - 50, -2)),
+        }
+        if pricerange['min'] < 0:
+            pricerange['min'] = 0
     else:
-        max_price = 0
-        min_price = 0
-    pricerange = {'max': max_price,
-                  'min': min_price,
-                  'selected': '%s,%s' % (min_price, max_price)}
+        pricerange = {'max': 0, 'min': 0}
+    pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
 
     # Calculate manufacturer
     manufacturers = Manufacturer.objects.filter(pk__in=[x[0] for x in facet['fields']['manufacturer'] if x[1] > 0])
@@ -90,7 +97,8 @@ def browse_products(request):
     if request.is_ajax():
         colors = [_to_int(x[0]) for x in facet['fields']['color'] if x[1] > 0]
     else:
-        colors = Option.objects.filter(option_type__name='color').all()
+        #colors = Option.objects.filter(option_type__name='color').all()
+        colors = Option.objects.filter(option_type__name='color').filter(pk__in=[_to_int(x[0]) for x in facet['fields']['color']])
 
     # Calculate category
     categories = [_to_int(x[0]) for x in facet['fields']['category'] if x[1] > 0]
@@ -123,7 +131,8 @@ def browse_products(request):
     result.update(pagination=pagination,
                   pricerange=pricerange,
                   manufacturers=manufacturers,
-                  colors=colors)
+                  colors=colors,
+                  categories=categories)
 
     paged_result.html = [o.template for o in paged_result.object_list]
     paged_result.object_list = []
@@ -135,20 +144,21 @@ def browse_products(request):
     # Update selected
     selected_colors = request.GET.get('color', None)
     if selected_colors:
-        selected_colors.split(',')
+        selected_colors = selected_colors.split(',')
+
+    selected_price = request.GET.get('price', None)
+    if selected_price:
+        selected_price = selected_price.split(',', 1)
 
     result.update(
         selected_categories = filter(None, map(_to_int, request.GET.get('category', '').split(','))),
         selected_colors     = selected_colors,
         selected_brands     = filter(None, map(_to_int, request.GET.get('manufacturer', '').split(','))),
-        selected_price      = request.GET.get('price', None),
+        selected_price      = selected_price,
         selected_gender     = request.GET.get('gender', None),
-        selected_shown_categories = filter(None, map(_to_int, request.GET.get('shown', '').split(',')))
     )
 
-    #if result['selected_brands'] or result['selected_price'] or result['selected_colors'] or result['selected_gender']:
-    result.update(categories=categories)
-
+    # Serve ajax request
     if request.is_ajax():
         result.update(get_pagination_as_dict(paged_result))
         result.update(
@@ -166,6 +176,7 @@ def browse_products(request):
             mimetype='text/json'
         )
 
+    # Serve non ajax request
     result.update(
         categories_all=Category._tree_manager.all(),
         current_page = paged_result,
@@ -182,8 +193,6 @@ def get_pagination_as_dict(paged_result):
     # Page and Pagination objects. Perhaps this code could be moved to the
     # exporter module instead?
     return {
-        #'object_list': [o.object for o in paged_result.object_list],
-        'html': [o.template for o in paged_result.object_list],
         'previous_page_number': paged_result.previous_page_number(),
         'next_page_number': paged_result.next_page_number(),
         'number': paged_result.number,
@@ -206,15 +215,13 @@ def browse_manufacturers(request, **kwargs):
 
     mp = Paginator(sqs.order_by('name').load_all(), settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
     try:
-        manufacturers = [x.object for x in mp.page(page).object_list]
+        manufacturers = [x.object for x in mp.page(page).object_list if x]
     except EmptyPage:
         manufacturers = []
     except InvalidPage:
-        manufacturers = [x.object for x in mp.page(1).object_list]
+        manufacturers = [x.object for x in mp.page(1).object_list if x]
 
-    #manufacturers = [x.object for x in sqs.order_by('name').load_all()]
     return HttpResponse(json.encode(manufacturers), mimetype='application/json')
-
 
 def get_template_source(template):
     template_source, template_origin = find_template_source(template)

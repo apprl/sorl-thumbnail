@@ -101,10 +101,9 @@
     <dynamicField name="*_d"  type="sdouble" indexed="true"  stored="true"/>
     <dynamicField name="*_dt" type="date"    indexed="true"  stored="true"/>
     
+    <field name="category" type="text" indexed="true" stored="false" multiValued="true" />
 
-    <field name="category" type="text" indexed="true" stored="false" multiValued="false" />
-
-    <field name="category_exact" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="category_exact" type="string" indexed="true" stored="true" multiValued="true" />
 
     <field name="manufacturer_exact" type="string" indexed="true" stored="true" multiValued="false" />
 

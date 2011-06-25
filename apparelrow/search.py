@@ -21,9 +21,10 @@ from haystack.forms import FacetedSearchForm
 from haystack.query import EmptySearchQuerySet
 from haystack.query import SearchQuerySet
 
-from apparelrow.apparel.models import Product
-from apparelrow.apparel.models import Manufacturer
+from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Look
+from apparelrow.apparel.models import Manufacturer
+from apparelrow.apparel.models import Product
 
 RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 10)
 
@@ -37,7 +38,7 @@ class ProductIndex(RealTimeSearchIndex):
     manufacturer = CharField(model_attr='manufacturer__id', faceted=True, stored=False)
     price = IntegerField(faceted=True, stored=False)
     color = MultiValueField(faceted=True, stored=False)
-    category = CharField(model_attr='category__id', faceted=True, stored=False)
+    category = MultiValueField(faceted=True, stored=False)
     template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_content.html')
 
     def prepare(self, object):
@@ -50,6 +51,8 @@ class ProductIndex(RealTimeSearchIndex):
                 pass
         # Add color to search index
         self.prepared_data['color'] = object.options.filter(option_type__name='color').values_list('pk', flat=True)
+        # Add category to search index
+        self.prepared_data['category'] = Category.objects.get(pk=object.category.id).get_ancestors(ascending=False, include_self=True).values_list('pk', flat=True)
         return self.prepared_data
 
     def index_queryset(self):

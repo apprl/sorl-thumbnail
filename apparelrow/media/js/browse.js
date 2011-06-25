@@ -342,22 +342,9 @@ function getQuery(query, reset) {
     query = query || {}
     reset = typeof(reset) != 'undefined' ? reset : false;
 
-    var category_list = [];
-    jQuery('#product-category li > a.selected').each(function(i, elem) {
-        var subCategories = jQuery(elem).next();
-        if(subCategories.find('a.selected').length <= 0) {
-            category_list = category_list.concat(getElementIds(subCategories.find('li > a')), getElementIds(jQuery(elem)));
-        }
-    });
+    category_list = getElementIds(jQuery('#product-category li > a.selected'));
     if(category_list.length > 0) {
         query['category'] = category_list.join(',');
-    }
-
-    // Add a new query called shown, contains all categories that appears to be
-    // selected for the user
-    shown_category_list = getElementIds(jQuery('#product-category li > a.selected'));
-    if(shown_category_list.length > 0) {
-        query['shown'] = shown_category_list.join(',');
     }
 
     manufacturer_list = getElementIds(jQuery('#selected-manufacturers li > a'));
@@ -568,7 +555,7 @@ function updateSelected(products) {
         }
     }
 
-    showCategories(products.selected_shown_categories);
+    showCategories(products.selected_categories);
     selectBrandList(products.selected_brands, '#available-manufacturer', '#product-manufacturers > a');
     selectList(products.selected_colors, '#option', '#product-color > a');
     selectGenderList(products.selected_gender, '#option');
