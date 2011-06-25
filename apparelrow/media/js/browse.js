@@ -56,24 +56,9 @@ var pagination = {
     }
 };
 
-var baseQuery = {};
-var baseIndex = 0;
-
 jQuery(document).ready(function() {
     // Initialize jquery history plugin with our filter
     var firstLoad = true;
-    if(location.search.length > 1 && location.hash.length == 0) {
-        
-        var pairs = location.search.substr(1).split('&');
-        for(var i = 0; i < pairs.length; i++) {
-            keyval = pairs[i].split('=');
-            if(/^(\d+):/.test(unescape(keyval[0])))
-                baseIndex = Math.max(RegExp.$1, baseIndex);
-            
-            baseQuery[unescape(keyval[0])] = unescape(keyval[1])
-        }
-    }
-    
     jQuery.history.init(function(hash) {
         // This is slightly contrived. On first load, only filter if we have something in the hash.
         // If so, hide the content to avoid flashing the products in the page, then show content again
@@ -109,9 +94,8 @@ jQuery(document).ready(function() {
         jQuery('#product-category .level-1, #product-category .level-2').hide();
         jQuery('#product-manufacturers .reset').click();
         jQuery('#product-gender li:first > a').addClass('selected'); // Select all genders
-        baseQuery = {};
-        baseIndex = 0;
-        filter(getQuery());
+        // Call getQuery with empty query and reset true
+        filter(getQuery({}, true));
         return false;
     });
     jQuery('.options .reset').click(function(e) {
@@ -352,10 +336,9 @@ jQuery(document).ready(function() {
         }
     });
 });
-function getQuery(query) {
+function getQuery(query, reset) {
     query = query || {}
-    for(var key in baseQuery)
-        query[key] = baseQuery[key]
+    reset = typeof(reset) != 'undefined' ? reset : false;
 
     var category_list = [];
     jQuery('#product-category li > a.selected').each(function(i, elem) {
@@ -397,7 +380,7 @@ function getQuery(query) {
             + jQuery("input[name=pricerange_max]").val();
     }
 
-    if(location.hash.length > 0) { 
+    if(!reset && location.hash.length > 0) {
         var pairs = location.hash.substr(1).split('&');
         for(var i = 0; i < pairs.length; i++) {
             keyval = pairs[i].split('=');
