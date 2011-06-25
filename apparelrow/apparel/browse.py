@@ -58,7 +58,7 @@ def filter_query(query, params):
     if 'gender' in params and len(params.get('gender')) == 1:
         query = query.narrow('gender:%s' % (query.query.clean(params.get('gender')),))
     else:
-        query = query.narrow('gender:(W OR M)')
+        query = query.narrow('gender:(W OR M OR U)')
 
     if 'q' in params:
         query = query.filter(content=query.query.clean(params.get('q', '')))
