@@ -56,7 +56,7 @@ def filter_query(query, params):
                 query = query.narrow('%s:(%s)' % (field + '_exact', ' OR '.join([query.query.clean(x) for x in params[field].split(',')])))
 
     if 'gender' in params and len(params.get('gender')) == 1:
-        query = query.narrow('gender:%s' % (query.query.clean(params.get('gender')),))
+        query = query.narrow('gender:(%s OR U)' % (query.query.clean(params.get('gender')),))
     else:
         query = query.narrow('gender:(W OR M OR U)')
 
