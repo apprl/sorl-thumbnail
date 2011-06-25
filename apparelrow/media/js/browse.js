@@ -88,6 +88,8 @@ jQuery(document).ready(function() {
     // Fixed scrolling
     //jQuery('#content').fixedscroll();
 
+    jQuery('#product-category .level-1, #product-category .level-2').hide();
+
     // Reset button
     jQuery('#reset').click(function() {
         jQuery('.selected').removeClass('selected');
