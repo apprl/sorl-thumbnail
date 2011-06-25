@@ -1,5 +1,9 @@
 {# NOTE: If you change this, also change pagination_js.html #}
-<a class="prev{% if not current_page.has_previous %} disabled{% endif %}" href="/browse/?page={{ current_page.previous_page_number }}">&lt;</a>
+{% if not current_page.has_previous %}
+<span class="prev disabled">&lt;</span>
+{% else %}
+<a class="prev" href="/browse/?page={{ current_page.previous_page_number }}">&lt;</a>
+{% endif %}
 <div>
 <ol>
 {% if pagination.left %}
@@ -25,4 +29,8 @@
 {% endif %}
 </ol>
 </div>
-<a class="next{% if not current_page.has_next %} disabled{% endif %}" href="/browse/?page={{ current_page.next_page_number }}">&gt;</a>
+{% if not current_page.has_next or True %}
+<span class="next disabled">&gt;</span>
+{% else %}
+<a class="next" href="/browse/?page={{ current_page.next_page_number }}">&gt;</a>
+{% endif %}

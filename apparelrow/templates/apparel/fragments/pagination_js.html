@@ -1,5 +1,9 @@
 {{#}}NOTE: If you change this, also change pagination_js.html{{/#}}
-<a class="prev{{if !products.previous_page_number}} disabled{{/if}}" href="/browse/?page=${ products.previous_page_number }">&lt;</a>
+{{if !products.previous_page_number || products.previous_page_number < 0}}
+<span class="prev disabled">&lt;</span>
+{{else}}
+<a class="prev" href="/browse/?page=${products.previous_page_number}">&lt;</a>
+{{/if}}
 <div>
 <ol>
 {{if products.pagination.left}}
@@ -25,4 +29,8 @@
 {{/if}}
 </ol>
 </div>
-<a class="next{{if !products.next_page_number || products.next_page_number > products.paginator.num_pages }} disabled{{/if}}" href="/browse/?page=${ products.next_page_number }">&gt;</a>
+{{if !products.next_page_number || products.next_page_number > products.paginator.num_pages}}
+<span class="next disabled">&gt;</span>
+{{else}}
+<a class="next" href="/browse/?page=${products.next_page_number}">&gt;</a>
+{{/if}}

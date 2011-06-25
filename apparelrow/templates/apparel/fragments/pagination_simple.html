@@ -1,5 +1,9 @@
 {# NOTE: This should be merged with the pagination code used for the browse page #}
-<a class="prev{% if not page_obj.has_previous %} disabled{% endif %}" href="{{ request.path }}?page={{ page_obj.previous_page_number }}">&lt;</a>
+{% if not page_obj.has_previous %}
+<span class="prev disabled">&lt;</span>
+{% else %}
+<a class="prev" href="{{ request.path }}?page={{ page_obj.previous_page_number }}">&lt;</a>
+{% endif %}
 <div>
 <ol>
 {% for page in page_range %}
@@ -11,5 +15,8 @@
 {% endfor %}
 </ol>
 </div>
-<a class="next{% if not page_obj.has_next %} disabled{% endif %}" href="{{ request.path }}?page={{ page_obj.next_page_number }}">&gt;</a>
-
+{% if not page_obj.has_next %}
+<span class="next disabled">&gt;</span>
+{% else %}
+<a class="next" href="{{ request.path }}?page={{ page_obj.next_page_number }}">&gt;</a>
+{% endif %}
