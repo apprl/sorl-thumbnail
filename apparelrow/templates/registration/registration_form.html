@@ -6,12 +6,12 @@
 {% block body %}
 
 <div id="content">
-    <h2>{% trans "... or sign up using your Facebook ID" %}</h2>
+    <h2>{% trans "Sign up using your Facebook ID" %}</h2>
     <p>
         <fb:login-button show-faces="false" width="18" max-rows="1" size="small" perms="{% facebook_perms %}"></fb:login-button>
     </p>
 
-    <h2>{% trans "Sign up" %}</h2>
+    <h2>{% trans "... Or create a new account" %}</h2>
     {% with "Sign up" as submit_text %}
         {% include "fragments/form.html" %}
     {% endwith %}
