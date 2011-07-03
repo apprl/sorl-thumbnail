@@ -25,6 +25,7 @@ from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Look
 from apparelrow.apparel.models import Manufacturer
 from apparelrow.apparel.models import Product
+from apparelrow.apparel.models import Wardrobe
 
 RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 10)
 
@@ -40,6 +41,7 @@ class ProductIndex(RealTimeSearchIndex):
     color = MultiValueField(faceted=True, stored=False)
     category = MultiValueField(faceted=True, stored=False)
     template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_content.html')
+    user = MultiValueField(faceted=True, stored=False)
 
     def prepare(self, object):
         self.prepared_data = super(ProductIndex, self).prepare(object)
@@ -53,6 +55,8 @@ class ProductIndex(RealTimeSearchIndex):
         self.prepared_data['color'] = object.options.filter(option_type__name='color').values_list('pk', flat=True)
         # Add category to search index
         self.prepared_data['category'] = Category.objects.get(pk=object.category.id).get_ancestors(ascending=False, include_self=True).values_list('pk', flat=True)
+        # Add user to search index
+        self.prepared_data['user'] = Wardrobe.objects.filter(products=object).values_list('user__id', flat=True)
         return self.prepared_data
 
     def index_queryset(self):

@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
-from django.db.models import Q, Max, Min, connection, get_model
+from django.db.models import Max, Min, connection, get_model, signals
 from django.template import RequestContext, Template, Context, loader
 from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -24,149 +24,9 @@ from actstream.models import user_stream, Follow
 from profile.models import ApparelProfile
 
 from apparel.decorators import seamless_request_handling, get_current_user
-from apparel.manager import QueryParser, InvalidExpression
 from apparel.models import *
 from apparel.forms import *
 
-
-BROWSE_PAGE_SIZE = 12
-BROWSE_PAGE_MAX  = 100
-
-
-
-def _to_int(s):
-    try:
-        return int(s)
-    except ValueError:
-        return None
-    
-# Used to collect the current query from the command line to enable options to
-# be pre-checked. The conversion from string to int for id-fields is required
-# to check wether they exist using the in-operator
-def update_with_selected(context, request):
-    qp   = QueryParser(Product)
-    expr = {}
-    for key, value in request.GET.items():
-        try:
-            label, short, field, operator = qp.parse_key(key)
-        except InvalidExpression:
-            continue
-        
-        expr['%s.%s' % (short, field)] = qp.prepare_op_val(operator, value)[1]
-
-    context.update(
-        selected_categories = filter(None, map(_to_int, expr.get('c.id') or [])),
-        selected_colors     = expr.get('o.color'),
-        selected_brands     = filter(None, map(_to_int, expr.get('m.id') or [])),
-        selected_price      = expr.get('vp.price'),
-        selected_gender     = expr.get('p.gender'),
-        selected_shown_categories = filter(None, map(_to_int, request.GET.get('shown', '').split(',')))
-    )
-
-def search(request, model):
-    """
-    AJAX-only search results. Results are paginated
-    """
-    class_name = {
-        'products': 'Product',
-        'manufacturers': 'Manufacturer',
-        'categories': 'Category',
-        'looks': 'Look',
-    }.get(model)
-    
-    paged_result = get_paged_search_result(request, class_name)
-    response     = get_pagination_as_dict(paged_result)
-
-    return HttpResponse(
-        json.encode(response),
-        mimetype='application/json'
-    )
-
-@get_current_user
-def wardrobe(request, profile):
-    return browse(request,
-            template='profile/wardrobe.html',
-            extra_context={ 'profile': profile },
-            wardrobe__user=profile.user)
-
-def without(query, model_shorthand):
-    r = re.compile(r"^\d:%s\." % model_shorthand)
-
-    return dict((k, v) for k, v in query.items() if not r.match(k))
-
-
-def browse_manufacturers(request, **kwargs):
-    result = get_filter(request, **kwargs)
-    
-    return HttpResponse(
-            json.encode(result.get('manufacturers', [])),
-            mimetype='application/json'
-        )
-    
-
-def browse(request, template='apparel/browse.html', extra_context=None, **kwargs):
-    paged_result = get_paged_search_result(request,
-        class_name='Product',
-        page_size=BROWSE_PAGE_SIZE,
-        **kwargs
-    )
-
-    try:
-        next_page = paged_result.paginator.page(paged_result.next_page_number())
-    except (EmptyPage, InvalidPage):
-        next_page = None
-
-    pages = (paged_result, next_page,)
-
-    left, mid, right = get_pagination(paged_result.paginator, paged_result.number)
-    pagination = {
-        'left': left,
-        'mid': mid,
-        'right': right
-    }
-
-    result = get_filter(request, **kwargs)
-    
-    if extra_context:
-        result.update(extra_context)
-
-    result.update(pagination=pagination)
-    
-    update_with_selected(result, request)
-
-    if request.is_ajax():
-        result.update(
-            html = loader.render_to_string('apparel/fragments/product_list.html',
-                {
-                    'current_page': paged_result,
-                    'pages': pages,
-                    'pagination': pagination
-                },
-                context_instance=RequestContext(request)
-            ),
-        )
-        result.update(get_pagination_as_dict(paged_result))
-
-        # FIXME This lets us avoid looking up all properties for all objects in the db
-        # We might want to refactor this a bit, but this is a very nice speedup!
-        del result['object_list']
-        # Still needed when updating the list of manufacturers
-        #del result['manufacturers']
-
-        return HttpResponse(
-            json.encode(result),
-            mimetype='text/json'
-        )
-    
-    result.update(
-        current_page = paged_result,
-        pages = pages,
-        templates = {
-            'pagination': get_template_source('apparel/fragments/pagination_js.html')
-        },
-    )
-
-    return render_to_response(template, result, context_instance=RequestContext(request))
 
 def product_redirect(request, pk):
     """
@@ -505,9 +365,10 @@ def add_to_wardrobe(request):
     """
     Adds a product to a user's wardrobe (and creates it if necessary)
     """
-    
+    product = Product.objects.get(pk=request.POST.get('product'))
     wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
-    wardrobe.products.add(Product.objects.get(pk=request.POST.get('product')))
+    wardrobe.products.add(product)
+    signals.post_save.send(sender=Product, instance=product) # For haystack/solr, trigger a fake save signal
     wardrobe.save() # FIXME: Only save if created?
     
     return wardrobe
@@ -521,106 +382,40 @@ def csrf_failure(request, reason=None):
     logging.debug("CSRF failure: %s" % reason)
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
 
-
-
-
-
-#
-# Utility routines. FIXME: Move these out
-#
-
-def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
+@get_current_user
+@login_required
+def home(request, profile, page=0):
     """
-    >>> from django.core.paginator import Paginator
-    >>> from apparel import views
-    >>> p = Paginator(range(22), 2)
-    >>> views.get_pagination(p, 3)
-    (None, [1, 2, 3, 4, 5, 6], [10, 11])
-
-    >>> views.get_pagination(p, 6)
-    (None, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], None)
-
-    >>> views.get_pagination(p, 9)
-    ([1, 2], [6, 7, 8, 9, 10, 11], None)
-
-    >>> p = Paginator(range(100), 2)
-    >>> views.get_pagination(p, 23)
-    ([1, 2], [20, 21, 22, 23, 24, 25, 26], [49, 50])
-
-    >>> views.get_pagination(p, 23, on_ends=5, on_each_side=2)
-    ([1, 2, 3, 4, 5], [21, 22, 23, 24, 25], [46, 47, 48, 49, 50])
+    Displays the logged in user's page
     """
-    if paginator.num_pages <= (on_ends * 2) + (on_each_side * 2):
-        return None, paginator.page_range, None
+    queryset = user_stream(request.user)
+    queryset = queryset.filter(verb__in=['liked', 'added', 'commented', 'created'])
 
-    left, mid, right = None, None, None
-    
-    if page_num <= on_ends + on_each_side + 1:
-        mid = range(1, page_num + 1)
-    else:
-        left = range(1, on_ends + 1)
-        mid = range(page_num - on_each_side, page_num + 1)
+    return list_detail.object_list(
+        request,
+        queryset=queryset,
+        template_name='apparel/user_home.html',
+        paginate_by=10,
+        page=page,
+        extra_context={
+            'profile': profile,
+            'facebook_friends': get_facebook_friends(request),
+            'popular_looks_in_network': get_top_in_network(Look, request.user, limit=2),
+            'popular_products_in_network': get_top_in_network(Product, request.user, limit=2)
+        }
+    )
 
-    if page_num >= paginator.num_pages - (on_ends + on_each_side + 1):
-        mid.extend(range(page_num + 1, paginator.num_pages + 1))
-    else:
-        mid.extend(range(page_num + 1, on_each_side + page_num + 1))
-        right = range(paginator.num_pages - on_ends + 1, paginator.num_pages + 1)
+def index(request):
+    #ctx = get_filter(request)
+    ctx = {}
+    # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
+    ctx['pages'] = FirstPageContent.published_objects.all()
+    ctx['popular_looks']  = Vote.objects.get_top(Look, limit=6)
+    ctx['colors'] = Option.objects.filter(option_type__name='color')
+    ctx['categories_all'] = Category._tree_manager.filter(on_front_page=True)
+    ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
 
-    return left, mid, right
-
-def get_paged_search_result(request, class_name=None, page_size=None, **kwargs):
-    class_name = class_name.lower()
-    model_class = get_model('apparel', class_name)
-    if model_class is None:
-        raise Exception('No model to search for')
-
-    query, page, size = get_query_and_page(request, page_size)
-    # FIXME: When adding a search engine and refactoring SearchManager, we
-    # might want to add a select_related somewhere here
-    queryset = model_class.objects.search(query).filter(**kwargs)
-    # If we are searching for a product, make sure that every product in our
-    # result has a corresponding vendorproduct in the database.
-    if class_name == 'product':
-        queryset = queryset.filter(vendorproduct__isnull=False,
-                                   category__isnull=False)
-
-    paginator = Paginator(queryset, size)
-
-    try:
-        paged_result = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        paged_result = paginator.page(paginator.num_pages)
-
-    return paged_result
-    
-def get_pagination_as_dict(paged_result):
-    # FIXME: This exists because the JSON exporter is unable to serialise
-    # Page and Pagination objects. Perhaps this code could be moved to the 
-    # exporter module instead?
-    return {
-        'object_list': paged_result.object_list,
-        'previous_page_number': paged_result.previous_page_number(),
-        'next_page_number': paged_result.next_page_number(),
-        'number': paged_result.number,
-        'paginator': {
-            'num_pages': paged_result.paginator.num_pages,
-            'count': paged_result.paginator.count,
-        },
-    }
-
-def get_pricerange(query, **kwargs):
-    query_set = VendorProduct.objects.filter(product__published=True)
-    filter_query = without(query, 'vp')
-
-    if filter_query:
-        query_set = query_set.filter(product__in=Product.objects.search(filter_query))
-    if kwargs:
-        query_set = query_set.filter(**kwargs)
-
-    pricerange = query_set.aggregate(min=Min('price'), max=Max('price'))
-    #pricerange = { 'min': 0, 'max': 10 }
-    
+    pricerange = VendorProduct.objects.filter(product__published=True, product__category__isnull=False).aggregate(min=Min('price'), max=Max('price'))
     if pricerange['min'] is None:
         pricerange['min'] = 0
     else:
@@ -629,85 +424,22 @@ def get_pricerange(query, **kwargs):
         pricerange['max'] = 10000
     else:
         pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
-    pricerange['selected'] = query['1:vp.price:range'] if '1:vp.price:range' in query else '%s,%s' % (pricerange['min'],pricerange['max'])
+    pricerange['selected'] = '%s,%s' % (pricerange['min'], pricerange['max'])
+    ctx['pricerange'] = pricerange
 
-    return pricerange
-
-
-def get_filter(request, **kwargs):
-    query = request.GET.copy()
-    mpage = query.get('mpage', 1)
-    mname = query.get('mname')
-    
-    for k in filter(lambda k: k in query, ['page', 'mpage', 'mname', 'shown']):
-        del query[k]
-    
-    colors = Option.objects.filter(option_type__name='color')
-    
-    product_args = {}
-    
-    if query or kwargs:
-        if query:
-            manufacturers = Product.objects.search(without(query, 'm')).filter(published=True)
-            colors = colors.filter(product__in=Product.objects.search(without(query, 'o')).filter(published=True))
-        else:
-            manufacturers = Product.objects.filter(published=True)
-
-        if kwargs:
-            manufacturers = manufacturers.filter(**kwargs)
-            for key in kwargs:
-                product_args['product__%s' % key] = kwargs[key]
-
-            colors = colors.filter(**product_args)
-        
-        manufacturers = Manufacturer.objects.filter(id__in=manufacturers.distinct().values_list('manufacturer', flat=True))
-    else:
-        manufacturers = Manufacturer.objects.filter(product__published=True).distinct()
-    
-    colors = colors.distinct()
-    
-    
-    if mname:
-        manufacturers = manufacturers.filter(name__istartswith=mname)
-    
-    mp = Paginator(manufacturers.order_by('name'), settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
+    mp = Paginator(Manufacturer.objects.filter(product__published=True).distinct().order_by('name'), settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
     try:
-        manufacturers = mp.page(mpage).object_list
+        manufacturers = mp.page(1).object_list
     except EmptyPage:
         manufacturers = []
-    except InvalidPage:
-        manufacturers = mp.page(1).object_list
-    
-    result = {}
+    ctx['manufacturers'] = manufacturers
 
-    if request.is_ajax():
-        colors = colors.values_list('value', flat=True)
-    else:
-        result.update(categories_all=Category._tree_manager.all())
-
-    if query or kwargs:
-        result.update(
-            categories = Product.objects.search(without(query, 'c')).filter(published=True).filter(**kwargs).distinct().values_list('category', flat=True)
-        )
-    
-    result.update(
-        manufacturers = manufacturers,
-        colors = colors,
-        pricerange = get_pricerange(query, **product_args),
-    )
-
-    return result
-
-def index(request):
-    ctx = get_filter(request)
-    # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
-    ctx['pages'] = FirstPageContent.published_objects.all()
-    ctx['popular_looks']  = Vote.objects.get_top(Look, limit=6)
-    ctx['categories_all'] = ctx['categories_all'].filter(on_front_page=True)
-    ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
-    
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 
+
+#
+# Utility routines. FIXME: Move these out
+#
 
 def get_top_in_network(Model, user, limit=2):
     """
@@ -745,73 +477,11 @@ def get_top_in_network(Model, user, limit=2):
         if id in objects:
             yield objects[id], int(score)
 
-@get_current_user
-@login_required
-def home(request, profile, page=0):
-    """
-    Displays the logged in user's page
-    """
-    queryset = user_stream(request.user)
-    queryset = queryset.filter(verb__in=['liked', 'added', 'commented', 'created'])
-
-    return list_detail.object_list(
-        request,
-        queryset=queryset,
-        template_name='apparel/user_home.html',
-        paginate_by=10,
-        page=page,
-        extra_context={
-            'profile': profile,
-            'facebook_friends': get_facebook_friends(request),
-            'popular_looks_in_network': get_top_in_network(Look, request.user, limit=2),
-            'popular_products_in_network': get_top_in_network(Product, request.user, limit=2)
-        }
-    )
-
 def get_facebook_friends(request):
     if request.facebook:
         friends = request.facebook.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
         return ApparelProfile.objects.filter(user__facebookprofile__uid__in=friends_uids)
-
-def get_query_and_page(request, override_size=None):
-    """
-    Copies the request query to a mutable dict and removes the 'page' and 'size'
-    keys.
-     - 'page' - indicates which page in the paged result should be used
-     - 'size' - indicates page size used. 'max' corresponds to the BROWSE_PAGE_MAX
-                setting.
-    
-    If 'override_size' argument is passed, the 'size' query key have no effect.
-    """
-    query = request.GET.copy()
-    page  = int(query.pop('page', [1])[0]) # all values are lists in the QueryDict object and we never expect more than one
-    size  = query.pop('size', ['max'])[0]
-    
-    if page == -1:
-        logging.warn('Use of depricated page=-1 query. Use size=MAX instead. Request %s', request)
-        size = 'max'
-        page = 1
-    
-    if override_size is not None:
-        size = override_size
-        logging.debug('Using explicit page size: %s', override_size)
-    elif size == 'max':
-        size = BROWSE_PAGE_MAX
-        logging.debug('Using max page size: %s', size)
-    elif size:
-        try:
-            size = int(size)
-        except ValueError:
-            logging.error('%s is not an intiger, using max setting', size)
-            size = BROWSE_PAGE_MAX
-        else:
-            if size > BROWSE_PAGE_MAX: size = BROWSE_PAGE_MAX
-        
-        logging.debug('Using query page size: %s', size)
-    
-    return query, page, size
-
 
 def js_template(str, request=None, context=None):
     if context is None:

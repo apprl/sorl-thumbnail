@@ -123,7 +123,7 @@
 
     <field name="price_exact" type="slong" indexed="true" stored="true" multiValued="false" />
 
-    <field name="user" type="text" indexed="true" stored="true" multiValued="false" />
+    <field name="user" type="text" indexed="true" stored="false" multiValued="true" />
 
     <field name="template" type="string" indexed="false" stored="true" multiValued="false" />
 
@@ -132,6 +132,8 @@
     <field name="color_exact" type="string" indexed="true" stored="true" multiValued="true" />
 
     <field name="manufacturer" type="text" indexed="true" stored="false" multiValued="false" />
+
+    <field name="user_exact" type="string" indexed="true" stored="false" multiValued="true" />
 
   </fields>
 

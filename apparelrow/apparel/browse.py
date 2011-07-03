@@ -27,6 +27,7 @@ from apparel.models import Product
 from apparel.models import Manufacturer
 from apparel.models import Option
 from apparel.models import Category
+from apparel.decorators import get_current_user
 
 BROWSE_PAGE_SIZE = 12
 BROWSE_PAGE_MAX  = 100
@@ -65,12 +66,14 @@ def filter_query(query, params):
 
     return query
 
-def browse_products(request):
+def browse_products(request, template='apparel/browse.html', extra_context=None):
     query = ''
     results = EmptySearchQuerySet()
 
     sqs = SearchQuerySet().models(Product)
     sqs = filter_query(sqs, request.GET)
+    if extra_context and 'profile' in extra_context:
+        sqs = sqs.narrow('user_exact:%s' % (extra_context['profile'].user.id,))
     sqs = sqs.load_all()
 
     facet = sqs.facet_counts()
@@ -134,11 +137,11 @@ def browse_products(request):
                   colors=colors,
                   categories=categories)
 
-    paged_result.html = [o.template for o in paged_result.object_list]
+    paged_result.html = [o.template for o in paged_result.object_list if o]
     paged_result.object_list = []
 
     if next_page is not None:
-        next_page.html = [o.template for o in next_page.object_list]
+        next_page.html = [o.template for o in next_page.object_list if o]
         next_page.object_list = []
 
     # Update selected
@@ -157,6 +160,10 @@ def browse_products(request):
         selected_price      = selected_price,
         selected_gender     = request.GET.get('gender', None),
     )
+
+    # Extra context
+    if extra_context:
+        result.update(extra_context)
 
     # Serve ajax request
     if request.is_ajax():
@@ -186,7 +193,7 @@ def browse_products(request):
         },
     )
 
-    return render_to_response('apparel/browse.html', result, context_instance=RequestContext(request))
+    return render_to_response(template, result, context_instance=RequestContext(request))
 
 def get_pagination_as_dict(paged_result):
     # FIXME: This exists because the JSON exporter is unable to serialise
@@ -201,6 +208,12 @@ def get_pagination_as_dict(paged_result):
             'count': paged_result.paginator.count,
         },
     }
+
+@get_current_user
+def browse_wardrobe(request, profile):
+    return browse_products(request,
+            template='profile/wardrobe.html',
+            extra_context={'profile': profile})
 
 def browse_manufacturers(request, **kwargs):
     """

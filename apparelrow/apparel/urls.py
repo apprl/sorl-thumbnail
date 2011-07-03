@@ -23,14 +23,12 @@ like_look_dict = {
 urlpatterns = patterns('',
     (r'^$', 'apparel.views.index'),
     (r'^home/$', 'apparel.views.home'),
-    (r'^(?P<model>\w+)/search$', 'apparel.views.search'),
+    (r'^(?P<model>\w+)/search$', 'apparelrow.search.search_view'),
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
     (r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list'),
     (r'^products/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
     
-    #(r'^browse/$', 'apparel.views.browse'),
-    #(r'^browse/manufacturers/$', 'apparel.views.browse_manufacturers'),
     (r'^browse/$', 'apparel.browse.browse_products'),
     (r'^browse/manufacturers/$', 'apparel.browse.browse_manufacturers'),
     

@@ -451,7 +451,7 @@ var chooser = {
         });
         
         if(to_fetch.length > 0) {
-            jQuery.getJSON('{% url apparel.views.search "products"  %}', {
+            jQuery.getJSON('{% url apparelrow.search.search_view "products"  %}', {
                 '1:p.id:in': to_fetch.join(','),
                 'page': '-1'
             }, function(result, status) {
