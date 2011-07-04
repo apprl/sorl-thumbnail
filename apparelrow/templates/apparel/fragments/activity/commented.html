@@ -12,11 +12,7 @@
 {% endblock %}
 
 {% block activity_header %}
-    {% if profile.user == object.actor %}
-        {% blocktrans with object.action_object.content_object as commented_on %}Commented on {{ commented_on }}{% endblocktrans %}
-    {% else %}
-        {% blocktrans with object.action_object.content_object as commented_on and object.actor.get_profile.display_name as name %}{{ name }} commented on {{ commented_on }}{% endblocktrans %}
-    {% endif %}
+    {% blocktrans with object.action_object.content_object as commented_on and object.actor.get_profile.display_name as name %}{{ name }} commented on {{ commented_on }}{% endblocktrans %}
 {% endblock %}
 
 {% block activity_content %}
