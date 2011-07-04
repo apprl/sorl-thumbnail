@@ -1,8 +1,9 @@
+{% load i18n %}
 <form action="{% url django.views.i18n.set_language %}" method="post" class="select-language">
     {% csrf_token %}
     {% for language in LANGUAGES %}
         {% if language.0 != request.LANGUAGE_CODE %}
-        <button name="language" value="{{ language.0 }}" type="submit">{{ language.1 }}</button>
+        <button name="language" value="{{ language.0 }}" type="submit">{% trans language.1 %}</button>
         {% endif %}
     {% endfor %}
 </form>
