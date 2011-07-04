@@ -39,6 +39,13 @@ cd apache-solr-3.2.0/example
 java -jar start.jar
 ./manage.py rebuild_index --settings development
 
+= Set up message queue =
+install rabbitmq and start rabbitmq
+sudo rabbitmqctl add_user apparel apparel_mq
+sudo rabbitmqctl add_vhost apparel
+sudo rabbitmqctl set_permissions -p apparel apparel ".*" ".*" ".*"
+./manage.py celeryd -E -B --settings development
+
 Now you can start django, either with the django-admin.py in bin, or the regular manage.py
 
 = Directory Structure =

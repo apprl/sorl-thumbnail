@@ -6,11 +6,11 @@ from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
 from django.http import Http404
 from django.http import HttpResponse
+from django.db.models import signals
 from django.db.models import get_model
 
 from haystack import site
 from haystack.indexes import SearchIndex
-from haystack.indexes import RealTimeSearchIndex
 from haystack.indexes import CharField
 from haystack.indexes import DateTimeField
 from haystack.indexes import IntegerField
@@ -21,6 +21,7 @@ from haystack.forms import FacetedSearchForm
 from haystack.query import EmptySearchQuerySet
 from haystack.query import SearchQuerySet
 
+from apparelrow.tasks import search_index_update_task
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Look
 from apparelrow.apparel.models import Manufacturer
@@ -29,7 +30,37 @@ from apparelrow.apparel.models import Wardrobe
 
 RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 10)
 
-class ProductIndex(RealTimeSearchIndex):
+def remove_instance_from_index(instance):
+    model_class = get_model(instance._meta.app_label, instance._meta.module_name)
+    search_index = site.get_index(model_class)
+    search_index.remove_object(instance)
+
+class QueuedSearchIndex(SearchIndex):
+    """
+    A ``SearchIndex`` subclass that enqueues updates for later processing.
+
+    Deletes are handled instantly since a reference, not the instance, is put on the queue. It would not be hard
+    to update this to handle deletes as well (with a delete task).
+    """
+    def _setup_save(self, model):
+        signals.post_save.connect(self.enqueue_save, sender=model)
+
+    def _setup_delete(self, model):
+        signals.post_delete.connect(self.enqueue_delete, sender=model)
+
+    def _teardown_save(self, model):
+        signals.post_save.disconnect(self.enqueue_save, sender=model)
+
+    def _teardown_delete(self, model):
+        signals.post_delete.disconnect(self.enqueue_delete, sender=model)
+
+    def enqueue_save(self, instance, **kwargs):
+        search_index_update_task.delay(instance._meta.app_label, instance._meta.module_name, instance._get_pk_val())
+
+    def enqueue_delete(self, instance, **kwargs):
+        remove_instance_from_index(instance)
+
+class ProductIndex(QueuedSearchIndex):
     """
     Search index for product model.
     """
@@ -68,7 +99,7 @@ class ProductIndex(RealTimeSearchIndex):
     def should_update(self, instance, **kwargs):
         return instance.published==True
 
-class ManufacturerIndex(RealTimeSearchIndex):
+class ManufacturerIndex(QueuedSearchIndex):
     """
     Search index for manufacturer model.
     """
@@ -81,7 +112,7 @@ class ManufacturerIndex(RealTimeSearchIndex):
         return Manufacturer.objects.filter(product__published=True).distinct()
 
 
-class LookIndex(RealTimeSearchIndex):
+class LookIndex(QueuedSearchIndex):
     """
     Search index for look model.
     """

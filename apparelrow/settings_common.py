@@ -155,6 +155,7 @@ INSTALLED_APPS = (
     'mptt',
     'sorl.thumbnail',
 
+    'djcelery',
     'haystack',
     'actstream',
     'tagging',

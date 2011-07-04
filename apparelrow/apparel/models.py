@@ -215,14 +215,18 @@ class VendorCategory(models.Model):
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
         if self.category:
-            Product.objects.filter(vendorproduct__vendor_category=self).update(
-                category=self.category,
-                published=True
-            )
+            queryset = Product.objects.filter(vendorproduct__vendor_category=self)
+            for product in queryset:
+                product.category = self.category
+                product.published = True
+                product.save()
+
         if self.default_gender:
-            Product.objects.filter(vendorproduct__vendor_category=self, gender__isnull=True).update(
-                gender=self.default_gender
-            )
+            queryset = Product.objects.filter(vendorproduct__vendor_category=self, gender__isnull=True)
+            for product in queryset:
+                product.gender = self.default_gender
+                product.save()
+
             # NOTE 1: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
             # NOTE 2: If we do not want to explicitly publish all related products (perhaps they are 
             #   unpublished for a different reason?) we may want to do one of two things:

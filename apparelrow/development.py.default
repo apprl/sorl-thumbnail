@@ -35,6 +35,16 @@ HAYSTACK_SITECONF = 'apparelrow.search'
 HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr'
 
+BROKER_HOST = 'localhost'
+BROKER_PORT = 5672
+BROKER_USER = 'apparel'
+BROKER_PASSWORD = 'apparel_mq'
+BROKER_VHOST = 'apparel'
+
+import djcelery
+djcelery.setup_loader()
+CELERY_RESULT_BACKEND='amqp'
+
 SEARCH_SYNONYM_FILE = os.path.join(PROJECT_ROOT, '..', 'etc', 'synonyms.txt')
 
 # --- Application wide init code goes here. 
