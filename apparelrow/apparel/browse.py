@@ -50,7 +50,8 @@ def filter_query(query, params):
         if field in params:
             if field == 'price':
                 price = params[field].split(',')
-                query = query.narrow('%s:[%s TO %s]' % (field + '_exact', query.query.clean(price[0]), query.query.clean(price[1])))
+                if len(price) == 2:
+                    query = query.narrow('%s:[%s TO %s]' % (field + '_exact', query.query.clean(price[0]), query.query.clean(price[1])))
             elif field == 'category':
                 query = query.narrow('{!tag=category}%s:(%s)' % (field + '_exact', ' OR '.join([query.query.clean(x) for x in params[field].split(',')])))
             else:
@@ -81,7 +82,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     # support for stats component.
     solr = Solr(settings.HAYSTACK_SOLR_URL)
     price_result = solr.search(q=sqs.query.build_query(), fq=list(sqs.query.narrow_queries), **{'stats': 'on', 'stats.field': 'price'})
-    if price_result:
+    if price_result and price_result.stats['stats_fields']['price']:
         pricerange = {
             'max': int(round(price_result.stats['stats_fields']['price']['max'] + 50, -2)),
             'min': int(round(price_result.stats['stats_fields']['price']['min'] - 50, -2)),
