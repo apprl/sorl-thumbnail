@@ -1,7 +1,8 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns
+
 from voting.views import vote_on_object
-from apparel.models import *
-from django.db.models import Q
+
+from apparelrow.apparel.models import Look, Product
 
 
 # FIXME: There's currently no way for django-voting to limit the Product queryset

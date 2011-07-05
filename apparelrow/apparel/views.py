@@ -1,32 +1,32 @@
-import logging, re, math, copy
+import logging
+import re
+import math
+
+from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext
-from django.db.models import Max, Min, connection, get_model, signals
-from django.template import RequestContext, Template, Context, loader
+from django.db.models import Max, Min, connection, signals
+from django.template import RequestContext, Template, loader
 from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from django.contrib.flatpages.models import FlatPage
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic import list_detail
-from django.conf import settings
 
-from sorl.thumbnail.main import DjangoThumbnail
 from hanssonlarsson.django.exporter import json
-from recommender.models import Recommender
+
 from voting.models import Vote
 
-from actstream.models import user_stream, Follow
+from actstream.models import user_stream
+from actstream.models import Follow
 
-from profile.models import ApparelProfile
-
-from apparel.decorators import seamless_request_handling, get_current_user
-from apparel.models import *
-from apparel.forms import *
-
+from apparelrow.profile.models import ApparelProfile
+from apparelrow.apparel.decorators import seamless_request_handling
+from apparelrow.apparel.decorators import get_current_user
+from apparelrow.apparel.models import Product, Manufacturer, Category, Option, VendorProduct
+from apparelrow.apparel.models import Look, LookComponent, Wardrobe, FirstPageContent
+from apparelrow.apparel.forms import LookForm, LookComponentForm
 
 def product_redirect(request, pk):
     """
@@ -191,7 +191,7 @@ def look_create(request):
     
     return (
         look,
-        HttpResponseRedirect( reverse('apparel.views.look_edit', args=(look.slug,)))
+        HttpResponseRedirect(reverse('apparel.views.look_edit', args=(look.slug,)))
     )
 
 
@@ -273,7 +273,7 @@ def save_look_component(request):
             'added': added,
             'html': loader.render_to_string('apparel/fragments/%s.html' % template, {'component': form.instance}, context_instance=RequestContext(request)),
         },                                                                                        # JSON response 
-        HttpResponseRedirect( reverse('apparel.views.look_edit', args=(request.POST['look'],)))   # Browser request response
+        HttpResponseRedirect(reverse('apparel.views.look_edit', args=(request.POST['look'],)))   # Browser request response
     )
 
 @seamless_request_handling
@@ -323,7 +323,7 @@ def delete_look_component(request):
             'component': request.POST['component_of'],
             'in_look': in_look,
         }, 
-        HttpResponseRedirect( reverse('apparel.views.look_edit', args=(request.POST['look'],)))
+        HttpResponseRedirect(reverse('apparel.views.look_edit', args=(request.POST['look'],)))
     )
 
 @seamless_request_handling
@@ -441,9 +441,9 @@ def index(request):
 # Utility routines. FIXME: Move these out
 #
 
-def get_top_in_network(Model, user, limit=2):
+def get_top_in_network(model_class, user, limit=2):
     """
-    Get top objects of type Model which was created by followers to user. Based on get_top
+    Get top objects of type model_class which was created by followers to user. Based on get_top
     from the django-voting plugin. Also requires the django-activity-stream plugin.
     """
     if settings.DATABASE_ENGINE == 'mysql':
@@ -464,15 +464,15 @@ def get_top_in_network(Model, user, limit=2):
             'having_score_name': connection.ops.quote_name('score'),
             'having_score': having_score,
             'vote_table_name': connection.ops.quote_name(Vote._meta.db_table),
-            'model_table_name': connection.ops.quote_name(Model._meta.db_table),
+            'model_table_name': connection.ops.quote_name(model_class._meta.db_table),
             'follow_table_name': connection.ops.quote_name(Follow._meta.db_table)
         }
 
-    content_type_id = ContentType.objects.get_for_model(Model).id
+    content_type_id = ContentType.objects.get_for_model(model_class).id
     cursor = connection.cursor()
     cursor.execute(query, [content_type_id, content_type_id, user.id, limit])
     results = cursor.fetchall()
-    objects = Model.objects.in_bulk([id for id, score in results])
+    objects = model_class.objects.in_bulk([id for id, score in results])
     for id, score in results:
         if id in objects:
             yield objects[id], int(score)
