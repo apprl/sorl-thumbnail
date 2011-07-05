@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 from importer.framework.provider import CSVProvider
@@ -49,14 +50,19 @@ from importer.framework.mapper import DataMapper
 # Note: Column names are lower cased
 #   
 
+# FIXME: Implement this globally just like map_colors function?
+GENDERS = {'M': ('male', 'males', 'men', 'mens', 'herr', 'herrar', 'man', 'män'),
+           'W': ('female', 'females', 'woman', 'women', 'womens', 'dam', 'damer', 'kvinna', 'kvinnor'),
+           'U': ('unisex',)}
 
+GENDER_REGEXES = dict((gender, re.compile(r'\b(?:%s)\b' % '|'.join(value), re.I)) for gender, value in GENDERS.items())
 
 class CJMapper(DataMapper):
     re_cdata = re.compile(r'<!\[CDATA\[(.+?)\]\]>')
     re_quote = re.compile(r'^"*|(?<!\d)"|"*$')          # The middle segment preserves inches
     re_yes   = re.compile(r'^yes$', re.I)
     re_price = re.compile(r'[^\d\.]')
-    
+
     def preprocess(self):
         for k, v in self.record.items():
             self.record[k.lower()] = self.re_cdata.sub(r'\1', self.record[k])
@@ -75,15 +81,14 @@ class CJMapper(DataMapper):
         return self.record['sku']
     
     def get_gender(self):
-        keyword = self.record['keywords'].split(',')[0]
-        
-        if keyword == 'WOMAN' or keyword == 'GIRL':
-            return 'W'
-        if keyword == 'MAN' or keyword == 'BOY':
-            return 'M'
-        
-        return 'U'
-    
+        for c, r in GENDER_REGEXES.items():
+            if r.search(self.record.get('advertisercategory')):
+                return c
+
+        for c, r in GENDER_REGEXES.items():
+            if r.search(self.record.get('keywords')):
+                return c
+
     def get_product_name(self):
         return self.record['name']
     
@@ -97,9 +102,7 @@ class CJMapper(DataMapper):
         return self.record['buyurl']
     
     def get_category(self):
-        keyword = self.record['keywords'].split(',')[0]
-
-        return self.record['advertisercategory'] + ' > ' + keyword 
+        return self.record['advertisercategory']
     
     def get_price(self):
         price = self.record.get('price')
