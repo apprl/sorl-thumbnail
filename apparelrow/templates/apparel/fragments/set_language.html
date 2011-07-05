@@ -6,4 +6,14 @@
         <button name="language" value="{{ language.0 }}" type="submit">{% trans language.1 %}</button>
         {% endif %}
     {% endfor %}
+
+    {% comment %}
+        {% if request.LANGUAGE_CODE == 'sv' %}
+            <button name="language" value="en" type="submit">English</button>
+        {% endif %}
+
+        {% if request.LANGUAGE_CODE == 'en' %}
+            <button name="language" value="sv" type="submit">Svenska</button>
+        {% endif %}
+    {% endcomment %}
 </form>

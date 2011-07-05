@@ -23,7 +23,7 @@ msgstr ""
 
 #: settings_common.py:48
 msgid "Swedish"
-msgstr ""
+msgstr "Svenska"
 
 #: apparel/models.py:25
 msgid "Products can only be displayed for an active manufactorer"

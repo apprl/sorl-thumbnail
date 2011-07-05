@@ -20,7 +20,7 @@ msgstr ""
 
 #: settings_common.py:47
 msgid "English"
-msgstr "Engelska"
+msgstr "English"
 
 #: settings_common.py:48
 msgid "Swedish"
