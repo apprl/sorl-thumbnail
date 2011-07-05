@@ -1,5 +1,3 @@
-import logging
-from apparel.views import js_template, get_template_source
 from django.conf import settings as django_settings
 
 def exposed_settings(request):
