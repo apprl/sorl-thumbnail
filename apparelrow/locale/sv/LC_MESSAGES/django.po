@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-04 20:34+0200\n"
+"POT-Creation-Date: 2011-07-06 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -664,36 +664,36 @@ msgstr "Skapa"
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/apparel/look_detail.html:39 templates/apparel/look_edit.html:5
+#: templates/apparel/look_detail.html:59 templates/apparel/look_edit.html:5
 msgid "Edit"
 msgstr "Redigera"
 
-#: templates/apparel/look_detail.html:44
+#: templates/apparel/look_detail.html:64
 #, python-format
 msgid "%(name)s's looks"
 msgstr "%(name)ss looks"
 
-#: templates/apparel/look_detail.html:59
+#: templates/apparel/look_detail.html:79
 msgid "Created"
 msgstr "Skapad"
 
-#: templates/apparel/look_detail.html:69
+#: templates/apparel/look_detail.html:89
 msgid "Embed"
 msgstr "Bädda in"
 
-#: templates/apparel/look_detail.html:72
+#: templates/apparel/look_detail.html:92
 msgid "More looks by"
 msgstr "Fler looks av"
 
-#: templates/apparel/look_detail.html:78
+#: templates/apparel/look_detail.html:98
 msgid "Similar looks"
 msgstr "Liknande looks"
 
-#: templates/apparel/look_detail.html:106
+#: templates/apparel/look_detail.html:126
 msgid "Tags"
 msgstr "Taggar"
 
-#: templates/apparel/look_detail.html:117
+#: templates/apparel/look_detail.html:137
 msgid "Articles in this look"
 msgstr "Artiklar i denna look"
 
@@ -767,6 +767,8 @@ msgid "Products"
 msgstr "Produkter"
 
 #: templates/apparel/look_edit.html:572
+#: templates/apparel/fragments/look_user_like_list.html:8
+#: templates/apparel/fragments/product_user_like_list.html:8
 msgid "Close"
 msgstr "Stäng"
 
@@ -784,18 +786,18 @@ msgstr "Lägger till..."
 msgid "In wardrobe"
 msgstr "Finns i garderob"
 
-#: templates/apparel/product_detail.html:157
+#: templates/apparel/product_detail.html:177
 #, python-format
 msgid "Added to <span class=\"count\">%(counter)s</span> look"
 msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] "Tillagd i <span class=\"count\">%(counter)s</span> look"
 msgstr[1] "Tillagd i <span class=\"count\">%(counter)s</span> looks"
 
-#: templates/apparel/product_detail.html:161
+#: templates/apparel/product_detail.html:181
 msgid "Recently viewed"
 msgstr "Senast besökta"
 
-#: templates/apparel/product_detail.html:170
+#: templates/apparel/product_detail.html:190
 #, python-format
 msgid ""
 "\n"
@@ -816,7 +818,7 @@ msgstr[1] ""
 "                    <span class=\"count\">%(counter)s</span> looks med denna "
 "produkt                "
 
-#: templates/apparel/product_detail.html:183
+#: templates/apparel/product_detail.html:203
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
@@ -883,6 +885,7 @@ msgid "Unlike"
 msgstr "Ogilla"
 
 #: templates/apparel/fragments/likes.html:6
+#: templates/apparel/fragments/likes_link.html:6
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> like"
 msgid_plural "<span class=\"count\">%(counter)s</span> likes"
@@ -893,6 +896,15 @@ msgstr[1] "<span class=\"count\">%(counter)s</span> likes"
 #: templates/apparel/fragments/product_detail.html:42
 msgid "Buy"
 msgstr "Köp"
+
+#: templates/apparel/fragments/look_user_like_list.html:7
+msgid "List of people liking this look"
+msgstr "Visar alla användare som gillat denna look"
+
+#: templates/apparel/fragments/look_user_like_list.html:11
+#: templates/apparel/fragments/product_user_like_list.html:11
+msgid "Search users"
+msgstr "Sök bland användarna"
 
 #: templates/apparel/fragments/look_widget.html:14
 msgid "By"
@@ -951,6 +963,10 @@ msgstr "Välj en eller flera färger"
 #: templates/apparel/fragments/product_options_price.html:5
 msgid "Select price range"
 msgstr "Välj prisintervall"
+
+#: templates/apparel/fragments/product_user_like_list.html:7
+msgid "List of people liking this product"
+msgstr "Visar alla användare som gillat denna produkt"
 
 #: templates/apparel/fragments/share.html:3
 msgid "Share"

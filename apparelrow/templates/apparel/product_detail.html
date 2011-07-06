@@ -132,6 +132,26 @@
                     btn.text('{% trans "In wardrobe" %}');
                     btn.click( function() { return false } );
                 },
+                });
+
+            jQuery('.activity .likes').click(function(event) {
+                jQuery('<div class="dialog"></div>').load('{% url apparel.views.product_user_like_list object.slug %}').appendTo('body').overlay({
+                    mask: {
+                        color: '#000',
+                        loadSpeed: 200,
+                        opacity: 0.5
+                    },
+                    load: true,
+                    closeOnClick: true,
+                    close: '.close',
+                    top: 100,
+                    onClose: function(e) { this.getTrigger().remove() }
+                });
+                event.preventDefault();
+                return false;
+            });
+            jQuery('.dialog .close').live('click', function(event) {
+                $('.dialog').overlay().close();
             });
         });
     </script>
@@ -155,7 +175,7 @@
             <div class="activity">
                 {% include 'apparel/fragments/comment_count.html' %}
                 <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
-                <p class="last">{% include 'apparel/fragments/likes.html' %}</p>
+                <p class="last">{% include 'apparel/fragments/likes_link.html' %}</p>
             </div>
             {% if viewed_products %}
                 <h2>{% trans "Recently viewed" %}</h2>

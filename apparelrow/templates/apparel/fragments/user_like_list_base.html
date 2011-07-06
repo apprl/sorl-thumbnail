@@ -1,0 +1,24 @@
+{% load i18n %}
+<div class="dialog-container">
+    <form action="{% block form_url %}{% endblock %}">
+        <div>
+            <h3>
+                {% block title %}{% endblock %}
+                <a class="close" href="#">{% trans "Close" %}</a>
+            </h3>
+            <div class="content">
+                <input type="text" name="user" value="{% trans "Search users" %}" class="default" />
+                <ul id="user-list">
+                {% for profile in profiles %}
+                    <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}">
+                        <a id="user-{{ profile.id }}" href="{{ profile.get_absolute_url }}">
+                            <img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/><span>{{ profile.display_name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </form>
+    <div class="dialog-footer"></div>
+</div>

@@ -1,0 +1,5 @@
+{% extends 'apparel/fragments/user_like_list_base.html' %}
+{% load i18n %}
+
+{% block form_url %}{% url apparel.views.product_user_like_list slug %}{% endblock %}
+{% block title %}{% trans "List of people liking this product" %}{% endblock %}

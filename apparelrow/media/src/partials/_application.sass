@@ -587,7 +587,7 @@ a.looks
   background: transparent image_url(unquote("look.png")) no-repeat scroll left center
   padding-left: 16px
 
-span
+span, a
   &.likes
     +apparel_likes
   &.price
@@ -1493,3 +1493,45 @@ a#create-look
 
 .dialog
   +dialog
+  .dialog-container
+    h3
+      margin: 10px
+    .close
+      float: right
+      background: transparent image_url(unquote("logout.png")) no-repeat scroll right center
+      padding-right: 15px
+    .content
+      background-color: $button_color
+      input
+        +text_input
+        width: 306px
+        margin: 4px 3px 3px
+        padding-left: 8px
+        padding-right: 8px
+        &.default
+          font-family: $font_family_italic
+          font-style: italic
+    #user-list
+      +border(top)
+      +border(bottom)
+      height: 205px
+      overflow-y: auto
+      padding: 0 12px
+      background-color: $button_color
+      li
+        line-height: 20px
+        border: none
+        +border(bottom)
+        background: transparent image_url("arrow-bg.png") scroll no-repeat right center
+        clear: both
+        &:hover
+          background-image: image_url("arrow-bg-hover.png")
+        &.last
+          margin-bottom: 5px
+        img
+          float: left
+          margin: 5px 10px 5px 0
+        span
+          display: block
+          height: 60px
+          line-height: 60px

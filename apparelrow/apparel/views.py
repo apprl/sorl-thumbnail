@@ -405,6 +405,26 @@ def home(request, profile, page=0):
         }
     )
 
+def product_user_like_list(request, slug):
+    votes = Vote.objects.filter(content_type=ContentType.objects.get_for_model(Product), object_id=Product.objects.get(slug=slug).id)
+    user_ids = votes.values_list('user__id', flat=True)
+    queryset = ApparelProfile.objects.filter(user__id__in=user_ids).order_by('name', 'user__first_name', 'user__last_name', 'user__username')
+    return render_to_response(
+        'apparel/fragments/product_user_like_list.html',
+        {'profiles': queryset, 'slug': slug},
+        context_instance=RequestContext(request)
+    )
+
+def look_user_like_list(request, slug):
+    votes = Vote.objects.filter(content_type=ContentType.objects.get_for_model(Look), object_id=Look.objects.get(slug=slug).id)
+    user_ids = votes.values_list('user__id', flat=True)
+    queryset = ApparelProfile.objects.filter(user__id__in=user_ids).order_by('name', 'user__first_name', 'user__last_name', 'user__username')
+    return render_to_response(
+        'apparel/fragments/look_user_like_list.html',
+        {'profiles': queryset, 'slug': slug},
+        context_instance=RequestContext(request)
+    )
+
 def index(request):
     #ctx = get_filter(request)
     ctx = {}

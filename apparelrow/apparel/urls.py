@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
     (r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list'),
     (r'^products/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
+    (r'^products/(?P<slug>[\w-]+)/users/$', 'apparel.views.product_user_like_list'),
     
     (r'^browse/$', 'apparel.browse.browse_products'),
     (r'^browse/manufacturers/$', 'apparel.browse.browse_manufacturers'),
@@ -43,6 +44,8 @@ urlpatterns = patterns('',
     (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
     (r'^looks/(?P<slug>[\w-]+?)/edit/$', 'apparel.views.look_edit'),
     (r'^looks/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_look_dict, "like-look"),
+    (r'^looks/(?P<slug>[\w-]+)/users/$', 'apparel.views.look_user_like_list'),
+
     (r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
     
     (r'^widget/look/(?P<object_id>\d+)/collage/$', 'apparel.views.widget', { 
