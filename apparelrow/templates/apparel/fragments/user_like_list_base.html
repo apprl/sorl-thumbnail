@@ -7,7 +7,6 @@
                 <a class="close" href="#">{% trans "Close" %}</a>
             </h3>
             <div class="content">
-                <input type="text" name="user" value="{% trans "Search users" %}" class="default" />
                 <ul id="user-list">
                 {% for profile in profiles %}
                     <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}">
