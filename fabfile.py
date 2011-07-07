@@ -150,9 +150,8 @@ def copy_bin():
 def copy_solr():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
-        sudo('mkdir ./solr', pty=True)
+        sudo('cp -rup ./releases/%(release)s/solr/ .' % env, pty=True)
         sudo('chown %(run_user)s:%(run_user)s ./solr' % env, pty=True)
-        sudo('cp -rup ./releases/%(release)s/solr/ ./solr' % env, pty=True, user=env.run_user)
 
 def copy_config():
     require('release', provided_by=[deploy, setup])
