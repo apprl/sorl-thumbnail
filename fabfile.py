@@ -44,6 +44,8 @@ def setup():
     sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev libxslt1-dev')
     # install some version control systems, since we need Django modules in development
     sudo('apt-get install -y git-core subversion')
+    # install rabbitmq-server (add http://www.rabbitmq.com/debian.html#apt for newest version)
+    sudo('apt-get install rabbitmq-server')
         
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
