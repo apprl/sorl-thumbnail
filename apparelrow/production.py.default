@@ -42,8 +42,8 @@ import djcelery
 djcelery.setup_loader()
 CELERY_RESULT_BACKEND='amqp'
 
-# Synonyms for Solr. FIXME: This should be properly set up and configured, running the example app for now.
-SEARCH_SYNONYM_FILE = "/home/hanssonlarsson/solr/apache-solr-3.2.0/example/solr/conf/synonyms.txt"
+# Synonyms for Solr.
+SEARCH_SYNONYM_FILE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'solr', 'solr', 'conf', 'synonyms.txt')
 
 LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', '..', '..', 'etc', 'logging.conf') # logging configuration file
 
