@@ -199,6 +199,9 @@ def restart_django():
     with cd(env.path):
         sudo('./bin/django-server restart', pty=True, user=env.run_user)
 
+def restart_solr():
+    sudo('restart solr', pty=True)
+
 def restart_celeryd():
     sudo('/etc/init.d/celeryd restart', pty=True)
 
