@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load follower_tags %}
 
 {% block body-classes %}three-columns profile{% endblock body-classes %}
 
@@ -33,9 +34,11 @@
         <h2>{% trans "Your friends are here!" %}</h2>
         <ul class="suggested-friends">
             {% for profile in facebook_friends %}
-            <li>
-                {% include 'apparel/fragments/avatar_link.html' %}
-            </li>
+                {% if_user_is_following profile.user %}{% else %}
+                <li>
+                    {% include 'apparel/fragments/avatar_link.html' %}
+                </li>
+                {% endif %}
             {% endfor %}
         </ul>
         {% endif %}
