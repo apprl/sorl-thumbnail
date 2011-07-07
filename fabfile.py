@@ -160,6 +160,7 @@ def copy_config():
         run('cp -n ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
         run('cd releases/%(release)s/apparelrow; cp production.py.default production.py' % env, pty=True)
         sudo('cp -n ./releases/%(release)s/etc/arimport.cron /etc/cron.daily/arimport' % env, pty=True)
+        sudo('cp -n ./releases/%(release)s/etc/solr.conf.init /etc/init/solr.conf' % env, pty=True)
         sudo('cp -n ./releases/%(release)s/etc/celeryd.default /etc/default/celeryd' % env, pty=True)
         sudo('cp -n ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
         sudo('update-rc.d celeryd defaults', pty=True)
