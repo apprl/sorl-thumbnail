@@ -929,7 +929,7 @@ msgstr "Lägg i garderob"
 #: templates/apparel/fragments/product_menu.html:7
 #: templates/apparel/fragments/product_menu_browse.html:6
 msgid "Browse articles"
-msgstr "Filtrera resultat"
+msgstr "Hitta plagg"
 
 #: templates/apparel/fragments/product_menu.html:10
 msgid "All"
