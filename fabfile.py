@@ -146,6 +146,10 @@ def copy_bin():
     require('release', provided_by=[deploy, setup])
     run('cd %(path)s; cp -n ./releases/%(release)s/bin/* ./bin' % env, pty=True)
 
+def copy_solr():
+    require('release', provided_by=[deploy, setup])
+    sudo('cd %(path)s; cp -rup ./releases/%(release)s/solr/ ./solr' % env, pty=True, user=env.run_user)
+
 def copy_config():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
