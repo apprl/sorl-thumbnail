@@ -108,6 +108,24 @@ button
       color: $easy_color
       font-family: $font_family
       min-width: 200px
+    &.create-look
+      float: left
+      padding-left: 2px
+      a
+        +button(none, 1em)
+        +border-radius(2px)
+        +highlight
+        line-height: 1
+        background-repeat: no-repeat
+        background-attachment: scroll
+        background-position: 6px center
+        background-image: image_url("follow.png")
+        padding: 6px 12px 7px 22px
+        display: inline-block
+        &:hover
+          text-decoration: none
+          +highlight_hover
+
     &.right
       float: right
       text-align: right

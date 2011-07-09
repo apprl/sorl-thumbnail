@@ -196,18 +196,17 @@
                     </a>
                 </li>
                 <li>
-                    <a class="{% ifequal request.path profile_url %} selected{% endifequal %}" href="{{ profile_url }}">
+                    <a class="last{% ifequal request.path profile_url %} selected{% endifequal %}" href="{{ profile_url }}">
                         {% trans "My profile" %}
                         <div class="arrow"></div>
                     </a>
                 </li>
-                <li>
-                    <a class="last{% ifequal request.path look_create_url %} selected{% endifequal %}" href="{{ look_create_url }}">
-                        {% trans "Create a look" %}
-                        <div class="arrow"></div>
-                    </a>
-                </li>
             </ul>
+            <div class="create-look">
+                <a class="create-look{% ifequal request.path look_create_url %} selected{% endifequal %}" href="{{ look_create_url }}">
+                        {% trans "Create a look" %}
+                    </a>
+            </div>
             <div class="right">
                 <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
             </div>
