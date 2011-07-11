@@ -41,9 +41,12 @@ BROKER_USER = 'apparel'
 BROKER_PASSWORD = 'apparel_mq'
 BROKER_VHOST = 'apparel'
 
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+CELERY_RESULT_BACKEND = "amqp"
+CELERY_AMQP_TASK_RESULT_EXPIRES = 30
+
 import djcelery
 djcelery.setup_loader()
-CELERY_RESULT_BACKEND='amqp'
 
 SEARCH_SYNONYM_FILE = os.path.join(PROJECT_ROOT, '..', 'solr', 'solr', 'conf', 'synonyms.txt')
 
