@@ -74,9 +74,12 @@ jQuery(document).ready(function() {
                     updateSelected(response);
                 });
             } else {
-                // First load, no hash, but we must set the gender to all
+                // No hash, but we must selected all genders if no gender is selected
                 // TODO: Move this to a function if more functionality is needed.
-                jQuery('#product-gender li:first > a').addClass('selected');
+                // FIXME: Is this necessary?
+                if(!jQuery('#product-gender li > a').hasClass('selected')) {
+                    jQuery('#product-gender li:first > a').addClass('selected');
+                }
             }
         } else {
             doFilter(hash, this.filterCallback);
@@ -207,13 +210,13 @@ jQuery(document).ready(function() {
     }
 
     // Handles click on women in main navigation on browse page
-    jQuery('#nav-main .women').click(function() {
+    jQuery('#nav-main .women, #footer .women').click(function() {
         resetGender(jQuery('#product-gender li.women > a'));
         return false;
     });
 
     // Handles click on men in main navigation on browse page
-    jQuery('#nav-main .men').click(function() {
+    jQuery('#nav-main .men, #footer .men').click(function() {
         resetGender(jQuery('#product-gender li.men > a'));
         return false;
     });

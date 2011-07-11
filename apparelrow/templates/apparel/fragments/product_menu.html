@@ -7,7 +7,7 @@
 <h2>{% trans "Browse articles" %}</h2>
 {% endblock %}
 <ul id="product-gender" class="hover-menu">
-    <li class="first"><a href="{% url apparel.browse.browse_products %}">{% trans "All" %}</a></li>
+    <li class="first"><a{% if selected_gender != "W" and selected_gender != "M" %} class="selected"{% endif %} href="{% url apparel.browse.browse_products %}">{% trans "All" %}</a></li>
     <li class="women"><a id="option-W"{% ifequal selected_gender "W" %} class="selected"{% endifequal %} href="{% url apparel.browse.browse_products %}?gender=W">{% trans "Women" %}</a></li>
     <li class="last men"><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
 </ul>

@@ -55,7 +55,7 @@ button
   #inner-container
     width: 940px
     margin-left: 18px
-    padding: 0 20px
+    padding: 0 20px 20px 20px
     clear: both
     +pie-clearfix
     overflow: visible
@@ -85,8 +85,24 @@ button
 
 #footer
   background: transparent image_url(unquote("footer-bg.png")) scroll no-repeat center center
-  height: 58px
-
+  height: 124px
+  #inner-footer
+    width: 940px
+    margin-left: 38px
+    position: relative
+    overflow: visible
+    ul, div
+      margin-top: 16px
+      margin-right: 36px
+      +float-left
+    ul
+      margin-right: 42px
+      h3
+        // Bold do not work with font, use bigger font for a quick solution
+        font-size: 1.2em
+        font-weight: bold
+    .copyright
+      width: 208px
 
 #login-pane
   clear: left

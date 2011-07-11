@@ -68,7 +68,7 @@
                 }
             });            
 
-            jQuery('#about-beta').click(function(event) {
+            jQuery('.about-beta-popup').click(function(event) {
                 jQuery('#error_dialog_template')
                     .render({
                         header: "{% trans "About ApparelRow beta" %}",
@@ -163,7 +163,7 @@
                 <li><a class="women" href="{% url apparel.browse.browse_products %}?gender=W">{% trans "Women" %}</a></li>
                 <li><a class="men" href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
                 <!-- <li><a href="http://blog.apparelrow.com/">{% trans "Blog" %}</a></li> -->
-                <li><a id="about-beta" href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
+                <li><a id="about-beta" class="about-beta-popup" href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
             {% if not user.is_authenticated %}
                 <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
                 <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>
@@ -218,7 +218,36 @@
         </div>
     </div>
 
-    <div id="footer"></div>
+    <div id="footer">
+        <div id="inner-footer">
+            <div class="copyright">&#169; APPARELROW AB</div>
+            <ul>
+                <li><h3>{% trans "Clothes" %}</h3></li>
+                <li><a href="{% url apparel.browse.browse_products %}">{% trans "All" %}</a></li>
+                <li><a class="women" href="{% url apparel.browse.browse_products %}?gender=W">{% trans "Women" %}</a></li>
+                <li><a class="men" href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
+            </ul>
+            <ul>
+                <li><h3>{% trans "Looks" %}</h3></li>
+                <li><a href="{% url apparel.views.look_list %}">{% trans "All looks" %}</a></li>
+                <li><a href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a></li>
+            </ul>
+            <ul>
+                <li><h3>{% trans "Social" %}</h3></li>
+                <li><a href="#">{% trans "All members" %}</a></li>
+                {% if not user.is_authenticated %}
+                <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
+                <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>
+                {% endif %}
+            </ul>
+            <ul>
+                <li><h3>{% trans "About Apparelrow" %}</h3></li>
+                <li><a class="about-beta-popup" href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
+                <li><a href="http://blog.apparelrow.com/">{% trans "Blog" %}</a></li>
+                <li><a href="mailto:info@apparelrow.com">{% trans "Contact" %}</a><li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 {% for template_name,template_string in templates.items %}
