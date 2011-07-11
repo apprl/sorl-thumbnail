@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-06 11:20+0200\n"
+"POT-Creation-Date: 2011-07-11 23:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -508,15 +508,15 @@ msgstr "Översikt"
 msgid "My profile"
 msgstr "Min profil"
 
-#: templates/base.html:206
+#: templates/base.html:207
 msgid "Create a look"
 msgstr "Skapa en look"
 
-#: templates/base.html:212
+#: templates/base.html:211
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:237 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:236 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr "OK"
 
@@ -767,8 +767,7 @@ msgid "Products"
 msgstr "Produkter"
 
 #: templates/apparel/look_edit.html:572
-#: templates/apparel/fragments/look_user_like_list.html:8
-#: templates/apparel/fragments/product_user_like_list.html:8
+#: templates/apparel/fragments/user_like_list_base.html:7
 msgid "Close"
 msgstr "Stäng"
 
@@ -822,23 +821,23 @@ msgstr[1] ""
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
-#: templates/apparel/user_home.html:8
+#: templates/apparel/user_home.html:9
 msgid "Popular products in your network"
 msgstr "Populära plagg bland dina vänner"
 
-#: templates/apparel/user_home.html:13
+#: templates/apparel/user_home.html:14
 msgid "Popular looks in your network"
 msgstr "Populära looks bland dina vänner"
 
-#: templates/apparel/user_home.html:19
+#: templates/apparel/user_home.html:20
 msgid "Your friend's latest updates"
 msgstr "Senaste händelser bland dina vänner"
 
-#: templates/apparel/user_home.html:24 templates/profile/profile.html:11
+#: templates/apparel/user_home.html:25 templates/profile/profile.html:11
 msgid "No updates"
 msgstr "Inga händelser"
 
-#: templates/apparel/user_home.html:33
+#: templates/apparel/user_home.html:34
 msgid "Your friends are here!"
 msgstr "Hitta dina vänner!"
 
@@ -897,14 +896,9 @@ msgstr[1] "<span class=\"count\">%(counter)s</span> likes"
 msgid "Buy"
 msgstr "Köp"
 
-#: templates/apparel/fragments/look_user_like_list.html:7
-msgid "List of people liking this look"
-msgstr "Visar alla användare som gillat denna look"
-
-#: templates/apparel/fragments/look_user_like_list.html:11
-#: templates/apparel/fragments/product_user_like_list.html:11
-msgid "Search users"
-msgstr "Sök bland användarna"
+#: templates/apparel/fragments/look_user_like_list.html:5
+msgid "People who like this look"
+msgstr "Medlemmar som gillar denna look"
 
 #: templates/apparel/fragments/look_widget.html:14
 msgid "By"
@@ -964,9 +958,9 @@ msgstr "Välj en eller flera färger"
 msgid "Select price range"
 msgstr "Välj prisintervall"
 
-#: templates/apparel/fragments/product_user_like_list.html:7
-msgid "List of people liking this product"
-msgstr "Visar alla användare som gillat denna produkt"
+#: templates/apparel/fragments/product_user_like_list.html:5
+msgid "People who like this product"
+msgstr "Medlemmar som gillar produkten"
 
 #: templates/apparel/fragments/share.html:3
 msgid "Share"
@@ -1333,6 +1327,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Search users"
+#~ msgstr "Sök bland användarna"
 
 #~ msgid "Added to wardrobe"
 #~ msgstr "Lade till i garderob"
