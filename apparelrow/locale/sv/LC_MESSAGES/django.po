@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 16:29+0200\n"
+"POT-Creation-Date: 2011-07-12 23:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -446,7 +446,7 @@ msgstr "Användarnamn"
 msgid "Password"
 msgstr "Lösenord"
 
-#: templates/base.html:131 templates/base.html.py:169 templates/base.html:240
+#: templates/base.html:131 templates/base.html.py:155 templates/base.html:249
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr "Logga in"
@@ -455,7 +455,7 @@ msgstr "Logga in"
 msgid "Forgot password"
 msgstr "Glömt lösenord?"
 
-#: templates/base.html:140 templates/base.html.py:146
+#: templates/base.html:140 templates/base.html.py:145
 #: templates/profile/base_profile.html:17
 msgid "Cancel"
 msgstr "Avbryt"
@@ -464,96 +464,108 @@ msgstr "Avbryt"
 msgid "Search for products"
 msgstr "Sök efter plagg"
 
-#: templates/base.html:148
-msgid "Matching products"
-msgstr "Träffar bland produkter"
-
-#: templates/base.html:152
-msgid "Matching looks"
-msgstr "Träffar bland looks"
-
-#: templates/base.html:156
-msgid "Matching brands"
-msgstr "Träffar bland varumärken"
-
-#: templates/base.html:163 templates/base.html.py:228
+#: templates/base.html:149 templates/base.html.py:237
 #: templates/apparel/fragments/product_menu.html:11
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:164 templates/base.html.py:229
+#: templates/base.html:150 templates/base.html.py:238
 #: templates/apparel/fragments/product_menu.html:12
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:165 templates/base.html.py:232
+#: templates/base.html:151 templates/base.html.py:241
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
 #: templates/profile/fragments/menu_items.html:10
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/base.html:166 templates/base.html.py:247
+#: templates/base.html:152 templates/base.html.py:256
 msgid "Blog"
 msgstr "Blogg"
 
-#: templates/base.html:167 templates/base.html.py:246
+#: templates/base.html:153 templates/base.html.py:255
 msgid "About the beta"
 msgstr "Om betaversionen"
 
-#: templates/base.html:170 templates/base.html.py:241
+#: templates/base.html:156 templates/base.html.py:250
 #: templates/registration/registration_complete.html:8
 msgid "Sign up"
 msgstr "Bli medlem"
 
-#: templates/base.html:190
+#: templates/base.html:171
+msgid "Matching products"
+msgstr "Träffar bland produkter"
+
+#: templates/base.html:175
+msgid "Matching looks"
+msgstr "Träffar bland looks"
+
+#: templates/base.html:179
+msgid "Matching brands"
+msgstr "Träffar bland varumärken"
+
+#: templates/base.html:183
+msgid "Show all products"
+msgstr "Visa alla plagg"
+
+#: templates/base.html:184
+msgid "Show all looks"
+msgstr "Visa alla looks"
+
+#: templates/base.html:185
+msgid "Show all manufacturers"
+msgstr "Visa alla varumärken"
+
+#: templates/base.html:199
 msgid "Logged in as"
 msgstr "Inloggad som"
 
-#: templates/base.html:195
+#: templates/base.html:204
 msgid "Overview"
 msgstr "Översikt"
 
-#: templates/base.html:201
+#: templates/base.html:210
 msgid "My profile"
 msgstr "Min profil"
 
-#: templates/base.html:208 templates/base.html.py:234
+#: templates/base.html:217 templates/base.html.py:243
 msgid "Create a look"
 msgstr "Skapa en look"
 
-#: templates/base.html:212
+#: templates/base.html:221
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:226
+#: templates/base.html:235
 msgid "Clothes"
 msgstr "Kläder"
 
-#: templates/base.html:227 templates/apparel/fragments/product_menu.html:10
+#: templates/base.html:236 templates/apparel/fragments/product_menu.html:10
 msgid "All"
 msgstr "Alla"
 
-#: templates/base.html:233
+#: templates/base.html:242
 msgid "All looks"
 msgstr "Alla looks"
 
-#: templates/base.html:237
+#: templates/base.html:246
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:238 templates/apparel/user_home.html:35
+#: templates/base.html:247 templates/apparel/user_home.html:35
 msgid "All members"
 msgstr "Alla medlemmar"
 
-#: templates/base.html:245
+#: templates/base.html:254
 msgid "About Apparelrow"
 msgstr "Om ApparelRow"
 
-#: templates/base.html:248
+#: templates/base.html:257
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:266 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:275 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr "OK"
 
@@ -1388,9 +1400,6 @@ msgstr "Varför mejlet inte skickades"
 
 #~ msgid "View product"
 #~ msgstr "Se produkt"
-
-#~ msgid "Manufacturer"
-#~ msgstr "Tillverkare"
 
 #~ msgid "Vendor"
 #~ msgstr "Butik"

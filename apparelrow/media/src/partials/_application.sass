@@ -1104,7 +1104,7 @@ a.block_link
 
 #cancel-search
   background: transparent image_url(unquote("close-large.png")) scroll no-repeat center center
-  display: block
+  display: none
   position: absolute
   right: 38px
   top: 18px
@@ -1116,7 +1116,7 @@ a.block_link
 #search
   background: transparent image_url(unquote("search.png")) scroll no-repeat right top
   top: 26px
-  right: -21px
+  right: -20px
   position: absolute
   width: 163px
   height: 24px
@@ -1124,9 +1124,9 @@ a.block_link
   overflow: visible
   z-index: 1000
   &.expanded
-    background: transparent image_url(unquote("searchresult-bg.png")) scroll no-repeat right top
-    height: 547px
-    width: 895px
+    background: transparent image_url(unquote("searchresult-box.png")) scroll no-repeat right top
+    height: 85px
+    width: 163px
   & input
     position: absolute
     width: 163px
@@ -1138,15 +1138,50 @@ a.block_link
     background: transparent
 
 #search-result
+  position: absolute
+  top: 111px
+  z-index: 20000
   display: none
-  margin: 60px -25px auto -15px
+  #inner-search-result
+    background-color: $box_color
+    width: 940px
+    margin-left: 18px
+    padding: 0 20px
+    position: relative
+    overflow: visible
+
+  #search-footer
+    background: transparent image_url(unquote("searchresult-footer.png")) repeat-x
+    width: 980px
+    height: 20px
+    margin-left: 18px
+    position: relative
+    overflow: visible
+
   h3, h2, a
     font-weight: normal
   h2
+    margin-top: 20px
     background: transparent image_url(unquote("arrow-bg.png")) scroll no-repeat right center
     cursor: pointer
     &:hover
       background-image: image_url(unquote("arrow-bg-hover.png"))
+
+  #search-links
+    clear: both
+    +clearfix
+    padding: 20px 0
+    div
+      text-align: right
+      a
+        +button
+        +border-radius(3px)
+        padding: 5px 10px
+        line-height: 2em
+        &:hover
+          +hover_button
+          line-height: 2em
+
   .result-container
     width: 200px
     float: left

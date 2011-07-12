@@ -142,21 +142,7 @@
             </div>
             <form action="/apparel/search" method="get" onsubmit="return false" id="search">
                 <input type="text" name="s" placeholder="{% trans 'Search for products' %}" />
-                <div id="search-result">
-                    <a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>
-                    <div class="wide result-container">
-                        <h2>{% trans "Matching products" %}</h2>
-                        <div class="product-list"><ul id="search-result-products"></ul></div>
-                    </div>
-                    <div class="result-container">
-                        <h2>{% trans "Matching looks" %}</h2>
-                        <ul id="search-result-looks" class="looks"></ul>
-                    </div>
-                    <div class="last result-container">
-                        <h2>{% trans "Matching brands" %}</h2>
-                        <ul id="search-result-manufacturers"></ul>
-                    </div>
-                </div>
+                <a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>
             </form>
 
             <ul id="nav-main">
@@ -177,6 +163,29 @@
             </ul>
 
         </div>
+    </div>
+
+    <div id="search-result">
+        <div id="inner-search-result">
+            <div class="wide result-container">
+                <h2 class="search-result-products">{% trans "Matching products" %}</h2>
+                <div class="product-list"><ul id="search-result-products"></ul></div>
+            </div>
+            <div class="result-container">
+                <h2 class="search-result-looks">{% trans "Matching looks" %}</h2>
+                <ul id="search-result-looks" class="looks"></ul>
+            </div>
+            <div class="last result-container">
+                <h2 class="search-result-manufacturers">{% trans "Matching brands" %}</h2>
+                <ul id="search-result-manufacturers"></ul>
+            </div>
+            <div id="search-links">
+                <div class="wide result-container"><a class="search-result-products" href="#">{% trans "Show all products" %}</a></div>
+                <div class="result-container"><a class="search-result-looks" href="#">{% trans "Show all looks" %}</a></div>
+                <div class="last result-container"><a class="search-result-manufacturers" href="#">{% trans "Show all manufacturers" %}</a></div>
+            </div>
+        </div>
+        <div id="search-footer"></div>
     </div>
 
     <div id="container">

@@ -64,22 +64,22 @@ jQuery(document).ready(function() {
     });
     //Hover state for share button
     jQuery('.share').hover(
-        function() { jQuery(this).find('ul').show(); }, 
+        function() { jQuery(this).find('ul').show(); },
         function() { jQuery(this).find('ul').hide(); }
     );
     jQuery('.share').click(function() { jQuery(this).find('ul').toggle(); return false; })
-    
+
     jQuery('ul.hover-menu li[class!=active]')
-        .live('mouseenter', function(e) { 
-            jQuery(this).addClass('hover'); 
+        .live('mouseenter', function(e) {
+            jQuery(this).addClass('hover');
             return true;
         } )
-        .live('mouseleave', function(e) { 
+        .live('mouseleave', function(e) {
             jQuery(this).removeClass('hover');
-            return true; 
+            return true;
         } )
     ;
-    
+
     jQuery('.upload-field input[type=text], .upload-field .button').click(function(e) {
         // Forward click events from the fake controls to file object. This doesn't work in FF
         jQuery('input[type=file]', jQuery(this).parent()).focus();
@@ -88,13 +88,13 @@ jQuery(document).ready(function() {
     jQuery('.upload-field input[type=file]').change(function(e) {
         jQuery('input[type=text]', jQuery(this).closest('.upload-field')).val(this.value);
     });
-    
+
     /*jQuery('.dialog .buttons>.ok').live('click', function(e) {
         // FIXME: Remove shade and stuff
         jQuery(this).closest('.dialog').remove();
     });
     */
-    
+
     jQuery('a.follow, a.unfollow').click(function() {
         $this = $(this);
         $parent = $this.parent();
@@ -160,7 +160,7 @@ jQuery(document).ready(function() {
     jQuery('#profile-image').hover(
         function() { if (hover_edit_button) $('button.edit', this).show() },
         function() { if (hover_edit_button) $('button.edit', this).hide() }
-    ); 
+    );
     jQuery('#profile-image button.edit').click(function() {
         jQuery('#profile-image button.cancel-edit').show();
         jQuery(this).hide().siblings('form').show();
@@ -183,7 +183,7 @@ function makeProductTooltip(selector) {
     var q = (typeof selector == 'string')
         ? jQuery(selector)
         : selector;
-    
+
     q.tooltip({
         effect: 'slide',
         relative: true,
@@ -196,7 +196,7 @@ function makeProductTooltip(selector) {
 
 
 /**
- *  Search functionality 
+ *  Search functionality
  */
 
 ApparelSearch = {
@@ -204,11 +204,13 @@ ApparelSearch = {
         // Hides search result dialog
         jQuery('#search-result').hide();
         jQuery('#search').removeClass('expanded');
+        jQuery('#cancel-search').hide();
     },
     show: function() {
         // Shows search result dialog
         jQuery('#search-result').fadeIn('fast');
         jQuery('#search').addClass('expanded');
+        jQuery('#cancel-search').show();
     },
     clear: function() {
         // Clears displayed results and cached resultsets and queries
@@ -225,15 +227,15 @@ ApparelSearch = {
     },
     search: function(callback) {
         // Preforms a search
-        
+
         var s = jQuery('#search > input').val();
         if(s.length == 0)
             return;
-        
+
         ApparelSearch.clear();
-        
+
         ApparelSearch._doSearch({
-            model: 'product', 
+            model: 'product',
             query: {
                 'q': s,
                 'limit': 8
@@ -244,9 +246,9 @@ ApparelSearch = {
                 singular: 'Found %(count)s product'
             }
         });
-    
+
         ApparelSearch._doSearch({
-            model: 'look', 
+            model: 'look',
             query: {
                 'q': s,
                 'limit': 6
@@ -257,7 +259,7 @@ ApparelSearch = {
                 singular: 'Found %(count)s look'
             }
         });
-        
+
         ApparelSearch._doSearch({
             model: 'manufacturer',
             query: {
@@ -270,7 +272,7 @@ ApparelSearch = {
                 singular: 'Found %(count)s matching brand'
             }
         });
-        
+
         ApparelSearch.show();
     },
     _doSearch: function(opts) {
@@ -302,34 +304,34 @@ ApparelSearch = {
                         root = jQuery('<li/>').appendTo(list);
                     }
                     root.append(object)
-                    
+
                     var item = list.children(':last');
                     item.addClass((i % 2 == 0) ? 'even' : 'odd');
                     if(i == 0)
                         item.addClass('first');
                     if(i == response.object_list.length - 1)
                         item.addClass('last');
-                    
+
                     if(opts.template == 'product_template' && i % 4 == 3)
                         item.addClass('edge');
                 });
-            
+
                 if(list.children().size() == 0) {
                     console.log('No results');
                 }
-                
+
                 list.closest('.result-container').children('h2').text(
                     interpolate(
                         ngettext(
-                            opts.text.singular, 
-                            opts.text.plural, 
+                            opts.text.singular,
+                            opts.text.plural,
                             response.paginator.count
-                        ), 
-                        { count: response.paginator.count }, 
+                        ),
+                        { count: response.paginator.count },
                         true
                     )
                 );
-                
+
                 list.data('last-query', opts.query);
                 list.data('last-result', response);
             }
@@ -344,23 +346,23 @@ ApparelSearch = {
         ngettext('Found %(count)s matching brand', 'Found %(count)s matching brands', 0);
         ngettext('%s product', '%s products', 0);
     },
-    
+
     format_query: function(query) {
-        // Takes a query as an object and stringifies if after removing the 
+        // Takes a query as an object and stringifies if after removing the
         // size-property
-        
+
         if('limit' in query)
             delete(query['limit']);
-        
+
         var pairs = [];
         for(var key in query) {
             pairs.push(
                encodeURIComponent(key)
-                + '=' 
+                + '='
                 + encodeURIComponent(query[key])
             );
         }
-        
+
         return pairs.join('&')
     },
 };
@@ -372,7 +374,7 @@ jQuery(document).ready(function() {
     jQuery('#search > input').keyup(function(e) {
         var j = jQuery(this);
         clearTimeout(j.data('tid'));
-        
+
         switch(e.keyCode) {
             case 0: // command+tab
             case 9: // tab
@@ -386,67 +388,76 @@ jQuery(document).ready(function() {
             case 27: // escape
                 ApparelSearch.cancel();
                 return false;
-            
+
             default:
                 j.data('tid', setTimeout(ApparelSearch.search, 1000));
         }
     });
-    jQuery('#cancel-search')
-        .click(function(e) {
-            ApparelSearch.cancel();
-            return false;
-        })
-    ;
-    jQuery('#search .result-container>h2')
-        .click(function(e) {
-            var list  = jQuery(this).parent().find('ul:first');
-            var query = list.data('last-query');
 
-            switch(list.attr('id')) {
-                case 'search-result-products':
-                    if(!query) {
-                        console.error('Could not find search query');
-                        break;
-                    }
-                    
-                    location.href = '/browse/#' + ApparelSearch.format_query(query);
+    jQuery('#cancel-search').click(function(e) {
+        ApparelSearch.cancel();
+        return false;
+    });
+
+    jQuery('#search-result .search-result-products').click(function(e) {
+        return search_link_action('search-result-products');
+    });
+
+    jQuery('#search-result .search-result-looks').click(function(e) {
+        return search_link_action('search-result-looks');
+    });
+
+    jQuery('#search-result .search-result-manufacturers').click(function(e) {
+        return search_link_action('search-result-manufacturers');
+    });
+
+    function search_link_action(type) {
+        var query = jQuery('#' + type).data('last-query');
+
+        switch(type) {
+            case 'search-result-products':
+                if(!query) {
+                    console.error('Could not find search query');
                     break;
-                
-                case 'search-result-looks':
-                    if(!query) {
-                        console.error('Could not find search query');
-                        break;
-                    }
-                    
-                    location.href = '/looks/?' + ApparelSearch.format_query(query);
+                }
+
+                location.href = '/browse/#' + ApparelSearch.format_query(query);
+                break;
+
+            case 'search-result-looks':
+                if(!query) {
+                    console.error('Could not find search query');
                     break;
-                
-                case 'search-result-manufacturers':
+                }
 
-                    var s = query.q;
-                    location.href = 
-                        '/browse/?criterion=manufacturer&'
-                        + encodeURIComponent('1:m.name:icontains')
-                        + '=' + encodeURIComponent(s)
-                        + '&defaults=manufacturer-dialog'
-                        + '&defaults=' 
-                        + encodeURIComponent('manufacturer-dialog-filter|' + s)
-                    
-                    break;
-                
-                default:
-                    console.log('No action for ', list.attr('id'));
-            }
+                location.href = '/looks/?' + ApparelSearch.format_query(query);
+                break;
 
-            ApparelSearch.cancel();
+            case 'search-result-manufacturers':
 
-            // From reset click handler in browse.js
-            jQuery('.selected').removeClass('selected');
-            jQuery('#product-category .level-1, #product-category .level-2').hide();
-            //jQuery('#product-manufacturers .reset').click();
-            jQuery('#product-gender li:first > a').addClass('selected');
-            
-            return false;
-        } )
-    ;
+                var s = query.q;
+                location.href =
+                    '/browse/?criterion=manufacturer&'
+                    + encodeURIComponent('1:m.name:icontains')
+                    + '=' + encodeURIComponent(s)
+                    + '&defaults=manufacturer-dialog'
+                    + '&defaults='
+                    + encodeURIComponent('manufacturer-dialog-filter|' + s)
+
+                break;
+
+            default:
+                console.log('No action for %s', type);
+        }
+
+        ApparelSearch.cancel();
+
+        // From reset click handler in browse.js
+        jQuery('.selected').removeClass('selected');
+        jQuery('#product-category .level-1, #product-category .level-2').hide();
+        //jQuery('#product-manufacturers .reset').click();
+        jQuery('#product-gender li:first > a').addClass('selected');
+
+        return false;
+    }
 } );
