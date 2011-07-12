@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-11 23:17+0200\n"
+"POT-Creation-Date: 2011-07-12 16:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -435,7 +435,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: templates/base.html:131 templates/base.html.py:168
+#: templates/base.html:131 templates/base.html.py:169 templates/base.html:240
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr ""
@@ -465,47 +465,84 @@ msgstr ""
 msgid "Matching brands"
 msgstr ""
 
-#: templates/base.html:163 templates/apparel/fragments/product_menu.html:11
+#: templates/base.html:163 templates/base.html.py:228
+#: templates/apparel/fragments/product_menu.html:11
 msgid "Women"
 msgstr ""
 
-#: templates/base.html:164 templates/apparel/fragments/product_menu.html:12
+#: templates/base.html:164 templates/base.html.py:229
+#: templates/apparel/fragments/product_menu.html:12
 msgid "Men"
 msgstr ""
 
-#: templates/base.html:165
+#: templates/base.html:165 templates/base.html.py:232
+#: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
+#: templates/profile/fragments/menu_items.html:10
+msgid "Looks"
+msgstr ""
+
+#: templates/base.html:166 templates/base.html.py:247
 msgid "Blog"
 msgstr ""
 
-#: templates/base.html:166
+#: templates/base.html:167 templates/base.html.py:246
 msgid "About the beta"
 msgstr ""
 
-#: templates/base.html:169 templates/registration/registration_complete.html:8
+#: templates/base.html:170 templates/base.html.py:241
+#: templates/registration/registration_complete.html:8
 msgid "Sign up"
 msgstr ""
 
-#: templates/base.html:189
+#: templates/base.html:190
 msgid "Logged in as"
 msgstr ""
 
-#: templates/base.html:194
+#: templates/base.html:195
 msgid "Overview"
 msgstr ""
 
-#: templates/base.html:200
+#: templates/base.html:201
 msgid "My profile"
 msgstr ""
 
-#: templates/base.html:207
+#: templates/base.html:208 templates/base.html.py:234
 msgid "Create a look"
 msgstr ""
 
-#: templates/base.html:211
+#: templates/base.html:212
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:236 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:226
+msgid "Clothes"
+msgstr ""
+
+#: templates/base.html:227 templates/apparel/fragments/product_menu.html:10
+msgid "All"
+msgstr ""
+
+#: templates/base.html:233
+msgid "All looks"
+msgstr ""
+
+#: templates/base.html:237
+msgid "Social"
+msgstr ""
+
+#: templates/base.html:238 templates/apparel/user_home.html:35
+msgid "All members"
+msgstr ""
+
+#: templates/base.html:245
+msgid "About Apparelrow"
+msgstr ""
+
+#: templates/base.html:248
+msgid "Contact"
+msgstr ""
+
+#: templates/base.html:266 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr ""
 
@@ -636,11 +673,6 @@ msgstr ""
 
 #: templates/apparel/look_create.html:26
 msgid "Create"
-msgstr ""
-
-#: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
-#: templates/profile/fragments/menu_items.html:10
-msgid "Looks"
 msgstr ""
 
 #: templates/apparel/look_detail.html:59 templates/apparel/look_edit.html:5
@@ -809,8 +841,20 @@ msgstr ""
 msgid "No updates"
 msgstr ""
 
-#: templates/apparel/user_home.html:34
+#: templates/apparel/user_home.html:33
 msgid "Your friends are here!"
+msgstr ""
+
+#: templates/apparel/users.html:8
+msgid "Most followers"
+msgstr ""
+
+#: templates/apparel/users.html:18
+msgid "Members"
+msgstr ""
+
+#: templates/apparel/users.html:33
+msgid "Find your friends"
 msgstr ""
 
 #: templates/apparel/fragments/comment_count.html:2
@@ -822,13 +866,13 @@ msgid "Comments & links"
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:6
-msgid "Stop following"
-msgstr ""
-
-#: templates/apparel/fragments/follow.html:6
 #: templates/profile/following.html:6
 #: templates/profile/fragments/menu_items.html:16
 msgid "Following"
+msgstr ""
+
+#: templates/apparel/fragments/follow.html:6
+msgid "Stop following"
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:7
@@ -895,10 +939,6 @@ msgstr ""
 #: templates/apparel/fragments/product_menu.html:7
 #: templates/apparel/fragments/product_menu_browse.html:6
 msgid "Browse articles"
-msgstr ""
-
-#: templates/apparel/fragments/product_menu.html:10
-msgid "All"
 msgstr ""
 
 #: templates/apparel/fragments/product_menu.html:18

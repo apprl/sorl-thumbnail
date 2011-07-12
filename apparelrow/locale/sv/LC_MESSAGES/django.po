@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-11 23:17+0200\n"
+"POT-Creation-Date: 2011-07-12 16:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -446,7 +446,7 @@ msgstr "Användarnamn"
 msgid "Password"
 msgstr "Lösenord"
 
-#: templates/base.html:131 templates/base.html.py:168
+#: templates/base.html:131 templates/base.html.py:169 templates/base.html:240
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr "Logga in"
@@ -476,47 +476,84 @@ msgstr "Träffar bland looks"
 msgid "Matching brands"
 msgstr "Träffar bland varumärken"
 
-#: templates/base.html:163 templates/apparel/fragments/product_menu.html:11
+#: templates/base.html:163 templates/base.html.py:228
+#: templates/apparel/fragments/product_menu.html:11
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:164 templates/apparel/fragments/product_menu.html:12
+#: templates/base.html:164 templates/base.html.py:229
+#: templates/apparel/fragments/product_menu.html:12
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:165
-msgid "Blog"
-msgstr ""
+#: templates/base.html:165 templates/base.html.py:232
+#: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
+#: templates/profile/fragments/menu_items.html:10
+msgid "Looks"
+msgstr "Looks"
 
-#: templates/base.html:166
+#: templates/base.html:166 templates/base.html.py:247
+msgid "Blog"
+msgstr "Blogg"
+
+#: templates/base.html:167 templates/base.html.py:246
 msgid "About the beta"
 msgstr "Om betaversionen"
 
-#: templates/base.html:169 templates/registration/registration_complete.html:8
+#: templates/base.html:170 templates/base.html.py:241
+#: templates/registration/registration_complete.html:8
 msgid "Sign up"
 msgstr "Bli medlem"
 
-#: templates/base.html:189
+#: templates/base.html:190
 msgid "Logged in as"
 msgstr "Inloggad som"
 
-#: templates/base.html:194
+#: templates/base.html:195
 msgid "Overview"
 msgstr "Översikt"
 
-#: templates/base.html:200
+#: templates/base.html:201
 msgid "My profile"
 msgstr "Min profil"
 
-#: templates/base.html:207
+#: templates/base.html:208 templates/base.html.py:234
 msgid "Create a look"
 msgstr "Skapa en look"
 
-#: templates/base.html:211
+#: templates/base.html:212
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:236 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:226
+msgid "Clothes"
+msgstr "Kläder"
+
+#: templates/base.html:227 templates/apparel/fragments/product_menu.html:10
+msgid "All"
+msgstr "Alla"
+
+#: templates/base.html:233
+msgid "All looks"
+msgstr "Alla looks"
+
+#: templates/base.html:237
+msgid "Social"
+msgstr ""
+
+#: templates/base.html:238 templates/apparel/user_home.html:35
+msgid "All members"
+msgstr "Alla medlemmar"
+
+#: templates/base.html:245
+msgid "About Apparelrow"
+msgstr "Om ApparelRow"
+
+#: templates/base.html:248
+msgid "Contact"
+msgstr "Kontakt"
+
+#: templates/base.html:266 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr "OK"
 
@@ -658,11 +695,6 @@ msgstr "Beskrivning (valfritt)"
 #: templates/apparel/look_create.html:26
 msgid "Create"
 msgstr "Skapa"
-
-#: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
-#: templates/profile/fragments/menu_items.html:10
-msgid "Looks"
-msgstr "Looks"
 
 #: templates/apparel/look_detail.html:59 templates/apparel/look_edit.html:5
 msgid "Edit"
@@ -837,9 +869,21 @@ msgstr "Senaste händelser bland dina vänner"
 msgid "No updates"
 msgstr "Inga händelser"
 
-#: templates/apparel/user_home.html:34
+#: templates/apparel/user_home.html:33
 msgid "Your friends are here!"
 msgstr "Hitta dina vänner!"
+
+#: templates/apparel/users.html:8
+msgid "Most followers"
+msgstr "Följs av flest"
+
+#: templates/apparel/users.html:18
+msgid "Members"
+msgstr "Medlemmar"
+
+#: templates/apparel/users.html:33
+msgid "Find your friends"
+msgstr "Hitta dina vänner"
 
 #: templates/apparel/fragments/comment_count.html:2
 msgid "comments and links"
@@ -850,14 +894,14 @@ msgid "Comments & links"
 msgstr "Kommentarer och länkar"
 
 #: templates/apparel/fragments/follow.html:6
-msgid "Stop following"
-msgstr "Sluta följa"
-
-#: templates/apparel/fragments/follow.html:6
 #: templates/profile/following.html:6
 #: templates/profile/fragments/menu_items.html:16
 msgid "Following"
 msgstr "Följer"
+
+#: templates/apparel/fragments/follow.html:6
+msgid "Stop following"
+msgstr "Sluta följa"
 
 #: templates/apparel/fragments/follow.html:7
 msgid "Follow"
@@ -924,10 +968,6 @@ msgstr "Lägg i garderob"
 #: templates/apparel/fragments/product_menu_browse.html:6
 msgid "Browse articles"
 msgstr "Hitta plagg"
-
-#: templates/apparel/fragments/product_menu.html:10
-msgid "All"
-msgstr "Alla"
 
 #: templates/apparel/fragments/product_menu.html:18
 msgid "Color"
