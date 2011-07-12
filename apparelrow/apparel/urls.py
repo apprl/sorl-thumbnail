@@ -56,6 +56,8 @@ urlpatterns = patterns('',
         'model': Look,
         'template_name': 'apparel/fragments/look_photo.html',
      }),
+
+    (r'^users/$', 'apparel.views.user_list'),
 )
 
 

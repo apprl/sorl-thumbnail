@@ -30,17 +30,8 @@
         </div>
     </div>
     <div class="sidebar last">
-        {% if facebook_friends %}
         <h2>{% trans "Your friends are here!" %}</h2>
-        <ul class="suggested-friends">
-            {% for profile in facebook_friends %}
-                {% if_user_is_following profile.user %}{% else %}
-                <li>
-                    {% include 'apparel/fragments/avatar_link.html' %}
-                </li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        {% endif %}
+        {% include 'apparel/fragments/facebook_friends.html' %}
+        <a class="all-users" href="{% url apparel.views.user_list %}">{% trans "All members" %}</a>
     </div>
 {% endblock body %}

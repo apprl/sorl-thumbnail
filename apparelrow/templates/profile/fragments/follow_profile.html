@@ -7,7 +7,7 @@
     <a href="{{ profile.get_absolute_url }}"><h3>{{ profile.display_name }}</h3></a>
     {% if user.is_authenticated %}
         {% include 'apparel/fragments/follow.html' %}
-        {% if_user_is_following profile.user %}<span class="user_is_following">{% trans "Following you" %}</span>{% endif %}
+        {% if_is_following profile.user request.user %}<span class="user_is_following">{% trans "Following you" %}</span>{% endif %}
     {% endif %}
     <p class="about">{% if profile.about %}{{ profile.about }}{% endif %}</p>
     <p>

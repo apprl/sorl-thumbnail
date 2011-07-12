@@ -108,7 +108,6 @@ jQuery(document).ready(function() {
     })
     .hover(function() {
         $this = $(this);
-        $this.attr("data-original-text", $this.text());
         $this.text($this.attr("data-hover-text"));
     }, function() {
         $this = $(this);

@@ -235,7 +235,7 @@
             </ul>
             <ul>
                 <li><h3>{% trans "Social" %}</h3></li>
-                <li><a href="#">{% trans "All members" %}</a></li>
+                <li><a href="{% url apparel.views.user_list %}">{% trans "All members" %}</a></li>
                 {% if not user.is_authenticated %}
                 <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
                 <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>

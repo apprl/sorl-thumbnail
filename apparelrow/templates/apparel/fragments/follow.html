@@ -2,8 +2,8 @@
 {% load follower_tags %}
 
 {% if user.is_authenticated and user != profile.user %}
-<span class="{% if_user_is_following profile.user %}following{% else %}not_following{% endif %}">
-    <a href="{% url_to_unfollow profile.user %}" class="unfollow" data-hover-text="{% trans 'Stop following' %}"><span>{% trans "Following" %}</span></a>
+<span class="{% if_is_following request.user profile.user %}following{% else %}not_following{% endif %}">
+    <a href="{% url_to_unfollow profile.user %}" class="unfollow" data-original-text="{% trans 'Following' %}" data-hover-text="{% trans 'Stop following' %}"><span>{% trans "Following" %}</span></a>
     <a href="{% url_to_follow profile.user %}" class="follow"><span>{% trans "Follow" %}</span></a>
 </span>
 {% endif %}

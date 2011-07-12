@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body-classes %}three-columns profile profile-profiles{% endblock body-classes %}
+
+{% block body %}
+    <div class="sidebar">
+        <h2>{% trans "Most followers" %}</h2>
+        <ul class="suggested-friends">
+        {% for profile in most_followed_users %}
+            <li>
+            {% include 'apparel/fragments/avatar_link.html' %}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div id="content">
+        <h2>{% trans "Members" %}</h2>
+        <ul class="users">
+        {% for follower in object_list %}
+            <li>
+            {% with follower.user.get_profile as profile %}
+                {% if profile %}{% include 'profile/fragments/follow_profile.html' %}{% endif %}
+            {% endwith %}
+            </li>
+        {% endfor %}
+        </ul>
+        <div class="pagination">
+            {% include 'apparel/fragments/pagination_simple.html' %}
+        </div>
+    </div>
+    <div class="sidebar last">
+        <h2>{% trans "Find your friends" %}</h2>
+        {% include 'apparel/fragments/facebook_friends.html' %}
+    </div>
+{% endblock body %}

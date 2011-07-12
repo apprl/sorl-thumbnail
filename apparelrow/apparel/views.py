@@ -6,7 +6,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
-from django.db.models import Max, Min, connection, signals
+from django.db.models import Max, Min, Count, connection, signals
 from django.template import RequestContext, Template, loader
 from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -383,6 +383,33 @@ def csrf_failure(request, reason=None):
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
 
 @get_current_user
+def user_list(request, profile):
+    """
+    Displays a list of profiles
+    """
+    queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('name', 'user__first_name', 'user__last_name', 'user__username')
+
+    paginator = Paginator(queryset, 10)
+    try:
+        paged_result = paginator.page(int(request.GET.get('page', 1)))
+    except (EmptyPage, InvalidPage):
+        paged_result = paginator.page(paginator.num_pages)
+    except ValueError:
+        paged_result = paginator.page(1)
+
+    object_list = sorted(paged_result.object_list, key=lambda x: x.display_name)
+
+    context = {'paginator': paginator,
+               'current_page': paged_result,
+               'page_range': paginator.page_range,
+               'object_list': object_list,
+               'profile': profile,
+               'facebook_friends': get_facebook_friends(request),
+               'most_followed_users': get_most_followed_users(limit=4)}
+
+    return render_to_response('apparel/users.html', context, context_instance=RequestContext(request))
+
+@get_current_user
 @login_required
 def home(request, profile, page=0):
     """
@@ -460,6 +487,10 @@ def index(request):
 #
 # Utility routines. FIXME: Move these out
 #
+
+def get_most_followed_users(limit=2):
+    object_ids = [x['object_id'] for x in Follow.objects.values('object_id').annotate(Count('id')).order_by('-id__count')[:limit]]
+    return ApparelProfile.objects.select_related('user').filter(user__in=object_ids)
 
 def get_top_in_network(model_class, user, limit=2):
     """
