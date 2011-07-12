@@ -185,7 +185,7 @@
     {% endcache %}
     {% cache CACHE_TIMEOUT index_looks LANGUAGE_CODE %}
     <div class="sidebar last">
-        <h2>{% trans "Popular looks" %}</h2>
+        <a href="{% url apparel.views.look_list %}"><h2>{% trans "Popular looks" %}</h2></a>
         {% with popular_looks as looks %}
             {% include 'apparel/fragments/looks_sidebar.html' %}
         {% endwith %}
