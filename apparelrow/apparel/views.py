@@ -371,8 +371,8 @@ def add_to_wardrobe(request):
     signals.post_save.send(sender=Product, instance=product) # For haystack/solr, trigger a fake save signal
     wardrobe.save() # FIXME: Only save if created?
     
-    return wardrobe
-    
+    return {'success': True}
+
     
 def csrf_failure(request, reason=None):
     """

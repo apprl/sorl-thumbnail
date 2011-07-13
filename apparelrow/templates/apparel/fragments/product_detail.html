@@ -79,7 +79,7 @@
                 <form action="{% url apparel.views.add_to_wardrobe %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="product" value="{{ object.id }}" />
-                    <button type="submit" id="wardobe-button-add">
+                    <button type="submit" id="wardrobe-button-add">
                         {% trans "Add to wardrobe" %}                
                     </button>
                 </form>
