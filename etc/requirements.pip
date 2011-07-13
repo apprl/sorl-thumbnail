@@ -40,3 +40,4 @@ pysolr==2.0.15
 django-haystack==1.2.4
 celery==2.2.7
 django-celery==2.2.4
+kombu==1.1.6

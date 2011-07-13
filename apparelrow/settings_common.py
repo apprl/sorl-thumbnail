@@ -178,6 +178,7 @@ INSTALLED_APPS = (
     'profile',
     'importer',
     'apparel_comments',
+    'statistics',
     
         
     'tinymce',

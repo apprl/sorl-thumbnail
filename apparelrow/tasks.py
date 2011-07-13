@@ -1,10 +1,11 @@
 import logging
+from datetime import timedelta
 
 from django.db.models.loading import get_model
-
 from haystack import site
+from celery.task import task, PeriodicTask
 
-from celery.task import task
+from apparelrow.statistics.messaging import process_clicks
 
 logger = logging.getLogger(__name__)
 
@@ -19,3 +20,9 @@ def search_index_update_task(app_name, model_name, pk, **kwargs):
     except Exception, exc:
         logger.error(exc)
         search_index_update_task.retry(exc=exc)
+
+class ProcessClicksTask(PeriodicTask):
+    run_every = timedelta(minutes=15)
+
+    def run(self, **kwargs):
+        process_clicks()

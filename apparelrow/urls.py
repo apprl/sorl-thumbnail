@@ -34,7 +34,7 @@ urlpatterns = patterns('',
     (r'^ping/', include('trackback.urls')),
     ('^activity/', include('actstream.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
-    (r'^admin/(.*)', admin.site.root),
+    (r'^admin/', include(admin.site.urls)),
     (r'^tinymce/', include('tinymce.urls')),
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
     
@@ -42,6 +42,7 @@ urlpatterns = patterns('',
     (r'^beta/', include('beta.urls')),
 
     (r'^search/(?P<model>\w+)/', 'apparelrow.search.search_view'),
+    (r'^s/', include('statistics.urls')),
 )
 
 
