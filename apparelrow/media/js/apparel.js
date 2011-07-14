@@ -137,7 +137,7 @@ jQuery(document).ready(function() {
         }
     });
 
-    jQuery('#nav-main a').click(function(event) {
+    jQuery('#nav-main a, #footer a').click(function(event) {
         var target = $(this).attr('href');
         if(target.indexOf('/browse/?') >= 0) {
             event.preventDefault();
