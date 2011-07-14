@@ -11,7 +11,7 @@ from apparelrow.statistics.messaging import process_clicks
 
 @task(name='apparelrow.tasks.search_index_update_task', max_retries=1, ignore_result=True)
 def search_index_update_task(app_name, model_name, pk, **kwargs):
-    logger = self.get_logger(**kwargs)
+    logger = search_index_update_task.get_logger(**kwargs)
     try:
         model_class = get_model(app_name, model_name)
         instance = model_class.objects.get(pk=pk)
