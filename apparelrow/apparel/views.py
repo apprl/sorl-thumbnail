@@ -21,6 +21,7 @@ from voting.models import Vote
 from actstream.models import user_stream
 from actstream.models import Follow
 
+from apparelrow.tasks import search_index_update_task
 from apparelrow.profile.models import ApparelProfile
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.decorators import get_current_user
@@ -368,7 +369,7 @@ def add_to_wardrobe(request):
     product = Product.objects.get(pk=request.POST.get('product'))
     wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
     wardrobe.products.add(product)
-    signals.post_save.send(sender=Product, instance=product) # For haystack/solr, trigger a fake save signal
+    search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
     wardrobe.save() # FIXME: Only save if created?
     
     return {'success': True}

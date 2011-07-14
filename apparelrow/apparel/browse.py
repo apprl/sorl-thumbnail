@@ -75,6 +75,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     sqs = filter_query(sqs, request.GET)
     if extra_context and 'profile' in extra_context:
         sqs = sqs.narrow('user_exact:%s' % (extra_context['profile'].user.id,))
+    sqs = sqs.order_by('-popularity')
 
     facet = sqs.facet_counts()
 

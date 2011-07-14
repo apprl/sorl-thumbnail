@@ -144,6 +144,7 @@ class Product(models.Model):
     # FIXME: Could we have ForeignKey to VendorProduct instead?
     gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
     published     = models.BooleanField(default=True, db_index=True)
+    popularity    = models.IntegerField(default=0)
     
     objects = SearchManager()
     

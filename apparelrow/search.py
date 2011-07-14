@@ -21,7 +21,7 @@ from haystack.forms import FacetedSearchForm
 from haystack.query import EmptySearchQuerySet
 from haystack.query import SearchQuerySet
 
-from apparelrow.tasks import search_index_update_task
+from apparelrow.apparel.messaging import search_index_update
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Look
 from apparelrow.apparel.models import Manufacturer
@@ -55,12 +55,15 @@ class QueuedSearchIndex(SearchIndex):
         signals.post_delete.disconnect(self.enqueue_delete, sender=model)
 
     def enqueue_save(self, instance, **kwargs):
-        # XXX: maybe add this here?
-        #if self.should_update(instance, **kwargs):
-        search_index_update_task.delay(instance._meta.app_label, instance._meta.module_name, instance._get_pk_val())
+        if self.should_update(instance, **kwargs):
+            search_index_update(instance._meta.app_label, instance._meta.module_name, instance._get_pk_val())
 
     def enqueue_delete(self, instance, **kwargs):
         remove_instance_from_index(instance)
+
+    def update_objects(self, instances, using=None, **kwargs):
+        instances = [x for x in instances if self.should_update(x, **kwargs)]
+        self.backend.update(self, instances)
 
 class ProductIndex(QueuedSearchIndex):
     """
@@ -75,11 +78,12 @@ class ProductIndex(QueuedSearchIndex):
     category = MultiValueField(faceted=True, stored=False)
     template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_content.html')
     user = MultiValueField(faceted=True, stored=False)
+    popularity = IntegerField(model_attr='popularity')
 
     def prepare(self, object):
         self.prepared_data = super(ProductIndex, self).prepare(object)
         # Add price to search index
-        if object.default_vendor.price:
+        if object.default_vendor and object.default_vendor.price:
             try:
                 self.prepared_data['price'] = int(object.default_vendor.price)
             except ValueError:
