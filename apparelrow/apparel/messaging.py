@@ -45,11 +45,11 @@ def process_search_index_updates():
 
         key = '%s:%s' % (app_name, model_name)
         if key in updates:
-            updates[key]['pks'].append(pk)
+            updates[key]['pks'].add(pk)
         else:
             model_class = get_model(app_name, model_name)
             search_index = site.get_index(model_class)
-            updates[key] = {'model_class': model_class, 'search_index': search_index, 'pks': [pk]}
+            updates[key] = {'model_class': model_class, 'search_index': search_index, 'pks': set([pk])}
 
         if pk in messages:
             messages[pk].append(message)
@@ -59,7 +59,7 @@ def process_search_index_updates():
     for key, value in updates.items():
         model_class = value['model_class']
         search_index = value['search_index']
-        split_pks = split_seq(value['pks'], 1000)
+        split_pks = split_seq(list(value['pks']), 1000)
 
         seq = 1
         for pks in split_pks:
