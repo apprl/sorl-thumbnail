@@ -8,6 +8,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.db.models import signals
 from django.db.models import get_model
+from django.template.loader import render_to_string
 
 from haystack import site
 from haystack.indexes import SearchIndex
@@ -147,12 +148,16 @@ def search_view(request, model):
     except ValueError:
         limit = RESULTS_PER_PAGE
 
+    ids = request.GET.get('ids', None)
     class_name = model.lower()
     model_class = get_model('apparel', class_name)
     if model_class is None:
         raise Exception('No model to search for')
 
     sqs = SearchQuerySet().models(model_class).facet('category')
+    if ids:
+        sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
+
     # FIXME: Do we really need a form when this is only accessed through ajax
     if request.GET.get('q'):
         form = FacetedSearchForm(request.GET, searchqueryset=sqs, load_all=True)
@@ -171,9 +176,20 @@ def search_view(request, model):
     except ValueError:
         paged_result = paginator.page(1)
 
+    if request.GET.get('thumb', None):
+        object_list = []
+        for obj in paged_result.object_list:
+            if obj:
+                object_list.append({
+                    'id': obj.object.id,
+                    'template': render_to_string('apparel/fragments/product_thumb_no_cache.html', {'product': obj.object})
+                })
+    else:
+        object_list = [o.template for o in paged_result.object_list if o]
+
     return HttpResponse(
         json.dumps({
-            'object_list': [o.template for o in paged_result.object_list],
+            'object_list': object_list,
             'previous_page_number': paged_result.previous_page_number(),
             'next_page_number': paged_result.next_page_number(),
             'number': paged_result.number,

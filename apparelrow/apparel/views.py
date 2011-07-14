@@ -154,10 +154,7 @@ def look_edit(request, slug):
     data = {
         'object': form.instance, 
         'form': form,
-        'wardrobe': wardrobe,
-        'templates': {
-            'product_thumb': js_template(get_template_source('apparel/fragments/product_thumb.html'), context=context),
-        }
+        'wardrobe': wardrobe
     }
     # FIXME: Cannot export Form objects as JSON. Fix this and remove this
     # work around

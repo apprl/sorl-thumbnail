@@ -334,7 +334,7 @@ jQuery(document).ready(function() {
         chooser.show({
             anchor: jQuery(this),
             callback: function(li) {
-                createHotspot(li.data('product'), top, left);
+                createHotspot(li.data('product_id'), top, left);
             },
             left: left,
             top: top
@@ -368,9 +368,9 @@ jQuery(document).ready(function() {
     
 });
 
-function createHotspot(product, top, left) {
+function createHotspot(product_id, top, left) {
     look.saveComponent({
-        id: product.id,
+        id: product_id,
         position: {
             left: left - 40,
             top: top - 40
@@ -451,16 +451,17 @@ var chooser = {
         });
         
         if(to_fetch.length > 0) {
-            jQuery.getJSON('{% url apparelrow.search.search_view "products"  %}', {
-                '1:p.id:in': to_fetch.join(','),
-                'page': '-1'
+            jQuery.getJSON('{% url apparelrow.search.search_view "product"  %}', {
+                'q': '*:*',
+                'ids': to_fetch.join(','),
+                'page': '-1',
+                'thumb': '1',
+                'limit': '1000'
             }, function(result, status) {
                 jQuery.each(result.object_list, function(idx, product) {
                     jQuery('#option-' + product.id)
-                        .append(
-                            jQuery('#product_thumb_template').render({ product: product })
-                        )
-                        .data('product', product);
+                        .append(product.template)
+                        .data('product_id', product.id);
                 });
             });
         }
