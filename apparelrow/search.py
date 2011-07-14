@@ -154,7 +154,9 @@ def search_view(request, model):
     if model_class is None:
         raise Exception('No model to search for')
 
-    sqs = SearchQuerySet().models(model_class).facet('category')
+    sqs = SearchQuerySet().models(model_class)
+    if class_name == 'product':
+        sqs = sqs.order_by('-popularity')
     if ids:
         sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
 
