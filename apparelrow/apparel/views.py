@@ -458,7 +458,7 @@ def index(request):
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
     ctx['pages'] = FirstPageContent.published_objects.all()
     ctx['popular_looks']  = Vote.objects.get_top(Look, limit=6)
-    ctx['colors'] = Option.objects.filter(option_type__name='color')
+    ctx['all_colors'] = Option.objects.filter(option_type__name='color')
     ctx['categories_all'] = Category._tree_manager.filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
 
@@ -466,11 +466,11 @@ def index(request):
     if pricerange['min'] is None:
         pricerange['min'] = 0
     else:
-        pricerange['min'] = int(100 * math.floor(float(pricerange['min']) / 100))
+        pricerange['min'] = int(pricerange['min'])
     if pricerange['max'] is None:
         pricerange['max'] = 10000
     else:
-        pricerange['max'] = int(100 * math.ceil(float(pricerange['max']) / 100))
+        pricerange['max'] = int(pricerange['max'])
     pricerange['selected'] = '%s,%s' % (pricerange['min'], pricerange['max'])
     ctx['pricerange'] = pricerange
 

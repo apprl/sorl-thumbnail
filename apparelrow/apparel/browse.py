@@ -41,21 +41,18 @@ def _to_int(s):
         return None
 
 def filter_query(query, params):
+    query = query.facet_limit(-1).facet_mincount(1)
     for field in FACET_FILTER_OPTIONS:
-        if field == 'category':
-            query = query.facet('{!ex=category}%s' % (field,))
-        else:
-            query = query.facet('%s' % (field,))
+        query = query.facet('{!ex=%s}%s' % (field, field))
 
         if field in params:
+            tag = '{!tag=%s}%s' % (field, field + '_exact')
             if field == 'price':
                 price = params[field].split(',')
                 if len(price) == 2:
-                    query = query.narrow('%s:[%s TO %s]' % (field + '_exact', query.query.clean(price[0]), query.query.clean(price[1])))
-            elif field == 'category':
-                query = query.narrow('{!tag=category}%s:(%s)' % (field + '_exact', ' OR '.join([query.query.clean(x) for x in params[field].split(',')])))
+                    query = query.narrow('%s:[%s TO %s]' % (tag, query.query.clean(price[0]), query.query.clean(price[1])))
             else:
-                query = query.narrow('%s:(%s)' % (field + '_exact', ' OR '.join([query.query.clean(x) for x in params[field].split(',')])))
+                query = query.narrow('%s:(%s)' % (tag, ' OR '.join([query.query.clean(x) for x in params[field].split(',')])))
 
     if 'gender' in params and len(params.get('gender')) == 1:
         query = query.narrow('gender:(%s OR U)' % (query.query.clean(params.get('gender')),))
@@ -68,11 +65,7 @@ def filter_query(query, params):
     return query
 
 def browse_products(request, template='apparel/browse.html', extra_context=None):
-    query = ''
-    results = EmptySearchQuerySet()
-
-    sqs = SearchQuerySet().models(Product)
-    sqs = filter_query(sqs, request.GET)
+    sqs = filter_query(SearchQuerySet().models(Product), request.GET)
     if extra_context and 'profile' in extra_context:
         sqs = sqs.narrow('user_exact:%s' % (extra_context['profile'].user.id,))
     sqs = sqs.order_by('-popularity')
@@ -81,28 +74,39 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
 
     # Calculate price range. Using Solr directly because haystack have no
     # support for stats component.
-    solr = Solr(settings.HAYSTACK_SOLR_URL)
-    price_result = solr.search(q=sqs.query.build_query(), fq=list(sqs.query.narrow_queries), **{'stats': 'on', 'stats.field': 'price'})
-    if price_result and price_result.stats['stats_fields']['price']:
-        pricerange = {
-            'max': int(round(price_result.stats['stats_fields']['price']['max'] + 50, -2)),
-            'min': int(round(price_result.stats['stats_fields']['price']['min'] - 50, -2)),
-        }
-        if pricerange['min'] < 0:
-            pricerange['min'] = 0
+    #solr = Solr(settings.HAYSTACK_SOLR_URL)
+    #price_result = solr.search(q=sqs.query.build_query(), fq=list(sqs.query.narrow_queries), **{'stats': 'on', 'stats.field': 'price'})
+    #if price_result and price_result.stats['stats_fields']['price']:
+        #pricerange = {
+            #'max': int(round(price_result.stats['stats_fields']['price']['max'] + 50, -2)),
+            #'min': int(round(price_result.stats['stats_fields']['price']['min'] - 50, -2)),
+        #}
+        #if pricerange['min'] < 0:
+            #pricerange['min'] = 0
+    #else:
+        #pricerange = {'max': 0, 'min': 0}
+    #pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
+
+    # Calculate price range
+    pricerange = {}
+    prices = [int(x[0]) for x in facet['fields']['price']]
+    if prices:
+        pricerange['max'] = max(prices)
+        pricerange['min'] = min(prices)
     else:
-        pricerange = {'max': 0, 'min': 0}
+        pricerange = {'min': 0, 'max': 0}
     pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
 
     # Calculate manufacturer
     manufacturers = Manufacturer.objects.filter(pk__in=[x[0] for x in facet['fields']['manufacturer'] if x[1] > 0])
 
     # Calculate colors
-    if request.is_ajax():
-        colors = [_to_int(x[0]) for x in facet['fields']['color'] if x[1] > 0]
-    else:
-        #colors = Option.objects.filter(option_type__name='color').all()
-        colors = Option.objects.filter(option_type__name='color').filter(pk__in=[_to_int(x[0]) for x in facet['fields']['color']])
+    #if request.is_ajax():
+    colors = [_to_int(x[0]) for x in facet['fields']['color'] if x[1] > 0]
+    #else:
+        #colors = Option.objects.filter(option_type__name='color').filter(pk__in=[_to_int(x[0]) for x in facet['fields']['color']])
+
+    all_colors = Option.objects.filter(option_type__name='color').all()
 
     # Calculate category
     categories = [_to_int(x[0]) for x in facet['fields']['category'] if x[1] > 0]
@@ -136,6 +140,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
                   pricerange=pricerange,
                   manufacturers=manufacturers,
                   colors=colors,
+                  all_colors=all_colors,
                   categories=categories)
 
     paged_result.html = [o.template for o in paged_result.object_list if o]

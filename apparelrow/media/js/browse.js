@@ -231,7 +231,9 @@ jQuery(document).ready(function() {
         return false;
     });
     jQuery('#product-color li > a').click(function() {
-        jQuery(this).toggleClass('selected');
+        if(!jQuery(this).hasClass('filtered')) {
+            jQuery(this).toggleClass('selected');
+        }
         return false;
     });
     jQuery('#product-category li > a').click(function() {
@@ -341,6 +343,7 @@ jQuery(document).ready(function() {
         }
     });
 });
+
 function getQuery(query, reset) {
     query = query || {}
     reset = typeof(reset) != 'undefined' ? reset : false;
@@ -496,15 +499,19 @@ function filterCriteria(criteria_filter) {
             values[1] = max;
         $('#price-slider').slider('option', 'min', min);
         $('#price-slider').slider('option', 'max', max);
-        $('#price-slider').slider('values', values);
+        if (!jQuery('#product-price > a').hasClass('selected')) {
+            $('#price-slider').slider('values', criteria_filter.pricerange.selected.split(','));
+        } else {
+            $('#price-slider').slider('values', values);
+        }
     }
 }
 
 function applyCriteriaFilter(args) {
-    //selector, criteria, cb_add, cb_remove) {
+    //selector, criteria, cb_add, cb_remove
     jQuery(args.selector).each(function() {
         $this = jQuery(this);
-        if (args.criteria.length == 0 || jQuery.inArray(parseInt(this.id.split('-')[1], 10), args.criteria) >= 0) {
+        if (jQuery.inArray(parseInt(this.id.split('-')[1], 10), args.criteria) >= 0) {
             args.remove($this);
         } else {
             args.add($this);
