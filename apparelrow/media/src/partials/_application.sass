@@ -633,6 +633,16 @@ span, a
 .product-photo
   border: 1px solid #dadada
 
+#product-count
+  a
+    float: right
+    background: transparent image_url("arrow-bg.png") scroll no-repeat right center
+    clear: both
+    &:hover
+      background-image: image_url("arrow-bg-hover.png")
+    padding-right: 15px
+    padding-bottom: 1px
+
 div#product-list
   +border-bottom-radius(unquote("3px"))
   width: $large_width - 1

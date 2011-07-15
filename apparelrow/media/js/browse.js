@@ -196,6 +196,10 @@ jQuery(document).ready(function() {
         return false;
     });
 
+    jQuery('#product-count a').click(function() {
+        jQuery('#reset').click();
+    });
+
     // Set selected and clear selected from related element and then call filter
     function resetGender(element) {
         if(!element.hasClass('.selected')) {
@@ -448,6 +452,13 @@ function renderPage(products) {
             }
         });
 
+    query = getQuery();
+    if('f' in query) {
+        jQuery('#product-count a').hide();
+    } else {
+        jQuery('#product-count a').attr('href', '#' + decodeURIComponent(jQuery.param({'f': 1}))).show();
+    }
+
     if(location.hash && location.hash != '#!') {
         jQuery('#reset').show()
     } else {
@@ -582,13 +593,17 @@ function updateSelected(products) {
 
 function renderProducts(products) {
     $('#product-list > ul.list').empty();
-    $('#product-count').text(
+    product_count_text = $('#product-count span').text(
         interpolate(ngettext(
             '%s product', 
             '%s products', 
             products.paginator.count
         ), [products.paginator.count])
     );
+    //product_count_text = $('#product-count span');
+    if('help_text' in products) {
+        product_count_text.prepend(products.help_text + ', ');
+    }
     renderPage(products);
     pagination.data = products;
     pagination.recalculate(0);

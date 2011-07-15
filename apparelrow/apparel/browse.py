@@ -14,6 +14,7 @@ from django.template.loader import find_template_source
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
+from django.utils.translation import get_language, ugettext_lazy as _
 
 from hanssonlarsson.django.exporter import json
 
@@ -159,6 +160,11 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     # Extra context
     if extra_context:
         result.update(extra_context)
+
+    if request.GET.get('q', None):
+        result.update(help_text=_('Showing') + ' \'' + request.GET.get('q') + '\'')
+    if request.GET.get('f', None):
+        result.update(help_text=_('Showing popular products in your network'))
 
     # Serve ajax request
     if request.is_ajax():

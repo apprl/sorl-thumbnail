@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 23:43+0200\n"
+"POT-Creation-Date: 2011-07-15 14:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,14 @@ msgstr "English"
 #: settings_common.py:48
 msgid "Swedish"
 msgstr "Svenska"
+
+#: apparel/browse.py:165
+msgid "Showing"
+msgstr "Visar"
+
+#: apparel/browse.py:167
+msgid "Showing popular products in your network"
+msgstr "Visar populära plagg bland dina vänner"
 
 #: apparel/models.py:25
 msgid "Products can only be displayed for an active manufactorer"
@@ -74,11 +82,11 @@ msgstr "Kategorin visas på förstasidan"
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:134 apparel/models.py:310
+#: apparel/models.py:134 apparel/models.py:311
 msgid "Slug Name"
 msgstr "Slug"
 
-#: apparel/models.py:135 apparel/models.py:311
+#: apparel/models.py:135 apparel/models.py:312
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr "Används i URLer. Om den är tom, auto-genereras den från namnet"
 
@@ -94,7 +102,7 @@ msgstr "Måste vara unikt för tillverkaren"
 msgid "Time added"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:140 apparel/models.py:317 apparel/models.py:484
+#: apparel/models.py:140 apparel/models.py:318 apparel/models.py:485
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -110,152 +118,152 @@ msgstr "Produktbild"
 msgid "Gender"
 msgstr "Kön"
 
-#: apparel/models.py:210
+#: apparel/models.py:211
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:211
+#: apparel/models.py:212
 msgid "Name"
 msgstr "Namn"
 
-#: apparel/models.py:213
+#: apparel/models.py:214
 msgid "Default gender"
 msgstr ""
 
-#: apparel/models.py:252
+#: apparel/models.py:253
 msgid "Buy URL"
 msgstr "URL till köpsida"
 
-#: apparel/models.py:253 templates/apparel/fragments/product_menu.html:15
+#: apparel/models.py:254 templates/apparel/fragments/product_menu.html:15
 msgid "Price"
 msgstr "Pris"
 
-#: apparel/models.py:253
+#: apparel/models.py:254
 msgid "Price converted to base currency"
 msgstr "Pris konverterat till basvaluta"
 
-#: apparel/models.py:254 importer/models.py:123
+#: apparel/models.py:255 importer/models.py:123
 msgid "Currency"
 msgstr "Valuta"
 
-#: apparel/models.py:254
+#: apparel/models.py:255
 msgid "Base currency as three-letter ISO code"
 msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:255
+#: apparel/models.py:256
 msgid "Original price"
 msgstr "Ursprungligt pris"
 
-#: apparel/models.py:256
+#: apparel/models.py:257
 msgid "Original currency"
 msgstr "Ursprunglig valuta"
 
-#: apparel/models.py:256
+#: apparel/models.py:257
 msgid "Currency as three-letter ISO code"
 msgstr "Valuta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:289
+#: apparel/models.py:290
 msgid "Items in stock"
 msgstr "Antal i lager"
 
-#: apparel/models.py:289
+#: apparel/models.py:290
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:294
+#: apparel/models.py:295
 msgid "No information available"
 msgstr "Ingen information tillgänglig"
 
-#: apparel/models.py:296
+#: apparel/models.py:297
 msgid "Out of stock"
 msgstr "Ej i lager"
 
-#: apparel/models.py:298
+#: apparel/models.py:299
 msgid "In stock"
 msgstr "I lager"
 
-#: apparel/models.py:300
+#: apparel/models.py:301
 msgid "items in stock"
 msgstr "i lager"
 
-#: apparel/models.py:309 apparel/models.py:477
+#: apparel/models.py:310 apparel/models.py:478
 #: templates/apparel/look_create.html:18
 msgid "Title"
 msgstr "Titel"
 
-#: apparel/models.py:312
+#: apparel/models.py:313
 msgid "Look description"
 msgstr "Beskrivning"
 
-#: apparel/models.py:316 apparel/models.py:483 beta/models.py:6
+#: apparel/models.py:317 apparel/models.py:484 beta/models.py:6
 #: beta/models.py:14
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:319
+#: apparel/models.py:320
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:320
+#: apparel/models.py:321
 msgid "The look will be shown on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:410
+#: apparel/models.py:411
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:411
+#: apparel/models.py:412
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:412
+#: apparel/models.py:413
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:413
+#: apparel/models.py:414
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:414
+#: apparel/models.py:415
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:415
+#: apparel/models.py:416
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:478
+#: apparel/models.py:479
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:478
+#: apparel/models.py:479
 msgid "HTML allowed"
 msgstr ""
 
-#: apparel/models.py:479
+#: apparel/models.py:480
 msgid "URL"
 msgstr "URL"
 
-#: apparel/models.py:480
+#: apparel/models.py:481
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:480
+#: apparel/models.py:481
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:482
+#: apparel/models.py:483
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:505
+#: apparel/models.py:506
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:505
+#: apparel/models.py:506
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -386,6 +394,10 @@ msgstr "Profilbild"
 #: profile/models.py:20
 msgid "About"
 msgstr "Om"
+
+#: statistics/models.py:30 statistics/models.py:31
+msgid "Product clicks"
+msgstr "Produkt klick"
 
 #: templates/base.html:74
 msgid "About ApparelRow beta"
@@ -700,7 +712,7 @@ msgstr "Skapa ny look"
 msgid "Create a new look"
 msgstr "Skapa en ny look"
 
-#: templates/apparel/look_create.html:22 templates/apparel/look_edit.html:505
+#: templates/apparel/look_create.html:22 templates/apparel/look_edit.html:506
 msgid "Description (optional):"
 msgstr "Beskrivning (valfritt)"
 
@@ -753,64 +765,64 @@ msgstr "Spara foto"
 msgid "Save selection"
 msgstr "Spara urval"
 
-#: templates/apparel/look_edit.html:502
+#: templates/apparel/look_edit.html:503
 msgid "Save"
 msgstr "Spara"
 
-#: templates/apparel/look_edit.html:507
+#: templates/apparel/look_edit.html:508
 msgid "Tags:"
 msgstr "Taggar (valfritt)"
 
-#: templates/apparel/look_edit.html:513
+#: templates/apparel/look_edit.html:514
 msgid "Collage"
 msgstr "Kollage"
 
-#: templates/apparel/look_edit.html:514
+#: templates/apparel/look_edit.html:515
 msgid "Photo"
 msgstr "Foto"
 
-#: templates/apparel/look_edit.html:515
+#: templates/apparel/look_edit.html:516
 msgid "Selection"
 msgstr "Urval"
 
-#: templates/apparel/look_edit.html:522
+#: templates/apparel/look_edit.html:523
 msgid "To create a look, you need to have products in your wardrobe."
 msgstr ""
 "För att skapa en look behöver du först lägga till plagg i din garderob."
 
-#: templates/apparel/look_edit.html:522
+#: templates/apparel/look_edit.html:523
 msgid "Find products!"
 msgstr "Hitta plagg!"
 
-#: templates/apparel/look_edit.html:524
+#: templates/apparel/look_edit.html:525
 msgid "Drag products here to start building a collage"
 msgstr "Dra produkter hit för att börja skapa ditt kollage"
 
-#: templates/apparel/look_edit.html:526
+#: templates/apparel/look_edit.html:527
 msgid "or"
 msgstr "eller"
 
-#: templates/apparel/look_edit.html:527 templates/apparel/look_edit.html:537
+#: templates/apparel/look_edit.html:528 templates/apparel/look_edit.html:538
 msgid "Upload a photo to create a tagged image"
 msgstr "Ladda upp ett foto för att skapa en taggad bild"
 
-#: templates/apparel/look_edit.html:542
+#: templates/apparel/look_edit.html:543
 msgid "Choose file"
 msgstr "Välj bild"
 
-#: templates/apparel/look_edit.html:545
+#: templates/apparel/look_edit.html:546
 msgid "Upload"
 msgstr "Ladda upp"
 
-#: templates/apparel/look_edit.html:562
+#: templates/apparel/look_edit.html:563
 msgid "Your wardrobe"
 msgstr "Din garderob"
 
-#: templates/apparel/look_edit.html:572
+#: templates/apparel/look_edit.html:573
 msgid "Products"
 msgstr "Produkter"
 
-#: templates/apparel/look_edit.html:572
+#: templates/apparel/look_edit.html:573
 #: templates/apparel/fragments/user_like_list_base.html:7
 msgid "Close"
 msgstr "Stäng"
