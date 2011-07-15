@@ -177,7 +177,7 @@ var ManufacturerBrowser = {
     renderItem: function(item, $list) {
         // FIXME: When we render template on server, drop this method all together
         var $a = jQuery('<a>')
-            .attr('href', '/browse/?1:m.id:in=' + item.id)
+            .attr('href', '/browse/?manufacturer=' + item.id)
             .attr('id', 'available-manufacturer-' + item.id)
             .text(item.name)
         ;
