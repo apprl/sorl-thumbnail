@@ -9,6 +9,9 @@ from django.http import HttpResponse
 from django.db.models import signals
 from django.db.models import get_model
 from django.template.loader import render_to_string
+from django.contrib.contenttypes.models import ContentType
+
+from voting.models import Vote
 
 from haystack import site
 from haystack.indexes import SearchIndex
@@ -78,7 +81,8 @@ class ProductIndex(QueuedSearchIndex):
     color = MultiValueField(faceted=True, stored=False)
     category = MultiValueField(faceted=True, stored=False)
     template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_content.html')
-    user = MultiValueField(faceted=True, stored=False)
+    user_wardrobe = MultiValueField(stored=False)
+    user_likes = MultiValueField(stored=False)
     popularity = IntegerField(model_attr='popularity')
 
     def prepare(self, object):
@@ -94,7 +98,10 @@ class ProductIndex(QueuedSearchIndex):
         # Add category to search index
         self.prepared_data['category'] = Category.objects.get(pk=object.category.id).get_ancestors(ascending=False, include_self=True).values_list('pk', flat=True)
         # Add user to search index
-        self.prepared_data['user'] = Wardrobe.objects.filter(products=object).values_list('user__id', flat=True)
+        self.prepared_data['user_wardrobe'] = Wardrobe.objects.filter(products=object).values_list('user__id', flat=True)
+        # Add user likes to search index
+        self.prepared_data['user_likes'] = Vote.objects.filter(content_type=ContentType.objects.get_for_model(object),
+                                                               object_id=object.id).values_list('user__id', flat=True)
         return self.prepared_data
 
     def index_queryset(self):
@@ -111,13 +118,13 @@ class ManufacturerIndex(QueuedSearchIndex):
     Search index for manufacturer model.
     """
     text = CharField(document=True, use_template=True, model_attr='name')
+    manufacturer_id = IntegerField(model_attr='id')
     name = CharField(model_attr='name')
     template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/manufacturer_search.html')
     auto = NgramField(model_attr='name')
 
     def index_queryset(self):
         return Manufacturer.objects.filter(product__published=True).distinct()
-
 
 class LookIndex(QueuedSearchIndex):
     """

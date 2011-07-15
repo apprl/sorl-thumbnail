@@ -17,11 +17,11 @@ from django.core.paginator import EmptyPage
 
 from hanssonlarsson.django.exporter import json
 
-from pysolr import Solr
-
 from haystack.forms import FacetedSearchForm
 from haystack.query import EmptySearchQuerySet
 from haystack.query import SearchQuerySet
+
+from actstream.models import Follow
 
 from apparel.models import Product
 from apparel.models import Manufacturer
@@ -30,9 +30,6 @@ from apparel.models import Category
 from apparel.decorators import get_current_user
 
 BROWSE_PAGE_SIZE = 12
-BROWSE_PAGE_MAX  = 100
-
-FACET_FILTER_OPTIONS = ['category', 'price', 'manufacturer', 'color']
 
 def _to_int(s):
     try:
@@ -40,10 +37,11 @@ def _to_int(s):
     except ValueError:
         return None
 
-def filter_query(query, params):
+def filter_query(query, params, current_user=None, facet_fields=None):
     query = query.facet_limit(-1).facet_mincount(1)
-    for field in FACET_FILTER_OPTIONS:
-        query = query.facet('{!ex=%s}%s' % (field, field))
+    for field in ['category', 'price', 'manufacturer', 'color']:
+        if facet_fields and field in facet_fields:
+            query = query.facet('{!ex=%s}%s' % (field, field))
 
         if field in params:
             tag = '{!tag=%s}%s' % (field, field + '_exact')
@@ -62,30 +60,22 @@ def filter_query(query, params):
     if 'q' in params:
         query = query.filter(content=query.query.clean(params.get('q', '')))
 
+    # Browse products in that those you follow either like or is in their wardrobe.
+    if 'f' in params and current_user:
+        user_ids = Follow.objects.filter(user=current_user).values_list('object_id', flat=True)
+        user_ids_or = ' OR '.join(str(x) for x in user_ids)
+        query = query.narrow('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or))
+
     return query
 
 def browse_products(request, template='apparel/browse.html', extra_context=None):
-    sqs = filter_query(SearchQuerySet().models(Product), request.GET)
+    facet_fields = ['category', 'price', 'manufacturer', 'color']
+    sqs = filter_query(SearchQuerySet().models(Product), request.GET, request.user, facet_fields)
     if extra_context and 'profile' in extra_context:
-        sqs = sqs.narrow('user_exact:%s' % (extra_context['profile'].user.id,))
+        sqs = sqs.narrow('user_wardrobe:%s' % (extra_context['profile'].user.id,))
     sqs = sqs.order_by('-popularity')
 
     facet = sqs.facet_counts()
-
-    # Calculate price range. Using Solr directly because haystack have no
-    # support for stats component.
-    #solr = Solr(settings.HAYSTACK_SOLR_URL)
-    #price_result = solr.search(q=sqs.query.build_query(), fq=list(sqs.query.narrow_queries), **{'stats': 'on', 'stats.field': 'price'})
-    #if price_result and price_result.stats['stats_fields']['price']:
-        #pricerange = {
-            #'max': int(round(price_result.stats['stats_fields']['price']['max'] + 50, -2)),
-            #'min': int(round(price_result.stats['stats_fields']['price']['min'] - 50, -2)),
-        #}
-        #if pricerange['min'] < 0:
-            #pricerange['min'] = 0
-    #else:
-        #pricerange = {'max': 0, 'min': 0}
-    #pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
 
     # Calculate price range
     pricerange = {}
@@ -99,14 +89,14 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
 
     # Calculate manufacturer
     manufacturers = Manufacturer.objects.filter(pk__in=[x[0] for x in facet['fields']['manufacturer'] if x[1] > 0])
+    mp = Paginator(manufacturers, settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
+    try:
+        manufacturers = [x for x in mp.page(1).object_list if x]
+    except InvalidPage:
+        manufacturers = []
 
     # Calculate colors
-    #if request.is_ajax():
     colors = [_to_int(x[0]) for x in facet['fields']['color'] if x[1] > 0]
-    #else:
-        #colors = Option.objects.filter(option_type__name='color').filter(pk__in=[_to_int(x[0]) for x in facet['fields']['color']])
-
-    all_colors = Option.objects.filter(option_type__name='color').all()
 
     # Calculate category
     categories = [_to_int(x[0]) for x in facet['fields']['category'] if x[1] > 0]
@@ -140,7 +130,6 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
                   pricerange=pricerange,
                   manufacturers=manufacturers,
                   colors=colors,
-                  all_colors=all_colors,
                   categories=categories)
 
     paged_result.html = [o.template for o in paged_result.object_list if o]
@@ -188,6 +177,9 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
             json.encode(result),
             mimetype='text/json'
         )
+    else:
+        all_colors = Option.objects.filter(option_type__name='color').all()
+        result.update(all_colors=all_colors)
 
     # Serve non ajax request
     result.update(
@@ -225,20 +217,28 @@ def browse_manufacturers(request, **kwargs):
     """
     Browse manufacturers view.
     """
-    sqs = SearchQuerySet().models(Manufacturer)
-
     page = request.GET.get('mpage', 1)
     term = request.GET.get('mname', None)
-    if term:
-        sqs = sqs.filter(auto=term)
 
-    mp = Paginator(sqs.order_by('name').load_all(), settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
-    try:
-        manufacturers = [x.object for x in mp.page(page).object_list if x]
-    except EmptyPage:
-        manufacturers = []
-    except InvalidPage:
-        manufacturers = [x.object for x in mp.page(1).object_list if x]
+    product_facet = filter_query(SearchQuerySet().models(Product), request.GET, request.user, ['manufacturer']).facet_counts()
+    manufacturers = Manufacturer.objects.filter(pk__in=[x[0] for x in product_facet['fields']['manufacturer'] if x[1] > 0])
+
+    if term:
+        sqs = SearchQuerySet().models(Manufacturer)
+        if term:
+            sqs = sqs.filter(auto=term)
+
+        mp = Paginator(sqs.order_by('name'), settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
+        try:
+            manufacturers = [{'id': x.manufacturer_id, 'name': x.name} for x in mp.page(page).object_list if x]
+        except InvalidPage:
+            manufacturers = []
+    else:
+        mp = Paginator(manufacturers, settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
+        try:
+            manufacturers = [x for x in mp.page(page).object_list if x]
+        except InvalidPage:
+            manufacturers = []
 
     return HttpResponse(json.encode(manufacturers), mimetype='application/json')
 

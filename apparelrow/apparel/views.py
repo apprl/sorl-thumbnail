@@ -13,13 +13,10 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic import list_detail
-
 from hanssonlarsson.django.exporter import json
-
 from voting.models import Vote
-
-from actstream.models import user_stream
-from actstream.models import Follow
+from actstream.models import user_stream, Follow
+from haystack.query import SearchQuerySet
 
 from apparelrow.tasks import search_index_update_task
 from apparelrow.profile.models import ApparelProfile
@@ -416,6 +413,13 @@ def home(request, profile, page=0):
     queryset = user_stream(request.user)
     queryset = queryset.filter(verb__in=['liked', 'added', 'commented', 'created'])
 
+    # Retrieve most popular products in users network
+    limit = 2
+    user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
+    user_ids_or = ' OR '.join(str(x) for x in user_ids)
+    search_queryset = SearchQuerySet().narrow('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or)).order_by('-popularity')[:limit]
+    popular_products_in_network = [x.object for x in search_queryset if x]
+
     return list_detail.object_list(
         request,
         queryset=queryset,
@@ -426,7 +430,8 @@ def home(request, profile, page=0):
             'profile': profile,
             'facebook_friends': get_facebook_friends(request),
             'popular_looks_in_network': get_top_in_network(Look, request.user, limit=2),
-            'popular_products_in_network': get_top_in_network(Product, request.user, limit=2)
+            'popular_products_in_network': [x.object for x in search_queryset if x]
+
         }
     )
 

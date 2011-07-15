@@ -382,6 +382,9 @@ function getQuery(query, reset) {
             if(keyval[0] == 'q') {
                 query['q'] = keyval[1];
             }
+            if(keyval[0] == 'f') {
+                query['f'] = keyval[1];
+            }
         }
     }
 

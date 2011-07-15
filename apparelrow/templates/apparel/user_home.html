@@ -6,7 +6,7 @@
 
 {% block body %}
     <div class="sidebar">
-        <h2>{% trans "Popular products in your network" %}</h2>
+        <a href="{% url apparel.browse.browse_products %}#f=1"><h2>{% trans "Popular products in your network" %}</h2></a>
         {% with popular_products_in_network as products %}
             {% include 'apparel/fragments/products_sidebar.html' %}
         {% endwith %}
