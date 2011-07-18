@@ -37,7 +37,7 @@
         <div id="content">
             <h2 id="product-count">
                 <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
-                <a href="{% url apparel.browse.browse_products %}" style="float: right;">{% trans "Show popular products in your network" %}</a>
+                <a href="{% url apparel.browse.browse_products %}#f=1">{% trans "Show popular products in your network" %}</a>
             </h2>
             {% include 'apparel/fragments/product_list.html' %}
         </div>

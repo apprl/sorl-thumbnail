@@ -456,7 +456,7 @@ function renderPage(products) {
     if('f' in query) {
         jQuery('#product-count a').hide();
     } else {
-        jQuery('#product-count a').attr('href', '#' + decodeURIComponent(jQuery.param({'f': 1}))).show();
+        jQuery('#product-count a').show();
     }
 
     if(location.hash && location.hash != '#!') {
