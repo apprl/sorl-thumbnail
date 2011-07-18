@@ -242,8 +242,10 @@ ApparelSearch = {
             },
             selector: '#search-result-products',
             text: {
-                plural: 'Found %(count)s products',
-                singular: 'Found %(count)s product'
+                header_plural: 'Found %(count)s products',
+                header_singular: 'Found %(count)s product',
+                button_plural: 'Show all %(count)s products',
+                button_singular: 'Show %(count)s product'
             }
         });
 
@@ -255,8 +257,10 @@ ApparelSearch = {
             },
             selector: '#search-result-looks',
             text: {
-                plural: 'Found %(count)s looks',
-                singular: 'Found %(count)s look'
+                header_plural: 'Found %(count)s looks',
+                header_singular: 'Found %(count)s look',
+                button_plural: 'Show all %(count)s looks',
+                button_singular: 'Show %(count)s look'
             }
         });
 
@@ -268,8 +272,10 @@ ApparelSearch = {
             },
             selector: '#search-result-manufacturers',
             text: {
-                plural: 'Found %(count)s matching brands',
-                singular: 'Found %(count)s matching brand'
+                header_plural: 'Found %(count)s matching brands',
+                header_singular: 'Found %(count)s matching brand',
+                button_plural: 'Show all %(count)s matching brands',
+                button_singular: 'Show %(count)s matching brand'
             }
         });
 
@@ -323,8 +329,20 @@ ApparelSearch = {
                 list.closest('.result-container').children('h2').text(
                     interpolate(
                         ngettext(
-                            opts.text.singular,
-                            opts.text.plural,
+                            opts.text.header_singular,
+                            opts.text.header_plural,
+                            response.paginator.count
+                        ),
+                        { count: response.paginator.count },
+                        true
+                    )
+                );
+
+                jQuery('a.' + opts.selector.substring(1)).text(
+                    interpolate(
+                        ngettext(
+                            opts.text.button_singular,
+                            opts.text.button_plural,
                             response.paginator.count
                         ),
                         { count: response.paginator.count },
@@ -344,6 +362,9 @@ ApparelSearch = {
         ngettext('Found %(count)s product', 'Found %(count)s products', 0);
         ngettext('Found %(count)s look', 'Found %(count)s looks', 0);
         ngettext('Found %(count)s matching brand', 'Found %(count)s matching brands', 0);
+        ngettext('Show %(count)s product', 'Show all %(count)s products', 0);
+        ngettext('Show %(count)s look', 'Show all %(count)s looks', 0);
+        ngettext('Show %(count)s matching brand', 'Show all %(count)s matching brands', 0);
         ngettext('%s product', '%s products', 0);
     },
 
