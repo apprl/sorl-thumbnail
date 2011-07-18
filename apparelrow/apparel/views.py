@@ -377,8 +377,7 @@ def csrf_failure(request, reason=None):
     logging.debug("CSRF failure: %s" % reason)
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
 
-@get_current_user
-def user_list(request, profile):
+def user_list(request):
     """
     Displays a list of profiles
     """
@@ -398,7 +397,6 @@ def user_list(request, profile):
                'current_page': paged_result,
                'page_range': paginator.page_range,
                'object_list': object_list,
-               'profile': profile,
                'facebook_friends': get_facebook_friends(request),
                'most_followed_users': get_most_followed_users(limit=4)}
 
