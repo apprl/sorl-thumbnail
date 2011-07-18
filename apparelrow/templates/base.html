@@ -150,7 +150,6 @@
                 <li><a class="men" href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
                 <li><a href="{% url apparel.views.look_list %}">{% trans "Looks" %}</a></li>
                 <!-- <li><a href="http://blog.apparelrow.com/">{% trans "Blog" %}</a></li> -->
-                <li><a id="about-beta" class="about-beta-popup" href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
             {% if not user.is_authenticated %}
                 <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
                 <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>
