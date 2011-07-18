@@ -20,7 +20,7 @@ def parse_product_name(record):
     #if manufacturer.strip() == ','.join(product_name_parts[-comma_occurences:]).strip():
         #del product_name_parts[-comma_occurences:]
 
-    return ', '.join(product_name_parts)
+    return ', '.join([x.strip() for x in product_name_parts])
 
 class LinkshareMapper(DataMapper):
     genders = {'FEMALE': 'W', 'MALE': 'M', 'WOMEN': 'W', 'MEN': 'M'}
