@@ -391,14 +391,14 @@ def user_list(request):
     except ValueError:
         paged_result = paginator.page(1)
 
+    # FIXME: This does not work so well with pagination... solve in query instead, but how?
     object_list = sorted(paged_result.object_list, key=lambda x: x.display_name)
 
-    context = {'paginator': paginator,
-               'current_page': paged_result,
+    context = {'page_obj': paged_result,
                'page_range': paginator.page_range,
                'object_list': object_list,
                'facebook_friends': get_facebook_friends(request),
-               'most_followed_users': get_most_followed_users(limit=4)}
+               'most_followed_users': get_most_followed_users(limit=10)}
 
     return render_to_response('apparel/users.html', context, context_instance=RequestContext(request))
 
