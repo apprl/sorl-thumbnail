@@ -232,9 +232,9 @@
             <div class="copyright">&#169; APPARELROW</div>
             <ul>
                 <li><h3>{% trans "Clothes" %}</h3></li>
-                <li><a href="{% url apparel.browse.browse_products %}">{% trans "All" %}</a></li>
                 <li><a class="women" href="{% url apparel.browse.browse_products %}?gender=W">{% trans "Women" %}</a></li>
                 <li><a class="men" href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
+                <li><a href="{% url apparel.browse.browse_products %}">{% trans "All" %}</a></li>
             </ul>
             <ul>
                 <li><h3>{% trans "Looks" %}</h3></li>
@@ -243,7 +243,7 @@
             </ul>
             <ul>
                 <li><h3>{% trans "Social" %}</h3></li>
-                <li><a href="{% url apparel.views.user_list %}">{% trans "All members" %}</a></li>
+                <li><a href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a></li>
                 {% if not user.is_authenticated %}
                 <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
                 <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>
