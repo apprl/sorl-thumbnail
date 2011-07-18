@@ -1,4 +1,7 @@
 import logging
+import uuid
+import os.path
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
@@ -305,6 +308,8 @@ class VendorProductVariation(models.Model):
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
 
+def look_image_path(instance, filename):
+    return os.path.join(settings.APPAREL_LOOK_IMAGE_ROOT, uuid.uuid4().hex)
 
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200)
@@ -313,7 +318,7 @@ class Look(models.Model):
     description = models.TextField(_('Look description'), null=True, blank=True)
     products    = models.ManyToManyField(Product)
     user        = models.ForeignKey(User)
-    image       = models.ImageField(upload_to=settings.APPAREL_LOOK_IMAGE_ROOT, max_length=255, blank=True)
+    image       = models.ImageField(upload_to=look_image_path, max_length=255, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags        = TagField(blank=True)

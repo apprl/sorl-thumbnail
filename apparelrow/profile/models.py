@@ -1,4 +1,7 @@
 import logging
+import uuid
+import os.path
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
@@ -12,11 +15,14 @@ from apparel.models import Look
 
 import datetime, mptt
 
+def profile_image_path(instance, filename):
+    return os.path.join(settings.APPAREL_PROFILE_IMAGE_ROOT, uuid.uuid4().hex)
+
 class ApparelProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     
     name  = models.CharField(max_length=50, unique=True, blank=True, null=True)
-    image = models.ImageField(upload_to=settings.APPAREL_PROFILE_IMAGE_ROOT, help_text=_('User profile image'), blank=True, null=True) 
+    image = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True) 
     about = models.TextField(_('About'), null=True, blank=True)
 
     @models.permalink
