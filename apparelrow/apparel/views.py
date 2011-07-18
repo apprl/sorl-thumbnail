@@ -189,6 +189,12 @@ def look_create(request):
         HttpResponseRedirect(reverse('apparel.views.look_edit', args=(look.slug,)))
     )
 
+@login_required
+@seamless_request_handling
+def look_delete(request, slug):
+    look = get_object_or_404(Look, slug=slug, user=request.user)
+    look.delete()
+    return (look, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.username,))))
 
 def looks():
     pass

@@ -67,24 +67,24 @@ body {
   line-height: 1.5em;
   color: #333333;
 }
-/* line 134, ../src/partials/_base.sass */
+/* line 148, ../src/partials/_base.sass */
 body a {
   text-decoration: none;
   color: #333333;
 }
-/* line 138, ../src/partials/_base.sass */
+/* line 152, ../src/partials/_base.sass */
 body p a:hover, body p a:active {
   text-decoration: underline;
 }
-/* line 140, ../src/partials/_base.sass */
+/* line 154, ../src/partials/_base.sass */
 body h1 {
   font-size: 1.25em;
 }
-/* line 143, ../src/partials/_base.sass */
+/* line 157, ../src/partials/_base.sass */
 body h2, body h3 {
   font-size: 1em;
 }
-/* line 145, ../src/partials/_base.sass */
+/* line 159, ../src/partials/_base.sass */
 body h2 {
   margin: 30px 0 10px;
   border-bottom: 1px solid #d9d9d9;

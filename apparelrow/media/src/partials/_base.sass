@@ -85,6 +85,20 @@ $font_family_bold_italic: "Gotham Medium Italic", "Helvetica", "Arial", sans-ser
   font-size: 10px
   padding: 5px 5px 5px 20px
 
+=delete_button
+  background-image: image_url(unquote("cancel.png"))
+  background-repeat: no-repeat
+  background-position: 5px 5px
+  padding: 5px 5px 5px 20px
+  font-size: 10px
+  background-color: $like_color + #666666
+  border-color: $like_color
+  color: $font_color
+  &:hover
+    background-color: $like_color + #333333
+    border-color: $like_color
+    color: $font_color
+
 =container
   margin: 0 auto
   width: $content_width

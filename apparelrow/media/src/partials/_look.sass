@@ -192,12 +192,12 @@ $input_border_color: $highlight_border_color !default
 
 #look-title
   +border(all)
-  width: 918px
+  width: 935px
   height: 27px
   background: $button_color image_url(unquote("gradient-bg.png")) repeat-x
   margin: 20px 0 10px 0
   padding-top: 3px
-  padding-left: 20px
+  padding-left: 3px
   #id_title, button
     color: $input_color
     font-family: $font_family
@@ -207,7 +207,7 @@ $input_border_color: $highlight_border_color !default
     background-color: $input_bg_color
     line-height: 20px
     height: 14px
-    width: 210px
+    width: 200px
     text-align: center
     padding-top: 6px
     +box-shadow-inset($input_bg_color - #222222, 0, 3px, 3px)
@@ -220,6 +220,15 @@ $input_border_color: $highlight_border_color !default
     width: 103px
     border: none
     text-align: start
+  .delete
+    float: right
+    margin-right: 20px
+    height: 22px
+    +button(none, unquote("22px"))
+    +border-radius(unquote("2px"))
+    +delete_button
+    padding-top: 0
+    padding-bottom: 0
 
 #id_description,
 #id_tags,
@@ -305,14 +314,19 @@ body.look
     h1
       font-size: 1.5em
       line-height: 2em
-      a
+      a.edit
         margin-left: 2em
         +button(none, unquote("20px"))
         +border-radius(unquote("2px"))
         +highlight
         +edit_button
-      a:hover
-        +highlight_hover
+        &:hover
+          +highlight_hover
+      a.delete
+        margin-left: 2em
+        +button(none, unquote("20px"))
+        +border-radius(unquote("2px"))
+        +delete_button
 
 #wardrobe
   clear: both

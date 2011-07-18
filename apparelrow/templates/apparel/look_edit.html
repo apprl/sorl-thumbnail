@@ -501,6 +501,7 @@ jQuery(document).ready(function() {
 {% csrf_token %}
 <div id="look-title">
     {{ form.title }}<button type="submit">{% trans "Save" %}</button>
+                <a class="delete" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
 </div>
 <div class="sidebar">
     <label for="id_description">{% trans "Description (optional):" %}</label>
