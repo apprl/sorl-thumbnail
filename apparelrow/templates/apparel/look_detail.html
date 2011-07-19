@@ -37,10 +37,10 @@
                 onClose: function(e) { this.getTrigger().remove() }
             });
             event.preventDefault();
-            return false;
         });
         jQuery('.dialog .close').live('click', function(event) {
             $('.dialog').overlay().close();
+            event.preventDefault();
         });
 
         jQuery('#look-header .delete').click(function(event) {
