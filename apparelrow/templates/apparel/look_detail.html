@@ -42,6 +42,18 @@
         jQuery('.dialog .close').live('click', function(event) {
             $('.dialog').overlay().close();
         });
+
+        jQuery('#look-header .delete').click(function(event) {
+            var title = jQuery(this).attr('title');
+            var href = jQuery(this).attr('href');
+            create_modal_dialog(
+                '{% trans "Are you sure?" %}',
+                ['{% trans "Do you really want to delete" %} <span class="bold">' + title + '</span>?'],
+                function (modal_dialog) { location.href = href; },
+                function (modal_dialog) { modal_dialog.close(); }
+            );
+            event.preventDefault();
+        });
     });
 
 </script>
@@ -57,7 +69,7 @@
             {{ object.title }}
             {% ifequal object.user user %}
                 <a class="edit" href="{% url apparel.views.look_edit object.slug %}">{% trans "Edit" %}</a>
-                <a class="delete" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
+                <a class="delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
             {% endifequal %}
         </h1>
         <span>

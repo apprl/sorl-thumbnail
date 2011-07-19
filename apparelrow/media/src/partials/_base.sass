@@ -313,7 +313,7 @@ $color_height: 19px
   width: $small_width
   &.error
     h2
-      padding-left: 30px
+      padding-left: 36px
       background: transparent image_url('warn.png') no-repeat scroll 10px center
   h2
     +box-shadow
@@ -321,15 +321,23 @@ $color_height: 19px
     margin-top: 0
     padding: 0 10px
   p
-    padding: 10px
+    padding: 5px 10px
   .buttons
     +border(top)
     height: 32px
-    margin-top: -4px
-    padding: 0 10px
-    button
-      +button
-      height: $button_height
-      margin-top: -5px
+    margin-top: 10px
+    padding: 10px
+    button.yes, button.no, button.ok
+      +button(unquote("gradient-bg.png"), 22px)
+      &:hover
+        +hover_button(22px)
+      width: 75px
+    button.yes
+      margin-right: 50px
+      float: right
+    button.no
+      margin-left: 50px
+      float: left
+    button.ok
       float: right
 

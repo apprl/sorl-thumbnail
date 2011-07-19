@@ -193,8 +193,11 @@ def look_create(request):
 @seamless_request_handling
 def look_delete(request, slug):
     look = get_object_or_404(Look, slug=slug, user=request.user)
-    look.delete()
-    return (look, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.username,))))
+    if look:
+        look.delete()
+        return (True, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.username,))))
+    else:
+        return (False, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.username,))))
 
 def looks():
     pass

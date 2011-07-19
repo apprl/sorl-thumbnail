@@ -71,6 +71,7 @@
             jQuery('.about-beta-popup').click(function(event) {
                 jQuery('#error_dialog_template')
                     .render({
+                        modal: false,
                         header: "{% trans "About ApparelRow beta" %}",
                         messages: [
                             "{% trans "Hi beta tester!" %}",
@@ -271,7 +272,14 @@
             {% templatetag openvariable %}each(i, message) messages{% templatetag closevariable %}
                 <p>${ message }</p>
             {% templatetag openvariable %}/each{% templatetag closevariable %}
-            <div class="buttons"><button class="ok">{% trans "OK" %}</button></div>
+            <div class="buttons">
+                {% templatetag openvariable %}if modal{% templatetag closevariable %}
+                <button class="no">{% trans "No" %}</button>
+                <button class="yes">{% trans "Yes" %}</button>
+                {% templatetag openvariable %}else{% templatetag closevariable %}
+                <button class="ok">{% trans "OK" %}</button>
+                {% templatetag openvariable %}/if{% templatetag closevariable %}
+            </div>
         </div>
     </script>
 

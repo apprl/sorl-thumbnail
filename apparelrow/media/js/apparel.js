@@ -9,6 +9,33 @@ function increase_counts(counts, new_count) {
     });
 }
 
+/**
+ * Creates a modal dialog with yes/no as alternatives.
+ */
+function create_modal_dialog(header, messages, yes_action, no_action) {
+    var modal_dialog = jQuery('#error_dialog_template')
+        .render({
+            modal: true,
+            header: header,
+            messages: messages,
+        })
+        .appendTo('body')
+        .overlay({
+            mask: {
+                color: '#000',
+                loadSpeed: 200,
+                opacity: 0.5
+            },
+            load: true,
+            closeOnClick: false,
+            top: 100,
+            onClose: function(e) { this.getTrigger().remove() }
+        });
+
+    jQuery('.yes', modal_dialog).click(function() { yes_action(jQuery(modal_dialog).overlay()); });
+    jQuery('.no', modal_dialog).click(function() { no_action(jQuery(modal_dialog).overlay()); });
+}
+
 jQuery(document).ready(function() {
     // Make all "apparel rows" scrollables
     jQuery('.row').scrollable().end();

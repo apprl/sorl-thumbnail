@@ -1,6 +1,37 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block 'extra-scripts' %}
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('.inline-delete-look').click(function(event) {
+                var title = jQuery(this).prev('a').attr('title');
+                var href = jQuery(this).attr('href');
+                var li = jQuery(this).closest('li');
+                create_modal_dialog(
+                    '{% trans "Are you sure?" %}',
+                    ['{% trans "Do you really want to delete" %} <span class="bold">' + title + '</span>?'],
+                    function (modal_dialog) {
+                        jQuery.ajax({
+                            url: href,
+                            success: function(data) {
+                                if (data.data) {
+                                    li.remove();
+                                }
+                            },
+                            complete: function() { modal_dialog.close(); }
+                        });
+                    },
+                    function (modal_dialog) { modal_dialog.close(); }
+                );
+                event.preventDefault();
+            });
+        });
+    </script>
+
+{% endblock 'extra-scripts' %}
+
 {% block body-classes %}three-columns profile{% endblock body-classes %}
 {% block body %}
     <div id="profile-nav">

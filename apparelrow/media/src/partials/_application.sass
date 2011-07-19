@@ -395,6 +395,9 @@ ul.looks
   li
     margin-right: $gutter_width / 2
     margin-bottom: 10px
+    h3
+      margin-top: 5px
+      word-wrap: break-word
     &.last
       margin-right: 0
     .look
@@ -406,11 +409,16 @@ ul.looks
       display: block
       +border-bottom-radius(unquote("3px"))
       text-align: center
+    span.inline-date
+      margin-top: 5px
     a.inline-delete-look
       float: right
-      width: 1.5em
-      height: 1.5em
-      background: transparent image_url(unquote("logout.png")) no-repeat scroll right center
+      width: 17px
+      height: 15px
+      margin: 5px 5px 0 5px
+      background: transparent image_url(unquote("delete-button.png")) no-repeat scroll right center
+      &:hover
+        background: transparent image_url(unquote("delete-button-hover.png")) no-repeat scroll right center
 
 
 

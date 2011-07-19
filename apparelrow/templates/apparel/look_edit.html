@@ -487,6 +487,18 @@ jQuery(document).ready(function() {
     
     if('{{ object.display_with_component }}' == 'P' && location.hash == '')
         jQuery('a[href=photo-tab]').click();
+
+    jQuery('#look-title .delete').click(function(event) {
+        var title = jQuery(this).attr('title');
+        var href = jQuery(this).attr('href');
+        create_modal_dialog(
+            '{% trans "Are you sure?" %}',
+            ['{% trans "Do you really want to delete" %} <span class="bold">' + title + '</span>?'],
+            function (modal_dialog) { location.href = href; },
+            function (modal_dialog) { modal_dialog.close(); }
+        );
+        event.preventDefault();
+    });
 });
 
 
@@ -501,7 +513,7 @@ jQuery(document).ready(function() {
 {% csrf_token %}
 <div id="look-title">
     {{ form.title }}<button type="submit">{% trans "Save" %}</button>
-                <a class="delete" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
+    <a class="delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
 </div>
 <div class="sidebar">
     <label for="id_description">{% trans "Description (optional):" %}</label>
