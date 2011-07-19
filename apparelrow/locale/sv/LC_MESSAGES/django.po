@@ -960,8 +960,8 @@ msgstr "Ogilla"
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> like"
 msgid_plural "<span class=\"count\">%(counter)s</span> likes"
-msgstr[0] "<span class=\"count\">%(counter)s</span> like"
-msgstr[1] "<span class=\"count\">%(counter)s</span> likes"
+msgstr[0] "<span class=\"count\">%(counter)s</span> som gillar"
+msgstr[1] "<span class=\"count\">%(counter)s</span> som gillar"
 
 #: templates/apparel/fragments/look_product_tooltip.html:17
 #: templates/apparel/fragments/product_detail.html:42
