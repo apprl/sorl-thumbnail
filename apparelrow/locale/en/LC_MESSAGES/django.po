@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-19 16:35+0200\n"
+"POT-Creation-Date: 2011-07-19 21:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -908,11 +908,11 @@ msgid "Find your friends"
 msgstr ""
 
 #: templates/apparel/fragments/comment_count.html:2
-msgid "comments and links"
+msgid "comments"
 msgstr ""
 
 #: templates/apparel/fragments/comments.html:4
-msgid "Comments & links"
+msgid "Comments"
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:6
