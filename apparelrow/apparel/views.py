@@ -390,7 +390,7 @@ def user_list(request):
     """
     Displays a list of profiles
     """
-    queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('name')
+    queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('user__first_name', 'user__last_name', 'user__username')
 
     paginator = Paginator(queryset, 10)
     try:
@@ -401,7 +401,8 @@ def user_list(request):
         paged_result = paginator.page(1)
 
     # FIXME: This does not work so well with pagination... solve in query instead, but how?
-    object_list = sorted(paged_result.object_list, key=lambda x: x.display_name)
+    #object_list = sorted(paged_result.object_list, key=lambda x: x.display_name)
+    object_list = paged_result.object_list
 
     context = {'page_obj': paged_result,
                'page_range': paginator.page_range,
@@ -501,8 +502,13 @@ def index(request):
 #
 
 def get_most_followed_users(limit=2):
-    object_ids = [x['object_id'] for x in Follow.objects.values('object_id').annotate(Count('id')).order_by('-id__count')[:limit]]
-    return ApparelProfile.objects.select_related('user').filter(user__in=object_ids)
+    #object_ids = [x['object_id'] for x in Follow.objects.values('object_id').annotate(Count('id')).order_by('-id__count')[:limit]]
+    #return ApparelProfile.objects.select_related('user').filter(user__in=object_ids)
+    # FIXME: This is inefficient because it creates a query for everyone object_id, better solution?
+    apparel_profiles = []
+    for object_id in Follow.objects.values_list('object_id', flat=True).annotate(count=Count('id')).order_by('-count')[:limit]:
+        apparel_profiles.append(ApparelProfile.objects.select_related('user').get(user__id=object_id))
+    return apparel_profiles
 
 def get_top_in_network(model_class, user, limit=2):
     """

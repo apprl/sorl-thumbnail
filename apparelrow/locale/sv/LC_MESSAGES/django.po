@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-19 13:56+0200\n"
+"POT-Creation-Date: 2011-07-19 16:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -928,8 +928,8 @@ msgid "Most followers"
 msgstr "Följs av flest"
 
 #: templates/apparel/users.html:18
-msgid "Members"
-msgstr "Medlemmar"
+msgid "Members in alphabetical order"
+msgstr "Medlemmar i bokstavsordning"
 
 #: templates/apparel/users.html:33
 msgid "Find your friends"
