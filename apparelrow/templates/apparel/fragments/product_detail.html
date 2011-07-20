@@ -74,14 +74,16 @@
         </li>
         <li id="add-to-wardrobe" class="top last">
             {% if is_in_wardrobe %}
-                <button>{% trans "In wardrobe" %}</button>
-            {% else %}
-                <form action="{% url apparel.views.add_to_wardrobe %}" method="post">
+                <form class="delete" action="{% url apparel.views.delete_from_wardrobe %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="product" value="{{ object.id }}" />
-                    <button type="submit" id="wardrobe-button-add">
-                        {% trans "Add to wardrobe" %}                
-                    </button>
+                    <button type="submit" id="wardrobe-button-delete">{% trans "In wardrobe" %}</button>
+                </form>
+            {% else %}
+                <form class="add" action="{% url apparel.views.add_to_wardrobe %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="product" value="{{ object.id }}" />
+                    <button type="submit" id="wardrobe-button-add">{% trans "Add to wardrobe" %}</button>
                 </form>
             {% endif %}
         </li>

@@ -107,7 +107,7 @@
                 },
                 error: function(error, req) {
                     link.text = text;
-                },
+                }
             });
             jQuery('#add-to-look button[name=look]').click(function() {
                 this.form.elements.look[0].value = this.value;
@@ -122,17 +122,41 @@
                 .focus(function() { if(this.value == this.defaultValue) this.select() })
                 .blur(function()  { if(this.value == '') this.value = this.defaultValue })
                 .bind('keypress', function(e) { if(e.keyCode == 13) { jQuery('#add-to-look>form').submit(); return false } return true})
-            
-            jQuery('#add-to-wardrobe>form').hyperSubmit({
+
+            var is_add = jQuery('#add-to-wardrobe > form').hasClass('add');
+            jQuery('#add-to-wardrobe > form').hyperSubmit({
                 beforeSend: function(req) {
                     btn = jQuery('#add-to-wardrobe form button[type=submit]');
-                    btn.text('{% trans "Adding..." %}');
+                    if(is_add) {
+                        btn.text('{% trans "Adding..." %}');
+                    } else {
+                        btn.text('{% trans "Deleting..." %}');
+                    }
+                    btn.click(function() { return false });
                 },
                 success: function(data, statusText, req) {
-                    btn.text('{% trans "In wardrobe" %}');
-                    btn.click( function() { return false } );
+                    if(is_add) {
+                        btn.text('{% trans "In wardrobe" %}');
+                        jQuery('#add-to-wardrobe form').attr('action', '{% url apparel.views.delete_from_wardrobe %}');
+                    } else {
+                        btn.text('{% trans "Add to wardrobe" %}');
+                        jQuery('#add-to-wardrobe form').attr('action', '{% url apparel.views.add_to_wardrobe %}');
+                    }
+                    is_add = !is_add;
+                    btn.unbind('click');
                 },
-                });
+                error: function(data, statusText, req) {
+                    if(is_add) {
+                        btn.text('{% trans "Add to wardrobe" %}');
+                    } else {
+                        btn.text('{% trans "In wardrobe" %}');
+                    }
+                    is_add = !is_add;
+                    btn.unbind('click');
+                }
+            });
+
+            jQuery('#add-to-wardrobe form button[type=submit]').click(function() { console.log('wtf'); });
 
             jQuery('.activity .likes').click(function(event) {
                 jQuery('<div class="dialog"></div>').load('{% url apparel.views.product_user_like_list object.slug %}').appendTo('body').overlay({

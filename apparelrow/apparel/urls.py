@@ -35,6 +35,7 @@ urlpatterns = patterns('',
     (r'^browse/manufacturers/$', 'apparel.browse.browse_manufacturers'),
     
     (r'^wardrobe/add_product/$', 'apparel.views.add_to_wardrobe'),
+    (r'^wardrobe/delete_product/$', 'apparel.views.delete_from_wardrobe'),
 
     (r'^looks/$', 'apparel.views.look_list'),
     (r'^looks/create/$', 'apparel.views.look_create'),

@@ -452,6 +452,8 @@ function renderPage(products) {
             }
         });
 
+    jQuery('#product-list').trigger('post_browse_render');
+
     query = getQuery();
     if('f' in query) {
         jQuery('#product-count a').hide();

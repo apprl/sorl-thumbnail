@@ -5,6 +5,39 @@
     {% include 'apparel/fragments/browse_scripts.html' %}
     <script type="text/javascript">
         var browse_url = '{% url apparel.browse.browse_wardrobe user %}';
+        var delete_link = '<a class="delete-wardrobe" href=""></a>';
+        var delete_overlay = '<div class="delete-wardrobe-overlay"></div>';
+        jQuery(document).ready(function() {
+            jQuery('#product-list ul.list li ul li').prepend(delete_link);
+            jQuery('#product-list').bind('post_browse_render', function() {
+                jQuery('ul.list li ul li', jQuery(this)).prepend(delete_link);
+            });
+
+            jQuery('#product-list .delete-wardrobe').live('click', function(event) {
+                var id = parseInt(jQuery(this).closest('li').attr('id').split('-').pop(), 10);
+                var title = jQuery(this).parent().find('h4').text() + ' ' + jQuery(this).parent().find('.product-image img').attr('alt');
+
+                create_modal_dialog(
+                    '{% trans "Are you sure?" %}',
+                    ['{% trans "Do you really want to delete" %} <span class="bold">' + title + '</span>?'],
+                    function (modal_dialog) {
+                        jQuery.post('{% url apparel.views.delete_from_wardrobe %}', {'product': id}, function(data, textStatus, req) {
+                            if(data.success) { delay(function() { location.reload() }, 300); }
+                        });
+                    },
+                    function (modal_dialog) { modal_dialog.close(); }
+                );
+
+                event.preventDefault();
+            });
+        });
+        var delay = (function(){
+            var timer = 0;
+            return function(callback, ms){
+                clearTimeout (timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
     </script>
 {% endblock 'extra-scripts' %}
 

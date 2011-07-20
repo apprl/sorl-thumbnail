@@ -677,6 +677,16 @@ div#product-list, .product-list
         +clearfix
         li
           +product_list_item
+          .delete-wardrobe
+            position: absolute
+            top: 2px
+            left: 2px
+            width: 20px
+            height: 20px
+            z-index: 150
+            background: transparent image_url(unquote("delete-button-on-image.png")) no-repeat scroll center center
+            &:hover
+              background: transparent image_url(unquote("delete-button-on-image-hover.png")) no-repeat scroll center center
 
 #hover-products li
   z-index: 100
@@ -1320,6 +1330,10 @@ a.profile-link
     margin-right: 0.5em
   &:hover
     text-decoration: underline
+
+body.profile-small
+  #content
+    overflow: visible
 
 body.profile
   #profile-nav

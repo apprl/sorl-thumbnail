@@ -74,6 +74,7 @@ class ProductIndex(QueuedSearchIndex):
     Search index for product model.
     """
     text = CharField(document=True, use_template=True, model_attr='product_name', stored=False)
+    name = CharField(model_attr='product_name', stored=False)
     created = DateTimeField(model_attr='date_added', stored=False)
     gender = CharField(model_attr='gender', default=None, stored=False)
     manufacturer = CharField(model_attr='manufacturer__id', faceted=True, stored=False)

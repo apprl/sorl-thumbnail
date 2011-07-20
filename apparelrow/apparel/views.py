@@ -373,10 +373,18 @@ def add_to_wardrobe(request):
     wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
     wardrobe.products.add(product)
     search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
-    wardrobe.save() # FIXME: Only save if created?
     
     return {'success': True}
 
+@seamless_request_handling
+@login_required
+def delete_from_wardrobe(request):
+    product = Product.objects.get(pk=request.POST.get('product'))
+    wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
+    wardrobe.products.remove(product)
+    search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
+
+    return ({'success': True}, HttpResponseRedirect(reverse('apparel.browse.browse_wardrobe', args=(request.user,))))
     
 def csrf_failure(request, reason=None):
     """
