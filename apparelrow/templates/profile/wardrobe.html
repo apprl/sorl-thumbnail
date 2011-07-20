@@ -5,6 +5,8 @@
     {% include 'apparel/fragments/browse_scripts.html' %}
     <script type="text/javascript">
         var browse_url = '{% url apparel.browse.browse_wardrobe user %}';
+        {% url apparel.browse.browse_wardrobe user.username as wardrobe_url %}
+        {% ifequal request.path wardrobe_url %}
         var delete_link = '<a class="delete-wardrobe" href=""></a>';
         var delete_overlay = '<div class="delete-wardrobe-overlay"></div>';
         jQuery(document).ready(function() {
@@ -38,6 +40,7 @@
                 timer = setTimeout(callback, ms);
             };
         })();
+        {% endifequal %}
     </script>
 {% endblock 'extra-scripts' %}
 
