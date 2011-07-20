@@ -4,6 +4,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
+from apparel.models import Product, Wardrobe, LookComponent
 from importer.models import VendorFeed, ImportLog
 
 class Command(BaseCommand):
@@ -40,6 +41,12 @@ class Command(BaseCommand):
             help='Force run when settings variable DEBUG is True',
             default=False
         ),
+        make_option('--remove',
+            action='store_true',
+            dest='remove',
+            help='Remove a vendorfeed (removes all products except for those in look or wardrobe)',
+            default=False
+        )
     )
     
     def handle(self, *args, **options):
@@ -52,6 +59,12 @@ class Command(BaseCommand):
                     
         if options['list']:
             return self.list_feeds()
+
+        if options['remove']:
+            if len(args) > 0:
+                return self.remove_feed(args[0])
+            else:
+                raise CommandError('Missing feed argument')
         
         if options['all']:
             return self.import_all_feeds(**options)
@@ -60,6 +73,31 @@ class Command(BaseCommand):
             self.import_feed(args[0], **options)
         else:
             raise CommandError('Missing feed argument')
+
+    def remove_feed(self, name):
+        try:
+            feed = VendorFeed.objects.get(name=name)
+        except VendorFeed.DoesNotExist:
+            raise CommandError('Feed named %s does not exist' % name)
+
+        vendor = feed.vendor
+
+        wardrobe_product_ids = set(Product.objects.filter(wardrobe__in=Wardrobe.objects.all()).distinct().values_list('id', flat=True))
+        look_product_ids = set(LookComponent.objects.all().values_list('product__id', flat=True))
+        product_ids = wardrobe_product_ids.union(look_product_ids)
+
+        for product in Product.objects.filter(vendorproduct__vendor=vendor):
+            if product.id in product_ids:
+                print 'Product is in use: %s' % (product,)
+                for variation in product.vendorproduct.get(vendor=vendor).variations.all():
+                    variation.in_stock = 0
+                    variation.save()
+            else:
+                product.delete()
+
+        feed.delete()
+
+        print 'Feed %s and all products (except in look/wardrobe) is deleted' % (feed,)
     
     def list_feeds(self):
         format = "%-17s%-22s%s"
