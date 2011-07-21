@@ -20,6 +20,7 @@ from haystack.indexes import DateTimeField
 from haystack.indexes import IntegerField
 from haystack.indexes import MultiValueField
 from haystack.indexes import NgramField
+from haystack.indexes import BooleanField
 from haystack.forms import ModelSearchForm
 from haystack.forms import FacetedSearchForm
 from haystack.query import EmptySearchQuerySet
@@ -85,6 +86,7 @@ class ProductIndex(QueuedSearchIndex):
     user_wardrobe = MultiValueField(stored=False)
     user_likes = MultiValueField(stored=False)
     popularity = IntegerField(model_attr='popularity')
+    availability = BooleanField(stored=False)
 
     def prepare(self, object):
         self.prepared_data = super(ProductIndex, self).prepare(object)
@@ -103,6 +105,14 @@ class ProductIndex(QueuedSearchIndex):
         # Add user likes to search index
         self.prepared_data['user_likes'] = Vote.objects.filter(content_type=ContentType.objects.get_for_model(object),
                                                                object_id=object.id).values_list('user__id', flat=True)
+        # Add availability to search index
+        # A product is available if atleast one vendorproduct is not sold out (NULL does not count as sold out)
+        availability = False
+        for available in set(object.vendorproduct.values_list('availability', flat=True)):
+            if available != 0:
+                availability = True
+                break
+        self.prepared_data['availability'] = availability
         return self.prepared_data
 
     def index_queryset(self):
@@ -164,6 +174,7 @@ def search_view(request, model):
 
     sqs = SearchQuerySet().models(model_class)
     if class_name == 'product':
+        sqs = sqs.narrow('availability:true')
         sqs = sqs.order_by('-popularity')
     if ids:
         sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))

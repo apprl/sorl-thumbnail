@@ -66,7 +66,9 @@ def process_search_index_updates():
             logger.info('processing sequence %s with length %s' % (seq, len(pks)))
             search_index.update_objects(model_class.objects.in_bulk(pks).values())
             for pk in pks:
-                [message.ack() for message in messages[pk]]
+                for message in messages[pk]:
+                    if not message.acknowledged:
+                        message.ack()
             seq = seq + 1
 
     consumer.close()

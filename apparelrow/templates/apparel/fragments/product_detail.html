@@ -39,7 +39,7 @@
         {% with object.vendorproduct.all|dictsort:'price' as vendorproducts %}
         {% for vendorproduct in vendorproducts %}
             {% if forloop.first %}
-                {% if vendorproduct.in_stock == 0 %}
+                {% if vendorproduct.availability == 0 %}
                 <span class="sold-out">{% trans "Sold out" %}</span>
                 {% else %}
                 <a href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_new" class="buy-now{% if vendorproduct.currency != vendorproduct.original_currency %} higher{% endif %}">{% trans "Buy" %}</a>
@@ -47,7 +47,7 @@
             {% endif %}
             <div class="product-vendor">
                 <span class="price">{{ vendorproduct.price }}</span><span class="currency">{{ vendorproduct.currency }}</span>
-                {% if vendorproduct.in_stock == 0 %}
+                {% if vendorproduct.availability == 0 %}
                 <a class="vendor" target="_new" href="{{ vendorproduct.vendor.homepage }}">{{ vendorproduct.vendor }}</a>
                 {% else %}
                 <a class="vendor" target="_new" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}">{{ vendorproduct.vendor }}</a>

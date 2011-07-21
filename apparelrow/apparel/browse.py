@@ -74,6 +74,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     sqs = filter_query(SearchQuerySet().models(Product), request.GET, request.user, facet_fields)
     if extra_context and 'profile' in extra_context:
         sqs = sqs.narrow('user_wardrobe:%s' % (extra_context['profile'].user.id,))
+    sqs = sqs.narrow('availability:true')
     sqs = sqs.order_by('-popularity', 'name')
 
     facet = sqs.facet_counts()

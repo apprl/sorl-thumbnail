@@ -94,9 +94,9 @@ class CJMapper(DataMapper):
     
     def get_availability(self):
         if self.re_yes.match(self.record['instock']) and self.re_yes.match(self.record['online']):
-            return True
+            return -1
         
-        return False
+        return None
     
     def get_product_url(self):
         return self.record['buyurl']

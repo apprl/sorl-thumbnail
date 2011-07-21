@@ -6,6 +6,7 @@ from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
 
 regex_size = re.compile('^[Ss]ize: .+\. ')
+AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False}
 
 def parse_product_name(record):
     product_name = record.get('product-name')
@@ -91,10 +92,18 @@ class LinkshareMapper(DataMapper):
         return category
 
     def get_availability(self):
-        if self.record.get('availability').lower().strip() == 'in stock':
-            return True
+        availability = self.record.get('availability')
+        if availability:
+            if AVAILABILITY_MATRIX.get(availability.strip().lower(), True):
+                try:
+                    availability = int(availability)
+                except ValueError:
+                    availability = -1
+                return availability
+            else:
+                return 0
 
-        return False
+        return None
 
 
 class Provider(CSVProvider):

@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.files import storage, File
 from django.template.defaultfilters import slugify
 from django.db import transaction
+from django.db import IntegrityError
 from django.db.models import Count
 from django.conf import settings
 from urllib2 import HTTPError, URLError
@@ -126,7 +127,7 @@ class API(object):
             'description': self.dataset['product']['description'],
             'category': self.category,
             'product_image': self.product_image,
-            'gender': self.dataset['product']['gender'],
+            'gender': self.dataset['product']['gender']
         }
         
         try:
@@ -246,6 +247,7 @@ class API(object):
             'buy_url': self.dataset['product']['product-url'],
             'original_price': self.dataset['product']['price'],
             'original_currency': self.dataset['product']['currency'],
+            'availability': self.availability
         }
         
         rates = self.fxrates()
@@ -361,8 +363,20 @@ class API(object):
             # Force string
             if isinstance(category_names, list):
                 category_names = ' '.join(category_names)
-            
-            self._vendor_category, created = VendorCategory.objects.get_or_create(vendor=self.vendor, name=category_names)
+
+            @transaction.commit_on_success
+            def vendor_category_get_or_create(vendor, category):
+                created = True
+                try:
+                    obj = VendorCategory.objects.create(vendor=vendor, name=category)
+                except IntegrityError:
+                    transaction.commit()
+                    created = False
+                    obj = VendorCategory.objects.get(vendor=vendor, name=category)
+                return obj, created
+
+            self._vendor_category, created = vendor_category_get_or_create(self.vendor, category_names)
+            #self._vendor_category, created = VendorCategory.objects.get_or_create(vendor=self.vendor, name=category_names)
 
             if created:
                 self._import_log.messages.create(
@@ -379,6 +393,21 @@ class API(object):
         Returns the mapped category for the product. This may return None
         """
         return self.vendor_category.category
+
+    @property
+    def availability(self):
+        availability = self.dataset['product']['availability']
+        if availability:
+            if availability == 0:
+                logger.debug('Adding availability to product: Out of stock')
+            elif availability < 0:
+                logger.debug('Adding availability to product: In stock')
+            else:
+                logger.debug('Adding availability to product: %i in stock' % (availability,))
+            return availability
+
+        logger.debug('Adding availability to product: No information available')
+        return None
             
     @property 
     def manufacturer(self):

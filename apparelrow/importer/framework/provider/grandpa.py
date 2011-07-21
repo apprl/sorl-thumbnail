@@ -14,9 +14,13 @@ class GrandpaMapper(DataMapper):
     def get_variations(self):
         variations = []
         for color in self.map_colors(self.record.get('product-name', '')):
-            variations.append({'color': color, 'availability': True}) #FIXME: should do a check for availability instead of just True
+            #FIXME: should do a check for availability instead of just None (No information)
+            variations.append({'color': color, 'availability': None})
         return variations
-    
+
+    def get_availability(self):
+        return None
+
     def get_image_url(self):
         # FIXME: Do a HEAD for the resulting URL to ensure it exists before returning this URI
         return re.sub(r'/images/\w/', '/images/XL/', self.record.get('image-url'))

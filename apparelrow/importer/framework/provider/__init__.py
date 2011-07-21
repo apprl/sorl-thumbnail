@@ -1,6 +1,9 @@
 import datetime, os, logging, re, traceback, sys
 
 from django.conf import settings
+from django.db import transaction
+
+from apparel.models import Product, VendorProduct
 
 from importer.framework import fetcher, parser
 from importer.api import API, SkipProduct, ImporterError, IncompleteDataSet
@@ -42,6 +45,8 @@ class Provider(object):
         self.extension = None
         self.mapper    = None
         self.count     = 0
+
+        self.product_ids = set(Product.objects.filter(vendorproduct__vendor=self.feed.vendor).values_list('id', flat=True))
     
     def __del__(self, *args, **kwargs):
         if self.file and not self.file.closed:
@@ -62,8 +67,7 @@ class Provider(object):
     @property
     def decompress(self):
         return self.feed.decompress
-    
-    
+
     def run(self, from_warehouse=False, for_date=None):
         """
         Entry point for the import process. This will retrieve the file from
@@ -77,7 +81,20 @@ class Provider(object):
         
         self.fetch(from_warehouse=from_warehouse, for_date=for_date)
         self.process()
-    
+        self.update_availability()
+
+    @transaction.commit_on_success
+    def update_availability(self):
+        """
+        Set all products found in database but not found in the feed to sold out.
+        """
+        for vp in VendorProduct.objects.filter(product__id__in=self.product_ids):
+            logger.info('Setting availability for vendor product %s to sold out' % (vp,))
+            vp.availability = 0
+            vp.save()
+
+        return True
+
     def fetch(self, from_warehouse=False, for_date=None):
         """
         Retrieves a file from the Internet, stores it in the warehouse and 
@@ -128,10 +145,12 @@ class Provider(object):
             prod_id = '[unknown]'
                 
         try:
-            d   = self.mapper(self, record).translate()
+            d = self.mapper(self, record).translate()
             api = API(import_log=self.feed.latest_import_log)
-            api.import_dataset( d )
+            product = api.import_dataset(d)
+            self.product_ids.discard(product.id)
             del api
+            del product
         
         except (SkipProduct, IncompleteDataSet) as e:
             self.feed.latest_import_log.messages.create(

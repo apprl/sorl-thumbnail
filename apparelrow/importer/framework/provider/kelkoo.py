@@ -6,6 +6,8 @@ from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
 
+AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False}
+
 def parse_product_id(record):
     return record.get('product-id') or slugify(record.get('product-url'))
 
@@ -14,12 +16,26 @@ class KelkooMapper(DataMapper):
 
     def get_variations(self):
         for variation in self.record['variations']:
-            variation['availability'] = self.record.get('available') or True
+            variation['availability'] = self.record.get('available') or None
             
             c = self.map_colors(self.record.get('product-name', ''))
             if len(c): variation['color'] = c[0]
         
         return self.record['variations']
+
+    def get_availability(self):
+        availability = self.record.get('available')
+        if availability:
+            if AVAILABILITY_MATRIX.get(availability.strip().lower(), True):
+                try:
+                    availability = int(availability)
+                except ValueError:
+                    availability = -1
+                return availability
+            else:
+                return 0
+
+        return None
    
     def get_product_id(self):
         return parse_product_id(self.record)

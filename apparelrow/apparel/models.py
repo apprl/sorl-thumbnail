@@ -258,14 +258,7 @@ class VendorProduct(models.Model):
     currency          = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Base currency as three-letter ISO code'))
     original_price    = models.DecimalField(_('Original price'), null=True, blank=True, max_digits=10, decimal_places=2,)
     original_currency = models.CharField(_('Original currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
-
-    @property
-    def in_stock(self):
-        try:
-            variation = self.variations.get()
-            return variation.in_stock
-        except VendorProductVariation.DoesNotExist:
-            pass
+    availability  = models.IntegerField(_('Items in stock'), null=True, blank=True, help_text=_('Negative value means it is in stock, but we have no information about how many. Null means we have no information about availability. 0 means it is sold out'))
 
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)

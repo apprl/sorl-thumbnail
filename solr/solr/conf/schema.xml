@@ -138,6 +138,8 @@
 
     <field name="user_likes" type="string" indexed="true" stored="false" multiValued="true" />
 
+    <field name="availability" type="boolean" indexed="true" stored="false" multiValued="false" />
+
     <field name="manufacturer" type="text" indexed="true" stored="false" multiValued="false" />
 
     <field name="manufacturer_id" type="slong" indexed="true" stored="true" multiValued="false" />

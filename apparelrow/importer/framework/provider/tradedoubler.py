@@ -5,6 +5,8 @@ from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
 
+AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False}
+
 class TradeDoublerMapper(DataMapper):
     re_split = re.compile(r'(?<!http):')
     genders  = {'Man': 'M', 'Kvinna': 'W'}
@@ -43,8 +45,19 @@ class TradeDoublerMapper(DataMapper):
         return self.record.get('deliveryTime')
     
     def get_availability(self):
-        return True if self.record.get('availability') else False
-        
+        availability = self.record.get('availability')
+        if availability:
+            if AVAILABILITY_MATRIX.get(availability.strip().lower(), True):
+                try:
+                    availability = int(availability)
+                except ValueError:
+                    availability = -1
+                return availability
+            else:
+                return 0
+
+        return None
+
     def get_image_url(self):
         return self.record.get('extraImageProductLarge') or self.record.get('extraImageProductSmall') or self.record.get('imageUrl')
 

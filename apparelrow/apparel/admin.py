@@ -163,9 +163,20 @@ class VendorProductVariationInline(admin.StackedInline):
 
 class VendorProductAdmin(admin.ModelAdmin):
     raw_id_fields = ['product', 'vendor_category']
-    list_display = ['product', 'vendor', 'price']
+    list_display = ['product', 'vendor', 'price', 'in_stock']
     list_filter = ['vendor']
     inlines = [VendorProductVariationInline]
+
+    def in_stock(self, vp):
+        if vp.availability is None:
+            return 'No information available'
+        elif vp.availability == 0:
+            return 'Out of stock'
+        elif vp.availability < 0:
+            return 'In stock'
+        else:
+            return '%i %s' % (vp.availability, 'items in stock')
+
 
 admin.site.register(VendorProduct, VendorProductAdmin)
 
