@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-20 19:36+0200\n"
+"POT-Creation-Date: 2011-07-21 10:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -604,7 +604,7 @@ msgstr ""
 
 #: templates/index.html:164 templates/apparel/look_detail.html:10
 #: templates/apparel/look_edit.html:5 templates/apparel/product_detail.html:10
-#: templates/apparel/fragments/look_wide.html:10
+#: templates/apparel/fragments/look_wide.html:13
 msgid "by"
 msgstr ""
 
@@ -684,7 +684,7 @@ msgstr ""
 msgid "Browse"
 msgstr ""
 
-#: templates/apparel/browse.html:39 templates/profile/wardrobe.html:49
+#: templates/apparel/browse.html:39 templates/profile/wardrobe.html:51
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
@@ -712,20 +712,20 @@ msgid "Create"
 msgstr ""
 
 #: templates/apparel/look_detail.html:50 templates/apparel/look_edit.html:495
-#: templates/profile/base_profile.html:13 templates/profile/wardrobe.html:21
+#: templates/profile/base_profile.html:13 templates/profile/wardrobe.html:22
 msgid "Are you sure?"
 msgstr ""
 
 #: templates/apparel/look_detail.html:51 templates/apparel/look_edit.html:496
-#: templates/profile/base_profile.html:14 templates/profile/wardrobe.html:22
-msgid "Do you really want to delete"
+#: templates/profile/base_profile.html:14
+msgid "Do you really want to delete look"
 msgstr ""
 
 #: templates/apparel/look_detail.html:71 templates/apparel/look_edit.html:5
 msgid "Edit"
 msgstr ""
 
-#: templates/apparel/look_detail.html:72 templates/apparel/look_edit.html:516
+#: templates/apparel/look_detail.html:72
 msgid "Delete"
 msgstr ""
 
@@ -772,6 +772,11 @@ msgstr ""
 
 #: templates/apparel/look_edit.html:515
 msgid "Save"
+msgstr ""
+
+#: templates/apparel/look_edit.html:516
+#: templates/apparel/fragments/look_wide.html:10
+msgid "Delete look"
 msgstr ""
 
 #: templates/apparel/look_edit.html:521
@@ -848,6 +853,13 @@ msgstr ""
 #: templates/apparel/product_detail.html:152
 #: templates/apparel/fragments/product_detail.html:88
 msgid "In wardrobe"
+msgstr ""
+
+#: templates/apparel/product_detail.html:139
+#: templates/apparel/product_detail.html:152
+#: templates/apparel/fragments/product_detail.html:88
+#: templates/profile/wardrobe.html:10
+msgid "Delete product from my wardrobe"
 msgstr ""
 
 #: templates/apparel/product_detail.html:142
@@ -1175,6 +1187,10 @@ msgstr ""
 
 #: templates/profile/profile.html:6
 msgid "Latest updates"
+msgstr ""
+
+#: templates/profile/wardrobe.html:23
+msgid "Do you really want to delete product"
 msgstr ""
 
 #: templates/profile/watcher.html:13

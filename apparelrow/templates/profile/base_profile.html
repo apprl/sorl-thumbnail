@@ -11,7 +11,7 @@
                 var li = jQuery(this).closest('li');
                 create_modal_dialog(
                     '{% trans "Are you sure?" %}',
-                    ['{% trans "Do you really want to delete" %} <span class="bold">' + title + '</span>?'],
+                    ['{% trans "Do you really want to delete look" %} <span class="bold">' + title + '</span>?'],
                     function (modal_dialog) {
                         jQuery.ajax({
                             url: href,

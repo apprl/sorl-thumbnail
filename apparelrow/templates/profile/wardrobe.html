@@ -7,8 +7,7 @@
         var browse_url = '{% url apparel.browse.browse_wardrobe user %}';
         {% url apparel.browse.browse_wardrobe user.username as wardrobe_url %}
         {% ifequal request.path wardrobe_url %}
-        var delete_link = '<a class="delete-wardrobe" href=""></a>';
-        var delete_overlay = '<div class="delete-wardrobe-overlay"></div>';
+        var delete_link = '<a class="delete-wardrobe" title="{% trans "Delete product from my wardrobe" %}" href="">{% trans "Delete product from my wardrobe" %}</a>';
         jQuery(document).ready(function() {
             jQuery('#product-list ul.list li ul li').prepend(delete_link);
             jQuery('#product-list').bind('post_browse_render', function() {
@@ -21,7 +20,7 @@
 
                 create_modal_dialog(
                     '{% trans "Are you sure?" %}',
-                    ['{% trans "Do you really want to delete" %} <span class="bold">' + title + '</span>?'],
+                    ['{% trans "Do you really want to delete product" %} <span class="bold">' + title + '</span>?'],
                     function (modal_dialog) {
                         jQuery.post('{% url apparel.views.delete_from_wardrobe %}', {'product': id}, function(data, textStatus, req) {
                             if(data.success) { delay(function() { location.reload() }, 300); }

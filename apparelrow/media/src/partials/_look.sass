@@ -221,12 +221,15 @@ $input_border_color: $highlight_border_color !default
     border: none
     text-align: start
   .delete
-    float: right
-    margin-right: 20px
-    height: 22px
+    +float-right
     +button(none, unquote("22px"))
     +border-radius(unquote("2px"))
     +delete_button
+    background-position: 5px 6px
+    font-family: $font_family
+    font-size: 1em
+    margin-right: 20px
+    height: 22px
     padding-top: 0
     padding-bottom: 0
 

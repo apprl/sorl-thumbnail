@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-20 19:36+0200\n"
+"POT-Creation-Date: 2011-07-21 10:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -618,7 +618,7 @@ msgstr "Aktuellt"
 
 #: templates/index.html:164 templates/apparel/look_detail.html:10
 #: templates/apparel/look_edit.html:5 templates/apparel/product_detail.html:10
-#: templates/apparel/fragments/look_wide.html:10
+#: templates/apparel/fragments/look_wide.html:13
 msgid "by"
 msgstr "av"
 
@@ -705,7 +705,7 @@ msgstr "Ändra lösenord"
 msgid "Browse"
 msgstr "Bläddra"
 
-#: templates/apparel/browse.html:39 templates/profile/wardrobe.html:49
+#: templates/apparel/browse.html:39 templates/profile/wardrobe.html:51
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
@@ -733,20 +733,20 @@ msgid "Create"
 msgstr "Skapa"
 
 #: templates/apparel/look_detail.html:50 templates/apparel/look_edit.html:495
-#: templates/profile/base_profile.html:13 templates/profile/wardrobe.html:21
+#: templates/profile/base_profile.html:13 templates/profile/wardrobe.html:22
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
 #: templates/apparel/look_detail.html:51 templates/apparel/look_edit.html:496
-#: templates/profile/base_profile.html:14 templates/profile/wardrobe.html:22
-msgid "Do you really want to delete"
-msgstr "Vill du verkligen ta bort"
+#: templates/profile/base_profile.html:14
+msgid "Do you really want to delete look"
+msgstr "Vill du verkligen ta bort looken"
 
 #: templates/apparel/look_detail.html:71 templates/apparel/look_edit.html:5
 msgid "Edit"
 msgstr "Redigera"
 
-#: templates/apparel/look_detail.html:72 templates/apparel/look_edit.html:516
+#: templates/apparel/look_detail.html:72
 msgid "Delete"
 msgstr "Ta bort"
 
@@ -794,6 +794,11 @@ msgstr "Spara urval"
 #: templates/apparel/look_edit.html:515
 msgid "Save"
 msgstr "Spara"
+
+#: templates/apparel/look_edit.html:516
+#: templates/apparel/fragments/look_wide.html:10
+msgid "Delete look"
+msgstr "Ta bort look"
 
 #: templates/apparel/look_edit.html:521
 msgid "Tags:"
@@ -871,6 +876,13 @@ msgstr "Tar bort..."
 #: templates/apparel/fragments/product_detail.html:88
 msgid "In wardrobe"
 msgstr "Finns i garderob"
+
+#: templates/apparel/product_detail.html:139
+#: templates/apparel/product_detail.html:152
+#: templates/apparel/fragments/product_detail.html:88
+#: templates/profile/wardrobe.html:10
+msgid "Delete product from my wardrobe"
+msgstr "Ta bort plagg från min garderob"
 
 #: templates/apparel/product_detail.html:142
 #: templates/apparel/product_detail.html:150
@@ -1232,6 +1244,10 @@ msgstr "%(name)ss populära looks"
 #: templates/profile/profile.html:6
 msgid "Latest updates"
 msgstr "Senaste händelser"
+
+#: templates/profile/wardrobe.html:23
+msgid "Do you really want to delete product"
+msgstr "Vill du verkligen ta bort plagg"
 
 #: templates/profile/watcher.html:13
 msgid "Search now"

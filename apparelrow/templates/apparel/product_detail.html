@@ -136,10 +136,10 @@
                 },
                 success: function(data, statusText, req) {
                     if(is_add) {
-                        btn.text('{% trans "In wardrobe" %}');
+                        btn.text('{% trans "In wardrobe" %}').attr('title', '{% trans "Delete product from my wardrobe" %}');
                         jQuery('#add-to-wardrobe form').attr('action', '{% url apparel.views.delete_from_wardrobe %}');
                     } else {
-                        btn.text('{% trans "Add to wardrobe" %}');
+                        btn.text('{% trans "Add to wardrobe" %}').attr('title', '{% trans "Add to wardrobe" %}');
                         jQuery('#add-to-wardrobe form').attr('action', '{% url apparel.views.add_to_wardrobe %}');
                     }
                     is_add = !is_add;
@@ -147,9 +147,9 @@
                 },
                 error: function(data, statusText, req) {
                     if(is_add) {
-                        btn.text('{% trans "Add to wardrobe" %}');
+                        btn.text('{% trans "Add to wardrobe" %}').attr('title', '{% trans "Add to wardrobe" %}');
                     } else {
-                        btn.text('{% trans "In wardrobe" %}');
+                        btn.text('{% trans "In wardrobe" %}').attr('title', '{% trans "Delete product from my wardrobe" %}');
                     }
                     is_add = !is_add;
                     btn.unbind('click');

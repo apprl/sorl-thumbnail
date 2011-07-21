@@ -48,7 +48,7 @@
             var href = jQuery(this).attr('href');
             create_modal_dialog(
                 '{% trans "Are you sure?" %}',
-                ['{% trans "Do you really want to delete" %} <span class="bold">' + title + '</span>?'],
+                ['{% trans "Do you really want to delete look" %} <span class="bold">' + title + '</span>?'],
                 function (modal_dialog) { location.href = href; },
                 function (modal_dialog) { modal_dialog.close(); }
             );

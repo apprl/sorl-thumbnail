@@ -493,7 +493,7 @@ jQuery(document).ready(function() {
         var href = jQuery(this).attr('href');
         create_modal_dialog(
             '{% trans "Are you sure?" %}',
-            ['{% trans "Do you really want to delete" %} <span class="bold">' + title + '</span>?'],
+            ['{% trans "Do you really want to delete look" %} <span class="bold">' + title + '</span>?'],
             function (modal_dialog) { location.href = href; },
             function (modal_dialog) { modal_dialog.close(); }
         );
@@ -513,7 +513,7 @@ jQuery(document).ready(function() {
 {% csrf_token %}
 <div id="look-title">
     {{ form.title }}<button type="submit">{% trans "Save" %}</button>
-    <a class="delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
+    <a class="delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete look" %}</a>
 </div>
 <div class="sidebar">
     <label for="id_description">{% trans "Description (optional):" %}</label>
