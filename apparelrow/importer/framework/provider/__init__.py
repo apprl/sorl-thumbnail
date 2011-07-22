@@ -78,9 +78,23 @@ class Provider(object):
          - for_date        - use this as_of_date. Format: YYYY-MM-DD
         
         """
-        
-        self.fetch(from_warehouse=from_warehouse, for_date=for_date)
-        self.process()
+        # If we are not able to fetch the feed, set all products for this
+        # vendor as sold out and re raise the exception
+        try:
+            self.fetch(from_warehouse=from_warehouse, for_date=for_date)
+        except Exception:
+            self.update_availability()
+            raise
+
+        # If we are not able to process the feed, set all products for this
+        # vendor that have not yet been proccessed as sold out and re raise the
+        # exception
+        try:
+            self.process()
+        except Exception:
+            self.update_availability()
+            raise
+
         self.update_availability()
 
     @transaction.commit_on_success
