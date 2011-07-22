@@ -63,7 +63,7 @@ def filter_query(query, params, current_user=None, facet_fields=None):
 
     # Browse products in that those you follow either like or is in their wardrobe.
     if 'f' in params and current_user:
-        user_ids = Follow.objects.filter(user=current_user).values_list('object_id', flat=True)
+        user_ids = list(Follow.objects.filter(user=current_user).values_list('object_id', flat=True)) + [0]
         user_ids_or = ' OR '.join(str(x) for x in user_ids)
         query = query.narrow('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or))
 
@@ -74,7 +74,9 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     sqs = filter_query(SearchQuerySet().models(Product), request.GET, request.user, facet_fields)
     if extra_context and 'profile' in extra_context:
         sqs = sqs.narrow('user_wardrobe:%s' % (extra_context['profile'].user.id,))
-    sqs = sqs.narrow('availability:true')
+    else:
+        if request.GET.get('f', None) is None:
+            sqs = sqs.narrow('availability:true')
     sqs = sqs.order_by('-popularity', 'name')
 
     facet = sqs.facet_counts()
