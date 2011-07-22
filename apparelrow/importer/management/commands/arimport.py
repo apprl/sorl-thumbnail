@@ -92,6 +92,11 @@ class Command(BaseCommand):
                 for variation in product.vendorproduct.get(vendor=vendor).variations.all():
                     variation.in_stock = 0
                     variation.save()
+
+                for vendorproduct in product.vendorproduct.all():
+                    vendorproduct.availability = 0
+                    vendorproduct.save()
+
             else:
                 product.delete()
 
