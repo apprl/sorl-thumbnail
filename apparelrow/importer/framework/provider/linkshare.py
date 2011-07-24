@@ -5,29 +5,17 @@ from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
 
-regex_size = re.compile('^[Ss]ize: .+\. ')
+REGEX_SIZE = re.compile('^[Ss]ize: .+\. ')
 AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False}
 
-def parse_product_name(record):
-    product_name = record.get('product-name')
-    product_name_parts = product_name.split(',')
-    if len(product_name_parts) > 1:
-        if product_name_parts[-1].strip().lower().startswith('size:'):
-            del product_name_parts[-1]
-
-    # XXX: Should not need to remove manufacturer from product name
-    #manufacturer = record.get('manufacturer') or record.get('brand')
-    #comma_occurences = manufacturer.count(',') + 1
-    #if manufacturer.strip() == ','.join(product_name_parts[-comma_occurences:]).strip():
-        #del product_name_parts[-comma_occurences:]
-
-    return ', '.join([x.strip() for x in product_name_parts])
-
 class LinkshareMapper(DataMapper):
-    genders = {'FEMALE': 'W', 'MALE': 'M', 'WOMEN': 'W', 'MEN': 'M'}
-
     def get_product_name(self):
-        return parse_product_name(self.record)
+        product_name_parts = self.record.get('product-name').split(',')
+        if len(product_name_parts) > 1:
+            if product_name_parts[-1].strip().lower().startswith('size:'):
+                del product_name_parts[-1]
+
+        return ', '.join([x.strip() for x in product_name_parts])
 
     def get_variations(self):
         availability = self.get_availability()
@@ -50,12 +38,12 @@ class LinkshareMapper(DataMapper):
         return variations
 
     def get_gender(self):
-        if self.record.get('gender'):
-            return self.genders.get(self.record.get('gender', '').upper())
+        gender = self.map_gender(self.record.get('gender', ''))
+        if not gender:
+            # Gender can be in category (for example in Stylebop feed)
+            gender = self.map_gender(self.record.get('category', ''))
 
-        # Gender can be in category (for example in Stylebop feed)
-        if self.record.get('category'):
-            return self.genders.get(self.record.get('category', '').upper())
+        return gender
 
     def get_price(self):
         discount_price = self.record.get('discount-price') or '0.00'
@@ -74,7 +62,7 @@ class LinkshareMapper(DataMapper):
 
     def get_description(self):
         description = self.record.get('long-description') or self.record.get('description')
-        description = regex_size.sub('', description, re.IGNORECASE)
+        description = REGEX_SIZE.sub('', description, re.IGNORECASE)
 
         if self.record.get('material'):
             description += " (%s)" % self.record.get('material')
@@ -152,7 +140,7 @@ class Provider(CSVProvider):
         )
 
     def should_merge(self, new_record):
-        return parse_product_name(self.record) == parse_product_name(new_record)
+        return self.record['product']['product-name'] == new_record['product']['product-name']
 
     def merge(self, new_record):
         pass

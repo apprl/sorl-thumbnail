@@ -308,4 +308,8 @@ APPAREL_DECOMPRESS_UTILS = {
     'gzip': '/usr/bin/gunzip',
     'zip':  '/usr/bin/unzip',
 }
+APPAREL_DECOMPRESS_SUFFIX = {
+    'gzip': '.gz',
+    'zip': '.zip',
+}
 

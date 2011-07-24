@@ -7,7 +7,7 @@ import subprocess
 logger = logging.getLogger('apparel.importer.fetcher')
 
 
-def fetch(url, localpath=None, username=None, password=None):
+def fetch(url, localpath=None, username=None, password=None, decompress=None):
     """
     Retrieves given URL and stores it in the given location. The path of the
     downloaded file is returned. If localpath is not defined, a temporary path
@@ -31,8 +31,11 @@ def fetch(url, localpath=None, username=None, password=None):
         logging.debug('Added Basic Authentication header. Username %s' % username)
     
     if not localpath:
-        m = re.search(r'.+(\.\w+)(?:\?|$)', url)
-        suffix = m.group(1) if m else '.tmp'    
+        if decompress and decompress in settings.APPAREL_DECOMPRESS_SUFFIX:
+            suffix = settings.APPAREL_DECOMPRESS_SUFFIX[decompress]
+        else:
+            m = re.search(r'.+(\.\w+)(?:\?|$)', url)
+            suffix = m.group(1) if m else '.tmp'
         
         (fh, localpath) = tempfile.mkstemp(prefix='ar_importer_', suffix=suffix)
         local_fh = os.fdopen(fh, 'w')
@@ -75,7 +78,7 @@ def fetch_feed(url, path, from_warehouse=False, username=None, password=None, de
             raise Exception('File %s not in warehouse. Try importing file vendor instead' % path)
     else:
         logger.info("Downloading %s" % url)
-        temppath = fetch(url, username=username, password=password)
+        temppath = fetch(url, username=username, password=password, decompress=decompress)
         
         if decompress:
             temppath = Decompressor(decompress).decompress(temppath)

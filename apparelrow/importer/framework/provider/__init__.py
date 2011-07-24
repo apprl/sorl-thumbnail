@@ -102,10 +102,13 @@ class Provider(object):
         """
         Set all products found in database but not found in the feed to sold out.
         """
-        for vp in VendorProduct.objects.filter(product__id__in=self.product_ids):
-            logger.info('Setting availability for vendor product %s to sold out' % (vp,))
-            vp.availability = 0
-            vp.save()
+        for product in Product.objects.filter(id__in=self.product_ids):
+            for vendorproduct in product.vendorproduct.all():
+                logger.info('Setting availability for vendor product %s to sold out' % (vendorproduct,))
+                vendorproduct.availability = 0
+                vendorproduct.save()
+
+            product.save()
 
         return True
 
@@ -114,15 +117,14 @@ class Provider(object):
         Retrieves a file from the Internet, stores it in the warehouse and 
         opens it for reading. The open file object is stored in the file property
         """
-        
         # NOTE: 
         #  If anyone needs to override "fetch", it might be a good idea to
         #  move the warehouse bit out so it can be re-used. It won't really
         #  change between providers.
-        
+
         if not for_date:
             for_date = datetime.datetime.utcnow()
-        
+
         date = for_date.strftime('%Y-%m-%d')
         path = os.path.join(
             settings.APPAREL_IMPORTER_WAREHOUSE,
@@ -152,16 +154,14 @@ class Provider(object):
         Imports the given record using the API. The record is first mapped
         using the configured data mapper.
         """
-        None
         try:
             prod_id = record['product']['product-id']
         except KeyError:
             prod_id = '[unknown]'
                 
         try:
-            d = self.mapper(self, record).translate()
             api = API(import_log=self.feed.latest_import_log)
-            product = api.import_dataset(d)
+            product = api.import_dataset(record)
             self.product_ids.discard(product.id)
             del api
             del product
@@ -251,6 +251,8 @@ class CSVProvider(Provider):
         # FIXME: Add merge test for parsing using mockobejcts
         
         for row in csv_reader:
+            # Do mapping
+            row = self.mapper(self, row).translate()
             if self.record:
                 if self.should_merge(row):
                     # If this record doesn't match the previous one, import it

@@ -9,7 +9,6 @@ AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False}
 
 class TradeDoublerMapper(DataMapper):
     re_split = re.compile(r'(?<!http):')
-    genders  = {'Man': 'M', 'Kvinna': 'W'}
     
     def preprocess(self):
         self.record.update([self.re_split.split(v) for v in self.record.get('fields', '').split(';')])
@@ -21,7 +20,7 @@ class TradeDoublerMapper(DataMapper):
         return variations
     
     def get_gender(self):
-        return self.genders.get(self.record.get('gender'))
+        return self.map_gender(self.record.get('gender'))
     
     def get_product_name(self):
         return self.record.get('name')

@@ -15,7 +15,7 @@ AVAILABLE_UTILS = [(v, v,) for v in settings.APPAREL_DECOMPRESS_UTILS.keys()]
 class VendorFeed(models.Model):
     vendor   = models.ForeignKey(apparel.Vendor)
     name     = models.CharField(max_length=15, unique=True, help_text=_('a-z, 0-9 and _'))
-    url      = models.CharField(max_length=255)
+    url      = models.CharField(max_length=2550)
     username = models.CharField(max_length=50, null=True, blank=True)
     password = models.CharField(max_length=50, null=True, blank=True)
     decompress = models.CharField(max_length=10, choices=AVAILABLE_UTILS, null=True, blank=True, help_text=_('Decompress the file before importing it'))

@@ -8,11 +8,7 @@ from importer.framework.mapper import DataMapper
 
 AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False}
 
-def parse_product_id(record):
-    return record.get('product-id') or slugify(record.get('product-url'))
-
 class KelkooMapper(DataMapper):
-    genders = {'Mens': 'M', 'Womens': 'W'}
 
     def get_variations(self):
         for variation in self.record['variations']:
@@ -38,13 +34,13 @@ class KelkooMapper(DataMapper):
         return None
    
     def get_product_id(self):
-        return parse_product_id(self.record)
+        return record.get('product-id') or slugify(record.get('product-url'))
     
     def get_currency(self):
         return 'SEK'
     
     def get_gender(self):
-        return self.genders.get(self.record.get('gender'))
+        return self.map_gender(self.record.get('gender'))
     
     def get_image_url(self):
         try:
@@ -77,12 +73,8 @@ class Provider(CSVProvider):
     
     
     def should_merge(self, new_record):
-        return parse_product_id(self.record) == parse_product_id(new_record)
+        return self.record['product']['product-id'] == new_record['product']['product-id']
     
     def merge(self, new_record):
-        if not 'variations' in self.record:
-            self.record['variations'] = []
-        
-        self.record['variations'].append({'size': new_record.get('size')})
-
+        self.record['product']['variations'].extend(new_record['product']['variations'])
 

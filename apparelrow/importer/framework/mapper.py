@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 import re, logging, datetime, htmlentitydefs
 
 from django.conf import settings
 
-from apparelrow.importer.api import API, SkipProduct
-from apparelrow.importer.models import ColorMapping
+from importer.api import API, SkipProduct
+from importer.models import ColorMapping
 
 logger = logging.getLogger('apparel.importer.mapper')
 
@@ -13,6 +14,12 @@ COLOR_REGEXES = dict(
     (cm.color, re.compile(r'\b(?:%s)\b' % '|'.join(cm.color_list()), re.I))
     for cm in ColorMapping.objects.all()
 )
+
+# FIXME: Add this to a model like ColorMapping?
+GENDERS = {'M': ('male', 'males', 'men', 'mens', 'mensware', 'herr', 'herrar', 'man', 'män'),
+           'W': ('female', 'females', 'woman', 'women', 'womens', 'womenswear', 'dam', 'damer', 'kvinna', 'kvinnor'),
+           'U': ('unisex',)}
+GENDER_REGEXES = dict((gender, re.compile(r'\b(?:%s)\b' % '|'.join(value), re.I)) for gender, value in GENDERS.items())
 
 class DataMapper(object):
     color_regexes = None
@@ -122,7 +129,7 @@ class DataMapper(object):
     #
     # - Helper methods -
     #
-    
+
     def map_colors(self, value=''):
         """
         Helper method that appempts to extract colour names from the given string
@@ -135,8 +142,24 @@ class DataMapper(object):
         ['black', 'blue', 'red']
         """
         return [c for c, r in COLOR_REGEXES.items() if r.search(value)]
-    
-    
+
+    def map_gender(self, value=''):
+        """
+        Helper method that attempts to extract gender from the given string and
+        returns the proper gender enum value.
+
+        Example
+
+        >>> mapper = DataMapper()
+        >>> mapper.map_gender(u"Women's Accessories")
+        W
+        """
+        for c, r in GENDER_REGEXES.items():
+            if r.search(value):
+                return c
+
+        return None
+
     def strip_html(self, text):
         """
         Strings argument from all HTML-tags and expands HTML entities.
@@ -150,7 +173,7 @@ class DataMapper(object):
                         )
                     )
                 )
-            
+
     def trim(self, text):
         """
         Trims whitespaces to the left and right of text. Argument may be a list
