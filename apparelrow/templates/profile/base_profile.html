@@ -27,6 +27,11 @@
                 );
                 event.preventDefault();
             });
+
+            {% url profile.views.looks user.username as looks_url %}
+            {% ifequal request.path looks_url %}
+            jQuery('.inline-delete-look').show();
+            {% endifequal %}
         });
     </script>
 
