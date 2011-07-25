@@ -17,7 +17,15 @@
 {% cache CACHE_TIMEOUT product_detail_fragment2 object.id LANGUAGE_CODE %}
 </div>
 <div class="product-info">
-    <h2>{{ object.categories|join:' \\ ' }} \ {{ object.manufacturer }}</h2>
+    <h2>
+    {% for category in object.categories %}
+    {% if forloop.first %}
+    <a href="{% url apparel.browse.browse_products %}#category={{ category.id }}">{{ category }}</a>
+    {% else %}
+    \ <a href="{% url apparel.browse.browse_products %}#category={{ category.id }}">{{ category }}</a>
+    {% endif %}
+    {% endfor %} \ {{ object.manufacturer }}
+    </h2>
     <h1>{{ object.manufacturer }}</h1>
     {% if object.product_name %}<h3>{{ object.product_name }}</h3>{% endif %}
     {% regroup object.options.all by option_type as option_list %}
