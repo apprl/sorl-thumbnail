@@ -5,10 +5,12 @@ import re
 from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
+from importer.framework.mapper import expand_entities
 
 REGEX_SIZE = re.compile('^[Ss]ize: .+\. ')
+REGEX_DECIMAL = re.compile(r'[^\d.]+')
 
-class LibertyMapper(DataMapper):
+class AffiliateWindowMapper(DataMapper):
     
     def get_product_id(self):
         return self.record['merchant_product_id']
@@ -26,7 +28,7 @@ class LibertyMapper(DataMapper):
         manufacturer = self.get_manufacturer()
         product_name = re.sub(r', %s$' % (manufacturer,), '', product_name, re.IGNORECASE)
 
-        return product_name
+        return expand_entities(product_name)
 
     def get_product_url(self):
         return self.record['aw_deep_link']
@@ -35,7 +37,24 @@ class LibertyMapper(DataMapper):
         return self.record['aw_image_url']
 
     def get_price(self):
-        return self.record.get('display_price')
+        try:
+            display_price = float(REGEX_DECIMAL.sub('', self.record.get('display_price', '')))
+        except ValueError:
+            display_price = 0
+
+        try:
+            store_price = float(REGEX_DECIMAL.sub('', self.record.get('store_price', '')))
+        except ValueError:
+            store_price = 0
+
+        if display_price == 0 and store_price == 0:
+            return None
+        elif display_price == 0 and store_price > 0:
+            return '%.2f' % (store_price,)
+        elif display_price > 0 and store_price == 0:
+            return '%.2f' % (display_price,)
+        else:
+            return '%.2f' % (min(store_price, display_price),)
 
     def get_category(self):
         return '%s >> %s' % (self.record.get('category_name'), self.record.get('merchant_category'))
@@ -54,19 +73,29 @@ class LibertyMapper(DataMapper):
 
     def get_availability(self):
         if self.record.get('in_stock'):
-            return -1
+            try:
+                stock_quantity = int(self.record.get('stock_quantity', '-'))
+            except ValueError:
+                return -1
+
+            return stock_quantity if stock_quantity > 0 else -1
 
         return None
 
     def get_variations(self):
         availability = self.get_availability()
+        specification = self.record.get('specification', '')
         
         colors = ['']
-        colors.extend(self.map_colors(self.get_product_name() + self.record.get('specification', '')))
+        colors.extend(self.map_colors(self.get_product_name() + specification))
 
         sizes = ['']
-        if self.record.get('specification', False):
-            sizes.extend([self.record.get('specification')])
+        if specification:
+            result = re.match(r'Sizes: (.+)\|Colours', specification)
+            if result:
+                sizes.extend(result.group(1).split('|'))
+            else:
+                sizes.extend([specification])
 
         variations = []
         for color, size in itertools.product(colors, sizes):
@@ -78,11 +107,11 @@ class LibertyMapper(DataMapper):
 class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):
         super(Provider, self).__init__(*args, **kwargs)
-        self.mapper=LibertyMapper
+        self.mapper=AffiliateWindowMapper
         self.dialect=utils.CSVPipeDelimitedQuoted
 
     def should_merge(self, new_record):
         return self.record['product']['product-name'] == new_record['product']['product-name']
 
-    def merge(self, new_mapped_record):
+    def merge(self, new_record):
         pass
