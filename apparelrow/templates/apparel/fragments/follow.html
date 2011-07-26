@@ -6,4 +6,10 @@
     <a href="{% url_to_unfollow profile.user %}" class="unfollow" data-original-text="{% trans 'Following' %}" data-hover-text="{% trans 'Stop following' %}"><span>{% trans "Following" %}</span></a>
     <a href="{% url_to_follow profile.user %}" class="follow"><span>{% trans "Follow" %}</span></a>
 </span>
+{% else %}
+    {% if user != profile.user %}
+    <span class="not_following">
+        <a href="{% url_to_follow profile.user %}" class="follow user-action"><span>{% trans "Follow" %}</span></a>
+    </span>
+    {% endif %}
 {% endif %}
