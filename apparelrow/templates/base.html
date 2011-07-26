@@ -25,48 +25,6 @@
     <script type="text/javascript">
         
         jQuery(document).ready(function() {
-             function toggleLoginDialog() {
-                jQuery('#nav-main').animate({ opacity: 'toggle' }, 'fast');
-                jQuery('#account-dialogue').animate({ opacity: 'toggle' }, 'fast');
-                
-                return false;
-            };
-
-            jQuery('#login').click(toggleLoginDialog);
-            jQuery('#account-dialogue .cancel').click(toggleLoginDialog);
-            
-            /* Toggle text field texts */
-            jQuery('#account-dialogue input[type=text]').each(function() {
-                if(this.name) {
-                    jQuery(this).focus(function() { 
-                        this.value = '';
-                        jQuery(this).removeClass('default-value');
-                    } );
-                    
-                    jQuery(this).blur(function() { 
-                        if(this.value == '') {
-                            this.value = this.defaultValue 
-                            jQuery(this).addClass('default-value');
-                        }
-                    } );
-                }
-            });
-            
-            /* Toggle password box */
-            jQuery('#login-password-placeholder').focus(function() {
-                pwdField = jQuery('#login-password');
-                jQuery(this).toggle();
-                pwdField.toggle();
-                pwdField.focus();
-            });
-            
-            jQuery('#login-password').blur(function() {
-                if(this.value == '') {
-                    txtField = jQuery('#login-password-placeholder');
-                    jQuery(this).toggle();
-                    txtField.toggle();
-                }
-            });            
 
             jQuery('.about-beta-popup').click(function(event) {
                 jQuery('#error_dialog_template')
@@ -100,12 +58,6 @@
         });
     
     </script>
-    {% facebook_init %}
-        {% block facebook_code %}
-        // Reload page on Facebook login
-        FB.Event.subscribe('auth.login', function() { location.reload() });
-        {% endblock %}
-    {% endfacebook %}
     {% block 'extra-scripts' %}
     {% endblock 'extra-scripts' %}
 </head>
@@ -117,30 +69,6 @@
 
             <a href="/"><h1 class="beta">ApparelRow</h1></a>
 
-            <div id="account-dialogue">
-                <!-- LOGIN FORM -->
-                <form action="/accounts/login/" method="post" id="login-form">
-                    {% csrf_token %}
-                    <!--
-                    <a id="login-forgot-password" href="/accounts/password/reset/">{% trans "Forgot password?" %}</a>
-                    <a id="login-create-account" href="/accounts/register/">{% trans "Create account" %}</a>
-                    -->
-                    <div>
-                        <input type="text" name="username" class="default-value" value="{% trans "Username" %}" id="login-username" />
-                        <input type="text" value="{% trans "Password" %}" class="default-value" id="login-password-placeholder" />
-                        <input type="password" name="password" id="login-password" />
-                        <button type="submit" name="submit" id="login-submit">{% trans "Login" %}</button>
-                        {% ifequal request.path "/accounts/logout/" %}
-                            <input type="hidden" name="next" value="/" />
-                        {% else %}
-                            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-                        {% endifequal %}
-                    </div>
-                </form>
-                <div id="login-more">
-                    <a href="{% url registration_register %}">{% trans "Create account" %}</a> | <a href="{% url auth_password_reset %}">{% trans "Forgot password" %}</a> | <fb:login-button show-faces="false" width="18" max-rows="1" size="small" perms="{% facebook_perms %}"></fb:login-button> | <a href="{{ request.url }}" class="cancel">{% trans "Cancel" %}</a>
-                </div>
-            </div>
             <form action="/apparel/search" method="get" onsubmit="return false" id="search">
                 <input type="text" name="s" placeholder="{% trans 'Search for products' %}" />
                 <a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>
@@ -150,15 +78,9 @@
                 <li><a class="women" href="{% url apparel.browse.browse_products %}?gender=W">{% trans "Women" %}</a></li>
                 <li><a class="men" href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
                 <li><a href="{% url apparel.views.look_list %}">{% trans "Looks" %}</a></li>
-                <!-- <li><a href="http://blog.apparelrow.com/">{% trans "Blog" %}</a></li> -->
-            {% if not user.is_authenticated %}
-                <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
-                <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>
-                <li>
-                {# Facebook connect button #}
-                <fb:login-button show-faces="false" width="18" max-rows="1" size="small" perms="{% facebook_perms %}"></fb:login-button>
-                </li>
-            {% endif %}
+                {% if not user.is_authenticated %}
+                <li>{% facebook_button 'http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_short.gif' %}</li>
+                {% endif %}
                 <li>{% include 'apparel/fragments/set_language.html' %}</li>
             </ul>
 
@@ -246,8 +168,7 @@
                 <li><h3>{% trans "Social" %}</h3></li>
                 <li><a href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a></li>
                 {% if not user.is_authenticated %}
-                <li><a href="{% url auth_login %}" id="login">{% trans "Login" %}</a></li>
-                <li><a href="{% url registration_register %}" id="login">{% trans "Sign up" %}</a></li>
+                <li>{% facebook_button 'http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_short.gif' %}</li>
                 {% endif %}
             </ul>
             <ul>
@@ -283,7 +204,7 @@
         </div>
     </script>
 
-    {% facebook_load %}
+{% facebook_js %}
 
 <script type="text/javascript">
     var _kundo = _kundo || {};

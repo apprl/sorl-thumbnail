@@ -43,6 +43,7 @@ urlpatterns = patterns('',
 
     (r'^search/(?P<model>\w+)/', 'apparelrow.search.search_view'),
     (r'^s/', include('statistics.urls')),
+    (r'^facebook/', include('django_facebook.urls')),
 )
 
 

@@ -205,7 +205,7 @@ button
 
 #nav-main
   position: absolute
-  top: 42px
+  top: 36px
   right: 235px
   li
     display: inline
@@ -218,9 +218,9 @@ button
       padding-bottom: 1em
       &.fb_button
         padding: 0
-    form.select-language
+    form.select-language, form.connect-button
       display: inline-block
-      button
+      button, input
         display: inline
         background: transparent
         color: white
@@ -228,76 +228,9 @@ button
         text-transform: uppercase
         padding: 0
         margin: 0
-
-
-a.fb_button
-  width: 18px
-  overflow: hidden
-
-#account-dialogue
-  position: absolute
-  width: 454px
-  height: 36px
-  padding: 3px 0
-  top: 37px
-  left: 200px
-  display: none
-  background: transparent image_url("login-bg.png") scroll no-repeat left center
-
-#login-forgot-password
-  color: #fb9292
-
-#login-create-account
-  color: #92c0c0
-
-#account-dialogue
-  input.default-value
-    font-family: $font_family_italic
-    font-style: italic
-  form
-    margin: 0
-    padding: 0 1px 0 3px
-
-#login-username, #login-password, #login-password-placeholder
-  background: transparent image_url("login-text-bg.png") scroll no-repeat left center
-  color: $easier_color
-  width: 176px
-  height: 24px
-  margin: 0 0 0 -2px
-  border: none
-  vertical-align: middle
-  padding: 8px 16px
-  font-size: 1.2em
-  float: left
-
-#login-submit
-  width: 40px
-  height: 40px
-  padding: 0
-  margin: 0 0 0 -2px
-  background: transparent image_url("login-button.png") scroll no-repeat center center
-  text-indent: -10000em
-  border: none
-  float: left
-  cursor: pointer
-
-#login-password
-  display: none
-
-.connect-button
-  display: inline
-  position: relative
-  top: 4px
-  left: -16px
-
-#login-more
-  text-align: center
-  color: $easier_color
-  a
-    color: $easier_color
-  .connect-button
-    top: 5px
-    left: 0
+      input
+        position: relative
+        top: 5px
 
 #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
   +box
