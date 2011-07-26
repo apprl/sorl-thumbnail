@@ -21,9 +21,6 @@ from haystack.indexes import IntegerField
 from haystack.indexes import MultiValueField
 from haystack.indexes import NgramField
 from haystack.indexes import BooleanField
-from haystack.forms import ModelSearchForm
-from haystack.forms import FacetedSearchForm
-from haystack.query import EmptySearchQuerySet
 from haystack.query import SearchQuerySet
 
 from apparelrow.apparel.messaging import search_index_update
@@ -159,8 +156,6 @@ site.register(Look, LookIndex)
 
 
 def search_view(request, model):
-    query = ''
-    results = EmptySearchQuerySet()
     try:
         limit = int(request.GET.get('limit', RESULTS_PER_PAGE))
     except ValueError:
@@ -176,19 +171,18 @@ def search_view(request, model):
     if class_name == 'product':
         sqs = sqs.narrow('availability:true')
         sqs = sqs.order_by('-popularity')
+
     if ids:
         sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
 
     # FIXME: Do we really need a form when this is only accessed through ajax
     if request.GET.get('q'):
-        form = FacetedSearchForm(request.GET, searchqueryset=sqs, load_all=True)
-        if form.is_valid():
-            query = form.cleaned_data['q']
-            results = form.search()
+        sqs = sqs.filter(content=sqs.query.clean(request.GET.get('q')))
+        #sqs = sqs.auto_query(sqs.query.clean(request.GET.get('q')))
     else:
         return Http404('Search require a search string')
 
-    paginator = Paginator(results, limit)
+    paginator = Paginator(sqs, limit)
 
     try:
         paged_result = paginator.page(int(request.GET.get('page', 1)))
