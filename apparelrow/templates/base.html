@@ -79,7 +79,9 @@
                 <li><a class="men" href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
                 <li><a href="{% url apparel.views.look_list %}">{% trans "Looks" %}</a></li>
                 {% if not user.is_authenticated %}
-                <li>{% facebook_button 'http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_short.gif' %}</li>
+                {% with MEDIA_URL|add:'images/fblogo.png' as button_image %}
+                <li>{% facebook_button button_image %}</li>
+                {% endwith %}
                 {% endif %}
                 <li>{% include 'apparel/fragments/set_language.html' %}</li>
             </ul>
