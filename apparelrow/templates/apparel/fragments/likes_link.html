@@ -3,4 +3,4 @@
 {% load voting_tags %}
 {% load apparel_extras %}
 
-<a class="likes" href="#likes" id="like-{{ object|class_name|lower }}s-{{ object.slug }}">{% blocktrans count object.score.score as counter %}<span class="count">{{ counter }}</span> like{% plural %}<span class="count">{{ counter }}</span> likes{% endblocktrans %}</a>
+<a class="likes open-dialog" href="{% if likes_url %}{{ likes_url }}{% else %}#likes{% endif %}" id="like-{{ object|class_name|lower }}s-{{ object.slug }}">{% blocktrans count object.score.score as counter %}<span class="count">{{ counter }}</span> like{% plural %}<span class="count">{{ counter }}</span> likes{% endblocktrans %}</a>

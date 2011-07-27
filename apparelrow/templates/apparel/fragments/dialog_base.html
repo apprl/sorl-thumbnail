@@ -1,0 +1,11 @@
+{% load i18n %}
+<div class="dialog-container">
+    <h3>
+        {% block title %}{% endblock %}
+        <a class="close" href="#">{% trans "Close" %}</a>
+    </h3>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    <div class="dialog-footer">{% block footer %}{% endblock %}</div>
+</div>

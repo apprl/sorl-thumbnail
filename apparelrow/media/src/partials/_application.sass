@@ -1572,8 +1572,12 @@ a#create-look
       background: transparent image_url(unquote("logout.png")) no-repeat scroll right center
       padding-right: 15px
     .content
+      +border(top)
+      +border(bottom)
       background-color: $button_color
-      input
+      form.connect-button input
+        padding: 10px
+      input.search
         +text_input
         width: 306px
         margin: 4px 3px 3px
@@ -1582,9 +1586,9 @@ a#create-look
         &.default
           font-family: $font_family_italic
           font-style: italic
+    .dialog-footer
+      height: 16px
     #user-list
-      +border(top)
-      +border(bottom)
       height: 205px
       overflow-y: auto
       padding: 0 12px

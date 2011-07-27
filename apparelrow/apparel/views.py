@@ -473,6 +473,15 @@ def look_user_like_list(request, slug):
         context_instance=RequestContext(request)
     )
 
+def dialog_login_favorite_friends(request):
+    """
+    Display a dialog with information about facebook login before you can view
+    popular products in your network. Redirects to browse page with f=1 on
+    successful login
+    """
+    return render_to_response('apparel/fragments/dialog_login_favorite_friends.html',
+            {'next': reverse('apparel.browse.browse_products') + '#f=1'}, context_instance=RequestContext(request))
+
 def index(request):
     #ctx = get_filter(request)
     ctx = {}

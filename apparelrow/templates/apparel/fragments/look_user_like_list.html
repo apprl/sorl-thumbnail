@@ -1,5 +1,15 @@
-{% extends 'apparel/fragments/user_like_list_base.html' %}
+{% extends 'apparel/fragments/dialog_base.html' %}
 {% load i18n %}
 
-{% block form_url %}{% url apparel.views.look_user_like_list slug %}{% endblock %}
 {% block title %}{% trans "People who like this look" %}{% endblock %}
+{% block content %}
+    <ul id="user-list">
+    {% for profile in profiles %}
+        <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}">
+            <a id="user-{{ profile.id }}" href="{{ profile.get_absolute_url }}">
+                <img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/><span>{{ profile.display_name }}</span>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

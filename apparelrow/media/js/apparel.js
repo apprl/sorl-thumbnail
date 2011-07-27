@@ -36,6 +36,24 @@ function create_modal_dialog(header, messages, yes_action, no_action) {
     jQuery('.no', modal_dialog).click(function() { no_action(jQuery(modal_dialog).overlay()); });
 }
 
+/**
+ * Creates a dialog from html loaded through ajax, only alternativ is close
+ */
+function create_html_dialog(url_to_html) {
+    jQuery('<div class="dialog"></div>').load(url_to_html).appendTo('body').overlay({
+        mask: {
+            color: '#000',
+            loadSpeed: 200,
+            opacity: 0.5
+        },
+        load: true,
+        closeOnClick: true,
+        close: '.close',
+        top: 100,
+        onClose: function(e) { this.getTrigger().remove() }
+    });
+}
+
 jQuery(document).ready(function() {
     // Make all "apparel rows" scrollables
     jQuery('.row').scrollable().end();
@@ -43,6 +61,17 @@ jQuery(document).ready(function() {
     // Make all textareas autogrow
     jQuery('textarea').autoResize();
 
+    // All elements with class open-dialog should open a dialog and load html from href-url
+    jQuery('.open-dialog').live('click', function(event) {
+        create_html_dialog(jQuery(this).attr('href'));
+        event.preventDefault();
+    });
+
+    // Make sure that a dialog can be closed by the element with class 'close'
+    jQuery('.dialog .close').live('click', function(event) {
+        $('.dialog').overlay().close();
+        event.preventDefault();
+    });
 
     // Adding comments to jquery-tmpl, syntax: {{#}}comment{{/#}} Note: the "" are important
     jQuery.tmplcmd['#'] = {

@@ -19,29 +19,8 @@
     jQuery(document).ready(function() {
         makeProductTooltip('.collage .product, .photo .product');        
         jQuery('#embed-code')
-            .focus(function(e) { this.select(); } )
-            .mouseup(function(e) { e.preventDefault() } )
-        ;
-
-        jQuery('.activity .likes').click(function(event) {
-            jQuery('<div class="dialog"></div>').load('{% url apparel.views.look_user_like_list object.slug %}').appendTo('body').overlay({
-                mask: {
-                    color: '#000',
-                    loadSpeed: 200,
-                    opacity: 0.5
-                },
-                load: true,
-                closeOnClick: true,
-                close: '.close',
-                top: 100,
-                onClose: function(e) { this.getTrigger().remove() }
-            });
-            event.preventDefault();
-        });
-        jQuery('.dialog .close').live('click', function(event) {
-            $('.dialog').overlay().close();
-            event.preventDefault();
-        });
+            .focus(function(e) { this.select(); })
+            .mouseup(function(e) { e.preventDefault() });
 
         jQuery('#look-header .delete').click(function(event) {
             var title = jQuery(this).attr('title');
@@ -94,7 +73,8 @@
 {% endcache %}
     {% get_comment_count for object as comment_count %}
     <div class="activity">
-      {% include 'apparel/fragments/comment_count.html' %}
+    {% include 'apparel/fragments/comment_count.html' %}
+      {% url apparel.views.look_user_like_list object.slug as likes_url %}
       <p class="last">{% include 'apparel/fragments/likes_link.html' %}</p>
     </div>
 {% cache CACHE_TIMEOUT look_detail2 object.id LANGUAGE_CODE %}

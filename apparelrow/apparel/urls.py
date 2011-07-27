@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns
+from django.conf.urls.defaults import patterns, url
 
 from voting.views import vote_on_object
 
@@ -47,6 +47,8 @@ urlpatterns = patterns('',
     (r'^looks/(?P<slug>[\w-]+?)/edit/$', 'apparel.views.look_edit'),
     (r'^looks/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_look_dict, "like-look"),
     (r'^looks/(?P<slug>[\w-]+)/users/$', 'apparel.views.look_user_like_list'),
+
+    url(r'^dialog/login-friends/$', 'apparel.views.dialog_login_favorite_friends', name='dialog-login-friends'),
 
     (r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
     
