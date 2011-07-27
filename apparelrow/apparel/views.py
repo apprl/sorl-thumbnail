@@ -93,6 +93,7 @@ def look_list(request, profile=None, contains=None, page=0):
         queryset=queryset,
         paginate_by=10,
         extra_context={
+            'next': request.get_full_path(),
             "popular_looks": popular
         }
     )
@@ -443,6 +444,7 @@ def home(request, profile, page=0):
         paginate_by=10,
         page=page,
         extra_context={
+            'next': request.get_full_path(),
             'profile': profile,
             'facebook_friends': get_facebook_friends(request),
             'popular_looks_in_network': get_top_in_network(Look, request.user, limit=2),
