@@ -1,11 +1,28 @@
 {% extends 'base.html' %}
+{% load facebook %}
 {% load i18n %}
 
 {% block body-classes %}three-columns{% endblock body-classes %}
 
 {% block body %}
     <div class="sidebar">
-        &nbsp;
+        <h2>{% trans "Friends with most looks" %}</h2>
+        {% if user.is_authenticated %}
+        <ul class="suggested-friends">
+        {% for profile in most_looks_users %}
+            <li>
+            {% include 'apparel/fragments/avatar_link.html' %}
+            <a href="{% url profile.views.looks profile.user.username %}">
+                {% blocktrans with profile.looks as looks %}See all {{ looks }} looks{% endblocktrans %}
+            </a>
+            </li>
+        {% endfor %}
+        </ul>
+        {% else %}
+        {% with MEDIA_URL|add:'images/facebook_signin_sv.png' as facebook_login_image %}
+        {% facebook_button facebook_login_image %}
+        {% endwith %}
+        {% endif %}
     </div>
     <div id="content">
         <h2>{% trans "Latest looks" %}</h2>

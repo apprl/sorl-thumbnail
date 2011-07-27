@@ -87,14 +87,22 @@ def look_list(request, profile=None, contains=None, page=0):
     
     # FIXME: This is used elsewhere, we should move it out to a utils module
     popular = Vote.objects.get_top(Look, limit=8)
-    
+
+    if request.user.is_authenticated():
+        user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
+        most_looks_users = ApparelProfile.objects.annotate(look_count=Count('user__look')).order_by('-look_count').filter(look_count__gt=1, user__in=user_ids)
+    else:
+        most_looks_users = None
+
     return list_detail.object_list(
         request,
         queryset=queryset,
         paginate_by=10,
         extra_context={
             'next': request.get_full_path(),
-            "popular_looks": popular
+            'previous': None,
+            'popular_looks': popular,
+            'most_looks_users': most_looks_users
         }
     )
 

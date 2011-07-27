@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-27 11:33+0200\n"
+"POT-Creation-Date: 2011-07-27 13:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -585,7 +585,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: templates/index.html:188 templates/apparel/look_list.html:15
+#: templates/index.html:188 templates/apparel/look_list.html:32
 msgid "Popular looks"
 msgstr ""
 
@@ -805,7 +805,16 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: templates/apparel/look_list.html:11 templates/profile/looks.html:6
+#: templates/apparel/look_list.html:9
+msgid "Friends with most looks"
+msgstr ""
+
+#: templates/apparel/look_list.html:16
+#, python-format
+msgid "See all %(looks)s looks"
+msgstr ""
+
+#: templates/apparel/look_list.html:28 templates/profile/looks.html:6
 msgid "Latest looks"
 msgstr ""
 
