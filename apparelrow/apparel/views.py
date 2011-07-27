@@ -564,7 +564,7 @@ def get_top_in_network(model_class, user, limit=2):
             yield objects[id], int(score)
 
 def get_facebook_friends(request):
-    if request.facebook:
+    if request.user.is_authenticated() and request.facebook:
         friends = request.facebook.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
         return ApparelProfile.objects.filter(user__facebookprofile__uid__in=friends_uids)
