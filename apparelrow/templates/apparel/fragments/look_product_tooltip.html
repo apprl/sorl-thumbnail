@@ -14,7 +14,11 @@
                 <span class="price">{{ component.product.default_vendor.price }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
             </div>
         </a>
+        {% if component.product.default_vendor.availability == 0 %}
+        <div class="vendors"><a class="vendor" target="_new" href="{{ component.product.default_vendor.vendor.homepage }}">{{ component.product.default_vendor.vendor.name }}</a></div>
+        {% else %}
         <div class="vendors"><a class="vendor" target="_new" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ component.product.id }}&u={{ component.product.default_vendor.buy_url|urlencode }}">{{ component.product.default_vendor.vendor }}</a><a href="{% url apparelrow.statistics.views.product_click_count %}?i={{ component.product.id }}&u={{ component.product.default_vendor.buy_url|urlencode }}" target="_new" class="buy-now">{% trans "Buy" %}</a></div>
+        {% endif %}
     </div>
     <span class="arrow"></span>
 </div>
