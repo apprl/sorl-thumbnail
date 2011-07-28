@@ -28,7 +28,7 @@
         {% url look-list as look_list_url %}
         {% url popular-look-list as popular_look_list_url %}
         {% if request.path == look_list_url or request.path == popular_look_list_url %}
-        <ul class="tabs">
+        <ul class="look-list-tabs">
             <li><a class="first latest{% if request.path == look_list_url %} current{% endif %}" href="{{ look_list_url }}">{% trans "Latest looks" %}</a></li>
             <li><a class="last popular{% if request.path == popular_look_list_url %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
         </ul>
