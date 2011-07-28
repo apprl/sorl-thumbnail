@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-27 13:24+0200\n"
+"POT-Creation-Date: 2011-07-28 17:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,242 +33,243 @@ msgstr ""
 msgid "Showing popular products in your network"
 msgstr ""
 
-#: apparel/models.py:28
+#: apparel/models.py:26
 msgid "Products can only be displayed for an active manufactorer"
 msgstr ""
 
-#: apparel/models.py:29 apparel/models.py:85
+#: apparel/models.py:27 apparel/models.py:83
 msgid "Logotype"
 msgstr ""
 
-#: apparel/models.py:30 apparel/models.py:84
+#: apparel/models.py:28 apparel/models.py:82
 msgid "Home page"
 msgstr ""
 
-#: apparel/models.py:56
+#: apparel/models.py:54
 msgid "Option Type"
 msgstr ""
 
-#: apparel/models.py:57
+#: apparel/models.py:55
 msgid "Option Types"
 msgstr ""
 
-#: apparel/models.py:65
+#: apparel/models.py:63
 msgid "Option value"
 msgstr ""
 
-#: apparel/models.py:74
+#: apparel/models.py:72
 msgid "Option Item"
 msgstr ""
 
-#: apparel/models.py:75
+#: apparel/models.py:73
 msgid "Option Items"
 msgstr ""
 
-#: apparel/models.py:100
+#: apparel/models.py:98
 msgid "Only active categories are visible and searchable on the website"
 msgstr ""
 
-#: apparel/models.py:101
+#: apparel/models.py:99
 msgid "Option types"
 msgstr ""
 
-#: apparel/models.py:102
+#: apparel/models.py:100
 msgid "The category is visible on the front page"
 msgstr ""
 
-#: apparel/models.py:136
+#: apparel/models.py:134
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:137 apparel/models.py:317
+#: apparel/models.py:135 apparel/models.py:337
 msgid "Slug Name"
 msgstr ""
 
-#: apparel/models.py:138 apparel/models.py:318
+#: apparel/models.py:136 apparel/models.py:338
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr ""
 
-#: apparel/models.py:139
+#: apparel/models.py:137
 msgid "Stock Keeping Unit"
 msgstr ""
 
-#: apparel/models.py:140
+#: apparel/models.py:138
 msgid "Has to be unique with the manufacturer"
 msgstr ""
 
-#: apparel/models.py:142
+#: apparel/models.py:140
 msgid "Time added"
 msgstr ""
 
-#: apparel/models.py:143 apparel/models.py:324 apparel/models.py:491
+#: apparel/models.py:141 apparel/models.py:221 apparel/models.py:344
+#: apparel/models.py:443 apparel/models.py:534
 msgid "Time modified"
 msgstr ""
 
-#: apparel/models.py:144
+#: apparel/models.py:142
 msgid "Product description"
 msgstr ""
 
-#: apparel/models.py:145
+#: apparel/models.py:143
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:148
+#: apparel/models.py:146
 msgid "Gender"
 msgstr ""
 
-#: apparel/models.py:214
+#: apparel/models.py:220 apparel/models.py:343 apparel/models.py:442
+#: apparel/models.py:533 beta/models.py:6 beta/models.py:14
+msgid "Time created"
+msgstr ""
+
+#: apparel/models.py:234
 msgid "category"
 msgstr ""
 
-#: apparel/models.py:215
+#: apparel/models.py:235
 msgid "Name"
 msgstr ""
 
-#: apparel/models.py:217
+#: apparel/models.py:237
 msgid "Default gender"
 msgstr ""
 
-#: apparel/models.py:256
+#: apparel/models.py:276
 msgid "Buy URL"
 msgstr ""
 
-#: apparel/models.py:257 templates/apparel/fragments/product_menu.html:15
+#: apparel/models.py:277 templates/apparel/fragments/product_menu.html:15
 msgid "Price"
 msgstr ""
 
-#: apparel/models.py:257
+#: apparel/models.py:277
 msgid "Price converted to base currency"
 msgstr ""
 
-#: apparel/models.py:258 importer/models.py:123
+#: apparel/models.py:278 importer/models.py:123
 msgid "Currency"
 msgstr ""
 
-#: apparel/models.py:258
+#: apparel/models.py:278
 msgid "Base currency as three-letter ISO code"
 msgstr ""
 
-#: apparel/models.py:259
+#: apparel/models.py:279
 msgid "Original price"
 msgstr ""
 
-#: apparel/models.py:260
+#: apparel/models.py:280
 msgid "Original currency"
 msgstr ""
 
-#: apparel/models.py:260
+#: apparel/models.py:280
 msgid "Currency as three-letter ISO code"
 msgstr ""
 
-#: apparel/models.py:261 apparel/models.py:294
+#: apparel/models.py:281 apparel/models.py:314
 msgid "Items in stock"
 msgstr ""
 
-#: apparel/models.py:261 apparel/models.py:294
+#: apparel/models.py:281 apparel/models.py:314
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:299
+#: apparel/models.py:319
 msgid "No information available"
 msgstr ""
 
-#: apparel/models.py:301
+#: apparel/models.py:321
 msgid "Out of stock"
 msgstr ""
 
-#: apparel/models.py:303
+#: apparel/models.py:323
 msgid "In stock"
 msgstr ""
 
-#: apparel/models.py:305
+#: apparel/models.py:325
 msgid "items in stock"
 msgstr ""
 
-#: apparel/models.py:316 apparel/models.py:484
+#: apparel/models.py:336 apparel/models.py:527
 #: templates/apparel/look_create.html:18
 msgid "Title"
 msgstr ""
 
-#: apparel/models.py:319
+#: apparel/models.py:339
 msgid "Look description"
 msgstr ""
 
-#: apparel/models.py:323 apparel/models.py:490 beta/models.py:6
-#: beta/models.py:14
-msgid "Time created"
-msgstr ""
-
-#: apparel/models.py:326
+#: apparel/models.py:346
 msgid "What compontent to show"
 msgstr ""
 
-#: apparel/models.py:327
+#: apparel/models.py:347
 msgid "The look will be shown on the front page"
 msgstr ""
 
-#: apparel/models.py:417
+#: apparel/models.py:460
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:418
+#: apparel/models.py:461
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:419
+#: apparel/models.py:462
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:420
+#: apparel/models.py:463
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:421
+#: apparel/models.py:464
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:422
+#: apparel/models.py:465
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:485
+#: apparel/models.py:528
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:485
+#: apparel/models.py:528
 msgid "HTML allowed"
 msgstr ""
 
-#: apparel/models.py:486
+#: apparel/models.py:529
 msgid "URL"
 msgstr ""
 
-#: apparel/models.py:487
+#: apparel/models.py:530
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:487
+#: apparel/models.py:530
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:489
+#: apparel/models.py:532
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:512
+#: apparel/models.py:555
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:512
+#: apparel/models.py:555
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:228
+#: apparel/templatetags/apparel_extras.py:257
 msgid "ago"
 msgstr ""
 
@@ -386,11 +387,11 @@ msgid ""
 "\"svart,night,coal\""
 msgstr ""
 
-#: profile/models.py:25
+#: profile/models.py:21
 msgid "User profile image"
 msgstr ""
 
-#: profile/models.py:26
+#: profile/models.py:22
 msgid "About"
 msgstr ""
 
@@ -585,11 +586,12 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: templates/index.html:188 templates/apparel/look_list.html:32
+#: templates/index.html:189 templates/index.html.py:191
+#: templates/apparel/look_list.html:41
 msgid "Popular looks"
 msgstr ""
 
-#: templates/index.html:192
+#: templates/index.html:196
 msgid "Create a look!"
 msgstr ""
 
@@ -719,11 +721,11 @@ msgstr ""
 msgid "Similar looks"
 msgstr ""
 
-#: templates/apparel/look_detail.html:119
+#: templates/apparel/look_detail.html:121
 msgid "Tags"
 msgstr ""
 
-#: templates/apparel/look_detail.html:130
+#: templates/apparel/look_detail.html:132
 msgid "Articles in this look"
 msgstr ""
 
@@ -814,8 +816,13 @@ msgstr ""
 msgid "See all %(looks)s looks"
 msgstr ""
 
-#: templates/apparel/look_list.html:28 templates/profile/looks.html:6
+#: templates/apparel/look_list.html:32 templates/apparel/look_list.html:36
+#: templates/profile/looks.html:6
 msgid "Latest looks"
+msgstr ""
+
+#: templates/apparel/look_list.html:33 templates/apparel/user_home.html:14
+msgid "Popular looks in your network"
 msgstr ""
 
 #: templates/apparel/product_detail.html:52
@@ -829,20 +836,20 @@ msgstr ""
 
 #: templates/apparel/product_detail.html:139
 #: templates/apparel/product_detail.html:152
-#: templates/apparel/fragments/product_detail.html:96
+#: templates/apparel/fragments/product_detail.html:98
 msgid "In wardrobe"
 msgstr ""
 
 #: templates/apparel/product_detail.html:139
 #: templates/apparel/product_detail.html:152
-#: templates/apparel/fragments/product_detail.html:96
+#: templates/apparel/fragments/product_detail.html:98
 #: templates/profile/wardrobe.html:10
 msgid "Delete product from my wardrobe"
 msgstr ""
 
 #: templates/apparel/product_detail.html:142
 #: templates/apparel/product_detail.html:150
-#: templates/apparel/fragments/product_detail.html:102
+#: templates/apparel/fragments/product_detail.html:104
 msgid "Add to wardrobe"
 msgstr ""
 
@@ -878,10 +885,6 @@ msgstr ""
 
 #: templates/apparel/user_home.html:9
 msgid "Popular products in your network"
-msgstr ""
-
-#: templates/apparel/user_home.html:14
-msgid "Popular looks in your network"
 msgstr ""
 
 #: templates/apparel/user_home.html:20
@@ -922,8 +925,8 @@ msgstr ""
 
 #: templates/apparel/fragments/dialog_login_favorite_friends.html:7
 msgid ""
-"In order to see which items are popular among your friends, you need to log "
-"in using Facebook and choose which of your friends you want to follow."
+"Log in using your Facebook account to see which items are popular among your "
+"friends."
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:6
@@ -941,36 +944,36 @@ msgstr ""
 msgid "Follow"
 msgstr ""
 
-#: templates/apparel/fragments/like_button.html:10
-#: templates/apparel/fragments/like_button.html:15
+#: templates/apparel/fragments/like_button.html:8
+#: templates/apparel/fragments/like_button.html:13
 msgid "Unliked!"
 msgstr ""
 
-#: templates/apparel/fragments/like_button.html:10
-#: templates/apparel/fragments/like_button.html:15
+#: templates/apparel/fragments/like_button.html:8
+#: templates/apparel/fragments/like_button.html:13
 msgid "Liked!"
 msgstr ""
 
-#: templates/apparel/fragments/like_button.html:10
-#: templates/apparel/fragments/like_button.html:15
+#: templates/apparel/fragments/like_button.html:8
+#: templates/apparel/fragments/like_button.html:13
 msgid "Like"
 msgstr ""
 
-#: templates/apparel/fragments/like_button.html:10
-#: templates/apparel/fragments/like_button.html:15
+#: templates/apparel/fragments/like_button.html:8
+#: templates/apparel/fragments/like_button.html:13
 msgid "Unlike"
 msgstr ""
 
-#: templates/apparel/fragments/likes.html:6
-#: templates/apparel/fragments/likes_link.html:6
+#: templates/apparel/fragments/likes.html:5
+#: templates/apparel/fragments/likes_link.html:5
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> like"
 msgid_plural "<span class=\"count\">%(counter)s</span> likes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/fragments/look_product_tooltip.html:17
-#: templates/apparel/fragments/product_detail.html:53
+#: templates/apparel/fragments/look_product_tooltip.html:20
+#: templates/apparel/fragments/product_detail.html:55
 msgid "Buy"
 msgstr ""
 
@@ -982,19 +985,19 @@ msgstr ""
 msgid "By"
 msgstr ""
 
-#: templates/apparel/fragments/product_detail.html:51
+#: templates/apparel/fragments/product_detail.html:53
 msgid "Sold out"
 msgstr ""
 
-#: templates/apparel/fragments/product_detail.html:75
+#: templates/apparel/fragments/product_detail.html:77
 msgid "Add to look"
 msgstr ""
 
-#: templates/apparel/fragments/product_detail.html:85
+#: templates/apparel/fragments/product_detail.html:87
 msgid "Enter look name"
 msgstr ""
 
-#: templates/apparel/fragments/product_detail.html:86
+#: templates/apparel/fragments/product_detail.html:88
 msgid "New look"
 msgstr ""
 
@@ -1080,6 +1083,8 @@ msgid "created a new look"
 msgstr ""
 
 #: templates/apparel/fragments/activity/liked.html:14
+#: templates/apparel/fragments/activity/liked_look.html:14
+#: templates/apparel/fragments/activity/liked_product.html:14
 #, python-format
 msgid "%(name)s likes"
 msgstr ""
