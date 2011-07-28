@@ -9,8 +9,8 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanen
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.db.models import Q, Max, Min, Count, Sum, connection, signals
-from django.template import RequestContext, Template, loader
-from django.template.loader import find_template_source, get_template
+from django.template import RequestContext, loader
+from django.template.loader import get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -65,9 +65,6 @@ def product_detail(request, slug):
     return render_to_response(
             'apparel/product_detail.html',
             {
-                'templates': {
-                    'look_button': js_template(get_template_source('apparel/fragments/look_button.html'), context=context)
-                },
                 'object': product,
                 'user_looks': user_looks,
                 'is_in_wardrobe': is_in_wardrobe,
@@ -290,10 +287,6 @@ def look_delete(request, slug):
 def looks():
     pass
 
-def get_template_source(template):
-    template_source, template_origin = find_template_source(template)
-    return template_source
-
 def widget(request, object_id, template_name, model):
     try:
         instance = model.objects.get(pk=object_id)
@@ -444,6 +437,7 @@ def add_to_look(request):
         {
             'look': look,           # The look the product was added to
             'created': created,     # Whether the look was created
+            'created_html': loader.render_to_string('apparel/fragments/look_button.html', {'look': look}, context_instance=RequestContext(request)),
             'added': added,         # Whether the product was added to the look or not. If false it was aleady there.
             'html': loader.render_to_string('apparel/fragments/look_small_like.html', {'object': look}, context_instance=RequestContext(request)),
         },
@@ -625,12 +619,3 @@ def get_facebook_friends(request):
         friends = request.facebook.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
         return ApparelProfile.objects.filter(user__facebookprofile__uid__in=friends_uids)
-
-def js_template(str, request=None, context=None):
-    if context is None:
-        context = RequestContext(request)
-    
-    str = str.replace('{{', '${').replace('}}', '}')
-    str = re.sub(r'\{%\s*include "(.+?)"\s*%\}', lambda m: js_template(get_template_source(m.group(1)), context=context), str)
-
-    return Template(str).render(context)

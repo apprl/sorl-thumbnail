@@ -1,5 +1,6 @@
 import re
 import math
+import os.path
 
 from django.http import HttpResponse
 from django.conf import settings
@@ -7,10 +8,7 @@ from django.shortcuts import render_to_response
 from django.db.models import Max
 from django.db.models import Min
 from django.template import RequestContext
-from django.template import Template
 from django.template import loader
-from django.template.loader import get_template
-from django.template.loader import find_template_source
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
@@ -29,6 +27,9 @@ from apparel.models import Manufacturer
 from apparel.models import Option
 from apparel.models import Category
 from apparel.decorators import get_current_user
+
+#FIXME: ugly solution to avoid using get_template_source which is deprecated. Solve this in js and not by using pagination_js template.
+PAGINATION_JS_TEMPLATE_SOURCE = open(os.path.join(settings.TEMPLATE_DIRS[0], 'apparel/fragments/pagination_js.html')).read()
 
 BROWSE_PAGE_SIZE = 12
 
@@ -197,7 +198,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
         current_page = paged_result,
         pages = pages,
         templates = {
-            'pagination': get_template_source('apparel/fragments/pagination_js.html')
+            'pagination': PAGINATION_JS_TEMPLATE_SOURCE
         },
     )
 
@@ -252,10 +253,6 @@ def browse_manufacturers(request, **kwargs):
 
     return HttpResponse(json.encode(manufacturers), mimetype='application/json')
 
-def get_template_source(template):
-    template_source, template_origin = find_template_source(template)
-    return template_source
-
 def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
     """
     >>> from django.core.paginator import Paginator
@@ -295,12 +292,3 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
         right = range(paginator.num_pages - on_ends + 1, paginator.num_pages + 1)
 
     return left, mid, right
-
-def js_template(str, request=None, context=None):
-    if context is None:
-        context = RequestContext(request)
-
-    str = str.replace('{{', '${').replace('}}', '}')
-    str = re.sub(r'\{%\s*include "(.+?)"\s*%\}', lambda m: js_template(get_template_source(m.group(1)), context=context), str)
-
-    return Template(str).render(context)
