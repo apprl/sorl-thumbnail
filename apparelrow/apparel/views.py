@@ -157,8 +157,11 @@ def look_list(request, popular=None, contains=None, page=0):
     if contains:
         queryset = Look.objects.filter(products__slug=contains)
     elif popular:
-        user_ids = Follow.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(User)).values_list('object_id', flat=True)
-        queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')
+        if request.user.is_authenticated():
+            user_ids = Follow.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(User)).values_list('object_id', flat=True)
+            queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')
+        else:
+            queryset = Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes')
     else:
         queryset = Look.objects.all().order_by('-modified')
 
