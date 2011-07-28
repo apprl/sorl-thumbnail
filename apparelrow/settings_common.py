@@ -161,7 +161,6 @@ INSTALLED_APPS = (
     'actstream',
     'tagging',
     'pagination',
-    'voting',
     'django.contrib.comments',
     'ajaxcomments',
     'django_extensions',

@@ -18,7 +18,6 @@ django-notification==0.1.5
 django-announcements==0.1.0
 #-e svn+http://django-mptt.googlecode.com/svn/trunk/@116#egg=django-mptt
 -e git://github.com/django-mptt/django-mptt.git#egg=django-mptt
--e git://github.com/hanssonlarsson/django-voting.git#egg=django-voting
 -e svn+http://code.hanssonlarsson.se/svn_public/hanssonlarsson_utils-svn/tags/hanssonlarsson-django-exporter-0.2.5/#egg=hanssonlarsson-django-exporter
 -e svn+http://code.hanssonlarsson.se/svn_public/hanssonlarsson_utils-svn/tags/django-jsmin-0.0.2/#egg=django-jsmin
 django-tagging==0.3.1
