@@ -48,7 +48,7 @@
         {% for vendorproduct in vendorproducts %}
             {% if forloop.first %}
                 {% if vendorproduct.availability == 0 %}
-                <span class="sold-out">{% trans "Sold out" %}</span>
+                <span class="sold-out{% if vendorproduct.currency != vendorproduct.original_currency %} higher{% endif %}">{% trans "Sold out" %}</span>
                 {% else %}
                 <a href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_new" class="buy-now{% if vendorproduct.currency != vendorproduct.original_currency %} higher{% endif %}">{% trans "Buy" %}</a>
                 {% endif %}
