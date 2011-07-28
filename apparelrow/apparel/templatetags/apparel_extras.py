@@ -33,10 +33,11 @@ def likes_product(user, product):
     """
     Takes a user model and returns a like object for a specific product.
     """
-    try:
-        return ProductLike.objects.get(user=user, product=product, active=True)
-    except ObjectDoesNotExist, MultipleObjectsReturned:
-        pass
+    if user and user.is_authenticated():
+        try:
+            return ProductLike.objects.get(user=user, product=product, active=True)
+        except ObjectDoesNotExist, MultipleObjectsReturned:
+            pass
 
     return False
 
@@ -45,10 +46,11 @@ def likes_look(user, look):
     """
     Takes a user model and returns a like object for a specific look.
     """
-    try:
-        return LookLike.objects.get(user=user, look=look, active=True)
-    except ObjectDoesNotExist, MultipleObjectsReturned:
-        pass
+    if user and user.is_authenticated():
+        try:
+            return LookLike.objects.get(user=user, look=look, active=True)
+        except ObjectDoesNotExist, MultipleObjectsReturned:
+            pass
 
     return False
 
