@@ -11,8 +11,6 @@ from django.db.models import get_model
 from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType
 
-from voting.models import Vote
-
 from haystack import site
 from haystack.indexes import SearchIndex
 from haystack.indexes import CharField
@@ -29,6 +27,7 @@ from apparelrow.apparel.models import Look
 from apparelrow.apparel.models import Manufacturer
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.models import Wardrobe
+from apparelrow.apparel.models import ProductLike
 
 RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 10)
 
@@ -100,8 +99,7 @@ class ProductIndex(QueuedSearchIndex):
         # Add user to search index
         self.prepared_data['user_wardrobe'] = Wardrobe.objects.filter(products=object).values_list('user__id', flat=True)
         # Add user likes to search index
-        self.prepared_data['user_likes'] = Vote.objects.filter(content_type=ContentType.objects.get_for_model(object),
-                                                               object_id=object.id).values_list('user__id', flat=True)
+        self.prepared_data['user_likes'] = ProductLike.objects.filter(product=object, active=True).values_list('user__id', flat=True)
         # Add availability to search index
         # A product is available if atleast one vendorproduct is not sold out (NULL does not count as sold out)
         availability = False

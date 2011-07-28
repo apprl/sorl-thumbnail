@@ -97,8 +97,13 @@ jQuery(document).ready(function() {
                   .attr('data-alternate-done-text', doneText)
                   .attr('data-done-text', newDoneText)
                   .text(doneText).delay(1000).text(newButtonText);
-            if(/^\/(\w+)\/([\w-]+)\/like/.test(action)) {
-                increase_counts(jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count'), response.score.score);
+            if(/^\/(\w+)\/([\w-]+)\/like/.test(action) && response.success == true) {
+                elem = jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count');
+                elem.text(parseInt(elem.text(), 10) + 1);
+            }
+            if(/^\/(\w+)\/([\w-]+)\/unlike/.test(action) && response.success == true) {
+                elem = jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count');
+                elem.text(parseInt(elem.text(), 10) - 1);
             }
         },
     });

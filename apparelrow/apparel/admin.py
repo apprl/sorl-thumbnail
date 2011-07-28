@@ -188,6 +188,16 @@ admin.site.register(VendorProduct, VendorProductAdmin)
 admin.site.register(LookComponent)
 admin.site.register(Wardrobe)
 
+class LookLikeAdmin(admin.ModelAdmin):
+    raw_id_fields = ['look', 'user']
+
+admin.site.register(LookLike, LookLikeAdmin)
+
+class ProductLikeAdmin(admin.ModelAdmin):
+    raw_id_fields = ['product', 'user']
+
+admin.site.register(ProductLike, ProductLikeAdmin)
+
 # Front Page
 
 class FirstPageContentAdmin(admin.ModelAdmin):

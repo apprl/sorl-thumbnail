@@ -1,4 +1,3 @@
-import logging
 import uuid
 import os.path
 
@@ -9,11 +8,8 @@ from django.db.models.signals import post_save
 from django_facebook.models import FacebookProfile
 from django.conf import settings
 
-from voting.models import Vote
-from apparel.models import Look
+from apparel.models import Look, LookLike, ProductLike
 
-
-import datetime, mptt
 
 def profile_image_path(instance, filename):
     return os.path.join(settings.APPAREL_PROFILE_IMAGE_ROOT, uuid.uuid4().hex)
@@ -38,7 +34,8 @@ class ApparelProfile(models.Model):
     
     @property
     def likes(self):
-        return Vote.objects.filter(user=self.user).count()
+        # Number of likes on products and looks combined
+        return LookLike.objects.filter(user=self.user).count() + ProductLike.objects.filter(user=self.user).count()
 
     @property
     def display_name(self):

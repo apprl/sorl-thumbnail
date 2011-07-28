@@ -7,6 +7,9 @@ from django.utils.html import escape
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+
+from apparel.models import ProductLike, LookLike
 
 try:
     from django.utils.safestring import mark_safe
@@ -24,6 +27,30 @@ def category_descendants_id(category, include_self=True):
     including itself separated with comma.
     """
     return ','.join([str(cat.id) for cat in category.get_descendants(include_self=include_self)])
+
+@register.filter
+def likes_product(user, product):
+    """
+    Takes a user model and returns a like object for a specific product.
+    """
+    try:
+        return ProductLike.objects.get(user=user, product=product, active=True)
+    except ObjectDoesNotExist, MultipleObjectsReturned:
+        pass
+
+    return False
+
+@register.filter
+def likes_look(user, look):
+    """
+    Takes a user model and returns a like object for a specific look.
+    """
+    try:
+        return LookLike.objects.get(user=user, look=look, active=True)
+    except ObjectDoesNotExist, MultipleObjectsReturned:
+        pass
+
+    return False
 
 
 # FIXME: When we've bumped up Django, we should replace the use of these two

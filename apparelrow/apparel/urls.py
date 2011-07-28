@@ -1,25 +1,6 @@
 from django.conf.urls.defaults import patterns, url
 
-from voting.views import vote_on_object
-
-from apparelrow.apparel.models import Look, Product
-
-
-# FIXME: There's currently no way for django-voting to limit the Product queryset
-# to only contain published products
-like_product_dict = {
-    'model': Product,
-    'template_object_name': 'product',
-    'slug_field': 'slug',
-    'allow_xmlhttprequest': True,
-}
-
-like_look_dict = {
-    'model': Look,
-    'template_object_name': 'look',
-    'slug_field': 'slug',
-    'allow_xmlhttprequest': True,
-}
+from apparelrow.apparel.models import Look
 
 urlpatterns = patterns('',
     (r'^$', 'apparel.views.index'),
@@ -27,8 +8,8 @@ urlpatterns = patterns('',
     (r'^(?P<model>\w+)/search$', 'apparelrow.search.search_view'),
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
-    (r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list'),
-    (r'^products/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_product_dict, "like-product"),
+    url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list', name='product-look-list'),
+    (r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.product_like'),
     (r'^products/(?P<slug>[\w-]+)/users/$', 'apparel.views.product_user_like_list'),
     
     (r'^browse/$', 'apparel.browse.browse_products'),
@@ -37,7 +18,8 @@ urlpatterns = patterns('',
     (r'^wardrobe/add_product/$', 'apparel.views.add_to_wardrobe'),
     (r'^wardrobe/delete_product/$', 'apparel.views.delete_from_wardrobe'),
 
-    (r'^looks/$', 'apparel.views.look_list'),
+    url(r'^looks/$', 'apparel.views.look_list', name='look-list'),
+    url(r'^looks/popular/$', 'apparel.views.look_list', {'popular': True}, name='popular-look-list'),
     (r'^looks/create/$', 'apparel.views.look_create'),
     (r'^looks/save_component/$', 'apparel.views.save_look_component'),
     (r'^looks/delete_component/$', 'apparel.views.delete_look_component'),
@@ -45,7 +27,7 @@ urlpatterns = patterns('',
     (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
     (r'^looks/(?P<slug>[\w-]+?)/delete/$', 'apparel.views.look_delete'),
     (r'^looks/(?P<slug>[\w-]+?)/edit/$', 'apparel.views.look_edit'),
-    (r'^looks/(?P<slug>[\w-]+?)/like/(?P<direction>up|clear)/?$', vote_on_object, like_look_dict, "like-look"),
+    (r'^looks/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.look_like'),
     (r'^looks/(?P<slug>[\w-]+)/users/$', 'apparel.views.look_user_like_list'),
 
     url(r'^dialog/login-friends/$', 'apparel.views.dialog_login_favorite_friends', name='dialog-login-friends'),

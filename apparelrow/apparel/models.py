@@ -16,8 +16,6 @@ from apparel import cache
 
 import datetime, mptt, tagging
 from tagging.fields import TagField
-from voting.models import Vote
-from voting.signals import delete_votes
 from sorl.thumbnail.main import DjangoThumbnail
 
 from django_extensions.db.fields import AutoSlugField
@@ -152,7 +150,7 @@ class Product(models.Model):
     objects = SearchManager()
     
     def score(self):
-        return Vote.objects.get_score(self)
+        return ProductLike.objects.filter(product=self, active=True).count()
     
     @property
     def default_vendor(self):
@@ -204,8 +202,30 @@ class Product(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Product)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Product)
-models.signals.post_delete.connect(delete_votes, sender=Product)
 
+def delete_product_likes(sender, instance, **kwargs):
+    """
+    Delete all likes for the sender.
+    """
+    ProductLike.objects.filter(product=instance).delete()
+
+models.signals.post_delete.connect(delete_product_likes, sender=Product)
+
+class ProductLike(models.Model):
+    """
+    Keep track of likes on products
+    """
+    product = models.ForeignKey(Product, related_name='likes')
+    user = models.ForeignKey(User, related_name='product_likes')
+    created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
+    modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return u'%s likes product %s' % (self.user, self.product)
+
+    class Meta:
+        unique_together = (('product', 'user'),)
 
 # Maps products for a specific vendor 
 # This is used for importing stuff - when this category is changed,
@@ -331,7 +351,7 @@ class Look(models.Model):
     featured = FeaturedManager()
     
     def score(self):
-        return Vote.objects.get_score(self)
+        return LookLike.objects.filter(look=self, active=True).count()
 
     def total_price(self, component=None):
         """
@@ -404,7 +424,30 @@ class Look(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Look)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Look)
-models.signals.post_delete.connect(delete_votes, sender=Look)
+
+def delete_look_likes(sender, instance, **kwargs):
+    """
+    Delete all likes for the sender.
+    """
+    LookLike.objects.filter(look=instance).delete()
+
+models.signals.post_delete.connect(delete_look_likes, sender=Look)
+
+class LookLike(models.Model):
+    """
+    Keep track of likes on looks
+    """
+    look = models.ForeignKey(Look, related_name='likes')
+    user = models.ForeignKey(User, related_name='look_likes')
+    created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
+    modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return u'%s likes look %s' % (self.user, self.look)
+
+    class Meta:
+        unique_together = (('look', 'user'),)
 
 class LookComponent(models.Model):
     """

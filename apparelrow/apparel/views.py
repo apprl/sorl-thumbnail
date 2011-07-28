@@ -1,20 +1,22 @@
 import logging
 import re
 import math
+import json
 
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
-from django.db.models import Max, Min, Count, connection, signals
+from django.db import IntegrityError
+from django.db.models import Q, Max, Min, Count, Sum, connection, signals
 from django.template import RequestContext, Template, loader
 from django.template.loader import find_template_source, get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic import list_detail
-from hanssonlarsson.django.exporter import json
-from voting.models import Vote
+from hanssonlarsson.django.exporter import json as special_json
 from actstream.models import user_stream, Follow
 from haystack.query import SearchQuerySet
 
@@ -22,9 +24,10 @@ from apparelrow.tasks import search_index_update_task
 from apparelrow.profile.models import ApparelProfile
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.decorators import get_current_user
-from apparelrow.apparel.models import Product, Manufacturer, Category, Option, VendorProduct
-from apparelrow.apparel.models import Look, LookComponent, Wardrobe, FirstPageContent
+from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct
+from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, FirstPageContent
 from apparelrow.apparel.forms import LookForm, LookComponentForm
+import apparel.signals
 
 def product_redirect(request, pk):
     """
@@ -75,18 +78,91 @@ def product_detail(request, slug):
             context_instance=context,
             )
 
-def look_list(request, profile=None, contains=None, page=0):
-    
-    if profile:
-        queryset = Look.objects.filter(user__username=profile)
-    elif contains:
+@login_required
+def product_like(request, slug, action):
+    """
+    Like or unlike a product through ajax.
+    """
+    if request.method == 'GET':
+        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')))
+    if not request.user.is_authenticated():
+        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')))
+
+    try:
+        product = Product.objects.get(slug=slug)
+    except Product.MultipleObjectsReturned, Product.DoesNotExist:
+        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')))
+
+    if action == 'like':
+        product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
+        product_like.active = True
+        product_like.save()
+
+        apparel.signals.like.send(sender=ProductLike, instance=product_like)
+        return HttpResponse(json.dumps(dict(success=True, error_message=None)))
+
+    elif action == 'unlike':
+        product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
+        product_like.active = False
+        product_like.save()
+
+        apparel.signals.unlike.send(sender=ProductLike, instance=product_like)
+        return HttpResponse(json.dumps(dict(success=True, error_message=None)))
+
+    return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
+
+@login_required
+def look_like(request, slug, action):
+    """
+    Like or unlike a look through ajax.
+    """
+    if request.method == 'GET':
+        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')))
+    if not request.user.is_authenticated():
+        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')))
+
+    try:
+        look = Look.objects.get(slug=slug)
+    except Look.MultipleObjectsReturned, Look.DoesNotExist:
+        return HttpResponse(json.dumps(dict(success=False, error_message='No look found')))
+
+    if action == 'like':
+        look_like, created = LookLike.objects.get_or_create(user=request.user, look=look)
+        look_like.active = True
+        look_like.save()
+
+        apparel.signals.like.send(sender=LookLike, instance=look_like)
+        return HttpResponse(json.dumps(dict(success=True, error_message=None)))
+
+    elif action == 'unlike':
+        look_like, created = LookLike.objects.get_or_create(user=request.user, look=look)
+        look_like.active = False
+        look_like.save()
+
+        apparel.signals.unlike.send(sender=LookLike, instance=look_like)
+        return HttpResponse(json.dumps(dict(success=True, error_message=None)))
+
+    return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
+
+
+def look_list(request, popular=None, contains=None, page=0):
+    """
+    This view can list looks in three ways:
+
+        1) If no argument is used a list of all looks is displayed.
+        3) If popular-argument is set displays a list of all popular looks in your network.
+        2) If contains-argument is set displays all looks that contains the product.
+
+    """
+    if contains:
         queryset = Look.objects.filter(products__slug=contains)
+    elif popular:
+        user_ids = Follow.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(User)).values_list('object_id', flat=True)
+        queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')
     else:
         queryset = Look.objects.all().order_by('-modified')
 
-    
-    # FIXME: This is used elsewhere, we should move it out to a utils module
-    popular = Vote.objects.get_top(Look, limit=8)
+    popular = get_top_looks(limit=8)
 
     if request.user.is_authenticated():
         user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
@@ -224,7 +300,7 @@ def widget(request, object_id, template_name, model):
         success  = False
         html     = 'Not found'
 
-    return HttpResponse('%s(%s)' % (request.GET['callback'], json.encode({
+    return HttpResponse('%s(%s)' % (request.GET['callback'], special_json.encode({
         'success': success,
         'html':  html,
     })), mimetype='application/json')
@@ -436,11 +512,11 @@ def home(request, profile, page=0):
     Displays the logged in user's page
     """
     queryset = user_stream(request.user)
-    queryset = queryset.filter(verb__in=['liked', 'added', 'commented', 'created'])
+    queryset = queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created'])
 
     # Retrieve most popular products in users network
     limit = 2
-    user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
+    user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
     user_ids_or = ' OR '.join(str(x) for x in user_ids)
     search_queryset = SearchQuerySet().narrow('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or)).order_by('-popularity')[:limit]
     popular_products_in_network = [x.object for x in search_queryset if x]
@@ -455,17 +531,15 @@ def home(request, profile, page=0):
             'next': request.get_full_path(),
             'profile': profile,
             'facebook_friends': get_facebook_friends(request),
-            'popular_looks_in_network': get_top_in_network(Look, request.user, limit=2),
+            'popular_looks_in_network': get_top_looks_in_network(request.user, limit=2),
             'popular_products_in_network': [x.object for x in search_queryset if x]
 
         }
     )
 
 def product_user_like_list(request, slug):
-    votes = Vote.objects.filter(content_type=ContentType.objects.get_for_model(Product), object_id=Product.objects.get(slug=slug).id)
-    user_ids = votes.values_list('user__id', flat=True)
-    queryset = ApparelProfile.objects.filter(user__id__in=user_ids).order_by('name')
-    queryset = sorted(queryset, key=lambda x: x.display_name)
+    product = Product.objects.get(slug=slug)
+    queryset = ApparelProfile.objects.select_related('user').filter(Q(user__product_likes__product=product) & Q(user__product_likes__active=True)).order_by('user__first_name', 'user__last_name', 'user__username')
     return render_to_response(
         'apparel/fragments/product_user_like_list.html',
         {'profiles': queryset, 'slug': slug},
@@ -473,10 +547,8 @@ def product_user_like_list(request, slug):
     )
 
 def look_user_like_list(request, slug):
-    votes = Vote.objects.filter(content_type=ContentType.objects.get_for_model(Look), object_id=Look.objects.get(slug=slug).id)
-    user_ids = votes.values_list('user__id', flat=True)
-    queryset = ApparelProfile.objects.filter(user__id__in=user_ids).order_by('name')
-    queryset = sorted(queryset, key=lambda x: x.display_name)
+    look = Look.objects.get(slug=slug)
+    queryset = ApparelProfile.objects.select_related('user').filter(Q(user__look_likes__look=look) & Q(user__look_likes__active=True)).order_by('user__first_name', 'user__last_name', 'user__username')
     return render_to_response(
         'apparel/fragments/look_user_like_list.html',
         {'profiles': queryset, 'slug': slug},
@@ -497,7 +569,7 @@ def index(request):
     ctx = {}
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
     ctx['pages'] = FirstPageContent.published_objects.all()
-    ctx['popular_looks']  = Vote.objects.get_top(Look, limit=6)
+    ctx['popular_looks'] = get_top_looks(limit=6)
     ctx['all_colors'] = Option.objects.filter(option_type__name='color')
     ctx['categories_all'] = Category._tree_manager.filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
@@ -528,6 +600,9 @@ def index(request):
 # Utility routines. FIXME: Move these out
 #
 
+def get_top_looks(limit=10):
+    return Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
+
 def get_most_followed_users(limit=2):
     #object_ids = [x['object_id'] for x in Follow.objects.values('object_id').annotate(Count('id')).order_by('-id__count')[:limit]]
     #return ApparelProfile.objects.select_related('user').filter(user__in=object_ids)
@@ -537,41 +612,10 @@ def get_most_followed_users(limit=2):
         apparel_profiles.append(ApparelProfile.objects.select_related('user').get(user__id=object_id))
     return apparel_profiles
 
-def get_top_in_network(model_class, user, limit=2):
-    """
-    Get top objects of type model_class which was created by followers to user. Based on get_top
-    from the django-voting plugin. Also requires the django-activity-stream plugin.
-    """
-    if settings.DATABASE_ENGINE == 'mysql':
-        having_score = connection.ops.quote_name('score')
-    else:
-        having_score = 'SUM(v.vote)'
-
-    query = """
-    SELECT v.object_id, SUM(v.vote) as %(having_score_name)s
-    FROM %(vote_table_name)s AS v
-    WHERE v.content_type_id = %%s
-    AND v.object_id IN (
-        SELECT vv.object_id FROM %(vote_table_name)s AS vv
-        INNER JOIN %(follow_table_name)s AS f ON vv.user_id = f.object_id
-        WHERE f.content_type_id = 3 AND vv.content_type_id = %%s AND f.user_id = %%s)
-    GROUP BY v.object_id
-    HAVING %(having_score)s > 0 ORDER BY %(having_score)s DESC LIMIT %%s""" % {
-            'having_score_name': connection.ops.quote_name('score'),
-            'having_score': having_score,
-            'vote_table_name': connection.ops.quote_name(Vote._meta.db_table),
-            'model_table_name': connection.ops.quote_name(model_class._meta.db_table),
-            'follow_table_name': connection.ops.quote_name(Follow._meta.db_table)
-        }
-
-    content_type_id = ContentType.objects.get_for_model(model_class).id
-    cursor = connection.cursor()
-    cursor.execute(query, [content_type_id, content_type_id, user.id, limit])
-    results = cursor.fetchall()
-    objects = model_class.objects.in_bulk([id for id, score in results])
-    for id, score in results:
-        if id in objects:
-            yield objects[id], int(score)
+def get_top_looks_in_network(user, limit=2):
+    content_type = ContentType.objects.get_for_model(User)
+    user_ids = Follow.objects.filter(content_type=content_type, user=user).values_list('object_id', flat=True)
+    return Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')[:limit]
 
 def get_facebook_friends(request):
     if request.user.is_authenticated() and request.facebook:

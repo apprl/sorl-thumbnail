@@ -1508,7 +1508,7 @@ ul.suggested-friends
       background-repeat: no-repeat
       background-attachment: scroll
       background-position: 104px 6px
-      &.liked
+      &.liked, &.liked_product, &.liked_look
         background-image: image_url("activity_heart.png")
         h3
           color: $like_color
@@ -1613,3 +1613,37 @@ a#create-look
           display: block
           height: 60px
           line-height: 60px
+
+ul.tabs
+  +horizontal-list(0)
+  margin: 16px 0 10px 0
+  +border(all)
+  +border-top-left-radius
+  +border-top-right-radius
+  li
+    +border(all)
+    display: block
+    border-style: none solid none none
+    &:first-child, &.first, &:first-child a, &.first a
+      +border-top-left-radius
+    &:last-child, &.last, &:last-child a, &.last a
+      +border-top-right-radius
+      border-right: none
+      width: 225px
+    a
+      +button
+      width: 224px
+      text-align: center
+      display: block
+      border: none
+      &.current, &.current:hover
+        background-image: image_url(unquote("gradient-darker-bg.png"))
+        cursor: default
+      &:active, &:hover
+        background-image: image_url(unquote("gradient-dark-bg.png"))
+      span
+        padding-left: 16px
+        background:
+          color: transparent
+          repeat: no-repeat
+          position: left center
