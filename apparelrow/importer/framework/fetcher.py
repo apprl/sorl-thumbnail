@@ -1,8 +1,13 @@
-import urllib2, urlparse, os, sys, logging, tempfile, re
+import os
+import logging
+import tempfile
+import re
+import subprocess
 from datetime import datetime
 
+import requests
+
 from django.conf import settings
-import subprocess
 
 logger = logging.getLogger('apparel.importer.fetcher')
 
@@ -16,20 +21,6 @@ def fetch(url, localpath=None, username=None, password=None, decompress=None):
     If username or password is defined, the Basic Authentication headers are
     added to the request.
     """
-    
-    if username or password:
-        bits = urlparse.urlparse(url)
-        password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-        password_mgr.add_password(None, '%s://%s' % (bits.scheme, bits.netloc), username, password)
-        
-        urllib2.install_opener(
-            urllib2.build_opener(
-                urllib2.HTTPBasicAuthHandler(password_mgr)
-            )
-        )
-        
-        logging.debug('Added Basic Authentication header. Username %s' % username)
-    
     if not localpath:
         if decompress and decompress in settings.APPAREL_DECOMPRESS_SUFFIX:
             suffix = settings.APPAREL_DECOMPRESS_SUFFIX[decompress]
@@ -41,10 +32,14 @@ def fetch(url, localpath=None, username=None, password=None, decompress=None):
         local_fh = os.fdopen(fh, 'w')
     else:
         local_fh = open(localpath, 'w')
+
+    if username or password:
+        request_handler = requests.get(url, auth=(username, password))
+        logging.debug('Added Basic Authentication header. Username %s' % username)
+    else:
+        request_handler = requests.get(url)
     
-    f = urllib2.urlopen(urllib2.quote(url, ":/&?="))
-    
-    local_fh.write(f.read())
+    local_fh.write(request_handler.read())
     local_fh.close()
     local_fh = None
     

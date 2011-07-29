@@ -42,3 +42,4 @@ git+git://github.com/jhherren/django-haystack.git@facetfeatures#egg=django-hayst
 celery==2.2.7
 django-celery==2.2.4
 kombu==1.1.6
+requests
