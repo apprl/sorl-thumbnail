@@ -64,7 +64,6 @@
                         jQuery('h2#looks.hidden, p.hidden:has(a.looks)').fadeIn().removeClass('hidden');
                         jQuery('<li/>').append(response.data.html).prependTo('.sidebar > ul.looks');
                         jQuery('.sidebar > ul.looks > li').each(function(i, item) {
-                            console.log(i, item);
                             if(i % 2 == 1)
                                 jQuery(item).addClass('last');
                             else
