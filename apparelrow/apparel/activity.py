@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.comments import signals as comments_signals
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 
 from django.db import models
 from apparel.models import *
@@ -114,7 +115,7 @@ def post_save_handler(sender, **kwargs):
 
 models.signals.post_save.connect(post_save_handler, sender=Look)
 
-def post_delete_handler(sender, **kwargs):
+def pre_delete_handler(sender, **kwargs):
     instance = kwargs['instance']
     if not hasattr(instance, 'user'):
         logging.warning('Trying to remove an activity on post_delete, but %s has not user attribute' % instance)
@@ -122,13 +123,26 @@ def post_delete_handler(sender, **kwargs):
 
     verb = 'created'
 
+    product_content_type = ContentType.objects.get_for_model(Product)
+    user_content_type = ContentType.objects.get_for_model(User)
+    look_content_type = ContentType.objects.get_for_model(Look)
+
+    for product in instance.products.all():
+        action_object = Action.objects.filter(actor_content_type=user_content_type,
+                                              actor_object_id=instance.user.pk,
+                                              target_content_type=look_content_type,
+                                              target_object_id=instance.pk,
+                                              action_object_content_type=product_content_type,
+                                              action_object_object_id=product.pk)
+        action_object.delete()
+
     action_object = Action.objects.filter(actor_object_id=instance.user.pk,
                                           verb=verb,
                                           action_object_content_type=ContentType.objects.get_for_model(instance),
                                           action_object_object_id=instance.pk)
     action_object.delete()
 
-models.signals.post_delete.connect(post_delete_handler, sender=Look)
+models.signals.pre_delete.connect(pre_delete_handler, sender=Look)
 
 
 # TODO: When you can remove products from the wardrobe and remove looks, make sure that this actions is also removed
