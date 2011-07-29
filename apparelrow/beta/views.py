@@ -2,6 +2,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from django.template import RequestContext
 from django.conf import settings
+from django.utils import translation
 from datetime import datetime, timedelta
 
 from beta.models import *
@@ -9,6 +10,11 @@ from beta.models import *
 # Create your views here.
 
 def unlock(request):
+    # Set language to user's browser language for beta view
+    language = translation.get_language_from_request(request)
+    translation.activate(language)
+    request.LANGUAGE_CODE = translation.get_language()
+
     if request.method == 'POST':
         try:
             invitee = Invitee.objects.get(email=request.POST.get('email'), invite__code=request.POST.get('code'))
