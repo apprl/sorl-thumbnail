@@ -1,34 +1,41 @@
 @import compass/reset
 @import compass/css3
+@import compass/utilities
 
 @import partials/base.sass
 @import partials/typography.sass
 
 body
-  background: #3c3c3c
-  color: #adadad
+  background: white
+  color: $font_color
   h1
-    font-size: 2em
+    +replace-text("logo_dark_bg.png")
+    width: 200px
+    height: 61px
+    margin: 20% auto 0
+  h2
     margin-bottom: 0.5em
   form
     width: 300px
-    margin: 20% auto 0
+    margin: 1em auto 0
   label
     display: block
   input
     width: 100%
-  input, button
+  input
     display: block
     font-size: 2em
     +border-radius(3px)
   button
+    font-family: $font_family
+    font-size: 1em
+    color: $font_color
+    box-sizing: content-box
+    -webkit-box-sizing: content-box
+    -moz-box-sizing: content-box
     margin-top: 1em
-    background: #3c3c3c
-    color: #adadad
-    border: 1px solid #adadad
+    +button
     float: right
     &:hover
-      color: #3c3c3c
-      background: #adadad
-      border-color: #efefef
+      +hover_button
 
