@@ -34,7 +34,7 @@ class AffiliateWindowMapper(DataMapper):
         return self.record['aw_deep_link']
 
     def get_image_url(self):
-        return self.record['aw_image_url']
+        return self.record['merchant_image_url']
 
     def get_price(self):
         try:
