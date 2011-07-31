@@ -36,6 +36,12 @@ class ProductAdmin(admin.ModelAdmin):
         queryset.update(published=False)
     hide.short_description = "Hide selected products"
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            if Wardrobe.objects.filter(products=obj) or Look.objects.filter(products=obj):
+                return ['published']
+        return []
+
     class ChangeCategoryForm(Form):
         _selected_action = CharField(widget=MultipleHiddenInput)
         category = TreeNodeChoiceField(queryset=Category.objects.all())
