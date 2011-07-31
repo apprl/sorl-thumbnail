@@ -602,7 +602,6 @@ function renderProducts(products) {
             products.paginator.count
         ), [products.paginator.count])
     );
-    //product_count_text = $('#product-count span');
     if('help_text' in products) {
         product_count_text.prepend(products.help_text + ', ');
     }
