@@ -109,6 +109,7 @@
 {% endcache %}
     {% url apparel.views.look_like object.slug 'like' as like_url %}
     {% url apparel.views.look_like object.slug 'unlike' as unlike_url %}
+    {% url dialog-like-look as dialog_url %}
     {% with user|likes_look:object as is_liked %}
     {% include 'apparel/fragments/like_button.html' %}
     {% endwith %}

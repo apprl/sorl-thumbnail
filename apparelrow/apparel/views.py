@@ -247,32 +247,31 @@ def look_edit(request, slug):
         render_to_response('apparel/look_edit.html', data, context_instance=context)
     )
 
-
-@login_required
-@seamless_request_handling
-# FIXME: Require a POST to this page
 def look_create(request):
     """
     POST - Save changes to a look
             - if in AJAX mode, return the look as JSON
             - else redirect to look's edit page (unless a new image has been uploaded)
     GET - Display create page
-            - if in AJAX mode, this won't work  
+            - if not logged in display a popup
+            - if in AJAX mode, this won't work
     """
-    
-    if request.method == 'GET':
+
+    if request.method == 'GET' and request.user.is_authenticated():
         return render_to_response('apparel/look_create.html', {}, context_instance=RequestContext(request))
-    
-    look = Look.objects.create(
-        user=request.user, 
-        title=request.POST.get('title'),
-        description=request.POST.get('description')
-    )
-    
-    return (
-        look,
-        HttpResponseRedirect(reverse('apparel.views.look_edit', args=(look.slug,)))
-    )
+
+    if request.method == 'POST' and request.user.is_authenticated():
+        look = Look.objects.create(
+            user=request.user,
+            title=request.POST.get('title'),
+            description=request.POST.get('description')
+        )
+        if request.is_ajax():
+            return HttpResponse(json.encode({'success': True, 'data': look}), mimetype='text/json')
+
+        return HttpResponseRedirect(reverse('apparel.views.look_edit', args=(look.slug,)))
+
+    return render_to_response('apparel/fragments/dialog_create_look.html', {}, context_instance=RequestContext(request))
 
 @login_required
 @seamless_request_handling
@@ -554,12 +553,35 @@ def look_user_like_list(request, slug):
 
 def dialog_login_favorite_friends(request):
     """
-    Display a dialog with information about facebook login before you can view
-    popular products in your network. Redirects to browse page with f=1 on
-    successful login
+    Display a dialog tailored for the browse page with information about
+    facebook login. On successful login redirect to browse page with f=1.
     """
     return render_to_response('apparel/fragments/dialog_login_favorite_friends.html',
             {'next': reverse('apparel.browse.browse_products') + '#f=1'}, context_instance=RequestContext(request))
+
+def dialog_like_product(request):
+    """
+    Display a dialog tailored for the product detail page with information
+    about facebook login. On successful login redirect to same page.
+    """
+    return render_to_response('apparel/fragments/dialog_like_product.html',
+            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+
+def dialog_like_look(request):
+    """
+    Display a dialog tailored for the look detail page with information about
+    facebook login. On successful login redirect to same page.
+    """
+    return render_to_response('apparel/fragments/dialog_like_look.html',
+            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+
+def dialog_follow_user(request):
+    """
+    Display a dialog tailored for the look detail page with information about
+    facebook login. On successful login redirect to same page.
+    """
+    return render_to_response('apparel/fragments/dialog_follow_user.html',
+            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
 
 def index(request):
     #ctx = get_filter(request)

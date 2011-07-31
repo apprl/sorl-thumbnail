@@ -31,6 +31,9 @@ urlpatterns = patterns('',
     (r'^looks/(?P<slug>[\w-]+)/users/$', 'apparel.views.look_user_like_list'),
 
     url(r'^dialog/login-friends/$', 'apparel.views.dialog_login_favorite_friends', name='dialog-login-friends'),
+    url(r'^dialog/like-product/$', 'apparel.views.dialog_like_product', name='dialog-like-product'),
+    url(r'^dialog/like-look/$', 'apparel.views.dialog_like_look', name='dialog-like-look'),
+    url(r'^dialog/follow-user/$', 'apparel.views.dialog_follow_user', name='dialog-follow-user'),
 
     (r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
     

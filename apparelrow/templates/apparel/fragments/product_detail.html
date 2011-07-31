@@ -11,6 +11,7 @@
 {% endcache %}
         {% url apparel.views.product_like object.slug 'like' as like_url %}
         {% url apparel.views.product_like object.slug 'unlike' as unlike_url %}
+        {% url dialog-like-product as dialog_url %}
         {% with user|likes_product:object as is_liked %}
         {% include 'apparel/fragments/like_button.html' %}
         {% endwith %}

@@ -9,7 +9,7 @@
 {% else %}
     {% if user != profile.user %}
     <span class="not_following">
-        <a href="{% url_to_follow profile.user %}" class="follow user-action"><span>{% trans "Follow" %}</span></a>
+        <a href="{% url dialog-follow-user %}?next={{ request.get_full_path }}" class="follow open-dialog"><span>{% trans "Follow" %}</span></a>
     </span>
     {% endif %}
 {% endif %}

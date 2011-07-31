@@ -156,7 +156,7 @@ jQuery(document).ready(function() {
     });
     */
 
-    jQuery('a.follow, a.unfollow').click(function() {
+    jQuery('a.follow:not(a.open-dialog), a.unfollow:not(a.open-dialog)').click(function() {
         $this = $(this);
         $parent = $this.parent();
         $.post($this.attr('href'), function(response) {

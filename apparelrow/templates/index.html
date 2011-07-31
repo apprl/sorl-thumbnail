@@ -193,7 +193,7 @@
         {% with popular_looks as looks %}
             {% include 'apparel/fragments/looks_sidebar.html' %}
         {% endwith %}
-        <a href="/looks/create/" id="create-look" class="button">{% trans "Create a look!" %}</a>
+        <a href="/looks/create/" id="create-look" class="button{% if not user.is_authenticated %} open-dialog{% endif %}">{% trans "Create a look!" %}</a>
     </div>
     {% endcache %}
 {% endblock body %}

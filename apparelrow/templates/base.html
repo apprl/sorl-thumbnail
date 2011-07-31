@@ -55,20 +55,7 @@
                 ;
                 event.preventDefault();
             });
-
-            {% if not user.is_authenticated %}
-            jQuery('.user-action').click(function(event) {
-                FB.login(function(response) {
-                    if (response.session) {
-                        location.href = '{% url facebook_login %}?fb_next={{ request.path }}';
-                    }
-                }, {perms: '{% facebook_perms %}'});
-                event.preventDefault();
-                return false;
-            });
-            {% endif %}
         });
-    
     </script>
     {% block 'extra-scripts' %}
     {% endblock 'extra-scripts' %}
