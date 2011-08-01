@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-31 17:32+0200\n"
+"POT-Creation-Date: 2011-08-01 10:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -518,6 +518,7 @@ msgid "Social"
 msgstr ""
 
 #: templates/base.html:168 templates/apparel/user_home.html:35
+#: templates/apparel/fragments/browse_follow_user.html:5
 msgid "See all members"
 msgstr ""
 
@@ -855,18 +856,18 @@ msgstr ""
 msgid "Add to wardrobe"
 msgstr ""
 
-#: templates/apparel/product_detail.html:182
+#: templates/apparel/product_detail.html:180
 #, python-format
 msgid "Added to <span class=\"count\">%(counter)s</span> look"
 msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:186
+#: templates/apparel/product_detail.html:184
 msgid "Recently viewed"
 msgstr ""
 
-#: templates/apparel/product_detail.html:195
+#: templates/apparel/product_detail.html:193
 #, python-format
 msgid ""
 "\n"
@@ -881,7 +882,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:208
+#: templates/apparel/product_detail.html:206
 msgid "No product found!"
 msgstr ""
 
@@ -911,6 +912,12 @@ msgstr ""
 
 #: templates/apparel/users.html:33
 msgid "Find your friends"
+msgstr ""
+
+#: templates/apparel/fragments/browse_follow_user.html:4
+msgid ""
+"To see what products are popular in your network, first you need to start "
+"following friends among our members."
 msgstr ""
 
 #: templates/apparel/fragments/comment_count.html:2

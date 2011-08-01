@@ -609,7 +609,13 @@ function renderProducts(products) {
     pagination.data = products;
     pagination.recalculate(0);
     pagination.render();
-    jQuery('#product-list').data('scrollable').begin();
+
+    var product_list = jQuery('#product-list');
+    product_list.data('scrollable').begin();
+    product_list.find('#product-infotext').remove();
+    if(products.follow_html) {
+        product_list.prepend(products.follow_html);
+    }
 
     filterCriteria(products);
 }

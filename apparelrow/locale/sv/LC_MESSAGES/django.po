@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-31 17:32+0200\n"
+"POT-Creation-Date: 2011-08-01 10:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -529,6 +529,7 @@ msgid "Social"
 msgstr ""
 
 #: templates/base.html:168 templates/apparel/user_home.html:35
+#: templates/apparel/fragments/browse_follow_user.html:5
 msgid "See all members"
 msgstr "Se alla medlemmar"
 
@@ -877,18 +878,18 @@ msgstr "Ta bort plagg från min garderob"
 msgid "Add to wardrobe"
 msgstr "Lägg i garderob"
 
-#: templates/apparel/product_detail.html:182
+#: templates/apparel/product_detail.html:180
 #, python-format
 msgid "Added to <span class=\"count\">%(counter)s</span> look"
 msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] "Tillagd i <span class=\"count\">%(counter)s</span> look"
 msgstr[1] "Tillagd i <span class=\"count\">%(counter)s</span> looks"
 
-#: templates/apparel/product_detail.html:186
+#: templates/apparel/product_detail.html:184
 msgid "Recently viewed"
 msgstr "Senast besökta"
 
-#: templates/apparel/product_detail.html:195
+#: templates/apparel/product_detail.html:193
 #, python-format
 msgid ""
 "\n"
@@ -909,7 +910,7 @@ msgstr[1] ""
 "                    <span class=\"count\">%(counter)s</span> looks med denna "
 "produkt                "
 
-#: templates/apparel/product_detail.html:208
+#: templates/apparel/product_detail.html:206
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
@@ -941,6 +942,14 @@ msgstr "Medlemmar i bokstavsordning"
 msgid "Find your friends"
 msgstr "Hitta dina vänner"
 
+#: templates/apparel/fragments/browse_follow_user.html:4
+msgid ""
+"To see what products are popular in your network, first you need to start "
+"following friends among our members."
+msgstr ""
+"För att se vilka plagg som är populära bland dina vänner behöver du först "
+"hitta vänner att följa bland våra medlemmar."
+
 #: templates/apparel/fragments/comment_count.html:2
 msgid "comments"
 msgstr "kommentarer"
@@ -951,7 +960,8 @@ msgstr "Kommentarer"
 
 #: templates/apparel/fragments/dialog_create_look.html:7
 msgid "To create a look you need to connect with your Facebook account:"
-msgstr "För att kunna skapa en look behöver du logga in med ditt Facebookkonto:"
+msgstr ""
+"För att kunna skapa en look behöver du logga in med ditt Facebookkonto:"
 
 #: templates/apparel/fragments/dialog_follow_user.html:5
 msgid "Follow a member"
@@ -961,7 +971,9 @@ msgstr "Följ en medlem"
 msgid ""
 "To follow someone on the site, you need to connect with your Facebook "
 "account:"
-msgstr "För att kunna följa någon här på siten behöver du logga in med ditt facebookkonto:"
+msgstr ""
+"För att kunna följa någon här på siten behöver du logga in med ditt "
+"facebookkonto:"
 
 #: templates/apparel/fragments/dialog_like_look.html:5
 msgid "Like a look"
@@ -971,8 +983,10 @@ msgstr "Gilla en look"
 msgid ""
 "To 'like' a look on the site, you need to login with your Facebook account. "
 "(Please note that this will not show up on your Facebook wall by default.)"
-msgstr "För att kunna 'gilla' en look här på siten behöver du logga in med ditt "
-"Facebookkonto. (Bara så du vet, det kommer inte automatiskt att synas på Facebook att du har gillat en look här.)"
+msgstr ""
+"För att kunna 'gilla' en look här på siten behöver du logga in med ditt "
+"Facebookkonto. (Bara så du vet, det kommer inte automatiskt att synas på "
+"Facebook att du har gillat en look här.)"
 
 #: templates/apparel/fragments/dialog_like_product.html:5
 msgid "Like a product"
@@ -983,7 +997,10 @@ msgid ""
 "To 'like' a product on the site, you need to login with your Facebook "
 "account. (Please note that this will not show up on your Facebook wall by "
 "default.)"
-msgstr "För att kunna 'gilla' ett plagg här på siten behöver du logga in med ditt Facebookkonto. (Bara så du vet, det kommer inte automatiskt att synas på din Facebooksida att du har gillat ett plagg här)"
+msgstr ""
+"För att kunna 'gilla' ett plagg här på siten behöver du logga in med ditt "
+"Facebookkonto. (Bara så du vet, det kommer inte automatiskt att synas på din "
+"Facebooksida att du har gillat ett plagg här)"
 
 #: templates/apparel/fragments/dialog_login_favorite_friends.html:5
 msgid "See your friends' favorite products"
