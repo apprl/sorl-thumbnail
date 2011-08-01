@@ -117,18 +117,18 @@
 
         <div id="login-pane">
             <div class="left">
-                {% trans "Logged in as" %} <a href="{{ home_url }}">{{ user.get_profile.display_name }}</a>
+                {% trans "Logged in as" %} <a href="{{ profile_url }}">{{ user.get_profile.display_name }}</a>
             </div>
             <ul>
                 <li>
-                    <a class="first{% ifequal request.path home_url %} selected{% endifequal %}" href="{{ home_url }}">
-                        {% trans "Overview" %}
+                    <a class="first{% ifequal request.path profile_url %} selected{% endifequal %}" href="{{ profile_url }}">
+                        {% trans "My profile" %}
                         <div class="arrow"></div>
                     </a>
                 </li>
                 <li>
-                    <a class="last{% ifequal request.path profile_url %} selected{% endifequal %}" href="{{ profile_url }}">
-                        {% trans "My profile" %}
+                    <a class="last{% ifequal request.path home_url %} selected{% endifequal %}" href="{{ home_url }}">
+                        {% trans "Friends' updates" %}
                         <div class="arrow"></div>
                     </a>
                 </li>

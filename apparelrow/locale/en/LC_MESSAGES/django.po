@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-01 10:11+0200\n"
+"POT-Creation-Date: 2011-08-01 10:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -485,11 +485,11 @@ msgid "Logged in as"
 msgstr ""
 
 #: templates/base.html:125
-msgid "Overview"
+msgid "My profile"
 msgstr ""
 
 #: templates/base.html:131
-msgid "My profile"
+msgid "Friends' updates"
 msgstr ""
 
 #: templates/base.html:138 templates/base.html.py:164

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-01 10:10+0200\n"
+"POT-Creation-Date: 2011-08-01 10:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -496,12 +496,12 @@ msgid "Logged in as"
 msgstr "Inloggad som"
 
 #: templates/base.html:125
-msgid "Overview"
-msgstr "Översikt"
-
-#: templates/base.html:131
 msgid "My profile"
 msgstr "Min profil"
+
+#: templates/base.html:131
+msgid "Friends' updates"
+msgstr "Vänners uppdateringar"
 
 #: templates/base.html:138 templates/base.html.py:164
 #: templates/apparel/fragments/dialog_create_look.html:5
@@ -1503,6 +1503,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Overview"
+#~ msgstr "Översikt"
 
 #~ msgid ""
 #~ "In order to see which items are popular among your friends, you need to "
