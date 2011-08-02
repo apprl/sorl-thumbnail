@@ -1,4 +1,8 @@
-import logging, re, tempfile, urllib2, os
+import logging
+import re
+import os
+import subprocess
+from urllib2 import HTTPError, URLError
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.files import storage, File
@@ -7,7 +11,6 @@ from django.db import transaction
 from django.db import IntegrityError
 from django.db.models import Count
 from django.conf import settings
-from urllib2 import HTTPError, URLError
 
 from apparel.models import *
 from importer.framework.fetcher import fetch
@@ -481,7 +484,10 @@ class API(object):
                     #        until the image has been added
                     logger.error(u'%s (while downloading %s)' % (e, url))
                     raise SkipProduct('Could not download product image')
-                                
+
+                if re.search(r':.* text', subprocess.Popen(["file", '-L', temppath], stdout=subprocess.PIPE).stdout.read()):
+                    raise SkipProduct('Could not download product image')
+
                 storage.default_storage.save(self._product_image, File(open(temppath)))
                 logger.debug(u'Stored image at %s' % self._product_image)
             else:

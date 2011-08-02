@@ -38,6 +38,8 @@ def fetch(url, localpath=None, username=None, password=None, decompress=None):
         logging.debug('Added Basic Authentication header. Username %s' % username)
     else:
         request_handler = requests.get(url)
+
+    request_handler.raise_for_status()
     
     local_fh.write(request_handler.read())
     local_fh.close()
