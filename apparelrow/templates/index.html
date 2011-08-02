@@ -183,18 +183,18 @@
         </div>
     </div>
     {% endcache %}
-    {% cache CACHE_TIMEOUT index_looks LANGUAGE_CODE %}
     <div class="sidebar last">
         {% if user and user.is_authenticated %}
         <a href="{% url popular-look-list %}"><h2>{% trans "Popular looks" %}</h2></a>
         {% else %}
         <a href="{% url look-list %}"><h2>{% trans "Popular looks" %}</h2></a>
         {% endif %}
+        {% cache CACHE_TIMEOUT index_looks LANGUAGE_CODE %}
         {% with popular_looks as looks %}
             {% include 'apparel/fragments/looks_sidebar.html' %}
         {% endwith %}
+        {% endcache %}
         <a href="/looks/create/" id="create-look" class="button{% if not user.is_authenticated %} open-dialog{% endif %}">{% trans "Create a look!" %}</a>
     </div>
-    {% endcache %}
 {% endblock body %}
 
