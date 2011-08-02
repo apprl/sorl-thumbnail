@@ -8,5 +8,7 @@
     {% endfor %}
     </ul>
     {% if trackbacks %}{% include 'apparel/fragments/trackbacks.html' %}{% endif %}
+    {% if user and user.is_authenticated %}
     {% render_comment_form for object %}
+    {% endif %}
 </div>
