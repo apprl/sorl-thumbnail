@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-01 10:24+0200\n"
+"POT-Creation-Date: 2011-08-02 10:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -273,7 +273,8 @@ msgstr ""
 msgid "ago"
 msgstr ""
 
-#: apparel_comments/__init__.py:6
+#: apparel_comments/__init__.py:6 templates/profile/settings.html:11
+#: templates/profile/settings.html.py:30
 msgid "E-mail address"
 msgstr ""
 
@@ -387,12 +388,49 @@ msgid ""
 "\"svart,night,coal\""
 msgstr ""
 
-#: profile/models.py:21
+#: profile/models.py:14 templates/base.html:166
+#: templates/apparel/fragments/product_menu.html:10
+msgid "All"
+msgstr ""
+
+#: profile/models.py:15
+msgid "Those I follow"
+msgstr ""
+
+#: profile/models.py:16
+msgid "No one"
+msgstr ""
+
+#: profile/models.py:26
 msgid "User profile image"
 msgstr ""
 
-#: profile/models.py:22
+#: profile/models.py:27
 msgid "About"
+msgstr ""
+
+#: profile/models.py:31
+msgid "When someone commented on a product that I have in my wardrobe"
+msgstr ""
+
+#: profile/models.py:33
+msgid "When someone commented on a product that I have commented on"
+msgstr ""
+
+#: profile/models.py:35
+msgid "When someone commented on a look that I have created"
+msgstr ""
+
+#: profile/models.py:37
+msgid "When someone commented on a look that I have commented on"
+msgstr ""
+
+#: profile/models.py:39
+msgid "When someone likes a look that I have created"
+msgstr ""
+
+#: profile/models.py:41
+msgid "When someone starts to follow me"
 msgstr ""
 
 #: statistics/models.py:30 statistics/models.py:31
@@ -440,17 +478,17 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: templates/base.html:77 templates/base.html.py:157
+#: templates/base.html:77 templates/base.html.py:164
 #: templates/apparel/fragments/product_menu.html:11
 msgid "Women"
 msgstr ""
 
-#: templates/base.html:78 templates/base.html.py:158
+#: templates/base.html:78 templates/base.html.py:165
 #: templates/apparel/fragments/product_menu.html:12
 msgid "Men"
 msgstr ""
 
-#: templates/base.html:79 templates/base.html.py:162
+#: templates/base.html:79 templates/base.html.py:169
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
 #: templates/profile/fragments/menu_items.html:10
 msgid "Looks"
@@ -480,73 +518,73 @@ msgstr ""
 msgid "Show all manufacturers"
 msgstr ""
 
-#: templates/base.html:120
+#: templates/base.html:121
 msgid "Logged in as"
 msgstr ""
 
-#: templates/base.html:125
+#: templates/base.html:126
 msgid "My profile"
 msgstr ""
 
-#: templates/base.html:131
+#: templates/base.html:132
 msgid "Friends' updates"
 msgstr ""
 
-#: templates/base.html:138 templates/base.html.py:164
+#: templates/base.html:138 templates/profile/settings.html:8
+msgid "Settings"
+msgstr ""
+
+#: templates/base.html:145 templates/base.html.py:171
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
 msgstr ""
 
-#: templates/base.html:142
+#: templates/base.html:149
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:156
+#: templates/base.html:163
 msgid "Clothes"
 msgstr ""
 
-#: templates/base.html:159 templates/apparel/fragments/product_menu.html:10
-msgid "All"
-msgstr ""
-
-#: templates/base.html:163
+#: templates/base.html:170
 msgid "All looks"
 msgstr ""
 
-#: templates/base.html:167
+#: templates/base.html:174
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:168 templates/apparel/user_home.html:35
+#: templates/base.html:175 templates/apparel/user_home.html:35
 #: templates/apparel/fragments/browse_follow_user.html:5
 msgid "See all members"
 msgstr ""
 
-#: templates/base.html:174
+#: templates/base.html:181
 msgid "About Apparelrow"
 msgstr ""
 
-#: templates/base.html:175
+#: templates/base.html:182
 msgid "About the beta"
 msgstr ""
 
-#: templates/base.html:176
+#: templates/base.html:183
 msgid "Blog"
 msgstr ""
 
-#: templates/base.html:177
+#: templates/base.html:184
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:197
+#: templates/base.html:204
 msgid "No"
 msgstr ""
 
-#: templates/base.html:198
+#: templates/base.html:205
 msgid "Yes"
 msgstr ""
 
-#: templates/base.html:200 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:207 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr ""
 
@@ -1225,6 +1263,26 @@ msgstr ""
 
 #: templates/profile/profile.html:6
 msgid "Latest updates"
+msgstr ""
+
+#: templates/profile/settings.html:10 templates/profile/settings.html.py:15
+msgid "Events"
+msgstr ""
+
+#: templates/profile/settings.html:16
+msgid "Here you can set which events you want to be notified about via email:"
+msgstr ""
+
+#: templates/profile/settings.html:19
+msgid "Who?"
+msgstr ""
+
+#: templates/profile/settings.html:20
+msgid "Event"
+msgstr ""
+
+#: templates/profile/settings.html:27 templates/profile/settings.html.py:33
+msgid "Submit"
 msgstr ""
 
 #: templates/profile/wardrobe.html:23

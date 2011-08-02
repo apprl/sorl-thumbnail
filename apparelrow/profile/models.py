@@ -2,14 +2,19 @@ import uuid
 import os.path
 
 from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
-from django.db.models.signals import post_save
-from django_facebook.models import FacebookProfile
 from django.conf import settings
+from django_facebook.models import FacebookProfile
 
 from apparel.models import Look, LookLike, ProductLike
 
+EVENT_CHOICES = (
+    ('A', _('All')),
+    ('F', _('Those I follow')),
+    ('N', _('No one')),
+)
 
 def profile_image_path(instance, filename):
     return os.path.join(settings.APPAREL_PROFILE_IMAGE_ROOT, uuid.uuid4().hex)
@@ -20,6 +25,20 @@ class ApparelProfile(models.Model):
     name  = models.CharField(max_length=50, unique=True, blank=True, null=True)
     image = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True) 
     about = models.TextField(_('About'), null=True, blank=True)
+
+    # notification settings
+    comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+            help_text=_('When someone commented on a product that I have in my wardrobe'))
+    comment_product_comment = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+            help_text=_('When someone commented on a product that I have commented on'))
+    comment_look_created = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+            help_text=_('When someone commented on a look that I have created'))
+    comment_look_comment = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+            help_text=_('When someone commented on a look that I have commented on'))
+    like_look_created = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+            help_text=_('When someone likes a look that I have created'))
+    follow_user = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+            help_text=_('When someone starts to follow me'))
 
     @models.permalink
     def get_looks_url(self):

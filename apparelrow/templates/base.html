@@ -114,6 +114,7 @@
         {% url apparel.views.home as home_url %}
         {% url profile.views.profile as profile_url %}
         {% url apparel.views.look_create as look_create_url %}
+        {% url profile.views.settings as settings_url %}
 
         <div id="login-pane">
             <div class="left">
@@ -121,20 +122,26 @@
             </div>
             <ul>
                 <li>
-                    <a class="first{% ifequal request.path profile_url %} selected{% endifequal %}" href="{{ profile_url }}">
+                    <a class="first{% if request.path == profile_url %} selected{% endif %}" href="{{ profile_url }}">
                         {% trans "My profile" %}
                         <div class="arrow"></div>
                     </a>
                 </li>
                 <li>
-                    <a class="last{% ifequal request.path home_url %} selected{% endifequal %}" href="{{ home_url }}">
+                    <a class="last{% if request.path == home_url %} selected{% endif %}" href="{{ home_url }}">
                         {% trans "Friends' updates" %}
+                        <div class="arrow"></div>
+                    </a>
+                </li>
+                <li>
+                    <a class="last{% if request.path == settings_url %} selected{% endif %}" href="{{ settings_url }}">
+                        {% trans "Settings" %}
                         <div class="arrow"></div>
                     </a>
                 </li>
             </ul>
             <div class="create-look">
-                <a class="create-look{% ifequal request.path look_create_url %} selected{% endifequal %}" href="{{ look_create_url }}">
+                <a class="create-look{% if request.path == look_create_url %} selected{% endif %}" href="{{ look_create_url }}">
                         {% trans "Create a look" %}
                     </a>
             </div>

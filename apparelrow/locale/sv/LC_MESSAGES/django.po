@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-01 10:24+0200\n"
+"POT-Creation-Date: 2011-08-02 10:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -274,9 +274,10 @@ msgstr ""
 msgid "ago"
 msgstr "sedan"
 
-#: apparel_comments/__init__.py:6
+#: apparel_comments/__init__.py:6 templates/profile/settings.html:11
+#: templates/profile/settings.html.py:30
 msgid "E-mail address"
-msgstr "epostadress"
+msgstr "E-postadress"
 
 #: beta/models.py:5
 msgid "beta code"
@@ -284,7 +285,7 @@ msgstr "inbjudningskod"
 
 #: beta/models.py:12
 msgid "e-mail address"
-msgstr "epostadress"
+msgstr "e-postadress"
 
 #: beta/models.py:15
 msgid "Time seen"
@@ -388,13 +389,50 @@ msgid ""
 "\"svart,night,coal\""
 msgstr ""
 
-#: profile/models.py:21
+#: profile/models.py:14 templates/base.html:166
+#: templates/apparel/fragments/product_menu.html:10
+msgid "All"
+msgstr "Alla"
+
+#: profile/models.py:15
+msgid "Those I follow"
+msgstr "De jag följer"
+
+#: profile/models.py:16
+msgid "No one"
+msgstr "Inga"
+
+#: profile/models.py:26
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:22
+#: profile/models.py:27
 msgid "About"
 msgstr "Om"
+
+#: profile/models.py:31
+msgid "When someone commented on a product that I have in my wardrobe"
+msgstr "När någon kommenterat ett plagg som jag har i garderoben"
+
+#: profile/models.py:33
+msgid "When someone commented on a product that I have commented on"
+msgstr "När någon kommenterat ett plagg som jag kommenterat på"
+
+#: profile/models.py:35
+msgid "When someone commented on a look that I have created"
+msgstr "När någon kommenterat en look som jag har gjort"
+
+#: profile/models.py:37
+msgid "When someone commented on a look that I have commented on"
+msgstr "När någon kommenterat en look som jag har kommenterat på"
+
+#: profile/models.py:39
+msgid "When someone likes a look that I have created"
+msgstr "När någon gillar en look som jag har gjort"
+
+#: profile/models.py:41
+msgid "When someone starts to follow me"
+msgstr "När någon börjat följa mig"
 
 #: statistics/models.py:30 statistics/models.py:31
 msgid "Product clicks"
@@ -451,17 +489,17 @@ msgstr "Sök efter plagg"
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:77 templates/base.html.py:157
+#: templates/base.html:77 templates/base.html.py:164
 #: templates/apparel/fragments/product_menu.html:11
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:78 templates/base.html.py:158
+#: templates/base.html:78 templates/base.html.py:165
 #: templates/apparel/fragments/product_menu.html:12
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:79 templates/base.html.py:162
+#: templates/base.html:79 templates/base.html.py:169
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
 #: templates/profile/fragments/menu_items.html:10
 msgid "Looks"
@@ -491,73 +529,73 @@ msgstr "Visa alla looks"
 msgid "Show all manufacturers"
 msgstr "Visa alla varumärken"
 
-#: templates/base.html:120
+#: templates/base.html:121
 msgid "Logged in as"
 msgstr "Inloggad som"
 
-#: templates/base.html:125
+#: templates/base.html:126
 msgid "My profile"
 msgstr "Min profil"
 
-#: templates/base.html:131
+#: templates/base.html:132
 msgid "Friends' updates"
 msgstr "Vänners uppdateringar"
 
-#: templates/base.html:138 templates/base.html.py:164
+#: templates/base.html:138 templates/profile/settings.html:8
+msgid "Settings"
+msgstr "Inställningar"
+
+#: templates/base.html:145 templates/base.html.py:171
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
 msgstr "Skapa en look"
 
-#: templates/base.html:142
+#: templates/base.html:149
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:156
+#: templates/base.html:163
 msgid "Clothes"
 msgstr "Kläder"
 
-#: templates/base.html:159 templates/apparel/fragments/product_menu.html:10
-msgid "All"
-msgstr "Alla"
-
-#: templates/base.html:163
+#: templates/base.html:170
 msgid "All looks"
 msgstr "Alla looks"
 
-#: templates/base.html:167
+#: templates/base.html:174
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:168 templates/apparel/user_home.html:35
+#: templates/base.html:175 templates/apparel/user_home.html:35
 #: templates/apparel/fragments/browse_follow_user.html:5
 msgid "See all members"
 msgstr "Se alla medlemmar"
 
-#: templates/base.html:174
+#: templates/base.html:181
 msgid "About Apparelrow"
 msgstr "Om ApparelRow"
 
-#: templates/base.html:175
+#: templates/base.html:182
 msgid "About the beta"
 msgstr "Om betaversionen"
 
-#: templates/base.html:176
+#: templates/base.html:183
 msgid "Blog"
 msgstr "Blogg"
 
-#: templates/base.html:177
+#: templates/base.html:184
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:197
+#: templates/base.html:204
 msgid "No"
 msgstr "Nej"
 
-#: templates/base.html:198
+#: templates/base.html:205
 msgid "Yes"
 msgstr "Ja"
 
-#: templates/base.html:200 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:207 templates/apparel/fragments/product_options.html:15
 msgid "OK"
 msgstr "OK"
 
@@ -1296,6 +1334,27 @@ msgstr "%(name)ss populära looks"
 msgid "Latest updates"
 msgstr "Senaste händelser"
 
+#: templates/profile/settings.html:10 templates/profile/settings.html.py:15
+msgid "Events"
+msgstr "Händelser"
+
+#: templates/profile/settings.html:16
+msgid "Here you can set which events you want to be notified about via email:"
+msgstr ""
+"Här kan du ställa in vilka händelser du vill bli meddelad om via e-mail:"
+
+#: templates/profile/settings.html:19
+msgid "Who?"
+msgstr "Vem?"
+
+#: templates/profile/settings.html:20
+msgid "Event"
+msgstr "Händelse"
+
+#: templates/profile/settings.html:27 templates/profile/settings.html.py:33
+msgid "Submit"
+msgstr "Skicka"
+
 #: templates/profile/wardrobe.html:23
 msgid "Do you really want to delete product"
 msgstr "Vill du verkligen ta bort plagg"
@@ -1503,28 +1562,3 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
-
-#~ msgid "Overview"
-#~ msgstr "Översikt"
-
-#~ msgid ""
-#~ "In order to see which items are popular among your friends, you need to "
-#~ "log in using Facebook and choose which of your friends you want to follow."
-#~ msgstr ""
-#~ "För att kunna se vilka plagg som är populära bland dina vänner behöver du "
-#~ "logga in med Facebook och välja vilka av dina vänner du vill följa."
-
-#~ msgid "Forgot password?"
-#~ msgstr "Glömt lösenord?"
-
-#~ msgid "Create account"
-#~ msgstr "Skapa konto"
-
-#~ msgid "Username"
-#~ msgstr "Användarnamn"
-
-#~ msgid "Password"
-#~ msgstr "Lösenord"
-
-#~ msgid "Forgot password"
-#~ msgstr "Glömt lösenord?"

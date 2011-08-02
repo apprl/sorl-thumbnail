@@ -5,13 +5,14 @@ from django.template import RequestContext
 from django.db.models import Q, Count
 from django.views.generic import list_detail
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 
 from apparel.decorators import get_current_user
-from apparel.models import *
-from apparel.forms import *
+from apparel.models import Look
 from actstream.models import user_stream, actor_stream, Follow
-
-from profile.forms import *
+from profile.forms import ProfileImageForm, EmailForm, NotificationForm
 
 # TODO && FIXME: build a better solution, right now we use this in
 # profile/looks/following/followers. Should create a view for the submit form
@@ -60,7 +61,8 @@ def profile(request, profile, page=0):
 def looks(request, profile, page=0):
     form = handle_change_image(request, profile)
     queryset = Look.objects.filter(user=profile.user).order_by('-modified')
-    popular  = get_top_looks(profile.user, 10)
+    # Returns a list of objects for the most popular looks for the given user.
+    popular_by_user = Look.objects.filter(Q(likes__active=True) & Q(user=profile.user)).annotate(num_likes=Count('likes')).order_by('-num_likes')[:10]
     
     return list_detail.object_list(
         request,
@@ -72,8 +74,7 @@ def looks(request, profile, page=0):
             'next': request.get_full_path(),
             "change_image_form": form,
             "profile": profile,
-            "popular_looks": popular
-            # FIXME: Add the most used brand to display in the left column
+            "popular_looks": popular_by_user
         }
     )
     
@@ -117,8 +118,42 @@ def following(request, profile, page=0):
         }
     )
 
-def get_top_looks(user, limit=10):
+#
+# Settings
+#
+
+@login_required
+def settings_notification(request):
     """
-    Returns a list of objects for the most popular looks for the given user.
+    Handles the notification settings form
     """
-    return Look.objects.filter(Q(likes__active=True) & Q(user=user)).annotate(num_likes=Count('likes')).order_by('-num_likes')[:limit]
+    if request.method == 'POST':
+        form = NotificationForm(request.POST, request.FILES, instance=request.user.get_profile())
+        if form.is_valid():
+            form.save()
+
+    return HttpResponseRedirect(reverse('profile.views.settings'))
+
+@login_required
+def settings_email(request):
+    """
+    Handles the email settings form
+    """
+    if request.method == 'POST':
+        form = EmailForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+
+    return HttpResponseRedirect(reverse('profile.views.settings'))
+
+@login_required
+def settings(request):
+    notification_form = NotificationForm(instance=request.user.get_profile())
+    email_form = EmailForm(instance=request.user)
+
+    return render_to_response('profile/settings.html',
+            {
+                'email_form': email_form,
+                'notification_form': notification_form
+            },
+            context_instance=RequestContext(request))
