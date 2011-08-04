@@ -1,5 +1,5 @@
 {% load i18n %}
-<form action="{% url django.views.i18n.set_language %}" method="post" class="select-language">
+<form action="{% url apparel.views.apparel_set_language %}" method="post" class="select-language">
     {% csrf_token %}
     {% for language in LANGUAGES %}
         {% if language.0 != request.LANGUAGE_CODE %}

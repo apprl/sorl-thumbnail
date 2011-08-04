@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic import list_detail
+from django.views.i18n import set_language
 from hanssonlarsson.django.exporter import json as special_json
 from actstream.models import user_stream, Follow
 from haystack.query import SearchQuerySet
@@ -614,6 +615,13 @@ def index(request):
 
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 
+def apparel_set_language(request):
+    language = request.POST.get('language', None)
+    profile = request.user.get_profile()
+    profile.language = language
+    profile.save()
+
+    return set_language(request)
 
 #
 # Utility routines. FIXME: Move these out
