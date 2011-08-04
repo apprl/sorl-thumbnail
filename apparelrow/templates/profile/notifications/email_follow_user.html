@@ -1,0 +1,6 @@
+{% extends "profile/notifications/email_base.html" %}{% load i18n %}{% block content %}
+{% blocktrans %}
+<p>{{ sender_first_name }} {{ sender_last_name }} now follow your updates on Apparelrow.</p>
+<p>You are not currently following {{ sender_first_name }} updates.</p>
+{% endblocktrans %}
+{% endblock %}

@@ -1,11 +1,12 @@
 import logging
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.utils.translation import get_language, activate
 from actstream.models import Follow
 
@@ -22,8 +23,8 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     extra_context['sender_first_name'] = sender.first_name
     extra_context['sender_last_name'] = sender.last_name
 
-    body_template_name = 'profile/notifications/email_%s.txt' % (notification_name,)
-    subject_template_name = 'profile/notifications/subject_%s.txt' % (notification_name,)
+    body_template_name = 'profile/notifications/email_%s.html' % (notification_name,)
+    subject_template_name = 'profile/notifications/subject_%s.html' % (notification_name,)
 
     current_language = get_language()
 
@@ -34,12 +35,15 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
         extra_context['recipient_last_name'] = user.last_name
 
         subject = ''.join(render_to_string(subject_template_name, extra_context).splitlines())
-        body = render_to_string(body_template_name, extra_context)
+        html_body = render_to_string(body_template_name, extra_context)
+        text_body = strip_tags(html_body)
         recipients = []
         if user.email and user.is_active:
             recipients.append(user.email)
 
-        send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients)
+        msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, recipients)
+        msg.attach_alternative(html_body, 'text/html')
+        msg.send()
 
     activate(current_language)
 

@@ -1,9 +1,0 @@
-{% load i18n %}{% blocktrans %}Hi {{ recipient_first_name }}!
-
-{{ sender_first_name }} {{ sender_last_name }} now follow your updates on Apparelrow.
-
-You are following {{ sender_first_name }} since before.
-
-If you do not want to receive these messages, please visit http://{{ domain }}/profile/settings/
-/ Apparelrow
-{% endblocktrans %}

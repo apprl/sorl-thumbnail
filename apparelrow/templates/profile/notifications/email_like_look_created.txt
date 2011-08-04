@@ -1,7 +1,0 @@
-{% load i18n %}{% blocktrans %}Hi {{ recipient_first_name }}!
-
-{{ sender_first_name }} {{ sender_last_name }} likes your look {{ object_title }}.
-
-If you do not want to receive these messages, please visit http://{{ domain }}/profile/settings/
-/ Apparelrow
-{% endblocktrans %}
