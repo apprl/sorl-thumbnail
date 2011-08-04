@@ -39,8 +39,12 @@ def process_notification():
                         routing_key='send_notification',
                         exchange_type='direct')
 
-    duplicates = set()
+    messages = []
     for message in consumer.iterqueue():
+        messages.append(message)
+
+    duplicates = set()
+    for message in reversed(messages):
         logger.debug('Processing notifcation message: %s' % (message.body,))
         if message.body in duplicates:
             if not message.acknowledged:
@@ -71,7 +75,13 @@ def process_notification():
             continue
 
         ModelClass = get_model(app_name, model_name)
-        action_object = ModelClass.objects.get(pk=int(pk))
+        try:
+            action_object = ModelClass.objects.get(pk=int(pk))
+        except ModelClass.DoesNotExist:
+            if not message.acknowledged:
+                message.ack()
+            logger.warning('Action object not found, app_name = %s, model_name = %s, pk = %s' % (app_name, model_name, pk,))
+            continue
 
         try:
             process_notification = getattr(profile.notifications, 'process_%s' % (notification_name,))
