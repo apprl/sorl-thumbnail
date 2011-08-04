@@ -123,7 +123,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     
     "context_processors.exposed_settings",
     
-    "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
 )
 
@@ -135,10 +134,9 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.humanize',
     'django.contrib.flatpages',
-    
+    'django.contrib.comments',
     
     # external
-    'notification', # must be first
     'django_facebook',
     'registration',
 #    'mailer',          # FIXME: Includes e-mail manager, set this up later
@@ -152,7 +150,6 @@ INSTALLED_APPS = (
     'actstream',
     'tagging',
     'pagination',
-    'django.contrib.comments',
     'ajaxcomments',
     'django_extensions',
     'trackback',

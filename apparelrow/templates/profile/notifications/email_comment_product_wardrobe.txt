@@ -1,0 +1,9 @@
+{% load i18n %}{% blocktrans with user.first_name as first_name %}Hi {{ recipient_first_name }}!
+
+{{ sender_first_name }} {{ sender_last_name }} have commented on {{ object_title }} which is in your wardrobe:
+
+"{{ comment }}"
+
+If you do not want to receive these messages, please visit http://{{ domain }}/profile/settings/
+/ Apparelrow
+{% endblocktrans %}

@@ -8,6 +8,7 @@ from celery.schedules import crontab
 
 from apparelrow.apparel.messaging import process_search_index_updates
 from apparelrow.statistics.messaging import process_clicks
+from apparelrow.profile.messaging import process_notification
 
 @task(name='apparelrow.tasks.search_index_update_task', max_retries=1, ignore_result=True)
 def search_index_update_task(app_name, model_name, pk, **kwargs):
@@ -42,3 +43,10 @@ class ProcessPopularityTask(PeriodicTask):
         logger = self.get_logger(**kwargs)
         logger.info('update popularity for products')
         call_command('popularity')
+
+class ProcessNotificationTask(PeriodicTask):
+    run_every = timedelta(minutes=2)
+    ignore_result = True
+
+    def run(self, **kwargs):
+        process_notification()

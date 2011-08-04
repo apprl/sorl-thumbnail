@@ -27,7 +27,6 @@ urlpatterns = patterns('',
     (r'^profile/', include('profile.urls')),
     (r'^watcher/', include('watcher.urls')),
     
-    (r'^notices/', include('notification.urls')),
     (r'^announcements/', include('announcements.urls')),
     (r'^scale/', include('scale.urls')),
     (r'^comments/', include('django.contrib.comments.urls')),

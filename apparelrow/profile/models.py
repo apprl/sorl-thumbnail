@@ -22,9 +22,10 @@ def profile_image_path(instance, filename):
 class ApparelProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     
-    name  = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    name = models.CharField(max_length=50, unique=True, blank=True, null=True)
     image = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True) 
     about = models.TextField(_('About'), null=True, blank=True)
+    language = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
 
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
@@ -129,3 +130,5 @@ def create_profile_from_facebook(signal, instance, **kwargs):
 
 post_save.connect(create_profile, sender=User)
 post_save.connect(create_profile_from_facebook, sender=FacebookProfile)
+
+import profile.activity

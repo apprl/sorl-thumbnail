@@ -95,7 +95,7 @@ def product_like(request, slug, action):
         product_like.active = True
         product_like.save()
 
-        apparel.signals.like.send(sender=ProductLike, instance=product_like)
+        apparel.signals.like.send(sender=ProductLike, instance=product_like, request=request)
         return HttpResponse(json.dumps(dict(success=True, error_message=None)))
 
     elif action == 'unlike':
@@ -103,7 +103,7 @@ def product_like(request, slug, action):
         product_like.active = False
         product_like.save()
 
-        apparel.signals.unlike.send(sender=ProductLike, instance=product_like)
+        apparel.signals.unlike.send(sender=ProductLike, instance=product_like, request=request)
         return HttpResponse(json.dumps(dict(success=True, error_message=None)))
 
     return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
@@ -128,7 +128,7 @@ def look_like(request, slug, action):
         look_like.active = True
         look_like.save()
 
-        apparel.signals.like.send(sender=LookLike, instance=look_like)
+        apparel.signals.like.send(sender=LookLike, instance=look_like, request=request)
         return HttpResponse(json.dumps(dict(success=True, error_message=None)))
 
     elif action == 'unlike':
@@ -136,7 +136,7 @@ def look_like(request, slug, action):
         look_like.active = False
         look_like.save()
 
-        apparel.signals.unlike.send(sender=LookLike, instance=look_like)
+        apparel.signals.unlike.send(sender=LookLike, instance=look_like, request=request)
         return HttpResponse(json.dumps(dict(success=True, error_message=None)))
 
     return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
