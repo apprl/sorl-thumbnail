@@ -2,11 +2,13 @@ import uuid
 import os.path
 
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django_facebook.models import FacebookProfile
+from actstream.models import Follow, Action
 
 from apparel.models import Look, LookLike, ProductLike
 
@@ -128,7 +130,41 @@ def create_profile_from_facebook(signal, instance, **kwargs):
             p.about = instance.bio
             p.save()
 
+def delete_user_followings(signal, instance, **kwargs):
+    """
+    This signal attempts to delete any followings which is related to Follow
+    through a generic relation.
+    """
+    Follow.objects.filter(
+        object_id=instance.pk,
+        content_type=ContentType.objects.get_for_model(instance)
+        ).delete()
+    Follow.objects.filter(user=instance).delete()
+
+# XXX: If actions get missing, look here...
+def delete_object_activities(sender, instance, **kwargs):
+    """
+    This signal attempts to delete any activity which is related to Action
+    through a generic relation. This should keep the Action table sane.
+    """
+    Action.objects.filter(
+        action_object_object_id=instance.pk,
+        action_object_content_type=ContentType.objects.get_for_model(instance)
+        ).delete()
+    Action.objects.filter(
+        actor_object_id=instance.pk,
+        actor_content_type=ContentType.objects.get_for_model(instance)
+        ).delete()
+    Action.objects.filter(
+        target_object_id=instance.pk,
+        target_content_type=ContentType.objects.get_for_model(instance)
+        ).delete()
+
 post_save.connect(create_profile, sender=User)
 post_save.connect(create_profile_from_facebook, sender=FacebookProfile)
+
+# FIXME: Move these to actstream?
+post_delete.connect(delete_user_followings, sender=User)
+post_delete.connect(delete_object_activities, sender=User)
 
 import profile.activity
