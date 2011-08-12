@@ -1676,29 +1676,33 @@ ul.look-list-tabs
           position: left center
 
 body.settings
-  form
-    overflow: hidden
-  p
-    clear: both
-    padding: 5px 0
-  input[type=submit]
-    clear: both
-  .left
-    width: 240px
-    clear: both
-    li
+  .settings-content
+    form
+      overflow: hidden
+    p
+      clear: both
+      padding: 5px 0
+    input[type=submit]
+      clear: both
+    .left
+      width: 240px
+      clear: both
+      li
+        padding-right: 10px
+        float: left
+      label[for=id_follow_user_1]
+        visibility: hidden
+    .left, .right
       float: left
-  .left, .right
-    float: left
-    height: 25px
-    line-height: 25px
+      height: 25px
+      line-height: 25px
   .sidebar
     h2
       margin: 30px 0 0 0
     .settings-list
       li
+        padding: 5px 0
         border-bottom: 1px solid $border_color
         a
-          padding: 2px 0
           &:hover
             text-decoration: underline

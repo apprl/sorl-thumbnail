@@ -22,6 +22,9 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     extra_context['domain'] = Site.objects.get_current().domain
     extra_context['sender_first_name'] = sender.first_name
     extra_context['sender_last_name'] = sender.last_name
+    extra_context['sender_link'] = 'http://%s%s' % (extra_context['domain'], sender.get_profile().get_absolute_url())
+    if 'object_link' in extra_context:
+        extra_context['object_link'] = 'http://%s%s' % (extra_context['domain'], extra_context['object_link'])
 
     body_template_name = 'profile/notifications/email_%s.html' % (notification_name,)
     subject_template_name = 'profile/notifications/subject_%s.html' % (notification_name,)
@@ -29,6 +32,9 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     current_language = get_language()
 
     for user in users:
+        if not user:
+            continue
+
         activate(user.get_profile().language)
 
         extra_context['recipient_first_name'] = user.first_name
@@ -41,7 +47,7 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
         if user.email and user.is_active:
             recipients.append(user.email)
 
-        msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, recipients)
+        msg = EmailMultiAlternatives(subject, text_body, 'Apparelrow <no-reply@apparelrow.com>', recipients)
         msg.attach_alternative(html_body, 'text/html')
         msg.send()
 
@@ -61,10 +67,12 @@ def process_comment_look_created(recipient, sender, comment):
         if Follow.objects.filter(user=recipient, content_type=sender_content_type, object_id=sender.pk):
             notify_user = recipient
 
-    notify_by_mail([notify_user], 'comment_look_created', sender, {
-        'object_title': comment.content_object.title,
-        'comment': comment.comment
-    })
+    if notify_user:
+        notify_by_mail([notify_user], 'comment_look_created', sender, {
+            'object_title': comment.content_object.title,
+            'object_link': comment.content_object.get_absolute_url(),
+            'comment': comment.comment
+        })
 
 def comment_common(notification_name, recipient, sender, comment):
     """
@@ -91,10 +99,12 @@ def comment_common(notification_name, recipient, sender, comment):
     elif notification_name == 'comment_look_comment':
         title = content_object.title
 
-    notify_by_mail(notify_users, notification_name, sender, {
-        'object_title': title,
-        'comment': comment.comment
-    })
+    if notify_users:
+        notify_by_mail(list(notify_users), notification_name, sender, {
+            'object_title': title,
+            'object_link': content_object.get_absolute_url(),
+            'comment': comment.comment
+        })
 
 def process_comment_product_comment(recipient, sender, comment):
     """
@@ -127,10 +137,12 @@ def process_comment_product_wardrobe(recipient, sender, comment):
                 if Follow.objects.filter(user=wardrobe.user, content_type=sender_content_type, object_id=sender.pk):
                     notify_users.add(wardrobe.user)
 
-    notify_by_mail(list(notify_users), 'comment_product_wardrobe', sender, {
-        'object_title': u'%s %s' % (content_object.manufacturer, content_object.product_name),
-        'comment': comment.comment
-    })
+    if notify_users:
+        notify_by_mail(list(notify_users), 'comment_product_wardrobe', sender, {
+            'object_title': u'%s %s' % (content_object.manufacturer, content_object.product_name),
+            'object_link': content_object.get_absolute_url(),
+            'comment': comment.comment
+        })
 
 def process_like_look_created(recipient, sender, look_like):
     """
@@ -145,9 +157,11 @@ def process_like_look_created(recipient, sender, look_like):
         if Follow.objects.filter(user=recipient, content_type=sender_content_type, object_id=sender.pk):
             notify_user = recipient
 
-    notify_by_mail([notify_user], 'like_look_created', sender, {
-        'object_title': look_like.look.title
-    })
+    if notify_user:
+        notify_by_mail([notify_user], 'like_look_created', sender, {
+            'object_title': look_like.look.title,
+            'object_link': look_like.look.get_absolute_url()
+        })
 
 def process_follow_user(recipient, sender, follow):
     """
@@ -167,4 +181,5 @@ def process_follow_user(recipient, sender, follow):
             notify_user = recipient
             template_name = 'follow_user_following'
 
-    notify_by_mail([notify_user], template_name, sender)
+    if notify_user:
+        notify_by_mail([notify_user], template_name, sender)

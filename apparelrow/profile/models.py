@@ -28,17 +28,17 @@ class ApparelProfile(models.Model):
     language = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
 
     # notification settings
-    comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+    comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone commented on a product that I have in my wardrobe'))
-    comment_product_comment = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+    comment_product_comment = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone commented on a product that I have commented on'))
-    comment_look_created = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+    comment_look_created = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone commented on a look that I have created'))
-    comment_look_comment = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+    comment_look_comment = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone commented on a look that I have commented on'))
-    like_look_created = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+    like_look_created = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone likes a look that I have created'))
-    follow_user = models.CharField(max_length=1, choices=EVENT_CHOICES, default='F',
+    follow_user = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone starts to follow me'))
 
     @models.permalink

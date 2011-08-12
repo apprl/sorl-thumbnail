@@ -5,32 +5,34 @@
 
 {% block body %}
     <div class="sidebar">
-        <h2>{% trans "Settings" %}</h2>
+        <a href="{% url profile.views.settings %}"><h2>{% trans "Settings" %}</h2></a>
         <ul class="settings-list">
             <li class="first"><a href="#events">{% trans "Events" %}</a></li>
             <li class="last"><a href="#email-address">{% trans "E-mail address" %}</a></li>
         </ul>
     </div>
-    <div id="content"> 
+    <div id="content" class="settings-content">
         <h2 id="events">{% trans "Events" %}</h2>
         <p>{% trans "Here you can set which events you want to be notified about via email:" %}</p>
         <form action="{% url profile.views.settings_notification %}" method="post">{% csrf_token %}
             <div class="form-content">
-                <div class="left">{% trans "Who?" %}</div>
-                <div class="right">{% trans "Event" %}</div>
+                <h3 class="left">{% trans "Who?" %}</h3>
+                <h3 class="right">{% trans "Event" %}</h3>
                 {% for field in notification_form %}
-                <div class="left">{{ field }}<div style="clear: both;"></div></div>
+                <div class="left">{{ field }}</div>
                 <div class="right">{{ field.help_text }}</div>
                 {% endfor %}
             </div>
-            <div style="clear: both;"></div>
-            <input type="submit" value="{% trans "Submit" %}" />
+            <div style="clear: both;">
+                <input type="submit" value="{% trans "Save changes" %}" />
+            </div>
         </form>
 
         <h2 id="email-address">{% trans "E-mail address" %}</h2>
         <form action="{% url profile.views.settings_email %}" method="post">{% csrf_token %}
+            <!--<p>{% trans "Current e-mail address:" %} {{ request.user.email }}</p>-->
             {{ email_form.as_p }}
-            <input type="submit" value="{% trans "Submit" %}" />
+            <input type="submit" value="{% trans "Save changes" %}" />
         </form>
     </div>
     <div class="sidebar last">
