@@ -31,11 +31,8 @@ cd apparelrow
 ./manage.py loaddata apparel/fixtures/* --settings development
 ./manage.py loaddata importer/fixtures/* --settings development
 
-= Set up search (beta) =
-wget http://apache.mirrors.spacedump.net//lucene/solr/3.2.0/apache-solr-3.2.0.tgz
-tar zxvf apache-solr-3.2.0.tgz
-mv ./etc/schema.xml apache-solr-3.2.0/example/solr/conf/schema.xml
-cd apache-solr-3.2.0/example
+= Set up search =
+touch solr/solr/conf/synoyms.txt
 java -jar start.jar
 ./manage.py rebuild_index --settings development
 
@@ -44,7 +41,7 @@ install rabbitmq and start rabbitmq
 sudo rabbitmqctl add_user apparel apparel_mq
 sudo rabbitmqctl add_vhost apparel
 sudo rabbitmqctl set_permissions -p apparel apparel ".*" ".*" ".*"
-./manage.py celeryd -E -B --settings development
+./manage.py celeryd -B --settings development
 
 Now you can start django, either with the django-admin.py in bin, or the regular manage.py
 
