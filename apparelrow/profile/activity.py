@@ -9,9 +9,6 @@ from apparel.models import LookLike, Look, Product
 from apparel import signals as apparel_signals
 from profile.messaging import send_notification
 
-look_content_type = ContentType.objects.get_for_model(Look)
-product_content_type = ContentType.objects.get_for_model(Product)
-
 #
 # Look like activity handlers
 #
@@ -45,6 +42,7 @@ def comments_handler(sender, **kwargs):
     if instance.content_type is None:
         return
 
+    look_content_type = ContentType.objects.get_for_model(Look)
     if instance.content_type == look_content_type:
         send_notification('comment_look_created',
                           instance.content_object.user.pk,
@@ -59,6 +57,7 @@ def comments_handler(sender, **kwargs):
                           instance._meta.module_name,
                           instance._get_pk_val())
 
+    product_content_type = ContentType.objects.get_for_model(Product)
     if instance.content_type == product_content_type:
         send_notification('comment_product_comment',
                           None,

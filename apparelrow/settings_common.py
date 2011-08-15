@@ -153,7 +153,6 @@ INSTALLED_APPS = (
     'ajaxcomments',
     'django_extensions',
     'trackback',
-    'recommender',
     'south',
     'modeltranslation',
     'jsmin',

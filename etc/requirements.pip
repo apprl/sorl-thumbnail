@@ -23,7 +23,6 @@ django-pagination==1.0.5
 -e git://github.com/django-extensions/django-extensions.git#egg=django-extensions
 -e svn+http://django-trackback.googlecode.com/svn/trunk/@15#egg=django-trackback
 django-ajaxcomments==0.2
--e svn+http://code.hanssonlarsson.se/svn_public/hanssonlarsson_django-recommender-fork#egg=django-recommender
 -f ftp://xmlsoft.org/libxml2/python/libxml2-python-2.6.15.tar.gz
 libxml2-python==2.6.15
 -e svn+http://django-compress.googlecode.com/svn/trunk/#egg=django-compress
