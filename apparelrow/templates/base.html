@@ -128,7 +128,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="last{% if request.path == home_url %} selected{% endif %}" href="{{ home_url }}">
+                    <a class="{% if request.path == home_url %} selected{% endif %}" href="{{ home_url }}">
                         {% trans "Friends' updates" %}
                         <div class="arrow"></div>
                     </a>
@@ -139,6 +139,14 @@
                         <div class="arrow"></div>
                     </a>
                 </li>
+                {% if user.beta and user.beta.invites > 0 %}
+                <li>
+                    <a class="last open-dialog" href="{% url beta.views.invite %}?next={{ request.path }}">
+                        {% blocktrans with user.beta.invites as invites %}Invite friends ({{ invites }}){% endblocktrans %}
+                        <div class="arrow"></div>
+                    </a>
+                </li>
+                {% endif %}
             </ul>
             <div class="create-look">
                 <a class="create-look{% if request.path == look_create_url %} selected{% endif %}" href="{{ look_create_url }}">
