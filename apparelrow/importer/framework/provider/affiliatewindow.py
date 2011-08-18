@@ -109,9 +109,4 @@ class Provider(CSVProvider):
         super(Provider, self).__init__(*args, **kwargs)
         self.mapper=AffiliateWindowMapper
         self.dialect=utils.CSVPipeDelimitedQuoted
-
-    def should_merge(self, new_record):
-        return self.record['product']['product-name'] == new_record['product']['product-name']
-
-    def merge(self, new_record):
-        pass
+        self.unique_fields = ['product-name']

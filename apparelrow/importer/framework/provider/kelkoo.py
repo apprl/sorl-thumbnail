@@ -70,11 +70,8 @@ class Provider(CSVProvider):
             'description',       # 11
             'gender',            # 12
         )
-    
-    
-    def should_merge(self, new_record):
-        return self.record['product']['product-id'] == new_record['product']['product-id']
-    
-    def merge(self, new_record):
-        self.record['product']['variations'].extend(new_record['product']['variations'])
+        self.unique_fields = ['product-id']
+
+    def merge_duplicate(self, old_record, new_record):
+        old_record['product']['variations'].extend(new_record['product']['variations'])
 

@@ -138,9 +138,4 @@ class Provider(CSVProvider):
             'agegroup',
             'attribute9',
         )
-
-    def should_merge(self, new_record):
-        return self.record['product']['product-name'] == new_record['product']['product-name']
-
-    def merge(self, new_record):
-        pass
+        self.unique_fields = ['product-name']

@@ -1,4 +1,10 @@
-import datetime, os, logging, re, traceback, sys
+import datetime
+import os
+import logging
+import re
+import traceback
+import sys
+import itertools
 
 from django.conf import settings
 from django.db import transaction
@@ -239,6 +245,7 @@ class CSVProvider(Provider):
         self.dialect    = None
         self.encoding   = 'utf-8'
         self.record     = None   # Used for merging
+        self.unique_fields = None
     
     def process(self):
         
@@ -249,31 +256,24 @@ class CSVProvider(Provider):
         )
         
         # FIXME: Add merge test for parsing using mockobejcts
-        
-        for row in csv_reader:
-            # Do mapping
-            row = self.mapper(self, row).translate()
-            if self.record:
-                if self.should_merge(row):
-                    # If this record doesn't match the previous one, import it
-                    self.merge(row)
-                    continue
-                    
-                # Otherwise, import base record
-                self.import_data(self.record)
-                self.record = None # To avoid importing a single last record twice
-            
-            # Use this record as base record
-            self.record = row
-            self.merge(row) # Call merge so data can be arranged in the same order
-        else:
-            if self.record:
-                self.import_data(self.record)
-     
-    def merge(self, new_record):
-        pass
-    
-    def should_merge(self, new_record):
-        return False
-    
 
+        duplicate_storage = dict()
+        for row in csv_reader:
+            self.record = self.mapper(self, row).translate()
+            if self.unique_fields:
+                unique_fields = self.unique_fields
+                duplicate_key = tuple(self.record['product'][field] for field in unique_fields)
+                if duplicate_key in duplicate_storage:
+                    logger.info('merge duplicate')
+                    self.merge_duplicate(duplicate_storage[duplicate_key], self.record)
+                else:
+                    duplicate_storage[duplicate_key] = self.record
+            else:
+                self.import_data(self.record)
+
+        if self.unique_fields:
+            for key, record in duplicate_storage.items():
+                self.import_data(record)
+
+    def merge_duplicate(self, old_record, new_record):
+        pass
