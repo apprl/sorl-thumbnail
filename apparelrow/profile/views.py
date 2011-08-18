@@ -1,6 +1,10 @@
 import logging
+import uuid
+
+from django.contrib.sites.models import Site
+from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect, HttpResponseNotFound
 from django.template import RequestContext
 from django.db.models import Q, Count
 from django.views.generic import list_detail
@@ -13,6 +17,8 @@ from apparel.decorators import get_current_user
 from apparel.models import Look
 from actstream.models import user_stream, actor_stream, Follow
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm
+from profile.models import EmailChange
+from profile.tasks import send_email_confirm_task
 
 # TODO && FIXME: build a better solution, right now we use this in
 # profile/looks/following/followers. Should create a view for the submit form
@@ -140,6 +146,23 @@ def settings_notification(request):
             {'notification_form': form}, context_instance=RequestContext(request))
 
 @login_required
+def confirm_email(request):
+    """
+    Confirm email through GET-request.
+    """
+    token = request.GET.get('token', None)
+    if token:
+        try:
+            email_change = EmailChange.objects.get(token=token, user=request.user)
+        except EmailChange.DoesNotExist:
+            return HttpResponseNotFound()
+        request.user.email = email_change.email
+        request.user.save()
+        email_change.delete()
+
+    return HttpResponseRedirect(reverse('profile.views.settings_email'))
+
+@login_required
 def settings_email(request):
     """
     Handles the email settings form
@@ -147,11 +170,30 @@ def settings_email(request):
     if request.method == 'POST':
         form = EmailForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
-            form.save()
+            # Remove old email change confirmations
+            EmailChange.objects.filter(user=request.user).delete()
+
+            token = uuid.uuid4().hex
+            email = form.cleaned_data['email']
+            email_change = EmailChange.objects.create(user=request.user, email=email, token=token)
+
+            subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
+            body = render_to_string('profile/confirm_email.html', {
+                    'username': request.user.get_profile().display_name,
+                    'link': 'http://%s%s' % (Site.objects.get_current().domain, reverse('profile.views.confirm_email')),
+                    'token': token,
+                })
+            send_email_confirm_task.delay(subject, body, email)
 
         return HttpResponseRedirect(reverse('profile.views.settings_email'))
 
-    form = EmailForm(instance=request.user)
+    form = EmailForm()
+    try:
+        email_change = EmailChange.objects.get(user=request.user)
+    except EmailChange.DoesNotExist:
+        email_change = None
 
-    return render_to_response('profile/settings_email.html',
-            {'email_form': form}, context_instance=RequestContext(request))
+    return render_to_response('profile/settings_email.html', {
+            'email_form': form,
+            'email_change': email_change
+        }, context_instance=RequestContext(request))

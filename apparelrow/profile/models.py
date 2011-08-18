@@ -113,6 +113,14 @@ class ApparelProfile(models.Model):
     def __unicode__(self):
         return self.display_name
 
+class EmailChange(models.Model):
+    user = models.ForeignKey(User)
+    token = models.CharField(max_length=42)
+    email = models.CharField(max_length=256)
+
+    def __unicode__(self):
+        return '%s - %s' % (self.user, self.email)
+
 def create_profile(signal, instance, **kwargs):
     if kwargs['created']:
         p, created = ApparelProfile.objects.get_or_create(user=instance)

@@ -2,10 +2,13 @@
 {% load i18n %}
 
 {% block content %}
-    <h2 id="email-address">{% trans "E-mail address" %}</h2>
-    <form action="{% url profile.views.settings_email %}" method="post">{% csrf_token %}
-        <!--<p>{% trans "Current e-mail address:" %} {{ request.user.email }}</p>-->
-        {{ email_form.as_p }}
-        <input type="submit" value="{% trans "Save changes" %}" />
-    </form>
+<h2 id="email-address">{% trans "E-mail address" %}</h2>
+{% if email_change %}
+<p>{% blocktrans with email_change.email as new_email %}Pending e-mail address change to {{ new_email }}, check your inbox for confirmation mail.{% endblocktrans %}</p>
+{% endif %}
+<form action="{% url profile.views.settings_email %}" method="post">{% csrf_token %}
+    <p>{% trans "Current e-mail address:" %} {{ request.user.email }}</p>
+    {{ email_form.as_p }}
+    <input type="submit" value="{% trans "Save changes" %}" />
+</form>
 {% endblock content %}
