@@ -1,0 +1,15 @@
+{% load i18n %}
+<html>
+    <head></head>
+    <body>
+        <p>{% trans "Hi!" %}</p>
+        <p>{% blocktrans %}{{ name }} has invited you to the beta version of Apparelrow.{% endblocktrans %}</p>
+        <p>{% trans "1. To enter the site, go to " %}<a href="{{ domain }}">{{ domain }}</a></p>
+        <p>{% trans "2. Login with:" %}</p>
+        <p style="padding-top: 10px;">{{ email }}</p>
+        <p style="padding-bottom: 10px;">{{ password }}</p>
+        <p>{% trans "3. Sign in with your Facebook account on the site to find your friends." %}</p>
+        <p>{% trans "See you!" %}</p>
+        <p>/ Apparelrow</p>
+    </body>
+</html>
