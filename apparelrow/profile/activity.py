@@ -3,11 +3,17 @@ import logging
 from django.db.models.signals import post_save
 from django.contrib.comments import signals as comments_signals
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 from actstream.models import Follow
 
 from apparel.models import LookLike, Look, Product
 from apparel import signals as apparel_signals
-from profile.messaging import send_notification
+from profile.notifications import process_like_look_created
+from profile.notifications import process_comment_look_created
+from profile.notifications import process_comment_look_comment
+from profile.notifications import process_comment_product_wardrobe
+from profile.notifications import process_comment_product_comment
+from profile.notifications import process_follow_user
 
 #
 # Look like activity handlers
@@ -19,15 +25,9 @@ def like_look_handler(sender, **kwargs):
     if not instance.active or not hasattr(instance, 'user') or not hasattr(request, 'user'):
         return None
 
-    send_notification('like_look_created',
-                      instance.look.user.pk,
-                      request.user.pk,
-                      instance._meta.app_label,
-                      instance._meta.module_name,
-                      instance._get_pk_val())
+    process_like_look_created.delay(instance.look.user, request.user, instance)
 
 apparel_signals.like.connect(like_look_handler, sender=LookLike)
-
 
 #
 # Comment activity handler
@@ -44,36 +44,15 @@ def comments_handler(sender, **kwargs):
 
     look_content_type = ContentType.objects.get_for_model(Look)
     if instance.content_type == look_content_type:
-        send_notification('comment_look_created',
-                          instance.content_object.user.pk,
-                          request.user.pk,
-                          instance._meta.app_label,
-                          instance._meta.module_name,
-                          instance._get_pk_val())
-        send_notification('comment_look_comment',
-                          instance.content_object.user.pk,
-                          request.user.pk,
-                          instance._meta.app_label,
-                          instance._meta.module_name,
-                          instance._get_pk_val())
+        process_comment_look_created.delay(instance.content_object.user, request.user, instance)
+        process_comment_look_comment.delay(instance.content_object.user, request.user, instance)
 
     product_content_type = ContentType.objects.get_for_model(Product)
     if instance.content_type == product_content_type:
-        send_notification('comment_product_comment',
-                          None,
-                          request.user.pk,
-                          instance._meta.app_label,
-                          instance._meta.module_name,
-                          instance._get_pk_val())
-        send_notification('comment_product_wardrobe',
-                          None,
-                          request.user.pk,
-                          instance._meta.app_label,
-                          instance._meta.module_name,
-                          instance._get_pk_val())
+        process_comment_product_comment.delay(None, request.user, instance)
+        process_comment_product_wardrobe.delay(None, request.user, instance)
 
 comments_signals.comment_was_posted.connect(comments_handler)
-
 
 #
 # Follow handler
@@ -84,11 +63,10 @@ def follow_handler(sender, **kwargs):
     if not hasattr(instance, 'user') and instance.content_type == ContentType.objects.get_for_model(instance.user):
         return
 
-    send_notification('follow_user',
-                      instance.object_id,
-                      instance.user.pk,
-                      instance._meta.app_label,
-                      instance._meta.module_name,
-                      instance._get_pk_val())
+    try:
+        recipient = User.objects.get(pk=instance.object_id)
+        process_follow_user.delay(recipient, instance.user, instance)
+    except User.DoesNotExist:
+        pass
 
 post_save.connect(follow_handler, sender=Follow)

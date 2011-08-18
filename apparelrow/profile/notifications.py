@@ -1,7 +1,9 @@
 import logging
+import hashlib
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.core.cache import cache
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
 from django.contrib.sites.models import Site
@@ -9,8 +11,24 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.translation import get_language, activate
 from actstream.models import Follow
+from celery.task import task
 
 from apparel.models import Wardrobe
+
+LOCK_EXPIRE = 60*60*12
+
+def is_duplicate(name, recipient, sender, obj):
+    m = hashlib.md5()
+    if recipient:
+        m.update(str(recipient.pk))
+    if sender:
+        m.update(str(sender.pk))
+    if obj:
+        m.update(str(obj.pk))
+
+    lock_id = '%s_lock_%s' % (name, m.hexdigest())
+
+    return not cache.add(lock_id, 'true', LOCK_EXPIRE)
 
 def notify_by_mail(users, notification_name, sender, extra_context=None):
     """
@@ -52,11 +70,17 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     activate(current_language)
 
+@task(name='profile.notifications.process_comment_look_created', max_retries=5, ignore_result=True)
 def process_comment_look_created(recipient, sender, comment):
     """
     Process notification for a comment made by sender on a look created by
     recipient.
     """
+    logger = process_comment_look_created.get_logger(**kwargs)
+    if is_duplicate('comment_look_created', recipient, sender, comment):
+        logger.info('Found duplicate notification.')
+        return
+
     sender_content_type = ContentType.objects.get_for_model(sender)
 
     notify_user = None
@@ -105,25 +129,43 @@ def comment_common(notification_name, recipient, sender, comment):
             'comment': comment.comment
         })
 
+@task(name='profile.notifications.process_comment_product_comment', max_retries=5, ignore_result=True)
 def process_comment_product_comment(recipient, sender, comment):
     """
     Process notification for a comment made by sender on a product already
     commented by X.
     """
+    logger = process_comment_product_comment.get_logger(**kwargs)
+    if is_duplicate('comment_product_comment', recipient, sender, comment):
+        logger.info('Found duplicate notification.')
+        return
+
     comment_common('comment_product_comment', recipient, sender, comment)
 
+@task(name='profile.notifications.process_comment_look_comment', max_retries=5, ignore_result=True)
 def process_comment_look_comment(recipient, sender, comment):
     """
     Process notification for a comment made by sender on a look already
     commented by X.
     """
+    logger = process_comment_look_comment.get_logger(**kwargs)
+    if is_duplicate('comment_look_comment', recipient, sender, comment):
+        logger.info('Found duplicate notification.')
+        return
+
     comment_common('comment_look_comment', recipient, sender, comment)
 
+@task(name='profile.notifications.process_comment_product_wardrobe', max_retries=5, ignore_result=True)
 def process_comment_product_wardrobe(recipient, sender, comment):
     """
     Process notification for a comment made by sender on a product in
     user X wardrobe.
     """
+    logger = process_comment_product_wardrobe.get_logger(**kwargs)
+    if is_duplicate('comment_product_wardrobe', recipient, sender, comment):
+        logger.info('Found duplicate notification.')
+        return
+
     sender_content_type = ContentType.objects.get_for_model(sender)
     content_object = comment.content_object
 
@@ -143,10 +185,16 @@ def process_comment_product_wardrobe(recipient, sender, comment):
             'comment': comment.comment
         })
 
+@task(name='profile.notifications.process_like_look_created', max_retries=5, ignore_result=True)
 def process_like_look_created(recipient, sender, look_like):
     """
     Process notification for a like by sender on a look created by recipient.
     """
+    logger = process_like_look_created.get_logger(**kwargs)
+    if is_duplicate('comment_like_look_created', recipient, sender, look_like):
+        logger.info('Found duplicate notification.')
+        return
+
     sender_content_type = ContentType.objects.get_for_model(sender)
 
     notify_user = None
@@ -162,10 +210,16 @@ def process_like_look_created(recipient, sender, look_like):
             'object_link': look_like.look.get_absolute_url()
         })
 
-def process_follow_user(recipient, sender, follow):
+@task(name='profile.notifications.process_follow_user', max_retries=5, ignore_result=True)
+def process_follow_user(recipient, sender, follow, **kwargs):
     """
     Process notification for sender following recipient.
     """
+    logger = process_follow_user.get_logger(**kwargs)
+    if is_duplicate('comment_follow_user', recipient, sender, None):
+        logger.info('Found duplicate notification.')
+        return
+
     recipient_content_type = ContentType.objects.get_for_model(recipient)
     sender_content_type = ContentType.objects.get_for_model(sender)
 
