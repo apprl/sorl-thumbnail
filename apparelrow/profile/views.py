@@ -132,7 +132,12 @@ def settings_notification(request):
         if form.is_valid():
             form.save()
 
-    return HttpResponseRedirect(reverse('profile.views.settings'))
+        return HttpResponseRedirect(reverse('profile.views.settings_notification'))
+
+    form = NotificationForm(instance=request.user.get_profile())
+
+    return render_to_response('profile/settings_notification.html',
+            {'notification_form': form}, context_instance=RequestContext(request))
 
 @login_required
 def settings_email(request):
@@ -144,16 +149,9 @@ def settings_email(request):
         if form.is_valid():
             form.save()
 
-    return HttpResponseRedirect(reverse('profile.views.settings'))
+        return HttpResponseRedirect(reverse('profile.views.settings_email'))
 
-@login_required
-def settings(request):
-    notification_form = NotificationForm(instance=request.user.get_profile())
-    email_form = EmailForm(instance=request.user)
+    form = EmailForm(instance=request.user)
 
-    return render_to_response('profile/settings.html',
-            {
-                'email_form': email_form,
-                'notification_form': notification_form
-            },
-            context_instance=RequestContext(request))
+    return render_to_response('profile/settings_email.html',
+            {'email_form': form}, context_instance=RequestContext(request))

@@ -114,7 +114,8 @@
         {% url apparel.views.home as home_url %}
         {% url profile.views.profile as profile_url %}
         {% url apparel.views.look_create as look_create_url %}
-        {% url profile.views.settings as settings_url %}
+        {% url profile.views.settings_notification as notification_settings_url %}
+        {% url profile.views.settings_email as email_settings_url %}
 
         <div id="login-pane">
             <div class="left">
@@ -134,7 +135,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="last{% if request.path == settings_url %} selected{% endif %}" href="{{ settings_url }}">
+                    <a class="last{% if request.path == notification_settings_url or request.path == email_settings_url %} selected{% endif %}" href="{{ notification_settings_url }}">
                         {% trans "Settings" %}
                         <div class="arrow"></div>
                     </a>

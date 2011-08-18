@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns
 
 urlpatterns = patterns('',
-    (r'^settings/$', 'profile.views.settings'),
+    (r'^settings/$', 'profile.views.settings_notification'),
     (r'^settings/notification/$', 'profile.views.settings_notification'),
     (r'^settings/email/$', 'profile.views.settings_email'),
     (r'^(?:([^\/]+?)/)?$', 'profile.views.profile'),

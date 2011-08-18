@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body-classes %}two-columns settings{% endblock body-classes %}
+
+{% block body %}
+    <div class="sidebar">
+        <h2>{% trans "Settings" %}</h2>
+        <ul class="settings-list">
+            <li class="first"><a href="{% url profile.views.settings_notification %}">{% trans "Events" %}</a></li>
+            <li class="last"><a href="{% url profile.views.settings_email %}">{% trans "E-mail address" %}</a></li>
+        </ul>
+    </div>
+    <div id="content" class="settings-content">
+        {% block content %}{% endblock content %}
+    </div>
+{% endblock body %}
