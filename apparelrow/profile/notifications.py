@@ -33,7 +33,10 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     for user in users:
         if user and user.email and user.is_active:
-            activate(user.get_profile().language)
+            if hasattr(user, 'get_profile'):
+                activate(user.get_profile().language)
+            else:
+                activate(settings.LANGUAGE_CODE)
 
             extra_context['recipient_first_name'] = user.first_name
             extra_context['recipient_last_name'] = user.last_name
