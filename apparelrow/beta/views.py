@@ -10,7 +10,7 @@ from django.utils import translation
 from django.core.validators import email_re
 
 from beta.models import Invitee, Invite, InvitePerUser
-from apparelrow.tasks import beta_email_task
+from beta.tasks import send_email_task
 
 # Create your views here.
 
@@ -53,7 +53,7 @@ def invite(request):
                         invite = Invite.objects.create(code=''.join(random.choice(string.letters + string.digits) for i in xrange(8)))
                         invitee = Invitee.objects.create(email=email, invite=invite)
 
-                    beta_email_task.delay(name, invitee.email, invitee.invite.code)
+                    send_email_task.delay(name, invitee.email, invitee.invite.code)
                     email_count += 1
 
             if email_count > 0:
