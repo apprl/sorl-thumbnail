@@ -247,6 +247,7 @@ FACEBOOK_PREPOPULATE_USER_DATA = True
 FACEBOOK_EXTENDED_PERMISSIONS = ['email']
 FACEBOOK_AUTOMATIC_LOGIN = False
 
+DEFAULT_FROM_EMAIL = 'Apparelrow <no-reply@apparelrow.com>'
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587
 EMAIL_HOST_USER     = 'postman@apparelrow.com'

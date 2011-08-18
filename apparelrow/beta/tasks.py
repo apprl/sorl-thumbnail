@@ -29,7 +29,7 @@ def send_email_task(name, email, password, **kwargs):
         html_body = render_to_string(body_template_name, context)
         text_body = strip_tags(html_body)
         recipients = [email]
-        msg = EmailMultiAlternatives(subject, text_body, 'Apparelrow <no-reply@apparelrow.com>', recipients)
+        msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, recipients)
         msg.attach_alternative(html_body, 'text/html')
         msg.send()
 

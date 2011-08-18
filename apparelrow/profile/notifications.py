@@ -64,7 +64,7 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
             text_body = strip_tags(html_body)
             recipients = [user.email]
 
-            msg = EmailMultiAlternatives(subject, text_body, 'Apparelrow <no-reply@apparelrow.com>', recipients)
+            msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, recipients)
             msg.attach_alternative(html_body, 'text/html')
             msg.send()
 
