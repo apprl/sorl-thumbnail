@@ -32,24 +32,20 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     current_language = get_language()
 
     for user in users:
-        if not user:
-            continue
+        if user and user.email and user.is_active:
+            activate(user.get_profile().language)
 
-        activate(user.get_profile().language)
+            extra_context['recipient_first_name'] = user.first_name
+            extra_context['recipient_last_name'] = user.last_name
 
-        extra_context['recipient_first_name'] = user.first_name
-        extra_context['recipient_last_name'] = user.last_name
+            subject = ''.join(render_to_string(subject_template_name, extra_context).splitlines())
+            html_body = render_to_string(body_template_name, extra_context)
+            text_body = strip_tags(html_body)
+            recipients = [user.email]
 
-        subject = ''.join(render_to_string(subject_template_name, extra_context).splitlines())
-        html_body = render_to_string(body_template_name, extra_context)
-        text_body = strip_tags(html_body)
-        recipients = []
-        if user.email and user.is_active:
-            recipients.append(user.email)
-
-        msg = EmailMultiAlternatives(subject, text_body, 'Apparelrow <no-reply@apparelrow.com>', recipients)
-        msg.attach_alternative(html_body, 'text/html')
-        msg.send()
+            msg = EmailMultiAlternatives(subject, text_body, 'Apparelrow <no-reply@apparelrow.com>', recipients)
+            msg.attach_alternative(html_body, 'text/html')
+            msg.send()
 
     activate(current_language)
 
