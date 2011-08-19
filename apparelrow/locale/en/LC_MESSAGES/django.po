@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-19 00:37+0200\n"
+"POT-Creation-Date: 2011-08-19 12:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1353,18 +1353,24 @@ msgstr ""
 msgid "Latest updates"
 msgstr ""
 
-#: templates/profile/settings_email.html:7
+#: templates/profile/settings_email.html:6
+msgid ""
+"Here you can set which e-mail adress you want to receive messages and "
+"updates to from Apparelrow"
+msgstr ""
+
+#: templates/profile/settings_email.html:8
 #, python-format
 msgid ""
 "Pending e-mail address change to %(new_email)s, check your inbox for "
 "confirmation mail."
 msgstr ""
 
-#: templates/profile/settings_email.html:10
+#: templates/profile/settings_email.html:11
 msgid "Current e-mail address:"
 msgstr ""
 
-#: templates/profile/settings_email.html:12
+#: templates/profile/settings_email.html:13
 #: templates/profile/settings_notification.html:17
 msgid "Save changes"
 msgstr ""

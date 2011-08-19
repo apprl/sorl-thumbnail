@@ -3,6 +3,7 @@
 
 {% block content %}
 <h2 id="email-address">{% trans "E-mail address" %}</h2>
+<p>{% trans "Here you can set which e-mail adress you want to receive messages and updates to from Apparelrow" %}</p>
 {% if email_change %}
 <p>{% blocktrans with email_change.email as new_email %}Pending e-mail address change to {{ new_email }}, check your inbox for confirmation mail.{% endblocktrans %}</p>
 {% endif %}

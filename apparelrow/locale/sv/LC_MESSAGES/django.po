@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-19 00:37+0200\n"
+"POT-Creation-Date: 2011-08-19 12:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1400,8 +1400,8 @@ msgid ""
 "You have requested an e-mail address change, if you wish to continue with it "
 "click on the link below to complete it:"
 msgstr ""
-"Du har begärt att ändra din e-postadress, om du vill slutföra ändringen klicka "
-"på länken nedan:"
+"Du har begärt att ändra din e-postadress, om du vill slutföra ändringen "
+"klicka på länken nedan:"
 
 #: templates/profile/confirm_email.html:8
 msgid "/ Apparelrow"
@@ -1425,7 +1425,15 @@ msgstr "%(name)ss populära looks"
 msgid "Latest updates"
 msgstr "Senaste händelser"
 
-#: templates/profile/settings_email.html:7
+#: templates/profile/settings_email.html:6
+msgid ""
+"Here you can set which e-mail adress you want to receive messages and "
+"updates to from Apparelrow"
+msgstr ""
+"Här kan du ställa in vilken e-mailadress du vill få meddelanden och "
+"händelser till från Apparelrow."
+
+#: templates/profile/settings_email.html:8
 #, python-format
 msgid ""
 "Pending e-mail address change to %(new_email)s, check your inbox for "
@@ -1435,11 +1443,11 @@ msgstr ""
 "godkänna förändringen klicka på länken i e-postmeddelandet som skickades "
 "till dig. "
 
-#: templates/profile/settings_email.html:10
+#: templates/profile/settings_email.html:11
 msgid "Current e-mail address:"
 msgstr "Nuvarande e-postadress:"
 
-#: templates/profile/settings_email.html:12
+#: templates/profile/settings_email.html:13
 #: templates/profile/settings_notification.html:17
 msgid "Save changes"
 msgstr "Spara ändringar"
