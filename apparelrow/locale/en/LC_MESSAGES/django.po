@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-19 12:43+0200\n"
+"POT-Creation-Date: 2011-08-19 13:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,7 +119,7 @@ msgid "Gender"
 msgstr ""
 
 #: apparel/models.py:220 apparel/models.py:343 apparel/models.py:442
-#: apparel/models.py:533 beta/models.py:7 beta/models.py:15
+#: apparel/models.py:533 beta/models.py:9 beta/models.py:17
 msgid "Time created"
 msgstr ""
 
@@ -280,23 +280,23 @@ msgstr ""
 msgid "E-mail address"
 msgstr ""
 
-#: beta/models.py:6
+#: beta/models.py:8
 msgid "beta code"
 msgstr ""
 
-#: beta/models.py:13
+#: beta/models.py:15
 msgid "e-mail address"
 msgstr ""
 
-#: beta/models.py:16
+#: beta/models.py:18
 msgid "Time seen"
 msgstr ""
 
-#: beta/models.py:17
+#: beta/models.py:19
 msgid "used count"
 msgstr ""
 
-#: beta/models.py:24
+#: beta/models.py:26
 msgid "invites"
 msgstr ""
 
@@ -1203,7 +1203,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/beta/dialog_invite_user.html:18
-msgid "Add another field"
+msgid "Add more e-mail addresses"
 msgstr ""
 
 #: templates/beta/dialog_invite_user.html:21
@@ -1220,19 +1220,33 @@ msgid "%(name)s has invited you to the beta version of Apparelrow."
 msgstr ""
 
 #: templates/beta/mail_body.html:7
-msgid "1. To enter the site, go to "
+#, python-format
+msgid ""
+"To enter the site, go to <a href=\"%(domain)s\">%(domain)s</a> and log in "
+"with:"
 msgstr ""
 
 #: templates/beta/mail_body.html:8
-msgid "2. Login with:"
+#, python-format
+msgid "E-mail: %(email)s"
+msgstr ""
+
+#: templates/beta/mail_body.html:9
+#, python-format
+msgid "Invite code: %(password)s"
+msgstr ""
+
+#: templates/beta/mail_body.html:10
+msgid ""
+"Then log in with your Facebook account on the site to find your friends."
 msgstr ""
 
 #: templates/beta/mail_body.html:11
-msgid "3. Sign in with your Facebook account on the site to find your friends."
+msgid "See you!"
 msgstr ""
 
-#: templates/beta/mail_body.html:12
-msgid "See you!"
+#: templates/beta/mail_body.html:12 templates/profile/confirm_email.html:8
+msgid "/ Apparelrow"
 msgstr ""
 
 #: templates/comments/form.html:20
@@ -1329,10 +1343,6 @@ msgstr ""
 msgid ""
 "You have requested an e-mail address change, if you wish to continue with it "
 "click on the link below to complete it:"
-msgstr ""
-
-#: templates/profile/confirm_email.html:8
-msgid "/ Apparelrow"
 msgstr ""
 
 #: templates/profile/confirm_email_subject.html:1

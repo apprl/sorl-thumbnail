@@ -140,10 +140,10 @@
                         <div class="arrow"></div>
                     </a>
                 </li>
-                {% if user.beta and user.beta.invites > 0 %}
+                {% if user.get_profile.beta and user.get_profile.beta.invites > 0 %}
                 <li>
                     <a class="last open-dialog" href="{% url beta.views.invite %}?next={{ request.path }}">
-                        {% blocktrans with user.beta.invites as invites %}Invite friends ({{ invites }}){% endblocktrans %}
+                        {% blocktrans with user.get_profile.beta.invites as invites %}Invite friends ({{ invites }}){% endblocktrans %}
                         <div class="arrow"></div>
                     </a>
                 </li>

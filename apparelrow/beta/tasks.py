@@ -27,7 +27,7 @@ def send_email_task(name, email, password, **kwargs):
 
         subject = ''.join(render_to_string(subject_template_name, context).splitlines())
         html_body = render_to_string(body_template_name, context)
-        text_body = strip_tags(html_body)
+        text_body = strip_tags(html_body).strip()
         recipients = [email]
         msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, recipients)
         msg.attach_alternative(html_body, 'text/html')

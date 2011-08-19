@@ -9,7 +9,7 @@ from django.conf import settings
 from django.utils import translation
 from django.core.validators import email_re
 
-from beta.models import Invitee, Invite, InvitePerUser
+from beta.models import Invitee, Invite
 from beta.tasks import send_email_task
 
 # Create your views here.
@@ -41,7 +41,7 @@ def invite(request):
             emails = request.POST.getlist('email')
             email_count = 0
             for email in emails:
-                if email_count >= request.user.beta.invites:
+                if email_count >= request.user.get_profile().beta.invites:
                     break
 
                 if email_re.match(email):
@@ -57,15 +57,15 @@ def invite(request):
                     email_count += 1
 
             if email_count > 0:
-                request.user.beta.invites -= email_count
-                request.user.beta.save()
+                request.user.get_profile().beta.invites -= email_count
+                request.user.get_profile().beta.save()
 
             return HttpResponseRedirect(redirect_page)
 
-        if request.user.beta and request.user.beta.invites > 0:
+        if request.user.get_profile().beta and request.user.get_profile().beta.invites > 0:
             return render_to_response('beta/dialog_invite_user.html', {
-                    'invites_count': request.user.beta.invites,
-                    'display_count': xrange(min(5, request.user.beta.invites)),
+                    'invites_count': request.user.get_profile().beta.invites,
+                    'display_count': xrange(min(5, request.user.get_profile().beta.invites)),
                     'next': request.GET.get('next', '/'),
                 }, context_instance=RequestContext(request))
 

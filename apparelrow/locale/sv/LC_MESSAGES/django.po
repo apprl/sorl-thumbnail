@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-19 12:43+0200\n"
+"POT-Creation-Date: 2011-08-19 13:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,7 +120,7 @@ msgid "Gender"
 msgstr "Kön"
 
 #: apparel/models.py:220 apparel/models.py:343 apparel/models.py:442
-#: apparel/models.py:533 beta/models.py:7 beta/models.py:15
+#: apparel/models.py:533 beta/models.py:9 beta/models.py:17
 msgid "Time created"
 msgstr "Tid tillagd"
 
@@ -281,23 +281,23 @@ msgstr "sedan"
 msgid "E-mail address"
 msgstr "E-postadress"
 
-#: beta/models.py:6
+#: beta/models.py:8
 msgid "beta code"
 msgstr "inbjudningskod"
 
-#: beta/models.py:13
+#: beta/models.py:15
 msgid "e-mail address"
 msgstr "e-postadress"
 
-#: beta/models.py:16
+#: beta/models.py:18
 msgid "Time seen"
 msgstr "Sågs senast"
 
-#: beta/models.py:17
+#: beta/models.py:19
 msgid "used count"
 msgstr ""
 
-#: beta/models.py:24
+#: beta/models.py:26
 msgid "invites"
 msgstr ""
 
@@ -1248,8 +1248,8 @@ msgstr[0] "Du kan bjuda in 1 vän:"
 msgstr[1] "Du kan bjuda in %(counter)s vänner:"
 
 #: templates/beta/dialog_invite_user.html:18
-msgid "Add another field"
-msgstr "Lägg till ett nytt fält"
+msgid "Add more e-mail addresses"
+msgstr "Lägg till fler e-postadresser"
 
 #: templates/beta/dialog_invite_user.html:21
 msgid "Send"
@@ -1265,21 +1265,37 @@ msgid "%(name)s has invited you to the beta version of Apparelrow."
 msgstr "%(name)s har bjudit in dig till betaversionen av Apparelrow."
 
 #: templates/beta/mail_body.html:7
-msgid "1. To enter the site, go to "
-msgstr "1. För att komma in på siten, gå till "
+#, python-format
+msgid ""
+"To enter the site, go to <a href=\"%(domain)s\">%(domain)s</a> and log in "
+"with:"
+msgstr ""
+"För att komma in på siten, gå till <a href=\"%(domain)s\">%(domain)s</a> och "
+"logga in med:"
 
 #: templates/beta/mail_body.html:8
-msgid "2. Login with:"
-msgstr "2. Logga in med:"
+#, python-format
+msgid "E-mail: %(email)s"
+msgstr "E-mail: %(email)s"
+
+#: templates/beta/mail_body.html:9
+#, python-format
+msgid "Invite code: %(password)s"
+msgstr "Invite code: %(password)s"
+
+#: templates/beta/mail_body.html:10
+msgid ""
+"Then log in with your Facebook account on the site to find your friends."
+msgstr ""
+"Logga sen in med ditt facebook-konto på siten för att hitta dina vänner."
 
 #: templates/beta/mail_body.html:11
-msgid "3. Sign in with your Facebook account on the site to find your friends."
-msgstr ""
-"3. Logga in med ditt facebook-konto på siten för att hitta dina vänner."
-
-#: templates/beta/mail_body.html:12
 msgid "See you!"
 msgstr "Vi ses!"
+
+#: templates/beta/mail_body.html:12 templates/profile/confirm_email.html:8
+msgid "/ Apparelrow"
+msgstr "/ Apparelrow"
 
 #: templates/comments/form.html:20
 msgid "Comment"
@@ -1402,10 +1418,6 @@ msgid ""
 msgstr ""
 "Du har begärt att ändra din e-postadress, om du vill slutföra ändringen "
 "klicka på länken nedan:"
-
-#: templates/profile/confirm_email.html:8
-msgid "/ Apparelrow"
-msgstr "/ Apparelrow"
 
 #: templates/profile/confirm_email_subject.html:1
 msgid "Confirm e-mail address change"
