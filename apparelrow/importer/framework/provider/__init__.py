@@ -264,7 +264,11 @@ class CSVProvider(Provider):
                 unique_fields = self.unique_fields
                 duplicate_key = tuple(self.record['product'][field] for field in unique_fields)
                 if duplicate_key in duplicate_storage:
+                    # FIXME: Replace...
                     logger.info('merge duplicate')
+                    # ...with
+                    # logger.debug(u"merge duplicate %s", duplicate_key)
+                    # if you have an environment that can run the code..
                     self.merge_duplicate(duplicate_storage[duplicate_key], self.record)
                 else:
                     duplicate_storage[duplicate_key] = self.record
