@@ -8,6 +8,7 @@ from django.template import RequestContext
 from apparel.models import *
 from modeltranslation.admin import TranslationAdmin
 from sorl.thumbnail.main import DjangoThumbnail
+from sorl.thumbnail.base import ThumbnailException
 from mptt.forms import TreeNodeChoiceField
 from mptt.admin import MPTTModelAdmin
 
@@ -23,8 +24,11 @@ class ProductAdmin(admin.ModelAdmin):
     actions = ['publish', 'hide', 'change_category', 'change_options']
 
     def image(self, obj):
-        thumbnail = DjangoThumbnail(obj.product_image, (50, 50))
-        return u'<a href="%s"><img src="%s" /></a>' % (obj.product_image.url, thumbnail.absolute_url,)
+        try:
+            thumbnail = DjangoThumbnail(obj.product_image, (50, 50))
+            return u'<a href="%s"><img src="%s" /></a>' % (obj.product_image.url, thumbnail.absolute_url,)
+        except ThumbnailException:
+            return u'ERR: thumb-img not found'
     image.short_description = 'Image'
     image.allow_tags = True
 
