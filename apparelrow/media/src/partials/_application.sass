@@ -1594,6 +1594,8 @@ a#create-look
 .dialog
   +dialog
   .dialog-container
+    &.welcome-dialog
+      width: $large_width
     h3
       padding: 10px
       font-weight: normal
@@ -1616,6 +1618,32 @@ a#create-look
         &.default
           font-family: $font_family_italic
           font-style: italic
+      h3
+        padding: 0
+        margin: 15px 10px 10px 10px
+        border-bottom: 1px solid $border_color
+      ul.three-columns
+        margin: 0 10px
+        overflow: hidden
+        &.suggested-facebook-friends
+          height: 160px
+          overflow: auto
+          border-bottom: 1px solid $border_color
+        li
+          width: 218px
+          float: left
+          &.column-1
+            clear: left
+      .all-users
+        +button
+        +border-radius(3px)
+        display: inline-block
+        padding: 0 10px
+        line-height: 2em
+        margin: 10px
+        &:hover
+          +hover_button
+          line-height: 2em
     .dialog-footer
       min-height: 16px
       input

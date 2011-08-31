@@ -15,6 +15,8 @@ from django.core.urlresolvers import reverse
 
 from apparel.decorators import get_current_user
 from apparel.models import Look
+# FIXME: Move get_facebook_friends and get_most_followed_users to a util module
+from apparel.views import get_facebook_friends, get_most_followed_users
 from actstream.models import user_stream, actor_stream, Follow
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm
 from profile.models import EmailChange
@@ -197,3 +199,19 @@ def settings_email(request):
             'email_form': form,
             'email_change': email_change
         }, context_instance=RequestContext(request))
+
+@login_required
+def welcome_dialog(request):
+    """
+    Welcome dialog, shown on first login
+    """
+    apparel_profile = request.user.get_profile()
+    apparel_profile.first_visit = False
+    apparel_profile.save()
+
+    context = {
+            'first_name': request.user.first_name,
+            'facebook_friends': get_facebook_friends(request),
+            'most_followed_users': get_most_followed_users(limit=6)}
+
+    return render_to_response('profile/dialog_welcome.html', context, context_instance=RequestContext(request))

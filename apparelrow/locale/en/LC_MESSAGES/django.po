@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-19 13:13+0200\n"
+"POT-Creation-Date: 2011-08-31 11:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -398,7 +398,7 @@ msgid ""
 "\"svart,night,coal\""
 msgstr ""
 
-#: profile/models.py:16 templates/base.html:175
+#: profile/models.py:16 templates/base.html:180
 #: templates/apparel/fragments/product_menu.html:10
 msgid "All"
 msgstr ""
@@ -447,19 +447,23 @@ msgstr ""
 msgid "When someone starts to follow me"
 msgstr ""
 
+#: profile/models.py:47
+msgid "Is this the first visit?"
+msgstr ""
+
 #: statistics/models.py:30 statistics/models.py:31
 msgid "Product clicks"
 msgstr ""
 
-#: templates/base.html:33
+#: templates/base.html:34
 msgid "About ApparelRow beta"
 msgstr ""
 
-#: templates/base.html:35
+#: templates/base.html:36
 msgid "Hi beta tester!"
 msgstr ""
 
-#: templates/base.html:36
+#: templates/base.html:37
 msgid ""
 "Right now, this site is only available to a few select individuals, who we "
 "believe can help make it better together with us. We appreciate all "
@@ -468,7 +472,7 @@ msgid ""
 "thoughts."
 msgstr ""
 
-#: templates/base.html:37
+#: templates/base.html:38
 msgid ""
 "What's more, we're not sure we've found the right name for the site yet and "
 "we'd love your suggestion! If you have ideas for what to call the site, just "
@@ -476,135 +480,141 @@ msgid ""
 "prize will be awarded to whoever suggests the name we eventually choose."
 msgstr ""
 
-#: templates/base.html:38
+#: templates/base.html:39
 msgid "Feel free to e-mail us at info@apparelrow.com."
 msgstr ""
 
-#: templates/base.html:39
+#: templates/base.html:40
 msgid "Have fun! /The team"
 msgstr ""
 
-#: templates/base.html:72
+#: templates/base.html:77
 msgid "Search for products"
 msgstr ""
 
-#: templates/base.html:73 templates/profile/base_profile.html:53
+#: templates/base.html:78 templates/profile/base_profile.html:53
 msgid "Cancel"
 msgstr ""
 
-#: templates/base.html:77 templates/base.html.py:173
+#: templates/base.html:82 templates/base.html.py:178
 #: templates/apparel/fragments/product_menu.html:11
 msgid "Women"
 msgstr ""
 
-#: templates/base.html:78 templates/base.html.py:174
+#: templates/base.html:83 templates/base.html.py:179
 #: templates/apparel/fragments/product_menu.html:12
 msgid "Men"
 msgstr ""
 
-#: templates/base.html:79 templates/base.html.py:178
+#: templates/base.html:84 templates/base.html.py:183
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:5
 #: templates/profile/fragments/menu_items.html:10
 msgid "Looks"
 msgstr ""
 
-#: templates/base.html:92
+#: templates/base.html:97
 msgid "Matching products"
 msgstr ""
 
-#: templates/base.html:96
+#: templates/base.html:101
 msgid "Matching looks"
 msgstr ""
 
-#: templates/base.html:100
+#: templates/base.html:105
 msgid "Matching brands"
 msgstr ""
 
-#: templates/base.html:104
+#: templates/base.html:109
 msgid "Show all products"
 msgstr ""
 
-#: templates/base.html:105
+#: templates/base.html:110
 msgid "Show all looks"
 msgstr ""
 
-#: templates/base.html:106
+#: templates/base.html:111
 msgid "Show all manufacturers"
 msgstr ""
 
-#: templates/base.html:122
+#: templates/base.html:127
 msgid "Logged in as"
 msgstr ""
 
-#: templates/base.html:127
+#: templates/base.html:132
 msgid "My profile"
 msgstr ""
 
-#: templates/base.html:133
+#: templates/base.html:138
 msgid "Friends' updates"
 msgstr ""
 
-#: templates/base.html:139 templates/profile/base_settings.html:8
+#: templates/base.html:144 templates/profile/base_settings.html:8
 msgid "Settings"
 msgstr ""
 
-#: templates/base.html:146
+#: templates/base.html:151
 #, python-format
 msgid "Invite friends (%(invites)s)"
 msgstr ""
 
-#: templates/base.html:154 templates/base.html.py:180
+#: templates/base.html:159 templates/base.html.py:185
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
 msgstr ""
 
-#: templates/base.html:158
+#: templates/base.html:163
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:172
+#: templates/base.html:177
 msgid "Clothes"
 msgstr ""
 
-#: templates/base.html:179
+#: templates/base.html:184
 msgid "All looks"
 msgstr ""
 
-#: templates/base.html:183
+#: templates/base.html:188
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:184 templates/apparel/user_home.html:35
+#: templates/base.html:189 templates/apparel/user_home.html:35
 #: templates/apparel/fragments/browse_follow_user.html:5
+#: templates/profile/dialog_welcome.html:25
 msgid "See all members"
 msgstr ""
 
-#: templates/base.html:190
+#: templates/base.html:195
 msgid "About Apparelrow"
 msgstr ""
 
-#: templates/base.html:191
+#: templates/base.html:196
 msgid "About the beta"
 msgstr ""
 
-#: templates/base.html:192
+#: templates/base.html:197
 msgid "Blog"
 msgstr ""
 
-#: templates/base.html:193
+#: templates/base.html:198
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:213
+#: templates/base.html:218
 msgid "No"
 msgstr ""
 
-#: templates/base.html:214
+#: templates/base.html:219
 msgid "Yes"
 msgstr ""
 
-#: templates/base.html:216 templates/apparel/fragments/product_options.html:15
+#: templates/base.html:221 templates/apparel/fragments/product_options.html:15
 msgid "OK"
+msgstr ""
+
+#: templates/dialog_base.html:5 templates/apparel/look_edit.html:586
+#: templates/beta/dialog_invite_user.html:5
+msgid "Close"
 msgstr ""
 
 #: templates/homepage.html:5
@@ -856,12 +866,6 @@ msgstr ""
 
 #: templates/apparel/look_edit.html:586
 msgid "Products"
-msgstr ""
-
-#: templates/apparel/look_edit.html:586
-#: templates/apparel/fragments/dialog_base.html:5
-#: templates/beta/dialog_invite_user.html:5
-msgid "Close"
 msgstr ""
 
 #: templates/apparel/look_list.html:9
@@ -1347,6 +1351,30 @@ msgstr ""
 
 #: templates/profile/confirm_email_subject.html:1
 msgid "Confirm e-mail address change"
+msgstr ""
+
+#: templates/profile/dialog_welcome.html:5
+#, python-format
+msgid "Welcome %(first_name)s"
+msgstr ""
+
+#: templates/profile/dialog_welcome.html:7
+msgid ""
+"The first thing you should do now is to follow members here on the site, to "
+"keep you updated when they create looks, see which products they like and "
+"what which products they have in their closet."
+msgstr ""
+
+#: templates/profile/dialog_welcome.html:8
+msgid "Find your friends below, or among all our other members."
+msgstr ""
+
+#: templates/profile/dialog_welcome.html:9
+msgid "Most popular to follow"
+msgstr ""
+
+#: templates/profile/dialog_welcome.html:17
+msgid "Find your friends!"
 msgstr ""
 
 #: templates/profile/followers.html:6

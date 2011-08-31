@@ -39,8 +39,14 @@ function create_modal_dialog(header, messages, yes_action, no_action) {
 /**
  * Creates a dialog from html loaded through ajax, only alternativ is close
  */
-function create_html_dialog(url_to_html) {
-    jQuery('<div class="dialog"></div>').load(url_to_html).appendTo('body').overlay({
+function create_html_dialog(url_to_html, large_dialog) {
+    var dialog = jQuery('<div class="dialog"></div>');
+
+    if(large_dialog) {
+        dialog.addClass('large-dialog');
+    }
+
+    dialog.load(url_to_html).appendTo('body').overlay({
         mask: {
             color: '#000',
             loadSpeed: 200,
@@ -64,6 +70,11 @@ jQuery(document).ready(function() {
     // All elements with class open-dialog should open a dialog and load html from href-url
     jQuery('.open-dialog').live('click', function(event) {
         create_html_dialog(jQuery(this).attr('href'));
+        event.preventDefault();
+    });
+
+    jQuery('.open-dialog-large').live('click', function(event) {
+        create_html_dialog(jQuery(this).attr('href'), true);
         event.preventDefault();
     });
 

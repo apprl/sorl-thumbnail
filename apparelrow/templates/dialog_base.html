@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="dialog-container">
+<div class="dialog-container {% block dialog_class %}{% endblock %}">
     <h3>
         {% block title %}{% endblock %}
         <a class="close" href="#">{% trans "Close" %}</a>
