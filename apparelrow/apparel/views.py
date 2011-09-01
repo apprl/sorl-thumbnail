@@ -477,11 +477,14 @@ def csrf_failure(request, reason=None):
     logging.debug("CSRF failure: %s" % reason)
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
 
-def user_list(request):
+def user_list(request, popular=None):
     """
     Displays a list of profiles
     """
-    queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('user__first_name', 'user__last_name', 'user__username')
+    if popular:
+        queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('-followers_count', 'user__first_name', 'user__last_name', 'user__username')
+    else:
+        queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('user__first_name', 'user__last_name', 'user__username')
 
     paginator = Paginator(queryset, 10)
     try:
@@ -491,17 +494,17 @@ def user_list(request):
     except ValueError:
         paged_result = paginator.page(1)
 
-    # FIXME: This does not work so well with pagination... solve in query instead, but how?
-    #object_list = sorted(paged_result.object_list, key=lambda x: x.display_name)
-    object_list = paged_result.object_list
+    # Ten latest active members
+    latest_members = ApparelProfile.objects.filter(user__is_active=True).order_by('-user__date_joined')[:8]
 
     context = {'page_obj': paged_result,
                'page_range': paginator.page_range,
-               'object_list': object_list,
+               'object_list': paged_result.object_list,
                'facebook_friends': get_facebook_friends(request),
-               'most_followed_users': get_most_followed_users(limit=10)}
+               'latest_members': latest_members,
+               'next': request.get_full_path()}
 
-    return render_to_response('apparel/users.html', context, context_instance=RequestContext(request))
+    return render_to_response('apparel/user_list.html', context, context_instance=RequestContext(request))
 
 @get_current_user
 @login_required

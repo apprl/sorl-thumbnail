@@ -1,6 +1,6 @@
 import logging
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.contrib.comments import signals as comments_signals
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
@@ -69,4 +69,21 @@ def follow_handler(sender, **kwargs):
     except User.DoesNotExist:
         pass
 
+    apparel_profile = recipient.get_profile()
+    apparel_profile.followers_count = apparel_profile.followers_count + 1
+    apparel_profile.save()
+
 post_save.connect(follow_handler, sender=Follow)
+
+def delete_follow_handler(sender, **kwargs):
+    instance = kwargs['instance']
+    try:
+        user = User.objects.get(id=instance.object_id)
+    except User.DoesNotExist:
+        pass
+
+    apparel_profile = user.get_profile()
+    apparel_profile.followers_count = apparel_profile.followers_count - 1
+    apparel_profile.save()
+
+post_delete.connect(delete_follow_handler, sender=Follow)

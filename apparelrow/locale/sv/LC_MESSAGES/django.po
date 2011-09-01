@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-31 11:23+0200\n"
+"POT-Creation-Date: 2011-09-01 15:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -988,17 +988,26 @@ msgstr "Inga händelser"
 msgid "Your friends are here!"
 msgstr "Hitta dina vänner!"
 
-#: templates/apparel/users.html:8
+#: templates/apparel/user_list.html:9
+msgid "Latest members"
+msgstr "Senaste medlemmar"
+
+#: templates/apparel/user_list.html:22
 msgid "Most followers"
 msgstr "Följs av flest"
 
-#: templates/apparel/users.html:18
+#: templates/apparel/user_list.html:23
 msgid "Members in alphabetical order"
 msgstr "Medlemmar i bokstavsordning"
 
-#: templates/apparel/users.html:33
+#: templates/apparel/user_list.html:39
 msgid "Find your friends"
 msgstr "Hitta dina vänner"
+
+#: templates/apparel/user_list.html:41
+msgid "Connect with your Facebook account to find your friends."
+msgstr ""
+"Logga in med ditt Facebookkonto för att hitta dina vänner."
 
 #: templates/apparel/fragments/browse_follow_user.html:4
 msgid ""

@@ -46,7 +46,8 @@ urlpatterns = patterns('',
         'template_name': 'apparel/fragments/look_photo.html',
      }),
 
-    (r'^users/$', 'apparel.views.user_list'),
+    url(r'^users/$', 'apparel.views.user_list', name='user-list'),
+    url(r'^users/popular/$', 'apparel.views.user_list', {'popular': True}, name='popular-user-list'),
 )
 
 
