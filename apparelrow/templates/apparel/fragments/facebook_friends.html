@@ -5,7 +5,7 @@
     {% for profile in facebook_friends %}
         {% if_user_is_following profile.user %}{% else %}
         <li>
-            {% include 'apparel/fragments/avatar_link.html' %}
+            {% include 'apparel/fragments/avatar_link_no_cache.html' %}
         </li>
         {% endif %}
     {% endfor %}
