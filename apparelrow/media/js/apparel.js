@@ -167,7 +167,7 @@ jQuery(document).ready(function() {
     });
     */
 
-    jQuery('a.follow:not(a.open-dialog), a.unfollow:not(a.open-dialog)').click(function() {
+    jQuery('a.follow:not(a.open-dialog), a.unfollow:not(a.open-dialog)').live('click', function(event) {
         $this = $(this);
         $parent = $this.parent();
         $.post($this.attr('href'), function(response) {
