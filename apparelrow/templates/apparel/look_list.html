@@ -2,12 +2,48 @@
 {% load facebook %}
 {% load i18n %}
 
-{% block body-classes %}three-columns{% endblock body-classes %}
+{% block body-classes %}three-columns look-list{% endblock body-classes %}
 
 {% block body %}
     <div class="sidebar">
+        <h2>{% trans "Latest looks" %}</h2>
+        {% with latest_looks as looks %}
+            {% include 'apparel/fragments/looks_sidebar.html' %}
+        {% endwith %}
+    </div>
+    <div id="content">
+        {% url look-list as look_list_url %}
+        {% url popular-look-list as popular_look_list_url %}
+        {% if request.path == look_list_url or request.path == popular_look_list_url %}
+        <ul class="look-list-tabs">
+            <li><a class="first latest{% if request.path == look_list_url %} current{% endif %}" href="{{ look_list_url }}">{% trans "Popular looks" %}</a></li>
+            <li><a class="last popular{% if request.path == popular_look_list_url %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
+        </ul>
+        {% else %}
+        <h2>{% trans "Latest looks" %}</h2>
+        {% endif %}
+
+        {% if not user.is_authenticated and request.path == popular_look_list_url %}
+            <div>{% trans "To see popular looks in your network you need to connect with your Facebook account." %}</div>
+            {% with MEDIA_URL|add:'images/facebook_signin_sv.png' as facebook_login_image %}
+                {% facebook_button facebook_login_image %}
+            {% endwith %}
+        {% else %}
+            {% if not object_list and request.path == popular_look_list_url %}
+                <div>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</div>
+                <a class="all-users" href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a>
+            {% else %}
+                {% include 'apparel/fragments/looks_middle_column.html' %}
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="sidebar last">
         <h2>{% trans "Friends with most looks" %}</h2>
         {% if user.is_authenticated %}
+        {% if not most_looks_users %}
+        <div>{% trans "You currently don't follow anyone who has created any looks, find friends to follow among our members." %}</div>
+        <a class="all-users" href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a>
+        {% else %}
         <ul class="suggested-friends">
         {% for profile in most_looks_users %}
             <li>
@@ -18,29 +54,12 @@
             </li>
         {% endfor %}
         </ul>
+        {% endif %}
         {% else %}
+        <div>{% trans "To see which of your friends have created the most looks, connect with your Facebook account." %}</div>
         {% with MEDIA_URL|add:'images/facebook_signin_sv.png' as facebook_login_image %}
         {% facebook_button facebook_login_image %}
         {% endwith %}
         {% endif %}
-    </div>
-    <div id="content">
-        {% url look-list as look_list_url %}
-        {% url popular-look-list as popular_look_list_url %}
-        {% if request.path == look_list_url or request.path == popular_look_list_url %}
-        <ul class="look-list-tabs">
-            <li><a class="first latest{% if request.path == look_list_url %} current{% endif %}" href="{{ look_list_url }}">{% trans "Latest looks" %}</a></li>
-            <li><a class="last popular{% if request.path == popular_look_list_url %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
-        </ul>
-        {% else %}
-        <h2>{% trans "Latest looks" %}</h2>
-        {% endif %}
-        {% include 'apparel/fragments/looks_middle_column.html' %}
-    </div>
-    <div class="sidebar last">
-        <h2>{% trans "Popular looks" %}</h2>
-        {% with popular_looks as looks %}
-            {% include 'apparel/fragments/looks_sidebar.html' %}
-        {% endwith %}
     </div>
 {% endblock body %}

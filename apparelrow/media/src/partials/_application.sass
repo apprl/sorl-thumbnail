@@ -408,6 +408,15 @@ ul.products
     color: $font_color
   .sum
     color: $easier_color
+  .all-users
+    +button
+    +border-radius(3px)
+    display: block
+    padding-left: 10px
+    line-height: 2em
+    &:hover
+      +hover_button
+      line-height: 2em
 
 .reset
   background: transparent image_url(unquote("logout.png")) no-repeat scroll right center
@@ -934,6 +943,18 @@ a.buy-now
       background-image: none
       margin-top: 2px
 
+body.look-list
+  .all-users
+    +button
+    +border-radius(3px)
+    display: inline-block
+    padding: 0 10px
+    line-height: 2em
+    margin: 5px 0
+    &:hover
+      +hover_button
+      line-height: 2em
+
 body.look
   #comments-and-links
     form
@@ -1320,15 +1341,6 @@ body.profile
       display: block
       margin-left: $aside_width
   .sidebar
-    .all-users
-      +button
-      +border-radius(3px)
-      display: block
-      padding-left: 10px
-      line-height: 2em
-      &:hover
-        +hover_button
-        line-height: 2em
     #profile-image
       position: relative
       margin-top: -30px

@@ -160,17 +160,17 @@ def look_list(request, popular=None, contains=None, page=0):
             user_ids = Follow.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(User)).values_list('object_id', flat=True)
             queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')
         else:
-            queryset = Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes')
+            queryset = Look.objects.none()
     else:
-        queryset = Look.objects.all().order_by('-modified')
-
-    popular = get_top_looks(limit=8)
+        queryset = Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)
 
     if request.user.is_authenticated():
         user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
-        most_looks_users = ApparelProfile.objects.annotate(look_count=Count('user__look')).order_by('-look_count').filter(look_count__gt=1, user__in=user_ids)
+        most_looks_users = ApparelProfile.objects.annotate(look_count=Count('user__look')).order_by('-look_count').filter(look_count__gt=0, user__in=user_ids)
     else:
         most_looks_users = None
+
+    latest_looks = Look.objects.order_by('-created')[:8]
 
     return list_detail.object_list(
         request,
@@ -179,8 +179,9 @@ def look_list(request, popular=None, contains=None, page=0):
         extra_context={
             'next': request.get_full_path(),
             'previous': None,
-            'popular_looks': popular,
-            'most_looks_users': most_looks_users
+            'most_looks_users': most_looks_users,
+            'latest_looks': latest_looks,
+            'next': request.get_full_path(),
         }
     )
 

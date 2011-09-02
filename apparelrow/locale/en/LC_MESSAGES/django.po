@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-01 15:40+0200\n"
+"POT-Creation-Date: 2011-09-02 11:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -578,7 +578,8 @@ msgstr ""
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:189 templates/apparel/user_home.html:35
+#: templates/base.html:189 templates/apparel/look_list.html:34
+#: templates/apparel/look_list.html:45 templates/apparel/user_home.html:35
 #: templates/apparel/fragments/browse_follow_user.html:5
 #: templates/profile/dialog_welcome.html:25
 msgid "See all members"
@@ -657,7 +658,7 @@ msgid "Next"
 msgstr ""
 
 #: templates/index.html:188 templates/index.html.py:190
-#: templates/apparel/look_list.html:41
+#: templates/apparel/look_list.html:19
 msgid "Popular looks"
 msgstr ""
 
@@ -868,22 +869,46 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: templates/apparel/look_list.html:9
-msgid "Friends with most looks"
-msgstr ""
-
-#: templates/apparel/look_list.html:16
-#, python-format
-msgid "See all %(looks)s looks"
-msgstr ""
-
-#: templates/apparel/look_list.html:32 templates/apparel/look_list.html:36
+#: templates/apparel/look_list.html:9 templates/apparel/look_list.html:23
 #: templates/profile/looks.html:6
 msgid "Latest looks"
 msgstr ""
 
-#: templates/apparel/look_list.html:33 templates/apparel/user_home.html:14
+#: templates/apparel/look_list.html:20 templates/apparel/user_home.html:14
 msgid "Popular looks in your network"
+msgstr ""
+
+#: templates/apparel/look_list.html:27
+msgid ""
+"To see popular looks in your network you need to connect with your Facebook "
+"account."
+msgstr ""
+
+#: templates/apparel/look_list.html:33
+msgid ""
+"You currently don't follow anyone who has liked any looks, find friends to "
+"follow amoung our members."
+msgstr ""
+
+#: templates/apparel/look_list.html:41
+msgid "Friends with most looks"
+msgstr ""
+
+#: templates/apparel/look_list.html:44
+msgid ""
+"You currently don't follow anyone who has created any looks, find friends to "
+"follow among our members."
+msgstr ""
+
+#: templates/apparel/look_list.html:52
+#, python-format
+msgid "See all %(looks)s looks"
+msgstr ""
+
+#: templates/apparel/look_list.html:59
+msgid ""
+"To see which of your friends have created the most looks, connect with your "
+"Facebook account."
 msgstr ""
 
 #: templates/apparel/product_detail.html:52
