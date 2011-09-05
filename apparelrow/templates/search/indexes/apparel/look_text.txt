@@ -1,2 +1,5 @@
 {{ object.title }}
 {{ object.description }}
+{% for manufacturer_name in object.product_manufacturers %}
+    {{ manufacturer_name }}
+{% endfor %}

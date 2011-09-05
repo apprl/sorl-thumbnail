@@ -408,6 +408,10 @@ class Look(models.Model):
         if self.component: return self.component
         if self.photo_components.count() > 0: return 'P'
         return 'C'
+
+    @property
+    def product_manufacturers(self):
+        return self.products.values_list('manufacturer__name', flat=True)
     
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user.get_profile().display_name)
