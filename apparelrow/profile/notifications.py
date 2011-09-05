@@ -71,7 +71,7 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     activate(current_language)
 
 @task(name='profile.notifications.process_comment_look_created', max_retries=5, ignore_result=True)
-def process_comment_look_created(recipient, sender, comment):
+def process_comment_look_created(recipient, sender, comment, **kwargs):
     """
     Process notification for a comment made by sender on a look created by
     recipient.
@@ -130,7 +130,7 @@ def comment_common(notification_name, recipient, sender, comment):
         })
 
 @task(name='profile.notifications.process_comment_product_comment', max_retries=5, ignore_result=True)
-def process_comment_product_comment(recipient, sender, comment):
+def process_comment_product_comment(recipient, sender, comment, **kwargs):
     """
     Process notification for a comment made by sender on a product already
     commented by X.
@@ -143,7 +143,7 @@ def process_comment_product_comment(recipient, sender, comment):
     comment_common('comment_product_comment', recipient, sender, comment)
 
 @task(name='profile.notifications.process_comment_look_comment', max_retries=5, ignore_result=True)
-def process_comment_look_comment(recipient, sender, comment):
+def process_comment_look_comment(recipient, sender, comment, **kwargs):
     """
     Process notification for a comment made by sender on a look already
     commented by X.
@@ -156,7 +156,7 @@ def process_comment_look_comment(recipient, sender, comment):
     comment_common('comment_look_comment', recipient, sender, comment)
 
 @task(name='profile.notifications.process_comment_product_wardrobe', max_retries=5, ignore_result=True)
-def process_comment_product_wardrobe(recipient, sender, comment):
+def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
     """
     Process notification for a comment made by sender on a product in
     user X wardrobe.
@@ -186,7 +186,7 @@ def process_comment_product_wardrobe(recipient, sender, comment):
         })
 
 @task(name='profile.notifications.process_like_look_created', max_retries=5, ignore_result=True)
-def process_like_look_created(recipient, sender, look_like):
+def process_like_look_created(recipient, sender, look_like, **kwargs):
     """
     Process notification for a like by sender on a look created by recipient.
     """
