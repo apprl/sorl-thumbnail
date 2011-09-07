@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-05 12:47+0200\n"
+"POT-Creation-Date: 2011-09-07 10:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,7 +102,7 @@ msgid "Time added"
 msgstr ""
 
 #: apparel/models.py:141 apparel/models.py:221 apparel/models.py:344
-#: apparel/models.py:443 apparel/models.py:534
+#: apparel/models.py:447 apparel/models.py:538
 msgid "Time modified"
 msgstr ""
 
@@ -118,8 +118,8 @@ msgstr ""
 msgid "Gender"
 msgstr ""
 
-#: apparel/models.py:220 apparel/models.py:343 apparel/models.py:442
-#: apparel/models.py:533 beta/models.py:9 beta/models.py:17
+#: apparel/models.py:220 apparel/models.py:343 apparel/models.py:446
+#: apparel/models.py:537 beta/models.py:9 beta/models.py:17
 msgid "Time created"
 msgstr ""
 
@@ -194,7 +194,7 @@ msgstr ""
 msgid "items in stock"
 msgstr ""
 
-#: apparel/models.py:336 apparel/models.py:527
+#: apparel/models.py:336 apparel/models.py:531
 #: templates/apparel/look_create.html:18
 msgid "Title"
 msgstr ""
@@ -211,59 +211,59 @@ msgstr ""
 msgid "The look will be shown on the front page"
 msgstr ""
 
-#: apparel/models.py:460
+#: apparel/models.py:464
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:461
+#: apparel/models.py:465
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:462
+#: apparel/models.py:466
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:463
+#: apparel/models.py:467
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:464
+#: apparel/models.py:468
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:465
+#: apparel/models.py:469
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:528
+#: apparel/models.py:532
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:528
+#: apparel/models.py:532
 msgid "HTML allowed"
 msgstr ""
 
-#: apparel/models.py:529
+#: apparel/models.py:533
 msgid "URL"
 msgstr ""
 
-#: apparel/models.py:530
+#: apparel/models.py:534
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:530
+#: apparel/models.py:534
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:532
+#: apparel/models.py:536
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:555
+#: apparel/models.py:559
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:555
+#: apparel/models.py:559
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -649,11 +649,13 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: templates/index.html:172 templates/apparel/fragments/product_row.html:2
+#: templates/index.html:172 templates/apparel/product_detail.html:194
+#: templates/apparel/fragments/product_row.html:2
 msgid "Previous"
 msgstr ""
 
-#: templates/index.html:181 templates/apparel/fragments/product_row.html:10
+#: templates/index.html:181 templates/apparel/product_detail.html:202
+#: templates/apparel/fragments/product_row.html:10
 msgid "Next"
 msgstr ""
 
@@ -950,7 +952,11 @@ msgstr[1] ""
 msgid "Recently viewed"
 msgstr ""
 
-#: templates/apparel/product_detail.html:193
+#: templates/apparel/product_detail.html:192
+msgid "Similar products"
+msgstr ""
+
+#: templates/apparel/product_detail.html:207
 #, python-format
 msgid ""
 "\n"
@@ -965,7 +971,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:206
+#: templates/apparel/product_detail.html:220
 msgid "No product found!"
 msgstr ""
 
@@ -1536,19 +1542,19 @@ msgstr ""
 msgid "You are not currently following "
 msgstr ""
 
-#: templates/profile/notifications/email_follow_user.html:6
-#: templates/profile/notifications/email_follow_user_following.html:6
+#: templates/profile/notifications/email_follow_user.html:3
+#: templates/profile/notifications/email_follow_user_following.html:3
 #, python-format
 msgid "%(sender_first_name)s'"
 msgstr ""
 
-#: templates/profile/notifications/email_follow_user.html:8
-#: templates/profile/notifications/email_follow_user_following.html:8
+#: templates/profile/notifications/email_follow_user.html:3
+#: templates/profile/notifications/email_follow_user_following.html:3
 #, python-format
 msgid "%(sender_first_name)s's"
 msgstr ""
 
-#: templates/profile/notifications/email_follow_user.html:10
+#: templates/profile/notifications/email_follow_user.html:3
 msgid " updates."
 msgstr ""
 
@@ -1556,7 +1562,7 @@ msgstr ""
 msgid "You are following "
 msgstr ""
 
-#: templates/profile/notifications/email_follow_user_following.html:10
+#: templates/profile/notifications/email_follow_user_following.html:3
 msgid " since before."
 msgstr ""
 

@@ -188,6 +188,20 @@
                     {% endwith %}
                 </div>
             {% endif %}
+            {% if more_like_this %}
+                <h2>{% trans "Similar products" %}</h2>
+                <div id="more-like-this">
+                    <a class="prev">{% trans "Previous" %}</a>
+                    <div class="row">
+                        <ul>
+                        {% for product in more_like_this %}
+                            {{ product.template_mlt|safe }}
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    <a class="next">{% trans "Next" %}</a>
+                </div>
+            {% endif %}
     {% cache CACHE_TIMEOUT product_detail2 object.id LANGUAGE_CODE %}
             <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
                 {% blocktrans count looks_with_product|length as counter %}

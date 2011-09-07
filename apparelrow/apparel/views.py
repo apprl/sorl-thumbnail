@@ -63,6 +63,8 @@ def product_detail(request, slug):
         is_in_wardrobe = False
     
     context = RequestContext(request)
+
+    more_like_this = SearchQuerySet().filter(django_ct='apparel.product').filter(gender=product.gender).more_like_this(product)[:10]
     
     return render_to_response(
             'apparel/product_detail.html',
@@ -72,7 +74,8 @@ def product_detail(request, slug):
                 'is_in_wardrobe': is_in_wardrobe,
                 'looks_with_product': Look.objects.filter(products=product),
                 'viewed_products': viewed_products,
-                'object_url': request.build_absolute_uri()
+                'object_url': request.build_absolute_uri(),
+                'more_like_this': more_like_this
             },
             context_instance=context,
             )

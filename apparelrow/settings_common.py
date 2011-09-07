@@ -113,6 +113,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
 )
 
+HAYSTACK_LIMIT_TO_REGISTERED_MODELS = False
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.auth",

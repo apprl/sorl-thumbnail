@@ -763,6 +763,19 @@
       -->
     </requestHandler>
 
+    <requestHandler name="/mlt" class="solr.MoreLikeThisHandler">
+        <lst name="defaults">
+            <str name="mlt.mintf">1</str>
+            <str name="mlt.mindf">1</str>
+            <str name="mlt.minwl">2</str>
+            <str name="mlt.maxwl">25</str>
+            <str name="mlt.maxqt">20</str>
+            <str name="mlt.match.include">false</str>
+            <!-- Abort any searches longer than 0.8 seconds -->
+            <int name="timeAllowed">800</int>
+        </lst>
+    </requestHandler>
+
   <!-- A Robust Example
 
        This example SearchHandler declaration shows off usage of the

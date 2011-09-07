@@ -116,7 +116,7 @@
 
     <field name="color" type="text" indexed="true" stored="false" multiValued="true" />
 
-    <field name="text" type="text" indexed="true" stored="true" multiValued="false" />
+    <field name="text" type="text" indexed="true" stored="true" multiValued="false" termVectors="true" />
 
     <field name="price" type="slong" indexed="true" stored="false" multiValued="false" />
 
@@ -131,6 +131,7 @@
     <field name="user_wardrobe" type="string" indexed="true" stored="false" multiValued="true" />
 
     <field name="template" type="string" indexed="false" stored="true" multiValued="false" />
+    <field name="template_mlt" type="string" indexed="false" stored="true" multiValued="false" />
 
     <field name="gender" type="text" indexed="true" stored="false" multiValued="false" />
 

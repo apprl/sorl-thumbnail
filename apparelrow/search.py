@@ -79,6 +79,7 @@ class ProductIndex(QueuedSearchIndex):
     color = MultiValueField(faceted=True, stored=False)
     category = MultiValueField(faceted=True, stored=False)
     template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_content.html')
+    template_mlt = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_no_price.html')
     user_wardrobe = MultiValueField(stored=False)
     user_likes = MultiValueField(stored=False)
     popularity = IntegerField(model_attr='popularity')
