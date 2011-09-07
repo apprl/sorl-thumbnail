@@ -14,7 +14,7 @@ def invalidate_cache(cache_key):
   Five second should be more than enough time to prevent this from happening for
   a web app.
   """
-  cache.set(cache_key, None, 5)
+  cache.set(cache_key, None, 2)
 
 def invalidate_template_cache(fragment_name, *variables):
   args = md5_constructor(u':'.join([urlquote(var) for var in variables]))
@@ -22,20 +22,18 @@ def invalidate_template_cache(fragment_name, *variables):
   invalidate_cache(cache_key)
 
 
-
-
 template_cache_map = {
     'Product':  (
-        'product_detail_fragment1', 'product_detail_fragment2', 'product_detail2',
-        'product_small', 'product_thumb', 'look_widget', 'look_small',
+        'product_detail_fragment1', 'product_detail_fragment2',
+        'product_small', 'product_thumb', 'look_widget', 'look_small', 'look_small_like',
     ),
     'VendorProduct': (
-        'product_detail_fragment1', 'product_detail_fragment2', 'product_detail2',
-        'look_widget', 'look_small',
+        'product_detail_fragment1', 'product_detail_fragment2',
+        'look_widget', 'look_small', 'look_small_like',
     ),
     'VendorProductVariation': (  # Fixme: Validate these
-        'product_detail_fragment1', 'product_detail_fragment2', 'product_detail2',
-        'look_widget', 'look_small',
+        'product_detail_fragment1', 'product_detail_fragment2',
+        'look_widget', 'look_small', 'look_small_like',
     ),
     'Option': (
         'filter_menu',
@@ -44,12 +42,12 @@ template_cache_map = {
         'filter_menu',
     ),
     'Look': (
-        'look_detail1', 'look_detail2', 'look_detail3', 'look_small',
-        'product_detail2', 'look_widget', 'look_small',
+        'look_detail1', 'look_detail2', 'look_detail3', 'look_small_like',
+        'look_widget', 'look_small',
         'index', 'index_looks'
     ), # < only if featured was changed
     'LookComponent': (
-        'look_detail1', 'look_detail2', 'look_detail3', 'look_widget', 'look_small',
+        'look_detail1', 'look_detail2', 'look_detail3', 'look_widget', 'look_small', 'look_small_like',
     ),
     'FirstPageContent': (
         'index'

@@ -202,7 +202,6 @@
                     <a class="next">{% trans "Next" %}</a>
                 </div>
             {% endif %}
-    {% cache CACHE_TIMEOUT product_detail2 object.id LANGUAGE_CODE %}
             <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
                 {% blocktrans count looks_with_product|length as counter %}
                     <span class="count">{{ counter }}</span> look with this product
@@ -214,7 +213,6 @@
             {% include 'apparel/fragments/looks.html' %}
             {% endwith %}
         </div>
-    {% endcache %}
 {% else %}
     <!-- FIXME: This needs some sort of layout -->
     <p>{% trans "No product found!" %}</p>
