@@ -171,10 +171,13 @@ jQuery(document).ready(function() {
         $this = $(this);
         $parent = $this.parent();
         $.post($this.attr('href'), function(response) {
-            if($parent.is('.following'))
+            if($parent.is('.following')) {
+                jQuery('.following a[href=' + $this.attr('href') + ']').parent().removeClass('following').addClass('not_following');
                 $parent.removeClass('following').addClass('not_following');
-            else
+            } else {
+                jQuery('.not_following a[href=' + $this.attr('href') + ']').parent().removeClass('not_following').addClass('following');
                 $parent.removeClass('not_following').addClass('following');
+            }
         });
         return false;
     })
