@@ -31,10 +31,10 @@ from apparelrow.apparel.models import ProductLike
 
 RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 10)
 
-def remove_instance_from_index(instance):
+def remove_instance_from_index(instance, **kwargs):
     model_class = get_model(instance._meta.app_label, instance._meta.module_name)
     search_index = site.get_index(model_class)
-    search_index.remove_object(instance)
+    search_index.remove_object(instance, **kwargs)
 
 class QueuedSearchIndex(SearchIndex):
     """
@@ -60,7 +60,7 @@ class QueuedSearchIndex(SearchIndex):
             search_index_update(instance._meta.app_label, instance._meta.module_name, instance._get_pk_val())
 
     def enqueue_delete(self, instance, **kwargs):
-        remove_instance_from_index(instance)
+        remove_instance_from_index(instance, **kwargs)
 
     def update_objects(self, instances, using=None, **kwargs):
         instances = [x for x in instances if self.should_update(x, **kwargs)]
