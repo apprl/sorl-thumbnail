@@ -332,8 +332,12 @@ models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Vendor
 def look_image_path(instance, filename):
     return os.path.join(settings.APPAREL_LOOK_IMAGE_ROOT, uuid.uuid4().hex)
 
+def validate_not_spaces(value):
+    if value.strip() == '':
+        raise ValidationError(u'You must provide more than just whitespace.')
+
 class Look(models.Model):
-    title = models.CharField(_('Title'), max_length=200)
+    title = models.CharField(_('Title'), max_length=200, validators=[validate_not_spaces])
     slug  = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
                 help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     description = models.TextField(_('Look description'), null=True, blank=True)
