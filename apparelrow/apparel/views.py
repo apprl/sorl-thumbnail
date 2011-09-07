@@ -64,7 +64,7 @@ def product_detail(request, slug):
     
     context = RequestContext(request)
 
-    more_like_this = SearchQuerySet().filter(django_ct='apparel.product').filter(gender=product.gender).more_like_this(product)[:10]
+    more_like_this = SearchQuerySet().filter(django_ct='apparel.product').filter(availability=True).filter(gender=product.gender).more_like_this(product)[:10]
     
     return render_to_response(
             'apparel/product_detail.html',
