@@ -1297,22 +1297,24 @@ a.follow, a.unfollow
   +button(none, 1em)
   +border-radius(2px)
   +highlight
-  line-height: 1
+  line-height: 1em
   background-repeat: no-repeat
   background-attachment: scroll
   background-position: 2px center
-  padding: 0 2px 0 11px
+  padding: 1px 2px 1px 14px
   display: inline-block
   span
     display: none
   &:hover
-    text-decoration: none
     +highlight_hover
+    text-decoration: none !important
     span
       display: inline
 
 a.follow
   background-image: image_url("follow.png")
+  &:hover
+    text-decoration: none !important
 
 a.unfollow
   background-color: #f0f0f0
@@ -1324,6 +1326,7 @@ a.unfollow
     background-image: image_url("unfollow.png")
     border-color: $like_color
     color: $font_color
+    text-decoration: none !important
 
 a.profile-link
   img.avatar
