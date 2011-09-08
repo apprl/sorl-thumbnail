@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="sidebar last">
-        <h2>{% trans "Find your friends" %}</h2>
+        <h2>{% trans "Your friends are here!" %}</h2>
         {% if not user.is_authenticated %}
         <div>{% trans "Connect with your Facebook account to find your friends." %}</div>
         {% with MEDIA_URL|add:'images/facebook_signin_'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}

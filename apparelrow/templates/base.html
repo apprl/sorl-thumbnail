@@ -82,6 +82,7 @@
                 <li><a class="women" href="{% url apparel.browse.browse_products %}?gender=W">{% trans "Women" %}</a></li>
                 <li><a class="men" href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
                 <li><a href="{% url look-list %}">{% trans "Looks" %}</a></li>
+                <li><a href="{% url apparel.views.user_list %}">{% trans "Members" %}</a></li>
                 {% if not user.is_authenticated %}
                 <li>{% apparel_facebook_button %}</li>
                 {% endif %}
