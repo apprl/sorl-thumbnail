@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-08 10:27+0200\n"
+"POT-Creation-Date: 2011-09-08 10:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -990,8 +990,8 @@ msgid "Recently viewed"
 msgstr "Senast besökta"
 
 #: templates/apparel/product_detail.html:192
-msgid "Similar products"
-msgstr "Liknande plagg"
+msgid "Similar"
+msgstr "Liknande"
 
 #: templates/apparel/product_detail.html:206
 #, python-format
@@ -1886,6 +1886,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Similar products"
+#~ msgstr "Liknande plagg"
 
 #~ msgid "Find your friends"
 #~ msgstr "Hitta dina vänner"
