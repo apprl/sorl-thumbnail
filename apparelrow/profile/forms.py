@@ -1,6 +1,7 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, EmailField
 from django.forms.widgets import RadioSelect
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 
 from apparelrow.profile.models import ApparelProfile
 
@@ -10,6 +11,8 @@ class ProfileImageForm(ModelForm):
         fields = ('image',)
 
 class EmailForm(ModelForm):
+    email = EmailField(label=_('New e-mail address'))
+
     class Meta:
         model = User
         fields = ('email',)
