@@ -60,8 +60,8 @@ def filter_query(query, params, current_user=None, facet_fields=None):
         query = query.narrow('gender:(W OR M OR U)')
 
     if 'q' in params:
-        query = query.filter(content=query.query.clean(params.get('q')))
-        #query = query.auto_query(query.query.clean(params.get('q')))
+        #query = query.filter(content=query.query.clean(params.get('q')))
+        query = query.auto_query(params.get('q'))
 
     # Browse products in that those you follow either like or is in their wardrobe.
     if 'f' in params and current_user:

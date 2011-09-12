@@ -162,6 +162,21 @@ class Product(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('apparel.views.product_detail', [str(self.slug)])
+
+    @property
+    def categories_all_languages(self):
+        current_category = self.category
+        categories = []
+        while current_category:
+            categories.insert(0, current_category.name_sv)
+            categories.insert(0, current_category.name_en)
+            current_category = current_category.parent
+
+        return categories
+
+    @property
+    def colors(self):
+        return self.options.filter(option_type__name='color').values_list('value', flat=True)
     
     def categories(self):
         c = self.category

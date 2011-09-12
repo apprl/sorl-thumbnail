@@ -1,4 +1,5 @@
 {{ object.product_name }}
 {{ object.description }}
-{{ object.category.name_sv }} / {{ object.category.name_en }}
 {{ object.manufacturer.name }}
+{{ object.categories_all_languages|join:" " }}
+{{ object.colors|join:" " }}

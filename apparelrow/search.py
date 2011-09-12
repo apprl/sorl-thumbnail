@@ -85,6 +85,11 @@ class ProductIndex(QueuedSearchIndex):
     popularity = IntegerField(model_attr='popularity')
     availability = BooleanField(stored=False)
 
+    #description = CharField(model_attr='description', stored=False)
+    #color_name = MultiValueField(stored=False)
+    #manufacturer_name = CharField(model_attr='manufacturer__name', stored=False)
+    #categories = CharField(stored=False)
+
     def prepare(self, object):
         self.prepared_data = super(ProductIndex, self).prepare(object)
         # Add price to search index
@@ -109,6 +114,12 @@ class ProductIndex(QueuedSearchIndex):
                 availability = True
                 break
         self.prepared_data['availability'] = availability
+
+        # Add categories
+        #self.prepared_data['categories'] = object.categories_all_languages
+        # Add color names
+        #self.prepared_data['color_names'] = object.options.filter(option_type__name='color').values_list('value', flat=True)
+
         return self.prepared_data
 
     def index_queryset(self):
@@ -174,10 +185,9 @@ def search_view(request, model):
     if ids:
         sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
 
-    # FIXME: Do we really need a form when this is only accessed through ajax
     if request.GET.get('q'):
-        sqs = sqs.filter(content=sqs.query.clean(request.GET.get('q')))
-        #sqs = sqs.auto_query(sqs.query.clean(request.GET.get('q')))
+        #sqs = sqs.filter(content=sqs.query.clean(request.GET.get('q')))
+        sqs = sqs.auto_query(request.GET.get('q'))
     else:
         return Http404('Search require a search string')
 
