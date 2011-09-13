@@ -168,8 +168,10 @@ class Product(models.Model):
         current_category = self.category
         categories = []
         while current_category:
-            categories.insert(0, current_category.name_sv)
-            categories.insert(0, current_category.name_en)
+            if current_category.name_sv:
+                categories.insert(0, current_category.name_sv)
+            if current_category.name_en:
+                categories.insert(0, current_category.name_en)
             current_category = current_category.parent
 
         return categories
