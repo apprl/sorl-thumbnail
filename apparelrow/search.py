@@ -66,6 +66,62 @@ class QueuedSearchIndex(SearchIndex):
         instances = [x for x in instances if self.should_update(x, **kwargs)]
         self.backend.update(self, instances)
 
+class SearchQuerySetPlus(SearchQuerySet):
+
+    def auto_query_plus(self, query_string, fieldnames=None):
+        """
+        This is an extension of auto_query that is built into haystack.
+        """
+        clone = self._clone()
+
+        # Pull out anything wrapped in quotes and do an exact match on it.
+        open_quote_position = None
+        non_exact_query = query_string
+
+        if fieldnames is None:
+            fieldnames = ['name', 'description', 'manufacturer_name', 'color_names', 'category_names']
+
+        for offset, char in enumerate(query_string):
+            if char == '"':
+                if open_quote_position != None:
+                    current_match = non_exact_query[open_quote_position + 1:offset]
+
+                    if current_match:
+                        keyword_list = []
+                        for fieldname in fieldnames:
+                            keyword_list.append('%s:"%s"' % (fieldname, clone.query.clean(current_match)))
+
+                        clone = clone.narrow(' OR '.join(keyword_list))
+
+                    non_exact_query = non_exact_query.replace('"%s"' % current_match, '', 1)
+                    open_quote_position = None
+                else:
+                    open_quote_position = offset
+
+        # Pseudo-tokenize the rest of the query.
+        keywords = non_exact_query.split()
+
+        # Loop through keywords and add filters to the query.
+        for keyword in keywords:
+            exclude = False
+
+            if keyword.startswith('-') and len(keyword) > 1:
+                keyword = keyword[1:]
+                exclude = True
+
+            cleaned_keyword = clone.query.clean(keyword)
+            keyword_list = []
+            for fieldname in fieldnames:
+                keyword_list.append('%s:"%s"' % (fieldname, cleaned_keyword))
+
+            if exclude:
+                clone = clone.narrow('NOT (%s)' % (' OR '.join(keyword_list)))
+            else:
+                clone = clone.narrow(' OR '.join(keyword_list))
+
+        return clone
+
+
 class ProductIndex(QueuedSearchIndex):
     """
     Search index for product model.
@@ -85,10 +141,10 @@ class ProductIndex(QueuedSearchIndex):
     popularity = IntegerField(model_attr='popularity')
     availability = BooleanField(stored=False)
 
-    #description = CharField(model_attr='description', stored=False)
-    #color_name = MultiValueField(stored=False)
-    #manufacturer_name = CharField(model_attr='manufacturer__name', stored=False)
-    #categories = CharField(stored=False)
+    description = CharField(model_attr='description', stored=False, boost=0.7)
+    manufacturer_name = CharField(model_attr='manufacturer__name', stored=False)
+    color_names = CharField(stored=False)
+    category_names = CharField(stored=False)
 
     def prepare(self, object):
         self.prepared_data = super(ProductIndex, self).prepare(object)
@@ -115,10 +171,10 @@ class ProductIndex(QueuedSearchIndex):
                 break
         self.prepared_data['availability'] = availability
 
-        # Add categories
-        #self.prepared_data['categories'] = object.categories_all_languages
+        # Add category names
+        self.prepared_data['category_names'] = ' '.join(object.categories_all_languages)
         # Add color names
-        #self.prepared_data['color_names'] = object.options.filter(option_type__name='color').values_list('value', flat=True)
+        self.prepared_data['color_names'] = ' '.join(object.colors)
 
         return self.prepared_data
 
@@ -177,7 +233,7 @@ def search_view(request, model):
     if model_class is None:
         raise Exception('No model to search for')
 
-    sqs = SearchQuerySet().models(model_class)
+    sqs = SearchQuerySetPlus().models(model_class)
     if class_name == 'product':
         sqs = sqs.narrow('availability:true')
         sqs = sqs.order_by('-popularity')
@@ -186,8 +242,10 @@ def search_view(request, model):
         sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
 
     if request.GET.get('q'):
-        #sqs = sqs.filter(content=sqs.query.clean(request.GET.get('q')))
-        sqs = sqs.auto_query(request.GET.get('q'))
+        if class_name == 'product':
+            sqs = sqs.auto_query_plus(request.GET.get('q'))
+        else:
+            sqs = sqs.auto_query(request.GET.get('q'))
     else:
         return Http404('Search require a search string')
 

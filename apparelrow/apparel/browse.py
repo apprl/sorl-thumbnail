@@ -16,12 +16,11 @@ from django.utils.translation import get_language, ugettext_lazy as _
 
 from hanssonlarsson.django.exporter import json
 
-from haystack.forms import FacetedSearchForm
-from haystack.query import EmptySearchQuerySet
 from haystack.query import SearchQuerySet
 
 from actstream.models import Follow
 
+from apparelrow.search import SearchQuerySetPlus
 from apparel.models import Product
 from apparel.models import Manufacturer
 from apparel.models import Option
@@ -60,8 +59,7 @@ def filter_query(query, params, current_user=None, facet_fields=None):
         query = query.narrow('gender:(W OR M OR U)')
 
     if 'q' in params:
-        #query = query.filter(content=query.query.clean(params.get('q')))
-        query = query.auto_query(params.get('q'))
+        query = query.auto_query_plus(params.get('q'))
 
     # Browse products in that those you follow either like or is in their wardrobe.
     if 'f' in params and current_user:
@@ -73,7 +71,7 @@ def filter_query(query, params, current_user=None, facet_fields=None):
 
 def browse_products(request, template='apparel/browse.html', extra_context=None):
     facet_fields = ['category', 'price', 'manufacturer', 'color']
-    sqs = filter_query(SearchQuerySet().models(Product), request.GET, request.user, facet_fields)
+    sqs = filter_query(SearchQuerySetPlus().models(Product), request.GET, request.user, facet_fields)
     if extra_context and 'profile' in extra_context:
         sqs = sqs.narrow('user_wardrobe:%s' % (extra_context['profile'].user.id,))
     else:
