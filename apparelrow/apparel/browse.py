@@ -77,7 +77,10 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     else:
         if request.GET.get('f', None) is None:
             sqs = sqs.narrow('availability:true')
-    sqs = sqs.order_by('-popularity')
+
+    # If 'q' is not in GET sort by popularity descending
+    if request.GET.get('q', None) is None:
+        sqs = sqs.order_by('-popularity')
 
     facet = sqs.facet_counts()
 

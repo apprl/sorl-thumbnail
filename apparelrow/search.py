@@ -234,15 +234,13 @@ def search_view(request, model):
         raise Exception('No model to search for')
 
     sqs = SearchQuerySetPlus().models(model_class)
-    if class_name == 'product':
-        sqs = sqs.narrow('availability:true')
-        sqs = sqs.order_by('-popularity')
 
     if ids:
         sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
 
     if request.GET.get('q'):
         if class_name == 'product':
+            sqs = sqs.narrow('availability:true')
             sqs = sqs.auto_query_plus(request.GET.get('q'))
         else:
             sqs = sqs.auto_query(request.GET.get('q'))
