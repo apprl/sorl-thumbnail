@@ -130,7 +130,8 @@ class API(object):
             'description': self.dataset['product']['description'],
             'category': self.category,
             'product_image': self.product_image,
-            'gender': self.dataset['product']['gender']
+            'gender': self.dataset['product']['gender'],
+            'feed_gender': self.dataset['product']['gender']
         }
         
         try:
