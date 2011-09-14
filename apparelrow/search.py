@@ -20,6 +20,7 @@ from haystack.indexes import MultiValueField
 from haystack.indexes import NgramField
 from haystack.indexes import BooleanField
 from haystack.query import SearchQuerySet
+from haystack.backends import SQ
 
 from apparelrow.apparel.messaging import search_index_update
 from apparelrow.apparel.models import Category
@@ -87,11 +88,14 @@ class SearchQuerySetPlus(SearchQuerySet):
                     current_match = non_exact_query[open_quote_position + 1:offset]
 
                     if current_match:
-                        keyword_list = []
+                        keyword_kwargs = {}
                         for fieldname in fieldnames:
-                            keyword_list.append('%s:"%s"' % (fieldname, clone.query.clean(current_match)))
+                            keyword_kwargs[fieldname] = clone.query.clean(current_match)
 
-                        clone = clone.narrow(' OR '.join(keyword_list))
+                        clone = clone._clone()
+                        sq = SQ(**keyword_kwargs)
+                        sq.connector = 'OR'
+                        clone.query.add_filter(sq)
 
                     non_exact_query = non_exact_query.replace('"%s"' % current_match, '', 1)
                     open_quote_position = None
@@ -110,14 +114,20 @@ class SearchQuerySetPlus(SearchQuerySet):
                 exclude = True
 
             cleaned_keyword = clone.query.clean(keyword)
-            keyword_list = []
+            keyword_kwargs = {}
             for fieldname in fieldnames:
-                keyword_list.append('%s:"%s"' % (fieldname, cleaned_keyword))
+                keyword_kwargs[fieldname] = cleaned_keyword
 
             if exclude:
-                clone = clone.narrow('NOT (%s)' % (' OR '.join(keyword_list)))
+                clone = clone._clone()
+                sq = SQ(**keyword_kwargs)
+                sq.connector = 'OR'
+                clone.query.add_filter(~sq)
             else:
-                clone = clone.narrow(' OR '.join(keyword_list))
+                clone = clone._clone()
+                sq = SQ(**keyword_kwargs)
+                sq.connector = 'OR'
+                clone.query.add_filter(sq)
 
         return clone
 
