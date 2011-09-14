@@ -22,6 +22,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['category', 'gender', 'published']
     list_display_links = ['product_name']
     actions = ['publish', 'hide', 'change_category', 'change_options']
+    list_per_page = 50
 
     def image(self, obj):
         try:
@@ -143,9 +144,26 @@ class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
         return ' > '.join([c.name for c in category.get_ancestors()])
 
     def num_products(self, category):
-        result = Product.objects.values('category').filter(category=category).annotate(Count('category')).get()
-        if result and 'category__count' in result:
-            return result['category__count']
+        try:
+            products = Product.objects.values('category').filter(category=category).annotate(Count('category')).get()
+        except Product.DoesNotExist:
+            return '0'
+
+        if products and 'category__count' in products:
+            try:
+                available_products = Product.objects.values('category').filter(category=category).exclude(vendorproduct__availability=0).annotate(Count('category')).get()
+                if available_products and 'category__count' in available_products:
+                    return '%s (%s)' % (products['category__count'], available_products['category__count'])
+            except Product.DoesNotExist:
+                pass
+
+            return '%s (%s)' % (products['category__count'], 0)
+
+        return '0'
+
+        #result = Product.objects.values('category').filter(category=category).annotate(Count('category')).get()
+        #if result and 'category__count' in result:
+            #return result['category__count']
 
 admin.site.register(Category, CategoryAdmin)
 
@@ -159,14 +177,28 @@ class VendorCategoryAdmin(admin.ModelAdmin):
     list_editable = ['override_gender', 'default_gender', 'category']
     list_display_links = ['name']
     actions = ['reset_gender']
+    list_per_page = 50
 
     def category_ancestors(self, vendor_category):
         return ' > '.join([c.name for c in vendor_category.category.get_ancestors()])
 
     def num_products(self, vendor_category):
-        result = VendorProduct.objects.values('vendor_category').filter(vendor_category=vendor_category).annotate(Count('vendor_category')).get()
-        if result and 'vendor_category__count' in result:
-            return result['vendor_category__count']
+        try:
+            vproducts = VendorProduct.objects.values('vendor_category').filter(vendor_category=vendor_category).annotate(Count('vendor_category')).get()
+        except VendorProduct.DoesNotExist:
+            return 0
+
+        if vproducts and 'vendor_category__count' in vproducts:
+            try:
+                available_vproducts = VendorProduct.objects.values('vendor_category').filter(vendor_category=vendor_category).exclude(availability=0).annotate(Count('vendor_category')).get()
+                if available_vproducts and 'vendor_category__count' in available_vproducts:
+                    return '%s (%s)' % (vproducts['vendor_category__count'], available_vproducts['vendor_category__count'])
+            except VendorProduct.DoesNotExist:
+                pass
+
+            return '%s (%s)' % (vproducts['vendor_category__count'], 0)
+
+        return 0
 
     def reset_gender(self, request, queryset):
         num_products = 0
@@ -227,6 +259,7 @@ class VendorProductAdmin(admin.ModelAdmin):
     list_display = ['product', 'vendor', 'price', 'in_stock']
     list_filter = ['vendor']
     inlines = [VendorProductVariationInline]
+    list_per_page = 50
 
     def in_stock(self, vp):
         if vp.availability is None:
