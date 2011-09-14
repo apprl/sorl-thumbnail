@@ -127,7 +127,7 @@ class ProductIndex(QueuedSearchIndex):
     Search index for product model.
     """
     text = CharField(document=True, use_template=True, model_attr='product_name', stored=False)
-    name = CharField(model_attr='product_name', stored=False)
+    name = CharField(model_attr='product_name', stored=False, boost=1.1)
     created = DateTimeField(model_attr='date_added', stored=False)
     gender = CharField(model_attr='gender', default=None, stored=False)
     manufacturer = CharField(model_attr='manufacturer__id', faceted=True, stored=False)
@@ -141,10 +141,10 @@ class ProductIndex(QueuedSearchIndex):
     popularity = IntegerField(model_attr='popularity')
     availability = BooleanField(stored=False)
 
-    description = CharField(model_attr='description', stored=False, boost=0.7)
-    manufacturer_name = CharField(model_attr='manufacturer__name', stored=False)
-    color_names = CharField(stored=False)
-    category_names = CharField(stored=False)
+    description = CharField(model_attr='description', stored=False, boost=0.5)
+    manufacturer_name = CharField(model_attr='manufacturer__name', stored=False, boost=1.1)
+    color_names = CharField(stored=False, boost=1.1)
+    category_names = CharField(stored=False, boost=1.1)
 
     def prepare(self, object):
         self.prepared_data = super(ProductIndex, self).prepare(object)
