@@ -180,4 +180,13 @@ post_save.connect(create_profile_from_facebook, sender=FacebookProfile)
 post_delete.connect(delete_user_followings, sender=User)
 post_delete.connect(delete_object_activities, sender=User)
 
+#
+# NOTIFICATION CACHE
+#
+class NotificationCache(models.Model):
+    key = models.CharField(max_length=255, unique=True, blank=False, null=False)
+
+    def __unicode__(self):
+        return '%s' % (self.key,)
+
 import profile.activity
