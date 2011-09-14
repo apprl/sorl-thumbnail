@@ -13,7 +13,7 @@ from mptt.forms import TreeNodeChoiceField
 from mptt.admin import MPTTModelAdmin
 
 #
-# Products
+# PRODUCT
 #
 
 class ProductAdmin(admin.ModelAdmin):
@@ -101,6 +101,10 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 
+#
+# LOOK
+#
+
 class LookAdmin(admin.ModelAdmin):
     raw_id_fields = ('products',)
     list_display = ('title', 'user', 'component', 'is_featured')
@@ -108,11 +112,19 @@ class LookAdmin(admin.ModelAdmin):
 
 admin.site.register(Look, LookAdmin)
 
+#
+# MANUFACTURER
+#
+
 class ManufacturerAdmin(admin.ModelAdmin):
     list_display = ('name', 'active',)
     list_filter = ['active']
 
 admin.site.register(Manufacturer, ManufacturerAdmin)
+
+#
+# CATEGORY
+#
 
 class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
     list_display = ('name', 'ancestors', 'on_front_page', 'num_products')
@@ -137,11 +149,16 @@ class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 
+#
+# VENDOR CATEGORY
+#
+
 class VendorCategoryAdmin(admin.ModelAdmin):
-    list_display = ('vendor', 'name', 'default_gender', 'category', 'category_ancestors', 'num_products',)
-    list_filter = ['vendor', 'category', 'default_gender']
-    list_editable = ['default_gender', 'category']
+    list_display = ('vendor', 'name', 'override_gender', 'default_gender', 'category', 'category_ancestors', 'num_products',)
+    list_filter = ['vendor', 'category', 'override_gender', 'default_gender']
+    list_editable = ['override_gender', 'default_gender', 'category']
     list_display_links = ['name']
+    actions = ['reset_gender']
 
     def category_ancestors(self, vendor_category):
         return ' > '.join([c.name for c in vendor_category.category.get_ancestors()])
@@ -151,7 +168,29 @@ class VendorCategoryAdmin(admin.ModelAdmin):
         if result and 'vendor_category__count' in result:
             return result['vendor_category__count']
 
+    def reset_gender(self, request, queryset):
+        num_products = 0
+        num_vendor_categories = 0
+        for vendor_category in queryset:
+            num_vendor_categories += 1
+            vendor_category.override_gender = ''
+            for product in Product.objects.filter(vendorproduct__vendor_category=vendor_category):
+                num_products += 1
+                product.gender = product.feed_gender
+                if product.gender is None and vendor_category.default_gender is not None:
+                    product.gender = vendor_category.default_gender
+                product.save()
+            vendor_category.save()
+
+        self.message_user(request, "Successfully reseted %s products in %s vendor categories" % (num_products, num_vendor_categories))
+
+    reset_gender.short_description = "Reset gender for all products related to this vendor category"
+
 admin.site.register(VendorCategory, VendorCategoryAdmin)
+
+#
+# OPTION TYPE
+#
 
 class OptionTypeAdmin(admin.ModelAdmin):
     list_display = ['name', 'parent']
@@ -159,13 +198,25 @@ class OptionTypeAdmin(admin.ModelAdmin):
 
 admin.site.register(OptionType, OptionTypeAdmin)
 
+#
+# OPTION
+#
+
 class OptionAdmin(admin.ModelAdmin):
     list_display = ['value', 'option_type']
     list_filter = ['option_type']
 
 admin.site.register(Option, OptionAdmin)
 
+#
+# VENDOR
+#
+
 admin.site.register(Vendor)
+
+#
+# VENDOR PRODUCT
+#
 
 class VendorProductVariationInline(admin.StackedInline):
     model = VendorProductVariation

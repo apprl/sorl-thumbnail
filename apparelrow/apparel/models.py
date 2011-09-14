@@ -253,6 +253,7 @@ class VendorCategory(models.Model):
     name     = models.CharField(_('Name'), max_length=255)
     vendor   = models.ForeignKey(Vendor)
     default_gender = models.CharField(_('Default gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
+    override_gender = models.CharField(_('Override gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
@@ -267,6 +268,12 @@ class VendorCategory(models.Model):
             queryset = Product.objects.filter(vendorproduct__vendor_category=self, gender__isnull=True)
             for product in queryset:
                 product.gender = self.default_gender
+                product.save()
+
+        if self.override_gender:
+            queryset = Product.objects.filter(vendorproduct__vendor_category=self)
+            for product in queryset:
+                product.gender = self.override_gender
                 product.save()
 
             # NOTE 1: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
