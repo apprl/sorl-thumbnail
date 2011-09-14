@@ -577,6 +577,10 @@ def save_synonym_file(sender, **kwargs):
     synonym_file.write(instance.content.encode("utf-8"))
     synonym_file.close()
 
+    # FIXME: Move this link to a config file
+    import requests
+    requests.get('http://localhost:8983/solr/admin/cores?action=RELOAD&core=collection1')
+
 class SynonymFile(models.Model):
     content = models.TextField(_('Synonyms'), null=True, blank=True, help_text=_('Place all synonyms on their own line, comma-separated. Comments start with "#".'))
 
