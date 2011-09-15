@@ -295,12 +295,12 @@ class API(object):
             raise IncompleteDataSet('image-url', 'product image URL [%s] does not match [%s]' % (url, self.re_url))
 
         filename = m.group(1)
-        filename, extension = os.path.splitext(filename)
+        filename_temp, extension = os.path.splitext(filename)
         # FIXME: Here we want to find the mimetype and use that instead of just 'jpg', this is not possible:
         #   * Here we set the path for where to save the downloaded file later, which means that we need to download the file here, everytime to check mimetype
         #   * The builtin python mimetypes module does not work, python-magic works but is incompatible with the version of sorl-thumbnail we uses
         if not extension:
-            filename = '%s.%s' % (filename, 'jpg')
+            filename = '%s.%s' % (filename_temp, 'jpg')
 
         return '%s/%s/%s.%s' % (
             settings.APPAREL_PRODUCT_IMAGE_ROOT, 
