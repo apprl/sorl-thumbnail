@@ -495,6 +495,7 @@ class API(object):
                     raise SkipProduct('Could not download product image')
 
                 if re.search(r':.* text', subprocess.Popen(["file", '-L', temppath], stdout=subprocess.PIPE).stdout.read()):
+                    logger.error(u'No image found, only text (while downloading %s)' % (url,))
                     raise SkipProduct('Could not download product image')
 
                 storage.default_storage.save(self._product_image, File(open(temppath)))
