@@ -69,7 +69,7 @@ class QueuedSearchIndex(SearchIndex):
 
 class SearchQuerySetPlus(SearchQuerySet):
 
-    def auto_query_plus(self, query_string, fieldnames=None):
+    def auto_query_product(self, query_string, fieldnames=None):
         """
         This is an extension of auto_query that is built into haystack.
         """
@@ -80,7 +80,7 @@ class SearchQuerySetPlus(SearchQuerySet):
         non_exact_query = query_string
 
         if fieldnames is None:
-            fieldnames = ['name', 'description', 'manufacturer_name', 'color_names', 'category_names']
+            fieldnames = ['product_name', 'description', 'manufacturer_name', 'color_names', 'category_names']
 
         for offset, char in enumerate(query_string):
             if char == '"':
@@ -137,7 +137,7 @@ class ProductIndex(QueuedSearchIndex):
     Search index for product model.
     """
     text = CharField(document=True, use_template=True, model_attr='product_name', stored=False)
-    name = CharField(model_attr='product_name', stored=False, boost=1.1)
+    name = CharField(model_attr='product_name', stored=False)
     created = DateTimeField(model_attr='date_added', stored=False)
     gender = CharField(model_attr='gender', default=None, stored=False)
     manufacturer = CharField(model_attr='manufacturer__id', faceted=True, stored=False)
@@ -151,6 +151,7 @@ class ProductIndex(QueuedSearchIndex):
     popularity = IntegerField(model_attr='popularity')
     availability = BooleanField(stored=False)
 
+    product_name = CharField(model_attr='product_name', stored=False, boost=1.1)
     description = CharField(model_attr='description', stored=False, boost=0.5)
     manufacturer_name = CharField(model_attr='manufacturer__name', stored=False, boost=1.1)
     color_names = CharField(stored=False, boost=1.1)
@@ -251,7 +252,7 @@ def search_view(request, model):
     if request.GET.get('q'):
         if class_name == 'product':
             sqs = sqs.narrow('availability:true')
-            sqs = sqs.auto_query_plus(request.GET.get('q'))
+            sqs = sqs.auto_query_product(request.GET.get('q'))
         else:
             sqs = sqs.auto_query(request.GET.get('q'))
     else:
