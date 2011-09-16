@@ -145,10 +145,10 @@
     <field name="manufacturer_id" type="slong" indexed="true" stored="true" multiValued="false" />
 
     <!-- Used in product search -->
-    <field name="manufacturer_name" type="text" indexed="true" stored="false" multiValued="false" />
-    <field name="description" type="text" indexed="true" stored="false" multiValued="false" />
-    <field name="category_names" type="text" indexed="true" stored="false" multiValued="false" />
-    <field name="color_names" type="text" indexed="true" stored="false" multiValued="false" />
+    <field name="manufacturer_name" type="text" indexed="true" stored="true" multiValued="false" termVectors="true" />
+    <field name="description" type="text" indexed="true" stored="true" multiValued="false" termVectors="true" />
+    <field name="category_names" type="text" indexed="true" stored="true" multiValued="false" termVectors="true" />
+    <field name="color_names" type="text" indexed="true" stored="true" multiValued="false" termVectors="true" />
   </fields>
 
   <!-- field to use to determine and enforce document uniqueness. -->
