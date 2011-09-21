@@ -5,7 +5,7 @@
 {% block title %}{% trans "Follow a member" %}{% endblock %}
 {% block content %}
 <p>{% trans "To follow someone on the site, you need to connect with your Facebook account:" %}</p>
-{% with MEDIA_URL|add:'images/facebook_signin_'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
+{% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
 {% facebook_button facebook_login_image %}
 {% endwith %}
 {% endblock %}

@@ -60,9 +60,36 @@ button
     +pie-clearfix
     overflow: visible
 
+#facebook-header
+  background: transparent image_url(unquote("facebook-header.png")) scroll no-repeat center center
+  height: 49px
+  margin-bottom: -12px
+  position: relative
+  z-index: 1000
+  #inner-facebook-header
+    width: 940px
+    margin-left: 38px
+    position: relative
+    overflow: visible
+    p
+      background: transparent image_url(unquote("bubble.png")) scroll no-repeat left 17px
+      padding-top: 20px
+      padding-left: 30px
+      color: white
+      font-size: 12px
+      float: left
+    .connect-button
+      float: right
+      margin-top: 14px
+    img
+      float: right
+      margin-left: 10px
+      margin-top: 18px
+
 #header
   background: transparent image_url(unquote("header-bg.png")) scroll no-repeat center center
   height: 118px
+  position: relative
   #inner-header
     width: 940px
     margin-left: 38px
@@ -81,7 +108,79 @@ button
       background-position: center right
       width: 149px
       padding-right: 0
+  #nav-main
+    position: absolute
+    top: 38px
+    right: 235px
+    line-height: 26px
+    li
+      display: inline
+      margin-left: 2em
+      a
+        text-decoration: none
+        text-transform: uppercase
+        color: white
+        padding-top: 1em
+        padding-bottom: 1em
+        &.fb_button
+          padding: 0
+      form.select-language, form.connect-button
+        display: inline-block
+        button, input
+          display: inline
+          background: transparent
+          color: white
+          line-height: 1.5
+          text-transform: uppercase
+          padding: 0
+          margin: 0
+        input
+          position: relative
+          top: 4px
+  #cancel-search
+    background: transparent image_url(unquote("close-large.png")) scroll no-repeat center center
+    display: none
+    position: absolute
+    right: 38px
+    top: 18px
+    height: 12px
+    width: 12px
+    text-indent: -9999px
+    &:hover
+      background-image: image_url(unquote("close-large-hover.png"))
+  #search
+    background: transparent image_url(unquote("search.png")) scroll no-repeat right top
+    top: 26px
+    right: -20px
+    position: absolute
+    width: 163px
+    height: 24px
+    padding: 16px 50px 16px 41px
+    overflow: visible
+    z-index: 1000
+    &.expanded
+      background: transparent image_url(unquote("searchresult-box.png")) scroll no-repeat right top
+      height: 85px
+      width: 163px
+    & input
+      position: absolute
+      width: 163px
+      right: 50px
+      margin: 0
+      border: none
+      vertical-align: middle
+      font-size: 1.2em
+      background: transparent
 
+#header.facebook
+  background: transparent image_url(unquote("facebook-header.png")) scroll no-repeat center center
+  height: 159px
+  h1
+    margin-top: 64px
+  #nav-main
+    top: 79px
+  #search
+    top: 67px
 
 #footer
   background: transparent image_url(unquote("footer-bg.png")) scroll no-repeat center center
@@ -202,36 +301,6 @@ button
           left: 0
           bottom: 0
           right: 0
-
-#nav-main
-  position: absolute
-  top: 38px
-  right: 235px
-  line-height: 26px
-  li
-    display: inline
-    margin-left: 2em
-    a
-      text-decoration: none
-      text-transform: uppercase
-      color: white
-      padding-top: 1em
-      padding-bottom: 1em
-      &.fb_button
-        padding: 0
-    form.select-language, form.connect-button
-      display: inline-block
-      button, input
-        display: inline
-        background: transparent
-        color: white
-        line-height: 1.5
-        text-transform: uppercase
-        padding: 0
-        margin: 0
-      input
-        position: relative
-        top: 4px
 
 #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
   +box
@@ -1137,42 +1206,6 @@ a.block_link
   line-height: 2.5em
   text-align: center
   text-transform: uppercase
-
-
-#cancel-search
-  background: transparent image_url(unquote("close-large.png")) scroll no-repeat center center
-  display: none
-  position: absolute
-  right: 38px
-  top: 18px
-  height: 12px
-  width: 12px
-  text-indent: -9999px
-  &:hover
-    background-image: image_url(unquote("close-large-hover.png"))
-#search
-  background: transparent image_url(unquote("search.png")) scroll no-repeat right top
-  top: 26px
-  right: -20px
-  position: absolute
-  width: 163px
-  height: 24px
-  padding: 16px 50px 16px 41px
-  overflow: visible
-  z-index: 1000
-  &.expanded
-    background: transparent image_url(unquote("searchresult-box.png")) scroll no-repeat right top
-    height: 85px
-    width: 163px
-  & input
-    position: absolute
-    width: 163px
-    right: 50px
-    margin: 0
-    border: none
-    vertical-align: middle
-    font-size: 1.2em
-    background: transparent
 
 #search-result
   position: absolute

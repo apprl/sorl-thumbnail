@@ -20,7 +20,7 @@ from pprint import pformat
 register = Library()
 
 @register.inclusion_tag('apparel/tags/apparel_facebook_button.html', takes_context=True)
-def apparel_facebook_button(context):
+def apparel_facebook_button(context, image=None):
     if not 'request' in context:
         raise AttributeError, 'Please add the ``django.core.context_processors.request`` context processors to your settings.TEMPLATE_CONTEXT_PROCESSORS set'
     logged_in = context['request'].user.is_authenticated()
@@ -28,7 +28,10 @@ def apparel_facebook_button(context):
         next = context['next']
     else:
         next = None
-    button = settings.MEDIA_URL + 'images/fblogo.png'
+    if image is not None:
+        button = settings.MEDIA_URL + 'images/' + image
+    else:
+        button = settings.MEDIA_URL + 'images/fblogo.png'
     return dict(next=next, logged_in=logged_in, button=button, request=context['request'])
 
 @register.filter

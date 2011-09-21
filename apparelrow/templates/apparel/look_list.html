@@ -25,7 +25,7 @@
 
         {% if not user.is_authenticated and request.path == popular_look_list_url %}
             <div>{% trans "To see popular looks in your network you need to connect with your Facebook account." %}</div>
-            {% with MEDIA_URL|add:'images/facebook_signin_sv.png' as facebook_login_image %}
+            {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
                 {% facebook_button facebook_login_image %}
             {% endwith %}
         {% else %}
@@ -57,8 +57,8 @@
         {% endif %}
         {% else %}
         <div>{% trans "To see which of your friends have created the most looks, connect with your Facebook account." %}</div>
-        {% with MEDIA_URL|add:'images/facebook_signin_sv.png' as facebook_login_image %}
-        {% facebook_button facebook_login_image %}
+        {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
+            {% facebook_button facebook_login_image %}
         {% endwith %}
         {% endif %}
     </div>
