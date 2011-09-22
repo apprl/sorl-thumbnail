@@ -16,8 +16,29 @@ class ApparelMapper(DataMapper):
                 else:
                     logger.debug('Color %s not recogised' % v['color'])
                     del v['color']
-        
+
+            if 'in-stock' in v:
+                try:
+                    v['availability'] = int(v['in-stock'])
+                    del v['in-stock']
+                except ValueError:
+                    pass
+
         return self.record['variations']
+
+    def get_availability(self):
+        availability_sum = 0
+        for v in self.get_variations():
+            if 'availability' in v:
+                if v['availability'] > 0:
+                    availability_sum += v['availability']
+
+        if availability_sum > 0:
+            return -1
+        elif availability_sum == 0:
+            return 0
+
+        return None
 
 class Provider(BaseProvider):
     def __init__(self, *args, **kwargs):
@@ -37,7 +58,7 @@ class Provider(BaseProvider):
                 (e.name, self.process_text(e.getContent())) 
                 for e in p.xpathEval('./*')
             ])
-            
+
             record['variations'] = []
             
             for v in p.xpathEval('./variations/*'):
@@ -47,7 +68,8 @@ class Provider(BaseProvider):
                         for a in v.xpathEval('./@*')
                     ])
                 )
-            
+
+            record = self.mapper(self, record).translate()
             self.import_data(record)
         
     def process_text(self, text):
