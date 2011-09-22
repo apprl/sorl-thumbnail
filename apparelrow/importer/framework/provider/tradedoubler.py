@@ -20,7 +20,12 @@ class TradeDoublerMapper(DataMapper):
         return variations
     
     def get_gender(self):
-        return self.map_gender(self.record.get('gender'))
+        # Skip products from tradedoubler with gender == kids
+        gender = self.record.get('gender') or self.record.get('Gender', '')
+        if gender == 'kids':
+            raise SkipProduct('Do not import product with gender == kids')
+
+        return self.map_gender(gender)
     
     def get_product_name(self):
         return self.record.get('name')
@@ -29,10 +34,18 @@ class TradeDoublerMapper(DataMapper):
         return self.record.get('TDProductId')
     
     def get_category(self):
-        return self.record.get('merchantCategoryName') or self.record.get('TDCategoryName')
-    
+        merchant_category_name = self.record.get('merchantCategoryName')
+        td_category_name = self.record.get('TDCategoryName')
+
+        if merchant_category_name and td_category_name:
+            return td_category_name + ' > ' + merchant_category_name
+        elif td_category_name:
+            return td_category_name
+        elif merchant_category_name:
+            return merchant_category_name
+
     def get_manufacturer(self):
-        return self.record.get('brand') or self.record.get('manufacturer')
+        return self.record.get('brand') or self.record.get('manufacturer') or self.record.get('programName')
     
     def get_product_url(self):
         return self.record.get('productUrl')
@@ -44,7 +57,7 @@ class TradeDoublerMapper(DataMapper):
         return self.record.get('deliveryTime')
     
     def get_availability(self):
-        availability = self.record.get('availability')
+        availability = self.record.get('availability') or self.record.get('inStock')
         if availability:
             if AVAILABILITY_MATRIX.get(availability.strip().lower(), True):
                 try:
@@ -58,7 +71,7 @@ class TradeDoublerMapper(DataMapper):
         return None
 
     def get_image_url(self):
-        return self.record.get('extraImageProductLarge') or self.record.get('extraImageProductSmall') or self.record.get('imageUrl')
+        return self.record.get('Detailed_Image') or self.record.get('extraImageProductLarge') or self.record.get('extraImageProductSmall') or self.record.get('imageUrl')
 
     
 class Provider(CSVProvider):

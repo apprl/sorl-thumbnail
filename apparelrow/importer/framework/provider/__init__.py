@@ -259,7 +259,12 @@ class CSVProvider(Provider):
 
         duplicate_storage = dict()
         for row in csv_reader:
-            self.record = self.mapper(self, row).translate()
+            try:
+                self.record = self.mapper(self, row).translate()
+            except SkipProduct, e:
+                logger.info('Skipped product during mapping: %s' % (e,))
+                continue
+
             if self.unique_fields:
                 unique_fields = self.unique_fields
                 duplicate_key = tuple(self.record['product'][field] for field in unique_fields)

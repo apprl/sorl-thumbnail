@@ -482,7 +482,7 @@ class API(object):
                 os.makedirs(os.path.join(settings.MEDIA_ROOT, d))
             
             if not storage.default_storage.exists(self._product_image):
-                logger.info(u'Downloading product image %s' % url)
+                logger.debug(u'Downloading product image %s' % url)
                 temppath = None
                 
                 try:
