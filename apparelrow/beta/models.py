@@ -30,6 +30,7 @@ class InvitePerUser(models.Model):
 
 class InviteRequest(models.Model):
     email = models.EmailField(_('E-mail address'))
+    invitee = models.OneToOneField(Invitee, null=True)
 
     def __unicode__(self):
         return u"%s" % self.email
