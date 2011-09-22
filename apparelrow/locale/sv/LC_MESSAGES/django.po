@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-21 21:12+0200\n"
+"POT-Creation-Date: 2011-09-22 18:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -282,7 +282,8 @@ msgstr ""
 msgid "ago"
 msgstr "sedan"
 
-#: apparel_comments/__init__.py:6 templates/beta/dialog_invite_user.html:16
+#: apparel_comments/__init__.py:6 beta/models.py:32
+#: templates/beta/dialog_invite_user.html:16
 #: templates/beta/dialog_invite_user.html:25
 #: templates/profile/base_settings.html:11
 #: templates/profile/settings_email.html:5
@@ -317,21 +318,53 @@ msgstr "Välkommen till vår beta!"
 msgid "Welcome to the ApparelRow beta!"
 msgstr "Välkommen till ApparelRow beta!"
 
-#: beta/templates/beta/beta.html:11
+#: beta/templates/beta/beta.html:47
 msgid "Welcome to ApparelRow beta"
 msgstr "Välkommen till ApparelRow beta"
 
-#: beta/templates/beta/beta.html:14
+#: beta/templates/beta/beta.html:50 beta/templates/beta/beta.html.py:60
 msgid "E-mail"
 msgstr "E-post"
 
-#: beta/templates/beta/beta.html:15
+#: beta/templates/beta/beta.html:51
 msgid "Invite code"
 msgstr "Inbjudningskod"
 
-#: beta/templates/beta/beta.html:16
+#: beta/templates/beta/beta.html:52
 msgid "Unlock beta"
 msgstr "Lås upp beta"
+
+#: beta/templates/beta/beta.html:55
+msgid "Don't have an invite?"
+msgstr "Har du ingen inbjudan till betaversionen?"
+
+#: beta/templates/beta/beta.html:57
+msgid ""
+"Submit your e-mail address below and we'll send you one as soon as we are "
+"able to let more people in."
+msgstr ""
+"Ge oss din e-mailadress så skickar vi en så snart vi kan släppa in fler."
+
+#: beta/templates/beta/beta.html:61
+msgid "Request invite"
+msgstr "Begär en inbjudan"
+
+#: beta/templates/beta/beta.html:64
+msgid ""
+"Thank you! We have received your request and will take it into "
+"consideration. When we are ready to accept more users, you will receive an "
+"email with your invite code."
+msgstr ""
+"Tack! Vi har tagit emot din begäran och kommer att ta den under beaktande. "
+"När vi är redo att ta emot fler användare får du en inbjudningskod via e-"
+"post."
+
+#: beta/templates/beta/beta.html:67
+msgid ""
+"There was an error processing your request. Please double-check your e-mail "
+"address above."
+msgstr ""
+"Din begäran kunde inte hanteras. Vänligen dubbelkolla din e-postadress ovan."
 
 #: importer/models.py:17
 msgid "a-z, 0-9 and _"

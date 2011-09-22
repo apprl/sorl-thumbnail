@@ -3,7 +3,7 @@ import string
 from datetime import datetime, timedelta
 
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseNotFound
 from django.template import RequestContext
 from django.conf import settings
 from django.utils import translation
@@ -11,6 +11,7 @@ from django.core.validators import email_re
 
 from beta.models import Invitee, Invite
 from beta.tasks import send_email_task
+from beta.forms import InviteRequestForm
 
 # Create your views here.
 
@@ -73,3 +74,17 @@ def invite(request):
 
 def about(request):
     return render_to_response('beta/about.html', context_instance=RequestContext(request))
+
+def request_invite(request):
+    """
+    Request an invite
+    """
+    form = InviteRequestForm(request.POST)
+    response = HttpResponse()
+    if form.is_valid():
+        form.save()
+        response.status_code = 202
+    else:
+        response.status_code = 400
+    
+    return response

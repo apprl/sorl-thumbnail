@@ -27,3 +27,9 @@ class InvitePerUser(models.Model):
 
     def __unicode__(self):
         return u'%s (%s invites)' % (self.user, self.invites)
+
+class InviteRequest(models.Model):
+    email = models.EmailField(_('E-mail address'))
+
+    def __unicode__(self):
+        return u"%s" % self.email

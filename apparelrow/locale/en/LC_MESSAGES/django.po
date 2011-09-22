@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-21 21:12+0200\n"
+"POT-Creation-Date: 2011-09-22 18:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -281,7 +281,8 @@ msgstr ""
 msgid "ago"
 msgstr ""
 
-#: apparel_comments/__init__.py:6 templates/beta/dialog_invite_user.html:16
+#: apparel_comments/__init__.py:6 beta/models.py:32
+#: templates/beta/dialog_invite_user.html:16
 #: templates/beta/dialog_invite_user.html:25
 #: templates/profile/base_settings.html:11
 #: templates/profile/settings_email.html:5
@@ -316,20 +317,47 @@ msgstr ""
 msgid "Welcome to the ApparelRow beta!"
 msgstr ""
 
-#: beta/templates/beta/beta.html:11
+#: beta/templates/beta/beta.html:47
 msgid "Welcome to ApparelRow beta"
 msgstr ""
 
-#: beta/templates/beta/beta.html:14
+#: beta/templates/beta/beta.html:50 beta/templates/beta/beta.html.py:60
 msgid "E-mail"
 msgstr ""
 
-#: beta/templates/beta/beta.html:15
+#: beta/templates/beta/beta.html:51
 msgid "Invite code"
 msgstr ""
 
-#: beta/templates/beta/beta.html:16
+#: beta/templates/beta/beta.html:52
 msgid "Unlock beta"
+msgstr ""
+
+#: beta/templates/beta/beta.html:55
+msgid "Don't have an invite?"
+msgstr ""
+
+#: beta/templates/beta/beta.html:57
+msgid ""
+"Submit your e-mail address below and we'll send you one as soon as we are "
+"able to let more people in."
+msgstr ""
+
+#: beta/templates/beta/beta.html:61
+msgid "Request invite"
+msgstr ""
+
+#: beta/templates/beta/beta.html:64
+msgid ""
+"Thank you! We have received your request and will take it into "
+"consideration. When we are ready to accept more users, you will receive an "
+"email with your invite code."
+msgstr ""
+
+#: beta/templates/beta/beta.html:67
+msgid ""
+"There was an error processing your request. Please double-check your e-mail "
+"address above."
 msgstr ""
 
 #: importer/models.py:17
