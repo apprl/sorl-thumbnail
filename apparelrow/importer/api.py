@@ -409,10 +409,12 @@ class API(object):
     @property
     def availability(self):
         availability = self.dataset['product']['availability']
-        if availability:
-            if availability == 0:
-                logger.debug('Adding availability to product: Out of stock')
-            elif availability < 0:
+        if availability == 0:
+            logger.debug('Adding availability to product: Out of stock')
+            return 0
+
+        elif availability:
+            if availability < 0:
                 logger.debug('Adding availability to product: In stock')
             else:
                 logger.debug('Adding availability to product: %i in stock' % (availability,))
