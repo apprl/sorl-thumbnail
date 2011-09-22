@@ -495,6 +495,11 @@ jQuery(document).ready(function() {
         return false;
     });
 
+    jQuery('#search-result-manufacturers a').live('click', function(e) {
+        ApparelSearch.cancel();
+        location.href = jQuery(this).attr('href');
+    });
+
     jQuery('#search-result .search-result-products').click(function(e) {
         return search_link_action('search-result-products');
     });
