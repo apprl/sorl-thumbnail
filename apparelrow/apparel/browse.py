@@ -66,6 +66,8 @@ def filter_query(query, params, current_user=None, facet_fields=None):
         user_ids = list(Follow.objects.filter(user=current_user).values_list('object_id', flat=True)) + [0]
         user_ids_or = ' OR '.join(str(x) for x in user_ids)
         query = query.narrow('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or))
+    else:
+        query = query.narrow('availability:true')
 
     return query
 
@@ -74,9 +76,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     sqs = filter_query(SearchQuerySetPlus().models(Product), request.GET, request.user, facet_fields)
     if extra_context and 'profile' in extra_context:
         sqs = sqs.narrow('user_wardrobe:%s' % (extra_context['profile'].user.id,))
-    else:
-        if request.GET.get('f', None) is None:
-            sqs = sqs.narrow('availability:true')
+        sqs = sqs.narrow('availability:false OR availability:true') # If we are in wardrobe, availability does not matter
 
     # If 'q' is not in GET sort by popularity descending
     if request.GET.get('q', None) is None:
