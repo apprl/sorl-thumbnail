@@ -9,7 +9,7 @@
         {% include 'apparel/fragments/follow.html' %}
         {% if_is_following profile.user request.user %}<span class="user_is_following">{% trans "Following you" %}</span>{% endif %}
     {% endif %}
-    {% if profile.about %}<p class="about">{{ profile.about|linebreaks|urlize }}</p>{% endif %}
+    {% if profile.about %}<p class="about">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
     <p>
       <span class="member_since">{% blocktrans with profile.user.date_joined|naturalday:"Y-m-d" as date_joined %}Member since {{ date_joined }}{% endblocktrans %}</span>
       <span class="follower_count">

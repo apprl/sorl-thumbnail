@@ -74,7 +74,7 @@
             {{ looks }} looks
         {% endblocktrans %}
         </p>      
-        {% if profile.about %}<p class="description">{{ profile.about|linebreaks|urlize }}</p>{% endif %}
+        {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
         <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
     </div>
     <div id="content">
