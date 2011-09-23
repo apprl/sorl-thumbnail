@@ -1,4 +1,4 @@
-import libxml2, logging, re
+import libxml2, logging, re, os
 from decimal import Decimal
 from xml.sax.saxutils import unescape
 
@@ -20,7 +20,12 @@ class FXRateImporter():
             return self.import_feed(self.file)
         else:
             logger.info("Refreshing FX rates from URL %s", self.url)
-            return self.import_feed(fetcher.fetch(self.url))
+            feed_file = fetcher.fetch(self.url)
+            try:
+                feed = self.import_feed(feed_file)
+                return feed
+            finally:
+                os.remove(feed_file)
         
     def import_fx_rate(self, currency, rate):
         fxrate = None

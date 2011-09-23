@@ -498,10 +498,12 @@ class API(object):
 
                 if re.search(r':.* text', subprocess.Popen(["file", '-L', temppath], stdout=subprocess.PIPE).stdout.read()):
                     logger.error(u'No image found, only text (while downloading %s)' % (url,))
+                    os.remove(temppath)
                     raise SkipProduct('Could not download product image')
 
                 storage.default_storage.save(self._product_image, File(open(temppath)))
                 logger.debug(u'Stored image at %s' % self._product_image)
+                os.remove(temppath)
             else:
                 logger.debug(u'Image already exists, will not download [%s]' % self._product_image)
         
