@@ -33,6 +33,8 @@ def fetch(url, localpath=None, username=None, password=None, decompress=None):
     else:
         local_fh = open(localpath, 'w')
 
+    url = url.replace(' ', '%20') # Replace spaces in url with %20
+
     if username or password:
         request_handler = requests.get(url, auth=(username, password))
         logging.debug('Added Basic Authentication header. Username %s' % username)

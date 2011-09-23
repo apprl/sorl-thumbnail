@@ -489,7 +489,7 @@ class API(object):
                 
                 try:
                     temppath = fetch(url)
-                except (URLError, HTTPError), e:
+                except (URLError, HTTPError, ValueError), e:
                     # FIXME: We could have a re-try loop for certain errors
                     # FIXME: We could create the product, and mark it as unpublished
                     #        until the image has been added
