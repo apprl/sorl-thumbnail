@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-22 18:11+0200\n"
+"POT-Creation-Date: 2011-09-23 08:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -545,8 +545,8 @@ msgid "Have fun! /The team"
 msgstr ""
 
 #: templates/base.html:81
-msgid "Did you know that you can log in on Apparelrow using Facebook"
-msgstr "Visste du att du kan logga in på Apparelrow med hjälp av Facebook"
+msgid "Log in with your Facebook account to find your friends"
+msgstr "Logga in med Facebook för att hitta dina vänner!"
 
 #: templates/base.html:95
 msgid "Search for products"
@@ -1929,6 +1929,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Did you know that you can log in on Apparelrow using Facebook"
+#~ msgstr "Visste du att du kan logga in på Apparelrow med hjälp av Facebook"
 
 #~ msgid "Similar products"
 #~ msgstr "Liknande plagg"
