@@ -234,25 +234,18 @@ def browse_manufacturers(request, **kwargs):
     page = request.GET.get('mpage', 1)
     term = request.GET.get('mname', None)
 
-    product_facet = filter_query(SearchQuerySet().models(Product), request.GET, request.user, ['manufacturer']).facet_counts()
-    manufacturers = Manufacturer.objects.filter(pk__in=[x[0] for x in product_facet['fields']['manufacturer'] if x[1] > 0])
-
+    sqs = filter_query(SearchQuerySetPlus().models(Product), request.GET, request.user, ['manufacturer']).facet_limit(-1).facet_mincount(1)
     if term:
-        sqs = SearchQuerySet().models(Manufacturer)
-        if term:
-            sqs = sqs.filter(auto=term)
+        sqs = sqs.filter(manufacturer_auto=term)
 
-        mp = Paginator(sqs.order_by('name'), settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
-        try:
-            manufacturers = [{'id': x.manufacturer_id, 'name': x.name} for x in mp.page(page).object_list if x]
-        except InvalidPage:
-            manufacturers = []
-    else:
-        mp = Paginator(manufacturers, settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
-        try:
-            manufacturers = [x for x in mp.page(page).object_list if x]
-        except InvalidPage:
-            manufacturers = []
+    facet = sqs.facet_counts()
+    manufacturers = Manufacturer.objects.values('id', 'name').filter(pk__in=[x[0] for x in facet['fields']['manufacturer']]).order_by('name')
+
+    mp = Paginator(manufacturers, settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
+    try:
+        manufacturers = [x for x in mp.page(page).object_list if x]
+    except InvalidPage:
+        manufacturers = []
 
     return HttpResponse(json.encode(manufacturers), mimetype='application/json')
 

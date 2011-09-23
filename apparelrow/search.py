@@ -131,6 +131,9 @@ class SearchQuerySetPlus(SearchQuerySet):
 
         return clone
 
+#
+# ProductIndex
+#
 
 class ProductIndex(QueuedSearchIndex):
     """
@@ -140,7 +143,6 @@ class ProductIndex(QueuedSearchIndex):
     name = CharField(model_attr='product_name', stored=False)
     created = DateTimeField(model_attr='date_added', stored=False)
     gender = CharField(model_attr='gender', default=None, stored=False)
-    manufacturer = CharField(model_attr='manufacturer__id', faceted=True, stored=False)
     price = IntegerField(faceted=True, stored=False)
     color = MultiValueField(faceted=True, stored=False)
     category = MultiValueField(faceted=True, stored=False)
@@ -151,11 +153,16 @@ class ProductIndex(QueuedSearchIndex):
     popularity = IntegerField(model_attr='popularity')
     availability = BooleanField(stored=False)
 
+    # Search fields
     product_name = CharField(model_attr='product_name', stored=False, boost=1.1)
     description = CharField(model_attr='description', stored=False, boost=0.5)
-    manufacturer_name = CharField(model_attr='manufacturer__name', stored=False, boost=1.1)
+    manufacturer_name = CharField(model_attr='manufacturer__name', boost=1.1)
     color_names = CharField(stored=False, boost=1.1)
     category_names = CharField(stored=False, boost=1.1)
+
+    # Manufacturer
+    manufacturer = CharField(model_attr='manufacturer__id', faceted=True)
+    manufacturer_auto = NgramField(model_attr='manufacturer__name')
 
     def prepare(self, object):
         self.prepared_data = super(ProductIndex, self).prepare(object)
@@ -198,18 +205,9 @@ class ProductIndex(QueuedSearchIndex):
     def should_update(self, instance, **kwargs):
         return instance.published==True
 
-class ManufacturerIndex(QueuedSearchIndex):
-    """
-    Search index for manufacturer model.
-    """
-    text = CharField(document=True, use_template=True, model_attr='name')
-    manufacturer_id = IntegerField(model_attr='id')
-    name = CharField(model_attr='name')
-    template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/manufacturer_search.html')
-    auto = NgramField(model_attr='name')
-
-    def index_queryset(self):
-        return Manufacturer.objects.filter(product__published=True).distinct()
+#
+# LookIndex
+#
 
 class LookIndex(QueuedSearchIndex):
     """
@@ -228,55 +226,34 @@ class LookIndex(QueuedSearchIndex):
         return Look.objects.all()
 
 site.register(Product, ProductIndex)
-site.register(Manufacturer, ManufacturerIndex)
 site.register(Look, LookIndex)
 
+#
+# Manufacturer search
+#
 
-def search_view(request, model):
+def manufacturer_search(request):
     try:
         limit = int(request.GET.get('limit', RESULTS_PER_PAGE))
     except ValueError:
         limit = RESULTS_PER_PAGE
 
-    ids = request.GET.get('ids', None)
-    class_name = model.lower()
-    model_class = get_model('apparel', class_name)
-    if model_class is None:
-        raise Exception('No model to search for')
-
-    sqs = SearchQuerySetPlus().models(model_class)
-
-    if ids:
-        sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
-
-    if request.GET.get('q'):
-        if class_name == 'product':
-            sqs = sqs.narrow('availability:true')
-            sqs = sqs.auto_query_product(request.GET.get('q'))
-        else:
-            sqs = sqs.auto_query(request.GET.get('q'))
-    else:
+    query = request.GET.get('q', None)
+    if not query:
         return Http404('Search require a search string')
 
-    paginator = Paginator(sqs, limit)
+    sqs = SearchQuerySetPlus().models(get_model('apparel', 'product')).narrow('availability:true').auto_query_product(query, fieldnames=['manufacturer_name'])
+    sqs = sqs.facet('manufacturer').facet_limit(-1).facet_mincount(1)
+    facet = sqs.facet_counts()
+    manufacturers = Manufacturer.objects.values('id', 'name').filter(pk__in=[x[0] for x in facet['fields']['manufacturer']]).order_by('name')
 
+    paginator = Paginator(manufacturers, limit)
     try:
-        paged_result = paginator.page(int(request.GET.get('page', 1)))
+        paged_result = paginator.page(1)
     except (EmptyPage, InvalidPage):
         paged_result = paginator.page(paginator.num_pages)
-    except ValueError:
-        paged_result = paginator.page(1)
 
-    if request.GET.get('thumb', None):
-        object_list = []
-        for obj in paged_result.object_list:
-            if obj:
-                object_list.append({
-                    'id': obj.object.id,
-                    'template': render_to_string('apparel/fragments/product_thumb_no_cache.html', {'product': obj.object})
-                })
-    else:
-        object_list = [o.template for o in paged_result.object_list if o]
+    object_list = [render_to_string('apparel/fragments/manufacturer_search.html', {'object': obj}) for obj in paged_result.object_list]
 
     return HttpResponse(
         json.dumps({
@@ -288,6 +265,73 @@ def search_view(request, model):
                 'num_pages': paged_result.paginator.num_pages,
                 'count': paged_result.paginator.count,
             }
-        }), 
+        }),
+        mimetype='application/json'
+    )
+
+#
+# Generic search (product and looks)
+#
+
+def search_view(request, model):
+    try:
+        limit = int(request.GET.get('limit', RESULTS_PER_PAGE))
+    except ValueError:
+        limit = RESULTS_PER_PAGE
+
+    class_name = model.lower()
+    model_class = get_model('apparel', class_name)
+    if model_class is None:
+        raise Exception('No model to search for')
+
+    sqs = SearchQuerySetPlus().models(model_class)
+
+    if request.GET.get('q'):
+        if class_name == 'product':
+            sqs = sqs.narrow('availability:true')
+            sqs = sqs.auto_query_product(request.GET.get('q'))
+        else:
+            sqs = sqs.auto_query(request.GET.get('q'))
+    else:
+        return Http404('Search require a search string')
+
+    # Used in look image to bring up popup with products
+    if request.GET.get('ids', False):
+        sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
+
+    paginator = Paginator(sqs, limit)
+    try:
+        paged_result = paginator.page(int(request.GET.get('page', 1)))
+    except (EmptyPage, InvalidPage):
+        paged_result = paginator.page(paginator.num_pages)
+    except ValueError:
+        paged_result = paginator.page(1)
+
+    # Used in look image to bring up popup with products
+    if request.GET.get('thumb', False):
+        object_list = []
+        for obj in paged_result.object_list:
+            if obj:
+                object_list.append({
+                    'id': obj.object.id,
+                    'template': render_to_string('apparel/fragments/product_thumb_no_cache.html', {'product': obj.object})
+                })
+    else:
+        if class_name == 'manufacturer':
+            object_list = [o.manufacturer_template for o in paged_result.object_list if o]
+        else:
+            object_list = [o.template for o in paged_result.object_list if o]
+
+    return HttpResponse(
+        json.dumps({
+            'object_list': object_list,
+            'previous_page_number': paged_result.previous_page_number(),
+            'next_page_number': paged_result.next_page_number(),
+            'number': paged_result.number,
+            'paginator': {
+                'num_pages': paged_result.paginator.num_pages,
+                'count': paged_result.paginator.count,
+            }
+        }),
         mimetype='application/json'
     )
