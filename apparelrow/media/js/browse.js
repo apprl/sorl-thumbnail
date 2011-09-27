@@ -158,39 +158,36 @@ jQuery(document).ready(function() {
     jQuery('#product-manufacturers form').submit(function() {
         return false;
     });
+
+    // Click handler for manufacturer option-popup
     jQuery('#available-manufacturers a').live('click', function(e) {
-        var $this = jQuery(this);
-        var $ul   = jQuery('#selected-manufacturers');
-        var id    = 'manufacturer-' + this.id.split('-').pop();
+        var element = jQuery(this);
+        var selected_manufacturers = jQuery('#selected-manufacturers');
+        var id = 'manufacturer-' + getElementId(element);
         
-        if($this.is('.selected')) {
-            jQuery('#' + id, $ul).click();
+        if(element.hasClass('selected')) {
+            jQuery('#' + id, selected_manufacturers).click(); // selected class is removed in this click handler
         } else {
-            $this
-                .clone()
-                .attr('id', id)
-                .appendTo(
-                    $('<li>')
-                        .prependTo($ul)
-                );
-            
+            element.addClass('selected');
+            element.clone().attr('id', id).appendTo(
+                jQuery('<li>').prependTo(selected_manufacturers)
+            );
             delayedFilter(getQuery());
-            jQuery('#product-manufacturers>a').addClass('selected');
+            jQuery('#product-manufacturers > a').addClass('selected');
         }
-        
-        $this.toggleClass('selected');
+
         return false;
     });
-    jQuery('#selected-manufacturers a').live('click', function(e) {
-        var $li = jQuery(this).closest('li');
 
-        var id = parseInt(jQuery(this).attr('id').split('-').pop(), 10);
-        jQuery('#available-manufacturer-' + id).removeClass('selected');
-        
+    // Click handler for list of selected manufacturers
+    jQuery('#selected-manufacturers a').live('click', function(e) {
+        jQuery('#available-manufacturer-' + getElementId(this)).removeClass('selected');
+
+        var $li = jQuery(this).closest('li');
         if($li.siblings().length == 0) 
-            jQuery('#product-manufacturers>a').removeClass('selected');
-        
+            jQuery('#product-manufacturers > a').removeClass('selected');
         $li.remove();
+
         delayedFilter(getQuery());
         
         return false;
@@ -262,7 +259,7 @@ jQuery(document).ready(function() {
     jQuery(document).keydown(function(e) {
         if(e.keyCode == 37 || e.keyCode == 39) {
             var index = jQuery('#product-list').data('scrollable').getIndex(),
-                currentPageId = parseInt(jQuery('#product-list > ul.list > li:eq(' + index + ')').attr('id').split('-').pop(), 10),
+                currentPageId = getElementId(jQuery('#product-list > ul.list > li:eq(' + index + ')')),
                 page = e.keyCode == 37 ? currentPageId - 1 : currentPageId + 1;
 
             scrollTo(page);
@@ -394,10 +391,13 @@ function getQuery(query, reset) {
 
     return query;
 }
+
+function getElementId(element) {
+    return parseInt(jQuery(element).attr('id').split('-').pop(), 10);
+}
+
 function getElementIds(elements) {
-    return jQuery.map(elements, function(element) {
-        return element.id.split('-').pop();
-    });
+    return jQuery.map(elements, getElementId);
 }
 
 
@@ -424,11 +424,6 @@ function doFilter(query, callback) {
     jQuery.getJSON(browse_url, query, callback || renderProducts);
 }
 function renderPage(products) {
-
-    function getId(el) {
-        return parseInt(el.id.split('-').pop(), 10);
-    }
-
     // Find the pages in the response
     var pages = jQuery('ul.list > li', products.html)
         // Append each page to appropriate place
@@ -436,7 +431,7 @@ function renderPage(products) {
             var existing = jQuery('#' + this.id);
             if(existing.length == 0) {
                 var existingPages = jQuery('#product-list > ul.list > li');
-                var nextPage = existingPages.filter(function(i) { return getId(this) > getId(page) }).first();
+                var nextPage = existingPages.filter(function(i) { return getElementId(this) > getElementId(page) }).first();
                 // There are pages that should be after this one in the list
                 if(nextPage.length == 1) {
                     nextPage.before(page);
