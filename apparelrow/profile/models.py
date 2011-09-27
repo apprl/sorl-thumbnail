@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.comments.models import Comment
 from django_facebook.models import FacebookProfile
 from actstream.models import Follow, Action
 
@@ -179,6 +180,13 @@ post_save.connect(create_profile_from_facebook, sender=FacebookProfile)
 # FIXME: Move these to actstream?
 post_delete.connect(delete_user_followings, sender=User)
 post_delete.connect(delete_object_activities, sender=User)
+
+#def delete_user_comments(signal, instance, **kwargs):
+    #"""
+    #This signal attemps to delete any comments which is written by the user.
+    #"""
+    #Comment.objects.filter(user=instance).delete()
+#post_delete.connect(delete_user_comments, sender=User)
 
 #
 # NOTIFICATION CACHE
