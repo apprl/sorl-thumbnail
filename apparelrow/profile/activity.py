@@ -67,7 +67,7 @@ def follow_handler(sender, **kwargs):
         recipient = User.objects.get(pk=instance.object_id)
         process_follow_user.delay(recipient, instance.user, instance)
     except User.DoesNotExist:
-        pass
+        return
 
     apparel_profile = recipient.get_profile()
     apparel_profile.followers_count = apparel_profile.followers_count + 1
@@ -80,7 +80,7 @@ def delete_follow_handler(sender, **kwargs):
     try:
         user = User.objects.get(id=instance.object_id)
     except User.DoesNotExist:
-        pass
+        return
 
     apparel_profile = user.get_profile()
     apparel_profile.followers_count = apparel_profile.followers_count - 1
