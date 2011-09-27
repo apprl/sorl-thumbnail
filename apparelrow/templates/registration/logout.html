@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load facebook %}
 {% load i18n %}
 {% block body-classes %}one-column{% endblock body-classes %}
 {% block body %}
@@ -7,5 +8,9 @@
         <p>
             {% trans "You have logged out" %}
         </p>
+        <br />
+        {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
+            {% facebook_button facebook_login_image %}
+        {% endwith %}
     </div>
 {% endblock %}
