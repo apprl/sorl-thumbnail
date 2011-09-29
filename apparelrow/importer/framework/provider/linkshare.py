@@ -1,6 +1,7 @@
 import itertools
 import re
 
+from importer.api import SkipProduct
 from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
@@ -9,6 +10,13 @@ REGEX_SIZE = re.compile('^[Ss]ize: .+\. ')
 AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False}
 
 class LinkshareMapper(DataMapper):
+    def get_product_id(self):
+        product_id = self.record.get('product-id')
+        if product_id == 'HDR':
+            raise SkipProduct('Remove first row from linkshare feeds')
+
+        return product_id
+
     def get_product_name(self):
         product_name_parts = self.record.get('product-name').split(',')
         if len(product_name_parts) > 1:
