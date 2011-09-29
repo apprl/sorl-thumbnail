@@ -108,7 +108,7 @@ class Provider(object):
         """
         Set all products found in database but not found in the feed to sold out.
         """
-        for product in Product.objects.filter(id__in=self.product_ids):
+        for product in Product.objects.filter(id__in=self.product_ids).exclude(vendorproduct__availability=0):
             for vendorproduct in product.vendorproduct.all():
                 logger.info('Setting availability for vendor product %s to sold out' % (vendorproduct,))
                 vendorproduct.availability = 0
