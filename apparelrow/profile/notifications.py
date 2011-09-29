@@ -17,8 +17,9 @@ from profile.models import NotificationCache
 
 LOCK_EXPIRE = 60*60*12
 
-def is_duplicate(name, recipient, sender, obj):
+def get_key(name, recipient, sender, obj):
     recipient_pk = sender_pk = obj_pk = ''
+
     if recipient:
         recipient_pk = recipient.pk
     if sender:
@@ -26,7 +27,11 @@ def is_duplicate(name, recipient, sender, obj):
     if obj:
         obj_pk = obj.pk
 
-    key = '%s_%s_%s_%s' % (name, recipient_pk, sender_pk, obj_pk)
+    return '%s_%s_%s_%s' % (name, recipient_pk, sender_pk, obj_pk)
+
+
+def is_duplicate(name, recipient, sender, obj):
+    key = get_key(name, recipient, sender, obj)
     cache, created = NotificationCache.objects.get_or_create(key=key)
     if created:
         return False
@@ -85,14 +90,12 @@ def process_comment_look_created(recipient, sender, comment, **kwargs):
     """
     logger = process_comment_look_created.get_logger(**kwargs)
     if is_duplicate('comment_look_created', recipient, sender, comment):
-        logger.info('Found duplicate notification.')
-        return
+        return 'duplicate'
 
     sender_content_type = ContentType.objects.get_for_model(sender)
 
     if sender == recipient:
-        logger.info('The user who commented is the creater of this look, do not notify')
-        return
+        return 'same user'
 
     notify_user = None
     if recipient.get_profile().comment_look_created == 'A':
@@ -107,13 +110,15 @@ def process_comment_look_created(recipient, sender, comment, **kwargs):
             'object_link': comment.content_object.get_absolute_url(),
             'comment': comment.comment
         })
-    else:
-        if not notify_user and sender:
-            logger.error('No user to notify and no sender')
-        elif not notify_user:
-            logger.error('No user to notify')
-        elif not sender:
-            logger.error('No sender')
+
+        return get_key('comment_look_created', recipient, sender, comment)
+
+    if not notify_user and sender:
+        logger.error('No user to notify and no sender')
+    elif not notify_user:
+        logger.error('No user to notify')
+    elif not sender:
+        logger.error('No sender')
 
 #
 # COMMENT PRODUCT COMMENT
@@ -127,8 +132,7 @@ def process_comment_product_comment(recipient, sender, comment, **kwargs):
     """
     logger = process_comment_product_comment.get_logger(**kwargs)
     if is_duplicate('comment_product_comment', recipient, sender, comment):
-        logger.info('Found duplicate notification.')
-        return
+        return 'duplicate'
 
     sender_content_type = ContentType.objects.get_for_model(sender)
     content_object = comment.content_object
@@ -152,13 +156,15 @@ def process_comment_product_comment(recipient, sender, comment, **kwargs):
             'object_link': content_object.get_absolute_url(),
             'comment': comment.comment
         })
-    else:
-        if not notify_users and sender:
-            logger.error('No user to notify and no sender')
-        elif not notify_users:
-            logger.error('No user to notify')
-        elif not sender:
-            logger.error('No sender')
+
+        return get_key('comment_product_comment', recipient, sender, comment)
+
+    if not notify_users and sender:
+        logger.error('No user to notify and no sender')
+    elif not notify_users:
+        logger.error('No user to notify')
+    elif not sender:
+        logger.error('No sender')
 
 #
 # COMMENT LOOK COMMENT
@@ -172,8 +178,7 @@ def process_comment_look_comment(recipient, sender, comment, **kwargs):
     """
     logger = process_comment_look_comment.get_logger(**kwargs)
     if is_duplicate('comment_look_comment', recipient, sender, comment):
-        logger.info('Found duplicate notification.')
-        return
+        return 'duplicate'
 
     sender_content_type = ContentType.objects.get_for_model(sender)
     content_object = comment.content_object
@@ -197,13 +202,15 @@ def process_comment_look_comment(recipient, sender, comment, **kwargs):
             'object_link': content_object.get_absolute_url(),
             'comment': comment.comment
         })
-    else:
-        if not notify_users and sender:
-            logger.error('No user to notify and no sender')
-        elif not notify_users:
-            logger.error('No user to notify')
-        elif not sender:
-            logger.error('No sender')
+
+        return get_key('comment_look_comment', recipient, sender, comment)
+
+    if not notify_users and sender:
+        logger.error('No user to notify and no sender')
+    elif not notify_users:
+        logger.error('No user to notify')
+    elif not sender:
+        logger.error('No sender')
 
 #
 # COMMENT PRODUCT WARDROBE
@@ -217,8 +224,7 @@ def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
     """
     logger = process_comment_product_wardrobe.get_logger(**kwargs)
     if is_duplicate('comment_product_wardrobe', recipient, sender, comment):
-        logger.info('Found duplicate notification.')
-        return
+        return 'duplicate'
 
     sender_content_type = ContentType.objects.get_for_model(sender)
     content_object = comment.content_object
@@ -238,13 +244,15 @@ def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
             'object_link': content_object.get_absolute_url(),
             'comment': comment.comment
         })
-    else:
-        if not notify_users and sender:
-            logger.error('No user to notify and no sender')
-        elif not notify_users:
-            logger.error('No user to notify')
-        elif not sender:
-            logger.error('No sender')
+
+        return get_key('comment_product_wardrobe', recipient, sender, comment)
+
+    if not notify_users and sender:
+        logger.error('No user to notify and no sender')
+    elif not notify_users:
+        logger.error('No user to notify')
+    elif not sender:
+        logger.error('No sender')
 
 #
 # LIKE LOOK CREATED
@@ -256,9 +264,8 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
     Process notification for a like by sender on a look created by recipient.
     """
     logger = process_like_look_created.get_logger(**kwargs)
-    if is_duplicate('comment_like_look_created', recipient, sender, look_like):
-        logger.info('Found duplicate notification.')
-        return
+    if is_duplicate('like_look_created', recipient, sender, look_like):
+        return 'duplicate'
 
     sender_content_type = ContentType.objects.get_for_model(sender)
 
@@ -274,13 +281,15 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
             'object_title': look_like.look.title,
             'object_link': look_like.look.get_absolute_url()
         })
-    else:
-        if not notify_user and sender:
-            logger.error('No user to notify and no sender')
-        elif not notify_user:
-            logger.error('No user to notify')
-        elif not sender:
-            logger.error('No sender')
+
+        return get_key('like_look_created', recipient, sender, look_like)
+
+    if not notify_user and sender:
+        logger.error('No user to notify and no sender')
+    elif not notify_user:
+        logger.error('No user to notify')
+    elif not sender:
+        logger.error('No sender')
 
 #
 # FOLLOW USER
@@ -292,9 +301,8 @@ def process_follow_user(recipient, sender, follow, **kwargs):
     Process notification for sender following recipient.
     """
     logger = process_follow_user.get_logger(**kwargs)
-    if is_duplicate('comment_follow_user', recipient, sender, None):
-        logger.info('Found duplicate notification.')
-        return
+    if is_duplicate('follow_user', recipient, sender, None):
+        return 'duplicate'
 
     recipient_content_type = ContentType.objects.get_for_model(recipient)
     sender_content_type = ContentType.objects.get_for_model(sender)
@@ -308,10 +316,12 @@ def process_follow_user(recipient, sender, follow, **kwargs):
 
     if notify_user and sender:
         notify_by_mail([notify_user], template_name, sender)
-    else:
-        if not notify_user and sender:
-            logger.error('No user to notify and no sender')
-        elif not notify_user:
-            logger.error('No user to notify')
-        elif not sender:
-            logger.error('No sender')
+
+        return get_key('follow_user', recipient, sender, None)
+
+    if not notify_user and sender:
+        logger.error('No user to notify and no sender')
+    elif not notify_user:
+        logger.error('No user to notify')
+    elif not sender:
+        logger.error('No sender')
