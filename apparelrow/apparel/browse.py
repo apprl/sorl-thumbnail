@@ -12,6 +12,7 @@ from django.template import loader
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
+from django.core.urlresolvers import reverse
 from django.utils.translation import get_language, ugettext_lazy as _
 
 from hanssonlarsson.django.exporter import json
@@ -155,12 +156,19 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     if selected_price:
         selected_price = selected_price.split(',', 1)
 
+    selected_brands = filter(None, map(_to_int, request.GET.get('manufacturer', '').split(',')))
+    selected_brands_data = {}
+    for brand in Manufacturer.objects.values('id', 'name').filter(pk__in=selected_brands):
+        brand['href'] = '%s?manufacturer=%s' % (reverse('apparel.browse.browse_products'), brand['id'])
+        selected_brands_data[brand['id']] = brand
+
     result.update(
-        selected_categories = filter(None, map(_to_int, request.GET.get('category', '').split(','))),
-        selected_colors     = selected_colors,
-        selected_brands     = filter(None, map(_to_int, request.GET.get('manufacturer', '').split(','))),
-        selected_price      = selected_price,
-        selected_gender     = request.GET.get('gender', None),
+        selected_categories  = filter(None, map(_to_int, request.GET.get('category', '').split(','))),
+        selected_colors      = selected_colors,
+        selected_brands      = selected_brands,
+        selected_brands_data = selected_brands_data,
+        selected_price       = selected_price,
+        selected_gender      = request.GET.get('gender', None),
     )
 
     # Extra context

@@ -259,7 +259,7 @@ jQuery(document).ready(function() {
     jQuery(document).keydown(function(e) {
         if(e.keyCode == 37 || e.keyCode == 39) {
             var index = jQuery('#product-list').data('scrollable').getIndex(),
-                currentPageId = getElementId(jQuery('#product-list > ul.list > li:eq(' + index + ')')),
+                currentPageId = getElementId(jQuery('#product-list > ul.list > li:eq(' + index + ')'), true),
                 page = e.keyCode == 37 ? currentPageId - 1 : currentPageId + 1;
 
             scrollTo(page);
@@ -392,8 +392,11 @@ function getQuery(query, reset) {
     return query;
 }
 
-function getElementId(element) {
-    return parseInt(jQuery(element).attr('id').split('-').pop(), 10);
+function getElementId(element, numeric) {
+    if(numeric) {
+        return parseInt(jQuery(element).attr('id').split('-').pop(), 10);
+    }
+    return jQuery(element).attr('id').split('-').pop()
 }
 
 function getElementIds(elements) {
@@ -431,7 +434,7 @@ function renderPage(products) {
             var existing = jQuery('#' + this.id);
             if(existing.length == 0) {
                 var existingPages = jQuery('#product-list > ul.list > li');
-                var nextPage = existingPages.filter(function(i) { return getElementId(this) > getElementId(page) }).first();
+                var nextPage = existingPages.filter(function(i) { return getElementId(this, true) > getElementId(page, true) }).first();
                 // There are pages that should be after this one in the list
                 if(nextPage.length == 1) {
                     nextPage.before(page);
@@ -562,12 +565,12 @@ function updateSelected(products) {
         }
     }
 
-    function selectBrandList(list, selectorPrefix, parentSelector) {
+    function selectBrandList(list, data, selectorPrefix, parentSelector) {
         if(list && list.length > 0) {
             jQuery.each(list, function(i, id) {
-                var element = jQuery(selectorPrefix + '-' + id).addClass('selected');
+                jQuery(selectorPrefix + '-' + id).addClass('selected');
                 jQuery('<li>').append(
-                    jQuery('<a>').attr({id: 'manufacturer-' + id, href: element.attr('href')}).text(element.text())
+                    jQuery('<a>').attr({id: 'manufacturer-' + id, href: data[id]['href']}).text(data[id]['name'])
                 ).prependTo('#selected-manufacturers');
             });
             if(parentSelector) {
@@ -577,7 +580,7 @@ function updateSelected(products) {
     }
 
     showCategories(products.selected_categories);
-    selectBrandList(products.selected_brands, '#available-manufacturer', '#product-manufacturers > a');
+    selectBrandList(products.selected_brands, products.selected_brands_data, '#available-manufacturer', '#product-manufacturers > a');
     selectList(products.selected_colors, '#option', '#product-color > a');
     selectGenderList(products.selected_gender, '#option');
 
