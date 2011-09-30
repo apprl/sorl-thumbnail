@@ -26,13 +26,14 @@ cd apparelrow
 
 = Set up database =
 cd apparelrow
-./manage.py syncdb --settings development
+./manage.py syncdb --settings development # Warning: do not create a superuser in this stage
+./manage.py migrate profile --settings development
 ./manage.py migrate --settings development
-./manage.py loaddata apparel/fixtures/* --settings development
-./manage.py loaddata importer/fixtures/* --settings development
+./manage.py createsuperuser --settings development
 
 = Set up search =
-touch solr/solr/conf/synoyms.txt
+touch solr/solr/conf/synonyms.txt
+cd solr
 java -jar start.jar
 ./manage.py rebuild_index --settings development
 
@@ -42,6 +43,10 @@ sudo rabbitmqctl add_user apparel apparel_mq
 sudo rabbitmqctl add_vhost apparel
 sudo rabbitmqctl set_permissions -p apparel apparel ".*" ".*" ".*"
 ./manage.py celeryd -B --settings development
+
+= Continue set up database =
+./manage.py loaddata apparel/fixtures/* --settings development
+./manage.py loaddata importer/fixtures/* --settings development
 
 Now you can start django, either with the django-admin.py in bin, or the regular manage.py
 
