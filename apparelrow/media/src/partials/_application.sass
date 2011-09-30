@@ -1334,10 +1334,8 @@ a.follow, a.unfollow
   background-repeat: no-repeat
   background-attachment: scroll
   background-position: 2px center
-  padding: 1px 2px 1px 14px
+  padding: 2px 2px 1px 14px
   display: inline-block
-  span
-    display: none
   &:hover
     +highlight_hover
     text-decoration: none !important
@@ -1485,14 +1483,16 @@ body.profile
           background-attachment: scroll
           background-position: 8px center
           display: inline-block
-          line-height: 1.75
+          height: 18px
+          line-height: 18px
           cursor: auto
         .following, .not_following
           float: right
           .follow, .unfollow
             +border-radius(4px)
             background-position: 8px center
-            line-height: 1.75
+            height: 18px
+            line-height: 18px
             padding: 0 8px 0 25px
             span
               max-width: 75px

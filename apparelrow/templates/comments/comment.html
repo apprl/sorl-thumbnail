@@ -1,6 +1,6 @@
 {% extends 'apparel/fragments/trackback_comment_base.html' %}
 {% load humanize %}
 
-{% block image %}{% with comment.user.get_profile as profile %}{% include 'apparel/fragments/avatar_link.html' %}{% endwith %}{% endblock %}
+{% block image %}{% with comment.user.get_profile as profile %}{% include 'apparel/fragments/avatar_link_no_cache.html' %}{% endwith %}{% endblock %}
 {% block submit_date %}{{ comment.submit_date|naturalday:"Y-m-d" }} {{ comment.submit_date|date:"H:i"}}{% endblock %}
 {% block content %}{{ comment.comment }}{% endblock %}
