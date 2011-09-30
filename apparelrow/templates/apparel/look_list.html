@@ -20,7 +20,7 @@
             <li><a class="last popular{% if request.path == popular_look_list_url %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
         </ul>
         {% else %}
-        <h2>{% trans "Latest looks" %}</h2>
+        <h2>{% trans "Showing" %} '{{ query|escape }}', {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
         {% endif %}
 
         {% if not user.is_authenticated and request.path == popular_look_list_url %}

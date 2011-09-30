@@ -533,7 +533,7 @@ jQuery(document).ready(function() {
                     break;
                 }
 
-                location.href = '/looks/?' + ApparelSearch.format_query(query);
+                location.href = '/looks/search/?' + ApparelSearch.format_query(query);
                 break;
 
             case 'search-result-manufacturers':

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-23 08:52+0200\n"
+"POT-Creation-Date: 2011-09-30 16:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,11 +26,11 @@ msgstr "English"
 msgid "Swedish"
 msgstr "Svenska"
 
-#: apparel/browse.py:171
+#: apparel/browse.py:179 templates/apparel/look_list.html:23
 msgid "Showing"
 msgstr "Visar"
 
-#: apparel/browse.py:173
+#: apparel/browse.py:181
 msgid "Showing popular products in your network"
 msgstr "Visar populära plagg bland dina vänner"
 
@@ -444,56 +444,56 @@ msgstr ""
 msgid "New e-mail address"
 msgstr "Ny e-postadress"
 
-#: profile/models.py:16 templates/base.html:199
+#: profile/models.py:17 templates/base.html:199
 #: templates/apparel/fragments/product_menu.html:10
 msgid "All"
 msgstr "Alla"
 
-#: profile/models.py:17
+#: profile/models.py:18
 msgid "Those I follow"
 msgstr "De jag följer"
 
-#: profile/models.py:18
+#: profile/models.py:19
 msgid "No one"
 msgstr "Inga"
 
-#: profile/models.py:28
+#: profile/models.py:29
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:29
+#: profile/models.py:30
 msgid "About"
 msgstr "Om"
 
-#: profile/models.py:30 templates/account/base.html:20
+#: profile/models.py:31 templates/account/base.html:20
 msgid "Language"
 msgstr "Språk"
 
-#: profile/models.py:34
+#: profile/models.py:35
 msgid "When someone commented on a product that I have in my wardrobe"
 msgstr "När någon kommenterat ett plagg som jag har i garderoben"
 
-#: profile/models.py:36
+#: profile/models.py:37
 msgid "When someone commented on a product that I have commented on"
 msgstr "När någon kommenterat ett plagg som jag kommenterat på"
 
-#: profile/models.py:38
+#: profile/models.py:39
 msgid "When someone commented on a look that I have created"
 msgstr "När någon kommenterat en look som jag har gjort"
 
-#: profile/models.py:40
+#: profile/models.py:41
 msgid "When someone commented on a look that I have commented on"
 msgstr "När någon kommenterat en look som jag har kommenterat på"
 
-#: profile/models.py:42
+#: profile/models.py:43
 msgid "When someone likes a look that I have created"
 msgstr "När någon gillar en look som jag har gjort"
 
-#: profile/models.py:44
+#: profile/models.py:45
 msgid "When someone starts to follow me"
 msgstr "När någon börjat följa mig"
 
-#: profile/models.py:47
+#: profile/models.py:48
 msgid "Is this the first visit?"
 msgstr ""
 
@@ -945,14 +945,20 @@ msgstr "Din garderob"
 msgid "Products"
 msgstr "Produkter"
 
-#: templates/apparel/look_list.html:9 templates/apparel/look_list.html:23
-#: templates/profile/looks.html:6
+#: templates/apparel/look_list.html:9 templates/profile/looks.html:6
 msgid "Latest looks"
 msgstr "Senaste looks"
 
 #: templates/apparel/look_list.html:20 templates/apparel/user_home.html:14
 msgid "Popular looks in your network"
 msgstr "Populära looks bland dina vänner"
+
+#: templates/apparel/look_list.html:23
+#, python-format
+msgid "%(counter)s look"
+msgid_plural "%(counter)s looks"
+msgstr[0] "%(counter)s look"
+msgstr[1] "%(counter)s looks"
 
 #: templates/apparel/look_list.html:27
 msgid ""
@@ -1810,11 +1816,11 @@ msgstr "Glömt lösenordet?"
 msgid "Need an account?"
 msgstr "Behöver du ett konto?"
 
-#: templates/registration/logout.html:6
+#: templates/registration/logout.html:7
 msgid "Log out"
 msgstr "Logga ut"
 
-#: templates/registration/logout.html:8
+#: templates/registration/logout.html:9
 msgid "You have logged out"
 msgstr "Du har loggat ut"
 

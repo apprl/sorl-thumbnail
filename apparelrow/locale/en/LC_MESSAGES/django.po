@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-23 08:52+0200\n"
+"POT-Creation-Date: 2011-09-30 16:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "Swedish"
 msgstr "Svenska"
 
-#: apparel/browse.py:171
+#: apparel/browse.py:179 templates/apparel/look_list.html:23
 msgid "Showing"
 msgstr ""
 
-#: apparel/browse.py:173
+#: apparel/browse.py:181
 msgid "Showing popular products in your network"
 msgstr ""
 
@@ -438,56 +438,56 @@ msgstr ""
 msgid "New e-mail address"
 msgstr ""
 
-#: profile/models.py:16 templates/base.html:199
+#: profile/models.py:17 templates/base.html:199
 #: templates/apparel/fragments/product_menu.html:10
 msgid "All"
 msgstr ""
 
-#: profile/models.py:17
+#: profile/models.py:18
 msgid "Those I follow"
 msgstr ""
 
-#: profile/models.py:18
+#: profile/models.py:19
 msgid "No one"
 msgstr ""
 
-#: profile/models.py:28
+#: profile/models.py:29
 msgid "User profile image"
 msgstr ""
 
-#: profile/models.py:29
+#: profile/models.py:30
 msgid "About"
 msgstr ""
 
-#: profile/models.py:30 templates/account/base.html:20
+#: profile/models.py:31 templates/account/base.html:20
 msgid "Language"
 msgstr ""
 
-#: profile/models.py:34
+#: profile/models.py:35
 msgid "When someone commented on a product that I have in my wardrobe"
 msgstr ""
 
-#: profile/models.py:36
+#: profile/models.py:37
 msgid "When someone commented on a product that I have commented on"
 msgstr ""
 
-#: profile/models.py:38
+#: profile/models.py:39
 msgid "When someone commented on a look that I have created"
 msgstr ""
 
-#: profile/models.py:40
+#: profile/models.py:41
 msgid "When someone commented on a look that I have commented on"
 msgstr ""
 
-#: profile/models.py:42
+#: profile/models.py:43
 msgid "When someone likes a look that I have created"
 msgstr ""
 
-#: profile/models.py:44
+#: profile/models.py:45
 msgid "When someone starts to follow me"
 msgstr ""
 
-#: profile/models.py:47
+#: profile/models.py:48
 msgid "Is this the first visit?"
 msgstr ""
 
@@ -918,14 +918,20 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: templates/apparel/look_list.html:9 templates/apparel/look_list.html:23
-#: templates/profile/looks.html:6
+#: templates/apparel/look_list.html:9 templates/profile/looks.html:6
 msgid "Latest looks"
 msgstr ""
 
 #: templates/apparel/look_list.html:20 templates/apparel/user_home.html:14
 msgid "Popular looks in your network"
 msgstr ""
+
+#: templates/apparel/look_list.html:23
+#, python-format
+msgid "%(counter)s look"
+msgid_plural "%(counter)s looks"
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/apparel/look_list.html:27
 msgid ""
@@ -1693,11 +1699,11 @@ msgstr ""
 msgid "Need an account?"
 msgstr ""
 
-#: templates/registration/logout.html:6
+#: templates/registration/logout.html:7
 msgid "Log out"
 msgstr ""
 
-#: templates/registration/logout.html:8
+#: templates/registration/logout.html:9
 msgid "You have logged out"
 msgstr ""
 

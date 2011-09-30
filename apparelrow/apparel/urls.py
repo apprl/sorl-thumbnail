@@ -20,6 +20,7 @@ urlpatterns = patterns('',
 
     url(r'^looks/$', 'apparel.views.look_list', name='look-list'),
     url(r'^looks/popular/$', 'apparel.views.look_list', {'popular': True}, name='popular-look-list'),
+    url(r'^looks/search/$', 'apparel.views.look_list_search', name='search-look-list'),
     (r'^looks/create/$', 'apparel.views.look_create'),
     (r'^looks/save_component/$', 'apparel.views.save_look_component'),
     (r'^looks/delete_component/$', 'apparel.views.delete_look_component'),

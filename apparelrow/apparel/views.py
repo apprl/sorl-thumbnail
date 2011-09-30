@@ -4,11 +4,11 @@ import math
 import json
 
 from django.conf import settings
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
-from django.db.models import Q, Max, Min, Count, Sum, connection, signals
+from django.db.models import Q, Max, Min, Count, Sum, connection, signals, get_model
 from django.template import RequestContext, loader
 from django.template.loader import get_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -29,6 +29,7 @@ from apparelrow.apparel.decorators import get_current_user
 from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct
 from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, FirstPageContent
 from apparelrow.apparel.forms import LookForm, LookComponentForm
+from apparelrow.search import SearchQuerySetPlus
 import apparel.signals
 
 def product_redirect(request, pk):
@@ -45,13 +46,13 @@ def product_detail(request, slug):
         viewed_products.remove(product.id)
     except ValueError:
         pass
-    
+
     request.session['viewed_products'] = [product.id]
     request.session['viewed_products'].extend(viewed_products)
-    
+
     for p in Product.objects.filter(pk__in=viewed_products):
         viewed_products[viewed_products.index(p.id)] = p
-    
+
     if request.user.is_authenticated():
         user_looks     = Look.objects.filter(user=request.user)
         try:
@@ -61,11 +62,11 @@ def product_detail(request, slug):
     else:
         user_looks     = []
         is_in_wardrobe = False
-    
+
     context = RequestContext(request)
 
     more_like_this = SearchQuerySet().filter(django_ct='apparel.product').filter(availability=True).filter(gender=product.gender).more_like_this(product)[:10]
-    
+
     return render_to_response(
             'apparel/product_detail.html',
             {
@@ -146,19 +147,15 @@ def look_like(request, slug, action):
 
     return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
 
-
-def look_list(request, popular=None, contains=None, page=0):
+def look_list(request, popular=None, page=0):
     """
     This view can list looks in three ways:
 
         1) If no argument is used a list of all looks is displayed.
-        3) If popular-argument is set displays a list of all popular looks in your network.
-        2) If contains-argument is set displays all looks that contains the product.
+        2) If popular-argument is set displays a list of all popular looks in your network.
 
     """
-    if contains:
-        queryset = Look.objects.filter(products__slug=contains)
-    elif popular:
+    if popular:
         if request.user.is_authenticated():
             user_ids = Follow.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(User)).values_list('object_id', flat=True)
             queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')
@@ -188,11 +185,39 @@ def look_list(request, popular=None, contains=None, page=0):
         }
     )
 
+def look_list_search(request):
+    if not request.GET.get('q'):
+        return redirect('search-look-list')
+
+    sqs = SearchQuerySetPlus().models(Look)
+    sqs = sqs.auto_query(request.GET.get('q'))
+    queryset = sqs.load_all()
+
+    paginator = Paginator(sqs, 10)
+    try:
+        paged_result = paginator.page(int(request.GET.get('page', 1)))
+    except (EmptyPage, InvalidPage):
+        paged_result = paginator.page(paginator.num_pages)
+    except ValueError:
+        paged_result = paginator.page(1)
+
+    return render_to_response(
+            'apparel/look_list.html',
+            {
+                'query': request.GET.get('q'),
+                'object_list': [x.object for x in queryset],
+                'is_paginated': True,
+                'paginator': paginator,
+                'page_obj': paged_result
+            },
+            context_instance=RequestContext(request),
+        )
+
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
     looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:8]
     similar_looks = []
-    
+
     return render_to_response(
             'apparel/look_detail.html',
             {
@@ -215,32 +240,32 @@ def look_edit(request, slug):
             - if in AJAX mode, return the look as JSON
             - else redirect to look's view page (unless a new image has been uploaded)
     """
-    
+
     # FIXME: Ensure user owns look
     look = get_object_or_404(Look, slug=slug, user=request.user)
-        
+
     if request.method == 'POST':
         form = LookForm(request.POST, request.FILES, instance=look)
-        
+
         if form.is_valid():
             form.save()
             if not request.is_ajax() and not request.FILES:
                 return HttpResponseRedirect(form.instance.get_absolute_url())
         else:
             logging.debug('Form errors: %s', form.errors.__unicode__())
-    
+
     else:
         form = LookForm(instance=look)
-    
+
     try:
         wardrobe = Wardrobe.objects.get(user=request.user).products.all()
     except Wardrobe.DoesNotExist:
         wardrobe = []
-    
+
     context = RequestContext(request)
-    
+
     data = {
-        'object': form.instance, 
+        'object': form.instance,
         'form': form,
         'wardrobe': wardrobe
     }
@@ -313,9 +338,9 @@ def save_look_component(request):
     """
     This view adds or updates a component for a look and product
     """
-    
+
     look = get_object_or_404(Look, pk=request.POST['look'], user=request.user)
-    
+
     try:
         lc = LookComponent.objects.get(
                     look=look,
@@ -327,42 +352,42 @@ def save_look_component(request):
     except LookComponent.DoesNotExist:
         form  = LookComponentForm(request.POST)
         added = True
-    
+
     if form.is_valid():
         # FIXME: This behaviour should be default in all forms. Implement this
         # globally somehow.
         for field in form.cleaned_data:
             if form.cleaned_data[field] is None and field not in form.data:
                 setattr(form.instance, field, form.initial.get(field))
-        
+
         if not form.instance.top and not form.instance.left:
             components = LookComponent.objects.filter(positioned='A', look=look, component_of=form.instance.component_of)
             left = components.aggregate(Max('left')).values()[0]
             top  = components.aggregate(Max('top')).values()[0]
-            
-            form.instance.left = 0 if left is None else left + 78 
-            form.instance.top  = 0 if top  is None else top 
-            
+
+            form.instance.left = 0 if left is None else left + 78
+            form.instance.top  = 0 if top  is None else top
+
             if form.instance.left > 78 * 5:
                 form.instance.top += 150
                 form.instance.left = 0
-            
+
             form.instance.positioned = 'A'
         else:
             form.instance.positioned = 'M'
-        
+
         form.save()
     else:
         # FIXME: Return some error response here. Can we just throw an exception?
         raise Exception('Validaton errors %s' % form.errors)
-    
+
     template = 'look_collage_product_image' if form.instance.component_of == 'C' else 'look_photo_product'
     return (
         {
             'look_component': form.instance,
             'added': added,
             'html': loader.render_to_string('apparel/fragments/%s.html' % template, {'component': form.instance}, context_instance=RequestContext(request)),
-        },                                                                                        # JSON response 
+        },                                                                                        # JSON response
         HttpResponseRedirect(reverse('apparel.views.look_edit', args=(request.POST['look'],)))   # Browser request response
     )
 
@@ -370,49 +395,49 @@ def save_look_component(request):
 @login_required
 def delete_look_component(request):
     """
-    Removes a list of components from for the given look. 
+    Removes a list of components from for the given look.
     Parameters:
      - product (ID, ID, ...)
      - component_of C or P
      - look (ID)
      - delete_photo (True, False) - removes the associated photo. component_of will have to be P for this to work
-    
+
     AJAX return value
      - component: C or P
      - in_look:
         id: True or False,
         ...
     """
-    
+
     # NOTE: This is a workaround because jQuery adds the [] notation to arrays,
     # rather than just add multiple keys like a normal user agent
     products = request.POST.getlist('product[]') if 'product[]' in request.POST else request.POST.getlist('product')
     look     = get_object_or_404(Look, pk=request.POST['look'], user=request.user)
-    
+
     components = LookComponent.objects.filter(
         product__id__in=products,
         look=look
     )
-    
+
     # Delete all components for the current context
     components.filter(component_of=request.POST['component_of']).delete()
-    
+
     # Make a list of which ones are still on the look
     in_look = dict( map(lambda x: (x, components.filter(product__id=x).exists()), products) )
-    
+
     # Remove the ones who aren't
     look.products.remove(*[x for x in in_look.keys() if not in_look[x]])
-    
+
     # Delete photo if told to do so
     if request.POST.get('delete_photo') and request.POST['component_of'] == 'P':
         look.image = None
         look.save()
-    
+
     return (
         {
             'component': request.POST['component_of'],
             'in_look': in_look,
-        }, 
+        },
         HttpResponseRedirect(reverse('apparel.views.look_edit', args=(request.POST['look'],)))
     )
 
@@ -427,17 +452,17 @@ def add_to_look(request):
         look = Look(user=request.user, title=request.POST.get('new_name'))
         look.save()
         created = True
-    
+
     p = Product.objects.get(pk=request.POST.get('product'))
-    
+
     if look.products.filter(pk=p.id):
         added = False
     else:
         added = True
         look.products.add(p)
-    
+
     add_to_wardrobe(request)        # Also, add the product to user's wardrobe
-    
+
     return (
         {
             'look': look,           # The look the product was added to
@@ -448,7 +473,7 @@ def add_to_look(request):
         },
         HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,)))
     )
-    
+
 
 @seamless_request_handling
 @login_required
@@ -460,7 +485,7 @@ def add_to_wardrobe(request):
     wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
     wardrobe.products.add(product)
     search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
-    
+
     return {'success': True}
 
 @seamless_request_handling
@@ -472,7 +497,7 @@ def delete_from_wardrobe(request):
     search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
 
     return ({'success': True}, HttpResponseRedirect(reverse('apparel.browse.browse_wardrobe', args=(request.user,))))
-    
+
 def csrf_failure(request, reason=None):
     """
     Display error page for cross site forgery requests
