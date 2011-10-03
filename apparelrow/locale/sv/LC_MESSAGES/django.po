@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-30 16:11+0200\n"
+"POT-Creation-Date: 2011-10-03 20:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1337,6 +1337,11 @@ msgstr "skapade en look"
 #, python-format
 msgid "%(name)s likes"
 msgstr "%(name)s gillar"
+
+#: templates/apparel/fragments/activity/started following.html:18
+#, python-format
+msgid "now follows %(name)s"
+msgstr "följer nu %(name)s"
 
 #: templates/beta/dialog_invite_user.html:4
 msgid "Invite your friends to Apparelrow Beta"

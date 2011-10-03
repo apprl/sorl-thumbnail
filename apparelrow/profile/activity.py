@@ -4,7 +4,7 @@ from django.db.models.signals import post_save, post_delete
 from django.contrib.comments import signals as comments_signals
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
-from actstream.models import Follow
+from actstream.models import Follow, Action
 
 from apparel.models import LookLike, Look, Product
 from apparel import signals as apparel_signals
@@ -55,10 +55,14 @@ def comments_handler(sender, **kwargs):
 comments_signals.comment_was_posted.connect(comments_handler)
 
 #
-# Follow handler
+# Follow handlers
 #
 
-def follow_handler(sender, **kwargs):
+def post_save_follow_handler(sender, **kwargs):
+    """
+    Post save handler for follow objects. Updates followers count on user
+    profile and attempts to notify users about this new follow object.
+    """
     instance = kwargs['instance']
     if not hasattr(instance, 'user') and instance.content_type == ContentType.objects.get_for_model(instance.user):
         return
@@ -73,9 +77,11 @@ def follow_handler(sender, **kwargs):
     apparel_profile.followers_count = apparel_profile.followers_count + 1
     apparel_profile.save()
 
-post_save.connect(follow_handler, sender=Follow)
-
-def delete_follow_handler(sender, **kwargs):
+def post_delete_follow_handler(sender, **kwargs):
+    """
+    Post save handler for follow objects. Updates followers count on user
+    profile.
+    """
     instance = kwargs['instance']
     try:
         user = User.objects.get(id=instance.object_id)
@@ -86,4 +92,11 @@ def delete_follow_handler(sender, **kwargs):
     apparel_profile.followers_count = apparel_profile.followers_count - 1
     apparel_profile.save()
 
-post_delete.connect(delete_follow_handler, sender=Follow)
+    Action.objects.filter(actor_object_id=instance.user.pk,
+                          actor_content_type=instance.content_type,
+                          target_object_id=instance.object_id,
+                          target_content_type=instance.content_type,
+                          verb='following').delete()
+
+post_save.connect(post_save_follow_handler, sender=Follow)
+post_delete.connect(post_delete_follow_handler, sender=Follow)

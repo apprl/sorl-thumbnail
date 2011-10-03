@@ -542,7 +542,7 @@ def home(request, profile, page=0):
     Displays the logged in user's page
     """
     queryset = user_stream(request.user)
-    queryset = queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created'])
+    queryset = queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'following'])
 
     # Retrieve most popular products in users network
     limit = 2

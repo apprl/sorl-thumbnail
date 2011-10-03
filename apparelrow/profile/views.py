@@ -48,7 +48,7 @@ def profile(request, profile, page=0):
     form = handle_change_image(request, profile)
 
     queryset = actor_stream(profile.user)
-    queryset = queryset.filter(verb__in=['added', 'commented', 'created', 'liked_look', 'liked_product'])
+    queryset = queryset.filter(verb__in=['added', 'commented', 'created', 'liked_look', 'liked_product', 'following'])
 
     return list_detail.object_list(
         request,

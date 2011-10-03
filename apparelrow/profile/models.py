@@ -53,8 +53,6 @@ class ApparelProfile(models.Model):
     def get_looks_url(self):
         return ('looks_by_user', [str(self.user.username)])
 
-    # FIXME: Extract number of looks and and likes
-
     @property
     def looks(self):
         # Number of looks
@@ -91,7 +89,7 @@ class ApparelProfile(models.Model):
             return '/scale/125%s' % self.image
 
         if self.facebook_profile:
-            return 'http://graph.facebook.com/%s/picture?type=small' % self.facebook_profile.uid
+            return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_profile.uid
 
         return settings.APPAREL_DEFAULT_AVATAR
 
@@ -127,6 +125,10 @@ class EmailChange(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.user, self.email)
 
+#
+# Create profile when a new user is created
+#
+
 def create_profile(signal, instance, **kwargs):
     if kwargs['created']:
         p, created = ApparelProfile.objects.get_or_create(user=instance)
@@ -143,6 +145,13 @@ def create_profile_from_facebook(signal, instance, **kwargs):
             p.name = instance.name
             p.about = instance.bio
             p.save()
+
+post_save.connect(create_profile, sender=User)
+post_save.connect(create_profile_from_facebook, sender=FacebookProfile)
+
+#
+# Delete follows and actions when a user is deleted.
+#
 
 def delete_user_followings(signal, instance, **kwargs):
     """
@@ -174,8 +183,6 @@ def delete_object_activities(sender, instance, **kwargs):
         target_content_type=ContentType.objects.get_for_model(instance)
         ).delete()
 
-post_save.connect(create_profile, sender=User)
-post_save.connect(create_profile_from_facebook, sender=FacebookProfile)
 
 # FIXME: Move these to actstream?
 post_delete.connect(delete_user_followings, sender=User)
@@ -191,6 +198,7 @@ post_delete.connect(delete_object_activities, sender=User)
 #
 # NOTIFICATION CACHE
 #
+
 class NotificationCache(models.Model):
     key = models.CharField(max_length=255, unique=True, blank=False, null=False)
 

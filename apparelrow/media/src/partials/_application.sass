@@ -1593,6 +1593,8 @@ ul.suggested-friends
         background-image: image_url("activity_new.png")
       &.added
         background-image: image_url("activity_add.png")
+      &.following
+        background-image: image_url("activity_follow.png")
       +clearfix
       border: none
       position: relative
@@ -1602,6 +1604,7 @@ ul.suggested-friends
       .activity-image
         margin-right: 45px
         float: left
+        overflow: hidden
       .activity-image
         width: $aside_width / 2 - $gutter_width / 4 - 2
         +border("all")
