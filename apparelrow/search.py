@@ -296,7 +296,8 @@ def search_view(request, model):
         return Http404('Search require a search string')
 
     # Used in look image to bring up popup with products
-    if request.GET.get('ids', False):
+    ids = request.GET.get('ids', False)
+    if ids:
         sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
 
     paginator = Paginator(sqs, limit)
