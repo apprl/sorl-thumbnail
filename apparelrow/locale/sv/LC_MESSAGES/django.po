@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-03 20:40+0200\n"
+"POT-Creation-Date: 2011-10-07 15:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,11 +26,11 @@ msgstr "English"
 msgid "Swedish"
 msgstr "Svenska"
 
-#: apparel/browse.py:179 templates/apparel/look_list.html:23
+#: apparel/browse.py:181 templates/apparel/look_list.html:23
 msgid "Showing"
 msgstr "Visar"
 
-#: apparel/browse.py:181
+#: apparel/browse.py:183
 msgid "Showing popular products in your network"
 msgstr "Visar populära plagg bland dina vänner"
 
@@ -852,8 +852,8 @@ msgid "Created"
 msgstr "Skapad"
 
 #: templates/apparel/look_detail.html:82
-msgid "Embed"
-msgstr "Bädda in"
+msgid "Embed this look on your blog or site"
+msgstr "Lägg in looken på din blogg eller site"
 
 #: templates/apparel/look_detail.html:85
 msgid "More looks by"
@@ -1217,7 +1217,7 @@ msgid_plural "<span class=\"count\">%(counter)s</span> likes"
 msgstr[0] "<span class=\"count\">%(counter)s</span> som gillar"
 msgstr[1] "<span class=\"count\">%(counter)s</span> som gillar"
 
-#: templates/apparel/fragments/look_product_tooltip.html:20
+#: templates/apparel/fragments/look_product_tooltip.html:21
 #: templates/apparel/fragments/product_detail.html:56
 msgid "Buy"
 msgstr "Köp"
@@ -1331,17 +1331,17 @@ msgstr "%(name)s lade till %(object)s"
 msgid "created a new look"
 msgstr "skapade en look"
 
+#: templates/apparel/fragments/activity/following.html:18
+#, python-format
+msgid "now follows %(name)s"
+msgstr "följer nu %(name)s"
+
 #: templates/apparel/fragments/activity/liked.html:14
 #: templates/apparel/fragments/activity/liked_look.html:14
 #: templates/apparel/fragments/activity/liked_product.html:14
 #, python-format
 msgid "%(name)s likes"
 msgstr "%(name)s gillar"
-
-#: templates/apparel/fragments/activity/started following.html:18
-#, python-format
-msgid "now follows %(name)s"
-msgstr "följer nu %(name)s"
 
 #: templates/beta/dialog_invite_user.html:4
 msgid "Invite your friends to Apparelrow Beta"
@@ -1940,6 +1940,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Embed"
+#~ msgstr "Bädda in"
 
 #~ msgid "Did you know that you can log in on Apparelrow using Facebook"
 #~ msgstr "Visste du att du kan logga in på Apparelrow med hjälp av Facebook"

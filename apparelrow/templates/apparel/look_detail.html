@@ -79,7 +79,7 @@
     </div>
 {% cache CACHE_TIMEOUT look_detail2 object.id LANGUAGE_CODE %}
     <div class="spread">
-        <label>{% trans "Embed" %}<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code"></label>
+        <label>{% trans "Embed this look on your blog or site" %}<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code"></label>
     </div>
     {% if looks_by_user %}
     <a href="{{ looks_url }}"><h2>{% trans "More looks by" %} {{ object.user.get_profile.display_name }}</h2></a>

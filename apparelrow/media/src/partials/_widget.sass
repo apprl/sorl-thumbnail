@@ -36,23 +36,31 @@ $tooltip_width: 242px
       white-space: normal
       overflow: hidden
       padding-right: 16px
+    a:hover, .hover
+      h2
+        text-decoration: underline
     h3
       color: $easy_color
       font-size: smaller
       font-weight: normal
     div.vendors, div.ar-vendors
       margin-top: 0.5em
-      a.vendor, a.ar-vendor
+      span.vendor, span.ar-vendor
         +vendor
         display: inline-block
         color: $easy_color
         font-size: smaller
-      a.buy-now, a.ar-buy-now
+      span.buy-now, span.ar-buy-now
         +buy_now
         display: inline
         padding: 5px
         font-size: smaller
         margin-left: 5px
+      a:hover
+        span.vendor, span.ar-vendor
+          text-decoration: underline
+        span.buy-now, span.ar-buy-now
+          background-color: $hover_highlight_bg_color
     .arrow, .ar-arrow
       position: absolute
       background: transparent image_url(unquote("tooltip-arrow.png")) no-repeat scroll center center

@@ -265,6 +265,16 @@ function makeProductTooltip(selector) {
         delay: 500,
         offset: [15, 0]
     });
+
+    jQuery('.product-image', q.parent().next()).hover(
+        function(e) {
+            var $this = jQuery(e.currentTarget);
+            $this.parent().find('.product-meta > a').addClass('hover');
+        },
+        function(e) {
+            var $this = jQuery(e.currentTarget);
+            $this.parent().find('.product-meta > a').removeClass('hover');
+        });
 }
 
 
