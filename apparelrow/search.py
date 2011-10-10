@@ -57,7 +57,9 @@ class QueuedSearchIndex(SearchIndex):
         signals.post_delete.disconnect(self.enqueue_delete, sender=model)
 
     def enqueue_save(self, instance, **kwargs):
-        if self.should_update(instance, **kwargs):
+        if hasattr(instance, 'published') and instance.published == False:
+            remove_instance_from_index(instance, **kwargs)
+        elif self.should_update(instance, **kwargs):
             search_index_update(instance._meta.app_label, instance._meta.module_name, instance._get_pk_val())
 
     def enqueue_delete(self, instance, **kwargs):
