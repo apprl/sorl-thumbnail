@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-07 15:20+0200\n"
+"POT-Creation-Date: 2011-10-10 02:40-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "Swedish"
 msgstr "Svenska"
 
-#: apparel/browse.py:181 templates/apparel/look_list.html:23
+#: apparel/browse.py:179 templates/apparel/look_list.html:23
 msgid "Showing"
 msgstr ""
 
-#: apparel/browse.py:183
+#: apparel/browse.py:181
 msgid "Showing popular products in your network"
 msgstr ""
 
@@ -825,23 +825,27 @@ msgstr ""
 msgid "Created"
 msgstr ""
 
-#: templates/apparel/look_detail.html:82
+#: templates/apparel/look_detail.html:83
 msgid "Embed this look on your blog or site"
 msgstr ""
 
-#: templates/apparel/look_detail.html:85
+#: templates/apparel/look_detail.html:86
+msgid "Absolute address to this page"
+msgstr ""
+
+#: templates/apparel/look_detail.html:90
 msgid "More looks by"
 msgstr ""
 
-#: templates/apparel/look_detail.html:91
+#: templates/apparel/look_detail.html:96
 msgid "Similar looks"
 msgstr ""
 
-#: templates/apparel/look_detail.html:122
+#: templates/apparel/look_detail.html:127
 msgid "Tags"
 msgstr ""
 
-#: templates/apparel/look_detail.html:133
+#: templates/apparel/look_detail.html:138
 msgid "Articles in this look"
 msgstr ""
 
@@ -1273,16 +1277,16 @@ msgstr ""
 msgid "created a new look"
 msgstr ""
 
-#: templates/apparel/fragments/activity/following.html:18
-#, python-format
-msgid "now follows %(name)s"
-msgstr ""
-
 #: templates/apparel/fragments/activity/liked.html:14
 #: templates/apparel/fragments/activity/liked_look.html:14
 #: templates/apparel/fragments/activity/liked_product.html:14
 #, python-format
 msgid "%(name)s likes"
+msgstr ""
+
+#: templates/apparel/fragments/activity/started-following.html:18
+#, python-format
+msgid "now follows %(name)s"
 msgstr ""
 
 #: templates/beta/dialog_invite_user.html:4

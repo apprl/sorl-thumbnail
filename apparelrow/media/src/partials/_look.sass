@@ -259,10 +259,12 @@ body.edit-look
 body.look
   .spread
     margin-top: 20px
+    div.last
+      margin-top: 2px
     input
       +text_input
-      width: 140px
-      margin-left: 0.5em
+      width: 195px
+      +box-shadow-inset(#f6f6f6 - #222222, 0, 0, 0)
 
 .tooltip
   +apparel_tooltip
@@ -304,7 +306,6 @@ body.look
     margin-top: -1.8em
     .collage, .photo
       background-color: white
-      margin-right: 2em
 
 #look-header
   padding-top: 1em

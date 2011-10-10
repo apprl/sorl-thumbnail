@@ -225,7 +225,7 @@ def look_detail(request, slug):
                 'looks_by_user': looks_by_user,
                 'similar_looks': similar_looks,
                 'tooltips': True,
-                'object_url': request.build_absolute_uri()
+                'object_url': request.build_absolute_uri(look.get_absolute_url())
             },
             context_instance=RequestContext(request),
         )
