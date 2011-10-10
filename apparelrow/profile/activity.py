@@ -96,7 +96,7 @@ def post_delete_follow_handler(sender, **kwargs):
                           actor_content_type=instance.content_type,
                           target_object_id=instance.object_id,
                           target_content_type=instance.content_type,
-                          verb='following').delete()
+                          verb='started following').delete()
 
 post_save.connect(post_save_follow_handler, sender=Follow)
 post_delete.connect(post_delete_follow_handler, sender=Follow)

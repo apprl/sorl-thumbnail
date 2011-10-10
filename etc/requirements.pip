@@ -27,8 +27,7 @@ django-ajaxcomments==0.2
 libxml2-python==2.6.15
 -e svn+http://django-compress.googlecode.com/svn/trunk/#egg=django-compress
 # Change back when pull request is accepted
-#-e git+https://github.com/hanssonlarsson/django-activity-stream.git#egg=django-activity-stream
--e git+https://github.com/jbohman/django-activity-stream.git#egg=django-activity-stream
+-e git+https://github.com/hanssonlarsson/django-activity-stream.git#egg=django-activity-stream
 -f http://django-modeltranslation.googlecode.com/files/django-modeltranslation-0.2.tar.gz
 django-modeltranslation==0.2
 django-tinymce==1.5.1a1
