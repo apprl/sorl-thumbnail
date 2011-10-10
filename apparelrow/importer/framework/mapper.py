@@ -51,12 +51,14 @@ class DataMapper(object):
          * Leading and trailing whitespaces are trimmed
          * HTML is stripped from the description field
          * HTML entities are expanded to unicode characters in the description field
+         * HTML entities are expanded to unicode characters in the product-name field
         
         """
         
         for field, value in self.mapped_record['product'].items():
             self.mapped_record['product'][field] = self.trim(value)
-        
+
+        self.mapped_record['product']['product-name'] = expand_entities(self.mapped_record['product']['product-name'])
         self.mapped_record['product']['description'] = self.strip_html(self.mapped_record['product']['description'])
     
     def translate(self):
