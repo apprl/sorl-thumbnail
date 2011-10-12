@@ -54,6 +54,12 @@ $tooltip_width: 242px
         padding: 5px
         font-size: smaller
         margin-left: 5px
+      span.sold-out, span.ar-sold-out
+        +sold_out
+        display: inline
+        padding: 5px
+        font-size: smaller
+        margin-left: 5px
       a:hover
         span.vendor, span.ar-vendor
           text-decoration: underline
@@ -79,6 +85,13 @@ $tooltip_width: 242px
   text-transform: uppercase
   &:hover
     background-color: $hover_highlight_bg_color
+
+=sold_out
+  text-align: center
+  background-color: $box_color
+  +border(all, $border_color)
+  color: $font_color
+  text-transform: uppercase
   
 =apparel_hotspot
   position: relative
