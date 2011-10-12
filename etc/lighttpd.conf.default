@@ -1,5 +1,9 @@
+$HTTP["host"] =~ "^(demo\.|www\.)apparelrow\.com$" {
+    url.redirect-code = 302
+    url.redirect = ( "^/(.*)" => "http://apparelrow.com/$1" )
+}
 
-$HTTP["host"] =~ "^demo.apparelrow.com$" {
+$HTTP["host"] =~ "^apparelrow.com$" {
     var.project-name = "apparelrow"
     var.deploy-base  = var.hnl-deploy-dir + "/apparelrow"
     var.deploy-dir   = var.deploy-base + "/releases/current"
@@ -23,6 +27,18 @@ $HTTP["host"] =~ "^demo.apparelrow.com$" {
     
     alias.url = (
         "/admin_media"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/media",
+        "/screenshots"     => var.deploy-base + "/www/root/screenshots",
+        "/logo.png"        => var.deploy-base + "/www/root/logo.png",
+    )
+
+    auth.backend = "htpasswd"
+    auth.backend.htpasswd.userfile = var.deploy-base + "/www/etc/htpasswd"
+    auth.debug = 2
+    auth.require = ( "/screenshots" => (
+           "method" => "basic",
+           "realm"  => "ApparelRow Preview",
+           "require" => "valid-user"
+       )
     )
 
     url.rewrite-once = (
@@ -34,5 +50,3 @@ $HTTP["host"] =~ "^demo.apparelrow.com$" {
         "^(/.*)$"                  => "/apparelrow.fcgi$1",          # FCGI configuration
     )
 }
-
-
