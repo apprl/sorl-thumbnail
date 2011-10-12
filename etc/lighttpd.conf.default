@@ -27,7 +27,6 @@ $HTTP["host"] == "apparelrow.com" {
     alias.url = (
         "/admin_media"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/media",
         "/screenshots"     => var.deploy-base + "/www/root/screenshots",
-        "/logo.png"        => var.deploy-base + "/www/root/logo.png",
     )
 
     auth.backend = "htpasswd"
@@ -41,11 +40,11 @@ $HTTP["host"] == "apparelrow.com" {
     )
 
     url.rewrite-once = (
-        "^/robots\.txt$"           => "/media/robots.txt",               # Robots.txt
-        "^/favicon\.ico$"          => "/media/favicon.ico",              # Favicon, redirect to static folder
-        "^(/(?:admin_)?media.*)$"  => "$1",                              # Static files
-# Uncomment following line to run admin server on separate process
-#        "^(/admin(?:\/.*|$))"      => "/apparelrow-admin.fcgi$1",    # FCGI Admin site configuration
+        "^/robots\.txt$"           => "/media/robots.txt",           # Robots.txt
+        "^/favicon\.ico$"          => "/media/favicon.ico",          # Favicon, redirect to static folder
+        "^(/(?:admin_)?media.*)$"  => "$1",                          # Static files
+        "^/(screenshots/.*)$"      => "$1",                          # Screenshots
+        "^(/admin(?:\/.*|$))"      => "/apparelrow-admin.fcgi$1",    # FCGI Admin site configuration
         "^(/.*)$"                  => "/apparelrow.fcgi$1",          # FCGI configuration
     )
 }
