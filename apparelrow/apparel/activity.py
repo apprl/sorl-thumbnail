@@ -174,7 +174,43 @@ def m2m_handler(sender, **kwargs):
                                                   target_object_id=instance.pk)
             action_object.delete()
 
-models.signals.m2m_changed.connect(m2m_handler, sender=Wardrobe.products.through)
 models.signals.m2m_changed.connect(m2m_handler, sender=Look.products.through)
 
+def wardrobe_product_addhandler(sender, **kwargs):
+    instance = kwargs['instance']
+    if not hasattr(instance.wardrobe, 'user'):
+        logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % instance)
+        return
 
+    if not kwargs['created']:
+        return
+
+    action.send(
+        instance.wardrobe.user,
+        verb='added',
+        action_object=instance.product,
+        target=instance.wardrobe
+    )
+
+def wardrobe_product_delhandler(sender, **kwargs):
+    instance = kwargs['instance']
+    if not hasattr(instance.wardrobe, 'user'):
+        logging.warning('Trying to remove an activity on post_delete, but %s has not user attribute' % instance)
+        return
+
+    verb = 'added'
+
+    product_content_type = ContentType.objects.get_for_model(Product)
+    user_content_type = ContentType.objects.get_for_model(User)
+    wardrobe_content_type = ContentType.objects.get_for_model(Wardrobe)
+
+    action_object = Action.objects.filter(actor_content_type=user_content_type,
+                                          actor_object_id=instance.wardrobe.user.pk,
+                                          target_content_type=wardrobe_content_type,
+                                          target_object_id=instance.wardrobe.pk,
+                                          action_object_content_type=product_content_type,
+                                          action_object_object_id=instance.product.pk)
+    action_object.delete()
+
+models.signals.post_save.connect(wardrobe_product_addhandler, sender=WardrobeProduct)
+models.signals.pre_delete.connect(wardrobe_product_delhandler, sender=WardrobeProduct)
