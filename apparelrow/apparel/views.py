@@ -27,7 +27,7 @@ from apparelrow.profile.models import ApparelProfile
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.decorators import get_current_user
 from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct
-from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, FirstPageContent
+from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, WardrobeProduct, FirstPageContent
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.search import SearchQuerySetPlus
 import apparel.signals
@@ -268,7 +268,9 @@ def look_edit(request, slug):
         form = LookForm(instance=look)
 
     try:
-        wardrobe = Wardrobe.objects.get(user=request.user).products.all()
+        wardrobe = Wardrobe.objects.get(user=request.user).wardrobeproduct_set.order_by('-created').all()
+        wardrobe = [x.product for x in wardrobe]
+
     except Wardrobe.DoesNotExist:
         wardrobe = []
 
@@ -493,7 +495,8 @@ def add_to_wardrobe(request):
     """
     product = Product.objects.get(pk=request.POST.get('product'))
     wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
-    wardrobe.products.add(product)
+    # Becase the ManyToMany relation is handle through a WardrobeProduct
+    WardrobeProduct(wardrobe=wardrobe, product=product).save()
     search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
 
     return {'success': True}
@@ -503,7 +506,8 @@ def add_to_wardrobe(request):
 def delete_from_wardrobe(request):
     product = Product.objects.get(pk=request.POST.get('product'))
     wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
-    wardrobe.products.remove(product)
+    # Becase the ManyToMany relation is handle through a WardrobeProduct
+    WardrobeProduct(wardrobe=wardrobe, product=product).remove()
     search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
 
     return ({'success': True}, HttpResponseRedirect(reverse('apparel.browse.browse_wardrobe', args=(request.user,))))

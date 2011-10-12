@@ -551,10 +551,22 @@ models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookCo
 
 class Wardrobe(models.Model):
     user     = models.ForeignKey(User)
-    products = models.ManyToManyField(Product)
-    
+    products = models.ManyToManyField(Product, through='WardrobeProduct')
+
     def __unicode__(self):
         return u'Wardrobe for %s' % self.user.get_profile().display_name
+
+class WardrobeProduct(models.Model):
+    """
+    Maps the relation between products and a users wardrobe, with the addition
+    of creation time.
+    """
+    created  = models.DateTimeField(_("Time created"), auto_now_add=True)
+    wardrobe = models.ForeignKey(Wardrobe)
+    product = models.ForeignKey(Product)
+
+    class Meta:
+        db_table = 'apparel_wardrobe_products'
 
 class FirstPageContent(models.Model):
     title     = models.CharField(_('Title'), max_length=127, blank=True)
