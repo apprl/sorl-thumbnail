@@ -69,6 +69,11 @@
                 </div>
                 {% endif %}
             </div>
+        {% empty %}
+            <span class="sold-out">{% trans "Sold out" %}</span>
+            <div class="product-vendor">
+                <span class="price"></span><span class="currency"></span>
+            </div>
         {% endfor %}
         {% endwith %}
     </div>
