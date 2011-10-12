@@ -1,9 +1,8 @@
-$HTTP["host"] =~ "^(demo\.|www\.)apparelrow\.com$" {
-    url.redirect-code = 302
-    url.redirect = ( "^/(.*)" => "http://apparelrow.com/$1" )
+$HTTP["host"] =~ "^(demo|www)\.(apparelrow\.com)$" {
+    url.redirect = ( "^/(.*)" => "http://%2/$1" )
 }
 
-$HTTP["host"] =~ "^apparelrow.com$" {
+$HTTP["host"] == "apparelrow.com" {
     var.project-name = "apparelrow"
     var.deploy-base  = var.hnl-deploy-dir + "/apparelrow"
     var.deploy-dir   = var.deploy-base + "/releases/current"
