@@ -156,11 +156,11 @@ class ProductIndex(QueuedSearchIndex):
     availability = BooleanField(stored=False)
 
     # Search fields
-    product_name = CharField(model_attr='product_name', stored=False, boost=1.1)
-    description = CharField(model_attr='description', stored=False, boost=0.5)
-    manufacturer_name = CharField(model_attr='manufacturer__name', boost=1.1)
-    color_names = CharField(stored=False, boost=1.1)
-    category_names = CharField(stored=False, boost=1.1)
+    product_name = CharField(model_attr='product_name', stored=False, boost=0.5)
+    description = CharField(model_attr='description', stored=False, boost=0.4)
+    manufacturer_name = CharField(model_attr='manufacturer__name', boost=1.3)
+    color_names = CharField(stored=False, boost=1.3)
+    category_names = CharField(stored=False, boost=1.3)
 
     # Manufacturer
     manufacturer = CharField(model_attr='manufacturer__id', faceted=True)
