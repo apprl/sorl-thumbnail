@@ -193,6 +193,14 @@ def look_list_search(request):
     sqs = sqs.auto_query(request.GET.get('q'))
     queryset = sqs.load_all()
 
+    if request.user.is_authenticated():
+        user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
+        most_looks_users = ApparelProfile.objects.annotate(look_count=Count('user__look')).order_by('-look_count').filter(look_count__gt=0, user__in=user_ids)
+    else:
+        most_looks_users = None
+
+    latest_looks = Look.objects.order_by('-created')[:8]
+
     paginator = Paginator(sqs, 10)
     try:
         paged_result = paginator.page(int(request.GET.get('page', 1)))
@@ -208,6 +216,8 @@ def look_list_search(request):
                 'object_list': [x.object for x in queryset],
                 'is_paginated': True,
                 'paginator': paginator,
+                'most_looks_users': most_looks_users,
+                'latest_looks': latest_looks,
                 'page_obj': paged_result
             },
             context_instance=RequestContext(request),
