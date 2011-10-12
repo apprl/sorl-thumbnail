@@ -3,11 +3,10 @@
 {% load i18n %}
 
 {% block activity_link %}
-    {{ object.actor.get_profile.get_absolute_url }}
+    {{ object.target.get_profile.get_absolute_url }}
 {% endblock %}
 {% block activity_image %}
-    <!--<img src="/scale/93x69{{ object.product_image.url }}?crop=true">-->
-    <img src="{{ object.actor.get_profile.avatar_medium }}" alt="{{ object.actor.get_profile.display_name }}">
+    <img src="{{ object.target.get_profile.avatar_medium }}" alt="{{ object.target.get_profile.display_name }}">
 {% endblock %}
 
 {% block activity_header %}
