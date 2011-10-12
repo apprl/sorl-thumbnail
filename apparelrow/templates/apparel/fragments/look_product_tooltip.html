@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="tooltip">
+<div id="tooltip-{{ component.product.id }}" class="tooltip">
     <a href="{{ component.product.get_absolute_url }}" class="product-image">
         <img src="/scale/90x115{{ component.product.product_image.url }}" />
     </a>
@@ -16,7 +16,7 @@
         </a>
         <div class="vendors">
         {% if component.product.default_vendor.availability == 0 %}
-            <a target="_new" href="{{ component.product.default_vendor.vendor.homepage }}"><span class="vendor">{{ component.product.default_vendor.vendor.name }}</span></a>
+            <a target="_new" href="{{ component.product.default_vendor.vendor.homepage }}"><span class="vendor">{{ component.product.default_vendor.vendor.name }}</span><span class="sold-out">{% trans "Sold out" %}</span></a>
         {% else %}
             <a target="_new" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ component.product.id }}&u={{ component.product.default_vendor.buy_url|urlencode }}"><span class="vendor">{{ component.product.default_vendor.vendor }}</span><span class="buy-now">{% trans "Buy" %}</span></a>
         {% endif %}
