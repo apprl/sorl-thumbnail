@@ -496,7 +496,7 @@ def add_to_wardrobe(request):
     product = Product.objects.get(pk=request.POST.get('product'))
     wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
     # Becase the ManyToMany relation is handle through a WardrobeProduct
-    WardrobeProduct(wardrobe=wardrobe, product=product).save()
+    WardrobeProduct.objects.get_or_create(wardrobe=wardrobe, product=product)
     search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
 
     return {'success': True}
@@ -507,7 +507,7 @@ def delete_from_wardrobe(request):
     product = Product.objects.get(pk=request.POST.get('product'))
     wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
     # Becase the ManyToMany relation is handle through a WardrobeProduct
-    WardrobeProduct.objects.get(wardrobe=wardrobe, product=product).delete()
+    WardrobeProduct.objects.filter(wardrobe=wardrobe, product=product).delete()
     search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
 
     return ({'success': True}, HttpResponseRedirect(reverse('apparel.browse.browse_wardrobe', args=(request.user,))))
