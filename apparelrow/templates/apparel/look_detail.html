@@ -17,8 +17,8 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        makeProductTooltip('.collage .product, .photo .product');        
-        jQuery('#embed-code')
+        makeProductTooltip('.collage .product, .photo .product');
+        jQuery('#embed-code, #url-code')
             .focus(function(e) { this.select(); })
             .mouseup(function(e) { e.preventDefault() });
 
@@ -143,5 +143,15 @@
 </div>
 {% endcomment %}
 {% endcache %}
-
+<div id="look-tooltips">
+{% if object.display_with_component == 'P' %}
+    {% for component in object.photo_components.all %}
+        {% include "apparel/fragments/look_product_tooltip.html" %}
+    {% endfor %}
+{% else %}
+    {% for component in object.collage_components.all %}
+        {% include "apparel/fragments/look_product_tooltip.html" %}
+    {% endfor %}
+{% endif %}
+</div>
 {% endblock body %}

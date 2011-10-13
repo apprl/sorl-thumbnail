@@ -44,10 +44,6 @@ var look = {
                 });
                 
                 break;
-                
-            case 'photo-background':
-                makeProductTooltip(ele);
-                break;
         }
         
         wrapper
@@ -147,12 +143,14 @@ var look = {
                 
                 if(response.data.added) {
                     var new_product = jQuery(response.data.html).appendTo(pane);
+                    jQuery(response.data.tooltip_html).appendTo(jQuery('#look-tooltips'));
                     look.initialize(new_product.first());
                 }
             }
         );
     },
     deleteComponent: function(product, pane) {
+        jQuery('.tooltip').hide(); // Hide tooltip
         var context = getContextFromPane(pane);
         var id = product.attr('id').split('-').pop();
         jQuery.post(
@@ -179,6 +177,7 @@ var look = {
         );
     },
     deleteAllComponents: function(pane) {
+        jQuery('.tooltip').hide(); // Hide tooltip
         var context = getContextFromPane(pane);
         var ids = jQuery.map(jQuery('.product', pane), function(e, i) {
             return e.id.split('-').pop()
@@ -238,6 +237,7 @@ function getContextFromPane(pane) {
 }
 
 jQuery(document).ready(function() {
+    makeProductTooltip('#photo .product');
     look.initialize(jQuery('#photo-background > .product'));
     look.initialize(jQuery('#collage > .product'));
     look.disable(jQuery('.ui-draggable'));
@@ -584,4 +584,15 @@ jQuery(document).ready(function() {
     </div>
 </div>
 <div id="product-chooser"><h3>{% trans "Products" %}<a class="reset" href="#">{% trans "Close" %}</a></h3><ul></ul></div>
+<div id="look-tooltips">
+{% if object.display_with_component == 'P' %}
+    {% for component in object.photo_components.all %}
+        {% include "apparel/fragments/look_product_tooltip.html" %}
+    {% endfor %}
+{% else %}
+    {% for component in object.collage_components.all %}
+        {% include "apparel/fragments/look_product_tooltip.html" %}
+    {% endfor %}
+{% endif %}
+</div>
 {% endblock body %}

@@ -253,32 +253,57 @@ jQuery(document).ready(function() {
     });
 });
 
-
-function makeProductTooltip(selector) {
-    var q = (typeof selector == 'string')
-        ? jQuery(selector)
-        : selector;
-
-    q.tooltip({
-        effect: 'slide',
-        relative: true,
-        delay: 500,
-        offset: [15, 0]
-    });
-
-    jQuery('.product-image', q.parent().next()).hover(
-        function(e) {
-            var $this = jQuery(e.currentTarget);
-            $this.parent().find('.product-meta > a').addClass('hover');
-        },
-        function(e) {
-            var $this = jQuery(e.currentTarget);
-            $this.parent().find('.product-meta > a').removeClass('hover');
-        });
+function getElementId(element, numeric) {
+    if(numeric) {
+        return parseInt(jQuery(element).attr('id').split('-').pop(), 10);
+    }
+    return jQuery(element).attr('id').split('-').pop()
 }
 
+// Based on http://javascript-array.com/scripts/jquery_simple_drop_down_menu/
+function makeProductTooltip(selector) {
+    var elements = (typeof selector == 'string') ? jQuery(selector) : selector;
+    var closetimer = false;
+    var tooltip = false;
+    var tooltip_top = 0;
+    var tooltip_left = 0;
 
+    function open() {
+        cancel();
+        close();
+        var attr_id = jQuery(this).attr('id').split('-');
+        var component_id = attr_id.pop();
+        var component_type = attr_id.pop();
+        tooltip = jQuery('#tooltip-' + component_id);
+        if (component_type != 'tooltip') {
+            var positions = jQuery('#' + component_type + '-' + component_id).offset();
+            tooltip_top = positions.top - tooltip.height();
+            tooltip_left = positions.left;
+        }
+        tooltip.show().css({'position': 'absolute', 'top': tooltip_top, 'left': tooltip_left});
+    }
 
+    function close() {
+        if (tooltip) {
+            tooltip.hide();
+        }
+    }
+
+    function timer() {
+        closetimer = window.setTimeout(close, 150);
+    }
+
+    function cancel() {
+        if(closetimer) {
+            window.clearTimeout(closetimer);
+            closetimer = null;
+        }
+    }
+
+    elements.live('mouseenter', open).live('mouseleave', timer);
+    jQuery('.tooltip').live('mouseenter', open).live('mouseleave', timer);
+    jQuery(document).click(close);
+}
 
 /**
  *  Search functionality
