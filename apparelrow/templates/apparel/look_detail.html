@@ -101,16 +101,15 @@
 </div>
 <div id="content">
     {# FIXME: Add a "display_as "whatever" or "dispay_as_whatever" property to thge look object rather than checking the flag #}
-    {% ifequal object.display_with_component 'C' %}
+    {% if object.display_with_component == 'C' %}
         <div class="collage">
         {% include 'apparel/fragments/look_collage.html' %}
         </div>
     {% else %}
-        <!-- FIXME: Move tooltip offset to relative of the position of the background image. Consolidate with edit_look page -->
         <div class="photo">
         {% include 'apparel/fragments/look_photo.html' %}
         </div>
-    {% endifequal %}
+    {% endif %}
 {% endcache %}
     {% url apparel.views.look_like object.slug 'like' as like_url %}
     {% url apparel.views.look_like object.slug 'unlike' as unlike_url %}

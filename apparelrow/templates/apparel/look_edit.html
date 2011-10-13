@@ -247,6 +247,8 @@ jQuery(document).ready(function() {
         onClick: function(x, index) {
             var buttonTexts = ['{% trans "Save collage" %}', '{% trans "Save photo" %}', '{% trans "Save selection" %}'];
             jQuery('#look-title button').text(buttonTexts[index]);
+            var componentFormFieldValue = ['C', 'P', 'C'];
+            jQuery('#id_component').val(componentFormFieldValue[index]);
         }
     });
     jQuery('#wardrobe-title').click(function() {
@@ -520,6 +522,7 @@ jQuery(document).ready(function() {
     {{ form.description }}
     <label for="id_tags">{% trans "Tags:" %}</label>
     {{ form.tags }}
+    {{ form.component.as_hidden }}
 </div>
 <div id="content">
     <div id="edit-look">

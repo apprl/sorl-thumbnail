@@ -387,7 +387,6 @@ class Look(models.Model):
         Returns the total price of the given component, or default if none specified
         To get the price of all components, specify A
         """
-        
         components = None
         
         if component == 'C':
@@ -414,7 +413,6 @@ class Look(models.Model):
         """
         All components in the collage view
         """
-        
         return self.components.filter(component_of='C')
     
     @property
@@ -423,7 +421,6 @@ class Look(models.Model):
         All components in the view that should be displayed according to the
         logic in "display_with_component"
         """
-        
         return self.photo_components if self.display_with_component == 'P' else self.collage_components
     
     @property
