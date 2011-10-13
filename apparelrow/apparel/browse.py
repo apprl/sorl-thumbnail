@@ -39,7 +39,7 @@ def _to_int(s):
     except ValueError:
         return None
 
-def filter_query(query, params, current_user=None, facet_fields=None):
+def filter_query(query, params, current_user=None, facet_fields=None, profile=None):
     query = query.facet_limit(-1).facet_mincount(1)
     for field in ['category', 'price', 'manufacturer', 'color']:
         if facet_fields and field in facet_fields:
@@ -67,6 +67,8 @@ def filter_query(query, params, current_user=None, facet_fields=None):
         user_ids = list(Follow.objects.filter(user=current_user).values_list('object_id', flat=True)) + [0]
         user_ids_or = ' OR '.join(str(x) for x in user_ids)
         query = query.narrow('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or))
+    elif profile:
+        query = query.narrow('user_wardrobe:%s' % (profile.user.id,))
     else:
         query = query.narrow('availability:true')
 
@@ -74,10 +76,12 @@ def filter_query(query, params, current_user=None, facet_fields=None):
 
 def browse_products(request, template='apparel/browse.html', extra_context=None):
     facet_fields = ['category', 'price', 'manufacturer', 'color']
-    sqs = filter_query(SearchQuerySetPlus().models(Product), request.GET, request.user, facet_fields)
     if extra_context and 'profile' in extra_context:
-        sqs = sqs.narrow('user_wardrobe:%s' % (extra_context['profile'].user.id,))
-        sqs = sqs.narrow('availability:false OR availability:true') # If we are in wardrobe, availability does not matter
+        # wardrobe
+        sqs = filter_query(SearchQuerySetPlus().models(Product), request.GET, request.user, facet_fields, profile=extra_context['profile'])
+        sqs = sqs.order_by('-availability', '-popularity')
+    else:
+        sqs = filter_query(SearchQuerySetPlus().models(Product), request.GET, request.user, facet_fields)
 
     # If 'q' is not in GET sort by popularity descending
     if request.GET.get('q', None) is None:
