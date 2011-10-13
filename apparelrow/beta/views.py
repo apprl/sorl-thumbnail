@@ -27,13 +27,14 @@ def unlock(request):
             invitee.seen = datetime.utcnow()
             invitee.used_count += 1
             invitee.save() # Update seen attribute
-            response = HttpResponseRedirect(request.POST.get('next', '/'))
+            response = HttpResponseRedirect(request.POST.get('next', '/home'))
             response.set_cookie('in_beta', value='1', max_age=365 * 24 * 60 * 60)
             return response
         except Invitee.DoesNotExist:
             return render_to_response('beta/beta.html', {'next': request.POST.get('next', '/')}, context_instance=RequestContext(request))
     else:
-        return render_to_response('beta/beta.html', {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+        # Initial request
+        return render_to_response('beta/beta.html', {'next': request.GET.get('next', '/home')}, context_instance=RequestContext(request))
 
 def invite(request):
     if request.user and request.user.is_authenticated:
