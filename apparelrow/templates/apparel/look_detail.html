@@ -80,10 +80,10 @@
 {% cache CACHE_TIMEOUT look_detail2 object.id LANGUAGE_CODE %}
     <div class="spread">
         <div class="first">
-            <label>{% trans "Embed this look on your blog or site" %}<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code"></label>
+            <label>{% trans "Embed this look on your blog or site" %}:<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code"></label>
         </div>
         <div class="last">
-            <label>{% trans "Absolute address to this page" %}<input type="text" value="{% filter force_escape %}{{ object_url }}{% endfilter %}" id="url-code"></label>
+            <label>{% trans "Direct link to this page" %}:<input type="text" value="{% filter force_escape %}{{ object_url }}{% endfilter %}" id="url-code"></label>
         </div>
     </div>
     {% if looks_by_user %}

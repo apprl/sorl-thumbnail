@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-10 02:40-0500\n"
+"POT-Creation-Date: 2011-10-13 19:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "Swedish"
 msgstr "Svenska"
 
-#: apparel/browse.py:179 templates/apparel/look_list.html:23
+#: apparel/browse.py:183 templates/apparel/look_list.html:23
 msgid "Showing"
 msgstr ""
 
-#: apparel/browse.py:181
+#: apparel/browse.py:185
 msgid "Showing popular products in your network"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgid "Time added"
 msgstr ""
 
 #: apparel/models.py:141 apparel/models.py:239 apparel/models.py:373
-#: apparel/models.py:476 apparel/models.py:567
+#: apparel/models.py:476 apparel/models.py:579
 msgid "Time modified"
 msgstr ""
 
@@ -123,7 +123,9 @@ msgid "Feed gender"
 msgstr ""
 
 #: apparel/models.py:238 apparel/models.py:372 apparel/models.py:475
-#: apparel/models.py:566 beta/models.py:9 beta/models.py:17
+#: apparel/models.py:564 apparel/models.py:578
+#: apparel/migrations/0021_auto__add_wardrobeproducts.py:12 beta/models.py:9
+#: beta/models.py:17
 msgid "Time created"
 msgstr ""
 
@@ -202,7 +204,7 @@ msgstr ""
 msgid "items in stock"
 msgstr ""
 
-#: apparel/models.py:365 apparel/models.py:560
+#: apparel/models.py:365 apparel/models.py:572
 #: templates/apparel/look_create.html:18
 msgid "Title"
 msgstr ""
@@ -243,35 +245,35 @@ msgstr ""
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:561
+#: apparel/models.py:573
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:561
+#: apparel/models.py:573
 msgid "HTML allowed"
 msgstr ""
 
-#: apparel/models.py:562
+#: apparel/models.py:574
 msgid "URL"
 msgstr ""
 
-#: apparel/models.py:563
+#: apparel/models.py:575
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:563
+#: apparel/models.py:575
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:565
+#: apparel/models.py:577
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:592
+#: apparel/models.py:604
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:592
+#: apparel/models.py:604
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -830,7 +832,7 @@ msgid "Embed this look on your blog or site"
 msgstr ""
 
 #: templates/apparel/look_detail.html:86
-msgid "Absolute address to this page"
+msgid "Direct link to this page"
 msgstr ""
 
 #: templates/apparel/look_detail.html:90
@@ -981,20 +983,20 @@ msgstr ""
 
 #: templates/apparel/product_detail.html:139
 #: templates/apparel/product_detail.html:152
-#: templates/apparel/fragments/product_detail.html:99
+#: templates/apparel/fragments/product_detail.html:105
 msgid "In wardrobe"
 msgstr ""
 
 #: templates/apparel/product_detail.html:139
 #: templates/apparel/product_detail.html:152
-#: templates/apparel/fragments/product_detail.html:99
+#: templates/apparel/fragments/product_detail.html:105
 #: templates/profile/wardrobe.html:10
 msgid "Delete product from my wardrobe"
 msgstr ""
 
 #: templates/apparel/product_detail.html:142
 #: templates/apparel/product_detail.html:150
-#: templates/apparel/fragments/product_detail.html:105
+#: templates/apparel/fragments/product_detail.html:111
 msgid "Add to wardrobe"
 msgstr ""
 
@@ -1167,6 +1169,12 @@ msgid_plural "<span class=\"count\">%(counter)s</span> likes"
 msgstr[0] ""
 msgstr[1] ""
 
+#: templates/apparel/fragments/look_product_tooltip.html:19
+#: templates/apparel/fragments/product_detail.html:54
+#: templates/apparel/fragments/product_detail.html:73
+msgid "Sold out"
+msgstr ""
+
 #: templates/apparel/fragments/look_product_tooltip.html:21
 #: templates/apparel/fragments/product_detail.html:56
 msgid "Buy"
@@ -1180,19 +1188,15 @@ msgstr ""
 msgid "By"
 msgstr ""
 
-#: templates/apparel/fragments/product_detail.html:54
-msgid "Sold out"
-msgstr ""
-
-#: templates/apparel/fragments/product_detail.html:78
+#: templates/apparel/fragments/product_detail.html:84
 msgid "Add to look"
 msgstr ""
 
-#: templates/apparel/fragments/product_detail.html:88
+#: templates/apparel/fragments/product_detail.html:94
 msgid "Enter look name"
 msgstr ""
 
-#: templates/apparel/fragments/product_detail.html:89
+#: templates/apparel/fragments/product_detail.html:95
 msgid "New look"
 msgstr ""
 
@@ -1284,7 +1288,7 @@ msgstr ""
 msgid "%(name)s likes"
 msgstr ""
 
-#: templates/apparel/fragments/activity/started-following.html:18
+#: templates/apparel/fragments/activity/started-following.html:17
 #, python-format
 msgid "now follows %(name)s"
 msgstr ""
