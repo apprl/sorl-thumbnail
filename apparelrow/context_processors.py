@@ -8,13 +8,12 @@ def exposed_settings(request):
         'DEFAULT_AVATAR_LARGE': django_settings.APPAREL_DEFAULT_AVATAR_LARGE,
         'GOOGLE_ANALYTICS_ACCOUNT': django_settings.GOOGLE_ANALYTICS_ACCOUNT,
         'GOOGLE_ANALYTICS_DOMAIN': django_settings.GOOGLE_ANALYTICS_DOMAIN,
-        'next': request.path,
     }
 
 def next_redirects(request):
     if reverse("django.contrib.auth.views.logout") == request.path:
-        return { 
-            'next' : '/' 
+        return {
+            'next' : '/'
         }
     else:
         return {
