@@ -1,4 +1,5 @@
 from django.conf import settings as django_settings
+from django.core.urlresolvers import reverse
 
 def exposed_settings(request):
     return {
@@ -9,3 +10,13 @@ def exposed_settings(request):
         'GOOGLE_ANALYTICS_DOMAIN': django_settings.GOOGLE_ANALYTICS_DOMAIN,
         'next': request.path,
     }
+
+def next_redirects(request):
+    if reverse("django.contrib.auth.views.logout") == request.path:
+        return { 
+            'next' : '/' 
+        }
+    else:
+        return {
+            'next' : request.path
+        }

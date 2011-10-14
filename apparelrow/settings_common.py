@@ -124,6 +124,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     
     "context_processors.exposed_settings",
+    "context_processors.next_redirects",
     
     "announcements.context_processors.site_wide_announcements",
 )
