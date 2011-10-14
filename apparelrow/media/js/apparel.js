@@ -276,9 +276,10 @@ function makeProductTooltip(selector) {
         var component_type = attr_id.pop();
         tooltip = jQuery('#tooltip-' + component_id);
         if (component_type != 'tooltip') {
-            var positions = jQuery('#' + component_type + '-' + component_id).offset();
-            tooltip_top = positions.top - tooltip.height();
-            tooltip_left = positions.left;
+            var component = jQuery('#' + component_type + '-' + component_id);
+            var container = component.closest('.photo, .collage, #photo');
+            tooltip_top = container.offset().top + component.position().top - tooltip.height() + 5;
+            tooltip_left = container.offset().left + component.position().left;
         }
         tooltip.show().css({'position': 'absolute', 'top': tooltip_top, 'left': tooltip_left});
     }
@@ -303,6 +304,13 @@ function makeProductTooltip(selector) {
     elements.live('mouseenter', open).live('mouseleave', timer);
     jQuery('.tooltip').live('mouseenter', open).live('mouseleave', timer);
     jQuery(document).click(close);
+    jQuery('.tooltip .product-image').hover(
+        function(e) {
+            jQuery(e.currentTarget).parent().find('.product-meta > a').addClass('hover');
+        },
+        function(e) {
+            jQuery(e.currentTarget).parent().find('.product-meta > a').removeClass('hover');
+        });
 }
 
 /**

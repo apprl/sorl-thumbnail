@@ -14,6 +14,12 @@ $tooltip_width: 242px
   padding: 4px !important
   position: relative
   white-space: nowrap
+  h2
+    background: transparent image_url("arrow-bg.png") scroll no-repeat right center
+  a:hover, .hover
+    h2
+      background-image: image_url("arrow-bg-hover.png")
+      text-decoration: underline
   .product-image, .ar-product-image
     border: 1px solid #dadada
     text-align: center
@@ -34,9 +40,6 @@ $tooltip_width: 242px
       white-space: normal
       overflow: hidden
       padding-right: 16px
-    a:hover, .hover
-      h2
-        text-decoration: underline
     h3
       color: $easy_color
       font-size: smaller
@@ -65,13 +68,6 @@ $tooltip_width: 242px
           text-decoration: underline
         span.buy-now, span.ar-buy-now
           background-color: $hover_highlight_bg_color
-    .arrow, .ar-arrow
-      position: absolute
-      background: transparent image_url(unquote("tooltip-arrow.png")) no-repeat scroll center center
-      width: 14px
-      height: 8px
-      bottom: -8px
-      left: $tooltip_width / 2 - 5
 
 =vendor
   background: transparent image_url(unquote("vendor.png")) scroll no-repeat left center
