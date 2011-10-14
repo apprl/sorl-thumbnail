@@ -31,7 +31,7 @@ from apparel.decorators import get_current_user
 #FIXME: ugly solution to avoid using get_template_source which is deprecated. Solve this in js and not by using pagination_js template.
 PAGINATION_JS_TEMPLATE_SOURCE = open(os.path.join(settings.TEMPLATE_DIRS[0], 'apparel/fragments/pagination_js.html')).read()
 
-BROWSE_PAGE_SIZE = 12
+BROWSE_PAGE_SIZE = 60
 
 def _to_int(s):
     try:

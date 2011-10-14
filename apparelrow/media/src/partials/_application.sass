@@ -677,7 +677,9 @@ span, a
 div#product-list
   +border-bottom-radius(unquote("3px"))
   width: $large_width - 1
-  height: 404px
+  // This height should only be used when javascript is disabled, as it updates
+  // the height to the correct value
+  height: 1946px
   div#product-infotext
     position: relative
     width: $large_width - 1
@@ -707,6 +709,8 @@ div#product-list, .product-list
   ul.list
     width: 20000em
     position: absolute
+    // Take the pagination bar into account
+    margin-top: 31px
     li
       +float(left)
       width: $large_width + 1
@@ -773,13 +777,17 @@ body.three-columns .pagination
     width: $middle_width - 2 * (115 + 2)
 
 .pagination
-  &#pagination
+  &#pagination-top, &#pagination-bottom
     position: absolute
-    border-bottom: none
     border-left: none
     border-right: none
+  &#pagination-bottom
+    border-bottom: none
+    bottom: 0
+  &#pagination-top
+    border-top: none
+    top: 0
   height: 30px
-  bottom: 0
   background-color: $button_color
   +border(all)
   +border-bottom-radius(unquote("3px"))

@@ -49,7 +49,7 @@ var pagination = {
     data: pagination_data,
     render: function() {
         try {
-            $('#pagination').html($('#pagination_template').render({products: this.data}));
+            $('.pagination').html($('#pagination_template').render({products: this.data}));
         } catch(e) {
             console.log(e)
         }
@@ -57,6 +57,7 @@ var pagination = {
 };
 
 jQuery(document).ready(function() {
+
     // Initialize jquery history plugin with our filter
     var firstLoad = true;
     jQuery.history.init(function(hash) {
@@ -80,6 +81,7 @@ jQuery(document).ready(function() {
                 if(!jQuery('#product-gender li > a').hasClass('selected')) {
                     jQuery('#product-gender li:first > a').addClass('selected');
                 }
+                adjustProductListHeight();
             }
         } else {
             doFilter(hash, this.filterCallback);
@@ -266,7 +268,7 @@ jQuery(document).ready(function() {
         }
     });
 
-    jQuery('#pagination a').live('click', function(e) {
+    jQuery('.pagination a').live('click', function(e) {
         // FIXME: Move out logic to section that handles page-swapping
         
         var link = jQuery(this);
@@ -591,6 +593,16 @@ function updateSelected(products) {
     }
 }
 
+function adjustProductListHeight() {
+    // Calculate height of product-list
+    var height = 0;
+    jQuery('#product-list').children().each(function () {
+        height += $(this).height();
+    });
+
+    jQuery('#product-list').height(height);
+}
+
 function renderProducts(products) {
     $('#product-list > ul.list').empty();
     product_count_text = $('#product-count span').text(
@@ -616,4 +628,6 @@ function renderProducts(products) {
     }
 
     filterCriteria(products);
+    
+    adjustProductListHeight();
 }

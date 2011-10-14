@@ -1,5 +1,8 @@
 {% spaceless %}
 <div id="product-list" class="product-list">
+    <div id="pagination-top" class="pagination">
+        {% include 'apparel/fragments/pagination.html' %}
+    </div>
     <ul class="list">
         {% for page in pages %}
             <li id="page-{{ page.number }}">
@@ -19,7 +22,7 @@
         {% endwith %}
         {% endcomment %}
     </ul>
-    <div id="pagination" class="pagination">
+    <div id="pagination-bottom" class="pagination">
         {% include 'apparel/fragments/pagination.html' %}
     </div>
 </div>
