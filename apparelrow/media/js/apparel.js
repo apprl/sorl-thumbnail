@@ -318,6 +318,7 @@ function makeProductTooltip(selector) {
  */
 
 ApparelSearch = {
+    last_query: false,
     hide: function() {
         // Hides search result dialog
         jQuery('#search-result').hide();
@@ -341,14 +342,25 @@ ApparelSearch = {
         // Clears and hides all
         this.hide();
         this.clear();
+        updateHash('!s', s, true);
         jQuery('#search > input').val('');
     },
-    search: function(callback) {
+    search: function(callback, query) {
         // Preforms a search
+        var s = '';
+        if(query) {
+            jQuery('#search > input').val(query);
+            s = query;
+        } else {
+            s = jQuery('#search > input').val();
+        }
 
-        var s = jQuery('#search > input').val();
         if(s.length == 0)
             return;
+
+        ApparelSearch.last_query = s;
+
+        updateHash('!s', s, false);
 
         ApparelSearch.clear();
 
@@ -506,6 +518,37 @@ ApparelSearch = {
     },
 };
 
+function getHashParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]?" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(window.location.hash);
+    if(results == null)
+        return "";
+    else
+        return decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function updateHash(name, value, remove) {
+    var hash_object = {};
+    var found = false;
+    if(window.location.hash.substring(1)) {
+        jQuery.each(window.location.hash.substring(1).split('&'), function(index, elem) {
+            var pair = elem.split('=');
+            if(pair[0] == name) {
+                pair[1] = value;
+                found = true;
+            }
+            if(!remove) {
+                hash_object[pair[0]] = pair[1];
+            }
+        });
+    }
+    if(!found && !remove) {
+        hash_object[name] = value;
+    }
+    window.location.hash = jQuery.param(hash_object);
+}
 
 // DOM bindings
 
@@ -532,6 +575,18 @@ jQuery(document).ready(function() {
                 j.data('tid', setTimeout(ApparelSearch.search, 1000));
         }
     });
+
+    jQuery(window).bind('hashchange', function() {
+        var hash_query = getHashParameterByName('!s');
+        if(hash_query && ApparelSearch.last_query != hash_query) {
+            ApparelSearch.search(null, hash_query);
+        }
+    });
+
+    var hash_query = getHashParameterByName('!s');
+    if(hash_query && ApparelSearch.last_query != hash_query) {
+        ApparelSearch.search(null, hash_query);
+    }
 
     jQuery('#cancel-search').click(function(e) {
         ApparelSearch.cancel();
