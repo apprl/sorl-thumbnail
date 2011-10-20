@@ -245,6 +245,7 @@ def manufacturer_search(request):
         return Http404('Search require a search string')
 
     sqs = SearchQuerySetPlus().models(get_model('apparel', 'product')).narrow('availability:true').auto_query_product(query, fieldnames=['manufacturer_name'])
+    sqs = sqs.narrow('gender:(W OR M OR U)')
     sqs = sqs.facet('manufacturer').facet_limit(-1).facet_mincount(1)
     facet = sqs.facet_counts()
     manufacturers = Manufacturer.objects.values('id', 'name').filter(pk__in=[x[0] for x in facet['fields']['manufacturer']]).order_by('name')
@@ -291,6 +292,7 @@ def search_view(request, model):
     if request.GET.get('q'):
         if class_name == 'product':
             sqs = sqs.narrow('availability:true')
+            sqs = sqs.narrow('gender:(W OR M OR U)')
             sqs = sqs.auto_query_product(request.GET.get('q'))
         else:
             sqs = sqs.auto_query(request.GET.get('q'))
