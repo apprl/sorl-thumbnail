@@ -152,13 +152,24 @@ jQuery(document).ready(function() {
         } )
     ;
 
+    // From: http://www.w3.org/TR/html5/number-state.html#file-upload-state
+    function extractFilename(path) {
+        var x = path.lastIndexOf('\\');
+        if (x >= 0) // Windows-based path
+            return path.substr(x+1);
+        x = path.lastIndexOf('/');
+        if (x >= 0) // Unix-based path
+            return path.substr(x+1);
+        return path; // just the filename
+    }
+
     jQuery('.upload-field input[type=text], .upload-field .button').click(function(e) {
         // Forward click events from the fake controls to file object. This doesn't work in FF
         jQuery('input[type=file]', jQuery(this).parent()).focus();
         return false;
     });
     jQuery('.upload-field input[type=file]').change(function(e) {
-        jQuery('input[type=text]', jQuery(this).closest('.upload-field')).val(this.value);
+        jQuery('input[type=text]', jQuery(this).closest('.upload-field')).val(extractFilename(this.value));
     });
 
     /*jQuery('.dialog .buttons>.ok').live('click', function(e) {
