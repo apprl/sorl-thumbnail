@@ -278,34 +278,47 @@ function makeProductTooltip(selector) {
     var tooltip = false;
     var tooltip_top = 0;
     var tooltip_left = 0;
+    var last_id = false;
 
-    function open() {
-        cancel();
-        close();
+    function open(event) {
         var attr_id = jQuery(this).attr('id').split('-');
         var component_id = attr_id.pop();
         var component_type = attr_id.pop();
-        tooltip = jQuery('#tooltip-' + component_id);
-        if (component_type != 'tooltip') {
+
+        cancel(event);
+        if(last_id != component_id) {
+            close(event);
+        }
+
+        tooltip = jQuery('#tooltip-' + component_id).css({position: 'absolute'}).show();
+        if(component_type != 'tooltip') {
             var component = jQuery('#' + component_type + '-' + component_id);
             var container = component.closest('.photo, .collage, #photo');
-            tooltip_top = container.offset().top + component.position().top - tooltip.height() + 5;
+            tooltip_top = container.offset().top + component.position().top - tooltip.height() + 10;
             tooltip_left = container.offset().left + component.position().left;
         }
-        tooltip.show().css({'position': 'absolute', 'top': tooltip_top, 'left': tooltip_left});
+        tooltip.css({'top': tooltip_top, 'left': tooltip_left});
+        if(!jQuery(event.currentTarget).hasClass('tooltip') && last_id != component_id) {
+            tooltip.stop().animate({opacity: 1}, 350);
+        } else {
+            tooltip.css({opacity: 1});
+        }
+        last_id = component_id;
     }
 
-    function close() {
-        if (tooltip) {
-            tooltip.hide();
+    function close(event) {
+        if(tooltip) {
+            tooltip.stop().hide().css({opacity: 0});
+            tooltip = false;
+            last_id = false;
         }
     }
 
-    function timer() {
-        closetimer = window.setTimeout(close, 150);
+    function timer(event) {
+        closetimer = window.setTimeout(function() { close(event) }, 100);
     }
 
-    function cancel() {
+    function cancel(event) {
         if(closetimer) {
             window.clearTimeout(closetimer);
             closetimer = null;
