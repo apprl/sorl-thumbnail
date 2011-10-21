@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, url, include
 from django.conf import settings
 
 from django.views.generic.simple import direct_to_template
@@ -44,7 +44,9 @@ urlpatterns = patterns('',
     (r'^search/manufacturer/', 'apparelrow.search.manufacturer_search'),
     (r'^search/(?P<model>\w+)/', 'apparelrow.search.search_view'),
     (r'^s/', include('statistics.urls')),
-    (r'^facebook/', include('django_facebook.urls')),
+    # Override facebook
+    #(r'^facebook/', include('django_facebook.urls')),
+    url(r'^facebook/login', 'apparelrow.profile.views.login', name='facebook_login'),
 )
 
 

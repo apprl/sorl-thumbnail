@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllow
 from django.template import RequestContext
 from django.db.models import Q, Count
 from django.views.generic import list_detail
+from django.contrib import auth
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -215,3 +216,29 @@ def welcome_dialog(request):
             'most_followed_users': get_most_followed_users(limit=6)}
 
     return render_to_response('profile/dialog_welcome.html', context, context_instance=RequestContext(request))
+
+def _get_next(request):
+    """
+    Returns a url to redirect to after the login
+    """
+    if 'next' in request.session:
+        next = request.session['next']
+        del request.session['next']
+        return next
+    elif 'next' in request.GET:
+        return request.GET.get('next')
+    elif 'next' in request.POST:
+        return request.POST.get('next')
+    else:
+        return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
+
+def login(request):
+    if request.facebook is not None:
+        user = auth.authenticate(fb_uid=request.facebook.uid, fb_object=request.facebook)
+        if user is not None and user.is_active:
+            auth.login(request, user)
+            if user.get_profile().first_visit:
+                return HttpResponseRedirect(reverse('apparel.views.home'))
+            return HttpResponseRedirect(_get_next(request))
+
+    return HttpResponseRedirect('/')

@@ -11,7 +11,7 @@ def exposed_settings(request):
     }
 
 def next_redirects(request):
-    if reverse("django.contrib.auth.views.logout") == request.path:
+    if reverse('django.contrib.auth.views.logout') == request.path:
         return {
             'next' : '/'
         }
