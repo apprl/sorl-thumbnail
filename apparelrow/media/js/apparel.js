@@ -294,7 +294,7 @@ function makeProductTooltip(selector) {
         if(component_type != 'tooltip') {
             var component = jQuery('#' + component_type + '-' + component_id);
             var container = component.closest('.photo, .collage, #photo');
-            tooltip_top = container.offset().top + component.position().top - tooltip.height() + 10;
+            tooltip_top = container.offset().top + component.position().top - tooltip.height() + 5;
             tooltip_left = container.offset().left + component.position().left;
         }
         tooltip.css({'top': tooltip_top, 'left': tooltip_left});
