@@ -299,7 +299,7 @@ function makeProductTooltip(selector) {
         }
         tooltip.css({'top': tooltip_top, 'left': tooltip_left});
         if(!jQuery(event.currentTarget).hasClass('tooltip') && last_id != component_id) {
-            tooltip.stop().animate({opacity: 1}, 350);
+            tooltip.stop().animate({opacity: 1}, 300);
         } else {
             tooltip.css({opacity: 1});
         }
@@ -308,7 +308,7 @@ function makeProductTooltip(selector) {
 
     function close(event) {
         if(tooltip) {
-            tooltip.stop().hide().css({opacity: 0});
+            tooltip.stop().animate({opacity: 0}, 250, 'linear', function() { jQuery(this).hide() });
             tooltip = false;
             last_id = false;
         }
