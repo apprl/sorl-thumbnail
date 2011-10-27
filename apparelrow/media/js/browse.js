@@ -73,6 +73,7 @@ jQuery(document).ready(function() {
                     jQuery('#content').show();
                     renderProducts(response);
                     updateSelected(response);
+                    adjustProductListHeight();
                 });
             } else {
                 // No hash, but we must selected all genders if no gender is selected
