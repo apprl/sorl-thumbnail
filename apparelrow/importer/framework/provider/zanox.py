@@ -18,6 +18,13 @@ class ZanoxMapper(DataMapper):
         return []
 
     def get_gender(self):
+        extra = self.record.get('ExtraTextOne', '')
+        if extra:
+            if extra.find('W') != -1:
+                return 'W'
+            if extra.find('M') != -1:
+                return 'M'
+
         gender = self.map_gender(self.record.get('gender', ''))
         if not gender:
             gender = self.map_gender(self.record.get('MerchantProductCategory'))
