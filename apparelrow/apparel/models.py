@@ -250,7 +250,7 @@ class ProductLike(models.Model):
 # all related products will be updated to reflect the category
 class VendorCategory(models.Model):
     category = TreeForeignKey(Category, verbose_name=_('category'), blank=True, null=True)
-    name     = models.CharField(_('Name'), max_length=255)
+    name     = models.CharField(_('Name'), max_length=555)
     vendor   = models.ForeignKey(Vendor)
     default_gender = models.CharField(_('Default gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     override_gender = models.CharField(_('Override gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
@@ -298,7 +298,7 @@ class VendorProduct(models.Model):
     vendor            = models.ForeignKey(Vendor)
     product           = models.ForeignKey(Product, related_name='vendorproduct')
     vendor_category   = models.ForeignKey(VendorCategory, related_name='vendorproducts', null=True,)
-    buy_url           = models.URLField(_('Buy URL'), null=True, blank=True, max_length=255,)
+    buy_url           = models.URLField(_('Buy URL'), null=True, blank=True, max_length=555,)
     price             = models.DecimalField(_('Price'), null=True, blank=True, max_digits=10, decimal_places=2, db_index=True, help_text=_('Price converted to base currency'))
     currency          = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Base currency as three-letter ISO code'))
     original_price    = models.DecimalField(_('Original price'), null=True, blank=True, max_digits=10, decimal_places=2,)
