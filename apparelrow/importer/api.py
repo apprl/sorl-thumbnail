@@ -149,7 +149,7 @@ class API(object):
             logger.debug('Created new product: [id %s] %s' % (self.product.id, self.product))
         
         except MultipleObjectsReturned:
-            raise SkipRecord('Multiple products found with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku']))
+            raise SkipProduct('Multiple products found with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku']))
             
         else:
             # Update product
@@ -158,8 +158,9 @@ class API(object):
         
         self.__vendor_options()
         self.__product_options()
-        
+
         self.product.save()
+
         return self.product
     
     def __product_options(self):
@@ -376,15 +377,17 @@ class API(object):
             if isinstance(category_names, list):
                 category_names = ' '.join(category_names)
 
-            @transaction.commit_on_success
+            @transaction.commit_manually
             def vendor_category_get_or_create(vendor, category):
                 created = True
                 try:
                     obj = VendorCategory.objects.create(vendor=vendor, name=category)
                 except IntegrityError:
-                    transaction.commit()
+                    transaction.rollback()
                     created = False
                     obj = VendorCategory.objects.get(vendor=vendor, name=category)
+                else:
+                    transaction.commit()
                 return obj, created
 
             self._vendor_category, created = vendor_category_get_or_create(self.vendor, category_names)
