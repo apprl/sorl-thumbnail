@@ -366,7 +366,7 @@ ApparelSearch = {
         // Clears and hides all
         this.hide();
         this.clear();
-        updateHash('!s', s, true);
+        updateHash('!s', '', true);
         jQuery('#search > input').val('');
     },
     search: function(callback, query) {
@@ -563,7 +563,7 @@ function updateHash(name, value, remove) {
                 pair[1] = value;
                 found = true;
             }
-            if(!remove) {
+            if(!(remove && found)) {
                 hash_object[pair[0]] = pair[1];
             }
         });
