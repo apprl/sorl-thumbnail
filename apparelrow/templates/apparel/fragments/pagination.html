@@ -2,13 +2,13 @@
 {% if not current_page.has_previous %}
 <span class="prev disabled">&lt;</span>
 {% else %}
-<a class="prev" href="/browse/?page={{ current_page.previous_page_number }}">&lt;</a>
+<a class="prev" href="{{ request.path }}?page={{ current_page.previous_page_number }}">&lt;</a>
 {% endif %}
 <div>
 <ol>
 {% if pagination.left %}
     {% for page in pagination.left %}
-        <li><a href="/browse/?page={{ page }}">{{ page }}</a></li>
+        <li><a href="{{ request.path }}?page={{ page }}">{{ page }}</a></li>
     {% endfor %}
     <li class="pagination-dots">&hellip;</li>
 {% endif %}
@@ -17,14 +17,14 @@
     {% ifequal page current_page.number %}
         <li class="current">{{ page }}</li>
     {% else %}
-        <li><a href="/browse/?page={{ page }}">{{ page }}</a></li>
+        <li><a href="{{ request.path }}?page={{ page }}">{{ page }}</a></li>
     {% endifequal %}
 {% endfor %}
 
 {% if pagination.right %}
     <li class="pagination-dots">&hellip;</li>
     {% for page in pagination.right %}
-        <li><a href="/browse/?page={{ page }}">{{ page }}</a></li>
+        <li><a href="{{ request.path }}?page={{ page }}">{{ page }}</a></li>
     {% endfor %}
 {% endif %}
 </ol>
@@ -32,5 +32,5 @@
 {% if not current_page.has_next or True %}
 <span class="next disabled">&gt;</span>
 {% else %}
-<a class="next" href="/browse/?page={{ current_page.next_page_number }}">&gt;</a>
+<a class="next" href="{{ request.path }}?page={{ current_page.next_page_number }}">&gt;</a>
 {% endif %}

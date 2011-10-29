@@ -30,7 +30,10 @@ from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Catego
 from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, WardrobeProduct, FirstPageContent
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.search import SearchQuerySetPlus
+from apparel.utils import get_pagination
 import apparel.signals
+
+FAVORITES_PAGE_SIZE = 30
 
 def product_redirect(request, pk):
     """
@@ -552,7 +555,7 @@ def user_list(request, popular=None):
 
 @get_current_user
 @login_required
-def home(request, profile, page=0):
+def home(request, profile):
     """
     Displays the logged in user's page
     """
@@ -564,23 +567,31 @@ def home(request, profile, page=0):
     user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
     user_ids_or = ' OR '.join(str(x) for x in user_ids)
     search_queryset = SearchQuerySet().narrow('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or)).order_by('-popularity')[:limit]
-    popular_products_in_network = [x.object for x in search_queryset if x]
 
-    return list_detail.object_list(
-        request,
-        queryset=queryset,
-        template_name='apparel/user_home.html',
-        paginate_by=10,
-        page=page,
-        extra_context={
+    paginator = Paginator(queryset, FAVORITES_PAGE_SIZE)
+    try:
+        paged_result = paginator.page(request.GET.get('page', 1))
+    except (EmptyPage, InvalidPage):
+        paged_result = paginator.page(paginator.num_pages)
+    except ValueError:
+        paged_result = paginator.page(1)
+
+    left, mid, right = get_pagination(paged_result.paginator, paged_result.number, on_ends=1, on_each_side=2)
+    pagination = {
+        'left': left,
+        'mid': mid,
+        'right': right
+    }
+
+    return render_to_response('apparel/user_home.html', {
+            'pagination': pagination,
+            'current_page': paged_result,
             'next': request.get_full_path(),
             'profile': profile,
             'facebook_friends': get_facebook_friends(request),
             'popular_looks_in_network': get_top_looks_in_network(request.user, limit=2),
             'popular_products_in_network': [x.object for x in search_queryset if x]
-
-        }
-    )
+        }, context_instance=RequestContext(request))
 
 def product_user_like_list(request, slug):
     product = Product.objects.get(slug=slug)

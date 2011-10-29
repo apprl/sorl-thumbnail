@@ -19,14 +19,14 @@
     <div id="content">
         <h2>{% trans "Your friend's latest updates" %}</h2>
         <ul class="activity-list">
-        {% for object in object_list %}
+        {% for object in current_page.object_list %}
             {% include 'apparel/fragments/activity/activity.html' %}
         {% empty %}
             <li>{% trans "No updates" %}</li>
         {% endfor %}
         </ul>
         <div class="pagination">
-            {% include 'apparel/fragments/pagination_simple.html' %}
+            {% include 'apparel/fragments/pagination.html' %}
         </div>
     </div>
     <div class="sidebar last">
