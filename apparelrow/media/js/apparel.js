@@ -39,7 +39,7 @@ function create_modal_dialog(header, messages, yes_action, no_action) {
 /**
  * Creates a dialog from html loaded through ajax, only alternativ is close
  */
-function create_html_dialog(url_to_html, large_dialog) {
+function create_html_dialog(url_to_html, large_dialog, close_callback) {
     var dialog = jQuery('<div class="dialog"></div>');
 
     if(large_dialog) {
@@ -56,7 +56,13 @@ function create_html_dialog(url_to_html, large_dialog) {
         closeOnClick: true,
         close: '.close',
         top: 100,
-        onClose: function(e) { this.getTrigger().remove() }
+        onClose: function(e) {
+            if(close_callback !== undefined) {
+                close_callback();
+            } else {
+                this.getTrigger().remove();
+            }
+        }
     });
 }
 

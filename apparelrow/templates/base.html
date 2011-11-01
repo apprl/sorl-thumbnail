@@ -58,7 +58,9 @@
             });
 
             if(isAuthenticated && isFirstTimeVisit) {
-                create_html_dialog('{% url profile.views.welcome_dialog %}', true);
+                create_html_dialog('{% url profile.views.welcome_dialog %}', true, function() {
+                    window.location.reload();
+                });
             }
 
             jQuery('.facebook-close').click(function(event) {
