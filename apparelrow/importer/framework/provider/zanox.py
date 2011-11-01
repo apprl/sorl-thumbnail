@@ -18,16 +18,14 @@ class ZanoxMapper(DataMapper):
         return []
 
     def get_gender(self):
-        extra = self.record.get('ExtraTextOne', '')
-        if extra:
-            if extra.find('W') != -1:
-                return 'W'
-            if extra.find('M') != -1:
-                return 'M'
-
-        gender = self.map_gender(self.record.get('gender', ''))
+        gender = self.map_gender(self.record.get('MerchantProductCategory'))
         if not gender:
-            gender = self.map_gender(self.record.get('MerchantProductCategory'))
+            extra = self.record.get('ExtraTextOne', '')
+            if extra:
+                if extra.find('W') != -1:
+                    return 'W'
+                if extra.find('M') != -1:
+                    return 'M'
 
         return gender
 
@@ -56,5 +54,5 @@ class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):
         super(Provider, self).__init__(*args, **kwargs)
         self.mapper=ZanoxMapper
-        self.dialect=utils.CSVStandard
+        self.dialect=None # breaks if CSVStandard is used or a sniffed dialect
         self.unique_fields = ['product-name']
