@@ -104,6 +104,11 @@ class SearchQuerySetPlus(SearchQuerySet):
                 else:
                     open_quote_position = offset
 
+        non_exact_query = non_exact_query.strip()
+        full_keyword_kwargs = {}
+        for fieldname in (set(fieldnames) - set(['color_names', 'category_names'])):
+            full_keyword_kwargs[fieldname] = clone.query.clean(non_exact_query)
+
         # Pseudo-tokenize the rest of the query.
         keywords = non_exact_query.split()
 
@@ -117,8 +122,10 @@ class SearchQuerySetPlus(SearchQuerySet):
 
             cleaned_keyword = clone.query.clean(keyword)
             keyword_kwargs = {}
-            for fieldname in fieldnames:
+            for fieldname in ['color_names', 'category_names']:
                 keyword_kwargs[fieldname] = cleaned_keyword
+
+            keyword_kwargs.update(full_keyword_kwargs)
 
             if exclude:
                 clone = clone._clone()
