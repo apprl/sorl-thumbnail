@@ -730,6 +730,10 @@ div#product-list, .product-list
             background: transparent image_url(unquote("delete-button-on-image.png")) no-repeat scroll center center
             &:hover
               background: transparent image_url(unquote("delete-button-on-image-hover.png")) no-repeat scroll center center
+          .product-small
+            .product-image
+              // The height is defined in the template product_small_content
+              height: 153px 
 
 #hover-products li
   z-index: 100
