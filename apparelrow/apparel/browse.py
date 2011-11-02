@@ -19,6 +19,7 @@ from hanssonlarsson.django.exporter import json
 
 from actstream.models import Follow
 
+from apparelrow.search import PRODUCT_SEARCH_FIELDS
 from apparelrow.search import ApparelSearch
 from apparel.models import Product
 from apparel.models import Manufacturer
@@ -47,7 +48,7 @@ def set_query_arguments(query_arguments, params, current_user=None, facet_fields
     query_arguments['facet.mincount'] = 1
     query_arguments['facet.field'] = []
 
-    query_arguments['qf'] = 'manufacturer_name category_names^40 product_name color_names^40 description'
+    query_arguments['qf'] = PRODUCT_SEARCH_FIELDS
     query_arguments['defType'] = 'edismax'
 
     if 'fq' not in query_arguments:

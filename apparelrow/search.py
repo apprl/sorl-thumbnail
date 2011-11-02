@@ -31,6 +31,7 @@ from apparelrow.apparel.models import ProductLike
 from pysolr import Solr
 
 RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 10)
+PRODUCT_SEARCH_FIELDS = ['manufacturer_name', 'category_names^40', 'product_name', 'color_names^40', 'description']
 
 def remove_instance_from_index(instance, **kwargs):
     model_class = get_model(instance._meta.app_label, instance._meta.module_name)
@@ -94,8 +95,6 @@ class ApparelSearch(object):
     def __init__(self, query_string, **data):
         self.query_string = query_string
         self.data = data
-        #self.data.update({'qf': 'manufacturer_name category_names^40 product_name color_names^40 description',
-                          #'defType': 'edismax'})
 
     def __len__(self):
         return self._get_results().hits
@@ -267,7 +266,7 @@ def manufacturer_search(request):
                  'facet.mincount': 1,
                  'facet.limit': -1,
                  'facet.field': ['manufacturer_exact'],
-                 'qf': 'manufacturer_name category_names^40 product_name color_names^40 description',
+                 'qf': PRODUCT_SEARCH_FIELDS,
                  'defType': 'edismax'}
     result = ApparelSearch(query, **arguments)
     facet = result.get_facet()
@@ -320,7 +319,7 @@ def search_view(request, model):
     if class_name == 'product':
         fq.append('availability:true')
         fq.append('gender:(W OR M OR U)')
-        qf = ['manufacturer_name', 'category_names^40', 'product_name', 'color_names^40', 'description']
+        qf = PRODUCT_SEARCH_FIELDS
     elif class_name == 'look':
         qf = ['text']
 
