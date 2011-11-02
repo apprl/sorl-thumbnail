@@ -19,8 +19,6 @@ from haystack.indexes import IntegerField
 from haystack.indexes import MultiValueField
 from haystack.indexes import NgramField
 from haystack.indexes import BooleanField
-from haystack.query import SearchQuerySet
-from haystack.backends import SQ
 
 from apparelrow.apparel.messaging import search_index_update
 from apparelrow.apparel.models import Category
@@ -29,6 +27,8 @@ from apparelrow.apparel.models import Manufacturer
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.models import Wardrobe
 from apparelrow.apparel.models import ProductLike
+
+from pysolr import Solr
 
 RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 10)
 
@@ -69,76 +69,85 @@ class QueuedSearchIndex(SearchIndex):
         instances = [x for x in instances if self.should_update(x, **kwargs)]
         self.backend.update(self, instances)
 
-class SearchQuerySetPlus(SearchQuerySet):
+#
+# Apparel search (circumvent haystack)
+#
 
-    def auto_query_product(self, query_string, fieldnames=None):
+class ResultContainer:
+    """
+    Result container, used for converting from dict to object
+    """
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
+
+def more_like_this_product(product_id, product_gender, limit):
+    kwargs = {'fq': ['django_ct:apparel.product', 'availability:true', 'gender:%s' % (product_gender,)],
+              'rows': limit}
+    connection = Solr(getattr(settings, 'HAYSTACK_SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    result = connection.more_like_this('id:apparel.product.%s' % (product_id,), 'text', **kwargs)
+    return result
+
+class ApparelSearch(object):
+    """
+    Our own interface with solr
+    """
+    def __init__(self, query_string, **data):
+        self.query_string = query_string
+        self.data = data
+        #self.data.update({'qf': 'manufacturer_name category_names^40 product_name color_names^40 description',
+                          #'defType': 'edismax'})
+
+    def __len__(self):
+        return self._get_results().hits
+
+    def get_facet(self):
         """
-        This is an extension of auto_query that is built into haystack.
+        Get facet results
         """
-        clone = self._clone()
+        return self._get_results().facets
 
-        # Pull out anything wrapped in quotes and do an exact match on it.
-        open_quote_position = None
-        non_exact_query = query_string
+    def get_docs(self):
+        """
+        Get docs
+        """
+        return self._get_results().docs
 
-        if fieldnames is None:
-            fieldnames = ['product_name', 'description', 'manufacturer_name', 'color_names', 'category_names']
+    _result = None
+    def _get_results(self, update=False):
+        if self._result is None or update:
+            self._result = Solr(getattr(settings, 'HAYSTACK_SOLR_URL', 'http://127.0.0.1:8983/solr/')).search(self.query_string, **self.data)
+            self._result.docs = [ResultContainer(**element) for element in self._result.docs]
 
-        for offset, char in enumerate(query_string):
-            if char == '"':
-                if open_quote_position != None:
-                    current_match = non_exact_query[open_quote_position + 1:offset]
+        return self._result
 
-                    if current_match:
-                        keyword_kwargs = {}
-                        for fieldname in fieldnames:
-                            keyword_kwargs[fieldname] = clone.query.clean(current_match)
+    def __getitem__(self, k):
+        """
+        Support both slice or single element access
+        """
+        if not isinstance(k, (slice, int, long)):
+            raise TypeError
 
-                        clone = clone._clone()
-                        sq = SQ(**keyword_kwargs)
-                        sq.connector = 'OR'
-                        clone.query.add_filter(sq)
+        if isinstance(k, slice):
+            paginate_opts = {}
 
-                    non_exact_query = non_exact_query.replace('"%s"' % current_match, '', 1)
-                    open_quote_position = None
-                else:
-                    open_quote_position = offset
+            if k.start is not None:
+                paginate_opts['start'] = int(k.start)
 
-        non_exact_query = non_exact_query.strip()
-        full_keyword_kwargs = {}
-        for fieldname in (set(fieldnames) - set(['color_names', 'category_names'])):
-            full_keyword_kwargs[fieldname] = clone.query.clean(non_exact_query)
-
-        # Pseudo-tokenize the rest of the query.
-        keywords = non_exact_query.split()
-
-        # Loop through keywords and add filters to the query.
-        for keyword in keywords:
-            exclude = False
-
-            if keyword.startswith('-') and len(keyword) > 1:
-                keyword = keyword[1:]
-                exclude = True
-
-            cleaned_keyword = clone.query.clean(keyword)
-            keyword_kwargs = {}
-            for fieldname in ['color_names', 'category_names']:
-                keyword_kwargs[fieldname] = cleaned_keyword
-
-            keyword_kwargs.update(full_keyword_kwargs)
-
-            if exclude:
-                clone = clone._clone()
-                sq = SQ(**keyword_kwargs)
-                sq.connector = 'OR'
-                clone.query.add_filter(~sq)
+            if k.stop is None:
+                stop = len(self)
             else:
-                clone = clone._clone()
-                sq = SQ(**keyword_kwargs)
-                sq.connector = 'OR'
-                clone.query.add_filter(sq)
+                stop = min(k.stop, len(self))
 
-        return clone
+            paginate_opts['rows'] = stop - int(k.start)
+
+            if self.data['start'] != paginate_opts['start'] or self.data['rows'] != paginate_opts['rows']:
+                self.data.update(paginate_opts)
+                return self._get_results(True)
+
+            return self._get_results()
+
+        return self._get_results()[k]
+
 
 #
 # ProductIndex
@@ -251,12 +260,21 @@ def manufacturer_search(request):
     if not query:
         return Http404('Search require a search string')
 
-    sqs = SearchQuerySetPlus().models(get_model('apparel', 'product')).narrow('availability:true').auto_query_product(query, fieldnames=['manufacturer_name'])
-    sqs = sqs.narrow('gender:(W OR M OR U)')
-    sqs = sqs.facet('manufacturer').facet_limit(-1).facet_mincount(1)
-    facet = sqs.facet_counts()
-    manufacturers = Manufacturer.objects.values('id', 'name').filter(pk__in=[x[0] for x in facet['fields']['manufacturer']]).order_by('name')
+    arguments = {'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(W OR M OR U)'],
+                 'start': 0,
+                 'rows': 10,
+                 'facet': 'on',
+                 'facet.mincount': 1,
+                 'facet.limit': -1,
+                 'facet.field': ['manufacturer_exact'],
+                 'qf': 'manufacturer_name category_names^40 product_name color_names^40 description',
+                 'defType': 'edismax'}
+    result = ApparelSearch(query, **arguments)
+    facet = result.get_facet()
 
+    manufacturer_ids = [int(value) for i, value in enumerate(facet['facet_fields']['manufacturer_exact']) if i % 2 == 0]
+
+    manufacturers = Manufacturer.objects.values('id', 'name').filter(pk__in=manufacturer_ids).order_by('name')
     paginator = Paginator(manufacturers, limit)
     try:
         paged_result = paginator.page(1)
@@ -284,34 +302,43 @@ def manufacturer_search(request):
 #
 
 def search_view(request, model):
+    """
+    Generic search view
+    """
     try:
         limit = int(request.GET.get('limit', RESULTS_PER_PAGE))
     except ValueError:
         limit = RESULTS_PER_PAGE
 
-    class_name = model.lower()
-    model_class = get_model('apparel', class_name)
-    if model_class is None:
-        raise Exception('No model to search for')
-
-    sqs = SearchQuerySetPlus().models(model_class)
-
-    if request.GET.get('q'):
-        if class_name == 'product':
-            sqs = sqs.narrow('availability:true')
-            sqs = sqs.narrow('gender:(W OR M OR U)')
-            sqs = sqs.auto_query_product(request.GET.get('q'))
-        else:
-            sqs = sqs.auto_query(request.GET.get('q'))
-    else:
+    query = request.GET.get('q')
+    if not query:
         return Http404('Search require a search string')
+
+    # Filter query parameters
+    class_name = model.lower()
+    fq = ['django_ct:apparel.%s' % (class_name,)]
+    if class_name == 'product':
+        fq.append('availability:true')
+        fq.append('gender:(W OR M OR U)')
+        qf = ['manufacturer_name', 'category_names^40', 'product_name', 'color_names^40', 'description']
+    elif class_name == 'look':
+        qf = ['text']
+
+    # Base arguments
+    arguments = {'qf': qf,
+                 'defType': 'edismax',
+                 'fq': fq,
+                 'start': 0,
+                 'rows': limit}
 
     # Used in look image to bring up popup with products
     ids = request.GET.get('ids', False)
     if ids:
-        sqs = sqs.narrow('django_id:(%s)' % (ids.replace(',', ' OR '),))
+        arguments['fq'].append(' django_id:(%s)' % (ids.replace(',', ' OR '),))
 
-    paginator = Paginator(sqs, limit)
+    results = ApparelSearch(query, **arguments)
+
+    paginator = Paginator(results, limit)
     try:
         paged_result = paginator.page(int(request.GET.get('page', 1)))
     except (EmptyPage, InvalidPage):
@@ -329,10 +356,7 @@ def search_view(request, model):
                     'template': render_to_string('apparel/fragments/product_thumb_no_cache.html', {'product': obj.object})
                 })
     else:
-        if class_name == 'manufacturer':
-            object_list = [o.manufacturer_template for o in paged_result.object_list if o]
-        else:
-            object_list = [o.template for o in paged_result.object_list if o]
+        object_list = [o.template for o in paged_result.object_list if o]
 
     return HttpResponse(
         json.dumps({

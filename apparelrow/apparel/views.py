@@ -20,7 +20,6 @@ from django.views.i18n import set_language
 from django.utils import translation
 from hanssonlarsson.django.exporter import json as special_json
 from actstream.models import user_stream, Follow
-from haystack.query import SearchQuerySet
 
 from apparelrow.tasks import search_index_update_task
 from apparelrow.profile.models import ApparelProfile
@@ -29,7 +28,8 @@ from apparelrow.apparel.decorators import get_current_user
 from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct
 from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, WardrobeProduct, FirstPageContent
 from apparelrow.apparel.forms import LookForm, LookComponentForm
-from apparelrow.search import SearchQuerySetPlus
+from apparelrow.search import ApparelSearch
+from apparelrow.search import more_like_this_product
 from apparel.utils import get_pagination
 import apparel.signals
 
@@ -68,8 +68,6 @@ def product_detail(request, slug):
 
     context = RequestContext(request)
 
-    more_like_this = SearchQuerySet().filter(django_ct='apparel.product').filter(availability=True).filter(gender=product.gender).more_like_this(product)[:10]
-
     return render_to_response(
             'apparel/product_detail.html',
             {
@@ -79,7 +77,7 @@ def product_detail(request, slug):
                 'looks_with_product': Look.objects.filter(products=product),
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri(),
-                'more_like_this': more_like_this
+                'more_like_this': more_like_this_product(product.id, product.gender, 10)
             },
             context_instance=context,
             )
@@ -190,11 +188,16 @@ def look_list(request, popular=None, page=0):
 
 def look_list_search(request):
     if not request.GET.get('q'):
-        return redirect('search-look-list')
+        return redirect('look-list')
 
-    sqs = SearchQuerySetPlus().models(Look)
-    sqs = sqs.auto_query(request.GET.get('q'))
-    queryset = sqs.load_all()
+    limit = 1
+    query_arguments = {'qf': 'text',
+                       'defType': 'edismax',
+                       'fq': 'django_ct:apparel.look',
+                       'start': 0,
+                       'rows': limit}
+    results = ApparelSearch(request.GET.get('q'), **query_arguments)
+    queryset = Look.objects.in_bulk([doc.django_id for doc in results.get_docs()])
 
     if request.user.is_authenticated():
         user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
@@ -204,7 +207,7 @@ def look_list_search(request):
 
     latest_looks = Look.objects.order_by('-created')[:8]
 
-    paginator = Paginator(sqs, 10)
+    paginator = Paginator(results, limit)
     try:
         paged_result = paginator.page(int(request.GET.get('page', 1)))
     except (EmptyPage, InvalidPage):
@@ -216,7 +219,7 @@ def look_list_search(request):
             'apparel/look_list.html',
             {
                 'query': request.GET.get('q'),
-                'object_list': [x.object for x in queryset],
+                'object_list': [x for k, x in queryset.items()],
                 'is_paginated': True,
                 'paginator': paginator,
                 'most_looks_users': most_looks_users,
@@ -566,7 +569,12 @@ def home(request, profile):
     limit = 2
     user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
     user_ids_or = ' OR '.join(str(x) for x in user_ids)
-    search_queryset = SearchQuerySet().narrow('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or)).order_by('-popularity')[:limit]
+
+
+    # FIXME: Ugly solution, query solr for popular products, then query db for those two results, should be able to get this directly with db queries.
+    query_arguments = {'sort': 'popularity desc', 'start': 0, 'rows': 2, 'fq': 'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or)}
+    result = ApparelSearch('*:*', **query_arguments)
+    popular_products = Product.objects.filter(id__in=[doc.django_id for doc in result.get_docs()])
 
     paginator = Paginator(queryset, FAVORITES_PAGE_SIZE)
     try:
@@ -590,7 +598,7 @@ def home(request, profile):
             'profile': profile,
             'facebook_friends': get_facebook_friends(request),
             'popular_looks_in_network': get_top_looks_in_network(request.user, limit=2),
-            'popular_products_in_network': [x.object for x in search_queryset if x]
+            'popular_products_in_network': popular_products
         }, context_instance=RequestContext(request))
 
 def product_user_like_list(request, slug):
