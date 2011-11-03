@@ -18,10 +18,13 @@ from apparel.decorators import get_current_user
 from apparel.models import Look
 # FIXME: Move get_facebook_friends and get_most_followed_users to a util module
 from apparel.views import get_facebook_friends, get_most_followed_users
+from apparel.utils import get_pagination_page
 from actstream.models import user_stream, actor_stream, Follow
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm
 from profile.models import EmailChange
 from profile.tasks import send_email_confirm_task
+
+PROFILE_PAGE_SIZE = 30
 
 # TODO && FIXME: build a better solution, right now we use this in
 # profile/looks/following/followers. Should create a view for the submit form
@@ -51,20 +54,17 @@ def profile(request, profile, page=0):
     queryset = actor_stream(profile.user)
     queryset = queryset.filter(verb__in=['added', 'commented', 'created', 'liked_look', 'liked_product', 'started following'])
 
-    return list_detail.object_list(
-        request,
-        queryset=queryset,
-        template_name="profile/profile.html",
-        paginate_by=10,
-        page=page,
-        extra_context={
-            'next': request.get_full_path(),
-            "change_image_form": form,
-            "profile": profile,
-            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
-        }
-    )
+    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
+            request.GET.get('page', 1), 1, 2)
 
+    return render_to_response('profile/profile.html', {
+        'pagination': pagination,
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        "change_image_form": form,
+        "profile": profile,
+        "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+        }, context_instance=RequestContext(request))
 
 @get_current_user
 def looks(request, profile, page=0):
@@ -73,19 +73,17 @@ def looks(request, profile, page=0):
     # Returns a list of objects for the most popular looks for the given user.
     popular_by_user = Look.objects.filter(Q(likes__active=True) & Q(user=profile.user)).annotate(num_likes=Count('likes')).order_by('-num_likes')[:10]
     
-    return list_detail.object_list(
-        request,
-        queryset=queryset,
-        template_name='profile/looks.html',
-        paginate_by=10,
-        page=page,
-        extra_context={
-            'next': request.get_full_path(),
-            "change_image_form": form,
-            "profile": profile,
-            "popular_looks": popular_by_user
-        }
-    )
+    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
+            request.GET.get('page', 1), 1, 2)
+
+    return render_to_response('profile/looks.html', {
+        'pagination': pagination,
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        "change_image_form": form,
+        "profile": profile,
+        "popular_looks": popular_by_user
+        }, context_instance=RequestContext(request))
     
 @get_current_user
 def followers(request, profile, page=0):
@@ -93,19 +91,17 @@ def followers(request, profile, page=0):
     content_type = ContentType.objects.get_for_model(User)
     queryset = Follow.objects.filter(content_type=content_type, object_id=profile.user.id)
 
-    return list_detail.object_list(
-        request,
-        queryset=queryset,
-        template_name="profile/followers.html",
-        paginate_by=10,
-        page=page,
-        extra_context={
-            'next': request.get_full_path(),
-            "change_image_form": form,
-            "profile": profile,
-            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
-        }
-    )
+    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
+            request.GET.get('page', 1), 1, 2)
+
+    return render_to_response('profile/followers.html', {
+        'pagination': pagination,
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        "change_image_form": form,
+        "profile": profile,
+        "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+        }, context_instance=RequestContext(request))
 
 @get_current_user
 def following(request, profile, page=0):
@@ -113,19 +109,17 @@ def following(request, profile, page=0):
     content_type = ContentType.objects.get_for_model(User)
     queryset = Follow.objects.filter(content_type=content_type, user=profile.user)
 
-    return list_detail.object_list(
-        request,
-        queryset=queryset,
-        template_name="profile/following.html",
-        paginate_by=10,
-        page=page,
-        extra_context={
-            'next': request.get_full_path(),
-            "change_image_form": form,
-            "profile": profile,
-            "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
-        }
-    )
+    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
+            request.GET.get('page', 1), 1, 2)
+
+    return render_to_response('profile/following.html', {
+        'pagination': pagination,
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        "change_image_form": form,
+        "profile": profile,
+        "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+        }, context_instance=RequestContext(request))
 
 #
 # Settings

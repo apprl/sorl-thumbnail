@@ -26,7 +26,7 @@ from apparel.models import Manufacturer
 from apparel.models import Option
 from apparel.models import Category
 from apparel.decorators import get_current_user
-from apparel.utils import get_pagination
+from apparel.utils import get_pagination_page
 
 #FIXME: ugly solution to avoid using get_template_source which is deprecated. Solve this in js and not by using pagination_js template.
 PAGINATION_JS_TEMPLATE_SOURCE = open(os.path.join(settings.TEMPLATE_DIRS[0], 'apparel/fragments/pagination_js.html')).read()
@@ -135,13 +135,8 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     categories = [int(value) for i, value in enumerate(facet['category']) if i % 2 == 0]
 
     # Calculate paginator
-    paginator = Paginator(search, BROWSE_PAGE_SIZE)
-    try:
-        paged_result = paginator.page(int(request.GET.get('page', 1)))
-    except (EmptyPage, InvalidPage):
-        paged_result = paginator.page(paginator.num_pages)
-    except ValueError:
-        paged_result = paginator.page(1)
+    paged_result, pagination = get_pagination_page(search, BROWSE_PAGE_SIZE,
+            request.GET.get('page', 1))
 
     # Calculate next page
     try:
@@ -150,13 +145,6 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
         next_page = None
 
     pages = (paged_result, next_page)
-
-    left, mid, right = get_pagination(paged_result.paginator, paged_result.number)
-    pagination = {
-        'left': left,
-        'mid': mid,
-        'right': right
-    }
 
     result = {}
     result.update(pagination=pagination,

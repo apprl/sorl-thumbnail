@@ -30,7 +30,7 @@ from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, W
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.search import ApparelSearch
 from apparelrow.search import more_like_this_product
-from apparel.utils import get_pagination
+from apparel.utils import get_pagination_page
 import apparel.signals
 
 FAVORITES_PAGE_SIZE = 30
@@ -576,20 +576,8 @@ def home(request, profile):
     result = ApparelSearch('*:*', **query_arguments)
     popular_products = Product.objects.filter(id__in=[doc.django_id for doc in result.get_docs()])
 
-    paginator = Paginator(queryset, FAVORITES_PAGE_SIZE)
-    try:
-        paged_result = paginator.page(request.GET.get('page', 1))
-    except (EmptyPage, InvalidPage):
-        paged_result = paginator.page(paginator.num_pages)
-    except ValueError:
-        paged_result = paginator.page(1)
-
-    left, mid, right = get_pagination(paged_result.paginator, paged_result.number, on_ends=1, on_each_side=2)
-    pagination = {
-        'left': left,
-        'mid': mid,
-        'right': right
-    }
+    paged_result, pagination = get_pagination_page(queryset,
+            FAVORITES_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
 
     return render_to_response('apparel/user_home.html', {
             'pagination': pagination,
