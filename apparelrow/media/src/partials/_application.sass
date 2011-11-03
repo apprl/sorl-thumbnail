@@ -94,25 +94,19 @@ button
   background: transparent image_url(unquote("header-bg.png")) scroll no-repeat center center
   height: 118px
   position: relative
-  overflow: hidden
   #inner-header
     width: 940px
     margin-left: 38px
     position: relative
     overflow: visible
   h1
-    +float-left
+    position: absolute
+    top: 23px
     +replace-text("logo.png")
     width: 128px
     height: 13px
     padding: 20px
-    margin-top: 23px
     +border(bottom, #999999)
-    &.beta
-      +replace-text("logo_beta.png")
-      background-position: center right
-      width: 149px
-      padding-right: 0
   #nav-main
     font-family: $font_family
     position: absolute
