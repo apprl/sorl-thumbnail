@@ -536,25 +536,19 @@ def user_list(request, popular=None):
     else:
         queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('user__first_name', 'user__last_name', 'user__username')
 
-    paginator = Paginator(queryset, 10)
-    try:
-        paged_result = paginator.page(int(request.GET.get('page', 1)))
-    except (EmptyPage, InvalidPage):
-        paged_result = paginator.page(paginator.num_pages)
-    except ValueError:
-        paged_result = paginator.page(1)
+    paged_result, pagination = get_pagination_page(queryset,
+            10, request.GET.get('page', 1), 1, 2)
 
     # Ten latest active members
     latest_members = ApparelProfile.objects.filter(user__is_active=True).order_by('-user__date_joined')[:8]
 
-    context = {'page_obj': paged_result,
-               'page_range': paginator.page_range,
-               'object_list': paged_result.object_list,
-               'facebook_friends': get_facebook_friends(request),
-               'latest_members': latest_members,
-               'next': request.get_full_path()}
-
-    return render_to_response('apparel/user_list.html', context, context_instance=RequestContext(request))
+    return render_to_response('apparel/user_list.html', {
+            'pagination': pagination,
+            'current_page': paged_result,
+            'next': request.get_full_path(),
+            'facebook_friends': get_facebook_friends(request),
+            'latest_members': latest_members,
+        }, context_instance=RequestContext(request))
 
 @get_current_user
 @login_required

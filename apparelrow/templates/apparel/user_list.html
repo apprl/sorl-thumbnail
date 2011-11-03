@@ -23,7 +23,7 @@
             <li><a class="last popular{% if request.path == user_list_url %} current{% endif %}" href="{{ user_list_url }}">{% trans "Members in alphabetical order" %}</a></li>
         </ul>
         <ul class="users">
-        {% for follower in object_list %}
+        {% for follower in current_page.object_list %}
             <li>
             {% with follower.user.get_profile as profile %}
                 {% if profile %}{% include 'profile/fragments/follow_profile.html' %}{% endif %}
@@ -32,7 +32,7 @@
         {% endfor %}
         </ul>
         <div class="pagination">
-            {% include 'apparel/fragments/pagination_simple.html' %}
+            {% include 'apparel/fragments/pagination.html' %}
         </div>
     </div>
     <div class="sidebar last">
