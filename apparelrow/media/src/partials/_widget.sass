@@ -17,6 +17,7 @@ $tooltip_width: 242px
   +opacity(0)
   h2
     background: transparent image_url("arrow-bg.png") scroll no-repeat right center
+    font-size: 1.1em
   a:hover, .hover
     h2
       background-image: image_url("arrow-bg-hover.png")
@@ -43,7 +44,7 @@ $tooltip_width: 242px
       padding-right: 16px
     h3
       color: $easy_color
-      font-size: smaller
+      font-size: 0.9em
       font-weight: normal
     div.vendors, div.ar-vendors
       margin-top: 0.5em
@@ -51,11 +52,11 @@ $tooltip_width: 242px
         +vendor
         display: inline-block
         color: $easy_color
-        font-size: smaller
+        font-size: 0.9em
       span.buy-now, span.ar-buy-now
         +buy_now
         display: inline
-        padding: 5px
+        padding: 3px 4px
         font-size: smaller
         margin-left: 5px
       span.sold-out, span.ar-sold-out
@@ -99,13 +100,16 @@ $tooltip_width: 242px
     background: transparent image_url(unquote("look-hotspot.png")) no-repeat scroll center center
 
 =apparel_likes
+  font:
+    family: $font_family_base
   background: transparent image_url(unquote("heart.png")) no-repeat scroll left center
   padding-left: 16px
   color: $like_color
 
 =apparel_price
-  font-family: $font_family_base
+  font:
+    family: $font_family_base
   background: transparent url(../images/check.png) no-repeat scroll 1px center
-  color: $price_color
+  color: $easy_color
   padding-left: 16px
 

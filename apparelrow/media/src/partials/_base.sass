@@ -13,11 +13,10 @@ $border_color: $box_color - #212121
 $easy_border_color: $box_color - #080808
 $dark_border_color: $box_color - #393939
 $font_color: $box_color - #c7c7c7
-$price_color: #737373
 $easy_color: $box_color - #949494
 $easier_color: $box_color - #616161
 $easiest_color: #d9d9d9
-$like_color: $box_color - #008a8a
+$like_color: #c95050
 $button_color: $box_color - #080808
 $error_color: #990000
 
@@ -26,7 +25,7 @@ $hover_color: #ebebeb
 $highlight_bg_color: #d0fae8
 $hover_highlight_bg_color: #94ffd1
 $highlight_border_color: #92c0c7
-$highlight_color: #408994
+$highlight_color: #408993
 
 $border_width: 1px
 
@@ -49,13 +48,12 @@ $font_family_bold: "ProximaNova-Bold", "Helvetica", "Arial", sans-serif
   +font-face-extended("ProximaNova-Bold", font-files("13AD48_14.woff", woff, "13AD48_14.ttf", truetype, "13AD48_14.svg", svg), "13AD48_14.eot", "proximanova-bold", false, "bold")
 
 =text_input
-  font-family: $font_family
-  font-size: 1em
+  font:
+    family: $font_family_base
+    size: 1em
+  +box
   +border-radius(3px)
-  +border(all, #d9d9d9)
-  background-color: #f6f6f6
-  color: #666666
-  +box-shadow-inset(#f6f6f6 - #222222, 0, 3px, 3px)
+  color: $easy_color
   padding: 0.5em 5px
 
 =highlight
@@ -69,32 +67,32 @@ $font_family_bold: "ProximaNova-Bold", "Helvetica", "Arial", sans-serif
   color: $highlight_color
 
 =edit_button
+  font-family: $font_family_bold
   background-image: image_url(unquote("edit.png"))
   background-repeat: no-repeat
   background-position: 5px 5px
-  font-size: 10px
-  padding: 5px 5px 5px 20px
+  padding: 3px 5px 3px 20px
 
 =cancel_button
+  font-family: $font_family_bold
   background-image: image_url(unquote("cancel.png"))
   background-repeat: no-repeat
   background-position: 5px 5px
-  font-size: 10px
-  padding: 5px 5px 5px 20px
+  padding: 3px 5px 3px 20px
 
 =delete_button
+  font-family: $font_family_bold
   background-image: image_url(unquote("cancel.png"))
   background-repeat: no-repeat
   background-position: 5px 5px
-  padding: 5px 5px 5px 20px
-  font-size: 10px
+  padding: 3px 5px 3px 20px
   background-color: $like_color + #666666
   border-color: $like_color
-  color: $font_color
+  color: $easy_color
   &:hover
     background-color: $like_color + #333333
     border-color: $like_color
-    color: $font_color
+    color: $easy_color
 
 =container
   margin: 0 auto
@@ -115,6 +113,7 @@ $font_family_bold: "ProximaNova-Bold", "Helvetica", "Arial", sans-serif
   @if $bg != "none"
     $bg_image: image_url($bg)
   +box
+  font-family: $font_family
   line-height: $height
   overflow: hidden
   white-space: nowrap
@@ -136,7 +135,7 @@ $color_height: 19px
 
 =font
   font:
-    family: $font_family
+    family: $font_family_base
     size: 70%
   line-height: 1.5em
   color: $font_color
@@ -149,7 +148,9 @@ $color_height: 19px
     &:hover, &:active
       text-decoration: underline
   h1
-    font-size: 1.25em
+    font:
+      size: 1.25em
+      family: $font_family
 
   h2, h3
     font-size: 1em

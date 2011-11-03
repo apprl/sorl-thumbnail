@@ -3,11 +3,12 @@
   +border-radius(unquote("3px"))
   +no-bullets
   margin-bottom: 10px
-  li
+  > li
     +button
     border-bottom: none
     border-left: none
     border-right: none
+  li
     &.first
       border-top: none
       +border-top-radius(unquote("3px"))
@@ -24,6 +25,7 @@
 
 =popup($n: 1)
   div.options
+    font-family: $font_family_base
     margin-left: -5px
     cursor: auto
     .option-content

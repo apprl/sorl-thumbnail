@@ -72,25 +72,29 @@ button
     margin-left: 38px
     position: relative
     overflow: visible
+    padding-top: 14px
     p
-      background: transparent image_url(unquote("bubble.png")) scroll no-repeat left 17px
-      padding-top: 20px
+      background: transparent image_url(unquote("bubble.png")) scroll no-repeat left 3px
+      height: 2em
+      line-height: 2em
       padding-left: 30px
       color: white
-      font-size: 12px
+      font:
+        weight: 500
+        size: 1.1em
       float: left
     .connect-button
       float: right
-      margin-top: 14px
     img
       float: right
       margin-left: 10px
-      margin-top: 18px
+      margin-top: 4px
 
 #header
   background: transparent image_url(unquote("header-bg.png")) scroll no-repeat center center
   height: 118px
   position: relative
+  overflow: hidden
   #inner-header
     width: 940px
     margin-left: 38px
@@ -110,6 +114,7 @@ button
       width: 149px
       padding-right: 0
   #nav-main
+    font-family: $font_family
     position: absolute
     top: 38px
     right: 235px
@@ -191,6 +196,8 @@ button
     margin-left: 38px
     position: relative
     overflow: visible
+    a
+      color: $easy_color
     ul, div
       margin-top: 16px
       margin-right: 36px
@@ -198,9 +205,7 @@ button
     ul
       margin-right: 42px
       h3
-        // Bold do not work with font, use bigger font for a quick solution
-        font-size: 1.2em
-        font-weight: bold
+        margin-bottom: 0.5em
     .copyright
       width: 208px
 
@@ -215,15 +220,15 @@ button
   border-right: none
   margin: 0px 0px 0px 18px
   padding: 0px 20px
-  font-size: smaller
-  a
-    font-family: $font_family_bold
+  font-size: 0.9em
   div
     &.left
       float: left
-      color: $easy_color
-      font-family: $font_family
+      color: $easier_color
+      margin-top: -1px
       min-width: 200px
+      a
+        font-weight: bold
     &.create-look
       float: left
       padding-left: 3px
@@ -231,6 +236,9 @@ button
         +button(none, 13px)
         +border-radius(2px)
         +highlight
+        font:
+          family: $font_family_bold
+          size: 1.1em
         background-repeat: no-repeat
         background-attachment: scroll
         background-position: 6px center
@@ -246,14 +254,14 @@ button
     &.right
       float: right
       text-align: right
+      margin-top: -1px
     #logout
       display: inline-block
       color: $easy-color
       background: transparent image_url(unquote("logout.png")) scroll no-repeat right center
-      padding-top: 1px
       padding-right: 16px
-      height: 12px
-      line-height: 12px
+      height: 28px
+      line-height: 28px
     
   ul
     float: left
@@ -264,6 +272,8 @@ button
     margin-left: 1em
     li
       a, span
+        font:
+          family: $font_family_bold
         padding-top: 1px
         display: block
         height: 28px
@@ -335,18 +345,23 @@ button
         background:
           image: image_url("gradient-tall-bg.png")
           repeat: repeat-x
+        h3
+          font:
+            family: $font_family_bold
+            size: 1.1em
+          text-transform: uppercase
+          color: $easy_color
+        h3, p
+          line-height: 1
         .info
           display: block
-          h3
-            font-family: $font_family_bold
-            font-weight: bold
-          background: "transparent" image_url("arrow-bg.png") "no-repeat" "scroll" "left" 10px
+          background: transparent image_url("arrow-bg.png") no-repeat scroll left 6px
           padding-left: 20px
 
   #switchlook
     +clearfix
     position: absolute
-    bottom: 32px
+    bottom: 29px
     right: 10px
     .backward
       position: relative
@@ -511,15 +526,15 @@ $ruler_width: $slider_width + 9px
 #product-options
   +filter(unquote("list-item-arrow.png"), unquote("list-item-radio-checked.png"))
   position: relative
-  li.hover
+  > li.hover
     +hover_button
     border-left: none
     border-bottom: none
-  li.hover.first
+  > li.hover.first
     border-top: none
-  li.hover.last
+  > li.hover.last
     border-bottom: none
-  li.active
+  > li.active
     background-image: image_url(unquote("gradient-darker-bg.png"))
   #product-price
     +popup(0)
@@ -563,14 +578,12 @@ $ruler_width: $slider_width + 9px
       padding: 12px
       padding-bottom: 0px
     .price-range
-      +box
-      +border-radius(unquote("3px"))
+      +text_input
+      padding: 0
       height: 20px
       width: 36px
       text-align: center
       float: left
-      color: $easier_color
-      font-size: smaller
   #product-color
     +popup(1)
     ul
@@ -603,9 +616,7 @@ $ruler_width: $slider_width + 9px
       li
         line-height: 20px
         height: 20px
-        border: none
         +border(bottom)
-        background-image: none
         a
           margin-left: -10px
           background-image: image_url(unquote("list-item-check.png"))
@@ -855,8 +866,13 @@ body.three-columns .pagination
     text-transform: uppercase
   h3
     text-transform: uppercase
-    font-weight: normal
+    font:
+      family: $font_family
+      weight: normal
+      size: 0.9em
+    color: $easy_color
   p.description
+    font-size: 1.1em
     width: $aside_width + $gutter_width
     margin-bottom: 18px
 
@@ -931,7 +947,7 @@ a.buy-now
   font-weight: bold
   text-align: center
   +border(all, $border_color)
-  color: $font_color
+  color: $easy_color
   text-transform: uppercase
   &.higher
     margin-top: -32px
@@ -959,9 +975,15 @@ a.buy-now
     background: none
     padding-left: 0
     padding-right: 5px
+    color: $font_color
+    display: inline-block
+    margin-top: -4px
+  .currency
+    color: $easier_color
   .vendor
     float: right
     padding-right: 10px
+    font-size: 1.2em
   .original-price, .original-price .price
     font-size: 1em
     color: $easy_color
@@ -993,10 +1015,8 @@ a.buy-now
         margin-right: 9px
       h3
         font-weight: normal
-        span.date
-          color: $easier_color
-          float: right
-          font-size: 10px
+        a
+          font-size: 1.1em
       p
         color: $easy_color
   form
@@ -1013,10 +1033,16 @@ a.buy-now
       +text_input
     button
       float: right
-      +text_input
+      +button(none, unquote("18px"))
+      +border-radius(unquote("2px"))
       +highlight
+      font:
+        family: $font_family_bold
+        size: 0.9em
       background-image: none
       margin-top: 2px
+      &:hover
+        +highlight_hover
 
 body.look-list
   .all-users
@@ -1074,6 +1100,7 @@ form .upload-field
   input
     +text_input
     +box-shadow-inset(#f6f6f6 - #222222, 0, 0, 0)
+    font-style: normal
     right: 0px
     padding: 0
     padding-left: 1em
@@ -1115,15 +1142,16 @@ body.product .product-image, body.look #content
     position: absolute
     top: 0px
     right: 0px
-    font-size: smaller
+    font-size: 0.9em
     button
       margin: 0
       border: none
       background: transparent image_url(unquote("like-medium.png")) no-repeat scroll center center
+      font-family: $font_family_bold
       color: $like_color
       text-transform: uppercase
-      padding-top: 18px
-      height: 48px
+      padding-top: 30px
+      height: 42px
       width: 56px
       cursor: pointer
       text-align: center
@@ -1136,7 +1164,7 @@ body.product .product-image, body.look #content
     float: left
 
 ul.hover-menu
-  li.hover
+  > li.hover
     +hover_button
 
 ul.menu
@@ -1336,6 +1364,7 @@ a.follow, a.unfollow
   +button(none, 1em)
   +border-radius(2px)
   +highlight
+  font-family: $font_family_base
   line-height: 1em
   background-repeat: no-repeat
   background-attachment: scroll
@@ -1482,6 +1511,7 @@ body.profile
           +button(none, 1em)
           +border-radius(4px)
           +highlight
+          font-family: $font_family_base
           padding: 0 8px 0 25px
           border-color: $highlight_bg_color
           background-image: image_url("following_you.png")
@@ -1576,7 +1606,8 @@ ul.suggested-friends
 
 .inline-date
   float: right
-  color: $easy_color
+  color: $easier_color
+  font-size: 0.9em
 
 .activity-list
   a.activity
@@ -1604,9 +1635,6 @@ ul.suggested-friends
       +clearfix
       border: none
       position: relative
-      .inline-date
-        color: $easier_color
-        float: right
       .activity-image
         margin-right: 45px
         float: left
@@ -1631,11 +1659,13 @@ ul.suggested-friends
           overflow: hidden
         span
           color: $easier_color
+          font-size: 0.9em
         .price, .sum
           background-image: none
           padding-left: 0
         .activity-content
           margin-top: 0.5em
+          color: $easy_color
 
 a#create-look
   +button(none, unquote("32px"))

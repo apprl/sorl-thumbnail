@@ -200,11 +200,11 @@ $input_border_color: $highlight_border_color !default
   padding-left: 3px
   #id_title, button
     color: $input_color
-    font-family: $font_family
   #id_title
     +border(all, $input_border_color)
     +border-radius(3px)
     background-color: $input_bg_color
+    font-style: italic
     line-height: 20px
     height: 14px
     width: 200px
@@ -213,21 +213,23 @@ $input_border_color: $highlight_border_color !default
     +box-shadow-inset($input_bg_color - #222222, 0, 3px, 3px)
   button
     +float-right
-    margin-right: -21px
+    font-family: $font_family_bold
+    margin-right: -32px
     background: transparent image_url(unquote("preview-button.png")) no-repeat scroll
+    font-size: 0.9em
     height: 24px
     line-height: 24px
     width: 113px
     border: none
+    padding: 0 5px
     text-align: start
   .delete
     +float-right
     +button(none, unquote("22px"))
     +border-radius(unquote("2px"))
     +delete_button
-    background-position: 5px 6px
-    font-family: $font_family
-    font-size: 1em
+    background-position: 5px center
+    font-size: 0.9em
     margin-right: 20px
     height: 22px
     padding-top: 0
@@ -277,11 +279,9 @@ ul.looks
   
 body.look
   .collage, .photo
-    margin-top: 1.8em
     position: relative
     height: $look_height
     +border(all)
-    border-top: none
   #comments-and-links
     float: left
     width: $middle_width
@@ -308,31 +308,35 @@ body.look
       background-color: white
 
 #look-header
-  padding-top: 1em
+  margin: 0 -20px
+  padding: 1em 20px 0 20px
   position: relative
   +border(bottom)
   .profile-image
     position: absolute
-    left: 0
+    left: 20px
     top: 1em
   div
     margin-left: 70px
     h1
-      font-size: 1.5em
+      font:
+        family: $font_family_bold
+        size: 1.2em
       line-height: 2em
       height: 2em
-      a.edit
+      margin-bottom: 0.5em
+      a.edit, a.delete
         margin-left: 2em
         +button(none, unquote("20px"))
         +border-radius(unquote("2px"))
+        font-size: 0.83em
+        vertical-align: top
+      a.edit
         +highlight
         +edit_button
         &:hover
           +highlight_hover
       a.delete
-        margin-left: 2em
-        +button(none, unquote("20px"))
-        +border-radius(unquote("2px"))
         +delete_button
 
 #wardrobe
@@ -419,6 +423,8 @@ body
       float: none
       margin-right: 0
       +clearfix
+      .price, .sum, .likes
+        font-size: 0.9em
       div.look
         +float-left
         margin-right: 18px
