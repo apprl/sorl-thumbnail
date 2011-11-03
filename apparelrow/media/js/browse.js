@@ -294,7 +294,8 @@ jQuery(document).ready(function() {
                 pagination.recalculate(pageNum);
                 pagination.render();
             }
-        }
+        },
+        onSeek: adjustProductListHeight
     });
     
     /**
