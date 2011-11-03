@@ -34,9 +34,7 @@ django-tinymce==1.5.1a1
 django-flatpages-tinymce==0.1.1
 # Search related
 pysolr==2.0.15
-#django-haystack==1.2.4
-# Use this fork because it supports facet limit and mincount and facet query expressions
--e git+git://github.com/jbohman/django-haystack.git@facet#egg=django-haystack==1.2.6
+django-haystack==1.2.5
 celery==2.2.7
 django-celery==2.2.4
 kombu==1.1.6
