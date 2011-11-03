@@ -451,6 +451,7 @@ ul.products
 
 .sidebar
   h2
+    font-family: $font_family_base
     clear: both
   p
     +border(top)
@@ -589,7 +590,7 @@ $ruler_width: $slider_width + 9px
       padding-left: 8px
       padding-right: 8px
       &.default
-        font-family: $font_family_italic
+        font-family: $font_family_base
         font-style: italic
     #available-manufacturers
       +border(top)
@@ -745,6 +746,7 @@ div#product-list, .product-list
     +border(top)
     height: 1.5em
     overflow: hidden
+    font-family: $font_family_base
   .product-image
     border: none
     background-color: white
@@ -1666,7 +1668,7 @@ a#create-look
         padding-left: 8px
         padding-right: 8px
         &.default
-          font-family: $font_family_italic
+          font-family: $font_family_base
           font-style: italic
       h3
         padding: 0

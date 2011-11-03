@@ -13,6 +13,7 @@ $border_color: $box_color - #212121
 $easy_border_color: $box_color - #080808
 $dark_border_color: $box_color - #393939
 $font_color: $box_color - #c7c7c7
+$price_color: #737373
 $easy_color: $box_color - #949494
 $easier_color: $box_color - #616161
 $easiest_color: #d9d9d9
@@ -39,17 +40,13 @@ $default_box_shadow_h_offset: 0px !default
 $default_box_shadow_v_offset: 0px !default
 $default_box_shadow_blur: 10px !default
 
-$font_family: "Gotham Book", "Helvetica", "Arial", sans-serif
-$font_family_bold: "Gotham Medium", "Helvetica", "Arial", sans-serif
-$font_family_italic: "Gotham Book Italic", "Helvetica", "Arial", sans-serif
-$font_family_bold_italic: "Gotham Medium Italic", "Helvetica", "Arial", sans-serif
-
+$font_family_base: "Helvetica Neue", "Helvetica", "Arial", sans-serif
+$font_family: "ProximaNova-Regular", "Helvetica", "Arial", sans-serif
+$font_family_bold: "ProximaNova-Bold", "Helvetica", "Arial", sans-serif
 
 =custom_fonts
-  +font-face("Gotham Book", font-files("gotham-book.woff", woff, "gotham-book.ttf", truetype, "gotham-book.svg", svg), "gotham-book.eot", "gotham-book")
-  +font-face("Gotham Book Italic", font-files("gotham-bookitalic.woff", woff, "gotham-bookitalic.ttf", truetype, "gotham-bookitalic.svg", svg), "gotham-bookitalic.eot", "gotham-bookitalic", "italic")
-  +font-face-extended("Gotham Medium", font-files("gotham-medium.woff", woff, "gotham-medium.ttf", truetype, "gotham-medium.svg", svg), "gotham-medium.eot", "gotham-medium", false, "bold")
-  +font-face-extended("Gotham Medium Italic", font-files("gotham-mediumitalic.woff", woff, "gotham-mediumitalic.ttf", truetype, "gotham-mediumitalic.svg", svg), "gotham-mediumitalic.eot", "gotham-mediumitalic", "italic", "bold")
+  +font-face("ProximaNova-Regular", font-files("13AD48_10.woff", woff, "13AD48_10.ttf", truetype, "13AD48_10.svg", svg), "13AD48_10.eot", "proximanova-regular")
+  +font-face-extended("ProximaNova-Bold", font-files("13AD48_14.woff", woff, "13AD48_14.ttf", truetype, "13AD48_14.svg", svg), "13AD48_14.eot", "proximanova-bold", false, "bold")
 
 =text_input
   font-family: $font_family
