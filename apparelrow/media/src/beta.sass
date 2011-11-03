@@ -3,11 +3,11 @@
 @import compass/utilities
 
 @import partials/base.sass
-@import partials/typography.sass
 
 body
+  +font
+  +typography
   background: white
-  color: $font_color
   h1
     +replace-text("logo_dark_bg.png")
     width: 200px

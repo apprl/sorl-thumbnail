@@ -1,8 +1,14 @@
 @import partials/base.sass
-@import partials/typography.sass
 @import partials/filter.sass
 @import partials/row.sass
 @import partials/look.sass
+
+body
+  +font
+  +typography
+  background-color: #e6e6e6
+  .ui-draggable-dragging a
+    cursor: move
 
 li
   list-style: none
@@ -11,11 +17,6 @@ li
 
 input, textarea
   outline: none
-
-body
-  background-color: #e6e6e6
-  .ui-draggable-dragging a
-    cursor: move
 
 // FIXME: Should this not apply to all button tags?
 .button
