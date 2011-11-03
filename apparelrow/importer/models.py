@@ -4,6 +4,7 @@ from datetime import datetime
 from django.conf import settings
 from django.db import models, connection, transaction
 from django.utils.translation import get_language, ugettext_lazy as _
+from django.template.defaultfilters import slugify
 
 from apparel import models as apparel
 from importer.framework.provider import load_provider
@@ -41,7 +42,15 @@ class VendorFeed(models.Model):
         provider = None
         
         try:
-            provider = load_provider(self.provider_class, self)
+            # First try specific provider dependent on the name
+            try:
+                name = slugify(self.name)
+                provider = load_provider(name, self)
+            # Fall back to generic provider provider if the specific one fails
+            except Exception:
+                logger.info("Couldnt find specific provider %s, falling back on generic one: %s" % 
+                        (name, self.provider_class))
+                provider = load_provider(self.provider_class, self)
             provider.run(from_warehouse=from_warehouse, for_date=for_date)
         except Exception, e:
             logger.fatal(unicode(e.__str__(), 'utf-8'))
