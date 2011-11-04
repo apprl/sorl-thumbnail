@@ -482,7 +482,7 @@ ApparelSearch = {
                         item.addClass('edge');
                 });
 
-                var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1);
+                var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1) + ' search';
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
                 if(list.children().size() == 0) {
