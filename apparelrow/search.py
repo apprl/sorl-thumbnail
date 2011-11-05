@@ -60,6 +60,8 @@ class QueuedSearchIndex(SearchIndex):
     def enqueue_save(self, instance, **kwargs):
         if hasattr(instance, 'published') and instance.published == False:
             remove_instance_from_index(instance, **kwargs)
+        elif hasattr(instance, 'category') and instance.category == None:
+            remove_instance_from_index(instance, **kwargs)
         elif self.should_update(instance, **kwargs):
             search_index_update(instance._meta.app_label, instance._meta.module_name, instance._get_pk_val())
 

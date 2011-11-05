@@ -22,7 +22,7 @@ def search_index_update_task(app_name, model_name, pk, **kwargs):
         search_index_update_task.retry(exc=exc)
 
 class ProcessSearchIndexUpdatesTask(PeriodicTask):
-    run_every = timedelta(minutes=10)
+    run_every = timedelta(minutes=2)
     ignore_result = True
 
     def run(self, **kwargs):
@@ -37,6 +37,7 @@ class ProcessClicksTask(PeriodicTask):
 
 class ProcessPopularityTask(PeriodicTask):
     run_every = crontab(hour=4, minute=15)
+    ignore_result = True
 
     def run(self, **kwargs):
         logger = self.get_logger(**kwargs)
