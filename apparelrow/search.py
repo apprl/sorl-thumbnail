@@ -345,17 +345,7 @@ def search_view(request, model):
     except ValueError:
         paged_result = paginator.page(1)
 
-    # Used in look image to bring up popup with products
-    if request.GET.get('thumb', False):
-        object_list = []
-        for obj in paged_result.object_list:
-            if obj:
-                object_list.append({
-                    'id': obj.object.id,
-                    'template': render_to_string('apparel/fragments/product_thumb_no_cache.html', {'product': obj.object})
-                })
-    else:
-        object_list = [o.template for o in paged_result.object_list if o]
+    object_list = [o.template for o in paged_result.object_list if o]
 
     return HttpResponse(
         json.dumps({

@@ -424,49 +424,19 @@ var chooser = {
                 }
         );
         // Weed out duplicates and existing ids
-        ids = jQuery.grep(ids, 
+        ids = jQuery.grep(ids,
             function(id, idx) {
                 return !(existing.indexOf(id) > -1 || ids.indexOf(id) < idx);
             }
-        );   
-                    
+        );
+
         // Find out what ids needs to be fetched
-        var to_fetch = [];
         jQuery.each(ids, function(idx, id) {
             var item = dialog.find('#option-' + id);
             if(item.length > 0) {
-                // Display item
-                item.show();
-            } else {
-                // Insert after previous item to maintain order
-                var li = jQuery('<li/>')
-                    .attr('id', 'option-' + id)
-                ;
-                
-                if(idx > 0) {
-                    jQuery('#option-' + ids[idx - 1]).after(li);
-                } else {
-                    dialog.find('ul').append(li);
-                }
-                to_fetch.push(id);
+                item.show().data('product_id', id);
             }
         });
-        
-        if(to_fetch.length > 0) {
-            jQuery.getJSON('{% url apparelrow.search.search_view "product"  %}', {
-                'q': '*:*',
-                'ids': to_fetch.join(','),
-                'page': '-1',
-                'thumb': '1',
-                'limit': '1000'
-            }, function(result, status) {
-                jQuery.each(result.object_list, function(idx, product) {
-                    jQuery('#option-' + product.id)
-                        .append(product.template)
-                        .data('product_id', product.id);
-                });
-            });
-        }
     }
 };
 
@@ -586,7 +556,16 @@ jQuery(document).ready(function() {
         {% endwith %}
     </div>
 </div>
-<div id="product-chooser"><h3>{% trans "Products" %}<a class="reset" href="#">{% trans "Close" %}</a></h3><ul></ul></div>
+<div id="product-chooser">
+    <h3>{% trans "Products" %}<a class="reset" href="#">{% trans "Close" %}</a></h3>
+    <ul>
+    {% with wardrobe as products %}
+    {% for product in products %}
+        <li id="option-{{ product.id }}">{% include 'apparel/fragments/product_thumb.html' %}</li>
+    {% endfor %}
+    {% endwith %}
+    </ul>
+</div>
 <div id="look-tooltips">
 {% if object.display_with_component == 'P' %}
     {% for component in object.photo_components.all %}
