@@ -1,5 +1,5 @@
 {% load cache %}
-{% cache CACHE_TIMEOUT product_thumb LANGUAGE_CODE %}
+{% cache CACHE_TIMEOUT product_thumb product.id LANGUAGE_CODE %}
 <a href="{{ product.get_absolute_url }}">
     <img src="/scale/42/{{ product.product_image.name }}?crop=true" alt="{{ product.product_name }}" />
     <h4>{{ product.product_name }}</h4>
