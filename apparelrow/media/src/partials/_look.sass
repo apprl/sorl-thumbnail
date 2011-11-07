@@ -295,13 +295,55 @@ body.look
         float: right
         color: $easier_color
   .sidebar
-    margin-top: 30px
+    margin-top: 15px
     p
       border-top: none
       +border(bottom)
     .description
       border-bottom: none
       padding-top: 1.5em
+
+    // This part is taken from _application
+    // Needed to get the follow button to work on look detail
+    // XXX: Better solution?
+    .following
+      .follow
+        display: none
+    .not_following
+      .unfollow
+        display: none
+    a.follow, a.unfollow
+      +button(none, 32px)
+      +border-radius(2px)
+      +highlight
+      font-family: $font_family_base
+      background-repeat: no-repeat
+      background-attachment: scroll
+      background-position: 10px center
+      padding: 2px 2px 1px 24px
+      display: inline-block
+      margin-bottom: 10px
+      width: $aside_width - 26
+      &:hover
+        +highlight_hover
+        text-decoration: none !important
+        span
+          display: inline
+    a.follow
+      background-image: image_url("follow.png")
+      &:hover
+        text-decoration: none !important
+    a.unfollow
+      background-color: #f0f0f0
+      background-image: image_url("following.png")
+      border-color: #f0f0f0
+      color: $font_color
+      &:hover
+        background-color: $like_color + #666666
+        background-image: image_url("unfollow.png")
+        border-color: $like_color
+        color: $font_color
+        text-decoration: none !important
   #content
     margin-top: -1.8em
     .collage, .photo
@@ -318,6 +360,8 @@ body.look
     top: 1em
   div
     margin-left: 70px
+    a:hover
+      text-decoration: underline
     h1
       font:
         family: $font_family_bold
