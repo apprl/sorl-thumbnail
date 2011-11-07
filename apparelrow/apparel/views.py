@@ -15,7 +15,6 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.views.generic import list_detail
 from django.views.i18n import set_language
 from django.utils import translation
 from hanssonlarsson.django.exporter import json as special_json
@@ -34,6 +33,7 @@ from apparel.utils import get_pagination_page
 import apparel.signals
 
 FAVORITES_PAGE_SIZE = 30
+LOOK_PAGE_SIZE = 10
 
 def product_redirect(request, pk):
     """
@@ -148,12 +148,13 @@ def look_like(request, slug, action):
 
     return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
 
-def look_list(request, popular=None, page=0):
+def look_list(request, popular=None, search=None, page=0):
     """
     This view can list looks in three ways:
 
         1) If no argument is used a list of all looks is displayed.
         2) If popular-argument is set displays a list of all popular looks in your network.
+        3) If search-argument is set displays a list of all matching looks to param 'q'.
 
     """
     if popular:
@@ -162,6 +163,15 @@ def look_list(request, popular=None, page=0):
             queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')
         else:
             queryset = Look.objects.none()
+
+    elif search:
+        query_arguments = {'qf': 'text',
+                           'defType': 'edismax',
+                           'fq': 'django_ct:apparel.look',
+                           'start': 0,
+                           'rows': 500} # XXX: maximum search results, sync this with the count that is displayed in the search result box
+        results = ApparelSearch(request.GET.get('q'), **query_arguments)
+        queryset = Look.objects.filter(id__in=[doc.django_id for doc in results.get_docs()])
     else:
         queryset = Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)
 
@@ -172,62 +182,23 @@ def look_list(request, popular=None, page=0):
         most_looks_users = None
 
     latest_looks = Look.objects.order_by('-created')[:8]
-
-    return list_detail.object_list(
-        request,
-        queryset=queryset,
-        paginate_by=10,
-        extra_context={
-            'next': request.get_full_path(),
-            'previous': None,
-            'most_looks_users': most_looks_users,
-            'latest_looks': latest_looks,
-            'next': request.get_full_path(),
-        }
-    )
-
-def look_list_search(request):
-    if not request.GET.get('q'):
-        return redirect('look-list')
-
-    limit = 1
-    query_arguments = {'qf': 'text',
-                       'defType': 'edismax',
-                       'fq': 'django_ct:apparel.look',
-                       'start': 0,
-                       'rows': limit}
-    results = ApparelSearch(request.GET.get('q'), **query_arguments)
-    queryset = Look.objects.in_bulk([doc.django_id for doc in results.get_docs()])
-
-    if request.user.is_authenticated():
-        user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
-        most_looks_users = ApparelProfile.objects.annotate(look_count=Count('user__look')).order_by('-look_count').filter(look_count__gt=0, user__in=user_ids)
-    else:
-        most_looks_users = None
-
-    latest_looks = Look.objects.order_by('-created')[:8]
-
-    paginator = Paginator(results, limit)
-    try:
-        paged_result = paginator.page(int(request.GET.get('page', 1)))
-    except (EmptyPage, InvalidPage):
-        paged_result = paginator.page(paginator.num_pages)
-    except ValueError:
-        paged_result = paginator.page(1)
+    paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
+            request.GET.get('page', 1), 1, 2)
 
     return render_to_response(
             'apparel/look_list.html',
             {
                 'query': request.GET.get('q'),
-                'object_list': [x for k, x in queryset.items()],
-                'is_paginated': True,
-                'paginator': paginator,
+                'paginator': paged_result.paginator,
+                'pagination': pagination,
+                'current_page': paged_result,
+                'next': request.get_full_path(),
                 'most_looks_users': most_looks_users,
                 'latest_looks': latest_looks,
-                'page_obj': paged_result
             },
-            context_instance=RequestContext(request),
+            context_instance=RequestContext(request)
         )
+
 
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)

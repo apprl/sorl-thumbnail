@@ -7,7 +7,6 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect, HttpResponseNotFound
 from django.template import RequestContext
 from django.db.models import Q, Count
-from django.views.generic import list_detail
 from django.contrib import auth
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User

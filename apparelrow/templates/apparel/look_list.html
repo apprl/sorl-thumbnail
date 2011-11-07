@@ -29,7 +29,7 @@
                 {% facebook_button facebook_login_image %}
             {% endwith %}
         {% else %}
-            {% if not object_list and request.path == popular_look_list_url %}
+            {% if not current_page.object_list and request.path == popular_look_list_url %}
                 <div>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</div>
                 <a class="all-users" href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a>
             {% else %}
