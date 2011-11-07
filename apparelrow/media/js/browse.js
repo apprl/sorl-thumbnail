@@ -246,6 +246,9 @@ jQuery(document).ready(function() {
     });
 
     function scrollTo(page) {
+        if((jQuery(window).height() - jQuery('body').scrollTop()) < 300)
+            jQuery('body').scrollTop(0);
+
         if(page == 0 || page > pagination.data.paginator.num_pages)
             return false;
         
