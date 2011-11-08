@@ -1388,6 +1388,23 @@ a.unfollow
     color: $font_color
     text-decoration: none !important
 
+p.large_follow
+  height: 28px
+  margin-bottom: 15px
+  .following, .not_following
+    display: block
+    margin-top: 0.5em
+    a.follow, a.unfollow
+      line-height: 6px
+      +border-radius(0.25em)
+      padding: 1em
+      background-position: 8px center
+      padding-left: 24px
+      span
+        display: inline
+  .following .unfollow, .not_following .follow
+    display: block
+
 a.profile-link
   img.avatar
     margin-right: 0.5em
@@ -1462,23 +1479,9 @@ body.profile
     p
       border: none
       color: $easier_color
-      font-size: smaller
       &.description
         margin-top: 1em
         color: $font-color
-      &.large_follow
-        .following, .not_following
-          display: block
-          margin-top: 0.5em
-          a.follow, a.unfollow
-            +border-radius(0.25em)
-            padding: 1em
-            background-position: 8px center
-            padding-left: 24px
-            span
-              display: inline
-        .following .unfollow, .not_following .follow
-          display: block
 
   ul.users
     li

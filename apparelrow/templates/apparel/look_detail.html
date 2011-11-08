@@ -59,11 +59,9 @@
 </div>
 
 <div class="sidebar">
-    {% if user.is_authenticated %}
-        {% with object.user.get_profile as profile %}
-        {% include 'apparel/fragments/follow.html' %}
-        {% endwith %}
-    {% endif %}
+    {% with object.user.get_profile as profile %}
+    <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
+    {% endwith %}
 {% cache CACHE_TIMEOUT look_detail1 object.id LANGUAGE_CODE %}
     {% include 'apparel/fragments/total_price.html' %}
     {% if object.description %}
