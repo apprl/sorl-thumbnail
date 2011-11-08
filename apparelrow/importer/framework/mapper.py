@@ -49,17 +49,15 @@ class DataMapper(object):
         By default, postprocess performs following actions
         
          * Leading and trailing whitespaces are trimmed
-         * HTML is stripped from the description field
-         * HTML entities are expanded to unicode characters in the description field
-         * HTML entities are expanded to unicode characters in the product-name field
+         * HTML is stripped from the description, product-name, category and manufacturer field
+         * HTML entities are expanded to unicode characters in the description, product-name, category and manufacturer field
         
         """
         
         for field, value in self.mapped_record['product'].items():
             self.mapped_record['product'][field] = self.trim(value)
 
-        for field in ['product-name', 'description', 'currency', 'manufacturer']:
-            pass
+        for field in ['product-name', 'description', 'category', 'manufacturer']:
             self.mapped_record['product'][field] = self.strip_html(self.mapped_record['product'][field])
     
     def translate(self):
