@@ -47,6 +47,9 @@ def set_query_arguments(query_arguments, params, current_user=None, facet_fields
     query_arguments['facet.limit'] = -1
     query_arguments['facet.mincount'] = 1
     query_arguments['facet.field'] = []
+    for field in ['category', 'price', 'manufacturer_data', 'color']:
+        if facet_fields and field in facet_fields:
+            query_arguments['facet.field'].append('{!ex=%s}%s' % (field, field))
 
     query_arguments['qf'] = PRODUCT_SEARCH_FIELDS
     query_arguments['defType'] = 'edismax'
@@ -54,19 +57,27 @@ def set_query_arguments(query_arguments, params, current_user=None, facet_fields
     if 'fq' not in query_arguments:
         query_arguments['fq'] = []
 
-    for field in ['category', 'price', 'manufacturer', 'color']:
-        if facet_fields and field in facet_fields:
-            query_arguments['facet.field'].append('{!ex=%s}%s' % (field, field))
+    query_arguments['fq'].append('django_ct:apparel.product')
 
-        if field in params:
-            tag = '{!tag=%s}%s' % (field, field + '_exact')
-            if field == 'price':
-                price = params[field].split(',')
-                if len(price) == 2:
-                    query_arguments['fq'].append('%s:[%s TO %s]' % (tag, price[0], price[1]))
-            else:
-                query_arguments['fq'].append('%s:(%s)' % (tag, ' OR '.join([x for x in params[field].split(',')])))
+    # Category
+    if 'category' in params:
+       query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('category', 'category', ' OR '.join([x for x in params['category'].split(',')])))
 
+    # Price
+    if 'price' in params:
+        price = params['price'].split(',')
+        if len(price) == 2:
+            query_arguments['fq'].append('{!tag=%s}%s:[%s TO %s]' % ('price', 'price', price[0], price[1]))
+
+    # Manufacturer
+    if 'manufacturer' in params:
+        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer_data', 'manufacturer_id', ' OR '.join([x for x in params['manufacturer'].split(',')])))
+
+    # Color
+    if 'color' in params:
+       query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join([x for x in params['color'].split(',')])))
+
+    # Gender
     if 'gender' in params:
         if params['gender'] == 'M':
             query_arguments['fq'].append('gender:(M OR U)')
@@ -77,6 +88,7 @@ def set_query_arguments(query_arguments, params, current_user=None, facet_fields
     else:
         query_arguments['fq'].append('gender:(W OR M OR U)')
 
+    # Extra
     if 'f' in params and current_user:
         user_ids = list(Follow.objects.filter(user=current_user).values_list('object_id', flat=True)) + [0]
         user_ids_or = ' OR '.join(str(x) for x in user_ids)
@@ -86,12 +98,10 @@ def set_query_arguments(query_arguments, params, current_user=None, facet_fields
     else:
         query_arguments['fq'].append('availability:true')
 
-    query_arguments['fq'].append('django_ct:apparel.product')
-
     return query_arguments
 
 def browse_products(request, template='apparel/browse.html', extra_context=None):
-    facet_fields = ['category', 'price', 'manufacturer', 'color']
+    facet_fields = ['category', 'price', 'color', 'manufacturer_data']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     if extra_context and 'profile' in extra_context:
         # wardrobe
@@ -120,16 +130,15 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
 
     # Calculate manufacturer
-    manufacturers = Manufacturer.objects.filter(pk__in=[int(value) for i, value in enumerate(facet['manufacturer']) if i % 2 == 0])
-    mp = Paginator(manufacturers, settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
-    try:
-        manufacturers = [x for x in mp.page(1).object_list if x]
-    except InvalidPage:
-        manufacturers = []
+    manufacturers = []
+    for i, value in enumerate(facet['manufacturer_data']):
+        if i % 2 == 0:
+            split = value.rsplit('|')
+            manufacturers.append({'id': int(split[1]), 'name': split[0]})
+    manufacturers = manufacturers[:settings.APPAREL_MANUFACTURERS_PAGE_SIZE]
 
     # Calculate colors
     colors = [int(value) for i, value in enumerate(facet['color']) if i % 2 == 0]
-
 
     # Calculate category
     categories = [int(value) for i, value in enumerate(facet['category']) if i % 2 == 0]
@@ -259,7 +268,7 @@ def browse_manufacturers(request, **kwargs):
     query_arguments = {'rows': settings.APPAREL_MANUFACTURERS_PAGE_SIZE, 'start': 0}
 
     # Update query arguments for browse page
-    query_arguments = set_query_arguments(query_arguments, request.GET, request.user, ['manufacturer'])
+    query_arguments = set_query_arguments(query_arguments, request.GET, request.user, ['manufacturer_data'])
 
     # Override qf argument
     query_arguments['qf'] = 'manufacturer_auto'
@@ -274,8 +283,12 @@ def browse_manufacturers(request, **kwargs):
 
     # Get facet results
     facet = search.get_facet()['facet_fields']
+    manufacturers = []
+    for i, value in enumerate(facet['manufacturer_data']):
+        if i % 2 == 0:
+            split = value.rsplit('|')
+            manufacturers.append({'id': int(split[1]), 'name': split[0]})
 
-    manufacturers = Manufacturer.objects.values('id', 'name').filter(pk__in=[int(value) for i, value in enumerate(facet['manufacturer']) if i % 2 == 0]).order_by('name')
     mp = Paginator(manufacturers, settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
     try:
         manufacturers = [x for x in mp.page(page).object_list if x]

@@ -180,8 +180,9 @@ class ProductIndex(QueuedSearchIndex):
     category_names = CharField(stored=False, boost=1.7)
 
     # Manufacturer
-    manufacturer = CharField(model_attr='manufacturer__id', faceted=True)
+    manufacturer_id = CharField(model_attr='manufacturer__id')
     manufacturer_auto = NgramField(model_attr='manufacturer__name')
+    manufacturer_data = CharField()
 
     def prepare(self, object):
         self.prepared_data = super(ProductIndex, self).prepare(object)
@@ -207,11 +208,12 @@ class ProductIndex(QueuedSearchIndex):
                 availability = True
                 break
         self.prepared_data['availability'] = availability
-
         # Add category names
         self.prepared_data['category_names'] = ' '.join(object.categories_all_languages)
         # Add color names
         self.prepared_data['color_names'] = ' '.join(object.colors)
+        # Add manufacturer data
+        self.prepared_data['manufacturer_data'] = '%s|%s' % (object.manufacturer.name, object.manufacturer.id)
 
         return self.prepared_data
 
@@ -248,61 +250,10 @@ site.register(Product, ProductIndex)
 site.register(Look, LookIndex)
 
 #
-# Manufacturer search
+# Generic search
 #
 
-def manufacturer_search(request):
-    try:
-        limit = int(request.GET.get('limit', RESULTS_PER_PAGE))
-    except ValueError:
-        limit = RESULTS_PER_PAGE
-
-    query = request.GET.get('q', None)
-    if not query:
-        return Http404('Search require a search string')
-
-    arguments = {'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(W OR M OR U)'],
-                 'start': 0,
-                 'rows': 10,
-                 'facet': 'on',
-                 'facet.mincount': 1,
-                 'facet.limit': -1,
-                 'facet.field': ['manufacturer_exact'],
-                 'qf': PRODUCT_SEARCH_FIELDS,
-                 'defType': 'edismax'}
-    result = ApparelSearch(query, **arguments)
-    facet = result.get_facet()
-
-    manufacturer_ids = [int(value) for i, value in enumerate(facet['facet_fields']['manufacturer_exact']) if i % 2 == 0]
-
-    manufacturers = Manufacturer.objects.values('id', 'name').filter(pk__in=manufacturer_ids).order_by('name')
-    paginator = Paginator(manufacturers, limit)
-    try:
-        paged_result = paginator.page(1)
-    except (EmptyPage, InvalidPage):
-        paged_result = paginator.page(paginator.num_pages)
-
-    object_list = [render_to_string('apparel/fragments/manufacturer_search.html', {'object': obj}) for obj in paged_result.object_list]
-
-    return HttpResponse(
-        json.dumps({
-            'object_list': object_list,
-            'previous_page_number': paged_result.previous_page_number(),
-            'next_page_number': paged_result.next_page_number(),
-            'number': paged_result.number,
-            'paginator': {
-                'num_pages': paged_result.paginator.num_pages,
-                'count': paged_result.paginator.count,
-            }
-        }),
-        mimetype='application/json'
-    )
-
-#
-# Generic search (product and looks)
-#
-
-def search_view(request, model):
+def search_view(request, model_name):
     """
     Generic search view
     """
@@ -315,22 +266,30 @@ def search_view(request, model):
     if not query:
         return Http404('Search require a search string')
 
-    # Filter query parameters
-    class_name = model.lower()
-    fq = ['django_ct:apparel.%s' % (class_name,)]
-    if class_name == 'product':
-        fq.append('availability:true')
-        fq.append('gender:(W OR M OR U)')
-        qf = PRODUCT_SEARCH_FIELDS
-    elif class_name == 'look':
-        qf = ['text']
+    model_name = model_name.lower()
 
     # Base arguments
-    arguments = {'qf': qf,
+    arguments = {'qf': ['text'],
                  'defType': 'edismax',
-                 'fq': fq,
+                 'fq': ['django_ct:apparel.%s' % (model_name,)],
                  'start': 0,
                  'rows': limit}
+
+    # Filter query parameters based on model name
+    if model_name == 'product':
+        arguments['fq'].append('availability:true')
+        arguments['fq'].append('gender:(W OR M OR U)')
+        arguments['qf'] = PRODUCT_SEARCH_FIELDS
+    elif model_name == 'look':
+        arguments['qf'] = ['text']
+    elif model_name == 'manufacturer':
+        # override fq cause we do not have a separate manufacturer index
+        arguments['fq'] = ['django_ct:apparel.product', 'availability:true', 'gender:(W OR M OR U)']
+        arguments['qf'] = ['manufacturer_auto']
+        arguments['facet'] = 'on'
+        arguments['facet.limit'] = -1
+        arguments['facet.mincount'] = 1
+        arguments['facet.field'] = ['manufacturer', 'manufacturer_data']
 
     # Used in look image to bring up popup with products
     ids = request.GET.get('ids', False)
@@ -338,6 +297,15 @@ def search_view(request, model):
         arguments['fq'].append(' django_id:(%s)' % (ids.replace(',', ' OR '),))
 
     results = ApparelSearch(query, **arguments)
+
+    # If the model name is manufacturer get the result from a facet
+    if model_name == 'manufacturer':
+        facet = results.get_facet()['facet_fields']
+        results = []
+        for i, value in enumerate(facet['manufacturer_data']):
+            if i % 2 == 0:
+                split = value.rsplit('|')
+                results.append({'id': int(split[1]), 'name': split[0]})
 
     paginator = Paginator(results, limit)
     try:
@@ -347,7 +315,13 @@ def search_view(request, model):
     except ValueError:
         paged_result = paginator.page(1)
 
-    object_list = [o.template for o in paged_result.object_list if o]
+    # Return object list based on model name
+    if model_name == 'product':
+        object_list = [o.template for o in paged_result.object_list if o]
+    elif model_name == 'look':
+        object_list = [o.template for o in paged_result.object_list if o]
+    elif model_name == 'manufacturer':
+        object_list = [render_to_string('apparel/fragments/manufacturer_search.html', {'object': obj}) for obj in paged_result.object_list]
 
     return HttpResponse(
         json.dumps({

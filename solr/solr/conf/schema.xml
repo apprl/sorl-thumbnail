@@ -139,13 +139,13 @@
     <field name="availability" type="boolean" indexed="true" stored="false" multiValued="false" />
 
     <!-- Used in manufacturer search and product faceting -->
-    <field name="manufacturer" type="text" indexed="true" stored="true" multiValued="false" />
-    <field name="manufacturer_exact" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="manufacturer_id" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="manufacturer_data" type="string" indexed="true" stored="true" multiValued="false" />
     <field name="manufacturer_auto" type="ngram" indexed="true" stored="true" multiValued="false" />
 
     <!-- Used in product search -->
     <field name="product_name" type="text" indexed="true" stored="false" multiValued="false" termVectors="true" />
-    <field name="manufacturer_name" type="text" indexed="true" stored="true" multiValued="false" termVectors="true" />
+    <field name="manufacturer_name" type="text" indexed="true" stored="false" multiValued="false" termVectors="true" />
     <field name="description" type="text" indexed="true" stored="false" multiValued="false" termVectors="true" />
     <field name="category_names" type="text" indexed="true" stored="false" multiValued="false" termVectors="true" />
     <field name="color_names" type="text" indexed="true" stored="false" multiValued="false" termVectors="true" />
