@@ -287,7 +287,8 @@ function makeProductTooltip(selector) {
     var last_id = false;
 
     function open(event) {
-        var attr_id = jQuery(this).attr('id').split('-');
+        var component = jQuery(event.currentTarget);
+        var attr_id = component.attr('id').split('-');
         var component_id = attr_id.pop();
         var component_type = attr_id.pop();
 
@@ -298,13 +299,12 @@ function makeProductTooltip(selector) {
 
         tooltip = jQuery('#tooltip-' + component_id).css({position: 'absolute'}).show();
         if(component_type != 'tooltip') {
-            var component = jQuery('#' + component_type + '-' + component_id);
             var container = component.closest('.photo, .collage, #photo');
             tooltip_top = container.offset().top + component.position().top - tooltip.height() + 5;
             tooltip_left = container.offset().left + component.position().left;
         }
         tooltip.css({'top': tooltip_top, 'left': tooltip_left});
-        if(!jQuery(event.currentTarget).hasClass('tooltip') && last_id != component_id) {
+        if(!component.hasClass('tooltip') && last_id != component_id) {
             tooltip.stop().animate({opacity: 1}, 300);
         } else {
             tooltip.css({opacity: 1});
