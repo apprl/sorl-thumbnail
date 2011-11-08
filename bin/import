@@ -27,6 +27,9 @@ fi
 
 cd "$PROJDIR/releases/current/apparelrow"
 
+# Update fx rates
+$PROJDIR/bin/python manage.py arfxrates --refresh --settings $DJANGO_SETTINGS_MODULE
+
 if [[ -z "$1" ]]; then
     $PROJDIR/bin/python manage.py arimport --all --settings $DJANGO_SETTINGS_MODULE
 else
