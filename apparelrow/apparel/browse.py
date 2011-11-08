@@ -133,7 +133,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     manufacturers = []
     for i, value in enumerate(facet['manufacturer_data']):
         if i % 2 == 0:
-            split = value.rsplit('|')
+            split = value.rsplit('|', 1)
             manufacturers.append({'id': int(split[1]), 'name': split[0]})
     manufacturers = manufacturers[:settings.APPAREL_MANUFACTURERS_PAGE_SIZE]
 
@@ -286,7 +286,7 @@ def browse_manufacturers(request, **kwargs):
     manufacturers = []
     for i, value in enumerate(facet['manufacturer_data']):
         if i % 2 == 0:
-            split = value.rsplit('|')
+            split = value.rsplit('|', 1)
             manufacturers.append({'id': int(split[1]), 'name': split[0]})
 
     mp = Paginator(manufacturers, settings.APPAREL_MANUFACTURERS_PAGE_SIZE)

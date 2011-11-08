@@ -304,7 +304,7 @@ def search_view(request, model_name):
         results = []
         for i, value in enumerate(facet['manufacturer_data']):
             if i % 2 == 0:
-                split = value.rsplit('|')
+                split = value.rsplit('|', 1)
                 results.append({'id': int(split[1]), 'name': split[0]})
 
     paginator = Paginator(results, limit)
