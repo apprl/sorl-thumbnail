@@ -58,8 +58,9 @@ class DataMapper(object):
         for field, value in self.mapped_record['product'].items():
             self.mapped_record['product'][field] = self.trim(value)
 
-        self.mapped_record['product']['product-name'] = expand_entities(self.mapped_record['product']['product-name'])
-        self.mapped_record['product']['description'] = self.strip_html(self.mapped_record['product']['description'])
+        for field in ['product-name', 'description', 'currency', 'manufacturer']:
+            pass
+            self.mapped_record['product'][field] = self.strip_html(self.mapped_record['product'][field])
     
     def translate(self):
         """
