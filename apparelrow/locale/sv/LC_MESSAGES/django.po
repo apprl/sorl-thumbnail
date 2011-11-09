@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 19:57+0100\n"
+"POT-Creation-Date: 2011-11-09 21:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -504,14 +504,26 @@ msgid "Product clicks"
 msgstr "Produkt klick"
 
 #: templates/403.html:6
+msgid "403 Error"
+msgstr "403-fel"
+
+#: templates/403.html:7
 msgid "Access forbidden"
 msgstr "Åtkomst nekad"
 
 #: templates/404.html:6
+msgid "404 Error"
+msgstr "404-fel"
+
+#: templates/404.html:7
 msgid "The page you're trying to view cannot be found!"
 msgstr "Sidan kunde tyvärr inte hittas!"
 
 #: templates/500.html:6
+msgid "500 Error"
+msgstr "500-fel"
+
+#: templates/500.html:7
 msgid "An error occurred"
 msgstr "Ett fel uppstod"
 
