@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 19:45+0100\n"
+"POT-Creation-Date: 2011-11-09 19:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -502,7 +502,7 @@ msgid "Access forbidden"
 msgstr ""
 
 #: templates/404.html:6
-msgid "The page could unfortunately not be found!"
+msgid "The page you're trying to view cannot be found!"
 msgstr ""
 
 #: templates/500.html:6
