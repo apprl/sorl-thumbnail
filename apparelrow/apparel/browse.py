@@ -134,8 +134,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     for i, value in enumerate(facet['manufacturer_data']):
         if i % 2 == 0:
             split = value.rsplit('|', 1)
-            manufacturers.append({'id': int(split[1]), 'name': split[0]})
-    manufacturers = manufacturers[:settings.APPAREL_MANUFACTURERS_PAGE_SIZE]
+            manufacturers.append((int(split[1]), split[0]))
 
     # Calculate colors
     colors = [int(value) for i, value in enumerate(facet['color']) if i % 2 == 0]
@@ -217,17 +216,12 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
                 context_instance=RequestContext(request)
             ),
         )
-        return HttpResponse(
-            json.encode(result),
-            mimetype='text/json'
-        )
-    else:
-        all_colors = Option.objects.filter(option_type__name='color').all()
-        result.update(all_colors=all_colors)
+        return HttpResponse(json.encode(result), mimetype='text/json')
 
     # Serve non ajax request
     result.update(
-        categories_all=Category._tree_manager.all(),
+        all_colors = Option.objects.filter(option_type__name='color').all(),
+        categories_all = Category._tree_manager.all(),
         current_page = paged_result,
         pages = pages,
         templates = {
@@ -287,13 +281,7 @@ def browse_manufacturers(request, **kwargs):
     for i, value in enumerate(facet['manufacturer_data']):
         if i % 2 == 0:
             split = value.rsplit('|', 1)
-            manufacturers.append({'id': int(split[1]), 'name': split[0]})
-
-    mp = Paginator(manufacturers, settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
-    try:
-        manufacturers = [x for x in mp.page(page).object_list if x]
-    except InvalidPage:
-        manufacturers = []
+            manufacturers.append((int(split[1]), split[0]))
 
     return HttpResponse(json.encode(manufacturers), mimetype='application/json')
 

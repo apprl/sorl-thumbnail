@@ -388,11 +388,10 @@ ApparelSearch = {
         if(s.length == 0)
             return;
 
+        ApparelSearch.clear();
         ApparelSearch.last_query = s;
 
         updateHash('!s', s, false);
-
-        ApparelSearch.clear();
 
         ApparelSearch._doSearch({
             model: 'product',
@@ -573,14 +572,17 @@ function updateHash(name, value, remove) {
                 found = true;
             }
             if(!(remove && found)) {
-                hash_object[pair[0]] = pair[1];
+                if (pair[1]) {
+                    hash_object[pair[0]] = pair[1];
+                }
             }
         });
     }
     if(!found && !remove) {
         hash_object[name] = value;
     }
-    window.location.hash = jQuery.param(hash_object);
+    // Use decodeURIComponent because jQuery.param returns it encoded
+    window.location.hash = decodeURIComponent(jQuery.param(hash_object));
 }
 
 // DOM bindings
@@ -623,13 +625,6 @@ jQuery(document).ready(function() {
 
     jQuery('#cancel-search').click(function(e) {
         ApparelSearch.cancel();
-        return false;
-    });
-
-    jQuery('#search-result-manufacturers a').live('click', function(e) {
-        location.href = jQuery(this).attr('href');
-        location.reload(true);
-
         return false;
     });
 
@@ -689,7 +684,7 @@ jQuery(document).ready(function() {
         // From reset click handler in browse.js
         jQuery('.selected').removeClass('selected');
         jQuery('#product-category .level-1, #product-category .level-2').hide();
-        //jQuery('#product-manufacturers .reset').click();
+        jQuery('#product-manufacturers .reset').click();
         jQuery('#product-gender li:first > a').addClass('selected');
 
         return false;

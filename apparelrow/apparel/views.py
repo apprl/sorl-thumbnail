@@ -626,12 +626,22 @@ def index(request):
     pricerange['selected'] = '%s,%s' % (pricerange['min'], pricerange['max'])
     ctx['pricerange'] = pricerange
 
-    mp = Paginator(Manufacturer.objects.filter(product__published=True).distinct().order_by('name'), settings.APPAREL_MANUFACTURERS_PAGE_SIZE)
-    try:
-        manufacturers = mp.page(1).object_list
-    except EmptyPage:
-        manufacturers = []
-    ctx['manufacturers'] = manufacturers
+    arguments = {'defType': 'edismax',
+                 'start': 0,
+                 'rows': 1,
+                 'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(W OR M OR U)'],
+                 'qf': ['manufacturer_auto'],
+                 'facet': 'on',
+                 'facet.limit': -1,
+                 'facet.mincount': 1,
+                 'facet.field':  ['manufacturer_data']}
+
+    facet_fields = ApparelSearch('*:*', **arguments).get_facet()['facet_fields']
+    ctx['manufacturers'] = []
+    for i, value in enumerate(facet_fields['manufacturer_data']):
+        if i % 2 == 0:
+            split = value.rsplit('|', 1)
+            ctx['manufacturers'].append((int(split[1]), split[0]))
 
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 

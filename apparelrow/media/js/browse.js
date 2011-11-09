@@ -130,7 +130,6 @@ jQuery(document).ready(function() {
             case 'product-manufacturers':
                 jQuery("input[name=brand]")
                     .val('')
-                    .keyup()
                     .blur()
                 ;
                 
@@ -180,6 +179,27 @@ jQuery(document).ready(function() {
         }
 
         return false;
+    });
+
+    // Click handler for manufacturer search results element
+    jQuery('#search-result-manufacturers a').live('click', function(e) {
+        // Cancel search and reset browse filters
+        ApparelSearch.cancel();
+        jQuery('#reset').click();
+
+        // Get current element and id
+        var element = jQuery(this);
+        var id = 'manufacturer-' + getElementId(element);
+
+        // If not previously marked as selected, select it, add it to the
+        // selected list and make sure the manufacturer filter is activated
+        var element_available = jQuery('#available-manufacturer-' + id);
+        if(!element_available.hasClass('selected')) {
+            element_available.addClass('selected');
+            element.clone().attr('id', id).appendTo(jQuery('<li>').prependTo(jQuery('#selected-manufacturers')));
+            jQuery('#product-manufacturers > a').addClass('selected');
+            delayedFilter(getQuery());
+        }
     });
 
     // Click handler for list of selected manufacturers

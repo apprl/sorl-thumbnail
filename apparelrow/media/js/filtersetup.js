@@ -81,18 +81,13 @@ jQuery(document).ready(function() {
     
     ManufacturerBrowser.init();    
     // Brand search
-
     var _manufacturerSearchTimeout;
     jQuery("input[name=brand]")
         .keyup(function(e) {
             var name = this.value; 
             if(_manufacturerSearchTimeout)
                 clearTimeout(_manufacturerSearchTimeout);
-        
-            _manufacturerSearchTimeout = setTimeout(
-                function() { ManufacturerBrowser.filterByName(name) },
-                500
-            );
+            _manufacturerSearchTimeout = setTimeout(function() { ManufacturerBrowser.filterByName(name) }, 500);
         })
         .focus(function(e) { 
             if(this.value == this.defaultValue) {
@@ -160,12 +155,6 @@ var ManufacturerBrowser = {
         var self = ManufacturerBrowser;
         this.$availableList = jQuery('#available-manufacturers');
         this.$selectedList  = jQuery('#selected-manufacturers');
-        
-        this.$availableList.scroll(function() {
-            if(self.canFetch && self.$availableList.scrollTop() > this.scrollHeight / 2) {
-               self.fetchNextPage();
-            }
-        });
     },
     
     reset: function() {
@@ -177,18 +166,16 @@ var ManufacturerBrowser = {
     renderItem: function(item, $list) {
         // FIXME: When we render template on server, drop this method all together
         var $a = jQuery('<a>')
-            .attr('href', '/browse/?manufacturer=' + item.id)
-            .attr('id', 'available-manufacturer-' + item.id)
-            .text(item.name)
-        ;
+            .attr('href', '/browse/?manufacturer=' + item[0])
+            .attr('id', 'available-manufacturer-' + item[0])
+            .text(item[1]);
         
-        if(jQuery('#manufacturer-' + item.id).length > 0)
+        if(jQuery('#manufacturer-' + item[0]).length > 0)
             $a.addClass('selected');
         
         jQuery('<li>')
             .append($a)
-            .appendTo(this.$availableList)
-        ;
+            .appendTo(this.$availableList);
     },
     
     fetchNextPage: function() {
