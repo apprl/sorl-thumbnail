@@ -189,7 +189,7 @@ class ProductIndex(QueuedSearchIndex):
         # Add price to search index
         if object.default_vendor and object.default_vendor.price:
             try:
-                self.prepared_data['price'] = int(object.default_vendor.price)
+                self.prepared_data['price'] = int(object.default_vendor.price + 0.5)
             except ValueError:
                 pass
         # Add color to search index
