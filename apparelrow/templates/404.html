@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>404 Not Found</title>
-</head>
-<body>
-    <h1>404 - Not Found</h1>
-    <p>The requested URL {{ request.path }} was not found on this server.</p>
-</body>
-</html>
+{% extends "base.html" %}
+{% load i18n %}
+{% block body-classes %}one-column{% endblock body-classes %}
+{% block body %}
+    <div id="content">
+        <h2>{% trans "The page could unfortunately not be found!" %}</h2>
+    </div>
+{% endblock %}
