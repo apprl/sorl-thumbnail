@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal, ROUND_HALF_UP
 
 from django.conf import settings
 from django.core.paginator import Paginator
@@ -189,7 +190,7 @@ class ProductIndex(QueuedSearchIndex):
         # Add price to search index
         if object.default_vendor and object.default_vendor.price:
             try:
-                self.prepared_data['price'] = int(object.default_vendor.price + 0.5)
+                self.prepared_data['price'] = int(object.default_vendor.price.quantize(Decimal('1.'), rounding=ROUND_HALF_UP))
             except ValueError:
                 pass
         # Add color to search index
