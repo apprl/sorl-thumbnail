@@ -32,6 +32,8 @@ class ImportLogInline(admin.TabularInline):
 
 
 class ImportLogAdmin(admin.ModelAdmin):
+    list_display = ['vendor_feed', 'start_time', 'end_time', 'imported_products', 'status']
+    list_filter = ['vendor_feed']
     inlines = [
         ImportLogMessageInline
     ]
