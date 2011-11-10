@@ -7,7 +7,7 @@ from importer.framework.mapper import DataMapper
 from importer.framework.mapper import SkipField
 
 REGEX_SIZE = re.compile('^[Ss]ize: .+\. ')
-AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False}
+AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False, 'out of stock': False, 'no stock': False}
 
 class LinkshareMapper(DataMapper):
     def get_product_id(self):
