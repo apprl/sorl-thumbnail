@@ -15,10 +15,10 @@ class ZanoxMapper(DataMapper):
         return self.record.get('ZanoxProductLink')
 
     def get_variations(self):
-        return []
+        return [{'color': c} for c in self.map_colors(self.record.get('ExtraTextOne', ''))]
 
     def get_gender(self):
-        gender = self.map_gender(self.record.get('MerchantProductCategory'))
+        gender = self.map_gender(self.record.get('MerchantProductCategory', ''))
         if not gender:
             extra = self.record.get('ExtraTextOne', '')
             if extra:
