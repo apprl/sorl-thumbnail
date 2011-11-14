@@ -2,6 +2,7 @@
 import re, logging, datetime, htmlentitydefs
 
 from django.conf import settings
+from django.utils.encoding import smart_unicode
 
 from importer.api import API, SkipProduct
 from importer.models import ColorMapping
@@ -11,15 +12,15 @@ logger = logging.getLogger('apparel.importer.mapper')
 # Compile regular expression matching all aliases to a color, should only be
 # compiled once on import.
 COLOR_REGEXES = dict(
-    (cm.color, re.compile(r'\b(?:%s)\b' % '|'.join(cm.color_list()), re.I))
+    (cm.color, re.compile(ur'\b(?:%s)\b' % (ur'|'.join(cm.color_list()),), re.I | re.UNICODE))
     for cm in ColorMapping.objects.all()
 )
 
 # FIXME: Add this to a model like ColorMapping?
-GENDERS = {'M': ('male', 'males', 'men', 'mens', 'mensware', 'herr', 'herrar', 'man', 'män'),
-           'W': ('female', 'females', 'woman', 'women', 'womens', 'womenswear', 'dam', 'damer', 'kvinna', 'kvinnor'),
-           'U': ('unisex',)}
-GENDER_REGEXES = dict((gender, re.compile(r'\b(?:%s)\b' % '|'.join(value), re.I)) for gender, value in GENDERS.items())
+GENDERS = {'M': (u'male', u'males', u'men', u'mens', u'mensware', u'herr', u'herrar', u'man', u'män'),
+           'W': (u'female', u'females', u'woman', u'women', u'womens', u'womenswear', u'dam', u'damer', u'kvinna', u'kvinnor'),
+           'U': (u'unisex',)}
+GENDER_REGEXES = dict((gender, re.compile(ur'\b(?:%s)\b' % (ur'|'.join(value),), re.I | re.UNICODE)) for gender, value in GENDERS.items())
 
 class DataMapper(object):
     color_regexes = None
@@ -142,7 +143,7 @@ class DataMapper(object):
         >>> list = mapper.map_colors(u'Here is a string with Black, navy and red')
         ['black', 'blue', 'red']
         """
-        return [c for c, r in COLOR_REGEXES.items() if r.search(value)]
+        return [c for c, r in COLOR_REGEXES.items() if r.search(smart_unicode(value))]
 
     def map_gender(self, value=''):
         """
@@ -156,7 +157,7 @@ class DataMapper(object):
         W
         """
         for c, r in GENDER_REGEXES.items():
-            if r.search(value):
+            if r.search(smart_unicode(value)):
                 return c
 
         return None
