@@ -810,16 +810,16 @@ body.three-columns .pagination
     height: 30px
   .prev
     float: left
-    +replace-text(unquote("prev-page.png"), unquote("20px"), center)
+    +replace-text(unquote("prev-page.png"), center, center)
     +border(right)
   .prev.disabled
-    +replace-text(unquote("prev-page-disabled.png"), unquote("20px"), center)
+    +replace-text(unquote("prev-page-disabled.png"), center, center)
   .next
     float: right
-    +replace-text(unquote("next-page.png"), unquote("89px"), center)
+    +replace-text(unquote("next-page.png"), center, center)
     +border(left)
   .next.disabled
-    +replace-text(unquote("next-page-disabled.png"), unquote("89px"), center)
+    +replace-text(unquote("next-page-disabled.png"), center, center)
   .next:hover, .prev:hover
     background-color: $hover_color
   .next.disabled:hover, .prev.disabled:hover
