@@ -14,9 +14,18 @@ class TradeDoublerMapper(DataMapper):
         self.record.update([self.re_split.split(v) for v in self.record.get('fields', '').split(';')])
  
     def get_variations(self):
-        variations = [{'color': c} for c in self.map_colors(self.record.get('name', ''))]
+        colors = self.map_colors(self.record.get('color', ''))
+        if not colors:
+            colors = self.map_colors(self.record.get('name', ''))
+
+        variations = []
+        if colors:
+            for color in colors:
+                variations.append({'color': color})
+
         for variation in variations:
             variation['availability'] = True if self.record.get('availability') else False
+
         return variations
     
     def get_gender(self):
