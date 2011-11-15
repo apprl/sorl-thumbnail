@@ -148,13 +148,14 @@ def look_like(request, slug, action):
 
     return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
 
-def look_list(request, popular=None, search=None, page=0):
+def look_list(request, popular=None, search=None, contains=None, page=0):
     """
-    This view can list looks in three ways:
+    This view can list looks in four ways:
 
         1) If no argument is used a list of all looks is displayed.
         2) If popular-argument is set displays a list of all popular looks in your network.
         3) If search-argument is set displays a list of all matching looks to param 'q'.
+        4) If contains-argument is set displays all looks that contains the product.
 
     """
     if popular:
@@ -163,7 +164,6 @@ def look_list(request, popular=None, search=None, page=0):
             queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')
         else:
             queryset = Look.objects.none()
-
     elif search:
         query_arguments = {'qf': 'text',
                            'defType': 'edismax',
@@ -172,6 +172,8 @@ def look_list(request, popular=None, search=None, page=0):
                            'rows': 500} # XXX: maximum search results, sync this with the count that is displayed in the search result box
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
         queryset = Look.objects.filter(id__in=[doc.django_id for doc in results.get_docs()])
+    elif contains:
+        queryset = Look.objects.filter(products__slug=contains)
     else:
         queryset = Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)
 
