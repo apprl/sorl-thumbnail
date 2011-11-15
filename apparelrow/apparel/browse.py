@@ -140,7 +140,9 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     colors = [int(value) for i, value in enumerate(facet['color']) if i % 2 == 0]
 
     # Calculate category
-    categories = [int(value) for i, value in enumerate(facet['category']) if i % 2 == 0]
+    category_ids = map(int, facet['category'][::2])
+    category_values = map(int, facet['category'][1::2])
+    categories = dict(zip(category_ids, category_values))
 
     # Calculate paginator
     paged_result, pagination = get_pagination_page(search, BROWSE_PAGE_SIZE,

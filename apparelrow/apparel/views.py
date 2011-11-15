@@ -632,11 +632,11 @@ def index(request):
                  'start': 0,
                  'rows': 1,
                  'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(W OR M OR U)'],
-                 'qf': ['manufacturer_auto'],
+                 'qf': [],
                  'facet': 'on',
                  'facet.limit': -1,
                  'facet.mincount': 1,
-                 'facet.field':  ['manufacturer_data']}
+                 'facet.field':  ['manufacturer_data', 'category']}
 
     facet_fields = ApparelSearch('*:*', **arguments).get_facet()['facet_fields']
     ctx['manufacturers'] = []
@@ -644,6 +644,10 @@ def index(request):
         if i % 2 == 0:
             split = value.rsplit('|', 1)
             ctx['manufacturers'].append((int(split[1]), split[0]))
+
+    category_ids = map(int, facet_fields['category'][::2])
+    category_values = map(int, facet_fields['category'][1::2])
+    ctx['categories'] = dict(zip(category_ids, category_values))
 
     return render_to_response('index.html', ctx, context_instance=RequestContext(request))
 

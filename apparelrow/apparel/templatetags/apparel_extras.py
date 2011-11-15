@@ -314,3 +314,14 @@ def dump(x):
 
 register.filter('rawdump', rawdump)
 register.filter('dump', dump)
+
+def getdictattribute(value, arg):
+    """
+    Gets a dict attribute of an object dynamically from a string name
+    """
+    if arg in value:
+        return value[arg]
+    else:
+        return settings.TEMPLATE_STRING_IF_INVALID
+
+register.filter('getdictattribute', getdictattribute)

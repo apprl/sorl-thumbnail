@@ -493,6 +493,9 @@ function renderPage(products) {
     }
 }
 
+/**
+ * Apply filter on available browse options.
+ */
 function filterCriteria(criteria_filter) {
     if('manufacturers' in criteria_filter && !jQuery('#product-manufacturers').hasClass('active')) {
         ManufacturerBrowser.reset();
@@ -503,24 +506,29 @@ function filterCriteria(criteria_filter) {
     }
 
     if('categories' in criteria_filter) {
-        applyCriteriaFilter({
-            'selector': '#product-category li > a',
-            'criteria': criteria_filter['categories'],
-            'add': function(o) { o.parent().addClass('filtered'); },
-            'remove': function(o) {
-                o.parents('.filtered').removeClass('filtered');
-            },
+        jQuery('#product-category li > a').each(function(index) {
+            var this_element = jQuery(this);
+            var this_element_id = parseInt(getElementId(this_element), 10);
+            if(this_element_id in criteria_filter['categories']) {
+                this_element.find('.category-count').text('(' + criteria_filter['categories'][this_element_id] + ')');
+                this_element.parents('.filtered').removeClass('filtered');
+            } else {
+                this_element.parent().addClass('filtered');
+            }
         });
         jQuery('#product-category>li.first').removeClass('first');
         jQuery('#product-category>li[class!=filtered]:first').addClass('first');
     }
 
     if('colors' in criteria_filter) {
-        applyCriteriaFilter({
-            'selector': '#product-color .option-content li > a',
-            'criteria': criteria_filter['colors'],
-            'add': function(o) { o.addClass('filtered'); },
-            'remove': function(o) { o.removeClass('filtered');  },
+        jQuery('#product-color .option-content li > a').each(function(index) {
+            var this_element = jQuery(this);
+            var this_element_id = parseInt(getElementId(this_element), 10);
+            if(jQuery.inArray(this_element_id, criteria_filter['colors']) >= 0) {
+                this_element.removeClass('filtered');
+            } else {
+                this_element.addClass('filtered');
+            }
         });
     }
 
@@ -546,18 +554,6 @@ function filterCriteria(criteria_filter) {
             $('#price-slider').slider('values', values);
         }
     }
-}
-
-function applyCriteriaFilter(args) {
-    //selector, criteria, cb_add, cb_remove
-    jQuery(args.selector).each(function() {
-        $this = jQuery(this);
-        if (jQuery.inArray(parseInt(this.id.split('-')[1], 10), args.criteria) >= 0) {
-            args.remove($this);
-        } else {
-            args.add($this);
-        }
-    });
 }
 
 function updateSelected(products) {
