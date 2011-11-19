@@ -1,0 +1,18 @@
+{% load i18n %}
+<!doctype html>
+<html lang="{{ lang }}">
+    <head>
+        <title>{% block extra-title %}{% endblock %}Apparelrow</title>
+        <link rel="stylesheet" href="{{ MEDIA_URL }}styles/beta.css" type="text/css" media="screen, projection">
+        <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            google.load("jquery", "1.4.2");
+        </script>
+        {% block scripts %}{% endblock %}
+        <style>body{background-image: url('{{ MEDIA_URL }}{{ image }}');}</style>
+    </head>
+    <body>
+        <h1>Apparelrow</h1>
+        {% block body %}{% endblock %}
+    </body>
+</html>

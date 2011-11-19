@@ -10,6 +10,7 @@ from django.utils import translation
 from django.core.validators import email_re
 
 from beta.models import Invitee, Invite
+from apparel.models import BackgroundImage
 from beta.tasks import send_email_task
 from beta.forms import InviteRequestForm
 
@@ -20,6 +21,7 @@ def unlock(request):
     language = translation.get_language_from_request(request)
     translation.activate(language)
     request.LANGUAGE_CODE = translation.get_language()
+    image = BackgroundImage.objects.get_random_image()
 
     if request.method == 'POST':
         try:
@@ -31,10 +33,10 @@ def unlock(request):
             response.set_cookie('in_beta', value='1', max_age=365 * 24 * 60 * 60)
             return response
         except Invitee.DoesNotExist:
-            return render_to_response('beta/beta.html', {'next': request.POST.get('next', '/')}, context_instance=RequestContext(request))
+            return render_to_response('beta/beta.html', {'next': request.POST.get('next', '/'), 'image': image}, context_instance=RequestContext(request))
     else:
         # Initial request
-        return render_to_response('beta/beta.html', {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+        return render_to_response('beta/beta.html', {'next': request.GET.get('next', '/'), 'image': image}, context_instance=RequestContext(request))
 
 def invite(request):
     if request.user and request.user.is_authenticated:

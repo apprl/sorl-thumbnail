@@ -592,6 +592,23 @@ class FirstPageContent(models.Model):
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=FirstPageContent)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=FirstPageContent)
 
+class BackgroundImageManager(models.Manager):
+    def get_random_image(self):
+        try:
+            return self.order_by('?')[0].image
+        except IndexError:
+            pass
+
+        return ''
+
+class BackgroundImage(models.Model):
+    image = models.ImageField(_('Image'), upload_to=settings.APPAREL_BACKGROUND_IMAGE_ROOT, max_length=255, null=True, blank=True)
+
+    objects = BackgroundImageManager()
+
+    def __unicode__(self):
+        return u'%s' % (self.image,)
+
 def save_synonym_file(sender, **kwargs):
     instance = kwargs['instance']
     synonym_file = open(settings.SEARCH_SYNONYM_FILE, "w")

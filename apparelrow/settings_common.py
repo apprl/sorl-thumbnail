@@ -98,7 +98,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'trackback.middleware.PingbackUrlInjectionMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'beta.middleware.BetaMiddleware', # must be before gender middleware
+    'apparelrow.middleware.GenderMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -271,6 +273,7 @@ APPAREL_FXRATES_URL = 'http://themoneyconverter.com/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR       = os.path.join('/', MEDIA_URL, 'images', 'avatar_small.png')
 APPAREL_DEFAULT_AVATAR_LARGE = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
 APPAREL_MISC_IMAGE_ROOT = 'static/images'
+APPAREL_BACKGROUND_IMAGE_ROOT = 'static/images/background'
 APPAREL_PRODUCT_IMAGE_ROOT = 'static/products'
 APPAREL_LOOK_IMAGE_ROOT = 'static/looks'
 APPAREL_LOGO_IMAGE_ROOT = 'static/logos'

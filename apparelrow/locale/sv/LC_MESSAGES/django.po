@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 21:42+0100\n"
+"POT-Creation-Date: 2011-11-19 10:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,11 +26,11 @@ msgstr "English"
 msgid "Swedish"
 msgstr "Svenska"
 
-#: apparel/browse.py:200 templates/apparel/look_list.html:23
+#: apparel/browse.py:202 templates/apparel/look_list.html:23
 msgid "Showing"
 msgstr "Visar"
 
-#: apparel/browse.py:202
+#: apparel/browse.py:204
 msgid "Showing popular products in your network"
 msgstr "Visar populära plagg bland dina vänner"
 
@@ -258,7 +258,7 @@ msgstr ""
 msgid "URL"
 msgstr "URL"
 
-#: apparel/models.py:577
+#: apparel/models.py:577 apparel/models.py:605
 msgid "Image"
 msgstr ""
 
@@ -270,11 +270,11 @@ msgstr ""
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:606
+#: apparel/models.py:623
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:606
+#: apparel/models.py:623
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -285,6 +285,7 @@ msgid "ago"
 msgstr "sedan"
 
 #: apparel_comments/__init__.py:6 beta/models.py:32
+#: beta/templates/beta/beta.html:71 beta/templates/beta/beta.html.py:82
 #: templates/beta/dialog_invite_user.html:16
 #: templates/beta/dialog_invite_user.html:25
 #: templates/profile/base_settings.html:11
@@ -320,38 +321,44 @@ msgstr "Välkommen till vår beta!"
 msgid "Welcome to the ApparelRow beta!"
 msgstr "Välkommen till ApparelRow beta!"
 
-#: beta/templates/beta/beta.html:47
-msgid "Welcome to ApparelRow beta"
-msgstr "Välkommen till ApparelRow beta"
+#: beta/templates/beta/beta.html:66
+msgid "Beta login"
+msgstr ""
 
-#: beta/templates/beta/beta.html:50 beta/templates/beta/beta.html.py:60
-msgid "E-mail"
-msgstr "E-post"
+#: beta/templates/beta/beta.html:67
+msgid ""
+"Apparelrow is currently available to a limited number of people. Submit your "
+"e-mail address below if you want us to send you an invite when we are able "
+"to handle more users - or send us a message on info@apparelrow.com instead!"
+msgstr ""
+"Apparelrow är just nu bara tillgänglig för ett begränsat antal personer. Ge oss "
+"din e-mailadress om du vill att vi skickar dig ett login när vi har möjlighet "
+"att ta in fler användare - eller skicka ett e-mail till info@apparelrow.com!"
 
-#: beta/templates/beta/beta.html:51
+#: beta/templates/beta/beta.html:72
+msgid "Request invite"
+msgstr "Skicka"
+
+#: beta/templates/beta/beta.html:74
+msgid ""
+"There was an error processing your request. Please double-check your e-mail "
+"address above."
+msgstr ""
+"Din begäran kunde inte hanteras. Vänligen dubbelkolla din e-postadress ovan."
+
+#: beta/templates/beta/beta.html:80
+msgid "If you already have an invite:"
+msgstr "Om du redan har en inbjudan logga in här:"
+
+#: beta/templates/beta/beta.html:83
 msgid "Invite code"
-msgstr "Inbjudningskod"
+msgstr "Din kod"
 
-#: beta/templates/beta/beta.html:52
+#: beta/templates/beta/beta.html:84
 msgid "Unlock beta"
 msgstr "Lås upp beta"
 
-#: beta/templates/beta/beta.html:55
-msgid "Don't have an invite?"
-msgstr "Har du ingen inbjudan till betaversionen?"
-
-#: beta/templates/beta/beta.html:57
-msgid ""
-"Submit your e-mail address below and we'll send you one as soon as we are "
-"able to let more people in."
-msgstr ""
-"Ge oss din e-mailadress så skickar vi en så snart vi kan släppa in fler."
-
-#: beta/templates/beta/beta.html:61
-msgid "Request invite"
-msgstr "Begär en inbjudan"
-
-#: beta/templates/beta/beta.html:64
+#: beta/templates/beta/beta.html:88
 msgid ""
 "Thank you! We have received your request and will take it into "
 "consideration. When we are ready to accept more users, you will receive an "
@@ -360,13 +367,6 @@ msgstr ""
 "Tack! Vi har tagit emot din begäran och kommer att ta den under beaktande. "
 "När vi är redo att ta emot fler användare får du en inbjudningskod via e-"
 "post."
-
-#: beta/templates/beta/beta.html:67
-msgid ""
-"There was an error processing your request. Please double-check your e-mail "
-"address above."
-msgstr ""
-"Din begäran kunde inte hanteras. Vänligen dubbelkolla din e-postadress ovan."
 
 #: importer/models.py:18
 msgid "a-z, 0-9 and _"
@@ -833,6 +833,30 @@ msgstr[1] "%(counter)s produkter"
 #: templates/apparel/browse.html:41 templates/apparel/browse.html.py:43
 msgid "Show popular products in your network"
 msgstr "Visa populära plagg bland dina vänner"
+
+#: templates/apparel/gender.html:6
+msgid "WELCOME!"
+msgstr ""
+
+#: templates/apparel/gender.html:7
+msgid ""
+"We look forward to making Apparelrow better together with you. We appreciate "
+"all questions, suggestions and problems from you, the more the better. Click "
+"the link \"Tyck Till\" on the right hand side to share your thoughts. Or "
+"send us an email on info@apparelrow.com. Have fun!"
+msgstr ""
+"Vi ser fram emot att göra Apparelrow bättre tillsammans med dig. Vi uppskattar "
+"alla frågor, förslag och problem vi kan få från er, ju mer desto bättre. Klicka "
+"på länken 'Tyck Till' i högerkanten på siten och dela med dig av dina tankar. "
+"Eller maila oss på info@apparelrow.com så blir vi också glada. Have fun!"
+
+#: templates/apparel/gender.html:10
+msgid "Shop women"
+msgstr ""
+
+#: templates/apparel/gender.html:11
+msgid "Shop men"
+msgstr ""
 
 #: templates/apparel/look_create.html:5
 msgid "Create new look"
@@ -1972,6 +1996,18 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Welcome to ApparelRow beta"
+#~ msgstr "Välkommen till ApparelRow beta"
+
+#~ msgid "E-mail"
+#~ msgstr "E-post"
+
+#~ msgid ""
+#~ "Submit your e-mail address below and we'll send you one as soon as we are "
+#~ "able to let more people in."
+#~ msgstr ""
+#~ "Ge oss din e-mailadress så skickar vi en så snart vi kan släppa in fler."
 
 #~ msgid "Absolute address to this page"
 #~ msgstr "Absolut adress till denna sida"

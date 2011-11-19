@@ -49,6 +49,9 @@ urlpatterns = patterns('',
 
     url(r'^users/$', 'apparel.views.user_list', name='user-list'),
     url(r'^users/popular/$', 'apparel.views.user_list', {'popular': True}, name='popular-user-list'),
+    url(r'^gender/$', 'apparel.views.gender', name='gender'),
+    url(r'^gender/men/$', 'apparel.views.gender', {'gender': 'M'}, name='gender-men'),
+    url(r'^gender/women/$', 'apparel.views.gender', {'gender': 'W'}, name='gender-women'),
 )
 
 

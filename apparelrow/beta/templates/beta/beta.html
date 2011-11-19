@@ -1,70 +1,75 @@
+{% extends 'front_base.html' %}
 {% load i18n %}
-<!doctype html>
-<html lang="{{ lang }}">
-    <head>
-        <title>Beta | Apparel Row</title>
-        <link rel="stylesheet" href="{{ MEDIA_URL }}styles/beta.css" type="text/css" media="screen, projection">
-        <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-        <script type="text/javascript">
-            google.load("jquery", "1.4.2");
-        </script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $("#request-invite").submit(function(e) {
-                    var $form = $(e.currentTarget);
-                    $.ajax({
-                        type: "POST",
-                        url: $form.attr("action"),
-                        data: $form.serialize(),
-                        success: function() {
-                            $("form").fadeOut("fast");
-                            $(".error-message").hide();
-                            $(".success-message").show();
-                        },
-                        error: function() {
-                            $(".success-message").hide();
-                            $(".error-message").show();
-                            $("input[name=email]", $form)
-                                .addClass("error")
-                                .bind("keydown", function(e) {
-                                    $(e.currentTarget)
-                                        .removeClass("error")
-                                        .unbind("keydown");
-                                        ;
-                                    $(".error-message").hide();
-                                });
-                                ;
-                        }
+
+{% block scripts %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#request-invite").submit(function(e) {
+        var $form = $(e.currentTarget);
+        $.ajax({
+            type: "POST",
+            url: $form.attr("action"),
+            data: $form.serialize(),
+            success: function() {
+                $("form").fadeOut("fast");
+                $(".error-message").hide();
+                $("p").text($(".success-message").text());
+            },
+            error: function() {
+                $(".success-message").hide();
+                $(".error-message").show();
+                $("input[name=email]", $form)
+                    .addClass("error")
+                    .bind("keydown", function(e) {
+                        $(e.currentTarget)
+                            .removeClass("error")
+                            .unbind("keydown");
+                        $(".error-message").hide();
                     });
-                    e.preventDefault();
-                });
-            });
-        </script>
-    </head>
-    <body>
-        <h1>Apparelrow</h1>
-        <form method="POST" action="{% url beta.views.unlock %}">
-            <h2>{% trans "Welcome to ApparelRow beta" %}</h2>
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}">
-            <label>{% trans "E-mail" %}<input type="text" name="email"></label>
-            <label>{% trans "Invite code" %}<input type="text" name="code"></label>
-            <button>{% trans "Unlock beta" %}</button>
-        </form>
-        <form method="POST" action="{% url beta.views.request_invite %}" id="request-invite">
-            <h2>{% trans "Don't have an invite?" %}</h2>
-            <p>
-            {% trans "Submit your e-mail address below and we'll send you one as soon as we are able to let more people in." %}
-            </p>
-            {% csrf_token %}
-            <label>{% trans "E-mail" %}<input type="text" name="email"></label>
-            <button>{% trans "Request invite" %}</button>
-        </form>
-        <div class="success-message" style="display: none">
-            {% trans "Thank you! We have received your request and will take it into consideration. When we are ready to accept more users, you will receive an email with your invite code." %}
-        </div>
+            }
+        });
+        e.preventDefault();
+    });
+    jQuery("input").focus(function(e) {
+        if(this.value == this.defaultValue) {
+            this.value = "";
+            jQuery(this).removeClass("default");
+        }
+    }).blur(function(e) {
+        if(this.value == "") {
+            this.value = this.defaultValue;
+            jQuery(this).addClass("default");
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% block body %}
+<div id="beta-container">
+    <h2>{% trans "Beta login" %}</h2>
+    <p>{% trans "Apparelrow is currently available to a limited number of people. Submit your e-mail address below if you want us to send you an invite when we are able to handle more users - or send us a message on info@apparelrow.com instead!" %}</p>
+
+    <form method="POST" action="{% url beta.views.request_invite %}" id="request-invite">
+        {% csrf_token %}
+        <input type="text" class="default left" value="{% trans "E-mail address" %}" name="email">
+        <button>{% trans "Request invite" %}</button>
         <div class="error-message" style="display: none">
             {% trans "There was an error processing your request. Please double-check your e-mail address above." %}
         </div>
-    </body>
-</html>
+    </form>
+
+    <form method="POST" action="{% url beta.views.unlock %}" id="use-invite">
+        {% csrf_token %}
+        <h3>{% trans "If you already have an invite:" %}</h3>
+        <input type="hidden" name="next" value="{{ next }}">
+        <input type="text" class="default left" value="{% trans "E-mail address" %}" name="email">
+        <input type="text" class="default right" value="{% trans "Invite code" %}" name="code">
+        <button>{% trans "Unlock beta" %}</button>
+    </form>
+
+    <div class="success-message" style="display: none">
+        {% trans "Thank you! We have received your request and will take it into consideration. When we are ready to accept more users, you will receive an email with your invite code." %}
+    </div>
+</div>
+{% endblock %}

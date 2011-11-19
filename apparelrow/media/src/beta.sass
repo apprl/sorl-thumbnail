@@ -7,41 +7,102 @@
 body
   +font
   +typography
-  background: white
+  background: $black_color image_url('') no-repeat center 61px
+  padding-bottom: 20px
   h1
-    +replace-text("logo_dark_bg.png")
-    width: 200px
-    height: 61px
-    margin: 10% auto 0
-  h2
-    margin-bottom: 0.5em
-  form
-    +clearfix()
-  form, .success-message, .error-message
-    width: 300px
+    +replace-text("logo.png")
+    width: 128px
+    height: 13px
     margin: 0 auto
-  label
-    display: block
-    margin-top: 0.5em
-  input
-    width: 100%
-    &.error
-      background: $like_color + #666
-      border-color: $like_color
-  input
-    display: block
-    font-size: 2em
-    +border-radius(3px)
-  button
-    font-family: $font_family
-    font-size: 1em
-    color: $font_color
-    box-sizing: content-box
-    -webkit-box-sizing: content-box
-    -moz-box-sizing: content-box
-    margin-top: 1em
-    +button
-    float: right
-    &:hover
-      +hover_button
-
+    padding: 20px 20px 10px 20px
+    +border(bottom, #999999)
+  #link-container
+    width: 542px
+    margin: 4px auto 0 auto
+    .men, .women
+      +border(all)
+      display: block
+      width: 267px
+      height: 40px
+      line-height: 40px
+      font-size: 1.25em
+      text-transform: uppercase
+      text-align: center
+      background-color: $white_color
+    .men
+      float: right
+      background: $white_color image_url("right-big-arrow.png") scroll no-repeat 236px center
+    .women
+      float: left
+      background: $white_color image_url("left-big-arrow.png") scroll no-repeat 15px center
+  #beta-container
+    +border(all)
+    margin: 8em auto 0 auto
+    width: 500px
+    background-color: $white_color
+    padding: 20px
+    h2
+      margin: 0
+      padding-bottom: 20px
+      font-family: $font_family
+      font-size: 2em
+      text-transform: uppercase
+      text-align: center
+    h3
+      margin: 1.6em 0
+      font-size: 1.25em
+      font-weight: bold
+    p
+      margin: 2em 0
+      font-size: 1.1em
+    form
+      +clearfix()
+    input
+      +text_input
+      outline: none
+      width: 214px
+      height: 30px
+      display: block
+      font-size: 1.1em
+      background-color: $white_color
+      margin: 0
+      padding: 0 8px
+      &.default
+        font-family: $font_family_base
+        font-style: italic
+      &.left
+        float: left
+      &.right
+        float: right
+      &.error
+        background: $like_color + #666
+        border-color: $like_color
+    button
+      +button
+      width: 230px
+      float: right
+      margin: 0
+      padding: 0
+      font-family: $font_family
+      font-size: 1.1em
+      text-transform: uppercase
+      color: $font_color
+      box-sizing: content-box
+      -webkit-box-sizing: content-box
+      -moz-box-sizing: content-box
+      &:hover
+        +hover_button
+    .error-message
+      clear: both
+    #request-invite
+      padding-bottom: 1.5em
+      +border(bottom)
+    #use-invite
+      button
+        +button(none, unquote("32px"))
+        +border-radius(unquote("2px"))
+        +highlight
+        width: 498px
+        margin-top: 1.5em
+        &:hover
+          +highlight_hover

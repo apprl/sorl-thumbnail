@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 21:42+0100\n"
+"POT-Creation-Date: 2011-11-19 10:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "Swedish"
 msgstr "Svenska"
 
-#: apparel/browse.py:200 templates/apparel/look_list.html:23
+#: apparel/browse.py:202 templates/apparel/look_list.html:23
 msgid "Showing"
 msgstr ""
 
-#: apparel/browse.py:202
+#: apparel/browse.py:204
 msgid "Showing popular products in your network"
 msgstr ""
 
@@ -257,7 +257,7 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: apparel/models.py:577
+#: apparel/models.py:577 apparel/models.py:605
 msgid "Image"
 msgstr ""
 
@@ -269,11 +269,11 @@ msgstr ""
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:606
+#: apparel/models.py:623
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:606
+#: apparel/models.py:623
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -284,6 +284,7 @@ msgid "ago"
 msgstr ""
 
 #: apparel_comments/__init__.py:6 beta/models.py:32
+#: beta/templates/beta/beta.html:71 beta/templates/beta/beta.html.py:82
 #: templates/beta/dialog_invite_user.html:16
 #: templates/beta/dialog_invite_user.html:25
 #: templates/profile/base_settings.html:11
@@ -319,47 +320,44 @@ msgstr ""
 msgid "Welcome to the ApparelRow beta!"
 msgstr ""
 
-#: beta/templates/beta/beta.html:47
-msgid "Welcome to ApparelRow beta"
-msgstr ""
-
-#: beta/templates/beta/beta.html:50 beta/templates/beta/beta.html.py:60
-msgid "E-mail"
-msgstr ""
-
-#: beta/templates/beta/beta.html:51
-msgid "Invite code"
-msgstr ""
-
-#: beta/templates/beta/beta.html:52
-msgid "Unlock beta"
-msgstr ""
-
-#: beta/templates/beta/beta.html:55
-msgid "Don't have an invite?"
-msgstr ""
-
-#: beta/templates/beta/beta.html:57
-msgid ""
-"Submit your e-mail address below and we'll send you one as soon as we are "
-"able to let more people in."
-msgstr ""
-
-#: beta/templates/beta/beta.html:61
-msgid "Request invite"
-msgstr ""
-
-#: beta/templates/beta/beta.html:64
-msgid ""
-"Thank you! We have received your request and will take it into "
-"consideration. When we are ready to accept more users, you will receive an "
-"email with your invite code."
+#: beta/templates/beta/beta.html:66
+msgid "Beta login"
 msgstr ""
 
 #: beta/templates/beta/beta.html:67
 msgid ""
+"Apparelrow is currently available to a limited number of people. Submit your "
+"e-mail address below if you want us to send you an invite when we are able "
+"to handle more users - or send us a message on info@apparelrow.com instead!"
+msgstr ""
+
+#: beta/templates/beta/beta.html:72
+msgid "Request invite"
+msgstr ""
+
+#: beta/templates/beta/beta.html:74
+msgid ""
 "There was an error processing your request. Please double-check your e-mail "
 "address above."
+msgstr ""
+
+#: beta/templates/beta/beta.html:80
+msgid "If you already have an invite:"
+msgstr ""
+
+#: beta/templates/beta/beta.html:83
+msgid "Invite code"
+msgstr ""
+
+#: beta/templates/beta/beta.html:84
+msgid "Unlock beta"
+msgstr ""
+
+#: beta/templates/beta/beta.html:88
+msgid ""
+"Thank you! We have received your request and will take it into "
+"consideration. When we are ready to accept more users, you will receive an "
+"email with your invite code."
 msgstr ""
 
 #: importer/models.py:18
@@ -806,6 +804,26 @@ msgstr[1] ""
 
 #: templates/apparel/browse.html:41 templates/apparel/browse.html.py:43
 msgid "Show popular products in your network"
+msgstr ""
+
+#: templates/apparel/gender.html:6
+msgid "WELCOME!"
+msgstr ""
+
+#: templates/apparel/gender.html:7
+msgid ""
+"We look forward to making Apparelrow better together with you. We appreciate "
+"all questions, suggestions and problems from you, the more the better. Click "
+"the link \"Tyck Till\" on the right hand side to share your thoughts. Or "
+"send us an email on info@apparelrow.com. Have fun!"
+msgstr ""
+
+#: templates/apparel/gender.html:10
+msgid "Shop women"
+msgstr ""
+
+#: templates/apparel/gender.html:11
+msgid "Shop men"
 msgstr ""
 
 #: templates/apparel/look_create.html:5

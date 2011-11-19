@@ -4,3 +4,4 @@ from beta.models import *
 class InviteRequestForm(ModelForm):
     class Meta:
         model = InviteRequest
+        exclude = ('invitee',)

@@ -24,7 +24,7 @@ from apparelrow.tasks import search_index_update_task
 from apparelrow.profile.models import ApparelProfile
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.decorators import get_current_user
-from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct
+from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct, BackgroundImage
 from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, WardrobeProduct, FirstPageContent
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.search import ApparelSearch
@@ -522,6 +522,20 @@ def user_list(request, popular=None):
             'facebook_friends': get_facebook_friends(request),
             'latest_members': latest_members,
         }, context_instance=RequestContext(request))
+
+def gender(request, gender=None):
+    # Set language to user's browser language for gender select view
+    language = translation.get_language_from_request(request)
+    translation.activate(language)
+    request.LANGUAGE_CODE = translation.get_language()
+    image = BackgroundImage.objects.get_random_image()
+
+    if gender is not None:
+        response = HttpResponseRedirect(request.GET.get('next', '/'))
+        response.set_cookie('gender', value=gender, max_age=365 * 24 * 60 * 60)
+        return response
+
+    return render_to_response('apparel/gender.html', {'next': request.GET.get('next', '/'), 'image': image}, context_instance=RequestContext(request))
 
 @get_current_user
 @login_required

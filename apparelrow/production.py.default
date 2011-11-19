@@ -19,8 +19,6 @@ APPAREL_DECOMPRESS_UTILS = {
     'zip':  '/bin/zip',
 }
 
-MIDDLEWARE_CLASSES += ('beta.middleware.BetaMiddleware',)
-
 #FACEBOOK_API_KEY = '177090790853'
 #FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
 
