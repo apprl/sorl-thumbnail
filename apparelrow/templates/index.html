@@ -127,7 +127,7 @@
         {% include 'apparel/fragments/product_menu.html' %}
     </div>
     {% endcache %}
-    {% cache CACHE_TIMEOUT index LANGUAGE_CODE %}
+    {% cache CACHE_TIMEOUT index LANGUAGE_CODE apparel_gender %}
     <div id="content">
         <h2>{% trans "News" %}</h2>
         <div id="featured-looks">
@@ -185,7 +185,7 @@
     {% endcache %}
     <div class="sidebar last">
         <a href="{% url look-list %}"><h2>{% trans "Popular looks" %}</h2></a>
-        {% cache CACHE_TIMEOUT index_looks LANGUAGE_CODE %}
+        {% cache CACHE_TIMEOUT index_looks LANGUAGE_CODE apparel_gender %}
         {% with popular_looks as looks %}
             {% include 'apparel/fragments/looks_sidebar.html' %}
         {% endwith %}
