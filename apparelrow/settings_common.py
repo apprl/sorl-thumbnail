@@ -127,6 +127,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     
     "context_processors.exposed_settings",
     "context_processors.next_redirects",
+    "context_processors.gender",
     
     "announcements.context_processors.site_wide_announcements",
 )
@@ -267,6 +268,7 @@ GOOGLE_ANALYTICS_ACCOUNT = 'UA-21990268-1'
 GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 
 
+APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/SEK/rss.xml'

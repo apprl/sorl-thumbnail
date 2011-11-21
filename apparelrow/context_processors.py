@@ -19,3 +19,6 @@ def next_redirects(request):
         return {
             'next' : request.path
         }
+
+def gender(request):
+    return {'apparel_gender': request.COOKIES.get(django_settings.APPAREL_GENDER_COOKIE, 'U')}

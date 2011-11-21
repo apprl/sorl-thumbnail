@@ -532,7 +532,7 @@ def gender(request, gender=None):
 
     if gender is not None:
         response = HttpResponseRedirect(request.GET.get('next', '/'))
-        response.set_cookie('gender', value=gender, max_age=365 * 24 * 60 * 60)
+        response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
         return response
 
     return render_to_response('apparel/gender.html', {'next': request.GET.get('next', '/'), 'image': image}, context_instance=RequestContext(request))
