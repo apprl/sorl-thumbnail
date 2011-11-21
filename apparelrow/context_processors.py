@@ -1,6 +1,8 @@
 from django.conf import settings as django_settings
 from django.core.urlresolvers import reverse
 
+from apparel.utils import get_gender_from_cookie
+
 def exposed_settings(request):
     return {
         'CACHE_TIMEOUT': django_settings.CACHE_TEMPLATE_TIMEOUT,
@@ -21,4 +23,4 @@ def next_redirects(request):
         }
 
 def gender(request):
-    return {'apparel_gender': request.COOKIES.get(django_settings.APPAREL_GENDER_COOKIE, 'U')}
+    return {'apparel_gender': get_gender_from_cookie(request)}

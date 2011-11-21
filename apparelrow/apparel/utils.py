@@ -1,8 +1,20 @@
+from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-"""
-Help method around get_pagination that also returns the actual paged result
-"""
+
+def get_gender_from_cookie(request):
+    """
+    Get gender from cookie in a safe way.
+    """
+    cookie_value = request.COOKIES.get(settings.APPAREL_GENDER_COOKIE, 'U')
+    if cookie_value in ['M', 'W', 'U']:
+        return cookie_value
+
+    return 'U'
+
 def get_pagination_page(queryset, per_page, page_num, on_ends=2, on_each_side=3):
+    """
+    Help method around get_pagination that also returns the actual paged result
+    """
     paginator = Paginator(queryset, per_page)
     try:
         paged_result = paginator.page(int(page_num))
@@ -14,13 +26,12 @@ def get_pagination_page(queryset, per_page, page_num, on_ends=2, on_each_side=3)
 
     return (paged_result, get_pagination(paged_result.paginator, paged_result.number, on_ends, on_each_side))
 
-"""
-Get a pagination object that works with the template pagination.html.
-It will return a dict containing left, mid and right, corresponding to the page
-numbers being displayed in the pagination.
-"""
 def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
     """
+    Get a pagination object that works with the template pagination.html.
+    It will return a dict containing left, mid and right, corresponding to the page
+    numbers being displayed in the pagination.
+
     >>> from django.core.paginator import Paginator
     >>> from apparel import views
     >>> p = Paginator(range(22), 2)
