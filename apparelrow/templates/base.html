@@ -216,7 +216,7 @@
                 <li><h3>{% trans "Social" %}</h3></li>
                 <li><a href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a></li>
                 {% if not user.is_authenticated %}
-                <li>{% apparel_facebook_button "facebook-footer.png" %}</li>
+                <li class="facebook">{% apparel_facebook_button "facebook-footer.png" %}</li>
                 {% endif %}
             </ul>
             <ul>
