@@ -7,3 +7,18 @@
     <a id="reset" class="reset" href="{% url apparel.browse.browse_products %}"{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Show all" %}</a>
 </h2>
 {% endblock %}
+{% block product_options %}
+<ul id="product-options" class="hover-menu">
+    <li class="first" id="product-price"><a {% if selected_price %}class="selected" {% endif %}href="{% url apparel.browse.browse_products %}">{% trans "Price" %}</a>
+    {% include "apparel/fragments/product_options_price.html" %}
+    </li>
+    <li id="product-color"><a {% if selected_colors %}class="selected" {% endif %}href="{% url apparel.browse.browse_products %}">{% trans "Color" %}</a>
+    {% include "apparel/fragments/product_options_color.html" %}
+    </li>
+    <li class="last" id="product-manufacturers"><a {% if selected_brands %}class="selected" {% endif %}href="{% url apparel.browse.browse_products %}">{% trans "Brand" %}</a>
+        {% include "apparel/fragments/product_options_brand.html" %}
+        <ul id="selected-manufacturers" class="level-1">
+        </ul>
+    </li>
+</ul>
+{% endblock %}

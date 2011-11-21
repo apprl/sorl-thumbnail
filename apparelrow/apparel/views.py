@@ -29,7 +29,7 @@ from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, W
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.search import ApparelSearch
 from apparelrow.search import more_like_this_product
-from apparel.utils import get_pagination_page
+from apparel.utils import get_pagination_page, get_gender_from_cookie
 import apparel.signals
 
 FAVORITES_PAGE_SIZE = 30
@@ -627,9 +627,11 @@ def index(request):
     #ctx = get_filter(request)
     ctx = {}
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
-    ctx['pages'] = FirstPageContent.published_objects.all()
-    ctx['popular_looks'] = get_top_looks(limit=6)
+    gender = get_gender_from_cookie(request)
+    ctx['pages'] = FirstPageContent.published_objects.filter(gender__in = ['U', gender])
+    ctx['popular_looks'] = get_top_looks(request, limit=6)
     ctx['all_colors'] = Option.objects.filter(option_type__name='color')
+    # ctx['categories_all'] contains all categories, they will later be filtered
     ctx['categories_all'] = Category._tree_manager.filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
 
@@ -648,7 +650,7 @@ def index(request):
     arguments = {'defType': 'edismax',
                  'start': 0,
                  'rows': 1,
-                 'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(W OR M OR U)'],
+                 'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(U OR %s)' % (gender)],
                  'qf': [],
                  'facet': 'on',
                  'facet.limit': -1,
@@ -662,6 +664,7 @@ def index(request):
             split = value.rsplit('|', 1)
             ctx['manufacturers'].append((int(split[1]), split[0]))
 
+    # Get the categories to actually show
     category_ids = map(int, facet_fields['category'][::2])
     category_values = map(int, facet_fields['category'][1::2])
     ctx['categories'] = dict(zip(category_ids, category_values))
@@ -698,8 +701,8 @@ except ImportError:
 # Utility routines. FIXME: Move these out
 #
 
-def get_top_looks(limit=10):
-    return Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
+def get_top_looks(request, limit=10):
+    return Look.objects.filter(likes__active=True).filter(gender__in=['U', get_gender_from_cookie(request)]).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
 
 def get_most_followed_users(limit=2):
     #object_ids = [x['object_id'] for x in Follow.objects.values('object_id').annotate(Count('id')).order_by('-id__count')[:limit]]

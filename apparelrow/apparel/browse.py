@@ -26,7 +26,7 @@ from apparel.models import Manufacturer
 from apparel.models import Option
 from apparel.models import Category
 from apparel.decorators import get_current_user
-from apparel.utils import get_pagination_page
+from apparel.utils import get_pagination_page, get_gender_from_cookie
 
 #FIXME: ugly solution to avoid using get_template_source which is deprecated. Solve this in js and not by using pagination_js template.
 PAGINATION_JS_TEMPLATE_SOURCE = open(os.path.join(settings.TEMPLATE_DIRS[0], 'apparel/fragments/pagination_js.html')).read()
@@ -39,7 +39,7 @@ def _to_int(s):
     except ValueError:
         return None
 
-def set_query_arguments(query_arguments, params, current_user=None, facet_fields=None, profile=None):
+def set_query_arguments(query_arguments, request, facet_fields=None, profile=None):
     """
     Set query arguments that are common for every browse page access.
     """
@@ -60,37 +60,29 @@ def set_query_arguments(query_arguments, params, current_user=None, facet_fields
     query_arguments['fq'].append('django_ct:apparel.product')
 
     # Category
-    if 'category' in params:
-       query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('category', 'category', ' OR '.join([x for x in params['category'].split(',')])))
+    if 'category' in request.GET:
+       query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('category', 'category', ' OR '.join([x for x in request.GET['category'].split(',')])))
 
     # Price
-    if 'price' in params:
-        price = params['price'].split(',')
+    if 'price' in request.GET:
+        price = request.GET['price'].split(',')
         if len(price) == 2:
             query_arguments['fq'].append('{!tag=%s}%s:[%s TO %s]' % ('price', 'price', price[0], price[1]))
 
     # Manufacturer
-    if 'manufacturer' in params:
-        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer_data', 'manufacturer_id', ' OR '.join([x for x in params['manufacturer'].split(',')])))
+    if 'manufacturer' in request.GET:
+        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer_data', 'manufacturer_id', ' OR '.join([x for x in request.GET['manufacturer'].split(',')])))
 
     # Color
-    if 'color' in params:
-       query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join([x for x in params['color'].split(',')])))
+    if 'color' in request.GET:
+       query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join([x for x in request.GET['color'].split(',')])))
 
     # Gender
-    if 'gender' in params:
-        if params['gender'] == 'M':
-            query_arguments['fq'].append('gender:(M OR U)')
-        elif params['gender'] == 'W':
-            query_arguments['fq'].append('gender:(W OR U)')
-        else:
-            query_arguments['fq'].append('gender:(W OR M OR U)')
-    else:
-        query_arguments['fq'].append('gender:(W OR M OR U)')
+    query_arguments['fq'].append('gender:(U OR %s)' % (get_gender_from_cookie(request)))
 
     # Extra
-    if 'f' in params and current_user:
-        user_ids = list(Follow.objects.filter(user=current_user).values_list('object_id', flat=True)) + [0]
+    if 'f' in request.GET and request.user:
+        user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
         user_ids_or = ' OR '.join(str(x) for x in user_ids)
         query_arguments['fq'].append('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or))
     elif profile:
@@ -105,10 +97,10 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     if extra_context and 'profile' in extra_context:
         # wardrobe
-        query_arguments = set_query_arguments(query_arguments, request.GET, request.user, facet_fields, profile=extra_context['profile'])
+        query_arguments = set_query_arguments(query_arguments, request, facet_fields, profile=extra_context['profile'])
         query_arguments['sort'] = ['availability desc', 'popularity desc']
     else:
-        query_arguments = set_query_arguments(query_arguments, request.GET, request.user, facet_fields)
+        query_arguments = set_query_arguments(query_arguments, request, facet_fields)
 
     query_string = request.GET.get('q')
     if not query_string:
@@ -191,7 +183,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
         selected_brands      = selected_brands,
         selected_brands_data = selected_brands_data,
         selected_price       = selected_price,
-        selected_gender      = request.GET.get('gender', None),
+        selected_gender      = get_gender_from_cookie(request),
     )
 
     # Extra context
@@ -264,7 +256,7 @@ def browse_manufacturers(request, **kwargs):
     query_arguments = {'rows': settings.APPAREL_MANUFACTURERS_PAGE_SIZE, 'start': 0}
 
     # Update query arguments for browse page
-    query_arguments = set_query_arguments(query_arguments, request.GET, request.user, ['manufacturer_data'])
+    query_arguments = set_query_arguments(query_arguments, request, ['manufacturer_data'])
 
     # Override qf argument
     query_arguments['qf'] = 'manufacturer_auto'

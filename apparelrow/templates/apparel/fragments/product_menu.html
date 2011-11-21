@@ -6,24 +6,7 @@
 {% block product_menu_title %}
 <h2>{% trans "Browse articles" %}</h2>
 {% endblock %}
-<ul id="product-gender" class="hover-menu">
-    <li class="first"><a href="{% url apparel.browse.browse_products %}">{% trans "All" %}</a></li>
-    <li class="women"><a id="option-W"{% ifequal selected_gender "W" %} class="selected"{% endifequal %} href="{% url apparel.browse.browse_products %}?gender=W">{% trans "Women" %}</a></li>
-    <li class="last men"><a id="option-M"{% ifequal selected_gender "M" %} class="selected"{% endifequal %} href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
-</ul>
-<ul id="product-options" class="hover-menu">
-    <li class="first" id="product-price"><a {% if selected_price %}class="selected" {% endif %}href="{% url apparel.browse.browse_products %}">{% trans "Price" %}</a>
-    {% include "apparel/fragments/product_options_price.html" %}
-    </li>
-    <li id="product-color"><a {% if selected_colors %}class="selected" {% endif %}href="{% url apparel.browse.browse_products %}">{% trans "Color" %}</a>
-    {% include "apparel/fragments/product_options_color.html" %}
-    </li>
-    <li class="last" id="product-manufacturers"><a {% if selected_brands %}class="selected" {% endif %}href="{% url apparel.browse.browse_products %}">{% trans "Brand" %}</a>
-        {% include "apparel/fragments/product_options_brand.html" %}
-        <ul id="selected-manufacturers" class="level-1">
-        </ul>
-    </li>
-</ul>
+{% block product_options %}{% endblock %}
 
 {% for category, structure in categories_all|tree_info %}
     {% if structure.new_level %}

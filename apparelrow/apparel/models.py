@@ -379,10 +379,42 @@ class Look(models.Model):
     tags        = TagField(blank=True)
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     is_featured = models.BooleanField(default=False, help_text=_('The look will be shown on the front page'))
+    gender      = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=False, blank=False, default='U')
     
     
     objects  = SearchManager()
     featured = FeaturedManager()
+
+    def save(self, *args, **kwargs):
+        self.calculate_gender()
+        super(Look, self).save(*args, **kwargs)
+
+    def calculate_gender(self):
+
+        if self.component == 'C':
+            components = self.collage_components
+        elif self.component == 'P':
+            components = self.photo_components
+        elif self.component == 'A':
+            components = self.components
+        else:
+            components = self.display_components
+
+        W = 0
+        M = 0
+        for gender in components.values_list('product__gender', flat=True):
+            if gender == 'M':
+                M += 1
+            elif gender == 'W':
+                W += 1
+        if M > 0 and W > 0:
+            self.gender = 'U'
+        elif M > 0:
+            self.gender = 'M'
+        elif W > 0:
+            self.gender = 'W'
+        else:
+            self.gender = 'U'
     
     def score(self):
         return LookLike.objects.filter(look=self, active=True).count()
@@ -579,6 +611,7 @@ class FirstPageContent(models.Model):
     pub_date  = models.DateTimeField(_("Publish date"))
     created   = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified  = models.DateTimeField(_("Time modified"), auto_now=True)
+    gender    = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, default='U', null=False, blank=False)
 
     objects = models.Manager()
     published_objects = FirstPageManager()
