@@ -99,13 +99,8 @@
             </form>
 
             <div id="nav-gender">
-                {% if apparel_gender == 'M' %}
-                <a class="left" href="{% url gender-women %}">{% trans "Women" %}</a>
-                <a class="right selected" href="{% url gender-men %}">{% trans "Men" %}</a>
-                {% else %}
-                <a class="left selected" href="{% url gender-women %}">{% trans "Women" %}</a>
-                <a class="right" href="{% url gender-men %}">{% trans "Men" %}</a>
-                {% endif %}
+                <a class="left{% if apparel_gender == 'W' %} selected{% endif %}" href="{% url gender-women %}?next={{ next }}">{% trans "Women" %}</a>
+                <a class="right{% if apparel_gender == 'M' %} selected{% endif %}" href="{% url gender-men %}?next={{ next }}">{% trans "Men" %}</a>
             </div>
 
             <ul id="nav-main">

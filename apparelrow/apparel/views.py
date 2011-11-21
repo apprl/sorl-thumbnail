@@ -524,6 +524,9 @@ def user_list(request, popular=None):
         }, context_instance=RequestContext(request))
 
 def gender(request, gender=None):
+    """
+    Display gender selection front page, also handle change from one gender to the other.
+    """
     # Set language to user's browser language for gender select view
     language = translation.get_language_from_request(request)
     translation.activate(language)
