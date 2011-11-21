@@ -325,3 +325,9 @@ def getdictattribute(value, arg):
         return settings.TEMPLATE_STRING_IF_INVALID
 
 register.filter('getdictattribute', getdictattribute)
+
+@register.simple_tag
+def selected_url(request, pattern):
+    if request.path.startswith(pattern):
+        return 'selected'
+    return ''
