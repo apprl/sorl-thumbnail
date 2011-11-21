@@ -122,7 +122,7 @@
 {% block body-classes %}three-columns{% endblock body-classes %}
 
 {% block body %}
-    {% cache CACHE_TIMEOUT index_filter LANGUAGE_CODE request.META.QUERY_STRING %}
+    {% cache CACHE_TIMEOUT index_filter LANGUAGE_CODE request.META.QUERY_STRING apparel_gender %}
     <div class="sidebar">
         {% include 'apparel/fragments/product_menu.html' %}
     </div>
