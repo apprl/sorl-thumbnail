@@ -30,7 +30,7 @@
 
 {% block body %}
         <div class="sidebar">
-        {% cache CACHE_TIMEOUT filter_menu LANGUAGE_CODE request.META.QUERY_STRING %}
+        {% cache CACHE_TIMEOUT filter_menu LANGUAGE_CODE request.META.QUERY_STRING apparel_gender %}
             {% include 'apparel/fragments/product_menu_browse.html' %}
         {% endcache %}
         </div>
