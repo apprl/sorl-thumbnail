@@ -98,7 +98,7 @@ jQuery(document).ready(function() {
 
     // Reset button
     jQuery('#reset').click(function() {
-        jQuery('.selected').removeClass('selected');
+        jQuery('#container .selected').removeClass('selected');
         jQuery('#product-category .level-1, #product-category .level-2').hide();
         jQuery('#product-manufacturers .reset').click();
         jQuery('#product-gender li:first > a').addClass('selected'); // Select all genders

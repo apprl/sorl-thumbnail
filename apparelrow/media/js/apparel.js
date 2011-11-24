@@ -682,7 +682,7 @@ jQuery(document).ready(function() {
         ApparelSearch.cancel();
 
         // From reset click handler in browse.js
-        jQuery('.selected').removeClass('selected');
+        jQuery('#container .selected').removeClass('selected');
         jQuery('#product-category .level-1, #product-category .level-2').hide();
         jQuery('#product-manufacturers .reset').click();
         jQuery('#product-gender li:first > a').addClass('selected');
