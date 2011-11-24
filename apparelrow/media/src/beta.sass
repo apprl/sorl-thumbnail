@@ -37,6 +37,7 @@ body
       background: $white_color image_url("left-big-arrow.png") scroll no-repeat 15px center
   #beta-container
     +border(all)
+    +box-shadow(rgba(0,0,0,0.5) 1px 1px 51px)
     margin: 8em auto 0 auto
     width: 500px
     background-color: $white_color
@@ -55,6 +56,8 @@ body
     p
       margin: 2em 0
       font-size: 1.1em
+      a
+        color: $highlight_color
     form
       +clearfix()
     input

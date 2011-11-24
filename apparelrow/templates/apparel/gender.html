@@ -4,7 +4,7 @@
 {% block body %}
 <div id="beta-container">
     <h2>{% trans 'WELCOME!' %}</h2>
-    <p>{% trans 'We look forward to making Apparelrow better together with you. We appreciate all questions, suggestions and problems from you, the more the better. Click the link "Tyck Till" on the right hand side to share your thoughts. Or send us an email on info@apparelrow.com. Have fun!' %}</p>
+    <p>{% blocktrans %}We look forward to making Apparelrow better together with you. We appreciate all questions, suggestions and problems from you, the more the better. Click the link "Tyck Till" on the right hand side to share your thoughts. Or send us an email on <a href="mailto:info@apparelrow.com">info@apparelrow.com</a>. Have fun!{% endblocktrans %}</p>
 </div>
 <div id="link-container">
     <a href="{% url gender-women %}?next={{ next }}" class="women">{% trans "Shop women" %}</a>

@@ -48,7 +48,8 @@ $(document).ready(function() {
 {% block body %}
 <div id="beta-container">
     <h2>{% trans "Beta login" %}</h2>
-    <p>{% trans "Apparelrow is currently available to a limited number of people. Submit your e-mail address below if you want us to send you an invite when we are able to handle more users - or send us a message on info@apparelrow.com instead!" %}</p>
+
+    <p>{% blocktrans %}Apparelrow is currently available to a limited number of people. Submit your e-mail address below if you want us to send you an invite when we are able to handle more users - or send us a message on <a href="mailto:info@apparelrow.com">info@apparelrow.com</a> instead! {% endblocktrans %}</p>
 
     <form method="POST" action="{% url beta.views.request_invite %}" id="request-invite">
         {% csrf_token %}
@@ -61,7 +62,7 @@ $(document).ready(function() {
 
     <form method="POST" action="{% url beta.views.unlock %}" id="use-invite">
         {% csrf_token %}
-        <h3>{% trans "If you already have an invite:" %}</h3>
+        <p>{% trans "If you already have an invite:" %}</p>
         <input type="hidden" name="next" value="{{ next }}">
         <input type="text" class="default left" value="{% trans "E-mail address" %}" name="email">
         <input type="text" class="default right" value="{% trans "Invite code" %}" name="code">
