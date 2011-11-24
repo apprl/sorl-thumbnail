@@ -104,10 +104,10 @@
             </div>
 
             <ul id="nav-main">
-                <li><a class="{% selected_url request "/browse/" %}" href="{% url apparel.browse.browse_products %}">{% trans "Shop" %}</a></li>
-                <li><a class="{% selected_url request "/brands/" %}" href="{% url apparel.browse.browse_products %}">{% trans "Brand" %}</a></li>
-                <li><a class="{% selected_url request "/looks/" %}" href="{% url look-list %}">{% trans "Looks" %}</a></li>
-                <li><a class="{% selected_url request "/users/" %}" href="{% url apparel.views.user_list %}">{% trans "Members" %}</a></li>
+                <li><a class="{% selected_url request "/browse" %}" href="{% url apparel.browse.browse_products %}">{% trans "Shop" %}</a></li>
+                <!--<li><a class="{% selected_url request "/brands/" %}" href="{% url apparel.browse.browse_products %}">{% trans "Brand" %}</a></li>-->
+                <li><a class="{% selected_url request "/looks" %}" href="{% url look-list %}">{% trans "Looks" %}</a></li>
+                <li><a class="{% selected_url request "/users" %}" href="{% url apparel.views.user_list %}">{% trans "Members" %}</a></li>
             </ul>
 
             <ul id="nav-user">
