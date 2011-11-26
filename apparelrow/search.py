@@ -241,6 +241,7 @@ class LookIndex(QueuedSearchIndex):
     modified = DateTimeField(model_attr='modified')
     user = CharField(model_attr='user__username')
     template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/look_small_like_content.html')
+    gender = CharField(model_attr='gender', default=None, stored=False)
 
     def get_updated_field(self):
         return 'modified'
@@ -284,6 +285,7 @@ def search_view(request, model_name):
         arguments['qf'] = PRODUCT_SEARCH_FIELDS
     elif model_name == 'look':
         arguments['qf'] = ['text']
+        arguments['fq'].append('gender:(U OR %s)' % (get_gender_from_cookie(request)))
     elif model_name == 'manufacturer':
         # override fq cause we do not have a separate manufacturer index
         arguments['fq'] = ['django_ct:apparel.product', 'availability:true']
