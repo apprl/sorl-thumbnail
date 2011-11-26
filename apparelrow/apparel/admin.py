@@ -108,10 +108,19 @@ admin.site.register(Product, ProductAdmin)
 
 class LookAdmin(admin.ModelAdmin):
     raw_id_fields = ('products',)
-    list_display = ('title', 'user', 'component', 'is_featured')
-    list_filter = ['is_featured']
+    list_display = ('title', 'user', 'component', 'is_featured', 'gender')
+    list_filter = ['is_featured', 'gender']
 
 admin.site.register(Look, LookAdmin)
+
+#
+# LOOK COMPONENT
+#
+
+class LookComponentAdmin(admin.ModelAdmin):
+    raw_id_fields = ('product',)
+
+admin.site.register(LookComponent, LookComponentAdmin)
 
 #
 # MANUFACTURER
@@ -279,7 +288,6 @@ admin.site.register(VendorProduct, VendorProductAdmin)
 # User data
 #
 
-admin.site.register(LookComponent)
 admin.site.register(Wardrobe)
 
 class LookLikeAdmin(admin.ModelAdmin):
