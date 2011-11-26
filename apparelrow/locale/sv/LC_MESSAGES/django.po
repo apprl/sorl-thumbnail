@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-24 11:50+0100\n"
+"POT-Creation-Date: 2011-11-26 11:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,14 @@ msgstr "English"
 #: settings_common.py:48
 msgid "Swedish"
 msgstr "Svenska"
+
+#: settings_common.py:51
+msgid "Eng"
+msgstr "Eng"
+
+#: settings_common.py:52
+msgid "Swe"
+msgstr "Sve"
 
 #: apparel/browse.py:194 templates/apparel/look_list.html:23
 msgid "Showing"
@@ -335,8 +343,8 @@ msgid ""
 msgstr ""
 "Apparelrow är just nu bara tillgänglig för ett begränsat antal personer. Ge "
 "oss din e-mailadress om du vill att vi skickar dig ett login när vi har "
-"möjlighet att ta in fler användare - eller skicka ett e-mail till "
-"<a href=\"mailto:info@apparelrow.com\">info@apparelrow.com</a>!"
+"möjlighet att ta in fler användare - eller skicka ett e-mail till <a href="
+"\"mailto:info@apparelrow.com\">info@apparelrow.com</a>!"
 
 #: beta/templates/beta/beta.html:57
 msgid "Request invite"
@@ -858,8 +866,8 @@ msgstr ""
 "Vi ser fram emot att göra Apparelrow bättre tillsammans med dig. Vi "
 "uppskattar alla frågor, förslag och problem vi kan få från er, ju mer desto "
 "bättre. Klicka på länken 'Tyck Till' i högerkanten på siten och dela med dig "
-"av dina tankar. Eller maila oss på <a href=\"mailto:info@apparelrow.com\">info@apparelrow."
-"com</a>. så blir vi också glada. Have fun!"
+"av dina tankar. Eller maila oss på <a href=\"mailto:info@apparelrow.com"
+"\">info@apparelrow.com</a>. så blir vi också glada. Have fun!"
 
 #: templates/apparel/gender.html:10
 msgid "Shop women"

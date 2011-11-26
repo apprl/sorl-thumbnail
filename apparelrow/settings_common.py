@@ -47,6 +47,10 @@ LANGUAGES = (
     ('en', gettext('English')),
     ('sv', gettext('Swedish')),
 )
+SHORT_LANGUAGES = (
+    ('en', gettext('Eng')),
+    ('sv', gettext('Swe')),
+)
 
 
 # Absolute path to the directory that holds media.

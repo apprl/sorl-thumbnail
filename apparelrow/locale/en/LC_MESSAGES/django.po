@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-24 11:50+0100\n"
+"POT-Creation-Date: 2011-11-26 11:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,6 +24,14 @@ msgstr ""
 #: settings_common.py:48
 msgid "Swedish"
 msgstr "Svenska"
+
+#: settings_common.py:51
+msgid "Eng"
+msgstr ""
+
+#: settings_common.py:52
+msgid "Swe"
+msgstr "Sve"
 
 #: apparel/browse.py:194 templates/apparel/look_list.html:23
 msgid "Showing"

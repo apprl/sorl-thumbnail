@@ -73,6 +73,25 @@ jQuery(document).ready(function() {
     // Make all textareas autogrow
     jQuery('textarea').autoResize();
 
+    // Handle language selection
+    var selected = false;
+    jQuery('#nav-user li.language a').click(function(event) {
+        if(selected) {
+            jQuery(this).removeClass('select').addClass('current').parent().find('form').hide();
+            selected = false;
+        } else {
+            jQuery(this).removeClass('current').addClass('select').parent().find('form').show();
+            selected = true;
+        }
+        return false;
+    });
+    jQuery(document).click(function(event) {
+        if(selected) {
+            jQuery('#nav-user li.language a').removeClass('select').addClass('current').parent().find('form').hide();
+            selected = false;
+        }
+    });
+
     // All elements with class open-dialog should open a dialog and load html from href-url
     jQuery('.open-dialog').live('click', function(event) {
         create_html_dialog(jQuery(this).attr('href'));

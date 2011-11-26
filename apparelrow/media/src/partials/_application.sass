@@ -160,6 +160,38 @@ button
           text-transform: uppercase
           color: $white_color
           padding: 1em 0
+        a.language
+          display: inline-block
+          width: 50px
+          height: 28px
+          padding: 0 0 0 7px
+          &.current
+            background: transparent image_url(unquote("language-bg.png")) scroll no-repeat 36px center
+          &.select
+            background: transparent image_url(unquote("language-bg-selected.png")) scroll no-repeat right center
+        form.select-language
+          position: absolute
+          top: 25px
+          right: -3px
+          z-index: 99999
+          ul
+            width: 63px
+            background-color: $font_color
+            +border(all, $font_color)
+            +border-radius(3px)
+            +box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 5px)
+            line-height: 0
+            li
+              +border(bottom, #282828)
+              width: 63px
+              margin: 0
+              padding: 0
+              line-height: 24px
+              &.last
+                border: 0
+              button
+                width: 63px
+                height: 24px
         form.select-language, form.connect-button
           display: inline-block
           button, input

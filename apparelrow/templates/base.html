@@ -112,9 +112,9 @@
 
             <ul id="nav-user">
                 {% if not user.is_authenticated %}
-                <li>{% apparel_facebook_button %}</li>
+                <li class="facebook">{% apparel_facebook_button %}</li>
                 {% endif %}
-                <li>{% include 'apparel/fragments/set_language.html' %}</li>
+                <li class="language">{% include 'apparel/fragments/set_language.html' %}</li>
             </ul>
         </div>
     </div>

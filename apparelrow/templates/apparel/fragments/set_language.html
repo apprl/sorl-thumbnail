@@ -1,19 +1,16 @@
 {% load i18n %}
-<form action="{% url apparel.views.apparel_set_language %}" method="post" class="select-language">
+{% for language in SHORT_LANGUAGES %}
+    {% if language.0 == request.LANGUAGE_CODE %}
+    <a class="current language" href="{% url apparel.views.apparel_set_language %}">{% trans language.1 %}</a>
+    {% endif %}
+{% endfor %}
+<form action="{% url apparel.views.apparel_set_language %}" method="post" class="select-language" style="display: none">
     {% csrf_token %}
+    <ul>
     {% for language in LANGUAGES %}
-        {% if language.0 != request.LANGUAGE_CODE %}
-        <button name="language" value="{{ language.0 }}" type="submit">{% trans language.1 %}</button>
-        {% endif %}
+        <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}">
+            <button name="language" value="{{ language.0 }}" type="submit">{% trans language.1 %}</button>
+        </li>
     {% endfor %}
-
-    {% comment %}
-        {% if request.LANGUAGE_CODE == 'sv' %}
-            <button name="language" value="en" type="submit">English</button>
-        {% endif %}
-
-        {% if request.LANGUAGE_CODE == 'en' %}
-            <button name="language" value="sv" type="submit">Svenska</button>
-        {% endif %}
-    {% endcomment %}
+    </ul>
 </form>
