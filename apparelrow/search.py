@@ -28,6 +28,7 @@ from apparelrow.apparel.models import Manufacturer
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.models import Wardrobe
 from apparelrow.apparel.models import ProductLike
+from apparelrow.apparel.utils import get_gender_from_cookie
 
 from pysolr import Solr
 
@@ -279,13 +280,14 @@ def search_view(request, model_name):
     # Filter query parameters based on model name
     if model_name == 'product':
         arguments['fq'].append('availability:true')
-        arguments['fq'].append('gender:(W OR M OR U)')
+        arguments['fq'].append('gender:(U OR %s)' % (get_gender_from_cookie(request)))
         arguments['qf'] = PRODUCT_SEARCH_FIELDS
     elif model_name == 'look':
         arguments['qf'] = ['text']
     elif model_name == 'manufacturer':
         # override fq cause we do not have a separate manufacturer index
-        arguments['fq'] = ['django_ct:apparel.product', 'availability:true', 'gender:(W OR M OR U)']
+        arguments['fq'] = ['django_ct:apparel.product', 'availability:true']
+        arguments['fq'].append('gender:(U OR %s)' % (get_gender_from_cookie(request)))
         arguments['qf'] = ['manufacturer_auto']
         arguments['facet'] = 'on'
         arguments['facet.limit'] = -1
