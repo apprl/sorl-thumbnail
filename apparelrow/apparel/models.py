@@ -386,35 +386,22 @@ class Look(models.Model):
     featured = FeaturedManager()
 
     def save(self, *args, **kwargs):
-        self.calculate_gender()
+        self.gender = self.calculate_gender()
         super(Look, self).save(*args, **kwargs)
 
     def calculate_gender(self):
+        """
+        Calculate looks gender based on displayed products.
 
-        if self.component == 'C':
-            components = self.collage_components
-        elif self.component == 'P':
-            components = self.photo_components
-        elif self.component == 'A':
-            components = self.components
-        else:
-            components = self.display_components
+        Implementation uses set difference which result in a set with either
+        Man, Woman or Man & Woman.
+        """
+        unique_genders = set(self.display_components.values_list('product__gender', flat=True))
+        unique_genders = list(unique_genders - set('U'))
+        if len(unique_genders) == 1:
+            return unique_genders[0]
 
-        W = 0
-        M = 0
-        for gender in components.values_list('product__gender', flat=True):
-            if gender == 'M':
-                M += 1
-            elif gender == 'W':
-                W += 1
-        if M > 0 and W > 0:
-            self.gender = 'U'
-        elif M > 0:
-            self.gender = 'M'
-        elif W > 0:
-            self.gender = 'W'
-        else:
-            self.gender = 'U'
+        return 'U'
     
     def score(self):
         return LookLike.objects.filter(look=self, active=True).count()
