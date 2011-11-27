@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 from importer.api import SkipProduct
@@ -33,6 +34,17 @@ class TradeDoublerMapper(DataMapper):
         gender = self.record.get('gender') or self.record.get('Gender', '')
         if gender == 'kids':
             raise SkipProduct('Do not import product with gender == kids')
+
+        # Skip products from tradedouble with extra field size == kid sizes
+        bad_sizes = ['50', '56', '62', '68', '74', '80', '86', '92', '98', '104', '110', '116', '122', '128', '134', '140', '146', '152', '158', '164']
+        sizes = self.record.get('size') or self.record.get('Size', '')
+        print sizes
+        if u'år' in sizes or u'year' in sizes:
+            raise SkipProduct('Do not import product with size containing "år" or "year"')
+        for size in sizes.split(','):
+            for single in size.split('-'):
+                if single in bad_sizes:
+                    raise SkipProduct('Do not import product with size containing child sizes 50-164');
 
         return self.map_gender(gender)
     
