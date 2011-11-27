@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-26 11:48+0100\n"
+"POT-Creation-Date: 2011-11-28 00:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,216 +73,216 @@ msgstr ""
 msgid "Option Items"
 msgstr ""
 
-#: apparel/models.py:98
+#: apparel/models.py:99
 msgid "Only active categories are visible and searchable on the website"
 msgstr ""
 
-#: apparel/models.py:99
+#: apparel/models.py:100
 msgid "Option types"
 msgstr ""
 
-#: apparel/models.py:100
+#: apparel/models.py:101
 msgid "The category is visible on the front page"
 msgstr ""
 
-#: apparel/models.py:134
+#: apparel/models.py:135
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:135 apparel/models.py:371
+#: apparel/models.py:136 apparel/models.py:372
 msgid "Slug Name"
 msgstr ""
 
-#: apparel/models.py:136 apparel/models.py:372
+#: apparel/models.py:137 apparel/models.py:373
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr ""
 
-#: apparel/models.py:137
+#: apparel/models.py:138
 msgid "Stock Keeping Unit"
 msgstr ""
 
-#: apparel/models.py:138
+#: apparel/models.py:139
 msgid "Has to be unique with the manufacturer"
 msgstr ""
 
-#: apparel/models.py:140
+#: apparel/models.py:141
 msgid "Time added"
 msgstr ""
 
-#: apparel/models.py:141 apparel/models.py:239 apparel/models.py:378
-#: apparel/models.py:510 apparel/models.py:613
+#: apparel/models.py:142 apparel/models.py:240 apparel/models.py:379
+#: apparel/models.py:498 apparel/models.py:601
 msgid "Time modified"
 msgstr ""
 
-#: apparel/models.py:142
+#: apparel/models.py:143
 msgid "Product description"
 msgstr ""
 
-#: apparel/models.py:143
+#: apparel/models.py:144
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:146 apparel/models.py:382 apparel/models.py:614
+#: apparel/models.py:147 apparel/models.py:383 apparel/models.py:602
 msgid "Gender"
 msgstr ""
 
-#: apparel/models.py:147
+#: apparel/models.py:148
 msgid "Feed gender"
 msgstr ""
 
-#: apparel/models.py:238 apparel/models.py:377 apparel/models.py:509
-#: apparel/models.py:598 apparel/models.py:612
+#: apparel/models.py:239 apparel/models.py:378 apparel/models.py:497
+#: apparel/models.py:586 apparel/models.py:600
 #: apparel/migrations/0021_auto__add_wardrobeproducts.py:12 beta/models.py:9
 #: beta/models.py:17
 msgid "Time created"
 msgstr ""
 
-#: apparel/models.py:252
+#: apparel/models.py:253
 msgid "category"
 msgstr ""
 
-#: apparel/models.py:253
+#: apparel/models.py:254
 msgid "Name"
 msgstr ""
 
-#: apparel/models.py:255
+#: apparel/models.py:256
 msgid "Default gender"
 msgstr ""
 
-#: apparel/models.py:256
+#: apparel/models.py:257
 msgid "Override gender"
 msgstr ""
 
-#: apparel/models.py:306
+#: apparel/models.py:307
 msgid "Buy URL"
 msgstr ""
 
-#: apparel/models.py:307
+#: apparel/models.py:308
 #: templates/apparel/fragments/product_menu_browse.html:12
 msgid "Price"
 msgstr ""
 
-#: apparel/models.py:307
+#: apparel/models.py:308
 msgid "Price converted to base currency"
 msgstr ""
 
-#: apparel/models.py:308 importer/models.py:132
+#: apparel/models.py:309 importer/models.py:132
 msgid "Currency"
 msgstr ""
 
-#: apparel/models.py:308
+#: apparel/models.py:309
 msgid "Base currency as three-letter ISO code"
 msgstr ""
 
-#: apparel/models.py:309
+#: apparel/models.py:310
 msgid "Original price"
 msgstr ""
 
-#: apparel/models.py:310
+#: apparel/models.py:311
 msgid "Original currency"
 msgstr ""
 
-#: apparel/models.py:310
+#: apparel/models.py:311
 msgid "Currency as three-letter ISO code"
 msgstr ""
 
-#: apparel/models.py:311 apparel/models.py:344
+#: apparel/models.py:312 apparel/models.py:345
 msgid "Items in stock"
 msgstr ""
 
-#: apparel/models.py:311 apparel/models.py:344
+#: apparel/models.py:312 apparel/models.py:345
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:349
+#: apparel/models.py:350
 msgid "No information available"
 msgstr ""
 
-#: apparel/models.py:351
+#: apparel/models.py:352
 msgid "Out of stock"
 msgstr ""
 
-#: apparel/models.py:353
+#: apparel/models.py:354
 msgid "In stock"
 msgstr ""
 
-#: apparel/models.py:355
+#: apparel/models.py:356
 msgid "items in stock"
 msgstr ""
 
-#: apparel/models.py:370 apparel/models.py:606
+#: apparel/models.py:371 apparel/models.py:594
 #: templates/apparel/look_create.html:18
 msgid "Title"
 msgstr ""
 
-#: apparel/models.py:373
+#: apparel/models.py:374
 msgid "Look description"
 msgstr ""
 
-#: apparel/models.py:380
+#: apparel/models.py:381
 msgid "What compontent to show"
 msgstr ""
 
-#: apparel/models.py:381
+#: apparel/models.py:382
 msgid "The look will be shown on the front page"
 msgstr ""
 
-#: apparel/models.py:527
+#: apparel/models.py:515
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:528
+#: apparel/models.py:516
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:529
+#: apparel/models.py:517
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:530
+#: apparel/models.py:518
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:531
+#: apparel/models.py:519
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:532
+#: apparel/models.py:520
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:607
+#: apparel/models.py:595
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:607
+#: apparel/models.py:595
 msgid "HTML allowed"
 msgstr ""
 
-#: apparel/models.py:608
+#: apparel/models.py:596
 msgid "URL"
 msgstr ""
 
-#: apparel/models.py:609 apparel/models.py:638
+#: apparel/models.py:597 apparel/models.py:626
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:609
+#: apparel/models.py:597
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:611
+#: apparel/models.py:599
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:656
+#: apparel/models.py:644
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:656
+#: apparel/models.py:644
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -364,10 +364,7 @@ msgid "Unlock beta"
 msgstr ""
 
 #: beta/templates/beta/beta.html:73
-msgid ""
-"Thank you! We have received your request and will take it into "
-"consideration. When we are ready to accept more users, you will receive an "
-"email with your invite code."
+msgid "Thanks! When we're able to handle more users we'll send you an invite."
 msgstr ""
 
 #: importer/models.py:18
