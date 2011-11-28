@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-28 00:30+0100\n"
+"POT-Creation-Date: 2011-11-29 00:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -587,10 +587,12 @@ msgid "Cancel"
 msgstr "Avbryt"
 
 #: templates/base.html:102 templates/base.html.py:206
+#: templates/apparel/gender.html:10
 msgid "Women"
 msgstr "Dam"
 
 #: templates/base.html:103 templates/base.html.py:207
+#: templates/apparel/gender.html:11
 msgid "Men"
 msgstr "Herr"
 
@@ -862,14 +864,6 @@ msgstr ""
 "bättre. Klicka på länken 'Tyck Till' i högerkanten på siten och dela med dig "
 "av dina tankar. Eller maila oss på <a href=\"mailto:info@apparelrow.com"
 "\">info@apparelrow.com</a>. så blir vi också glada. Have fun!"
-
-#: templates/apparel/gender.html:10
-msgid "Shop women"
-msgstr "Shop dam"
-
-#: templates/apparel/gender.html:11
-msgid "Shop men"
-msgstr "Shop herr"
 
 #: templates/apparel/look_create.html:5
 msgid "Create new look"
@@ -2005,6 +1999,12 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Shop women"
+#~ msgstr "Shop dam"
+
+#~ msgid "Shop men"
+#~ msgstr "Shop herr"
 
 #~ msgid ""
 #~ "Thank you! We have received your request and will take it into "

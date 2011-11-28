@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-28 00:30+0100\n"
+"POT-Creation-Date: 2011-11-29 00:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -571,10 +571,12 @@ msgid "Cancel"
 msgstr ""
 
 #: templates/base.html:102 templates/base.html.py:206
+#: templates/apparel/gender.html:10
 msgid "Women"
 msgstr ""
 
 #: templates/base.html:103 templates/base.html.py:207
+#: templates/apparel/gender.html:11
 msgid "Men"
 msgstr ""
 
@@ -830,14 +832,6 @@ msgid ""
 "the link \"Tyck Till\" on the right hand side to share your thoughts. Or "
 "send us an email on <a href=\"mailto:info@apparelrow.com\">info@apparelrow."
 "com</a>. Have fun!"
-msgstr ""
-
-#: templates/apparel/gender.html:10
-msgid "Shop women"
-msgstr ""
-
-#: templates/apparel/gender.html:11
-msgid "Shop men"
 msgstr ""
 
 #: templates/apparel/look_create.html:5
