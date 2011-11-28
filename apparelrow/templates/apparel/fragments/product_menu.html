@@ -15,7 +15,7 @@
         </li>
     {% endif %}
         <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}{% if categories and category.id not in categories %} to_filter{% endif %}">
-        <a id="category-{{ category.id }}"{% if category.id in selected_categories %} class="selected"{% endif %} href="{% url apparel.browse.browse_products %}?category={{ category.id }}">{{ category.name }} <span class="category-count">({{ categories|getdictattribute:category.id }})</span></a>
+        <a data-order="{{ category.name_order }}" id="category-{{ category.id }}"{% if category.id in selected_categories %} class="selected"{% endif %} href="{% url apparel.browse.browse_products %}?category={{ category.id }}">{{ category.name }} <span class="category-count">({{ categories|getdictattribute:category.id }})</span></a>
     {% for level in structure.closed_levels %}</li></ul>{% endfor %}
 {% endfor %}
 

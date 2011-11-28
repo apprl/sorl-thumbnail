@@ -94,6 +94,7 @@ class Vendor(models.Model):
 
 class Category(MPTTModel):
     name          = models.CharField(max_length=100, db_index=True)
+    name_order    = models.CharField(max_length=100, null=True, blank=True)
     parent        = TreeForeignKey('self', null=True, blank=True, related_name='children')
     active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'), db_index=True)
     option_types  = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
@@ -108,14 +109,14 @@ class Category(MPTTModel):
         return u"%s" % self.name
     
     class Exporter:
-        export_fields = ['name', 'option_types']
+        export_fields = ['name', 'name_order', 'option_types']
     
     class Meta:
         ordering = ('tree_id', 'lft')
         verbose_name_plural = 'categories'
 
     class MPTTMeta:
-        order_insertion_by = ['name']
+        order_insertion_by = ['name_order']
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Category)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Category)
