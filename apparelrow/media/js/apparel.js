@@ -85,6 +85,13 @@ jQuery(document).ready(function() {
         }
         return false;
     });
+    jQuery('#nav-user form.select-language button.disabled').click(function(event) {
+        if(selected) {
+            jQuery('#nav-user li.language a').removeClass('select').addClass('current').parent().find('form').hide();
+            selected = false;
+        }
+        return false;
+    });
     jQuery(document).click(function(event) {
         if(selected) {
             jQuery('#nav-user li.language a').removeClass('select').addClass('current').parent().find('form').hide();

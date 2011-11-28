@@ -9,7 +9,11 @@
     <ul>
     {% for language in LANGUAGES %}
         <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}">
+            {% if language.0 == request.LANGUAGE_CODE %}
+            <button class="disabled" name="language" value="{{ language.0 }}" type="submit">{% trans language.1 %}</button>
+            {% else %}
             <button name="language" value="{{ language.0 }}" type="submit">{% trans language.1 %}</button>
+            {% endif %}
         </li>
     {% endfor %}
     </ul>
