@@ -183,7 +183,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0):
     else:
         most_looks_users = None
 
-    latest_looks = Look.objects.order_by('-created')[:8]
+    latest_looks = Look.objects.order_by('-created')[:16]
     paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
@@ -629,7 +629,7 @@ def index(request):
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
     gender = get_gender_from_cookie(request)
     ctx['pages'] = FirstPageContent.published_objects.filter(gender__in = ['U', gender])
-    ctx['popular_looks'] = get_top_looks(request, limit=6)
+    ctx['popular_looks'] = get_top_looks(request, limit=8)
     ctx['all_colors'] = Option.objects.filter(option_type__name='color')
     # ctx['categories_all'] contains all categories, they will later be filtered
     ctx['categories_all'] = Category._tree_manager.filter(on_front_page=True)

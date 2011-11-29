@@ -62,7 +62,7 @@ def profile(request, profile, page=0):
         'next': request.get_full_path(),
         "change_image_form": form,
         "profile": profile,
-        "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+        "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:54], # Just a constant for filling the entire page when PROFILE_PAGE_SIZE is 60
         }, context_instance=RequestContext(request))
 
 @get_current_user
