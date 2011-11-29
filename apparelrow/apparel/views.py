@@ -628,7 +628,7 @@ def index(request):
     ctx = {}
     # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
     gender = get_gender_from_cookie(request)
-    ctx['pages'] = FirstPageContent.published_objects.filter(gender__in = ['U', gender], language=translation.get_language())
+    ctx['pages'] = FirstPageContent.published_objects.filter(gender__in=['U', gender], language=request.LANGUAGE_CODE)
     ctx['popular_looks'] = get_top_looks(request, limit=8)
     ctx['all_colors'] = Option.objects.filter(option_type__name='color')
     # ctx['categories_all'] contains all categories, they will later be filtered
