@@ -304,7 +304,7 @@ admin.site.register(ProductLike, ProductLikeAdmin)
 
 class FirstPageContentAdmin(admin.ModelAdmin):
     list_display = ['title', 'pub_date', 'published']
-    list_filter = ['published']
+    list_filter = ['published', 'language', 'gender']
 
 admin.site.register(FirstPageContent, FirstPageContentAdmin)
 
