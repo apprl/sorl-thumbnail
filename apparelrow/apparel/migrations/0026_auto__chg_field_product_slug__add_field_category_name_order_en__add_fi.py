@@ -23,11 +23,12 @@ class Migration(SchemaMigration):
         # Changing field 'Look.slug'
         db.alter_column('apparel_look', 'slug', self.gf('django_extensions.db.fields.AutoSlugField')(allow_duplicates=False, max_length=80, separator=u'-', blank=True, populate_from=('title',), overwrite=False))
 
-        for obj in orm.Category.objects.all():
-            obj.name_order = obj.name
-            obj.name_order_sv = obj.name
-            obj.name_order_en = obj.name_en
-            obj.save()
+        if not db.dry_run:
+            for obj in orm.Category.objects.all():
+                obj.name_order = obj.name
+                obj.name_order_sv = obj.name
+                obj.name_order_en = obj.name_en
+                obj.save()
     
     
     def backwards(self, orm):
