@@ -155,7 +155,7 @@ def upload_tar_from_git(snapshot='master'):
     "Create an archive from the current Git master branch and upload it"
     require('release', provided_by=[deploy, setup])
     env.snapshot=snapshot
-    local('git archive --format=tar %(tag)s | gzip > %(release)s.tar.gz' % env)
+    local('git archive --format=tar %(snapshot)s | gzip > %(release)s.tar.gz' % env)
     run('mkdir -p %(path)s/releases/%(release)s' % env, pty=True)
     put('%(release)s.tar.gz' % env, '%(path)s/packages/' % env)
     run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz' % env, pty=True)
