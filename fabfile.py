@@ -21,14 +21,18 @@ def demo():
     "Use the actual webserver"
     env.hosts = ['demo.apparelrow.com:32744']
     env.user = 'hanssonlarsson'
+    env.group = env.user
     env.run_user = 'www-data'
+    env.run_group = env.run_user
     env.path = '/home/%(user)s/%(project_name)s' % env
 
 def prod():
     "Use our EC2 server"
     env.hosts = ['web1.apparelrow.com']
     env.user = 'deploy'
+    env.group = 'nogroup'
     env.run_user = 'www-data'
+    env.run_group = env.run_user
     env.path = '/home/%(user)s/%(project_name)s' % env
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
 
@@ -70,7 +74,7 @@ def setup():
     # install some version control systems, since we need Django modules in development
     sudo('apt-get install -y git-core subversion')
     # install rabbitmq-server (add http://www.rabbitmq.com/debian.html#apt for newest version)
-    sudo('apt-get install rabbitmq-server')
+    sudo('apt-get install -y rabbitmq-server')
         
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
@@ -88,12 +92,12 @@ def setup():
         sudo('cd /etc/%(webserver)s/conf-enabled/; rm default;' % env, pty=True)
     
     # new project setup
-    sudo('mkdir -p %(path)s; chown %(user)s:%(user)s %(path)s;' % env, pty=True)
+    sudo('mkdir -p %(path)s; chown %(user)s:%(group)s %(path)s;' % env, pty=True)
     with cd(env.path):
         run('virtualenv --no-site-packages .')
         with settings(warn_only=True):
             run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared packages backup;', pty=True)
-            sudo('chown -R %(run_user)s:%(run_user)s var;' % env, pty=True)
+            sudo('chown -R %(run_user)s:%(run_group)s var;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     deploy('first')
     
@@ -178,7 +182,7 @@ def copy_solr():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
         sudo('cp -rup ./releases/%(release)s/solr/ .' % env, pty=True)
-        sudo('chown --silent -R %(run_user)s:%(run_user)s ./solr' % env, pty=True)
+        sudo('chown --silent -R %(run_user)s:%(run_group)s ./solr' % env, pty=True)
 
 def copy_config():
     require('release', provided_by=[deploy, setup])
@@ -196,7 +200,7 @@ def copy_config():
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
-        sudo('chown -R %(run_user)s:%(run_user)s ./media' % env, pty=True)
+        sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
         sudo('%(path)s/bin/python manage.py synccompress --settings production' % env, pty=True, user=env.run_user)
         sudo('cd ./media; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
