@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement # needed for python 2.5
 from fabric.api import *
+from os import environ
 
 # globals
 env.project_name = 'apparelrow' # no spaces!
@@ -15,15 +16,27 @@ def localhost():
     env.hosts = ['localhost']
     env.user = 'linus'
     env.path = '/home/%(user)s/development/projects/%(project_name)s' % env
-    env.virtualhost_path = env.path
 
 def demo():
     "Use the actual webserver"
     env.hosts = ['demo.apparelrow.com:32744']
     env.user = 'hanssonlarsson'
     env.run_user = 'www-data'
-    env.path = '/home/hanssonlarsson/%(project_name)s' % env
-    env.virtualhost_path = env.path
+    env.path = '/home/%(user)s/%(project_name)s' % env
+
+def prod():
+    "Use our EC2 server"
+    env.hosts = ['web1.apparelrow.com']
+    env.user = 'deploy'
+    env.run_user = 'www-data'
+    env.path = '/home/%(user)s/%(project_name)s' % env
+    env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
+
+def prod_db():
+    "Use our EC2 server"
+    env.hosts = ['db1.apparelrow.com']
+    env.user = 'deploy'
+    env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
    
 # tasks
 
@@ -31,13 +44,25 @@ def test():
     "Run the test suite and bail out if it fails"
     local("cd %(path)s; python manage.py test --settings production" % env)
     
+def setup_db():
+    """
+    Setup a DB server
+    """
+    require('hosts', provided_by=[localhost,demo,prod_db])
+    require('path')
+    sudo('apt-get update')
+    if env.dbserver=='mysql':
+        sudo('apt-get install -y mysql-server')
+        put('etc/mysql.cnf', '/etc/mysql/conf.d/apparelrow.cnf', use_sudo=True)
+    elif env.dbserver=='postgresql':
+        sudo('apt-get install -y postgresql')
     
 def setup():
     """
     Setup a fresh virtualenv as well as a few useful directories, then run
     a full deployment
     """
-    require('hosts', provided_by=[localhost,demo])
+    require('hosts', provided_by=[localhost,demo,prod])
     require('path')
     # install Python environment
     sudo('apt-get update')
@@ -51,12 +76,12 @@ def setup():
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
     sudo('easy_install pip')
 
+    if env.dbserver=='mysql':
+        sudo('apt-get install -y libmysqlclient-dev')
+    elif env.dbserver=='postgresql':
+        sudo('apt-get install -y python-psycopg2')
     if env.webserver=='lighttpd':
         sudo('apt-get install -y lighttpd')
-    if env.dbserver=='mysql':
-        sudo('apt-get install -y mysql-server libmysqlclient-dev')
-    elif env.dbserver=='postgresql':
-        sudo('apt-get install -y postgresql python-psycopg2')
         
     # disable default site
     with settings(warn_only=True):
@@ -72,17 +97,17 @@ def setup():
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     deploy('first')
     
-def deploy(param=''):
+def deploy(param='', snapshot='master'):
     """
     Deploy the latest version of the site to the servers, install any
     required third party modules, install the virtual host and 
     then restart the webserver
     """
-    require('hosts', provided_by=[localhost,demo])
+    require('hosts', provided_by=[localhost,demo,prod])
     require('path')
     import time
     env.release = time.strftime('%Y%m%d%H%M%S')
-    upload_tar_from_git()
+    upload_tar_from_git(snapshot)
     install_requirements()
     install_site()
     copy_bin()
@@ -98,7 +123,7 @@ def deploy(param=''):
     
 def deploy_version(version):
     "Specify a specific version to be made live"
-    require('hosts', provided_by=[localhost,demo])
+    require('hosts', provided_by=[localhost,demo,prod])
     require('path')
     env.version = version
     with cd(env.path):
@@ -111,7 +136,7 @@ def rollback():
     Limited rollback capability. Simply loads the previously current
     version of the code. Rolling back again will swap between the two.
     """
-    require('hosts', provided_by=[localhost,demo])
+    require('hosts', provided_by=[localhost,demo,prod])
     require('path')
     with cd(env.path):
         run('mv releases/current releases/_previous;', pty=True)
@@ -122,10 +147,11 @@ def rollback():
     
 # Helpers. These are called by other functions rather than directly
 
-def upload_tar_from_git():
+def upload_tar_from_git(snapshot='master'):
     "Create an archive from the current Git master branch and upload it"
     require('release', provided_by=[deploy, setup])
-    local('git archive --format=tar master | gzip > %(release)s.tar.gz' % env)
+    env.snapshot=snapshot
+    local('git archive --format=tar %(tag)s | gzip > %(release)s.tar.gz' % env)
     run('mkdir -p %(path)s/releases/%(release)s' % env, pty=True)
     put('%(release)s.tar.gz' % env, '%(path)s/packages/' % env)
     run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz' % env, pty=True)
