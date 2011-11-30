@@ -1,3 +1,4 @@
+[mysqld]
 datadir = /mnt/mysql
 bind-address = 0.0.0.0
 query_cache_limit = 4M
