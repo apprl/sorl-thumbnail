@@ -86,6 +86,10 @@ def setup():
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
     sudo('easy_install pip')
 
+    # Install Compass
+    sudo('apt-get install -y rubygems')
+    sudo('gem install compass')
+
     if env.dbserver=='mysql':
         sudo('apt-get install -y libmysqlclient-dev')
     elif env.dbserver=='postgresql':
