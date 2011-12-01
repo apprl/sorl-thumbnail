@@ -57,7 +57,13 @@ def setup_db():
     sudo('apt-get update')
     if env.dbserver=='mysql':
         sudo('apt-get install -y mysql-server')
+        sudo('stop mysql')
+        sudo('test -d /var/lib/mysql && mv /var/lib/mysql /mnt || true')
+        sudo("sed -i 's/var\/lib/mnt/' /etc/apparmor.d/usr.sbin.mysqld")
         put('etc/mysql.cnf', '/etc/mysql/conf.d/apparelrow.cnf', use_sudo=True)
+        sudo('/etc/init.d/apparmor restart')
+        sudo('start mysql')
+        run('mysql_setpermission -u root -p')
     elif env.dbserver=='postgresql':
         sudo('apt-get install -y postgresql')
     
