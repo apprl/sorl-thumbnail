@@ -390,8 +390,8 @@ class API(object):
                     transaction.commit()
                 return obj, created
 
-            self._vendor_category, created = vendor_category_get_or_create(self.vendor, category_names)
-            #self._vendor_category, created = VendorCategory.objects.get_or_create(vendor=self.vendor, name=category_names)
+            #self._vendor_category, created = vendor_category_get_or_create(self.vendor, category_names)
+            self._vendor_category, created = VendorCategory.objects.get_or_create(vendor=self.vendor, name=category_names)
 
             if created:
                 self._import_log.messages.create(
