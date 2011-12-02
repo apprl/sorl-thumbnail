@@ -12,8 +12,8 @@ urlpatterns = patterns('',
     (r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.product_like'),
     (r'^products/(?P<slug>[\w-]+)/users/$', 'apparel.views.product_user_like_list'),
     
-    (r'^browse/$', 'apparel.browse.browse_products'),
-    (r'^browse/manufacturers/$', 'apparel.browse.browse_manufacturers'),
+    (r'^shop/$', 'apparel.browse.browse_products'),
+    (r'^shop/manufacturers/$', 'apparel.browse.browse_manufacturers'),
     
     (r'^wardrobe/add_product/$', 'apparel.views.add_to_wardrobe'),
     (r'^wardrobe/delete_product/$', 'apparel.views.delete_from_wardrobe'),

@@ -2,13 +2,13 @@
 {{if !products.previous_page_number || products.previous_page_number < 0}}
 <span class="prev disabled">&lt;</span>
 {{else}}
-<a class="prev" href="/browse/?page=${products.previous_page_number}">&lt;</a>
+<a class="prev" href="/shop/?page=${products.previous_page_number}">&lt;</a>
 {{/if}}
 <div>
 <ol>
 {{if products.pagination.left}}
     {{each(i, page) products.pagination.left}}
-        <li><a href="/browse/?page=${ page }">${ page }</a></li>
+        <li><a href="/shop/?page=${ page }">${ page }</a></li>
     {{/each}}
     <li class="pagination-dots">&hellip;</li>
 {{/if}}
@@ -17,14 +17,14 @@
     {{if page == products.number}}
         <li class="current">${ page }</li>
     {{else}}
-        <li><a href="/browse/?page=${ page }">${ page }</a></li>
+        <li><a href="/shop/?page=${ page }">${ page }</a></li>
     {{/if}}
 {{/each}}
 
 {{if products.pagination.right}}
     <li class="pagination-dots">&hellip;</li>
     {{each(i, page) products.pagination.right}}
-        <li><a href="/browse/?page=${ page }">${ page }</a></li>
+        <li><a href="/shop/?page=${ page }">${ page }</a></li>
     {{/each}}
 {{/if}}
 </ol>
@@ -32,5 +32,5 @@
 {{if !products.next_page_number || products.next_page_number > products.paginator.num_pages}}
 <span class="next disabled">&gt;</span>
 {{else}}
-<a class="next" href="/browse/?page=${products.next_page_number}">&gt;</a>
+<a class="next" href="/shop/?page=${products.next_page_number}">&gt;</a>
 {{/if}}

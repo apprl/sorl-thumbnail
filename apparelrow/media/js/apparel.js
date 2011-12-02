@@ -257,7 +257,7 @@ jQuery(document).ready(function() {
 
     jQuery('#nav-main a, #footer a').click(function(event) {
         var target = $(this).attr('href');
-        if(target.indexOf('/browse/?') >= 0) {
+        if(target.indexOf('/shop/?') >= 0) {
             event.preventDefault();
             window.location = target.replace('?', '#');
         }
@@ -676,7 +676,7 @@ jQuery(document).ready(function() {
                     break;
                 }
 
-                location.href = '/browse/#' + ApparelSearch.format_query(query);
+                location.href = '/shop/#' + ApparelSearch.format_query(query);
                 break;
 
             case 'search-result-looks':
@@ -692,7 +692,7 @@ jQuery(document).ready(function() {
 
                 var s = query.q;
                 location.href =
-                    '/browse/?criterion=manufacturer&'
+                    '/shop/?criterion=manufacturer&'
                     + encodeURIComponent('1:m.name:icontains')
                     + '=' + encodeURIComponent(s)
                     + '&defaults=manufacturer-dialog'
