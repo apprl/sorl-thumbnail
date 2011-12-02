@@ -267,6 +267,9 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
     if is_duplicate('like_look_created', recipient, sender, look_like):
         return 'duplicate'
 
+    if sender == recipient:
+        return 'sender is recipient, no notification'
+
     sender_content_type = ContentType.objects.get_for_model(sender)
 
     notify_user = None
