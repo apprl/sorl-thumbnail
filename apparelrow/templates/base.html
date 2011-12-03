@@ -99,15 +99,15 @@
             </form>
 
             <div id="nav-gender">
-                <a class="left{% if apparel_gender == 'W' %} selected{% endif %}" href="{% url gender-women %}?next={{ next }}">{% trans "Women" %}</a>
-                <a class="right{% if apparel_gender == 'M' %} selected{% endif %}" href="{% url gender-men %}?next={{ next }}">{% trans "Men" %}</a>
+                <a class="left{% if APPAREL_GENDER == 'W' %} selected{% endif %}" href="{% change_gender_url request APPAREL_GENDER 'women' %}">{% trans "Women" %}</a>
+                <a class="right{% if APPAREL_GENDER == 'M' %} selected{% endif %}" href="{% change_gender_url request APPAREL_GENDER 'men' %}">{% trans "Men" %}</a>
             </div>
 
             <ul id="nav-main">
-                <li><a class="{% selected_url request "/shop" %}" href="{% url apparel.browse.browse_products %}">{% trans "Shop" %}</a></li>
-                <!--<li><a class="{% selected_url request "/brands/" %}" href="{% url apparel.browse.browse_products %}">{% trans "Brand" %}</a></li>-->
-                <li><a class="{% selected_url request "/looks" %}" href="{% url look-list %}">{% trans "Looks" %}</a></li>
-                <li><a class="{% selected_url request "/users" %}" href="{% url apparel.views.user_list %}">{% trans "Members" %}</a></li>
+                <li><a class="{% selected_url request "/shop" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
+                <!--<li><a class="{% selected_url request "/brands/" %}" href="{% url index %}">{% trans "Brand" %}</a></li>-->
+                <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
+                <li><a class="{% selected_url request "/users" %}" href="{% gender_url APPAREL_GENDER 'user-list-popular' %}">{% trans "Members" %}</a></li>
             </ul>
 
             <ul id="nav-user">
@@ -203,18 +203,17 @@
             <div class="copyright">&#169; APPARELROW</div>
             <ul>
                 <li><h3>{% trans "Clothes" %}</h3></li>
-                <li><a class="women" href="{% url apparel.browse.browse_products %}?gender=W">{% trans "Women" %}</a></li>
-                <li><a class="men" href="{% url apparel.browse.browse_products %}?gender=M">{% trans "Men" %}</a></li>
-                <li><a href="{% url apparel.browse.browse_products %}">{% trans "All" %}</a></li>
+                <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
+                <li><a class="men" href="{% gender_url 'M' 'shop' %}">{% trans "Men" %}</a></li>
             </ul>
             <ul>
                 <li><h3>{% trans "Looks" %}</h3></li>
-                <li><a href="{% url look-list %}">{% trans "All looks" %}</a></li>
+                <li><a href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "All looks" %}</a></li>
                 <li><a href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a></li>
             </ul>
             <ul>
                 <li><h3>{% trans "Social" %}</h3></li>
-                <li><a href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a></li>
+                <li><a href="{% gender_url APPAREL_GENDER 'user-list' %}">{% trans "See all members" %}</a></li>
                 {% if not user.is_authenticated %}
                 <li class="facebook">{% apparel_facebook_button "facebook-footer.png" %}</li>
                 {% endif %}

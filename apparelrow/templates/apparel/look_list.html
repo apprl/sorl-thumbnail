@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load facebook %}
 {% load i18n %}
+{% load apparel_extras %}
 
 {% block body-classes %}three-columns look-list{% endblock body-classes %}
 
@@ -12,15 +13,20 @@
         {% endwith %}
     </div>
     <div id="content">
-        {% url look-list as look_list_url %}
+        {% url look-list-men as look_list_men %}
+        {% url look-list-women as look_list_women %}
         {% url popular-look-list as popular_look_list_url %}
-        {% if request.path == look_list_url or request.path == popular_look_list_url %}
+        {% if request.path == look_list_women or request.path == look_list_men or request.path == popular_look_list_url %}
         <ul class="look-list-tabs">
-            <li><a class="first latest{% if request.path == look_list_url %} current{% endif %}" href="{{ look_list_url }}">{% trans "Popular looks" %}</a></li>
-            <li><a class="last popular{% if request.path == popular_look_list_url %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
+            <li><a class="first latest{% if 'popular' not in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Popular looks" %}</a></li>
+            <li><a class="last popular{% if 'popular' in request.path %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
         </ul>
         {% else %}
-        <h2>{% trans "Showing" %} '{{ query|escape }}', {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
+            {% if 'products/' in request.path %}
+            <h2>{% trans "Showing" %} {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
+            {% else %}
+            <h2>{% trans "Showing" %} '{{ query|escape }}', {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
+            {% endif %}
         {% endif %}
 
         {% if not user.is_authenticated and request.path == popular_look_list_url %}

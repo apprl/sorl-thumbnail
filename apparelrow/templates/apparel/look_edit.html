@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load apparel_extras %}
 {% load thumbnail %}
 
 {% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
@@ -506,7 +507,7 @@ jQuery(document).ready(function() {
                 {% include 'apparel/fragments/look_collage_edit.html' %}
                 <div class="look-empty"{% if object.collage_components.all.count > 0 %} style="display: none"{% endif %}>
                     {% if wardrobe|length == 0 %}
-                        <div class="message warning">{% trans "To create a look, you need to have products in your wardrobe." %} <a href="{% url apparel.browse.browse_products %}">{% trans "Find products!" %}</a></div>
+                        <div class="message warning">{% trans "To create a look, you need to have products in your wardrobe." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
                     {% else %}
                         <div class="message">{% trans "Drag products here to start building a collage" %}</div>
                         <div{% if object.image %} style="display: none"{% endif %}>

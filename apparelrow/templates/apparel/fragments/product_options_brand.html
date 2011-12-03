@@ -7,7 +7,7 @@
 <input type="text" name="brand" value="{% trans "Search brands" %}" class="default" />
 <ul id="available-manufacturers">
     {% for manufacturer in manufacturers %}
-    <li><a id="available-manufacturer-{{ manufacturer.0 }}" href="{% url apparel.browse.browse_products %}?manufacturer={{ manufacturer.0 }}">{{ manufacturer.1 }}</a></li>
+    <li><a id="available-manufacturer-{{ manufacturer.0 }}" href="{% gender_url APPAREL_GENDER 'shop' %}?manufacturer={{ manufacturer.0 }}">{{ manufacturer.1 }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}

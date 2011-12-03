@@ -166,7 +166,7 @@ var ManufacturerBrowser = {
     renderItem: function(item, $list) {
         // FIXME: When we render template on server, drop this method all together
         var $a = jQuery('<a>')
-            .attr('href', '/shop/?manufacturer=' + item[0])
+            .attr('href', browse_url + '?manufacturer=' + item[0])
             .attr('id', 'available-manufacturer-' + item[0])
             .text(item[1]);
         
@@ -201,8 +201,7 @@ var ManufacturerBrowser = {
         
         self.canFetch = false;
         
-        jQuery.getJSON(
-            '/shop/manufacturers/?' + query,
+        jQuery.getJSON(browse_manufacturers_url + '?' + query,
             function(response) {
                 if(jQuery.isArray(response) && response.length > 0) {
                     jQuery.each(response, function(i, manufacturer) {

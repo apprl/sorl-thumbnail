@@ -122,12 +122,12 @@
 {% block body-classes %}three-columns{% endblock body-classes %}
 
 {% block body %}
-    {% cache CACHE_TIMEOUT index_filter LANGUAGE_CODE apparel_gender %}
+    {% cache CACHE_TIMEOUT index_filter LANGUAGE_CODE APPAREL_GENDER %}
     <div class="sidebar">
         {% include 'apparel/fragments/product_menu.html' %}
     </div>
     {% endcache %}
-    {% cache CACHE_TIMEOUT index LANGUAGE_CODE apparel_gender %}
+    {% cache CACHE_TIMEOUT index LANGUAGE_CODE APPAREL_GENDER %}
     <div id="content">
         <h2>{% trans "News" %}</h2>
         <div id="featured-looks">
@@ -187,7 +187,7 @@
     {% endcache %}
     <div class="sidebar last">
         <a href="{% url look-list %}"><h2>{% trans "Popular looks" %}</h2></a>
-        {% cache CACHE_TIMEOUT index_looks LANGUAGE_CODE apparel_gender %}
+        {% cache CACHE_TIMEOUT index_looks LANGUAGE_CODE APPAREL_GENDER %}
         {% with popular_looks as looks %}
             {% include 'apparel/fragments/looks_sidebar.html' %}
         {% endwith %}
@@ -195,4 +195,3 @@
         <a href="/looks/create/" id="create-look" class="button{% if not user.is_authenticated %} open-dialog{% endif %}">{% trans "Create a look!" %}</a>
     </div>
 {% endblock body %}
-

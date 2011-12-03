@@ -118,5 +118,3 @@ def get_current_user(view_func):
     _decorator.__doc__  = view_func.__doc__
     
     return _decorator
-
-

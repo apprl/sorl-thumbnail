@@ -26,7 +26,7 @@ from apparel.models import Manufacturer
 from apparel.models import Option
 from apparel.models import Category
 from apparel.decorators import get_current_user
-from apparel.utils import get_pagination_page, get_gender_from_cookie
+from apparel.utils import get_pagination_page
 
 #FIXME: ugly solution to avoid using get_template_source which is deprecated. Solve this in js and not by using pagination_js template.
 PAGINATION_JS_TEMPLATE_SOURCE = open(os.path.join(settings.TEMPLATE_DIRS[0], 'apparel/fragments/pagination_js.html')).read()
@@ -39,7 +39,7 @@ def _to_int(s):
     except ValueError:
         return None
 
-def set_query_arguments(query_arguments, request, facet_fields=None, profile=None):
+def set_query_arguments(query_arguments, request, facet_fields=None, gender=None, profile=None):
     """
     Set query arguments that are common for every browse page access.
     """
@@ -78,7 +78,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, profile=Non
        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join([x for x in request.GET['color'].split(',')])))
 
     # Gender
-    query_arguments['fq'].append('gender:(U OR %s)' % (get_gender_from_cookie(request)))
+    query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
     # Extra
     if 'f' in request.GET and request.user:
@@ -92,15 +92,15 @@ def set_query_arguments(query_arguments, request, facet_fields=None, profile=Non
 
     return query_arguments
 
-def browse_products(request, template='apparel/browse.html', extra_context=None):
+def browse_products(request, template='apparel/browse.html', extra_context=None, gender=None):
     facet_fields = ['category', 'price', 'color', 'manufacturer_data']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     if extra_context and 'profile' in extra_context:
         # wardrobe
-        query_arguments = set_query_arguments(query_arguments, request, facet_fields, profile=extra_context['profile'])
+        query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, profile=extra_context['profile'])
         query_arguments['sort'] = ['availability desc', 'popularity desc']
     else:
-        query_arguments = set_query_arguments(query_arguments, request, facet_fields)
+        query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender)
 
     query_string = request.GET.get('q')
     if not query_string:
@@ -183,7 +183,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
         selected_brands      = selected_brands,
         selected_brands_data = selected_brands_data,
         selected_price       = selected_price,
-        selected_gender      = get_gender_from_cookie(request),
+        selected_gender      = gender,
     )
 
     # Extra context
@@ -221,9 +221,12 @@ def browse_products(request, template='apparel/browse.html', extra_context=None)
         templates = {
             'pagination': PAGINATION_JS_TEMPLATE_SOURCE
         },
+        APPAREL_GENDER=gender,
     )
 
-    return render_to_response(template, result, context_instance=RequestContext(request))
+    response = render_to_response(template, result, context_instance=RequestContext(request))
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+    return response
 
 def get_pagination_as_dict(paged_result):
     # FIXME: This exists because the JSON exporter is unable to serialise
@@ -245,7 +248,7 @@ def browse_wardrobe(request, profile):
             template='profile/wardrobe.html',
             extra_context={'profile': profile})
 
-def browse_manufacturers(request, **kwargs):
+def browse_manufacturers(request, gender=None, **kwargs):
     """
     Browse manufacturers view.
     """
@@ -256,7 +259,7 @@ def browse_manufacturers(request, **kwargs):
     query_arguments = {'rows': settings.APPAREL_MANUFACTURERS_PAGE_SIZE, 'start': 0}
 
     # Update query arguments for browse page
-    query_arguments = set_query_arguments(query_arguments, request, ['manufacturer_data'])
+    query_arguments = set_query_arguments(query_arguments, request, ['manufacturer_data'], gender=gender)
 
     # Override qf argument
     query_arguments['qf'] = 'manufacturer_auto'

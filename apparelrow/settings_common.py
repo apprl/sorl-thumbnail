@@ -103,8 +103,7 @@ MIDDLEWARE_CLASSES = (
     'pagination.middleware.PaginationMiddleware',
     'trackback.middleware.PingbackUrlInjectionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'beta.middleware.BetaMiddleware', # must be before gender middleware
-    'apparelrow.middleware.GenderMiddleware',
+    'beta.middleware.BetaMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (

@@ -233,18 +233,6 @@ jQuery(document).ready(function() {
         }
     }
 
-    // Handles click on women in main navigation on browse page
-    jQuery('#nav-main .women, #footer .women').click(function() {
-        resetGender(jQuery('#product-gender li.women > a'));
-        return false;
-    });
-
-    // Handles click on men in main navigation on browse page
-    jQuery('#nav-main .men, #footer .men').click(function() {
-        resetGender(jQuery('#product-gender li.men > a'));
-        return false;
-    });
-
     jQuery('#product-gender li > a').click(function() {
         var element = jQuery(this);
         if(!element.hasClass('.selected')) {

@@ -1,4 +1,5 @@
 import logging
+
 from hanssonlarsson.django.exporter import json
 from django.template import Library, Variable, TemplateSyntaxError, Node, VariableDoesNotExist
 from django import template
@@ -8,6 +9,7 @@ from django.utils.timesince import timesince
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.urlresolvers import reverse
 
 from apparel.models import ProductLike, LookLike
 
@@ -331,3 +333,37 @@ def selected_url(request, pattern):
     if request.path.startswith(pattern):
         return 'selected'
     return ''
+
+@register.simple_tag
+def change_gender_url(request, current_gender, gender):
+    """
+    Calculate new url from current gender and the gender to be.
+    """
+    if current_gender == 'M':
+        current_gender = 'men'
+    elif current_gender == 'W':
+        current_gender = 'women'
+    else:
+        current_gender = False
+
+    if not current_gender:
+        return '%s?next=%s' % (reverse('gender-%s' % (gender,)), request.path)
+
+    if current_gender != gender:
+        current_gender = '/%s/' % (current_gender,)
+        if current_gender in request.path:
+            return '%s?next=%s' % (reverse('gender-%s' % (gender,)), request.path.replace(current_gender, '/%s/' % (gender,)))
+
+    return '%s?next=%s' % (reverse('gender-%s' % (gender,)), request.path)
+
+@register.simple_tag
+def gender_url(gender, named_url):
+    """
+    Reverse named_url with correct gender.
+    """
+    if gender == 'M':
+        return reverse('%s-men' % (named_url,))
+    elif gender == 'W':
+        return reverse('%s-women' % (named_url,))
+
+    return reverse(named_url)

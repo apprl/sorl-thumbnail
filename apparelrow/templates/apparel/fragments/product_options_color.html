@@ -6,7 +6,7 @@
 {% block option_content %}
 <ul>
     {% for color in all_colors %}
-    <li><a href="{% url apparel.browse.browse_products %}?color={{ color.pk }}" class="{{ color.value }}{% if selected_colors and color.value in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}">{{ color.value }}</a></li>
+    <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?color={{ color.pk }}" class="{{ color.value }}{% if selected_colors and color.value in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}">{{ color.value }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}

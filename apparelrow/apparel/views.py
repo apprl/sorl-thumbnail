@@ -5,7 +5,7 @@ import json
 
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.db.models import Q, Max, Min, Count, Sum, connection, signals, get_model
@@ -148,7 +148,7 @@ def look_like(request, slug, action):
 
     return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
 
-def look_list(request, popular=None, search=None, contains=None, page=0):
+def look_list(request, popular=None, search=None, contains=None, page=0, gender=None):
     """
     This view can list looks in four ways:
 
@@ -158,6 +158,9 @@ def look_list(request, popular=None, search=None, contains=None, page=0):
         4) If contains-argument is set displays all looks that contains the product.
 
     """
+    if not gender:
+        gender = get_gender_from_cookie(request)
+
     if popular:
         if request.user.is_authenticated():
             user_ids = Follow.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(User)).values_list('object_id', flat=True)
@@ -187,9 +190,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0):
     paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
-    return render_to_response(
-            'apparel/look_list.html',
-            {
+    response = render_to_response('apparel/look_list.html', {
                 'query': request.GET.get('q'),
                 'paginator': paged_result.paginator,
                 'pagination': pagination,
@@ -197,10 +198,10 @@ def look_list(request, popular=None, search=None, contains=None, page=0):
                 'next': request.get_full_path(),
                 'most_looks_users': most_looks_users,
                 'latest_looks': latest_looks,
-            },
-            context_instance=RequestContext(request)
-        )
-
+                'APPAREL_GENDER': gender
+            }, context_instance=RequestContext(request))
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+    return response
 
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
@@ -500,10 +501,13 @@ def csrf_failure(request, reason=None):
     logging.debug("CSRF failure: %s" % reason)
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
 
-def user_list(request, popular=None):
+def user_list(request, popular=None, gender=None):
     """
     Displays a list of profiles
     """
+    if not gender:
+        gender = get_gender_from_cookie(request)
+
     if popular:
         queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('-followers_count', 'user__first_name', 'user__last_name', 'user__username')
     else:
@@ -515,30 +519,47 @@ def user_list(request, popular=None):
     # Ten latest active members
     latest_members = ApparelProfile.objects.filter(user__is_active=True).order_by('-user__date_joined')[:8]
 
-    return render_to_response('apparel/user_list.html', {
+    response = render_to_response('apparel/user_list.html', {
             'pagination': pagination,
             'current_page': paged_result,
             'next': request.get_full_path(),
             'facebook_friends': get_facebook_friends(request),
             'latest_members': latest_members,
+            'APPAREL_GENDER': gender
         }, context_instance=RequestContext(request))
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+    return response
 
-def gender(request, gender=None):
+def gender(request, view=None, gender=None):
     """
     Display gender selection front page, also handle change from one gender to the other.
     """
+    if gender is not None:
+        response = HttpResponseRedirect(request.GET.get('next', '/'))
+        response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+        return response
+
+    if view is None:
+        return HttpResponseNotFound()
+
     # Set language to user's browser language for gender select view
     language = translation.get_language_from_request(request)
     translation.activate(language)
     request.LANGUAGE_CODE = translation.get_language()
     image = BackgroundImage.objects.get_random_image()
 
-    if gender is not None:
-        response = HttpResponseRedirect(request.GET.get('next', '/'))
-        response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-        return response
+    gender_cookie = get_gender_from_cookie(request)
+    if gender_cookie == 'W':
+        return HttpResponseRedirect(reverse('%s-women' % (view,)))
+    elif gender_cookie == 'M':
+        return HttpResponseRedirect(reverse('%s-men' % (view,)))
 
-    return render_to_response('apparel/gender.html', {'next': request.GET.get('next', '/'), 'image': image}, context_instance=RequestContext(request))
+    return render_to_response('apparel/gender.html', {
+            'men_url': reverse('%s-men' % (view,)),
+            'women_url': reverse('%s-women' % (view,)),
+            'next': request.GET.get('next', '/'),
+            'image': image
+        }, context_instance=RequestContext(request))
 
 @get_current_user
 @login_required
@@ -623,13 +644,10 @@ def dialog_follow_user(request):
     return render_to_response('apparel/fragments/dialog_follow_user.html',
             {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
 
-def index(request):
-    #ctx = get_filter(request)
+def index(request, gender=None):
     ctx = {}
-    # FIXME: This just selects the top voted objects. We should implement a better popularity algorithm, see #69
-    gender = get_gender_from_cookie(request)
     ctx['pages'] = FirstPageContent.published_objects.filter(gender__in=['U', gender], language=request.LANGUAGE_CODE)
-    ctx['popular_looks'] = get_top_looks(request, limit=8)
+    ctx['popular_looks'] = get_top_looks(request, limit=8, gender=gender)
     ctx['all_colors'] = Option.objects.filter(option_type__name='color')
     # ctx['categories_all'] contains all categories, they will later be filtered
     ctx['categories_all'] = Category._tree_manager.filter(on_front_page=True)
@@ -669,7 +687,11 @@ def index(request):
     category_values = map(int, facet_fields['category'][1::2])
     ctx['categories'] = dict(zip(category_ids, category_values))
 
-    return render_to_response('index.html', ctx, context_instance=RequestContext(request))
+    ctx['APPAREL_GENDER'] = gender
+
+    response = render_to_response('index.html', ctx, context_instance=RequestContext(request))
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+    return response
 
 def apparel_set_language(request):
     language = request.POST.get('language', None)
@@ -701,8 +723,14 @@ except ImportError:
 # Utility routines. FIXME: Move these out
 #
 
-def get_top_looks(request, limit=10):
-    return Look.objects.filter(likes__active=True).filter(gender__in=['U', get_gender_from_cookie(request)]).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
+def get_top_looks(request, limit=10, gender=None):
+    """
+    Get the most popular looks, sorted by number of likes. If gender is set,
+    also filter looks by gender.
+    """
+    if gender is not None:
+        return Look.objects.filter(likes__active=True).filter(gender__in=['U', gender]).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
+    return Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
 
 def get_most_followed_users(limit=2):
     #object_ids = [x['object_id'] for x in Follow.objects.values('object_id').annotate(Count('id')).order_by('-id__count')[:limit]]

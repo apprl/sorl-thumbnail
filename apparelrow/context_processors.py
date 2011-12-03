@@ -24,4 +24,4 @@ def next_redirects(request):
         }
 
 def gender(request):
-    return {'apparel_gender': get_gender_from_cookie(request)}
+    return {'APPAREL_GENDER': get_gender_from_cookie(request)}

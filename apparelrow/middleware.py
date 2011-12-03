@@ -2,6 +2,7 @@ from django.middleware.locale import LocaleMiddleware
 from django.http import HttpResponseRedirect
 from django.utils import translation
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 class SwedishOnlyLocaleMiddleware(LocaleMiddleware):
     """
@@ -17,13 +18,3 @@ class SwedishOnlyLocaleMiddleware(LocaleMiddleware):
 
         translation.activate(language)
         request.LANGUAGE_CODE = translation.get_language()
-
-class GenderMiddleware(object):
-    """
-    Require a selected gender in order to view any page.
-    """
-    # TODO: update the cookie periodically
-    def process_request(self, request):
-        if not request.path.startswith('/gender') and not request.path.startswith('/beta') and \
-           not request.path.startswith('/admin') and not request.path.startswith(settings.MEDIA_URL) and not request.COOKIES.get('gender'):
-            return HttpResponseRedirect('%s?next=%s' % ('/gender/', request.path))

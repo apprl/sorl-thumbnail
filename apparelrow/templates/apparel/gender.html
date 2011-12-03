@@ -7,7 +7,7 @@
     <p>{% blocktrans %}We look forward to making Apparelrow better together with you. We appreciate all questions, suggestions and problems from you, the more the better. Click the link "Tyck Till" on the right hand side to share your thoughts. Or send us an email on <a href="mailto:info@apparelrow.com">info@apparelrow.com</a>. Have fun!{% endblocktrans %}</p>
 </div>
 <div id="link-container">
-    <a href="{% url gender-women %}?next={{ next }}" class="women">{% trans "Women" %}</a>
-    <a href="{% url gender-men %}?next={{ next }}" class="men">{% trans "Men" %}</a>
+    <a href="{{ women_url }}" class="women">{% trans "Women" %}</a>
+    <a href="{{ men_url }}" class="men">{% trans "Men" %}</a>
 </div>
 {% endblock %}

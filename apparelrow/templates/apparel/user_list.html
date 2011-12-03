@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-{% load i18n %}
 {% load facebook %}
+{% load i18n %}
+{% load apparel_extras %}
 
 {% block body-classes %}three-columns profile profile-profiles{% endblock body-classes %}
 
@@ -16,11 +17,9 @@
         </ul>
     </div>
     <div id="content">
-        {% url user-list as user_list_url %}
-        {% url popular-user-list as popular_user_list_url %}
         <ul class="user-list-tabs">
-            <li><a class="first latest{% if request.path == popular_user_list_url %} current{% endif %}" href="{{ popular_user_list_url }}">{% trans "Most followers" %}</a></li>
-            <li><a class="last popular{% if request.path == user_list_url %} current{% endif %}" href="{{ user_list_url }}">{% trans "Members in alphabetical order" %}</a></li>
+            <li><a class="first latest{% if 'popular' in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'user-list-popular' %}">{% trans "Most followers" %}</a></li>
+            <li><a class="last popular{% if 'popular' not in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'user-list' %}">{% trans "Members in alphabetical order" %}</a></li>
         </ul>
         <ul class="users">
         {% for follower in current_page.object_list %}

@@ -271,6 +271,13 @@ def search_view(request, model_name):
 
     model_name = model_name.lower()
 
+    # Gender field
+    gender = get_gender_from_cookie(request)
+    if not gender:
+        gender_field = 'gender:(U OR M OR W)'
+    else:
+        gender_field = 'gender:(U OR %s)' % (gender,)
+
     # Base arguments
     arguments = {'qf': ['text'],
                  'defType': 'edismax',
@@ -281,15 +288,14 @@ def search_view(request, model_name):
     # Filter query parameters based on model name
     if model_name == 'product':
         arguments['fq'].append('availability:true')
-        arguments['fq'].append('gender:(U OR %s)' % (get_gender_from_cookie(request)))
+        arguments['fq'].append(gender_field)
         arguments['qf'] = PRODUCT_SEARCH_FIELDS
     elif model_name == 'look':
         arguments['qf'] = ['text']
-        arguments['fq'].append('gender:(U OR %s)' % (get_gender_from_cookie(request)))
+        arguments['fq'].append(gender_field)
     elif model_name == 'manufacturer':
         # override fq cause we do not have a separate manufacturer index
-        arguments['fq'] = ['django_ct:apparel.product', 'availability:true']
-        arguments['fq'].append('gender:(U OR %s)' % (get_gender_from_cookie(request)))
+        arguments['fq'] = ['django_ct:apparel.product', 'availability:true', gender_field]
         arguments['qf'] = ['manufacturer_auto']
         arguments['facet'] = 'on'
         arguments['facet.limit'] = -1

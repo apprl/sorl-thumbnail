@@ -5,11 +5,11 @@ def get_gender_from_cookie(request):
     """
     Get gender from cookie in a safe way.
     """
-    cookie_value = request.COOKIES.get(settings.APPAREL_GENDER_COOKIE, 'U')
-    if cookie_value in ['M', 'W', 'U']:
+    cookie_value = request.COOKIES.get(settings.APPAREL_GENDER_COOKIE, '')
+    if cookie_value in ['M', 'W']:
         return cookie_value
 
-    return 'U'
+    return None
 
 def get_pagination_page(queryset, per_page, page_num, on_ends=2, on_each_side=3):
     """

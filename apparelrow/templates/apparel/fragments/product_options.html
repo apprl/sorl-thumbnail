@@ -1,11 +1,12 @@
 {% load i18n %}
+{% load apparel_extras %}
 
 <div class="options">
-    <form action="{% url apparel.browse.browse_products %}">
+    <form action="{% gender_url APPAREL_GENDER 'shop' %}">
         <div>
             <h3>
                 {% block option_header %}{% endblock %}
-                <a class="reset" href="{% url apparel.browse.browse_products %}">{% trans "Show all" %}</a>
+                <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Show all" %}</a>
             </h3>
             <div class="option-content">
                 {% block option_content %}{% endblock %}
