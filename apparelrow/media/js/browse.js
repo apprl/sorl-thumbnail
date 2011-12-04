@@ -470,8 +470,14 @@ function renderPage(products) {
     query = getQuery();
     if('f' in query) {
         jQuery('#product-count a').hide();
+        jQuery('#product-gender').show();
     } else {
         jQuery('#product-count a').show();
+        // Special case, only hide gender if we are not on the wardrobe page
+        // TODO / FIXME: better solution?
+        if(window.location.pathname.indexOf('wardrobe') == -1) {
+            jQuery('#product-gender').hide();
+        }
     }
 
     if(location.hash && location.hash != '#!') {

@@ -39,6 +39,17 @@ def _to_int(s):
     except ValueError:
         return None
 
+def generate_gender_field(params):
+    """
+    Generate a SOLR expression for the gender field based on params.
+    """
+    gender_field = 'gender:(W OR M OR U)'
+    if 'gender' in params:
+        if params['gender'] == 'M' or params['gender'] == 'W':
+            gender_field = 'gender:(%s OR U)' % (params['gender'],)
+
+    return gender_field
+
 def set_query_arguments(query_arguments, request, facet_fields=None, gender=None, profile=None):
     """
     Set query arguments that are common for every browse page access.
@@ -77,18 +88,18 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     if 'color' in request.GET:
        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join([x for x in request.GET['color'].split(',')])))
 
-    # Gender
-    query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
-
     # Extra
     if 'f' in request.GET and request.user:
         user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
         user_ids_or = ' OR '.join(str(x) for x in user_ids)
         query_arguments['fq'].append('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or))
+        query_arguments['fq'].append(generate_gender_field(request.GET))
     elif profile:
         query_arguments['fq'].append('user_wardrobe:%s' % (profile.user.id,))
+        query_arguments['fq'].append(generate_gender_field(request.GET))
     else:
         query_arguments['fq'].append('availability:true')
+        query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
     return query_arguments
 
@@ -221,11 +232,19 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
         templates = {
             'pagination': PAGINATION_JS_TEMPLATE_SOURCE
         },
-        APPAREL_GENDER=gender,
     )
 
+    # Wardrobe page has no gender in the url, do not set APPAREL_GENDER from wardrobe calls
+    if not extra_context:
+        result.update(APPAREL_GENDER=gender)
+
+    # If we are called from the wardrobe, make sure the templates know this
+    if extra_context and 'profile' in extra_context:
+        result.update(wardrobe=True)
+
     response = render_to_response(template, result, context_instance=RequestContext(request))
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+    if not extra_context:
+        response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 
 def get_pagination_as_dict(paged_result):
