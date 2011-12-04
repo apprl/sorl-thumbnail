@@ -172,25 +172,31 @@ button
         form.select-language
           position: absolute
           top: 25px
-          right: -3px
+          right: -4px
           z-index: 99999
           ul
-            width: 63px
-            background-color: $font_color
+            width: 65px
+            background: #2e2e2e image_url(unquote("language-popup-bg.png")) scroll repeat-x center top
             +border(all, $font_color)
             +border-radius(3px)
             +box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 5px)
             line-height: 0
             li
-              +border(bottom, #282828)
-              width: 63px
+              +border(bottom, #363636)
+              width: 65px
               margin: 0
               padding: 0
               line-height: 24px
               &.last
                 border: 0
+              &.arrow
+                position: absolute
+                top: -4px
+                height: 8px
+                background: transparent image_url(unquote("language-popup-arrow.png")) scroll no-repeat center top
+                border: none
               button
-                width: 63px
+                width: 65px
                 height: 24px
         form.select-language, form.connect-button
           display: inline-block

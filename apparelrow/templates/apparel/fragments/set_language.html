@@ -7,6 +7,7 @@
 <form action="{% url apparel.views.apparel_set_language %}" method="post" class="select-language" style="display: none">
     {% csrf_token %}
     <ul>
+        <li class="arrow"></li>
     {% for language in LANGUAGES %}
         <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}">
             {% if language.0 == request.LANGUAGE_CODE %}
