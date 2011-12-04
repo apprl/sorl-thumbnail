@@ -676,7 +676,7 @@ jQuery(document).ready(function() {
                     break;
                 }
 
-                location.href = '/shop/#' + ApparelSearch.format_query(query);
+                window.location.href = '/shop/#' + ApparelSearch.format_query(query);
                 break;
 
             case 'search-result-looks':
@@ -685,13 +685,13 @@ jQuery(document).ready(function() {
                     break;
                 }
 
-                location.href = '/looks/search/?' + ApparelSearch.format_query(query);
+                window.location.href = '/looks/search/?' + ApparelSearch.format_query(query);
                 break;
 
             case 'search-result-manufacturers':
 
                 var s = query.q;
-                location.href =
+                window.location.href =
                     '/shop/?criterion=manufacturer&'
                     + encodeURIComponent('1:m.name:icontains')
                     + '=' + encodeURIComponent(s)

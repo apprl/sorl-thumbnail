@@ -325,7 +325,7 @@ jQuery(document).ready(function() {
      * the query string
      * 
      */
-    jQuery.each(location.search.split('&'), function(i, e) {
+    jQuery.each(window.location.search.split('&'), function(i, e) {
         var pair = e.split('=');
         if(pair[0] != 'defaults') return;
         var value = unescape(pair[1]).split('|');
@@ -391,8 +391,8 @@ function getQuery(query, reset) {
             + jQuery("input[name=pricerange_max]").val();
     }
 
-    if(!reset && location.hash.length > 0) {
-        var pairs = location.hash.substr(1).split('&');
+    if(!reset && window.location.hash.length > 0) {
+        var pairs = window.location.hash.substr(1).split('&');
         for(var i = 0; i < pairs.length; i++) {
             keyval = pairs[i].split('=');
             if(keyval[0] == 'q') {
@@ -428,7 +428,7 @@ function delayedFilter(query) {
 }
 
 function filter(query, callback) {
-    // FIXME: History hack. It is not possible to set location.hash and then call
+    // FIXME: History hack. It is not possible to set window.location.hash and then call
     // doFilter(...) as that will invoke the call twice with a different callback
     // The current workaround is this:
     // 1) Only let the jQuery.history callback invoke doFilter()
@@ -480,7 +480,7 @@ function renderPage(products) {
         }
     }
 
-    if(location.hash && location.hash != '#!') {
+    if(window.location.hash && window.location.hash != '#!') {
         jQuery('#reset').show()
     } else {
         jQuery('#reset').hide()
