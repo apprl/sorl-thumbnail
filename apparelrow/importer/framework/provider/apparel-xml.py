@@ -40,6 +40,14 @@ class ApparelMapper(DataMapper):
 
         return None
 
+    def get_category(self):
+        gender = self.record.get('gender')
+        if gender:
+            return '%s > %s' % (gender, self.record.get('category'))
+
+        return self.record.get('category')
+
+
 class Provider(BaseProvider):
     def __init__(self, *args, **kwargs):
         super(Provider, self).__init__(*args, **kwargs)
