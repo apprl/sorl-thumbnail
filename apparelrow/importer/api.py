@@ -230,10 +230,9 @@ class API(object):
                 vendor=self.vendor,
             )
             
-            if created:
-                self._vendor_product.vendor_category = self.vendor_category
-                self._vendor_product.save()
-                logger.debug('Added product data to vendor: %s', self._vendor_product)
+            self._vendor_product.vendor_category = self.vendor_category
+            self._vendor_product.save()
+            logger.debug('Added product data to vendor: %s', self._vendor_product)
 
         return self._vendor_product
         
