@@ -300,7 +300,7 @@ def search_view(request, model_name):
         arguments['facet'] = 'on'
         arguments['facet.limit'] = -1
         arguments['facet.mincount'] = 1
-        arguments['facet.field'] = ['manufacturer', 'manufacturer_data']
+        arguments['facet.field'] = ['manufacturer_data']
 
     # Used in look image to bring up popup with products
     ids = request.GET.get('ids', False)
