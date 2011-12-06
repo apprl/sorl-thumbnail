@@ -4,7 +4,7 @@ $HTTP["host"] =~ "^(demo|www)\.(apparelrow\.com)$" {
 
 $HTTP["host"] == "apparelrow.com" {
     var.project-name = "apparelrow"
-    var.deploy-base  = var.hnl-deploy-dir + "/apparelrow"
+    var.deploy-base  = "/home/deploy/apparelrow"
     var.deploy-dir   = var.deploy-base + "/releases/current"
 
     server.document-root = var.deploy-dir + "/" + var.project-name
