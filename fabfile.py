@@ -83,6 +83,8 @@ def setup(snapshot='master'):
     sudo('apt-get install -y rabbitmq-server')
     # install memcached
     sudo('apt-get install -y memcached')
+    # install java (for solr)
+    sudo('apt-get install -y openjdk-6-jre-headless')
 
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
@@ -90,7 +92,7 @@ def setup(snapshot='master'):
 
     # Install Compass
     sudo('apt-get install -y rubygems')
-    sudo('gem install compass')
+    sudo('gem install compass --no-rdoc --no-ri')
 
     if env.dbserver=='mysql':
         sudo('apt-get install -y libmysqlclient-dev')
@@ -246,7 +248,8 @@ def restart_django():
         sudo('./bin/django-server restart', pty=True, user=env.run_user)
 
 def restart_solr():
-    sudo('restart solr', pty=True)
+    with settings(warn_only=True):
+        sudo('restart solr', pty=True)
 
 def restart_celeryd():
     sudo('/etc/init.d/celeryd restart', pty=True)
