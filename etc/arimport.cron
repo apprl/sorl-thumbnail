@@ -1,4 +1,4 @@
 #!/bin/sh
 # Run import for all configured apparelrow providers
 
-su -s /bin/sh -c "/home/hanssonlarsson/apparelrow/bin/import 1>> /home/hanssonlarsson/apparelrow/var/logs/importer.log" www-data
+su -s /bin/sh -c "/home/deploy/apparelrow/bin/import 1>> /home/deploy/apparelrow/var/logs/importer.log" www-data
