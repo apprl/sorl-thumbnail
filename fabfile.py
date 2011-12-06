@@ -67,7 +67,7 @@ def setup_db():
     elif env.dbserver=='postgresql':
         sudo('apt-get install -y postgresql')
     
-def setup():
+def setup(snapshot='master'):
     """
     Setup a fresh virtualenv as well as a few useful directories, then run
     a full deployment
@@ -81,7 +81,7 @@ def setup():
     sudo('apt-get install -y git-core subversion')
     # install rabbitmq-server (add http://www.rabbitmq.com/debian.html#apt for newest version)
     sudo('apt-get install -y rabbitmq-server')
-        
+
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
     sudo('easy_install pip')
@@ -109,7 +109,7 @@ def setup():
             run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared packages backup;', pty=True)
             sudo('chown -R %(run_user)s:%(run_group)s var;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
-    deploy('first')
+    deploy('first', snapshot=snapshot)
     
 def deploy(param='', snapshot='master'):
     """
