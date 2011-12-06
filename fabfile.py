@@ -81,6 +81,8 @@ def setup(snapshot='master'):
     sudo('apt-get install -y git-core subversion')
     # install rabbitmq-server (add http://www.rabbitmq.com/debian.html#apt for newest version)
     sudo('apt-get install -y rabbitmq-server')
+    # install memcached
+    sudo('apt-get install -y memcached')
 
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
@@ -133,6 +135,7 @@ def deploy(param='', snapshot='master'):
     restart_solr()
     restart_celeryd()
     restart_django()
+    restart_memcached()
     restart_webserver()
     
 def deploy_version(version):
@@ -247,6 +250,9 @@ def restart_solr():
 
 def restart_celeryd():
     sudo('/etc/init.d/celeryd restart', pty=True)
+
+def restart_memcached():
+    sudo('/etc/init.d/memcached restart', pty=True)
 
 def restart_webserver():
     "Restart the web server"
