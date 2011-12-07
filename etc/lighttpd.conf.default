@@ -1,10 +1,10 @@
 $HTTP["host"] =~ "^(demo|www)\.(apparelrow\.com)$" {
-    url.redirect = ( "^/(.*)" => "http://%2/$1" )
+    url.redirect = ( "^/(.*)" => "http://%%2/$1" )
 }
 
 $HTTP["host"] == "apparelrow.com" {
     var.project-name = "apparelrow"
-    var.deploy-base  = "/home/deploy/apparelrow"
+    var.deploy-base  = "%(path)s"
     var.deploy-dir   = var.deploy-base + "/releases/current"
 
     server.document-root = var.deploy-dir + "/" + var.project-name

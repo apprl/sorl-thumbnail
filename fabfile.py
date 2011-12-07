@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement # needed for python 2.5
 from fabric.api import *
+from fabric.contrib.files import upload_template
 from os import environ
 
 # globals
@@ -40,6 +41,7 @@ def prod_db():
     "Use our EC2 server"
     env.hosts = ['db1.apparelrow.com']
     env.user = 'deploy'
+    env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
    
 # tasks
@@ -60,12 +62,18 @@ def setup_db():
         sudo('stop mysql')
         sudo('test -d /var/lib/mysql && mv /var/lib/mysql /mnt || true')
         sudo("sed -i 's/var\/lib/mnt/' /etc/apparmor.d/usr.sbin.mysqld")
-        put('etc/mysql.cnf', '/etc/mysql/conf.d/apparelrow.cnf', use_sudo=True)
+        upload_template('etc/mysql.cnf', '/etc/mysql/conf.d/apparelrow.cnf', use_sudo=True, context=env)
         sudo('/etc/init.d/apparmor restart')
         sudo('start mysql')
-        run('mysql_setpermission -u root -p')
+        upload_template('etc/mysql.sql', '/tmp/setup.sql', context=env)
+        sudo('mysql -u root -p < /tmp/setup.sql')
+        sudo('restart mysql')
     elif env.dbserver=='postgresql':
         sudo('apt-get install -y postgresql')
+        upload_template('etc/postgres.sql', '/tmp/setup.sql', context=env)
+        sudo('psql -U root -W < /tmp/setup.sql')
+        sudo('restart postgresql')
+    sudo('rm -f /tmp/setup.sql')
     
 def setup(snapshot='master'):
     """
@@ -180,7 +188,7 @@ def install_site():
     "Add the virtualhost config file to the webserver's config, activate logrotate"
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s' % env):
-        sudo('cp etc/%(webserver)s.conf.default /etc/%(webserver)s/conf-available/%(project_name)s.conf' % env, pty=True)
+        upload_template('etc/%(webserver)s.conf.default' % env, '/etc/%(webserver)s/conf-available/%(project_name)s.conf' % env, context=env, use_sudo=True)
     with settings(warn_only=True):
         sudo('cd /etc/%(webserver)s/conf-enabled/; ln -s ../conf-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
     
@@ -206,9 +214,10 @@ def copy_config():
         run('cp ./releases/%(release)s/etc/requirements.pip ./etc/requirements.pip' %env, pty=True)
         run('cp -n ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
         run('cd releases/%(release)s/apparelrow; cp production.py.default production.py' % env, pty=True)
-        sudo('cp -n ./releases/%(release)s/etc/arimport.cron /etc/cron.daily/arimport' % env, pty=True)
-        sudo('cp -n ./releases/%(release)s/etc/solr.conf.init /etc/init/solr.conf' % env, pty=True)
-        sudo('cp -n ./releases/%(release)s/etc/celeryd.default /etc/default/celeryd' % env, pty=True)
+        upload_template('etc/arimport.cron', '/etc/cron.daily/arimport', context=env, use_sudo=True)
+        sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
+        upload_template('etc/solr.conf.init', '/etc/init/solr.conf', context=env, use_sudo=True)
+        upload_template('etc/celeryd.default', '/etc/default/celeryd', context=env, use_sudo=True)
         sudo('cp -n ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
         sudo('update-rc.d celeryd defaults', pty=True)
 

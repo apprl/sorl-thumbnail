@@ -7,9 +7,9 @@ start on runlevel [2345]
 stop on runlevel [06]
 
 script
-    BASE_DIR="/home/deploy/apparelrow"
+    BASE_DIR="%(path)s"
     SOLR_HOME="$BASE_DIR/solr"
     ENABLE_SOLR="yes"
     if [ -f /etc/default/solr ]; then . /etc/default/solr; fi
-    if [ "x$ENABLE_SOLR" = "xyes" ]; then exec sudo -E -u www-data java -Djava.util.logging.config.file=$SOLR_HOME/etc/logging.properties -Djetty.home=$SOLR_HOME -Dsolr.solr.home=$SOLR_HOME/solr -jar $SOLR_HOME/start.jar 2>> $BASE_DIR/var/logs/solr_error.log 1>> $BASE_DIR/var/logs/solr.log; fi
+    if [ "x$ENABLE_SOLR" = "xyes" ]; then exec sudo -E -u %(run_user)s java -Djava.util.logging.config.file=$SOLR_HOME/etc/logging.properties -Djetty.home=$SOLR_HOME -Dsolr.solr.home=$SOLR_HOME/solr -jar $SOLR_HOME/start.jar 2>> $BASE_DIR/var/logs/solr_error.log 1>> $BASE_DIR/var/logs/solr.log; fi
 end script
