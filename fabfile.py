@@ -122,6 +122,7 @@ def setup(snapshot='master'):
             sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse shared/static;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     deploy('first', snapshot=snapshot)
+    load_fixtures()
     
 def deploy(param='', snapshot='master'):
     """
@@ -173,6 +174,11 @@ def rollback():
     restart_webserver()    
     
 # Helpers. These are called by other functions rather than directly
+
+def load_fixtures():
+    require('release', provided_by=[deploy, setup])
+    with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
+        sudo('%(path)s/bin/python manage.py loaddata importer/fixtures/color_mapping.yaml importer/fixtures/feedvendors.yaml apparel/fixtures/* --settings production' % env, pty=True, user=env.run_user)
 
 def upload_tar_from_git(snapshot='master'):
     "Create an archive from the current Git master branch and upload it"
@@ -243,10 +249,10 @@ def migrate(param=''):
     require('project_name')
     require('path')
     env.southparam = '--auto'
-    if param=='first':
-        sudo('cd %(path)s/releases/%(release)s/%(project_name)s; %(path)s/bin/python manage.py syncdb --noinput --settings production' % env, pty=True, user=env.run_user)
-        env.southparam = '--initial'
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
+        if param=='first':
+            sudo('%(path)s/bin/python manage.py syncdb --settings production' % env, pty=True, user=env.run_user)
+            env.southparam = '--initial'
         #run('%(path)s/bin/python manage.py schemamigration %(project_name)s %(southparam)s --settings production && %(path)s/bin/python manage.py migrate %(project_name)s --settings production' % env)
         sudo('%(path)s/bin/python manage.py migrate --settings production' % env, pty=True, user=env.run_user)
         # TODO: should also migrate other apps! get migrations from previous releases
