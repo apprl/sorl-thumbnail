@@ -118,8 +118,8 @@ def setup(snapshot='master'):
     with cd(env.path):
         run('virtualenv --no-site-packages .')
         with settings(warn_only=True):
-            run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared packages backup;', pty=True)
-            sudo('chown -R %(run_user)s:%(run_group)s var;' % env, pty=True)
+            run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared/warehouse packages backup;', pty=True)
+            sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     deploy('first', snapshot=snapshot)
     
