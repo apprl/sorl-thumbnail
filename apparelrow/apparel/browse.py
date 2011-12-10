@@ -194,7 +194,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
         selected_brands      = selected_brands,
         selected_brands_data = selected_brands_data,
         selected_price       = selected_price,
-        selected_gender      = gender,
+        selected_gender      = None,
     )
 
     # Extra context
