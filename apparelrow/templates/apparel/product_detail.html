@@ -26,9 +26,20 @@
                 jQuery(this).find('.magnifier').fadeOut('slow');
                 return false;
             });
-            jQuery('.product-image a').overlay({ 
-                target: "#gallery",
-                fixed: false
+
+
+            // Gallery overlay
+            gallery_overlay = false;
+            jQuery('.product-image a').click(function(event) {
+                gallery_overlay = true;
+                jQuery('#gallery').css({'position': 'absolute', 'left': '50%', 'top': '100px'}).show();
+                return false;
+            });
+            jQuery(document).click(function(event) {
+                if(gallery_overlay) {
+                    gallery_overlay = false;
+                    jQuery('#gallery').hide();
+                }
             });
 
             jQuery('#add-to-look').bind('click mouseenter mouseleave', function(event) {
@@ -170,6 +181,7 @@
             {% include 'apparel/fragments/product_detail.html' %}
             <!-- overlay element -->
             <div id="gallery">
+                <div class="close"></div>
                 <img src="{{object.product_image.url}}">
             </div>
         </div>
