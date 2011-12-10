@@ -281,18 +281,22 @@ def look_create(request):
     """
 
     if request.method == 'GET' and request.user.is_authenticated():
-        return render_to_response('apparel/look_create.html', {}, context_instance=RequestContext(request))
+        return render_to_response('apparel/look_create.html', {'form': LookForm()}, context_instance=RequestContext(request))
 
     if request.method == 'POST' and request.user.is_authenticated():
-        look = Look.objects.create(
-            user=request.user,
-            title=request.POST.get('title'),
-            description=request.POST.get('description')
-        )
-        if request.is_ajax():
-            return HttpResponse(json.encode({'success': True, 'data': look}), mimetype='text/json')
+        form = LookForm(request.POST)
 
-        return HttpResponseRedirect(reverse('apparel.views.look_edit', args=(look.slug,)))
+        if form.is_valid():
+            look = form.save(commit=False)
+            look.user = request.user
+            look.save()
+
+            if request.is_ajax():
+                return HttpResponse(json.encode({'success': True, 'data': look}), mimetype='text/json')
+
+            return HttpResponseRedirect(reverse('apparel.views.look_edit', args=(look.slug,)))
+
+        return HttpResponseRedirect(reverse('apparel.views.look_create'))
 
     return render_to_response('apparel/fragments/dialog_create_look.html', {}, context_instance=RequestContext(request))
 

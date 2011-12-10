@@ -5,7 +5,7 @@ class LookForm(ModelForm):
     tags = CharField(widget=Textarea, required=False)
     class Meta:
         model = Look
-        exclude = ('products','user', 'gender')
+        exclude = ('products', 'user', 'gender')
 
 class LookComponentForm(ModelForm):
     class Meta:

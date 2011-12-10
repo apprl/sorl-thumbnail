@@ -16,11 +16,11 @@
         <ul>
         <li>
             <label for="id_title">{% trans "Title" %}</label>
-            <input type="text" name="title" id="id_title">
+            {{ form.title }}
         </li>
         <li>
             <label for="id_description">{% trans "Description (optional):" %}</label>
-            <textarea name="description" cols="40" rows="10" id="id_description" style="overflow: hidden; display: block;"></textarea>
+            {{ form.description }}
         </li>
         <li>
             <button type="submit">{% trans "Create" %}</button>
