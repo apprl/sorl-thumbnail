@@ -27,7 +27,7 @@
     {% else %}
     \ <a href="{% gender_url APPAREL_GENDER 'shop' %}#category={{ category.id }}">{{ category }}</a>
     {% endif %}
-    {% endfor %} \ {{ object.manufacturer }}
+    {% endfor %} \ <a href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ object.manufacturer.id }}">{{ object.manufacturer }}</a>
     </h2>
     <h1>{{ object.manufacturer }}</h1>
     {% if object.product_name %}<h3>{{ object.product_name }}</h3>{% endif %}
