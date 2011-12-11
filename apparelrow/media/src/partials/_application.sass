@@ -913,9 +913,21 @@ body.three-columns .pagination
           font-weight: bold
           background: transparent image_url(unquote("current-page.png")) no-repeat scroll center bottom
 
+.product-back
+  margin-top: 20px
+  margin-bottom: 10px
+  a
+    display: block
+    +button(none, unquote("22px"))
+    +border-radius(unquote("2px"))
+    +highlight
+    width: 100px
+    text-align: center
+    &:hover
+      +highlight_hover
+
 .product-left
   +float-left
-  margin-top: 30px
   width: $small_width
   margin-right: $gutter_width
 
@@ -937,6 +949,7 @@ body.three-columns .pagination
   margin-right: $gutter_width
   width: $small_width
   h2
+    margin-top: 0
     color: $easy_color
     a:hover
       text-decoration: underline
@@ -1161,10 +1174,6 @@ body.product
   +row($aside_width)
 #more-like-this
   +row($semi_large_width)
-
-body.product
-  .sidebar
-    margin-top: 30px
 
 a h2
   background: transparent image_url("arrow-bg.png") scroll no-repeat right center
