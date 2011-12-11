@@ -77,6 +77,13 @@
         {% endfor %}
         {% endwith %}
     </div>
+
+    {% if object.original_currency %}
+    <div class="product-original-currency">
+        {% blocktrans with object.original_currency|join:", " as original_currency %}The item is sold in {{ original_currency }} and the conversion to SEK is approximate.{% endblocktrans %}
+    </div>
+    {% endif %}
+
 {% endcache %}
     <ul id="add-menu" class="menu hover-menu">
         {% include 'apparel/fragments/share.html' %}

@@ -161,6 +161,15 @@ class Product(models.Model):
         except IndexError:
             return None
 
+    @property
+    def original_currency(self):
+        original_currency = []
+        for vendorproduct in self.vendorproduct.all():
+            if vendorproduct.original_currency != 'SEK':
+                original_currency.append(vendorproduct.original_currency)
+
+        return original_currency
+
     @models.permalink
     def get_absolute_url(self):
         return ('apparel.views.product_detail', [str(self.slug)])
