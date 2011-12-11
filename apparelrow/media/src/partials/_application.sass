@@ -1017,6 +1017,7 @@ a.buy-now
     margin-top: -32px
 
 .product-vendors a.buy-now
+  +buy_now
   float: right
   margin-top: -50px
   padding: 58px 0 0
@@ -1051,6 +1052,9 @@ a.buy-now
   .original-price, .original-price .price
     font-size: 1em
     color: $easy_color
+  .original-price .currency
+    display: inline-block
+    margin-top: -4px
 
 .vendor
   +vendor
