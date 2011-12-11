@@ -176,54 +176,71 @@
 
 {% if object %}
 {% url apparel.views.product_user_like_list object.slug as likes_url %}
-        <div id="content">
-            {% get_trackbacks_for object as trackbacks %}
-            {% include 'apparel/fragments/product_detail.html' %}
-            <!-- overlay element -->
+        <div class="product-left">
+            <div class="product-image">
+                <a href="{{ object.product_image.url }}" title="{{ object.manufacturer }} - {{ object.product_name }}"><img src="/scale/328x500{{ object.product_image.url }}" /></a>
+                {% url apparel.views.product_like object.slug 'like' as like_url %}
+                {% url apparel.views.product_like object.slug 'unlike' as unlike_url %}
+                {% url dialog-like-product as dialog_url %}
+                {% with user|likes_product:object as is_liked %}
+                {% include 'apparel/fragments/like_button.html' %}
+                {% endwith %}
+            </div>
             <div id="gallery">
                 <div class="close"></div>
                 <img src="{{object.product_image.url}}">
             </div>
+            {% include 'apparel/fragments/comments.html' %}
         </div>
-        <div class="sidebar last">
-            {% get_comment_count for object as comment_count %}
-            <div class="activity">
-                {% include 'apparel/fragments/comment_count.html' %}
-                <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
-                <p class="last">{% include 'apparel/fragments/likes_link.html' %}</p>
-            </div>
-            {% if viewed_products %}
-                <h2>{% trans "Recently viewed" %}</h2>
-                <div id="recentlyviewed">
-                    {% with viewed_products as products %}
-                    {% include 'apparel/fragments/product_row.html' %}
-                    {% endwith %}
-                </div>
-            {% endif %}
-            {% if more_like_this %}
-                <h2>{% trans "Similar" %}</h2>
-                <div id="more-like-this">
-                    <a class="prev">{% trans "Previous" %}</a>
-                    <div class="row">
-                        <ul>
-                        {% for product in more_like_this %}
-                            {{ product.template_mlt|safe }}
-                        {% endfor %}
-                        </ul>
+        <div class="product-right">
+            <div class="product-content">
+                {% get_trackbacks_for object as trackbacks %}
+                {% include 'apparel/fragments/product_detail.html' %}
+                <div class="sidebar last">
+                    {% get_comment_count for object as comment_count %}
+                    <div class="activity">
+                        {% include 'apparel/fragments/comment_count.html' %}
+                        <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
+                        <p class="last">{% include 'apparel/fragments/likes_link.html' %}</p>
                     </div>
-                    <a class="next">{% trans "Next" %}</a>
+                    {% if viewed_products %}
+                        <h2>{% trans "Recently viewed" %}</h2>
+                        <div id="recentlyviewed">
+                            {% with viewed_products as products %}
+                            {% include 'apparel/fragments/product_row.html' %}
+                            {% endwith %}
+                        </div>
+                {% endif %}
                 </div>
-            {% endif %}
-            <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
-                {% blocktrans count looks_with_product|length as counter %}
-                    <span class="count">{{ counter }}</span> look with this product
-                {% plural %}
-                    <span class="count">{{ counter }}</span> looks with this product
-                {% endblocktrans %}
-            </h2></a>
-            {% with looks_with_product as looks %}
-            {% include 'apparel/fragments/looks.html' %}
-            {% endwith %}
+            </div>
+            <div class="product-similar">
+                {% if more_like_this %}
+                    <h2>{% trans "Similar" %}</h2>
+                    <div id="more-like-this">
+                        <a class="prev">{% trans "Previous" %}</a>
+                        <div class="row">
+                            <ul>
+                            {% for product in more_like_this %}
+                                {{ product.template_mlt|safe }}
+                            {% endfor %}
+                            </ul>
+                        </div>
+                        <a class="next">{% trans "Next" %}</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="product-looks">
+                <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
+                    {% blocktrans count looks_with_product|length as counter %}
+                        <span class="count">{{ counter }}</span> look with this product
+                    {% plural %}
+                        <span class="count">{{ counter }}</span> looks with this product
+                    {% endblocktrans %}
+                </h2></a>
+                {% with looks_with_product as looks %}
+                {% include 'apparel/fragments/looks.html' %}
+                {% endwith %}
+            </div>
         </div>
 {% else %}
     <!-- FIXME: This needs some sort of layout -->

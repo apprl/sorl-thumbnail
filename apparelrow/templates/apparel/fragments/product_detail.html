@@ -4,21 +4,7 @@
 {% load apparel_extras %}
 {% load cache %}
 {% if object and object.product_image %}
-{% cache CACHE_TIMEOUT product_detail_fragment1 object.id LANGUAGE_CODE %}
-<div class="product-left">
-    <div class="product-image">
-        <a href="{{ object.product_image.url }}" title="{{ object.manufacturer }} - {{ object.product_name }}"><img src="/scale/328x500{{ object.product_image.url }}" /></a>
-{% endcache %}
-        {% url apparel.views.product_like object.slug 'like' as like_url %}
-        {% url apparel.views.product_like object.slug 'unlike' as unlike_url %}
-        {% url dialog-like-product as dialog_url %}
-        {% with user|likes_product:object as is_liked %}
-        {% include 'apparel/fragments/like_button.html' %}
-        {% endwith %}
-    </div>
-    {% include 'apparel/fragments/comments.html' %}
 {% cache CACHE_TIMEOUT product_detail_fragment2 object.id LANGUAGE_CODE %}
-</div>
 <div class="product-info">
     <h2>
     {% for category in object.categories %}
