@@ -575,13 +575,13 @@ def home(request, profile):
     queryset = queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following'])
 
     # Retrieve most popular products in users network
-    limit = 2
+    limit = 4
     user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
     user_ids_or = ' OR '.join(str(x) for x in user_ids)
 
 
     # FIXME: Ugly solution, query solr for popular products, then query db for those two results, should be able to get this directly with db queries.
-    query_arguments = {'sort': 'popularity desc', 'start': 0, 'rows': 2, 'fq': 'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or)}
+    query_arguments = {'sort': 'popularity desc', 'start': 0, 'rows': limit, 'fq': 'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or)}
     result = ApparelSearch('*:*', **query_arguments)
     popular_products = Product.objects.filter(id__in=[doc.django_id for doc in result.get_docs()])
 
@@ -594,7 +594,7 @@ def home(request, profile):
             'next': request.get_full_path(),
             'profile': profile,
             'facebook_friends': get_facebook_friends(request),
-            'popular_looks_in_network': get_top_looks_in_network(request.user, limit=2),
+            'popular_looks_in_network': get_top_looks_in_network(request.user, limit=limit),
             'popular_products_in_network': popular_products
         }, context_instance=RequestContext(request))
 
