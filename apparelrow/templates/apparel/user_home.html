@@ -12,7 +12,7 @@
             {% include 'apparel/fragments/products_sidebar.html' %}
         {% endwith %}
 
-        <h2>{% trans "Popular looks in your network" %}</h2>
+        <a href="{% url popular-look-list %}"><h2>{% trans "Popular looks in your network" %}</h2></a>
         {% with popular_looks_in_network as looks %}
             {% include 'apparel/fragments/looks_sidebar.html' %}
         {% endwith %}
