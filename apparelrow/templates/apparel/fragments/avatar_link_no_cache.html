@@ -1,1 +1,1 @@
-<a class="profile-link" href="{{ profile.get_absolute_url }}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>{{ profile.display_name }}</a> {% if user.is_authenticated %}{% include 'apparel/fragments/follow.html' %}{% endif %}
+<a class="profile-link" href="{{ profile.get_absolute_url }}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>{{ profile.display_name }}</a> {% include 'apparel/fragments/follow.html' %}
