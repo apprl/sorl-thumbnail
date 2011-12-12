@@ -11,7 +11,7 @@
                 {% with component.product as object %}{% include 'apparel/fragments/likes.html' %}{% endwith %}
             </div>
             <div>
-                <span class="price">{{ component.product.default_vendor.price }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
+                <span class="price">{{ component.product.default_vendor.price|floatformat:0 }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
             </div>
             {% if component.product.default_vendor.availability == 0 %}
             <div class="vendors">

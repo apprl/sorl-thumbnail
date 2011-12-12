@@ -19,6 +19,6 @@
         {{ object.action_object }}
     </p>
     <p>
-        <span class="price">{{ object.action_object.default_vendor.price }}</span> <span class="currency">{{ object.action_object.default_vendor.currency }}</span>
+        <span class="price">{{ object.action_object.default_vendor.price|floatformat:0 }}</span> <span class="currency">{{ object.action_object.default_vendor.currency }}</span>
     </p>
 {% endblock %}

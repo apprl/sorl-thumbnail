@@ -7,7 +7,7 @@
         <span class="likes">x</span>
     </div>
     <h4>{{ object.manufacturer }}</h4>
-    <span class="price">{{ object.default_vendor.price }} {{ object.default_vendor.currency }}</span>
+    <span class="price">{{ object.default_vendor.price|floatformat:0 }} {{ object.default_vendor.currency }}</span>
 </div>
 </a>
 {% endcache %}
