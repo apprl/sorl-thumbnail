@@ -121,6 +121,7 @@ def setup(snapshot='master'):
             run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared/warehouse shared/static packages backup;', pty=True)
             sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse shared/static;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
+    setup_rabbitmq()
     deploy('first', snapshot=snapshot)
     load_fixtures()
     
@@ -174,6 +175,11 @@ def rollback():
     restart_webserver()    
     
 # Helpers. These are called by other functions rather than directly
+
+def setup_rabbitmq():
+    sudo("rabbitmqctl add_user apparel apparel_mq", pty=True)
+    sudo("rabbitmqctl add_vhost apparel", pty=True)
+    sudo("rabbitmqctl set_permissions -p apparel apparel '.*' '.*' '.*'", pty=True)
 
 def load_fixtures():
     require('release', provided_by=[deploy, setup])
