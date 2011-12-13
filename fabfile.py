@@ -84,7 +84,7 @@ def setup(snapshot='master'):
     require('path')
     # install Python environment
     sudo('apt-get update')
-    sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev libxslt1-dev libyaml-dev')
+    sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev')
     # install some version control systems, since we need Django modules in development
     sudo('apt-get install -y git-core subversion')
     # install rabbitmq-server (add http://www.rabbitmq.com/debian.html#apt for newest version)
