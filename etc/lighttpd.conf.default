@@ -1,10 +1,94 @@
+#
+# mod_auth
+# Enables basic authentication
+#
+
+server.modules += ( "mod_auth" )
+auth.debug = 2
+
+
+#
+# mod_rewrite
+# 
+# http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs#mod_rewrite
+#
+
+server.modules  += ( "mod_rewrite" )
+
+
+
+#
+# mod_access
+# 
+# http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs#mod_access
+#
+
+server.modules  += ( "mod_access" )
+
+
+#
+# mod_alias
+#
+# http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs#mod_alias
+#
+
+server.modules  += ( "mod_alias" )
+
+
+# mod_fastcgi
+#
+# http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs#mod_fastcgi
+# 
+
+server.modules  += ( "mod_fastcgi" )
+# fastcgi.debug  = 65535  # Uncomment for server-wide FastCGI debug
+
+
+
+# 
+# mod_accesslog
+# 
+# http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs#mod_accesslog
+# 
+# NOTE: Default format uses mimics Apaches CLF
+# 
+
+server.modules    += ( "mod_accesslog" )
+
+#
+# mod_cgi
+# Allows CGI execution
+#
+
+
+server.modules      += ("mod_cgi")
+
+
+#
+# mod_setenv
+# Modify request/response environment
+# http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs:ModSetEnv
+#
+
+server.modules      += ("mod_proxy")
+
+#
+# mod_setenv
+# Modify request/response environment
+# http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs:ModSetEnv
+#
+
+server.modules      += ("mod_setenv")
+
+
+
 $HTTP["host"] =~ "^(demo|www)\.(apparelrow\.com)$" {
-    url.redirect = ( "^/(.*)" => "http://%2/$1" )
+    url.redirect = ( "^/(.*)" => "http://%%2/$1" )
 }
 
 $HTTP["host"] == "apparelrow.com" {
     var.project-name = "apparelrow"
-    var.deploy-base  = var.hnl-deploy-dir + "/apparelrow"
+    var.deploy-base  = "%(path)s"
     var.deploy-dir   = var.deploy-base + "/releases/current"
 
     server.document-root = var.deploy-dir + "/" + var.project-name

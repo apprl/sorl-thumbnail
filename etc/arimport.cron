@@ -1,4 +1,9 @@
 #!/bin/sh
+
+# Zip all old imports
+
+su -s /bin/sh -c "/bin/gzip -q -r %(path)s/shared/warehouse"
+
 # Run import for all configured apparelrow providers
 
-su -s /bin/sh -c "/home/hanssonlarsson/apparelrow/bin/import 1>> /home/hanssonlarsson/apparelrow/var/logs/importer.log" www-data
+su -s /bin/sh -c "%(path)s/bin/import 1>> %(path)s/var/logs/importer.log" %(run_user)s

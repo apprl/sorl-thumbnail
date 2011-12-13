@@ -305,7 +305,7 @@ class VendorCategory(models.Model):
 
     class Meta:
         ordering = ['name']
-        unique_together = (('vendor', 'name'),)
+        #unique_together = (('vendor', 'name'),)
         verbose_name_plural = 'vendor categories'
 
 
