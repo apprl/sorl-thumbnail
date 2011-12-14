@@ -12,13 +12,15 @@ body
   #header-container
     margin: 0 auto
     background: transparent image_url("landing-header-bg.png") scroll repeat-x left top
-    width: 1280px
+    max-width: 1280px
     height: 67px
     h1
+      position: absolute
+      left: 50%
+      margin-left: -84px
       +replace-text("logo.png")
       width: 128px
       height: 13px
-      margin: 0 auto
       padding: 20px 20px 10px 20px
       +border(bottom, #999999)
   #link-container
