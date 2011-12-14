@@ -29,6 +29,8 @@
          function facebookConnect(form){
             function handleResponse(response){
                 if (response.authResponse) {
+                    jQuery('input[name="access_token"]', form).val(response.authResponse.accessToken);
+                    jQuery('input[name="uid"]', form).val(response.authResponse.userID);
                     form.submit();
                 }
             }

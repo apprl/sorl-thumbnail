@@ -227,13 +227,16 @@ def _get_next(request):
         return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
 def login(request):
-    if request.facebook is not None:
-        user = auth.authenticate(fb_uid=request.facebook.uid, fb_graphtoken=request.facebook.user['access_token'])
+    if request.POST:
+        access_token = request.POST.get('access_token', '')
+        uid = request.POST.get('uid', '')
+
+        user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token)
         if user is not None and user.is_active:
             auth.login(request, user)
             if user.get_profile().first_visit:
-
                 return HttpResponseRedirect(reverse('apparel.views.home'))
+
             return HttpResponseRedirect(_get_next(request))
 
     return HttpResponseRedirect('/')

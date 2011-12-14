@@ -22,6 +22,7 @@ from actstream.models import user_stream, Follow
 
 from apparelrow.tasks import search_index_update_task
 from apparelrow.profile.models import ApparelProfile
+from apparelrow.profile.utils import get_facebook_user
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.decorators import get_current_user
 from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct, BackgroundImage
@@ -751,7 +752,8 @@ def get_top_looks_in_network(user, limit=2):
     return Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')[:limit]
 
 def get_facebook_friends(request):
-    if request.user.is_authenticated() and request.facebook:
-        friends = request.facebook.graph.get_connections('me', 'friends')
+    facebook_user = get_facebook_user(request)
+    if request.user.is_authenticated() and facebook_user:
+        friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
         return ApparelProfile.objects.filter(user__username__in=friends_uids)
