@@ -754,4 +754,4 @@ def get_facebook_friends(request):
     if request.user.is_authenticated() and request.facebook:
         friends = request.facebook.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
-        return ApparelProfile.objects.filter(user__facebookprofile__uid__in=friends_uids)
+        return ApparelProfile.objects.filter(user__username__in=friends_uids)

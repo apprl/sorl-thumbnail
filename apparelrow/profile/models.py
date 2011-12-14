@@ -8,7 +8,6 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
-from django_facebook.models import FacebookProfile
 from actstream.models import Follow, Action
 
 from apparel.models import Look, LookLike, ProductLike
@@ -78,8 +77,8 @@ class ApparelProfile(models.Model):
         if self.image:
             return '/scale/50x50%s?crop=true' % self.image
 
-        if self.facebook_profile:
-            return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_profile.uid
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_uid
 
         return settings.APPAREL_DEFAULT_AVATAR
 
@@ -88,8 +87,8 @@ class ApparelProfile(models.Model):
         if self.image:
             return '/scale/125%s' % self.image
 
-        if self.facebook_profile:
-            return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_profile.uid
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_uid
 
         return settings.APPAREL_DEFAULT_AVATAR
 
@@ -98,17 +97,23 @@ class ApparelProfile(models.Model):
         if self.image:
             return '/scale/200%s' % self.image
 
-        if self.facebook_profile:
-            return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_profile.uid
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_uid
 
         return settings.APPAREL_DEFAULT_AVATAR_LARGE
 
     @property
-    def facebook_profile(self):
+    def facebook_uid(self):
+        """
+        Try to convert username to int, if possible it is safe to assume that
+        the user is a facebook-user and not an admin created user.
+        """
         try:
-            return FacebookProfile.objects.get(user=self.user)
-        except FacebookProfile.DoesNotExist:
-            return None
+            return int(self.user.username)
+        except ValueError:
+            pass
+
+        return None
 
     @models.permalink
     def get_absolute_url(self):
@@ -133,21 +138,7 @@ def create_profile(signal, instance, **kwargs):
     if kwargs['created']:
         p, created = ApparelProfile.objects.get_or_create(user=instance)
 
-def create_profile_from_facebook(signal, instance, **kwargs):
-    if kwargs['created']:
-        fb_properties = {
-            'name': instance.name,
-            'about': instance.bio,
-        }
-        p, created = ApparelProfile.objects.get_or_create(user=instance.user, defaults=fb_properties)
-
-        if not created:
-            p.name = instance.name
-            p.about = instance.bio
-            p.save()
-
 post_save.connect(create_profile, sender=User)
-post_save.connect(create_profile_from_facebook, sender=FacebookProfile)
 
 #
 # Delete follows and actions when a user is deleted.

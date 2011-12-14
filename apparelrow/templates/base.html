@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="{{ MEDIA_URL }}styles/print.css" type="text/css" media="print">
     {% block 'extra-styles' %}
     {% endblock 'extra-styles' %}
-    
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
         google.load("jquery", "1.4.2");
@@ -20,11 +19,22 @@
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         var isFirstTimeVisit = {% if user.is_authenticated and user.get_profile.first_visit %}true{% else %}false{% endif %};
     </script>
+    {% facebook_init %}
+        {% block facebook_code %}{% endblock %}
+    {% endfacebook %}
     <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/compiled/jquery.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/apparel.js"></script>
     <script type="text/javascript">
-        
+         function facebookConnect(form){
+            function handleResponse(response){
+                if (response.authResponse) {
+                    form.submit();
+                }
+            }
+            FB.login(handleResponse, {scope: '{% facebook_perms %}' });
+        };
+
         jQuery(document).ready(function() {
 
             jQuery('.about-beta-popup').click(function(event) {
@@ -247,7 +257,7 @@
         </div>
     </script>
 
-{% facebook_js %}
+{% facebook_load %}
 
 <script type="text/javascript">
     var _kundo = _kundo || {};

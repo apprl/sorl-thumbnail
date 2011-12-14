@@ -43,8 +43,6 @@ urlpatterns = patterns('',
 
     (r'^search/(?P<model_name>\w+)/', 'apparelrow.search.search_view'),
     (r'^s/', include('statistics.urls')),
-    # Override facebook
-    #(r'^facebook/', include('django_facebook.urls')),
     url(r'^facebook/login', 'apparelrow.profile.views.login', name='facebook_login'),
 )
 

@@ -1,6 +1,7 @@
 import logging
 import uuid
 
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
@@ -227,10 +228,11 @@ def _get_next(request):
 
 def login(request):
     if request.facebook is not None:
-        user = auth.authenticate(fb_uid=request.facebook.uid, fb_object=request.facebook)
+        user = auth.authenticate(fb_uid=request.facebook.uid, fb_graphtoken=request.facebook.user['access_token'])
         if user is not None and user.is_active:
             auth.login(request, user)
             if user.get_profile().first_visit:
+
                 return HttpResponseRedirect(reverse('apparel.views.home'))
             return HttpResponseRedirect(_get_next(request))
 

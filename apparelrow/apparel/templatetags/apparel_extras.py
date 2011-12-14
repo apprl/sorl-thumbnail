@@ -36,6 +36,17 @@ def apparel_facebook_button(context, image=None):
         button = settings.MEDIA_URL + 'images/fblogo.png'
     return dict(next=next, logged_in=logged_in, button=button, request=context['request'])
 
+@register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)
+def facebook_button(context, button=None):
+    if not 'request' in context:
+        raise AttributeError, 'Please add the ``django.core.context_processors.request`` context processors to your settings.TEMPLATE_CONTEXT_PROCESSORS set'
+    logged_in = context['request'].user.is_authenticated()
+    if 'next' in context:
+        next = context['next']
+    else:
+        next = None
+    return dict(next=next, logged_in=logged_in, button=button, request=context['request'])
+
 @register.filter
 def category_descendants_id(category, include_self=True):
     """

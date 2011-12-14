@@ -107,7 +107,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    'django_facebook.auth.FacebookBackend',
+    'django_facebook.auth.FacebookProfileBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -252,8 +252,7 @@ TINYMCE_DEFAULT_CONFIG = {
 FACEBOOK_APP_ID = '177090790853'
 FACEBOOK_API_KEY = '44d47ef3e7285cace9a4c7c88f645742'
 FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
-FACEBOOK_PREPOPULATE_USER_DATA = True
-FACEBOOK_EXTENDED_PERMISSIONS = ['email']
+FACEBOOK_PERMS = ['email']
 FACEBOOK_AUTOMATIC_LOGIN = False
 
 DEFAULT_FROM_EMAIL = 'Apparelrow <no-reply@apparelrow.com>'

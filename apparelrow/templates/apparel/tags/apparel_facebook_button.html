@@ -1,9 +1,5 @@
 {% load i18n %}
 {% load apparel_extras %}
-{% load facebook %}
-{% comment %}
-<fb:login-button autologoutlink="true" perms="{% facebook_perms %}"></fb:login-button>
-{% endcomment %}
 
 <form class="connect-button" name="login" method="post" action="{% url facebook_login %}">
 {% csrf_token %}
