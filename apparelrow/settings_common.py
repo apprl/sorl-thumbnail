@@ -146,7 +146,6 @@ INSTALLED_APPS = (
     
     # external
     'django_facebook',  # Only used for loading facebook js sdk through templatetags
-    'registration',
 #    'mailer',          # FIXME: Includes e-mail manager, set this up later
     'announcements',
     'pagination',

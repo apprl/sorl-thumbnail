@@ -3,6 +3,7 @@ from django.conf import settings
 
 from django.views.generic.simple import direct_to_template
 
+from django.contrib.auth import views as auth_views
 from django.contrib import admin
 admin.autodiscover()
 
@@ -22,8 +23,9 @@ urlpatterns = patterns('',
     (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', { 'domain': 'djangojs', 'packages': ('apparelrow',),}), 
     # FIXME: Is it possible to include this in some other way? All I want to do
     # is to pass the next_page attribute (and not do it via query)
-    (r'^accounts/',         include('registration.backends.default.urls')),
-    
+    url(r'^accounts/login/$', auth_views.login, {'template_name': 'registration/login.html'}, name='auth_login'),
+    url(r'^accounts/logout/$', auth_views.logout, {'template_name': 'registration/logout.html'}, name='auth_logout'),
+
     (r'^profile/', include('profile.urls')),
     (r'^watcher/', include('watcher.urls')),
     
