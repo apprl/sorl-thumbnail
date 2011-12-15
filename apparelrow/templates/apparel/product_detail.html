@@ -176,7 +176,7 @@
 
 <div class="product-back">
     {% if request.META.HTTP_REFERER and CURRENT_DOMAIN in request.META.HTTP_REFERER %}
-    <a href="{{ request.META.HTTP_REFERER }}">{% trans "Back" %}</a>
+    <a href="{{ request.META.HTTP_REFERER }}" onClick="history.back(1);return false;">{% trans "Back" %}</a>
     {% endif %}
 </div>
 

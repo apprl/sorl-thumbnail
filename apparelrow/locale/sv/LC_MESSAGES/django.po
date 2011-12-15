@@ -1088,7 +1088,7 @@ msgstr "Lägg i garderob"
 
 #: templates/apparel/product_detail.html:179
 msgid "Back"
-msgstr ""
+msgstr "Tillbaka"
 
 #: templates/apparel/product_detail.html:209
 #, python-format

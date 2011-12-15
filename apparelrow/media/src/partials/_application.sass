@@ -916,13 +916,12 @@ body.three-columns .pagination
   margin-bottom: 10px
   a
     display: block
-    +button(none, unquote("22px"))
-    +border-radius(unquote("2px"))
-    +highlight
-    width: 100px
+    background: transparent image_url(unquote("left-arrow-button.png")) no-repeat scroll center bottom
+    width: 74px
+    height: 25px
     text-align: center
-    &:hover
-      +highlight_hover
+    color: $highlight_color
+    line-height: 25px
 
 .product-left
   +float-left
