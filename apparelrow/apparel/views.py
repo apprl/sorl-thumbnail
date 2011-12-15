@@ -297,7 +297,7 @@ def look_create(request):
 
             return HttpResponseRedirect(reverse('apparel.views.look_edit', args=(look.slug,)))
 
-        return HttpResponseRedirect(reverse('apparel.views.look_create'))
+        return render_to_response('apparel/look_create.html', {'form': form}, context_instance=RequestContext(request))
 
     return render_to_response('apparel/fragments/dialog_create_look.html', {}, context_instance=RequestContext(request))
 

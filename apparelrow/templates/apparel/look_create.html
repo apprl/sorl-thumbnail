@@ -15,8 +15,11 @@
         {% csrf_token %}
         <ul>
         <li>
-            <label for="id_title">{% trans "Title" %}</label>
+            <label for="id_title">{% trans "Name" %}</label>
             {{ form.title }}
+            {% if form.title.errors %}
+                {{ form.title.errors }}
+            {% endif %}
         </li>
         <li>
             <label for="id_description">{% trans "Description (optional):" %}</label>
@@ -25,7 +28,7 @@
         <li>
             <button type="submit">{% trans "Create" %}</button>
         </li>
-    </ul>    
+    </ul>
     </form>
 </div>
 {% endblock body %}
