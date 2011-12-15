@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-15 11:40+0100\n"
+"POT-Creation-Date: 2011-12-15 11:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1102,8 +1102,8 @@ msgid "Recently viewed"
 msgstr "Senast besökta"
 
 #: templates/apparel/product_detail.html:224
-msgid "Similar"
-msgstr "Liknande"
+msgid "You may also like"
+msgstr "Se även"
 
 #: templates/apparel/product_detail.html:240
 #, fuzzy, python-format
