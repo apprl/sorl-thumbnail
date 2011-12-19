@@ -43,7 +43,7 @@ def fetch(url, localpath=None, username=None, password=None, decompress=None):
 
     request_handler.raise_for_status()
     
-    local_fh.write(request_handler.content)
+    local_fh.write(request_handler.raw.read())
     local_fh.close()
     local_fh = None
     
