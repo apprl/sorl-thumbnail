@@ -249,7 +249,7 @@ class API(object):
         
         fields = {
             'buy_url': self.dataset['product']['product-url'],
-            'original_price': self.dataset['product']['price'],
+            'original_price': self.dataset['product']['price'] or '0.0',
             'original_currency': self.dataset['product']['currency'],
             'availability': self.availability
         }
