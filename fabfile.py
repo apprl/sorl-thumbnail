@@ -71,8 +71,8 @@ def setup_db():
     elif env.dbserver=='postgresql':
         sudo('apt-get install -y postgresql')
         upload_template('etc/postgres.sql', '/tmp/setup.sql', context=env)
-        sudo('psql -U root -W < /tmp/setup.sql')
-        sudo('restart postgresql')
+        sudo('psql < /tmp/setup.sql', user='postgres')
+        sudo('/etc/init.d/postgresql-8.4 restart')
     sudo('rm -f /tmp/setup.sql')
     
 def setup(snapshot='master'):
