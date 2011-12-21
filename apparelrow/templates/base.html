@@ -65,6 +65,24 @@
                 event.preventDefault();
             });
 
+            jQuery('.about-cookies-popup').click(function(event) {
+                jQuery('#error_dialog_template').render({
+                        modal: false,
+                        header: "{% trans "About cookies" %}",
+                        messages: [
+                            "{% trans "Apparelrow uses cookies to make it easier for users to use the site. A cookie is an unharmful, small text file that is stored on your computer, which makes it possible to recognize your web browser when you visit the site. The information that we store in cookies is anonymous and cannot be used to identify personal information about users. If you want, you may disable the use of cookies in your browser settings, but Apparelrow (and a lot of other sites) will not work as well." %}",
+                        ]
+                    }).appendTo('body').overlay({
+                        mask: {color: '#000', loadSpeed: 200, opacity: 0.5 },
+                        load: true,
+                        closeOnClick: false,
+                        close: '.ok',
+                        top: 100,
+                        onClose: function(e) { this.getTrigger().remove() }
+                    });
+                event.preventDefault();
+            });
+
             if(isAuthenticated && isFirstTimeVisit) {
                 create_html_dialog('{% url profile.views.welcome_dialog %}', true, function() {
                     window.location.reload();
@@ -229,6 +247,7 @@
                 <li><a class="about-beta-popup" href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
                 <li><a target="_blank" href="http://blog.apparelrow.com/">{% trans "Blog" %}</a></li>
                 <li><a href="mailto:info@apparelrow.com">{% trans "Contact" %}</a><li>
+                <li><a class="about-cookies-popup" href="/">{% trans "About cookies" %}</a></li>
             </ul>
         </div>
     </div>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-15 11:46+0100\n"
+"POT-Creation-Date: 2011-12-21 12:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -562,143 +562,165 @@ msgstr ""
 "tankar. Eller maila oss på info@apparelrow.com. så blir vi också glada. Have "
 "fun!"
 
-#: templates/base.html:92
+#: templates/base.html:71 templates/base.html.py:250
+msgid "About cookies"
+msgstr "Om cookies"
+
+#: templates/base.html:73
+msgid ""
+"Apparelrow uses cookies to make it easier for users to use the site. A "
+"cookie is an unharmful, small text file that is stored on your computer, "
+"which makes it possible to recognize your web browser when you visit the "
+"site. The information that we store in cookies is anonymous and cannot be "
+"used to identify personal information about users. If you want, you may "
+"disable the use of cookies in your browser settings, but Apparelrow (and a "
+"lot of other sites) will not work as well."
+msgstr ""
+"Apparelrow använder cookies för att göra tjänsten enklare och smartare för "
+"användaren. En cookie är en liten ofarlig textfil som lagras på din dator, "
+"som gör det möjligt att känna igen din webbläsare när du besöker oss igen. "
+"Informationen vi sparar i cookies är helt anonym och den kan inte användas "
+"för att identifiera personlig information om användare. Om du vill kan du "
+"stänga av cookies i din webbläsare, men Apparelrow (och många andra siter) "
+"kommer att fungera sämre då."
+
+#: templates/base.html:110
 msgid "Log in with your Facebook account to find your friends"
 msgstr "Logga in med Facebook för att hitta dina vänner!"
 
-#: templates/base.html:105
+#: templates/base.html:123
 msgid "Search for products"
 msgstr "Sök efter plagg"
 
-#: templates/base.html:106 templates/profile/base_profile.html:52
+#: templates/base.html:124 templates/profile/base_profile.html:52
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:110 templates/base.html.py:212
+#: templates/base.html:128 templates/base.html.py:230
 #: templates/apparel/gender.html:10
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:111 templates/base.html.py:213
+#: templates/base.html:129 templates/base.html.py:231
 #: templates/apparel/gender.html:11
 #: templates/apparel/fragments/product_menu_browse.html:15
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:115 templates/base.html.py:211
+#: templates/base.html:133 templates/base.html.py:229
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:116
+#: templates/base.html:134
 #: templates/apparel/fragments/product_menu_browse.html:24
 msgid "Brand"
 msgstr "Varumärke"
 
-#: templates/base.html:117 templates/base.html.py:216
+#: templates/base.html:135 templates/base.html.py:234
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:6
 #: templates/profile/fragments/menu_items.html:10
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/base.html:118
+#: templates/base.html:136
 msgid "Members"
 msgstr "Medlemmar"
 
-#: templates/base.html:133
+#: templates/base.html:151
 msgid "Matching products"
 msgstr "Träffar bland produkter"
 
-#: templates/base.html:137
+#: templates/base.html:155
 msgid "Matching looks"
 msgstr "Träffar bland looks"
 
-#: templates/base.html:141
+#: templates/base.html:159
 msgid "Matching brands"
 msgstr "Träffar bland varumärken"
 
-#: templates/base.html:145
+#: templates/base.html:163
 msgid "Show all products"
 msgstr "Visa alla plagg"
 
-#: templates/base.html:146
+#: templates/base.html:164
 msgid "Show all looks"
 msgstr "Visa alla looks"
 
-#: templates/base.html:147
+#: templates/base.html:165
 msgid "Show all manufacturers"
 msgstr "Visa alla varumärken"
 
-#: templates/base.html:163
+#: templates/base.html:181
 msgid "Logged in as"
 msgstr "Inloggad som"
 
-#: templates/base.html:168
+#: templates/base.html:186
 msgid "My profile"
 msgstr "Min profil"
 
-#: templates/base.html:174
+#: templates/base.html:192
 msgid "Friends' updates"
 msgstr "Vänners uppdateringar"
 
-#: templates/base.html:180 templates/profile/base_settings.html:8
+#: templates/base.html:198 templates/profile/base_settings.html:8
 msgid "Settings"
 msgstr "Inställningar"
 
-#: templates/base.html:187
+#: templates/base.html:205
 #, python-format
 msgid "Invite friends (%(invites)s)"
 msgstr "Bjud in vänner (%(invites)s)"
 
-#: templates/base.html:194 templates/base.html.py:218
+#: templates/base.html:212 templates/base.html.py:236
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
 msgstr "Skapa en look"
 
-#: templates/base.html:197
+#: templates/base.html:215
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:217
+#: templates/base.html:235
 msgid "All looks"
 msgstr "Alla looks"
 
-#: templates/base.html:221
+#: templates/base.html:239
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:222 templates/apparel/look_list.html:39
+#: templates/base.html:240 templates/apparel/look_list.html:39
 #: templates/apparel/look_list.html:50 templates/apparel/user_home.html:36
 #: templates/apparel/fragments/browse_follow_user.html:5
 #: templates/profile/dialog_welcome.html:25
 msgid "See all members"
 msgstr "Se alla medlemmar"
 
-#: templates/base.html:228
+#: templates/base.html:246
 msgid "About Apparelrow"
 msgstr "Om ApparelRow"
 
-#: templates/base.html:229
+#: templates/base.html:247
 msgid "About the beta"
 msgstr "Om betaversionen"
 
-#: templates/base.html:230
+#: templates/base.html:248
 msgid "Blog"
 msgstr "Blogg"
 
-#: templates/base.html:231
+#: templates/base.html:249
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:251
+#: templates/base.html:270
 msgid "No"
 msgstr "Nej"
 
-#: templates/base.html:252
+#: templates/base.html:271
 msgid "Yes"
 msgstr "Ja"
 
-#: templates/base.html:254 templates/apparel/fragments/product_options.html:16
+#: templates/base.html:273 templates/apparel/fragments/product_options.html:16
 msgid "OK"
 msgstr "OK"
 
