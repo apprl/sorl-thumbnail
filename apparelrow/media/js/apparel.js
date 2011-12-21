@@ -67,6 +67,10 @@ function create_html_dialog(url_to_html, large_dialog, close_callback) {
 }
 
 jQuery(document).ready(function() {
+    // Define an empty console.log if it's not available
+    if(!'console' in window)
+        window.console = { log: function() {} };
+
     // Make all "apparel rows" scrollables
     jQuery('.row').scrollable().end();
 
@@ -482,7 +486,7 @@ ApparelSearch = {
             dataType: 'json',
             data: opts.query,
             complete: function(request, status) {
-                console.log('Do cleanup here (hide "now searching" visual clue and whatever)')
+                // TODO Do cleanup here (hide "now searching" visual clue and whatever)
             },
             success: function(response, status, request) {
                 if(!response) return;
@@ -509,10 +513,6 @@ ApparelSearch = {
 
                 var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1) + ' search';
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
-
-                if(list.children().size() == 0) {
-                    console.log('No results');
-                }
 
                 list.closest('.result-container').children('h2').text(
                     interpolate(
@@ -700,9 +700,6 @@ jQuery(document).ready(function() {
                     + encodeURIComponent('manufacturer-dialog-filter|' + s)
 
                 break;
-
-            default:
-                console.log('No action for %s', type);
         }
 
         ApparelSearch.cancel();
