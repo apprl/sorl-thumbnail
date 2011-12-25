@@ -165,7 +165,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     if popular:
         if request.user.is_authenticated():
             user_ids = Follow.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(User)).values_list('object_id', flat=True)
-            queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')
+            queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids) & Q(gender__in=[gender, 'U'])).annotate(num_likes=Count('likes')).order_by('-num_likes')
         else:
             queryset = Look.objects.none()
     elif search:
@@ -179,7 +179,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     elif contains:
         queryset = Look.objects.filter(products__slug=contains)
     else:
-        queryset = Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)
+        queryset = Look.objects.filter(likes__active=True, gender__in=[gender, 'U']).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)
 
     if request.user.is_authenticated():
         user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
@@ -187,7 +187,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     else:
         most_looks_users = None
 
-    latest_looks = Look.objects.order_by('-created')[:16]
+    latest_looks = Look.objects.filter(gender__in=[gender, 'U']).order_by('-created')[:16]
     paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
