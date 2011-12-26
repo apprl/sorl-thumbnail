@@ -17,7 +17,12 @@ urlpatterns = patterns('',
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list', name='product-look-list'),
     (r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.product_like'),
     (r'^products/(?P<slug>[\w-]+)/users/$', 'apparel.views.product_user_like_list'),
-    
+
+    # Brand
+    url(r'^brands/$', 'apparel.views.gender', {'view': 'brand-list'}, name='brand-list'),
+    url(r'^brands/men/$', 'apparel.views.brand_list', {'gender': 'M'}, name='brand-list-men'),
+    url(r'^brands/women/$', 'apparel.views.brand_list', {'gender': 'W'}, name='brand-list-women'),
+
     # Shop
     url(r'^shop/$', 'apparel.views.gender', {'view': 'shop'}, name='shop'),
     url(r'^shop/men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),

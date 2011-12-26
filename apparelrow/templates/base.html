@@ -131,7 +131,7 @@
 
             <ul id="nav-main">
                 <li><a class="{% selected_url request "/shop" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
-                <!--<li><a class="{% selected_url request "/brands/" %}" href="{% url index %}">{% trans "Brand" %}</a></li>-->
+                <li><a class="{% selected_url request "/brands/" %}" href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
                 <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
                 <li><a class="{% selected_url request "/users" %}" href="{% gender_url APPAREL_GENDER 'user-list-popular' %}">{% trans "Members" %}</a></li>
             </ul>

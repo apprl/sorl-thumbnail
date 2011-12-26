@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load cache %}
+
+{% block body-classes %}three-columns brand-list{% endblock body-classes %}
+
+{% block body %}
+    <div class="sidebar">
+        <h2>{% trans "Most popular" %}</h2>
+        {% for manufacturer_name, popular_products in popular_brands %}
+        <h3>{{ manufacturer_name }}</h3>
+        {% with popular_products as products %}
+            {% include 'apparel/fragments/products_sidebar.html' %}
+        {% endwith %}
+        {% endfor %}
+    </div>
+    <div id="content">
+        <ul class="alphabet-list">
+        {% for brand_char, brand_empty, _ in brands %}
+            {% if brand_empty %}
+            <li class="empty">{{ brand_char }}</li>
+            {% else %}
+            <li><a href="#{{ brand_char }}">{{ brand_char }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+
+        {% for brand_char, brand_empty, brand_list in brands %}
+            {% if not brand_empty %}
+            <div class="brand-container">
+                <div class="brand-anchor"><a name="{{ brand_char }}">{{ brand_char }}</a></div>
+                <ul class="brands">
+                {% for brand in brand_list %}
+                    <li><a href="{% url shop %}#manufacturer={{ brand.id }}">{{ brand.name }}</a></li>
+                {% endfor %}
+                </ul>
+                <br>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="sidebar last">
+        <h2>{% trans "Popular brands in your network" %}</h2>
+        {% for manufacturer_name, popular_products in popular_brands_in_network %}
+        <h3>{{ manufacturer_name }}</h3>
+        {% with popular_products as products %}
+            {% include 'apparel/fragments/products_sidebar.html' %}
+        {% endwith %}
+        {% endfor %}
+    </div>
+{% endblock body %}

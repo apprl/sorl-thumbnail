@@ -1141,6 +1141,39 @@ a.buy-now
       &:hover
         +highlight_hover
 
+body.brand-list
+  .sidebar
+    h3
+      clear: both
+      font-weight: bold
+      padding: 0.5em 0
+  .alphabet-list
+    +horizontal_list
+    margin-top: 30px
+    li
+      font-size: 1em
+      text-transform: uppercase
+      &.empty
+        color: $easiest_color
+      a
+        &:hover
+          text-decoration: underline
+  .brand-container
+    padding: 1em 0
+    border-bottom: 1px solid $easiest_color
+    .brand-anchor
+      text-transform: uppercase
+      font-weight: bold
+    ul.brands
+      width: $middle_width
+      li
+        float: left
+        width: $middle_width / 2
+        padding: 1px 0
+    br
+      clear: both
+      margin: 1em 0
+
 body.look-list
   .all-users
     +button

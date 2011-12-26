@@ -29,7 +29,8 @@ django-modeltranslation==0.2
 django-tinymce==1.5.1a1
 django-flatpages-tinymce==0.1.1
 # Search related
-pysolr==2.0.15
+#pysolr==2.0.15
+-e git+https://github.com/anti-social/pysolr.git@45abcb37d8cc92ead1864133b5eebb244276e82c#egg=pysolr
 django-haystack==1.2.5
 celery==2.2.7
 django-celery==2.2.4

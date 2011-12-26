@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 import logging
 import re
 import math
 import json
+import string
+import unicodedata
 
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -115,6 +118,86 @@ def product_like(request, slug, action):
         return HttpResponse(json.dumps(dict(success=True, error_message=None)))
 
     return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
+
+def brand_list(request, gender=None):
+    """
+    List all brands.
+    """
+    alphabet = [u'#'] + list(unicode(string.ascii_lowercase)) + [u'å', u'ä', u'ö']
+    brands = []
+    brands_mapper = {}
+    for index, alpha in enumerate(alphabet):
+        brands_mapper[alpha] = index
+        brands.append([alpha, False, []])
+
+    if not gender:
+        gender = get_gender_from_cookie(request)
+
+    query_arguments = {'fl': 'manufacturer_auto, manufacturer_id',
+                       'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(U OR %s)' % (gender,)],
+                       'start': 0,
+                       'rows': -1,
+                       'group': 'true',
+                       'group.field': 'manufacturer_id'}
+    for brand in ApparelSearch('*:*', **query_arguments).get_docs():
+        brand_name = brand.manufacturer_auto
+        brand_id = brand.manufacturer_id
+
+        if brand_name:
+            normalized_name = unicodedata.normalize('NFKD', brand_name).lower()
+            for index, char in enumerate(normalized_name):
+                if char in alphabet:
+                    brands[brands_mapper[char]][2].append({'id': brand_id, 'name': brand_name})
+                    break
+                elif char.isdigit():
+                    brands[brands_mapper[u'#']][2].append({'id': brand_id, 'name': brand_name})
+                    break
+
+    for index, alpha in enumerate(alphabet):
+        brands[index][1] = len(brands[index][2]) == 0
+        brands[index][2] = sorted(brands[index][2], key=lambda k: k['name'])
+
+    # Popular brands with products
+    query_arguments = {'sort': 'popularity desc',
+                       'fl': 'django_id',
+                       'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(U OR %s)' % (gender,)],
+                       'start': 0,
+                       'rows': 3,
+                       'group': 'true',
+                       'group.limit': 2,
+                       'group.field': 'manufacturer_id'}
+    grouped = ApparelSearch('*:*', **query_arguments).get_grouped()
+    popular_brands = []
+    for value in grouped['manufacturer_id']['groups']:
+        products = list(Product.objects.select_related('manufacturer__name').filter(id__in=[doc['django_id'] for doc in value['doclist']['docs']]))
+        popular_brands.append([products[0].manufacturer.name, products])
+
+    # Popular brands in your network with products
+    user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
+    user_ids_or = ' OR '.join(str(x) for x in user_ids)
+    query_arguments = {'sort': 'popularity desc',
+                       'fl': 'django_id',
+                       'fq': 'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or),
+                       'start': 0,
+                       'rows': 3,
+                       'group': 'true',
+                       'group.limit': 2,
+                       'group.field': 'manufacturer_id'}
+    grouped = ApparelSearch('*:*', **query_arguments).get_grouped()
+    popular_brands_in_network = []
+    for value in grouped['manufacturer_id']['groups']:
+        products = list(Product.objects.select_related('manufacturer').filter(id__in=[doc['django_id'] for doc in value['doclist']['docs']]))
+        popular_brands_in_network.append([products[0].manufacturer.name, products])
+
+    response = render_to_response('apparel/brand_list.html', {
+                'brands': brands,
+                'popular_brands': popular_brands,
+                'popular_brands_in_network': popular_brands_in_network,
+                'next': request.get_full_path(),
+                'APPAREL_GENDER': gender
+            }, context_instance=RequestContext(request))
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+    return response
 
 @login_required
 def look_like(request, slug, action):

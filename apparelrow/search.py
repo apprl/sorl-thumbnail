@@ -115,6 +115,12 @@ class ApparelSearch(object):
         """
         return self._get_results().docs
 
+    def get_grouped(self):
+        """
+        Get grouped
+        """
+        return self._get_results().grouped
+
     _result = None
     def _get_results(self, update=False):
         if self._result is None or update:
