@@ -153,22 +153,26 @@ class Product(models.Model):
     
     def score(self):
         return ProductLike.objects.filter(product=self, active=True).count()
-    
+
     @property
     def default_vendor(self):
-        try:
-            return self.vendorproduct.order_by('price')[0]
-        except IndexError:
-            return None
+        if not hasattr(self, '_default_vendor'):
+            try:
+                self._default_vendor = self.vendorproduct.order_by('price')[0]
+            except IndexError:
+                self._default_vendor = None
+
+        return self._default_vendor
 
     @property
     def original_currency(self):
-        original_currency = []
-        for vendorproduct in self.vendorproduct.all():
-            if vendorproduct.original_currency != 'SEK':
-                original_currency.append(vendorproduct.original_currency)
+        if not hasattr(self, '_original_currency'):
+            self._original_currency = []
+            for vendorproduct in self.vendorproduct.all():
+                if vendorproduct.original_currency != 'SEK':
+                    self._original_currency.append(vendorproduct.original_currency)
 
-        return original_currency
+        return self._original_currency
 
     @models.permalink
     def get_absolute_url(self):
