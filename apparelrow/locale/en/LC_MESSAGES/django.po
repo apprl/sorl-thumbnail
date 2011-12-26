@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-21 12:01+0100\n"
+"POT-Creation-Date: 2011-12-26 15:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -741,12 +741,12 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: templates/index.html:175 templates/apparel/product_detail.html:226
+#: templates/index.html:175 templates/apparel/product_detail.html:234
 #: templates/apparel/fragments/product_row.html:2
 msgid "Previous"
 msgstr ""
 
-#: templates/index.html:184 templates/apparel/product_detail.html:234
+#: templates/index.html:184 templates/apparel/product_detail.html:242
 #: templates/apparel/fragments/product_row.html:10
 msgid "Next"
 msgstr ""
@@ -1078,26 +1078,18 @@ msgstr[1] ""
 msgid "Recently viewed"
 msgstr ""
 
-#: templates/apparel/product_detail.html:224
-msgid "You may also like"
-msgstr ""
-
-#: templates/apparel/product_detail.html:240
+#: templates/apparel/product_detail.html:222
 #, python-format
-msgid ""
-"\n"
-"                        <span class=\"count\">%(counter)s</span> look with "
-"this product\n"
-"                    "
-msgid_plural ""
-"\n"
-"                        <span class=\"count\">%(counter)s</span> looks with "
-"this product\n"
-"                    "
+msgid "<span class=\"count\">%(counter)s</span> look with this product"
+msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:253
+#: templates/apparel/product_detail.html:232
+msgid "You may also like"
+msgstr ""
+
+#: templates/apparel/product_detail.html:249
 msgid "No product found!"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-21 12:01+0100\n"
+"POT-Creation-Date: 2011-12-26 15:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -763,12 +763,12 @@ msgstr "Aktuellt"
 msgid "by"
 msgstr "av"
 
-#: templates/index.html:175 templates/apparel/product_detail.html:226
+#: templates/index.html:175 templates/apparel/product_detail.html:234
 #: templates/apparel/fragments/product_row.html:2
 msgid "Previous"
 msgstr "Föregående"
 
-#: templates/index.html:184 templates/apparel/product_detail.html:234
+#: templates/index.html:184 templates/apparel/product_detail.html:242
 #: templates/apparel/fragments/product_row.html:10
 msgid "Next"
 msgstr "Nästa"
@@ -1123,32 +1123,18 @@ msgstr[1] "Tillagd i <span class=\"count\">%(counter)s</span> looks"
 msgid "Recently viewed"
 msgstr "Senast besökta"
 
-#: templates/apparel/product_detail.html:224
+#: templates/apparel/product_detail.html:222
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> look with this product"
+msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
+msgstr[0] "<span class=\"count\">%(counter)s</span> look med denna produkt"
+msgstr[1] "<span class=\"count\">%(counter)s</span> looks med denna produkt"
+
+#: templates/apparel/product_detail.html:232
 msgid "You may also like"
 msgstr "Se även"
 
-#: templates/apparel/product_detail.html:240
-#, fuzzy, python-format
-msgid ""
-"\n"
-"                        <span class=\"count\">%(counter)s</span> look with "
-"this product\n"
-"                    "
-msgid_plural ""
-"\n"
-"                        <span class=\"count\">%(counter)s</span> looks with "
-"this product\n"
-"                    "
-msgstr[0] ""
-"\n"
-"                    <span class=\"count\">%(counter)s</span> look med denna "
-"produkt                "
-msgstr[1] ""
-"\n"
-"                    <span class=\"count\">%(counter)s</span> looks med denna "
-"produkt                "
-
-#: templates/apparel/product_detail.html:253
+#: templates/apparel/product_detail.html:249
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
@@ -2022,6 +2008,25 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid ""
+#~ "\n"
+#~ "                        <span class=\"count\">%(counter)s</span> look "
+#~ "with this product\n"
+#~ "                    "
+#~ msgid_plural ""
+#~ "\n"
+#~ "                        <span class=\"count\">%(counter)s</span> looks "
+#~ "with this product\n"
+#~ "                    "
+#~ msgstr[0] ""
+#~ "\n"
+#~ "                    <span class=\"count\">%(counter)s</span> look med "
+#~ "denna produkt                "
+#~ msgstr[1] ""
+#~ "\n"
+#~ "                    <span class=\"count\">%(counter)s</span> looks med "
+#~ "denna produkt                "
 
 #~ msgid "Forgot your password?"
 #~ msgstr "Glömt lösenordet?"

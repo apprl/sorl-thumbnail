@@ -210,13 +210,21 @@
                         <p class="last">{% include 'apparel/fragments/likes_link.html' %}</p>
                     </div>
                     {% if viewed_products %}
-                        <h2>{% trans "Recently viewed" %}</h2>
-                        <div id="recentlyviewed">
-                            {% with viewed_products as products %}
-                            {% include 'apparel/fragments/product_row.html' %}
-                            {% endwith %}
-                        </div>
-                {% endif %}
+                    <h2>{% trans "Recently viewed" %}</h2>
+                    <div id="recentlyviewed">
+                        {% with viewed_products as products %}
+                        {% include 'apparel/fragments/product_row.html' %}
+                        {% endwith %}
+                    </div>
+                    {% endif %}
+                    <div class="product-looks">
+                        <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
+                            {% blocktrans count looks_with_product|length as counter %}<span class="count">{{ counter }}</span> look with this product{% plural %}<span class="count">{{ counter }}</span> looks with this product{% endblocktrans %}
+                        </h2></a>
+                        {% with looks_with_product as looks %}
+                        {% include 'apparel/fragments/looks.html' %}
+                        {% endwith %}
+                    </div>
                 </div>
             </div>
             <div class="product-similar">
@@ -234,18 +242,6 @@
                         <a class="next">{% trans "Next" %}</a>
                     </div>
                 {% endif %}
-            </div>
-            <div class="product-looks">
-                <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
-                    {% blocktrans count looks_with_product|length as counter %}
-                        <span class="count">{{ counter }}</span> look with this product
-                    {% plural %}
-                        <span class="count">{{ counter }}</span> looks with this product
-                    {% endblocktrans %}
-                </h2></a>
-                {% with looks_with_product as looks %}
-                {% include 'apparel/fragments/looks.html' %}
-                {% endwith %}
             </div>
         </div>
 {% else %}
