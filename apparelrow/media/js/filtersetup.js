@@ -211,7 +211,7 @@ var ManufacturerBrowser = {
                 }
             }
         );
-    },
+    }
 };
 
 

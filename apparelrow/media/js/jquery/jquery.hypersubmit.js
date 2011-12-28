@@ -33,7 +33,7 @@
             success: function(data, textStatus, req) { console.log("success in form submit, ", data, textStatus, req) },
             error: function(req, textStatus, errorThrown) { console.log("error in form submit, ", req, textStatus, errorThrown) },
             dataType: 'json',
-            follow_redirect: true,
+            follow_redirect: true
         }
     };
     $.fn.hyperSubmit = $.fn.hyperSubmit || function(options) {

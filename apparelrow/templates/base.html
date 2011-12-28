@@ -15,7 +15,8 @@
     <script type="text/javascript">
         google.load("jquery", "1.4.2");
         google.load("jqueryui", "1.8.0");
-        
+
+        var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         var isFirstTimeVisit = {% if user.is_authenticated and user.get_profile.first_visit %}true{% else %}false{% endif %};
     </script>
@@ -117,7 +118,7 @@
     {% endif %}
     <div id="header">
         <div id="inner-header">
-            <a href="/"><h1>ApparelRow</h1></a>
+            <a href="{% gender_url APPAREL_GENDER 'index' %}"><h1>ApparelRow</h1></a>
 
             <form action="/apparel/search" method="get" onsubmit="return false" id="search" autocomplete="off">
                 <input type="text" name="s" placeholder="{% trans 'Search for products' %}" />

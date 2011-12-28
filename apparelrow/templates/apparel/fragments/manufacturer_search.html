@@ -1,1 +1,2 @@
-<a href="{% url shop %}#manufacturer={{ object.id }}" id="manufacturer-{{ object.id }}">{{ object.name }}</a>
+{% load apparel_extras %}
+<a href="{% gender_url gender 'shop' %}#manufacturer={{ object.id }}" id="manufacturer-{{ object.id }}">{{ object.name }}</a>

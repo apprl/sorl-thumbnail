@@ -17,7 +17,7 @@ function create_modal_dialog(header, messages, yes_action, no_action) {
         .render({
             modal: true,
             header: header,
-            messages: messages,
+            messages: messages
         })
         .appendTo('body')
         .overlay({
@@ -152,7 +152,7 @@ jQuery(document).ready(function() {
                 elem = jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count');
                 elem.text(parseInt(elem.text(), 10) - 1);
             }
-        },
+        }
     });
     // Comments posting
     var comment_area = jQuery('#comments-and-links textarea');
@@ -168,7 +168,7 @@ jQuery(document).ready(function() {
             jQuery(data.html).hide().appendTo('ul#comments').slideDown('fast');
             increase_counts(jQuery('a.comments > span.count'));
             return false;
-        },
+        }
     });
     //Hover state for share button
     jQuery('.share').hover(
@@ -181,12 +181,11 @@ jQuery(document).ready(function() {
         .live('mouseenter', function(e) {
             jQuery(this).addClass('hover');
             return true;
-        } )
+        })
         .live('mouseleave', function(e) {
             jQuery(this).removeClass('hover');
             return true;
-        } )
-    ;
+        });
 
     // From: http://www.w3.org/TR/html5/number-state.html#file-upload-state
     function extractFilename(path) {
@@ -481,8 +480,8 @@ ApparelSearch = {
          *  selector    Selector of UL to add results to
          */
         jQuery.ajax({
-            type: 'GET',
-            url: '/search/' + opts.model,
+            type: 'POST',
+            url: '/search/' + opts.model + '/',
             dataType: 'json',
             data: opts.query,
             complete: function(request, status) {
@@ -573,7 +572,7 @@ ApparelSearch = {
         }
 
         return pairs.join('&')
-    },
+    }
 };
 
 function getHashParameterByName(name) {
@@ -607,6 +606,7 @@ function updateHash(name, value, remove) {
     if(!found && !remove) {
         hash_object[name] = value;
     }
+
     // Use decodeURIComponent because jQuery.param returns it encoded
     window.location.hash = decodeURIComponent(jQuery.param(hash_object));
 }
@@ -676,7 +676,12 @@ jQuery(document).ready(function() {
                     break;
                 }
 
-                window.location.href = '/shop/#' + ApparelSearch.format_query(query);
+                window.location.href = browse_url + '#' + ApparelSearch.format_query(query);
+                if(window.location.pathname == browse_url) {
+                    ApparelSearch.cancel();
+                    window.location.reload();
+                }
+
                 break;
 
             case 'search-result-looks':
@@ -689,27 +694,18 @@ jQuery(document).ready(function() {
                 break;
 
             case 'search-result-manufacturers':
-
                 var s = query.q;
                 window.location.href =
-                    '/shop/?criterion=manufacturer&'
+                    browse_url + '?criterion=manufacturer&'
                     + encodeURIComponent('1:m.name:icontains')
                     + '=' + encodeURIComponent(s)
                     + '&defaults=manufacturer-dialog'
                     + '&defaults='
-                    + encodeURIComponent('manufacturer-dialog-filter|' + s)
+                    + encodeURIComponent('manufacturer-dialog-filter|' + s);
 
                 break;
         }
 
-        ApparelSearch.cancel();
-
-        // From reset click handler in browse.js
-        jQuery('#container .selected').removeClass('selected');
-        jQuery('#product-category .level-1, #product-category .level-2').hide();
-        jQuery('#product-manufacturers .reset').click();
-        jQuery('#product-gender li:first > a').addClass('selected');
-
         return false;
     }
-} );
+});

@@ -31,7 +31,7 @@
             view: window,
             events: "scroll resize",
             className: "fixed",
-            container: null,
+            container: null
         }
     };
     $.fn.fixedscroll = $.fn.fixedscroll || function(options) {

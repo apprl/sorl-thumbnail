@@ -267,13 +267,13 @@ def search_view(request, model_name):
     Generic search view
     """
     try:
-        limit = int(request.GET.get('limit', RESULTS_PER_PAGE))
+        limit = int(request.REQUEST.get('limit', RESULTS_PER_PAGE))
     except ValueError:
         limit = RESULTS_PER_PAGE
 
-    query = request.GET.get('q')
+    query = request.REQUEST.get('q')
     if not query:
-        return Http404('Search require a search string')
+        raise Http404()
 
     model_name = model_name.lower()
 
@@ -338,7 +338,7 @@ def search_view(request, model_name):
     elif model_name == 'look':
         object_list = [o.template for o in paged_result.object_list if o]
     elif model_name == 'manufacturer':
-        object_list = [render_to_string('apparel/fragments/manufacturer_search.html', {'object': obj}) for obj in paged_result.object_list]
+        object_list = [render_to_string('apparel/fragments/manufacturer_search.html', {'object': obj, 'gender': gender}) for obj in paged_result.object_list]
 
     return HttpResponse(
         json.dumps({
