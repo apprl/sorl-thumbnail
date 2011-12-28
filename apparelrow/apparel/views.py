@@ -631,17 +631,17 @@ def gender(request, view=None, gender=None):
     if view is None:
         return HttpResponseNotFound()
 
-    # Set language to user's browser language for gender select view
-    language = translation.get_language_from_request(request)
-    translation.activate(language)
-    request.LANGUAGE_CODE = translation.get_language()
-    image = BackgroundImage.objects.get_random_image()
-
     gender_cookie = get_gender_from_cookie(request)
     if gender_cookie == 'W':
         return HttpResponseRedirect(reverse('%s-women' % (view,)))
     elif gender_cookie == 'M':
         return HttpResponseRedirect(reverse('%s-men' % (view,)))
+
+    # Set language to user's browser language for gender select view
+    language = translation.get_language_from_request(request)
+    translation.activate(language)
+    request.LANGUAGE_CODE = translation.get_language()
+    image = BackgroundImage.objects.get_random_image()
 
     return render_to_response('apparel/gender.html', {
             'men_url': reverse('%s-men' % (view,)),
