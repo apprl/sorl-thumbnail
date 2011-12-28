@@ -140,18 +140,19 @@ def brand_list(request, gender=None):
                        'group': 'true',
                        'group.field': 'manufacturer_id'}
     for brand in ApparelSearch('*:*', **query_arguments).get_docs():
-        brand_name = brand.manufacturer_auto
-        brand_id = brand.manufacturer_id
+        if hasattr(brand, 'manufacturer_auto') and hasattr(brand, 'manufacturer_id'):
+            brand_name = brand.manufacturer_auto
+            brand_id = brand.manufacturer_id
 
-        if brand_name:
-            normalized_name = unicodedata.normalize('NFKD', brand_name).lower()
-            for index, char in enumerate(normalized_name):
-                if char in alphabet:
-                    brands[brands_mapper[char]][2].append({'id': brand_id, 'name': brand_name})
-                    break
-                elif char.isdigit():
-                    brands[brands_mapper[u'#']][2].append({'id': brand_id, 'name': brand_name})
-                    break
+            if brand_name:
+                normalized_name = unicodedata.normalize('NFKD', brand_name).lower()
+                for index, char in enumerate(normalized_name):
+                    if char in alphabet:
+                        brands[brands_mapper[char]][2].append({'id': brand_id, 'name': brand_name})
+                        break
+                    elif char.isdigit():
+                        brands[brands_mapper[u'#']][2].append({'id': brand_id, 'name': brand_name})
+                        break
 
     for index, alpha in enumerate(alphabet):
         brands[index][1] = len(brands[index][2]) == 0
