@@ -173,21 +173,22 @@ def brand_list(request, gender=None):
         popular_brands.append([products[0].manufacturer.name, products])
 
     # Popular brands in your network with products
-    user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
-    user_ids_or = ' OR '.join(str(x) for x in user_ids)
-    query_arguments = {'sort': 'popularity desc',
-                       'fl': 'django_id',
-                       'fq': 'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or),
-                       'start': 0,
-                       'rows': 3,
-                       'group': 'true',
-                       'group.limit': 2,
-                       'group.field': 'manufacturer_id'}
-    grouped = ApparelSearch('*:*', **query_arguments).get_grouped()
     popular_brands_in_network = []
-    for value in grouped['manufacturer_id']['groups']:
-        products = list(Product.objects.select_related('manufacturer').filter(id__in=[doc['django_id'] for doc in value['doclist']['docs']]))
-        popular_brands_in_network.append([products[0].manufacturer.name, products])
+    if request.user.is_authenticated():
+        user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
+        user_ids_or = ' OR '.join(str(x) for x in user_ids)
+        query_arguments = {'sort': 'popularity desc',
+                           'fl': 'django_id',
+                           'fq': 'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or),
+                           'start': 0,
+                           'rows': 3,
+                           'group': 'true',
+                           'group.limit': 2,
+                           'group.field': 'manufacturer_id'}
+        grouped = ApparelSearch('*:*', **query_arguments).get_grouped()
+        for value in grouped['manufacturer_id']['groups']:
+            products = list(Product.objects.select_related('manufacturer').filter(id__in=[doc['django_id'] for doc in value['doclist']['docs']]))
+            popular_brands_in_network.append([products[0].manufacturer.name, products])
 
     response = render_to_response('apparel/brand_list.html', {
                 'brands': brands,

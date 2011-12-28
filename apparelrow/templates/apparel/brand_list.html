@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load cache %}
+{% load apparel_extras %}
 
 {% block body-classes %}three-columns brand-list{% endblock body-classes %}
 
@@ -41,11 +42,18 @@
     </div>
     <div class="sidebar last">
         <h2>{% trans "Popular brands in your network" %}</h2>
-        {% for manufacturer_name, popular_products in popular_brands_in_network %}
-        <h3>{{ manufacturer_name }}</h3>
-        {% with popular_products as products %}
-            {% include 'apparel/fragments/products_sidebar.html' %}
-        {% endwith %}
-        {% endfor %}
+        {% if not user.is_authenticated %}
+            <div>{% trans "To see popular brands in your network you need to connect with your Facebook account." %}</div>
+            {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
+                {% facebook_button facebook_login_image %}
+            {% endwith %}
+        {% else %}
+            {% for manufacturer_name, popular_products in popular_brands_in_network %}
+            <h3>{{ manufacturer_name }}</h3>
+            {% with popular_products as products %}
+                {% include 'apparel/fragments/products_sidebar.html' %}
+            {% endwith %}
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock body %}
