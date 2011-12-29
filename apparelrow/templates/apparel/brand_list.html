@@ -7,9 +7,9 @@
 
 {% block body %}
     <div class="sidebar">
-        <h2>{% trans "Most popular" %}</h2>
-        {% for manufacturer_name, popular_products in popular_brands %}
-        <h3>{{ manufacturer_name }}</h3>
+        <h2>{% trans "Popular brands" %}</h2>
+        {% for manufacturer_id, manufacturer_name, popular_products in popular_brands %}
+        <a href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ manufacturer_id }}"><h3>{{ forloop.counter }}. {{ manufacturer_name }}</h3></a>
         {% with popular_products as products %}
             {% include 'apparel/fragments/products_sidebar.html' %}
         {% endwith %}
@@ -48,8 +48,8 @@
                 {% facebook_button facebook_login_image %}
             {% endwith %}
         {% else %}
-            {% for manufacturer_name, popular_products in popular_brands_in_network %}
-            <h3>{{ manufacturer_name }}</h3>
+            {% for manufacturer_id, manufacturer_name, popular_products in popular_brands_in_network %}
+            <a href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ manufacturer_id }}"><h3>{{ forloop.counter }}. {{ manufacturer_name }}</h3></a>
             {% with popular_products as products %}
                 {% include 'apparel/fragments/products_sidebar.html' %}
             {% endwith %}

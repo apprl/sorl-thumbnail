@@ -524,6 +524,9 @@ ul.products
       margin: 0
       .product-image
         line-height: 124px
+    a
+      &:hover
+        text-decoration: none !important
 
 #lookproducts
   +row
@@ -1142,6 +1145,9 @@ a.buy-now
         +highlight_hover
 
 body.brand-list
+  #inner-container a
+    &:hover, &:active
+      text-decoration: underline
   .sidebar
     h3
       clear: both
@@ -1156,9 +1162,6 @@ body.brand-list
       text-transform: uppercase
       &.empty
         color: $easiest_color
-      a
-        &:hover
-          text-decoration: underline
   .brand-container
     padding: 1em 0
     border-bottom: 1px solid $easiest_color

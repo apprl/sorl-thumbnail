@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-28 13:43+0100\n"
+"POT-Creation-Date: 2011-12-29 12:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -543,11 +543,11 @@ msgstr "500-fel"
 msgid "An error occurred"
 msgstr "Ett fel uppstod"
 
-#: templates/base.html:46
+#: templates/base.html:47
 msgid "About ApparelRow beta"
 msgstr "Om ApparelRows beta"
 
-#: templates/base.html:48
+#: templates/base.html:49
 msgid ""
 "Apparelrow is currently available to a limited number of people. We look "
 "forward to making the site better together with you. We appreciate all "
@@ -562,11 +562,11 @@ msgstr ""
 "tankar. Eller maila oss på info@apparelrow.com. så blir vi också glada. Have "
 "fun!"
 
-#: templates/base.html:71 templates/base.html.py:250
+#: templates/base.html:72 templates/base.html.py:251
 msgid "About cookies"
 msgstr "Om cookies"
 
-#: templates/base.html:73
+#: templates/base.html:74
 msgid ""
 "Apparelrow uses cookies to make it easier for users to use the site. A "
 "cookie is an unharmful, small text file that is stored on your computer, "
@@ -584,142 +584,142 @@ msgstr ""
 "stänga av cookies i din webbläsare, men Apparelrow (och många andra siter) "
 "kommer att fungera sämre då."
 
-#: templates/base.html:110
+#: templates/base.html:111
 msgid "Log in with your Facebook account to find your friends"
 msgstr "Logga in med Facebook för att hitta dina vänner!"
 
-#: templates/base.html:123
+#: templates/base.html:124
 msgid "Search for products"
 msgstr "Sök efter plagg"
 
-#: templates/base.html:124 templates/profile/base_profile.html:52
+#: templates/base.html:125 templates/profile/base_profile.html:52
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:128 templates/base.html.py:230
+#: templates/base.html:129 templates/base.html.py:231
 #: templates/apparel/gender.html:10
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:129 templates/base.html.py:231
+#: templates/base.html:130 templates/base.html.py:232
 #: templates/apparel/gender.html:11
 #: templates/apparel/fragments/product_menu_browse.html:15
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:133 templates/base.html.py:229
+#: templates/base.html:134 templates/base.html.py:230
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:134
+#: templates/base.html:135
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:135 templates/base.html.py:234
+#: templates/base.html:136 templates/base.html.py:235
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:6
 #: templates/profile/fragments/menu_items.html:10
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/base.html:136
+#: templates/base.html:137
 msgid "Members"
 msgstr "Medlemmar"
 
-#: templates/base.html:151
+#: templates/base.html:152
 msgid "Matching products"
 msgstr "Träffar bland produkter"
 
-#: templates/base.html:155
+#: templates/base.html:156
 msgid "Matching looks"
 msgstr "Träffar bland looks"
 
-#: templates/base.html:159
+#: templates/base.html:160
 msgid "Matching brands"
 msgstr "Träffar bland varumärken"
 
-#: templates/base.html:163
+#: templates/base.html:164
 msgid "Show all products"
 msgstr "Visa alla plagg"
 
-#: templates/base.html:164
+#: templates/base.html:165
 msgid "Show all looks"
 msgstr "Visa alla looks"
 
-#: templates/base.html:165
+#: templates/base.html:166
 msgid "Show all manufacturers"
 msgstr "Visa alla varumärken"
 
-#: templates/base.html:181
+#: templates/base.html:182
 msgid "Logged in as"
 msgstr "Inloggad som"
 
-#: templates/base.html:186
+#: templates/base.html:187
 msgid "My profile"
 msgstr "Min profil"
 
-#: templates/base.html:192
+#: templates/base.html:193
 msgid "Friends' updates"
 msgstr "Vänners uppdateringar"
 
-#: templates/base.html:198 templates/profile/base_settings.html:8
+#: templates/base.html:199 templates/profile/base_settings.html:8
 msgid "Settings"
 msgstr "Inställningar"
 
-#: templates/base.html:205
+#: templates/base.html:206
 #, python-format
 msgid "Invite friends (%(invites)s)"
 msgstr "Bjud in vänner (%(invites)s)"
 
-#: templates/base.html:212 templates/base.html.py:236
+#: templates/base.html:213 templates/base.html.py:237
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
 msgstr "Skapa en look"
 
-#: templates/base.html:215
+#: templates/base.html:216
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:235
+#: templates/base.html:236
 msgid "All looks"
 msgstr "Alla looks"
 
-#: templates/base.html:239
+#: templates/base.html:240
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:240 templates/apparel/look_list.html:39
+#: templates/base.html:241 templates/apparel/look_list.html:39
 #: templates/apparel/look_list.html:50 templates/apparel/user_home.html:36
 #: templates/apparel/fragments/browse_follow_user.html:5
 #: templates/profile/dialog_welcome.html:25
 msgid "See all members"
 msgstr "Se alla medlemmar"
 
-#: templates/base.html:246
+#: templates/base.html:247
 msgid "About Apparelrow"
 msgstr "Om ApparelRow"
 
-#: templates/base.html:247
+#: templates/base.html:248
 msgid "About the beta"
 msgstr "Om betaversionen"
 
-#: templates/base.html:248
+#: templates/base.html:249
 msgid "Blog"
 msgstr "Blogg"
 
-#: templates/base.html:249
+#: templates/base.html:250
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:270
+#: templates/base.html:271
 msgid "No"
 msgstr "Nej"
 
-#: templates/base.html:271
+#: templates/base.html:272
 msgid "Yes"
 msgstr "Ja"
 
-#: templates/base.html:273 templates/apparel/fragments/product_options.html:16
+#: templates/base.html:274 templates/apparel/fragments/product_options.html:16
 msgid "OK"
 msgstr "OK"
 
@@ -840,8 +840,8 @@ msgid "Update password"
 msgstr "Ändra lösenord"
 
 #: templates/apparel/brand_list.html:10
-msgid "Most popular"
-msgstr "Mest populära"
+msgid "Popular brands"
+msgstr "Populära varumärken"
 
 #: templates/apparel/brand_list.html:44
 msgid "Popular brands in your network"
@@ -2017,6 +2017,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Most popular"
+#~ msgstr "Mest populära"
 
 #~ msgid ""
 #~ "\n"
