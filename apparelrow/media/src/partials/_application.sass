@@ -977,20 +977,29 @@ body.three-columns .pagination
 body.product #container .product-image img
   cursor: image_url(unquote("magnifier.cur")), image_url(unquote("magnifier.png")), -moz-zoom-in
 
-#gallery
+#gallery-container
+  position: absolute
+  top: 100px
+  left: 0
   display: none
   z-index: 10000
-  +box-shadow
-  img
-    vertical-align: top
-  .close
-    position: absolute
-    background: transparent image_url(unquote("delete.png")) no-repeat scroll center center
-    cursor: pointer
-    height: 22px
-    width: 22px
-    top: -11px
-    left: -11px
+  width: 100%
+  text-align: center
+  #gallery
+    position: relative
+    display: inline-block
+    margin: 0 auto
+    +box-shadow
+    img
+      vertical-align: top
+    .close
+      position: absolute
+      background: transparent image_url(unquote("delete.png")) no-repeat scroll center center
+      cursor: pointer
+      height: 22px
+      width: 22px
+      top: -11px
+      left: -11px
 
 table.available-sizes th
   border: none

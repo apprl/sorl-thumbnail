@@ -29,16 +29,16 @@
 
 
             // Gallery overlay
-            gallery_overlay = false;
+            var gallery_overlay = false;
             jQuery('.product-image a').click(function(event) {
                 gallery_overlay = true;
-                jQuery('#gallery').css({'position': 'absolute', 'left': '50%', 'top': '100px'}).show();
+                jQuery('#gallery-container').show();
                 return false;
             });
             jQuery(document).click(function(event) {
                 if(gallery_overlay) {
                     gallery_overlay = false;
-                    jQuery('#gallery').hide();
+                    jQuery('#gallery-container').hide();
                 }
             });
 
@@ -192,9 +192,11 @@
                 {% include 'apparel/fragments/like_button.html' %}
                 {% endwith %}
             </div>
-            <div id="gallery">
-                <div class="close"></div>
-                <img src="{{object.product_image.url}}">
+            <div id="gallery-container">
+                <div id="gallery">
+                    <div class="close"></div>
+                    <img src="/scale/960{{object.product_image.url}}" alt="{{ object.product_name }}">
+                </div>
             </div>
             {% include 'apparel/fragments/comments.html' %}
         </div>
