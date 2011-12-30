@@ -115,28 +115,9 @@ $input_border_color: $highlight_border_color !default
           white-space: nowrap
 
 .look-empty
-  width: 300px
   position: absolute
   top: 150px
   left: 197px
-  text-align: center
-  button, a
-    +button(none, $button_height)
-    +border-radius(unquote("3px"))
-    +highlight
-    height: $button_height
-    margin-top: 1em
-    &:hover
-      +highlight_hover
-  a
-    background-image: image_url(unquote("add.png"))
-    background-repeat: no-repeat
-    background-position: 10px 9px
-    padding-left: 30px
-    display: block
-  p
-    margin: 1em 0
-    color: #333333
 
 #photo .look-empty
   .message

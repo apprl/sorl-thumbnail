@@ -1,5 +1,6 @@
 {% extends "profile/base.html" %}
 {% load i18n %}
+{% load apparel_extras %}
 
 {% block 'extra-scripts' %}
     {% include 'apparel/fragments/browse_scripts.html' %}
@@ -44,11 +45,19 @@
 {% endblock 'extra-scripts' %}
 
 {% block profile_left_sidebar %}
-    {% include 'apparel/fragments/product_menu_browse.html' %}
+    {% if current_page.paginator.count != 0 %}
+        {% include 'apparel/fragments/product_menu_browse.html' %}
+    {% endif %}
 {% endblock %}
 {% block profile_content %}
-    <h2 id="product-count">
-        <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
-    </h2>
-    {% include 'apparel/fragments/product_list.html' %}
+    {% if current_page.paginator.count != 0 %}
+        <h2 id="product-count">
+            <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
+        </h2>
+        {% include 'apparel/fragments/product_list.html' %}
+    {% else %}
+        <div class="wardrobe-empty">
+            <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+        </div>
+    {% endif %}
 {% endblock %}

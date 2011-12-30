@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-29 12:27+0100\n"
+"POT-Creation-Date: 2011-12-30 00:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -740,12 +740,12 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: templates/index.html:175 templates/apparel/product_detail.html:234
+#: templates/index.html:175 templates/apparel/product_detail.html:236
 #: templates/apparel/fragments/product_row.html:2
 msgid "Previous"
 msgstr ""
 
-#: templates/index.html:184 templates/apparel/product_detail.html:242
+#: templates/index.html:184 templates/apparel/product_detail.html:244
 #: templates/apparel/fragments/product_row.html:10
 msgid "Next"
 msgstr ""
@@ -828,7 +828,7 @@ msgstr ""
 msgid "Browse"
 msgstr ""
 
-#: templates/apparel/browse.html:40 templates/profile/wardrobe.html:51
+#: templates/apparel/browse.html:40 templates/profile/wardrobe.html:55
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
@@ -869,7 +869,7 @@ msgid "Create"
 msgstr ""
 
 #: templates/apparel/look_detail.html:29 templates/apparel/look_edit.html:468
-#: templates/profile/base_profile.html:13 templates/profile/wardrobe.html:22
+#: templates/profile/base_profile.html:13 templates/profile/wardrobe.html:23
 msgid "Are you sure?"
 msgstr ""
 
@@ -960,7 +960,7 @@ msgstr ""
 msgid "To create a look, you need to have products in your wardrobe."
 msgstr ""
 
-#: templates/apparel/look_edit.html:510
+#: templates/apparel/look_edit.html:510 templates/profile/wardrobe.html:60
 msgid "Find products!"
 msgstr ""
 
@@ -1058,7 +1058,7 @@ msgstr ""
 #: templates/apparel/product_detail.html:150
 #: templates/apparel/product_detail.html:163
 #: templates/apparel/fragments/product_detail.html:99
-#: templates/profile/wardrobe.html:10
+#: templates/profile/wardrobe.html:11
 msgid "Delete product from my wardrobe"
 msgstr ""
 
@@ -1072,29 +1072,29 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: templates/apparel/product_detail.html:209
+#: templates/apparel/product_detail.html:211
 #, python-format
 msgid "Added to <span class=\"count\">%(counter)s</span> look"
 msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:213
+#: templates/apparel/product_detail.html:215
 msgid "Recently viewed"
 msgstr ""
 
-#: templates/apparel/product_detail.html:222
+#: templates/apparel/product_detail.html:224
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> look with this product"
 msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:232
+#: templates/apparel/product_detail.html:234
 msgid "You may also like"
 msgstr ""
 
-#: templates/apparel/product_detail.html:249
+#: templates/apparel/product_detail.html:251
 msgid "No product found!"
 msgstr ""
 
@@ -1597,8 +1597,12 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
-#: templates/profile/wardrobe.html:23
+#: templates/profile/wardrobe.html:24
 msgid "Do you really want to delete product"
+msgstr ""
+
+#: templates/profile/wardrobe.html:60
+msgid "You do not have any products in your wardrobe right now."
 msgstr ""
 
 #: templates/profile/watcher.html:13
