@@ -46,6 +46,7 @@ jQuery(document).ready(function() {
             rangemin.val(jQuery(this).slider('values', 0));
             rangemax.val(jQuery(this).slider('values', 1));
             display_min.text(jQuery(this).slider('values', 0));
+            max_value = jQuery(this).slider('values', 1);
             if(max_value >= 10000) {
                 display_max.text('10000+');
             } else {
