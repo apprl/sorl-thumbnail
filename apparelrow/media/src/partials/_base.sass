@@ -293,10 +293,19 @@ $color_column_offset: 1px
         &.filtered
           background-position: $x $y_filtered
       &.pink
-        $x: -$color_width * 11
+        $x: -$color_width * 12
         background-position: $x top
         top: ($color_height + $color_row_offset) * 2
         left: ($color_width + $color_column_offset) * 2
+        &.selected
+          background-position: $x $y_selected
+        &.filtered
+          background-position: $x $y_filtered
+      &.purple
+        $x: -$color_width * 11
+        background-position: $x top
+        top: ($color_height + $color_row_offset) * 2
+        left: ($color_width + $color_column_offset) * 3
         &.selected
           background-position: $x $y_selected
         &.filtered
