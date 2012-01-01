@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-30 00:33+0100\n"
+"POT-Creation-Date: 2012-01-01 21:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "Swe"
 msgstr ""
 
-#: apparel/browse.py:205 templates/apparel/look_list.html:25
+#: apparel/browse.py:231 templates/apparel/look_list.html:25
 #: templates/apparel/look_list.html:27
 msgid "Showing"
 msgstr "Visar"
 
-#: apparel/browse.py:207
+#: apparel/browse.py:233
 msgid "Showing popular products in your network"
 msgstr "Visar populära plagg bland dina vänner"
 
@@ -163,7 +163,7 @@ msgid "Buy URL"
 msgstr "URL till köpsida"
 
 #: apparel/models.py:321
-#: templates/apparel/fragments/product_menu_browse.html:18
+#: templates/apparel/fragments/product_menu_browse.html:19
 msgid "Price"
 msgstr "Pris"
 
@@ -719,7 +719,7 @@ msgstr "Nej"
 msgid "Yes"
 msgstr "Ja"
 
-#: templates/base.html:274 templates/apparel/fragments/product_options.html:16
+#: templates/base.html:274
 msgid "OK"
 msgstr "OK"
 
@@ -1337,33 +1337,57 @@ msgid "Browse articles"
 msgstr "Hitta plagg"
 
 #: templates/apparel/fragments/product_menu_browse.html:8
-#: templates/apparel/fragments/product_options.html:9
 msgid "Show all"
 msgstr "Visa alla"
 
-#: templates/apparel/fragments/product_menu_browse.html:21
+#: templates/apparel/fragments/product_menu_browse.html:20
+#: templates/apparel/fragments/product_menu_browse.html:53
+#: templates/apparel/fragments/product_menu_browse.html:68
+msgid "Reset"
+msgstr "Återställ"
+
+#: templates/apparel/fragments/product_menu_browse.html:25
+msgid "Min"
+msgstr ""
+
+#: templates/apparel/fragments/product_menu_browse.html:25
+#: templates/apparel/fragments/product_menu_browse.html:27
+#: templates/apparel/fragments/product_menu_browse.html:29
+msgid "SEK"
+msgstr ""
+
+#: templates/apparel/fragments/product_menu_browse.html:27
+#: templates/apparel/fragments/product_menu_browse.html:29
+msgid "Max"
+msgstr ""
+
+#: templates/apparel/fragments/product_menu_browse.html:48
+msgid "Show only products on sale"
+msgstr "Visa endast prissänkta varor"
+
+#: templates/apparel/fragments/product_menu_browse.html:52
 msgid "Color"
 msgstr "Färg"
 
-#: templates/apparel/fragments/product_menu_browse.html:24
+#: templates/apparel/fragments/product_menu_browse.html:61
+msgid "Striped"
+msgstr "Randigt"
+
+#: templates/apparel/fragments/product_menu_browse.html:62
+msgid "Checkers"
+msgstr "Rutigt"
+
+#: templates/apparel/fragments/product_menu_browse.html:63
+msgid "Dotted"
+msgstr "Prickigt"
+
+#: templates/apparel/fragments/product_menu_browse.html:67
 msgid "Brand"
 msgstr "Varumärke"
 
-#: templates/apparel/fragments/product_options_brand.html:4
-msgid "Select one or many brands"
-msgstr "Välj ett eller flera varumärken"
-
-#: templates/apparel/fragments/product_options_brand.html:7
+#: templates/apparel/fragments/product_menu_browse.html:73
 msgid "Search brands"
 msgstr "Sök bland varumärken"
-
-#: templates/apparel/fragments/product_options_color.html:4
-msgid "Select one or more colors"
-msgstr "Välj en eller flera färger"
-
-#: templates/apparel/fragments/product_options_price.html:5
-msgid "Select price range"
-msgstr "Välj prisintervall"
 
 #: templates/apparel/fragments/product_user_like_list.html:4
 msgid "People who like this product"
@@ -2021,6 +2045,15 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Select one or many brands"
+#~ msgstr "Välj ett eller flera varumärken"
+
+#~ msgid "Select one or more colors"
+#~ msgstr "Välj en eller flera färger"
+
+#~ msgid "Select price range"
+#~ msgstr "Välj prisintervall"
 
 #~ msgid "Most popular"
 #~ msgstr "Mest populära"
