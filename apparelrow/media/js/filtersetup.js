@@ -1,36 +1,11 @@
 jQuery(document).ready(function() {
-    // Make option panels popups
-    jQuery('.options').addClass('popup');
-    jQuery('.options button').click(function() {
-        jQuery(this).parents('.popup').hide();
-        jQuery(this).parents('li.active').removeClass('active');
-        
-    });
-    jQuery('.options form').submit(function() {
-        if(jQuery(this).parents('.options').find('.selected').length > 0) {
-            jQuery(this).parents('.options').siblings('a').addClass('selected');
-        } else {
-            jQuery(this).parents('.options').siblings('a').removeClass('selected');
-        }
-    });
-
-    jQuery('#product-options > li > a').click(function() {
-        
-        if(!jQuery(this).parent().is(".active")) {
-            jQuery('#product-options .options').hide();
-            jQuery('#product-options li.active').removeClass('active');
-        }
-        
-        jQuery(this).parent().toggleClass('active');
-        jQuery(this).next('.options').slideToggle('fast');
-        
-        return false;
-    });
     // Price slider
-    
     var rangemin = jQuery("input[name=pricerange_min]");
     var rangemax = jQuery("input[name=pricerange_max]");
-    
+
+    var display_min = jQuery('#price-min span');
+    var display_max = jQuery('#price-max span');
+
     jQuery('#price-slider').siblings('input[type=text]').blur(function(e) {
         var slider = jQuery('#price-slider').data('slider');
         var values = [
@@ -70,17 +45,23 @@ jQuery(document).ready(function() {
         slide: function(event, ui) {
             rangemin.val(jQuery(this).slider('values', 0));
             rangemax.val(jQuery(this).slider('values', 1));
+            display_min.text(jQuery(this).slider('values', 0));
+            display_max.text(jQuery(this).slider('values', 1));
         },
         change: function(event, ui) {
-            jQuery(this).addClass('selected');
             rangemin.val(jQuery(this).slider('values', 0));
             rangemax.val(jQuery(this).slider('values', 1));
+            display_min.text(jQuery(this).slider('values', 0));
+            display_max.text(jQuery(this).slider('values', 1));
+            if(event.originalEvent) {
+                jQuery(this).addClass('selected');
+                jQuery(this).parents('form').submit();
+            }
         }
-     });
-    
-    
-    ManufacturerBrowser.init();    
+    });
+
     // Brand search
+    ManufacturerBrowser.init();
     var _manufacturerSearchTimeout;
     jQuery("input[name=brand]")
         .keyup(function(e) {
@@ -149,12 +130,10 @@ var ManufacturerBrowser = {
     brandPage: 1,
     brandName: '',
     $availableList: null,
-    $selectedList: null,
     
     init: function() {
         var self = ManufacturerBrowser;
         this.$availableList = jQuery('#available-manufacturers');
-        this.$selectedList  = jQuery('#selected-manufacturers');
     },
     
     reset: function() {

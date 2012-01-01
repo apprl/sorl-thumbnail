@@ -14,17 +14,62 @@
     <li class="women"><a id="option-W"{% if selected_gender == "W" %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'shop' %}?gender=W">{% trans "Women" %}</a></li>
     <li class="last men"><a id="option-M"{% if selected_gender == "M" %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'shop' %}?gender=M">{% trans "Men" %}</a></li>
 </ul>
-<ul id="product-options" class="hover-menu">
-    <li class="first" id="product-price"><a {% if selected_price %}class="selected" {% endif %}href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Price" %}</a>
-    {% include "apparel/fragments/product_options_price.html" %}
+<ul id="product-options">
+    <li class="first header">
+        <span>{% trans "Price" %}</span>
+        <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>
+        <div class="arrow"></div>
     </li>
-    <li id="product-color"><a {% if selected_colors %}class="selected" {% endif %}href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Color" %}</a>
-    {% include "apparel/fragments/product_options_color.html" %}
+    <li class="content" id="product-price">
+        <form action="{% gender_url APPAREL_GENDER 'shop' %}">
+            <div id="price-min">{% trans "Min" %} <span>{{ pricerange.min }}</span> {% trans "SEK" %}</div>
+            <div id="price-max">{% trans "Max" %} <span>{{ pricerange.max }}</span> {% trans "SEK" %}</div>
+
+            <div id="price-slider"></div>
+
+            <div id="price-ruler">
+                <div class="point min">{{ pricerange.min }}</div>
+                <div class="point mid">{% calc_half pricerange.max pricerange.min %}</div>
+                <div class="point max">{{ pricerange.max }}</div>
+            </div>
+
+            <input type="hidden" name="pricerange_max" value="{{ pricerange.max }}" class="price-range">
+            <input type="hidden" name="pricerange_min" value="{{ pricerange.min }}" class="price-range">
+            <input type="hidden" name="price" value="{{ pricerange.selected }}">
+
+            <div>{% trans "Show only products on sale" %}</div>
+        </form>
     </li>
-    <li class="last" id="product-manufacturers"><a {% if selected_brands %}class="selected" {% endif %}href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Brand" %}</a>
-        {% include "apparel/fragments/product_options_brand.html" %}
-        <ul id="selected-manufacturers" class="level-1">
+    <li class="header">
+        <span>{% trans "Color" %}</span>
+        <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>
+        <div class="arrow"></div>
+    </li>
+    <li class="content" id="product-color">
+        <ul>
+        {% for color in default_colors %}
+            <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?color={{ color.pk }}" class="{{ color.value }}{% if selected_colors and color.value in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}">{{ color.value }}</a></li>
+        {% endfor %}
+            <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?pattern=striped" class="pattern striped" id="option-striped" title="{% trans "Striped" %}">{% trans "Striped" %}</a></li>
+            <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?pattern=checkers" class="pattern checkers" id="option-checkers" title="{% trans "Checkers" %}">{% trans "Checkers" %}</a></li>
+            <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?pattern=dotted" class="pattern dotted" id="option-dotted" title="{% trans "Dotted" %}">{% trans "Dotted" %}</a></li>
         </ul>
+    </li>
+    <li class="header">
+        <span>{% trans "Brand" %}</span>
+        <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>
+        <div class="arrow"></div>
+    </li>
+    <li class="last content" id="product-manufacturers">
+        <form action="{% gender_url APPAREL_GENDER 'shop' %}">
+            <input type="text" name="brand" value="{% trans "Search brands" %}" class="default" />
+            <ul id="available-manufacturers">
+            {% for manufacturer in manufacturers %}
+                <li><a id="available-manufacturer-{{ manufacturer.0 }}" href="{% gender_url APPAREL_GENDER 'shop' %}?manufacturer={{ manufacturer.0 }}">{{ manufacturer.1 }}</a></li>
+            {% endfor %}
+            </ul>
+        </form>
+        <ul id="selected-manufacturers" class="level-1"></ul>
     </li>
 </ul>
 {% endblock %}

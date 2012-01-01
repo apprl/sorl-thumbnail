@@ -118,6 +118,12 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
         query_arguments['sort'] = 'popularity desc'
         query_string = '*:*'
 
+    if 'pattern' in request.GET:
+        if query_string == '*:*':
+            query_string = ' OR '.join(request.GET.get('pattern').split(','))
+        else:
+            query_string = '%s (%s)' % (query_string, ' OR '.join(request.GET.get('pattern').split(',')))
+
     search = ApparelSearch(query_string, **query_arguments)
 
     facet = search.get_facet()['facet_fields']
@@ -178,6 +184,10 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     if selected_colors:
         selected_colors = selected_colors.split(',')
 
+    selected_patterns = request.GET.get('pattern', None)
+    if selected_patterns:
+        selected_patterns = selected_patterns.split(',')
+
     selected_price = request.GET.get('price', None)
     if selected_price:
         selected_price = selected_price.split(',', 1)
@@ -191,10 +201,11 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     result.update(
         selected_categories  = filter(None, map(_to_int, request.GET.get('category', '').split(','))),
         selected_colors      = selected_colors,
+        selected_patterns    = selected_patterns,
         selected_brands      = selected_brands,
         selected_brands_data = selected_brands_data,
         selected_price       = selected_price,
-        selected_gender      = None,
+        selected_gender      = request.GET.get('gender', None),
     )
 
     # Extra context
@@ -223,9 +234,12 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
         )
         return HttpResponse(json.encode(result), mimetype='text/json')
 
+    # Default colors
+    default_colors = Option.objects.filter(option_type__name='color').exclude(value__exact='').all()
+
     # Serve non ajax request
     result.update(
-        all_colors = Option.objects.filter(option_type__name='color').all(),
+        default_colors = default_colors,
         categories_all = Category._tree_manager.all(),
         current_page = paged_result,
         pages = pages,

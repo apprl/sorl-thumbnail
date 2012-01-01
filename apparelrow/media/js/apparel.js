@@ -694,15 +694,7 @@ jQuery(document).ready(function() {
                 break;
 
             case 'search-result-manufacturers':
-                var s = query.q;
-                window.location.href =
-                    browse_url + '?criterion=manufacturer&'
-                    + encodeURIComponent('1:m.name:icontains')
-                    + '=' + encodeURIComponent(s)
-                    + '&defaults=manufacturer-dialog'
-                    + '&defaults='
-                    + encodeURIComponent('manufacturer-dialog-filter|' + s);
-
+                window.location.href = browse_url + '?brands_filter=' + encodeURIComponent(query.q);
                 break;
         }
 

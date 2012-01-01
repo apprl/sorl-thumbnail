@@ -89,74 +89,69 @@ jQuery(document).ready(function() {
             this.filterCallback = null;
         }
     });
-    // Tooltips FIXME: Fix this, so it works with ajax fetched stuff and looks nice
-    // jQuery('#product-list > ul > li').tooltip({ effect: 'slide', position: 'bottom center', offset: [170, 0], relative: true });
-    // Fixed scrolling
-    //jQuery('#content').fixedscroll();
 
+    // Initially hide level 1 and 2 categories
     jQuery('#product-category .level-1, #product-category .level-2').hide();
 
-    // Reset button
+    // Full reset button
     jQuery('#reset').click(function() {
-        jQuery('#container .selected').removeClass('selected');
+        // Every selected element is deselected
+        jQuery('#inner-container .selected').removeClass('selected');
+
+        // Every active element is deactivated
+        jQuery('#inner-container .active').removeClass('active');
+
+        // Hide level 1 and 2 categories
         jQuery('#product-category .level-1, #product-category .level-2').hide();
-        jQuery('#product-manufacturers .reset').click();
-        jQuery('#product-gender li:first > a').addClass('selected'); // Select all genders
-        // Call getQuery with empty query and reset true
+
+        // Initiate individual reset for brands filter
+        jQuery('#product-manufacturers').prev().find('.reset').click();
+
+        // Select both genders
+        jQuery('#product-gender li:first > a').addClass('selected');
+
+        // Call getQuery with empty query and force reset
         filter(getQuery({}, true));
+
         return false;
     });
-    jQuery('.options .reset').click(function(e) {
-        var link = jQuery(this);
-        
-        link
-            .parents('.options').hide()
-            .parents('li.active').removeClass('active')
-            .find('a.selected').removeClass('selected');
 
-        switch(link.closest('li').attr('id')) {
+    // Individual reset button
+    jQuery('#product-options .header .reset').click(function(e) {
+        var link = jQuery(this);
+        link.closest('li').next().find('.selected').removeClass('selected');
+        link.parents('li.active').removeClass('active');
+
+        switch(link.closest('li').next().attr('id')) {
             case 'product-price':
                 // Move slider to min and max
                 var slider = jQuery('#price-slider').data('slider');
                     slider.values([slider.option('min'), slider.option('max')]);
                 break;
+
             case 'product-color':
-                // Uncheck all colours
-                jQuery('ul > li', link.closest('.popup'))
-                    .find('.selected')
-                    .removeClass('selected');
-                    
                 break;
+
             case 'product-manufacturers':
-                jQuery("input[name=brand]")
-                    .val('')
-                    .blur()
-                ;
-                
-                jQuery('#available-manufacturers > li > a.selected')
-                    .removeClass('selected');
-                
-                jQuery('#selected-manufacturers > li')
-                    .remove();
-                
+                jQuery('input[name=brand]').val('').blur();
+                jQuery('#selected-manufacturers > li').remove();
                 break;
+
             default:
                 return false;
         }
-        
+
         filter(getQuery());
         return false;
     });
 
+    // Filter price on form submit but never actually submit the form
     jQuery('#product-price form').submit(function() {
         filter(getQuery());
         return false;
     });
-    jQuery('#product-color form').submit(function() {
-        filter(getQuery());
-        return false;
-    });
 
+    // Disable form submit when filtering manufacturers
     jQuery('#product-manufacturers form').submit(function() {
         return false;
     });
@@ -174,8 +169,7 @@ jQuery(document).ready(function() {
             element.clone().attr('id', id).appendTo(
                 jQuery('<li>').prependTo(selected_manufacturers)
             );
-            delayedFilter(getQuery());
-            jQuery('#product-manufacturers > a').addClass('selected');
+            filter(getQuery());
         }
 
         return false;
@@ -197,27 +191,17 @@ jQuery(document).ready(function() {
         if(!element_available.hasClass('selected')) {
             element_available.addClass('selected');
             element.clone().attr('id', id).appendTo(jQuery('<li>').prependTo(jQuery('#selected-manufacturers')));
-            jQuery('#product-manufacturers > a').addClass('selected');
-            delayedFilter(getQuery());
+            filter(getQuery());
         }
     });
 
     // Click handler for list of selected manufacturers
     jQuery('#selected-manufacturers a').live('click', function(e) {
         jQuery('#available-manufacturer-' + getElementId(this)).removeClass('selected');
-
-        var $li = jQuery(this).closest('li');
-        if($li.siblings().length == 0) 
-            jQuery('#product-manufacturers > a').removeClass('selected');
-        $li.remove();
-
-        delayedFilter(getQuery());
+        jQuery(this).closest('li').remove();
+        filter(getQuery());
         
         return false;
-    });
-
-    jQuery('#product-count a').click(function() {
-        jQuery('#reset').click();
     });
 
     // Set selected and clear selected from related element and then call filter
@@ -233,6 +217,7 @@ jQuery(document).ready(function() {
         }
     }
 
+    // Product gender filter
     jQuery('#product-gender li > a').click(function() {
         var element = jQuery(this);
         if(!element.hasClass('.selected')) {
@@ -242,12 +227,17 @@ jQuery(document).ready(function() {
         }
         return false;
     });
+
+    // Product color filter
     jQuery('#product-color li > a').click(function() {
         if(!jQuery(this).hasClass('filtered')) {
             jQuery(this).toggleClass('selected');
+            filter(getQuery());
         }
         return false;
     });
+
+    // Product category filter
     jQuery('#product-category li > a').click(function() {
         filter(getQuery());
         return false;
@@ -273,7 +263,7 @@ jQuery(document).ready(function() {
     jQuery(document).keydown(function(e) {
         if(e.keyCode == 37 || e.keyCode == 39) {
             var index = jQuery('#product-list').data('scrollable').getIndex(),
-                currentPageId = getElementId(jQuery('#product-list > ul.list > li:eq(' + index + ')'), true),
+                currentPageId = getNumericElementId(jQuery('#product-list > ul.list > li:eq(' + index + ')'), true),
                 page = e.keyCode == 37 ? currentPageId - 1 : currentPageId + 1;
 
             scrollTo(page);
@@ -308,58 +298,25 @@ jQuery(document).ready(function() {
         },
         onSeek: adjustProductListHeight
     });
-    
-    /**
-     * BROWSE PAGE DEFAULTS
-     * This allows manipulating the browse page interface on page load 
-     * from the query string.
-     * 
-     * Syntax
-     *  ?defaults=action|argument&...
-     *  
-     *  action      An named action see switch statement below
-     *  argument    Optional argument passed with action
-     * 
-     * Any number of 'defaults' query parameters may be present
-     * The actions will be performed in the same order as they appear in
-     * the query string
-     * 
-     */
-    jQuery.each(window.location.search.split('&'), function(i, e) {
+
+    jQuery.each(window.location.search.substr(1).split('&'), function(i, e) {
+        console.log(e);
         var pair = e.split('=');
-        if(pair[0] != 'defaults') return;
-        var value = unescape(pair[1]).split('|');
-        
-        switch(value[0]) {
-            case 'manufacturer-dialog':
-                // Show manufacturers filter dialog
-                jQuery('#product-manufacturers > a').click();
-                break;
-                
-            case 'manufacturer-dialog-filter':
-                // Set and perform a filter om the manufacturer dialog
-                jQuery('#product-manufacturers input[name=brand]')
-                    .attr('value', value[1])
-                    .keyup()
-                    .focus();
-                break;
-                
-            case 'price-dialog':
-                // Show price dialog
-                jQuery('#product-price > a').click();
-                break;
-                
-            case 'color-dialog':
-                // Show colour dialog
-                jQuery('#product-color > a').click();
-                break;
-            
-            default:
-                console.error('Action ', value[0], ' not implemented');
+        if(pair[0] != 'brands_filter') {
+            return;
         }
+        var value = unescape(pair[1]);
+        jQuery('#product-manufacturers input[name=brand]').attr('value', value).keyup().focus();
     });
+
 });
 
+/**
+ * GET QUERY
+ *
+ * Create a query object and populate it with selected filters. Also make sure
+ * that if there are selected filters, mark that filter category as active.
+ */
 function getQuery(query, reset) {
     query = query || {}
     reset = typeof(reset) != 'undefined' ? reset : false;
@@ -372,6 +329,9 @@ function getQuery(query, reset) {
     manufacturer_list = getElementIds(jQuery('#selected-manufacturers li > a'));
     if(manufacturer_list.length > 0) {
         query['manufacturer'] = manufacturer_list.join(',');
+        jQuery('#product-manufacturers').prev().addClass('active');
+    } else {
+        jQuery('#product-manufacturers').prev().removeClass('active');
     }
 
     gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
@@ -379,16 +339,30 @@ function getQuery(query, reset) {
         query['gender'] = gender_list[0];
     }
 
-    color_list = getElementIds(jQuery('#product-color li > a.selected'));
+    color_list = getElementIds(jQuery('#product-color a.selected:not(.pattern)'));
     if(color_list.length > 0) {
         query['color'] = color_list.join(',');
+        // Mark color filter as active
+        jQuery('#product-color').prev().addClass('active');
     }
 
-    if(jQuery('#product-price > a').is('.selected')) {
+    pattern_list = getElementIds(jQuery('#product-color a.pattern.selected'));
+    if(pattern_list.length > 0) {
+        query['pattern'] = pattern_list.join(',');
+        // Mark color filter as active
+        jQuery('#product-color').prev().addClass('active');
+    }
+
+    if(color_list.length == 0 && pattern_list.length == 0) {
+        jQuery('#product-color').prev().removeClass('active');
+    }
+
+    if(jQuery('#price-slider').is('.selected')) {
         query['price'] = 
               jQuery("input[name=pricerange_min]").val()
             + ',' 
             + jQuery("input[name=pricerange_max]").val();
+        jQuery('#product-price').prev().addClass('active');
     }
 
     if(!reset && window.location.hash.length > 0) {
@@ -408,23 +382,15 @@ function getQuery(query, reset) {
 }
 
 function getElementId(element, numeric) {
-    if(numeric) {
-        return parseInt(jQuery(element).attr('id').split('-').pop(), 10);
-    }
     return jQuery(element).attr('id').split('-').pop()
+}
+
+function getNumericElementId(element) {
+    return parseInt(jQuery(element).attr('id').split('-').pop(), 10);
 }
 
 function getElementIds(elements) {
     return jQuery.map(elements, getElementId);
-}
-
-
-var _delayedFilterTimerID;
-function delayedFilter(query) {
-    if(_delayedFilterTimerID)
-        clearTimeout(_delayedFilterTimerID);
-    
-    _delayedFilterTimerID = setTimeout(function() { filter(query) }, 1000); 
 }
 
 function filter(query, callback) {
@@ -449,7 +415,7 @@ function renderPage(products) {
             var existing = jQuery('#' + this.id);
             if(existing.length == 0) {
                 var existingPages = jQuery('#product-list > ul.list > li');
-                var nextPage = existingPages.filter(function(i) { return getElementId(this, true) > getElementId(page, true) }).first();
+                var nextPage = existingPages.filter(function(i) { return getNumericElementId(this) > getNumericElementId(page) }).first();
                 // There are pages that should be after this one in the list
                 if(nextPage.length == 1) {
                     nextPage.before(page);
@@ -491,7 +457,7 @@ function renderPage(products) {
  * Apply filter on available browse options.
  */
 function filterCriteria(criteria_filter) {
-    if('manufacturers' in criteria_filter && !jQuery('#product-manufacturers').hasClass('active')) {
+    if('manufacturers' in criteria_filter && !jQuery('#product-manufacturers').prev().hasClass('active')) {
         ManufacturerBrowser.reset();
 
         jQuery.each(criteria_filter['manufacturers'], function(i, manufacturer) {
@@ -510,12 +476,12 @@ function filterCriteria(criteria_filter) {
                 this_element.parent().addClass('filtered');
             }
         });
-        jQuery('#product-category>li.first').removeClass('first');
-        jQuery('#product-category>li[class!=filtered]:first').addClass('first');
+        jQuery('#product-category > li.first').removeClass('first');
+        jQuery('#product-category > li[class!=filtered]:first').addClass('first');
     }
 
     if('colors' in criteria_filter) {
-        jQuery('#product-color .option-content li > a').each(function(index) {
+        jQuery('#product-color a:not(.pattern)').each(function(index) {
             var this_element = jQuery(this);
             var this_element_id = parseInt(getElementId(this_element), 10);
             if(jQuery.inArray(this_element_id, criteria_filter['colors']) >= 0) {
@@ -551,60 +517,56 @@ function filterCriteria(criteria_filter) {
 }
 
 function updateSelected(products) {
-    function setSelected(selector) {
-        jQuery(selector).addClass('selected');
+    // Select categories
+    if(products.selected_categories && products.selected_categories.length > 0) {
+        jQuery.each(products.selected_categories, function(i, id) {
+            var category = jQuery('#category-' + id).addClass('selected');
+            category.siblings('ul').show();
+            category.parents('ul').show();
+        });
     }
 
-    function showCategories(list) {
-        if(list && list.length > 0) {
-            jQuery.each(list, function(i, id) {
-                var category = jQuery('#category-' + id).addClass('selected');
-                category.siblings('ul').show();
-                category.parents('ul').show();
-            });
-        }
+    // Select gender
+    if(products.selected_gender && products.selected_gender.length > 0) {
+        jQuery.each(products.selected_gender, function(i, id) {
+            jQuery('#option-' + id).addClass('selected');
+        });
+    } else {
+        jQuery('#product-gender li:first > a').addClass('selected');
     }
 
-    function selectList(list, selectorPrefix, parentSelector) {
-        if(list && list.length > 0) {
-            $.each(list, function(i, id) { setSelected(selectorPrefix + '-' + id) });
-            if(parentSelector) {
-                setSelected(parentSelector);
-            }
-        }
-    }
-
-    function selectGenderList(list, selectorPrefix) {
-        if(list && list.length > 0) {
-            jQuery.each(list, function(i, id) { setSelected(selectorPrefix + '-' + id) });
-        } else {
-            setSelected(jQuery('#product-gender li:first > a'));
-        }
-    }
-
-    function selectBrandList(list, data, selectorPrefix, parentSelector) {
-        if(list && list.length > 0) {
-            jQuery.each(list, function(i, id) {
-                jQuery(selectorPrefix + '-' + id).addClass('selected');
-                jQuery('<li>').append(
-                    jQuery('<a>').attr({id: 'manufacturer-' + id, href: data[id]['href']}).text(data[id]['name'])
-                ).prependTo('#selected-manufacturers');
-            });
-            if(parentSelector) {
-                setSelected(parentSelector);
-            }
-        }
-    }
-
-    showCategories(products.selected_categories);
-    selectBrandList(products.selected_brands, products.selected_brands_data, '#available-manufacturer', '#product-manufacturers > a');
-    selectList(products.selected_colors, '#option', '#product-color > a');
-    selectGenderList(products.selected_gender, '#option');
-
+    // Select price
     if(products.selected_price) {
-        setSelected('#product-price > a');
-        var slider = jQuery('#price-slider').data('slider');
-        slider.values(products.selected_price);
+        jQuery('#price-slider').data('slider').values(products.selected_price);
+        jQuery('#product-price').prev().addClass('active');
+    }
+
+    // Select colors
+    if(products.selected_colors && products.selected_colors.length > 0) {
+        jQuery.each(products.selected_colors, function(i, id) {
+            jQuery('#option-' + id).addClass('selected');
+        });
+        jQuery('#product-color').prev().addClass('active');
+    }
+
+    // Select patterns
+    if(products.selected_patterns && products.selected_patterns.length > 0) {
+        jQuery.each(products.selected_patterns, function(i, id) {
+            jQuery('#option-' + id).addClass('selected');
+        });
+        jQuery('#product-color').prev().addClass('active');
+    }
+
+    // Select brands
+    if(products.selected_brands && products.selected_brands.length > 0) {
+        jQuery.each(products.selected_brands, function(i, id) {
+            var data = products.selected_brands_data[id];
+            jQuery('#available-manufacturer-' + id).addClass('selected');
+            jQuery('<li>').append(
+                jQuery('<a>').attr({id: 'manufacturer-' + id, href: data['href']}).text(data['name'])
+            ).prependTo('#selected-manufacturers');
+        });
+        jQuery('#product-manufacturers').prev().addClass('active');
     }
 }
 
