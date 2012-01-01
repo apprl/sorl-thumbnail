@@ -34,25 +34,34 @@ jQuery(document).ready(function() {
         slider.option('values', values);
         return true;
     });
-    
+
     jQuery("#price-slider").slider({
         range: true,
         min: pricerange.min,
         max: pricerange.max,
-        step: 10,
+        step: 1,
         values: [rangemin.val(), rangemax.val()],
         animate: 'fast',
         slide: function(event, ui) {
             rangemin.val(jQuery(this).slider('values', 0));
             rangemax.val(jQuery(this).slider('values', 1));
             display_min.text(jQuery(this).slider('values', 0));
-            display_max.text(jQuery(this).slider('values', 1));
+            if(max_value >= 10000) {
+                display_max.text('10000+');
+            } else {
+                display_max.text(jQuery(this).slider('values', 1));
+            }
         },
         change: function(event, ui) {
             rangemin.val(jQuery(this).slider('values', 0));
             rangemax.val(jQuery(this).slider('values', 1));
             display_min.text(jQuery(this).slider('values', 0));
-            display_max.text(jQuery(this).slider('values', 1));
+            max_value = jQuery(this).slider('values', 1);
+            if(max_value >= 10000) {
+                display_max.text('10000+');
+            } else {
+                display_max.text(jQuery(this).slider('values', 1));
+            }
             if(event.originalEvent) {
                 jQuery(this).addClass('selected');
                 jQuery(this).parents('form').submit();

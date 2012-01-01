@@ -497,9 +497,13 @@ function filterCriteria(criteria_filter) {
             max = parseInt(criteria_filter.pricerange.max, 10),
             mid = parseInt(min + (max - min) / 2, 10);
 
-        $('#price-ruler .min').text(min);
-        $('#price-ruler .mid').text(mid);
-        $('#price-ruler .max').text(max);
+        jQuery('#price-ruler .min').text(min);
+        jQuery('#price-ruler .mid').text(mid);
+        if(max >= 10000) {
+            jQuery('#price-ruler .max').text('10000+');
+        } else {
+            jQuery('#price-ruler .max').text(max);
+        }
 
         var values = $('#price-slider').slider('values');
         if(values[0] > max)

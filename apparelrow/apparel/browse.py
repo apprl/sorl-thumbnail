@@ -78,7 +78,16 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     if 'price' in request.GET:
         price = request.GET['price'].split(',')
         if len(price) == 2:
-            query_arguments['fq'].append('{!tag=%s}%s:[%s TO %s]' % ('price', 'price', price[0], price[1]))
+            try:
+                max_price = int(price[1])
+                min_price = int(price[0])
+            except ValueError:
+                max_price = min_price = 0
+
+            if max_price >= 10000:
+                query_arguments['fq'].append('{!tag=%s}%s:[%s TO *]' % ('price', 'price', min_price))
+            else:
+                query_arguments['fq'].append('{!tag=%s}%s:[%s TO %s]' % ('price', 'price', min_price, max_price))
 
     # Manufacturer
     if 'manufacturer' in request.GET:
@@ -133,6 +142,8 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     prices = [int(value) for i, value in enumerate(facet['price']) if i % 2 == 0]
     if prices:
         pricerange['max'] = max(prices)
+        if pricerange['max'] > 10000:
+            pricerange['max'] = 10000
         pricerange['min'] = min(prices)
     else:
         pricerange = {'min': 0, 'max': 0}
@@ -191,6 +202,10 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     selected_price = request.GET.get('price', None)
     if selected_price:
         selected_price = selected_price.split(',', 1)
+        try:
+            map(int, selected_price)
+        except ValueError:
+            selected_price = [0,0]
 
     selected_brands = filter(None, map(_to_int, request.GET.get('manufacturer', '').split(',')))
     selected_brands_data = {}
