@@ -457,7 +457,7 @@ function renderPage(products) {
  */
 function filterCriteria(criteria_filter) {
     if('manufacturers' in criteria_filter && !jQuery('#product-manufacturers').prev().hasClass('active')) {
-        ManufacturerBrowser.reset();
+        ManufacturerBrowser.reset(true);
 
         jQuery.each(criteria_filter['manufacturers'], function(i, manufacturer) {
             ManufacturerBrowser.renderItem(manufacturer);

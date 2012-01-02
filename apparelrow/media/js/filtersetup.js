@@ -72,13 +72,9 @@ jQuery(document).ready(function() {
 
     // Brand search
     ManufacturerBrowser.init();
-    var _manufacturerSearchTimeout;
     jQuery("input[name=brand]")
         .keyup(function(e) {
-            var name = this.value; 
-            if(_manufacturerSearchTimeout)
-                clearTimeout(_manufacturerSearchTimeout);
-            _manufacturerSearchTimeout = setTimeout(function() { ManufacturerBrowser.filterByName(name) }, 500);
+            ManufacturerBrowser.filterByName(this.value);
         })
         .focus(function(e) { 
             if(this.value == this.defaultValue) {
@@ -136,9 +132,6 @@ jQuery(document).ready(function() {
 });
 
 var ManufacturerBrowser = {
-    canFetch: true,
-    brandPage: 1,
-    brandName: '',
     $availableList: null,
     
     init: function() {
@@ -146,10 +139,14 @@ var ManufacturerBrowser = {
         this.$availableList = jQuery('#available-manufacturers');
     },
     
-    reset: function() {
-        this.$availableList.html('');
-        this.canFetch = true;
-        this.brandPage = 1;
+    reset: function(hard) {
+        if(hard === true) {
+            this.$availableList.html('');
+        } else {
+            this.$availableList.find('li').each(function(index, element) {
+                jQuery(element).show();
+            });
+        }
     },
     
     renderItem: function(item, $list) {
@@ -167,39 +164,16 @@ var ManufacturerBrowser = {
             .appendTo(this.$availableList);
     },
     
-    fetchNextPage: function() {
-        this.brandPage++;
-        this.fetchManufacturers();
-    },
-    
     filterByName: function(name) {
         this.reset();
         this.brandName = name;
-        this.fetchManufacturers();
-    },
-    
-    fetchManufacturers: function() {
-        var self  = this;
-        var query = 'mpage=' + this.brandPage;
-        
-        if(this.brandName && this.brandName.length > 0)
-            query += '&mname=' + this.brandName;
-        
-        if(typeof getQuery == 'function')
-            query += '&' + jQuery.param(getQuery());
-        
-        self.canFetch = false;
-        
-        jQuery.getJSON(browse_manufacturers_url + '?' + query,
-            function(response) {
-                if(jQuery.isArray(response) && response.length > 0) {
-                    jQuery.each(response, function(i, manufacturer) {
-                        self.renderItem(manufacturer);
-                    });
-                    self.canFetch = true;
-                }
+        this.$availableList.find('li').each(function(index, element) {
+            element = jQuery(element);
+            var current_name = element.find('a').text().toLowerCase();
+            if(current_name.indexOf(name.toLowerCase()) == -1) {
+                element.hide();
             }
-        );
+        });
     }
 };
 
