@@ -93,9 +93,12 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     if 'manufacturer' in request.GET:
         query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer_data', 'manufacturer_id', ' OR '.join([x for x in request.GET['manufacturer'].split(',')])))
 
-    # Color
-    if 'color' in request.GET:
-       query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join([x for x in request.GET['color'].split(',')])))
+    # Color and pattern
+    color_pattern_list = request.GET.get('color', '').split(',')
+    color_pattern_list.extend(request.GET.get('pattern', '').split(','))
+    color_pattern_list = [x for x in color_pattern_list if x]
+    if color_pattern_list:
+       query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join(color_pattern_list)))
 
     # Extra
     if 'f' in request.GET and request.user:
@@ -126,12 +129,6 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     if not query_string:
         query_arguments['sort'] = 'popularity desc'
         query_string = '*:*'
-
-    if 'pattern' in request.GET:
-        if query_string == '*:*':
-            query_string = ' OR '.join(request.GET.get('pattern').split(','))
-        else:
-            query_string = '%s (%s)' % (query_string, ' OR '.join(request.GET.get('pattern').split(',')))
 
     search = ApparelSearch(query_string, **query_arguments)
 
@@ -252,8 +249,12 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     # Default colors
     default_colors = Option.objects.filter(option_type__name='color').exclude(value__exact='').all()
 
+    # Default patterns
+    default_patterns = Option.objects.filter(option_type__name='pattern').exclude(value__exact='').all()
+
     # Serve non ajax request
     result.update(
+        default_patterns = default_patterns,
         default_colors = default_colors,
         categories_all = Category._tree_manager.all(),
         current_page = paged_result,

@@ -9,6 +9,16 @@
     tree_id: 1
     level: 1
 
+- model: apparel.optiontype
+  pk: 2
+  fields:
+    name: pattern
+    description: Product pattern
+    lft: 1
+    rght: 1
+    tree_id: 1
+    level: 1
+
 # - OPTION VALUES -
 #   colours
 - model: apparel.option
@@ -82,3 +92,23 @@
   fields:
     value: magenta
     option_type: 1
+- model: apparel.option
+  pk: 15
+  fields:
+    value: purple
+    option_type: 1
+- model: apparel.option
+  pk: 16
+  fields:
+    value: striped
+    option_type: 2
+- model: apparel.option
+  pk: 17
+  fields:
+    value: checkers
+    option_type: 2
+- model: apparel.option
+  pk: 18
+  fields:
+    value: dotted
+    option_type: 2

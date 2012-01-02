@@ -201,7 +201,7 @@ class ProductIndex(QueuedSearchIndex):
             except ValueError:
                 pass
         # Add color to search index
-        self.prepared_data['color'] = object.options.filter(option_type__name='color').values_list('pk', flat=True)
+        self.prepared_data['color'] = object.options.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('pk', flat=True)
         # Add category to search index
         self.prepared_data['category'] = Category.objects.get(pk=object.category.id).get_ancestors(ascending=False, include_self=True).values_list('pk', flat=True)
         # Add user to search index

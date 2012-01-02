@@ -300,7 +300,6 @@ jQuery(document).ready(function() {
     });
 
     jQuery.each(window.location.search.substr(1).split('&'), function(i, e) {
-        console.log(e);
         var pair = e.split('=');
         if(pair[0] != 'brands_filter') {
             return;
@@ -339,7 +338,7 @@ function getQuery(query, reset) {
         query['gender'] = gender_list[0];
     }
 
-    color_list = getElementIds(jQuery('#product-color a.selected:not(.pattern)'));
+    color_list = getElementIds(jQuery('#product-color a.color.selected'));
     if(color_list.length > 0) {
         query['color'] = color_list.join(',');
         // Mark color filter as active
@@ -481,7 +480,7 @@ function filterCriteria(criteria_filter) {
     }
 
     if('colors' in criteria_filter) {
-        jQuery('#product-color a:not(.pattern)').each(function(index) {
+        jQuery('#product-color a').each(function(index) {
             var this_element = jQuery(this);
             var this_element_id = parseInt(getElementId(this_element), 10);
             if(jQuery.inArray(this_element_id, criteria_filter['colors']) >= 0) {
