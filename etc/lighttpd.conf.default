@@ -80,6 +80,7 @@ server.modules      += ("mod_proxy")
 
 server.modules      += ("mod_setenv")
 
+server.modules      += ("mod_redirect")
 
 
 $HTTP["host"] =~ "^(demo|www)\.(apparelrow\.com)$" {
