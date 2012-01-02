@@ -40,6 +40,11 @@
                     gallery_overlay = false;
                     jQuery('#gallery-container').hide();
                 }
+            }).keydown(function(event) {
+                if (event.keyCode == 27 && gallery_overlay) {
+                    gallery_overlay = false;
+                    jQuery('#gallery-container').hide();
+                }
             });
 
             jQuery('#add-to-look').bind('click mouseenter mouseleave', function(event) {
