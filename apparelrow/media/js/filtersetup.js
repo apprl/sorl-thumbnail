@@ -72,9 +72,13 @@ jQuery(document).ready(function() {
 
     // Brand search
     ManufacturerBrowser.init();
+    var _manufacturerSearchTimeout;
     jQuery("input[name=brand]")
         .keyup(function(e) {
-            ManufacturerBrowser.filterByName(this.value);
+            var name = this.value;
+            if(_manufacturerSearchTimeout)
+                clearTimeout(_manufacturerSearchTimeout);
+            _manufacturerSearchTimeout = setTimeout(function() { ManufacturerBrowser.filterByName(name) }, 400);
         })
         .focus(function(e) { 
             if(this.value == this.defaultValue) {
