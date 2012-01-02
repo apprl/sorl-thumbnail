@@ -144,37 +144,47 @@ def pre_delete_handler(sender, **kwargs):
 
 models.signals.pre_delete.connect(pre_delete_handler, sender=Look)
 
-
-# TODO: When you can remove products from the wardrobe and remove looks, make sure that this actions is also removed
-def m2m_handler(sender, **kwargs):
+def look_product_addhandler(sender, **kwargs):
     """
-    Stores an action when an object is added to a manytomany relationship.
+    Stores an action when a new look component containing a product is added.
     """
     instance = kwargs['instance']
-    if not hasattr(instance, 'user'):
-        logging.warning('Trying to register an activity on m2m_change (%s), but %s has not user attribute' % (sender, instance))
+    if not hasattr(instance.look, 'user'):
+        logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % instance)
         return
 
-    if kwargs['action'] == 'post_add':
-        for pk in kwargs['pk_set']:
-            action.send(
-                instance.user,
-                verb='added',
-                action_object=kwargs['model'].objects.get(pk=pk),
-                target=instance
-            )
+    if 'created' in kwargs and kwargs['created']:
+        action.send(
+            instance.look.user,
+            verb='added',
+            action_object=instance.product,
+            target=instance.look
+        )
 
-    if kwargs['action'] == 'post_remove':
-        for pk in kwargs['pk_set']:
-            action_object = Action.objects.filter(actor_object_id=instance.user.pk,
-                                                  verb='added',
-                                                  action_object_content_type=ContentType.objects.get_for_model(kwargs['model']),
-                                                  action_object_object_id=pk,
-                                                  target_content_type=ContentType.objects.get_for_model(instance),
-                                                  target_object_id=instance.pk)
-            action_object.delete()
+def look_product_delhandler(sender, **kwargs):
+    """
+    Deletes an action when a look component containing a product is removed.
+    """
+    instance = kwargs['instance']
+    if not hasattr(instance.look, 'user'):
+        logging.warning('Trying to remove an activity on post_delete, but %s has not user attribute' % instance)
+        return
 
-models.signals.m2m_changed.connect(m2m_handler, sender=Look.products.through)
+    product_content_type = ContentType.objects.get_for_model(Product)
+    user_content_type = ContentType.objects.get_for_model(User)
+    look_content_type = ContentType.objects.get_for_model(Look)
+
+    action_object = Action.objects.filter(actor_content_type=user_content_type,
+                                          actor_object_id=instance.look.user.pk,
+                                          target_content_type=look_content_type,
+                                          target_object_id=instance.look.pk,
+                                          action_object_content_type=product_content_type,
+                                          action_object_object_id=instance.product.pk,
+                                          verb='added')
+    action_object.delete()
+
+models.signals.post_save.connect(look_product_addhandler, sender=LookComponent)
+models.signals.pre_delete.connect(look_product_delhandler, sender=LookComponent)
 
 def wardrobe_product_addhandler(sender, **kwargs):
     instance = kwargs['instance']
@@ -198,8 +208,6 @@ def wardrobe_product_delhandler(sender, **kwargs):
         logging.warning('Trying to remove an activity on post_delete, but %s has not user attribute' % instance)
         return
 
-    verb = 'added'
-
     product_content_type = ContentType.objects.get_for_model(Product)
     user_content_type = ContentType.objects.get_for_model(User)
     wardrobe_content_type = ContentType.objects.get_for_model(Wardrobe)
@@ -209,7 +217,8 @@ def wardrobe_product_delhandler(sender, **kwargs):
                                           target_content_type=wardrobe_content_type,
                                           target_object_id=instance.wardrobe.pk,
                                           action_object_content_type=product_content_type,
-                                          action_object_object_id=instance.product.pk)
+                                          action_object_object_id=instance.product.pk,
+                                          verb='added')
     action_object.delete()
 
 models.signals.post_save.connect(wardrobe_product_addhandler, sender=WardrobeProduct)

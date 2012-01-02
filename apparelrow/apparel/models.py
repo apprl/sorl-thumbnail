@@ -385,7 +385,6 @@ class Look(models.Model):
     slug  = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
                 help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     description = models.TextField(_('Look description'), null=True, blank=True)
-    products    = models.ManyToManyField(Product)
     user        = models.ForeignKey(User)
     image       = models.ImageField(upload_to=look_image_path, max_length=255, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
@@ -475,7 +474,7 @@ class Look(models.Model):
 
     @property
     def product_manufacturers(self):
-        return self.products.values_list('manufacturer__name', flat=True)
+        return self.display_components.values_list('product__manufacturer__name', flat=True)
     
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user.get_profile().display_name)

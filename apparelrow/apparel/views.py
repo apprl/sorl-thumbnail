@@ -70,7 +70,7 @@ def product_detail(request, slug):
         user_looks     = []
         is_in_wardrobe = False
 
-    context = RequestContext(request)
+    looks_with_product = [lc.look for lc in LookComponent.objects.filter(product=product)]
 
     return render_to_response(
             'apparel/product_detail.html',
@@ -78,13 +78,13 @@ def product_detail(request, slug):
                 'object': product,
                 'user_looks': user_looks,
                 'is_in_wardrobe': is_in_wardrobe,
-                'looks_with_product': Look.objects.filter(products=product),
+                #'looks_with_product': Look.objects.filter(products=product),
+                'looks_with_product': looks_with_product,
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri(),
                 'more_like_this': more_like_this_product(product.id, product.gender, 10)
-            },
-            context_instance=context,
-            )
+            }, context_instance=RequestContext(request),
+        )
 
 @login_required
 def product_like(request, slug, action):
@@ -518,10 +518,7 @@ def delete_look_component(request):
     components.filter(component_of=request.POST['component_of']).delete()
 
     # Make a list of which ones are still on the look
-    in_look = dict( map(lambda x: (x, components.filter(product__id=x).exists()), products) )
-
-    # Remove the ones who aren't
-    look.products.remove(*[x for x in in_look.keys() if not in_look[x]])
+    in_look = dict(map(lambda x: (x, components.filter(product__id=x).exists()), products))
 
     # Delete photo if told to do so
     if request.POST.get('delete_photo') and request.POST['component_of'] == 'P':

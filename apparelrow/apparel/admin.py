@@ -107,7 +107,6 @@ admin.site.register(Product, ProductAdmin)
 #
 
 class LookAdmin(admin.ModelAdmin):
-    raw_id_fields = ('products',)
     list_display = ('title', 'user', 'component', 'is_featured', 'gender')
     list_filter = ['is_featured', 'gender']
 

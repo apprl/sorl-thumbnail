@@ -269,51 +269,31 @@ jQuery(document).ready(function() {
         'accept': '#wardrobe-contents li',
         'drop': function(event, ui) {
             var product_id = ui.draggable.attr('id').split('-').pop();
-
-            jQuery.post('{% url apparel.views.add_to_look %}', {
-                'look': '{{ object.id }}',
-                'product': product_id
-            }, function(response, status, request) {
-                if(response.success == false) {
-                    alert('something went wrong');
-                    return;
-                }
+            var data = { id: product_id }
+            switch(event.target.id) {
+                case 'selection':
+                    return;     // No component to save
                 
-                if(response.data.added) {
-                    var id      = ui.draggable.attr('id').split('-').pop();
-                    var product = ui.draggable.clone();
-                        product.attr('id', 'selection-' + id);
+                case 'collage':
+                    var img = jQuery(ui.draggable.find('img')[0]);
+                    data['position'] = ui.position;
+                    data['size'] = {
+                        height: img.height(),
+                        width: img.width()
+                    }
+                    jQuery('.look-empty', event.target).hide();
                     
-                    jQuery('#selection .row ul').append(product);
-                }
-                
-                var data = { id: product_id }
-                switch(event.target.id) {
-                    case 'selection':
-                        return;     // No component to save
-                    
-                    case 'collage':
-                        var img = jQuery(ui.draggable.find('img')[0]);
-                        data['position'] = ui.position;
-                        data['size'] = {
-                            height: img.height(),
-                            width: img.width()                        
-                        }
-                        jQuery('.look-empty', event.target).hide();
-                        
-                        break;
-                    case 'photo-background':
-                        oy = event.layerY || 0;
-                        ox = event.layerX || 0;
-                        data['position'] = {
-                            top: ui.position.top + oy - 40,
-                            left: ui.position.left + ox - event.target.offsetLeft - 40
-                        }
-                        break;
-                }
-                
-                look.saveComponent(data, $(event.target));
-            } );
+                    break;
+                case 'photo-background':
+                    oy = event.layerY || 0;
+                    ox = event.layerX || 0;
+                    data['position'] = {
+                        top: ui.position.top + oy - 40,
+                        left: ui.position.left + ox - event.target.offsetLeft - 40
+                    }
+                    break;
+            }
+            look.saveComponent(data, jQuery(event.target));
         }
     });
     jQuery('#photo-background').live('click', function(e) {
@@ -535,11 +515,13 @@ jQuery(document).ready(function() {
                 </div>
             </div>
             <div id="selection">
+            {% comment %}
             {% with "selection" as id_prefix %}
             {% with object.products.all as products %}
             {% include 'apparel/fragments/product_row.html' %}
             {% endwith %}
             {% endwith %}
+            {% endcomment %}
             </div>
         </div>
     </div>
