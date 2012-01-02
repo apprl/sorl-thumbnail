@@ -127,7 +127,8 @@ def pre_delete_handler(sender, **kwargs):
     user_content_type = ContentType.objects.get_for_model(User)
     look_content_type = ContentType.objects.get_for_model(Look)
 
-    for product in instance.products.all():
+    for look_component in instance.components.select_related('product'):
+        product = look_component.product
         action_object = Action.objects.filter(actor_content_type=user_content_type,
                                               actor_object_id=instance.user.pk,
                                               target_content_type=look_content_type,

@@ -43,7 +43,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            if Wardrobe.objects.filter(products=obj) or Look.objects.filter(products=obj):
+            if Wardrobe.objects.filter(products=obj) or LookComponent.objects.filter(product=obj):
                 return ['published']
         return []
 

@@ -89,7 +89,7 @@
                         jQuery('<li/>').append(response.data.template, { 'object': response.data.look }).prependTo('ul.looks');
                         */
                         
-                        var p = jQuery('#content .product-image img');
+                        var p = jQuery('#inner-container .product-image img');
                         var w = 76;                             // FIXME: Read from constant
                         var h = parseInt(p.height() / (p.width() / w));   // FIXME: At the moment we need both height and width to draw edit pane. This should not be the case really
 

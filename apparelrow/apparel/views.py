@@ -78,7 +78,6 @@ def product_detail(request, slug):
                 'object': product,
                 'user_looks': user_looks,
                 'is_in_wardrobe': is_in_wardrobe,
-                #'looks_with_product': Look.objects.filter(products=product),
                 'looks_with_product': looks_with_product,
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri(),
@@ -274,7 +273,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
         queryset = Look.objects.filter(id__in=[doc.django_id for doc in results.get_docs()])
     elif contains:
-        queryset = Look.objects.filter(products__slug=contains)
+        queryset = Look.objects.filter(id__in=LookComponent.objects.filter(product__slug=contains).values_list('look', flat=True))
     else:
         queryset = Look.objects.filter(likes__active=True, gender__in=[gender, 'U']).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)
 
@@ -546,12 +545,7 @@ def add_to_look(request):
         created = True
 
     p = Product.objects.get(pk=request.POST.get('product'))
-
-    if look.products.filter(pk=p.id):
-        added = False
-    else:
-        added = True
-        look.products.add(p)
+    added = True
 
     add_to_wardrobe(request)        # Also, add the product to user's wardrobe
 
