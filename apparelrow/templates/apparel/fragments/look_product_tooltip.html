@@ -10,18 +10,23 @@
             <div>
                 {% with component.product as object %}{% include 'apparel/fragments/likes.html' %}{% endwith %}
             </div>
-            <div>
-                <span class="price">{{ component.product.default_vendor.price|floatformat:0 }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
-            </div>
-            {% if component.product.default_vendor.availability == 0 %}
-            <div class="vendors">
-                <span class="vendor">{{ component.product.default_vendor.vendor.name }}</span><span class="sold-out">{% trans "Sold out" %}</span>
-            </div>
-            {% endif %}
-            {% if component.product.default_vendor.availability != 0 %}
-            <div class="vendors">
-                <a target="_new" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ component.product.id }}&u={{ component.product.default_vendor.buy_url|urlencode }}"><span class="vendor">{{ component.product.default_vendor.vendor }}</span><span class="buy-now">{% trans "Buy" %}</span></a>
-            </div>
+            {% if component.product.default_vendor %}
+                <div>
+                    <span class="price">{{ component.product.default_vendor.price|floatformat:0 }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
+                </div>
+                {% if component.product.default_vendor.availability == 0 %}
+                <div class="vendors">
+                    <span class="vendor">{{ component.product.default_vendor.vendor.name }}</span><span class="sold-out">{% trans "Sold out" %}</span>
+                </div>
+                {% else %}
+                <div class="vendors">
+                    <a target="_new" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ component.product.id }}&u={{ component.product.default_vendor.buy_url|urlencode }}"><span class="vendor">{{ component.product.default_vendor.vendor }}</span><span class="buy-now">{% trans "Buy" %}</span></a>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="vendors">
+                    <span class="sold-out">{% trans "Sold out" %}</span>
+                </div>
             {% endif %}
         </a>
     </div>
