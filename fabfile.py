@@ -227,6 +227,7 @@ def copy_config():
         run('cp ./releases/%(release)s/etc/requirements.pip ./etc/requirements.pip' %env, pty=True)
         run('cp -n ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
         run('cd releases/%(release)s/apparelrow; cp production.py.default production.py' % env, pty=True)
+        upload_template('etc/logrotate.conf', '/etc/logrotate.d/apparelrow', context=env, use_sudo=True)
         upload_template('etc/arimport.cron', '/etc/cron.daily/arimport', context=env, use_sudo=True)
         sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
         upload_template('etc/solr.conf.init', '/etc/init/solr.conf', context=env, use_sudo=True)
