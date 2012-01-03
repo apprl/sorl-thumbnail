@@ -199,9 +199,10 @@ COMPRESS_JS = {
                              'js/jquery/jquery.history.js',
                              'js/jquery/jquery.ui.rotatable.js',
                              'js/jquery/jquery.html5-placeholder-shim.js',
-                             'js/jquery/autoresize.jquery.min.js'),
+                             'js/jquery/autoresize.jquery.min.js',
+                             'js/jquery/jquery.scrollable.js'),
         'output_filename': 'js/compiled/jquery.js',
-    },
+    }
 }
 
 COMPRESS = True

@@ -81,7 +81,7 @@ def product_detail(request, slug):
                 'looks_with_product': looks_with_product,
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri(),
-                'more_like_this': more_like_this_product(product.id, product.gender, 10)
+                'more_like_this': more_like_this_product(product.id, product.gender, 20)
             }, context_instance=RequestContext(request),
         )
 

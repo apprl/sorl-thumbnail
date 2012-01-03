@@ -71,9 +71,6 @@ jQuery(document).ready(function() {
     if(!'console' in window)
         window.console = { log: function() {} };
 
-    // Make all "apparel rows" scrollables
-    jQuery('.row').scrollable().end();
-
     // Make all textareas autogrow
     jQuery('textarea').autoResize();
 

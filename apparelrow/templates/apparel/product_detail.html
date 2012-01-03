@@ -16,8 +16,6 @@
 
 {% block 'extra-scripts' %}
     <script type="text/javascript">
-    
-    
         jQuery(document).ready(function() {
             jQuery('.product-image').mouseenter(function() {
                 jQuery(this).find('.magnifier').fadeIn('slow');
@@ -171,6 +169,12 @@
                     btn.unbind('click');
                 }
             });
+
+            // More like this scrollable
+            jQuery('#more-like-this .row').simple_scrollable(532);
+
+            // Recently viewed scrollable
+            jQuery('#recentlyviewed .row').simple_scrollable();
         });
     </script>
 {% endblock 'extra-scripts' %}
