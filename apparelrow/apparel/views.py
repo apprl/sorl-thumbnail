@@ -542,7 +542,7 @@ def add_to_look(request):
         look = get_object_or_404(Look, pk=request.POST['look'], user=request.user)
         created = False
     else:
-        look = Look(user=request.user, title=request.POST.get('new_name'))
+        look = Look(user=request.user, title=request.POST.get('new_name'), description='')
         look.save()
         created = True
 
