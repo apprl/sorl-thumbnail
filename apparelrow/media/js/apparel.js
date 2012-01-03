@@ -510,7 +510,7 @@ ApparelSearch = {
                 var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1) + ' search';
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
-                list.closest('.result-container').children('h2').text(
+                var h2 = list.closest('.result-container').children('h2').text(
                     interpolate(
                         ngettext(
                             opts.text.header_singular,
@@ -522,7 +522,7 @@ ApparelSearch = {
                     )
                 );
 
-                jQuery('a.' + opts.selector.substring(1)).text(
+                var abutton = jQuery('a.' + opts.selector.substring(1)).text(
                     interpolate(
                         ngettext(
                             opts.text.button_singular,
@@ -533,6 +533,14 @@ ApparelSearch = {
                         true
                     )
                 );
+
+                if(response.paginator.count == 0) {
+                    h2.addClass('disabled');
+                    abutton.addClass('disabled');
+                } else {
+                    h2.removeClass('disabled');
+                    abutton.removeClass('disabled');
+                }
 
                 list.data('last-query', opts.query);
                 list.data('last-result', response);
@@ -651,15 +659,15 @@ jQuery(document).ready(function() {
         return false;
     });
 
-    jQuery('#search-result .search-result-products').click(function(e) {
+    jQuery('#search-result .search-result-products:not(.disabled)').live('click', function(e) {
         return search_link_action('search-result-products');
     });
 
-    jQuery('#search-result .search-result-looks').click(function(e) {
+    jQuery('#search-result .search-result-looks:not(.disabled)').live('click', function(e) {
         return search_link_action('search-result-looks');
     });
 
-    jQuery('#search-result .search-result-manufacturers').click(function(e) {
+    jQuery('#search-result .search-result-manufacturers:not(.disabled)').live('click', function(e) {
         return search_link_action('search-result-manufacturers');
     });
 

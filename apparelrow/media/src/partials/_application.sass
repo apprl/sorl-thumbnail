@@ -1460,8 +1460,8 @@ a.block_link
       background-image: image_url(unquote("arrow-bg-hover.png"))
 
   #search-links
-    clear: both
     +clearfix
+    clear: both
     padding: 20px 0
     div
       text-align: right
@@ -1473,23 +1473,16 @@ a.block_link
         &:hover
           +hover_button
           line-height: 2em
+        &.disabled
+          visibility: hidden
 
   .result-container
     width: 200px
     float: left
     margin-right: 30px
-    .more-results
-      +button(unquote("gradient-bg.png"), unquote("30px"))
-      height: 30px
-      display: block
-      width: 100%
-      cursor: pointer
-      &.hover
-        +hover_button
-      span
-        +go_to_link
-        text-transform: lowercase
-        font-variant: small-caps
+    h2.disabled
+      background: none
+      cursor: default
     .product-list
       border-left: none
       width: 464px
