@@ -8,6 +8,7 @@
 <div class="product-info">
     <!-- {{ object.popularity }} -->
     <h2>
+    <span>{% trans object.get_gender_display %}</span> \
     {% for category in object.categories %}
     {% if forloop.first %}
     <a href="{% gender_url APPAREL_GENDER 'shop' %}#category={{ category.id }}">{{ category }}</a>
