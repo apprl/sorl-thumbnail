@@ -57,7 +57,12 @@
         {% include 'apparel/fragments/product_list.html' %}
     {% else %}
         <div class="wardrobe-empty">
-            <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+            {% url apparel.browse.browse_wardrobe user.username as wardrobe_url %}
+            {% ifequal request.path wardrobe_url %}
+                <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+            {% else %}
+                <div class="message warning">{{ profile.display_name }} {% trans "do not have any products in his/her wardrobe right now." %}</div>
+            {% endifequal %}
         </div>
     {% endif %}
 {% endblock %}
