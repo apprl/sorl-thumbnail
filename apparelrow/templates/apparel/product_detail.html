@@ -217,7 +217,7 @@
                     {% get_comment_count for object as comment_count %}
                     <div class="activity">
                         {% include 'apparel/fragments/comment_count.html' %}
-                        <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product|length as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
+                        <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product_count as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
                         <p class="last">{% include 'apparel/fragments/likes_link.html' %}</p>
                     </div>
                     {% if viewed_products %}
@@ -230,7 +230,7 @@
                     {% endif %}
                     <div class="product-looks">
                         <a href="looks"><h2 id="looks"{% if not looks_with_product %} class="hidden"{% endif %}>
-                            {% blocktrans count looks_with_product|length as counter %}<span class="count">{{ counter }}</span> look with this product{% plural %}<span class="count">{{ counter }}</span> looks with this product{% endblocktrans %}
+                            {% blocktrans count looks_with_product_count as counter %}<span class="count">{{ counter }}</span> look with this product{% plural %}<span class="count">{{ counter }}</span> looks with this product{% endblocktrans %}
                         </h2></a>
                         {% with looks_with_product as looks %}
                         {% include 'apparel/fragments/looks.html' %}

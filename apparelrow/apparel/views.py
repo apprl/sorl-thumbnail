@@ -70,7 +70,8 @@ def product_detail(request, slug):
         user_looks     = []
         is_in_wardrobe = False
 
-    looks_with_product = [lc.look for lc in LookComponent.objects.filter(product=product)]
+    looks_with_product = Look.objects.filter(components__product=product).all()[:2]
+    looks_with_product_count = Look.objects.filter(components__product=product).aggregate(Count('id')).get('id__count', 0)
 
     return render_to_response(
             'apparel/product_detail.html',
@@ -79,6 +80,7 @@ def product_detail(request, slug):
                 'user_looks': user_looks,
                 'is_in_wardrobe': is_in_wardrobe,
                 'looks_with_product': looks_with_product,
+                'looks_with_product_count': looks_with_product_count,
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri(),
                 'more_like_this': more_like_this_product(product.id, product.gender, 20)
