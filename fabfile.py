@@ -35,12 +35,24 @@ def prod():
     env.run_user = 'www-data'
     env.run_group = env.run_user
     env.path = '/home/%(user)s/%(project_name)s' % env
+    env.config = 'production'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
 
 def prod_db():
     "Use our EC2 server"
     env.hosts = ['db1.apparelrow.com']
     env.user = 'deploy'
+    env.datadir = '/mnt/mysql'
+    env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
+
+def staging():
+    env.hosts = ['staging1.apparelrow.com']
+    env.user = 'deploy'
+    env.group = 'nogroup'
+    env.run_user = 'www-data'
+    env.run_group = env.run_user
+    env.path = '/mnt/%(project_name)s' % env
+    env.config = 'staging'
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
    
@@ -225,7 +237,7 @@ def copy_config():
         run('cp -n ./releases/%(release)s/etc/* ./etc' % env, pty=True)
         run('cp ./releases/%(release)s/etc/requirements.pip ./etc/requirements.pip' %env, pty=True)
         run('cp -n ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
-        run('cd releases/%(release)s/apparelrow; cp production.py.default production.py' % env, pty=True)
+        run('cd releases/%(release)s/apparelrow; cp %(config)s.py.default production.py' % env, pty=True)
         upload_template('etc/logrotate.conf', '/etc/logrotate.d/apparelrow', context=env, use_sudo=True)
         upload_template('etc/arimport.cron', '/etc/cron.daily/arimport', context=env, use_sudo=True)
         sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
