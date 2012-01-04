@@ -6,7 +6,7 @@
         <span class="likes">x</span>
     </div>
     <h4>{{ object.manufacturer }}</h4>
-    <span class="price">{{ object.default_vendor.price|floatformat:0 }} {{ object.default_vendor.currency }}</span>
+    <span class="price{% if object.default_vendor.availability == 0 %} sold-out{% endif %}" >{{ object.default_vendor.price|floatformat:0 }} {{ object.default_vendor.currency }}</span>
 </div>
 </a>
 </li>
