@@ -67,12 +67,12 @@ urlpatterns = patterns('',
      }),
 
     # Users
-    url(r'^users/$', 'apparel.views.gender', {'view': 'user-list'}, name='user-list'),
-    url(r'^users/men/$', 'apparel.views.user_list', {'gender': 'M'}, name='user-list-men'),
-    url(r'^users/women/$', 'apparel.views.user_list', {'gender': 'W'}, name='user-list-women'),
-    url(r'^users/popular/$', 'apparel.views.gender', {'view': 'user-list-popular'}, name='user-list-popular'),
-    url(r'^users/men/popular/$', 'apparel.views.user_list', {'gender': 'M', 'popular': True}, name='user-list-popular-men'),
-    url(r'^users/women/popular/$', 'apparel.views.user_list', {'gender': 'W', 'popular': True}, name='user-list-popular-women'),
+    url(r'^users/$', 'apparel.views.user_list', name='user-list'),
+    url(r'^users/men/$', 'apparel.views.user_list', {'view_gender': 'M'}, name='user-list-men'),
+    url(r'^users/women/$', 'apparel.views.user_list', {'view_gender': 'W'}, name='user-list-women'),
+    url(r'^users/popular/$', 'apparel.views.user_list', {'popular': True }, name='user-list-popular'),
+    url(r'^users/men/popular/$', 'apparel.views.user_list', {'view_gender': 'M', 'popular': True}, name='user-list-popular-men'),
+    url(r'^users/women/popular/$', 'apparel.views.user_list', {'view_gender': 'W', 'popular': True}, name='user-list-popular-women'),
 
     # Gender selection
     url(r'^gender/men/$', 'apparel.views.gender', {'gender': 'M'}, name='gender-men'),

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-04 11:55+0100\n"
+"POT-Creation-Date: 2012-01-04 15:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -128,6 +128,7 @@ msgid "Product image"
 msgstr ""
 
 #: apparel/models.py:147 apparel/models.py:395 apparel/models.py:615
+#: profile/models.py:34
 msgid "Gender"
 msgstr ""
 
@@ -285,7 +286,7 @@ msgstr ""
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:616 profile/models.py:30 templates/account/base.html:20
+#: apparel/models.py:616 profile/models.py:33 templates/account/base.html:20
 msgid "Language"
 msgstr ""
 
@@ -460,7 +461,7 @@ msgstr ""
 msgid "New e-mail address"
 msgstr ""
 
-#: profile/models.py:16
+#: profile/models.py:16 templates/apparel/user_list.html:24
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "All"
 msgstr ""
@@ -473,39 +474,39 @@ msgstr ""
 msgid "No one"
 msgstr ""
 
-#: profile/models.py:28
+#: profile/models.py:31
 msgid "User profile image"
 msgstr ""
 
-#: profile/models.py:29
+#: profile/models.py:32
 msgid "About"
 msgstr ""
 
-#: profile/models.py:34
+#: profile/models.py:38
 msgid "When someone commented on a product that I have in my wardrobe"
 msgstr ""
 
-#: profile/models.py:36
+#: profile/models.py:40
 msgid "When someone commented on a product that I have commented on"
 msgstr ""
 
-#: profile/models.py:38
+#: profile/models.py:42
 msgid "When someone commented on a look that I have created"
 msgstr ""
 
-#: profile/models.py:40
+#: profile/models.py:44
 msgid "When someone commented on a look that I have commented on"
 msgstr ""
 
-#: profile/models.py:42
+#: profile/models.py:46
 msgid "When someone likes a look that I have created"
 msgstr ""
 
-#: profile/models.py:44
+#: profile/models.py:48
 msgid "When someone starts to follow me"
 msgstr ""
 
-#: profile/models.py:47
+#: profile/models.py:51
 msgid "Is this the first visit?"
 msgstr ""
 
@@ -1110,7 +1111,7 @@ msgstr ""
 msgid "No updates"
 msgstr ""
 
-#: templates/apparel/user_home.html:34 templates/apparel/user_list.html:37
+#: templates/apparel/user_home.html:34 templates/apparel/user_list.html:42
 #: templates/profile/dialog_welcome.html:17
 msgid "Your friends are here!"
 msgstr ""
@@ -1127,7 +1128,15 @@ msgstr ""
 msgid "Members in alphabetical order"
 msgstr ""
 
-#: templates/apparel/user_list.html:39
+#: templates/apparel/user_list.html:25
+msgid "Females"
+msgstr ""
+
+#: templates/apparel/user_list.html:26
+msgid "Males"
+msgstr ""
+
+#: templates/apparel/user_list.html:44
 msgid "Connect with your Facebook account to find your friends."
 msgstr ""
 

@@ -596,17 +596,22 @@ def csrf_failure(request, reason=None):
     logging.debug("CSRF failure: %s" % reason)
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
 
-def user_list(request, popular=None, gender=None):
+def user_list(request, popular=None, gender=None, view_gender=[]):
     """
     Displays a list of profiles
     """
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    if popular:
-        queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('-followers_count', 'user__first_name', 'user__last_name', 'user__username')
+    if view_gender and set(view_gender).issubset(set(['W', 'M'])):
+        queryset = ApparelProfile.objects.filter(user__is_active=True, gender__in=view_gender)
     else:
-        queryset = ApparelProfile.objects.filter(user__is_active=True).order_by('user__first_name', 'user__last_name', 'user__username')
+        queryset = ApparelProfile.objects.filter(user__is_active=True)
+
+    if popular:
+        queryset = queryset.order_by('-followers_count', 'user__first_name', 'user__last_name', 'user__username')
+    else:
+        queryset = queryset.order_by('user__first_name', 'user__last_name', 'user__username')
 
     paged_result, pagination = get_pagination_page(queryset,
             10, request.GET.get('page', 1), 1, 2)
@@ -619,6 +624,7 @@ def user_list(request, popular=None, gender=None):
             'current_page': paged_result,
             'next': request.get_full_path(),
             'facebook_friends': get_facebook_friends(request),
+            'view_gender': view_gender[0] if len(view_gender) > 0 and view_gender[0] in ['W', 'M'] else 'A',
             'latest_members': latest_members,
             'APPAREL_GENDER': gender
         }, context_instance=RequestContext(request))

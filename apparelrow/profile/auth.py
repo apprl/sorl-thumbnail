@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
 import facebook
 
+FB_GENDER_MAP = { 'male': 'M', 'female': 'W' }
+
 class FacebookProfileBackend(ModelBackend):
     """
     Authenticate a facebook user and autopopulate facebook data into the
@@ -16,10 +18,11 @@ class FacebookProfileBackend(ModelBackend):
         """
         if fb_uid and fb_graphtoken:
             user, created = User.objects.get_or_create(username=fb_uid)
+            graph = facebook.GraphAPI(fb_graphtoken)
+            me = graph.get_object('me')
+
             if created:
                 # It would be nice to replace this with an asynchronous request
-                graph = facebook.GraphAPI(fb_graphtoken)
-                me = graph.get_object('me')
                 if me:
                     if me.get('first_name'):
                         user.first_name = me['first_name']
@@ -28,5 +31,11 @@ class FacebookProfileBackend(ModelBackend):
                     if me.get('email'):
                         user.email = me['email']
                     user.save()
+            profile = user.get_profile()
+            if profile.gender is None:
+                if me.get('gender'):
+                    if me['gender'] in FB_GENDER_MAP:
+                        profile.gender = FB_GENDER_MAP[me['gender']]
+                        profile.save()
             return user
         return None

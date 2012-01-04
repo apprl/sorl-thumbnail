@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-04 11:55+0100\n"
+"POT-Creation-Date: 2012-01-04 15:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,6 +129,7 @@ msgid "Product image"
 msgstr "Produktbild"
 
 #: apparel/models.py:147 apparel/models.py:395 apparel/models.py:615
+#: profile/models.py:34
 msgid "Gender"
 msgstr "Kön"
 
@@ -286,7 +287,7 @@ msgstr ""
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:616 profile/models.py:30 templates/account/base.html:20
+#: apparel/models.py:616 profile/models.py:33 templates/account/base.html:20
 msgid "Language"
 msgstr "Språk"
 
@@ -466,7 +467,7 @@ msgstr ""
 msgid "New e-mail address"
 msgstr "Ny e-postadress"
 
-#: profile/models.py:16
+#: profile/models.py:16 templates/apparel/user_list.html:24
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "All"
 msgstr "Alla"
@@ -479,39 +480,39 @@ msgstr "De jag följer"
 msgid "No one"
 msgstr "Inga"
 
-#: profile/models.py:28
+#: profile/models.py:31
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:29
+#: profile/models.py:32
 msgid "About"
 msgstr "Om"
 
-#: profile/models.py:34
+#: profile/models.py:38
 msgid "When someone commented on a product that I have in my wardrobe"
 msgstr "När någon kommenterat ett plagg som jag har i garderoben"
 
-#: profile/models.py:36
+#: profile/models.py:40
 msgid "When someone commented on a product that I have commented on"
 msgstr "När någon kommenterat ett plagg som jag kommenterat på"
 
-#: profile/models.py:38
+#: profile/models.py:42
 msgid "When someone commented on a look that I have created"
 msgstr "När någon kommenterat en look som jag har gjort"
 
-#: profile/models.py:40
+#: profile/models.py:44
 msgid "When someone commented on a look that I have commented on"
 msgstr "När någon kommenterat en look som jag har kommenterat på"
 
-#: profile/models.py:42
+#: profile/models.py:46
 msgid "When someone likes a look that I have created"
 msgstr "När någon gillar en look som jag har gjort"
 
-#: profile/models.py:44
+#: profile/models.py:48
 msgid "When someone starts to follow me"
 msgstr "När någon börjat följa mig"
 
-#: profile/models.py:47
+#: profile/models.py:51
 msgid "Is this the first visit?"
 msgstr ""
 
@@ -1155,7 +1156,7 @@ msgstr "Senaste händelser bland dina vänner"
 msgid "No updates"
 msgstr "Inga händelser"
 
-#: templates/apparel/user_home.html:34 templates/apparel/user_list.html:37
+#: templates/apparel/user_home.html:34 templates/apparel/user_list.html:42
 #: templates/profile/dialog_welcome.html:17
 msgid "Your friends are here!"
 msgstr "Dina vänner är här!"
@@ -1172,7 +1173,15 @@ msgstr "Följs av flest"
 msgid "Members in alphabetical order"
 msgstr "Medlemmar i bokstavsordning"
 
-#: templates/apparel/user_list.html:39
+#: templates/apparel/user_list.html:25
+msgid "Females"
+msgstr "Tjejer"
+
+#: templates/apparel/user_list.html:26
+msgid "Males"
+msgstr "Killar"
+
+#: templates/apparel/user_list.html:44
 msgid "Connect with your Facebook account to find your friends."
 msgstr "Logga in med ditt Facebookkonto för att hitta dina vänner."
 

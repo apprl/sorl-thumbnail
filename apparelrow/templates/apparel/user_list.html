@@ -17,8 +17,19 @@
     </div>
     <div id="content">
         <ul class="user-list-tabs">
-            <li><a class="first latest{% if 'popular' in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'user-list-popular' %}">{% trans "Most followers" %}</a></li>
-            <li><a class="last popular{% if 'popular' not in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'user-list' %}">{% trans "Members in alphabetical order" %}</a></li>
+            <li><a class="first latest{% if 'popular' in request.path %} current{% endif %}" href="{% url user-list-popular %}">{% trans "Most followers" %}</a></li>
+            <li><a class="last popular{% if 'popular' not in request.path %} current{% endif %}" href="{% url user-list %}">{% trans "Members in alphabetical order" %}</a></li>
+        </ul>
+        <ul class="gender-tabs">
+            {% if 'popular' in request.path %}
+            <li {% if view_gender == 'A' %}class="active"{% endif %} ><a href="{% url user-list-popular %}">{% trans "All" %}</a></li>
+            <li {% if view_gender == 'W' %}class="active"{% endif %} ><a href="{% url user-list-popular-women %}">{% trans "Females" %}</a></li>
+            <li {% if view_gender == 'M' %}class="active"{% endif %} ><a href="{% url user-list-popular-men %}">{% trans "Males" %}</a></li>
+            {% else %}
+            <li {% if view_gender == 'A' %}class="active"{% endif %} ><a href="{% url user-list %}">{% trans "All" %}</a></li>
+            <li {% if view_gender == 'W' %}class="active"{% endif %} ><a href="{% url user-list-women %}">{% trans "Females" %}</a></li>
+            <li {% if view_gender == 'M' %}class="active"{% endif %} ><a href="{% url user-list-men %}">{% trans "Males" %}</a></li>
+            {% endif %}
         </ul>
         <ul class="users">
         {% for follower in current_page.object_list %}
