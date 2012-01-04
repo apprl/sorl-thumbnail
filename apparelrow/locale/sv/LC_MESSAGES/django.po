@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-04 00:23+0100\n"
+"POT-Creation-Date: 2012-01-04 11:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1721,7 +1721,7 @@ msgid "You do not have any products in your wardrobe right now."
 msgstr "Du har inga produkter i garderoben just nu."
 
 #: templates/profile/wardrobe.html:64
-msgid "do not have any products in his/her wardrobe right now."
+msgid "does not have any products in the wardrobe right now."
 msgstr "har inga produkter i garderoben just nu."
 
 #: templates/profile/watcher.html:13
