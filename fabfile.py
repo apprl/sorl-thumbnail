@@ -144,7 +144,6 @@ def deploy(param='', snapshot='master'):
     build_styles_and_scripts()
     migrate(param)
     symlink_current_release()
-    restart_solr()
     restart_celeryd()
     restart_django()
     restart_memcached()
