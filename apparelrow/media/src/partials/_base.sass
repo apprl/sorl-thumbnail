@@ -42,17 +42,11 @@ $default_box_shadow_h_offset: 0px !default
 $default_box_shadow_v_offset: 0px !default
 $default_box_shadow_blur: 10px !default
 
-$font_family_base: "Helvetica Neue", "Helvetica", "Arial", sans-serif
-$font_family: "ProximaNova-Regular", "Helvetica", "Arial", sans-serif
-$font_family_bold: "ProximaNova-Bold", "Helvetica", "Arial", sans-serif
-
-=custom_fonts
-  +font-face("ProximaNova-Regular", font-files("13AD48_10.woff", woff, "13AD48_10.ttf", truetype, "13AD48_10.svg", svg), "13AD48_10.eot")
-  +font-face-extended("ProximaNova-Bold", font-files("13AD48_14.woff", woff, "13AD48_14.ttf", truetype, "13AD48_14.svg", svg), "13AD48_14.eot", "proximanova-bold", false, "bold")
+$font_family: "Helvetica Neue", "Helvetica", "Arial", sans-serif
 
 =text_input
   font:
-    family: $font_family_base
+    family: $font_family
     size: 1em
   +box
   +border-radius(3px)
@@ -70,21 +64,21 @@ $font_family_bold: "ProximaNova-Bold", "Helvetica", "Arial", sans-serif
   color: $highlight_color
 
 =edit_button
-  font-family: $font_family_bold
+  font-family: $font_family
   background-image: image_url(unquote("edit.png"))
   background-repeat: no-repeat
   background-position: 5px 5px
   padding: 3px 5px 3px 20px
 
 =cancel_button
-  font-family: $font_family_bold
+  font-family: $font_family
   background-image: image_url(unquote("cancel.png"))
   background-repeat: no-repeat
   background-position: 5px 5px
   padding: 3px 5px 3px 20px
 
 =delete_button
-  font-family: $font_family_bold
+  font-family: $font_family
   background-image: image_url(unquote("cancel.png"))
   background-repeat: no-repeat
   background-position: 5px 5px
@@ -135,7 +129,7 @@ $font_family_bold: "ProximaNova-Bold", "Helvetica", "Arial", sans-serif
 
 =font
   font:
-    family: $font_family_base
+    family: $font_family
     size: 70%
   line-height: 1.5em
   color: $font_color
@@ -147,16 +141,23 @@ $font_family_bold: "ProximaNova-Bold", "Helvetica", "Arial", sans-serif
   p a
     &:hover, &:active
       text-decoration: underline
+  p.bodycopy
+    font-size: 1.1em
+    color: $easy_color
   h1
     font:
-      size: 1.25em
+      size: 1.65em
       family: $font_family
-
+      weight: bold
+    text-transform: uppercase
   h2, h3
     font-size: 1em
   h2
+    font-size: 1.1em
+    font-weight: 500
     margin: 30px 0 10px
     border-bottom: 1px solid $border_color
+    padding-bottom: 5px
 
 =go_to_link
   background: transparent image_url(unquote("arrow-bg.png")) no-repeat scroll left center
@@ -370,11 +371,10 @@ $color_column_offset: 1px
       //background: transparent image_url('warn.png') no-repeat scroll 10px center
   &.large-dialog
     width: $large_width
-  h2
+  h1
     +box-shadow
-    line-height: 44px
+    padding: 10px
     margin-top: 0
-    padding: 0 10px
   p
     padding: 5px 10px
   .buttons

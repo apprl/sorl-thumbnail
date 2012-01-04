@@ -262,9 +262,9 @@
 
     <script type="text/html" id="error_dialog_template">
         <div class="dialog error">
-            <h2>${ header }</h2>
+            <h1>${ header }</h1>
             {% templatetag openvariable %}each(i, message) messages{% templatetag closevariable %}
-                <p>${ message }</p>
+                <p class="bodycopy">${ message }</p>
             {% templatetag openvariable %}/each{% templatetag closevariable %}
             <div class="buttons">
                 {% templatetag openvariable %}if modal{% templatetag closevariable %}

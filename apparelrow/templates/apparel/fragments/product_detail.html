@@ -7,7 +7,7 @@
 {% cache CACHE_TIMEOUT product_detail_fragment2 object.id LANGUAGE_CODE %}
 <div class="product-info">
     <!-- {{ object.popularity }} -->
-    <h2>
+    <div class="breadcrumb">
     <span>{% trans object.get_gender_display %}</span> \
     {% for category in object.categories %}
     {% if forloop.first %}
@@ -16,9 +16,9 @@
     \ <a href="{% gender_url APPAREL_GENDER 'shop' %}#category={{ category.id }}">{{ category }}</a>
     {% endif %}
     {% endfor %} \ <a href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ object.manufacturer.id }}">{{ object.manufacturer }}</a>
-    </h2>
+    </div>
     <h1>{{ object.manufacturer }}</h1>
-    {% if object.product_name %}<h3>{{ object.product_name }}</h3>{% endif %}
+    {% if object.product_name %}<h2>{{ object.product_name }}</h2>{% endif %}
     {% regroup object.options.all by option_type as option_list %}
     <!-- FIXME: Style this properly. See ticket #300 
     <ul class="product-options">
@@ -33,7 +33,7 @@
     {% endfor %}
     </ul>
     -->
-    <p class="description">{{ object.description }}</p>
+    <p class="bodycopy description">{{ object.description }}</p>
     <div class="product-vendors">
         {% with object.vendorproduct.all|dictsort:'price' as vendorproducts %}
         {% for vendorproduct in vendorproducts %}

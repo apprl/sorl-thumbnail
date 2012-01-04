@@ -109,6 +109,7 @@ button
       +border(bottom, $box_color)
     #nav-gender
       font-family: $font_family
+      font-size: 1.1em
       position: absolute
       top: 63px
       left: 244px
@@ -131,6 +132,7 @@ button
           color: $white_color
     #nav-main
       font-family: $font_family
+      font-size: 1.1em
       position: absolute
       top: 59px
       right: 244px
@@ -284,7 +286,6 @@ button
   border-right: none
   margin: 0px 0px 0px 18px
   padding: 0px 20px
-  font-size: 0.9em
   div
     &.left
       float: left
@@ -300,9 +301,6 @@ button
         +button(none, 13px)
         +border-radius(2px)
         +highlight
-        font:
-          family: $font_family_bold
-          size: 1.1em
         background-repeat: no-repeat
         background-attachment: scroll
         background-position: 6px center
@@ -337,7 +335,7 @@ button
     li
       a, span
         font:
-          family: $font_family_bold
+          family: $font_family
         padding-top: 1px
         display: block
         height: 28px
@@ -411,7 +409,7 @@ button
           repeat: repeat-x
         h3
           font:
-            family: $font_family_bold
+            family: $font_family
             size: 1.1em
           text-transform: uppercase
         p
@@ -535,12 +533,12 @@ ul.products
 
 .sidebar
   h2
-    font-family: $font_family_base
+    font-family: $font_family
     clear: both
   p
     +border(top)
   .activity
-    margin-top: 1.5em
+    margin-top: 2em
     +border(top)
     p
       border-top: none
@@ -703,7 +701,7 @@ $ruler_width: $slider_width
       padding-left: 8px
       padding-right: 8px
       &.default
-        font-family: $font_family_base
+        font-family: $font_family
         font-style: italic
     #selected-manufacturers
       padding: 10px 0
@@ -867,7 +865,7 @@ div#product-list, .product-list
     +border(top)
     height: 1.5em
     overflow: hidden
-    font-family: $font_family_base
+    font-family: $font_family
   .product-image
     border: none
     background-color: white
@@ -936,7 +934,7 @@ body.three-columns .pagination
     background-color: inherit
   ol
     a:hover
-      font-family: $font_family_bold
+      font-family: $font_family
       font-weight: bold
   div
     float: left
@@ -950,7 +948,7 @@ body.three-columns .pagination
         a
           display: block
         &.current
-          font-family: $font_family_bold
+          font-family: $font_family
           font-weight: bold
           background: transparent image_url(unquote("current-page.png")) no-repeat scroll center bottom
 
@@ -989,21 +987,22 @@ body.three-columns .pagination
   margin-right: $gutter_width
   width: $small_width
   h2
-    margin-top: 0
-    color: $font_color
+    border-bottom: 0
+    margin: 0
+    padding: 0 0 10px 0
+  h1
+    padding: 10px 0 5px 0
+    text-transform: uppercase
+  div.breadcrumb
+    line-height: 2em
+    vertical-align: top
+    color: $easier_color
+    a 
+      color: $easier_color 
+    border-bottom: 1px solid $border_color
     a:hover
       text-decoration: underline
-  h1
-    text-transform: uppercase
-  h3
-    text-transform: uppercase
-    font:
-      family: $font_family
-      weight: normal
-      size: 0.9em
-    color: $easy_color
   p.description
-    font-size: 1.1em
     width: $aside_width + $gutter_width
     margin-bottom: 18px
 
@@ -1043,8 +1042,6 @@ body.product #container .product-image img
 
 table.available-sizes th
   border: none
-  font-size: 0.8em
-  font-weight: normal
   text-align: center
   text-transform: uppercase
 
@@ -1083,7 +1080,7 @@ a.buy-now
   width: 73px
   height: 30px
   background: $box_color image_url(unquote("sold-out.png")) scroll no-repeat center 35%
-  font-family: $font_family_bold
+  font-family: $font_family
   font-weight: bold
   text-align: center
   +border(all, $border_color)
@@ -1101,7 +1098,7 @@ a.buy-now
   width: 73px
   height: 30px
   background: $highlight_bg_color image_url(unquote("check-large.png")) scroll no-repeat center 25%
-  font-family: $font_family_bold
+  font-family: $font_family
   font-weight: bold
   &.higher
     margin-top: -32px
@@ -1162,10 +1159,8 @@ a.buy-now
       +border(bottom)
       img.avatar
         margin-right: 9px
-      h3
-        font-weight: normal
-        a
-          font-size: 1.1em
+      h3 a
+        font-weight: bold
       p
         color: $easy_color
   form
@@ -1185,9 +1180,6 @@ a.buy-now
       +button(none, unquote("18px"))
       +border-radius(unquote("2px"))
       +highlight
-      font:
-        family: $font_family_bold
-        size: 0.9em
       background-image: none
       margin-top: 2px
       &:hover
@@ -1328,12 +1320,11 @@ body.product .product-image, body.look #content
     position: absolute
     top: 0px
     right: 0px
-    font-size: 0.9em
     button
       margin: 0
       border: none
       background: transparent image_url(unquote("like-medium.png")) no-repeat scroll center center
-      font-family: $font_family_bold
+      font-family: $font_family
       color: $like_color
       text-transform: uppercase
       padding-top: 30px
@@ -1545,7 +1536,7 @@ a.follow, a.unfollow
   +button(none, 1em)
   +border-radius(2px)
   +highlight
-  font-family: $font_family_base
+  font-family: $font_family
   line-height: 1em
   background-repeat: no-repeat
   background-attachment: scroll
@@ -1684,7 +1675,7 @@ body.profile
         h3
           display: inline-block
           font-weight: bold
-          font-family: $font_family_bold
+          font-family: $font_family
           font-size: 1.25em
           line-height: 2
         p
@@ -1695,7 +1686,7 @@ body.profile
           +button(none, 1em)
           +border-radius(4px)
           +highlight
-          font-family: $font_family_base
+          font-family: $font_family
           padding: 0 8px 0 25px
           border-color: $highlight_bg_color
           background-image: image_url("following_you.png")
@@ -1793,7 +1784,6 @@ ul.suggested-friends
 .inline-date
   float: right
   color: $easier_color
-  font-size: 0.9em
 
 .activity-list
   a.activity
@@ -1845,12 +1835,11 @@ ul.suggested-friends
           border: 0
           width: 240px
           background-image: none
-          font-size: 1.1em
+          font-size: 1em
           display: inline
           overflow: hidden
         span
           color: $easier_color
-          font-size: 0.9em
         .price, .sum
           background-image: none
           padding-left: 0
@@ -1874,9 +1863,11 @@ a#create-look
   .dialog-container
     &.welcome-dialog
       width: $large_width
-    h3
-      padding: 10px
-      font-weight: normal
+    h1
+      .close
+        font-size: 0.6em
+        font-weight: normal
+        text-transform: none
     .close
       float: right
       background: transparent image_url(unquote("logout.png")) no-repeat scroll right center
@@ -1894,7 +1885,7 @@ a#create-look
         padding-left: 8px
         padding-right: 8px
         &.default
-          font-family: $font_family_base
+          font-family: $font_family
           font-style: italic
       h3
         padding: 0
