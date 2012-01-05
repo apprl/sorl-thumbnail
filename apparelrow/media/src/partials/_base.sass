@@ -195,6 +195,10 @@ $color_column_offset: 1px
       height: $color_height
       position: absolute
       top: 0
+      &.div-one
+        +replace-text(unquote("color-div.png"))
+        top: 0
+        left: ($color_width + $color_column_offset) * 3
       &.black
         background-position: 0 0
         top: 0
@@ -356,7 +360,6 @@ $color_column_offset: 1px
           background-position: $x $y_selected
         &.filtered
           background-position: $x $y_filtered
-
  
 =dialog
   +box-shadow
