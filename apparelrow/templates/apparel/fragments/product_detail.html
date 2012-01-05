@@ -8,14 +8,14 @@
 <div class="product-info">
     <!-- {{ object.popularity }} -->
     <div class="breadcrumb">
-    <span>{% trans object.get_gender_display %}</span> \
+    <a href="{% gender_url object.gender 'shop' %}">{% trans object.get_gender_display %}</a> \
     {% for category in object.categories %}
     {% if forloop.first %}
-    <a href="{% gender_url APPAREL_GENDER 'shop' %}#category={{ category.id }}">{{ category }}</a>
+    <a href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">{{ category }}</a>
     {% else %}
-    \ <a href="{% gender_url APPAREL_GENDER 'shop' %}#category={{ category.id }}">{{ category }}</a>
+    \ <a href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">{{ category }}</a>
     {% endif %}
-    {% endfor %} \ <a href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ object.manufacturer.id }}">{{ object.manufacturer }}</a>
+    {% endfor %} \ <a href="{% gender_url object.gender 'shop' %}#manufacturer={{ object.manufacturer.id }}">{{ object.manufacturer }}</a>
     </div>
     <h1>{{ object.manufacturer }}</h1>
     {% if object.product_name %}<h2>{{ object.product_name }}</h2>{% endif %}
