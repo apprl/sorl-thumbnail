@@ -7,11 +7,56 @@ from django.db import models
 class Migration(SchemaMigration):
     
     def forwards(self, orm):
-        pass
+        
+        # Adding model 'Invite'
+        db.create_table('beta_invite', (
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=10)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+        ))
+        db.send_create_signal('beta', ['Invite'])
+
+        # Adding model 'Invitee'
+        db.create_table('beta_invitee', (
+            ('invite', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['beta.Invite'])),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75)),
+            ('used_count', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('seen', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+        ))
+        db.send_create_signal('beta', ['Invitee'])
+
+        # Adding model 'InvitePerUser'
+        db.create_table('beta_inviteperuser', (
+            ('invites', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='beta', unique=True, to=orm['profile.ApparelProfile'])),
+        ))
+        db.send_create_signal('beta', ['InvitePerUser'])
+
+        # Adding model 'InviteRequest'
+        db.create_table('beta_inviterequest', (
+            ('invitee', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['beta.Invitee'], unique=True, null=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75)),
+        ))
+        db.send_create_signal('beta', ['InviteRequest'])
     
     
     def backwards(self, orm):
-        pass
+        
+        # Deleting model 'Invite'
+        db.delete_table('beta_invite')
+
+        # Deleting model 'Invitee'
+        db.delete_table('beta_invitee')
+
+        # Deleting model 'InvitePerUser'
+        db.delete_table('beta_inviteperuser')
+
+        # Deleting model 'InviteRequest'
+        db.delete_table('beta_inviterequest')
     
     
     models = {

@@ -7,11 +7,40 @@ from django.db import models
 class Migration(SchemaMigration):
     
     def forwards(self, orm):
-        pass
+        
+        # Adding model 'StoredQuery'
+        db.create_table('watcher_storedquery', (
+            ('query', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='watches', to=orm['auth.User'])),
+        ))
+        db.send_create_signal('watcher', ['StoredQuery'])
+
+        # Adding unique constraint on 'StoredQuery', fields ['user', 'name']
+        db.create_unique('watcher_storedquery', ['user_id', 'name'])
+
+        # Adding model 'StoredQueryByEmail'
+        db.create_table('watcher_storedquerybyemail', (
+            ('stored_query', self.gf('django.db.models.fields.related.OneToOneField')(related_name='by_email', unique=True, to=orm['watcher.StoredQuery'])),
+            ('reason', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('checked', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('success', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+        ))
+        db.send_create_signal('watcher', ['StoredQueryByEmail'])
     
     
     def backwards(self, orm):
-        pass
+        
+        # Deleting model 'StoredQuery'
+        db.delete_table('watcher_storedquery')
+
+        # Removing unique constraint on 'StoredQuery', fields ['user', 'name']
+        db.delete_unique('watcher_storedquery', ['user_id', 'name'])
+
+        # Deleting model 'StoredQueryByEmail'
+        db.delete_table('watcher_storedquerybyemail')
     
     
     models = {
