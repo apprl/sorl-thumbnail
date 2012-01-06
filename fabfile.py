@@ -269,14 +269,13 @@ def migrate(param=''):
     "Update the database"
     require('project_name')
     require('path')
-    env.southparam = '--auto'
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         if param=='first':
             sudo('%(path)s/bin/python manage.py syncdb --settings production' % env, pty=True, user=env.run_user)
-            env.southparam = '--initial'
-        #run('%(path)s/bin/python manage.py schemamigration %(project_name)s %(southparam)s --settings production && %(path)s/bin/python manage.py migrate %(project_name)s --settings production' % env)
+            # Migrate in specific order
+            sudo('%(path)s/bin/python manage.py migrate apparel --settings production' % env, pty=True, user=env.run_user)
+            sudo('%(path)s/bin/python manage.py migrate profile --settings production' % env, pty=True, user=env.run_user)
         sudo('%(path)s/bin/python manage.py migrate --settings production' % env, pty=True, user=env.run_user)
-        # TODO: should also migrate other apps! get migrations from previous releases
     
 def restart_django():
     require('path')
