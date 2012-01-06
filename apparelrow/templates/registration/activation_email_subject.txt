@@ -1,2 +1,2 @@
 {% load i18n %}
-{% trans "Activate your ApparelRow account" %}
+{% trans "Activate your Apparelrow account" %}

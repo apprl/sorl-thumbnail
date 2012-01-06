@@ -26,7 +26,7 @@ logger = logging.getLogger('apparel.importer.api')
 
 
 """
-Provides an API for importing and setting up product data for the ApparelRow
+Provides an API for importing and setting up product data for the Apparelrow
 web application
 
 Synopsis
@@ -376,7 +376,7 @@ class API(object):
     def vendor_category(self):
         """
         Returns the VendorCategory instance that maps the extracted category
-        to manually defined one ApparelRow.
+        to manually defined one Apparelrow.
         """
         
         if not self._vendor_category:

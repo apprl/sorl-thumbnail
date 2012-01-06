@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-06 17:33+0100\n"
+"POT-Creation-Date: 2012-01-06 17:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -342,7 +342,7 @@ msgid "Welcome to our beta!"
 msgstr ""
 
 #: beta/templates/beta/about.html:11
-msgid "Welcome to the ApparelRow beta!"
+msgid "Welcome to the Apparelrow beta!"
 msgstr ""
 
 #: beta/templates/beta/beta.html:50
@@ -1141,7 +1141,7 @@ msgid "Comments"
 msgstr ""
 
 #: templates/apparel/fragments/dialog_about_apparelrow.html:4
-msgid "About ApparelRow beta"
+msgid "About Apparelrow beta"
 msgstr ""
 
 #: templates/apparel/fragments/dialog_about_apparelrow.html:6
@@ -1470,13 +1470,13 @@ msgstr ""
 #: templates/email/base.html:5
 msgid ""
 "\n"
-"The ApparelRow Team\n"
+"The Apparelrow Team\n"
 msgstr ""
 
 #: templates/facebook/setup.html:11
 msgid ""
 "\n"
-"        If you already have an account at ApparelRow, enter your username "
+"        If you already have an account at Apparelrow, enter your username "
 "and password below to link it with your facebook account. If you do not have "
 "an account, click Continue with facebook only - you will not have to "
 "remember a username and password.    \n"
@@ -1804,7 +1804,7 @@ msgstr ""
 #: templates/registration/activation_complete.html:9
 msgid ""
 "\n"
-"        Done! Your account at ApparelRow is now active.\n"
+"        Done! Your account at Apparelrow is now active.\n"
 "    "
 msgstr ""
 

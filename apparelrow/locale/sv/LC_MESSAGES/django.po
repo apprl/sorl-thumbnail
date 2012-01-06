@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-06 17:33+0100\n"
+"POT-Creation-Date: 2012-01-06 17:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -343,8 +343,9 @@ msgid "Welcome to our beta!"
 msgstr "Välkommen till vår beta!"
 
 #: beta/templates/beta/about.html:11
-msgid "Welcome to the ApparelRow beta!"
-msgstr "Välkommen till ApparelRow beta!"
+#, fuzzy
+msgid "Welcome to the Apparelrow beta!"
+msgstr "Välkommen till Apparelrow beta!"
 
 #: beta/templates/beta/beta.html:50
 msgid "Beta login"
@@ -658,7 +659,7 @@ msgstr "Se alla medlemmar"
 
 #: templates/base.html:212
 msgid "About Apparelrow"
-msgstr "Om ApparelRow"
+msgstr "Om Apparelrow"
 
 #: templates/base.html:213
 msgid "About the beta"
@@ -1183,8 +1184,9 @@ msgid "Comments"
 msgstr "Kommentarer"
 
 #: templates/apparel/fragments/dialog_about_apparelrow.html:4
-msgid "About ApparelRow beta"
-msgstr "Om ApparelRows beta"
+#, fuzzy
+msgid "About Apparelrow beta"
+msgstr "Om Apparelrows beta"
 
 #: templates/apparel/fragments/dialog_about_apparelrow.html:6
 msgid ""
@@ -1543,24 +1545,26 @@ msgid "Comment"
 msgstr "Kommentera"
 
 #: templates/email/base.html:5
+#, fuzzy
 msgid ""
 "\n"
-"The ApparelRow Team\n"
+"The Apparelrow Team\n"
 msgstr ""
 "\n"
-"ApparelRow-teamet\n"
+"Apparelrow-teamet\n"
 
 #: templates/facebook/setup.html:11
+#, fuzzy
 msgid ""
 "\n"
-"        If you already have an account at ApparelRow, enter your username "
+"        If you already have an account at Apparelrow, enter your username "
 "and password below to link it with your facebook account. If you do not have "
 "an account, click Continue with facebook only - you will not have to "
 "remember a username and password.    \n"
 "    "
 msgstr ""
 "\n"
-"        Om du redan har ett konto på ApparelRow, ange ditt användarnamn och "
+"        Om du redan har ett konto på Apparelrow, ange ditt användarnamn och "
 "lösenord nedan för att länka det med ditt Facebook-konto. Om du inte har ett "
 "konto, klicka Fortsätt med endast Facebook - du behöver inte komma ihåg ditt "
 "användarnamn och lösenord.\n"
@@ -1930,13 +1934,14 @@ msgstr ""
 "    "
 
 #: templates/registration/activation_complete.html:9
+#, fuzzy
 msgid ""
 "\n"
-"        Done! Your account at ApparelRow is now active.\n"
+"        Done! Your account at Apparelrow is now active.\n"
 "    "
 msgstr ""
 "\n"
-"        Klar! Ditt konto på ApparelRow är nu aktiverat.\n"
+"        Klar! Ditt konto på Apparelrow är nu aktiverat.\n"
 "    "
 
 #: templates/registration/activation_complete.html:13
@@ -2075,11 +2080,11 @@ msgstr "Varför mejlet inte skickades"
 #~ msgstr "OK"
 
 #~ msgid ""
-#~ "With ApparelRow you can create Looks as a collage, tagged image or a "
+#~ "With Apparelrow you can create Looks as a collage, tagged image or a "
 #~ "selection of clothes. You can share the Look at your blog, Facebook page "
 #~ "or other site."
 #~ msgstr ""
-#~ "På ApparelRow kan du skapa Looks som collage, taggade bilder eller ett "
+#~ "På Apparelrow kan du skapa Looks som collage, taggade bilder eller ett "
 #~ "urval av kläder. Du kan dela Looken på din blogg, Facebook-sida och andra "
 #~ "webbplatser."
 
@@ -2091,9 +2096,6 @@ msgstr "Varför mejlet inte skickades"
 
 #~ msgid "People who like this product"
 #~ msgstr "Medlemmar som gillar produkten"
-
-#~ msgid "Invite your friends to Apparelrow Beta"
-#~ msgstr "Bjud in vänner till ApparelRow beta"
 
 #~ msgid "Striped"
 #~ msgstr "Randigt"
@@ -2191,9 +2193,6 @@ msgstr "Varför mejlet inte skickades"
 #~ "beaktande. När vi är redo att ta emot fler användare får du en "
 #~ "inbjudningskod via e-post."
 
-#~ msgid "Welcome to ApparelRow beta"
-#~ msgstr "Välkommen till ApparelRow beta"
-
 #~ msgid "E-mail"
 #~ msgstr "E-post"
 
@@ -2208,9 +2207,6 @@ msgstr "Varför mejlet inte skickades"
 
 #~ msgid "Embed"
 #~ msgstr "Bädda in"
-
-#~ msgid "Did you know that you can log in on Apparelrow using Facebook"
-#~ msgstr "Visste du att du kan logga in på Apparelrow med hjälp av Facebook"
 
 #~ msgid "Similar products"
 #~ msgstr "Liknande plagg"

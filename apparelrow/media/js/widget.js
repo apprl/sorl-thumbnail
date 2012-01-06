@@ -1,8 +1,8 @@
 /*
- * ApparelRow.com Widget Embedment
+ * Apparelrow.com Widget Embedment
  */
 
-var ApparelRow = {
+var Apparelrow = {
     host: __ar_host__ || 'http://www.apparelrow.com',
     initialized: false,
     initStack: 0,
@@ -23,7 +23,7 @@ var ApparelRow = {
             .replace(/((?:\b(?:src|href)=(?:"|')?)|(?:\:\s+url\((?:"|')))(?=\/)/g, function(s, attr) {
                 // FIXME: This adds the host name to all html attributes src or href or
                 // inline css attributes url( whos value starts with /
-                return attr + ApparelRow.host;
+                return attr + Apparelrow.host;
             })
         ;
         
@@ -51,48 +51,48 @@ var ApparelRow = {
     request: function(path, node, callback) {
         callback = callback || function(response, statusText) {
             if(response.success) 
-                ApparelRow.insert(response, node);
+                Apparelrow.insert(response, node);
             else
                 node.remove();        
         };
         
         $.ajax({
-            url: ApparelRow.host + path + '?callback=?',
+            url: Apparelrow.host + path + '?callback=?',
             dataType: 'jsonp',
             success: callback
         });
     },
     initializers: {
         'ar-look-collage': function(node) {
-            ApparelRow.request('/widget/look/' + node.attr('id').split('-').pop() + '/collage/', node);
+            Apparelrow.request('/widget/look/' + node.attr('id').split('-').pop() + '/collage/', node);
         },
         'ar-look-photo': function(node) {
-            ApparelRow.request('/widget/look/' + node.attr('id').split('-').pop() + '/photo/', node);
+            Apparelrow.request('/widget/look/' + node.attr('id').split('-').pop() + '/photo/', node);
         }
     },
     initialize: function() {
-        if(ApparelRow.initialized)
+        if(Apparelrow.initialized)
             return;
         
-        ApparelRow.initialized = true;
+        Apparelrow.initialized = true;
         
         $('<link/>')
-            .attr('href', ApparelRow.host + '/media/styles/widget.css')
+            .attr('href', Apparelrow.host + '/media/styles/widget.css')
             .attr('rel', 'stylesheet')
             .attr('type', 'text/css')
             .appendTo('head');
 
         $('.apparelrow').each(function(idx, e) {
             var element = $(e);
-            for(var cls in ApparelRow.initializers) {
+            for(var cls in Apparelrow.initializers) {
                 if(element.hasClass(cls))
-                    ApparelRow.initializers[cls](element);
+                    Apparelrow.initializers[cls](element);
             }
         });
     }
 };
 
-$(document).ready(function() { ApparelRow.initialize() });
+$(document).ready(function() { Apparelrow.initialize() });
 if(document && document.getElementById && document.getElementById('__ar_widget__'))
-    ApparelRow.initialize();
+    Apparelrow.initialize();
 

@@ -8,7 +8,7 @@ Because of Django Templates useless whitespace handling, this comment, and all o
 
 {% endcomment %}{% load i18n %}{% blocktrans with user.username as username  %}Hi {{ username }},
 
-You have signed up for an account at ApparelRow. Please follow the link below to activate your account
+You have signed up for an account at Apparelrow. Please follow the link below to activate your account
 
 http://{{ site }}/accounts/activate/{{ activation_key }}
 

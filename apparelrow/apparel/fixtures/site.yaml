@@ -2,5 +2,5 @@
 - model: sites.site
   pk: 1
   fields:
-    name: 'ApparelRow'
+    name: 'Apparelrow'
     domain: 'apparelrow.com'
