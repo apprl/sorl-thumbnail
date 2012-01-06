@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.forms.models import BaseInlineFormSet
 
-from importer.models import *
+from importer.models import VendorFeed, ImportLog, ImportLogMessage, Mapping
 
 
 # FIXME: 
@@ -45,10 +45,12 @@ class VendorFeedAdmin(admin.ModelAdmin):
         ImportLogInline
     ]
     list_display = ['name', 'provider_class', 'vendor', 'comment']
-        
+
+class MappingAdmin(admin.ModelAdmin):
+    list_display = ['mapping_key', 'mapping_type', 'mapping_aliases']
 
 admin.site.register(VendorFeed, VendorFeedAdmin)
 admin.site.register(ImportLog, ImportLogAdmin)
 admin.site.register(ImportLogMessage)
-admin.site.register(ColorMapping)
+admin.site.register(Mapping, MappingAdmin)
 

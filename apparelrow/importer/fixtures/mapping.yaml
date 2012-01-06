@@ -1,0 +1,106 @@
+- fields: {mapping_aliases: "grey,gr\xE5,m\xF6rkgr\xE5,ljusgr\xE5,gray,smut,charcoal,meadow,thyme,stone,cement,slate,salvia,aluminum,smoke,seal,sediment,dark\
+      \ heather grey,light heather grey,charcoal,cedar,cloud,argento,smoke,faded aluminum,steel,hematite,hope,dark\
+      \ charcoal,bombay,pewter,gunmetal,bright cement,heather cinder,zinc,seaglass,royal\
+      \ grey,india ink,gris chine,quartz grey,moonstruck,carbon,carbon melange,nickel\
+      \ melange,platinum,raven,raven melange,granite,granit,pebble,heather carbon,rock,steel,steel\
+      \ grey,morel,fog,gris,smog,excalibur,thunder,elephant,light rosewood,gravel,charcoal\
+      \ melange,shitake,grau,vert fonce,pumice,jet", mapping_key: grey, mapping_type: color}
+  model: importer.mapping
+  pk: 1
+- fields: {mapping_aliases: 'white,vit,chalk,angel,ivory,oyster,porcelain,ivory heather,rice,ecru,natural
+      white,bone,crema,heather oyster,blanc,tea,yogurt,pearl,ceramic,eggshell,marshmallow,alabaster,moonbeam,snow,alabaster,milk,vanilla',
+    mapping_key: white, mapping_type: color}
+  model: importer.mapping
+  pk: 2
+- fields: {mapping_aliases: 'beige,khaki,sand,creme,camel,rye,chino,oatmeal,nougat,dust,sandune,suntan,champagne,blonde,buff,powder,khaki,natural,scallop,taupe,tan
+      combo,brule,cream,peanut,sahara,melange beige,skin,whisper,muave,light muave,cork
+      tan,nude,pumice,barley,bare,pale khaki,portobello,chai,macrame,sepia,sepia melange,kaki,chalk,cocoon',
+    mapping_key: beige, mapping_type: color}
+  model: importer.mapping
+  pk: 3
+- fields: {mapping_aliases: "brown,brun,m\xF6rkbrun,ljusbrun,chocolate,hickory,chicory,rum,herb,mocha,marled\
+      \ mocha,tobacco,espresso,amber,tortoise,hazel,tan,crazy tort,terracotta,copper,bengal\
+      \ large,bourbon,cedar,burn,bengal small,chocolate combo,leopard,huba,heather\
+      \ wood,cereale,mouse,sandalwood,moleskin,whiskey,agave,bronze,saffron,cognac,natural,dirty\
+      \ martini,coffee,cannon,fatigue,rust,henna,saddle,maroon,toffee,sable,fawn,chestnut,otter,walnut,antique\
+      \ brass,clove,butterscotch,bambi,russet,agave,topaz,umber,havana vintage", mapping_key: brown,
+    mapping_type: color}
+  model: importer.mapping
+  pk: 4
+- fields: {mapping_aliases: "red,r\xF6d,m\xF6rkr\xF6d,merlot,wine,bubble gum,cherry,tunisian\
+      \ red,paprika,marled paprika,lava,zinnia,garnet,merlot combo,raspberry,canyon,hibiscus,pomegranate,bordeaux,aubrey,crushed\
+      \ berry,chianti,pinot noir,beaujolais,geranium,crimson,flame scarlet,venom,rhubarb,night\
+      \ rose,cranberry,lipstick,siren,fig,chili,framboise,picante", mapping_key: red,
+    mapping_type: color}
+  model: importer.mapping
+  pk: 5
+- fields: {mapping_aliases: "yellow,gul,citron,ljusgul,m\xF6rkgul,meringue,mustard,seaweed,dijon,zest",
+    mapping_key: yellow, mapping_type: color}
+  model: importer.mapping
+  pk: 6
+- fields: {mapping_aliases: "green, gr\xF6n, ljusgr\xF6n, m\xF6rkgr\xF6n, olive, oliv,\
+      \ arme, army, arm\xE9, sage, fatigue, military, alpine, forest green, pacific\
+      \ green, mossgr\xF6n, moss, dark green, light green, forest, thicket, malachite,\
+      \ kelly, teal, kava green, jade, bottle green, dark teal, acid green, army green,\
+      \ jungle, fresh grass, mallard, avocado, lime, fango,emerald", mapping_key: green,
+    mapping_type: color}
+  model: importer.mapping
+  pk: 7
+- fields: {mapping_aliases: "blue,bl\xE5,navy,sapphire,m\xF6rkbl\xE5,ljusbl\xE5,rinse,petrol,blue\
+      \ ribbon,aqua,naples,sicily,seville,dresden,mariner,snorkel,midnight,shelby,kara,christie,young,blaze,magic,twilight\
+      \ ,essex,copacabana wash,skye,cellar,heather night,san francisco wash,rivington,winger,cobalt,cobolt,ocean,reservoir,night\
+      \ fall,ashbury,token,darkstar,royal,city tramp,bondi blue,coastal,maritime,kenmare,indigo,dark\
+      \ ink,new york dark,stock,sea blue,navy nora,dark aqua,night clouds,bahama,peacoat,cornflower",
+    mapping_key: blue, mapping_type: color}
+  model: importer.mapping
+  pk: 8
+- fields: {mapping_aliases: silver, mapping_key: silver, mapping_type: color}
+  model: importer.mapping
+  pk: 9
+- fields: {mapping_aliases: "gold,guld,oro, golden,guldf\xE4rgade,guldf\xE4rgad,guldiga",
+    mapping_key: gold, mapping_type: color}
+  model: importer.mapping
+  pk: 10
+- fields: {mapping_aliases: "pink, rosa, ljusrosa, m\xF6rkrosa, cerise, ceris, ballerina,\
+      \ pale rose, nectar, blush, sherbet, sherbert, flamingo, tulip, rose, rose gold,\
+      \ apricot, peanut blush, light pink, sorbet pink, dusty coral, tickled pink,\
+      \ love pink, light peach, peach, melon, fuchsia, fluoro pink, grenadine, wild\
+      \ rose, petal pink, rosewood, ash rose, coral, barbie pink, powder, cafri, peony",
+    mapping_key: pink, mapping_type: color}
+  model: importer.mapping
+  pk: 11
+- fields: {mapping_aliases: "orange,tangerine,m\xF6rkorange,ljusorange,tangerine,sienna,pumpkin",
+    mapping_key: orange, mapping_type: color}
+  model: importer.mapping
+  pk: 12
+- fields: {mapping_aliases: 'magenta,cerise,ceris,cerisa', mapping_key: magenta, mapping_type: color}
+  model: importer.mapping
+  pk: 13
+- fields: {mapping_aliases: purple, mapping_key: purple, mapping_type: color}
+  model: importer.mapping
+  pk: 14
+- fields: {mapping_aliases: 'black,svart,night,coal,caviar,black melange,nero,ruthenium
+      black,dark tin,bedford black,onyx,willow,ebonised,onyx,noir', mapping_key: black,
+    mapping_type: color}
+  model: importer.mapping
+  pk: 15
+- fields: {mapping_aliases: "male,males,men,mens,mensware,herr,herrar,man,m\xE4n",
+    mapping_key: M, mapping_type: gender}
+  model: importer.mapping
+  pk: 16
+- fields: {mapping_aliases: 'female,females,woman,women,womens,womenswear,dam,damer,kvinna,kvinnor',
+    mapping_key: W, mapping_type: gender}
+  model: importer.mapping
+  pk: 17
+- fields: {mapping_aliases: unisex, mapping_key: U, mapping_type: gender}
+  model: importer.mapping
+  pk: 18
+- fields: {mapping_aliases: 'striped,randigt', mapping_key: striped, mapping_type: pattern}
+  model: importer.mapping
+  pk: 19
+- fields: {mapping_aliases: 'dotted,prickigt', mapping_key: dotted, mapping_type: pattern}
+  model: importer.mapping
+  pk: 20
+- fields: {mapping_aliases: 'checkers,rutigt', mapping_key: checkers, mapping_type: pattern}
+  model: importer.mapping
+  pk: 21

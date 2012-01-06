@@ -167,10 +167,20 @@ class API(object):
         """
         Private method that adds, update and maintain vendor product options
         """
-        
         vp = VendorProduct.objects.get( product=self.product, vendor=self.vendor )
         types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in OptionType.objects.all()])
-        
+
+        if 'pattern' in types.keys():
+            for pattern in self.dataset['product']['patterns']:
+                option, created = Option.objects.get_or_create(option_type=types['pattern'], value=pattern)
+
+                if created:
+                    logger.debug('Created option %s' % option)
+
+                if not self.product.options.filter(pk=option.pk):
+                    logger.debug("Attaching option %s" % option)
+                    self.product.options.add(option)
+
         for variation in self.dataset['product']['variations']:
             options = []
             

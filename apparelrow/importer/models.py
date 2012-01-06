@@ -193,14 +193,20 @@ class FXRate(models.Model):
     class Meta:
         unique_together = (('base_currency', 'currency'),)
 
+MAPPING_CHOICES = (
+    ('color', 'color'),
+    ('pattern', 'pattern'),
+    ('gender', 'gender'),
+)
 
-class ColorMapping(models.Model):
-    color = models.CharField(max_length=100, unique=True, null=False, blank=False)
-    aliases = models.TextField(null=False, blank=False,
-            help_text=_('Aliases should be separated with a single comma and no spaces, example: "svart,night,coal"'))
+class Mapping(models.Model):
+    mapping_type = models.CharField(max_length=24, choices=MAPPING_CHOICES, null=False, blank=False)
+    mapping_key = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    mapping_aliases = models.TextField(null=False, blank=False,
+            help_text=_('Mapping aliases should be separated with a single command and no spaces, example: "svart,night,coal"'))
 
-    def color_list(self):
-        return [self.color] + self.aliases.split(',')
+    def get_list(self):
+        return self.mapping_aliases.split(',')
 
     def __unicode__(self):
-        return u'%s: %s' % (self.color, self.aliases)
+        return u'%s: %s' % (self.mapping_key, self.mapping_aliases)

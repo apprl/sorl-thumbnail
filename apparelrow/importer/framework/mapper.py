@@ -1,26 +1,34 @@
 # -*- coding: utf-8 -*-
-import re, logging, datetime, htmlentitydefs
+import re
+import logging
+import datetime
+import htmlentitydefs
+import itertools
 
 from django.conf import settings
 from django.utils.encoding import smart_unicode
 
 from importer.api import API, SkipProduct
-from importer.models import ColorMapping
+from importer.models import Mapping
 
 logger = logging.getLogger('apparel.importer.mapper')
 
 # Compile regular expression matching all aliases to a color, should only be
 # compiled once on import.
 COLOR_REGEXES = dict(
-    (cm.color, re.compile(ur'\b(?:%s)\b' % (ur'|'.join(cm.color_list()),), re.I | re.UNICODE))
-    for cm in ColorMapping.objects.all()
+    (m.mapping_key, re.compile(ur'\b(?:%s)\b' % (ur'|'.join(m.get_list()),), re.I | re.UNICODE))
+    for m in Mapping.objects.filter(mapping_type='color')
 )
 
-# FIXME: Add this to a model like ColorMapping?
-GENDERS = {'M': (u'male', u'males', u'men', u'mens', u'mensware', u'herr', u'herrar', u'man', u'män'),
-           'W': (u'female', u'females', u'woman', u'women', u'womens', u'womenswear', u'dam', u'damer', u'kvinna', u'kvinnor'),
-           'U': (u'unisex',)}
-GENDER_REGEXES = dict((gender, re.compile(ur'\b(?:%s)\b' % (ur'|'.join(value),), re.I | re.UNICODE)) for gender, value in GENDERS.items())
+PATTERN_REGEXES = dict(
+    (m.mapping_key, re.compile(ur'\b(?:%s)\b' % (ur'|'.join(m.get_list()),), re.I | re.UNICODE))
+    for m in Mapping.objects.filter(mapping_type='pattern')
+)
+
+GENDER_REGEXES = dict(
+    (m.mapping_key, re.compile(ur'\b(?:%s)\b' % (ur'|'.join(m.get_list()),), re.I | re.UNICODE))
+    for m in Mapping.objects.filter(mapping_type='gender')
+)
 
 class DataMapper(object):
     color_regexes = None
@@ -52,6 +60,7 @@ class DataMapper(object):
          * Leading and trailing whitespaces are trimmed
          * HTML is stripped from the description, product-name, category and manufacturer field
          * HTML entities are expanded to unicode characters in the description, product-name, category and manufacturer field
+         * Add a special field to the product, called patterns
         
         """
         
@@ -60,6 +69,8 @@ class DataMapper(object):
 
         for field in ['product-name', 'description', 'category', 'manufacturer']:
             self.mapped_record['product'][field] = self.strip_html(self.mapped_record['product'][field])
+
+        self.mapped_record['product']['patterns'] = self.map_patterns(self.mapped_record['product'].get('product-name', '') + self.mapped_record['product'].get('description'))
     
     def translate(self):
         """
@@ -97,7 +108,7 @@ class DataMapper(object):
         self.mapped_record['product']['variations'] = self.map_field('variations') or []
         
         self.postprocess()
-        
+
         return self.mapped_record
     
     def map_field(self, field_name):
@@ -136,14 +147,27 @@ class DataMapper(object):
         """
         Helper method that appempts to extract colour names from the given string
         and returns a list of names known by apparelrow.
-        
+
         Example
-        
+
         >>> mapper = DataMapper()
         >>> list = mapper.map_colors(u'Here is a string with Black, navy and red')
         ['black', 'blue', 'red']
         """
         return [c for c, r in COLOR_REGEXES.items() if r.search(smart_unicode(value))]
+
+    def map_patterns(self, value=''):
+        """
+        Helper method that appempts to extract pattern names from the given string
+        and returns a list of names known by apparelrow.
+
+        Example
+
+        >>> mapper = DataMapper()
+        >>> list = mapper.map_patterns(u'Here is a string with striped clothes')
+        ['striped']
+        """
+        return [c for c, r in PATTERN_REGEXES.items() if r.search(smart_unicode(value))]
 
     def map_gender(self, value=''):
         """
