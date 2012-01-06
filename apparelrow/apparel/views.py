@@ -662,6 +662,17 @@ def gender(request, view=None, gender=None):
             'image': image
         }, context_instance=RequestContext(request))
 
+def jobs(request):
+    # Set language to user's browser language for gender select view
+    language = translation.get_language_from_request(request)
+    translation.activate(language)
+    request.LANGUAGE_CODE = translation.get_language()
+    image = BackgroundImage.objects.get_random_image()
+
+    return render_to_response('apparel/jobs.html', {
+            'image': image
+        }, context_instance=RequestContext(request))
+
 @get_current_user
 @login_required
 def home(request, profile):

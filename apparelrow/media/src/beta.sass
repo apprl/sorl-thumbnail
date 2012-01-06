@@ -48,6 +48,18 @@ body
         color: $white_color
         background: transparent image_url("big-left-button-hover.png") scroll no-repeat left top
 
+  .content
+    +border(all)
+    +box-shadow(rgba(0,0,0,0.5), 1px, 1px, 51px)
+    margin: 8em auto 0 auto
+    width: 468px
+    background-color: $white_color
+    padding: 20px
+    p
+      margin: 2em 0
+      a
+        color: $highlight_color
+
   #beta-container
     +border(all)
     +box-shadow(rgba(0,0,0,0.5), 1px, 1px, 51px)

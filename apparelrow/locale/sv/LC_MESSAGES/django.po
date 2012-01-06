@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-04 15:42+0100\n"
+"POT-Creation-Date: 2012-01-06 15:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -457,17 +457,18 @@ msgstr "Basvaluta"
 msgid "Exchange rate"
 msgstr ""
 
-#: importer/models.py:200
+#: importer/models.py:206
 msgid ""
-"Aliases should be separated with a single comma and no spaces, example: "
-"\"svart,night,coal\""
+"Mapping aliases should be separated with a single command and no spaces, "
+"example: \"svart,night,coal\""
 msgstr ""
 
 #: profile/forms.py:14
 msgid "New e-mail address"
 msgstr "Ny e-postadress"
 
-#: profile/models.py:16 templates/apparel/user_list.html:24
+#: profile/models.py:16 templates/apparel/user_list.html:25
+#: templates/apparel/user_list.html:29
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "All"
 msgstr "Alla"
@@ -889,6 +890,46 @@ msgstr ""
 "av dina tankar. Eller maila oss på <a href=\"mailto:info@apparelrow.com"
 "\">info@apparelrow.com</a>. så blir vi också glada. Have fun!"
 
+#: templates/apparel/jobs.html:6
+msgid "JOBS"
+msgstr "JOBS"
+
+#: templates/apparel/jobs.html:7
+msgid "WEB DEVELOPER"
+msgstr "WEBBUTVECKLARE"
+
+#: templates/apparel/jobs.html:8
+msgid ""
+"Apparelrow is a startup within fashion, social shopping & affiliate. The "
+"service is written in Python/Django and we're currently in private beta. "
+"We're looking for sharp devs for part or full time work that want to be a "
+"part of changing e-commerce in Sweden and the world."
+msgstr ""
+"Apparelrow är en startup inom mode, social shopping & affiliate. Tjänsten "
+"skrivs i Python/Django och är just nu i privat beta. Vi letar efter skarpa "
+"utvecklare på del- eller heltid som vill vara med och förändra e-handeln i "
+"Sverige och världen."
+
+#: templates/apparel/jobs.html:9
+msgid ""
+"Experience from Python/Django is a plus, but the important thing is solid "
+"web programming experience. We're based in central Stockholm, however we're "
+"flexible to some extent when it comes to working location & hours."
+msgstr ""
+"Erfarenhet av just Python/Django är såklart ett plus men det viktiga är "
+"gedigen erfarenhet av webbprogrammering. Vi är baserade på Birger Jarlsgatan "
+"i Stockholm men vi är flexibla till viss grad vad gäller både arbetsplats "
+"och arbetstider."
+
+#: templates/apparel/jobs.html:10
+msgid ""
+"If this sounds like the gig for you, drop us an email with your resume on <a "
+"href=\"mailto:jobs@apparelrow.com\">jobs@apparelrow.com</a>."
+msgstr ""
+"Om detta låter intressant, eller om du vill veta mer om vad vi sysslar med, "
+"skicka ett mail med CV/relevanta erfarenheter till: <a href=\"mailto:"
+"jobs@apparelrow.com\">jobs@apparelrow.com</a>."
+
 #: templates/apparel/look_create.html:5
 msgid "Create new look"
 msgstr "Skapa ny look"
@@ -1156,7 +1197,7 @@ msgstr "Senaste händelser bland dina vänner"
 msgid "No updates"
 msgstr "Inga händelser"
 
-#: templates/apparel/user_home.html:34 templates/apparel/user_list.html:42
+#: templates/apparel/user_home.html:34 templates/apparel/user_list.html:48
 #: templates/profile/dialog_welcome.html:17
 msgid "Your friends are here!"
 msgstr "Dina vänner är här!"
@@ -1173,15 +1214,15 @@ msgstr "Följs av flest"
 msgid "Members in alphabetical order"
 msgstr "Medlemmar i bokstavsordning"
 
-#: templates/apparel/user_list.html:25
+#: templates/apparel/user_list.html:26 templates/apparel/user_list.html:30
 msgid "Females"
 msgstr "Tjejer"
 
-#: templates/apparel/user_list.html:26
+#: templates/apparel/user_list.html:27 templates/apparel/user_list.html:31
 msgid "Males"
 msgstr "Killar"
 
-#: templates/apparel/user_list.html:44
+#: templates/apparel/user_list.html:50
 msgid "Connect with your Facebook account to find your friends."
 msgstr "Logga in med ditt Facebookkonto för att hitta dina vänner."
 
@@ -1352,7 +1393,7 @@ msgstr "Visa alla"
 
 #: templates/apparel/fragments/product_menu_browse.html:20
 #: templates/apparel/fragments/product_menu_browse.html:53
-#: templates/apparel/fragments/product_menu_browse.html:68
+#: templates/apparel/fragments/product_menu_browse.html:69
 msgid "Reset"
 msgstr "Återställ"
 
@@ -1379,11 +1420,11 @@ msgstr "Visa endast prissänkta varor"
 msgid "Color"
 msgstr "Färg"
 
-#: templates/apparel/fragments/product_menu_browse.html:67
+#: templates/apparel/fragments/product_menu_browse.html:68
 msgid "Brand"
 msgstr "Varumärke"
 
-#: templates/apparel/fragments/product_menu_browse.html:73
+#: templates/apparel/fragments/product_menu_browse.html:74
 msgid "Search brands"
 msgstr "Sök bland varumärken"
 

@@ -79,6 +79,10 @@ urlpatterns = patterns('',
     url(r'^gender/women/$', 'apparel.views.gender', {'gender': 'W'}, name='gender-women'),
     url(r'^gender/(?P<view>[\w-]+)/$', 'apparel.views.gender', name='gender'),
 
+    # Jobs
+    url(r'^jobs/$', 'apparel.views.jobs', name='jobs'),
+
+    # ???
     url(r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
 )
 
