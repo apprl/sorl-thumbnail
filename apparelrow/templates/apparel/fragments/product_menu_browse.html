@@ -14,7 +14,7 @@
     <li class="women"><a id="option-W"{% if selected_gender == "W" %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'shop' %}?gender=W">{% trans "Women" %}</a></li>
     <li class="last men"><a id="option-M"{% if selected_gender == "M" %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'shop' %}?gender=M">{% trans "Men" %}</a></li>
 </ul>
-<ul id="product-options">
+<ul id="product-options"{% if 'category' not in request.GET %} style="display:none;"{% endif %}>
     <li class="first header">
         <span>{% trans "Price" %}</span>
         <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>

@@ -57,7 +57,6 @@ var pagination = {
 };
 
 jQuery(document).ready(function() {
-
     // Initialize jquery history plugin with our filter
     var firstLoad = true;
     jQuery.history.init(function(hash) {
@@ -323,6 +322,9 @@ function getQuery(query, reset) {
     category_list = getElementIds(jQuery('#product-category li > a.selected'));
     if(category_list.length > 0) {
         query['category'] = category_list.join(',');
+        jQuery('#product-options').show();
+    } else {
+        jQuery('#product-options').hide();
     }
 
     manufacturer_list = getElementIds(jQuery('#selected-manufacturers li > a'));
@@ -522,6 +524,8 @@ function filterCriteria(criteria_filter) {
 function updateSelected(products) {
     // Select categories
     if(products.selected_categories && products.selected_categories.length > 0) {
+        // If we have a select category, show product options
+        jQuery('#product-options').show();
         jQuery.each(products.selected_categories, function(i, id) {
             var category = jQuery('#category-' + id).addClass('selected');
             category.siblings('ul').show();
