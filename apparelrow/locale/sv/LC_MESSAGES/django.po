@@ -1385,7 +1385,7 @@ msgstr "Ny look"
 #: templates/apparel/fragments/product_menu.html:7
 #: templates/apparel/fragments/product_menu_browse.html:7
 msgid "Browse articles"
-msgstr "Hitta plagg"
+msgstr "Hitta produkter"
 
 #: templates/apparel/fragments/product_menu_browse.html:8
 msgid "Show all"
