@@ -42,6 +42,7 @@ def prod_db():
     "Use our EC2 server"
     env.hosts = ['db1.apparelrow.com']
     env.user = 'deploy'
+    env.db_client_host = 'ip-10-250-227-75.eu-west-1.compute.internal'
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
 
@@ -53,6 +54,7 @@ def staging():
     env.run_group = env.run_user
     env.path = '/mnt/%(project_name)s' % env
     env.config = 'staging'
+    env.db_client_host = 'localhost'
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
    
