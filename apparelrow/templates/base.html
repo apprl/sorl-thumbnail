@@ -39,48 +39,13 @@
         };
 
         jQuery(document).ready(function() {
-
             jQuery('.about-beta-popup').click(function(event) {
-                jQuery('#error_dialog_template')
-                    .render({
-                        modal: false,
-                        header: "{% trans "About ApparelRow beta" %}",
-                        messages: [
-                            "{% trans "Apparelrow is currently available to a limited number of people. We look forward to making the site better together with you. We appreciate all questions, suggestions and problems from you, the more the better. Click the link 'Tyck Till' on the right hand side to share your thoughts. Or send us an email on info@apparelrow.com. Have fun!" %}",
-                        ]
-                    })
-                    .appendTo('body')
-                    .overlay({
-                        mask: {
-                            color: '#000',
-                            loadSpeed: 200,
-                            opacity: 0.5
-                        },
-                        load: true,
-                        closeOnClick: false,
-                        close: '.ok',
-                        top: 100,
-                        onClose: function(e) { this.getTrigger().remove() }
-                    })
-                ;
+                create_html_dialog('{% url dialog-about-apparelrow %}');
                 event.preventDefault();
             });
 
             jQuery('.about-cookies-popup').click(function(event) {
-                jQuery('#error_dialog_template').render({
-                        modal: false,
-                        header: "{% trans "About cookies" %}",
-                        messages: [
-                            "{% trans "Apparelrow uses cookies to make it easier for users to use the site. A cookie is an unharmful, small text file that is stored on your computer, which makes it possible to recognize your web browser when you visit the site. The information that we store in cookies is anonymous and cannot be used to identify personal information about users. If you want, you may disable the use of cookies in your browser settings, but Apparelrow (and a lot of other sites) will not work as well." %}",
-                        ]
-                    }).appendTo('body').overlay({
-                        mask: {color: '#000', loadSpeed: 200, opacity: 0.5 },
-                        load: true,
-                        closeOnClick: false,
-                        close: '.ok',
-                        top: 100,
-                        onClose: function(e) { this.getTrigger().remove() }
-                    });
+                create_html_dialog('{% url dialog-about-cookies %}');
                 event.preventDefault();
             });
 
@@ -260,22 +225,20 @@
     </script>
 {% endfor %}
 
-    <script type="text/html" id="error_dialog_template">
-        <div class="dialog error">
-            <h1>${ header }</h1>
+<script type="text/html" id="error_dialog_template">
+    <div class="dialog-container {% block dialog_class %}{% endblock %}">
+        <h1>${ header }</h1>
+        <div class="bodycopy content">
             {% templatetag openvariable %}each(i, message) messages{% templatetag closevariable %}
-                <p class="bodycopy">${ message }</p>
+            <p>${ message }</p>
             {% templatetag openvariable %}/each{% templatetag closevariable %}
-            <div class="buttons">
-                {% templatetag openvariable %}if modal{% templatetag closevariable %}
-                <button class="no">{% trans "No" %}</button>
-                <button class="yes">{% trans "Yes" %}</button>
-                {% templatetag openvariable %}else{% templatetag closevariable %}
-                <button class="ok">{% trans "OK" %}</button>
-                {% templatetag openvariable %}/if{% templatetag closevariable %}
-            </div>
         </div>
-    </script>
+        <div class="dialog-footer">
+            <button class="no">{% trans "No" %}</button>
+            <button class="yes">{% trans "Yes" %}</button>
+        </div>
+    </div>
+</script>
 
 {% facebook_load %}
 

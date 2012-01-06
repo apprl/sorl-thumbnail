@@ -368,10 +368,6 @@ $color_column_offset: 1px
   display: none
   background-color: white
   width: $small_width
-  //&.error
-    //h2
-      //padding-left: 36px
-      //background: transparent image_url('warn.png') no-repeat scroll 10px center
   &.large-dialog
     width: $large_width
   h1
@@ -380,10 +376,8 @@ $color_column_offset: 1px
     margin-top: 0
   p
     padding: 5px 10px
-  .buttons
-    +border(top)
+  .dialog-footer
     height: 32px
-    margin-top: 10px
     padding: 10px
     button.yes, button.no, button.ok
       +button(unquote("gradient-bg.png"), 22px)

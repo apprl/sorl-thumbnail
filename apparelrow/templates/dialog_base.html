@@ -2,7 +2,7 @@
 <div class="dialog-container {% block dialog_class %}{% endblock %}">
     <h1>
         {% block title %}{% endblock %}
-        <a class="close" href="#">{% trans "Close" %}</a>
+        {% block close %}<a class="close" href="#">{% trans "Close" %}</a>{% endblock %}
     </h1>
     <div class="bodycopy content">
         {% block content %}{% endblock %}
