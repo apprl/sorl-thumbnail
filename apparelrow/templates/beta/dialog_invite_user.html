@@ -1,9 +1,9 @@
 {% load i18n %}
 <div class="dialog-container">
-    <h3>
+    <h1>
         {% trans "Invite your friends to Apparelrow Beta" %}
         <a class="close" href="#">{% trans "Close" %}</a>
-    </h3>
+    </h1>
     <form method="post" action="{% url beta.views.invite %}">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}" />
