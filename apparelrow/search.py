@@ -53,11 +53,11 @@ class QueuedSearchIndex(SearchIndex):
     def _setup_delete(self, model):
         signals.post_delete.connect(self.enqueue_delete, sender=model)
 
-    def _teardown_save(self, model):
-        signals.post_save.disconnect(self.enqueue_save, sender=model)
+    #def _teardown_save(self, model):
+        #signals.post_save.disconnect(self.enqueue_save, sender=model)
 
-    def _teardown_delete(self, model):
-        signals.post_delete.disconnect(self.enqueue_delete, sender=model)
+    #def _teardown_delete(self, model):
+        #signals.post_delete.disconnect(self.enqueue_delete, sender=model)
 
     def enqueue_save(self, instance, **kwargs):
         if hasattr(instance, 'published') and instance.published == False:
@@ -71,7 +71,7 @@ class QueuedSearchIndex(SearchIndex):
         remove_instance_from_index(instance, **kwargs)
 
     def update_objects(self, instances, using=None, **kwargs):
-        instances = [x for x in instances if self.should_update(x, **kwargs)]
+        #instances = [x for x in instances if self.should_update(x, **kwargs)]
         self.backend.update(self, instances)
 
 #
