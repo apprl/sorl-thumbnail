@@ -87,7 +87,7 @@ $HTTP["host"] =~ "^(demo|www)\.(apparelrow\.com)$" {
     url.redirect = ( "^/(.*)" => "http://%%2/$1" )
 }
 
-$HTTP["host"] =~ "^(web1\.)?apparelrow\.com" {
+$HTTP["host"] =~ "^(%(hostname)s\.)?apparelrow\.com" {
     var.project-name = "apparelrow"
     var.deploy-base  = "%(path)s"
     var.deploy-dir   = var.deploy-base + "/releases/current"

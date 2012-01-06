@@ -30,6 +30,7 @@ def demo():
 def prod():
     "Use our EC2 server"
     env.hosts = ['web1.apparelrow.com']
+    env.hostname = 'web1'
     env.user = 'deploy'
     env.group = 'nogroup'
     env.run_user = 'www-data'
@@ -48,6 +49,7 @@ def prod_db():
 
 def staging():
     env.hosts = ['staging1.apparelrow.com']
+    env.hostname = 'staging1'
     env.user = 'deploy'
     env.group = 'nogroup'
     env.run_user = 'www-data'
