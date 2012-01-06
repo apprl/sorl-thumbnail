@@ -41,7 +41,7 @@ msgstr "Visar"
 
 #: apparel/browse.py:230
 msgid "Showing popular products in your network"
-msgstr "Visar populära plagg bland dina vänner"
+msgstr "Visar populära produkter bland dina vänner"
 
 #: apparel/forms.py:8
 msgid "You have to name your look before your create it."
@@ -870,7 +870,7 @@ msgstr[1] "%(counter)s produkter"
 
 #: templates/apparel/browse.html:42 templates/apparel/browse.html.py:44
 msgid "Show popular products in your network"
-msgstr "Visa populära plagg bland dina vänner"
+msgstr "Visa populära produkter bland dina vänner"
 
 #: templates/apparel/gender.html:6
 msgid "WELCOME!"
@@ -1187,7 +1187,7 @@ msgstr "Ingen produkt hittad!"
 
 #: templates/apparel/user_home.html:10
 msgid "Popular products in your network"
-msgstr "Populära plagg bland dina vänner"
+msgstr "Populära produkter bland dina vänner"
 
 #: templates/apparel/user_home.html:21
 msgid "Your friend's latest updates"
