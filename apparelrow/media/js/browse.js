@@ -330,9 +330,9 @@ function getQuery(query, reset) {
     manufacturer_list = getElementIds(jQuery('#selected-manufacturers li > a'));
     if(manufacturer_list.length > 0) {
         query['manufacturer'] = manufacturer_list.join(',');
-        jQuery('#product-manufacturers').prev().addClass('active');
+        jQuery('#product-manufacturers').addClass('active').prev().addClass('active');
     } else {
-        jQuery('#product-manufacturers').prev().removeClass('active');
+        jQuery('#product-manufacturers').removeClass('active').prev().removeClass('active');
     }
 
     gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
@@ -573,7 +573,7 @@ function updateSelected(products) {
                 jQuery('<a>').attr({id: 'manufacturer-' + id, href: data['href']}).text(data['name'])
             ).prependTo('#selected-manufacturers');
         });
-        jQuery('#product-manufacturers').prev().addClass('active');
+        jQuery('#product-manufacturers').addClass('active').prev().addClass('active');
     }
 }
 

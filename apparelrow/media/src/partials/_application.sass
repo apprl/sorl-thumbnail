@@ -574,6 +574,8 @@ ul.products
   background: transparent image_url(unquote("logout.png")) no-repeat scroll right center
   padding-right: 15px
   float: right
+  font-size: 0.9em
+  font-weight: normal
 
 #product-gender
   +filter(unquote("list-item.png"), unquote("list-item-radio-selected.png"))
@@ -705,8 +707,10 @@ $ruler_width: $slider_width
       &.default
         font-family: $font_family
         font-style: italic
+    &.active
+      #selected-manufacturers
+        padding: 10px 0 0 0
     #selected-manufacturers
-      padding: 10px 0
       li
         a
           margin-left: -6px
