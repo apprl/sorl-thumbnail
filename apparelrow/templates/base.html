@@ -99,7 +99,7 @@
                 <li><a class="{% selected_url request "/shop" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
                 <li><a class="{% selected_url request "/brands/" %}" href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
                 <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
-                <li><a class="{% selected_url request "/users" %}" href="{% gender_url APPAREL_GENDER 'user-list-popular' %}">{% trans "Members" %}</a></li>
+                <li><a class="{% selected_url request "/users" %}" href="{% url user-list-popular %}">{% trans "Members" %}</a></li>
             </ul>
 
             <ul id="nav-user">
@@ -203,7 +203,7 @@
             </ul>
             <ul>
                 <li><h3>{% trans "Social" %}</h3></li>
-                <li><a href="{% gender_url APPAREL_GENDER 'user-list' %}">{% trans "See all members" %}</a></li>
+                <li><a href="{% url user-list %}">{% trans "See all members" %}</a></li>
                 {% if not user.is_authenticated %}
                 <li class="facebook">{% apparel_facebook_button "facebook-footer.png" %}</li>
                 {% endif %}
