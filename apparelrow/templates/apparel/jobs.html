@@ -2,11 +2,19 @@
 {% load i18n %}
 
 {% block body %}
-<div class="content">
-    <h1>{% trans "JOBS" %}</h1>
-    <h2>{% trans "WEB DEVELOPER" %}</h2>
-    <p>{% trans "Apparelrow is a startup within fashion, social shopping & affiliate. The service is written in Python/Django and we're currently in private beta. We're looking for sharp devs for part or full time work that want to be a part of changing e-commerce in Sweden and the world." %}</p>
-    <p>{% trans "Experience from Python/Django is a plus, but the important thing is solid web programming experience. We're based in central Stockholm, however we're flexible to some extent when it comes to working location & hours." %}</p>
-    <p>{% blocktrans %}If this sounds like the gig for you, drop us an email with your resume on <a href="mailto:jobs@apparelrow.com">jobs@apparelrow.com</a>.{% endblocktrans %}</p>
+<div class="content jobs">
+    <h1>JOBBA MED OSS!</h1>
+    <p class="center">Just nu letar vi efter:</p>
+    <h2>WEBBUTVECKLARE / WEB DEVELOPER</h2>
+    <div class="swedish">
+        <p>Apparelrow är en startup inom mode, social shopping & affiliate. Tjänsten skrivs i Python/Django och är just nu i privat beta. Vi letar efter skarpa utvecklare på del- eller heltid som vill vara med och förändra e-handeln i Sverige och världen.</p>
+        <p>Erfarenhet av just Python/Django är såklart ett plus men det viktiga är gedigen erfarenhet av webbprogrammering. Vi är baserade på Birger Jarlsgatan i Stockholm men vi är flexibla till viss grad vad gäller både arbetsplats och arbetstider.</p>
+        <p>Om detta låter intressant, eller om du vill veta mer om vad vi sysslar med, skicka ett mail med CV/relevanta erfarenheter till: <a href="mailto:jobs@apparelrow.com">jobs@apparelrow.com</a>.</p>
+    </div>
+    <div class="english">
+        <p>Apparelrow is a startup within fashion, social shopping & affiliate. The service is written in Python/Django and we're currently in private beta. We're looking for sharp devs for part or full time work that want to be a part of changing e-commerce in Sweden and the world.</p>
+        <p>Experience from Python/Django is a plus, but the important thing is solid web programming experience. We're based in central Stockholm, however we're flexible to some extent when it comes to working location & hours</p>
+        <p>If this sounds like the gig for you, drop us an email with your resume on <a href="mailto:jobs@apparelrow.com">jobs@apparelrow.com</a>.</p>
+    </div>
 </div>
 {% endblock %}
