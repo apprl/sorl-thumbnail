@@ -1,3 +1,4 @@
+server.modules += ( "mod_expire" )
 #
 # mod_auth
 # Enables basic authentication
@@ -113,6 +114,12 @@ $HTTP["host"] =~ "^(%(hostname)s\.)?apparelrow\.com" {
         "/media"           => var.deploy-dir + "/apparelrow/media",
         "/admin_media"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/media",
         "/screenshots"     => var.deploy-dir + "/www/root/screenshots",
+    )
+
+    expire.url = (
+        "/media"           => "access plus 1 years",
+        "/admin_media"     => "access plus 1 years",
+        "/screenshots"     => "access plus 1 years",
     )
 
     auth.backend = "htpasswd"
