@@ -110,6 +110,7 @@ $HTTP["host"] =~ "^(%(hostname)s\.)?apparelrow\.com" {
     )
     
     alias.url = (
+        "/media"           => var.deploy-dir + "/apparelrow/media",
         "/admin_media"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/media",
         "/screenshots"     => var.deploy-dir + "/www/root/screenshots",
     )
