@@ -357,15 +357,7 @@ def change_gender_url(request, current_gender, gender):
     else:
         current_gender = False
 
-    if not current_gender:
-        return '%s?next=%s' % (reverse('gender-%s' % (gender,)), request.path)
-
-    if current_gender != gender:
-        current_gender = '/%s/' % (current_gender,)
-        if current_gender in request.path:
-            return '%s?next=%s' % (reverse('gender-%s' % (gender,)), request.path.replace(current_gender, '/%s/' % (gender,)))
-
-    return '%s?next=%s' % (reverse('gender-%s' % (gender,)), request.path)
+    return reverse('index-%s' % (gender,))
 
 @register.simple_tag
 def gender_url(gender, named_url):
