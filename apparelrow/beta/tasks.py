@@ -7,7 +7,7 @@ from django.utils.translation import get_language, activate
 from celery.task import task
 
 @task(name='beta.tasks.send_email_task', max_retries=5, ignore_result=True)
-def send_email_task(name, email, password, **kwargs):
+def send_email_task(name, email, password, message='',**kwargs):
     """
     Beta invite email task. Should be in beta but this is easier.
     """
@@ -18,6 +18,8 @@ def send_email_task(name, email, password, **kwargs):
         context['name'] = name
         context['email'] = email
         context['password'] = password
+        if message and len(message) > 0:
+            context['message'] = message
 
         subject_template_name = 'beta/mail_subject.html'
         body_template_name = 'beta/mail_body.html'

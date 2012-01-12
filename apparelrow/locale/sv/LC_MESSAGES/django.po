@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-06 17:40+0100\n"
+"POT-Creation-Date: 2012-01-12 22:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -311,8 +311,8 @@ msgstr "sedan"
 
 #: apparel_comments/__init__.py:6 beta/models.py:32
 #: beta/templates/beta/beta.html:56 beta/templates/beta/beta.html.py:67
-#: templates/beta/dialog_invite_user.html:16
-#: templates/beta/dialog_invite_user.html:25
+#: templates/beta/dialog_invite_user.html:20
+#: templates/beta/dialog_invite_user.html:29
 #: templates/profile/base_settings.html:11
 #: templates/profile/settings_email.html:5
 msgid "E-mail address"
@@ -829,46 +829,6 @@ msgstr ""
 "bättre. Klicka på länken 'Tyck Till' i högerkanten på siten och dela med dig "
 "av dina tankar. Eller maila oss på <a href=\"mailto:info@apparelrow.com"
 "\">info@apparelrow.com</a>. så blir vi också glada. Have fun!"
-
-#: templates/apparel/jobs.html:6
-msgid "JOBS"
-msgstr "JOBS"
-
-#: templates/apparel/jobs.html:7
-msgid "WEB DEVELOPER"
-msgstr "WEBBUTVECKLARE"
-
-#: templates/apparel/jobs.html:8
-msgid ""
-"Apparelrow is a startup within fashion, social shopping & affiliate. The "
-"service is written in Python/Django and we're currently in private beta. "
-"We're looking for sharp devs for part or full time work that want to be a "
-"part of changing e-commerce in Sweden and the world."
-msgstr ""
-"Apparelrow är en startup inom mode, social shopping & affiliate. Tjänsten "
-"skrivs i Python/Django och är just nu i privat beta. Vi letar efter skarpa "
-"utvecklare på del- eller heltid som vill vara med och förändra e-handeln i "
-"Sverige och världen."
-
-#: templates/apparel/jobs.html:9
-msgid ""
-"Experience from Python/Django is a plus, but the important thing is solid "
-"web programming experience. We're based in central Stockholm, however we're "
-"flexible to some extent when it comes to working location & hours."
-msgstr ""
-"Erfarenhet av just Python/Django är såklart ett plus men det viktiga är "
-"gedigen erfarenhet av webbprogrammering. Vi är baserade på Birger Jarlsgatan "
-"i Stockholm men vi är flexibla till viss grad vad gäller både arbetsplats "
-"och arbetstider."
-
-#: templates/apparel/jobs.html:10
-msgid ""
-"If this sounds like the gig for you, drop us an email with your resume on <a "
-"href=\"mailto:jobs@apparelrow.com\">jobs@apparelrow.com</a>."
-msgstr ""
-"Om detta låter intressant, eller om du vill veta mer om vad vi sysslar med, "
-"skicka ett mail med CV/relevanta erfarenheter till: <a href=\"mailto:"
-"jobs@apparelrow.com\">jobs@apparelrow.com</a>."
 
 #: templates/apparel/look_create.html:5
 msgid "Create new look"
@@ -1478,21 +1438,29 @@ msgid "Invite friends"
 msgstr "Bjud in vänner"
 
 #: templates/beta/dialog_invite_user.html:12
+msgid "If you would like to include a message please do so here"
+msgstr "Inkludera ett medelande nedan"
+
+#: templates/beta/dialog_invite_user.html:14
+msgid "Follow me on Apparelrow"
+msgstr "Följ mig på Apparelrow"
+
+#: templates/beta/dialog_invite_user.html:16
 msgid "Right now a limited number of people have access to Apparelrow."
 msgstr "Just nu har ett begränsat antal personer tillgång till Apparelrow."
 
-#: templates/beta/dialog_invite_user.html:13
+#: templates/beta/dialog_invite_user.html:17
 #, python-format
 msgid "You can invite 1 friend:"
 msgid_plural "You can invite %(counter)s friends:"
 msgstr[0] "Du kan bjuda in 1 vän:"
 msgstr[1] "Du kan bjuda in %(counter)s vänner:"
 
-#: templates/beta/dialog_invite_user.html:18
+#: templates/beta/dialog_invite_user.html:22
 msgid "Add more e-mail addresses"
 msgstr "Lägg till fler e-postadresser"
 
-#: templates/beta/dialog_invite_user.html:21
+#: templates/beta/dialog_invite_user.html:25
 msgid "Send"
 msgstr "Skicka"
 
@@ -1505,7 +1473,18 @@ msgstr "Hej!"
 msgid "%(name)s has invited you to the beta version of Apparelrow."
 msgstr "%(name)s har bjudit in dig till betaversionen av Apparelrow."
 
-#: templates/beta/mail_body.html:7
+#: templates/beta/mail_body.html:6
+msgid ""
+"A service that makes it more easy and fun to find clothes and be inspired by "
+"your friends."
+msgstr "En tjänst som gör det enklare och roligare att hitta kläder och "
+"inspireras av dina vänner."
+
+#: templates/beta/mail_body.html:8
+msgid "says"
+msgstr "säger"
+
+#: templates/beta/mail_body.html:11
 #, python-format
 msgid ""
 "To enter the site, go to <a href=\"%(domain)s\">%(domain)s</a> and log in "
@@ -1514,27 +1493,27 @@ msgstr ""
 "För att komma in på siten, gå till <a href=\"%(domain)s\">%(domain)s</a> och "
 "logga in med:"
 
-#: templates/beta/mail_body.html:8
+#: templates/beta/mail_body.html:12
 #, python-format
 msgid "E-mail: %(email)s"
 msgstr "E-mail: %(email)s"
 
-#: templates/beta/mail_body.html:9
+#: templates/beta/mail_body.html:13
 #, python-format
 msgid "Invite code: %(password)s"
 msgstr "Invite code: %(password)s"
 
-#: templates/beta/mail_body.html:10
+#: templates/beta/mail_body.html:14
 msgid ""
 "Then log in with your Facebook account on the site to find your friends."
 msgstr ""
 "Logga sen in med ditt facebook-konto på siten för att hitta dina vänner."
 
-#: templates/beta/mail_body.html:11
+#: templates/beta/mail_body.html:15
 msgid "See you!"
 msgstr "Vi ses!"
 
-#: templates/beta/mail_body.html:12 templates/profile/confirm_email.html:8
+#: templates/beta/mail_body.html:16 templates/profile/confirm_email.html:8
 msgid "/ Apparelrow"
 msgstr "/ Apparelrow"
 
@@ -2070,6 +2049,41 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "JOBS"
+#~ msgstr "JOBS"
+
+#~ msgid "WEB DEVELOPER"
+#~ msgstr "WEBBUTVECKLARE"
+
+#~ msgid ""
+#~ "Apparelrow is a startup within fashion, social shopping & affiliate. The "
+#~ "service is written in Python/Django and we're currently in private beta. "
+#~ "We're looking for sharp devs for part or full time work that want to be a "
+#~ "part of changing e-commerce in Sweden and the world."
+#~ msgstr ""
+#~ "Apparelrow är en startup inom mode, social shopping & affiliate. Tjänsten "
+#~ "skrivs i Python/Django och är just nu i privat beta. Vi letar efter "
+#~ "skarpa utvecklare på del- eller heltid som vill vara med och förändra e-"
+#~ "handeln i Sverige och världen."
+
+#~ msgid ""
+#~ "Experience from Python/Django is a plus, but the important thing is solid "
+#~ "web programming experience. We're based in central Stockholm, however "
+#~ "we're flexible to some extent when it comes to working location & hours."
+#~ msgstr ""
+#~ "Erfarenhet av just Python/Django är såklart ett plus men det viktiga är "
+#~ "gedigen erfarenhet av webbprogrammering. Vi är baserade på Birger "
+#~ "Jarlsgatan i Stockholm men vi är flexibla till viss grad vad gäller både "
+#~ "arbetsplats och arbetstider."
+
+#~ msgid ""
+#~ "If this sounds like the gig for you, drop us an email with your resume on "
+#~ "<a href=\"mailto:jobs@apparelrow.com\">jobs@apparelrow.com</a>."
+#~ msgstr ""
+#~ "Om detta låter intressant, eller om du vill veta mer om vad vi sysslar "
+#~ "med, skicka ett mail med CV/relevanta erfarenheter till: <a href=\"mailto:"
+#~ "jobs@apparelrow.com\">jobs@apparelrow.com</a>."
 
 #~ msgid "OK"
 #~ msgstr "OK"

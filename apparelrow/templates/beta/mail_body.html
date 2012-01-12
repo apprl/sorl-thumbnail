@@ -3,7 +3,11 @@
     <head></head>
     <body>
         <p>{% trans "Hi!" %}</p>
-        <p>{% blocktrans %}{{ name }} has invited you to the beta version of Apparelrow.{% endblocktrans %}</p>
+        <p>{% blocktrans %}{{ name }} has invited you to the beta version of Apparelrow.{% endblocktrans %} - {% blocktrans %}A service that makes it more easy and fun to find clothes and be inspired by your friends.{% endblocktrans %}</p>
+        {% if message %}
+        <p>{{ name }} {% trans "says" %}:</p>
+        <p>{{ message|escape }}</p>
+        {% endif %}
         <p>{% blocktrans %}To enter the site, go to <a href="{{ domain }}">{{ domain }}</a> and log in with:{% endblocktrans %}</p>
         <p>{% blocktrans %}E-mail: {{ email }}{% endblocktrans %}</p>
         <p>{% blocktrans %}Invite code: {{ password }}{% endblocktrans %}</p>

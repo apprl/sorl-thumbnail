@@ -9,6 +9,10 @@
         <input type="hidden" name="next" value="{{ next }}" />
     <div class="content">
         <p>
+            {% blocktrans %}If you would like to include a message please do so here{% endblocktrans %}
+        </p>
+        <textarea name="email-message" placeholder="{% blocktrans %}Follow me on Apparelrow{% endblocktrans %}!"></textarea>
+        <p>
             {% blocktrans %}Right now a limited number of people have access to Apparelrow.{% endblocktrans %}
             {% blocktrans count invites_count as counter %}You can invite 1 friend:{% plural %}You can invite {{ counter }} friends:{% endblocktrans %}
         </p>
@@ -38,6 +42,32 @@ jQuery(document).ready(function() {
             }
             return false;
         });
+    }
+
+    {% comment %}
+    // Check for placeholder support and use js instead
+    // IE versions <= 9 does not support placeholder
+    // Could be integerated into jQuery.support
+    {% endcomment %}
+    if ('placeholder' in document.createElement('input') == false) {
+        var input = jQuery("<input>").attr({"type":"hidden", "name":"modified"});
+        var email_message = jQuery("textarea[name=email-message]");
+        email_message.closest("form").submit(function() {
+            if (email_message.attr("value") == jQuery(email_message).attr("placeholder")) {
+                email_message.attr("value", '');
+            }
+        });
+        email_message.focus(function() {
+            if (this.value == jQuery(this).attr("placeholder")) {
+                this.value = '';
+            }
+        });
+        email_message.blur(function() {
+            if (this.value == '') {
+                this.value = jQuery(this).attr("placeholder");
+            }
+        });
+        email_message.attr("value", email_message.attr("placeholder"));
     }
 });
 </script>
