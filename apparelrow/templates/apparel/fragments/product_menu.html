@@ -7,6 +7,7 @@
 <h2>{% trans "Browse articles" %}</h2>
 {% endblock %}
 
+{% block product_genders %}{% endblock %}
 {% for category, structure in categories_all|tree_info %}
     {% if structure.new_level %}
         <ul{% if forloop.first %} id="product-category"{% endif %} class="level-{{ category.get_level }}{% if forloop.first %} hover-menu{% endif %}">

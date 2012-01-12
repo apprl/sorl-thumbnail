@@ -8,13 +8,15 @@
     <a id="reset" class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}"{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Show all" %}</a>
 </h2>
 {% endblock %}
-{% block product_options %}
+{% block product_genders %}
 <ul id="product-gender" class="hover-menu"{% if not wardrobe %} style="display: none;"{% endif %}>
     <li class="first"><a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "All" %}</a></li>
     <li class="women"><a id="option-W"{% if selected_gender == "W" %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'shop' %}?gender=W">{% trans "Women" %}</a></li>
     <li class="last men"><a id="option-M"{% if selected_gender == "M" %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'shop' %}?gender=M">{% trans "Men" %}</a></li>
 </ul>
-<ul id="product-options"{% if 'category' not in request.GET %} style="display:none;"{% endif %}>
+{% endblock %}
+{% block product_options %}
+<ul id="product-options">
     <li class="first header">
         <span>{% trans "Price" %}</span>
         <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>
