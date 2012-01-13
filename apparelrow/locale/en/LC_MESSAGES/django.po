@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-12 22:31+0100\n"
+"POT-Creation-Date: 2012-01-14 00:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings_common.py:47
+#: settings_common.py:48
 msgid "English"
 msgstr ""
 
-#: settings_common.py:48
+#: settings_common.py:49
 msgid "Swedish"
 msgstr "Svenska"
 
-#: settings_common.py:51
+#: settings_common.py:52
 msgid "Eng"
 msgstr ""
 
-#: settings_common.py:52
+#: settings_common.py:53
 msgid "Swe"
 msgstr "Sve"
 
@@ -163,7 +163,7 @@ msgid "Buy URL"
 msgstr ""
 
 #: apparel/models.py:321
-#: templates/apparel/fragments/product_menu_browse.html:19
+#: templates/apparel/fragments/product_menu_browse.html:21
 msgid "Price"
 msgstr ""
 
@@ -1181,7 +1181,7 @@ msgid ""
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:6
-#: templates/profile/following.html:6
+#: templates/profile/base_profile.html:81 templates/profile/following.html:6
 #: templates/profile/fragments/menu_items.html:16
 msgid "Following"
 msgstr ""
@@ -1271,40 +1271,40 @@ msgstr ""
 msgid "Show all"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:20
-#: templates/apparel/fragments/product_menu_browse.html:53
-#: templates/apparel/fragments/product_menu_browse.html:69
+#: templates/apparel/fragments/product_menu_browse.html:22
+#: templates/apparel/fragments/product_menu_browse.html:55
+#: templates/apparel/fragments/product_menu_browse.html:71
 msgid "Reset"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:25
+#: templates/apparel/fragments/product_menu_browse.html:27
 msgid "Min"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:25
 #: templates/apparel/fragments/product_menu_browse.html:27
 #: templates/apparel/fragments/product_menu_browse.html:29
+#: templates/apparel/fragments/product_menu_browse.html:31
 msgid "SEK"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:27
 #: templates/apparel/fragments/product_menu_browse.html:29
+#: templates/apparel/fragments/product_menu_browse.html:31
 msgid "Max"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:48
+#: templates/apparel/fragments/product_menu_browse.html:50
 msgid "Show only products on sale"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:52
+#: templates/apparel/fragments/product_menu_browse.html:54
 msgid "Color"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:68
+#: templates/apparel/fragments/product_menu_browse.html:70
 msgid "Brand"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:74
+#: templates/apparel/fragments/product_menu_browse.html:76
 msgid "Search brands"
 msgstr ""
 
@@ -1501,33 +1501,34 @@ msgstr ""
 msgid "Member since"
 msgstr ""
 
-#: templates/profile/base_profile.html:63
-#, python-format
-msgid ""
-"\n"
-"            %(likes)s like\n"
-"        "
-msgid_plural ""
-"\n"
-"            %(likes)s likes\n"
-"        "
+#: templates/profile/base_profile.html:67
+msgid "product"
+msgid_plural "products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/base_profile.html:70
+#: templates/profile/base_profile.html:67
+msgid "in wardrobe"
+msgstr ""
+
+#: templates/profile/base_profile.html:71
 #, python-format
 msgid ""
 "\n"
-"            %(looks)s look\n"
-"        "
+"                %(looks)s look\n"
+"            "
 msgid_plural ""
 "\n"
-"            %(looks)s looks\n"
-"        "
+"                %(looks)s looks\n"
+"            "
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/base_profile.html:85
+#: templates/profile/base_profile.html:79
+msgid "Followed by"
+msgstr ""
+
+#: templates/profile/base_profile.html:92
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr ""
@@ -1724,11 +1725,7 @@ msgid " updates."
 msgstr ""
 
 #: templates/profile/notifications/email_follow_user_following.html:3
-msgid "You are following "
-msgstr ""
-
-#: templates/profile/notifications/email_follow_user_following.html:3
-msgid " since before."
+msgid "You are currently following "
 msgstr ""
 
 #: templates/profile/notifications/email_like_look_created.html:2

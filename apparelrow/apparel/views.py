@@ -616,8 +616,8 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
     paged_result, pagination = get_pagination_page(queryset,
             10, request.GET.get('page', 1), 1, 2)
 
-    # Ten latest active members
-    latest_members = ApparelProfile.objects.filter(user__is_active=True).order_by('-user__date_joined')[:8]
+    # Latest active members
+    latest_members = ApparelProfile.objects.filter(user__is_active=True).order_by('-user__date_joined')[:13]
 
     response = render_to_response('apparel/user_list.html', {
             'pagination': pagination,

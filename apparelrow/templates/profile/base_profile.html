@@ -59,20 +59,27 @@
         <p>
             {% trans "Member since" %} {{ profile.user.date_joined|date:"SHORT_DATE_FORMAT" }}
         </p>
+        {% url apparel.browse.browse_wardrobe profile.user.username as wardrobe_url %}
+        {% url profile.views.looks profile.user.username as looks_url %}
+        {% url profile.views.followers profile.user.username as followers_url %}
+        {% url profile.views.following profile.user.username as following_url %}
         <p>
-        {% blocktrans count profile.likes as likes %}
-            {{ likes }} like
-        {% plural %}
-            {{ likes }} likes
-        {% endblocktrans %}
+            <a href="{{ wardrobe_url }}">{{ products }} {% blocktrans count products as prod %}product{% plural %}products{% endblocktrans %} {% trans "in wardrobe" %}.</a>
         </p>
         <p>
-        {% blocktrans count profile.looks as looks %}
-            {{ looks }} look
-        {% plural %}
-            {{ looks }} looks
-        {% endblocktrans %}
+        <a href="{{ looks_url }}">
+            {% blocktrans count profile.looks as looks %}
+                {{ looks }} look
+            {% plural %}
+                {{ looks }} looks
+            {% endblocktrans %}
+        </a>
         </p>      
+        <p>
+            <a href="{{ followers_url }}">{% trans "Followed by" %} {{ profile.followers_count }}</a>
+        <p>
+            <a href="{{ following_url }}">{% trans "Following" %} {{ following }}</a>
+        </p>
         {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
         <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
     </div>

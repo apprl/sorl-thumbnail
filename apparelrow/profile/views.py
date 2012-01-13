@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from apparel.decorators import get_current_user
-from apparel.models import Look
+from apparel.models import Look, Wardrobe
 # FIXME: Move get_facebook_friends and get_most_followed_users to a util module
 from apparel.views import get_facebook_friends, get_most_followed_users
 from apparel.utils import get_pagination_page
@@ -44,6 +44,21 @@ def handle_change_image(request, profile):
     return form
 
 
+def get_profile_sidebar_info(user):
+    """
+    Get the misc. information needed in the sidebar of the profile page
+
+    Returns a dict containing the extra information
+    """
+    info = {}
+    wardrobe = Wardrobe.objects.get(user=user)
+    info["products"] = wardrobe.products.count()
+
+    content_type = ContentType.objects.get_for_model(User)
+    info["following"] = Follow.objects.filter(content_type=content_type, user=user).count()
+    return info
+
+
 @get_current_user
 def profile(request, profile, page=0):
     """
@@ -56,15 +71,17 @@ def profile(request, profile, page=0):
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
-
-    return render_to_response('profile/profile.html', {
+    content = {
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         "change_image_form": form,
         "profile": profile,
         "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:54], # Just a constant for filling the entire page when PROFILE_PAGE_SIZE is 60
-        }, context_instance=RequestContext(request))
+        }
+    content.update(get_profile_sidebar_info(profile.user))
+
+    return render_to_response('profile/profile.html', content, context_instance=RequestContext(request))
 
 @get_current_user
 def looks(request, profile, page=0):
@@ -76,14 +93,17 @@ def looks(request, profile, page=0):
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
-    return render_to_response('profile/looks.html', {
+    content = {
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         "change_image_form": form,
         "profile": profile,
         "popular_looks": popular_by_user
-        }, context_instance=RequestContext(request))
+        }
+    content.update(get_profile_sidebar_info(profile.user))
+
+    return render_to_response('profile/looks.html', content, context_instance=RequestContext(request))
     
 @get_current_user
 def followers(request, profile, page=0):
@@ -94,14 +114,17 @@ def followers(request, profile, page=0):
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
-    return render_to_response('profile/followers.html', {
+    content = {
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         "change_image_form": form,
         "profile": profile,
         "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
-        }, context_instance=RequestContext(request))
+        }
+    content.update(get_profile_sidebar_info(profile.user))
+
+    return render_to_response('profile/followers.html', content, context_instance=RequestContext(request))
 
 @get_current_user
 def following(request, profile, page=0):
@@ -112,14 +135,17 @@ def following(request, profile, page=0):
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
-    return render_to_response('profile/following.html', {
+    content = {
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         "change_image_form": form,
         "profile": profile,
         "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
-        }, context_instance=RequestContext(request))
+        }
+    content.update(get_profile_sidebar_info(profile.user))
+
+    return render_to_response('profile/following.html', content, context_instance=RequestContext(request))
 
 #
 # Settings

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-12 22:31+0100\n"
+"POT-Creation-Date: 2012-01-14 00:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,19 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: settings_common.py:47
+#: settings_common.py:48
 msgid "English"
 msgstr "English"
 
-#: settings_common.py:48
+#: settings_common.py:49
 msgid "Swedish"
 msgstr "Svenska"
 
-#: settings_common.py:51
+#: settings_common.py:52
 msgid "Eng"
 msgstr ""
 
-#: settings_common.py:52
+#: settings_common.py:53
 msgid "Swe"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgid "Buy URL"
 msgstr "URL till köpsida"
 
 #: apparel/models.py:321
-#: templates/apparel/fragments/product_menu_browse.html:19
+#: templates/apparel/fragments/product_menu_browse.html:21
 msgid "Price"
 msgstr "Pris"
 
@@ -1236,7 +1236,7 @@ msgstr ""
 "bland dina vänner."
 
 #: templates/apparel/fragments/follow.html:6
-#: templates/profile/following.html:6
+#: templates/profile/base_profile.html:81 templates/profile/following.html:6
 #: templates/profile/fragments/menu_items.html:16
 msgid "Following"
 msgstr "Följer"
@@ -1328,40 +1328,40 @@ msgstr "Hitta produkter"
 msgid "Show all"
 msgstr "Visa alla"
 
-#: templates/apparel/fragments/product_menu_browse.html:20
-#: templates/apparel/fragments/product_menu_browse.html:53
-#: templates/apparel/fragments/product_menu_browse.html:69
+#: templates/apparel/fragments/product_menu_browse.html:22
+#: templates/apparel/fragments/product_menu_browse.html:55
+#: templates/apparel/fragments/product_menu_browse.html:71
 msgid "Reset"
 msgstr "Återställ"
 
-#: templates/apparel/fragments/product_menu_browse.html:25
+#: templates/apparel/fragments/product_menu_browse.html:27
 msgid "Min"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:25
 #: templates/apparel/fragments/product_menu_browse.html:27
 #: templates/apparel/fragments/product_menu_browse.html:29
+#: templates/apparel/fragments/product_menu_browse.html:31
 msgid "SEK"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:27
 #: templates/apparel/fragments/product_menu_browse.html:29
+#: templates/apparel/fragments/product_menu_browse.html:31
 msgid "Max"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:48
+#: templates/apparel/fragments/product_menu_browse.html:50
 msgid "Show only products on sale"
 msgstr "Visa endast prissänkta varor"
 
-#: templates/apparel/fragments/product_menu_browse.html:52
+#: templates/apparel/fragments/product_menu_browse.html:54
 msgid "Color"
 msgstr "Färg"
 
-#: templates/apparel/fragments/product_menu_browse.html:68
+#: templates/apparel/fragments/product_menu_browse.html:70
 msgid "Brand"
 msgstr "Varumärke"
 
-#: templates/apparel/fragments/product_menu_browse.html:74
+#: templates/apparel/fragments/product_menu_browse.html:76
 msgid "Search brands"
 msgstr "Sök bland varumärken"
 
@@ -1477,8 +1477,9 @@ msgstr "%(name)s har bjudit in dig till betaversionen av Apparelrow."
 msgid ""
 "A service that makes it more easy and fun to find clothes and be inspired by "
 "your friends."
-msgstr "En tjänst som gör det enklare och roligare att hitta kläder och "
-"inspireras av dina vänner."
+msgstr ""
+"En tjänst som gör det enklare och roligare att hitta kläder och inspireras "
+"av dina vänner."
 
 #: templates/beta/mail_body.html:8
 msgid "says"
@@ -1578,35 +1579,26 @@ msgstr "Ändra bild"
 msgid "Member since"
 msgstr "Medlem sedan"
 
-#: templates/profile/base_profile.html:63
-#, python-format
-msgid ""
-"\n"
-"            %(likes)s like\n"
-"        "
-msgid_plural ""
-"\n"
-"            %(likes)s likes\n"
-"        "
-msgstr[0] ""
-"\n"
-"                %(likes)s like\n"
-"            "
-msgstr[1] ""
-"\n"
-"                %(likes)s likes\n"
-"            "
+#: templates/profile/base_profile.html:67
+msgid "product"
+msgid_plural "products"
+msgstr[0] "plagg"
+msgstr[1] "plagg"
 
-#: templates/profile/base_profile.html:70
+#: templates/profile/base_profile.html:67
+msgid "in wardrobe"
+msgstr "i garderoben"
+
+#: templates/profile/base_profile.html:71
 #, python-format
 msgid ""
 "\n"
-"            %(looks)s look\n"
-"        "
+"                %(looks)s look\n"
+"            "
 msgid_plural ""
 "\n"
-"            %(looks)s looks\n"
-"        "
+"                %(looks)s looks\n"
+"            "
 msgstr[0] ""
 "\n"
 "                %(looks)s look\n"
@@ -1616,7 +1608,11 @@ msgstr[1] ""
 "                %(looks)s looks\n"
 "            "
 
-#: templates/profile/base_profile.html:85
+#: templates/profile/base_profile.html:79
+msgid "Followed by"
+msgstr "Följs av"
+
+#: templates/profile/base_profile.html:92
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr "%(name)ss senaste looks"
@@ -1829,12 +1825,8 @@ msgid " updates."
 msgstr " uppdateringar."
 
 #: templates/profile/notifications/email_follow_user_following.html:3
-msgid "You are following "
-msgstr "Du följer "
-
-#: templates/profile/notifications/email_follow_user_following.html:3
-msgid " since before."
-msgstr " sedan tidigare."
+msgid "You are currently following "
+msgstr "Du följer just nu "
 
 #: templates/profile/notifications/email_like_look_created.html:2
 msgid " likes your look "
@@ -2049,6 +2041,29 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid ""
+#~ "\n"
+#~ "            %(likes)s like\n"
+#~ "        "
+#~ msgid_plural ""
+#~ "\n"
+#~ "            %(likes)s likes\n"
+#~ "        "
+#~ msgstr[0] ""
+#~ "\n"
+#~ "                %(likes)s like\n"
+#~ "            "
+#~ msgstr[1] ""
+#~ "\n"
+#~ "                %(likes)s likes\n"
+#~ "            "
+
+#~ msgid "You are following "
+#~ msgstr "Du följer "
+
+#~ msgid " since before."
+#~ msgstr " sedan tidigare."
 
 #~ msgid "JOBS"
 #~ msgstr "JOBS"
