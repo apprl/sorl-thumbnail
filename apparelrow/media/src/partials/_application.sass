@@ -1802,61 +1802,67 @@ ul.suggested-friends
     margin: 0 0 1.5em 0
     &:hover
       +box_shadow
-    li.activity
-      background-color: transparent
-      background-repeat: no-repeat
-      background-attachment: scroll
+  li.activity
+    margin: 0 0 1.5em 0
+    background-color: transparent
+    background-repeat: no-repeat
+    background-attachment: scroll
+    background-position: 104px 6px
+    &:hover
+      +box_shadow
+    &.liked, &.liked_product, &.liked_look
+      background-image: image_url("activity_heart.png")
+      background-position: 106px 6px
+    &.commented
+      background-image: image_url("activity_talk.png")
+      background-position: 107px 6px
+    &.created
+      background-image: image_url("activity_new.png")
       background-position: 104px 6px
-      &.liked, &.liked_product, &.liked_look
-        background-image: image_url("activity_heart.png")
-        background-position: 106px 6px
+    &.added
+      background-image: image_url("activity_add.png")
+      background-position: 109px 6px
+    &.following
+      background-image: image_url("activity_follow.png")
+      background-position: 107px 6px
+    +clearfix
+    border: none
+    position: relative
+    .activity-image
+      margin-right: 45px
+      float: left
+      overflow: hidden
+    .activity-image
+      width: $aside_width / 2 - $gutter_width / 4 - 2
+      +border("all")
+      .look
+        +look_small
+        border: none
+      img
+        vertical-align: top
+    .activity-info
+      padding: 0.5em 0.5em 0.5em 0
+      width: $middle_width - $aside_width / 2 - 45
+      float: right
+      .activity-content
         h3
-          color: $like_color
-      &.commented
-        background-image: image_url("activity_talk.png")
-        background-position: 107px 6px
-      &.created
-        background-image: image_url("activity_new.png")
-        background-position: 104px 6px
-      &.added
-        background-image: image_url("activity_add.png")
-        background-position: 109px 6px
-      &.following
-        background-image: image_url("activity_follow.png")
-        background-position: 107px 6px
-      +clearfix
-      border: none
-      position: relative
-      .activity-image
-        margin-right: 45px
-        float: left
-        overflow: hidden
-      .activity-image
-        width: $aside_width / 2 - $gutter_width / 4 - 2
-        +border("all")
-        .look
-          +look_small
-          border: none
-        img
-          vertical-align: top
-      .activity-info
-        padding: 0.5em
-        h3
-          margin: 0 0 1em
           border: 0
-          width: 240px
           background-image: none
-          font-size: 1em
           display: inline
           overflow: hidden
-        span
-          color: $easier_color
-        .price, .sum
-          background-image: none
-          padding-left: 0
-        .activity-content
-          margin-top: 0.5em
-          color: $easy_color
+          a
+            font-weight: bold
+            &:hover
+              text-decoration: underline
+          .inline-date
+            padding-left: 3px
+      span
+        color: $easier_color
+      .price, .sum, .likes
+        background-image: none
+        padding-left: 0
+      .likes
+        color: $like_color
 
 a#create-look
   +button(none, unquote("32px"))

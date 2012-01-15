@@ -8,11 +8,10 @@
 {% endblock %}
 
 {% block activity_header %}
-    {% blocktrans with object.actor.get_profile.display_name as name and object.action_object.title as object %}{{ name }} added {{ object }}{% endblocktrans %}
+{% blocktrans with object.actor.get_absolute_url as user_url and object.actor.get_profile.display_name as user and object.action_object.get_absolute_url as object_url and object.action_object.title as object %}<a href="{{user_url}}">{{user}}</a> created the look <a href="{{object_url}}">{{object}}</a>{% endblocktrans %}
 {% endblock %}
 
 {% block activity_content %}
-    <p>{{ object.actor.get_profile.display_name }} {% trans "created a new look" %}</p>
     {% with object.action_object as object %}
         {% include 'apparel/fragments/total_price.html' %}
     {% endwith %}

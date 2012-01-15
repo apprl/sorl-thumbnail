@@ -10,9 +10,5 @@
 {% endblock %}
 
 {% block activity_header %}
-    {{ object.actor.get_profile.display_name }}
-{% endblock %}
-
-{% block activity_content %}
-    {% blocktrans with object.target.get_profile.display_name as name %}now follows {{ name }}{% endblocktrans %}
+    {% blocktrans with object.actor.get_absolute_url as user_url and object.actor.get_profile.display_name as user and object.target.get_absolute_url as other_user_url and object.target.get_profile.display_name as other_user %}<a href="{{user_url}}">{{user}}</a> now follows <a href="{{other_user_url}}">{{other_user}}</a>{% endblocktrans %}
 {% endblock %}

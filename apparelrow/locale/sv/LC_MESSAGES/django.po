@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-14 00:22+0100\n"
+"POT-Creation-Date: 2012-01-15 16:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,19 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: settings_common.py:48
+#: settings_common.py:47
 msgid "English"
 msgstr "English"
 
-#: settings_common.py:49
+#: settings_common.py:48
 msgid "Swedish"
 msgstr "Svenska"
 
-#: settings_common.py:52
+#: settings_common.py:51
 msgid "Eng"
 msgstr ""
 
-#: settings_common.py:53
+#: settings_common.py:52
 msgid "Swe"
 msgstr ""
 
@@ -1394,39 +1394,83 @@ msgstr[1] ""
 
 #: templates/apparel/fragments/activity/added.html:15
 #, python-format
-msgid "%(name)s added to wardrobe"
-msgstr "%(name)s lade till i garderob"
+msgid ""
+"<a href=\"%(user_url)s\">%(user)s</a> added <a href=\"%(object_url)s\">"
+"%(object)s</a> to the wardrobe"
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> lade till <a href=\"%(object_url)s\">"
+"%(object)s</a> i sin garderob"
 
 #: templates/apparel/fragments/activity/added.html:17
 #, python-format
-msgid "%(name)s added to %(title)s"
-msgstr "%(name)s lade till i %(title)s"
+msgid ""
+"<a href=\"%(user_url)s\">%(user)s</a> added <a href=\"%(object_url)s\">"
+"%(object)s</a> to the look <a href=\"%(target_url)s\">%(target)s</a>"
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> lade till <a href=\"%(object_url)s\">"
+"%(object)s</a> i looken <a href=\"%(target_url)s\">%(target)s</a>"
 
-#: templates/apparel/fragments/activity/commented.html:15
+#: templates/apparel/fragments/activity/commented.html:16
 #, python-format
-msgid "%(name)s commented on %(commented_on)s"
-msgstr "%(name)s kommenterade på %(commented_on)s"
+msgid ""
+"<a href=\"%(user_url)s\">%(user)s</a> commented on <a href=\"%(object_url)s"
+"\">%(object)s</a>"
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> kommenterade på <a href="
+"\"%(object_url)s\">%(object)s</a>"
+
+#: templates/apparel/fragments/activity/commented.html:18
+#, python-format
+msgid ""
+"<a href=\"%(user_url)s\">%(user)s</a> commented on the look <a href="
+"\"%(object_url)s\">%(object)s</a> by <a href=\"%(object_user_url)s\">"
+"%(object_user)s</a>"
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> kommenterade på looken <a href="
+"\"%(object_url)s\">%(object)s</a> av <a href=\"%(object_user_url)s\">"
+"%(object_user)s</a>"
 
 #: templates/apparel/fragments/activity/created.html:11
 #, python-format
-msgid "%(name)s added %(object)s"
-msgstr "%(name)s lade till %(object)s"
+msgid ""
+"<a href=\"%(user_url)s\">%(user)s</a> created the look <a href="
+"\"%(object_url)s\">%(object)s</a>"
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> skapade looken <a href=\"%(object_url)s"
+"\">%(object)s</a>"
 
-#: templates/apparel/fragments/activity/created.html:15
-msgid "created a new look"
-msgstr "skapade en look"
-
-#: templates/apparel/fragments/activity/liked.html:14
 #: templates/apparel/fragments/activity/liked_look.html:14
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(user_url)s\">%(user)s</a> <span class=\"likes\">likes</span> the "
+"look <a href=\"%(object_url)s\">%(object)s</a> by <a href="
+"\"%(object_user_url)s\">%(object_user)s</a>\n"
+msgstr ""
+"\n"
+"<a href=\"%(user_url)s\">%(user)s</a> <span class=\"likes\">gillar</span> "
+"looken <a href=\"%(object_url)s\">%(object)s</a> av <a href="
+"\"%(object_user_url)s\">%(object_user)s</a>\n"
+
 #: templates/apparel/fragments/activity/liked_product.html:14
 #, python-format
-msgid "%(name)s likes"
-msgstr "%(name)s gillar"
+msgid ""
+"\n"
+"<a href=\"%(user_url)s\">%(user)s</a> <span class=\"likes\">likes</span> <a "
+"href=\"%(object_url)s\">%(object)s</a>\n"
+msgstr ""
+"\n"
+"<a href=\"%(user_url)s\">%(user)s</a> <span class=\"likes\">gillar</span> <a "
+"href=\"%(object_url)s\">%(object)s</a>\n"
 
-#: templates/apparel/fragments/activity/started-following.html:17
+#: templates/apparel/fragments/activity/started-following.html:13
 #, python-format
-msgid "now follows %(name)s"
-msgstr "följer nu %(name)s"
+msgid ""
+"<a href=\"%(user_url)s\">%(user)s</a> now follows <a href="
+"\"%(other_user_url)s\">%(other_user)s</a>"
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> följer nu <a href=\"%(other_user_url)s"
+"\">%(other_user)s</a>"
 
 #: templates/apparel/tags/apparel_facebook_button.html:11
 #: templates/registration/password_reset_complete.html:9
@@ -2099,6 +2143,27 @@ msgstr "Varför mejlet inte skickades"
 #~ "Om detta låter intressant, eller om du vill veta mer om vad vi sysslar "
 #~ "med, skicka ett mail med CV/relevanta erfarenheter till: <a href=\"mailto:"
 #~ "jobs@apparelrow.com\">jobs@apparelrow.com</a>."
+
+#~ msgid "%(name)s added to wardrobe"
+#~ msgstr "%(name)s lade till i garderob"
+
+#~ msgid "%(name)s added to %(title)s"
+#~ msgstr "%(name)s lade till i %(title)s"
+
+#~ msgid "%(name)s commented on %(commented_on)s"
+#~ msgstr "%(name)s kommenterade på %(commented_on)s"
+
+#~ msgid "%(name)s added %(object)s"
+#~ msgstr "%(name)s lade till %(object)s"
+
+#~ msgid "created a new look"
+#~ msgstr "skapade en look"
+
+#~ msgid "%(name)s likes"
+#~ msgstr "%(name)s gillar"
+
+#~ msgid "now follows %(name)s"
+#~ msgstr "följer nu %(name)s"
 
 #~ msgid "OK"
 #~ msgstr "OK"

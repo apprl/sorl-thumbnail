@@ -12,16 +12,13 @@
 
 {% block activity_header %}
     {% if object.target|class_name == 'Wardrobe' %}
-        {% blocktrans with object.actor.get_profile.display_name as name %}{{ name }} added to wardrobe{% endblocktrans %}
+        {% blocktrans with object.actor.get_absolute_url as user_url and object.actor.get_profile.display_name as user and object.action_object as object and object.action_object.get_absolute_url as object_url %}<a href="{{user_url}}">{{user}}</a> added <a href="{{object_url}}">{{object}}</a> to the wardrobe{% endblocktrans %}
     {% else %}
-        {% blocktrans with object.actor.get_profile.display_name as name and object.target.title as title %}{{ name }} added to {{ title }}{% endblocktrans %}
+    {% blocktrans with object.actor.get_absolute_url as user_url and object.actor.get_profile.display_name as user and object.action_object as object and object.action_object.get_absolute_url as object_url and object.target.get_absolute_url as target_url and object.target.title as target %}<a href="{{user_url}}">{{user}}</a> added <a href="{{object_url}}">{{object}}</a> to the look <a href="{{target_url}}">{{target}}</a>{% endblocktrans %}
     {% endif %}
 {% endblock %}
 
 {% block activity_content %}
-    <p>
-        {{ object.action_object }}
-    </p>
     {% if object.action_object|class_name == "Product" %}
     <p>
         <span class="price">{{ object.action_object.default_vendor.price|floatformat:0 }}</span> <span class="currency">{{ object.action_object.default_vendor.currency }}</span>
