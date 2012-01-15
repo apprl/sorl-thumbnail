@@ -1,5 +1,6 @@
 import uuid
 import os.path
+import datetime
 
 from django.db import models
 from django.db.models.signals import post_save, post_delete
@@ -11,6 +12,7 @@ from django.contrib.comments.models import Comment
 from actstream.models import Follow, Action
 
 from apparel.models import Look, LookLike, ProductLike
+from apparel.utils import get_friend_updates
 
 EVENT_CHOICES = (
     ('A', _('All')),
@@ -27,11 +29,12 @@ GENDERS = ( ('M', 'Men'),
 class ApparelProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     
-    name        = models.CharField(max_length=50, unique=True, blank=True, null=True)
-    image       = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True) 
-    about       = models.TextField(_('About'), null=True, blank=True)
-    language    = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
-    gender      = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
+    name                = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    image               = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True) 
+    about               = models.TextField(_('About'), null=True, blank=True)
+    language            = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
+    gender              = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
+    updates_last_visit  = models.DateTimeField(_('Last visit home'), default=datetime.datetime.now)
 
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
@@ -118,6 +121,10 @@ class ApparelProfile(models.Model):
             pass
 
         return None
+
+    @property
+    def get_updates_last_visit(self):
+        return get_friend_updates(self.user).filter(timestamp__gt=self.updates_last_visit).count()
 
     @models.permalink
     def get_absolute_url(self):

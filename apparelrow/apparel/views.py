@@ -5,6 +5,7 @@ import math
 import json
 import string
 import unicodedata
+import datetime
 
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -21,7 +22,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.views.i18n import set_language
 from django.utils import translation
 from hanssonlarsson.django.exporter import json as special_json
-from actstream.models import user_stream, Follow
+from actstream.models import Follow
 
 from apparelrow.tasks import search_index_update_task
 from apparelrow.profile.models import ApparelProfile
@@ -33,7 +34,7 @@ from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, W
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.search import ApparelSearch
 from apparelrow.search import more_like_this_product
-from apparel.utils import get_pagination_page, get_gender_from_cookie
+from apparel.utils import get_pagination_page, get_gender_from_cookie, get_friend_updates
 import apparel.signals
 
 FAVORITES_PAGE_SIZE = 30
@@ -679,8 +680,11 @@ def home(request, profile):
     """
     Displays the logged in user's page
     """
-    queryset = user_stream(request.user)
-    queryset = queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following'])
+    # Update the time we last checked "friends updates"
+    profile.updates_last_visit = datetime.datetime.now()
+    profile.save()
+
+    queryset = get_friend_updates(request.user)
 
     # Retrieve most popular products in users network
     limit = 4

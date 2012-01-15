@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from actstream.models import user_stream
 
 def get_gender_from_cookie(request):
     """
@@ -73,3 +74,7 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
             'mid': mid, 
             'right': right
             }
+
+def get_friend_updates(user):
+    queryset = user_stream(user)
+    return queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following'])

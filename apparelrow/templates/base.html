@@ -155,7 +155,9 @@
                 </li>
                 <li>
                     <a class="{% if request.path == home_url %} selected{% endif %}" href="{{ home_url }}">
-                        {% trans "Friends' updates" %}
+                        {% with user.get_profile.get_updates_last_visit as updates %}
+                        {% trans "Friends' updates" %}{% if updates %} ({{ user.get_profile.get_updates_last_visit }}){% endif %}
+                        {% endwith %}
                         <div class="arrow"></div>
                     </a>
                 </li>
