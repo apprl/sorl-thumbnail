@@ -300,21 +300,10 @@ button
       float: left
       padding-left: 3px
       a
-        +button(none, 13px)
-        +border-radius(2px)
-        +highlight
-        background-repeat: no-repeat
-        background-attachment: scroll
-        background-position: 6px center
-        background-image: image_url("follow.png")
-        padding: 5px 12px 5px 22px
+        +plus_button(22px)
         margin-top: 2px
-        height: 12px
+        height: 22px
         display: block
-        &:hover
-          text-decoration: none
-          +highlight_hover
-
     &.right
       float: right
       text-align: right
@@ -326,7 +315,7 @@ button
       padding-right: 16px
       height: 28px
       line-height: 28px
-    
+
   ul
     float: left
     +horizontal-list(0)
@@ -366,8 +355,6 @@ button
           &.selected, &:hover
             margin-left: 0
             border-left-color: #ababab
-            
-        
         .arrow
           display: none
           background: transparent image_url(unquote("box-arrow-bottom.png")) scroll no-repeat bottom center
@@ -858,7 +845,7 @@ div#product-list, .product-list
           .product-small
             .product-image
               // The height is defined in the template product_small_content
-              height: 153px 
+              height: 153px
 
 #hover-products li
   z-index: 100
@@ -966,13 +953,9 @@ body.three-columns .pagination
   padding-top: 20px
   padding-bottom: 10px
   a
-    display: block
-    background: transparent image_url(unquote("left-arrow-button.png")) no-repeat scroll center bottom
-    width: 74px
-    height: 25px
+    +highlight_button(23px)
+    width: 100px
     text-align: center
-    color: $highlight_color
-    line-height: 25px
 
 .product-left
   +float-left
@@ -1007,8 +990,8 @@ body.three-columns .pagination
     line-height: 2em
     vertical-align: top
     color: $easier_color
-    a 
-      color: $easier_color 
+    a
+      color: $easier_color
     border-bottom: 1px solid $border_color
     a:hover
       text-decoration: underline
@@ -1078,7 +1061,7 @@ table.available-sizes th
 
 .product-vendors
   border-bottom: 1px solid #e7e7e7
-  
+
 a.buy-now
   +buy_now
 
@@ -1169,8 +1152,14 @@ a.buy-now
       +border(bottom)
       img.avatar
         margin-right: 9px
-      h3 a
-        font-weight: bold
+      h3
+        a
+          line-height: 16px
+          height: 16px
+          vertical-align: middle
+          font-weight: bold
+        span.inline-date
+          margin-top: 2px
       p
         color: $easy_color
   form
@@ -1180,20 +1169,14 @@ a.buy-now
     margin: 15px 0 0 51px
     padding: 3px 2px 3px 3px
     textarea
-      height: 1.5em
+      height: 20px
       width: 96%
       display: block
       line-height: 1.5
       +text_input
     button
       float: right
-      +button(none, unquote("18px"))
-      +border-radius(unquote("2px"))
-      +highlight
-      background-image: none
-      margin-top: 2px
-      &:hover
-        +highlight_hover
+      +highlight_button(22px, 3px)
 
 body.brand-list
   #inner-container a
@@ -1308,7 +1291,7 @@ form .upload-field
     left: 0px
     z-index: 2
     opacity: 0
-  
+
 form.standard-form
   li
     margin: .5em auto
@@ -1544,18 +1527,13 @@ a.block_link
     display: none
 
 a.follow, a.unfollow
-  +button(none, 1em)
-  +border-radius(2px)
-  +highlight
-  font-family: $font_family
-  line-height: 1em
+  +highlight_button(16px, 3px)
   background-repeat: no-repeat
   background-attachment: scroll
-  background-position: 2px center
-  padding: 2px 2px 1px 14px
-  display: inline-block
+  background-position: 4px center
+  padding: 0 4px 0 16px
+  font-weight: normal !important
   &:hover
-    +highlight_hover
     text-decoration: none !important
     span
       display: inline
@@ -1585,7 +1563,6 @@ p.large_follow
     margin-top: 0.5em
     a.follow, a.unfollow
       line-height: 6px
-      +border-radius(0.25em)
       padding: 1em
       background-position: 8px center
       padding-left: 24px
@@ -1617,35 +1594,19 @@ body.profile
       .avatar.large
         z-index: 1
       button.edit
-        display: none
         position: absolute
         top: 0
         left: 0
         z-index: 2
-        +button(none, unquote("20px"))
-        +border-radius(unquote("2px"))
-        +highlight
-        +edit_button
-        padding-top: 0
-        padding-bottom: 0
-        &:hover
-          +highlight_hover
+        +edit_button(22px, 3px)
+        display: none
       button.cancel-edit
-        display: none
         position: absolute
         top: 0
         left: 0
         z-index: 2
-        +button(none, unquote("20px"))
-        +border-radius(unquote("2px"))
-        +highlight
-        +cancel_button
-        height: 19px
-        padding-top: 1px
-        padding-bottom: 0
-        color: #000000
-        background-color: #FFD6D6
-        border-color: #FA7070
+        +delete_button(22px, 3px)
+        display: none
       form
         display: none
         li.upload-field
@@ -1658,13 +1619,9 @@ body.profile
           width: 198px
           margin-bottom: 20px
           z-index: 2
-          +button(none, unquote("20px"))
-          +border-radius(unquote("2px"))
-          +highlight
+          +highlight_button(22px, 3px)
+          height: 22px
           padding: 0
-          &:hover
-            +highlight_hover
-
     p
       border: none
       color: $easier_color
@@ -1688,33 +1645,26 @@ body.profile
           font-weight: bold
           font-family: $font_family
           font-size: 1.25em
-          line-height: 2
         p
           margin: 1em 0
         .user_is_following
           float: right
           margin-right: 10px
-          +button(none, 1em)
-          +border-radius(4px)
-          +highlight
-          font-family: $font_family
+          +highlight_button(18px, 3px)
           padding: 0 8px 0 25px
-          border-color: $highlight_bg_color
           background-image: image_url("following_you.png")
           background-repeat: no-repeat
           background-attachment: scroll
           background-position: 8px center
-          display: inline-block
-          height: 18px
-          line-height: 18px
           cursor: auto
+          &:hover
+            background-color: $highlight_bg_color
         .following, .not_following
           float: right
           .follow, .unfollow
-            +border-radius(4px)
             background-position: 8px center
-            height: 18px
-            line-height: 18px
+            height: 22px
+            line-height: 22px
             padding: 0 8px 0 25px
             span
               max-width: 75px
@@ -1865,15 +1815,9 @@ ul.suggested-friends
         color: $like_color
 
 a#create-look
-  +button(none, unquote("32px"))
-  +border-radius(unquote("2px"))
-  +highlight
+  +highlight_button(unquote("32px"))
   width: $aside_width - 2
-  background-position: 5px 5px
-  font-size: 10px
   text-align: center
-  &:hover
-    +highlight_hover
 
 .dialog
   +dialog
@@ -2044,17 +1988,12 @@ body.settings
   width: 320px
   text-align: center
   button, a
-    +button(none, $button_height)
-    +border-radius(unquote("3px"))
-    +highlight
-    height: $button_height
+    +highlight_button(30px, 3px)
     margin-top: 1em
-    &:hover
-      +highlight_hover
   a
     background-image: image_url(unquote("add.png"))
     background-repeat: no-repeat
-    background-position: 10px 9px
+    background-position: 10px center
     display: block
   p
     margin: 1em 0

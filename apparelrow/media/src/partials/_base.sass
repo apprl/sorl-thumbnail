@@ -54,7 +54,7 @@ $font_family: "Helvetica Neue", "Helvetica", "Arial", sans-serif
   padding: 0.5em 5px
 
 =highlight
-  background: $highlight_bg_color image_url("highlight-button-bg.png") repeat-x scroll center top
+  background-color: $highlight_bg_color
   border-color: $highlight_border_color
   color: $highlight_color
 
@@ -63,26 +63,42 @@ $font_family: "Helvetica Neue", "Helvetica", "Arial", sans-serif
   border-color: $highlight_border_color
   color: $highlight_color
 
-=edit_button
-  font-family: $font_family
+=highlight_button($height: $button_height, $border_radius: unquote("3px"))
+  +button(none, $height, $border_radius)
+  +highlight
+  display: inline-block
+  background-image: none
+  &:hover
+    +highlight_hover
+    text-decoration: none
+
+=plus_button($height: 23px, $border_radius: unquote("3px"))
+  +highlight_button($height, $border_radius)
+  background-repeat: no-repeat
+  background-attachment: scroll
+  background-position: 5px center
+  background-image: image_url("follow.png")
+  padding: 0 7px 0 20px
+
+=edit_button($height: 23px, $border_radius: 3px)
+  +highlight_button($height, $border_radius)
   background-image: image_url(unquote("edit.png"))
   background-repeat: no-repeat
-  background-position: 5px 5px
-  padding: 3px 5px 3px 20px
+  background-position: 5px center
+  padding: 0 5px 0 20px
 
 =cancel_button
-  font-family: $font_family
   background-image: image_url(unquote("cancel.png"))
   background-repeat: no-repeat
   background-position: 5px 5px
   padding: 3px 5px 3px 20px
 
-=delete_button
-  font-family: $font_family
+=delete_button($height: 23px, $border_radius: 3px)
+  +highlight_button($height, $border_radius)
   background-image: image_url(unquote("cancel.png"))
   background-repeat: no-repeat
-  background-position: 5px 5px
-  padding: 3px 5px 3px 20px
+  background-position: 5px center
+  padding: 0 5px 0 20px
   background-color: $like_color + #666666
   border-color: $like_color
   color: $easy_color
@@ -105,11 +121,12 @@ $font_family: "Helvetica Neue", "Helvetica", "Arial", sans-serif
   +border(all, $border)
   background-color: $bg
 
-=button($bg: unquote("gradient-bg.png"), $height: $button_height)
+=button($bg: unquote("gradient-bg.png"), $height: $button_height, $border_radius: unquote("0px"))
   $bg_image: "none"
   @if $bg != "none"
     $bg_image: image_url($bg)
   +box
+  +border-radius($border_radius)
   font-family: $font_family
   line-height: $height
   overflow: hidden
@@ -123,6 +140,9 @@ $font_family: "Helvetica Neue", "Helvetica", "Arial", sans-serif
     content: image_url(unquote("cancel.png"))
   &.ok:before
     content: image_url(unquote("ok.png"))
+  &:hover
+    background-color: $hover_color
+    +border-radius($border_radius)
 
 =hover_button($height: $button_height)
   +button(unquote("gradient-dark-bg.png"), $height)
@@ -360,7 +380,7 @@ $color_column_offset: 1px
           background-position: $x $y_selected
         &.filtered
           background-position: $x $y_filtered
- 
+
 =dialog
   +box-shadow
   overflow: hidden

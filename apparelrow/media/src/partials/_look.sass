@@ -187,11 +187,9 @@ $input_border_color: $highlight_border_color !default
     background-color: $input_bg_color
     font-style: italic
     line-height: 20px
-    height: 14px
+    height: 20px
     width: 200px
     text-align: center
-    padding-top: 6px
-    +box-shadow-inset($input_bg_color - #222222, 0, 3px, 3px)
   button
     +float-right
     font-family: $font_family
@@ -205,14 +203,8 @@ $input_border_color: $highlight_border_color !default
     text-align: start
   .delete
     +float-right
-    +button(none, unquote("22px"))
-    +border-radius(unquote("2px"))
-    +delete_button
-    background-position: 5px center
+    +delete_button(22px, 2px)
     margin-right: 20px
-    height: 22px
-    padding-top: 0
-    padding-bottom: 0
 
 #id_description,
 #id_tags,
@@ -296,27 +288,24 @@ body.look
     position: absolute
     left: 20px
     top: 1em
-  div
+  .look-header-content
     margin-left: 70px
-    a:hover
-      text-decoration: underline
     h1
-      line-height: 2em
+      float: left
+      line-height: 1.5em
       height: 2em
       margin-bottom: -2px
-      a.edit, a.delete
-        margin-left: 2em
-        +button(none, unquote("20px"))
-        +border-radius(unquote("2px"))
-        font-size: 0.83em
-        vertical-align: top
-      a.edit
-        +highlight
-        +edit_button
-        &:hover
-          +highlight_hover
-      a.delete
-        +delete_button
+    a.edit, a.delete
+      float: left
+      margin-left: 2em
+    a.edit
+      +edit_button(22px, 3px)
+    a.delete
+      +delete_button(22px, 3px)
+    div.look-user-url
+      clear: both
+      a:hover
+        text-decoration: underline
 
 #wardrobe
   clear: both
