@@ -119,8 +119,9 @@ button
         text-transform: uppercase
         color: $easy_color
         padding: 2px 0
-        &:hover
+        &:hover, &:active
           color: $white_color
+          text-decoration: underline
         &.left
           float: left
           +border(right, $easy_color)
@@ -146,10 +147,8 @@ button
           text-transform: uppercase
           color: $white_color
           padding: 6px 0
-          &:hover
-            color: $white_color
-          &.selected
-            color: $white_color
+          &:hover, &:active
+            text-decoration: underline
     #nav-user
       font-family: $font_family
       position: absolute
