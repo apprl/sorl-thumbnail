@@ -72,7 +72,15 @@ $font_family: "Helvetica Neue", "Helvetica", "Arial", sans-serif
     +highlight_hover
     text-decoration: none
 
-=plus_button($height: 23px, $border_radius: unquote("3px"))
+=star_button($height: 22px, $border_radius: 3px)
+  +button(none, $height, $border_radius)
+  background-repeat: no-repeat
+  background-attachment: scroll
+  background-position: 5px center
+  background-image: image_url("star.png")
+  padding: 0 7px 0 20px
+
+=plus_button($height: 23px, $border_radius: 3px)
   +highlight_button($height, $border_radius)
   background-repeat: no-repeat
   background-attachment: scroll

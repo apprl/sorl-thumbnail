@@ -295,14 +295,17 @@ button
       min-width: 200px
       a
         font-weight: bold
-    &.create-look
+    &.create-look, &.friends-favorites
       float: left
       padding-left: 3px
       a
-        +plus_button(22px)
         margin-top: 2px
         height: 22px
         display: block
+    &.create-look a
+      +plus_button(22px, 3px)
+    &.friends-favorites a
+      +star_button(22px, 3px)
     &.right
       float: right
       text-align: right

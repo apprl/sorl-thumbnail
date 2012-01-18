@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-15 16:08+0100\n"
+"POT-Creation-Date: 2012-01-18 22:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,7 +129,7 @@ msgid "Product image"
 msgstr "Produktbild"
 
 #: apparel/models.py:147 apparel/models.py:395 apparel/models.py:615
-#: profile/models.py:34
+#: profile/models.py:36
 msgid "Gender"
 msgstr "Kön"
 
@@ -287,7 +287,7 @@ msgstr ""
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:616 profile/models.py:33 templates/account/base.html:20
+#: apparel/models.py:616 profile/models.py:35 templates/account/base.html:20
 msgid "Language"
 msgstr "Språk"
 
@@ -311,7 +311,7 @@ msgstr "sedan"
 
 #: apparel_comments/__init__.py:6 beta/models.py:32
 #: beta/templates/beta/beta.html:56 beta/templates/beta/beta.html.py:67
-#: templates/beta/dialog_invite_user.html:20
+#: templates/beta/dialog_invite_user.html:16
 #: templates/beta/dialog_invite_user.html:29
 #: templates/profile/base_settings.html:11
 #: templates/profile/settings_email.html:5
@@ -441,7 +441,7 @@ msgstr "Fel"
 msgid "Status"
 msgstr "Status"
 
-#: importer/models.py:122
+#: importer/models.py:122 templates/beta/dialog_invite_user.html:20
 msgid "Message"
 msgstr "Meddelande"
 
@@ -467,53 +467,57 @@ msgstr ""
 msgid "New e-mail address"
 msgstr "Ny e-postadress"
 
-#: profile/models.py:16 templates/apparel/user_list.html:25
+#: profile/models.py:18 templates/apparel/user_list.html:25
 #: templates/apparel/user_list.html:29
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "All"
 msgstr "Alla"
 
-#: profile/models.py:17
+#: profile/models.py:19
 msgid "Those I follow"
 msgstr "De jag följer"
 
-#: profile/models.py:18
+#: profile/models.py:20
 msgid "No one"
 msgstr "Inga"
 
-#: profile/models.py:31
+#: profile/models.py:33
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:32
+#: profile/models.py:34
 msgid "About"
 msgstr "Om"
 
-#: profile/models.py:38
+#: profile/models.py:37
+msgid "Last visit home"
+msgstr ""
+
+#: profile/models.py:41
 msgid "When someone commented on a product that I have in my wardrobe"
 msgstr "När någon kommenterat ett plagg som jag har i garderoben"
 
-#: profile/models.py:40
+#: profile/models.py:43
 msgid "When someone commented on a product that I have commented on"
 msgstr "När någon kommenterat ett plagg som jag kommenterat på"
 
-#: profile/models.py:42
+#: profile/models.py:45
 msgid "When someone commented on a look that I have created"
 msgstr "När någon kommenterat en look som jag har gjort"
 
-#: profile/models.py:44
+#: profile/models.py:47
 msgid "When someone commented on a look that I have commented on"
 msgstr "När någon kommenterat en look som jag har kommenterat på"
 
-#: profile/models.py:46
+#: profile/models.py:49
 msgid "When someone likes a look that I have created"
 msgstr "När någon gillar en look som jag har gjort"
 
-#: profile/models.py:48
+#: profile/models.py:51
 msgid "When someone starts to follow me"
 msgstr "När någon börjat följa mig"
 
-#: profile/models.py:51
+#: profile/models.py:54
 msgid "Is this the first visit?"
 msgstr ""
 
@@ -557,19 +561,19 @@ msgstr "Sök efter plagg"
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:94 templates/base.html.py:196
+#: templates/base.html:94 templates/base.html.py:201
 #: templates/apparel/gender.html:10
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:95 templates/base.html.py:197
+#: templates/base.html:95 templates/base.html.py:202
 #: templates/apparel/gender.html:11
 #: templates/apparel/fragments/product_menu_browse.html:15
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:99 templates/base.html.py:195
+#: templates/base.html:99 templates/base.html.py:200
 msgid "Shop"
 msgstr ""
 
@@ -577,7 +581,7 @@ msgstr ""
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:101 templates/base.html.py:200
+#: templates/base.html:101 templates/base.html.py:205
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:6
 #: templates/profile/fragments/menu_items.html:10
 msgid "Looks"
@@ -619,69 +623,73 @@ msgstr "Inloggad som"
 msgid "My profile"
 msgstr "Min profil"
 
-#: templates/base.html:158
+#: templates/base.html:159
 msgid "Friends' updates"
 msgstr "Vänners uppdateringar"
 
-#: templates/base.html:164 templates/profile/base_settings.html:8
+#: templates/base.html:166 templates/profile/base_settings.html:8
 msgid "Settings"
 msgstr "Inställningar"
 
-#: templates/base.html:171
+#: templates/base.html:173
 #, python-format
 msgid "Invite friends (%(invites)s)"
 msgstr "Bjud in vänner (%(invites)s)"
 
-#: templates/base.html:178 templates/base.html.py:202
+#: templates/base.html:180 templates/base.html.py:207
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
 msgstr "Skapa en look"
 
-#: templates/base.html:181
+#: templates/base.html:183
+msgid "Friends' Favorites"
+msgstr "Vänners favoriter"
+
+#: templates/base.html:186
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:201
+#: templates/base.html:206
 msgid "All looks"
 msgstr "Alla looks"
 
-#: templates/base.html:205
+#: templates/base.html:210
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:206 templates/apparel/look_list.html:39
+#: templates/base.html:211 templates/apparel/look_list.html:39
 #: templates/apparel/look_list.html:50 templates/apparel/user_home.html:36
 #: templates/apparel/fragments/browse_follow_user.html:5
 #: templates/profile/dialog_welcome.html:25
 msgid "See all members"
 msgstr "Se alla medlemmar"
 
-#: templates/base.html:212
+#: templates/base.html:217
 msgid "About Apparelrow"
 msgstr "Om Apparelrow"
 
-#: templates/base.html:213
+#: templates/base.html:218
 msgid "About the beta"
 msgstr "Om betaversionen"
 
-#: templates/base.html:214
+#: templates/base.html:219
 msgid "Blog"
 msgstr "Blogg"
 
-#: templates/base.html:215
+#: templates/base.html:220
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:216
+#: templates/base.html:221
 #: templates/apparel/fragments/dialog_about_cookies.html:4
 msgid "About cookies"
 msgstr "Om cookies"
 
-#: templates/base.html:237
+#: templates/base.html:242
 msgid "No"
 msgstr "Nej"
 
-#: templates/base.html:238
+#: templates/base.html:243
 msgid "Yes"
 msgstr "Ja"
 
@@ -856,15 +864,15 @@ msgstr "Är du säker?"
 msgid "Do you really want to delete look"
 msgstr "Vill du verkligen ta bort looken"
 
-#: templates/apparel/look_detail.html:50 templates/apparel/look_edit.html:6
+#: templates/apparel/look_detail.html:49 templates/apparel/look_edit.html:6
 msgid "Edit"
 msgstr "Redigera"
 
-#: templates/apparel/look_detail.html:51
+#: templates/apparel/look_detail.html:50
 msgid "Delete"
 msgstr "Ta bort"
 
-#: templates/apparel/look_detail.html:56
+#: templates/apparel/look_detail.html:54
 #, python-format
 msgid "%(name)s's looks"
 msgstr "%(name)ss looks"
@@ -1482,27 +1490,23 @@ msgid "Invite friends"
 msgstr "Bjud in vänner"
 
 #: templates/beta/dialog_invite_user.html:12
-msgid "If you would like to include a message please do so here"
-msgstr "Inkludera ett medelande nedan"
-
-#: templates/beta/dialog_invite_user.html:14
-msgid "Follow me on Apparelrow"
-msgstr "Följ mig på Apparelrow"
-
-#: templates/beta/dialog_invite_user.html:16
 msgid "Right now a limited number of people have access to Apparelrow."
 msgstr "Just nu har ett begränsat antal personer tillgång till Apparelrow."
 
-#: templates/beta/dialog_invite_user.html:17
+#: templates/beta/dialog_invite_user.html:13
 #, python-format
 msgid "You can invite 1 friend:"
 msgid_plural "You can invite %(counter)s friends:"
 msgstr[0] "Du kan bjuda in 1 vän:"
 msgstr[1] "Du kan bjuda in %(counter)s vänner:"
 
-#: templates/beta/dialog_invite_user.html:22
+#: templates/beta/dialog_invite_user.html:18
 msgid "Add more e-mail addresses"
 msgstr "Lägg till fler e-postadresser"
+
+#: templates/beta/dialog_invite_user.html:22
+msgid "Follow me on Apparelrow"
+msgstr "Följ mig på Apparelrow"
 
 #: templates/beta/dialog_invite_user.html:25
 msgid "Send"
@@ -2085,6 +2089,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "If you would like to include a message please do so here"
+#~ msgstr "Inkludera ett medelande nedan"
 
 #~ msgid ""
 #~ "\n"
