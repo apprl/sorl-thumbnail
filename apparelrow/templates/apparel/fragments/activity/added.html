@@ -12,9 +12,9 @@
 
 {% block activity_header %}
     {% if object.target|class_name == 'Wardrobe' %}
-        {% blocktrans with object.actor.get_absolute_url as user_url and object.actor.get_profile.display_name as user and object.action_object as object and object.action_object.get_absolute_url as object_url %}<a href="{{user_url}}">{{user}}</a> added <a href="{{object_url}}">{{object}}</a> to the wardrobe{% endblocktrans %}
+        {% blocktrans with object.actor.get_profile.get_absolute_url as user_url and object.actor.get_profile.display_name as user and object.action_object as object and object.action_object.get_absolute_url as object_url %}<a href="{{user_url}}">{{user}}</a> added <a href="{{object_url}}">{{object}}</a> to the wardrobe{% endblocktrans %}
     {% else %}
-    {% blocktrans with object.actor.get_absolute_url as user_url and object.actor.get_profile.display_name as user and object.action_object as object and object.action_object.get_absolute_url as object_url and object.target.get_absolute_url as target_url and object.target.title as target %}<a href="{{user_url}}">{{user}}</a> added <a href="{{object_url}}">{{object}}</a> to the look <a href="{{target_url}}">{{target}}</a>{% endblocktrans %}
+    {% blocktrans with object.actor.get_profile.get_absolute_url as user_url and object.actor.get_profile.display_name as user and object.action_object as object and object.action_object.get_absolute_url as object_url and object.target.get_absolute_url as target_url and object.target.title as target %}<a href="{{user_url}}">{{user}}</a> added <a href="{{object_url}}">{{object}}</a> to the look <a href="{{target_url}}">{{target}}</a>{% endblocktrans %}
     {% endif %}
 {% endblock %}
 
