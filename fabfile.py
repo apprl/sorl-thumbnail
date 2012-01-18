@@ -125,7 +125,7 @@ def setup(snapshot='master'):
         
     # disable default site
     with settings(warn_only=True):
-        sudo('cd /etc/%(webserver)s/conf-enabled/; rm default;' % env, pty=True)
+        sudo('cd /etc/%(webserver)s/conf-enabled/; rm -f default;' % env, pty=True)
     
     # new project setup
     sudo('mkdir -p %(path)s; chown %(user)s:%(group)s %(path)s;' % env, pty=True)
@@ -243,7 +243,7 @@ def copy_config():
         sudo('cp -n ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
         sudo('update-rc.d celeryd defaults', pty=True)
         upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
-        upload_template('etc/redis.conf', '/etc/redis.conf', context=env, use_sudo=True)
+        sudo('cp -n ./releases/%(release)s/etc/redis.conf /etc/redis.conf' % env, pty=True)
 
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
@@ -284,6 +284,8 @@ def install_redis():
             run('make', pty=True)
             sudo('make install', pty=True)
     sudo('adduser --system redis', pty=True)
+    sudo('mkdir -p /var/lib/redis /var/log/redis', pty=True)
+    sudo('chown redis /var/lib/redis /var/log/redis', pty=True)
 
 def restart_django():
     require('path')
