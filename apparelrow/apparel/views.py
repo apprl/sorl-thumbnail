@@ -6,6 +6,8 @@ import json
 import string
 import unicodedata
 import datetime
+import csv
+import StringIO
 
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -834,6 +836,24 @@ try:
 
 except ImportError:
     pass
+
+
+def admin_user_list_csv(request):
+    if not request.user.is_superuser:
+        return HttpResponseNotFound()
+
+    csv_string = StringIO.StringIO()
+
+    writer = csv.writer(csv_string)
+    for user in User.objects.exclude(Q(email__isnull=True) | Q(email__exact='')).exclude(Q(first_name__isnull=True) | Q(first_name__exact='')).exclude(Q(last_name__isnull=True) | Q(last_name__exact='')):
+        writer.writerow([user.email.encode('utf-8'), user.first_name.encode('utf-8'), user.last_name.encode('utf-8')])
+
+    response = HttpResponse(csv_string.getvalue(), content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=apparelrow-users.csv'
+
+    csv_string.close()
+
+    return response
 
 #
 # Utility routines. FIXME: Move these out
