@@ -35,15 +35,19 @@ HAYSTACK_SITECONF = 'apparelrow.search'
 HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr'
 
-BROKER_HOST = 'localhost'
-BROKER_PORT = 5672
-BROKER_USER = 'apparel'
-BROKER_PASSWORD = 'apparel_mq'
-BROKER_VHOST = 'apparel'
-
+BROKER_URL = "redis://localhost:6380/0"
+CELERY_RESULT_BACKEND = "redis"
+CELERY_REDIS_HOST = "localhost"
+CELERY_REDIS_PORT = 6380
+CELERY_REDIS_DB = 0
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-CELERY_RESULT_BACKEND = "amqp"
-CELERY_AMQP_TASK_RESULT_EXPIRES = 30
+#BROKER_HOST = 'localhost'
+#BROKER_PORT = 5672
+#BROKER_USER = 'apparel'
+#BROKER_PASSWORD = 'apparel_mq'
+#BROKER_VHOST = 'apparel'
+#CELERY_RESULT_BACKEND = "amqp"
+#CELERY_AMQP_TASK_RESULT_EXPIRES = 30
 
 import djcelery
 djcelery.setup_loader()

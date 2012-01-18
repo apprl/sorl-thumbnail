@@ -32,7 +32,8 @@ django-flatpages-tinymce==0.1.1
 #pysolr==2.0.15
 -e git+https://github.com/anti-social/pysolr.git@45abcb37d8cc92ead1864133b5eebb244276e82c#egg=pysolr
 django-haystack==1.2.5
-celery==2.2.7
+celery==2.4.6
 django-celery==2.2.4
-kombu==1.1.6
+celery-with-redis==2.4.1
+kombu==1.4.3
 requests==0.7.6

@@ -26,3 +26,4 @@ settings_local.py
 /etc/logging.conf
 /etc/lighttpd.conf
 /apparelrow/development.py
+/redis/*rdb
