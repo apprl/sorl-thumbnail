@@ -977,7 +977,7 @@ msgstr "Senaste looks"
 
 #: templates/apparel/look_list.html:21 templates/apparel/user_home.html:15
 msgid "Popular looks in your network"
-msgstr "Populära looks bland dina vänner"
+msgstr "Populära looks bland vänner"
 
 #: templates/apparel/look_list.html:25 templates/apparel/look_list.html:27
 #, python-format
@@ -1087,7 +1087,7 @@ msgstr "Ingen produkt hittad!"
 
 #: templates/apparel/user_home.html:10
 msgid "Popular products in your network"
-msgstr "Populära produkter bland dina vänner"
+msgstr "Populära produkter bland vänner"
 
 #: templates/apparel/user_home.html:21
 msgid "Your friend's latest updates"

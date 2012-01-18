@@ -64,7 +64,7 @@
         {% url profile.views.followers profile.user.username as followers_url %}
         {% url profile.views.following profile.user.username as following_url %}
         <p>
-            <a href="{{ wardrobe_url }}">{{ products }} {% blocktrans count products as prod %}product{% plural %}products{% endblocktrans %} {% trans "in wardrobe" %}.</a>
+            <a href="{{ wardrobe_url }}">{{ products }} {% blocktrans count products as prod %}product{% plural %}products{% endblocktrans %} {% trans "in wardrobe" %}</a>
         </p>
         <p>
         <a href="{{ looks_url }}">
