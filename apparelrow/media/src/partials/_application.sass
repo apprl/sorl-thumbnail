@@ -1945,14 +1945,16 @@ ul.look-list-tabs, ul.user-list-tabs
 
 ul.gender-tabs
   +horizontal_list
+  +border("bottom")
   font-weight: bold
   li
-    &.active
-      a
-        color: $font_color
     a
       font-size: 1.1em
       color: $easier_color
+      &:hover
+        text-decoration: underline
+    &.active > a, a:hover
+      color: $font_color
 
 body.settings
   .settings-content
