@@ -50,12 +50,16 @@ def get_profile_sidebar_info(user):
 
     Returns a dict containing the extra information
     """
-    info = {}
-    wardrobe = Wardrobe.objects.get(user=user)
-    info["products"] = wardrobe.products.count()
+    info = {'products' : 0, 'following' : 0 }
+    try:
+        wardrobe = Wardrobe.objects.get(user=user)
+        info['products'] = wardrobe.products.count()
 
-    content_type = ContentType.objects.get_for_model(User)
-    info["following"] = Follow.objects.filter(content_type=content_type, user=user).count()
+        content_type = ContentType.objects.get_for_model(User)
+        info['following'] = Follow.objects.filter(content_type=content_type, user=user).count()
+    except Wardrobe.DoesNotExist:
+        # If no wardrobe exists, do not alter the defaults
+        pass
     return info
 
 
