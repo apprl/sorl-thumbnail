@@ -103,8 +103,6 @@ def setup(snapshot='master'):
     sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev')
     # install some version control systems, since we need Django modules in development
     sudo('apt-get install -y git-core subversion')
-    # install rabbitmq-server (add http://www.rabbitmq.com/debian.html#apt for newest version)
-    sudo('apt-get install -y rabbitmq-server')
     # install memcached
     sudo('apt-get install -y memcached')
     # install java (for solr)
@@ -137,7 +135,7 @@ def setup(snapshot='master'):
             run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared/warehouse shared/static packages backup;', pty=True)
             sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse shared/static;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
-    setup_rabbitmq()
+    install_redis()
     deploy('first', snapshot=snapshot)
     load_fixtures()
     
@@ -190,11 +188,6 @@ def rollback():
     restart_webserver()    
     
 # Helpers. These are called by other functions rather than directly
-
-def setup_rabbitmq():
-    sudo("rabbitmqctl add_user apparel apparel_mq", pty=True)
-    sudo("rabbitmqctl add_vhost apparel", pty=True)
-    sudo("rabbitmqctl set_permissions -p apparel apparel '.*' '.*' '.*'", pty=True)
 
 def load_fixtures():
     require('release', provided_by=[deploy, setup])
@@ -249,6 +242,8 @@ def copy_config():
         upload_template('etc/celeryd.default', '/etc/default/celeryd', context=env, use_sudo=True)
         sudo('cp -n ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
         sudo('update-rc.d celeryd defaults', pty=True)
+        upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
+        upload_template('etc/redis.conf', '/etc/redis.conf', context=env, use_sudo=True)
 
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
@@ -279,6 +274,17 @@ def migrate(param=''):
             sudo('%(path)s/bin/python manage.py migrate profile --settings production' % env, pty=True, user=env.run_user)
         sudo('%(path)s/bin/python manage.py migrate --settings production' % env, pty=True, user=env.run_user)
     
+def install_redis():
+    run('mkdir -p /tmp/redis', pty=True)
+    env.redis_release = 'redis-2.4.6'
+    with cd('/tmp/redis'):
+        run('wget http://redis.googlecode.com/files/%(redis_release)s.tar.gz' % env, pty=True)
+        run('tar zxf %(redis_release)s.tar.gz' % env, pty=True)
+        with cd(env.redis_release):
+            run('make', pty=True)
+            sudo('make install', pty=True)
+    sudo('adduser --system redis', pty=True)
+
 def restart_django():
     require('path')
     with cd(env.path):
