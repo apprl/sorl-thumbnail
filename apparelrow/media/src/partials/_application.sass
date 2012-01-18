@@ -1876,8 +1876,6 @@ a#create-look
           line-height: 2em
     .dialog-footer
       min-height: 16px
-      input
-        margin: 10px
     #user-list
       height: 205px
       overflow-y: auto
@@ -1900,6 +1898,16 @@ a#create-look
           display: block
           height: 60px
           line-height: 60px
+    .add-another-field
+      a
+        color: $highlight_color
+    #email-message
+      margin-left: 15px
+      width: 285px
+    .email-field > input
+      height: 1em
+    input, textarea
+      +text_input
 
 ul.look-list-tabs, ul.user-list-tabs
   +horizontal-list(0)

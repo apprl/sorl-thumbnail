@@ -9,10 +9,6 @@
         <input type="hidden" name="next" value="{{ next }}" />
     <div class="content">
         <p>
-            {% blocktrans %}If you would like to include a message please do so here{% endblocktrans %}
-        </p>
-        <textarea name="email-message" placeholder="{% blocktrans %}Follow me on Apparelrow{% endblocktrans %}!"></textarea>
-        <p>
             {% blocktrans %}Right now a limited number of people have access to Apparelrow.{% endblocktrans %}
             {% blocktrans count invites_count as counter %}You can invite 1 friend:{% plural %}You can invite {{ counter }} friends:{% endblocktrans %}
         </p>
@@ -20,6 +16,10 @@
         <p class="email-field">{% trans "E-mail address" %}: <input type="text" name="email" /></p>
         {% endfor %}
         <p class="add-another-field"><a href="#">{% trans "Add more e-mail addresses" %}</a></p>
+        <p>
+            {% trans "Message" %}:
+        </p>
+        <textarea name="email-message" id="email-message" placeholder="{% blocktrans %}Follow me on Apparelrow{% endblocktrans %}!"></textarea>
     </div>
     <div class="dialog-footer">
         <input type="submit" name="submit" value="{% trans "Send" %}">
