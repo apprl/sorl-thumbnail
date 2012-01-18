@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.conf import settings
 from django.utils import translation
 from django.core.validators import email_re
+from django.core.exceptions import ObjectDoesNotExist
 
 from beta.models import Invitee, Invite
 from apparel.models import BackgroundImage
@@ -66,12 +67,16 @@ def invite(request):
 
             return HttpResponseRedirect(redirect_page)
 
-        if request.user.get_profile().beta and request.user.get_profile().beta.invites > 0:
-            return render_to_response('beta/dialog_invite_user.html', {
-                    'invites_count': request.user.get_profile().beta.invites,
-                    'display_count': xrange(min(5, request.user.get_profile().beta.invites)),
-                    'next': request.GET.get('next', '/'),
-                }, context_instance=RequestContext(request))
+        try:
+            if request.user.get_profile().beta and request.user.get_profile().beta.invites > 0:
+                return render_to_response('beta/dialog_invite_user.html', {
+                        'invites_count': request.user.get_profile().beta.invites,
+                        'display_count': xrange(min(5, request.user.get_profile().beta.invites)),
+                        'next': request.GET.get('next', '/'),
+                    }, context_instance=RequestContext(request))
+        except ObjectDoesNotExist:
+            # If we cant find the invite object we just ignore it and return 404
+            pass
 
     return HttpResponseNotFound()
 
