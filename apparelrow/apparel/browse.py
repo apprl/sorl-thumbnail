@@ -105,6 +105,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
         user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
         user_ids_or = ' OR '.join(str(x) for x in user_ids)
         query_arguments['fq'].append('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or))
+        query_arguments['fq'].append('availability:true')
         query_arguments['fq'].append(generate_gender_field(request.GET))
     elif profile:
         query_arguments['fq'].append('user_wardrobe:%s' % (profile.user.id,))
