@@ -256,15 +256,18 @@ jQuery(document).ready(function() {
         jQuery('#wardrobe-contents').slideToggle('fast');
         return false;
     });
-    jQuery('#wardrobe-contents li').draggable({
-        'zIndex': 100,
-        'disabled': false,
-        'addClasses': false,
-        'helper': 'clone',
-        'cursor': 'move',
-        'revert': 'invalid',
-        'appendTo': '#edit-look .panes'
-    });
+    jQuery('#wardrobe-contents').find('.row')
+        .simple_scrollable()
+    .end().find('li')
+        .draggable({
+            'zIndex': 100,
+            'disabled': false,
+            'addClasses': false,
+            'helper': 'clone',
+            'cursor': 'move',
+            'revert': 'invalid',
+            'appendTo': '#edit-look .panes'
+        });
     jQuery('#selection,#photo-background,#collage').droppable({
         'accept': '#wardrobe-contents li',
         'drop': function(event, ui) {
