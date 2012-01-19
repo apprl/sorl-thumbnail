@@ -215,7 +215,8 @@ def install_site():
 def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s; pip install -E . -r ./releases/%(release)s/etc/requirements.pip' % env, pty=True)
+    with cd(env.path):
+        run('pip install -E . -r ./releases/%(release)s/etc/requirements.pip' % env, pty=True)
 
 def copy_bin():
     require('release', provided_by=[deploy, setup])
