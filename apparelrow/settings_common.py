@@ -210,7 +210,7 @@ COMPRESS = True
 CSRF_FAILURE_VIEW = 'apparel.views.csrf_failure'
 
 ABSOLUTE_URL_OVERRIDES = {
-    "auth.user": lambda o: "/profiles/profile/%s/" % o.username,
+    "auth.user": lambda o: "/profile/%s/" % o.username,
 }
 
 MARKUP_FILTER_FALLBACK = 'none'
