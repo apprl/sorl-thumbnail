@@ -1,1 +1,4 @@
-<li><a href="{{ object.get_absolute_url }}"><img src="/scale/76x116{{ object.product_image.url }}" /></a></li>
+{% load thumbnail %}
+{% thumbnail object.product_image "76x116" crop="center" as im %}
+    <li><a href="{{ object.get_absolute_url }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" /></a></li>
+{% endthumbnail %}

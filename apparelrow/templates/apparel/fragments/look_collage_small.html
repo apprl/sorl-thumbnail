@@ -1,3 +1,6 @@
+{% load thumbnail %}
 {% for component in object.collage_components.all %}
-    <img id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_small }}" src="/scale/93x69{{ component.product.product_image.url }}?trans=true" />
+    {% thumbnail component.product.product_image "93x69" crop="noop" as im %}
+    <img id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_small }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+    {% endthumbnail %}
 {% endfor %}

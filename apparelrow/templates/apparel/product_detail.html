@@ -193,7 +193,9 @@
 {% url apparel.views.product_user_like_list object.slug as likes_url %}
         <div class="product-left">
             <div class="product-image">
-                <a href="{{ object.product_image.url }}" title="{{ object.manufacturer }} - {{ object.product_name }}"><img src="/scale/328x500{{ object.product_image.url }}" /></a>
+                {% thumbnail object.product_image "328" upscale=False crop="noop" as im %}
+                <a href="{{ object.product_image.url }}" title="{{ object.manufacturer }} - {{ object.product_name }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" /></a>
+                {% endthumbnail %}
                 {% url apparel.views.product_like object.slug 'like' as like_url %}
                 {% url apparel.views.product_like object.slug 'unlike' as unlike_url %}
                 {% url dialog-like-product as dialog_url %}
@@ -204,7 +206,9 @@
             <div id="gallery-container">
                 <div id="gallery">
                     <div class="close"></div>
-                    <img src="/scale/960{{object.product_image.url}}" alt="{{ object.product_name }}">
+                    {% thumbnail object.product_image "960" upscale=False crop="noop" as im %}
+                    <img src="{{ im.url }}" alt="{{ object.product_name }}">
+                    {% endthumbnail %}
                 </div>
             </div>
             {% include 'apparel/fragments/comments.html' %}

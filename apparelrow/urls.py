@@ -30,7 +30,6 @@ urlpatterns = patterns('',
     (r'^watcher/', include('watcher.urls')),
     
     (r'^announcements/', include('announcements.urls')),
-    (r'^scale/', include('scale.urls')),
     (r'^comments/', include('django.contrib.comments.urls')),
     (r'^ping/', include('trackback.urls')),
     ('^activity/', include('actstream.urls')),

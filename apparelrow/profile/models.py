@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
 from actstream.models import Follow, Action
+from sorl.thumbnail import get_thumbnail
 
 from apparel.models import Look, LookLike, ProductLike
 from apparel.utils import get_friend_updates
@@ -82,7 +83,7 @@ class ApparelProfile(models.Model):
     @property
     def avatar(self):
         if self.image:
-            return '/scale/50x50%s?crop=true' % self.image
+            return get_thumbnail(self.image, '50x50', crop='center').url
 
         if self.facebook_uid:
             return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_uid
@@ -92,7 +93,7 @@ class ApparelProfile(models.Model):
     @property
     def avatar_medium(self):
         if self.image:
-            return '/scale/125%s' % self.image
+            return get_thumbnail(self.image, '125').url
 
         if self.facebook_uid:
             return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_uid
@@ -102,7 +103,7 @@ class ApparelProfile(models.Model):
     @property
     def avatar_large(self):
         if self.image:
-            return '/scale/200%s' % self.image
+            return get_thumbnail(self.image, '200').url
 
         if self.facebook_uid:
             return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_uid

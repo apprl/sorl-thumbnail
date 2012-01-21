@@ -1,9 +1,12 @@
 {% load cache %}
+{% load thumbnail %}
 {% cache CACHE_TIMEOUT product_small_sidebar object.id "en" %}
 <a title="{{ object.product_name }}" href="{{ object.get_absolute_url }}">
 <div class="product-small">
     <div class="product-image">
-        <img src="/scale/93x124{{ object.product_image.url }}?crop=1" alt="{{ object.product_name }}" />
+        {% thumbnail object.product_image "93x124" crop="center" as im %}
+        <img src="{{ im.url }}" alt="{{ object.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
         <span class="likes">x</span>
     </div>
     <h4>{{ object.manufacturer }}</h4>

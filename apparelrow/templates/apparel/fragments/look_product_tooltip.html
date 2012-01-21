@@ -1,7 +1,10 @@
 {% load i18n %}
+{% load thumbnail %}
 <div id="tooltip-{{ component.product.id }}" class="tooltip">
     <a href="{{ component.product.get_absolute_url }}" class="product-image">
-        <img src="/scale/90x115{{ component.product.product_image.url }}" />
+        {% thumbnail component.product.product_image "90x115" crop="center" as im %}
+        <img src="{{ im.url }}" alt="{{ component.product.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
     </a>
     <div class="product-meta">
         <a href="{{ component.product.get_absolute_url }}">

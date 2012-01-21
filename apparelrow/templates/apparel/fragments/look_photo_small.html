@@ -1,1 +1,4 @@
-<img id="look-{{ object.id }}" class="product" src="/scale/93x69{{ object.image }}?trans=true&crop=true" />
+{% load thumbnail %}
+{% thumbnail object.image "93x69" crop="center" as im %}
+    <img id="look-{{ object.id }}" class="product" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" /><!-- trans -->
+{% endthumbnail %}

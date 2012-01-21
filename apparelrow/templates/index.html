@@ -106,7 +106,9 @@
                     <div class="page">
                         {% if page.url %}<a href="{{ page.url }}">{% endif %}
                             {% if page.image %}
-                                <img src="{% thumbnail page.image "450x327" crop="center" %}" width="450" height="327" alt="{{ page.title }}" />
+                                {% thumbnail page.image "450x327" crop="center" as im %}
+                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ page.title }}" />
+                                {% endthumbnail %}
                             {% else %}
                                 {{ page.content|safe }}
                             {% endif %}
@@ -122,13 +124,17 @@
                 <li class="feature">
                     <a href="{{ look.get_absolute_url }}">
                         <div class="look">
-                        {% with look as object %}
-                        {% ifequal object.display_with_component 'P' %}
-                            {% include 'apparel/fragments/look_photo_featured.html' %}
+                        {% if look.display_with_component == 'P' %}
+                            {% thumbnail look.image "450x328" crop="center" as im %}
+                            <img id="look-{{ look.id }} class="product" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                            {% endthumbnail %}
                         {% else %}
-                            {% include 'apparel/fragments/look_collage_featured.html' %}
-                        {% endifequal %}
-                        {% endwith %}
+                            {% for component in look.collage_components.all %}
+                                {% thumbnail component.product.product_image "450x328" crop="center" as im %}
+                                <img id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_middle }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+                                {% endthumbnail %}
+                            {% endfor %}
+                        {% endif %}
                         </div>
                     </a>
                     <div class="info-box">

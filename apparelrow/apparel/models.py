@@ -16,7 +16,8 @@ from apparel import cache
 
 import datetime, mptt, tagging
 from tagging.fields import TagField
-from sorl.thumbnail.main import DjangoThumbnail
+from sorl.thumbnail import ImageField
+from sorl.thumbnail import get_thumbnail
 
 from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
@@ -141,7 +142,7 @@ class Product(models.Model):
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True, db_index=True)
     modified      = models.DateTimeField(_("Time modified"), null=True, auto_now=True)
     description   = models.TextField(_('Product description'), null=True, blank=True)
-    product_image = models.ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image')) 
+    product_image = ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image'))
     vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
     # FIXME: Could we have ForeignKey to VendorProduct instead?
     gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
@@ -386,7 +387,7 @@ class Look(models.Model):
                 help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     description = models.TextField(_('Look description'), null=True, blank=True)
     user        = models.ForeignKey(User)
-    image       = models.ImageField(upload_to=look_image_path, max_length=255, blank=True)
+    image       = ImageField(upload_to=look_image_path, max_length=255, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags        = TagField(blank=True)
@@ -562,13 +563,10 @@ class LookComponent(models.Model):
     def save(self, *args, **kwargs):
         if self.component_of == 'C' and self.product.product_image and not self.height and not self.width:
             # This scales collage images to maximum size if height and width isn't defined
-            thumb = DjangoThumbnail(self.product.product_image, (
-                                        settings.APPAREL_LOOK_MAX_SIZE, 
-                                        settings.APPAREL_LOOK_MAX_SIZE
-                                    ))
-            self.width  = thumb.data.size[0]
-            self.height = thumb.data.size[1]
-        
+            thumb = get_thumbnail(self.product.product_image, '%sx%s' % (settings.APPAREL_LOOK_MAX_SIZE, settings.APPAREL_LOOK_MAX_SIZE), crop='noop', quality=99)
+            self.width = thumb.width
+            self.height = thumb.height
+
         super(LookComponent, self).save(*args, **kwargs)
     
     def __unicode__(self):
@@ -607,7 +605,7 @@ class FirstPageContent(models.Model):
     description = models.TextField(_('Short description'), null=True, blank=True)
     content     = models.TextField(_('Content'), null=True, blank=True, help_text=_('HTML allowed. This field is ignored if an image is set.'))
     url         = models.URLField(_('URL'), max_length=255, null=True, blank=True,)
-    image       = models.ImageField(_('Image'), upload_to=settings.APPAREL_MISC_IMAGE_ROOT, max_length=255, null=True, blank=True, help_text=_('Publish size 450x327'))
+    image       = ImageField(_('Image'), upload_to=settings.APPAREL_MISC_IMAGE_ROOT, max_length=255, null=True, blank=True, help_text=_('Publish size 450x327'))
     published   = models.BooleanField(default=False)
     pub_date    = models.DateTimeField(_("Publish date"))
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
