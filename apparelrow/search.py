@@ -165,7 +165,8 @@ class ProductIndex(QueuedSearchIndex):
     """
     Search index for product model.
     """
-    name = CharField(document=True, model_attr='product_name', stored=False)
+    text = CharField(document=True, use_template=True, model_attr='product_name', stored=False)
+    name = CharField(model_attr='product_name', stored=False)
     created = DateTimeField(model_attr='date_added', stored=False)
     gender = CharField(model_attr='gender', default=None, stored=False)
     price = IntegerField(faceted=True, stored=False)
