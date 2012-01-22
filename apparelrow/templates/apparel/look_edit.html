@@ -257,7 +257,7 @@ jQuery(document).ready(function() {
         return false;
     });
     jQuery('#wardrobe-contents').find('.row')
-        .simple_scrollable()
+        .simple_scrollable(jQuery('#wardrobe-contents .row').width())
     .end().find('li')
         .draggable({
             'zIndex': 100,
