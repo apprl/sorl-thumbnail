@@ -19,7 +19,7 @@
         <p>
             {% trans "Message" %}:
         </p>
-        <textarea name="email-message" id="email-message" placeholder="{% blocktrans %}Follow me on Apparelrow{% endblocktrans %}!"></textarea>
+        <textarea name="email-message" id="email-message">{% blocktrans %}Follow me on Apparelrow{% endblocktrans %}!</textarea>
     </div>
     <div class="dialog-footer">
         <input type="submit" name="submit" value="{% trans "Send" %}">
@@ -42,32 +42,6 @@ jQuery(document).ready(function() {
             }
             return false;
         });
-    }
-
-    {% comment %}
-    // Check for placeholder support and use js instead
-    // IE versions <= 9 does not support placeholder
-    // Could be integerated into jQuery.support
-    {% endcomment %}
-    if ('placeholder' in document.createElement('input') == false) {
-        var input = jQuery("<input>").attr({"type":"hidden", "name":"modified"});
-        var email_message = jQuery("textarea[name=email-message]");
-        email_message.closest("form").submit(function() {
-            if (email_message.attr("value") == jQuery(email_message).attr("placeholder")) {
-                email_message.attr("value", '');
-            }
-        });
-        email_message.focus(function() {
-            if (this.value == jQuery(this).attr("placeholder")) {
-                this.value = '';
-            }
-        });
-        email_message.blur(function() {
-            if (this.value == '') {
-                this.value = jQuery(this).attr("placeholder");
-            }
-        });
-        email_message.attr("value", email_message.attr("placeholder"));
     }
 });
 </script>
