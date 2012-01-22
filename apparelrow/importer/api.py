@@ -4,6 +4,7 @@ import os
 import subprocess
 from urllib2 import HTTPError, URLError
 
+from requests.exceptions import RequestException
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.files import storage, File
 from django.template.defaultfilters import slugify
@@ -501,7 +502,7 @@ class API(object):
                 
                 try:
                     temppath = fetch(url)
-                except (URLError, HTTPError, ValueError), e:
+                except (RequestException, URLError, HTTPError, ValueError), e:
                     # FIXME: We could have a re-try loop for certain errors
                     # FIXME: We could create the product, and mark it as unpublished
                     #        until the image has been added
