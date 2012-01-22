@@ -272,10 +272,12 @@ class API(object):
             
             if settings.APPAREL_BASE_CURRENCY == fields['original_currency']:
                 fields['price'] = fields['original_price']
-            
             elif fields['original_currency'] in rates:
-                fields['price'] = rates[fields['original_currency']].convert(float(fields['original_price']))
-                logger.debug('Setting price to %s %s (= %f %s)', fields['original_price'], fields['original_currency'], fields['price'], fields['currency'])
+                try:
+                    fields['price'] = rates[fields['original_currency']].convert(float(fields['original_price']))
+                    logger.debug('Setting price to %s %s (= %f %s)', fields['original_price'], fields['original_currency'], fields['price'], fields['currency'])
+                except TypeError:
+                    raise SkipProduct('Could not convert currency to base currency')
             else:
                 self._import_log.messages.create(
                     status='attention',

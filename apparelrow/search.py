@@ -71,7 +71,6 @@ class QueuedSearchIndex(SearchIndex):
         remove_instance_from_index(instance, **kwargs)
 
     def update_objects(self, instances, using=None, **kwargs):
-        #instances = [x for x in instances if self.should_update(x, **kwargs)]
         self.backend.update(self, instances)
 
 #
