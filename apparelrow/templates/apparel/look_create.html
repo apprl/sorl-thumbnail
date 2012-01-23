@@ -11,24 +11,28 @@
 {% block body %}
 <div id="content">
     <h2>{% trans "Create a new look" %}</h2>
-    <form action="{{ request.path }}" method="post" class="standard-form">
+    <form action="{{ request.path }}" method="post" class="standard-form create-look">
         {% csrf_token %}
-        <ul>
-        <li>
-            <label for="id_title">{% trans "Name" %}</label>
-            {{ form.title }}
+        <div>
+            <label for="id_title">{% trans "Select a name for your look: " %}</label>
+            {{ form.title }}
             {% if form.title.errors %}
                 {{ form.title.errors }}
             {% endif %}
-        </li>
-        <li>
-            <label for="id_description">{% trans "Description (optional):" %}</label>
-            {{ form.description }}
-        </li>
-        <li>
-            <button type="submit">{% trans "Create" %}</button>
-        </li>
-    </ul>
+        </div>
+
+        <ul class="choices">
+            <li>
+                <h3>{% trans "Tagged photo" %}</h3>
+                <img src="{{ MEDIA_URL }}images/example-photo.png">
+                <input type="submit" name="look_photo" value="{% trans "Create a photo" %}">
+            </li>
+            <li>
+                <h3>{% trans "Collage" %}</h3>
+                <img src="{{ MEDIA_URL }}images/example-collage.png">
+                <input type="submit" name="look_collage" value="{% trans "Create a collage" %}">
+            </li>
+        </ul>
     </form>
 </div>
 {% endblock body %}

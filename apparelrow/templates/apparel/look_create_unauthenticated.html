@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load apparel_extras %}
+
+{% block extra-title %}{% trans "Create a look" %} | {% endblock %}
+
+{% block body-classes %}create-look one-column{% endblock %}
+
+{% block body %}
+<div id="content">
+    <h2>{% trans "Create a look" %}</h2>
+    <p>{% trans "To create a look you need to connect with your Facebook account:" %}</p>
+    {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
+    {% facebook_button facebook_login_image %}
+    {% endwith %}
+</div>
+{% endblock body %}

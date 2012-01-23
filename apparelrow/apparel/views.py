@@ -383,6 +383,9 @@ def look_create(request):
     """
 
     if request.method == 'GET' and request.user.is_authenticated():
+        if request.is_ajax():
+            return render_to_response('apparel/look_create_dialog.html', {'form': LookForm()}, context_instance=RequestContext(request))
+
         return render_to_response('apparel/look_create.html', {'form': LookForm()}, context_instance=RequestContext(request))
 
     if request.method == 'POST' and request.user.is_authenticated():
@@ -390,6 +393,10 @@ def look_create(request):
 
         if form.is_valid():
             look = form.save(commit=False)
+            if request.POST.get('look_photo', None):
+                look.component = 'P'
+            else:
+                look.component = 'C'
             look.user = request.user
             look.save()
 
@@ -400,7 +407,10 @@ def look_create(request):
 
         return render_to_response('apparel/look_create.html', {'form': form}, context_instance=RequestContext(request))
 
-    return render_to_response('apparel/fragments/dialog_create_look.html', {}, context_instance=RequestContext(request))
+    if request.is_ajax():
+        return render_to_response('apparel/fragments/dialog_create_look.html', {}, context_instance=RequestContext(request))
+
+    return render_to_response('apparel/look_create_unauthenticated.html', {}, context_instance=RequestContext(request))
 
 @login_required
 @seamless_request_handling

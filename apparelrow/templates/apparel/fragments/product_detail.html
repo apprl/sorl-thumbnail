@@ -85,10 +85,6 @@
             {% for look in user_looks %}
                 {% include "apparel/fragments/look_button.html" %}
             {% endfor %}
-                <li id="add-to-look-new" class="last">
-                    <input type="text" name="new_name" value="{% trans "Enter look name" %}" />
-                    <button type="submit" name="new" value="1">{% trans "New look" %}</button>
-                </li>
             </ul>
             </form>
         </li>
