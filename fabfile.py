@@ -132,7 +132,7 @@ def setup(snapshot='master'):
     with cd(env.path):
         run('virtualenv --no-site-packages .')
         with settings(warn_only=True):
-            run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared/warehouse shared/static packages backup;', pty=True)
+            run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared/warehouse shared/cache shared/static packages backup;', pty=True)
             sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse shared/static;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     install_redis()
@@ -253,6 +253,7 @@ def build_styles_and_scripts():
         sudo('%(path)s/bin/python manage.py synccompress --settings production' % env, pty=True, user=env.run_user)
         sudo('cd ./media; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
+        sudo('ln -s ../../../../shared/cache media/cache', pty=True, user=env.run_user)
         sudo('ln -s ../../../../../lib/python2.6/site-packages/tinymce/media/tiny_mce media/js/tiny_mce', pty=True, user=env.run_user)
 
     
