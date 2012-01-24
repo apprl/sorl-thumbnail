@@ -662,7 +662,7 @@ def gender(request, view=None, gender=None):
             'men_url': reverse('%s-men' % (view,)),
             'women_url': reverse('%s-women' % (view,)),
             'next': request.GET.get('next', '/'),
-            'image': image
+            'image': str(image)
         }, context_instance=RequestContext(request))
 
 def jobs(request):
@@ -673,7 +673,7 @@ def jobs(request):
     image = BackgroundImage.objects.get_random_image()
 
     return render_to_response('apparel/jobs.html', {
-            'image': image
+            'image': str(image)
         }, context_instance=RequestContext(request))
 
 @get_current_user

@@ -3,9 +3,10 @@
 {% load apparel_extras %}
 {% load cache %}
 {% load thumbnail %}
+{% load django_static %}
 
 {% block 'extra-scripts' %}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/filtersetup.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/filtersetup.js" %}"></script>
     <script type="text/javascript">
         var pricerange = {
             min: {{ pricerange.min }},

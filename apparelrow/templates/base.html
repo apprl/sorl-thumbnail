@@ -1,14 +1,15 @@
 {% load i18n %}
 {% load facebook %}
 {% load apparel_extras %}
+{% load django_static %}
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
     <title>{% block extra-title %}{% endblock %}Apparelrow</title>
     <meta charset="utf-8" />
-    <link type="text/css" href="{{ MEDIA_URL }}styles/smoothness/jquery-ui-1.8rc3.custom.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ MEDIA_URL }}styles/screen.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="{{ MEDIA_URL }}styles/print.css" type="text/css" media="print">
+    <link type="text/css" href="{{ MEDIA_URL }}{% staticfile "styles/smoothness/jquery-ui-1.8rc3.custom.css" %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/screen.css" %}" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/print.css" %}" type="text/css" media="print">
     {% block 'extra-styles' %}
     {% endblock 'extra-styles' %}
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
@@ -24,8 +25,8 @@
         {% block facebook_code %}{% endblock %}
     {% endfacebook %}
     <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/compiled/jquery.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/apparel.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/compiled/jquery.js" %}"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/apparel.js" %}></script>
     <script type="text/javascript">
          function facebookConnect(form){
             function handleResponse(response){
@@ -74,7 +75,7 @@
     <div id="facebook-header">
         <div id="inner-facebook-header">
             <p>{% trans "Log in with your Facebook account to find your friends" %}</p>
-            <a href="#" class="facebook-close"><img src="{{ MEDIA_URL|add:'images/close-blue.png' }}"></a>
+            <a href="#" class="facebook-close"><img src="{{ MEDIA_URL}}{% staticfile "images/close-blue.png" %}"></a>
             {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
             {% facebook_button facebook_login_image %}
             {% endwith %}

@@ -36,3 +36,4 @@ celery==2.4.6
 django-celery==2.2.4
 celery-with-redis==2.4.1
 requests==0.7.6
+django-static==1.5.5

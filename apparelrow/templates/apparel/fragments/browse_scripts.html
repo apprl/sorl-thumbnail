@@ -1,7 +1,8 @@
 {% load apparel_extras %}
-<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery/jquery.history.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery/jquery.fixedscroll.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/filtersetup.js"></script>
+{% load django_static %}
+<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/jquery/jquery.history.js" %}"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/jquery/jquery.fixedscroll.js" %}"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/filtersetup.js" %}"></script>
 <script type="text/javascript">
     /* This variable contains the pagination data. It needs to be populated 
        with before rendering/recalculation may happen. This is the structure:
@@ -33,5 +34,5 @@
     };
 
 </script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/browse.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/browse.js" %}"></script>
 
