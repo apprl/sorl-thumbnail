@@ -38,6 +38,7 @@ def prod():
     env.path = '/home/%(user)s/%(project_name)s' % env
     env.config = 'production'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
+    env.celery_processes='6,3'
 
 def prod_db():
     "Use our EC2 server"
@@ -59,6 +60,7 @@ def staging():
     env.db_client_host = 'localhost'
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
+    env.celery_processes='2,1'
    
 # tasks
 
