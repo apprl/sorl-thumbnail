@@ -28,9 +28,9 @@
 			* @theme heading1
 			*/
 			h1, .h1{
-				/*@editable*/ color:#202020;
+				/*@editable*/ color:#333333;
 				display:block;
-				/*@editable*/ font-size:34px;
+				/*@editable*/ font-size:18px;
 				/*@editable*/ font-weight:bold;
 				/*@editable*/ line-height:100%;
 				margin-bottom:10px;
@@ -44,9 +44,9 @@
 			* @theme heading2
 			*/
 			h2, .h2{
-				/*@editable*/ color:#202020;
+				/*@editable*/ color:#333333;
 				display:block;
-				/*@editable*/ font-size:30px;
+				/*@editable*/ font-size:14px;
 				/*@editable*/ font-weight:bold;
 				/*@editable*/ line-height:100%;
 				margin-bottom:10px;
@@ -112,12 +112,13 @@
 			}
 
 			.headerContent a:link, .headerContent a:visited{
-				color:#666666;
+				color:#999999;
 				font-weight:normal;
 				text-decoration:none;
             }
             .headerContent a:hover{
-                color:#FFFFFF;
+                color:#999999;
+                text-decoration:underline;
             }
             .headerContent .logo a{
                 padding:10px;
@@ -145,7 +146,7 @@
 			* @theme main
 			*/
 			.bodyContent div{
-				/*@editable*/ color:#505050;
+				/*@editable*/ color:#666666;
 				/*@editable*/ font-size:14px;
 				/*@editable*/ line-height:150%;
                 /*@editable*/ text-align:left;
@@ -157,7 +158,7 @@
 			* @tip Set the styling for your email's main content links. Choose a color that helps them stand out from your text.
 			*/
 			.bodyContent div a:link, .bodyContent div a:visited{
-				/*@editable*/ color:#336699;
+				/*@editable*/ color:#666666;
 				/*@editable*/ font-weight:normal;
 				/*@editable*/ text-decoration:underline;
             }
@@ -168,7 +169,7 @@
             * @tip Set the styling for your email's main content links hover effect.
             */
             .bodyContent div a:hover{
-				/*@editable*/ color:#336699;
+				/*@editable*/ color:#666666;
 				/*@editable*/ font-weight:normal;
 				/*@editable*/ text-decoration:underline;
             }
@@ -176,6 +177,7 @@
 			.bodyContent img{
                 display:inline;
                 max-width:600px;
+                border:0;
 			}
 
 			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: FOOTER /\/\/\/\/\/\/\/\/\/\ */
@@ -274,19 +276,19 @@
                                             <td class="headerContent">
                                                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                                     <tr>
-                                                        <td colspan="6" valign="top" align="center" height="44" class="logo">
+                                                        <td valign="top" align="center" height="44" class="logo">
                                                             <a href="http://apparelrow.com/" target="_blank">
                                                                 <img border="0" width="128" height="13" src="http://apparelrow.com/media/images/logo.png" alt="apparelrow.com">
                                                             </a>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td valign="top" width="140"></td>
-                                                        <td valign="top" width="80"><a href="http://apparelrow.com/shop/" target="_blank">SHOP</a></td>
-                                                        <td valign="top" width="80"><a href="http://apparelrow.com/brands/" target="_blank">VARUMÄRKEN</a></td>
-                                                        <td valign="top" width="80"><a href="http://apparelrow.com/looks/" target="_blank">LOOKS</a></td>
-                                                        <td valign="top" width="80"><a href="http://apparelrow.com/users/" target="_blank">USERS</a></td>
-                                                        <td valign="top" width="140"></td>
+                                                        <td valign="top" align="center">
+                                                            <a href="http://apparelrow.com/shop/" target="_blank">SHOP</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <a href="http://apparelrow.com/brands/" target="_blank">VARUMÄRKEN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <a href="http://apparelrow.com/looks/" target="_blank">LOOKS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <a href="http://apparelrow.com/users/" target="_blank">MEDLEMMAR</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        </td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -406,10 +408,6 @@
                                                     *|LIST:DESCRIPTION|*
                                                     *|LIST:ADDRESS|*
                                                     <a href="*|UNSUB|*">unsubscribe from this list</a>
-                                                </div>
-                                                <br />
-                                                <div mc:edit="monkeyrewards">
-                                                    *|IF:REWARDS|* *|HTML:REWARDS|* *|END:IF|*
                                                 </div>
                                                 <br />
                                             </td>
