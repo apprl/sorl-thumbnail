@@ -8,10 +8,10 @@ CELERYD_CHDIR="%(path)s/releases/current/apparelrow"
 ENV_PYTHON="%(path)s/bin/python"
 
 # How to call "manage.py celeryd_multi"
-CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi"
+CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi --settings=production"
 
 # How to call "manage.py celeryctl"
-CELERYCTL="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl"
+CELERYCTL="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl --settings=production"
 
 # Extra arguments to celeryd
 CELERYD_OPTS="--autoscale=6,3 -Q:c1 standard -Q:c2 importer"
@@ -32,10 +32,7 @@ CELERYD_GROUP="%(run_group)s"
 CELERYBEAT_CHDIR="%(path)s/releases/current/apparelrow"
 
 # Path to celerybeat
-CELERYBEAT="$ENV_PYTHON $CELERYBEAT_CHDIR/manage.py celerybeat"
+CELERYBEAT="$ENV_PYTHON $CELERYBEAT_CHDIR/manage.py celerybeat --settings=production"
 
 # Extra arguments to celerybeat
 CELERYBEAT_OPTS="--schedule=%(path)s/var/celerybeat-schedule"
-
-# Name of the projects settings module.
-export DJANGO_SETTINGS_MODULE="%(config)s"
