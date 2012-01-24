@@ -1,6 +1,9 @@
 # Name of nodes to start, here we have a single node
 CELERYD_NODES="c1 c2"
 
+# Where to find the virtual env.
+VIRTUALENV="%(path)s"
+
 # Where to chdir at start.
 CELERYD_CHDIR="%(path)s/releases/current/apparelrow"
 
@@ -8,13 +11,13 @@ CELERYD_CHDIR="%(path)s/releases/current/apparelrow"
 ENV_PYTHON="%(path)s/bin/python"
 
 # How to call "manage.py celeryd_multi"
-CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi --settings=production"
+CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi"
 
 # How to call "manage.py celeryctl"
-CELERYCTL="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl --settings=production"
+CELERYCTL="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl"
 
 # Extra arguments to celeryd
-CELERYD_OPTS="--autoscale=6,3 -Q:c1 standard -Q:c2 importer"
+CELERYD_OPTS="--autoscale=6,3 -Q:c1 standard -Q:c2 importer -B:c1 --settings=production"
 
 # Name of the celery config module.
 # FIXME: is this needed?
@@ -27,12 +30,3 @@ CELERYD_PID_FILE="%(path)s/var/celery-%%n.pid"
 # Workers should run as an unprivileged user.
 CELERYD_USER="%(run_user)s"
 CELERYD_GROUP="%(run_group)s"
-
-# Where the Django project is.
-CELERYBEAT_CHDIR="%(path)s/releases/current/apparelrow"
-
-# Path to celerybeat
-CELERYBEAT="$ENV_PYTHON $CELERYBEAT_CHDIR/manage.py celerybeat --settings=production"
-
-# Extra arguments to celerybeat
-CELERYBEAT_OPTS="--schedule=%(path)s/var/celerybeat-schedule"

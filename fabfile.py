@@ -242,9 +242,7 @@ def copy_config():
         upload_template('etc/solr.conf.init', '/etc/init/solr.conf', context=env, use_sudo=True)
         upload_template('etc/celeryd.default', '/etc/default/celeryd', context=env, use_sudo=True)
         sudo('cp ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
-        sudo('cp ./releases/%(release)s/etc/celerybeat.init /etc/init.d/celerybeat' % env, pty=True)
         sudo('update-rc.d celeryd defaults', pty=True)
-        sudo('update-rc.d celerybeat defaults', pty=True)
         upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
         sudo('cp ./releases/%(release)s/etc/redis.conf /etc/redis.conf' % env, pty=True)
 
@@ -301,7 +299,6 @@ def restart_solr():
         sudo('restart solr', pty=False)
 
 def restart_celeryd():
-    sudo('/etc/init.d/celerybeat restart', pty=False)
     sudo('/etc/init.d/celeryd restart', pty=False)
 
 def restart_memcached():

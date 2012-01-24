@@ -85,7 +85,7 @@ export PATH="${PATH:+$PATH:}/usr/sbin:/sbin"
 
 
 stop_workers () {
-    $CELERYD_MULTI stop $CELERYD_NODES --pidfile="$CELERYD_PID_FILE"
+    $CELERYD_MULTI stop $CELERYD_NODES --pidfile="$CELERYD_PID_FILE" $CELERYD_OPTS
 }
 
 
@@ -108,7 +108,13 @@ restart_workers () {
                            $CELERYD_OPTS
 }
 
+if [ -n "$VIRTUALENV" ]; then
+    . $VIRTUALENV/bin/activate
+fi
 
+if [ -n "$CELERYD_CHDIR" ]; then
+    cd $CELERYD_CHDIR
+fi
 
 case "$1" in
     start)
