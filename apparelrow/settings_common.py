@@ -311,3 +311,26 @@ APPAREL_DECOMPRESS_SUFFIX = {
     'zip': '.zip',
 }
 
+
+# CELERY
+CELERY_CREATE_MISSING_QUEUES = True
+CELERY_QUEUES = {
+    'clicks': {'exchange': 'clicks', 'exchange_type': 'direct', 'routing_key': 'increment_click'},
+    'search_updates': {'exchange': 'search_updates', 'exchange_type': 'direct', 'routing_key': 'update_search_index'},
+    'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
+}
+
+CELERY_ROUTES = ({
+    'apparelrow.tasks.ProcessClicksTask': {'queue': 'importer'},
+    'apparelrow.tasks.ProcessPopularityTask': {'queue': 'importer'},
+    'apparelrow.tasks.ProcessSearchIndexUpdatesTask': {'queue': 'importer'},
+    'apparelrow.tasks.search_index_update_task': {'queue': 'standard'},
+    'beta.tasks.send_email_task': {'queue': 'standard'},
+    'profile.notifications.process_comment_look_comment': {'queue': 'standard'},
+    'profile.notifications.process_comment_look_created': {'queue': 'standard'},
+    'profile.notifications.process_comment_product_comment': {'queue': 'standard'},
+    'profile.notifications.process_comment_product_wardrobe': {'queue': 'standard'},
+    'profile.notifications.process_follow_user': {'queue': 'standard'},
+    'profile.notifications.process_like_look_created': {'queue': 'standard'},
+    'profile.views.send_email_confirm_task': {'queue': 'standard'},
+},)
