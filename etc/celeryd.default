@@ -11,7 +11,7 @@ ENV_PYTHON="%(path)s/bin/python"
 CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi"
 
 # How to call "manage.py celeryctl"
-CELERYCTL=$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl"
+CELERYCTL="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl"
 
 # Extra arguments to celeryd
 CELERYD_OPTS="--autoscale=6,3 -Q:c1 standard -Q:c2 importer"
