@@ -133,7 +133,7 @@ def setup(snapshot='master'):
         run('virtualenv --no-site-packages .')
         with settings(warn_only=True):
             run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared/warehouse shared/cache shared/static packages backup;', pty=True)
-            sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse shared/static;' % env, pty=True)
+            sudo('chown -R %(run_user)s:%(run_group)s var shared/cache shared/warehouse shared/static;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     install_redis()
     deploy('first', snapshot=snapshot)
