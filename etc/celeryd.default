@@ -32,7 +32,7 @@ CELERYD_GROUP="%(run_group)s"
 CELERYBEAT_CHDIR="%(path)s/releases/current/apparelrow"
 
 # Path to celerybeat
-CELERYBEAT=$ENV_PYTHON $CELERYBEAT_CHDIR/manage.py celerybeat"
+CELERYBEAT="$ENV_PYTHON $CELERYBEAT_CHDIR/manage.py celerybeat"
 
 # Extra arguments to celerybeat
 CELERYBEAT_OPTS="--schedule=%(path)s/var/celerybeat-schedule"
