@@ -220,7 +220,7 @@ def install_requirements():
 
 def copy_bin():
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s; cp -n ./releases/%(release)s/bin/* ./bin' % env, pty=True)
+    run('cd %(path)s; cp ./releases/%(release)s/bin/* ./bin' % env, pty=True)
 
 def copy_solr():
     require('release', provided_by=[deploy, setup])
@@ -232,21 +232,21 @@ def copy_solr():
 def copy_config():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
-        run('cp -n ./releases/%(release)s/etc/* ./etc' % env, pty=True)
+        run('cp ./releases/%(release)s/etc/* ./etc' % env, pty=True)
         run('cp ./releases/%(release)s/etc/requirements.pip ./etc/requirements.pip' %env, pty=True)
-        run('cp -n ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
+        run('cp ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
         run('cd releases/%(release)s/apparelrow; cp %(config)s.py.default production.py' % env, pty=True)
         upload_template('etc/logrotate.conf', '/etc/logrotate.d/apparelrow', context=env, use_sudo=True)
         upload_template('etc/arimport.cron', '/etc/cron.daily/arimport', context=env, use_sudo=True)
         sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
         upload_template('etc/solr.conf.init', '/etc/init/solr.conf', context=env, use_sudo=True)
         upload_template('etc/celeryd.default', '/etc/default/celeryd', context=env, use_sudo=True)
-        sudo('cp -n ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
-        sudo('cp -n ./releases/%(release)s/etc/celerybeat.init /etc/init.d/celerybeat' % env, pty=True)
+        sudo('cp ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
+        sudo('cp ./releases/%(release)s/etc/celerybeat.init /etc/init.d/celerybeat' % env, pty=True)
         sudo('update-rc.d celeryd defaults', pty=True)
         sudo('update-rc.d celerybeat defaults', pty=True)
         upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
-        sudo('cp -n ./releases/%(release)s/etc/redis.conf /etc/redis.conf' % env, pty=True)
+        sudo('cp ./releases/%(release)s/etc/redis.conf /etc/redis.conf' % env, pty=True)
 
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
