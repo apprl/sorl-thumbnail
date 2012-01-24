@@ -294,21 +294,21 @@ def install_redis():
 def restart_django():
     require('path')
     with cd(env.path):
-        sudo('./bin/django-server restart', pty=True, user=env.run_user)
+        sudo('./bin/django-server restart', pty=False, user=env.run_user)
 
 def restart_solr():
     with settings(warn_only=True):
-        sudo('restart solr', pty=True)
+        sudo('restart solr', pty=False)
 
 def restart_celeryd():
-    sudo('/etc/init.d/celerybeat restart', pty=True)
-    sudo('/etc/init.d/celeryd restart', pty=True)
+    sudo('/etc/init.d/celerybeat restart', pty=False)
+    sudo('/etc/init.d/celeryd restart', pty=False)
 
 def restart_memcached():
-    sudo('/etc/init.d/memcached restart', pty=True)
+    sudo('/etc/init.d/memcached restart', pty=False)
 
 def restart_webserver():
     "Restart the web server"
     require('webserver')
     with settings(warn_only=True):
-        sudo('/etc/init.d/%(webserver)s reload' % env, pty=True)
+        sudo('/etc/init.d/%(webserver)s reload' % env, pty=False)
