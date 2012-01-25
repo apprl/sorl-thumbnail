@@ -1,6 +1,6 @@
 {% load thumbnail %}
 {% for component in object.collage_components.all %}
-    {% thumbnail component.product.product_image "93x69" crop="noop" as im %}
+    {% thumbnail component.product.product_image "93x69" crop="noop" format="PNG" transparent=True as im %}
     <img id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_small }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
     {% endthumbnail %}
 {% endfor %}

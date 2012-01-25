@@ -311,6 +311,7 @@ APPAREL_DECOMPRESS_SUFFIX = {
     'zip': '.zip',
 }
 
+THUMBNAIL_ENGINE = 'apparel.sorl_engine.Engine'
 
 # CELERY
 CELERY_CREATE_MISSING_QUEUES = True

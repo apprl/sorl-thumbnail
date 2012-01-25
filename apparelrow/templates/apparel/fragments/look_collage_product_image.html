@@ -1,4 +1,4 @@
 {% load thumbnail %}
-{% thumbnail component.product.product_image "470" as im %}
+{% thumbnail component.product.product_image "470" format="PNG" transparent=True as im %}
 <img id="product-{{ component.product.id }}" class="product" style="position: absolute; {{ component.style }}" src="{{ im.url }}" />
 {% endthumbnail %}

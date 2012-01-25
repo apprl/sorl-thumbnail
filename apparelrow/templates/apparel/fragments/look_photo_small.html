@@ -1,4 +1,4 @@
 {% load thumbnail %}
-{% thumbnail object.image "93x69" crop="center" as im %}
+{% thumbnail object.image "93x69" crop="center" format="PNG" transparent=True as im %}
     <img id="look-{{ object.id }}" class="product" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" /><!-- trans -->
 {% endthumbnail %}
