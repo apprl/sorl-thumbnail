@@ -34,10 +34,10 @@ def unlock(request):
             response.set_cookie('in_beta', value='1', max_age=365 * 24 * 60 * 60)
             return response
         except Invitee.DoesNotExist:
-            return render_to_response('beta/beta.html', {'next': request.POST.get('next', '/'), 'image': image}, context_instance=RequestContext(request))
+            return render_to_response('beta/beta.html', {'next': request.POST.get('next', '/'), 'image': str(image)}, context_instance=RequestContext(request))
     else:
         # Initial request
-        return render_to_response('beta/beta.html', {'next': request.GET.get('next', '/'), 'image': image}, context_instance=RequestContext(request))
+        return render_to_response('beta/beta.html', {'next': request.GET.get('next', '/'), 'image': str(image)}, context_instance=RequestContext(request))
 
 def invite(request):
     if request.user and request.user.is_authenticated:
