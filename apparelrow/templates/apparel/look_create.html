@@ -11,28 +11,6 @@
 {% block body %}
 <div id="content">
     <h2>{% trans "Create a new look" %}</h2>
-    <form action="{{ request.path }}" method="post" class="standard-form create-look">
-        {% csrf_token %}
-        <div>
-            <label for="id_title">{% trans "Select a name for your look: " %}</label>
-            {{ form.title }}
-            {% if form.title.errors %}
-                {{ form.title.errors }}
-            {% endif %}
-        </div>
-
-        <ul class="choices">
-            <li>
-                <h3>{% trans "Tagged photo" %}</h3>
-                <img src="{{ MEDIA_URL }}images/example-photo.png">
-                <input type="submit" name="look_photo" value="{% trans "Create a photo" %}">
-            </li>
-            <li>
-                <h3>{% trans "Collage" %}</h3>
-                <img src="{{ MEDIA_URL }}images/example-collage.png">
-                <input type="submit" name="look_collage" value="{% trans "Create a collage" %}">
-            </li>
-        </ul>
-    </form>
+    {% include 'apparel/fragments/look_create.html' %}
 </div>
 {% endblock body %}

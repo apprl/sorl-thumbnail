@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-25 13:38+0100\n"
+"POT-Creation-Date: 2012-01-26 16:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -555,19 +555,19 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: templates/base.html:95 templates/base.html.py:202
+#: templates/base.html:95 templates/base.html.py:208
 #: templates/apparel/gender.html:10
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Women"
 msgstr ""
 
-#: templates/base.html:96 templates/base.html.py:203
+#: templates/base.html:96 templates/base.html.py:209
 #: templates/apparel/gender.html:11
 #: templates/apparel/fragments/product_menu_browse.html:15
 msgid "Men"
 msgstr ""
 
-#: templates/base.html:100 templates/base.html.py:201
+#: templates/base.html:100 templates/base.html.py:207
 msgid "Shop"
 msgstr ""
 
@@ -575,7 +575,7 @@ msgstr ""
 msgid "Brands"
 msgstr ""
 
-#: templates/base.html:102 templates/base.html.py:206
+#: templates/base.html:102 templates/base.html.py:158 templates/base.html:212
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:6
 #: templates/profile/fragments/menu_items.html:10
 msgid "Looks"
@@ -609,84 +609,95 @@ msgstr ""
 msgid "Show all manufacturers"
 msgstr ""
 
-#: templates/base.html:148
-msgid "Logged in as"
-msgstr ""
-
-#: templates/base.html:153
+#: templates/base.html:156
 msgid "My profile"
 msgstr ""
 
-#: templates/base.html:160
+#: templates/base.html:157 templates/profile/fragments/menu_items.html:7
+msgid "Wardrobe"
+msgstr ""
+
+#: templates/base.html:159 templates/profile/followers.html:6
+#: templates/profile/fragments/menu_items.html:13
+msgid "Followers"
+msgstr ""
+
+#: templates/base.html:160 templates/apparel/fragments/follow.html:6
+#: templates/profile/base_profile.html:81 templates/profile/following.html:6
+#: templates/profile/fragments/menu_items.html:16
+msgid "Following"
+msgstr ""
+
+#: templates/base.html:166
 msgid "Friends' updates"
 msgstr ""
 
-#: templates/base.html:167 templates/profile/base_settings.html:8
+#: templates/base.html:173 templates/profile/base_settings.html:8
 msgid "Settings"
 msgstr ""
 
-#: templates/base.html:174
+#: templates/base.html:180
 #, python-format
 msgid "Invite friends (%(invites)s)"
 msgstr ""
 
-#: templates/base.html:181 templates/base.html.py:209 templates/base.html:211
-#: templates/apparel/look_create_dialog.html:4
+#: templates/base.html:187 templates/base.html.py:215 templates/base.html:217
+#: templates/apparel/look_create_dialog.html:6
 #: templates/apparel/look_create_unauthenticated.html:5
 #: templates/apparel/look_create_unauthenticated.html:11
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
 msgstr ""
 
-#: templates/base.html:184
+#: templates/base.html:190
 msgid "Friends' Favorites"
 msgstr ""
 
-#: templates/base.html:187
+#: templates/base.html:193
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:207
+#: templates/base.html:213
 msgid "All looks"
 msgstr ""
 
-#: templates/base.html:215
+#: templates/base.html:221
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:216 templates/apparel/look_list.html:39
+#: templates/base.html:222 templates/apparel/look_list.html:39
 #: templates/apparel/look_list.html:50 templates/apparel/user_home.html:36
 #: templates/apparel/fragments/browse_follow_user.html:5
 #: templates/profile/dialog_welcome.html:25
 msgid "See all members"
 msgstr ""
 
-#: templates/base.html:222
+#: templates/base.html:228
 msgid "About Apparelrow"
 msgstr ""
 
-#: templates/base.html:223
+#: templates/base.html:229
 msgid "About the beta"
 msgstr ""
 
-#: templates/base.html:224
+#: templates/base.html:230
 msgid "Blog"
 msgstr ""
 
-#: templates/base.html:225
+#: templates/base.html:231
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:226
+#: templates/base.html:232
 #: templates/apparel/fragments/dialog_about_cookies.html:4
 msgid "About cookies"
 msgstr ""
 
-#: templates/base.html:247
+#: templates/base.html:253
 msgid "No"
 msgstr ""
 
-#: templates/base.html:248
+#: templates/base.html:254
 msgid "Yes"
 msgstr ""
 
@@ -827,31 +838,6 @@ msgstr ""
 
 #: templates/apparel/look_create.html:13
 msgid "Create a new look"
-msgstr ""
-
-#: templates/apparel/look_create.html:17
-#: templates/apparel/look_create_dialog.html:10
-msgid "Select a name for your look: "
-msgstr ""
-
-#: templates/apparel/look_create.html:26
-#: templates/apparel/look_create_dialog.html:19
-msgid "Tagged photo"
-msgstr ""
-
-#: templates/apparel/look_create.html:28
-#: templates/apparel/look_create_dialog.html:21
-msgid "Create a photo"
-msgstr ""
-
-#: templates/apparel/look_create.html:31
-#: templates/apparel/look_create_dialog.html:24
-msgid "Collage"
-msgstr ""
-
-#: templates/apparel/look_create.html:33
-#: templates/apparel/look_create_dialog.html:26
-msgid "Create a collage"
 msgstr ""
 
 #: templates/apparel/look_create_unauthenticated.html:12
@@ -1186,12 +1172,6 @@ msgid ""
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:6
-#: templates/profile/base_profile.html:81 templates/profile/following.html:6
-#: templates/profile/fragments/menu_items.html:16
-msgid "Following"
-msgstr ""
-
-#: templates/apparel/fragments/follow.html:6
 msgid "Stop following"
 msgstr ""
 
@@ -1227,6 +1207,31 @@ msgid "<span class=\"count\">%(counter)s</span> like"
 msgid_plural "<span class=\"count\">%(counter)s</span> likes"
 msgstr[0] ""
 msgstr[1] ""
+
+#: templates/apparel/fragments/look_create.html:5
+msgid ""
+"Begin by selecting a name for your look (you can change the name later): "
+msgstr ""
+
+#: templates/apparel/fragments/look_create.html:12
+msgid "You can then choose to create a tagged photo or a collage: "
+msgstr ""
+
+#: templates/apparel/fragments/look_create.html:15
+msgid "Tagged photo"
+msgstr ""
+
+#: templates/apparel/fragments/look_create.html:17
+msgid "Create a tagged photo"
+msgstr ""
+
+#: templates/apparel/fragments/look_create.html:20
+msgid "Collage"
+msgstr ""
+
+#: templates/apparel/fragments/look_create.html:22
+msgid "Create a collage"
+msgstr ""
 
 #: templates/apparel/fragments/look_product_tooltip.html:22
 #: templates/apparel/fragments/look_product_tooltip.html:31
@@ -1590,11 +1595,6 @@ msgstr ""
 msgid "Most popular to follow"
 msgstr ""
 
-#: templates/profile/followers.html:6
-#: templates/profile/fragments/menu_items.html:13
-msgid "Followers"
-msgstr ""
-
 #: templates/profile/looks.html:11
 #, python-format
 msgid "%(name)s's popular looks"
@@ -1680,10 +1680,6 @@ msgstr ""
 #: templates/profile/fragments/follow_profile.html:17
 #, python-format
 msgid "Followed by %(follower_count)s"
-msgstr ""
-
-#: templates/profile/fragments/menu_items.html:7
-msgid "Wardrobe"
 msgstr ""
 
 #: templates/profile/notifications/email_base.html:5

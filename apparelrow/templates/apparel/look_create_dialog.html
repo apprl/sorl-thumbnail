@@ -1,32 +1,10 @@
 {% extends 'dialog_base.html' %}
 {% load i18n %}
 
+{% block dialog_class %}create-look-dialog{% endblock %}
+
 {% block title %}{% trans "Create a look" %}{% endblock %}
 
 {% block content %}
-    <form action="{{ request.path }}" method="post" class="standard-form create-look">
-        {% csrf_token %}
-        <div>
-            <label for="id_title">{% trans "Select a name for your look: " %}</label>
-            {{ form.title }}
-            {% if form.title.errors %}
-                {{ form.title.errors }}
-            {% endif %}
-        </div>
-        <div>
-            <ul class="choices">
-                <li>
-                    <h3>{% trans "Tagged photo" %}</h3>
-                    <img src="{{ MEDIA_URL }}images/example-photo.png">
-                    <input type="submit" name="look_photo" value="{% trans "Create a photo" %}">
-                </li>
-                <li>
-                    <h3>{% trans "Collage" %}</h3>
-                    <img src="{{ MEDIA_URL }}images/example-collage.png">
-                    <input type="submit" name="look_collage" value="{% trans "Create a collage" %}">
-                </li>
-            </ul>
-            <div class="clear"></div>
-        </div>
-    </form>
+    {% include 'apparel/fragments/look_create.html' %}
 {% endblock %}

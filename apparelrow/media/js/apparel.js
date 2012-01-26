@@ -37,11 +37,15 @@ function create_modal_dialog(header, messages, yes_action, no_action) {
 /**
  * Creates a dialog from html loaded through ajax, only alternativ is close
  */
-function create_html_dialog(url_to_html, large_dialog, close_callback) {
+function create_html_dialog(url_to_html, large_dialog, close_callback, width) {
     var dialog = jQuery('<div class="dialog"></div>');
 
     if(large_dialog) {
         dialog.addClass('large-dialog');
+    }
+
+    if(width) {
+        dialog.css('width', width + 'px');
     }
 
     dialog.load(url_to_html).appendTo('body').overlay({
@@ -55,7 +59,7 @@ function create_html_dialog(url_to_html, large_dialog, close_callback) {
         close: '.close',
         top: 100,
         onClose: function(e) {
-            if(close_callback !== undefined) {
+            if(close_callback !== undefined && close_callback) {
                 close_callback();
             } else {
                 this.getTrigger().remove();
@@ -100,7 +104,13 @@ jQuery(document).ready(function() {
 
     // All elements with class open-dialog should open a dialog and load html from href-url
     jQuery('.open-dialog').live('click', function(event) {
-        create_html_dialog(jQuery(this).attr('href'));
+        // TODO: replace attr with data when we change to new jquery version
+        var width = jQuery(this).attr('data-dialog-width');
+        if (width) {
+            create_html_dialog(jQuery(this).attr('href'), false, false, width);
+        } else {
+            create_html_dialog(jQuery(this).attr('href'));
+        }
         event.preventDefault();
     });
 
