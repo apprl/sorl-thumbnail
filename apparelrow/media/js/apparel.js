@@ -292,6 +292,23 @@ jQuery(document).ready(function() {
     jQuery('#profile-image input[type=file]').change(function(e) {
         jQuery('button[type=submit]', jQuery(this).closest('ul')).show();
     });
+
+    // Login pane profile hover menu
+    var profile_previously_selected = false;
+    jQuery('#login-pane .profile').hover(function(e) {
+        if (jQuery(this).find('> a').hasClass('selected')) {
+            profile_previously_selected = true;
+            jQuery(this).find('.profile-hover-menu').show();
+        } else {
+            jQuery(this).find('> a').addClass('selected').end().find('.profile-hover-menu').show();
+        }
+    }, function(e) {
+        if (profile_previously_selected) {
+            jQuery(this).find('.profile-hover-menu').hide();
+        } else {
+            jQuery(this).find('> a').removeClass('selected').end().find('.profile-hover-menu').hide();
+        }
+    });
 });
 
 function getElementId(element, numeric) {

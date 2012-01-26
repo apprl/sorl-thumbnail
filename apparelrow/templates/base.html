@@ -144,33 +144,39 @@
         {% url profile.views.settings_email as email_settings_url %}
 
         <div id="login-pane">
-            <div class="left">
-                {% trans "Logged in as" %} <a href="{{ profile_url }}">{{ user.get_profile.display_name }}</a>
-            </div>
             <ul>
-                <li>
-                    <a class="first{% if request.path == profile_url %} selected{% endif %}" href="{{ profile_url }}">
-                        {% trans "My profile" %}
+                <li class="profile">
+                    <a class="{% if request.path == profile_url %} selected{% endif %}"href="{{ profile_url }}">
+                        <img src="{{ user.get_profile.avatar }}" class="avatar small">
+                        {{ user.get_profile.display_name }}
                         <div class="arrow"></div>
                     </a>
+                    <ul class="profile-hover-menu" style="display: none;">
+                        <li class="arrow"></li>
+                        <li class="first"><a href="{% url profile.views.profile %}">{% trans "My profile" %}</a></li>
+                        <li><a href="{% url apparel.browse.browse_wardrobe user.username %}">{% trans "Wardrobe" %}</a></li>
+                        <li><a href="{% url profile.views.looks user.username %}">{% trans "Looks" %}</a></li>
+                        <li><a href="{% url profile.views.followers user.username %}">{% trans "Followers" %}</a></li>
+                        <li class="last"><a href="{% url profile.views.following user.username %}">{% trans "Following" %}</a></li>
+                    </ul>
                 </li>
-                <li>
+                <li class="updates">
                     <a class="{% if request.path == home_url %} selected{% endif %}" href="{{ home_url }}">
                         {% with user.get_profile.get_updates_last_visit as updates %}
-                        {% trans "Friends' updates" %}{% if updates %} ({{ user.get_profile.get_updates_last_visit }}){% endif %}
+                        <span>{% trans "Friends' updates" %}{% if updates %} ({{ user.get_profile.get_updates_last_visit }}){% endif %}</span>
                         {% endwith %}
                         <div class="arrow"></div>
                     </a>
                 </li>
-                <li>
-                    <a class="last{% if request.path == notification_settings_url or request.path == email_settings_url %} selected{% endif %}" href="{{ notification_settings_url }}">
-                        {% trans "Settings" %}
+                <li class="settings">
+                    <a class="{% if request.path == notification_settings_url or request.path == email_settings_url %} selected{% endif %}" href="{{ notification_settings_url }}">
+                        <span>{% trans "Settings" %}</span>
                         <div class="arrow"></div>
                     </a>
                 </li>
                 {% if user.get_profile.beta and user.get_profile.beta.invites > 0 %}
-                <li>
-                    <a class="last open-dialog" href="{% url beta.views.invite %}?next={{ request.path }}">
+                <li class="invites">
+                    <a class="open-dialog" href="{% url beta.views.invite %}?next={{ request.path }}">
                         {% blocktrans with user.get_profile.beta.invites as invites %}Invite friends ({{ invites }}){% endblocktrans %}
                         <div class="arrow"></div>
                     </a>
@@ -183,7 +189,7 @@
             <div class="friends-favorites">
                 <a href="{% gender_url APPAREL_GENDER 'shop' %}#f=1">{% trans "Friends' Favorites" %}</a>
             </div>
-            <div class="right">
+            <div class="right logout">
                 <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
             </div>
         </div>

@@ -278,15 +278,15 @@ button
 
 #login-pane
   clear: left
-  width: 940px
+  width: 980px
   height: 28px
   line-height: 28px
   background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x left top
   border: 1px solid $border_color
   border-left: none
   border-right: none
-  margin: 0px 0px 0px 18px
-  padding: 0px 20px
+  margin: 0 0 0 18px
+  padding: 0
   div
     &.left
       float: left
@@ -310,6 +310,7 @@ button
       float: right
       text-align: right
       margin-top: -1px
+      margin-right: $margin_width
     #logout
       display: inline-block
       color: $easy-color
@@ -324,25 +325,76 @@ button
     z-index: 10
     position: relative
     margin-top: -1px
-    margin-left: 1em
+    overflow: visible
     li
-      a, span
-        font:
-          family: $font_family
-        padding-top: 1px
+      &.profile
+        width: $aside_width + $gutter_width + $margin_width
+        a
+          padding-left: $margin_width + 25px
+          vertical-align: top
+        img
+          position: absolute
+          left: $margin_width
+          top: 4px
+          width: 20px
+          height: 20px
+        ul
+          position: absolute
+          top: 28px
+          left: $margin_width
+          z-index: 99999
+          width: $aside_width - 2px
+          +border(all, $font_color)
+          +border-radius(3px)
+          +box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 5px)
+          line-height: 0
+          background-color: #363636
+          li
+            +border(bottom, #363636)
+            width: $aside_width - 2px
+            height: 28px
+            margin: 0
+            padding: 0
+            background: transparent image_url(unquote("dark-menu-bg.png")) scroll repeat-x left top
+            &:hover
+              background: transparent image_url(unquote("dark-menu-hover-bg.png")) scroll repeat-x left top
+            &.last
+              border: 0
+            &.arrow
+              width: $aside_width
+              position: absolute
+              left: 0
+              top: -5px
+              height: 5px
+              background: transparent image_url(unquote("large-arrow-head.png")) scroll no-repeat left top
+              border: none
+            a
+              margin: 0
+              padding: 0 0 0 10px
+              height: 28px
+              line-height: 28px
+              color: $white_color - #333333
+              border: 0
+              &:hover
+                background: none
+
+      &.settings a span
+        padding-left: 20px
+        background: transparent image_url(unquote("icon-settings.png")) scroll no-repeat left center
+      &.updates a span
+        padding-left: 20px
+        background: transparent image_url(unquote("icon-updates.png")) scroll no-repeat left center
+      a
         display: block
         height: 28px
         line-height: 28px
-        padding-left: 1em
-        padding-right: 1em
+        padding: 1px 10px 0 10px
         border-right: 1px solid $border_color
         position: relative
         &.selected, &:hover
           background-image: image_url(unquote("profile-nav-bg-selected.png"))
           border-top: none
           border-bottom: none
-          height: 29px
-          line-height: 29px
           border-right-color: #ababab
           border-left: 1px solid #ababab
           margin-left: -1px
@@ -363,8 +415,11 @@ button
           position: absolute
           height: 6px
           left: 0
-          bottom: 0
+          bottom: -1px
           right: 0
+      &.profile a .arrow
+        background-position: bottom left
+        left: 36px
 
 #product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
   +box
