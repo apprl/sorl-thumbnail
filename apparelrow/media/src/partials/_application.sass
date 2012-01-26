@@ -182,7 +182,7 @@ button
             background: #2e2e2e image_url(unquote("language-popup-bg.png")) scroll repeat-x center top
             +border(all, $font_color)
             +border-radius(3px)
-            +box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 5px)
+            +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 5px)
             line-height: 0
             li
               +border(bottom, #363636)
@@ -346,7 +346,7 @@ button
           width: $aside_width - 2px
           +border(all, $font_color)
           +border-radius(3px)
-          +box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 5px)
+          +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 5px)
           line-height: 0
           background-color: #363636
           li
@@ -1191,7 +1191,7 @@ a.buy-now
   border: unquote("1px") solid $border_color
   padding: 0.5em
   +border-radius(5px)
-  +box-shadow(#f6f6f6 - #222222, 0, 2px, 2px)
+  +single-box-shadow(#f6f6f6 - #222222, 0, 2px, 2px)
   .highlight
     color: #408994
     background-color: $highlight_bg_color
@@ -1302,7 +1302,7 @@ form.create-look
       img
         border: 1px solid $border_color
         display: block
-        +box-shadow(rgba(0, 0, 0, 0.15), 0, 0, 6px)
+        +single-box-shadow(rgba(0, 0, 0, 0.15), 0, 0, 6px)
       input[type="submit"]
         width: 100%
         height: 25px
