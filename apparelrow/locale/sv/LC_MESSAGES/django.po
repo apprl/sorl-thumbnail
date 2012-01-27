@@ -949,7 +949,7 @@ msgstr "Dra produkter hit för att börja skapa ditt kollage"
 
 #: templates/apparel/look_edit.html:490
 msgid "Upload a photo to create a tagged image"
-msgstr "Ladda upp ett foto för att skapa en taggad bild"
+msgstr "Börja med att ladda upp ett foto"
 
 #: templates/apparel/look_edit.html:495
 msgid "Choose file"
