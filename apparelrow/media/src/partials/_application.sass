@@ -1302,16 +1302,17 @@ body.create-look, div.create-look-dialog
           padding-bottom: 5px
           margin: 10px 0 15px 0 !important
           border-bottom: 1px solid $border_color
-        img
-          border: 1px solid $border_color
-          display: block
-          +single-box-shadow(rgba(0, 0, 0, 0.15), 0, 0, 6px)
-        input[type="submit"]
+        button
           width: 100%
-          height: 25px
-          margin-top: 10px
-          +button(none, 25px, 3px)
-          line-height: 0
+          img
+            border: 1px solid $border_color
+            display: block
+            +single-box-shadow(rgba(0, 0, 0, 0.15), 0, 0, 6px)
+          span
+            height: 25px
+            margin-top: 10px
+            +button(none, 25px, 3px)
+            line-height: 0
         &.last
           margin-right: 0
   .dialog-footer
