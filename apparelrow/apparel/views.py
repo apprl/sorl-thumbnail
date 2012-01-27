@@ -393,7 +393,7 @@ def look_create(request):
 
         if form.is_valid():
             look = form.save(commit=False)
-            if request.POST.get('look_photo', None) or request.POST.get('look_photo.x', None):
+            if request.POST.get('look_photo', None) or request.POST.get('look_photo_image.x', None):
                 look.component = 'P'
             else:
                 look.component = 'C'

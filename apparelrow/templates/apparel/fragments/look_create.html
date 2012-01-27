@@ -13,12 +13,12 @@
         <ul class="choices">
             <li>
                 <h3>{% trans "Tagged photo" %}</h3>
-                <input type="image" src="{{ MEDIA_URL }}/images/example-photo.png" alt="">
+                <input name="look_photo_image" type="image" src="{{ MEDIA_URL }}/images/example-photo.png" alt="">
                 <input name="look_photo" type="submit" value="{% trans "Create a tagged photo" %}">
             </li>
             <li class="last">
                 <h3>{% trans "Collage" %}</h3>
-                <input type="image" src="{{ MEDIA_URL }}/images/example-collage.png" alt="">
+                <input name="look_collage_image" type="image" src="{{ MEDIA_URL }}/images/example-collage.png" alt="">
                 <input name="look_collage" type="submit" value="{% trans "Create a collage" %}">
             </li>
         </ul>
