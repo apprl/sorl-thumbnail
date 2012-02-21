@@ -34,6 +34,11 @@ class VendorFeed(models.Model):
         except ImportLog.DoesNotExist:
             pass        
     
+    def save(self, *args, **kwargs):
+        self.url = self.url.strip()
+
+        return super(VendorFeed, self).save(*args, **kwargs)
+
     def __unicode__(self):
         return u'%s' % self.vendor.name
     
