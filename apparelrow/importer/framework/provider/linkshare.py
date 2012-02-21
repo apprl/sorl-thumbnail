@@ -4,7 +4,7 @@ import re
 from importer.framework.provider import CSVProvider
 from importer.framework.parser import utils
 from importer.framework.mapper import DataMapper
-from importer.framework.mapper import SkipField
+from importer.api import SkipProduct
 
 REGEX_SIZE = re.compile('^[Ss]ize: .+\. ')
 AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False, 'out of stock': False, 'no stock': False}
@@ -13,7 +13,7 @@ class LinkshareMapper(DataMapper):
     def get_product_id(self):
         product_id = self.record.get('product-id')
         if product_id == 'HDR' or product_id == 'TRL':
-            raise SkipField('remove header / footer from linkshare feeds')
+            raise SkipProduct('remove header / footer from linkshare feeds')
 
         return product_id
 
@@ -45,7 +45,7 @@ class LinkshareMapper(DataMapper):
         return sizes
 
     def get_color(self):
-        colors = ['']
+        colors = []
         if self.record.get('color', ''):
             colors.extend(self.map_colors(self.record.get('color', '')))
         else:
