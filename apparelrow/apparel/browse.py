@@ -128,7 +128,8 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
 
     query_string = request.GET.get('q')
     if not query_string:
-        query_arguments['sort'] = 'popularity desc'
+        if not 'sort' in query_arguments:
+            query_arguments['sort'] = 'popularity desc'
         query_string = '*:*'
 
     search = ApparelSearch(query_string, **query_arguments)
