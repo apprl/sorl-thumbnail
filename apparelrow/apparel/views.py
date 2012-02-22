@@ -705,7 +705,16 @@ def home(request, profile):
 
 
     # FIXME: Ugly solution, query solr for popular products, then query db for those two results, should be able to get this directly with db queries.
-    query_arguments = {'sort': 'popularity desc', 'start': 0, 'rows': limit, 'fq': 'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or)}
+    query_arguments = {
+        'sort': 'popularity desc',
+        'start': 0,
+        'rows': limit,
+        'fq': [
+            'django_ct:apparel.product',
+            'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or),
+            'availability:true'
+        ]
+    }
     result = ApparelSearch('*:*', **query_arguments)
     popular_products = Product.objects.filter(id__in=[doc.django_id for doc in result.get_docs()])
 
