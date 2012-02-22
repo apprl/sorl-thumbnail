@@ -20,6 +20,7 @@ from haystack.indexes import IntegerField
 from haystack.indexes import MultiValueField
 from haystack.indexes import NgramField
 from haystack.indexes import BooleanField
+from haystack.indexes import DecimalField
 
 from apparelrow.apparel.messaging import search_index_update
 from apparelrow.apparel.models import Category
@@ -176,7 +177,7 @@ class ProductIndex(QueuedSearchIndex):
     template_mlt = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_no_price.html')
     user_wardrobe = MultiValueField(stored=False)
     user_likes = MultiValueField(stored=False)
-    popularity = IntegerField(model_attr='popularity')
+    popularity = DecimalField(model_attr='popularity')
     availability = BooleanField(stored=False)
 
     # Search fields
