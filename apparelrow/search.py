@@ -29,6 +29,7 @@ from apparelrow.apparel.models import Manufacturer
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.models import Wardrobe
 from apparelrow.apparel.models import ProductLike
+from apparelrow.apparel.models import VendorProduct
 from apparelrow.apparel.utils import get_gender_from_cookie
 
 from pysolr import Solr
@@ -50,6 +51,7 @@ class QueuedSearchIndex(SearchIndex):
     """
     def _setup_save(self, model):
         signals.post_save.connect(self.enqueue_save, sender=model)
+        signals.post_save.connect(self.vendor_product_save, sender=VendorProduct)
 
     def _setup_delete(self, model):
         signals.post_delete.connect(self.enqueue_delete, sender=model)
@@ -59,6 +61,9 @@ class QueuedSearchIndex(SearchIndex):
 
     #def _teardown_delete(self, model):
         #signals.post_delete.disconnect(self.enqueue_delete, sender=model)
+
+    def vendor_product_save(self, instance, **kwargs):
+        self.enqueue_save(instance.product)
 
     def enqueue_save(self, instance, **kwargs):
         if hasattr(instance, 'published') and instance.published == False:
