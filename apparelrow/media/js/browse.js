@@ -72,7 +72,7 @@ jQuery(document).ready(function() {
                     jQuery('#content').show();
                     renderProducts(response);
                     updateSelected(response);
-                    adjustProductListHeight();
+                    calculateProductLayout();
                 });
             } else {
                 // No hash, but we must selected all genders if no gender is selected
@@ -81,7 +81,7 @@ jQuery(document).ready(function() {
                 if(!jQuery('#product-gender li > a').hasClass('selected')) {
                     jQuery('#product-gender li:first > a').addClass('selected');
                 }
-                adjustProductListHeight();
+                calculateProductLayout();
             }
         } else {
             doFilter(hash, this.filterCallback);
@@ -295,7 +295,7 @@ jQuery(document).ready(function() {
                 pagination.render();
             }
         },
-        onSeek: adjustProductListHeight
+        onSeek: calculateProductLayout
     });
 
     jQuery.each(window.location.search.substr(1).split('&'), function(i, e) {
@@ -573,7 +573,10 @@ function updateSelected(products) {
     }
 }
 
-function adjustProductListHeight() {
+// Run every time new products are loaded
+function calculateProductLayout() {
+    console.log(gettext('SOLD OUT'));
+    jQuery('.sold-out').text(gettext('SOLD OUT'));
     // Calculate height of product-list
     var height = 0;
     jQuery('#product-list').children().each(function () {
@@ -609,5 +612,5 @@ function renderProducts(products) {
 
     filterCriteria(products);
     
-    adjustProductListHeight();
+    calculateProductLayout();
 }

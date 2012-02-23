@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-18 12:41+0200\n"
+"POT-Creation-Date: 2012-02-23 23:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,45 +18,50 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: media/js/apparel.js:355
+#: media/js/apparel.1329755908.js:567 media/js/apparel.js:567
 msgid "Found %(count)s product"
 msgid_plural "Found %(count)s products"
 msgstr[0] "%(count)s träff bland plagg"
 msgstr[1] "%(count)s träffar bland plagg"
 
-#: media/js/apparel.js:356
+#: media/js/apparel.1329755908.js:568 media/js/apparel.js:568
 msgid "Found %(count)s look"
 msgid_plural "Found %(count)s looks"
 msgstr[0] "%(count)s träff bland looks"
 msgstr[1] "%(count)s träffar bland looks"
 
-#: media/js/apparel.js:357
+#: media/js/apparel.1329755908.js:569 media/js/apparel.js:569
 msgid "Found %(count)s matching brand"
 msgid_plural "Found %(count)s matching brands"
 msgstr[0] "%(count)s träff bland varumärken"
 msgstr[1] "%(count)s träffar bland varumärken"
 
-#: media/js/apparel.js:358
+#: media/js/apparel.1329755908.js:570 media/js/apparel.js:570
 msgid "Show %(count)s product"
 msgid_plural "Show all %(count)s products"
 msgstr[0] "Visa %(count)s plagg"
 msgstr[1] "Visa alla %(count)s plagg"
 
-#: media/js/apparel.js:359
+#: media/js/apparel.1329755908.js:571 media/js/apparel.js:571
 msgid "Show %(count)s look"
 msgid_plural "Show all %(count)s looks"
 msgstr[0] "Visa %(count)s look"
 msgstr[1] "Visa alla %(count)s looks"
 
-#: media/js/apparel.js:360
+#: media/js/apparel.1329755908.js:572 media/js/apparel.js:572
 msgid "Show %(count)s matching brand"
 msgid_plural "Show all %(count)s matching brands"
 msgstr[0] "Visa %(count)s varumärke"
 msgstr[1] "Visa alla %(count)s varumärken"
 
-#: media/js/apparel.js:361 media/js/browse.js:593
+#: media/js/apparel.1329755908.js:573 media/js/apparel.js:573
+#: media/js/browse.1330037812.js:567 media/js/browse.js:567
 #, perl-format
 msgid "%s product"
 msgid_plural "%s products"
 msgstr[0] "%s produkt"
 msgstr[1] "%s produkter"
+
+#: media/js/browse.1330037812.js:553 media/js/browse.js:553
+msgid "SOLD OUT"
+msgstr "SLUT"
