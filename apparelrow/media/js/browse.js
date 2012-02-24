@@ -575,7 +575,6 @@ function updateSelected(products) {
 
 // Run every time new products are loaded
 function calculateProductLayout() {
-    console.log(gettext('SOLD OUT'));
     jQuery('.sold-out').text(gettext('SOLD OUT'));
     // Calculate height of product-list
     var height = 0;
