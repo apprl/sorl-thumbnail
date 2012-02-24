@@ -200,7 +200,7 @@ def brand_list(request, gender=None):
 
             if len(manufacturer_products) == 1:
                 product_one = Product.objects.select_related('manufacturer').get(id=manufacturer_products[0]['django_id'])
-                product_two = Product.objects.select_related('manufacturer').filter(manufacturer=manufacturer_id).exclude(id=manufacturer_products[0]['django_id']).order_by('-modified')[0]
+                product_two = Product.objects.select_related('manufacturer').filter(manufacturer=manufacturer_id).exclude(vendorproduct__availability=0, id=manufacturer_products[0]['django_id']).order_by('-modified')[0]
                 products = [product_one, product_two]
             else:
                 products = list(Product.objects.select_related('manufacturer').filter(id__in=[doc['django_id'] for doc in value['doclist']['docs']]))
