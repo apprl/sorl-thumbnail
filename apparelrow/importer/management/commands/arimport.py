@@ -81,6 +81,7 @@ class Command(BaseCommand):
             raise CommandError('Feed named %s does not exist' % name)
 
         vendor = feed.vendor
+        VendorCategory.objects.filter(vendor=vendor).delete()
 
         wardrobe_product_ids = set(Product.objects.filter(wardrobe__in=Wardrobe.objects.all()).distinct().values_list('id', flat=True))
         look_product_ids = set(LookComponent.objects.all().values_list('product__id', flat=True))
@@ -101,6 +102,7 @@ class Command(BaseCommand):
                 product.delete()
 
         feed.delete()
+        vendor.delete()
 
         print 'Feed %s and all products (except in look/wardrobe) is deleted' % (feed,)
     
