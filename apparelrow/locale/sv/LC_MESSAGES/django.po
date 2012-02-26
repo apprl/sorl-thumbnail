@@ -555,7 +555,7 @@ msgstr "Logga in med Facebook för att hitta dina vänner!"
 
 #: templates/base.html:90
 msgid "Search for products"
-msgstr "Sök efter plagg"
+msgstr "Sök efter produkter"
 
 #: templates/base.html:91 templates/profile/base_profile.html:52
 msgid "Cancel"
