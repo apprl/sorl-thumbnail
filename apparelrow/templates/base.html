@@ -5,7 +5,9 @@
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
-    <title>{% block extra-title %}{% endblock %}Apparelrow</title>
+    {% with user.get_profile.get_updates_last_visit as updates %}
+    <title>{% block extra-title %}{% endblock %}Apparelrow{% if updates %} ({{ updates }}){% endif %}</title>
+    {% endwith %}
     <meta charset="utf-8" />
     <link type="text/css" href="{{ MEDIA_URL }}{% staticfile "styles/smoothness/jquery-ui-1.8rc3.custom.css" %}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/screen.css" %}" type="text/css" media="screen, projection">
@@ -178,7 +180,7 @@
                 <li class="updates">
                     <a class="{% if request.path == home_url %} selected{% endif %}" href="{{ home_url }}">
                         {% with user.get_profile.get_updates_last_visit as updates %}
-                        <span>{% trans "Friends' updates" %}{% if updates %} ({{ user.get_profile.get_updates_last_visit }}){% endif %}</span>
+                        <span>{% trans "Friends' updates" %}{% if updates %} ({{ updates }}){% endif %}</span>
                         {% endwith %}
                         <div class="arrow"></div>
                     </a>

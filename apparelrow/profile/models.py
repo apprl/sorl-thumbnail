@@ -37,6 +37,8 @@ class ApparelProfile(models.Model):
     gender              = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     updates_last_visit  = models.DateTimeField(_('Last visit home'), default=datetime.datetime.now)
 
+    num_updates_last_visit = None
+
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone commented on a product that I have in my wardrobe'))
@@ -125,7 +127,9 @@ class ApparelProfile(models.Model):
 
     @property
     def get_updates_last_visit(self):
-        return get_friend_updates(self.user).filter(timestamp__gt=self.updates_last_visit).count()
+        if self.num_updates_last_visit == None:
+            self.num_updates_last_visit = get_friend_updates(self.user).filter(timestamp__gt=self.updates_last_visit).count()
+        return self.num_updates_last_visit
 
     @models.permalink
     def get_absolute_url(self):
