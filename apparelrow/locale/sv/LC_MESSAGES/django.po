@@ -809,7 +809,7 @@ msgstr "Populära varumärken"
 
 #: templates/apparel/brand_list.html:44
 msgid "Popular brands in your network"
-msgstr "Populära varumärken bland dina vänner"
+msgstr "Populära bland dina vänner"
 
 #: templates/apparel/brand_list.html:46
 msgid ""
