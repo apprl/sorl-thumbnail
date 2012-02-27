@@ -81,10 +81,14 @@ def get_friend_updates(user):
     queryset = user_stream(user)
     return queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following'])
 
-sum_if_sql_template = '(%(function)s(%(field)s) / POW((EXTRACT(EPOCH FROM NOW () - %(field_two)s) / 3600), 1.53))' 
+if settings.DATABASE_ENGINE.startswith('mysql'):
+    sql_template = '(%(function)s(%(field)s) / POW(TIMESTAMPDIFF(HOUR, %(field_two)s, NOW()), 1.53))'
+else:
+    sql_template = '(%(function)s(%(field)s) / POW((EXTRACT(EPOCH FROM NOW () - %(field_two)s) / 3600), 1.53))'
+
 class CountPopularitySQL(models.sql.aggregates.Aggregate):
     sql_function = 'COUNT'
-    sql_template = sum_if_sql_template
+    sql_template = sql_template
 
 class CountPopularity(models.Aggregate):
     name = 'CountPopularity'
