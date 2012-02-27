@@ -36,7 +36,7 @@ from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, W
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.search import ApparelSearch
 from apparelrow.search import more_like_this_product
-from apparel.utils import get_pagination_page, get_gender_from_cookie, get_friend_updates
+from apparel.utils import get_pagination_page, get_gender_from_cookie, get_friend_updates, CountPopularity
 import apparel.signals
 
 FAVORITES_PAGE_SIZE = 30
@@ -265,8 +265,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
 
     if popular:
         if request.user.is_authenticated():
-            user_ids = Follow.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(User)).values_list('object_id', flat=True)
-            queryset = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids) & Q(gender__in=[gender, 'U'])).annotate(num_likes=Count('likes')).order_by('-num_likes')
+            queryset = get_top_looks_in_network(request.user)
         else:
             queryset = Look.objects.none()
     elif search:
@@ -884,8 +883,8 @@ def get_top_looks(request, limit=10, gender=None):
     also filter looks by gender.
     """
     if gender is not None:
-        return Look.objects.filter(likes__active=True).filter(gender__in=['U', gender]).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
-    return Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
+        return Look.objects.filter(likes__active=True).filter(gender__in=['U', gender]).annotate(num_likes=CountPopularity('likes', field_two='apparel_look.created')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
+    return Look.objects.filter(likes__active=True).annotate(num_likes=CountPopularity('likes', field_two='apparel_look.created')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
 
 def get_most_followed_users(limit=2):
     #object_ids = [x['object_id'] for x in Follow.objects.values('object_id').annotate(Count('id')).order_by('-id__count')[:limit]]
@@ -896,10 +895,15 @@ def get_most_followed_users(limit=2):
         apparel_profiles.append(ApparelProfile.objects.select_related('user').get(user__id=object_id))
     return apparel_profiles
 
-def get_top_looks_in_network(user, limit=2):
+def get_top_looks_in_network(user, limit=None):
     content_type = ContentType.objects.get_for_model(User)
     user_ids = Follow.objects.filter(content_type=content_type, user=user).values_list('object_id', flat=True)
-    return Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=Count('likes')).order_by('-num_likes')[:limit]
+    looks = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=CountPopularity('likes', field_two='apparel_look.created')).order_by('-num_likes')
+
+    if limit:
+        return looks[:limit]
+
+    return looks
 
 def get_facebook_friends(request):
     facebook_user = get_facebook_user(request)

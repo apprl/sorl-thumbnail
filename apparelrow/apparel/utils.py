@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.db import models
+
 from actstream.models import user_stream
 
 def get_gender_from_cookie(request):
@@ -78,3 +80,18 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
 def get_friend_updates(user):
     queryset = user_stream(user)
     return queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following'])
+
+sum_if_sql_template = '(%(function)s(%(field)s) / POW((EXTRACT(EPOCH FROM NOW () - %(field_two)s) / 3600), 1.53))' 
+class CountPopularitySQL(models.sql.aggregates.Aggregate):
+    sql_function = 'COUNT'
+    sql_template = sum_if_sql_template
+
+class CountPopularity(models.Aggregate):
+    name = 'CountPopularity'
+
+    def add_to_query(self, query, alias, col, source, is_summary):
+        aggregate = CountPopularitySQL(col,
+                                       source=source,
+                                       is_summary=is_summary,
+                                       **self.extra)
+        query.aggregates[alias] = aggregate
