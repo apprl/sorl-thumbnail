@@ -103,7 +103,7 @@ class ImportLog(models.Model):
     
     def save(self, *args, **kwargs):
         if self.status != 'running':
-            self.end_time = datetime.utcnow()
+            self.end_time = datetime.now()
         
         return super(ImportLog, self).save(*args, **kwargs)
     
