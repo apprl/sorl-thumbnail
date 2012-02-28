@@ -156,7 +156,7 @@ class FXRate(models.Model):
         #    price=1 / self.rate * models.F('original_price'),
         #    currency=self.base_currency
         #)
-        
+
         cursor   = connection.cursor()
         affected = cursor.execute("""
             UPDATE
@@ -173,8 +173,11 @@ class FXRate(models.Model):
             'price': 1 / self.rate
         })
         transaction.commit_unless_managed()
+
+        if affected is None:
+            affected = cursor.rowcount
         
-        logger.info('Converted %i prices in %s to %s' % (
+        logger.info('Converted %s prices in %s to %s' % (
             affected,
             self.currency,
             self.base_currency
