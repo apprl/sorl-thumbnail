@@ -237,7 +237,7 @@ class ProductIndex(QueuedSearchIndex):
         return 'modified'
 
     def should_update(self, instance, **kwargs):
-        return instance.published==True
+        return instance.published == True and instance.category is not None
 
 #
 # LookIndex
