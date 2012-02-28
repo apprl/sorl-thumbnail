@@ -22,7 +22,7 @@ def search_index_update_task(app_name, model_name, pk, **kwargs):
         search_index_update_task.retry(exc=exc)
 
 class ProcessSearchIndexUpdatesTask(PeriodicTask):
-    run_every = timedelta(seconds=20)
+    run_every = timedelta(minutes=1)
     ignore_result = True
 
     def run(self, **kwargs):
