@@ -272,6 +272,9 @@ class API(object):
                 self.dataset['product']['discount-price'] = self.dataset['product']['price']
                 self.dataset['product']['price'] = self.vendorproduct.original_price
 
+        if not self.dataset['product']['discount-price']:
+            self.dataset['product']['discount-price'] = None
+
         fields = {
             'buy_url': self.dataset['product']['product-url'],
             'original_price': self.dataset['product']['price'] or '0.0',
