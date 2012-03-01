@@ -89,6 +89,10 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
             else:
                 query_arguments['fq'].append('{!tag=%s}%s:[%s TO %s]' % ('price', 'price', min_price, max_price))
 
+    # Only discount
+    if 'discount' in request.GET:
+        query_arguments['fq'].append('{!tag=%s}discount:true' % ('price',))
+
     # Manufacturer
     if 'manufacturer' in request.GET:
         query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer_data', 'manufacturer_id', ' OR '.join([x for x in request.GET['manufacturer'].split(',')])))
@@ -220,6 +224,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
         selected_brands_data = selected_brands_data,
         selected_price       = selected_price,
         selected_gender      = request.GET.get('gender', None),
+        selected_discount    = bool(request.GET.get('discount', None)),
     )
 
     # Extra context

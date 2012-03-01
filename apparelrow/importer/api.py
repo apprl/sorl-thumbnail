@@ -3,6 +3,7 @@ import re
 import os
 import subprocess
 from urllib2 import HTTPError, URLError
+import decimal
 
 from requests.exceptions import RequestException
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -47,6 +48,7 @@ Required Data Structure
         'category': 'Sneakers',
         'manufacturer': 'Jordan',
         'price': 1399.00,
+        'discount-price': 1299.00,
         'currency': 'SEK',
         'delivery-cost': 99.00,
         'delivery-time': '3-5 D',
@@ -253,15 +255,29 @@ class API(object):
         Private method that adds, update and maintain vendor data and options
         for a particular product
         """
-        
         # FIXME: Map
         #   - delivery time
         #   - delivery cost (Property of vendor?)
-        
+
+
+        # No discount price is mapped but we can get it from the stored original price
+        if self.vendorproduct.original_price and not self.dataset['product']['discount-price']:
+            decimal_type = None
+            try:
+                decimal_type = decimal.Decimal(self.dataset['product']['price'])
+            except:
+                pass
+
+            if self.vendorproduct.original_price > decimal_type:
+                self.dataset['product']['discount-price'] = self.dataset['product']['price']
+                self.dataset['product']['price'] = self.vendorproduct.original_price
+
         fields = {
             'buy_url': self.dataset['product']['product-url'],
             'original_price': self.dataset['product']['price'] or '0.0',
             'original_currency': self.dataset['product']['currency'],
+            'original_discount_price': self.dataset['product']['discount-price'],
+            'original_discount_currency': self.dataset['product']['currency'],
             'availability': self.availability
         }
         
@@ -272,10 +288,18 @@ class API(object):
             
             if settings.APPAREL_BASE_CURRENCY == fields['original_currency']:
                 fields['price'] = fields['original_price']
+                logger.debug('Setting price to %s %s', fields['original_price'], fields['original_currency'])
+                if fields['original_discount_price']:
+                    fields['discount_price'] = fields['original_discount_price']
+                    logger.debug('Setting discount price to %s %s', fields['original_discount_price'], fields['original_currency'])
             elif fields['original_currency'] in rates:
                 try:
                     fields['price'] = rates[fields['original_currency']].convert(float(fields['original_price']))
                     logger.debug('Setting price to %s %s (= %f %s)', fields['original_price'], fields['original_currency'], fields['price'], fields['currency'])
+
+                    if fields['original_discount_price']:
+                        fields['discount_price'] = rates[fields['original_currency']].convert(float(fields['original_discount_price']))
+                        logger.debug('Setting discount price to %s %s (= %f %s)', fields['original_discount_price'], fields['original_currency'], fields['discount_price'], fields['currency'])
                 except TypeError:
                     raise SkipProduct('Could not convert currency to base currency')
             else:
@@ -283,7 +307,7 @@ class API(object):
                     status='attention',
                     message='Missing exchange rate for %s. Add and run the arfxrates --update command' % fields['original_currency'],
                 )
-        
+
         for f in fields:
             setattr(self.vendorproduct, f, fields[f])
         
@@ -334,7 +358,7 @@ class API(object):
             [self.dataset[f] for f in ('version', 'date', 'vendor', 'product',)]
             [self.dataset['product'][f] for f in (
                 'product-id', 'product-name', 'category', 'manufacturer', 'gender',
-                'price', 'currency', 'delivery-cost', 'delivery-time', 'availability',
+                'price', 'discount-price', 'currency', 'delivery-cost', 'delivery-time', 'availability',
                 'product-url', 'image-url', 'description', 'variations')
             ]
         

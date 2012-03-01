@@ -71,6 +71,11 @@ class DataMapper(object):
             self.mapped_record['product'][field] = self.strip_html(self.mapped_record['product'][field])
 
         self.mapped_record['product']['patterns'] = self.map_patterns(self.mapped_record['product'].get('product-name', '') + self.mapped_record['product'].get('description'))
+
+        price = self.mapped_record['product']['price']
+        discount_price = self.mapped_record['product']['discount-price']
+        if price == discount_price:
+            self.mapped_record['product']['discount-price'] = None
     
     def translate(self):
         """
@@ -90,7 +95,8 @@ class DataMapper(object):
                       'product-name', 
                       'category',
                       'manufacturer', 
-                      'price', 
+                      'price',
+                      'discount-price',
                       'gender',
                       'currency', 
                       'delivery-cost', 

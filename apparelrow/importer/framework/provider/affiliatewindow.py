@@ -36,25 +36,37 @@ class AffiliateWindowMapper(DataMapper):
     def get_image_url(self):
         return self.record['merchant_image_url']
 
+    def get_discount_price(self):
+        price = self.get_price()
+
+        discount_price = None
+        try:
+            discount_price = float(REGEX_DECIMAL.sub('', self.record.get('search_price', '')))
+        except ValueError:
+            pass
+
+        if discount_price is not None and discount_price > 0 and discount_price < price:
+            return '%.2f' % (discount_price,)
+
+        return None
+
     def get_price(self):
+        price = None
         try:
-            display_price = float(REGEX_DECIMAL.sub('', self.record.get('display_price', '')))
+            price = float(REGEX_DECIMAL.sub('', self.record.get('rrp_price', '')))
         except ValueError:
-            display_price = 0
+            pass
 
-        try:
-            store_price = float(REGEX_DECIMAL.sub('', self.record.get('store_price', '')))
-        except ValueError:
-            store_price = 0
+        if price is None:
+            try:
+                price = float(REGEX_DECIMAL.sub('', self.record.get('store_price', '')))
+            except ValueError:
+                pass
 
-        if display_price == 0 and store_price == 0:
-            return None
-        elif display_price == 0 and store_price > 0:
-            return '%.2f' % (store_price,)
-        elif display_price > 0 and store_price == 0:
-            return '%.2f' % (display_price,)
-        else:
-            return '%.2f' % (min(store_price, display_price),)
+        if price is not None:
+            return '%.2f' % (price,)
+
+        return price
 
     def get_category(self):
         return '%s >> %s' % (self.record.get('category_name'), self.record.get('merchant_category'))

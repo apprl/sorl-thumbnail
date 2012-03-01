@@ -60,9 +60,11 @@ class LinkshareMapper(DataMapper):
 
         return gender
 
+    def get_discount_price(self):
+        return self.record.get('discount-price') or None
+
     def get_price(self):
-        discount_price = self.record.get('discount-price') or '0.00'
-        return discount_price if float(discount_price) else self.record.get('retail-price')
+        return self.record.get('retail-price') or '0.00'
 
     def get_manufacturer(self):
         manufacturer = self.record.get('manufacturer') or self.record.get('brand')

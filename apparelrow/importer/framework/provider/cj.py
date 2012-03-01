@@ -98,11 +98,20 @@ class CJMapper(DataMapper):
     
     def get_category(self):
         return self.record['advertisercategory']
-    
+
+    def get_discount_price(self):
+        price = self.get_price()
+        if price is not None:
+            sale_price = self.record.get('saleprice')
+            if sale_price is not None and sale_price > 0 and sale_price < price:
+                return sale_price
+
+        return None
+
     def get_price(self):
         price = self.record.get('price')
         if price is None:
-            return
+            return None
         
         return self.re_price.sub('', price)
     

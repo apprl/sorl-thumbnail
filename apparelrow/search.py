@@ -184,6 +184,7 @@ class ProductIndex(QueuedSearchIndex):
     user_likes = MultiValueField(stored=False)
     popularity = DecimalField(model_attr='popularity')
     availability = BooleanField(stored=False)
+    discount = BooleanField(stored=False)
 
     # Search fields
     product_name = CharField(model_attr='product_name', stored=False, boost=0.5)
@@ -202,7 +203,11 @@ class ProductIndex(QueuedSearchIndex):
         # Add price to search index
         if object.default_vendor and object.default_vendor.price:
             try:
-                self.prepared_data['price'] = int(object.default_vendor.price.quantize(Decimal('1.'), rounding=ROUND_HALF_UP))
+                price = object.default_vendor.price
+                if object.default_vendor.discount_price:
+                    price = object.default_vendor.discount_price
+
+                self.prepared_data['price'] = int(price.quantize(Decimal('1.'), rounding=ROUND_HALF_UP))
             except ValueError:
                 pass
         # Add color to search index
@@ -221,6 +226,8 @@ class ProductIndex(QueuedSearchIndex):
                 availability = True
                 break
         self.prepared_data['availability'] = availability
+        # Add discount boolean
+        self.prepared_data['discount'] = object.default_vendor.discount_price is not None
         # Add category names
         self.prepared_data['category_names'] = ' '.join(object.categories_all_languages)
         # Add color names

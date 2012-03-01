@@ -67,7 +67,7 @@ class VendorFeed(models.Model):
         finally:
             if provider:
                 log.imported_products = provider.count
-                        
+
             log.save()
             log = None
 

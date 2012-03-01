@@ -47,7 +47,7 @@
             <input type="hidden" name="pricerange_min" value="{{ pricerange.min }}" class="price-range">
             <input type="hidden" name="price" value="{{ pricerange.selected }}">
 
-            <!--<div>{% trans "Show only products on sale" %}</div>-->
+            <a id="discount-price" href="{% gender_url APPAREL_GENDER 'shop' %}?discount=1">{% trans "Show only products on sale" %}</a>
         </form>
     </li>
     <li class="header">

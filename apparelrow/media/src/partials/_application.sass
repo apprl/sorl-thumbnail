@@ -683,6 +683,13 @@ $ruler_width: $slider_width
     &.filtered
       display: none
   #product-price
+    #discount-price
+      display: block
+      padding-left: 15px
+      background: transparent image_url(unquote("list-item-check.png")) no-repeat scroll left center
+      &.selected
+        background-image: image_url(unquote("list-item-check-selected.png"))
+      //+filter(unquote("g"), unquote("list-item-check-selected.png"))
     #price-min, #price-max
       font-size: 0.85em
       padding-bottom: 5px
@@ -826,6 +833,8 @@ span, a
     +apparel_likes
   &.price
     +apparel_price
+    &.discount
+      color: $like_color
   &.price
     background: transparent url(../images/check.png) no-repeat scroll 2px center
     &.sold-out
@@ -1122,6 +1131,11 @@ table.available-sizes th
 a.buy-now
   +buy_now
 
+.bodycopy.vendors
+  color: $font_color
+  padding-bottom: 10px
+  font-weight: 500
+
 .product-vendors span.sold-out
   float: right
   margin-top: -50px
@@ -1156,8 +1170,6 @@ a.buy-now
 .product-vendor
   border-bottom: none
   padding: 7px 9px 3px
-  .price, .currency
-    vertical-align: middle
   .price
     font-size: 2em
     background: none
@@ -1165,24 +1177,24 @@ a.buy-now
     padding-right: 5px
     color: $font_color
     display: inline-block
-    margin-top: -4px
+  .discount-price
+    color: $like_color
   .currency
     color: $easier_color
-  .vendor
-    float: right
-    padding-right: 10px
-    font-size: 1.2em
+  .original-price
+    clear: left
   .original-price, .original-price .price
     font-size: 1em
     color: $easy_color
+  .original-price .discount-price
+    color: $like_color
   .original-price .currency
     display: inline-block
-    margin-top: -4px
 
 .product-original-currency
   color: $easier_color
   font-size: 1.1em
-  margin-top: 10px
+  margin-top: 8px
 
 .vendor
   +vendor

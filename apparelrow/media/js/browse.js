@@ -242,6 +242,14 @@ jQuery(document).ready(function() {
         return false;
     });
 
+
+    // Discount price filter
+    jQuery('#product-price #discount-price').click(function() {
+        jQuery(this).toggleClass('selected');
+        filter(getQuery());
+        return false;
+    });
+
     function scrollTo(page) {
         if((jQuery(window).height() - jQuery('body').scrollTop()) < 300)
             jQuery('body').scrollTop(0);
@@ -360,6 +368,11 @@ function getQuery(query, reset) {
               jQuery("input[name=pricerange_min]").val()
             + ',' 
             + jQuery("input[name=pricerange_max]").val();
+        jQuery('#product-price').prev().addClass('active');
+    }
+
+    if(jQuery('#discount-price').is('.selected')) {
+        query['discount'] = 1;
         jQuery('#product-price').prev().addClass('active');
     }
 
@@ -542,6 +555,11 @@ function updateSelected(products) {
     if(products.selected_price) {
         jQuery('#price-slider').data('slider').values(products.selected_price);
         jQuery('#product-price').prev().addClass('active');
+    }
+
+    // Select discount
+    if(products.selected_discount) {
+        jQuery('#discount-price').addClass('selected');
     }
 
     // Select colors
