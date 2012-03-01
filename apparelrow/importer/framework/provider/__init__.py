@@ -8,6 +8,7 @@ import itertools
 
 from django.conf import settings
 from django.db import transaction
+from django.db.models.signals import post_save
 
 from apparel.models import Product, VendorProduct
 
@@ -107,16 +108,16 @@ class Provider(object):
     def update_availability(self):
         """
         Set all products found in database but not found in the feed to sold out.
+
+        Performance upgrade: use post_save without actually saving data and
+        only print the product name, no need to also get the manufacturer name
         """
-        for product in Product.objects.filter(id__in=self.product_ids).exclude(vendorproduct__availability=0):
-            for vendorproduct in product.vendorproduct.all():
-                logger.info('Setting availability for vendor product %s to sold out' % (vendorproduct,))
-                vendorproduct.availability = 0
-                vendorproduct.save()
+        for product_id in self.product_ids:
+            product = Product.objects.get(pk=product_id)
+            product.vendorproduct.update(availability=0)
+            post_save.send(sender=product.__class__, instance=product)
 
-            product.save()
-
-        return True
+            logger.info('Setting availability for product %s to sold out' % (product.product_name,))
 
     def fetch(self, from_warehouse=False, for_date=None):
         """
@@ -169,6 +170,7 @@ class Provider(object):
             api = API(import_log=self.feed.latest_import_log)
             product = api.import_dataset(record)
             self.product_ids.discard(product.id)
+            post_save.send(sender=product.__class__, instance=product)
             del api
             del product
         
