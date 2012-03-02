@@ -3,6 +3,8 @@ import logging
 import tempfile
 import re
 import subprocess
+import urlparse
+import urllib2
 from datetime import datetime
 
 import requests
@@ -35,15 +37,34 @@ def fetch(url, localpath=None, username=None, password=None, decompress=None):
 
     url = url.replace(' ', '%20') # Replace spaces in url with %20
 
-    if username or password:
-        request_handler = requests.get(url, auth=(username, password))
-        logging.debug('Added Basic Authentication header. Username %s' % username)
-    else:
-        request_handler = requests.get(url)
+    if url.startswith('ftp'):
+        if username or password:
+            bits = urlparse.urlparse(url)
+            password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+            password_mgr.add_password(None, '%s://%s' % (bits.scheme, bits.netloc), username, password)
 
-    request_handler.raise_for_status()
+            urllib2.install_opener(
+                urllib2.build_opener(
+                    urllib2.HTTPBasicAuthHandler(password_mgr)
+                )
+            )
+
+            logging.debug('Added Basic Authentication header. Username %s' % username)
+
+        f = urllib2.urlopen(urllib2.quote(url, ":/&?="))
+
+        local_fh.write(f.read())
+    else:
+        if username or password:
+            request_handler = requests.get(url, auth=(username, password))
+            logging.debug('Added Basic Authentication header. Username %s' % username)
+        else:
+            request_handler = requests.get(url)
+
+        request_handler.raise_for_status()
     
-    local_fh.write(request_handler.raw.read())
+        local_fh.write(request_handler.raw.read())
+
     local_fh.close()
     local_fh = None
     
