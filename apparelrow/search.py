@@ -210,28 +210,44 @@ class ProductIndex(QueuedSearchIndex):
                 self.prepared_data['price'] = int(price.quantize(Decimal('1.'), rounding=ROUND_HALF_UP))
             except ValueError:
                 pass
-        # Add color to search index
-        self.prepared_data['color'] = object.options.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('pk', flat=True)
-        # Add category to search index
-        self.prepared_data['category'] = Category.objects.get(pk=object.category.id).get_ancestors(ascending=False, include_self=True).values_list('pk', flat=True)
+
+        # Add color
+        color_data = product.options.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('pk', 'value')
+        color_names = []
+        color_ids = []
+        if color_data:
+            color_ids, color_names = zip(*color_data)
+
+        self.prepared_data['color'] = color_ids
+        self.prepared_data['color_names'] = color_names
+
+        # Add category
+        category_data = product.category.get_ancestors(ascending=False, include_self=True).values_list('pk', 'name_en', 'name_sv')
+        category_names = []
+        category_ids = []
+        if category_data:
+            category_ids, category_en_names, category_sv_names = zip(*category_data)
+            category_names = category_en_names + category_sv_names
+
+        self.prepared_data['category'] = category_ids
+        self.prepared_data['category_names'] = category_names
+
         # Add user to search index
         self.prepared_data['user_wardrobe'] = Wardrobe.objects.filter(products=object).values_list('user__id', flat=True)
         # Add user likes to search index
         self.prepared_data['user_likes'] = ProductLike.objects.filter(product=object, active=True).values_list('user__id', flat=True)
         # Add availability to search index
         # A product is available if atleast one vendorproduct is not sold out (NULL does not count as sold out)
-        availability = False
-        for available in set(object.vendorproduct.values_list('availability', flat=True)):
-            if available != 0:
-                availability = True
-                break
-        self.prepared_data['availability'] = availability
+        #availability = False
+        #for available in set(object.vendorproduct.values_list('availability', flat=True)):
+            #if available != 0:
+                #availability = True
+                #break
+        #self.prepared_data['availability'] = availability
+        self.prepared_data['availability'] = object.default_vendor.availability != 0
+
         # Add discount boolean
         self.prepared_data['discount'] = object.default_vendor.discount_price is not None
-        # Add category names
-        self.prepared_data['category_names'] = ' '.join(object.categories_all_languages)
-        # Add color names
-        self.prepared_data['color_names'] = ' '.join(object.colors)
         # Add manufacturer data
         self.prepared_data['manufacturer_data'] = '%s|%s' % (object.manufacturer.name, object.manufacturer.id)
 
