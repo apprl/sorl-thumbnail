@@ -212,17 +212,17 @@ class ProductIndex(QueuedSearchIndex):
                 pass
 
         # Add color
-        color_data = product.options.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('pk', 'value')
+        color_data = object.options.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('pk', 'value')
         color_names = []
         color_ids = []
         if color_data:
             color_ids, color_names = zip(*color_data)
 
         self.prepared_data['color'] = color_ids
-        self.prepared_data['color_names'] = color_names
+        self.prepared_data['color_names'] = ' '.join(color_names)
 
         # Add category
-        category_data = product.category.get_ancestors(ascending=False, include_self=True).values_list('pk', 'name_en', 'name_sv')
+        category_data = object.category.get_ancestors(ascending=False, include_self=True).values_list('pk', 'name_en', 'name_sv')
         category_names = []
         category_ids = []
         if category_data:
@@ -230,7 +230,7 @@ class ProductIndex(QueuedSearchIndex):
             category_names = category_en_names + category_sv_names
 
         self.prepared_data['category'] = category_ids
-        self.prepared_data['category_names'] = category_names
+        self.prepared_data['category_names'] = ' '.join(category_names)
 
         # Add user to search index
         self.prepared_data['user_wardrobe'] = Wardrobe.objects.filter(products=object).values_list('user__id', flat=True)
