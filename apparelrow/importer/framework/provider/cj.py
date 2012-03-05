@@ -104,7 +104,7 @@ class CJMapper(DataMapper):
         if price is not None:
             sale_price = self.record.get('saleprice')
             if sale_price is not None and sale_price > 0 and sale_price < price:
-                return sale_price
+                return self.re_price.sub('', sale_price)
 
         return None
 
