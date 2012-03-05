@@ -101,9 +101,10 @@ class ApparelSearch(object):
     """
     Our own interface with solr
     """
-    def __init__(self, query_string, **data):
+    def __init__(self, query_string, connection=None, **data):
         self.query_string = query_string
         self.data = data
+        self.connection = connection
 
     def __len__(self):
         return self._get_results().hits
@@ -129,7 +130,9 @@ class ApparelSearch(object):
     _result = None
     def _get_results(self, update=False):
         if self._result is None or update:
-            self._result = Solr(getattr(settings, 'HAYSTACK_SOLR_URL', 'http://127.0.0.1:8983/solr/')).search(self.query_string, **self.data)
+            if self.connection is None:
+                self.connection = Solr(getattr(settings, 'HAYSTACK_SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+            self._result = self.connection.search(self.query_string, **self.data)
             self._result.docs = [ResultContainer(**element) for element in self._result.docs]
 
         return self._result
