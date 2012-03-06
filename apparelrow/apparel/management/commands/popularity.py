@@ -36,7 +36,11 @@ class Command(BaseCommand):
                 except ProductClick.DoesNotExist:
                     pass
                 wardrobe_count = Wardrobe.objects.filter(products=product).count()
-                like_count = ProductLike.objects.filter(product=product, active=True).count()
+                two_weeks_behind = datetime.datetime.now() - datetime.timedelta(weeks=2)
+                like_count = ProductLike.objects.filter(
+                        product=product,
+                        active=True,
+                        created__gte=two_weeks_behind).count()
                 votes = like_count + wardrobe_count + 3 * product_click_count
                 timedelta = datetime.datetime.now() - product.date_added
                 item_half_hour_age =  (timedelta.days * 86400 + timedelta.seconds) / 7200
