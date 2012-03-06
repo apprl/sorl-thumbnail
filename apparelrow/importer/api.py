@@ -268,7 +268,7 @@ class API(object):
             except:
                 pass
 
-            if self.vendorproduct.original_price > decimal_type:
+            if decimal_type is not None and self.vendorproduct.original_currency == self.dataset['product']['currency'] and self.vendorproduct.original_price > decimal_type:
                 self.dataset['product']['discount-price'] = self.dataset['product']['price']
                 self.dataset['product']['price'] = self.vendorproduct.original_price
 
