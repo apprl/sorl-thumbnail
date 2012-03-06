@@ -126,14 +126,14 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     if extra_context and 'profile' in extra_context:
         # wardrobe
         query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, profile=extra_context['profile'])
-        query_arguments['sort'] = ['availability desc', 'popularity desc']
+        query_arguments['sort'] = ['availability desc', 'popularity desc', 'created desc']
     else:
         query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender)
 
     query_string = request.GET.get('q')
     if not query_string:
         if not 'sort' in query_arguments:
-            query_arguments['sort'] = 'popularity desc'
+            query_arguments['sort'] = ['popularity desc', 'created desc']
         query_string = '*:*'
 
     search = ApparelSearch(query_string, **query_arguments)
