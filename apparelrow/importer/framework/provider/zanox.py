@@ -30,13 +30,17 @@ class ZanoxMapper(DataMapper):
         return gender
 
     def get_discount_price(self):
-        discount_price = self.record.get('ProductPriceOld')
-        if discount_price:
-            return discount_price
+        price = self.record.get('ProductPriceOld')
+        if price:
+            return self.record.get('ProductPrice')
 
         return None
 
     def get_price(self):
+        price = self.record.get('ProductPriceOld')
+        if price:
+            return price
+
         return self.record.get('ProductPrice')
         
     def get_currency(self):
