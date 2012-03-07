@@ -7,12 +7,16 @@ import logging.config
 
 from settings_common import *
 
-DATABASE_ENGINE = 'mysql'
-DATABASE_NAME = 'apparelrow'
-DATABASE_USER = 'apparelrow'
-DATABASE_PASSWORD = 'ashwe3'
-DATABASE_HOST = 'db1.apparelrow.com' # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'apparelrow',
+        'USER': 'apparelrow',
+        'PASSWORD': 'ashwe3',
+        'HOST': 'db1.apparelrow.com',
+        'PORT': ''
+    }
+}
 
 APPAREL_DECOMPRESS_UTILS = {
     'gzip': '/bin/gunzip',
@@ -34,35 +38,12 @@ CELERY_REDIS_PORT = 6380
 CELERY_REDIS_DB = 0
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 
-#BROKER_HOST = 'localhost'
-#BROKER_PORT = 5672
-#BROKER_USER = 'apparel'
-#BROKER_PASSWORD = 'apparel_mq'
-#BROKER_VHOST = 'apparel'
-#CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-#CELERY_RESULT_BACKEND = "amqp"
-#CELERY_AMQP_TASK_RESULT_EXPIRES = 30
-
 import djcelery
 djcelery.setup_loader()
 
 # Synonyms for Solr.
 SEARCH_SYNONYM_FILE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'solr', 'solr', 'conf', 'synonyms.txt')
 
-LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', '..', '..', 'etc', 'logging.conf') # logging configuration file
-
 # --- Application wide init code goes here. 
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated
-
-
-if not hasattr(logging, 'initialised'):
-    logging.config.fileConfig(LOGGING_CONFIG)
-    
-    if DEBUG:
-        logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
-        logging.debug('Using debug logger')
-    
-    logging.info('Initialised application logger')
-    setattr(logging, 'initialised', True)

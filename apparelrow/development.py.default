@@ -12,15 +12,18 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'dev.db'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'dev.db'
+    }
+}
 
 APPAREL_DECOMPRESS_UTILS = {
     'gzip': '/bin/gunzip',
     'zip':  '/bin/zip',
 }
 
-LOGGING_CONFIG = os.path.join(PROJECT_ROOT, '..', 'etc', 'logging.conf')
 APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', 'warehouse')
 
 FACEBOOK_APP_ID = '151961958184186'
@@ -41,13 +44,6 @@ CELERY_REDIS_HOST = "localhost"
 CELERY_REDIS_PORT = 6380
 CELERY_REDIS_DB = 0
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-#BROKER_HOST = 'localhost'
-#BROKER_PORT = 5672
-#BROKER_USER = 'apparel'
-#BROKER_PASSWORD = 'apparel_mq'
-#BROKER_VHOST = 'apparel'
-#CELERY_RESULT_BACKEND = "amqp"
-#CELERY_AMQP_TASK_RESULT_EXPIRES = 30
 
 import djcelery
 djcelery.setup_loader()
@@ -57,17 +53,6 @@ SEARCH_SYNONYM_FILE = os.path.join(PROJECT_ROOT, '..', 'solr', 'solr', 'conf', '
 # --- Application wide init code goes here. 
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated
-
-if not hasattr(logging, 'initialised'):
-    logging.config.fileConfig(LOGGING_CONFIG)
-    
-    if DEBUG:
-        logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
-        logging.debug('Using debug logger')
-    
-    logging.info('Initialised application logger')
-    setattr(logging, 'initialised', True)
 
 #INTERNAL_IPS = ('127.0.0.1',)
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)

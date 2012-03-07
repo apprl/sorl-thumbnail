@@ -262,7 +262,7 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     result.update(
         default_patterns = default_patterns,
         default_colors = default_colors,
-        categories_all = Category._tree_manager.all(),
+        categories_all = Category.objects.all(),
         current_page = paged_result,
         pages = pages,
         templates = {

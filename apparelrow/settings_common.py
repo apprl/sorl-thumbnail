@@ -19,13 +19,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'mysql'     # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'apparelrow_dev'  #os.path.join(PROJECT_ROOT, 'dev.db')       # Or path to database file if using sqlite3.
-DATABASE_USER = 'apparelrow'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'r0W'
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
-
 # Local time zone for this installation. Choices can be found here:
 # http://www.postgresql.org/docs/8.1/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
 # although not all variations may be possible on all operating systems.
@@ -38,6 +31,7 @@ TIME_ZONE = 'Europe/Stockholm'
 # http://blogs.law.harvard.edu/tech/stories/storyReader$15
 
 SITE_ID = 1
+SITE_NAME = "Apparelrow"
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -72,7 +66,6 @@ STATIC_URL = '/_media/static/'
 # Additional directories which hold static files
 STATICFILES_DIRS = (
     ('apparelrow', os.path.join(PROJECT_ROOT, 'media')),
-#    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
 DJANGO_STATIC = True
@@ -91,6 +84,20 @@ TEMPLATE_LOADERS = (
        'django.template.loaders.filesystem.Loader',
        'django.template.loaders.app_directories.Loader',
    )),
+)
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_ROOT, "templates"),
+)
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+
+    "context_processors.exposed_settings",
+    "context_processors.next_redirects",
+    "context_processors.gender",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,29 +122,8 @@ AUTHENTICATION_BACKENDS = (
 
 ROOT_URLCONF = 'apparelrow.urls'
 
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, "templates"),
-)
-
-HAYSTACK_LIMIT_TO_REGISTERED_MODELS = False
-HAYSTACK_DEFAULT_OPERATOR = 'AND'
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-    
-    "context_processors.exposed_settings",
-    "context_processors.next_redirects",
-    "context_processors.gender",
-    
-    "announcements.context_processors.site_wide_announcements",
-)
-
 INSTALLED_APPS = (
-    # included
+    # Django
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -145,43 +131,37 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.flatpages',
     'django.contrib.comments',
+    'django.contrib.admin',
     
-    # external
-    'django_facebook',  # Only used for loading facebook js sdk through templatetags
-#    'mailer',          # FIXME: Includes e-mail manager, set this up later
-    'announcements',
+    # External
+    'django_facebook',      # External: Only used for loading facebook js sdk through templatetags
     'pagination',
-    'mptt',
-    'sorl.thumbnail',
-    'django_static',
-
+    'mptt',                 # External: Category tree
+    'sorl.thumbnail',       # External: Thumbnail module
+    'django_static',        # External: Generates static files
     'djcelery',
-    'haystack',
-    'actstream',
+    'haystack',             # External: Mapping into solr
+    'actstream',            # External: Actions and follow
     'tagging',
     'pagination',
     'ajaxcomments',
-    'django_extensions',
+    'django_extensions',    # External: Used for auto-slug field
     'trackback',
-    'south',
-    'modeltranslation',
+    'south',                # External: Database migration
+    'modeltranslation',     # External: Used for category translation
     'jsmin',
     'compress',
-
-    'apparel',
-    'beta',
-    'scale',
-    'watcher',
-    'profile',
-    'importer',
-    'apparel_comments',
-    'statistics',
-    
-        
     'tinymce',
     'flatpages_tinymce',
-    'django.contrib.admin',
-    'apparelrow',
+
+    # Internal
+    'apparel',              # Internal: Product display module
+    'beta',                 # Internal: Beta module
+    'profile',              # Internal: User related module
+    'importer',             # Internal: Product importer module
+    'apparel_comments',
+    'statistics',           # Internal: Click statistics module
+    'apparelrow',           # Internal: Main module
 )
 
 COMMENTS_APP = 'apparel_comments'
@@ -216,22 +196,9 @@ ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profile/%s/" % o.username,
 }
 
-MARKUP_FILTER_FALLBACK = 'none'
-MARKUP_CHOICES = (
-    ('restructuredtext', u'reStructuredText'),
-    ('textile', u'Textile'),
-    ('markdown', u'Markdown'),
-    ('creole', u'Creole'),
-)
-WIKI_MARKUP_CHOICES = MARKUP_CHOICES
-
-
-
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
 CONTACT_EMAIL = "support@hanssonlarsson.se"
-SITE_NAME = "Apparelrow"
-
 
 # ACCOUNT/LOGIN AND OTHER STUFF
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -240,10 +207,10 @@ LOGIN_REDIRECT_URLNAME = "what_next"
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 
-AUTH_PROFILE_MODULE='profile.ApparelProfile'
+AUTH_PROFILE_MODULE = 'profile.ApparelProfile'
 
 # django-modeltranslation
-TRANSLATION_REGISTRY='translation'
+TRANSLATION_REGISTRY = 'translation'
 
 # django-tinymce
 TINYMCE_DEFAULT_CONFIG = {
@@ -256,6 +223,7 @@ FACEBOOK_API_KEY = '44d47ef3e7285cace9a4c7c88f645742'
 FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
 FACEBOOK_PERMS = ['email']
 
+# EMAIL CONFIGURATION
 DEFAULT_FROM_EMAIL = 'Apparelrow <no-reply@apparelrow.com>'
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587
@@ -263,14 +231,16 @@ EMAIL_HOST_USER     = 'postman@apparelrow.com'
 EMAIL_HOST_PASSWORD = 'lat3Del!vEry'
 EMAIL_USE_TLS       = True
 
+# CACHE CONFIGURATION
 CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_TEMPLATE_TIMEOUT = 60 * 15
 
+# GOOGLE ANALYTICS CONFIGURATION
 APPAREL_DOMAIN = '.apparelrow.com' # FIXME: We should probably get this from the Sites framework
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-21990268-1'
 GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 
-
+# INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
@@ -311,16 +281,16 @@ APPAREL_DECOMPRESS_SUFFIX = {
     'zip': '.zip',
 }
 
+# THUMBNAIL CONFIGURATION
 THUMBNAIL_ENGINE = 'apparel.sorl_engine.Engine'
 
-# CELERY
+# CELERY CONFIGURATION
 CELERY_CREATE_MISSING_QUEUES = True
 CELERY_QUEUES = {
     'clicks': {'exchange': 'clicks', 'exchange_type': 'direct', 'routing_key': 'increment_click'},
     'search_updates': {'exchange': 'search_updates', 'exchange_type': 'direct', 'routing_key': 'update_search_index'},
     'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
 }
-
 CELERY_ROUTES = ({
     'apparelrow.tasks.ProcessClicksTask': {'queue': 'importer'},
     'apparelrow.tasks.ProcessPopularityTask': {'queue': 'importer'},
@@ -335,3 +305,53 @@ CELERY_ROUTES = ({
     'profile.notifications.process_like_look_created': {'queue': 'standard'},
     'profile.views.send_email_confirm_task': {'queue': 'standard'},
 },)
+
+# LOGGING CONFIGURATION
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s %(name)s %(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'django.utils.log.NullHandler',
+        },
+        'console': {
+            'level': 'NOTSET',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'app_core': {
+            'level': 'NOTSET',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': '../../../var/logs/app_logger.log',
+            'maxBytes': 1000000,
+            'backupCount': 4
+        },
+        'importer': {
+            'level': 'NOTSET',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': '../../../var/logs/importer.log',
+            'maxBytes': 1000000,
+            'backupCount': 4
+        },
+    },
+    'loggers': {
+        'root': {
+            'level': 'INFO',
+            'propagate': False,
+            'handlers': ['app_core'],
+        },
+        'importer_logger': {
+            'level': 'INFO',
+            'propagate': True,
+            'handlers': ['importer'],
+        }
+    }
+}

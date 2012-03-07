@@ -786,7 +786,7 @@ def index(request, gender=None):
     ctx['popular_looks'] = get_top_looks(request, limit=8, gender=gender)
     ctx['all_colors'] = Option.objects.filter(option_type__name='color')
     # ctx['categories_all'] contains all categories, they will later be filtered
-    ctx['categories_all'] = Category._tree_manager.filter(on_front_page=True)
+    ctx['categories_all'] = Category.objects.filter(on_front_page=True)
     ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
 
     pricerange = VendorProduct.objects.filter(product__published=True, product__category__isnull=False).aggregate(min=Min('price'), max=Max('price'))

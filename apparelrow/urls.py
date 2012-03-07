@@ -29,7 +29,6 @@ urlpatterns = patterns('',
     (r'^profile/', include('profile.urls')),
     (r'^watcher/', include('watcher.urls')),
     
-    (r'^announcements/', include('announcements.urls')),
     (r'^comments/', include('django.contrib.comments.urls')),
     (r'^ping/', include('trackback.urls')),
     ('^activity/', include('actstream.urls')),
