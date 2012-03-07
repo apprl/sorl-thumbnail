@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-07 16:51+0100\n"
+"POT-Creation-Date: 2012-03-07 22:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "Swe"
 msgstr ""
 
-#: apparel/browse.py:235 templates/apparel/look_list.html:25
+#: apparel/browse.py:234 templates/apparel/look_list.html:25
 #: templates/apparel/look_list.html:27
 msgid "Showing"
 msgstr "Visar"
 
-#: apparel/browse.py:237
+#: apparel/browse.py:236
 msgid "Showing popular products in your network"
 msgstr "Visar populära produkter bland dina vänner"
 
@@ -511,11 +511,11 @@ msgstr ""
 
 #: profile/models.py:44
 msgid "When someone commented on a product that I have liked"
-msgstr "När någon kommenterat ett plagg som jag har gillat"
+msgstr "När någon kommenterat en produkt som jag har gillat"
 
 #: profile/models.py:46
 msgid "When someone commented on a product that I have commented on"
-msgstr "När någon kommenterat ett plagg som jag kommenterat på"
+msgstr "När någon kommenterat en produkt som jag kommenterat på"
 
 #: profile/models.py:48
 msgid "When someone commented on a look that I have created"
@@ -621,7 +621,7 @@ msgstr "Träffar bland varumärken"
 
 #: templates/base.html:143
 msgid "Show all products"
-msgstr "Visa alla plagg"
+msgstr "Visa alla produkter"
 
 #: templates/base.html:144
 msgid "Show all looks"
@@ -964,7 +964,7 @@ msgstr "För att skapa en look behöver du först gilla minst en produkt."
 
 #: templates/apparel/look_edit.html:490 templates/profile/wardrobe.html:55
 msgid "Find products!"
-msgstr "Hitta plagg!"
+msgstr "Hitta produkter!"
 
 #: templates/apparel/look_edit.html:492
 msgid "Drag products here to start building a collage"
@@ -1126,8 +1126,8 @@ msgid ""
 "To see what products are popular in your network, first you need to start "
 "following friends among our members."
 msgstr ""
-"För att se vilka plagg som är populära bland dina vänner behöver du först "
-"hitta vänner att följa bland våra medlemmar."
+"För att se vilka produkter som är populära bland dina vänner behöver du "
+"först hitta vänner att följa bland våra medlemmar."
 
 #: templates/apparel/fragments/comment_count.html:2
 msgid "comments"
@@ -1201,7 +1201,7 @@ msgstr ""
 
 #: templates/apparel/fragments/dialog_like_product.html:5
 msgid "Like a product"
-msgstr "Gilla ett plagg"
+msgstr "Gilla en produkt"
 
 #: templates/apparel/fragments/dialog_like_product.html:7
 msgid ""
@@ -1209,20 +1209,20 @@ msgid ""
 "account. (Please note that this will not show up on your Facebook wall by "
 "default.)"
 msgstr ""
-"För att kunna 'gilla' ett plagg här på siten behöver du logga in med ditt "
+"För att kunna 'gilla' en produkt här på siten behöver du logga in med ditt "
 "Facebookkonto. (Bara så du vet, det kommer inte automatiskt att synas på din "
-"Facebooksida att du har gillat ett plagg här)"
+"Facebooksida att du har gillat en produkt här)"
 
 #: templates/apparel/fragments/dialog_login_favorite_friends.html:5
 msgid "See your friends' favorite products"
-msgstr "Se dina vänners favoritplagg"
+msgstr "Se dina vänners favoritprodukter"
 
 #: templates/apparel/fragments/dialog_login_favorite_friends.html:7
 msgid ""
-"Log in using your Facebook account to see which items are popular among your "
-"friends."
+"Log in using your Facebook account to see which products are popular among "
+"your friends."
 msgstr ""
-"Logga in med ditt Facebook-konto för att se vilka plagg som är populära "
+"Logga in med ditt Facebook-konto för att se vilka produkter som är populära "
 "bland dina vänner."
 
 #: templates/apparel/fragments/follow.html:6
@@ -1401,16 +1401,7 @@ msgstr[1] ""
 "\n"
 "        %(number)s artiklar\n"
 
-#: templates/apparel/fragments/activity/added.html:16
-#, python-format
-msgid ""
-"<a href=\"%(user_url)s\">%(user)s</a> added <a href=\"%(object_url)s\">"
-"%(object)s</a> to the <a href=\"%(wardrobe_url)s\">wardrobe</a>"
-msgstr ""
-"<a href=\"%(user_url)s\">%(user)s</a> lade till <a href=\"%(object_url)s\">"
-"%(object)s</a> i sin <a href=\"%(wardrobe_url)s\">garderob</a>"
-
-#: templates/apparel/fragments/activity/added.html:18
+#: templates/apparel/fragments/activity/added.html:15
 #, python-format
 msgid ""
 "<a href=\"%(user_url)s\">%(user)s</a> added <a href=\"%(object_url)s\">"
@@ -1697,8 +1688,8 @@ msgid ""
 "what which products they have in their closet."
 msgstr ""
 "Det första du borde göra nu är att följa andra medlemmar här på siten, för "
-"att hålla dig uppdaterad när de skapar looks, se vad de gillar för plagg och "
-"vad de har i garderoben."
+"att hålla dig uppdaterad när de skapar looks, se vad de gillar för produkter "
+"och vad de har i garderoben."
 
 #: templates/profile/dialog_welcome.html:8
 msgid "Find your friends below, or among all our other members."
@@ -1766,7 +1757,7 @@ msgstr "Ogilla en produkt"
 
 #: templates/profile/wardrobe.html:25
 msgid "Do you really want to delete product"
-msgstr "Vill du verkligen ta bort plagg"
+msgstr "Vill du verkligen ta bort produkten"
 
 #: templates/profile/wardrobe.html:55
 msgid "You do not have any products in your wardrobe right now."
@@ -1906,7 +1897,7 @@ msgid ""
 "%(sender_first_name)s %(sender_last_name)s have commented on a product you "
 "have liked"
 msgstr ""
-"%(sender_first_name)s %(sender_last_name)s har kommenterat ett plagg som du "
+"%(sender_first_name)s %(sender_last_name)s har kommenterat en produkt som du "
 "gillat"
 
 #: templates/profile/notifications/subject_follow_user.html:1
@@ -2082,3 +2073,10 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid ""
+#~ "<a href=\"%(user_url)s\">%(user)s</a> added <a href=\"%(object_url)s\">"
+#~ "%(object)s</a> to the <a href=\"%(wardrobe_url)s\">wardrobe</a>"
+#~ msgstr ""
+#~ "<a href=\"%(user_url)s\">%(user)s</a> lade till <a href=\"%(object_url)s"
+#~ "\">%(object)s</a> i sin <a href=\"%(wardrobe_url)s\">garderob</a>"

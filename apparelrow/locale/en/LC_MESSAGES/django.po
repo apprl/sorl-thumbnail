@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-07 16:51+0100\n"
+"POT-Creation-Date: 2012-03-07 22:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,12 +33,12 @@ msgstr ""
 msgid "Swe"
 msgstr "Sve"
 
-#: apparel/browse.py:235 templates/apparel/look_list.html:25
+#: apparel/browse.py:234 templates/apparel/look_list.html:25
 #: templates/apparel/look_list.html:27
 msgid "Showing"
 msgstr ""
 
-#: apparel/browse.py:237
+#: apparel/browse.py:236
 msgid "Showing popular products in your network"
 msgstr ""
 
@@ -1167,8 +1167,8 @@ msgstr ""
 
 #: templates/apparel/fragments/dialog_login_favorite_friends.html:7
 msgid ""
-"Log in using your Facebook account to see which items are popular among your "
-"friends."
+"Log in using your Facebook account to see which products are popular among "
+"your friends."
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:6
@@ -1341,14 +1341,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/fragments/activity/added.html:16
-#, python-format
-msgid ""
-"<a href=\"%(user_url)s\">%(user)s</a> added <a href=\"%(object_url)s\">"
-"%(object)s</a> to the <a href=\"%(wardrobe_url)s\">wardrobe</a>"
-msgstr ""
-
-#: templates/apparel/fragments/activity/added.html:18
+#: templates/apparel/fragments/activity/added.html:15
 #, python-format
 msgid ""
 "<a href=\"%(user_url)s\">%(user)s</a> added <a href=\"%(object_url)s\">"
