@@ -10,7 +10,7 @@
         <span class="likes">x</span>
     </div>
     <h4>{{ object.manufacturer }}</h4>
-    {% if object.default_vendor.availability == 0 %}
+    {% if not object.default_vendor or object.default_vendor.availability == 0 %}
     <span class="price sold-out">SOLD OUT</span>
     {% else %}
     {% if object.default_vendor.discount_price %}
