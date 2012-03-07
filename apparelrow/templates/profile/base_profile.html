@@ -59,12 +59,12 @@
         <p>
             {% trans "Member since" %} {{ profile.user.date_joined|date:"SHORT_DATE_FORMAT" }}
         </p>
-        {% url apparel.browse.browse_wardrobe profile.user.username as wardrobe_url %}
+        {% url apparel.browse.browse_profile profile.user.username as likes_url %}
         {% url profile.views.looks profile.user.username as looks_url %}
         {% url profile.views.followers profile.user.username as followers_url %}
         {% url profile.views.following profile.user.username as following_url %}
         <p>
-            <a href="{{ wardrobe_url }}">{{ products }} {% blocktrans count products as prod %}product{% plural %}products{% endblocktrans %} {% trans "in wardrobe" %}</a>
+            <a href="{{ likes_url }}">{% blocktrans count products as prod %}Likes {{ prod }} product{% plural %}Likes {{ prod }} products{% endblocktrans %}</a>
         </p>
         <p>
         <a href="{{ looks_url }}">

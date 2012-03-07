@@ -27,7 +27,6 @@ from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Look
 from apparelrow.apparel.models import Manufacturer
 from apparelrow.apparel.models import Product
-from apparelrow.apparel.models import Wardrobe
 from apparelrow.apparel.models import ProductLike
 from apparelrow.apparel.models import VendorProduct
 from apparelrow.apparel.utils import get_gender_from_cookie
@@ -183,7 +182,6 @@ class ProductIndex(QueuedSearchIndex):
     category = MultiValueField(faceted=True, stored=False)
     template = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_content.html')
     template_mlt = CharField(use_template=True, indexed=False, template_name='apparel/fragments/product_small_no_price.html')
-    user_wardrobe = MultiValueField(stored=False)
     user_likes = MultiValueField(stored=False)
     popularity = DecimalField(model_attr='popularity')
     availability = BooleanField(stored=False)
@@ -203,16 +201,26 @@ class ProductIndex(QueuedSearchIndex):
 
     def prepare(self, object):
         self.prepared_data = super(ProductIndex, self).prepare(object)
-        # Add price to search index
-        if object.default_vendor and object.default_vendor.price:
-            try:
-                price = object.default_vendor.price
-                if object.default_vendor.discount_price:
-                    price = object.default_vendor.discount_price
 
-                self.prepared_data['price'] = int(price.quantize(Decimal('1.'), rounding=ROUND_HALF_UP))
-            except ValueError:
-                pass
+        # Update default vendor related fields
+        if object.default_vendor:
+            # Add price to search index
+            if object.default_vendor.price:
+                try:
+                    price = object.default_vendor.price
+                    if object.default_vendor.discount_price:
+                        price = object.default_vendor.discount_price
+
+                    self.prepared_data['price'] = int(price.quantize(Decimal('1.'), rounding=ROUND_HALF_UP))
+                except ValueError:
+                    pass
+            # Add discount boolean
+            self.prepared_data['discount'] = object.default_vendor.discount_price is not None
+            # Add availability
+            self.prepared_data['availability'] = object.default_vendor.availability != 0
+        else:
+            self.prepared_data['discount'] = False
+            self.prepared_data['availability'] = False
 
         # Add color
         color_data = object.options.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('pk', 'value')
@@ -235,22 +243,9 @@ class ProductIndex(QueuedSearchIndex):
         self.prepared_data['category'] = category_ids
         self.prepared_data['category_names'] = ' '.join(category_names)
 
-        # Add user to search index
-        self.prepared_data['user_wardrobe'] = Wardrobe.objects.filter(products=object).values_list('user__id', flat=True)
         # Add user likes to search index
         self.prepared_data['user_likes'] = ProductLike.objects.filter(product=object, active=True).values_list('user__id', flat=True)
-        # Add availability to search index
-        # A product is available if atleast one vendorproduct is not sold out (NULL does not count as sold out)
-        #availability = False
-        #for available in set(object.vendorproduct.values_list('availability', flat=True)):
-            #if available != 0:
-                #availability = True
-                #break
-        #self.prepared_data['availability'] = availability
-        self.prepared_data['availability'] = object.default_vendor.availability != 0
 
-        # Add discount boolean
-        self.prepared_data['discount'] = object.default_vendor.discount_price is not None
         # Add manufacturer data
         self.prepared_data['manufacturer_data'] = '%s|%s' % (object.manufacturer.name, object.manufacturer.id)
 

@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import admin
 from django.contrib.comments import signals as comments_signals
 from django.contrib.contenttypes.models import ContentType
@@ -7,36 +9,34 @@ from django.db import models
 from apparel.models import *
 from actstream import action
 from actstream.models import Action
+from apparelrow.tasks import search_index_update_task
 
-import logging
-
-import apparel.signals
 
 #
 # Set up activity handlers.
 #
-
-#
-# Look like activity handlers
-# FIXME: merge with product activity handler, by adding attribute_name to
-# signal dispatch in apparel/signals.py so we can now which instance attribute
-# to look at
-#
-
-def like_look_handler(sender, **kwargs):
-    instance = kwargs['instance']
+def look_like(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
-        logging.warning('Trying to register an activity on like_look, but %s has not user attribute' % instance)
-        return None
-
-    action.send(instance.user, verb='liked_look', action_object=instance.look)
-
-def unlike_look_handler(sender, **kwargs):
-    instance = kwargs['instance']
-    if not hasattr(instance, 'user'):
-        logging.warning('Trying to remove an activity on unlike_look, but %s has not user attribute' % instance)
+        logging.warning('Trying to register an activity, but %s has not user attribute' % instance)
         return
 
+    if instance.active == True:
+        action_object = Action.objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(instance.user),
+                                                     actor_object_id=instance.user.pk,
+                                                     verb='liked_look',
+                                                     action_object_content_type=ContentType.objects.get_for_model(instance.look),
+                                                     action_object_object_id=instance.look.pk)
+    else:
+        action_object = Action.objects.filter(actor_object_id=instance.user.pk,
+                                              verb='liked_look',
+                                              action_object_content_type=ContentType.objects.get_for_model(instance.look),
+                                              action_object_object_id=instance.look.pk)
+        action_object.delete()
+
+def look_like_delete(sender, instance, **kwargs):
+    if not hasattr(instance, 'user'):
+        logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
+        return
     action_object = Action.objects.filter(actor_object_id=instance.user.pk,
                                           verb='liked_look',
                                           action_object_content_type=ContentType.objects.get_for_model(instance.look),
@@ -44,26 +44,38 @@ def unlike_look_handler(sender, **kwargs):
     action_object.delete()
 
 
-apparel.signals.like.connect(like_look_handler, sender=LookLike)
-apparel.signals.unlike.connect(unlike_look_handler, sender=LookLike)
+models.signals.post_save.connect(look_like, sender=LookLike)
+models.signals.post_delete.connect(look_like_delete, sender=LookLike)
 
 #
 # Product like activity handlers
 #
-
-def like_product_handler(sender, **kwargs):
-    instance = kwargs['instance']
+def product_like(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
-        logging.warning('Trying to register an activity on like_product, but %s has not user attribute' % instance)
-        return None
-
-    action.send(instance.user, verb='liked_product', action_object=instance.product)
-
-def unlike_product_handler(sender, **kwargs):
-    instance = kwargs['instance']
-    if not hasattr(instance, 'user'):
-        logging.warning('Trying to remove an activity on unlike_product, but %s has not user attribute' % instance)
+        logging.warning('Trying to register an activity, but %s has not user attribute' % instance)
         return
+
+    search_index_update_task.delay(instance.product._meta.app_label, instance.product._meta.module_name, instance.product._get_pk_val())
+
+    if instance.active == True:
+        action_object = Action.objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(instance.user),
+                                                     actor_object_id=instance.user.pk,
+                                                     verb='liked_product',
+                                                     action_object_content_type=ContentType.objects.get_for_model(instance.product),
+                                                     action_object_object_id=instance.product.pk)
+    else:
+        action_object = Action.objects.filter(actor_object_id=instance.user.pk,
+                                              verb='liked_product',
+                                              action_object_content_type=ContentType.objects.get_for_model(instance.product),
+                                              action_object_object_id=instance.product.pk)
+        action_object.delete()
+
+def product_like_delete(sender, instance, **kwargs):
+    if not hasattr(instance, 'user'):
+        logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
+        return
+
+    search_index_update_task.delay(instance.product._meta.app_label, instance.product._meta.module_name, instance.product._get_pk_val())
 
     action_object = Action.objects.filter(actor_object_id=instance.user.pk,
                                           verb='liked_product',
@@ -72,8 +84,8 @@ def unlike_product_handler(sender, **kwargs):
     action_object.delete()
 
 
-apparel.signals.like.connect(like_product_handler, sender=ProductLike)
-apparel.signals.unlike.connect(unlike_product_handler, sender=ProductLike)
+models.signals.post_save.connect(product_like, sender=ProductLike)
+models.signals.post_delete.connect(product_like_delete, sender=ProductLike)
 
 #
 # Comment activity handler
@@ -186,41 +198,3 @@ def look_product_delhandler(sender, **kwargs):
 
 models.signals.post_save.connect(look_product_addhandler, sender=LookComponent)
 models.signals.pre_delete.connect(look_product_delhandler, sender=LookComponent)
-
-def wardrobe_product_addhandler(sender, **kwargs):
-    instance = kwargs['instance']
-    if not hasattr(instance.wardrobe, 'user'):
-        logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % instance)
-        return
-
-    if not kwargs['created']:
-        return
-
-    action.send(
-        instance.wardrobe.user,
-        verb='added',
-        action_object=instance.product,
-        target=instance.wardrobe
-    )
-
-def wardrobe_product_delhandler(sender, **kwargs):
-    instance = kwargs['instance']
-    if not hasattr(instance.wardrobe, 'user'):
-        logging.warning('Trying to remove an activity on post_delete, but %s has not user attribute' % instance)
-        return
-
-    product_content_type = ContentType.objects.get_for_model(Product)
-    user_content_type = ContentType.objects.get_for_model(User)
-    wardrobe_content_type = ContentType.objects.get_for_model(Wardrobe)
-
-    action_object = Action.objects.filter(actor_content_type=user_content_type,
-                                          actor_object_id=instance.wardrobe.user.pk,
-                                          target_content_type=wardrobe_content_type,
-                                          target_object_id=instance.wardrobe.pk,
-                                          action_object_content_type=product_content_type,
-                                          action_object_object_id=instance.product.pk,
-                                          verb='added')
-    action_object.delete()
-
-models.signals.post_save.connect(wardrobe_product_addhandler, sender=WardrobeProduct)
-models.signals.pre_delete.connect(wardrobe_product_delhandler, sender=WardrobeProduct)

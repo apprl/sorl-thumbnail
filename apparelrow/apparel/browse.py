@@ -108,11 +108,11 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     if 'f' in request.GET and request.user:
         user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
         user_ids_or = ' OR '.join(str(x) for x in user_ids)
-        query_arguments['fq'].append('user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or))
+        query_arguments['fq'].append('user_likes:({0})'.format(user_ids_or))
         query_arguments['fq'].append('availability:true')
         query_arguments['fq'].append(generate_gender_field(request.GET))
     elif profile:
-        query_arguments['fq'].append('user_wardrobe:%s' % (profile.user.id,))
+        query_arguments['fq'].append('user_likes:%s' % (profile.user.id,))
         query_arguments['fq'].append(generate_gender_field(request.GET))
     else:
         query_arguments['fq'].append('availability:true')
@@ -124,7 +124,6 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     facet_fields = ['category', 'price', 'color', 'manufacturer_data']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     if extra_context and 'profile' in extra_context:
-        # wardrobe
         query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, profile=extra_context['profile'])
         query_arguments['sort'] = ['availability desc', 'popularity desc', 'created desc']
     else:
@@ -271,13 +270,13 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
         },
     )
 
-    # Wardrobe page has no gender in the url, do not set APPAREL_GENDER from wardrobe calls
+    # Likes page has no gender in the url, do not set APPAREL_GENDER from like calls
     if not extra_context:
         result.update(APPAREL_GENDER=gender)
 
-    # If we are called from the wardrobe, make sure the templates know this
+    # If we are called from the likes page, make sure the templates know this
     if extra_context and 'profile' in extra_context:
-        result.update(wardrobe=True)
+        result.update(likes_page=True)
 
     response = render_to_response(template, result, context_instance=RequestContext(request))
     if not extra_context:
@@ -299,7 +298,7 @@ def get_pagination_as_dict(paged_result):
     }
 
 @get_current_user
-def browse_wardrobe(request, profile):
+def browse_profile(request, profile):
     return browse_products(request,
             template='profile/wardrobe.html',
             extra_context={'profile': profile})

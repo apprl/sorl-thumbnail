@@ -4,7 +4,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from apparel.models import Product, Wardrobe, LookComponent
+from apparel.models import Product, ProductLike, LookComponent
 from importer.models import VendorFeed, ImportLog
 
 class Command(BaseCommand):
@@ -83,9 +83,9 @@ class Command(BaseCommand):
         vendor = feed.vendor
         VendorCategory.objects.filter(vendor=vendor).delete()
 
-        wardrobe_product_ids = set(Product.objects.filter(wardrobe__in=Wardrobe.objects.all()).distinct().values_list('id', flat=True))
-        look_product_ids = set(LookComponent.objects.all().values_list('product__id', flat=True))
-        product_ids = wardrobe_product_ids.union(look_product_ids)
+        likes_product_ids = set(ProductLike.objects.filter(active=True).values_list('product__id', flat=True))
+        look_product_ids = set(LookComponent.objects.values_list('product__id', flat=True))
+        product_ids = likes_product_ids.union(look_product_ids)
 
         for product in Product.objects.filter(vendorproduct__vendor=vendor):
             if product.id in product_ids:

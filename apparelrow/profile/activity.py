@@ -6,28 +6,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from actstream.models import Follow, Action
 
-from apparel.models import LookLike, Look, Product
-from apparel import signals as apparel_signals
-from profile.notifications import process_like_look_created
+from apparel.models import Look, Product
 from profile.notifications import process_comment_look_created
 from profile.notifications import process_comment_look_comment
 from profile.notifications import process_comment_product_wardrobe
 from profile.notifications import process_comment_product_comment
 from profile.notifications import process_follow_user
 
-#
-# Look like activity handlers
-#
-
-def like_look_handler(sender, **kwargs):
-    instance = kwargs['instance']
-    request = kwargs['request']
-    if not instance.active or not hasattr(instance, 'user') or not hasattr(request, 'user'):
-        return None
-
-    process_like_look_created.delay(instance.look.user, request.user, instance)
-
-apparel_signals.like.connect(like_look_handler, sender=LookLike)
 
 #
 # Comment activity handler

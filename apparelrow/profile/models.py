@@ -41,7 +41,7 @@ class ApparelProfile(models.Model):
 
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
-            help_text=_('When someone commented on a product that I have in my wardrobe'))
+            help_text=_('When someone commented on a product that I have liked'))
     comment_product_comment = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone commented on a product that I have commented on'))
     comment_look_created = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',

@@ -26,18 +26,17 @@ from django.utils import translation
 from hanssonlarsson.django.exporter import json as special_json
 from actstream.models import Follow
 
-from apparelrow.tasks import search_index_update_task
 from apparelrow.profile.models import ApparelProfile
 from apparelrow.profile.utils import get_facebook_user
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.decorators import get_current_user
 from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct, BackgroundImage
-from apparelrow.apparel.models import Look, LookLike, LookComponent, Wardrobe, WardrobeProduct, FirstPageContent
+from apparelrow.apparel.models import Look, LookLike, LookComponent, FirstPageContent
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.search import ApparelSearch
 from apparelrow.search import more_like_this_product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, get_friend_updates, CountPopularity
-import apparel.signals
+from profile.notifications import process_like_look_created
 
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 10
@@ -63,15 +62,11 @@ def product_detail(request, slug):
     for p in Product.objects.filter(pk__in=viewed_products):
         viewed_products[viewed_products.index(p.id)] = p
 
+    is_in_wardrobe = False
+    user_looks = []
     if request.user.is_authenticated():
-        user_looks     = Look.objects.filter(user=request.user)
-        try:
-            is_in_wardrobe = Wardrobe.objects.get(user=request.user).products.filter(pk=product.id).count() > 0
-        except Wardrobe.DoesNotExist:
-            is_in_wardrobe = False
-    else:
-        user_looks     = []
-        is_in_wardrobe = False
+        user_looks = Look.objects.filter(user=request.user)
+        is_in_wardrobe = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
 
     looks_with_product = Look.objects.filter(components__product=product).order_by('-modified')[:2]
     looks_with_product_count = Look.objects.filter(components__product=product).aggregate(Count('id')).get('id__count', 0)
@@ -91,37 +86,66 @@ def product_detail(request, slug):
         )
 
 @login_required
+def product_unlike(request):
+    try:
+        product = Product.objects.get(pk=request.POST.get('product', 0))
+    except Product.MultipleObjectsReturned, Product.DoesNotExist:
+        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
+
+    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
+    product_like.active = False
+    product_like.save()
+
+    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
+
+@login_required
 def product_like(request, slug, action):
     """
     Like or unlike a product through ajax.
     """
-    if request.method == 'GET':
-        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')))
     if not request.user.is_authenticated():
-        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')))
+        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')), mimetype='application/json')
+    if request.method == 'GET':
+        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')), mimetype='application/json')
+    if action not in ['like', 'unlike']:
+        return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')), mimetype='application/json')
 
     try:
         product = Product.objects.get(slug=slug)
     except Product.MultipleObjectsReturned, Product.DoesNotExist:
-        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')))
+        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
+
+    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
+    product_like.active = True if action == 'like' else False
+    product_like.save()
+
+    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
+
+@login_required
+def look_like(request, slug, action):
+    """
+    Like or unlike a look through ajax.
+    """
+    if request.method == 'GET':
+        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')), mimetype='application/json')
+    if not request.user.is_authenticated():
+        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')), mimetype='application/json')
+    if action not in ['like', 'unlike']:
+        return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')), mimetype='application/json')
+
+    try:
+        look = Look.objects.get(slug=slug)
+    except Look.MultipleObjectsReturned, Look.DoesNotExist:
+        return HttpResponse(json.dumps(dict(success=False, error_message='No look found')), mimetype='application/json')
+
+    look_like, created = LookLike.objects.get_or_create(user=request.user, look=look)
+    look_like.active = True if action == 'like' else False
+    look_like.save()
 
     if action == 'like':
-        product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
-        product_like.active = True
-        product_like.save()
+        process_like_look_created.delay(look.user, request.user, look_like)
 
-        apparel.signals.like.send(sender=ProductLike, instance=product_like, request=request)
-        return HttpResponse(json.dumps(dict(success=True, error_message=None)))
-
-    elif action == 'unlike':
-        product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
-        product_like.active = False
-        product_like.save()
-
-        apparel.signals.unlike.send(sender=ProductLike, instance=product_like, request=request)
-        return HttpResponse(json.dumps(dict(success=True, error_message=None)))
-
-    return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
+    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
 def brand_list(request, gender=None):
     """
@@ -187,7 +211,7 @@ def brand_list(request, gender=None):
                            'fq': ['django_ct:apparel.product',
                                   'availability:true',
                                   'gender:(U OR %s)' % (gender,),
-                                  'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or)],
+                                  'user_likes:({0})'.format(user_ids_or)],
                            'start': 0,
                            'rows': 10,
                            'group': 'true',
@@ -216,39 +240,6 @@ def brand_list(request, gender=None):
             }, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
-
-@login_required
-def look_like(request, slug, action):
-    """
-    Like or unlike a look through ajax.
-    """
-    if request.method == 'GET':
-        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')))
-    if not request.user.is_authenticated():
-        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')))
-
-    try:
-        look = Look.objects.get(slug=slug)
-    except Look.MultipleObjectsReturned, Look.DoesNotExist:
-        return HttpResponse(json.dumps(dict(success=False, error_message='No look found')))
-
-    if action == 'like':
-        look_like, created = LookLike.objects.get_or_create(user=request.user, look=look)
-        look_like.active = True
-        look_like.save()
-
-        apparel.signals.like.send(sender=LookLike, instance=look_like, request=request)
-        return HttpResponse(json.dumps(dict(success=True, error_message=None)))
-
-    elif action == 'unlike':
-        look_like, created = LookLike.objects.get_or_create(user=request.user, look=look)
-        look_like.active = False
-        look_like.save()
-
-        apparel.signals.unlike.send(sender=LookLike, instance=look_like, request=request)
-        return HttpResponse(json.dumps(dict(success=True, error_message=None)))
-
-    return HttpResponse(json.dumps(dict(success=False, error_message='Unknown')))
 
 def look_list(request, popular=None, search=None, contains=None, page=0, gender=None):
     """
@@ -348,19 +339,17 @@ def look_edit(request, slug):
     else:
         form = LookForm(instance=look)
 
-    try:
-        wardrobe = Wardrobe.objects.get(user=request.user).wardrobeproduct_set.order_by('-created').all()
-        wardrobe = [x.product for x in wardrobe]
-
-    except Wardrobe.DoesNotExist:
-        wardrobe = []
+    product_likes = []
+    product_likes_queryset = ProductLike.objects.filter(user=request.user, active=True, product__published=True).order_by('-created')
+    if product_likes_queryset:
+        product_likes = [x.product for x in product_likes_queryset]
 
     context = RequestContext(request)
 
     data = {
         'object': form.instance,
         'form': form,
-        'wardrobe': wardrobe
+        'wardrobe': product_likes
     }
     # FIXME: Cannot export Form objects as JSON. Fix this and remove this
     # work around
@@ -400,7 +389,7 @@ def look_create(request):
             look.save()
 
             if request.is_ajax():
-                return HttpResponse(json.encode({'success': True, 'data': look}), mimetype='text/json')
+                return HttpResponse(json.encode({'success': True, 'data': look}), mimetype='application/json')
 
             return HttpResponseRedirect(reverse('apparel.views.look_edit', args=(look.slug,)))
 
@@ -559,10 +548,13 @@ def add_to_look(request):
         look.save()
         created = True
 
-    p = Product.objects.get(pk=request.POST.get('product'))
+    product = Product.objects.get(pk=request.POST.get('product'))
     added = True
 
-    add_to_wardrobe(request)        # Also, add the product to user's wardrobe
+    # If we add to a look, we should also added it to the "wardrobe" by liking
+    product_like, _ = ProductLike.objects.get_or_create(user=request.user, product=product)
+    product_like.active = True
+    product_like.save()
 
     return (
         {
@@ -575,31 +567,6 @@ def add_to_look(request):
         HttpResponseRedirect(reverse('apparel.views.look_detail', args=(look.slug,)))
     )
 
-
-@seamless_request_handling
-@login_required
-def add_to_wardrobe(request):
-    """
-    Adds a product to a user's wardrobe (and creates it if necessary)
-    """
-    product = Product.objects.get(pk=request.POST.get('product'))
-    wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
-    # Becase the ManyToMany relation is handle through a WardrobeProduct
-    WardrobeProduct.objects.get_or_create(wardrobe=wardrobe, product=product)
-    search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
-
-    return {'success': True}
-
-@seamless_request_handling
-@login_required
-def delete_from_wardrobe(request):
-    product = Product.objects.get(pk=request.POST.get('product'))
-    wardrobe, created = Wardrobe.objects.get_or_create(user=request.user)
-    # Becase the ManyToMany relation is handle through a WardrobeProduct
-    WardrobeProduct.objects.filter(wardrobe=wardrobe, product=product).delete()
-    search_index_update_task.delay(product._meta.app_label, product._meta.module_name, product._get_pk_val()) # Update search index
-
-    return ({'success': True}, HttpResponseRedirect(reverse('apparel.browse.browse_wardrobe', args=(request.user,))))
 
 def csrf_failure(request, reason=None):
     """
@@ -711,7 +678,7 @@ def home(request, profile):
         'rows': limit,
         'fq': [
             'django_ct:apparel.product',
-            'user_likes:({0}) OR user_wardrobe:({0})'.format(user_ids_or),
+            'user_likes:({0})'.format(user_ids_or),
             'availability:true'
         ]
     }

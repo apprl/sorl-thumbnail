@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     (r'^welcome/$', 'profile.views.welcome_dialog'),
     (r'^(?:([^\/]+?)/)?$', 'profile.views.profile'),
     (r'^(?:([^\/]+?)/)?looks/$', 'profile.views.looks'),
-    (r'^(?:([^\/]+?)/)?wardrobe/$', 'apparel.browse.browse_wardrobe'),
+    (r'^(?:([^\/]+?)/)?likes/$', 'apparel.browse.browse_profile'),
     (r'^(?:([^\/]+?)/)?followers/$', 'profile.views.followers'),
     (r'^(?:([^\/]+?)/)?following/$', 'profile.views.following'),
 )

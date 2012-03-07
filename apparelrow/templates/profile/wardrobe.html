@@ -5,10 +5,10 @@
 {% block 'extra-scripts' %}
     {% include 'apparel/fragments/browse_scripts.html' %}
     <script type="text/javascript">
-        var browse_url = '{% url apparel.browse.browse_wardrobe profile.user %}';
-        {% url apparel.browse.browse_wardrobe user.username as wardrobe_url %}
-        {% ifequal request.path wardrobe_url %}
-        var delete_link = '<a class="delete-wardrobe" title="{% trans "Delete product from my wardrobe" %}" href="">{% trans "Delete product from my wardrobe" %}</a>';
+        var browse_url = '{% url apparel.browse.browse_profile profile.user %}';
+        {% url apparel.browse.browse_profile user.username as browse_likes_url %}
+        {% if request.path == browse_likes_url %}
+        var delete_link = '<a class="delete-wardrobe" title="{% trans "Unlike product" %}" href="">{% trans "Unlike product" %}</a>';
         jQuery(document).ready(function() {
             jQuery('#product-list ul.list li ul li').prepend(delete_link);
             jQuery('#product-list').bind('post_browse_render', function() {
@@ -16,31 +16,24 @@
             });
 
             jQuery('#product-list .delete-wardrobe').live('click', function(event) {
-                var id = parseInt(jQuery(this).closest('li').attr('id').split('-').pop(), 10);
-                var title = jQuery(this).parent().find('h4').text() + ' ' + jQuery(this).parent().find('.product-image img').attr('alt');
+                var elem = jQuery(this).parent();
+                var id = parseInt(elem.attr('id').split('-').pop(), 10);
+                var title = elem.find('h4').text() + ' ' + elem.find('.product-image img').attr('alt');
 
                 create_modal_dialog(
                     '{% trans "Are you sure?" %}',
                     ['{% trans "Do you really want to delete product" %} <span class="bold">' + title + '</span>?'],
                     function (modal_dialog) {
-                        jQuery.post('{% url apparel.views.delete_from_wardrobe %}', {'product': id}, function(data, textStatus, req) {
-                            if(data.success) { delay(function() { location.reload() }, 300); }
+                        jQuery.post('{% url apparel.views.product_unlike %}', {'product': id}, function(data, textStatus, req) {
+                            if(data['success'] == true) { elem.remove(); modal_dialog.close(); }
                         });
                     },
                     function (modal_dialog) { modal_dialog.close(); }
                 );
-
                 event.preventDefault();
             });
         });
-        var delay = (function(){
-            var timer = 0;
-            return function(callback, ms){
-                clearTimeout (timer);
-                timer = setTimeout(callback, ms);
-            };
-        })();
-        {% endifequal %}
+        {% endif %}
     </script>
 {% endblock 'extra-scripts' %}
 
@@ -57,12 +50,12 @@
         {% include 'apparel/fragments/product_list.html' %}
     {% else %}
         <div class="wardrobe-empty">
-            {% url apparel.browse.browse_wardrobe user.username as wardrobe_url %}
-            {% ifequal request.path wardrobe_url %}
+            {% url apparel.browse.browse_profile user.username as profile_likes_url %}
+            {% if request.path == profile_likes_url %}
                 <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
             {% else %}
                 <div class="message warning">{{ profile.display_name }} {% trans "does not have any products in the wardrobe right now." %}</div>
-            {% endifequal %}
+            {% endif %}
         </div>
     {% endif %}
 {% endblock %}

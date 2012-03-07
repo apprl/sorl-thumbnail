@@ -2,8 +2,8 @@ import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 
-from apparelrow.apparel.models import Product, ProductLike, Wardrobe
-from apparelrow.statistics.models import ProductClick 
+from apparelrow.apparel.models import Product, ProductLike
+from apparelrow.statistics.models import ProductClick
 
 def batch_qs(qs, batch_size=1000):
     """
@@ -35,13 +35,12 @@ class Command(BaseCommand):
                     product_click_count = ProductClick.objects.get(product=product).click_count
                 except ProductClick.DoesNotExist:
                     pass
-                wardrobe_count = Wardrobe.objects.filter(products=product).count()
                 two_weeks_behind = datetime.datetime.now() - datetime.timedelta(weeks=2)
                 like_count = ProductLike.objects.filter(
                         product=product,
                         active=True,
                         created__gte=two_weeks_behind).count()
-                votes = like_count + wardrobe_count + 3 * product_click_count
+                votes = like_count + 3 * product_click_count
                 timedelta = datetime.datetime.now() - product.date_added
                 item_half_hour_age =  (timedelta.days * 86400 + timedelta.seconds) / 7200
                 product.popularity = str(votes / pow(item_half_hour_age, 1.53))

@@ -452,7 +452,7 @@ function renderPage(products) {
         jQuery('#product-count a').show();
         // Special case, only hide gender if we are not on the wardrobe page
         // TODO / FIXME: better solution?
-        if(window.location.pathname.indexOf('wardrobe') == -1) {
+        if(window.location.pathname.indexOf('likes') == -1) {
             jQuery('#product-gender').hide();
         }
     }

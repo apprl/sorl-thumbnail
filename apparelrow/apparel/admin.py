@@ -40,7 +40,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            if Wardrobe.objects.filter(products=obj) or LookComponent.objects.filter(product=obj):
+            if ProductLike.objects.filter(active=True, product=obj) or LookComponent.objects.filter(product=obj):
                 return ['published']
         return []
 
@@ -284,15 +284,21 @@ admin.site.register(VendorProduct, VendorProductAdmin)
 # User data
 #
 
-admin.site.register(Wardrobe)
-
 class LookLikeAdmin(admin.ModelAdmin):
+    readonly_fields = ('created', 'modified')
+    fields = ('look', 'user', 'active', 'created', 'modified')
     raw_id_fields = ['look', 'user']
+    list_display = ('look', 'user', 'created', 'modified', 'active')
+    list_filter = ('active', 'user')
 
 admin.site.register(LookLike, LookLikeAdmin)
 
 class ProductLikeAdmin(admin.ModelAdmin):
+    readonly_fields = ('created', 'modified')
+    fields = ('product', 'user', 'active', 'created', 'modified')
     raw_id_fields = ['product', 'user']
+    list_display = ('product', 'user', 'created', 'modified', 'active')
+    list_filter = ('active', 'user')
 
 admin.site.register(ProductLike, ProductLikeAdmin)
 

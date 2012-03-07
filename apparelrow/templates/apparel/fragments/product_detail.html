@@ -102,21 +102,6 @@
             </ul>
             </form>
         </li>
-        <li id="add-to-wardrobe" class="top last">
-            {% if is_in_wardrobe %}
-                <form class="delete" action="{% url apparel.views.delete_from_wardrobe %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="product" value="{{ object.id }}" />
-                    <button type="submit" id="wardrobe-button-delete" title="{% trans "Delete product from my wardrobe" %}">{% trans "In wardrobe" %}</button>
-                </form>
-            {% else %}
-                <form class="add" action="{% url apparel.views.add_to_wardrobe %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="product" value="{{ object.id }}" />
-                    <button type="submit" id="wardrobe-button-add" title="{% trans "Add to wardrobe" %}">{% trans "Add to wardrobe" %}</button>
-                </form>
-            {% endif %}
-        </li>
     </ul>
 </div>
 {% endif %}

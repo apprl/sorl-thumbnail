@@ -12,10 +12,8 @@ from django.utils.translation import get_language, activate
 from actstream.models import Follow
 from celery.task import task
 
-from apparel.models import Wardrobe
+from apparel.models import ProductLike
 from profile.models import NotificationCache
-
-LOCK_EXPIRE = 60*60*12
 
 def get_key(name, recipient, sender, obj):
     recipient_pk = sender_pk = obj_pk = ''
@@ -28,7 +26,6 @@ def get_key(name, recipient, sender, obj):
         obj_pk = obj.pk
 
     return '%s_%s_%s_%s' % (name, recipient_pk, sender_pk, obj_pk)
-
 
 def is_duplicate(name, recipient, sender, obj):
     key = get_key(name, recipient, sender, obj)
@@ -230,13 +227,13 @@ def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
     content_object = comment.content_object
 
     notify_users = set()
-    for wardrobe in Wardrobe.objects.filter(products=content_object).select_related('apparel_profile'):
-        if wardrobe.user != sender and wardrobe.user not in notify_users:
-            if wardrobe.user.get_profile().comment_product_wardrobe == 'A':
-                notify_users.add(wardrobe.user)
-            elif wardrobe.user.get_profile().comment_product_wardrobe == 'F':
-                if Follow.objects.filter(user=wardrobe.user, content_type=sender_content_type, object_id=sender.pk):
-                    notify_users.add(wardrobe.user)
+    for product_like in ProductLike.objects.filter(product=content_object).select_related('apparel_profile'):
+        if product_like.user != sender and product_like.user not in notify_users:
+            if product_like.user.get_profile().comment_product_wardrobe == 'A':
+                notify_users.add(product_like.user)
+            elif product_like.user.get_profile().comment_product_wardrobe == 'F':
+                if Follow.objects.filter(user=product_like.user, content_type=sender_content_type, object_id=sender.pk):
+                    notify_users.add(product_like.user)
 
     if notify_users and sender:
         notify_by_mail(list(notify_users), 'comment_product_wardrobe', sender, {

@@ -155,7 +155,7 @@
         {% url apparel.views.look_create as look_create_url %}
         {% url profile.views.settings_notification as notification_settings_url %}
         {% url profile.views.settings_email as email_settings_url %}
-        {% url apparel.browse.browse_wardrobe user.username as wardrobe_url %}
+        {% url apparel.browse.browse_profile user.username as likes_url %}
         {% url profile.views.looks user.username as looks_url %}
         {% url profile.views.followers user.username as followers_url %}
         {% url profile.views.following user.username as following_url %}
@@ -163,7 +163,7 @@
         <div id="login-pane">
             <ul>
                 <li class="profile">
-                    <a class="{% if request.path == profile_url or request.path == wardrobe_url or request.path == looks_url or request.path == followers_url or request.path == following_url %} selected{% endif %}"href="{{ profile_url }}">
+                    <a class="{% if request.path == profile_url or request.path == likes_url or request.path == looks_url or request.path == followers_url or request.path == following_url %} selected{% endif %}"href="{{ profile_url }}">
                         <img src="{{ user.get_profile.avatar }}" class="avatar small">
                         {{ user.get_profile.display_name }}
                         <div class="arrow"></div>
@@ -171,7 +171,7 @@
                     <ul class="profile-hover-menu" style="display: none;">
                         <li class="arrow"></li>
                         <li class="first"><a href="{{ profile_url }}">{% trans "My profile" %}</a></li>
-                        <li><a href="{{ wardrobe_url }}">{% trans "Wardrobe" %}</a></li>
+                        <li><a href="{{ likes_url }}">{% trans "Likes" %}</a></li>
                         <li><a href="{{ looks_url }}">{% trans "Looks" %}</a></li>
                         <li><a href="{{ followers_url }}">{% trans "Followers" %}</a></li>
                         <li class="last"><a href="{{ following_url }}">{% trans "Following" %}</a></li>

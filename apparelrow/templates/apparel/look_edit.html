@@ -487,7 +487,7 @@ jQuery(document).ready(function() {
             {% include 'apparel/fragments/look_collage_edit.html' %}
             <div class="look-empty"{% if object.collage_components.all.count > 0 %} style="display: none"{% endif %}>
                 {% if wardrobe|length == 0 %}
-                    <div class="message warning">{% trans "To create a look, you need to have products in your wardrobe." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+                    <div class="message warning">{% trans "To create a look, you need to have liked at least one product." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
                 {% else %}
                     <div class="message">{% trans "Drag products here to start building a collage" %}</div>
                 {% endif %}
@@ -516,7 +516,7 @@ jQuery(document).ready(function() {
 </form>
 <div id="wardrobe">
     <div id="wardrobe-title">
-        <span class="title">{% trans "Your wardrobe" %}</span>
+        <span class="title">{% trans "Your likes" %}</span>
         <span class="visibility-toggle hide">{% trans "Hide" %}</span>
     </div>
     <div id="wardrobe-contents">

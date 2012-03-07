@@ -77,9 +77,6 @@
                         /* FIXME uncommented this, for now. We need to do something more smart with templates.
                         jQuery('<li/>').append(response.data.template, { 'object': response.data.look }).prependTo('ul.looks');
                          */
-                        jQuery('#add-to-wardrobe form button[type=submit]').text('{% trans "In wardrobe" %}').attr('title', '{% trans "Delete product from my wardrobe" %}').unbind('click');
-                        jQuery('#add-to-wardrobe > form').removeClass('add').attr('action', '{% url apparel.views.delete_from_wardrobe %}');
-
                         if(response.data.look.component == 'C') {
                             var look_url = jQuery(response.data.html).attr('href');
                             if(jQuery('.sidebar > .product-looks > ul.looks a[href=' + look_url + ']').length == 0) {
@@ -145,42 +142,6 @@
                 .focus(function() { if(this.value == this.defaultValue) this.select() })
                 .blur(function()  { if(this.value == '') this.value = this.defaultValue })
                 .bind('keypress', function(e) { if(e.keyCode == 13) { jQuery('#add-to-look>form').submit(); return false } return true})
-
-            var wardrobe_form = jQuery('#add-to-wardrobe > form');
-            jQuery('#add-to-wardrobe > form').hyperSubmit({
-                beforeSend: function(req) {
-                    btn = jQuery('#add-to-wardrobe form button[type=submit]');
-                    if(wardrobe_form.hasClass('add')) {
-                        btn.text('{% trans "Adding..." %}');
-                    } else {
-                        btn.text('{% trans "Deleting..." %}');
-                    }
-                    btn.click(function() { return false });
-                },
-                success: function(data, statusText, req) {
-                    if(wardrobe_form.hasClass('add')) {
-                        btn.text('{% trans "In wardrobe" %}').attr('title', '{% trans "Delete product from my wardrobe" %}');
-                        jQuery('#add-to-wardrobe form').attr('action', '{% url apparel.views.delete_from_wardrobe %}');
-                        wardrobe_form.removeClass('add');
-                    } else {
-                        btn.text('{% trans "Add to wardrobe" %}').attr('title', '{% trans "Add to wardrobe" %}');
-                        jQuery('#add-to-wardrobe form').attr('action', '{% url apparel.views.add_to_wardrobe %}');
-                        wardrobe_form.addClass('add');
-                    }
-                    btn.unbind('click');
-                },
-                error: function(data, statusText, req) {
-                    if(wardrobe_form.hasClass('add')) {
-                        btn.text('{% trans "Add to wardrobe" %}').attr('title', '{% trans "Add to wardrobe" %}');
-                        wardrobe_form.addClass('add');
-                    } else {
-                        btn.text('{% trans "In wardrobe" %}').attr('title', '{% trans "Delete product from my wardrobe" %}');
-                        wardrobe_form.removeClass('add');
-                    }
-                    is_add = !is_add;
-                    btn.unbind('click');
-                }
-            });
 
             // More like this scrollable
             jQuery('#more-like-this .row').simple_scrollable(532);

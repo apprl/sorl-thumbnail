@@ -1,10 +1,10 @@
 {% load i18n %}
-{% url apparel.browse.browse_wardrobe profile.user.username as wardrobe_url %}
+{% url apparel.browse.browse_profile profile.user.username as profile_likes_url %}
 {% url profile.views.looks profile.user.username as looks_url %}
 {% url profile.views.followers profile.user.username as followers_url %}
 {% url profile.views.following profile.user.username as following_url %}
 <li>
-<a class="{% if request.path == wardrobe_url %}selected{% else %}first{% endif %}" href="{{ wardrobe_url }}">{% trans "Wardrobe" %}</a>
+<a class="{% if request.path == likes_url %}selected{% else %}first{% endif %}" href="{{ profile_likes_url }}">{% trans "Likes" %}</a>
 </li>
 <li>
     <a class="{% ifequal request.path looks_url %} selected{% endifequal %}" href="{{ looks_url }}">{% trans "Looks" %}</a>

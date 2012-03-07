@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from apparel.decorators import get_current_user
-from apparel.models import Look, Wardrobe
+from apparel.models import Look, ProductLike
 # FIXME: Move get_facebook_friends and get_most_followed_users to a util module
 from apparel.views import get_facebook_friends, get_most_followed_users
 from apparel.utils import get_pagination_page
@@ -50,18 +50,14 @@ def get_profile_sidebar_info(user):
 
     Returns a dict containing the extra information
     """
-    info = {'products' : 0, 'following' : 0 }
-    try:
-        wardrobe = Wardrobe.objects.get(user=user)
-        info['products'] = wardrobe.products.count()
+    info = {'products': 0, 'following': 0}
 
-        content_type = ContentType.objects.get_for_model(User)
-        info['following'] = Follow.objects.filter(content_type=content_type, user=user).count()
-    except Wardrobe.DoesNotExist:
-        # If no wardrobe exists, do not alter the defaults
-        pass
+    info['products'] = ProductLike.objects.filter(user=user, active=True, product__published=True).count()
+
+    content_type = ContentType.objects.get_for_model(User)
+    info['following'] = Follow.objects.filter(content_type=content_type, user=user).count()
+
     return info
-
 
 @get_current_user
 def profile(request, profile, page=0):

@@ -30,9 +30,8 @@ urlpatterns = patterns('',
     url(r'^shop/men/manufacturers/$', 'apparel.browse.browse_manufacturers', {'gender': 'M'}, name='shop-manufacturers-men'),
     url(r'^shop/women/manufacturers/$', 'apparel.browse.browse_manufacturers', {'gender': 'W'}, name='shop-manufacturers-women'),
 
-    # Wardrobe
-    (r'^wardrobe/add_product/$', 'apparel.views.add_to_wardrobe'),
-    (r'^wardrobe/delete_product/$', 'apparel.views.delete_from_wardrobe'),
+    # Likes
+    (r'^likes/delete_product/$', 'apparel.views.product_unlike'),
 
     # Looks
     url(r'^looks/$', 'apparel.views.gender', {'view': 'look-list'}, name='look-list'),
