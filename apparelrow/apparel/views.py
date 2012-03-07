@@ -666,7 +666,7 @@ def home(request, profile):
     queryset = get_friend_updates(request.user)
 
     # Retrieve most popular products in users network
-    limit = 4
+    limit = 2
     user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
     user_ids_or = ' OR '.join(str(x) for x in user_ids)
 
