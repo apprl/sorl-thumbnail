@@ -6,7 +6,7 @@
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
     {% with user.get_profile.get_updates_last_visit as updates %}
-    <title>{% block extra-title %}{% endblock %}Apparelrow{% if updates %} ({{ updates }}){% endif %}</title>
+    <title>{% if updates %}({{ updates }}) {% endif %}{% block extra-title %}{% endblock %}Apparelrow</title>
     {% endwith %}
     <meta charset="utf-8" />
     <link type="text/css" href="{{ MEDIA_URL }}{% staticfile "styles/smoothness/jquery-ui-1.8rc3.custom.css" %}" rel="stylesheet" />
