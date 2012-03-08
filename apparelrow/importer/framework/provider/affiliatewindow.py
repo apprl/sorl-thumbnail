@@ -57,9 +57,15 @@ class AffiliateWindowMapper(DataMapper):
         except ValueError:
             pass
 
-        if price is None:
+        if price is None or price == 0:
             try:
                 price = float(REGEX_DECIMAL.sub('', self.record.get('store_price', '')))
+            except ValueError:
+                pass
+
+        if price is None or price == 0:
+            try:
+                price = float(REGEX_DECIMAL.sub('', self.record.get('display_price', '')))
             except ValueError:
                 pass
 
