@@ -831,6 +831,9 @@ a.looks
 span, a
   &.likes
     +apparel_likes
+  &.discount-price
+    +apparel_price
+    color: $like_color
   &.price
     +apparel_price
     &.discount
@@ -1910,9 +1913,11 @@ ul.suggested-friends
             padding-left: 3px
       span
         color: $easier_color
-      .price, .sum, .likes
+      .discount-price, .price, .sum, .likes
         background-image: none
         padding-left: 0
+      .discount-price
+        color: $like_color
       .likes
         color: $like_color
 

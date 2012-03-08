@@ -1,6 +1,7 @@
 import logging
 import uuid
 import os.path
+import decimal
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -439,8 +440,16 @@ class Look(models.Model):
             components = self.components
         else:
             components = self.display_components
-        
-        return components.annotate(price=Min('product__vendorproduct__price')).aggregate(Sum('price'))['price__sum']
+
+        total = decimal.Decimal('0.00')
+        for component in components:
+            if component.product.default_vendor.discount_price:
+                total += component.product.default_vendor.discount_price
+            else:
+                total += component.product.default_vendor.price
+
+        return total
+        #return components.annotate(price=Min('product__vendorproduct__price')).aggregate(Sum('price'))['price__sum']
     
     
     @property
