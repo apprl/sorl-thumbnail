@@ -215,7 +215,7 @@ class ProductIndex(QueuedSearchIndex):
                 except ValueError:
                     pass
             # Add discount boolean
-            self.prepared_data['discount'] = object.default_vendor.discount_price is not None
+            self.prepared_data['discount'] = bool(object.default_vendor.discount_price)
             # Add availability
             self.prepared_data['availability'] = object.default_vendor.availability != 0
         else:
