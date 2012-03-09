@@ -21,6 +21,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.comments.models import Comment
 from django.views.i18n import set_language
 from django.utils import translation
 from hanssonlarsson.django.exporter import json as special_json
@@ -84,6 +85,37 @@ def product_detail(request, slug):
                 'more_like_this': more_like_this_product(product.id, product.gender, 20)
             }, context_instance=RequestContext(request),
         )
+
+def product_popup(request):
+    product_ids = []
+    try:
+        product_ids = map(int, request.GET.get('id', '').split(','))
+    except ValueError:
+        pass
+
+    result = []
+
+    content_type = ContentType.objects.get_for_model(Product)
+    for product in product_ids:
+        product_result = {}
+        product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
+        product_result['comments'] = Comment.objects.filter(content_type=content_type, object_pk=product, is_removed=False, is_public=True).count()
+        product_result['users'] = []
+
+        product_like_qs = ProductLike.objects.filter(product=product, active=True).order_by('-created')[:4]
+        #comments_qs = Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_removed=False, is_public=True).order_by('-submit_date')[:4]
+        #combined_result = product_like_qs + comments_qs
+
+        for product_like in product_like_qs:
+            product_result['users'].append({
+                'id': product_like.user.pk,
+                'name': product_like.user.get_profile().display_name,
+                'url': product_like.user.get_profile().get_absolute_url(),
+                'image': product_like.user.get_profile().avatar})
+        result.append(product_result)
+
+    return HttpResponse(json.dumps(result), mimetype='application/json')
+
 
 @login_required
 def product_unlike(request):
