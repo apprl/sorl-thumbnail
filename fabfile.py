@@ -218,7 +218,8 @@ def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
-        run('. bin/activate && pip install -U -r ./releases/%(release)s/etc/requirements.pip' % env, pty=True)
+        with prefix('. bin/activate'):
+            run('pip install -U -r ./releases/%(release)s/etc/requirements.pip' % env, pty=True)
 
 def copy_bin():
     require('release', provided_by=[deploy, setup])
