@@ -63,14 +63,19 @@ class ApparelProfile(models.Model):
         return ('looks_by_user', [str(self.user.username)])
 
     @property
+    def has_liked(self):
+        """User has liked"""
+        return ProductLike.objects.filter(user=self.user).exists()
+
+    @property
     def looks(self):
-        # Number of looks
+        """Number of looks"""
         return Look.objects.filter(user=self.user).count()
     
     @property
     def likes(self):
-        # Number of likes on products and looks combined
-        return LookLike.objects.filter(user=self.user).count() + ProductLike.objects.filter(user=self.user).count()
+        """Number of likes on products and looks combined"""
+        return LookLike.objects.filter(user=self.user, active=True).count() + ProductLike.objects.filter(user=self.user, active=True).count()
 
     @property
     def display_name(self):
