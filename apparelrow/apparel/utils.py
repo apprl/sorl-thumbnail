@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.db import models
+from django.db import connections, models
 
 from actstream.models import user_stream
 
@@ -81,7 +81,7 @@ def get_friend_updates(user):
     queryset = user_stream(user)
     return queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following'])
 
-if settings.DATABASE_ENGINE.startswith('mysql'):
+if connections['default'].vendor.startswith('mysql'):
     sql_template = '(%(function)s(%(field)s) / POW(TIMESTAMPDIFF(HOUR, %(field_two)s, NOW()), 1.53))'
 else:
     sql_template = '(%(function)s(%(field)s) / POW((EXTRACT(EPOCH FROM NOW () - %(field_two)s) / 3600), 1.53))'
