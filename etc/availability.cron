@@ -1,0 +1,3 @@
+#!/bin/sh
+
+su -s /bin/sh -c ". /mnt/apparelrow/bin/activate && cd /mnt/apparelrow/releases/current/apparelrow && ./manage.py check_availability --email --settings production" %(run_user)s
