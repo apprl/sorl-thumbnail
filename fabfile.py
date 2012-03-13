@@ -160,7 +160,7 @@ def deploy(param='', snapshot='master'):
     build_styles_and_scripts()
     migrate(param)
     symlink_current_release()
-    restart_celeryd()
+    #restart_celeryd()
     restart_django()
     restart_memcached()
     restart_webserver()
