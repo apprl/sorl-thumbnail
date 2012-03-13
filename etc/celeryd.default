@@ -17,7 +17,7 @@ CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi"
 CELERYCTL="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl"
 
 # Extra arguments to celeryd
-CELERYD_OPTS="--autoscale=%(celery_processes)s -Q:c1 standard -Q:c2 importer -B:c1 --settings=production"
+CELERYD_OPTS="--autoscale=%(celery_processes)s -Q:c1 standard -Q:c2 importer -B:c1"
 
 # Name of the celery config module.
 # FIXME: is this needed?

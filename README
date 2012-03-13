@@ -22,31 +22,31 @@ compass compile
 
 = build js =
 cd apparelrow
-./manage.py synccompress --settings development
+./manage.py synccompress
 
 = Set up database =
 cd apparelrow
-./manage.py syncdb --settings development # Warning: do not create a superuser in this stage
-./manage.py migrate profile --settings development
-./manage.py migrate --settings development
-./manage.py createsuperuser --settings development
+./manage.py syncdb # Warning: do not create a superuser in this stage
+./manage.py migrate profile
+./manage.py migrate
+./manage.py createsuperuser
 
 = Set up search =
 touch solr/solr/conf/synonyms.txt
 cd solr
 java -jar start.jar
-./manage.py rebuild_index --settings development
+./manage.py rebuild_index
 
 = Set up message queue =
 install rabbitmq and start rabbitmq
 sudo rabbitmqctl add_user apparel apparel_mq
 sudo rabbitmqctl add_vhost apparel
 sudo rabbitmqctl set_permissions -p apparel apparel ".*" ".*" ".*"
-./manage.py celeryd -B --settings development
+./manage.py celeryd -B
 
 = Continue set up database =
-./manage.py loaddata apparel/fixtures/* --settings development
-./manage.py loaddata importer/fixtures/* --settings development
+./manage.py loaddata apparel/fixtures/*
+./manage.py loaddata importer/fixtures/*
 
 Now you can start django, either with the django-admin.py in bin, or the regular manage.py
 
@@ -58,7 +58,7 @@ Now you can start django, either with the django-admin.py in bin, or the regular
 ./docs          General documentation
 
 = If rebuilding schema.xml =
-./manage.py build_solr_schema --settings development > schema.xml
+./manage.py build_solr_schema > schema.xml
 Replace field type with name slong with: 
     <fieldType name="slong" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
 

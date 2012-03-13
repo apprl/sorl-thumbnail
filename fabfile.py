@@ -36,7 +36,7 @@ def prod():
     env.run_user = 'www-data'
     env.run_group = env.run_user
     env.path = '/home/%(user)s/%(project_name)s' % env
-    env.config = 'production'
+    env.settings = 'production'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
     env.celery_processes='6,3'
 
@@ -56,7 +56,7 @@ def staging():
     env.run_user = 'www-data'
     env.run_group = env.run_user
     env.path = '/mnt/%(project_name)s' % env
-    env.config = 'staging'
+    env.settings = 'staging'
     env.db_client_host = 'localhost'
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
@@ -66,7 +66,7 @@ def staging():
 
 def test():
     "Run the test suite and bail out if it fails"
-    local("cd %(path)s; python manage.py test --settings production" % env)
+    local("cd %(path)s; python manage.py test" % env)
     
 def setup_db():
     """
@@ -194,7 +194,7 @@ def rollback():
 def load_fixtures():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
-        sudo('%(path)s/bin/python manage.py loaddata importer/fixtures/color_mapping.yaml importer/fixtures/feedvendors.yaml apparel/fixtures/* --settings production' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python manage.py loaddata importer/fixtures/color_mapping.yaml importer/fixtures/feedvendors.yaml apparel/fixtures/*' % env, pty=True, user=env.run_user)
 
 def upload_tar_from_git(snapshot='master'):
     "Create an archive from the current Git master branch and upload it"
@@ -238,7 +238,7 @@ def copy_config():
         run('cp ./releases/%(release)s/etc/* ./etc' % env, pty=True)
         run('cp ./releases/%(release)s/etc/requirements.pip ./etc/requirements.pip' %env, pty=True)
         run('cp ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
-        run('cd releases/%(release)s/apparelrow; cp %(config)s.py.default production.py' % env, pty=True)
+        run('cd releases/%(release)s/apparelrow; cp %(settings)s.py.default settings.py' % env, pty=True)
         upload_template('etc/logrotate.conf', '/etc/logrotate.d/apparelrow', context=env, use_sudo=True)
         upload_template('etc/arimport.cron', '/etc/cron.daily/arimport', context=env, use_sudo=True)
         sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
@@ -255,7 +255,7 @@ def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
-        sudo('%(path)s/bin/python manage.py synccompress --settings production' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python manage.py synccompress' % env, pty=True, user=env.run_user)
         sudo('cd ./media; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
         sudo('ln -s ../../../../shared/cache media/cache', pty=True, user=env.run_user)
@@ -275,11 +275,11 @@ def migrate(param=''):
     require('path')
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         if param=='first':
-            sudo('%(path)s/bin/python manage.py syncdb --settings production' % env, pty=True, user=env.run_user)
+            sudo('%(path)s/bin/python manage.py syncdb' % env, pty=True, user=env.run_user)
             # Migrate in specific order
-            sudo('%(path)s/bin/python manage.py migrate apparel --settings production' % env, pty=True, user=env.run_user)
-            sudo('%(path)s/bin/python manage.py migrate profile --settings production' % env, pty=True, user=env.run_user)
-        sudo('%(path)s/bin/python manage.py migrate --settings production' % env, pty=True, user=env.run_user)
+            sudo('%(path)s/bin/python manage.py migrate apparel' % env, pty=True, user=env.run_user)
+            sudo('%(path)s/bin/python manage.py migrate profile' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python manage.py migrate' % env, pty=True, user=env.run_user)
     
 def install_redis():
     run('mkdir -p /tmp/redis', pty=True)
