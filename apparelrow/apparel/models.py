@@ -443,10 +443,11 @@ class Look(models.Model):
 
         total = decimal.Decimal('0.00')
         for component in components:
-            if component.product.default_vendor.discount_price:
-                total += component.product.default_vendor.discount_price
-            else:
-                total += component.product.default_vendor.price
+            if component.product.default_vendor:
+                if component.product.default_vendor.discount_price:
+                    total += component.product.default_vendor.discount_price
+                else:
+                    total += component.product.default_vendor.price
 
         return total
         #return components.annotate(price=Min('product__vendorproduct__price')).aggregate(Sum('price'))['price__sum']
