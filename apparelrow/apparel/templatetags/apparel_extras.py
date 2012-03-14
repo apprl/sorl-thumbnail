@@ -341,8 +341,13 @@ register.filter('getdictattribute', getdictattribute)
 
 @register.simple_tag
 def selected_url(request, pattern):
-    if request.path.startswith(pattern):
-        return 'selected'
+    if pattern == '/':
+        if request.path.startswith('/men') or request.path.startswith('/women'):
+            return 'selected'
+    else:
+        if request.path.startswith(pattern):
+            return 'selected'
+
     return ''
 
 @register.simple_tag
@@ -357,7 +362,7 @@ def change_gender_url(request, current_gender, gender):
     else:
         current_gender = False
 
-    return reverse('index-%s' % (gender,))
+    return reverse('shop-%s' % (gender,))
 
 @register.simple_tag
 def gender_url(gender, named_url):

@@ -4,9 +4,9 @@ from apparelrow.apparel.models import Look
 
 urlpatterns = patterns('',
     # Index
-    url(r'^$', 'apparel.views.gender', {'view': 'index'}, name='index'),
-    url(r'^men/$', 'apparel.views.index', {'gender': 'M'}, name='index-men'),
-    url(r'^women/$', 'apparel.views.index', {'gender': 'W'}, name='index-women'),
+    url(r'^$', 'apparel.views.gender', {'view': 'shop'}, name='shop'),
+    url(r'^men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
+    url(r'^women/$', 'apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
 
     # Home
     (r'^home/$', 'apparel.views.home'),
@@ -24,10 +24,10 @@ urlpatterns = patterns('',
     url(r'^brands/women/$', 'apparel.views.brand_list', {'gender': 'W'}, name='brand-list-women'),
 
     # Shop
-    url(r'^shop/$', 'apparel.views.gender', {'view': 'shop'}, name='shop'),
+    #url(r'^shop/$', 'apparel.views.gender', {'view': 'shop'}, name='shop'),
     url(r'^shop/popup/$', 'apparel.views.product_popup', name='product-popup'),
-    url(r'^shop/men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
-    url(r'^shop/women/$', 'apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
+    #url(r'^shop/men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
+    #url(r'^shop/women/$', 'apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
     url(r'^shop/men/manufacturers/$', 'apparel.browse.browse_manufacturers', {'gender': 'M'}, name='shop-manufacturers-men'),
     url(r'^shop/women/manufacturers/$', 'apparel.browse.browse_manufacturers', {'gender': 'W'}, name='shop-manufacturers-women'),
 

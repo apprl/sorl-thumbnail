@@ -98,7 +98,7 @@
     {% endif %}
     <div id="header">
         <div id="inner-header">
-            <a href="{% gender_url APPAREL_GENDER 'index' %}"><h1>Apparelrow</h1></a>
+            <a href="{% gender_url APPAREL_GENDER 'shop' %}"><h1>Apparelrow</h1></a>
 
             <form action="/apparel/search" method="get" onsubmit="return false" id="search" autocomplete="off">
                 <input type="text" name="s" placeholder="{% trans 'Search for products' %}" />
@@ -111,8 +111,8 @@
             </div>
 
             <ul id="nav-main">
-                <li><a class="{% selected_url request "/shop" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
-                <li><a class="{% selected_url request "/brands/" %}" href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
+                <li><a class="{% selected_url request "/" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
+                <li><a class="{% selected_url request "/brands" %}" href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
                 <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
                 <li><a class="{% selected_url request "/users" %}" href="{% url user-list-popular %}">{% trans "Members" %}</a></li>
             </ul>
