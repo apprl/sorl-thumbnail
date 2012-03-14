@@ -2,26 +2,25 @@ import logging
 import uuid
 import os.path
 import decimal
+import datetime
 
 from django.db import models
+from django.db.models import Sum, Min
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
-from django.db.models import Sum, Min
-
 from django.forms import ValidationError
 
 from apparel.manager import SearchManager, FeaturedManager, FirstPageManager
 from apparel import cache
 
-import datetime, mptt, tagging
 from tagging.fields import TagField
 from sorl.thumbnail import ImageField
 from sorl.thumbnail import get_thumbnail
-
 from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
+from mptt.managers import TreeManager
 
 class Manufacturer(models.Model):
     name   = models.CharField(max_length=50, unique=True)
@@ -43,23 +42,23 @@ class Manufacturer(models.Model):
         export_fields = ['__all__', '-active']
 
 
-class OptionType(models.Model):
+class OptionType(MPTTModel):
     name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=100)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
 
+    objects = tree = TreeManager()
+
     def __unicode__(self):
         return u"%s" % self.name
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
     class Meta:
         ordering = ['name']
         verbose_name = _("Option Type")
         verbose_name_plural = _("Option Types")
-
-try:
-    mptt.register(OptionType, order_insertion_by=['name'])
-except mptt.AlreadyRegistered:
-    logging.debug("Attempt to register option type, but it's already registered")
 
 class Option(models.Model):
     value       = models.CharField(_('Option value'), max_length=255)
@@ -101,6 +100,8 @@ class Category(MPTTModel):
     active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'), db_index=True)
     option_types  = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
     on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'), db_index=True)
+
+    objects = tree = TreeManager()
     
     def save(self, *args, **kwargs):
         # FIXME: Can you get Django to auto truncate fields?
