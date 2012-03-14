@@ -33,6 +33,20 @@ PAGINATION_JS_TEMPLATE_SOURCE = open(os.path.join(settings.TEMPLATE_DIRS[0], 'ap
 
 BROWSE_PAGE_SIZE = 60
 
+DEFAULT_SORT_ARGUMENTS = {
+    'pop': 'popularity desc, created desc',
+    'lat': 'created desc, popularity desc',
+    'exp': 'price desc, popularity desc, created desc',
+    'che': 'price asc, popularity desc, created desc'
+}
+
+PROFILE_SORT_ARGUMENTS = {
+    'pop': 'availability desc, popularity desc, created desc',
+    'lat': 'availability desc, created desc, popularity desc',
+    'exp': 'availability desc, price desc, popularity desc, created desc',
+    'che': 'availability desc, price asc, popularity desc, created desc'
+}
+
 def _to_int(s):
     try:
         return int(s)
@@ -125,14 +139,15 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     if extra_context and 'profile' in extra_context:
         query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, profile=extra_context['profile'])
-        query_arguments['sort'] = ['availability desc', 'popularity desc', 'created desc']
+        query_arguments['sort'] = PROFILE_SORT_ARGUMENTS.get(request.GET.get('sort'), PROFILE_SORT_ARGUMENTS['pop'])
     else:
         query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender)
 
+    # Query string
     query_string = request.GET.get('q')
     if not query_string:
-        if not 'sort' in query_arguments:
-            query_arguments['sort'] = ['popularity desc', 'created desc']
+        if 'sort' not in query_arguments:
+            query_arguments['sort'] = DEFAULT_SORT_ARGUMENTS.get(request.GET.get('sort'), DEFAULT_SORT_ARGUMENTS['pop'])
         query_string = '*:*'
 
     search = ApparelSearch(query_string, **query_arguments)
