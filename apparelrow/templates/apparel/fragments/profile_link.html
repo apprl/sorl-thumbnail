@@ -1,4 +1,0 @@
-{% load cache %}
-{% cache CACHE_TIMEOUT profile_link profile %}
-<a class="profile-link" href="{{ profile.get_absolute_url }}">{{ profile.display_name }}</a> {% if user.is_authenticated %}{% include 'apparel/fragments/follow.html' %}{% endif %}
-{% endcache %}

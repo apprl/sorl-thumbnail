@@ -1,4 +1,4 @@
 {% load cache %}
-{% cache CACHE_TIMEOUT product_small object.id "en" %}
+{% cache CACHE_TIMEOUT product_small object.id LANGUAGE_CODE %}
 {% include 'apparel/fragments/product_small_content.html' %}
 {% endcache %}

@@ -4,7 +4,7 @@
 {% load apparel_extras %}
 {% load cache %}
 {% if object and object.product_image %}
-{% cache CACHE_TIMEOUT product_detail_fragment2 object.id LANGUAGE_CODE %}
+{% cache CACHE_TIMEOUT product_detail_fragment object.id LANGUAGE_CODE %}
 <div class="product-info">
     <!-- {{ object.popularity }} -->
     <div class="breadcrumb">

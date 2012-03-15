@@ -1,7 +1,14 @@
+{% load thumbnail %}
 <div class="look">
-    {% ifequal object.display_with_component 'P' %}
-        {% include 'apparel/fragments/look_photo_small.html' %}
+    {% if object.display_with_component == 'P' %}
+        {% thumbnail object.image "93x69" crop="center" format="PNG" transparent=True as im %}
+            <img id="look-{{ object.id }}" class="product" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" /><!-- trans -->
+        {% endthumbnail %}
     {% else %}
-        {% include 'apparel/fragments/look_collage_small.html' %}
-    {% endifequal %}
+        {% for component in object.collage_components.all %}
+            {% thumbnail component.product.product_image "93x69" crop="noop" format="PNG" transparent=True as im %}
+            <img id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_small }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+            {% endthumbnail %}
+        {% endfor %}
+    {% endif %}
 </div>

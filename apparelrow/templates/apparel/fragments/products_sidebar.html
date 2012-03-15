@@ -1,8 +1,34 @@
 {% load apparel_extras %}
+{% load cache %}
+{% load thumbnail %}
 <ul class="products">
 {% for product in products %}
-    {% with product|as_list|first as object %}
-    {% cycle '<li>' '<li class="last">' %}{% include 'apparel/fragments/product_small_sidebar.html' %}</li>
-    {% endwith %}
+    {% cycle '<li>' '<li class="last">' %}
+    {% cache CACHE_TIMEOUT products_sidebar product.id LANGUAGE_CODE %}
+    <a title="{{ product.product_name }}" href="{{ product.get_absolute_url }}">
+        <div class="product-small">
+            <div class="product-image">
+                {% thumbnail product.product_image "93x124" crop="center" as im %}
+                <img src="{{ im.url }}" alt="{{ product.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
+                {% endthumbnail %}
+                <span class="likes">x</span>
+            </div>
+            <h4>{{ product.manufacturer }}</h4>
+            {% if not product.default_vendor or product.default_vendor.availability == 0 %}
+            <span class="sold-out">SOLD OUT</span>
+            {% else %}
+                {% if product.default_vendor.discount_price %}
+                <span class="price discounted">{{ product.default_vendor.price|floatformat:0 }}</span> /
+                <span class="discount-price">{{ product.default_vendor.discount_price|floatformat:0 }}</span>
+                <span class="currency">{{ product.default_vendor.currency }}</span>
+                {% else %}
+                <span class="price">{{ product.default_vendor.price|floatformat:0 }}</span>
+                <span class="currency">{{ product.default_vendor.currency }}</span>
+                {% endif %}
+            {% endif %}
+        </div>
+    </a>
+    {% endcache %}
+    </li>
 {% endfor %}
 </ul>

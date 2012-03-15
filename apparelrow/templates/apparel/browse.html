@@ -31,9 +31,7 @@
 
 {% block body %}
         <div class="sidebar">
-        {% cache CACHE_TIMEOUT filter_menu LANGUAGE_CODE request.META.QUERY_STRING APPAREL_GENDER %}
             {% include 'apparel/fragments/product_menu_browse.html' %}
-        {% endcache %}
         </div>
         <div id="content">
             <h2 id="product-count">
@@ -44,6 +42,6 @@
                 <a class="open-dialog" href="{% url dialog-login-friends %}">{% trans "Show popular products in your network" %}</a>
                 {% endif %}
             </h2>
-            {% include 'apparel/fragments/product_list.html' %}
+            {% include 'apparel/fragments/product_list.html' with current_page=current_page pages=pages pagination=pagination only %}
         </div>
 {% endblock body %}

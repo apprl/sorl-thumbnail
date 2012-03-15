@@ -781,6 +781,9 @@ def dialog_follow_user(request):
             {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
 
 def index(request, gender=None):
+    """
+    NOT USED ANYMORE
+    """
     ctx = {}
     ctx['pages'] = FirstPageContent.published_objects.filter(gender__in=['U', gender], language=request.LANGUAGE_CODE)
     ctx['popular_looks'] = get_top_looks(request, limit=8, gender=gender)

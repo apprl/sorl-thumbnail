@@ -14,9 +14,12 @@
     <span class="sold-out">SOLD OUT</span>
     {% else %}
         {% if object.default_vendor.discount_price %}
-        <span class="price discounted">{{ object.default_vendor.price|floatformat:0 }}</span> <span class="discount-price">{{ object.default_vendor.discount_price|floatformat:0 }}</span> <span class="currency">{{ object.default_vendor.currency }}</span>
+        <span class="price discounted">{{ object.default_vendor.price|floatformat:0 }}</span> /
+        <span class="discount-price">{{ object.default_vendor.discount_price|floatformat:0 }}</span>
+        <span class="currency">{{ object.default_vendor.currency }}</span>
         {% else %}
-        <span class="price">{{ object.default_vendor.price|floatformat:0 }}</span> <span class="currency">{{ object.default_vendor.currency }}</span>
+        <span class="price">{{ object.default_vendor.price|floatformat:0 }}</span>
+        <span class="currency">{{ object.default_vendor.currency }}</span>
         {% endif %}
     {% endif %}
 </div>

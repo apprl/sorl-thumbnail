@@ -14,11 +14,11 @@
 {% endif %}
 
 {% for page in pagination.mid %}
-    {% ifequal page current_page.number %}
+    {% if page == current_page.number %}
         <li class="current">{{ page }}</li>
     {% else %}
         <li><a href="{{ request.path }}?page={{ page }}">{{ page }}</a></li>
-    {% endifequal %}
+    {% endif %}
 {% endfor %}
 
 {% if pagination.right %}

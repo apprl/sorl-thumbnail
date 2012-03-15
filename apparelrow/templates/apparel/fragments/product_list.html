@@ -1,7 +1,7 @@
 {% spaceless %}
 <div id="product-list" class="product-list">
     <div id="pagination-top" class="pagination">
-        {% include 'apparel/fragments/pagination.html' %}
+        {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
     </div>
     <ul class="list">
         {% for page in pages %}
@@ -13,17 +13,9 @@
                 </ul>
             </li>
         {% endfor %}
-        {% comment %}
-        FIXME: Fix this so it works with ajax fetched stuff and looks nice
-        {% with product as object %}
-        <div class="tooltip">
-            {% include 'apparel/fragments/product_detail.html' %}
-        </div>
-        {% endwith %}
-        {% endcomment %}
     </ul>
     <div id="pagination-bottom" class="pagination">
-        {% include 'apparel/fragments/pagination.html' %}
+        {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
     </div>
 </div>
 {% endspaceless %}

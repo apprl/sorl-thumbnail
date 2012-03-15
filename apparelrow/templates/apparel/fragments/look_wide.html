@@ -7,7 +7,9 @@
     {% include 'apparel/fragments/look_small.html' %}
     <a href="{% url apparel.views.look_delete object.slug %}" title="{% trans "Delete look" %}" class="inline-delete-look">{% trans "Delete look" %}</a>
     <span class="inline-date">{{ object.modified|since }}</span>
-    <h3><a title="{{ object.title }}" href="{{ object.get_absolute_url }}">{{ object.title }}</a> {% trans "by" %} {% with object.user.get_profile as profile %}{% include 'apparel/fragments/profile_link.html' %}{% endwith %}</h3>
+    <h3><a title="{{ object.title }}" href="{{ object.get_absolute_url }}">{{ object.title }}</a> {% trans "by" %} 
+        <a class="profile-link" href="{{ object.user.get_profile.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a>
+    </h3>
     <p>{{ object.description }}</p>
     {% include 'apparel/fragments/total_price.html' %}
     <p>{% include 'apparel/fragments/likes.html' %}</p>

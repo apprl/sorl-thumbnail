@@ -32,11 +32,9 @@
             {% endif %}
         </ul>
         <ul class="users">
-        {% for follower in current_page.object_list %}
+        {% for profile in current_page.object_list %}
             <li>
-            {% with follower.user.get_profile as profile %}
                 {% if profile %}{% include 'profile/fragments/follow_profile.html' %}{% endif %}
-            {% endwith %}
             </li>
         {% endfor %}
         </ul>
