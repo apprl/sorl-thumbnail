@@ -616,9 +616,9 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
         gender = get_gender_from_cookie(request)
 
     if view_gender and set(view_gender).issubset(set(['W', 'M'])):
-        queryset = ApparelProfile.objects.filter(user__is_active=True, gender__in=view_gender)
+        queryset = ApparelProfile.objects.select_related('user').filter(user__is_active=True, gender__in=view_gender)
     else:
-        queryset = ApparelProfile.objects.filter(user__is_active=True)
+        queryset = ApparelProfile.objects.select_related('user').filter(user__is_active=True)
 
     if popular:
         queryset = queryset.order_by('-followers_count', 'user__first_name', 'user__last_name', 'user__username')
@@ -629,7 +629,7 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
             10, request.GET.get('page', 1), 1, 2)
 
     # Latest active members
-    latest_members = ApparelProfile.objects.filter(user__is_active=True).order_by('-user__date_joined')[:13]
+    latest_members = ApparelProfile.objects.select_related('user').filter(user__is_active=True).order_by('-user__date_joined')[:13]
 
     response = render_to_response('apparel/user_list.html', {
             'pagination': pagination,
