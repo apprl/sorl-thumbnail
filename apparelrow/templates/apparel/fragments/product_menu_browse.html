@@ -61,7 +61,7 @@
             <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?color={{ color.pk }}" class="color {{ color.value }}{% if color.pk not in colors %} filtered{% endif %}{% if selected_colors and color.value in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}" title="{{ color.value }}">{{ color.value }}</a></li>
         {% endfor %}
         {% for pattern in default_patterns %}
-            <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?pattern={{ pattern.pk }}" class="pattern {{ pattern.value }}{% if pattern.pk not in colors %} filtered{% endif %}{% if selected_patterns and pattern.value in selected_patterns %} selected{% endif %}" id="option-{{ pattern.pk }}" title="{{ pattern.value }}">{{ pattern }}</a></li>
+            <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?pattern={{ pattern.pk }}" class="pattern {{ pattern.value }}{% if pattern.pk not in colors %} filtered{% endif %}{% if selected_patterns and pattern.value in selected_patterns %} selected{% endif %}" id="option-{{ pattern.pk }}" title="{{ pattern.value }}">{{ pattern.value }}</a></li>
         {% endfor %}
             <li><a href="{% gender_url APPAREL_GENDER 'shop' %}" class="div-one filtered">div-one</a></li>
         </ul>
