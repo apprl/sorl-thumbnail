@@ -58,14 +58,6 @@
                 });
             }
 
-            jQuery('.facebook-close').click(function(event) {
-                jQuery('#facebook-header').hide();
-                jQuery('#search-result').removeClass('extra-facebook-header');
-                var date = new Date();
-                date.setTime(date.getTime()+(10000*24*60*60*1000));
-                document.cookie = "arfbh=ok; expires="+date.toGMTString()+"; path=/";
-            });
-
             // FIXME: quick solution to not have to send the form to validate
             jQuery('.create-look-dialog form').live('submit', function(e) {
                 if(!jQuery(this).find('#id_title').val()) {
@@ -84,17 +76,6 @@
 <body class="{% block body-classes %}{% endblock %}">
 
  <div id="outer">
-    {% if not user.is_authenticated and not request.COOKIES.arfbh %}
-    <div id="facebook-header">
-        <div id="inner-facebook-header">
-            <p>{% trans "Log in with your Facebook account to find your friends" %}</p>
-            <a href="#" class="facebook-close"><img src="{{ MEDIA_URL}}{% staticfile "images/close-blue.png" %}"></a>
-            {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
-            {% facebook_button facebook_login_image %}
-            {% endwith %}
-        </div>
-    </div>
-    {% endif %}
     <div id="header">
         <div id="inner-header">
             <a href="{% gender_url APPAREL_GENDER 'shop' %}"><h1>Apparelrow</h1></a>
