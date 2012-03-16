@@ -2,8 +2,6 @@ from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db import connections, models
 
-from actstream.models import user_stream
-
 def get_gender_from_cookie(request):
     """
     Get gender from cookie in a safe way.
@@ -76,10 +74,6 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
             'mid': mid, 
             'right': right
             }
-
-def get_friend_updates(user):
-    queryset = user_stream(user)
-    return queryset.filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following'])
 
 if connections['default'].vendor.startswith('mysql'):
     sql_template = '(%(function)s(%(field)s) / POW(TIMESTAMPDIFF(HOUR, %(field_two)s, NOW()), 1.53))'

@@ -9,11 +9,10 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
-from actstream.models import Follow, Action
+from actstream.models import Follow, Action, user_stream
 from sorl.thumbnail import get_thumbnail
 
 from apparel.models import Look, LookLike, ProductLike
-from apparel.utils import get_friend_updates
 
 EVENT_CHOICES = (
     ('A', _('All')),
@@ -36,8 +35,6 @@ class ApparelProfile(models.Model):
     language            = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     gender              = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     updates_last_visit  = models.DateTimeField(_('Last visit home'), default=datetime.datetime.now)
-
-    num_updates_last_visit = None
 
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
@@ -130,11 +127,15 @@ class ApparelProfile(models.Model):
 
         return None
 
+    def get_friend_updates(self):
+        return user_stream(self.user).filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following'])
+
     @property
     def get_updates_last_visit(self):
-        if self.num_updates_last_visit == None:
-            self.num_updates_last_visit = get_friend_updates(self.user).filter(timestamp__gt=self.updates_last_visit).count()
-        return self.num_updates_last_visit
+        if not hasattr(self, '_updates_since_last_visit'):
+            self._updates_since_last_visit = self.get_friend_updates().filter(timestamp__gt=self.updates_last_visit).count()
+
+        return self._updates_since_last_visit
 
     @models.permalink
     def get_absolute_url(self):

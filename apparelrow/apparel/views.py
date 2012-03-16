@@ -36,7 +36,7 @@ from apparelrow.apparel.models import Look, LookLike, LookComponent, FirstPageCo
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.search import ApparelSearch
 from apparelrow.search import more_like_this_product
-from apparel.utils import get_pagination_page, get_gender_from_cookie, get_friend_updates, CountPopularity
+from apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity
 from profile.notifications import process_like_look_created
 
 FAVORITES_PAGE_SIZE = 30
@@ -693,9 +693,8 @@ def home(request, profile):
     """
     # Update the time we last checked "friends updates"
     profile.updates_last_visit = datetime.datetime.now()
+    queryset = profile.get_friend_updates()
     profile.save()
-
-    queryset = get_friend_updates(request.user)
 
     # Retrieve most popular products in users network
     limit = 2
