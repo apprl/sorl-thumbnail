@@ -72,6 +72,10 @@ def product_detail(request, slug):
     looks_with_product = Look.objects.filter(components__product=product).order_by('-modified')[:2]
     looks_with_product_count = Look.objects.filter(components__product=product).aggregate(Count('id')).get('id__count', 0)
 
+    # Comments
+    content_type =ContentType.objects.get_for_model(Product)
+    comments =  Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_public=True, is_removed=False).select_related('user', 'user__profile')
+
     return render_to_response(
             'apparel/product_detail.html',
             {
@@ -82,7 +86,8 @@ def product_detail(request, slug):
                 'looks_with_product_count': looks_with_product_count,
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri(),
-                'more_like_this': more_like_this_product(product.id, product.gender, 20)
+                'more_like_this': more_like_this_product(product.id, product.gender, 20),
+                'comments': comments
             }, context_instance=RequestContext(request),
         )
 

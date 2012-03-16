@@ -27,7 +27,7 @@ GENDERS = ( ('M', 'Men'),
             ('W', 'Women'))
 
 class ApparelProfile(models.Model):
-    user = models.ForeignKey(User, unique=True)
+    user = models.OneToOneField(User, related_name='profile')
     
     name                = models.CharField(max_length=50, unique=True, blank=True, null=True)
     image               = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True) 

@@ -184,7 +184,18 @@
                     {% endthumbnail %}
                 </div>
             </div>
-            {% include 'apparel/fragments/comments.html' %}
+            <div id="comments-and-links">
+                <h2>{% trans "Comments" %}</h2>
+                <ul id="comments">
+                {% for comment in comments %}
+                    {% include 'comments/comment.html' %}
+                {% endfor %}
+                </ul>
+                {% if trackbacks %}{% include 'apparel/fragments/trackbacks.html' %}{% endif %}
+                {% if user and user.is_authenticated %}
+                    {% render_comment_form for object %}
+                {% endif %}
+            </div>
         </div>
         <div class="product-right">
             <div class="product-content">
