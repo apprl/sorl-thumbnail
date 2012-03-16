@@ -26,9 +26,7 @@ MANAGERS = ADMINS
 # system time zone.
 TIME_ZONE = 'Europe/Stockholm'
 
-# Language code for this installation. All choices can be found here:
-# http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
-# http://blogs.law.harvard.edu/tech/stories/storyReader$15
+
 
 SITE_ID = 1
 SITE_NAME = "Apparelrow"
@@ -36,6 +34,13 @@ SITE_NAME = "Apparelrow"
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
+
+# If you set this to False, Django will not format dates, numbers and
+# calendars according to the current locale
+USE_L10N = True
+
+# Language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'sv'
 LANGUAGES = (
     ('en', gettext('English')),
@@ -68,6 +73,14 @@ STATICFILES_DIRS = (
     ('apparelrow', os.path.join(PROJECT_ROOT, 'media')),
 )
 
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
 DJANGO_STATIC = True
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
@@ -89,12 +102,11 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.auth",
+    "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
-
     "context_processors.exposed_settings",
     "context_processors.next_redirects",
     "context_processors.gender",
@@ -201,8 +213,6 @@ EMAIL_DEBUG = DEBUG
 CONTACT_EMAIL = "support@hanssonlarsson.se"
 
 # ACCOUNT/LOGIN AND OTHER STUFF
-ACCOUNT_ACTIVATION_DAYS = 7
-
 LOGIN_REDIRECT_URLNAME = "what_next"
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
@@ -245,16 +255,16 @@ APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/SEK/rss.xml'
-APPAREL_DEFAULT_AVATAR       = os.path.join('/', MEDIA_URL, 'images', 'avatar_small.png')
+APPAREL_DEFAULT_AVATAR = os.path.join('/', MEDIA_URL, 'images', 'avatar_small.png')
 APPAREL_DEFAULT_AVATAR_LARGE = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
 APPAREL_MISC_IMAGE_ROOT = 'static/images'
 APPAREL_BACKGROUND_IMAGE_ROOT = 'static/images/background'
 APPAREL_PRODUCT_IMAGE_ROOT = 'static/products'
 APPAREL_LOOK_IMAGE_ROOT = 'static/looks'
 APPAREL_LOGO_IMAGE_ROOT = 'static/logos'
-APPAREL_PROFILE_IMAGE_ROOT='static/profile'
-APPAREL_LOOK_MAX_SIZE      = 470
-APPAREL_LOOK_FEATURED      = 3
+APPAREL_PROFILE_IMAGE_ROOT ='static/profile'
+APPAREL_LOOK_MAX_SIZE = 470
+APPAREL_LOOK_FEATURED = 3
 APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'shared', 'warehouse')
 APPAREL_IMPORTER_COLORS = (
     (u'black'  , u'svart', u'night', u'coal',),
