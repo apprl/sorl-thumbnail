@@ -107,6 +107,10 @@ class ApparelSearch(object):
 
         return self._get_results()[k]
 
+def clean_index():
+    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection.delete(q='*:*')
+
 #
 # ProductIndex
 #
@@ -118,8 +122,13 @@ def product_save(instance, **kwargs):
     elif hasattr(instance, 'category') and instance.category is None:
         product_delete(instance, **kwargs)
     elif instance.published == True and instance.category is not None:
-        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+        if 'solr' in kwargs and kwargs['solr']:
+            connection = kwargs['solr']
+        else:
+            connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+
         document, boost = get_product_document(instance)
+
         if 'commit' in kwargs and kwargs['commit']:
             connection.add([document], commit=True, boost=boost)
         else:
@@ -137,6 +146,11 @@ def product_like_save(instance, **kwargs):
 @receiver(post_delete, sender=ProductLike, dispatch_uid='product_like_delete')
 def product_like_delete(instance, **kwargs):
     product_delete(instance.product)
+
+def rebuild_product_index():
+    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    for product in Product.objects.filter(published=True).iterator():
+        product_save(product, solr=connection)
 
 def get_product_document(instance):
     availability = False
@@ -213,7 +227,11 @@ def get_product_document(instance):
 
 @receiver(post_save, sender=Look, dispatch_uid='look_save')
 def look_save(instance, **kwargs):
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    if 'solr' in kwargs and kwargs['solr']:
+        connection = kwargs['solr']
+    else:
+        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+
     document, boost = get_look_document(instance)
     connection.add([document], commit=False, boost=boost, commitWithin=getattr(settings, 'SOLR_COMMIT_WITHIN', 30000))
 
@@ -221,6 +239,11 @@ def look_save(instance, **kwargs):
 def look_delete(instance, **kwargs):
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
+
+def rebuild_look_index():
+    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    for look in Look.objects.all().iterator():
+        look_save(look, solr=connection)
 
 def get_look_document(instance):
     boost = {}
