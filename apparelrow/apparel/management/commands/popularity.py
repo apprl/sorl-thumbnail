@@ -2,8 +2,8 @@ import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 
-from apparelrow.apparel.models import Product, ProductLike
-from apparelrow.statistics.models import ProductClick
+from apparel.models import Product, ProductLike
+from statistics.models import ProductClick
 
 def batch_qs(qs, batch_size=1000):
     """

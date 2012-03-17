@@ -3,7 +3,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files import storage
 
-from apparelrow.apparel.models import Product
+from apparel.models import Product
 
 class Command(BaseCommand):
     args = ''

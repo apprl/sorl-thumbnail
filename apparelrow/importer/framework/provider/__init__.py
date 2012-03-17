@@ -170,7 +170,7 @@ class Provider(object):
             api = API(import_log=self.feed.latest_import_log)
             product = api.import_dataset(record)
             self.product_ids.discard(product.id)
-            post_save.send(sender=product.__class__, instance=product)
+            #post_save.send(sender=product.__class__, instance=product) # XXX: is this needed?
             del api
             del product
         

@@ -41,10 +41,8 @@ urlpatterns = patterns('',
     
     (r'', include('apparel.urls')),
     (r'^beta/', include('beta.urls')),
-
-    (r'^search/(?P<model_name>\w+)/', 'apparelrow.search.search_view'),
     (r'^s/', include('statistics.urls')),
-    url(r'^facebook/login', 'apparelrow.profile.views.login', name='facebook_login'),
+    url(r'^facebook/login', 'profile.views.login', name='facebook_login'),
 )
 
 

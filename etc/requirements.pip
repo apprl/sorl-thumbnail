@@ -29,7 +29,6 @@ django-tinymce==1.5.1a1
 django-flatpages-tinymce==0.1.1
 #pysolr==2.0.15
 -e git+https://github.com/jbohman/pysolr.git#egg=pysolr
-django-haystack==1.2.5
 celery==2.4.6
 django-celery==2.2.4
 celery-with-redis==2.4.1

@@ -9,8 +9,6 @@ from django.db import models
 from apparel.models import *
 from actstream import action
 from actstream.models import Action
-from apparelrow.tasks import search_index_update_task
-
 
 #
 # Set up activity handlers.
@@ -55,8 +53,6 @@ def product_like(sender, instance, **kwargs):
         logging.warning('Trying to register an activity, but %s has not user attribute' % instance)
         return
 
-    search_index_update_task.delay(instance.product._meta.app_label, instance.product._meta.module_name, instance.product._get_pk_val())
-
     if instance.active == True:
         action_object = Action.objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(instance.user),
                                                      actor_object_id=instance.user.pk,
@@ -74,8 +70,6 @@ def product_like_delete(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
         logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
         return
-
-    search_index_update_task.delay(instance.product._meta.app_label, instance.product._meta.module_name, instance.product._get_pk_val())
 
     action_object = Action.objects.filter(actor_object_id=instance.user.pk,
                                           verb='liked_product',

@@ -152,7 +152,6 @@ INSTALLED_APPS = (
     'sorl.thumbnail',       # External: Thumbnail module
     'django_static',        # External: Generates static files
     'djcelery',
-    'haystack',             # External: Mapping into solr
     'actstream',            # External: Actions and follow
     'tagging',
     'pagination',
@@ -298,13 +297,11 @@ THUMBNAIL_ENGINE = 'apparel.sorl_engine.Engine'
 CELERY_CREATE_MISSING_QUEUES = True
 CELERY_QUEUES = {
     'clicks': {'exchange': 'clicks', 'exchange_type': 'direct', 'routing_key': 'increment_click'},
-    'search_updates': {'exchange': 'search_updates', 'exchange_type': 'direct', 'routing_key': 'update_search_index'},
     'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
 }
 CELERY_ROUTES = ({
     'apparelrow.tasks.ProcessClicksTask': {'queue': 'importer'},
     'apparelrow.tasks.ProcessPopularityTask': {'queue': 'importer'},
-    'apparelrow.tasks.ProcessSearchIndexUpdatesTask': {'queue': 'importer'},
     'apparelrow.tasks.search_index_update_task': {'queue': 'standard'},
     'beta.tasks.send_email_task': {'queue': 'standard'},
     'profile.notifications.process_comment_look_comment': {'queue': 'standard'},
@@ -353,15 +350,15 @@ LOGGING = {
         },
     },
     'loggers': {
-        'root': {
-            'level': 'INFO',
-            'propagate': False,
-            'handlers': ['app_core'],
-        },
-        'importer_logger': {
+        '': {
             'level': 'INFO',
             'propagate': True,
-            'handlers': ['importer'],
-        }
+            'handlers': ['app_core'],
+        },
+        'apparel.importer': {
+            'level': 'INFO',
+            'propagate': False,
+            'handlers': ['importer', 'console'],
+        },
     }
 }

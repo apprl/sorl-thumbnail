@@ -1,6 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-
-from apparelrow.apparel.models import Look
+from apparel.models import Look
 
 urlpatterns = patterns('',
     # Index
@@ -10,6 +9,9 @@ urlpatterns = patterns('',
 
     # Home
     (r'^home/$', 'apparel.views.home'),
+
+    # Search
+    (r'^search/(?P<model_name>\w+)/', 'apparel.search.search_view'),
 
     # Products
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),

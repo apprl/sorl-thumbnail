@@ -27,15 +27,15 @@ from django.utils import translation
 from hanssonlarsson.django.exporter import json as special_json
 from actstream.models import Follow
 
-from apparelrow.profile.models import ApparelProfile
-from apparelrow.profile.utils import get_facebook_user
-from apparelrow.apparel.decorators import seamless_request_handling
-from apparelrow.apparel.decorators import get_current_user
-from apparelrow.apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct, BackgroundImage
-from apparelrow.apparel.models import Look, LookLike, LookComponent, FirstPageContent
-from apparelrow.apparel.forms import LookForm, LookComponentForm
-from apparelrow.search import ApparelSearch
-from apparelrow.search import more_like_this_product
+from profile.models import ApparelProfile
+from profile.utils import get_facebook_user
+from apparel.decorators import seamless_request_handling
+from apparel.decorators import get_current_user
+from apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct, BackgroundImage
+from apparel.models import Look, LookLike, LookComponent, FirstPageContent
+from apparel.forms import LookForm, LookComponentForm
+from apparel.search import ApparelSearch
+from apparel.search import more_like_this_product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity
 from profile.notifications import process_like_look_created
 

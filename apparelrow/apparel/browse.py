@@ -19,8 +19,8 @@ from hanssonlarsson.django.exporter import json
 
 from actstream.models import Follow
 
-from apparelrow.search import PRODUCT_SEARCH_FIELDS
-from apparelrow.search import ApparelSearch
+from apparel.search import PRODUCT_SEARCH_FIELDS
+from apparel.search import ApparelSearch
 from apparel.models import Product
 from apparel.models import Manufacturer
 from apparel.models import Option

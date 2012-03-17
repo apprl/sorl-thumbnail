@@ -3,7 +3,7 @@ from django.forms.widgets import RadioSelect
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from apparelrow.profile.models import ApparelProfile
+from profile.models import ApparelProfile
 
 class ProfileImageForm(ModelForm):
     class Meta:

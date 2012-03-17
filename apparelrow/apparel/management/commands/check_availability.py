@@ -7,8 +7,8 @@ from django.core.management.base import BaseCommand
 from django.db.models.signals import post_save
 from django.core.mail import mail_admins
 
-from apparelrow.apparel.models import Product, VendorProduct
-from apparelrow.search import ApparelSearch
+from apparel.models import Product, VendorProduct
+from apparel.search import ApparelSearch
 
 class Command(BaseCommand):
     args = ''
@@ -34,8 +34,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         counter = 0
         bad_counter = 0
-        solr_connection = pysolr.Solr(getattr(settings, 'HAYSTACK_SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+        solr_connection = pysolr.Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
 
+        self.email = False
         if options['email']:
             self.email = True
             self.log_buffer = []
