@@ -225,7 +225,9 @@ def look_delete(instance, **kwargs):
 def get_look_document(instance):
     boost = {}
     document = {}
-
+    document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
+    document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)
+    document['django_id'] = instance.pk
     document['gender'] = instance.gender
     document['created'] = instance.created
     document['modified'] = instance.modified
