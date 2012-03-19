@@ -8,6 +8,7 @@ import itertools
 
 from django.conf import settings
 from django.db import transaction
+from django.db.models import Q
 from django.db.models.signals import post_save
 
 from apparel.models import Product, VendorProduct
@@ -53,7 +54,7 @@ class Provider(object):
         self.mapper    = None
         self.count     = 0
 
-        self.product_ids = set(Product.objects.filter(vendorproduct__vendor=self.feed.vendor).values_list('id', flat=True))
+        self.product_ids = set(VendorProduct.objects.filter(vendor=self.feed.vendor_id).exclude(Q(availability=0)).order_by('id').values_list('product_id', flat=True))
     
     def __del__(self, *args, **kwargs):
         if self.file and not self.file.closed:
