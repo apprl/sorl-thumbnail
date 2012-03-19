@@ -805,6 +805,7 @@ span, a
   &.discount-price
     +apparel_price
     color: $like_color
+    padding-left: 0
   &.price
     +apparel_price
     &.discount
@@ -813,6 +814,8 @@ span, a
     background: transparent url(../images/check.png) no-repeat scroll 2px center
     &.sold-out
       background: transparent url(../images/out-circle.png) no-repeat scroll 2px center
+  &.currency
+    padding: 0 2px
 
 .product-photo
   border: 1px solid #dadada
@@ -1584,6 +1587,8 @@ a.block_link
           z-index: 1100
           .product-small
             margin: -1px -1px -1px 0
+            img
+              width: 115px
     &.wide
       width: 466px
     &.last
