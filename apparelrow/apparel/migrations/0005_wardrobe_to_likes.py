@@ -26,7 +26,6 @@ class Migration(DataMigration):
                     user_content_type = orm['contenttypes.ContentType'].objects.get(model='user')
                     wardrobe_content_type = orm['contenttypes.ContentType'].objects.get(model='wardrobe')
 
-                if wp.product:
                     try:
                         action_object = Action.objects.get(actor_content_type=user_content_type,
                                                            actor_object_id=wardrobe.user.pk,
