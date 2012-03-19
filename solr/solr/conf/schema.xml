@@ -139,6 +139,7 @@
 
     <field name="availability" type="boolean" indexed="true" stored="false" multiValued="false" />
     <field name="discount" type="boolean" indexed="true" stored="false" multiValued="false" />
+    <field name="published" type="boolean" indexed="true" stored="false" multiValued="false" />
 
     <!-- Used in manufacturer search and product faceting -->
     <field name="manufacturer_id" type="string" indexed="true" stored="true" multiValued="false" />

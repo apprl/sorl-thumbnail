@@ -124,22 +124,20 @@ def clean_index():
 
 @receiver(post_save, sender=Product, dispatch_uid='product_save')
 def product_save(instance, **kwargs):
-    if hasattr(instance, 'published') and instance.published == False:
-        product_delete(instance, **kwargs)
-    elif hasattr(instance, 'category') and instance.category is None:
-        product_delete(instance, **kwargs)
-    elif instance.published == True and instance.category is not None:
-        if 'solr' in kwargs and kwargs['solr']:
-            connection = kwargs['solr']
-        else:
-            connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    if not hasattr(instance, 'id'):
+        return
 
-        document, boost = get_product_document(instance)
+    if 'solr' in kwargs and kwargs['solr']:
+        connection = kwargs['solr']
+    else:
+        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
 
-        if 'commit' in kwargs and kwargs['commit']:
-            connection.add([document], commit=True, boost=boost)
-        else:
-            connection.add([document], commit=False, boost=boost, commitWithin=getattr(settings, 'SOLR_COMMIT_WITHIN', 30000))
+    document, boost = get_product_document(instance)
+
+    if 'commit' in kwargs and kwargs['commit']:
+        connection.add([document], commit=True, boost=boost)
+    else:
+        connection.add([document], commit=False, boost=boost, commitWithin=getattr(settings, 'SOLR_COMMIT_WITHIN', 30000))
 
 @receiver(post_delete, sender=Product, dispatch_uid='product_delete')
 def product_delete(instance, **kwargs):
@@ -156,75 +154,84 @@ def product_like_delete(instance, **kwargs):
 
 def rebuild_product_index():
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
-    for product in Product.objects.filter(published=True).iterator():
+    for product in Product.objects.iterator():
         product_save(product, solr=connection)
 
 def get_product_document(instance):
-    availability = False
-    discount = False
-    price = decimal.Decimal('0.0')
-    if instance.default_vendor:
-        availability = instance.default_vendor.availability != 0
-        discount = instance.default_vendor.discount_price is not None
-        price = instance.default_vendor.price
-        if instance.default_vendor.discount_price:
-            price = instance.default_vendor.discount_price
+    document = {
+        'id': '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk),
+        'django_ct': '%s.%s' % (instance._meta.app_label, instance._meta.module_name),
+        'django_id': instance.pk,
+        'published': False
+    }
+    boost = {}
 
-    color_names = []
-    color_ids = []
-    color_data = instance.options.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('pk', 'value')
-    if color_data:
-        color_ids, color_names = zip(*color_data)
-    color_names = ' '.join(color_names)
+    if hasattr(instance, 'published') and hasattr(instance, 'category') and instance.published == True and instance.category is not None:
+        availability = False
+        discount = False
+        price = decimal.Decimal('0.0')
+        if instance.default_vendor:
+            availability = instance.default_vendor.availability != 0
+            discount = instance.default_vendor.discount_price is not None
+            price = instance.default_vendor.price
+            if instance.default_vendor.discount_price:
+                price = instance.default_vendor.discount_price
 
-    category_data = instance.category.get_ancestors(ascending=False, include_self=True).values_list('pk', 'name_en', 'name_sv')
-    category_ids, category_en_names, category_sv_names = zip(*category_data)
-    category_names = ' '.join(category_en_names + category_sv_names)
+        color_names = []
+        color_ids = []
+        color_data = instance.options.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('pk', 'value')
+        if color_data:
+            color_ids, color_names = zip(*color_data)
+        color_names = ' '.join(color_names)
 
-    user_likes = list(ProductLike.objects.filter(product=instance, active=True).values_list('user__id', flat=True))
+        category_data = instance.category.get_ancestors(ascending=False, include_self=True).values_list('pk', 'name_en', 'name_sv')
+        category_ids, category_en_names, category_sv_names = zip(*category_data)
+        category_names = ' '.join(category_en_names + category_sv_names)
 
-    template_browse = render_to_string('apparel/fragments/product_small_content.html', {'object': instance})
-    template_mlt = render_to_string('apparel/fragments/product_small_no_price.html', {'object': instance})
+        user_likes = list(ProductLike.objects.filter(product=instance, active=True).values_list('user__id', flat=True))
 
-    document = {}
-    document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
-    document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)
-    document['django_id'] = instance.pk
+        template_browse = render_to_string('apparel/fragments/product_small_content.html', {'object': instance})
+        template_mlt = render_to_string('apparel/fragments/product_small_no_price.html', {'object': instance})
 
-    # Search fields
-    document['product_name'] = instance.product_name
-    document['description'] = instance.description
-    document['manufacturer_name'] = instance.manufacturer.name
-    document['color_names'] = color_names
-    document['category_names'] = category_names
+        document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
+        document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)
+        document['django_id'] = instance.pk
 
-    # Facets
-    document['color'] = color_ids
-    document['price'] = int(price.quantize(decimal.Decimal('1.'), rounding=decimal.ROUND_HALF_UP))
-    document['category'] = category_ids
-    document['manufacturer_id'] = instance.manufacturer_id
+        # Search fields
+        document['product_name'] = instance.product_name
+        document['description'] = instance.description
+        document['manufacturer_name'] = instance.manufacturer.name
+        document['color_names'] = color_names
+        document['category_names'] = category_names
 
-    # Filters
-    document['gender'] = instance.gender
-    document['popularity'] = instance.popularity
-    document['availability'] = availability
-    document['discount'] = discount
+        # Facets
+        document['color'] = color_ids
+        document['price'] = int(price.quantize(decimal.Decimal('1.'), rounding=decimal.ROUND_HALF_UP))
+        document['category'] = category_ids
+        document['manufacturer_id'] = instance.manufacturer_id
 
-    # Templates
-    document['template'] = template_browse
-    document['template_mlt'] = template_mlt
+        # Filters
+        document['gender'] = instance.gender
+        document['popularity'] = instance.popularity
+        document['availability'] = availability
+        document['discount'] = discount
+        document['published'] = instance.published
 
-    # Dates
-    document['created'] = instance.date_added
+        # Templates
+        document['template'] = template_browse
+        document['template_mlt'] = template_mlt
 
-    # Users
-    document['user_likes'] = user_likes
+        # Dates
+        document['created'] = instance.date_added
 
-    # Manufacturer
-    document['manufacturer_auto'] = instance.manufacturer.name
-    document['manufacturer_data'] = '%s|%s' % (instance.manufacturer.name, instance.manufacturer_id)
+        # Users
+        document['user_likes'] = user_likes
 
-    boost = {'product_name': '0.5', 'description': '0.4', 'manufacturer_name': '1.2'}
+        # Manufacturer
+        document['manufacturer_auto'] = instance.manufacturer.name
+        document['manufacturer_data'] = '%s|%s' % (instance.manufacturer.name, instance.manufacturer_id)
+
+        boost = {'product_name': '0.5', 'description': '0.4', 'manufacturer_name': '1.2'}
 
     return document, boost
 
