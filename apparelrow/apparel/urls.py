@@ -26,12 +26,7 @@ urlpatterns = patterns('',
     url(r'^brands/women/$', 'apparel.views.brand_list', {'gender': 'W'}, name='brand-list-women'),
 
     # Shop
-    #url(r'^shop/$', 'apparel.views.gender', {'view': 'shop'}, name='shop'),
     url(r'^shop/popup/$', 'apparel.views.product_popup', name='product-popup'),
-    #url(r'^shop/men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
-    #url(r'^shop/women/$', 'apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
-    url(r'^shop/men/manufacturers/$', 'apparel.browse.browse_manufacturers', {'gender': 'M'}, name='shop-manufacturers-men'),
-    url(r'^shop/women/manufacturers/$', 'apparel.browse.browse_manufacturers', {'gender': 'W'}, name='shop-manufacturers-women'),
 
     # Likes
     (r'^likes/delete_product/$', 'apparel.views.product_unlike'),

@@ -68,16 +68,22 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     """
     Set query arguments that are common for every browse page access.
     """
+    query_arguments['fl'] = 'template'
+    #query_arguments['stats'] = 'on'
+    #query_arguments['stats.field'] = 'price'
+    query_arguments['facet.range'] = 'price'
+    query_arguments['facet.range.start'] = 0
+    query_arguments['facet.range.end'] = 11000
+    query_arguments['facet.range.gap'] = 10
+
     query_arguments['facet'] = 'on'
     query_arguments['facet.limit'] = -1
     query_arguments['facet.mincount'] = 1
     query_arguments['facet.field'] = []
+
     for field in ['category', 'price', 'manufacturer_data', 'color']:
         if facet_fields and field in facet_fields:
             query_arguments['facet.field'].append('{!ex=%s}%s' % (field, field))
-
-    query_arguments['qf'] = PRODUCT_SEARCH_FIELDS
-    query_arguments['defType'] = 'edismax'
 
     if 'fq' not in query_arguments:
         query_arguments['fq'] = []
@@ -150,6 +156,10 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
             query_arguments['sort'] = DEFAULT_SORT_ARGUMENTS.get(request.GET.get('sort'), DEFAULT_SORT_ARGUMENTS['pop'])
         query_string = '*:*'
 
+    if query_string != '*:*':
+        query_arguments['qf'] = PRODUCT_SEARCH_FIELDS
+        query_arguments['defType'] = 'edismax'
+
     search = ApparelSearch(query_string, **query_arguments)
 
     facet = search.get_facet()['facet_fields']
@@ -164,6 +174,15 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
         pricerange['min'] = min(prices)
     else:
         pricerange = {'min': 0, 'max': 0}
+
+    #stats = search.get_stats()['stats_fields']
+    #pricerange = {'min': 0, 'max': 0}
+    #if 'price' in stats:
+        #pricerange['min'] = int(stats['price']['min'])
+        #pricerange['max'] = int(stats['price']['max'])
+        #if pricerange['max'] > 10000:
+            #pricerange['max'] = 10000
+
     pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
 
     # Calculate manufacturer
@@ -317,38 +336,3 @@ def browse_profile(request, profile):
     return browse_products(request,
             template='profile/wardrobe.html',
             extra_context={'profile': profile})
-
-def browse_manufacturers(request, gender=None, **kwargs):
-    """
-    Browse manufacturers view.
-    """
-    page = request.GET.get('mpage', 1)
-    term = request.GET.get('mname', None)
-
-    # Initial query arguments for rows and start position
-    query_arguments = {'rows': settings.APPAREL_MANUFACTURERS_PAGE_SIZE, 'start': 0}
-
-    # Update query arguments for browse page
-    query_arguments = set_query_arguments(query_arguments, request, ['manufacturer_data'], gender=gender)
-
-    # Override qf argument
-    query_arguments['qf'] = 'manufacturer_auto'
-
-    # Set query string
-    query_string = '*:*'
-    if term:
-        query_string = '%s' % (term,)
-
-    # Do search on query string with query arguments
-    search = ApparelSearch(query_string, **query_arguments)
-
-    # Get facet results
-    facet = search.get_facet()['facet_fields']
-    manufacturers = []
-    for i, value in enumerate(facet['manufacturer_data']):
-        if i % 2 == 0:
-            split = value.rsplit('|', 1)
-            manufacturers.append((int(split[1]), split[0]))
-
-    return HttpResponse(json.encode(manufacturers), mimetype='application/json')
-

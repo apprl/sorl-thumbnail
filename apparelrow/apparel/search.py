@@ -69,6 +69,12 @@ class ApparelSearch(object):
         """
         return self._get_results().grouped
 
+    def get_stats(self):
+        """
+        Get stats
+        """
+        return self._get_results().stats
+
     _result = None
     def _get_results(self, update=False):
         if self._result is None or update:
@@ -76,6 +82,7 @@ class ApparelSearch(object):
                 self.connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
             self._result = self.connection.search(self.query_string, **self.data)
             self._result.docs = [ResultContainer(**element) for element in self._result.docs]
+
 
         return self._result
 
