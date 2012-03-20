@@ -139,7 +139,7 @@ class ApparelProfile(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('profile.views.profile', [str(self.user.username)])
+        return ('profile.views.likes', [str(self.user.username)])
     
     def __unicode__(self):
         return self.display_name

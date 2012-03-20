@@ -43,6 +43,10 @@ button
   border: none
   cursor: pointer
 
+.clear
+  clear: both
+  +clearfix
+
 #content.fixed
   position: fixed
   top: 0
@@ -1660,6 +1664,11 @@ a.profile-link
 body.profile-small
   #content
     overflow: visible
+
+body.profile-likes
+  .product-image
+    img
+      width: 93px
 
 body.profile
   #profile-nav

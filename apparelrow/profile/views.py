@@ -4,7 +4,7 @@ import uuid
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect, HttpResponseNotFound
 from django.template import RequestContext
 from django.db.models import Q, Count
@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from apparel.decorators import get_current_user
-from apparel.models import Look, ProductLike
+from apparel.models import Look, Product, ProductLike
 # FIXME: Move get_facebook_friends and get_most_followed_users to a util module
 from apparel.views import get_facebook_friends, get_most_followed_users
 from apparel.utils import get_pagination_page
@@ -58,6 +58,27 @@ def get_profile_sidebar_info(user):
     info['following'] = Follow.objects.filter(content_type=content_type, user=user).count()
 
     return info
+
+@get_current_user
+def likes(request, profile, page=0):
+    """
+    Displays the profile likes page.
+    """
+    form = handle_change_image(request, profile)
+    queryset = Product.objects.filter(likes__user=profile.user).order_by('-likes__modified')
+    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
+
+    content = {
+        'pagination': pagination,
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        "change_image_form": form,
+        "profile": profile,
+    }
+
+    content.update(get_profile_sidebar_info(profile.user))
+
+    return render(request, 'profile/likes.html', content)
 
 @get_current_user
 def profile(request, profile, page=0):

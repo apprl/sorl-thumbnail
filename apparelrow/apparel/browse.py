@@ -40,13 +40,6 @@ DEFAULT_SORT_ARGUMENTS = {
     'che': 'price asc, popularity desc, created desc'
 }
 
-PROFILE_SORT_ARGUMENTS = {
-    'pop': 'availability desc, popularity desc, created desc',
-    'lat': 'availability desc, created desc, popularity desc',
-    'exp': 'availability desc, price desc, popularity desc, created desc',
-    'che': 'availability desc, price asc, popularity desc, created desc'
-}
-
 def _to_int(s):
     try:
         return int(s)
@@ -64,7 +57,7 @@ def generate_gender_field(params):
 
     return gender_field
 
-def set_query_arguments(query_arguments, request, facet_fields=None, gender=None, profile=None):
+def set_query_arguments(query_arguments, request, facet_fields=None, gender=None):
     """
     Set query arguments that are common for every browse page access.
     """
@@ -131,23 +124,16 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
         query_arguments['fq'].append('user_likes:({0})'.format(user_ids_or))
         query_arguments['fq'].append('availability:true')
         query_arguments['fq'].append(generate_gender_field(request.GET))
-    elif profile:
-        query_arguments['fq'].append('user_likes:%s' % (profile.user.id,))
-        query_arguments['fq'].append(generate_gender_field(request.GET))
     else:
         query_arguments['fq'].append('availability:true')
         query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
     return query_arguments
 
-def browse_products(request, template='apparel/browse.html', extra_context=None, gender=None):
+def browse_products(request, template='apparel/browse.html', gender=None):
     facet_fields = ['category', 'price', 'color', 'manufacturer_data']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
-    if extra_context and 'profile' in extra_context:
-        query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, profile=extra_context['profile'])
-        query_arguments['sort'] = PROFILE_SORT_ARGUMENTS.get(request.GET.get('sort'), PROFILE_SORT_ARGUMENTS['pop'])
-    else:
-        query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender)
+    query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender)
 
     # Query string
     query_string = request.GET.get('q')
@@ -260,10 +246,6 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
         selected_discount    = bool(request.GET.get('discount', None)),
     )
 
-    # Extra context
-    if extra_context:
-        result.update(extra_context)
-
     if request.GET.get('q', None):
         result.update(help_text=_('Showing') + ' \'' + request.GET.get('q') + '\'')
     if request.GET.get('f', None):
@@ -304,17 +286,11 @@ def browse_products(request, template='apparel/browse.html', extra_context=None,
         },
     )
 
-    # Likes page has no gender in the url, do not set APPAREL_GENDER from like calls
-    if not extra_context:
-        result.update(APPAREL_GENDER=gender)
-
-    # If we are called from the likes page, make sure the templates know this
-    if extra_context and 'profile' in extra_context:
-        result.update(likes_page=True)
+    # Set APPAREL_GENDER
+    result.update(APPAREL_GENDER=gender)
 
     response = render_to_response(template, result, context_instance=RequestContext(request))
-    if not extra_context:
-        response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 
 def get_pagination_as_dict(paged_result):
@@ -330,9 +306,3 @@ def get_pagination_as_dict(paged_result):
             'count': paged_result.paginator.count,
         },
     }
-
-@get_current_user
-def browse_profile(request, profile):
-    return browse_products(request,
-            template='profile/wardrobe.html',
-            extra_context={'profile': profile})
