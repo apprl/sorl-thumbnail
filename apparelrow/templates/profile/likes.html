@@ -1,0 +1,67 @@
+{% extends "profile/base_profile.html" %}
+{% load i18n %}
+{% load apparel_extras %}
+{% load cache %}
+{% load thumbnail %}
+
+
+{% block 'extra-scripts' %}
+    <script type="text/javascript">
+        {% url apparel.browse.browse_profile user.username as browse_likes_url %}
+        {% if request.path == browse_likes_url %}
+        var delete_link = '<a class="delete-wardrobe" title="{% trans "Unlike product" %}" href="">{% trans "Unlike product" %}</a>';
+        jQuery(document).ready(function() {
+            jQuery('#product-list ul.list li ul li').prepend(delete_link);
+            jQuery('#product-list').bind('post_browse_render', function() {
+                jQuery('ul.list li ul li', jQuery(this)).prepend(delete_link);
+            });
+
+            jQuery('#product-list .delete-wardrobe').live('click', function(event) {
+                var elem = jQuery(this).parent();
+                var id = parseInt(elem.attr('id').split('-').pop(), 10);
+                var title = elem.find('h4').text() + ' ' + elem.find('.product-image img').attr('alt');
+
+                create_modal_dialog(
+                    '{% trans "Are you sure?" %}',
+                    ['{% trans "Do you really want to delete product" %} <span class="bold">' + title + '</span>?'],
+                    function (modal_dialog) {
+                        jQuery.post('{% url apparel.views.product_unlike %}', {'product': id}, function(data, textStatus, req) {
+                            if(data['success'] == true) { elem.remove(); modal_dialog.close(); }
+                        });
+                    },
+                    function (modal_dialog) { modal_dialog.close(); }
+                );
+                event.preventDefault();
+            });
+        });
+        {% endif %}
+    </script>
+{% endblock 'extra-scripts' %}
+
+{% block body-classes %}two-columns profile profile-likes{% endblock body-classes %}
+
+{% block content %}
+<h2>{% trans "Likes" %}</h2>
+
+{% if current_page.paginator.count != 0 %}
+    <ul class="products">
+    {% for object in current_page.object_list %}
+        {% include 'apparel/fragments/product_small.html' %}
+    {% endfor %}
+    </ul>
+    <div class="clear"></div>
+    <div class="pagination">
+        {% include 'apparel/fragments/pagination.html' %}
+    </div>
+{% else %}
+    <div class="wardrobe-empty">
+        {% url profile-likes request.user.username as profile_likes_url %}
+        {% if request.path == profile_likes_url %}
+            <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+        {% else %}
+            <div class="message warning">{{ profile.display_name }} {% trans "does not have any products in the wardrobe right now." %}</div>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% endblock %}
