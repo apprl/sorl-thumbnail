@@ -40,28 +40,30 @@
 
 {% block body-classes %}two-columns profile profile-likes{% endblock body-classes %}
 
-{% block content %}
-<h2>{% trans "Likes" %}</h2>
+{% block extended_content %}
+<div id="content">
+    <h2>{% trans "Likes" %}</h2>
 
-{% if current_page.paginator.count != 0 %}
-    <ul class="products">
-    {% for object in current_page.object_list %}
-        {% include 'apparel/fragments/product_small.html' %}
-    {% endfor %}
-    </ul>
-    <div class="clear"></div>
-    <div class="pagination">
-        {% include 'apparel/fragments/pagination.html' %}
-    </div>
-{% else %}
-    <div class="wardrobe-empty">
-        {% url profile-likes request.user.username as profile_likes_url %}
-        {% if request.path == profile_likes_url %}
-            <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
-        {% else %}
-            <div class="message warning">{{ profile.display_name }} {% trans "does not have any products in the wardrobe right now." %}</div>
-        {% endif %}
-    </div>
-{% endif %}
+    {% if current_page.paginator.count != 0 %}
+        <ul class="products">
+        {% for object in current_page.object_list %}
+            {% include 'apparel/fragments/product_small.html' %}
+        {% endfor %}
+        </ul>
+        <div class="clear"></div>
+        <div class="pagination">
+            {% include 'apparel/fragments/pagination.html' %}
+        </div>
+    {% else %}
+        <div class="wardrobe-empty">
+            {% url profile-likes request.user.username as profile_likes_url %}
+            {% if request.path == profile_likes_url %}
+                <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+            {% else %}
+                <div class="message warning">{{ profile.display_name }} {% trans "does not have any products in the wardrobe right now." %}</div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
 
-{% endblock %}
+{% endblock extended_content %}

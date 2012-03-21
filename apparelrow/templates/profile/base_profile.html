@@ -84,6 +84,7 @@
         {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
         <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
     </div>
+    {% block extended_content %}
     <div id="content">
     {% block content %}
     {% endblock content %}
@@ -96,4 +97,5 @@
         {% endwith %}
     {% endblock %}
     </div>
+    {% endblock extended_content %}
 {% endblock %}
