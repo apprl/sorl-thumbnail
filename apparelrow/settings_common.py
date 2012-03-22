@@ -337,16 +337,16 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
             'filename': '../../../var/logs/app_logger.log',
-            'maxBytes': 1000000,
-            'backupCount': 4
+            'maxBytes': 3000000,
+            'backupCount': 8
         },
         'importer': {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
             'filename': '../../../var/logs/importer.log',
-            'maxBytes': 1000000,
-            'backupCount': 4
+            'maxBytes': 3000000,
+            'backupCount': 8
         },
     },
     'loggers': {
