@@ -111,11 +111,7 @@ class LinkshareMapper(DataMapper):
         return None
 
     def get_image_url(self):
-        image_url = self.record.get('image-url', None)
-        if image_url:
-            image_url = image_url.replace('?$productdetail_main_new$', '')
-
-        return image_url
+        return [(self.record.get('image-url', ''), self.IMAGE_SMALL)]
 
 class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):

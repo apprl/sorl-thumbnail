@@ -91,7 +91,7 @@ class TradeDoublerMapper(DataMapper):
         return None
 
     def get_image_url(self):
-        return self.record.get('Detailed_Image') or self.record.get('extraImageProductLarge') or self.record.get('extraImageProductSmall') or self.record.get('imageUrl')
+        return [(self.record.get('Detailed_Image', '') or self.record.get('extraImageProductLarge', '') or self.record.get('extraImageProductSmall', '') or self.record.get('imageUrl', ''), self.IMAGE_SMALL)]
 
     
 class Provider(CSVProvider):

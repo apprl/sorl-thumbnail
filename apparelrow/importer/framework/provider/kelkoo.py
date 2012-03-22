@@ -44,7 +44,7 @@ class KelkooMapper(DataMapper):
     
     def get_image_url(self):
         try:
-            return re.sub(r'_(\w)\.jpg', '_L.jpg', self.record['image-url'])
+            return [(re.sub(r'_(\w)\.jpg', '_L.jpg', self.record['image-url']), self.IMAGE_SMALL)]
         except KeyError, e:
             return None
     

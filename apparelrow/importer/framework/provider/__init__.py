@@ -7,6 +7,7 @@ import sys
 import itertools
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import transaction
 from django.db.models import Q
 from django.db.models.signals import post_save
@@ -55,7 +56,7 @@ class Provider(object):
         self.count     = 0
 
         self.product_ids = set(VendorProduct.objects.filter(vendor=self.feed.vendor_id).exclude(Q(availability=0)).order_by('id').values_list('product_id', flat=True))
-    
+
     def __del__(self, *args, **kwargs):
         if self.file and not self.file.closed:
             self.file.close()
@@ -171,17 +172,25 @@ class Provider(object):
             api = API(import_log=self.feed.latest_import_log)
             product = api.import_dataset(record)
             self.product_ids.discard(product.id)
-            #post_save.send(sender=product.__class__, instance=product) # XXX: is this needed?
             del api
             del product
-        
+
         except (SkipProduct, IncompleteDataSet) as e:
             self.feed.latest_import_log.messages.create(
-                status='info', 
+                status='warning',
                 message="Skipping product\nProduct: %s\nError:%s" % (prod_id, e)
             )
-            logger.info(u'Record skipped: %s', e)
-        
+            logger.warning(u'Record skipped: %s', e)
+
+            # Try to set availability to zero if product already exists
+            try:
+                product = Product.objects.get(manufacturer__name__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product.vendorproduct.update(availability=0)
+                post_save.send(sender=product.__class__, instance=product)
+                logger.info('Setting availability for product %s to sold out' % (product.product_name,))
+            except ObjectDoesNotExist, MultipleObjectsReturned:
+                pass
+
         except ImporterError as e:
             self.feed.latest_import_log.messages.create(
                 status='error', 
@@ -189,7 +198,16 @@ class Provider(object):
                     prod_id, e
                 )
             )
-        
+
+            # Try to set availability to zero if product already exists
+            try:
+                product = Product.objects.get(manufacturer__name__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product.vendorproduct.update(availability=0)
+                post_save.send(sender=product.__class__, instance=product)
+                logger.info('Setting availability for product %s to sold out' % (product.product_name,))
+            except ObjectDoesNotExist, MultipleObjectsReturned:
+                pass
+
         except Exception as e:
             # FIXME: No need to add anything here as the process will terminate
             self.feed.latest_import_log.messages.create(
@@ -198,6 +216,16 @@ class Provider(object):
                     prod_id, unicode(e.__str__(), 'utf-8'), ''.join(traceback.format_tb(sys.exc_info()[2]))
                 )
             )
+
+            # Try to set availability to zero if product already exists
+            try:
+                product = Product.objects.get(manufacturer__name__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product.vendorproduct.update(availability=0)
+                post_save.send(sender=product.__class__, instance=product)
+                logger.info('Setting availability for product %s to sold out' % (product.product_name,))
+            except ObjectDoesNotExist, MultipleObjectsReturned:
+                pass
+
             raise 
         else:
             self.count += 1

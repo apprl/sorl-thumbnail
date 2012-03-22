@@ -26,6 +26,9 @@ class ApparelMapper(DataMapper):
 
         return self.record['variations']
 
+    def get_image_url(self):
+        return [(self.record.get('image-url'), self.IMAGE_MEDIUM)]
+
     def get_availability(self):
         availability_sum = 0
         for v in self.get_variations():

@@ -1,13 +1,16 @@
 import logging
 import re
 import os
+import os.path
 import subprocess
 from urllib2 import HTTPError, URLError
 import decimal
+import time
 
-from requests.exceptions import RequestException
+import requests
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.files import storage, File
+from django.core.files.temp import NamedTemporaryFile
 from django.template.defaultfilters import slugify
 from django.db import transaction
 from django.db import IntegrityError
@@ -25,6 +28,7 @@ except ImportError:
 
 
 logger = logging.getLogger('apparel.importer.api')
+image_logger = logging.getLogger('apparel.importer.api.image')
 
 
 """
@@ -54,7 +58,10 @@ Required Data Structure
         'delivery-time': '3-5 D',
         'availability': True OR a number (0 for not available),
         'product-url': 'http://caliroots.com/system/search/product_vert.asp?id=20724',
-        'image-url': 'http://caliroots.com/data/product/images/20724200911114162028734214_L.jpg',
+        'image-url': [
+            ('http://caliroots.com/data/product/images/20724200911114162028734214_XL.jpg', 10000),
+            ('http://caliroots.com/data/product/images/23144363545435345345346434_L.jpg', 1000)
+        ]
         'description': 'Classic Flight 45',
         'gender': 'F',
         'variations':
@@ -73,10 +80,8 @@ Required Data Structure
 """
 
 class API(object):
-    re_url   = re.compile(r'^.+/(.+)$')
     _fxrates = None
-    
-        
+
     def __init__(self, dataset=None, import_log=None):
         self.version          = "0.1"
         self.product          = None
@@ -108,7 +113,7 @@ class API(object):
                 self.dataset['product']['product-name'].encode('utf8'),
                 self.dataset['product']['manufacturer'].encode('utf8')
             ))
-            
+
             self.import_product()
         except ImporterError, e:
             logger.error(u'Record skipped: %s' % e)
@@ -315,47 +320,13 @@ class API(object):
             setattr(self.vendorproduct, f, fields[f])
         
         self.vendorproduct.save()
-    
-    def product_image_path(self, url):
-        """
-        Returns the local path for the given URL.
-        
-        APPAREL_PRODUCT_IMAGE_ROOT/vendor_name/orignal_image
-    
-        If the image already exists, it will not be downloaded. Returns None if
-        no image is specified
-        """
-        
-        try:
-            m = self.re_url.match(url)
-        except TypeError:
-            raise IncompleteDataSet('image-url', 'url [%s] is not a string' % url)
 
-        if not m:
-            raise IncompleteDataSet('image-url', 'product image URL [%s] does not match [%s]' % (url, self.re_url))
-
-        filename = m.group(1)
-        #filename_temp, extension = os.path.splitext(filename)
-        # FIXME: Here we want to find the mimetype and use that instead of just 'jpg', this is not possible:
-        #   * Here we set the path for where to save the downloaded file later, which means that we need to download the file here, everytime to check mimetype
-        #   * The builtin python mimetypes module does not work, python-magic works but is incompatible with the version of sorl-thumbnail we uses
-        #if not extension:
-            #filename = '%s.%s' % (filename_temp, 'jpg')
-
-        return '%s/%s/%s.%s' % (
-            settings.APPAREL_PRODUCT_IMAGE_ROOT, 
-            slugify(self.vendor.name),
-            self.dataset['product']['product-id'],
-            filename
-        )
-        
-    
     def validate(self):
         """
         Validates a data structure. Returns True on success, will otherwise throw
         an exception
         """
-        
+
         # Check that dataset contains all required keys
         try:
             [self.dataset[f] for f in ('version', 'date', 'vendor', 'product',)]
@@ -371,21 +342,25 @@ class API(object):
         # Check that we support this version
         if self.dataset['version'] != self.version:
             raise ImporterError('Incompatable version number "%s" (this is version %s)', self.dataset.get('version'), self.version)
-        
+
         # Check that the gender field is valid (it may be None)
         if self.dataset['product']['gender'] is not None:
             try:
                 dict(PRODUCT_GENDERS)[self.dataset['product']['gender']]
             except KeyError, key:
                 raise IncompleteDataSet('gender', '%s is not a recognised gender' % key)
-        
+
+        # Make sure the image-url is a list
+        if not isinstance(self.dataset['product']['image-url'], list):
+            raise IncompleteDataSet('image-url', 'The field image-url must be a list, not %s' % (type(self.dataset['product']['image-url']),))
+
         # Make sure the variations is a list
         if not isinstance(self.dataset['product']['variations'], list):
-            raise IncompleteDataSet('variations', 'Variations must be a list, not %s' % type(self.dataset['product']['variations']))
-        
+            raise IncompleteDataSet('variations', 'The field variations must be a list, not %s' % (type(self.dataset['product']['variations']),))
+
         logger.debug('Dataset is valid')
         return True
-    
+
     @property
     def dataset(self):
         """
@@ -504,64 +479,92 @@ class API(object):
         
         return self._vendor
 
-    
+    def _product_image_path(self, url, image_number):
+        """
+        Returns the local path for the given URL.
+
+        APPAREL_PRODUCT_IMAGE_ROOT/vendor_name/image_number__product_id__orignal_image_filename
+        """
+        try:
+            path, filename = os.path.split(url)
+        except TypeError, AttributeError:
+            raise IncompleteDataSet('image-url', '[%s] is not a string' % (url,))
+
+        if not path:
+            raise IncompleteDataSet('image-url', '[%s] is not a valid url' % (url,))
+
+        return '%s/%s/%s__%s__%s' % (
+            settings.APPAREL_PRODUCT_IMAGE_ROOT,
+            slugify(self.vendor.name),
+            image_number,
+            self.dataset['product']['product-id'],
+            filename
+        )
+
+    def _download_product_image(self, product_image, url, min_content_length):
+        """
+        Download product image.
+
+        Check for valid content_length and content_type.
+        """
+        if not storage.default_storage.exists(product_image):
+            try:
+                request_handler = requests.get(url, timeout=10)
+                request_handler.raise_for_status()
+            except (requests.exceptions.RequestException, URLError, HTTPError, ValueError), e:
+                image_logger.error(u'Download failed [%s]: %s' % (url, e))
+                return False
+
+            content_length = int(request_handler.headers.get('content-length', 0))
+            content_type = request_handler.headers.get('content-type', '')
+            if content_length < min_content_length or content_type.find('image') == -1:
+                image_logger.error(u'Invalid content [%s] [L: %s] [T: %s]' % (url, content_length, content_type))
+                return False
+
+            image_logger.debug(u'Image data [R: %s] [L: %s] [T: %s]' % (request_handler.status_code, content_length, content_type))
+
+            temp_fh = NamedTemporaryFile(prefix='ar_importer_', suffix=str(time.time()), delete=True)
+            temp_fh.write(request_handler.raw.read())
+            storage.default_storage.save(product_image, File(temp_fh))
+            temp_fh.close()
+
+        return True
+
     @property
     def product_image(self):
         """
         Downloads the product image and stores it in the appropriate location. 
         Returns the relative path to the stored image.
         """
-        
-        if not self._product_image:        
-            url = self.dataset['product']['image-url']
-            
-            # FIXME: This ensures that the vendor's directory is present. 
-            # Re-implement this when a ProductImageStorage backend has been developed
-            # Possibly, move this out
-            self._product_image = self.product_image_path(url)
-            m = re.match('(.+)/', self._product_image)
-            d = m.group(1)
-            
-            if not os.path.exists(os.path.join(settings.MEDIA_ROOT, d)):
-                os.makedirs(os.path.join(settings.MEDIA_ROOT, d))
-            
-            if not storage.default_storage.exists(self._product_image):
-                logger.debug(u'Downloading product image %s' % url)
-                temppath = None
-                
-                try:
-                    temppath = fetch(url)
-                except (RequestException, URLError, HTTPError, ValueError), e:
-                    # FIXME: We could have a re-try loop for certain errors
-                    # FIXME: We could create the product, and mark it as unpublished
-                    #        until the image has been added
-                    logger.error(u'%s (while downloading %s)' % (e, url))
-                    raise SkipProduct('Could not download product image')
+        if not self._product_image:
+            directory = os.path.join(settings.MEDIA_ROOT,
+                                     settings.APPAREL_PRODUCT_IMAGE_ROOT,
+                                     slugify(self.vendor.name))
 
-                if re.search(r':.* text', subprocess.Popen(["file", '-L', temppath], stdout=subprocess.PIPE).stdout.read()):
-                    logger.error(u'No image found, only text (while downloading %s)' % (url,))
-                    os.remove(temppath)
-                    raise SkipProduct('Could not download product image')
+            if not os.path.exists(directory):
+                os.makedirs(directory)
 
-                storage.default_storage.save(self._product_image, File(open(temppath)))
-                logger.debug(u'Stored image at %s' % self._product_image)
-                os.remove(temppath)
-            else:
-                logger.debug(u'Image already exists, will not download [%s]' % self._product_image)
-        
+            for url, content_length in self.dataset['product']['image-url']:
+                image_logger.debug(u'Downloading image [%s]' % (url,))
+                self._product_image = self._product_image_path(url, 1)
+                if self._download_product_image(self._product_image, url, content_length):
+                    image_logger.debug(u'Saved image [%s]' % (self._product_image,))
+                    return self._product_image
+
+            raise SkipProduct('Could not download product image')
+
         return self._product_image
-    
-        
+
     def fxrates(self):
         from importer.models import FXRate
-        
+
         if not API._fxrates:
             if hasattr(settings, 'APPAREL_BASE_CURRENCY'):
                 API._fxrates = dict([(c.currency, c) for c in FXRate.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY)])
             else:
                 logger.warning('Missing APPAREL_BASE_CURRENCY setting, prices will not be converted')
                 API._fxrates = {}
-        
+
         return API._fxrates
 
 

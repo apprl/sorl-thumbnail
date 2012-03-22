@@ -35,6 +35,10 @@ class DataMapper(object):
     re_html     = re.compile(r'<.+?>', re.S)
     re_trunc_ws = re.compile(r'[ \t\r]{2,}')
     re_trim     = re.compile(r'^\s*|\s*$')
+
+    IMAGE_LARGE = 20000
+    IMAGE_MEDIUM = 5000
+    IMAGE_SMALL = 1000
     
     def __init__(self, provider, record={}):
         self.provider      = provider    # Reference to the provider instance
@@ -101,7 +105,6 @@ class DataMapper(object):
                       'currency', 
                       'delivery-cost', 
                       'delivery-time', 
-                      'image-url', 
                       'product-url', 
                       'description', 
                       'availability',):
@@ -110,7 +113,8 @@ class DataMapper(object):
             except SkipField:
                 logger.debug(u'Skipping field %s' % field)
                 continue
-        
+
+        self.mapped_record['product']['image-url'] = self.map_field('image_url') or []
         self.mapped_record['product']['variations'] = self.map_field('variations') or []
         
         self.postprocess()

@@ -59,7 +59,7 @@ class ZanoxMapper(DataMapper):
         return None
 
     def get_image_url(self):
-        return self.record.get('ImageMediumURL')
+        return [(self.record.get('ImageLargeURL', '') or self.record.get('ImageMediumURL', ''), self.IMAGE_SMALL)]
 
 class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):

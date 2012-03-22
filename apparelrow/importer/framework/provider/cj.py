@@ -68,11 +68,7 @@ class CJMapper(DataMapper):
         return self.re_quote.sub('', self.record['description'])
     
     def get_image_url(self):
-        imageurl = self.record['imageurl']
-        # luisaviaroma specific
-        if imageurl.find('luisaviaroma.com') != -1 and imageurl.find('Small') != -1:
-            imageurl = imageurl.replace('Small', 'Big')
-        return imageurl
+        return [(self.record.get('imageurl', ''), self.IMAGE_SMALL)]
     
     def get_product_id(self):
         return self.record['sku']
