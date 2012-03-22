@@ -48,14 +48,15 @@ class VendorFeed(models.Model):
         
         try:
             # First try specific provider dependent on the name
+            name = slugify(self.name)
             try:
-                name = slugify(self.name)
                 provider = load_provider(name, self)
+                logger.info('Using provider %s' % (name,))
             # Fall back to generic provider provider if the specific one fails
             except Exception:
-                logger.info("Couldnt find specific provider %s, falling back on generic one: %s" % 
-                        (name, self.provider_class))
                 provider = load_provider(self.provider_class, self)
+                logger.info('Using provider %s (Could not find provider %s)' % (self.provider_class, name))
+
             provider.run(from_warehouse=from_warehouse, for_date=for_date)
         except Exception, e:
             logger.fatal(unicode(e.__str__(), 'utf-8'))
