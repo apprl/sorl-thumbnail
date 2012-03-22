@@ -45,7 +45,7 @@ class Command(BaseCommand):
             if counter % 5000 == 0 and counter > 0:
                 print 'Checked %s products' % (counter,)
 
-            result = ApparelSearch('id:apparel.product.%s AND availability:true' % product_id, connection=solr_connection)
+            result = ApparelSearch('id:apparel.product.%s AND availability:true AND published:true' % product_id, connection=solr_connection)
             if len(result):
                 availability = VendorProduct.objects.filter(product=product_id).order_by('price').values_list('availability', flat=True)[0]
                 if published == False:

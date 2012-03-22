@@ -199,7 +199,7 @@ def brand_list(request, gender=None):
         gender = get_gender_from_cookie(request)
 
     query_arguments = {'fl': 'manufacturer_auto, manufacturer_id',
-                       'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(U OR %s)' % (gender,)],
+                       'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender,)],
                        'start': 0,
                        'rows': -1,
                        'group': 'true',
@@ -226,7 +226,7 @@ def brand_list(request, gender=None):
     # Popular brands with products
     query_arguments = {'sort': 'popularity desc',
                        'fl': 'django_id',
-                       'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(U OR %s)' % (gender,)],
+                       'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender,)],
                        'start': 0,
                        'rows': 10,
                        'group': 'true',
@@ -247,6 +247,7 @@ def brand_list(request, gender=None):
                            'fl': 'django_id',
                            'fq': ['django_ct:apparel.product',
                                   'availability:true',
+                                  'published:true',
                                   'gender:(U OR %s)' % (gender,),
                                   'user_likes:({0})'.format(user_ids_or)],
                            'start': 0,
@@ -715,7 +716,8 @@ def home(request, profile):
         'fq': [
             'django_ct:apparel.product',
             'user_likes:({0})'.format(user_ids_or),
-            'availability:true'
+            'availability:true',
+            'published:true'
         ]
     }
     result = ApparelSearch('*:*', **query_arguments)
@@ -811,7 +813,7 @@ def index(request, gender=None):
     arguments = {'defType': 'edismax',
                  'start': 0,
                  'rows': 1,
-                 'fq': ['django_ct:apparel.product', 'availability:true', 'gender:(U OR %s)' % (gender)],
+                 'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender)],
                  'qf': [],
                  'facet': 'on',
                  'facet.limit': -1,

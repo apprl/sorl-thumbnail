@@ -81,6 +81,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     if 'fq' not in query_arguments:
         query_arguments['fq'] = []
 
+    query_arguments['fq'].append('published:true')
     query_arguments['fq'].append('django_ct:apparel.product')
 
     # Category
