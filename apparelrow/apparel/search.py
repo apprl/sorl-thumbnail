@@ -173,7 +173,7 @@ def get_product_document(instance):
         price = decimal.Decimal('0.0')
         if instance.default_vendor:
             availability = instance.default_vendor.availability != 0
-            discount = instance.default_vendor.discount_price is not None
+            discount = instance.default_vendor.discount_price > decimal.Decimal('0.0')
             price = instance.default_vendor.price
             if instance.default_vendor.discount_price:
                 price = instance.default_vendor.discount_price
