@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-16 22:10+0100\n"
+"POT-Creation-Date: 2012-03-24 12:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,14 +34,14 @@ msgstr ""
 msgid "Swe"
 msgstr ""
 
-#: apparel/browse.py:249 templates/apparel/look_list.html:25
+#: apparel/browse.py:251 templates/apparel/look_list.html:25
 #: templates/apparel/look_list.html:27
 msgid "Showing"
 msgstr "Visar"
 
-#: apparel/browse.py:251
-msgid "Showing popular products in your network"
-msgstr "Visar populära produkter bland dina vänner"
+#: apparel/browse.py:253
+msgid "Showing your friends' favorites"
+msgstr "Visar dina vänners favoriter"
 
 #: apparel/forms.py:8 templates/base.html:65
 msgid "You have to name your look before your create it."
@@ -172,7 +172,7 @@ msgstr "Pris"
 msgid "Price converted to base currency"
 msgstr "Pris konverterat till basvaluta"
 
-#: apparel/models.py:325 importer/models.py:137
+#: apparel/models.py:325 importer/models.py:138
 msgid "Currency"
 msgstr "Valuta"
 
@@ -413,67 +413,67 @@ msgstr ""
 msgid "Decompress the file before importing it"
 msgstr "Packa upp filen innan den importeras"
 
-#: importer/models.py:93
+#: importer/models.py:94
 msgid "Running"
 msgstr "Kör"
 
-#: importer/models.py:94
+#: importer/models.py:95
 msgid "Completed"
 msgstr "Färdig"
 
-#: importer/models.py:95
+#: importer/models.py:96
 msgid "Failed"
 msgstr "Misslyckad"
 
-#: importer/models.py:98
+#: importer/models.py:99
 msgid "Start time"
 msgstr "Starttid"
 
-#: importer/models.py:99
+#: importer/models.py:100
 msgid "End time"
 msgstr "Sluttid"
 
-#: importer/models.py:102
+#: importer/models.py:103
 msgid "Products imported"
 msgstr "Importerade produkter"
 
-#: importer/models.py:102
+#: importer/models.py:103
 msgid "Number of products created or updated"
 msgstr "Antal skapade eller uppdaterade produkter"
 
-#: importer/models.py:120
+#: importer/models.py:121
 msgid "Info"
 msgstr ""
 
-#: importer/models.py:121
+#: importer/models.py:122
 msgid "Attention required"
 msgstr "Måste åtgärdas"
 
-#: importer/models.py:122
+#: importer/models.py:123
 msgid "Error"
 msgstr "Fel"
 
-#: importer/models.py:126
+#: importer/models.py:127
 msgid "Status"
 msgstr "Status"
 
-#: importer/models.py:127 templates/beta/dialog_invite_user.html:20
+#: importer/models.py:128 templates/beta/dialog_invite_user.html:20
 msgid "Message"
 msgstr "Meddelande"
 
-#: importer/models.py:128
+#: importer/models.py:129
 msgid "Date"
 msgstr "Datum"
 
-#: importer/models.py:136
+#: importer/models.py:137
 msgid "Base currency"
 msgstr "Basvaluta"
 
-#: importer/models.py:138
+#: importer/models.py:139
 msgid "Exchange rate"
 msgstr ""
 
-#: importer/models.py:214
+#: importer/models.py:215
 msgid ""
 "Mapping aliases should be separated with a single command and no spaces, "
 "example: \"svart,night,coal\""
@@ -595,7 +595,7 @@ msgstr "Varumärken"
 
 #: templates/base.html:96 templates/base.html.py:159 templates/base.html:213
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:6
-#: templates/profile/fragments/menu_items.html:10
+#: templates/profile/fragments/menu_items.html:14
 msgid "Looks"
 msgstr "Looks"
 
@@ -627,22 +627,23 @@ msgstr "Visa alla looks"
 msgid "Show all manufacturers"
 msgstr "Visa alla varumärken"
 
-#: templates/base.html:157 templates/profile/fragments/menu_items.html:7
+#: templates/base.html:157 templates/profile/likes.html:45
+#: templates/profile/fragments/menu_items.html:8
 msgid "Likes"
 msgstr "Gillar"
 
-#: templates/base.html:158
+#: templates/base.html:158 templates/profile/fragments/menu_items.html:11
 msgid "Updates"
 msgstr "Uppdateringar"
 
 #: templates/base.html:160 templates/profile/followers.html:6
-#: templates/profile/fragments/menu_items.html:13
+#: templates/profile/fragments/menu_items.html:17
 msgid "Followers"
 msgstr "Följs av"
 
 #: templates/base.html:161 templates/apparel/fragments/follow.html:6
 #: templates/profile/base_profile.html:82 templates/profile/following.html:6
-#: templates/profile/fragments/menu_items.html:16
+#: templates/profile/fragments/menu_items.html:20
 msgid "Following"
 msgstr "Följer"
 
@@ -835,14 +836,14 @@ msgstr ""
 msgid "Browse"
 msgstr "Bläddra"
 
-#: templates/apparel/browse.html:38 templates/profile/wardrobe.html:48
+#: templates/apparel/browse.html:37
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
 msgstr[0] "%(counter)s produkt"
 msgstr[1] "%(counter)s produkter"
 
-#: templates/apparel/browse.html:40 templates/apparel/browse.html.py:42
+#: templates/apparel/browse.html:39 templates/apparel/browse.html.py:41
 msgid "Show popular products in your network"
 msgstr "Visa populära produkter bland dina vänner"
 
@@ -879,7 +880,7 @@ msgstr ""
 "För att kunna skapa en look behöver du logga in med ditt Facebookkonto:"
 
 #: templates/apparel/look_detail.html:29 templates/apparel/look_edit.html:453
-#: templates/profile/base_profile.html:13 templates/profile/wardrobe.html:24
+#: templates/profile/base_profile.html:13 templates/profile/likes.html:25
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
@@ -954,7 +955,7 @@ msgstr "Taggar (valfritt)"
 msgid "To create a look, you need to have liked at least one product."
 msgstr "För att skapa en look behöver du först gilla minst en produkt."
 
-#: templates/apparel/look_edit.html:490 templates/profile/wardrobe.html:55
+#: templates/apparel/look_edit.html:490 templates/profile/likes.html:61
 msgid "Find products!"
 msgstr "Hitta produkter!"
 
@@ -1642,7 +1643,7 @@ msgstr[1] ""
 msgid "Followed by"
 msgstr "Följs av"
 
-#: templates/profile/base_profile.html:93
+#: templates/profile/base_profile.html:94
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr "%(name)ss senaste looks"
@@ -1691,6 +1692,22 @@ msgstr "Hitta dina vänner nedan eller bland alla våra andra medlemmar."
 #: templates/profile/dialog_welcome.html:9
 msgid "Most popular to follow"
 msgstr "Mest populära att följa"
+
+#: templates/profile/likes.html:12
+msgid "Unlike product"
+msgstr "Ogilla en produkt"
+
+#: templates/profile/likes.html:26
+msgid "Do you really want to delete product"
+msgstr "Vill du verkligen ta bort produkten"
+
+#: templates/profile/likes.html:61
+msgid "You do not have any products in your wardrobe right now."
+msgstr "Du har inga produkter i garderoben just nu."
+
+#: templates/profile/likes.html:63
+msgid "does not have any products in the wardrobe right now."
+msgstr "har inga produkter i garderoben just nu."
 
 #: templates/profile/looks.html:11
 #, python-format
@@ -1743,40 +1760,6 @@ msgstr "Händelse"
 #: templates/profile/settings_notification.html:17
 msgid "Save changes"
 msgstr "Spara ändringar"
-
-#: templates/profile/wardrobe.html:11
-msgid "Unlike product"
-msgstr "Ogilla en produkt"
-
-#: templates/profile/wardrobe.html:25
-msgid "Do you really want to delete product"
-msgstr "Vill du verkligen ta bort produkten"
-
-#: templates/profile/wardrobe.html:55
-msgid "You do not have any products in your wardrobe right now."
-msgstr "Du har inga produkter i garderoben just nu."
-
-#: templates/profile/wardrobe.html:57
-msgid "does not have any products in the wardrobe right now."
-msgstr "har inga produkter i garderoben just nu."
-
-#: templates/profile/watcher.html:13
-msgid "Search now"
-msgstr "Sök nu"
-
-#: templates/profile/watcher.html:17
-msgid "Delete selected"
-msgstr "Ta bort valda"
-
-#: templates/profile/watcher.html:21
-msgid ""
-"\n"
-"            You can subscribe in a particular search by...\n"
-"        "
-msgstr ""
-"\n"
-"            Du kan prenumerera på en särskiljd sökning genom...\n"
-"        "
 
 #: templates/profile/fragments/follow_profile.html:10
 msgid "Following you"
@@ -2066,6 +2049,24 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Showing popular products in your network"
+#~ msgstr "Visar populära produkter bland dina vänner"
+
+#~ msgid "Search now"
+#~ msgstr "Sök nu"
+
+#~ msgid "Delete selected"
+#~ msgstr "Ta bort valda"
+
+#~ msgid ""
+#~ "\n"
+#~ "            You can subscribe in a particular search by...\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "            Du kan prenumerera på en särskiljd sökning genom...\n"
+#~ "        "
 
 #~ msgid "Log in with your Facebook account to find your friends"
 #~ msgstr "Logga in med Facebook för att hitta dina vänner!"

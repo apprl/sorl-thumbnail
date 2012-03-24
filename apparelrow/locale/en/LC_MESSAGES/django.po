@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-16 22:11+0100\n"
+"POT-Creation-Date: 2012-03-24 12:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,13 +33,13 @@ msgstr ""
 msgid "Swe"
 msgstr "Sve"
 
-#: apparel/browse.py:249 templates/apparel/look_list.html:25
+#: apparel/browse.py:251 templates/apparel/look_list.html:25
 #: templates/apparel/look_list.html:27
 msgid "Showing"
 msgstr ""
 
-#: apparel/browse.py:251
-msgid "Showing popular products in your network"
+#: apparel/browse.py:253
+msgid "Showing your friends' favorites"
 msgstr ""
 
 #: apparel/forms.py:8 templates/base.html:65
@@ -171,7 +171,7 @@ msgstr ""
 msgid "Price converted to base currency"
 msgstr ""
 
-#: apparel/models.py:325 importer/models.py:137
+#: apparel/models.py:325 importer/models.py:138
 msgid "Currency"
 msgstr ""
 
@@ -407,67 +407,67 @@ msgstr ""
 msgid "Decompress the file before importing it"
 msgstr ""
 
-#: importer/models.py:93
+#: importer/models.py:94
 msgid "Running"
 msgstr ""
 
-#: importer/models.py:94
+#: importer/models.py:95
 msgid "Completed"
 msgstr ""
 
-#: importer/models.py:95
+#: importer/models.py:96
 msgid "Failed"
 msgstr ""
 
-#: importer/models.py:98
+#: importer/models.py:99
 msgid "Start time"
 msgstr ""
 
-#: importer/models.py:99
+#: importer/models.py:100
 msgid "End time"
 msgstr ""
 
-#: importer/models.py:102
+#: importer/models.py:103
 msgid "Products imported"
 msgstr ""
 
-#: importer/models.py:102
+#: importer/models.py:103
 msgid "Number of products created or updated"
 msgstr ""
 
-#: importer/models.py:120
+#: importer/models.py:121
 msgid "Info"
 msgstr ""
 
-#: importer/models.py:121
+#: importer/models.py:122
 msgid "Attention required"
 msgstr ""
 
-#: importer/models.py:122
+#: importer/models.py:123
 msgid "Error"
 msgstr ""
 
-#: importer/models.py:126
+#: importer/models.py:127
 msgid "Status"
 msgstr ""
 
-#: importer/models.py:127 templates/beta/dialog_invite_user.html:20
+#: importer/models.py:128 templates/beta/dialog_invite_user.html:20
 msgid "Message"
 msgstr ""
 
-#: importer/models.py:128
+#: importer/models.py:129
 msgid "Date"
 msgstr ""
 
-#: importer/models.py:136
+#: importer/models.py:137
 msgid "Base currency"
 msgstr ""
 
-#: importer/models.py:138
+#: importer/models.py:139
 msgid "Exchange rate"
 msgstr ""
 
-#: importer/models.py:214
+#: importer/models.py:215
 msgid ""
 "Mapping aliases should be separated with a single command and no spaces, "
 "example: \"svart,night,coal\""
@@ -589,7 +589,7 @@ msgstr ""
 
 #: templates/base.html:96 templates/base.html.py:159 templates/base.html:213
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:6
-#: templates/profile/fragments/menu_items.html:10
+#: templates/profile/fragments/menu_items.html:14
 msgid "Looks"
 msgstr ""
 
@@ -621,22 +621,23 @@ msgstr ""
 msgid "Show all manufacturers"
 msgstr ""
 
-#: templates/base.html:157 templates/profile/fragments/menu_items.html:7
+#: templates/base.html:157 templates/profile/likes.html:45
+#: templates/profile/fragments/menu_items.html:8
 msgid "Likes"
 msgstr ""
 
-#: templates/base.html:158
+#: templates/base.html:158 templates/profile/fragments/menu_items.html:11
 msgid "Updates"
 msgstr ""
 
 #: templates/base.html:160 templates/profile/followers.html:6
-#: templates/profile/fragments/menu_items.html:13
+#: templates/profile/fragments/menu_items.html:17
 msgid "Followers"
 msgstr ""
 
 #: templates/base.html:161 templates/apparel/fragments/follow.html:6
 #: templates/profile/base_profile.html:82 templates/profile/following.html:6
-#: templates/profile/fragments/menu_items.html:16
+#: templates/profile/fragments/menu_items.html:20
 msgid "Following"
 msgstr ""
 
@@ -820,14 +821,14 @@ msgstr ""
 msgid "Browse"
 msgstr ""
 
-#: templates/apparel/browse.html:38 templates/profile/wardrobe.html:48
+#: templates/apparel/browse.html:37
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/browse.html:40 templates/apparel/browse.html.py:42
+#: templates/apparel/browse.html:39 templates/apparel/browse.html.py:41
 msgid "Show popular products in your network"
 msgstr ""
 
@@ -858,7 +859,7 @@ msgid "To create a look you need to connect with your Facebook account:"
 msgstr ""
 
 #: templates/apparel/look_detail.html:29 templates/apparel/look_edit.html:453
-#: templates/profile/base_profile.html:13 templates/profile/wardrobe.html:24
+#: templates/profile/base_profile.html:13 templates/profile/likes.html:25
 msgid "Are you sure?"
 msgstr ""
 
@@ -933,7 +934,7 @@ msgstr ""
 msgid "To create a look, you need to have liked at least one product."
 msgstr ""
 
-#: templates/apparel/look_edit.html:490 templates/profile/wardrobe.html:55
+#: templates/apparel/look_edit.html:490 templates/profile/likes.html:61
 msgid "Find products!"
 msgstr ""
 
@@ -1541,7 +1542,7 @@ msgstr[1] ""
 msgid "Followed by"
 msgstr ""
 
-#: templates/profile/base_profile.html:93
+#: templates/profile/base_profile.html:94
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr ""
@@ -1584,6 +1585,22 @@ msgstr ""
 
 #: templates/profile/dialog_welcome.html:9
 msgid "Most popular to follow"
+msgstr ""
+
+#: templates/profile/likes.html:12
+msgid "Unlike product"
+msgstr ""
+
+#: templates/profile/likes.html:26
+msgid "Do you really want to delete product"
+msgstr ""
+
+#: templates/profile/likes.html:61
+msgid "You do not have any products in your wardrobe right now."
+msgstr ""
+
+#: templates/profile/likes.html:63
+msgid "does not have any products in the wardrobe right now."
 msgstr ""
 
 #: templates/profile/looks.html:11
@@ -1630,37 +1647,6 @@ msgstr ""
 
 #: templates/profile/settings_notification.html:17
 msgid "Save changes"
-msgstr ""
-
-#: templates/profile/wardrobe.html:11
-msgid "Unlike product"
-msgstr ""
-
-#: templates/profile/wardrobe.html:25
-msgid "Do you really want to delete product"
-msgstr ""
-
-#: templates/profile/wardrobe.html:55
-msgid "You do not have any products in your wardrobe right now."
-msgstr ""
-
-#: templates/profile/wardrobe.html:57
-msgid "does not have any products in the wardrobe right now."
-msgstr ""
-
-#: templates/profile/watcher.html:13
-msgid "Search now"
-msgstr ""
-
-#: templates/profile/watcher.html:17
-msgid "Delete selected"
-msgstr ""
-
-#: templates/profile/watcher.html:21
-msgid ""
-"\n"
-"            You can subscribe in a particular search by...\n"
-"        "
 msgstr ""
 
 #: templates/profile/fragments/follow_profile.html:10

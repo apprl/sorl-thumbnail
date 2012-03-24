@@ -250,7 +250,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     if request.GET.get('q', None):
         result.update(help_text=_('Showing') + ' \'' + request.GET.get('q') + '\'')
     if request.GET.get('f', None):
-        result.update(help_text=_('Showing popular products in your network'))
+        result.update(help_text=_('Showing your friends\' favorites'))
         if Follow.objects.filter(user=request.user).count() == 0:
             result.update(follow_html=loader.render_to_string('apparel/fragments/browse_follow_user.html', {}, context_instance=RequestContext(request)))
 
