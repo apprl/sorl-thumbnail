@@ -33,10 +33,11 @@ class ResultContainer:
         self.__dict__.update(entries)
 
 def more_like_this_product(product_id, product_gender, limit):
-    kwargs = {'fq': ['django_ct:apparel.product', 'availability:true', 'gender:%s' % (product_gender,)],
+    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (product_gender,)],
               'rows': limit}
+    mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
-    result = connection.more_like_this('id:apparel.product.%s' % (product_id,), 'text', **kwargs)
+    result = connection.more_like_this('id:apparel.product.%s' % (product_id,), mlt_fields, **kwargs)
     return result
 
 class ApparelSearch(object):
