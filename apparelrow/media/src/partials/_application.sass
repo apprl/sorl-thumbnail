@@ -1006,8 +1006,11 @@ body.three-columns .pagination
     background-image: image_url(unquote("left-arrow-button.png"))
     line-height: 25px
     display: inline-block
-    width: 74px
+    width: 81px
     text-align: center
+    color: $highlight_color
+    &:hover
+      background-image: image_url(unquote("left-arrow-button-hover.png"))
 
 .product-left
   +float-left

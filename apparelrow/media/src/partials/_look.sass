@@ -193,13 +193,15 @@ $input_border_color: $highlight_border_color !default
   button
     +float-right
     font-family: $font_family
-    background: transparent image_url(unquote("preview-button.png")) no-repeat scroll
-    height: 24px
+    background: transparent image_url(unquote("right-arrow-button.png")) no-repeat scroll
+    height: 25px
     line-height: 24px
-    width: 113px
+    width: 81px
     border: none
-    padding: 0 5px
-    text-align: start
+    padding: 0 0 0 14px
+    text-align: left
+    &:hover
+      background: transparent image_url(unquote("right-arrow-button-hover.png")) no-repeat scroll
   .delete
     +float-right
     +delete_button(22px, 2px)
