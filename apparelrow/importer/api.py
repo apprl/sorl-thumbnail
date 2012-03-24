@@ -497,7 +497,7 @@ class API(object):
             settings.APPAREL_PRODUCT_IMAGE_ROOT,
             slugify(self.vendor.name),
             image_number,
-            self.dataset['product']['product-id'],
+            slugify(self.dataset['product']['product-id']),
             filename
         )
 
