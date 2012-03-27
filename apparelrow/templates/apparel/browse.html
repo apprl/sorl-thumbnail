@@ -41,6 +41,8 @@
                 <a class="open-dialog" href="{% url dialog-login-friends %}">{% trans "Show popular products in your network" %}</a>
                 {% endif %}
             </h2>
-            {% include 'apparel/fragments/product_list.html' with current_page=current_page pages=pages pagination=pagination only %}
+            <div id="product-list" class="product-list">
+                {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination only %}
+            </div>
         </div>
 {% endblock body %}

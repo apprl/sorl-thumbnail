@@ -1,21 +1,10 @@
 {% spaceless %}
-<div id="product-list" class="product-list">
-    <div id="pagination-top" class="pagination">
-        {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
-    </div>
-    <ul class="list">
-        {% for page in pages %}
-            <li id="page-{{ page.number }}">
-                <ul>
-                    {% for html in page.html %}
-                        {{ html|safe }}
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
-    <div id="pagination-bottom" class="pagination">
-        {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
-    </div>
+<ul class="list">
+    {% for html in current_page.html %}
+        {{ html|safe }}
+    {% endfor %}
+</ul>
+<div id="pagination-bottom" class="pagination">
+    {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
 </div>
 {% endspaceless %}

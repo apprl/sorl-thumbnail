@@ -13,7 +13,7 @@
         jQuery(document).ready(function() {
             jQuery('#product-list ul.list li ul li').prepend(delete_link);
             jQuery('#product-list').bind('post_browse_render', function() {
-                jQuery('ul.list li ul li', jQuery(this)).prepend(delete_link);
+                jQuery('ul.list li', jQuery(this)).prepend(delete_link);
             });
 
             jQuery('#product-list .delete-wardrobe').live('click', function(event) {

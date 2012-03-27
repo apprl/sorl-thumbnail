@@ -867,35 +867,29 @@ div#product-list, .product-list
   +box
   position: relative
   ul.list
-    width: 20000em
-    position: absolute
-    // Take the pagination bar into account
-    margin-top: 31px
+    +clearfix
+    width: $large_width + 1px
     li
-      +float(left)
-      width: $large_width + 1
-      ul
-        +clearfix
-        li
-          +product_list_item
-          .delete-wardrobe
-            position: absolute
-            top: 2px
-            left: 2px
-            width: 20px
-            height: 20px
-            z-index: 150
-            text-indent: -9999px
-            background: transparent image_url(unquote("delete-button-on-image.png")) no-repeat scroll center center
-            &:hover
-              background: transparent image_url(unquote("delete-button-on-image-hover.png")) no-repeat scroll center center
-          .product-small
-            .product-image
-              // The height is defined in the template product_small_content
-              height: 153px
-              img
-                height: 153px
-                width: 115px
+      float: left
+      +product_list_item
+      .delete-wardrobe
+        position: absolute
+        top: 2px
+        left: 2px
+        width: 20px
+        height: 20px
+        z-index: 150
+        text-indent: -9999px
+        background: transparent image_url(unquote("delete-button-on-image.png")) no-repeat scroll center center
+        &:hover
+          background: transparent image_url(unquote("delete-button-on-image-hover.png")) no-repeat scroll center center
+      .product-small
+        .product-image
+          // The height is defined in the template product_small_content
+          height: 153px
+          img
+            height: 153px
+            width: 115px
 
 #hover-products li
   z-index: 100

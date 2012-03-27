@@ -1,61 +1,3 @@
-var pagination = {
-    recalculate: function(page) {
-        var on_ends      = 2;   // FIXME: These constants should come from the server
-        var on_each_side = 3;
-        var num_pages = this.data.paginator.num_pages;
-        
-        this.data.pagination.right = null;
-        this.data.pagination.left  = null;
-        this.data.pagination.mid   = [];
-        
-        if(num_pages <= (on_ends * 2) + (on_each_side * 2)) {
-            for(var i = 1; i <= num_pages; i++) {
-                this.data.pagination.mid.push(i);
-            }
-        } else {
-            if(page <= on_ends + on_each_side + 1) {
-                for(var i = 1; i <= page; i++) {
-                    this.data.pagination.mid.push(i);
-                }
-            } else {
-                this.data.pagination.left = [];
-                for(var i = 1; i <= on_ends; i++) {
-                    this.data.pagination.left.push(i);
-                }
-                for(var i = page - on_each_side; i <= page; i++) {
-                    this.data.pagination.mid.push(i);
-                }
-            }
-            
-            if(page >= num_pages - (on_ends + on_each_side + 1)) {
-                for(var i = page + 1; i <= num_pages; i++) {
-                    this.data.pagination.mid.push(i);
-                }
-            } else {
-                this.data.pagination.right = [];
-                for(var i = page + 1; i <= on_each_side + page; i++) {
-                    this.data.pagination.mid.push(i);
-                }
-                for(var i = num_pages - on_ends + 1; i <= num_pages; i++) {
-                    this.data.pagination.right.push(i);
-                }                        
-            }
-        }
-                        
-        this.data.next_page_number     = (page < num_pages) ? page + 1 : null;
-        this.data.previous_page_number = (page > 1)         ? page - 1 : null;
-        this.data.number = page;
-    },
-    data: pagination_data,
-    render: function() {
-        try {
-            $('.pagination').html($('#pagination_template').render({products: this.data}));
-        } catch(e) {
-            console.log(e)
-        }
-    }
-};
-
 jQuery(document).ready(function() {
     // Initialize jquery history plugin with our filter
     var firstLoad = true;
@@ -250,32 +192,9 @@ jQuery(document).ready(function() {
         return false;
     });
 
-    function scrollTo(page) {
-        if((jQuery(window).height() - jQuery('body').scrollTop()) < 300)
-            jQuery('body').scrollTop(0);
-
-        if(page == 0 || page > pagination.data.paginator.num_pages)
-            return false;
-        
-        if(jQuery('#page-' + page).length == 0) {
-            filter(getQuery({page: page}), function(response) {
-                renderPage(response);
-                jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 400);
-            });
-        } else {
-            jQuery('#product-list').data('scrollable').seekTo(jQuery('#page-' + page).index(), 400);
-        }
+    function fetchPage(page) {
+        filter(getQuery({page: page}), renderPage);
     }
-
-    jQuery(document).keydown(function(e) {
-        if(e.keyCode == 37 || e.keyCode == 39) {
-            var index = jQuery('#product-list').data('scrollable').getIndex(),
-                currentPageId = getNumericElementId(jQuery('#product-list > ul.list > li:eq(' + index + ')'), true),
-                page = e.keyCode == 37 ? currentPageId - 1 : currentPageId + 1;
-
-            scrollTo(page);
-        }
-    });
 
     jQuery('.pagination a').live('click', function(e) {
         // FIXME: Move out logic to section that handles page-swapping
@@ -283,27 +202,8 @@ jQuery(document).ready(function() {
         var link = jQuery(this);
         var page = parseInt(link.attr('href').split('=')[1], 10);
         
-        scrollTo(page);
+        fetchPage(page);
         return false;
-    });
-    jQuery('#product-list').scrollable({
-        items: 'ul.list',
-        keyboard: false,
-        onBeforeSeek: function(event, index) {
-            var target = jQuery('#product-list > ul.list > li:eq(' + index + ')');
-            var pageNum = parseInt(target.attr('id').split('-')[1], 10);
-            if(target.is(':empty')) {
-                filter(getQuery({page: pageNum}), function(response) {
-                    renderPage(response);
-                    pagination.recalculate(pageNum);
-                    pagination.render();
-                });
-            } else {
-                pagination.recalculate(pageNum);
-                pagination.render();
-            }
-        },
-        onSeek: calculateProductLayout
     });
 
     jQuery.each(window.location.search.substr(1).split('&'), function(i, e) {
@@ -419,28 +319,11 @@ function doFilter(query, callback) {
     jQuery.getJSON(browse_url, query, callback || renderProducts);
 }
 function renderPage(products) {
-    // Find the pages in the response
-    var pages = jQuery('ul.list > li', products.html)
-        // Append each page to appropriate place
-        .each(function(i, page) {
-            var existing = jQuery('#' + this.id);
-            if(existing.length == 0) {
-                var existingPages = jQuery('#product-list > ul.list > li');
-                var nextPage = existingPages.filter(function(i) { return getNumericElementId(this) > getNumericElementId(page) }).first();
-                // There are pages that should be after this one in the list
-                if(nextPage.length == 1) {
-                    nextPage.before(page);
-                // This should be the last page in the list
-                } else if(existingPages.length > 0) {
-                    existingPages.last().after(page);
-                // There are no other pages
-                } else {
-                    jQuery('#product-list > ul.list').append(page);
-                }
-            } else {
-                existing.replaceWith(page);
-            }
-        });
+    var $list = $('ul.list', products.html),
+        $pagination = $('.pagination', products.html);
+
+    jQuery('#product-list > ul.list').append($list.html());
+    jQuery('.pagination').html($pagination.html());
 
     jQuery('#product-list').trigger('post_browse_render');
 
@@ -605,34 +488,19 @@ function calculateProductLayout() {
 
 function renderProducts(products) {
     $('#product-list > ul.list').empty();
-    if('selected_discount' in products && products['selected_discount']) {
-        product_count_text = $('#product-count span').text(
-            interpolate(ngettext(
-                '%s product on sale',
-                '%s products on sale',
-                products.paginator.count
-            ), [products.paginator.count])
-        );
-    } else {
-        product_count_text = $('#product-count span').text(
-            interpolate(ngettext(
-                '%s product',
-                '%s products',
-                products.paginator.count
-            ), [products.paginator.count])
-        );
-    }
-
+    product_count_text = $('#product-count span').text(
+        interpolate(ngettext(
+            '%s product', 
+            '%s products', 
+            products.paginator.count
+        ), [products.paginator.count])
+    );
     if('help_text' in products) {
         product_count_text.prepend(products.help_text + ', ');
     }
     renderPage(products);
-    pagination.data = products;
-    pagination.recalculate(0);
-    pagination.render();
 
     var product_list = jQuery('#product-list');
-    product_list.data('scrollable').begin();
     product_list.find('#product-infotext').remove();
     if(products.follow_html) {
         product_list.prepend(products.follow_html);

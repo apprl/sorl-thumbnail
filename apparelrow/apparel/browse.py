@@ -191,14 +191,6 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     paged_result, pagination = get_pagination_page(search, BROWSE_PAGE_SIZE,
             request.GET.get('page', 1))
 
-    # Calculate next page
-    try:
-        next_page = paged_result.paginator.page(paged_result.next_page_number())
-    except (EmptyPage, InvalidPage):
-        next_page = None
-
-    pages = (paged_result, next_page)
-
     result = {}
     result.update(pagination=pagination,
                   pricerange=pricerange,
@@ -208,10 +200,6 @@ def browse_products(request, template='apparel/browse.html', gender=None):
 
     paged_result.html = [o.template for o in paged_result.object_list if o]
     paged_result.object_list = []
-
-    if next_page is not None:
-        next_page.html = [o.template for o in next_page.object_list if o]
-        next_page.object_list = []
 
     # Update selected
     selected_colors = request.GET.get('color', None)
@@ -261,7 +249,6 @@ def browse_products(request, template='apparel/browse.html', gender=None):
             html = loader.render_to_string('apparel/fragments/product_list.html',
                 {
                     'current_page': paged_result,
-                    'pages': pages,
                     'pagination': pagination
                 },
                 context_instance=RequestContext(request)
@@ -281,7 +268,6 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         default_colors = default_colors,
         categories_all = Category.objects.all(),
         current_page = paged_result,
-        pages = pages,
         templates = {
             'pagination': PAGINATION_JS_TEMPLATE_SOURCE
         },
