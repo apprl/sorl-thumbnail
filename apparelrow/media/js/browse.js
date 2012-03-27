@@ -605,13 +605,24 @@ function calculateProductLayout() {
 
 function renderProducts(products) {
     $('#product-list > ul.list').empty();
-    product_count_text = $('#product-count span').text(
-        interpolate(ngettext(
-            '%s product', 
-            '%s products', 
-            products.paginator.count
-        ), [products.paginator.count])
-    );
+    if('selected_discount' in products && products['selected_discount']) {
+        product_count_text = $('#product-count span').text(
+            interpolate(ngettext(
+                '%s product on sale',
+                '%s products on sale',
+                products.paginator.count
+            ), [products.paginator.count])
+        );
+    } else {
+        product_count_text = $('#product-count span').text(
+            interpolate(ngettext(
+                '%s product',
+                '%s products',
+                products.paginator.count
+            ), [products.paginator.count])
+        );
+    }
+
     if('help_text' in products) {
         product_count_text.prepend(products.help_text + ', ');
     }

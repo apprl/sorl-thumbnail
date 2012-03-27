@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-23 23:59+0100\n"
+"POT-Creation-Date: 2012-03-27 13:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,50 +18,94 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: media/js/apparel.1329755908.js:567 media/js/apparel.js:567
+#: media/js/apparel.1327592246.js:567 media/js/apparel.1330712141.js:567
+#: media/js/apparel.1330712150.js:567 media/js/apparel.1330934728.js:567
+#: media/js/apparel.1331149855.js:567 media/js/apparel.1331672515.js:567
+#: media/js/apparel.1331721737.js:567 media/js/apparel.1331975508.js:567
+#: media/js/apparel.1331993025.js:567 media/js/apparel.js:567
 msgid "Found %(count)s product"
 msgid_plural "Found %(count)s products"
 msgstr[0] "%(count)s träff bland plagg"
 msgstr[1] "%(count)s träffar bland plagg"
 
-#: media/js/apparel.1329755908.js:568 media/js/apparel.js:568
+#: media/js/apparel.1327592246.js:568 media/js/apparel.1330712141.js:568
+#: media/js/apparel.1330712150.js:568 media/js/apparel.1330934728.js:568
+#: media/js/apparel.1331149855.js:568 media/js/apparel.1331672515.js:568
+#: media/js/apparel.1331721737.js:568 media/js/apparel.1331975508.js:568
+#: media/js/apparel.1331993025.js:568 media/js/apparel.js:568
 msgid "Found %(count)s look"
 msgid_plural "Found %(count)s looks"
 msgstr[0] "%(count)s träff bland looks"
 msgstr[1] "%(count)s träffar bland looks"
 
-#: media/js/apparel.1329755908.js:569 media/js/apparel.js:569
+#: media/js/apparel.1327592246.js:569 media/js/apparel.1330712141.js:569
+#: media/js/apparel.1330712150.js:569 media/js/apparel.1330934728.js:569
+#: media/js/apparel.1331149855.js:569 media/js/apparel.1331672515.js:569
+#: media/js/apparel.1331721737.js:569 media/js/apparel.1331975508.js:569
+#: media/js/apparel.1331993025.js:569 media/js/apparel.js:569
 msgid "Found %(count)s matching brand"
 msgid_plural "Found %(count)s matching brands"
 msgstr[0] "%(count)s träff bland varumärken"
 msgstr[1] "%(count)s träffar bland varumärken"
 
-#: media/js/apparel.1329755908.js:570 media/js/apparel.js:570
+#: media/js/apparel.1327592246.js:570 media/js/apparel.1330712141.js:570
+#: media/js/apparel.1330712150.js:570 media/js/apparel.1330934728.js:570
+#: media/js/apparel.1331149855.js:570 media/js/apparel.1331672515.js:570
+#: media/js/apparel.1331721737.js:570 media/js/apparel.1331975508.js:570
+#: media/js/apparel.1331993025.js:570 media/js/apparel.js:570
 msgid "Show %(count)s product"
 msgid_plural "Show all %(count)s products"
 msgstr[0] "Visa %(count)s plagg"
 msgstr[1] "Visa alla %(count)s plagg"
 
-#: media/js/apparel.1329755908.js:571 media/js/apparel.js:571
+#: media/js/apparel.1327592246.js:571 media/js/apparel.1330712141.js:571
+#: media/js/apparel.1330712150.js:571 media/js/apparel.1330934728.js:571
+#: media/js/apparel.1331149855.js:571 media/js/apparel.1331672515.js:571
+#: media/js/apparel.1331721737.js:571 media/js/apparel.1331975508.js:571
+#: media/js/apparel.1331993025.js:571 media/js/apparel.js:571
 msgid "Show %(count)s look"
 msgid_plural "Show all %(count)s looks"
 msgstr[0] "Visa %(count)s look"
 msgstr[1] "Visa alla %(count)s looks"
 
-#: media/js/apparel.1329755908.js:572 media/js/apparel.js:572
+#: media/js/apparel.1327592246.js:572 media/js/apparel.1330712141.js:572
+#: media/js/apparel.1330712150.js:572 media/js/apparel.1330934728.js:572
+#: media/js/apparel.1331149855.js:572 media/js/apparel.1331672515.js:572
+#: media/js/apparel.1331721737.js:572 media/js/apparel.1331975508.js:572
+#: media/js/apparel.1331993025.js:572 media/js/apparel.js:572
 msgid "Show %(count)s matching brand"
 msgid_plural "Show all %(count)s matching brands"
 msgstr[0] "Visa %(count)s varumärke"
 msgstr[1] "Visa alla %(count)s varumärken"
 
-#: media/js/apparel.1329755908.js:573 media/js/apparel.js:573
-#: media/js/browse.1330037812.js:567 media/js/browse.js:567
+#: media/js/apparel.1327592246.js:573 media/js/apparel.1330712141.js:573
+#: media/js/apparel.1330712150.js:573 media/js/apparel.1330934728.js:573
+#: media/js/apparel.1331149855.js:573 media/js/apparel.1331672515.js:573
+#: media/js/apparel.1331721737.js:573 media/js/apparel.1331975508.js:573
+#: media/js/apparel.1331993025.js:573 media/js/apparel.js:573
+#: media/js/browse.1326639937.js:591 media/js/browse.1330590039.js:591
+#: media/js/browse.1330592114.js:591 media/js/browse.1331049292.js:591
+#: media/js/browse.1331138988.js:591 media/js/browse.1331149855.js:591
+#: media/js/browse.1332846569.js:591 media/js/browse.js:591
 #, perl-format
 msgid "%s product"
 msgid_plural "%s products"
 msgstr[0] "%s produkt"
 msgstr[1] "%s produkter"
 
-#: media/js/browse.1330037812.js:553 media/js/browse.js:553
+#: media/js/browse.1326639937.js:568 media/js/browse.1330590039.js:568
+#: media/js/browse.1330592114.js:568 media/js/browse.1331049292.js:568
+#: media/js/browse.1331138988.js:568 media/js/browse.1331149855.js:568
+#: media/js/browse.1332846569.js:568 media/js/browse.js:568
 msgid "SOLD OUT"
 msgstr "SLUT"
+
+#: media/js/browse.1326639937.js:583 media/js/browse.1330590039.js:583
+#: media/js/browse.1330592114.js:583 media/js/browse.1331049292.js:583
+#: media/js/browse.1331138988.js:583 media/js/browse.1331149855.js:583
+#: media/js/browse.1332846569.js:583 media/js/browse.js:583
+#, perl-format
+msgid "%s product on sale"
+msgid_plural "%s products on sale"
+msgstr[0] "%s prissänkt produkt"
+msgstr[1] "%s prissänkta produkter"
