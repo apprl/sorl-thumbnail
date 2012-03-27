@@ -49,8 +49,12 @@ class VendorFeedAdmin(admin.ModelAdmin):
 class MappingAdmin(admin.ModelAdmin):
     list_display = ['mapping_key', 'mapping_type', 'mapping_aliases']
 
+class ImportLogMessageAdmin(admin.ModelAdmin):
+    list_display = ('status', 'message', 'datetime')
+    list_filter = ('status',)
+
 admin.site.register(VendorFeed, VendorFeedAdmin)
 admin.site.register(ImportLog, ImportLogAdmin)
-admin.site.register(ImportLogMessage)
+admin.site.register(ImportLogMessage, ImportLogMessageAdmin)
 admin.site.register(Mapping, MappingAdmin)
 
