@@ -36,6 +36,8 @@ urlpatterns = patterns('',
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^admin/', include(admin.site.urls)),
     (r'^admin/csv/users/$', 'apparel.views.admin_user_list_csv'),
+    (r'^admin/csv/dynamic/$', 'apparel.views.admin_user_list_extended_csv'),
+    (r'^admin/mail/weekly/$', 'apparel.views.generate_weekly_mail'),
     (r'^tinymce/', include('tinymce.urls')),
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
     

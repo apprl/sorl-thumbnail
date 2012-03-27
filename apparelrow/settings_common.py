@@ -240,6 +240,10 @@ EMAIL_HOST_USER     = 'postman@apparelrow.com'
 EMAIL_HOST_PASSWORD = 'lat3Del!vEry'
 EMAIL_USE_TLS       = True
 
+MAILCHIMP_API_KEY = '320bdd6a4c1815a8f093f1c29e1fc08f-us4'
+MAILCHIMP_API_URL = 'http://us4.api.mailchimp.com/1.3/'
+MAILCHIMP_WEEKLY_LIST = '18083c690f'
+
 # CACHE CONFIGURATION
 CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_TEMPLATE_TIMEOUT = 60 * 15
