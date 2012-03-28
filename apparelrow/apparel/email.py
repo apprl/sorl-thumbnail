@@ -94,11 +94,15 @@ def generate_weekly_mail(request):
     for look in week_looks + base_looks:
         if look.pk not in used_looks:
             static_image = get_thumbnail(look.static_image, '280', crop='noop', modified=str(look.modified)).url
+            avatar = look.user.get_profile().avatar
+            if not avatar.startswith('http://') and not avatar.startswith('https://'):
+                avatar = ''.join(['http://', Site.objects.get_current().domain, avatar])
+
             looks.append({
                 'url': ''.join(['http://', Site.objects.get_current().domain, look.get_absolute_url()]),
                 'image': ''.join(['http://', Site.objects.get_current().domain, static_image]),
                 'name': look.title,
-                'user_image': ''.join(['http://', Site.objects.get_current().domain, look.user.get_profile().avatar]),
+                'user_image': avatar,
                 'user_url': ''.join(['http://', Site.objects.get_current().domain, look.user.get_absolute_url()]),
                 'user_name': look.user.get_profile().display_name,
                 'user_text': u'Följs av %s' % (look.user.get_profile().followers_count,)
