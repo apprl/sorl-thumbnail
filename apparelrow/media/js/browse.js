@@ -319,8 +319,8 @@ function doFilter(query, callback) {
     jQuery.getJSON(browse_url, query, callback || renderProducts);
 }
 function renderPage(products) {
-    var $list = $('ul.list', products.html),
-        $pagination = $('.pagination', products.html);
+    var $list = $(products.html).filter('ul.list');
+    var $pagination = $(products.html).filter('.pagination');
 
     jQuery('#product-list > ul.list').append($list.html());
     jQuery('.pagination').html($pagination.html());
@@ -477,13 +477,6 @@ function updateSelected(products) {
 // Run every time new products are loaded
 function calculateProductLayout() {
     jQuery('.sold-out').text(gettext('SOLD OUT'));
-    // Calculate height of product-list
-    var height = 0;
-    jQuery('#product-list').children().each(function () {
-        height += $(this).height();
-    });
-
-    jQuery('#product-list').height(height);
 }
 
 function renderProducts(products) {
