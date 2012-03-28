@@ -49,10 +49,11 @@ def generate_weekly_mail(request):
     # Products
     product_names = []
     products = []
-    base_products = list(Product.objects.filter(published=True, category__isnull=False)
+    base_products = list(Product.objects.filter(published=True, category__isnull=False, vendorproduct__isnull=False)
                                         .filter(Q(vendorproduct__availability__lt=0) | Q(vendorproduct__availability__gt=0) | Q(vendorproduct__availability__isnull=True))
                                         .order_by('-popularity')[:9])
-    week_products = list(Product.objects.filter(likes__active=True, likes__modified__gt=one_week_ago)
+    week_products = list(Product.objects.filter(published=True, category__isnull=False, vendorproduct__isnull=False)
+                                        .filter(likes__active=True, likes__modified__gt=one_week_ago)
                                         .filter(Q(vendorproduct__availability__lt=0) | Q(vendorproduct__availability__gt=0) | Q(vendorproduct__availability__isnull=True))
                                         .annotate(num_likes=Count('likes')).order_by('-num_likes')[:9])
 
