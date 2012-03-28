@@ -22,10 +22,10 @@
         pagination: {{ pagination|export_as_json}},
         paginator: {
             {# The Pagination object is not currently exportable... #}
-            count: {{ pages.0.paginator.count }},
-            num_pages: {{ pages.0.paginator.num_pages }}
+            count: {{ current_page.paginator.count }},
+            num_pages: {{ current_page.paginator.num_pages }}
         },
-        number: {{ pages.0.number }}
+        number: {{ current_page.number }}
     };
 
     var pricerange = {
