@@ -319,8 +319,9 @@ function doFilter(query, callback) {
     jQuery.getJSON(browse_url, query, callback || renderProducts);
 }
 function renderPage(products) {
-    var $list = $(products.html).filter('ul.list');
-    var $pagination = $(products.html).filter('.pagination');
+    var $html = $(products.html);
+    var $list = $html.filter('ul.list');
+    var $pagination = $html.filter('.pagination');
 
     jQuery('#product-list > ul.list').append($list.html());
     jQuery('.pagination').html($pagination.html());
