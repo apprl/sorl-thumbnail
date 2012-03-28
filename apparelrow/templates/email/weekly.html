@@ -140,8 +140,10 @@
             }
 
             #templateBody .divider{
-                height: 5px;
-                background-color: #202020;
+                height:5px;
+                font-size:1px;
+                line-height:1px;
+                background-color:#202020;
             }
 
             .product-image{height: 228px;}
@@ -160,15 +162,16 @@
             .look-profile-name a, .look-profile-name a:link, .look-profile-name a:visited{font-size:14px;color:#202020;text-decoration:none;font-weight:bold;}
             .look-profile-text{font-size:12px;color:#666666;padding:5px 0 15px 0;}
 
-            .follow-image img{width: 125px}
+            .follow-image{height: 125px;}
+            .follow-image img{width: 125px;}
             .follow-name{padding:10px 0 0 0;}
             .follow-name a, .follow-name a:link, .follow-name a:visited{font-size:14px;color:#202020;text-decoration:none;font-weight:bold;}
             .follow-text{font-size:12px;color:#666666;padding:5px 0 15px 0;}
 
             .bodyHeader{padding:25px;}
-            .bodyMainHeader p, .bodyMainHeader h1{text-align:center;}
-            .bodyMainHeader p{font-size:14px;color:#666666;}
-            .bodyMainHeader h1{font-size:36px;}
+
+            .weekly_top{height:69px;background-image:url({{ email_weekly_top }});background-repeat:no-repeat;}
+            .weekly_bottom{text-align:center;font-size:14px;color:#666666;height:40px;background-image:url({{ email_weekly_bottom }});background-repeat:no-repeat;}
 
 			/**
 			* @tab Body
@@ -334,23 +337,23 @@
                                     <!-- // Begin Template Body \\ -->
                                     <table border="0" cellpadding="0" cellspacing="0" width="614" id="templateBody">
                                         <tr>
-                                            <td valign="top" align="center" class="bodyContent bodyMainHeader">
-                                                <h1>Veckans bästa</h1>
-                                                <p>{% now "j F Y" %}</p>
+                                            <td valign="top" height="69px" class="weekly_top">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td valign="top" height="40px" class="weekly_bottom">
+                                                {% now "j F Y" %}
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td valign="top">&nbsp;</td>
+                                        </tr>
+                                        <tr>
                                             <td valign="top" align="center" class="bodyContent">
-                                            
+
                                                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                                     <tr>
-                                                        <td colspan="3" valign="top" align="center" class="bodyHeader">
-                                                            <h3 mc:edit="products_header">Populära produkter</h3>
-														</td>
-                                                    </tr>
-                                                    <tr>
                                                         {% for product in products_1 %}
-                                                        <td align="center" width="33.333%" class="product-image">
+                                                        <td align="center" width="33.333%" height="228px" class="product-image">
                                                             <a href="{{ product.url }}"><img src="{{ product.image }}" /></a>
                                                         </td>
                                                         {% endfor %}
@@ -371,7 +374,7 @@
                                                     </tr>
                                                     <tr>
                                                         {% for product in products_2 %}
-                                                        <td align="center" width="33.333%" class="product-image">
+                                                        <td align="center" width="33.333%" height="228px" class="product-image">
                                                             <a href="{{ product.url }}"><img src="{{ product.image }}" /></a>
                                                         </td>
                                                         {% endfor %}
@@ -392,7 +395,7 @@
                                                     </tr>
                                                     <tr>
                                                         {% for product in products_3 %}
-                                                        <td align="center" width="33.333%" class="product-image">
+                                                        <td align="center" width="33.333%" height="228px" class="product-image">
                                                             <a href="{{ product.url }}"><img src="{{ product.image }}" /></a>
                                                         </td>
                                                         {% endfor %}
@@ -416,7 +419,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="divider"></td>
+                                            <td class="divider" height="5px">&nbsp;</td>
                                         </tr>
                                         <tr>
                                             <td valign="top" class="bodyContent">
@@ -425,7 +428,7 @@
 
                                                     <tr>
                                                         <td colspan="2" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
-                                                            <h3 mc:edit="look_header">Nya looks</h3>
+                                                            <h3 mc:edit="look_header">Populära looks</h3>
 														</td>
                                                     </tr>
                                                     <tr>
@@ -486,7 +489,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="divider"></td>
+                                            <td class="divider" height="5px">&nbsp;</td>
                                         </tr>
                                         <tr>
                                             <td valign="top" class="bodyContent">
@@ -494,7 +497,7 @@
                                                 <table border="0" cellpadding="10" cellspacing="0" width="100%">
                                                     <tr>
                                                         <td colspan="4" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
-                                                            <h3 mc:edit="follow_header">Du borde följa</h3>
+                                                            <h3 mc:edit="follow_header">Mest följda medlemmar i veckan</h3>
 														</td>
                                                     </tr>
                                                     <tr>
@@ -502,7 +505,7 @@
                                                         <td width="25%">
                                                             <table border="0" cellpadding="0" cellspacing="0" width="100%" class="follow-element">
                                                                 <tr>
-                                                                    <td valign="top" class="follow-image"><a href="{{ member.url }}"><img src="{{ member.image }}" /></a></td>
+                                                                    <td valign="middle" class="follow-image" height="125px"><a href="{{ member.url }}"><img src="{{ member.image }}" /></a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td valign="top" class="follow-name"><a href="{{ member.url}} ">{{ member.name }}</a></td>
@@ -532,14 +535,10 @@
                                                 <!-- // Begin Module: Standard Footer \\ -->
                                                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                                     <tr>
-                                                        <td valign="top" width="160" class="header">&copy; APPARELROW AB</td>
-                                                        <td valign="top" width="110" class="header">Shop</td>
-                                                        <td valign="top" width="110" class="header">Looks</td>
-                                                        <td valign="top" width="110" class="header">Social</td>
-                                                        <td valign="top" width="110" class="header">Om Apparelrow</td>
+                                                        <td valign="top" class="header" align="center">&copy; APPARELROW AB</td>
                                                     </tr>
                                                     <tr>
-                                                        <td valign="top" width="160">
+                                                        <td valign="top" align="center">
                                                             <div mc:edit="std_footer">
                                                                 <br />
                                                                 Birger Jarlsgatan 18A
@@ -549,28 +548,6 @@
                                                                 <a target="_blank" href="mailto:info@apparelrow.com">info@apparelrow.com</a>
                                                                 <br />
                                                             </div>
-                                                        </td>
-                                                        <td valign="top" width="110">
-                                                            <br />
-                                                            <a target="_blank" href="http://apparelrow.com/shop/women/">Dam</a>
-                                                            <br />
-                                                            <a target="_blank" href="http://apparelrow.com/shop/men/">Herr</a>
-                                                        </td>
-                                                        <td valign="top" width="110">
-                                                            <br />
-                                                            <a target="_blank" href="http://apparelrow.com/looks/">Alla looks</a>
-                                                            <br />
-                                                            <a target="_blank" href="http://apparelrow.com/looks/create/">Skapa en look</a>
-                                                        </td>
-                                                        <td valign="top" width="110">
-                                                            <br />
-                                                            <a target="_blank" href="http://apparelrow.com/users/">Alla medlemmar</a>
-                                                        </td>
-                                                        <td valign="top" width="110">
-                                                            <br />
-                                                            <a target="_blank" href="http://blog.apparelrow.com/">Blogg</a>
-                                                            <br />
-                                                            <a target="_blank" href="http://apparelrow.com/jobs/">Jobb</a>
                                                         </td>
                                                     </tr>
                                                 </table>
