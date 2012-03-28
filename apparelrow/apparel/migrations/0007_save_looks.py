@@ -1,21 +1,19 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
+from apparel.models import Look
 
-class Migration(SchemaMigration):
+class Migration(DataMigration):
     
     def forwards(self, orm):
-        
-        # Adding field 'Look.static_image'
-        db.add_column('apparel_look', 'static_image', self.gf('sorl.thumbnail.fields.ImageField')(max_length=255, null=True, blank=True), keep_default=False)
-
-    def backwards(self, orm):
-        
-        # Deleting field 'Look.static_image'
-        db.delete_column('apparel_look', 'static_image')
+        for look in Look.objects.iterator():
+            look.save(force_update=True)
     
+    
+    def backwards(self, orm):
+        "Write your backwards methods here."
     
     models = {
         'apparel.backgroundimage': {
