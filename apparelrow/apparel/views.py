@@ -924,16 +924,17 @@ def generate_weekly_mail(request):
 
     # Looks
     looks = []
-    base_looks = list(Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes')[:4])
-    week_looks = list(Look.objects.filter(likes__active=True, likes__modified__gt=one_week_ago).annotate(num_likes=Count('likes')).order_by('-num_likes')[:4])
+    base_looks = list(Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
+    week_looks = list(Look.objects.filter(likes__active=True, likes__modified__gt=one_week_ago).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
 
     used_looks = []
     count_looks = 0
     for look in week_looks + base_looks:
         if look.pk not in used_looks:
+            static_image = get_thumbnail(look.static_image, '280', crop='noop', modified=str(look.modified)).url
             looks.append({
                 'url': ''.join(['http://', Site.objects.get_current().domain, look.get_absolute_url()]),
-                'image': '',
+                'image': ''.join(['http://', Site.objects.get_current().domain, static_image]),
                 'name': look.title,
                 'user_image': ''.join(['http://', Site.objects.get_current().domain, look.user.get_profile().avatar]),
                 'user_url': ''.join(['http://', Site.objects.get_current().domain, look.user.get_absolute_url()]),
@@ -947,13 +948,9 @@ def generate_weekly_mail(request):
         if count_looks >= 4:
             break
 
-
-
-
+    # Members
     members = []
     print Action.objects.filter(verb='started following', timestamp__gt=one_week_ago).values_list('target_object_id', flat=True).annotate(count=Count('target_object_id')).order_by('-count')[:4]
-
-
     for object_id in Follow.objects.values_list('object_id', flat=True).annotate(count=Count('id')).order_by('-count')[:4]:
         profile = ApparelProfile.objects.get(user__id=object_id)
 

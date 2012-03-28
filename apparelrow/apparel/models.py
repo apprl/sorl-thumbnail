@@ -11,10 +11,14 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
+from django.core.files import storage
+from django.core.files.base import ContentFile
 
 from apparel.manager import SearchManager, FeaturedManager, FirstPageManager
 from apparel import cache
 
+from cStringIO import StringIO
+from PIL import Image
 from tagging.fields import TagField
 from sorl.thumbnail import ImageField
 from sorl.thumbnail import get_thumbnail
@@ -383,6 +387,9 @@ models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Vendor
 def look_image_path(instance, filename):
     return os.path.join(settings.APPAREL_LOOK_IMAGE_ROOT, uuid.uuid4().hex)
 
+def static_image_path(instance, filename):
+    return os.path.join(settings.APPAREL_LOOK_IMAGE_ROOT, filename)
+
 def validate_not_spaces(value):
     if value.strip() == '':
         raise ValidationError(u'You must provide more than just whitespace.')
@@ -394,6 +401,7 @@ class Look(models.Model):
     description = models.TextField(_('Look description'), null=True, blank=True)
     user        = models.ForeignKey(User)
     image       = ImageField(upload_to=look_image_path, max_length=255, blank=True)
+    static_image = ImageField(upload_to=static_image_path, max_length=255, null=True, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags        = TagField(blank=True)
@@ -407,7 +415,53 @@ class Look(models.Model):
 
     def save(self, *args, **kwargs):
         self.gender = self.calculate_gender()
+        self._build_static_image()
         super(Look, self).save(*args, **kwargs)
+
+    def _build_static_image(self):
+        """
+        Build a static image of the look. Used for thumbnails and mails.
+        """
+        image = Image.new('RGBA', settings.APPAREL_LOOK_SIZE, (255, 255, 255, 255))
+        offset_left = 0
+        offset_top = 0
+
+        if self.display_with_component == 'P' and self.image:
+            # Reuse photo image
+            thumbnail = get_thumbnail(self.image, '694x512')
+            background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
+            offset_top = 12 # ??? from css
+            offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
+            image.paste(background, (offset_left, offset_top))
+
+        for component in self.display_components.all():
+            if self.display_with_component == 'P':
+                component_image = Image.open(os.path.join(settings.MEDIA_ROOT, 'images', 'look-hotspot.png'))
+            else:
+                if not component.product.product_image:
+                    continue
+
+                # Reuse transparent thumbnail image
+                thumbnail = get_thumbnail(component.product.product_image, '%s' % (settings.APPAREL_LOOK_MAX_SIZE,), format='PNG', transparent=True)
+                component_image = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
+                component_image = component_image.resize((component.width, component.height), Image.ANTIALIAS).convert('RGBA')
+                if component.rotation:
+                    rotation = component_image.rotate(-component.rotation, Image.BICUBIC, 1)
+                    blank = Image.new('RGBA', rotation.size, (255, 255, 255, 255))
+                    component_image = Image.composite(rotation, blank, rotation)
+
+            image.paste(component_image, (offset_left + component.left, offset_top + component.top), component_image)
+
+        temp_handle = StringIO()
+        image.save(temp_handle, 'JPEG', quality=99)
+        temp_handle.seek(0)
+
+        if self.static_image:
+            self.static_image.delete(save=False)
+
+        filename = '%s/static__%s.jpg' % (settings.APPAREL_LOOK_IMAGE_ROOT, self.slug)
+        storage.default_storage.save(filename, ContentFile(temp_handle.read()))
+        self.static_image = filename
 
     def calculate_gender(self):
         """

@@ -268,6 +268,7 @@ APPAREL_LOGO_IMAGE_ROOT = 'static/logos'
 APPAREL_PROFILE_IMAGE_ROOT ='static/profile'
 APPAREL_LOOK_MAX_SIZE = 470
 APPAREL_LOOK_FEATURED = 3
+APPAREL_LOOK_SIZE = (696, 526)
 APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'shared', 'warehouse')
 APPAREL_IMPORTER_COLORS = (
     (u'black'  , u'svart', u'night', u'coal',),
