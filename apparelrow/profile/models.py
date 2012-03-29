@@ -36,6 +36,9 @@ class ApparelProfile(models.Model):
     gender              = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     updates_last_visit  = models.DateTimeField(_('Last visit home'), default=datetime.datetime.now)
 
+    # newsletter settings
+    newsletter = models.BooleanField(default=True, blank=False, null=False, help_text=_('Participating in newsletter'))
+
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone commented on a product that I have liked'))

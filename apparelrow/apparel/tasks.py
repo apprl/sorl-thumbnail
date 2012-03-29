@@ -1,0 +1,1 @@
+from apparel.email import mailchimp_subscribe, mailchimp_unsubscribe

@@ -20,7 +20,7 @@ from apparel.models import Look, Product, ProductLike
 from apparel.views import get_facebook_friends, get_most_followed_users
 from apparel.utils import get_pagination_page
 from actstream.models import user_stream, actor_stream, Follow
-from profile.forms import ProfileImageForm, EmailForm, NotificationForm
+from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm
 from profile.models import EmailChange
 from profile.tasks import send_email_confirm_task
 
@@ -182,12 +182,17 @@ def settings_notification(request):
         if form.is_valid():
             form.save()
 
+        newsletter_form = NewsletterForm(request.POST, request.FILES, instance=request.user.get_profile())
+        if newsletter_form.is_valid():
+            newsletter_form.save()
+
         return HttpResponseRedirect(reverse('profile.views.settings_notification'))
 
     form = NotificationForm(instance=request.user.get_profile())
+    newsletter_form = NewsletterForm(instance=request.user.get_profile())
 
     return render_to_response('profile/settings_notification.html',
-            {'notification_form': form}, context_instance=RequestContext(request))
+            {'notification_form': form, 'newsletter_form': newsletter_form}, context_instance=RequestContext(request))
 
 @login_required
 def confirm_email(request):

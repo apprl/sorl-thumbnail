@@ -81,6 +81,11 @@ urlpatterns = patterns('',
     # Jobs
     url(r'^jobs/$', 'apparel.views.jobs', name='jobs'),
 
+    # Mailchimp - email
+    url(r'^admin/csv/users/$', 'apparel.email.admin_user_list_csv'),
+    url(r'^admin/mail/weekly/$', 'apparel.email.generate_weekly_mail'),
+    url(r'^admin/mailchimp/webhook/$', 'apparel.email.mailchimp_webhook'),
+
     # ???
     url(r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
 )

@@ -1,4 +1,4 @@
-from django.forms import ModelForm, EmailField
+from django.forms import ModelForm, EmailField, BooleanField
 from django.forms.widgets import RadioSelect
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -29,3 +29,11 @@ class NotificationForm(ModelForm):
             'like_look_created': RadioSelect,
             'follow_user': RadioSelect
         }
+
+
+class NewsletterForm(ModelForm):
+    newsletter = BooleanField(required=False, help_text=_('Participate in our weekly newsletter'))
+
+    class Meta:
+        model = ApparelProfile
+        fields = ('newsletter',)
