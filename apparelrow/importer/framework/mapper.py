@@ -76,6 +76,14 @@ class DataMapper(object):
 
         self.mapped_record['product']['patterns'] = self.map_patterns(self.mapped_record['product'].get('product-name', '') + self.mapped_record['product'].get('description'))
 
+        # Remove manufacturer from product name
+        product_name = re.sub(r'(?iu)^%s' % (self.mapped_record['product']['manufacturer'],), '', self.mapped_record['product']['product-name'], count=1)
+        product_name = product_name.lstrip(' -_')
+        if product_name:
+            product_name = product_name[0].upper() + product_name[1:]
+            self.mapped_record['product']['product-name'] = product_name
+
+        # If price and discount price is equal, there is no discount
         price = self.mapped_record['product']['price']
         discount_price = self.mapped_record['product']['discount-price']
         if price == discount_price:
