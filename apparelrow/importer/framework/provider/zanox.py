@@ -66,4 +66,3 @@ class Provider(CSVProvider):
         super(Provider, self).__init__(*args, **kwargs)
         self.mapper=ZanoxMapper
         self.dialect=None # breaks if CSVStandard is used or a sniffed dialect
-        self.unique_fields = ['product-name']
