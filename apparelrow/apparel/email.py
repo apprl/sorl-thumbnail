@@ -43,7 +43,7 @@ def mailchimp_subscribe(user):
         mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
         mailchimp.listSubscribe(id=settings.MAILCHIMP_WEEKLY_LIST,
                                 email_address=user.email,
-                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name},
+                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.get_profile().gender},
                                 double_optin=False,
                                 update_existing=True,
                                 send_welcome=False)
