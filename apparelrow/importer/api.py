@@ -299,7 +299,11 @@ class API(object):
                 logger.debug('Setting price to %s %s', fields['original_price'], fields['original_currency'])
                 if fields['original_discount_price']:
                     fields['discount_price'] = fields['original_discount_price']
+                    fields['discount_currency'] = fields['original_discount_currency']
                     logger.debug('Setting discount price to %s %s', fields['original_discount_price'], fields['original_currency'])
+                else:
+                    fields['discount_price'] = None
+                    fields['discount_currency'] = None
             elif fields['original_currency'] in rates:
                 try:
                     fields['price'] = rates[fields['original_currency']].convert(float(fields['original_price']))
@@ -307,7 +311,11 @@ class API(object):
 
                     if fields['original_discount_price']:
                         fields['discount_price'] = rates[fields['original_currency']].convert(float(fields['original_discount_price']))
+                        fields['discount_currency'] = fields['original_discount_currency']
                         logger.debug('Setting discount price to %s %s (= %f %s)', fields['original_discount_price'], fields['original_currency'], fields['discount_price'], fields['currency'])
+                    else:
+                        fields['discount_price'] = None
+                        fields['discount_curency'] = None
                 except TypeError:
                     raise SkipProduct('Could not convert currency to base currency')
             else:
