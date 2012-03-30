@@ -25,6 +25,7 @@ from django.contrib.comments.models import Comment
 from django.contrib.sites.models import Site
 from django.views.i18n import set_language
 from django.utils import translation
+from django.utils.encoding import smart_unicode
 from hanssonlarsson.django.exporter import json as special_json
 from actstream.models import Follow, Action
 from sorl.thumbnail import get_thumbnail
@@ -212,7 +213,7 @@ def brand_list(request, gender=None):
             brand_id = brand.manufacturer_id
 
             if brand_name:
-                normalized_name = unicodedata.normalize('NFKD', brand_name).lower()
+                normalized_name = unicodedata.normalize('NFKD', smart_unicode(brand_name)).lower()
                 for index, char in enumerate(normalized_name):
                     if char in alphabet:
                         brands[brands_mapper[char]][2].append({'id': brand_id, 'name': brand_name})
