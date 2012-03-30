@@ -118,22 +118,19 @@ def admin_user_list_csv(request):
 
     return response
 
-@login_required
-def generate_weekly_mail(request):
-    if not request.user.is_superuser:
-        return HttpResponseNotFound()
-
-    user_content_type = ContentType.objects.get_for_model(User)
-    one_week_ago = datetime.datetime.now() - datetime.timedelta(weeks=1)
+def get_weekly_mail_content(gender, timeframe):
+    """
+    Generates the weekly mail content based on gender and timeframe.
+    """
 
     # Products
     product_names = []
     products = []
-    base_products = list(Product.objects.filter(published=True, category__isnull=False, vendorproduct__isnull=False)
+    base_products = list(Product.objects.filter(gender__in=[gender, 'U'], published=True, category__isnull=False, vendorproduct__isnull=False)
                                         .filter(Q(vendorproduct__availability__lt=0) | Q(vendorproduct__availability__gt=0) | Q(vendorproduct__availability__isnull=True))
                                         .order_by('-popularity')[:9])
-    week_products = list(Product.objects.filter(published=True, category__isnull=False, vendorproduct__isnull=False)
-                                        .filter(likes__active=True, likes__modified__gt=one_week_ago)
+    week_products = list(Product.objects.filter(gender__in=[gender, 'U'], published=True, category__isnull=False, vendorproduct__isnull=False)
+                                        .filter(likes__active=True, likes__modified__gt=timeframe)
                                         .filter(Q(vendorproduct__availability__lt=0) | Q(vendorproduct__availability__gt=0) | Q(vendorproduct__availability__isnull=True))
                                         .annotate(num_likes=Count('likes')).order_by('-num_likes')[:9])
 
@@ -166,8 +163,8 @@ def generate_weekly_mail(request):
 
     # Looks
     looks = []
-    base_looks = list(Look.objects.filter(likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
-    week_looks = list(Look.objects.filter(likes__active=True, likes__modified__gt=one_week_ago).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
+    base_looks = list(Look.objects.filter(gender__in=[gender, 'U'], likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
+    week_looks = list(Look.objects.filter(gender__in=[gender, 'U'], likes__active=True, likes__modified__gt=timeframe).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
 
     used_looks = []
     count_looks = 0
@@ -190,12 +187,24 @@ def generate_weekly_mail(request):
 
     # Members
     members = []
-    base_members = list(Follow.objects.values_list('object_id', flat=True).annotate(count=Count('id')).order_by('-count')[:4])
-    week_members = list(Action.objects.filter(verb='started following', timestamp__gt=one_week_ago)
-                                      .values_list('target_object_id', flat=True)
-                                      .annotate(count=Count('target_object_id'))
-                                      .order_by('-count')[:4])
-    
+    base_members = list(ApparelProfile.objects.filter(gender=gender).order_by('-followers_count').values_list('user', flat=True)[:4])
+    temp_week_members = list(Action.objects.filter(verb='started following', timestamp__gt=timeframe)
+                                           .values_list('target_object_id', flat=True)
+                                           .annotate(count=Count('target_object_id'))
+                                           .order_by('-count'))
+
+
+    week_members = []
+    count_week_members = 0
+    for user_id in temp_week_members:
+        profile = ApparelProfile.objects.get(user__id=user_id)
+        if profile.gender == gender:
+            week_members.append(user_id)
+            count_week_members = count_week_members + 1
+
+        if count_week_members >= 4:
+            break
+
     used_members = []
     count_members = 0
     for member_id in week_members + base_members:
@@ -219,49 +228,73 @@ def generate_weekly_mail(request):
         if count_members >= 4:
             break
 
+    return (subject, products, looks, members)
 
-    if request.GET.get('create'):
-        ms = MailSnake(settings.MAILCHIMP_API_KEY)
+@login_required
+def generate_weekly_mail(request):
+    if not request.user.is_superuser:
+        return HttpResponseNotFound()
+
+    if request.GET.get('create') == 'yes':
+        mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
 
         batch = []
         for user in get_newsletter_users():
-            batch.append({'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name})
+            batch.append({'EMAIL': user.email,
+                          'FNAME': user.first_name,
+                          'LNAME': user.last_name,
+                          'GENDER': user.get_profile().gender})
 
         try:
-            ms.listBatchSubscribe(id=settings.MAILCHIMP_WEEKLY_LIST, double_optin=False, update_existing=True, batch=batch)
-        except MailSnakeException:
-            return HttpResponse('Error: could not update subscribers list')
+            mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_WEEKLY_LIST, double_optin=False, update_existing=True, batch=batch)
+        except MailSnakeException, e:
+            return HttpResponse('Error: could not update subscribers list: %s' % (str(e),))
 
-        template = loader.render_to_string('email/weekly.html', {
-            'products': products,
-            'products_1': products[0:3],
-            'products_2': products[3:6],
-            'products_3': products[6:9],
-            'looks': looks,
-            'members': members,
-            'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-sv.gif'),
-            'email_weekly_bottom': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-bottom-sv.gif'),
-            'subject': subject
-        })
+        message = []
+        for gender in ['M', 'W']:
+            one_week_ago = datetime.datetime.now() - datetime.timedelta(weeks=1)
+            subject, products, looks, members = get_weekly_mail_content(gender, one_week_ago)
 
-        options = {
-                'list_id': settings.MAILCHIMP_WEEKLY_LIST,
-                'subject': subject,
-                'from_email': 'postman@apparelrow.com',
-                'from_name': 'Apparelrow',
-                'to_name': '*|FNAME|*',
-                'inline_css': True,
-                'generate_text': True
-            }
+            template = loader.render_to_string('email/weekly.html', {
+                'products': products,
+                'products_1': products[0:3],
+                'products_2': products[3:6],
+                'products_3': products[6:9],
+                'looks': looks,
+                'members': members,
+                'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-sv.gif'),
+                'email_weekly_bottom': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-bottom-sv.gif'),
+            })
 
-        try:
-            result = ms.campaignCreate(type='regular', options=options, content={'html': template})
-        except MailSnakeException:
-            return HttpResponse('Error: could not create campaign')
+            options = {
+                    'list_id': settings.MAILCHIMP_WEEKLY_LIST,
+                    'subject': subject,
+                    'from_email': 'postman@apparelrow.com',
+                    'from_name': 'Apparelrow',
+                    'to_name': '*|FNAME|*',
+                    'inline_css': True,
+                    'generate_text': True,
+                    'title': '%s - %s' % (datetime.date.today(), gender)
+                }
 
-        return HttpResponse('Campaign created with id %s' % (result,)) 
+            segment_options = {'match': 'all',
+                               'conditions': [{'field': 'GENDER',
+                                               'op': 'eq',
+                                               'value': gender}]}
 
-    
+            try:
+                result = mailchimp.campaignCreate(type='regular', options=options, content={'html': template}, segment_opts=segment_options)
+            except MailSnakeException, e:
+                return HttpResponse('Error [%s]: could not create campaign: %s' % (gender, e))
+
+            message.append(result)
+
+        return HttpResponse('Created two campaigns: %s' % (', '.join(message),))
+
+
+    one_week_ago = datetime.datetime.now() - datetime.timedelta(weeks=1)
+    subject, products, looks, members = get_weekly_mail_content(request.GET.get('gender', 'M'), one_week_ago)
+
     return render_to_response('email/weekly.html', {
             'products': products,
             'products_1': products[0:3],
@@ -271,5 +304,4 @@ def generate_weekly_mail(request):
             'members': members,
             'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-sv.gif'),
             'email_weekly_bottom': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-bottom-sv.gif'),
-            'subject': subject
         }, context_instance=RequestContext(request))
