@@ -355,12 +355,26 @@ LOGGING = {
             'maxBytes': 3000000,
             'backupCount': 8
         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        }
     },
     'loggers': {
         '': {
             'level': 'INFO',
             'propagate': True,
             'handlers': ['app_core'],
+        },
+        'django': {
+            'level': 'INFO',
+            'propagate': True,
+            'handlers': ['app_core'],
+        },
+        'django.request': {
+            'level': 'ERROR',
+            'propagate': False,
+            'handlers': ['mail_admins', 'app_core'],
         },
         'apparel.importer': {
             'level': 'INFO',
