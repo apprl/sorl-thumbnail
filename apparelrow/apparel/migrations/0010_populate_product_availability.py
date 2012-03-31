@@ -1,21 +1,21 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-class Migration(SchemaMigration):
-
+class Migration(DataMigration):
+    
     def forwards(self, orm):
-
-        # Adding field 'Product.availability'
-        db.add_column('apparel_product', 'availability', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default=False)
-
+        from apparel.models import Product
+        for product in Product.objects.filter(published=True).iterator():
+            if product.default_vendor and product.default_vendor.availability != 0:
+                product.availability = True
+                product.save()
+    
     def backwards(self, orm):
-
-        # Deleting field 'Product.availability'
-        db.delete_column('apparel_product', 'availability')
-
+        "Write your backwards methods here."
+    
     models = {
         'apparel.backgroundimage': {
             'Meta': {'object_name': 'BackgroundImage'},
