@@ -53,7 +53,7 @@ def product_redirect(request, pk):
     return HttpResponsePermanentRedirect(product.get_absolute_url())
 
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug, published=True)
+    product = get_object_or_404(Product, slug=slug, published=True, gender__isnull=False)
     viewed_products = request.session.get('viewed_products', [])
     try:
         viewed_products.remove(product.id)
