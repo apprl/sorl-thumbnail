@@ -5,6 +5,19 @@ from django.db.models import Q
 from django.http import QueryDict
 from django.db.models.fields.related import ForeignKey, ManyToManyField, RelatedObject, RelatedField
 
+class ProductManager(models.Manager):
+    """
+    Adds a shortcut to get valid products only.
+    """
+    def get_query_set(self):
+        return super(ProductManager, self).get_query_set() \
+                                          .filter(published=True,
+                                                  category__isnull=False,
+                                                  gender__isnull=False) \
+                                          .filter(Q(vendorproduct__availability__lt=0) |
+                                                  Q(vendorproduct__availability__gt=0) |
+                                                  Q(vendorproduct__availability__isnull=True))
+
 class SearchManager(models.Manager):
     """
     This Manager adds enables complex searching specifically for the Product

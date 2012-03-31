@@ -14,7 +14,7 @@ from django.forms import ValidationError
 from django.core.files import storage
 from django.core.files.base import ContentFile
 
-from apparel.manager import SearchManager, FeaturedManager, FirstPageManager
+from apparel.manager import ProductManager, SearchManager, FeaturedManager, FirstPageManager
 from apparel import cache
 
 from cStringIO import StringIO
@@ -154,10 +154,11 @@ class Product(models.Model):
     gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
     feed_gender   = models.CharField(_('Feed gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
     published     = models.BooleanField(default=True, db_index=True)
-    popularity    = models.DecimalField(default=0, max_digits=20, decimal_places=8)
-    
-    objects = SearchManager()
-    
+    popularity    = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
+
+    objects = models.Manager()
+    valid_objects = ProductManager()
+
     def score(self):
         return ProductLike.objects.filter(product=self, active=True).count()
 

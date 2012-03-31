@@ -227,50 +227,31 @@ def brand_list(request, gender=None):
         brands[index][2] = sorted(brands[index][2], key=lambda k: k['name'])
 
     # Popular brands with products
-    query_arguments = {'sort': 'popularity desc',
-                       'fl': 'django_id',
-                       'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender,)],
-                       'start': 0,
-                       'rows': 10,
-                       'group': 'true',
-                       'group.limit': 2,
-                       'group.field': 'manufacturer_id'}
-    grouped = ApparelSearch('*:*', **query_arguments).get_grouped()
     popular_brands = []
-    for value in grouped['manufacturer_id']['groups']:
-        products = list(Product.objects.select_related('manufacturer__name').filter(id__in=[doc['django_id'] for doc in value['doclist']['docs']]))
-        popular_brands.append([products[0].manufacturer.id, products[0].manufacturer.name, products])
+    manufacturers = Product.valid_objects.filter(gender__in=[gender, 'U']) \
+                                         .values_list('manufacturer', 'manufacturer__name') \
+                                         .annotate(Count('manufacturer')) \
+                                         .order_by('-popularity')[:10]
+    for manufacturer in manufacturers:
+        popular_brands.append([manufacturer[0],
+                               manufacturer[1],
+                               Product.valid_objects.filter(gender__in=[gender, 'U'],
+                                                            manufacturer=manufacturer[0]) \
+                                                    .order_by('-popularity')[:2]])
 
     # Popular brands in your network with products
     popular_brands_in_network = []
-    if request.user.is_authenticated():
-        user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
-        user_ids_or = ' OR '.join(str(x) for x in user_ids)
-        query_arguments = {'sort': 'popularity desc',
-                           'fl': 'django_id',
-                           'fq': ['django_ct:apparel.product',
-                                  'availability:true',
-                                  'published:true',
-                                  'gender:(U OR %s)' % (gender,),
-                                  'user_likes:({0})'.format(user_ids_or)],
-                           'start': 0,
-                           'rows': 10,
-                           'group': 'true',
-                           'group.limit': 2,
-                           'group.field': 'manufacturer_id'}
-        grouped = ApparelSearch('*:*', **query_arguments).get_grouped()
-        for value in grouped['manufacturer_id']['groups']:
-            manufacturer_id = value['groupValue']
-            manufacturer_products = value['doclist']['docs']
-
-            if len(manufacturer_products) == 1:
-                product_one = Product.objects.select_related('manufacturer').get(id=manufacturer_products[0]['django_id'])
-                product_two = Product.objects.select_related('manufacturer').filter(manufacturer=manufacturer_id).exclude(vendorproduct__availability=0, id=manufacturer_products[0]['django_id']).order_by('-modified')[0]
-                products = [product_one, product_two]
-            else:
-                products = list(Product.objects.select_related('manufacturer').filter(id__in=[doc['django_id'] for doc in value['doclist']['docs']]))
-
-            popular_brands_in_network.append([products[0].manufacturer.id, products[0].manufacturer.name, products])
+    manufacturers = Product.valid_objects.filter(gender__in=[gender, 'U']) \
+                                         .filter(likes__user__in=Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) \
+                                         .values_list('manufacturer', 'manufacturer__name') \
+                                         .annotate(Count('manufacturer')) \
+                                         .order_by('-popularity')[:10]
+    for manufacturer in manufacturers:
+        popular_brands_in_network.append([manufacturer[0],
+                                          manufacturer[1],
+                                          Product.valid_objects.filter(gender__in=[gender, 'U'],
+                                                                       manufacturer=manufacturer[0]) \
+                                                               .order_by('-popularity')[:2]])
 
     response = render_to_response('apparel/brand_list.html', {
                 'brands': brands,
