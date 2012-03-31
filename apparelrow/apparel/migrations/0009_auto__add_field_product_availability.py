@@ -3,7 +3,6 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
-from apparel.models import Product
 
 class Migration(SchemaMigration):
 
@@ -12,6 +11,7 @@ class Migration(SchemaMigration):
         # Adding field 'Product.availability'
         db.add_column('apparel_product', 'availability', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default=False)
 
+        from apparel.models import Product
         for product in Product.objects.filter(published=True).iterator():
             if product.default_vendor and product.default_vendor.availability != 0:
                 product.availability = True
