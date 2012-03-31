@@ -126,13 +126,12 @@ def get_weekly_mail_content(gender, timeframe):
     # Products
     product_names = []
     products = []
-    base_products = list(Product.objects.filter(gender__in=[gender, 'U'], published=True, category__isnull=False, vendorproduct__isnull=False)
-                                        .filter(Q(vendorproduct__availability__lt=0) | Q(vendorproduct__availability__gt=0) | Q(vendorproduct__availability__isnull=True))
-                                        .order_by('-popularity')[:9])
-    week_products = list(Product.objects.filter(gender__in=[gender, 'U'], published=True, category__isnull=False, vendorproduct__isnull=False)
-                                        .filter(likes__active=True, likes__modified__gt=timeframe)
-                                        .filter(Q(vendorproduct__availability__lt=0) | Q(vendorproduct__availability__gt=0) | Q(vendorproduct__availability__isnull=True))
-                                        .annotate(num_likes=Count('likes')).order_by('-num_likes')[:9])
+    base_products = list(Product.valid_objects.filter(gender__in=[gender, 'U'])
+                                              .order_by('-popularity')[:9])
+    week_products = list(Product.valid_objects.filter(gender__in=[gender, 'U'])
+                                              .filter(likes__active=True, likes__modified__gt=timeframe)
+                                              .annotate(num_likes=Count('likes'))
+                                              .order_by('-num_likes')[:9])
 
     used_products = []
     count_products = 0

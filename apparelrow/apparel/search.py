@@ -1,5 +1,6 @@
 import json
 import decimal
+import logging
 
 from django.conf import settings
 from django.core.paginator import Paginator
@@ -17,6 +18,8 @@ from apparel.models import ProductLike
 from apparel.utils import get_gender_from_cookie
 
 from pysolr import Solr
+
+logger = logging.getLogger('apparel.search')
 
 RESULTS_PER_PAGE = 10
 PRODUCT_SEARCH_FIELDS = ['manufacturer_name', 'category_names^40', 'product_name', 'color_names^40', 'description']
@@ -155,7 +158,7 @@ def product_like_delete(instance, **kwargs):
 
 def rebuild_product_index():
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
-    for product in Product.objects.iterator():
+    for product in Product.valid_objects.iterator():
         product_save(product, solr=connection)
 
 def get_product_document(instance):
@@ -167,16 +170,19 @@ def get_product_document(instance):
     }
     boost = {}
 
-    if hasattr(instance, 'published') and hasattr(instance, 'category') and instance.published == True and instance.category is not None:
-        availability = False
+    if instance.published == True and instance.category is not None and instance.gender is not None:
+        availability = instance.availability
         discount = False
         price = decimal.Decimal('0.0')
         if instance.default_vendor:
-            availability = instance.default_vendor.availability != 0
             discount = instance.default_vendor.discount_price > decimal.Decimal('0.0')
             price = instance.default_vendor.price
             if instance.default_vendor.discount_price:
                 price = instance.default_vendor.discount_price
+        else:
+            if availability:
+                logger.warning('Availability is true, but product have no vendorproduct [PID: %s]' % (instance.pk,))
+                availability = False
 
         color_names = []
         color_ids = []

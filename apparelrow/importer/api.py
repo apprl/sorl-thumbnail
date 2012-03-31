@@ -139,7 +139,8 @@ class API(object):
             'category': self.category,
             'product_image': self.product_image,
             'gender': self.dataset['product']['gender'],
-            'feed_gender': self.dataset['product']['gender']
+            'feed_gender': self.dataset['product']['gender'],
+            'availability': False if self.dataset['product']['availability'] == 0 else True
         }
         
         try:

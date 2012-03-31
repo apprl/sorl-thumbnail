@@ -156,7 +156,7 @@ class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
 
         if products and 'category__count' in products:
             try:
-                available_products = Product.objects.values('category').filter(category=category).exclude(vendorproduct__availability=0).annotate(Count('category')).get()
+                available_products = Product.valid_objects.values('category').filter(category=category).annotate(Count('category')).get()
                 if available_products and 'category__count' in available_products:
                     return '%s (%s)' % (products['category__count'], available_products['category__count'])
             except Product.DoesNotExist:
@@ -165,10 +165,6 @@ class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
             return '%s (%s)' % (products['category__count'], 0)
 
         return '0'
-
-        #result = Product.objects.values('category').filter(category=category).annotate(Count('category')).get()
-        #if result and 'category__count' in result:
-            #return result['category__count']
 
 admin.site.register(Category, CategoryAdmin)
 

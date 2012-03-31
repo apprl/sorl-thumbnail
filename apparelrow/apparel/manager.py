@@ -14,10 +14,8 @@ class ProductManager(models.Manager):
                                           .filter(vendorproduct__isnull=False,
                                                   published=True,
                                                   category__isnull=False,
-                                                  gender__isnull=False) \
-                                          .filter(Q(vendorproduct__availability__lt=0) |
-                                                  Q(vendorproduct__availability__gt=0) |
-                                                  Q(vendorproduct__availability__isnull=True))
+                                                  gender__isnull=False,
+                                                  availability=True)
 
 class SearchManager(models.Manager):
     """

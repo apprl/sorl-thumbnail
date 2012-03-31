@@ -155,6 +155,7 @@ class Product(models.Model):
     feed_gender   = models.CharField(_('Feed gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
     published     = models.BooleanField(default=True, db_index=True)
     popularity    = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
+    availability  = models.BooleanField(_('In stock'), null=False, blank=False, default=False)
 
     objects = models.Manager()
     valid_objects = ProductManager()
@@ -215,7 +216,7 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.date_added = datetime.date.today()
+            self.date_added = datetime.datetime.now()
 
         if not self.sku:
             self.sku = self.slug
