@@ -231,13 +231,13 @@ def brand_list(request, gender=None):
     manufacturers = Product.valid_objects.filter(gender__in=[gender, 'U']) \
                                          .values_list('manufacturer', 'manufacturer__name') \
                                          .annotate(Count('manufacturer')) \
-                                         .order_by('-popularity')[:10]
+                                         .order_by('-popularity', '-date_added')[:10]
     for manufacturer in manufacturers:
         popular_brands.append([manufacturer[0],
                                manufacturer[1],
                                Product.valid_objects.filter(gender__in=[gender, 'U'],
                                                             manufacturer=manufacturer[0]) \
-                                                    .order_by('-popularity')[:2]])
+                                                    .order_by('-popularity', '-date_added')[:2]])
 
     # Popular brands in your network with products
     popular_brands_in_network = []
@@ -245,13 +245,13 @@ def brand_list(request, gender=None):
                                          .filter(likes__user__in=Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) \
                                          .values_list('manufacturer', 'manufacturer__name') \
                                          .annotate(Count('manufacturer')) \
-                                         .order_by('-popularity')[:10]
+                                         .order_by('-popularity', '-date_added')[:10]
     for manufacturer in manufacturers:
         popular_brands_in_network.append([manufacturer[0],
                                           manufacturer[1],
                                           Product.valid_objects.filter(gender__in=[gender, 'U'],
                                                                        manufacturer=manufacturer[0]) \
-                                                               .order_by('-popularity')[:2]])
+                                                               .order_by('-popularity', '-date_added')[:2]])
 
     response = render_to_response('apparel/brand_list.html', {
                 'brands': brands,

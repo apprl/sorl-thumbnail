@@ -11,7 +11,8 @@ class ProductManager(models.Manager):
     """
     def get_query_set(self):
         return super(ProductManager, self).get_query_set() \
-                                          .filter(published=True,
+                                          .filter(vendorproduct__isnull=False,
+                                                  published=True,
                                                   category__isnull=False,
                                                   gender__isnull=False) \
                                           .filter(Q(vendorproduct__availability__lt=0) |
