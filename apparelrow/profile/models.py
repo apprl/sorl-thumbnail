@@ -4,6 +4,8 @@ import datetime
 
 from django.db import models
 from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
@@ -13,6 +15,7 @@ from actstream.models import Follow, Action, user_stream
 from sorl.thumbnail import get_thumbnail
 
 from apparel.models import Look, LookLike, ProductLike
+from profile.tasks import send_email_confirm_task
 
 EVENT_CHOICES = (
     ('A', _('All')),
@@ -159,11 +162,17 @@ class EmailChange(models.Model):
 # Create profile when a new user is created
 #
 
+@receiver(post_save, sender=User, dispatch_uid='post_save_create_profile')
 def create_profile(signal, instance, **kwargs):
+    """
+    Create a profile and send welcome email if a new user was created.
+    """
     if kwargs['created']:
-        p, created = ApparelProfile.objects.get_or_create(user=instance)
+        profile, created = ApparelProfile.objects.get_or_create(user=instance)
 
-post_save.connect(create_profile, sender=User)
+        subject = _('Welcome %(username)s') % {'username': profile.display_name}
+        body = render_to_string('profile/email_welcome.html', {'username': profile.display_name})
+        send_email_confirm_task.delay(subject, body, instance.email)
 
 #
 # Delete follows and actions when a user is deleted.

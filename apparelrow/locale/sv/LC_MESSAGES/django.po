@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-27 13:10+0200\n"
+"POT-Creation-Date: 2012-03-31 21:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "Swe"
 msgstr ""
 
-#: apparel/browse.py:251 templates/apparel/look_list.html:25
+#: apparel/browse.py:239 templates/apparel/look_list.html:25
 #: templates/apparel/look_list.html:27
 msgid "Showing"
 msgstr "Visar"
 
-#: apparel/browse.py:253
+#: apparel/browse.py:241
 msgid "Showing your friends' favorites"
 msgstr "Visar dina vänners favoriter"
 
@@ -47,275 +47,275 @@ msgstr "Visar dina vänners favoriter"
 msgid "You have to name your look before your create it."
 msgstr "Du måste ange ett namn på din look."
 
-#: apparel/models.py:27
+#: apparel/models.py:31
 msgid "Products can only be displayed for an active manufactorer"
 msgstr "Produkter visas endast för aktiva tillverkare"
 
-#: apparel/models.py:28 apparel/models.py:84
+#: apparel/models.py:32 apparel/models.py:88
 msgid "Logotype"
 msgstr "Logotype"
 
-#: apparel/models.py:29 apparel/models.py:83
+#: apparel/models.py:33 apparel/models.py:87
 msgid "Home page"
 msgstr "Hem"
 
-#: apparel/models.py:60
+#: apparel/models.py:64
 msgid "Option Type"
 msgstr ""
 
-#: apparel/models.py:61
+#: apparel/models.py:65
 msgid "Option Types"
 msgstr ""
 
-#: apparel/models.py:64
+#: apparel/models.py:68
 msgid "Option value"
 msgstr ""
 
-#: apparel/models.py:73
+#: apparel/models.py:77
 msgid "Option Item"
 msgstr ""
 
-#: apparel/models.py:74
+#: apparel/models.py:78
 msgid "Option Items"
 msgstr ""
 
-#: apparel/models.py:100
+#: apparel/models.py:104
 msgid "Only active categories are visible and searchable on the website"
 msgstr "Endast aktiva kategorier visas och är sökbara på sajten"
 
-#: apparel/models.py:101
+#: apparel/models.py:105
 msgid "Option types"
 msgstr ""
 
-#: apparel/models.py:102
+#: apparel/models.py:106
 msgid "The category is visible on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:138
+#: apparel/models.py:142
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:139 apparel/models.py:392
+#: apparel/models.py:143 apparel/models.py:400
 msgid "Slug Name"
 msgstr "Slug"
 
-#: apparel/models.py:140 apparel/models.py:393
+#: apparel/models.py:144 apparel/models.py:401
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr "Används i URLer. Om den är tom, auto-genereras den från namnet"
 
-#: apparel/models.py:141
+#: apparel/models.py:145
 msgid "Stock Keeping Unit"
 msgstr "Produkt ID (SKU)"
 
-#: apparel/models.py:142
+#: apparel/models.py:146
 msgid "Has to be unique with the manufacturer"
 msgstr "Måste vara unikt för tillverkaren"
 
-#: apparel/models.py:144
+#: apparel/models.py:148
 msgid "Time added"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:145 apparel/models.py:256 apparel/models.py:398
-#: apparel/models.py:526 apparel/models.py:627
+#: apparel/models.py:149 apparel/models.py:261 apparel/models.py:407
+#: apparel/models.py:581 apparel/models.py:682
 msgid "Time modified"
 msgstr "Tid ändrad"
 
-#: apparel/models.py:146
+#: apparel/models.py:150
 msgid "Product description"
 msgstr "Produktbeskrivning"
 
-#: apparel/models.py:147
+#: apparel/models.py:151
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:150 apparel/models.py:402 apparel/models.py:628
-#: profile/models.py:36
+#: apparel/models.py:154 apparel/models.py:411 apparel/models.py:683
+#: profile/models.py:38
 msgid "Gender"
 msgstr "Kön"
 
-#: apparel/models.py:151
+#: apparel/models.py:155
 msgid "Feed gender"
 msgstr ""
 
-#: apparel/models.py:255 apparel/models.py:397 apparel/models.py:525
-#: apparel/models.py:611 apparel/models.py:626 beta/models.py:9
+#: apparel/models.py:260 apparel/models.py:406 apparel/models.py:580
+#: apparel/models.py:666 apparel/models.py:681 beta/models.py:9
 #: beta/models.py:17
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:269
+#: apparel/models.py:274
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:270
+#: apparel/models.py:275
 msgid "Name"
 msgstr "Namn"
 
-#: apparel/models.py:272
+#: apparel/models.py:277
 msgid "Default gender"
 msgstr ""
 
-#: apparel/models.py:273
+#: apparel/models.py:278
 msgid "Override gender"
 msgstr ""
 
-#: apparel/models.py:323
+#: apparel/models.py:328
 msgid "Buy URL"
 msgstr "URL till köpsida"
 
-#: apparel/models.py:324
+#: apparel/models.py:329
 #: templates/apparel/fragments/product_menu_browse.html:21
 msgid "Price"
 msgstr "Pris"
 
-#: apparel/models.py:324
+#: apparel/models.py:329
 msgid "Price converted to base currency"
 msgstr "Pris konverterat till basvaluta"
 
-#: apparel/models.py:325 importer/models.py:138
+#: apparel/models.py:330 importer/models.py:138
 msgid "Currency"
 msgstr "Valuta"
 
-#: apparel/models.py:325
+#: apparel/models.py:330
 msgid "Base currency as three-letter ISO code"
 msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:326
+#: apparel/models.py:331
 msgid "Original price"
 msgstr "Ursprungligt pris"
 
-#: apparel/models.py:327
+#: apparel/models.py:332
 msgid "Original currency"
 msgstr "Ursprunglig valuta"
 
-#: apparel/models.py:327 apparel/models.py:329 apparel/models.py:331
+#: apparel/models.py:332 apparel/models.py:334 apparel/models.py:336
 msgid "Currency as three-letter ISO code"
 msgstr "Valuta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:328
+#: apparel/models.py:333
 msgid "Discount price"
 msgstr ""
 
-#: apparel/models.py:329
+#: apparel/models.py:334
 msgid "Discount currency"
 msgstr "Rabattvaluta"
 
-#: apparel/models.py:330
+#: apparel/models.py:335
 msgid "Original discount price"
 msgstr "Ursprungligt rabatterat pris"
 
-#: apparel/models.py:331
+#: apparel/models.py:336
 msgid "Original discount currency"
 msgstr "Ursprunglig rabattvaluta"
 
-#: apparel/models.py:332 apparel/models.py:365
+#: apparel/models.py:337 apparel/models.py:370
 msgid "Items in stock"
 msgstr "Antal i lager"
 
-#: apparel/models.py:332 apparel/models.py:365
+#: apparel/models.py:337 apparel/models.py:370
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:370
+#: apparel/models.py:375
 msgid "No information available"
 msgstr "Ingen information tillgänglig"
 
-#: apparel/models.py:372
+#: apparel/models.py:377
 msgid "Out of stock"
 msgstr "Ej i lager"
 
-#: apparel/models.py:374
+#: apparel/models.py:379
 msgid "In stock"
 msgstr "I lager"
 
-#: apparel/models.py:376
+#: apparel/models.py:381
 msgid "items in stock"
 msgstr "i lager"
 
-#: apparel/models.py:391 apparel/models.py:619
+#: apparel/models.py:399 apparel/models.py:674
 msgid "Title"
 msgstr "Titel"
 
-#: apparel/models.py:394
+#: apparel/models.py:402
 msgid "Look description"
 msgstr "Beskrivning"
 
-#: apparel/models.py:400
+#: apparel/models.py:409
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:401
+#: apparel/models.py:410
 msgid "The look will be shown on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:543
+#: apparel/models.py:598
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:544
+#: apparel/models.py:599
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:545
+#: apparel/models.py:600
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:546
+#: apparel/models.py:601
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:547
+#: apparel/models.py:602
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:548
+#: apparel/models.py:603
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:620
+#: apparel/models.py:675
 msgid "Short description"
 msgstr "Kort Beskrivning"
 
-#: apparel/models.py:621
+#: apparel/models.py:676
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:621
+#: apparel/models.py:676
 msgid "HTML allowed. This field is ignored if an image is set."
 msgstr ""
 
-#: apparel/models.py:622
+#: apparel/models.py:677
 msgid "URL"
 msgstr "URL"
 
-#: apparel/models.py:623 apparel/models.py:655
+#: apparel/models.py:678 apparel/models.py:710
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:623
+#: apparel/models.py:678
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:625
+#: apparel/models.py:680
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:629 profile/models.py:35 templates/account/base.html:20
+#: apparel/models.py:684 profile/models.py:37 templates/account/base.html:20
 msgid "Language"
 msgstr "Språk"
 
-#: apparel/models.py:630
+#: apparel/models.py:685
 msgid "Sorting order"
 msgstr ""
 
-#: apparel/models.py:673
+#: apparel/models.py:728
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:673
+#: apparel/models.py:728
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -483,59 +483,72 @@ msgstr ""
 msgid "New e-mail address"
 msgstr "Ny e-postadress"
 
-#: profile/models.py:18 templates/apparel/user_list.html:25
+#: profile/forms.py:35
+msgid "Participate in our weekly newsletter"
+msgstr ""
+
+#: profile/models.py:20 templates/apparel/user_list.html:25
 #: templates/apparel/user_list.html:29
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "All"
 msgstr "Alla"
 
-#: profile/models.py:19
+#: profile/models.py:21
 msgid "Those I follow"
 msgstr "De jag följer"
 
-#: profile/models.py:20
+#: profile/models.py:22
 msgid "No one"
 msgstr "Inga"
 
-#: profile/models.py:33
+#: profile/models.py:35
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:34
+#: profile/models.py:36
 msgid "About"
 msgstr "Om"
 
-#: profile/models.py:37
+#: profile/models.py:39
 msgid "Last visit home"
 msgstr ""
 
-#: profile/models.py:41
+#: profile/models.py:42
+msgid "Participating in newsletter"
+msgstr ""
+
+#: profile/models.py:46
 msgid "When someone commented on a product that I have liked"
 msgstr "När någon kommenterat en produkt som jag har gillat"
 
-#: profile/models.py:43
+#: profile/models.py:48
 msgid "When someone commented on a product that I have commented on"
 msgstr "När någon kommenterat en produkt som jag kommenterat på"
 
-#: profile/models.py:45
+#: profile/models.py:50
 msgid "When someone commented on a look that I have created"
 msgstr "När någon kommenterat en look som jag har gjort"
 
-#: profile/models.py:47
+#: profile/models.py:52
 msgid "When someone commented on a look that I have commented on"
 msgstr "När någon kommenterat en look som jag har kommenterat på"
 
-#: profile/models.py:49
+#: profile/models.py:54
 msgid "When someone likes a look that I have created"
 msgstr "När någon gillar en look som jag har gjort"
 
-#: profile/models.py:51
+#: profile/models.py:56
 msgid "When someone starts to follow me"
 msgstr "När någon börjat följa mig"
 
-#: profile/models.py:54
+#: profile/models.py:59
 msgid "Is this the first visit?"
 msgstr ""
+
+#: profile/models.py:172 templates/profile/email_welcome.html:5
+#, python-format
+msgid "Welcome %(username)s"
+msgstr "Välkommen %(username)s"
 
 #: statistics/models.py:30 statistics/models.py:31
 msgid "Product clicks"
@@ -1757,7 +1770,7 @@ msgstr "Vem?"
 msgid "Event"
 msgstr "Händelse"
 
-#: templates/profile/settings_notification.html:17
+#: templates/profile/settings_notification.html:22
 msgid "Save changes"
 msgstr "Spara ändringar"
 
