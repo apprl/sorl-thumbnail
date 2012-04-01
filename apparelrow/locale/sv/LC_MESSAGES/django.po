@@ -485,7 +485,7 @@ msgstr "Ny e-postadress"
 
 #: profile/forms.py:35
 msgid "Participate in our weekly newsletter"
-msgstr ""
+msgstr "Delta i vårt veckobrev"
 
 #: profile/models.py:20 templates/apparel/user_list.html:25
 #: templates/apparel/user_list.html:29
