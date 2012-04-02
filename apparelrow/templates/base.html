@@ -68,6 +68,13 @@
                     return false;
                 }
             });
+
+            jQuery('.ar_welcome').click(function() {
+                jQuery('#panel').slideToggle('slow');
+                var date = new Date();
+                date.setTime(date.getTime()+(10000*24*60*60*1000));
+                document.cookie = "ar_welcome=1; expires="+date.toUTCString()+"; path=/";
+            });
         });
     </script>
     {% block 'extra-scripts' %}
@@ -133,24 +140,16 @@
 
     <div id="container">
 
-        {% if not user.is_authenticated %} 
+        {% if not user.is_authenticated and not request.COOKIES.ar_welcome  %}
         <div id="panel">
             <div id="panelwrap">
                 <span class="row-span">
-                    <h1 class="rowrubbe">Socialize!</h1>
+                    <h1 class="rowrubbe">{% trans "Socialize!" %}</h1>
                     <p class="p-row">
                     {% blocktrans %}Now you can start to browse clothes, shoes & accessories on the SHOP-page, or by using the search function on the top right.<br/><br/>You can make Apparelrow even smarter and more personal by connecting to your Facebook account. For example you can see what clothes your friends like and see what brands are the most popular in your network. {% endblocktrans %}
                     </p>
                 </span>
-                <a class="btn-slide" href="#"></a>
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $(".btn-slide").click(function() {
-                            $("#panel").slideToggle("slow");
-                            $(this).toggleClass("active");
-                        });
-                    });
-                </script>
+                <a class="btn-slide ar_welcome" href="#"></a>
                 <div id="login-fb">
                     {% apparel_facebook_button "facebook-hide.png" %}
                 </div>
