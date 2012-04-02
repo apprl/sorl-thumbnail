@@ -31,7 +31,7 @@ from apparel.utils import get_pagination_page
 #FIXME: ugly solution to avoid using get_template_source which is deprecated. Solve this in js and not by using pagination_js template.
 PAGINATION_JS_TEMPLATE_SOURCE = open(os.path.join(settings.TEMPLATE_DIRS[0], 'apparel/fragments/pagination_js.html')).read()
 
-BROWSE_PAGE_SIZE = 60
+BROWSE_PAGE_SIZE = 30
 
 DEFAULT_SORT_ARGUMENTS = {
     'pop': 'popularity desc, created desc',
