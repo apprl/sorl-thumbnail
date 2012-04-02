@@ -42,7 +42,7 @@
 
 {% block extended_content %}
 <div id="content">
-    <h2>{% trans "Likes" %}</h2>
+    
 
     {% if current_page.paginator.count != 0 %}
         <ul class="products">
@@ -51,9 +51,6 @@
         {% endfor %}
         </ul>
         <div class="clear"></div>
-        <div class="pagination">
-            {% include 'apparel/fragments/pagination.html' %}
-        </div>
     {% else %}
         <div class="wardrobe-empty">
             {% url profile-likes request.user.username as profile_likes_url %}

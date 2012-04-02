@@ -2,12 +2,116 @@
 {% load i18n %}
 
 {% block body %}
-<div id="beta-container">
-    <h2>{% trans 'WELCOME!' %}</h2>
-    <p>{% blocktrans %}We look forward to making Apparelrow better together with you. We appreciate all questions, suggestions and problems from you, the more the better. Click the link "Tyck Till" on the right hand side to share your thoughts. Or send us an email on <a href="mailto:info@apparelrow.com">info@apparelrow.com</a>. Have fun!{% endblocktrans %}</p>
-</div>
-<div id="link-container">
-    <a href="{{ women_url }}" class="women">{% trans "Women" %}</a>
-    <a href="{{ men_url }}" class="men">{% trans "Men" %}</a>
-</div>
+<style type="text/css">
+* {margin: 0}
+html, body {height: 100%;font-family: Helvetica, Arial, sans-serif;font-size:15px;color:#333}
+p{text-align:center}
+img{border:none;}
+body #header-container {
+display: none;
+}
+h1, .ssh{font-size:3em;line-height: normal;}
+h3, .vth{font-size: 1.2em;color:#666;letter-spacing:3px;font-weight:normal;line-height: normal;}
+    .wrapper {max-height:200px;height: auto !important;height: 100%;margin: 0 auto -53px}
+    .push{background:url("{{ MEDIA_URL }}/images/genderimg/header-grad.jpg") repeat-x top left;min-width:980px;height: 67px;clear: both}
+    .footer {height: 200px;clear:both;}
+        #content{text-align:center;padding:20px 0 0;width:980px;height:100%;min-height:700px;overflow: hidden;margin:0 auto}
+        .footer-content {background: url("{{ MEDIA_URL }}/images/genderimg/footerbg.jpg") no-repeat scroll 0 bottom transparent;bottom: 0;height: 53px;left: 50%;margin: 0 0 0 -490px;position: fixed;width: 980px}
+@media screen and (min-height: 850px) {.footer-content {background: url("{{ MEDIA_URL }}/images/genderimg/footerbg.jpg") no-repeat scroll 0 bottom transparent;top:800px;height: 53px;left: 50%;margin: 0 0 0 -490px;position: absolute;width: 980px}}
+        .header-content{margin:0 auto;width:980px;height:53px}
+            #logo {color: white;float: left;margin:21px 0 0;text-align: center;background:url("{{ MEDIA_URL }}/images/genderimg/logo.png") no-repeat top center;width: 980px}
+            .footer-button-left{float:left;width:489px;height:53px}
+            .footer-button-right{float:right;width:489px;height:53px}
+            .footer-button-left:hover{background:url("{{ MEDIA_URL }}/images/genderimg/footerbg.jpg") no-repeat left top}
+            .footer-button-right:hover{background:url("{{ MEDIA_URL }}/images/genderimg/footerbg.jpg") no-repeat right top}
+                .content-row-ett{float:left;width:100%;min-width:10px;height:176px;border-top:5px solid #f0f0f0;border-bottom:1px solid #f0f0f0;margin:20px 0 0}
+                .content-row-tva{float:left;width:100%;min-width:10px;height:176px;border-bottom:1px solid #f0f0f0;margin:4px 0}
+                .content-row-tre{float:left;width:100%;min-width:10px;height:176px;border-bottom:1px solid #f0f0f0;margin:4px 0}
+                   .row-wrapper{width:100%;min-width:10px;float:left;height:128px;text-align:left;margin:24px 0 0}
+                   .startbubble{float:left}
+                   .row-span{float:left;width:250px;margin:0 0 0 20px}
+                   .p-row{line-height: normal;margin:20px 0 0;font-size: 0.85em;text-align:left;float:left}
+                   .mktmer{font-size: 0.85em;text-align:left;margin: 5px 0 0;float:right;}
+                   .rowrubbe {line-height: normal;float: left;min-width: 200px;font-size: 1.3em;font-weight: bold;margin: 0;border: none}
+                       #logoladdan-ett, #logoladdan-tva,  #logoladdan-tre{float:right}
+                       #logoladdan-ett {width:490px;height: 95px;margin: 17px 0 0;}
+                       #logoladdan-tva{width: 490px;height: 80px;margin: 30px 0 0;}
+                       #logoladdan-tre {width: 490px;height: 70px;margin: 23px 0 0;}
+                           .logo-row-ett{float:left;width:100px;height:41px; margin:0 30px 10px 0;}
+                           .logo-row-tva{float:left;width:69px;height:65px;margin: 0 15px 0 0;}
+                           .logo-row-tre{float:left;width:104px;height:89px;margin:0 24px 0 0;}
+</style>
+<div class="wrapper">
+                <div class="push">
+                    <div class="header-content">
+                        <div id="logo">
+                        <h1 style="text-indent:-9999em;">APPAREL ROW</h1>
+                        </div><!--logo-->
+                    </div><!--header-content-->
+                    </div><!--push-->
+                    <div id="content">
+                    <div class="rubriker">
+                        <h3 class="vth">Välkommen till</h3>
+                        <h1 class="ssh">Social Shopping!</h1>
+                    </div><!--rubriker-->
+                    <div class="content-row-ett">
+                    <div class="row-wrapper">
+                    <div class="startbubble"><img src="{{ MEDIA_URL }}/images/genderimg/bubble-1.png" /></div>
+                    <span class="row-span">
+                    <h2 class="rowrubbe">Allt på ett ställe</h2>
+                    <p class="p-row">Hitta alla dina favoritbutiker & varumärken på en plats! Vi har samlat ihop kläder, skor & accessoarer från alla de bästa svenska och internationella butikerna.</p>
+                    </span>
+                    <div id="logoladdan-ett">
+                    <div class="logo-row-ett"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_stores/liberty.png" /></div>
+                    <div class="logo-row-ett"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_stores/harrods.png" /></div>
+                    <div class="logo-row-ett"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_stores/v_ave_shoerepair.png" /></div>
+                    <div class="logo-row-ett" style="margin: 0 0 12px 0;"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_stores/nelly.png" /></div>
+                    <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_stores/ralphlauren.png" /></div>
+                    <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_stores/asos.png" /></div>
+                    <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_stores/urbanoutfitters.png" /></div>
+                    <div class="logo-row-ett" style="margin:0;"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_stores/mytheresa.png" /></div>
+                    <p class="mktmer">... och många fler!</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="content-row-tva">
+                    <div class="row-wrapper">
+                    <div class="startbubble"><img src="{{ MEDIA_URL }}/images/genderimg/bubble-2.png" /></div>
+                    <span class="row-span">
+                    <h2 class="rowrubbe">Inspireras av andra</h2>
+                    <p class="p-row">Se vad dina vänner gillar för kläder <br />& varumärken och inspireras av modebloggare & andra medlemmar!</p>
+                    </span>
+                    <div id="logoladdan-tva">
+                    <div class="logo-row-tva"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_profilepics/aliciavikander.png" /></div>
+                    <div class="logo-row-tva"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_profilepics/elinkling.png" /></div>
+                    <div class="logo-row-tva"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_profilepics/viktortell.png" /></div>
+                    <div class="logo-row-tva"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_profilepics/idarislow.png" /></div>
+                    <div class="logo-row-tva"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_profilepics/kimstrom.png" /></div>
+                    <div class="logo-row-tva" style="margin:0;"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_profilepics/fridafahrman.png" /></div>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="content-row-tre">
+                    <div class="row-wrapper">
+                    <div class="startbubble"><img src="{{ MEDIA_URL }}/images/genderimg/bubble-3.png" /></div>
+                    <span class="row-span">
+                    <h2 class="rowrubbe">Skapa looks</h2>
+                    <p class="p-row">Skapa och dela looks på Apparelrow eller på din egen blogg. Tagga upp foton med plagg eller mixa och matcha i ett kollage!</p>
+                    </span>
+                    <div id="logoladdan-tre">
+                    <div class="logo-row-tre"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_looks/look1.png" /></div>
+                    <div class="logo-row-tre"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_looks/look2.png" /></div>
+                    <div class="logo-row-tre"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_looks/look3.png" /></div>
+                    <div class="logo-row-tre" style="margin:0;"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_looks/look4.png" /></div>
+                    </div>
+                    </div>
+                    </div>
+                </div> <!--content-->
+</div> <!--wrapper-->
+<div class="footer">
+    <div class="footer-content">
+        <a href="http://dev.apparelrow.com/women/" class="footer-button-left"></a>
+        <a href="http://dev.apparelrow.com/men/" class="footer-button-right"></a>
+    </div><!--footer-content-->
+</div><!--footer-->
 {% endblock %}

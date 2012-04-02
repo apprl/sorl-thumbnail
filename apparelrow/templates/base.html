@@ -80,7 +80,7 @@
         <div id="inner-header">
             <a href="{% gender_url APPAREL_GENDER 'shop' %}"><h1>Apparelrow</h1></a>
 
-            <form action="/apparel/search" method="get" onsubmit="return false" id="search" autocomplete="off">
+            <form action="/apparel/search" method="get" onSubmit="return false" id="search" autocomplete="off">
                 <input type="text" name="s" placeholder="{% trans 'Search for products' %}" />
                 <a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>
             </form>
@@ -132,6 +132,37 @@
     </div>
 
     <div id="container">
+
+<!-- Facebooktjoffan -->
+
+<div id="panel"><div id="panelwrap">
+                    <span class="row-span">
+                    <h1 class="rowrubbe">Socialize!</h1>
+                    <p class="p-row">
+                    {% blocktrans %} Now you can start to browse clothes, shoes & accessorie​s on the SHOP-page,​ or by using the search function on the top right.<br/><br/>
+You can make Apparelrow​​ even smarter and more personal by connecting​​ to your Facebook account. For example you can see what clothes your friends like and see what brands are the most popular in your network. {% endblocktrans %}
+</p>
+
+                    </span>
+                    <a class="btn-slide" href="#"></a>
+                    <script type="text/javascript">
+                    $(document).ready(function(){
+                    $(".btn-slide").click(function(){
+                    $("#panel").slideToggle("slow");
+                    $(this).toggleClass("active");
+                        }); 
+                    });
+                    </script>
+                    <div id="login-fb">
+                        {% apparel_facebook_button "facebook-hide.png" %}
+                    </div>
+                    <div class="bild">
+                        <div class="fb-facepile" data-max-rows="2" data-width="281" data-app-id="177090790853"></div>
+                    </div>
+</div></div>
+
+<!-- Facebooktjoffan -->
+
     {% if user.is_authenticated and user.get_profile %}
         {% url apparel.views.home as home_url %}
         {% url apparel.views.look_create as look_create_url %}
@@ -145,54 +176,56 @@
         {% url profile-following user.username as url_following %}
 
         <div id="login-pane">
-            <ul>
-                <li class="profile">
-                    <a class="{% if request.path == url_updates or request.path == url_likes or request.path == url_looks or request.path == url_followers or request.path == url_following %} selected{% endif %}"href="{{ url_likes }}">
-                        <img src="{{ user.get_profile.avatar }}" class="avatar small">
-                        {{ user.get_profile.display_name }}
-                        <div class="arrow"></div>
-                    </a>
-                    <ul class="profile-hover-menu" style="display: none;">
-                        <li class="arrow"></li>
-                        <li class="first"><a href="{{ url_likes }}">{% trans "Likes" %}</a></li>
-                        <li><a href="{{ url_updates }}">{% trans "Updates" %}</a></li>
-                        <li><a href="{{ url_looks }}">{% trans "Looks" %}</a></li>
-                        <li><a href="{{ url_followers }}">{% trans "Followers" %}</a></li>
-                        <li class="last"><a href="{{ url_following }}">{% trans "Following" %}</a></li>
-                    </ul>
-                </li>
-                <li class="updates">
-                    <a class="{% if request.path == home_url %} selected{% endif %}" href="{{ home_url }}">
-                        {% with user.get_profile.get_updates_last_visit as updates %}
-                        <span>{% trans "Friends' updates" %}{% if updates %} ({{ updates }}){% endif %}</span>
-                        {% endwith %}
-                        <div class="arrow"></div>
-                    </a>
-                </li>
-                <li class="settings">
-                    <a class="{% if request.path == notification_settings_url or request.path == email_settings_url %} selected{% endif %}" href="{{ notification_settings_url }}">
-                        <span>{% trans "Settings" %}</span>
-                        <div class="arrow"></div>
-                    </a>
-                </li>
-                {% if user.get_profile.beta and user.get_profile.beta.invites > 0 %}
-                <li class="invites">
-                    <a class="open-dialog" href="{% url beta.views.invite %}?next={{ request.path }}">
-                        {% blocktrans with user.get_profile.beta.invites as invites %}Invite friends ({{ invites }}){% endblocktrans %}
-                        <div class="arrow"></div>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-            <div class="create-look">
-                <a class="open-dialog create-look" data-dialog-width="380" href="{{ look_create_url }}">{% trans "Create a look" %}</a>
-            </div>
-            <div class="friends-favorites">
-                <a href="{% gender_url APPAREL_GENDER 'shop' %}#f=1">{% trans "Friends' Favorites" %}</a>
-            </div>
-            <div class="right logout">
-                <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
-            </div>
+        	<div class="holder">
+                <ul>
+                    <li class="profile">
+                        <a class="{% if request.path == url_updates or request.path == url_likes or request.path == url_looks or request.path == url_followers or request.path == url_following %} selected{% endif %}"href="{{ url_likes }}">
+                            <img src="{{ user.get_profile.avatar }}" class="avatar small">
+                            {{ user.get_profile.display_name }}
+                            <div class="arrow"></div>
+                        </a>
+                        <ul class="profile-hover-menu" style="display: none;">
+                            <li class="arrow"></li>
+                            <li class="first"><a href="{{ url_likes }}">{% trans "Likes" %}</a></li>
+                            <li><a href="{{ url_updates }}">{% trans "Updates" %}</a></li>
+                            <li><a href="{{ url_looks }}">{% trans "Looks" %}</a></li>
+                            <li><a href="{{ url_followers }}">{% trans "Followers" %}</a></li>
+                            <li class="last"><a href="{{ url_following }}">{% trans "Following" %}</a></li>
+                        </ul>
+                    </li>
+                    <li class="updates">
+                        <a class="{% if request.path == home_url %} selected{% endif %}" href="{{ home_url }}">
+                            {% with user.get_profile.get_updates_last_visit as updates %}
+                            <span>{% trans "Friends' updates" %}{% if updates %} ({{ updates }}){% endif %}</span>
+                            {% endwith %}
+                            <div class="arrow"></div>
+                        </a>
+                    </li>
+                    <li class="settings">
+                        <a class="{% if request.path == notification_settings_url or request.path == email_settings_url %} selected{% endif %}" href="{{ notification_settings_url }}">
+                            <span>{% trans "Settings" %}</span>
+                            <div class="arrow"></div>
+                        </a>
+                    </li>
+                    {% if user.get_profile.beta and user.get_profile.beta.invites > 0 %}
+                    <li class="invites">
+                        <a class="open-dialog" href="{% url beta.views.invite %}?next={{ request.path }}">
+                            {% blocktrans with user.get_profile.beta.invites as invites %}Invite friends ({{ invites }}){% endblocktrans %}
+                            <div class="arrow"></div>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <div class="create-look">
+                    <a class="open-dialog create-look" data-dialog-width="380" href="{{ look_create_url }}">{% trans "Create a look" %}</a>
+                </div>
+                <div class="friends-favorites">
+                    <a href="{% gender_url APPAREL_GENDER 'shop' %}#f=1">{% trans "Friends' Favorites" %}</a>
+                </div>
+                <div class="right logout">
+                    <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
+                </div>
+            </div><!-- holder -->
         </div>
     {% endif %}
 

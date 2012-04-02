@@ -42,6 +42,8 @@ button
   display: block
   border: none
   cursor: pointer
+  height: 100px
+  
 
 .clear
   clear: both
@@ -52,26 +54,47 @@ button
   top: 0
 
 #outer
-  width: 1016px
+  width: 100%
+  min-width: 1000px
+  @media and screen (min-width: 1212px)
+    min-width: 1212px
+  @media and screen (min-width: 1444px)
+    min-width: 1444px
+  @media and screen (min-width: 1676px)
+    min-width: 1676px
   margin: 0 auto
 
 #container
-  background: transparent image_url(unquote("content-bg.png")) scroll repeat-y center center
+  background: $white_color
   #inner-container
     width: 940px
-    margin-left: 18px
+    @media screen and (min-width: 1212px)
+      width: 940px + 232
+    @media screen and (min-width: 1444px)
+      width: 940px + 464
+    @media screen and (min-width: 1676px)
+      width: 940px + 696
     padding: 0 20px 20px 20px
     clear: both
     +pie-clearfix
     overflow: visible
 
 #header
-  background: transparent image_url(unquote("header-bg.png")) scroll no-repeat center center
+  background: #333333
   height: 118px
   position: relative
+  width: 100%
+  min-width: 1000px
+
   #inner-header
     width: 940px
-    margin-left: 38px
+    @media and screen (min-width: 1212px)
+      min-width: 1212px
+    @media and screen (min-width: 1444px)
+      min-width: 1444px
+    @media and screen (min-width: 1676px)
+      min-width: 1676px
+    margin-left: 20px
     position: relative
     overflow: visible
     h1
@@ -94,9 +117,8 @@ button
         text-transform: uppercase
         color: $easy_color
         padding: 2px 0
-        color: $white_color
         &:hover, &:active, &.selected
-          text-decoration: underline
+          color: $white_color
         &.left
           float: left
           +border(right, $easy_color)
@@ -104,8 +126,6 @@ button
         &.right
           float: right
           padding-left: 1em
-        &.selected
-          color: $white_color
     #nav-main
       font-family: $font_family
       font-size: 1.1em
@@ -120,10 +140,10 @@ button
           display: inline-block
           text-decoration: none
           text-transform: uppercase
-          color: $white_color
+          color: $easy_color
           padding: 6px 0
           &:hover, &:active, &.selected
-            text-decoration: underline
+            color: $white_color
     #nav-user
       font-family: $font_family
       position: absolute
@@ -225,7 +245,6 @@ button
           background-image: image_url(unquote("close-large-hover.png"))
 
 #footer
-  background: transparent image_url(unquote("footer-bg.png")) scroll no-repeat center center
   height: 124px
   #inner-footer
     width: 940px
@@ -253,14 +272,14 @@ button
 
 #login-pane
   clear: left
-  width: 980px
+  width: 100%
   height: 28px
   line-height: 28px
   background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x left top
   border: 1px solid $border_color
   border-left: none
   border-right: none
-  margin: 0 0 0 18px
+  margin: 0
   padding: 0
   div
     &.left
@@ -285,7 +304,9 @@ button
       float: right
       text-align: right
       margin-top: -1px
-      margin-right: $margin_width
+    &.holder
+      float: left
+      width: $page_width - 20px
     #logout
       display: inline-block
       color: $easy-color
@@ -534,17 +555,16 @@ ul.products
   overflow: visible
   li
     margin-right: $gutter_width / 2
-    margin-bottom: 10px
+    margin-bottom: 30px
     &.last
       margin-right: 0
     &:hover
       z-index: 100
-      +box-shadow
     .product-small
-      width: 93px
       margin: 0
       .product-image
         line-height: 124px
+        margin-bottom: 10px
     a
       &:hover
         text-decoration: none !important
@@ -556,6 +576,7 @@ ul.products
   h2
     font-family: $font_family
     clear: both
+    font-weight: bold
   p
     +border(top)
   .activity
@@ -660,6 +681,7 @@ $ruler_width: $slider_width
   #product-price
     #discount-price
       display: block
+      text-decoration: line-through
       padding-left: 15px
       background: transparent image_url(unquote("list-item-check.png")) no-repeat scroll left center
       &.selected
@@ -807,15 +829,19 @@ span, a
   &.likes
     +apparel_likes
   &.discount-price
+    padding-right: 8px
     +apparel_price
     color: $like_color
     padding-left: 0
   &.price
     +apparel_price
+    padding-left: 0
     &.discount
       color: $like_color
+    &.discounted
+      text-decoration: line-through
   &.price
-    background: transparent url(../images/check.png) no-repeat scroll 2px center
+    background: none
     &.sold-out
       background: transparent url(../images/out-circle.png) no-repeat scroll 2px center
   &.currency
@@ -825,6 +851,7 @@ span, a
   border: 1px solid #dadada
 
 #product-count
+  font-weight: bold
   a
     float: right
     background: transparent image_url("arrow-bg.png") scroll no-repeat right center
@@ -836,10 +863,16 @@ span, a
 
 div#product-list
   +border-bottom-radius(unquote("3px"))
-  width: $large_width - 1
+  width: $large_width
+  @media screen and (min-width: 1212px)
+    width: $large_width + 232px
+  @media screen and (min-width: 1444px)
+    width: $large_width + 464px
+  @media screen and (min-width: 1676px)
+    width: $large_width * 2
   div#product-infotext
     position: relative
-    width: $large_width - 1
+    width: $large_width
     height: 404px
     div#product-infotext-inner
       position: absolute
@@ -861,11 +894,9 @@ div#product-list
 
 div#product-list, .product-list
   +clearfix
-  +box
   position: relative
   ul.list
     +clearfix
-    width: $large_width + 1px
     li
       float: left
       +product_list_item
@@ -883,30 +914,33 @@ div#product-list, .product-list
       .product-small
         .product-image
           // The height is defined in the template product_small_content
-          height: 153px
+          height: 291px
+          margin: 0 0 10px
           img
-            height: 153px
-            width: 115px
+            height: 291px
+            width: 224px
+
+.brand-list .sidebar .product-small, .profile .sidebar .product-small
+  width: 93px
 
 #hover-products li
   z-index: 100
   display: none
   position: absolute
-  +box-shadow
 
 .product-small
-  width: 115px
-  +box
-  margin: -1px 0 0 -1px
+  width: 224px
+  margin: 0 8px 20px 0
   text-align: center
   h4
-    +border(top)
     height: 1.5em
     overflow: hidden
     font-family: $font_family
+    font-size: 1.1em
+    font-weight: bold
   .product-image
     border: none
-    background-color: white
+    background-color: #FFF
     position: relative
     line-height: 153px
     img
@@ -930,44 +964,49 @@ a.prev.disabled, a.next.disabled
 body.two-columns .pagination
   div
     width: $large_width - 2 * (115 + 2) + 1
-
 body.three-columns .pagination
   div
     width: $middle_width - 2 * (115 + 2)
 
 .pagination
   &#pagination-top, &#pagination-bottom
-    position: absolute
+    position: relative
     border-left: none
     border-right: none
   &#pagination-bottom
     border-bottom: none
     bottom: 0
+    margin: 0 auto
+    width: 506px
+    background: white
   &#pagination-top
     border-top: none
     top: 0
-  height: 30px
+    display: none
+  height: 57px
   background-color: $button_color
-  +border(all)
-  +border-bottom-radius(unquote("3px"))
   .prev, .next
     display: inline-block
-    width: 115px
-    height: 30px
+    width: 506px
+    height: 57px
   .prev
     float: left
     +replace-text(unquote("prev-page.png"), center, center)
     +border(right)
+    display: none
   .prev.disabled
     +replace-text(unquote("prev-page-disabled.png"), center, center)
+    display: none
   .next
-    float: right
-    +replace-text(unquote("next-page.png"), center, center)
-    +border(left)
+    float: left
+    +replace-text(unquote("more-btn.png"), top, center)
   .next.disabled
     +replace-text(unquote("next-page-disabled.png"), center, center)
+    display: none
   .next:hover, .prev:hover
-    background-color: $hover_color
+    background-position: 0 -57px
+  .next:active, .prev:active
+    background-position: 0 -114px
   .next.disabled:hover, .prev.disabled:hover
     background-color: inherit
   ol
@@ -976,7 +1015,7 @@ body.three-columns .pagination
       font-weight: bold
   div
     float: left
-    line-height: 30px
+    line-height: 57px
     margin: 0 auto
     ol
       text-align: center
@@ -1395,17 +1434,19 @@ body.product .product-image, body.look #content
     top: 0px
     right: 0px
     button
-      margin: 0
+      margin: 5px 0 0
       border: none
-      background: transparent image_url(unquote("like-medium.png")) no-repeat scroll center center
+      background: transparent image_url(unquote("heartbg.jpg")) no-repeat scroll top center
       font-family: $font_family
       color: $like_color
       text-transform: uppercase
-      padding-top: 30px
-      height: 42px
-      width: 56px
+      height: 35px
+      width: 32px
       cursor: pointer
       text-align: center
+      text-indent: -9999em
+      &:hover
+        background-position: bottom center
 
 .similar-product
   .product-photo
@@ -1662,17 +1703,16 @@ body.profile-small
 body.profile-likes
   .product-image
     img
-      width: 93px
 
 body.profile
   #profile-nav
     ul
       display: block
-      margin-left: $aside_width
+      margin-left: $aside_width + 36px
   .sidebar
     #profile-image
       position: relative
-      margin-top: -30px
+      margin-top: -41px
       width: 200px
       .avatar.large
         z-index: 1
@@ -1776,13 +1816,15 @@ ul.suggested-friends
 #profile-nav
   +clearfix
   position: relative
-  padding-top: 1em
+  padding: 1em 0
   ul
     +horizontal-list(0)
     display: inline
     z-index: 1
     position: relative
     li
+      min-width: 78px
+      text-align: center
       a
         display: block
         height: 26px
@@ -1793,12 +1835,8 @@ ul.suggested-friends
         border-style: solid
         border-color: #d9d9d9
         border-width: 1px 1px 1px 0
-        text-transform: uppercase
         background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x top left
-        &.last
-          +border-right-radius(3px)
         &.first
-          +border-left-radius(3px)
           border-width: 1px
         &.selected, &:hover
           background-image: image_url(unquote("profile-nav-bg-selected.png"))
@@ -2099,3 +2137,104 @@ body.settings
   p
     margin: 1em 0
     color: #333333
+
+#back-top
+  position: fixed
+  bottom: 30px
+  left: 30px
+  z-index: 100
+  a
+    width: 96px
+    display: block
+    color: white
+    text-decoration: none
+    font-weight: bold
+  span
+    width: 96px
+    height: 51px
+    display: table-cell
+    text-align: center
+    vertical-align: middle
+    background-image: image_url(unquote("upp-pil.png"))
+    background-position: top center
+    &:hover
+      background-position: bottom center
+
+#panel
+  background: #f6f6f6
+  display: block
+  width: 100%
+  min-width: 870px
+  overflow: hidden
+  border-bottom: 1px solid #E6E6E6
+
+#panelwrap
+  width: 870px
+  float: left
+  margin: 0 0 0 72px
+  .slide
+    margin: 0
+    padding: 0
+  .btn-slide
+    display: block
+    background: image_url(unquote("kryss.png")) no-repeat top left
+    height: 22px
+    width: 23px
+    float: right
+    margin: 19px 0 0
+    &:hover
+      background: image_url(unquote("kryss.png")) no-repeat top right
+  .active
+    background-position: right 0px
+  .connect-button
+    a
+      background: image_url(unquote("fb-btn.png")) no-repeat top center transparent
+      width: 281px
+      height: 38px
+      float: left
+      margin: 59px 0 0 40px
+      text-indent: -9999em
+      &:hover
+        background: image_url(unquote("fb-btn.png")) no-repeat bottom center transparent
+  .bild
+    float: left
+    width: 281px
+    height: 73px
+    margin: 20px 0 0 79px
+  h1
+    font-size: 4em
+    line-height: 38px
+  h3
+    color: #666
+    letter-spacing: 3px
+    font-weight: normal
+  .row-span
+    float: left
+    width: 385px
+    margin: 61px 0 43px 37px
+  .p-row
+    margin: 20px 0 0
+    font-size: 1.3em
+    text-align: left
+    float: left
+    line-height: 20px
+    strong
+      font-weight: bold
+  .rowrubbe
+    float: left
+    line-height: 1em
+    width: 375px
+    text-transform: none
+  p
+    text-align: center
+#login-fb
+  background: image_url(unquote("fb-bg.png")) no-repeat top center
+  float: right
+  width: 360px
+  height: 126px
+  margin: 61px 40px 0 20px
+
+.uiProfilePhotoSmall
+  height: 32px
+  margin-top: 6px
+  width: 32px

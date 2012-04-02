@@ -26,7 +26,7 @@
 
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}two-columns{% endblock body-classes %}
+{% block body-classes %}two-columns page-shop{% endblock body-classes %}
 
 {% block body %}
         <div class="sidebar">
@@ -44,5 +44,6 @@
             <div id="product-list" class="product-list">
                 {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination only %}
             </div>
+            <p id="back-top"><a href="#top"><span>{% blocktrans %} Till toppen {% endblocktrans %}</span></a></p>
         </div>
 {% endblock body %}

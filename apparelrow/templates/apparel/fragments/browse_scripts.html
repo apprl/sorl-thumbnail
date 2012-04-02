@@ -35,4 +35,23 @@
 
 </script>
 <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/browse.js" %}"></script>
-
+<script>
+$(document).ready(function(){
+	$("#back-top").hide();	
+	$(function () {
+		$(window).scroll(function () {
+			if ($(this).scrollTop() > 1500) {
+				$('#back-top').fadeIn();
+			} else {
+				$('#back-top').fadeOut();
+			}
+		});
+		$('#back-top a').click(function () {
+			$('body,html').animate({
+				scrollTop: 0
+			}, 400);
+			return false;
+		});
+	});
+});
+</script>
