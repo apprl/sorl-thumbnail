@@ -13,6 +13,7 @@ def exposed_settings(request):
         'GOOGLE_ANALYTICS_DOMAIN': django_settings.GOOGLE_ANALYTICS_DOMAIN,
         'SHORT_LANGUAGES': django_settings.SHORT_LANGUAGES,
         'CURRENT_DOMAIN': Site.objects.get_current().domain,
+        'FACEBOOK_APP_ID': django_settings.FACEBOOK_APP_ID
     }
 
 def next_redirects(request):

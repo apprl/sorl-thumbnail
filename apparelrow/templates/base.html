@@ -133,35 +133,33 @@
 
     <div id="container">
 
-<!-- Facebooktjoffan -->
-
-<div id="panel"><div id="panelwrap">
-                    <span class="row-span">
+        {% if not user.is_authenticated %} 
+        <div id="panel">
+            <div id="panelwrap">
+                <span class="row-span">
                     <h1 class="rowrubbe">Socialize!</h1>
                     <p class="p-row">
-                    {% blocktrans %} Now you can start to browse clothes, shoes & accessorie​s on the SHOP-page,​ or by using the search function on the top right.<br/><br/>
-You can make Apparelrow​​ even smarter and more personal by connecting​​ to your Facebook account. For example you can see what clothes your friends like and see what brands are the most popular in your network. {% endblocktrans %}
-</p>
-
-                    </span>
-                    <a class="btn-slide" href="#"></a>
-                    <script type="text/javascript">
-                    $(document).ready(function(){
-                    $(".btn-slide").click(function(){
-                    $("#panel").slideToggle("slow");
-                    $(this).toggleClass("active");
-                        }); 
+                    {% blocktrans %}Now you can start to browse clothes, shoes & accessories on the SHOP-page, or by using the search function on the top right.<br/><br/>You can make Apparelrow even smarter and more personal by connecting to your Facebook account. For example you can see what clothes your friends like and see what brands are the most popular in your network. {% endblocktrans %}
+                    </p>
+                </span>
+                <a class="btn-slide" href="#"></a>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $(".btn-slide").click(function() {
+                            $("#panel").slideToggle("slow");
+                            $(this).toggleClass("active");
+                        });
                     });
-                    </script>
-                    <div id="login-fb">
-                        {% apparel_facebook_button "facebook-hide.png" %}
-                    </div>
-                    <div class="bild">
-                        <div class="fb-facepile" data-max-rows="2" data-width="281" data-app-id="177090790853"></div>
-                    </div>
-</div></div>
-
-<!-- Facebooktjoffan -->
+                </script>
+                <div id="login-fb">
+                    {% apparel_facebook_button "facebook-hide.png" %}
+                </div>
+                <div class="bild">
+                    <div class="fb-facepile" data-max-rows="2" data-width="281" data-app-id="{{ FACEBOOK_APP_ID }}"></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
     {% if user.is_authenticated and user.get_profile %}
         {% url apparel.views.home as home_url %}
@@ -176,7 +174,7 @@ You can make Apparelrow​​ even smarter and more personal by connecting​​
         {% url profile-following user.username as url_following %}
 
         <div id="login-pane">
-        	<div class="holder">
+            <div class="holder">
                 <ul>
                     <li class="profile">
                         <a class="{% if request.path == url_updates or request.path == url_likes or request.path == url_looks or request.path == url_followers or request.path == url_following %} selected{% endif %}"href="{{ url_likes }}">
