@@ -169,7 +169,7 @@ def get_weekly_mail_content(gender, timeframe):
     count_looks = 0
     for look in week_looks + base_looks:
         if look.pk not in used_looks:
-            static_image = get_thumbnail(look.static_image, '278', crop='noop', modified=str(look.modified)).url
+            static_image = get_thumbnail(look.static_image, '278', crop='noop').url
             look_class = 'photo' if look.display_with_component == 'P' else 'collage'
             looks.append({
                 'class': look_class,

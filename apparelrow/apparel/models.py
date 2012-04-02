@@ -20,8 +20,7 @@ from apparel import cache
 from cStringIO import StringIO
 from PIL import Image
 from tagging.fields import TagField
-from sorl.thumbnail import ImageField
-from sorl.thumbnail import get_thumbnail
+from sorl.thumbnail import ImageField, get_thumbnail, delete as sorl_delete
 from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
@@ -459,7 +458,7 @@ class Look(models.Model):
         temp_handle.seek(0)
 
         if self.static_image:
-            self.static_image.delete(save=False)
+            sorl_delete(self.static_image)
 
         filename = '%s/static__%s.jpg' % (settings.APPAREL_LOOK_IMAGE_ROOT, self.slug)
         storage.default_storage.save(filename, ContentFile(temp_handle.read()))
