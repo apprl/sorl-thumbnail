@@ -268,13 +268,13 @@ class API(object):
 
         # No discount price is mapped but we can get it from the stored original price
         if self.vendorproduct.original_price and not self.dataset['product']['discount-price']:
-            decimal_type = None
+            decimal_type = decimal.Decimal('0.0')
             try:
                 decimal_type = decimal.Decimal(self.dataset['product']['price'])
             except:
                 pass
 
-            if decimal_type is not None and decimal_type > decimal.Decimal('0.0') and self.vendorproduct.original_currency == self.dataset['product']['currency'] and self.vendorproduct.original_price > decimal_type:
+            if decimal_type > decimal.Decimal('0.0') and self.vendorproduct.original_currency == self.dataset['product']['currency'] and self.vendorproduct.original_price > (decimal_type * decimal.Decimal('1.1')):
                 self.dataset['product']['discount-price'] = self.dataset['product']['price']
                 self.dataset['product']['price'] = self.vendorproduct.original_price
 
