@@ -241,8 +241,11 @@ def brand_list(request, gender=None):
 
     # Popular brands in your network with products
     popular_brands_in_network = []
+    user_ids = []
+    if request.user and request.user.is_authenticated():
+        user_ids.extend(Follow.objects.filter(user=request.user).values_list('object_id', flat=True))
     manufacturers = Product.valid_objects.filter(gender__in=[gender, 'U']) \
-                                         .filter(likes__user__in=Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) \
+                                         .filter(likes__user__in=user_ids) \
                                          .values_list('manufacturer', 'manufacturer__name') \
                                          .annotate(Count('manufacturer')) \
                                          .order_by('-popularity', '-date_added')[:10]
