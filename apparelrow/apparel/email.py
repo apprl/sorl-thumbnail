@@ -3,6 +3,9 @@ import logging
 import datetime
 import csv
 import StringIO
+import os
+import os.path
+import shutil
 
 from django.conf import settings
 from django.shortcuts import render_to_response
@@ -122,6 +125,10 @@ def get_weekly_mail_content(gender, timeframe):
     """
     Generates the weekly mail content based on gender and timeframe.
     """
+    # Make sure that the email image root is created
+    directory = os.path.join(settings.MEDIA_ROOT, settings.APPAREL_EMAIL_IMAGE_ROOT)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
     # Products
     product_names = []
@@ -169,12 +176,17 @@ def get_weekly_mail_content(gender, timeframe):
     count_looks = 0
     for look in week_looks + base_looks:
         if look.pk not in used_looks:
-            static_image = get_thumbnail(look.static_image, '278', crop='noop').url
+            # Generate a thumbnail of look static image and store it forever
+            static_image = get_thumbnail(look.static_image, '278', crop='noop')
+            static_email_image = os.path.join(settings.APPAREL_EMAIL_IMAGE_ROOT, '%s__%s' % (datetime.date.today(), os.path.basename(static_image.name)))
+            shutil.copyfile(os.path.join(settings.MEDIA_ROOT, static_image.name), os.path.join(settings.MEDIA_ROOT, static_email_image))
+            static_email_image = os.path.join(settings.MEDIA_URL, static_email_image)
+
             look_class = 'photo' if look.display_with_component == 'P' else 'collage'
             looks.append({
                 'class': look_class,
                 'url': ''.join(['http://', Site.objects.get_current().domain, look.get_absolute_url()]),
-                'image': ''.join(['http://', Site.objects.get_current().domain, static_image]),
+                'image': ''.join(['http://', Site.objects.get_current().domain, static_email_image]),
                 'name': look.title,
                 'user_url': ''.join(['http://', Site.objects.get_current().domain, look.user.get_absolute_url()]),
                 'user_name': look.user.get_profile().display_name,

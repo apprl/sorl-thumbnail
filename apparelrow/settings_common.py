@@ -264,6 +264,7 @@ APPAREL_MISC_IMAGE_ROOT = 'static/images'
 APPAREL_BACKGROUND_IMAGE_ROOT = 'static/images/background'
 APPAREL_PRODUCT_IMAGE_ROOT = 'static/products'
 APPAREL_LOOK_IMAGE_ROOT = 'static/looks'
+APPAREL_EMAIL_IMAGE_ROOT = 'static/email'
 APPAREL_LOGO_IMAGE_ROOT = 'static/logos'
 APPAREL_PROFILE_IMAGE_ROOT ='static/profile'
 APPAREL_LOOK_MAX_SIZE = 470
