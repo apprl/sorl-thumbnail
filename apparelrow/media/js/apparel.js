@@ -345,7 +345,12 @@ jQuery(document).ready(function() {
                 jQuery.post(element.attr('data-unlike-url'), function(data) {
                     if(data['success'] == true && pending) {
                         var likes = element.parents('.header').find('.likes');
-                        likes.text(parseInt(likes.text(), 10) - 1)
+                        var likes_count = parseInt(likes.text(), 10) - 1;
+                        if(likes_count <= 0) {
+                            likes.hide().text(likes_count);
+                        } else {
+                            likes.text(likes_count);
+                        }
                         element.removeClass('liked');
 
                         var likes = jQuery('.likes span.count');
@@ -359,7 +364,7 @@ jQuery(document).ready(function() {
                 jQuery.post(element.attr('data-like-url'), function(data) {
                     if(data['success'] == true && pending) {
                         var likes = element.parents('.header').find('.likes');
-                        likes.text(parseInt(likes.text(), 10) + 1)
+                        likes.show().text(parseInt(likes.text(), 10) + 1)
                         element.addClass('liked');
 
                         var likes = jQuery('.likes span.count');
@@ -388,8 +393,16 @@ jQuery(document).ready(function() {
                     if(json[0].liked == true) {
                         hover_element.find('.product-heart').addClass('liked');
                     }
-                    hover_element.find('.likes').text(json[0].likes);
-                    hover_element.find('.comments').text(json[0].comments);
+                    if(json[0].likes > 0) {
+                        hover_element.find('.likes').show().text(json[0].likes);
+                    } else {
+                        hover_element.find('.likes').hide();
+                    }
+                    if(json[0].comments > 0) {
+                        hover_element.find('.comments').show().text(json[0].comments);
+                    } else {
+                        hover_element.find('.comments').hide();
+                    }
                 });
             }
             jQuery('div.product-hover').hide();
