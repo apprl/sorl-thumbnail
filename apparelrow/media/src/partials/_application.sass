@@ -683,12 +683,10 @@ $ruler_width: $slider_width
   #product-price
     #discount-price
       display: block
-      text-decoration: line-through
       padding-left: 15px
       background: transparent image_url(unquote("list-item-check.png")) no-repeat scroll left center
       &.selected
         background-image: image_url(unquote("list-item-check-selected.png"))
-      //+filter(unquote("g"), unquote("list-item-check-selected.png"))
     #price-min, #price-max
       font-size: 0.85em
       padding-bottom: 5px
@@ -1800,7 +1798,6 @@ body.profile
       display: block
       margin-left: $aside_width + 36px
   .sidebar
-    margin-top: -41px
     #profile-image
       position: relative
       width: 200px
