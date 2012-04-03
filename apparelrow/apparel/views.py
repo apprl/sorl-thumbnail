@@ -105,21 +105,23 @@ def product_popup(request):
 
     content_type = ContentType.objects.get_for_model(Product)
     for product in product_ids:
-        product_result = {}
+        product_result = {'liked': False}
+        if request.user and request.user.is_authenticated():
+            product_result['liked'] = ProductLike.objects.filter(product=product, active=True, user=request.user).exists()
         product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
         product_result['comments'] = Comment.objects.filter(content_type=content_type, object_pk=product, is_removed=False, is_public=True).count()
-        product_result['users'] = []
+        #product_result['users'] = []
 
-        product_like_qs = ProductLike.objects.filter(product=product, active=True).order_by('-created')[:4]
+        #product_like_qs = ProductLike.objects.filter(product=product, active=True).order_by('-created')[:4]
         #comments_qs = Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_removed=False, is_public=True).order_by('-submit_date')[:4]
         #combined_result = product_like_qs + comments_qs
 
-        for product_like in product_like_qs:
-            product_result['users'].append({
-                'id': product_like.user.pk,
-                'name': product_like.user.get_profile().display_name,
-                'url': product_like.user.get_profile().get_absolute_url(),
-                'image': product_like.user.get_profile().avatar})
+        #for product_like in product_like_qs:
+            #product_result['users'].append({
+                #'id': product_like.user.pk,
+                #'name': product_like.user.get_profile().display_name,
+                #'url': product_like.user.get_profile().get_absolute_url(),
+                #'image': product_like.user.get_profile().avatar})
         result.append(product_result)
 
     return HttpResponse(json.dumps(result), mimetype='application/json')
@@ -138,6 +140,28 @@ def product_unlike(request):
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
+def product_action(request, pk, action):
+    """
+    Like or unlike a product through ajax.
+    """
+    if not request.user or not request.user.is_authenticated():
+        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')), mimetype='application/json')
+    if request.method == 'GET':
+        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), mimetype='application/json')
+    if action not in ['like', 'unlike']:
+        return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')), mimetype='application/json')
+
+    try:
+        product = Product.objects.get(pk=pk)
+    except Product.MultipleObjectsReturned, Product.DoesNotExist:
+        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
+
+    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
+    product_like.active = True if action == 'like' else False
+    product_like.save()
+
+    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
+
 @login_required
 def product_like(request, slug, action):
     """
@@ -146,7 +170,7 @@ def product_like(request, slug, action):
     if not request.user.is_authenticated():
         return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')), mimetype='application/json')
     if request.method == 'GET':
-        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), mimetype='application/json')
     if action not in ['like', 'unlike']:
         return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')), mimetype='application/json')
 

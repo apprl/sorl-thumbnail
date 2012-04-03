@@ -19,6 +19,7 @@
         google.load("jquery", "1.4.2");
         google.load("jqueryui", "1.8.0");
 
+        var product_popup_url = '{% url product-popup %}';
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         var isFirstTimeVisit = {% if user.is_authenticated and user.get_profile.first_visit %}true{% else %}false{% endif %};

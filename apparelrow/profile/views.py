@@ -65,7 +65,7 @@ def likes(request, profile, page=0):
     Displays the profile likes page.
     """
     form = handle_change_image(request, profile)
-    queryset = Product.objects.filter(likes__user=profile.user).order_by('-likes__modified')
+    queryset = Product.objects.filter(likes__user=profile.user, likes__active=True).order_by('-likes__modified')
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
 
     content = {

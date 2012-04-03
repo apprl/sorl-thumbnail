@@ -215,6 +215,24 @@ jQuery(document).ready(function() {
         jQuery('#product-manufacturers input[name=brand]').attr('value', value).keyup().focus();
     });
 
+    // product like
+    jQuery('div.product-medium a.heart').live('click', function() {
+        var element = jQuery(this);
+        if(element.hasClass('liked')) {
+            jQuery.post(element.attr('data-unlike-url'), function() {
+                var likes = element.parents('.header').find('.likes');
+                likes.text(parseInt(likes.text(), 10) - 1)
+                element.removeClass('liked');
+            });
+        } else {
+            jQuery.post(element.attr('data-like-url'), function() {
+                var likes = element.parents('.header').find('.likes');
+                likes.text(parseInt(likes.text(), 10) + 1)
+                element.addClass('liked');
+            });
+        }
+        return false;
+    });
 });
 
 /**

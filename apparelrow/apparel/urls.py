@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 
     # Products
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
+    url(r'^products/(?P<pk>[\d]+)/(?P<action>like|unlike)/?$', 'apparel.views.product_action', name='product-action'),
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list', name='product-look-list'),
     (r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.product_like'),

@@ -319,6 +319,31 @@ jQuery(document).ready(function() {
             jQuery(this).find('> a').removeClass('selected').end().find('.profile-hover-menu').hide();
         }
     });
+
+
+    // Product hover
+    jQuery('a.product-image').live('mouseenter', function() {
+        var element = jQuery(this);
+        var hover_element = element.siblings('div.product-hover');
+        var product_id = getElementId(element.closest('li'));
+        if(!element.data('complete')) {
+            jQuery.getJSON(product_popup_url + '?id=' + product_id, function(json) {
+                hover_element.find('.header').show();
+                if(json[0].liked == true) {
+                    hover_element.find('.heart').addClass('liked');
+                }
+                hover_element.find('.likes').text(json[0].likes);
+                hover_element.find('.comments').text(json[0].comments);
+            });
+        }
+        jQuery('div.product-hover').hide();
+        element.data('complete', true);
+        hover_element.show();
+    });
+    jQuery('div.product-hover').live('mouseleave', function() {
+        jQuery('div.product-hover').hide();
+    });
+
 });
 
 function getElementId(element, numeric) {

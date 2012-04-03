@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load mptt_tags %}
 {% load apparel_extras %}
-{% load cache %}
 
 {% block extra-title %}{% trans "Browse" %} | {% endblock %}
 
@@ -23,7 +21,6 @@
     <script type="text/javascript">
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
     </script>
-
 {% endblock 'extra-scripts' %}
 
 {% block body-classes %}two-columns page-shop{% endblock body-classes %}

@@ -7,31 +7,51 @@
 
 {% block 'extra-scripts' %}
     <script type="text/javascript">
-        {% url apparel.browse.browse_profile user.username as browse_likes_url %}
-        {% if request.path == browse_likes_url %}
-        var delete_link = '<a class="delete-wardrobe" title="{% trans "Unlike product" %}" href="">{% trans "Unlike product" %}</a>';
+        {% url profile-likes user.username as likes_url %}
+        {% if request.path == likes_url %}
         jQuery(document).ready(function() {
-            jQuery('#product-list ul.list li ul li').prepend(delete_link);
-            jQuery('#product-list').bind('post_browse_render', function() {
-                jQuery('ul.list li', jQuery(this)).prepend(delete_link);
-            });
+            console.log('here');
+            jQuery('div.product-medium a.heart').live('click', function() {
+                console.log('wtf');
+                var element = jQuery(this);
+                if(element.hasClass('liked')) {
+                    var elem = jQuery(this).closest('li');
+                    var title = elem.find('h4').text() + ' ' + elem.find('.product-image img').attr('alt');
 
-            jQuery('#product-list .delete-wardrobe').live('click', function(event) {
-                var elem = jQuery(this).parent();
-                var id = parseInt(elem.attr('id').split('-').pop(), 10);
-                var title = elem.find('h4').text() + ' ' + elem.find('.product-image img').attr('alt');
+                    create_modal_dialog(
+                        '{% trans "Are you sure?" %}',
+                        ['{% trans "Do you really want to delete product" %} <span class="bold">' + title + '</span>?'],
+                        function (modal_dialog) {
+                            jQuery.post(element.attr('data-unlike-url'), function(data) {
+                                if(data['success'] == true) { elem.remove(); modal_dialog.close(); }
+                            });
+                        },
+                        function (modal_dialog) { modal_dialog.close(); }
+                    );
 
-                create_modal_dialog(
-                    '{% trans "Are you sure?" %}',
-                    ['{% trans "Do you really want to delete product" %} <span class="bold">' + title + '</span>?'],
-                    function (modal_dialog) {
-                        jQuery.post('{% url apparel.views.product_unlike %}', {'product': id}, function(data, textStatus, req) {
-                            if(data['success'] == true) { elem.remove(); modal_dialog.close(); }
-                        });
-                    },
-                    function (modal_dialog) { modal_dialog.close(); }
-                );
+                }
                 event.preventDefault();
+                return false;
+            });
+        });
+        {% else %}
+        jQuery(document).ready(function() {
+            jQuery('div.product-medium a.heart').live('click', function() {
+                var element = jQuery(this);
+                if(element.hasClass('liked')) {
+                    jQuery.post(element.attr('data-unlike-url'), function() {
+                        var likes = element.parents('.header').find('.likes');
+                        likes.text(parseInt(likes.text(), 10) - 1)
+                        element.removeClass('liked');
+                    });
+                } else {
+                    jQuery.post(element.attr('data-like-url'), function() {
+                        var likes = element.parents('.header').find('.likes');
+                        likes.text(parseInt(likes.text(), 10) + 1)
+                        element.addClass('liked');
+                    });
+                }
+                return false;
             });
         });
         {% endif %}
@@ -42,8 +62,6 @@
 
 {% block extended_content %}
 <div id="content">
-    
-
     {% if current_page.paginator.count != 0 %}
     <div id="product-list" class="product-list">
         <ul class="list">
@@ -52,16 +70,16 @@
         {% endfor %}
         </ul>
     </div>
-        <div class="clear"></div>
+    <div class="clear"></div>
     {% else %}
-        <div class="wardrobe-empty">
-            {% url profile-likes request.user.username as profile_likes_url %}
-            {% if request.path == profile_likes_url %}
-                <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
-            {% else %}
-                <div class="message warning">{{ profile.display_name }} {% trans "does not have any products in the wardrobe right now." %}</div>
-            {% endif %}
-        </div>
+    <div class="wardrobe-empty">
+        {% url profile-likes request.user.username as profile_likes_url %}
+        {% if request.path == profile_likes_url %}
+            <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+        {% else %}
+            <div class="message warning">{{ profile.display_name }} {% trans "does not have any products in the wardrobe right now." %}</div>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 

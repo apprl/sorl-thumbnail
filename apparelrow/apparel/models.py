@@ -7,6 +7,8 @@ import datetime
 from django.db import models
 from django.db.models import Sum, Min
 from django.contrib.auth.models import User
+from django.contrib.comments.models import Comment
+from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
@@ -161,6 +163,9 @@ class Product(models.Model):
 
     def score(self):
         return ProductLike.objects.filter(product=self, active=True).count()
+
+    def comment_count(self):
+        return Comment.objects.filter(content_type=ContentType.objects.get_for_model(Product), object_pk=self, is_removed=False, is_public=True).count()
 
     @property
     def default_vendor(self):

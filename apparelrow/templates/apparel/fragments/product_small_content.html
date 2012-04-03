@@ -1,15 +1,26 @@
 {% load i18n %}
 {% load thumbnail %}
 <li id="product-{{ object.id }}">
-<a href="{{ object.get_absolute_url }}">
-<div class="product-small">
-    <div class="product-image">
+<div class="product-medium">
+    <a class="product-image" href="{{ object.get_absolute_url }}">
         {% thumbnail object.product_image "224" crop="noop" as im %}
-        <img src="{{ im.url }}" alt="{{ object.product_name }}">
+        <img src="{{ im.url }}" alt="{{ object.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}
-        <span class="likes">x</span>
+    </a>
+    <div class="product-hover">
+        <div class="header">
+            <a class="heart" href="#" data-like-url="{% url product-action object.id 'like' %}" data-unlike-url="{% url product-action object.id 'unlike' %}"></a>
+            <div class="right">
+                <div class="comments">0</div>
+                <div class="likes">0</div>
+            </div>
+        </div>
+        <div class="footer">
+            <a class="footer-button info" href="{{ object.get_absolute_url }}">More info</a>
+            <a class="footer-button buy" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}">Buy</a>
+        </div>
     </div>
-    <h4>{{ object.manufacturer }}</h4>
+    <h4><a href="{{ object.get_absolute_url }}">{{ object.manufacturer }}</a></h4>
     {% if not object.default_vendor or object.default_vendor.availability == 0 %}
     <span class="sold-out">SOLD OUT</span>
     {% else %}
@@ -21,5 +32,4 @@
         {% endif %}
     {% endif %}
 </div>
-</a>
 </li>

@@ -920,14 +920,90 @@ div#product-list, .product-list
         background: transparent image_url(unquote("delete-button-on-image.png")) no-repeat scroll center center
         &:hover
           background: transparent image_url(unquote("delete-button-on-image-hover.png")) no-repeat scroll center center
-      .product-small
+      .product-medium
+        width: 224px
+        margin: 0 8px 20px 0
+        text-align: center
         .product-image
+          border: none
+          display: block
           // The height is defined in the template product_small_content
           height: 291px
-          margin: 0 0 10px
+          line-height: 291px
           img
-            height: 291px
             width: 224px
+            vertical-align: middle
+        h4
+          height: 1.5em
+          overflow: hidden
+          font-family: $font_family
+          font-size: 1.1em
+          font-weight: bold
+          padding-top: 10px
+          a
+            display: block
+        .product-hover
+          display: none
+          position: absolute
+          top: 0
+          left: 0
+          width: 224px
+          height: 291px
+          background-image: image_url("hvbg.png")
+          .header
+            display: none
+            position: absolute
+            top: 0
+            width: 224px
+            height: 40px
+            .heart
+              display: block
+              margin: 10px 0 0 10px
+              float: left
+              width: 34px
+              height: 35px
+              background: image_url("heartbg.jpg") top
+              &:hover, &.liked
+                background: image_url("heartbg.jpg") bottom
+            .right
+              position: absolute
+              top: 10px
+              right: 10px
+              width: 165px
+              height: 25px
+              padding-top: 10px
+              .likes
+                min-width: 34px
+                min-height: 35px
+                background: image_url("heartico.png") no-repeat 0px 2px
+                padding-left: 18px
+                margin-right: 10px
+                float: right
+              .comments
+                min-width: 34px
+                min-height: 35px
+                background: image_url("commentico.png") no-repeat 0px 2px
+                padding-left: 18px
+                margin-right: 15px
+                float: right
+          .footer
+            position: absolute
+            bottom: 0
+            width: 224px
+            height: 47px
+            .footer-button
+              width: 95px
+              height: auto
+              padding: 10px 0
+              border: 1px solid black
+              background: magenta
+              text-align: center
+              &.info
+                margin-left: 10px
+                float: left
+              &.buy
+                margin-right: 10px
+                float: right
 
 .brand-list .sidebar .product-small, .profile .sidebar .product-small
   width: 93px
