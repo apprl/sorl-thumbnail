@@ -4,7 +4,7 @@
 <div class="product-medium">
     <a class="product-image" href="{{ object.get_absolute_url }}">
         {% thumbnail object.product_image "224" crop="noop" as im %}
-        <img src="{{ im.url }}" alt="{{ object.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
+        <img src="{{ im.url }}" alt="{{ object.product_name }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|margin:'224x291' }}">
         {% endthumbnail %}
     </a>
     <div class="product-hover">
