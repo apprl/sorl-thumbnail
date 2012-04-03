@@ -1022,20 +1022,14 @@ div#product-list, .product-list
               width: 165px
               height: 25px
               padding-top: 10px
+              .likes, .comments
+                float: right
+                padding-left: 18px
               .likes
-                min-width: 34px
-                min-height: 35px
                 background: image_url("heartico.png") no-repeat 0px 2px
-                padding-left: 18px
-                margin-right: 10px
-                float: right
+                margin-right: 5px
               .comments
-                min-width: 34px
-                min-height: 35px
                 background: image_url("commentico.png") no-repeat 0px 2px
-                padding-left: 18px
-                margin-right: 15px
-                float: right
           .footer
             position: absolute
             bottom: 0
@@ -1045,13 +1039,14 @@ div#product-list, .product-list
               width: 95px
               height: auto
               padding: 10px 0
-              border: 1px solid black
-              background: magenta
               text-align: center
+              text-transform: uppercase
               &.info
+                +button(none, 16px, 0)
                 margin-left: 10px
                 float: left
               &.buy
+                +highlight_button(16px, 0)
                 margin-right: 10px
                 float: right
 
