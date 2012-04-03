@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-27 13:17+0200\n"
+"POT-Creation-Date: 2012-04-03 20:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,94 +16,166 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: media/js/apparel.1327592246.js:567 media/js/apparel.1330712141.js:567
-#: media/js/apparel.1330712150.js:567 media/js/apparel.1330934728.js:567
-#: media/js/apparel.1331149855.js:567 media/js/apparel.1331672515.js:567
-#: media/js/apparel.1331721737.js:567 media/js/apparel.1331975508.js:567
-#: media/js/apparel.1331993025.js:567 media/js/apparel.js:567
+#: media/js/apparel.1327592246.js:316 media/js/apparel.1330712141.js:316
+#: media/js/apparel.1330712150.js:316 media/js/apparel.1330934728.js:316
+#: media/js/apparel.1331149855.js:316 media/js/apparel.1331672515.js:316
+#: media/js/apparel.1331721737.js:316 media/js/apparel.1331975508.js:316
+#: media/js/apparel.1333371283.js:316 media/js/apparel.1333447486.js:316
+#: media/js/apparel.1333448813.js:316 media/js/apparel.1333456889.js:316
+#: media/js/apparel.1333457847.js:316 media/js/apparel.1333477983.js:316
+#: media/js/apparel.1333478776.js:316 media/js/apparel.js:316
+msgid "Like a product to save it to your profile"
+msgstr "Gilla en produkt för att spara den till din profil"
+
+# "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+#: media/js/apparel.1327592246.js:371 media/js/apparel.1330712141.js:371
+#: media/js/apparel.1330712150.js:371 media/js/apparel.1330934728.js:371
+#: media/js/apparel.1331149855.js:371 media/js/apparel.1331672515.js:371
+#: media/js/apparel.1331721737.js:371 media/js/apparel.1331975508.js:371
+#: media/js/apparel.1333371283.js:371 media/js/apparel.1333447486.js:371
+#: media/js/apparel.1333448813.js:371 media/js/apparel.1333456889.js:371
+#: media/js/apparel.1333457847.js:371 media/js/apparel.1333477983.js:371
+#: media/js/apparel.1333478776.js:371 media/js/apparel.js:371
+msgid "More info"
+msgstr "Mer info"
+
+#: media/js/apparel.1327592246.js:372 media/js/apparel.1330712141.js:372
+#: media/js/apparel.1330712150.js:372 media/js/apparel.1330934728.js:372
+#: media/js/apparel.1331149855.js:372 media/js/apparel.1331672515.js:372
+#: media/js/apparel.1331721737.js:372 media/js/apparel.1331975508.js:372
+#: media/js/apparel.1333371283.js:372 media/js/apparel.1333447486.js:372
+#: media/js/apparel.1333448813.js:372 media/js/apparel.1333456889.js:372
+#: media/js/apparel.1333457847.js:372 media/js/apparel.1333477983.js:372
+#: media/js/apparel.1333478776.js:372 media/js/apparel.js:372
+msgid "Buy"
+msgstr "Köp"
+
+#: media/js/apparel.1327592246.js:647 media/js/apparel.1330712141.js:647
+#: media/js/apparel.1330712150.js:647 media/js/apparel.1330934728.js:647
+#: media/js/apparel.1331149855.js:647 media/js/apparel.1331672515.js:647
+#: media/js/apparel.1331721737.js:647 media/js/apparel.1331975508.js:647
+#: media/js/apparel.1333371283.js:647 media/js/apparel.1333447486.js:647
+#: media/js/apparel.1333448813.js:647 media/js/apparel.1333456889.js:647
+#: media/js/apparel.1333457847.js:647 media/js/apparel.1333477983.js:647
+#: media/js/apparel.1333478776.js:647 media/js/apparel.js:647
 msgid "Found %(count)s product"
 msgid_plural "Found %(count)s products"
 msgstr[0] "%(count)s träff bland plagg"
 msgstr[1] "%(count)s träffar bland plagg"
 
-#: media/js/apparel.1327592246.js:568 media/js/apparel.1330712141.js:568
-#: media/js/apparel.1330712150.js:568 media/js/apparel.1330934728.js:568
-#: media/js/apparel.1331149855.js:568 media/js/apparel.1331672515.js:568
-#: media/js/apparel.1331721737.js:568 media/js/apparel.1331975508.js:568
-#: media/js/apparel.1331993025.js:568 media/js/apparel.js:568
+#: media/js/apparel.1327592246.js:648 media/js/apparel.1330712141.js:648
+#: media/js/apparel.1330712150.js:648 media/js/apparel.1330934728.js:648
+#: media/js/apparel.1331149855.js:648 media/js/apparel.1331672515.js:648
+#: media/js/apparel.1331721737.js:648 media/js/apparel.1331975508.js:648
+#: media/js/apparel.1333371283.js:648 media/js/apparel.1333447486.js:648
+#: media/js/apparel.1333448813.js:648 media/js/apparel.1333456889.js:648
+#: media/js/apparel.1333457847.js:648 media/js/apparel.1333477983.js:648
+#: media/js/apparel.1333478776.js:648 media/js/apparel.js:648
 msgid "Found %(count)s look"
 msgid_plural "Found %(count)s looks"
 msgstr[0] "%(count)s träff bland looks"
 msgstr[1] "%(count)s träffar bland looks"
 
-#: media/js/apparel.1327592246.js:569 media/js/apparel.1330712141.js:569
-#: media/js/apparel.1330712150.js:569 media/js/apparel.1330934728.js:569
-#: media/js/apparel.1331149855.js:569 media/js/apparel.1331672515.js:569
-#: media/js/apparel.1331721737.js:569 media/js/apparel.1331975508.js:569
-#: media/js/apparel.1331993025.js:569 media/js/apparel.js:569
+#: media/js/apparel.1327592246.js:649 media/js/apparel.1330712141.js:649
+#: media/js/apparel.1330712150.js:649 media/js/apparel.1330934728.js:649
+#: media/js/apparel.1331149855.js:649 media/js/apparel.1331672515.js:649
+#: media/js/apparel.1331721737.js:649 media/js/apparel.1331975508.js:649
+#: media/js/apparel.1333371283.js:649 media/js/apparel.1333447486.js:649
+#: media/js/apparel.1333448813.js:649 media/js/apparel.1333456889.js:649
+#: media/js/apparel.1333457847.js:649 media/js/apparel.1333477983.js:649
+#: media/js/apparel.1333478776.js:649 media/js/apparel.js:649
 msgid "Found %(count)s matching brand"
 msgid_plural "Found %(count)s matching brands"
 msgstr[0] "%(count)s träff bland varumärken"
 msgstr[1] "%(count)s träffar bland varumärken"
 
-#: media/js/apparel.1327592246.js:570 media/js/apparel.1330712141.js:570
-#: media/js/apparel.1330712150.js:570 media/js/apparel.1330934728.js:570
-#: media/js/apparel.1331149855.js:570 media/js/apparel.1331672515.js:570
-#: media/js/apparel.1331721737.js:570 media/js/apparel.1331975508.js:570
-#: media/js/apparel.1331993025.js:570 media/js/apparel.js:570
+#: media/js/apparel.1327592246.js:650 media/js/apparel.1330712141.js:650
+#: media/js/apparel.1330712150.js:650 media/js/apparel.1330934728.js:650
+#: media/js/apparel.1331149855.js:650 media/js/apparel.1331672515.js:650
+#: media/js/apparel.1331721737.js:650 media/js/apparel.1331975508.js:650
+#: media/js/apparel.1333371283.js:650 media/js/apparel.1333447486.js:650
+#: media/js/apparel.1333448813.js:650 media/js/apparel.1333456889.js:650
+#: media/js/apparel.1333457847.js:650 media/js/apparel.1333477983.js:650
+#: media/js/apparel.1333478776.js:650 media/js/apparel.js:650
 msgid "Show %(count)s product"
 msgid_plural "Show all %(count)s products"
 msgstr[0] "Visa %(count)s plagg"
 msgstr[1] "Visa alla %(count)s plagg"
 
-#: media/js/apparel.1327592246.js:571 media/js/apparel.1330712141.js:571
-#: media/js/apparel.1330712150.js:571 media/js/apparel.1330934728.js:571
-#: media/js/apparel.1331149855.js:571 media/js/apparel.1331672515.js:571
-#: media/js/apparel.1331721737.js:571 media/js/apparel.1331975508.js:571
-#: media/js/apparel.1331993025.js:571 media/js/apparel.js:571
+#: media/js/apparel.1327592246.js:651 media/js/apparel.1330712141.js:651
+#: media/js/apparel.1330712150.js:651 media/js/apparel.1330934728.js:651
+#: media/js/apparel.1331149855.js:651 media/js/apparel.1331672515.js:651
+#: media/js/apparel.1331721737.js:651 media/js/apparel.1331975508.js:651
+#: media/js/apparel.1333371283.js:651 media/js/apparel.1333447486.js:651
+#: media/js/apparel.1333448813.js:651 media/js/apparel.1333456889.js:651
+#: media/js/apparel.1333457847.js:651 media/js/apparel.1333477983.js:651
+#: media/js/apparel.1333478776.js:651 media/js/apparel.js:651
 msgid "Show %(count)s look"
 msgid_plural "Show all %(count)s looks"
 msgstr[0] "Visa %(count)s look"
 msgstr[1] "Visa alla %(count)s looks"
 
-#: media/js/apparel.1327592246.js:572 media/js/apparel.1330712141.js:572
-#: media/js/apparel.1330712150.js:572 media/js/apparel.1330934728.js:572
-#: media/js/apparel.1331149855.js:572 media/js/apparel.1331672515.js:572
-#: media/js/apparel.1331721737.js:572 media/js/apparel.1331975508.js:572
-#: media/js/apparel.1331993025.js:572 media/js/apparel.js:572
+#: media/js/apparel.1327592246.js:652 media/js/apparel.1330712141.js:652
+#: media/js/apparel.1330712150.js:652 media/js/apparel.1330934728.js:652
+#: media/js/apparel.1331149855.js:652 media/js/apparel.1331672515.js:652
+#: media/js/apparel.1331721737.js:652 media/js/apparel.1331975508.js:652
+#: media/js/apparel.1333371283.js:652 media/js/apparel.1333447486.js:652
+#: media/js/apparel.1333448813.js:652 media/js/apparel.1333456889.js:652
+#: media/js/apparel.1333457847.js:652 media/js/apparel.1333477983.js:652
+#: media/js/apparel.1333478776.js:652 media/js/apparel.js:652
 msgid "Show %(count)s matching brand"
 msgid_plural "Show all %(count)s matching brands"
 msgstr[0] "Visa %(count)s varumärke"
 msgstr[1] "Visa alla %(count)s varumärken"
 
-#: media/js/apparel.1327592246.js:573 media/js/apparel.1330712141.js:573
-#: media/js/apparel.1330712150.js:573 media/js/apparel.1330934728.js:573
-#: media/js/apparel.1331149855.js:573 media/js/apparel.1331672515.js:573
-#: media/js/apparel.1331721737.js:573 media/js/apparel.1331975508.js:573
-#: media/js/apparel.1331993025.js:573 media/js/apparel.js:573
-#: media/js/browse.1326639937.js:591 media/js/browse.1330590039.js:591
-#: media/js/browse.1330592114.js:591 media/js/browse.1331049292.js:591
-#: media/js/browse.1331138988.js:591 media/js/browse.1331149855.js:591
-#: media/js/browse.1332846569.js:591 media/js/browse.js:591
+#: media/js/apparel.1327592246.js:653 media/js/apparel.1330712141.js:653
+#: media/js/apparel.1330712150.js:653 media/js/apparel.1330934728.js:653
+#: media/js/apparel.1331149855.js:653 media/js/apparel.1331672515.js:653
+#: media/js/apparel.1331721737.js:653 media/js/apparel.1331975508.js:653
+#: media/js/apparel.1333371283.js:653 media/js/apparel.1333447486.js:653
+#: media/js/apparel.1333448813.js:653 media/js/apparel.1333456889.js:653
+#: media/js/apparel.1333457847.js:653 media/js/apparel.1333477983.js:653
+#: media/js/apparel.1333478776.js:653 media/js/apparel.js:653
+#: media/js/browse.1326639937.js:467 media/js/browse.1330590039.js:467
+#: media/js/browse.1330592114.js:467 media/js/browse.1331049292.js:467
+#: media/js/browse.1331138988.js:467 media/js/browse.1331149855.js:467
+#: media/js/browse.1332846569.js:467 media/js/browse.1332847113.js:467
+#: media/js/browse.1332953079.js:467 media/js/browse.1333437057.js:467
+#: media/js/browse.1333437074.js:467 media/js/browse.1333437677.js:467
+#: media/js/browse.1333440846.js:467 media/js/browse.1333441143.js:467
+#: media/js/browse.1333441676.js:467 media/js/browse.1333447076.js:467
+#: media/js/browse.1333448827.js:467 media/js/browse.1333453294.js:467
+#: media/js/browse.js:467
 #, perl-format
 msgid "%s product"
 msgid_plural "%s products"
 msgstr[0] "%s produkt"
 msgstr[1] "%s produkter"
 
-#: media/js/browse.1326639937.js:568 media/js/browse.1330590039.js:568
-#: media/js/browse.1330592114.js:568 media/js/browse.1331049292.js:568
-#: media/js/browse.1331138988.js:568 media/js/browse.1331149855.js:568
-#: media/js/browse.1332846569.js:568 media/js/browse.js:568
+#: media/js/browse.1326639937.js:451 media/js/browse.1330590039.js:451
+#: media/js/browse.1330592114.js:451 media/js/browse.1331049292.js:451
+#: media/js/browse.1331138988.js:451 media/js/browse.1331149855.js:451
+#: media/js/browse.1332846569.js:451 media/js/browse.1332847113.js:451
+#: media/js/browse.1332953079.js:451 media/js/browse.1333437057.js:451
+#: media/js/browse.1333437074.js:451 media/js/browse.1333437677.js:451
+#: media/js/browse.1333440846.js:451 media/js/browse.1333441143.js:451
+#: media/js/browse.1333441676.js:451 media/js/browse.1333447076.js:451
+#: media/js/browse.1333448827.js:451 media/js/browse.1333453294.js:451
+#: media/js/browse.js:451
 msgid "SOLD OUT"
 msgstr "SLUT"
 
-#: media/js/browse.1326639937.js:583 media/js/browse.1330590039.js:583
-#: media/js/browse.1330592114.js:583 media/js/browse.1331049292.js:583
-#: media/js/browse.1331138988.js:583 media/js/browse.1331149855.js:583
-#: media/js/browse.1332846569.js:583 media/js/browse.js:583
+#: media/js/browse.1326639937.js:459 media/js/browse.1330590039.js:459
+#: media/js/browse.1330592114.js:459 media/js/browse.1331049292.js:459
+#: media/js/browse.1331138988.js:459 media/js/browse.1331149855.js:459
+#: media/js/browse.1332846569.js:459 media/js/browse.1332847113.js:459
+#: media/js/browse.1332953079.js:459 media/js/browse.1333437057.js:459
+#: media/js/browse.1333437074.js:459 media/js/browse.1333437677.js:459
+#: media/js/browse.1333440846.js:459 media/js/browse.1333441143.js:459
+#: media/js/browse.1333441676.js:459 media/js/browse.1333447076.js:459
+#: media/js/browse.1333448827.js:459 media/js/browse.1333453294.js:459
+#: media/js/browse.js:459
 #, perl-format
 msgid "%s product on sale"
 msgid_plural "%s products on sale"

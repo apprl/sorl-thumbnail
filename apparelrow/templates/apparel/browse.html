@@ -18,9 +18,6 @@
 {% endblock 'extra-styles' %}
 {% block 'extra-scripts' %}
     {% include 'apparel/fragments/browse_scripts.html' %}
-    <script type="text/javascript">
-        var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
-    </script>
 {% endblock 'extra-scripts' %}
 
 {% block body-classes %}two-columns page-shop{% endblock body-classes %}

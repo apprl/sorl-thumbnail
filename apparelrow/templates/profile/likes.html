@@ -10,9 +10,7 @@
         {% url profile-likes user.username as likes_url %}
         {% if request.path == likes_url %}
         jQuery(document).ready(function() {
-            console.log('here');
-            jQuery('div.product-medium a.heart').live('click', function() {
-                console.log('wtf');
+            jQuery('a.product-heart').live('click', function() {
                 var element = jQuery(this);
                 if(element.hasClass('liked')) {
                     var elem = jQuery(this).closest('li');
@@ -31,26 +29,6 @@
 
                 }
                 event.preventDefault();
-                return false;
-            });
-        });
-        {% else %}
-        jQuery(document).ready(function() {
-            jQuery('div.product-medium a.heart').live('click', function() {
-                var element = jQuery(this);
-                if(element.hasClass('liked')) {
-                    jQuery.post(element.attr('data-unlike-url'), function() {
-                        var likes = element.parents('.header').find('.likes');
-                        likes.text(parseInt(likes.text(), 10) - 1)
-                        element.removeClass('liked');
-                    });
-                } else {
-                    jQuery.post(element.attr('data-like-url'), function() {
-                        var likes = element.parents('.header').find('.likes');
-                        likes.text(parseInt(likes.text(), 10) + 1)
-                        element.addClass('liked');
-                    });
-                }
                 return false;
             });
         });

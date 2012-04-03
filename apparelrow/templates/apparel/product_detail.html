@@ -17,7 +17,7 @@
 {% block 'extra-scripts' %}
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            jQuery('.product-image').mouseenter(function() {
+            jQuery('.product-image img').mouseenter(function() {
                 jQuery(this).find('.magnifier').fadeIn('slow');
                 return false;
             }).mouseleave(function() {
@@ -28,7 +28,7 @@
 
             // Gallery overlay
             var gallery_overlay = false;
-            jQuery('.product-image a').click(function(event) {
+            jQuery('.product-image img').click(function(event) {
                 gallery_overlay = true;
                 jQuery('#gallery-container').show();
                 return false;
@@ -167,14 +167,9 @@
         <div class="product-left">
             <div class="product-image">
                 {% thumbnail object.product_image "328" upscale=False crop="noop" as im %}
-                <a href="{{ object.product_image.url }}" title="{{ object.manufacturer }} - {{ object.product_name }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" /></a>
+                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" />
                 {% endthumbnail %}
-                {% url apparel.views.product_like object.slug 'like' as like_url %}
-                {% url apparel.views.product_like object.slug 'unlike' as unlike_url %}
-                {% url dialog-like-product as dialog_url %}
-                {% with user|likes_product:object as is_liked %}
-                {% include 'apparel/fragments/like_button.html' %}
-                {% endwith %}
+                <a class="product-heart{% if user|likes_product:object %} liked{% endif %}" href="#" data-like-url="{% url product-action object.id 'like' %}" data-unlike-url="{% url product-action object.id 'unlike' %}"></a>
             </div>
             <div id="gallery-container">
                 <div id="gallery">

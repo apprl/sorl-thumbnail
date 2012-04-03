@@ -65,6 +65,7 @@ class ApparelProfile(models.Model):
     def get_looks_url(self):
         return ('looks_by_user', [str(self.user.username)])
 
+    # XXX: make this a real column on the model?
     @property
     def has_liked(self):
         """User has liked"""

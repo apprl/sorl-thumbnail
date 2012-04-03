@@ -19,6 +19,8 @@
         google.load("jquery", "1.4.2");
         google.load("jqueryui", "1.8.0");
 
+        var hasLiked = {% if user.is_authenticated and user.get_profile.has_liked %}true{% else %}false{% endif %};
+        var dialog_like_product = '{% url dialog-like-product %}';
         var product_popup_url = '{% url product-popup %}';
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
@@ -121,7 +123,7 @@
         <div id="inner-search-result">
             <div class="wide result-container">
                 <h2 class="search-result-products">{% trans "Matching products" %}</h2>
-                <div class="product-list"><ul id="search-result-products"></ul></div>
+                <div class="product-list"><ul id="search-result-products" class="list"></ul></div>
             </div>
             <div class="result-container">
                 <h2 class="search-result-looks">{% trans "Matching looks" %}</h2>
@@ -137,7 +139,6 @@
                 <div class="last result-container"><a class="search-result-manufacturers" href="#">{% trans "Show all manufacturers" %}</a></div>
             </div>
         </div>
-        <div id="search-footer"></div>
     </div>
 
     <div id="container">

@@ -320,25 +320,82 @@ jQuery(document).ready(function() {
         }
     });
 
+    // Product like
+    jQuery('a.product-heart').live('mouseenter', function() {
+        if(isAuthenticated == true && hasLiked == false) {
+            var element = jQuery(this);
+            if(element.children().length == 0) {
+                element.append('<a href="#" class="product-heart-tooltip"><span>' + gettext('Like a product to save it to your profile') + '</span></a>');
+            } else {
+                element.children().show();
+            }
+        }
+    }).live('mouseleave', function() {
+        jQuery(this).children().hide();
+    });
+
+    var pending = false;
+    jQuery('a.product-heart').live('click', function() {
+        if(isAuthenticated == false) {
+            create_html_dialog(dialog_like_product);
+        } else {
+            var element = jQuery(this);
+            if(element.hasClass('liked')) {
+                pending = true;
+                jQuery.post(element.attr('data-unlike-url'), function(data) {
+                    if(data['success'] == true && pending) {
+                        var likes = element.parents('.header').find('.likes');
+                        likes.text(parseInt(likes.text(), 10) - 1)
+                        element.removeClass('liked');
+
+                        var likes = jQuery('.likes span.count');
+                        likes.text(parseInt(likes.text(), 10) - 1);
+
+                        pending = false;
+                    }
+                });
+            } else {
+                pending = true;
+                jQuery.post(element.attr('data-like-url'), function(data) {
+                    if(data['success'] == true && pending) {
+                        var likes = element.parents('.header').find('.likes');
+                        likes.text(parseInt(likes.text(), 10) + 1)
+                        element.addClass('liked');
+
+                        var likes = jQuery('.likes span.count');
+                        likes.text(parseInt(likes.text(), 10) + 1);
+
+                        pending = false;
+                    }
+                });
+            }
+            hasLiked = true;
+        }
+        return false;
+    });
 
     // Product hover
     jQuery('a.product-image').live('mouseenter', function() {
         var element = jQuery(this);
-        var hover_element = element.siblings('div.product-hover');
-        var product_id = getElementId(element.closest('li'));
-        if(!element.data('complete')) {
-            jQuery.getJSON(product_popup_url + '?id=' + product_id, function(json) {
-                hover_element.find('.header').show();
-                if(json[0].liked == true) {
-                    hover_element.find('.heart').addClass('liked');
-                }
-                hover_element.find('.likes').text(json[0].likes);
-                hover_element.find('.comments').text(json[0].comments);
-            });
+        if(element.parents('#search-result-products').length == 0) {
+            var hover_element = element.siblings('div.product-hover');
+            var product_id = getElementId(element.closest('li'));
+            if(!element.data('complete')) {
+                hover_element.find('.info').text(gettext('More info'));
+                hover_element.find('.buy').text(gettext('Buy'));
+                jQuery.getJSON(product_popup_url + '?id=' + product_id, function(json) {
+                    hover_element.find('.header').show();
+                    if(json[0].liked == true) {
+                        hover_element.find('.product-heart').addClass('liked');
+                    }
+                    hover_element.find('.likes').text(json[0].likes);
+                    hover_element.find('.comments').text(json[0].comments);
+                });
+            }
+            jQuery('div.product-hover').hide();
+            element.data('complete', true);   
+            hover_element.show();
         }
-        jQuery('div.product-hover').hide();
-        element.data('complete', true);
-        hover_element.show();
     });
     jQuery('div.product-hover').live('mouseleave', function() {
         jQuery('div.product-hover').hide();
