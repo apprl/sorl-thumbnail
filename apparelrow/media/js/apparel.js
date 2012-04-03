@@ -383,7 +383,7 @@ jQuery(document).ready(function() {
     jQuery('a.product-image').live('mouseenter', function() {
         var element = jQuery(this);
         if(element.parents('#search-result-products').length == 0) {
-            var hover_element = element.siblings('div.product-hover');
+            var hover_element = element.siblings('.product-hover');
             var product_id = getElementId(element.closest('li'));
             if(!element.data('complete')) {
                 hover_element.find('.info').text(gettext('More info'));
@@ -405,13 +405,15 @@ jQuery(document).ready(function() {
                     }
                 });
             }
-            jQuery('div.product-hover').hide();
+            jQuery('.product-hover').hide();
             element.data('complete', true);   
             hover_element.show();
         }
     });
-    jQuery('div.product-hover').live('mouseleave', function() {
-        jQuery('div.product-hover').hide();
+    jQuery('.product-hover').live('mouseleave', function() {
+        jQuery('.product-hover').hide();
+    }).live('click', function() {
+        window.location.href = jQuery(this).siblings('.product-image').attr('href');
     });
 
 });
