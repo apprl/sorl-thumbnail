@@ -45,11 +45,13 @@
     
 
     {% if current_page.paginator.count != 0 %}
-        <ul class="products">
+    <div id="product-list" class="product-list">
+        <ul class="list">
         {% for object in current_page.object_list %}
             {% include 'apparel/fragments/product_small.html' %}
         {% endfor %}
         </ul>
+    </div>
         <div class="clear"></div>
     {% else %}
         <div class="wardrobe-empty">

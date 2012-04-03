@@ -14,6 +14,8 @@ li
   list-style: none
   margin: 0
   padding: 0
+  .profile &
+    float: left
 
 input, textarea
   outline: none
@@ -42,7 +44,7 @@ button
   display: block
   border: none
   cursor: pointer
-  height: 100px
+/*  height: 100px */
   
 
 .clear
@@ -68,13 +70,13 @@ button
   background: $white_color
   #inner-container
     width: 940px
+    padding: 0 0 20px 20px
     @media screen and (min-width: 1212px)
       width: 940px + 232
     @media screen and (min-width: 1444px)
       width: 940px + 464
     @media screen and (min-width: 1676px)
       width: 940px + 696
-    padding: 0 20px 20px 20px
     clear: both
     +pie-clearfix
     overflow: visible
@@ -88,12 +90,12 @@ button
 
   #inner-header
     width: 940px
-    @media and screen (min-width: 1212px)
-      min-width: 1212px
-    @media and screen (min-width: 1444px)
-      min-width: 1444px
-    @media and screen (min-width: 1676px)
-      min-width: 1676px
+    @media screen and (min-width: 1212px)
+      width: 940px + 232
+    @media screen and (min-width: 1444px)
+      width: 940px + 464
+    @media screen and (min-width: 1676px)
+      width: 940px + 696
     margin-left: 20px
     position: relative
     overflow: visible
@@ -847,6 +849,13 @@ span, a
   &.currency
     padding: 0 2px
 
+.profile
+  .sidebar
+    span
+      &.price
+        &.discounted
+          display: none
+
 .product-photo
   border: 1px solid #dadada
 
@@ -922,6 +931,10 @@ div#product-list, .product-list
 
 .brand-list .sidebar .product-small, .profile .sidebar .product-small
   width: 93px
+  & h4
+    font-size: 0.9em
+    word-wrap: break-word
+    text-align: left
 
 #hover-products li
   z-index: 100
@@ -1683,8 +1696,9 @@ p.large_follow
     a.follow, a.unfollow
       line-height: 6px
       padding: 1em
-      background-position: 8px center
-      padding-left: 24px
+      background-position: 90% center
+      padding-right: 24px
+      text-align: center
       span
         display: inline
   .following .unfollow, .not_following .follow
@@ -1710,9 +1724,9 @@ body.profile
       display: block
       margin-left: $aside_width + 36px
   .sidebar
+    margin-top: -41px
     #profile-image
       position: relative
-      margin-top: -41px
       width: 200px
       .avatar.large
         z-index: 1
@@ -2192,7 +2206,7 @@ body.settings
       width: 281px
       height: 38px
       float: left
-      margin: 59px 0 0 40px
+      margin: 19px 0 0 40px
       text-indent: -9999em
       &:hover
         background: image_url(unquote("fb-btn.png")) no-repeat bottom center transparent
@@ -2233,8 +2247,3 @@ body.settings
   width: 360px
   height: 126px
   margin: 61px 40px 0 20px
-
-.uiProfilePhotoSmall
-  height: 32px
-  margin-top: 6px
-  width: 32px

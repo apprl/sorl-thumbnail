@@ -150,7 +150,16 @@
                     </p>
                 </span>
                 <a class="btn-slide ar_welcome" href="#"></a>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        $(".btn-slide").click(function(){
+                            $("#panel").slideToggle("slow");
+                            $(this).toggleClass("active");
+                        }); 
+                    });
+                </script>
                 <div id="login-fb">
+                    <p class="lifc">{% blocktrans %}Life is <em>funner</em> connected{% endblocktrans %}</p>
                     {% apparel_facebook_button "facebook-hide.png" %}
                 </div>
                 <div class="bild">
@@ -324,3 +333,4 @@
 </script>
 </body>
 </html>
+

@@ -3,7 +3,6 @@
 
 {% block body-classes %}three-columns profile{% endblock body-classes %}
 {% block content %}
-    <h2>{% trans "Latest updates" %}</h2>
     <ul class="activity-list">
     {% for object in current_page.object_list %}
         {% include 'apparel/fragments/activity/activity.html' %}

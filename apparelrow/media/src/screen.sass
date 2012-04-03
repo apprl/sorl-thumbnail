@@ -32,17 +32,35 @@ body
   &.right
     #content
       margin-right: $gutter_width
+      margin-top: 10px
   &.three-columns
     #content
       +float-left
       width: $middle_width
       margin-right: $gutter_width
+      margin-top: 10px
   &.one-column
     #content
       +float-left
+      margin-top: 10px
       width: $content_width
 
 //:focus
 //  outline= !border_color "dotted" "medium"
+#sidebar-profile-info
+  margin: 10px 0 5px 0
+.sidebar-profile-name
+  margin: 10px 0 5px 0
+  font-size: 2em
+.lifc
+  font-size: 1.43em
+  font-weight: bold
+  color: #3b3b3b
+  margin: 24px 0 0
+  text-shadow: 0 2px 3px #F5F5F5
+.lifc em
+  font-style: italic
+  color: #3d699e
+
 
 @import partials/application.sass
