@@ -146,7 +146,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     
     # External
-    'django_facebook',      # External: Only used for loading facebook js sdk through templatetags
     'pagination',
     'mptt',                 # External: Category tree
     'sorl.thumbnail',       # External: Thumbnail module
@@ -230,7 +229,7 @@ TINYMCE_DEFAULT_CONFIG = {
 FACEBOOK_APP_ID = '177090790853'
 FACEBOOK_API_KEY = '44d47ef3e7285cace9a4c7c88f645742'
 FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
-FACEBOOK_PERMS = ['email']
+FACEBOOK_PERMS = 'email'
 
 # EMAIL CONFIGURATION
 DEFAULT_FROM_EMAIL = 'Apparelrow <no-reply@apparelrow.com>'

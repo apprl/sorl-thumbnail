@@ -1,7 +1,4 @@
-{% load i18n %}
-{% load facebook %}
-{% load apparel_extras %}
-{% load django_static %}
+{% load i18n apparel_extras django_static %}
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
@@ -25,10 +22,17 @@
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         var isFirstTimeVisit = {% if user.is_authenticated and user.get_profile.first_visit %}true{% else %}false{% endif %};
+
+        window.fbAsyncInit = function() {
+            FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, oauth: true, xfbml: true});
+            {% block facebook_code %}{% endblock %}
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'unknown') {
+                    jQuery('#ar-facepile').html('').addClass('ar-facepile');
+                }
+            });
+        }
     </script>
-    {% facebook_init %}
-        {% block facebook_code %}{% endblock %}
-    {% endfacebook %}
     <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/compiled/jquery.js" %}"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/apparel.js" %}"></script>
@@ -41,7 +45,7 @@
                     form.submit();
                 }
             }
-            FB.login(handleResponse, {scope: '{% facebook_perms %}' });
+            FB.login(handleResponse, {scope: '{{ FACEBOOK_SCOPE }}' });
         };
 
         jQuery(document).ready(function() {
@@ -157,7 +161,7 @@
                     <p class="lifc">{% blocktrans %}Life is <em>funner</em> connected{% endblocktrans %}</p>
                     {% apparel_facebook_button "facebook-hide.png" %}
                 </div>
-                <div class="bild">
+                <div id="ar-facepile" class="bild">
                     <div class="fb-facepile" data-max-rows="2" data-width="281" data-app-id="{{ FACEBOOK_APP_ID }}"></div>
                 </div>
             </div>
@@ -270,6 +274,17 @@
     </div>
 </div>
 
+<div id="fb-root"></div>
+<script type="text/javascript">
+  (function(d){
+     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement('script'); js.id = id; js.async = true;
+     js.src = "//connect.facebook.net/sv_SE/all.js";
+     ref.parentNode.insertBefore(js, ref);
+   }(document));
+</script>
+
 {% for template_name,template_string in templates.items %}
     <script type="text/html" id="{{ template_name }}_template">
         {{ template_string|safe }}
@@ -290,8 +305,6 @@
         </div>
     </div>
 </script>
-
-{% facebook_load %}
 
 <script type="text/javascript">
     var _kundo = _kundo || {};

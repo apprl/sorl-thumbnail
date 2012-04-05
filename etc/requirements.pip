@@ -8,7 +8,6 @@ mock==0.7.0b3
 south==0.7
 django-debug-toolbar==0.9.4
 python-memcached==1.48
--e git+http://github.com/pythonforfacebook/django-facebook.git#egg=django-facebook
 -e git+http://github.com/pythonforfacebook/facebook-sdk.git#egg=facebook-sdk
 django-mptt==0.5.2
 -e svn+http://code.hanssonlarsson.se/svn_public/hanssonlarsson_utils-svn/tags/hanssonlarsson-django-exporter-0.2.5/#egg=hanssonlarsson-django-exporter
