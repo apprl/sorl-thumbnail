@@ -24,10 +24,9 @@
     {% if object.action_object.content_object|class_name == "Product" %}
     <p>
         {% if object.action_object.content_object.default_vendor.discount_price %}
-        <span class="discount-price">{{ object.action_object.content_object.default_vendor.discount_price|floatformat:0 }}</span>
+        <span class="discount-price">{{ object.action_object.content_object.default_vendor.discount_price|floatformat:0 }} {{ object.action_object.content_object.default_vendor.currency }}</span>
         {% endif %}
-        <span class="price"{% if object.action_object.content_object.default_vendor.discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.action_object.content_object.default_vendor.price|floatformat:0 }}</span>
-        <span class="currency">{{ object.action_object.content_object.default_vendor.currency }}</span>
+        <span class="price"{% if object.action_object.content_object.default_vendor.discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.action_object.content_object.default_vendor.price|floatformat:0 }} {{ object.action_object.content_object.default_vendor.currency }}</span>
     </p>
     {% endif %}
     {% if object.action_object.content_object|class_name == "Look" %}
