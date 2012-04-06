@@ -10,7 +10,7 @@
         {% url profile-likes user.username as likes_url %}
         {% if request.path == likes_url %}
         jQuery(document).ready(function() {
-            jQuery('a.product-heart').live('click', function() {
+            jQuery('a.product-heart').die('click').live('click', function() {
                 var element = jQuery(this);
                 if(element.hasClass('liked')) {
                     var elem = jQuery(this).closest('li');
@@ -28,7 +28,6 @@
                     );
 
                 }
-                event.preventDefault();
                 return false;
             });
         });
