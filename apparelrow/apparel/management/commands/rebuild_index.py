@@ -21,5 +21,7 @@ class Command(BaseCommand):
         if options['clean_rebuild']:
             clean_index()
 
-        rebuild_product_index()
-        rebuild_look_index()
+        product_count = rebuild_product_index()
+        print 'Reindexed %s products' % (product_count,)
+        look_count = rebuild_look_index()
+        print 'Reindexed %s looks' % (look_count,)
