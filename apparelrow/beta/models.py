@@ -2,8 +2,6 @@ from django.db import models
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.contrib.auth.models import User
 
-from profile.models import ApparelProfile
-
 class Invite(models.Model):
     code        = models.CharField(_('beta code'), max_length=10, blank=False)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
@@ -22,7 +20,7 @@ class Invitee(models.Model):
         return u"%s (%s)" % (self.email, self.seen)
 
 class InvitePerUser(models.Model):
-    user = models.OneToOneField(ApparelProfile, related_name='beta')
+    user = models.OneToOneField('profile.ApparelProfile', related_name='beta')
     invites = models.IntegerField(_('invites'), null=False, blank=False, default=0)
 
     def __unicode__(self):

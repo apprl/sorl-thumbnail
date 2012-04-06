@@ -14,7 +14,6 @@ from django.contrib.comments.models import Comment
 from actstream.models import Follow, Action, user_stream
 from sorl.thumbnail import get_thumbnail
 
-from apparel.models import Look, LookLike, ProductLike
 from profile.tasks import send_email_confirm_task
 
 EVENT_CHOICES = (
@@ -69,17 +68,17 @@ class ApparelProfile(models.Model):
     @property
     def has_liked(self):
         """User has liked"""
-        return ProductLike.objects.filter(user=self.user).exists()
+        return self.user.product_likes.exists()
 
     @property
     def looks(self):
         """Number of looks"""
-        return Look.objects.filter(user=self.user).count()
+        return self.user.look.count()
     
     @property
     def likes(self):
         """Number of likes on products and looks combined"""
-        return LookLike.objects.filter(user=self.user, active=True).count() + ProductLike.objects.filter(user=self.user, active=True).count()
+        return self.user.look_likes.filter(active=True).count() + self.user.product_likes.filter(active=True).count()
 
     @property
     def display_name(self):

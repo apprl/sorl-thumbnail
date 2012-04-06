@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from apparel.decorators import get_current_user
-from apparel.models import Look, Product, ProductLike
+from apparel.models import Look, Product
 # FIXME: Move get_facebook_friends and get_most_followed_users to a util module
 from apparel.views import get_facebook_friends, get_most_followed_users
 from apparel.utils import get_pagination_page
@@ -52,7 +52,7 @@ def get_profile_sidebar_info(user):
     """
     info = {'products': 0, 'following': 0}
 
-    info['products'] = ProductLike.objects.filter(user=user, active=True, product__published=True).count()
+    info['products'] = user.product_likes.filter(active=True).count()
 
     content_type = ContentType.objects.get_for_model(User)
     info['following'] = Follow.objects.filter(content_type=content_type, user=user).count()
@@ -72,8 +72,8 @@ def likes(request, profile, page=0):
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
-        "change_image_form": form,
-        "profile": profile,
+        'change_image_form': form,
+        'profile': profile,
     }
 
     content.update(get_profile_sidebar_info(profile.user))
@@ -96,9 +96,9 @@ def profile(request, profile, page=0):
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
-        "change_image_form": form,
-        "profile": profile,
-        "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:54], # Just a constant for filling the entire page when PROFILE_PAGE_SIZE is 60
+        'change_image_form': form,
+        'profile': profile,
+        'recent_looks': profile.user.look.order_by('-modified')[:20]
         }
     content.update(get_profile_sidebar_info(profile.user))
 
@@ -107,7 +107,7 @@ def profile(request, profile, page=0):
 @get_current_user
 def looks(request, profile, page=0):
     form = handle_change_image(request, profile)
-    queryset = Look.objects.filter(user=profile.user).order_by('-modified')
+    queryset = profile.user.look.order_by('-modified')
     # Returns a list of objects for the most popular looks for the given user.
     popular_by_user = Look.objects.filter(Q(likes__active=True) & Q(user=profile.user)).annotate(num_likes=Count('likes')).order_by('-num_likes')[:10]
     
@@ -118,8 +118,8 @@ def looks(request, profile, page=0):
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
-        "change_image_form": form,
-        "profile": profile,
+        'change_image_form': form,
+        'profile': profile,
         "popular_looks": popular_by_user
         }
     content.update(get_profile_sidebar_info(profile.user))
@@ -139,9 +139,9 @@ def followers(request, profile, page=0):
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
-        "change_image_form": form,
-        "profile": profile,
-        "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+        'change_image_form': form,
+        'profile': profile,
+        'recent_looks': profile.user.look.order_by('-modified')[:4]
         }
     content.update(get_profile_sidebar_info(profile.user))
 
@@ -160,9 +160,9 @@ def following(request, profile, page=0):
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
-        "change_image_form": form,
-        "profile": profile,
-        "recent_looks": Look.objects.filter(user=profile.user).order_by('-modified')[:4],
+        'change_image_form': form,
+        'profile': profile,
+        'recent_looks': profile.user.look.order_by('-modified')[:4]
         }
     content.update(get_profile_sidebar_info(profile.user))
 

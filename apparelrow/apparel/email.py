@@ -23,10 +23,10 @@ from actstream.models import Follow, Action
 from sorl.thumbnail import get_thumbnail
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
-from celery.task import task
 
-from profile.models import ApparelProfile
+from apparel.tasks import mailchimp_subscribe, mailchimp_unsubscribe
 from apparel.models import Product, Look
+from profile.models import ApparelProfile
 
 logger = logging.getLogger('apparel.email')
 
@@ -39,31 +39,6 @@ def get_newsletter_users():
                        .exclude(Q(first_name__isnull=True) | Q(first_name__exact='')) \
                        .exclude(Q(last_name__isnull=True) | Q(last_name__exact='')) \
                        .iterator()
-
-@task(name='apparel.email.mailchimp_subscribe', max_retries=5, ignore_result=True)
-def mailchimp_subscribe(user):
-    try:
-        mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
-        mailchimp.listSubscribe(id=settings.MAILCHIMP_WEEKLY_LIST,
-                                email_address=user.email,
-                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.get_profile().gender},
-                                double_optin=False,
-                                update_existing=True,
-                                send_welcome=False)
-    except MailSnakeException, e:
-        logger.error('Could not subscribe user to mailchimp: %s' % (e,))
-
-@task(name='apparel.email.mailchimp_unsubscribe', max_retries=5, ignore_result=True)
-def mailchimp_unsubscribe(user, delete=False):
-    try:
-        mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
-        mailchimp.listUnsubscribe(id=settings.MAILCHIMP_WEEKLY_LIST,
-                                  email_address=user.email,
-                                  delete_member=delete,
-                                  send_goodbye=False,
-                                  send_notify=False)
-    except MailSnakeException, e:
-        logger.error('Could not unsubscribe user from mailchimp: %s' % (e,))
 
 @receiver(pre_save, sender=ApparelProfile, dispatch_uid='pre_save_profile_newsletter')
 def pre_save_profile_newsletter(sender, instance, **kwargs):

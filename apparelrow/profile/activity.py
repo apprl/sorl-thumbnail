@@ -6,7 +6,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from actstream.models import Follow, Action
 
-from apparel.models import Look, Product
 from profile.notifications import process_comment_look_created
 from profile.notifications import process_comment_look_comment
 from profile.notifications import process_comment_product_wardrobe
@@ -27,12 +26,12 @@ def comments_handler(sender, **kwargs):
     if instance.content_type is None:
         return
 
-    look_content_type = ContentType.objects.get_for_model(Look)
+    look_content_type = ContentType.objects.get_by_natural_key('apparel', 'Look')
     if instance.content_type == look_content_type:
         process_comment_look_created.delay(instance.content_object.user, request.user, instance)
         process_comment_look_comment.delay(instance.content_object.user, request.user, instance)
 
-    product_content_type = ContentType.objects.get_for_model(Product)
+    product_content_type = ContentType.objects.get_by_natural_key('apparel', 'Product')
     if instance.content_type == product_content_type:
         process_comment_product_comment.delay(None, request.user, instance)
         process_comment_product_wardrobe.delay(None, request.user, instance)

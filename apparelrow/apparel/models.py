@@ -405,7 +405,7 @@ class Look(models.Model):
     slug  = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
                 help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     description = models.TextField(_('Look description'), null=True, blank=True)
-    user        = models.ForeignKey(User)
+    user        = models.ForeignKey(User, related_name='look')
     image       = ImageField(upload_to=look_image_path, max_length=255, blank=True)
     static_image = ImageField(upload_to=static_image_path, max_length=255, null=True, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)

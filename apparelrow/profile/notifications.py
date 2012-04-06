@@ -12,7 +12,6 @@ from django.utils.translation import get_language, activate
 from actstream.models import Follow
 from celery.task import task
 
-from apparel.models import ProductLike
 from profile.models import NotificationCache
 
 def get_key(name, recipient, sender, obj):
@@ -227,7 +226,7 @@ def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
     content_object = comment.content_object
 
     notify_users = set()
-    for product_like in ProductLike.objects.filter(product=content_object).select_related('apparel_profile'):
+    for product_like in content_object.likes.iterator():
         if product_like.user != sender and product_like.user not in notify_users:
             if product_like.user.get_profile().comment_product_wardrobe == 'A':
                 notify_users.add(product_like.user)
