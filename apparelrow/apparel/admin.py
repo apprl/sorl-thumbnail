@@ -149,22 +149,13 @@ class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
         return ' > '.join([c.name for c in category.get_ancestors()])
 
     def num_products(self, category):
-        try:
-            products = Product.objects.values('category').filter(category=category).annotate(Count('category')).get()
-        except Product.DoesNotExist:
-            return '0'
+        p = Product.objects.filter(category=category).count()
 
-        if products and 'category__count' in products:
-            try:
-                available_products = Product.valid_objects.values('category').filter(category=category).annotate(Count('category')).get()
-                if available_products and 'category__count' in available_products:
-                    return '%s (%s)' % (products['category__count'], available_products['category__count'])
-            except Product.DoesNotExist:
-                pass
+        available_p = 0
+        if p > 0:
+            available_p = Product.valid_objects.filter(category=category).count()
 
-            return '%s (%s)' % (products['category__count'], 0)
-
-        return '0'
+        return '%s (%s)' % (p, available_p)
 
 admin.site.register(Category, CategoryAdmin)
 
@@ -184,22 +175,13 @@ class VendorCategoryAdmin(admin.ModelAdmin):
         return ' > '.join([c.name for c in vendor_category.category.get_ancestors()])
 
     def num_products(self, vendor_category):
-        try:
-            vproducts = VendorProduct.objects.values('vendor_category').filter(vendor_category=vendor_category).annotate(Count('vendor_category')).get()
-        except VendorProduct.DoesNotExist:
-            return 0
+        vp = VendorProduct.objects.filter(vendor_category=vendor_category).count()
 
-        if vproducts and 'vendor_category__count' in vproducts:
-            try:
-                available_vproducts = VendorProduct.objects.values('vendor_category').filter(vendor_category=vendor_category).exclude(availability=0).annotate(Count('vendor_category')).get()
-                if available_vproducts and 'vendor_category__count' in available_vproducts:
-                    return '%s (%s)' % (vproducts['vendor_category__count'], available_vproducts['vendor_category__count'])
-            except VendorProduct.DoesNotExist:
-                pass
+        available_vp = 0
+        if vp > 0:
+            available_vp = VendorProduct.objects.filter(vendor_category=vendor_category).exclude(availability=0).count()
 
-            return '%s (%s)' % (vproducts['vendor_category__count'], 0)
-
-        return 0
+        return '%s (%s)' % (vp, available_vp)
 
     def reset_gender(self, request, queryset):
         num_products = 0
