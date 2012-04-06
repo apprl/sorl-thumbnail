@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
-from apparelrow.apparel.models import Product
+from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 
 class ProductClickManager(models.Manager):
 
@@ -10,15 +10,20 @@ class ProductClickManager(models.Manager):
         Increment the click count for an URL.
         """
         if product_id:
-            click, created = self.get_or_create(product=Product.objects.get(pk=product_id), defaults={'click_count': increment_by})
-            if not created:
-                click.click_count += increment_by
-                click.save()
+            content_type = ContentType.objects.get_by_natural_key('apparel', 'product')
+            try:
+                product = content_type.get_object_for_this_type(pk=product_id)
+                click, created = self.get_or_create(product=product, defaults={'click_count': increment_by})
+                if not created:
+                    click.click_count += increment_by
+                    click.save()
 
-            return click.click_count
+                return click.click_count
+            except ObjectDoesNotExist:
+                pass
 
 class ProductClick(models.Model):
-    product = models.ForeignKey(Product)
+    product = models.ForeignKey('apparel.Product')
     click_count = models.PositiveIntegerField(default=0)
 
     objects = ProductClickManager()

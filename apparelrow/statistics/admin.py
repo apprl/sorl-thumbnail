@@ -1,7 +1,7 @@
 from django.core import urlresolvers
 from django.contrib import admin
 
-from apparelrow.statistics.models import ProductClick
+from statistics.models import ProductClick
 
 class ProductClickAdmin(admin.ModelAdmin):
     list_display = ('product', 'click_count', 'link')

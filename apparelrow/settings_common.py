@@ -171,7 +171,6 @@ INSTALLED_APPS = (
     'importer',             # Internal: Product importer module
     'apparel_comments',
     'statistics',           # Internal: Click statistics module
-    'apparelrow',           # Internal: Main module
 )
 
 COMMENTS_APP = 'apparel_comments'
@@ -317,7 +316,8 @@ CELERY_ROUTES = ({
     'profile.notifications.process_like_look_created': {'queue': 'standard'},
     'profile.views.send_email_confirm_task': {'queue': 'standard'},
     'apparel.email.mailchimp_subscribe': {'queue': 'standard'},
-    'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'}
+    'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
+    'statistics.tasks.increment_click': {'queue': 'standard'}
 },)
 
 # LOGGING CONFIGURATION
