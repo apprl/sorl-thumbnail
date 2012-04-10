@@ -4,6 +4,7 @@ import logging
 import datetime
 import htmlentitydefs
 import itertools
+import decimal
 
 from django.conf import settings
 from django.utils.encoding import smart_unicode
@@ -29,6 +30,8 @@ GENDER_REGEXES = dict(
     (m.mapping_key, re.compile(ur'\b(?:%s)\b' % (ur'|'.join(m.get_list()),), re.I | re.UNICODE))
     for m in Mapping.objects.filter(mapping_type='gender')
 )
+
+ZERO = decimal.Decimal('0.0')
 
 class DataMapper(object):
     color_regexes = None
@@ -87,6 +90,13 @@ class DataMapper(object):
         price = self.mapped_record['product']['price']
         discount_price = self.mapped_record['product']['discount-price']
         if price == discount_price:
+            self.mapped_record['product']['discount-price'] = None
+
+        # If there is a discount price but no price, use discount as price
+        price = decimal.Decimal(price)
+        discount_price = decimal.Decimal(discount_price)
+        if price <= ZERO and discount_price > ZERO:
+            self.mapped_record['product']['price'] = self.mapped_record['product']['discount-price']
             self.mapped_record['product']['discount-price'] = None
     
     def translate(self):
