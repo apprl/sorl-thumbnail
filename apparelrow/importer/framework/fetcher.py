@@ -1,4 +1,5 @@
 import os
+import shutil
 import logging
 import tempfile
 import re
@@ -104,7 +105,7 @@ def fetch_feed(url, path, from_warehouse=False, username=None, password=None, de
             temppath = Decompressor(decompress).decompress(temppath)
         
         logger.debug('Moving feed file %s to warehouse: %s' % (temppath, path)) 
-        os.rename(temppath, path)
+        shutil.move(temppath, path)
     
     return path
 
