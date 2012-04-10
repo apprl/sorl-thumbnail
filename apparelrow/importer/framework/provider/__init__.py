@@ -10,7 +10,6 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import transaction
 from django.db.models import Q
-from django.db.models.signals import post_save
 
 from apparel.models import Product, VendorProduct
 
@@ -55,7 +54,7 @@ class Provider(object):
         self.mapper    = None
         self.count     = 0
 
-        self.product_ids = set(VendorProduct.objects.filter(vendor=self.feed.vendor_id).exclude(Q(availability=0)).order_by('id').values_list('product_id', flat=True))
+        self.product_ids = set(Product.objects.filter(vendors=self.feed.vendor_id, availability=True).values_list('id', flat=True))
 
     def __del__(self, *args, **kwargs):
         if self.file and not self.file.closed:
@@ -111,13 +110,14 @@ class Provider(object):
         """
         Set all products found in database but not found in the feed to sold out.
 
-        Performance upgrade: use post_save without actually saving data and
-        only print the product name, no need to also get the manufacturer name
+        Performance upgrade: only print the product name, no need to also get
+        the manufacturer name
         """
         for product_id in self.product_ids:
             product = Product.objects.get(pk=product_id)
+            product.availability=False
             product.vendorproduct.update(availability=0)
-            post_save.send(sender=product.__class__, instance=product)
+            product.save()
 
             logger.info('Setting availability for product %s to sold out' % (product.product_name,))
 
@@ -185,8 +185,9 @@ class Provider(object):
             # Try to set availability to zero if product already exists
             try:
                 product = Product.objects.get(manufacturer__name__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product.availability=False
                 product.vendorproduct.update(availability=0)
-                post_save.send(sender=product.__class__, instance=product)
+                product.save()
                 logger.info('Setting availability for product %s to sold out' % (product.product_name,))
             except ObjectDoesNotExist, MultipleObjectsReturned:
                 pass
@@ -202,8 +203,9 @@ class Provider(object):
             # Try to set availability to zero if product already exists
             try:
                 product = Product.objects.get(manufacturer__name__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product.availability=False
                 product.vendorproduct.update(availability=0)
-                post_save.send(sender=product.__class__, instance=product)
+                product.save()
                 logger.info('Setting availability for product %s to sold out' % (product.product_name,))
             except ObjectDoesNotExist, MultipleObjectsReturned:
                 pass
@@ -220,8 +222,9 @@ class Provider(object):
             # Try to set availability to zero if product already exists
             try:
                 product = Product.objects.get(manufacturer__name__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product.availability=False
                 product.vendorproduct.update(availability=0)
-                post_save.send(sender=product.__class__, instance=product)
+                product.save()
                 logger.info('Setting availability for product %s to sold out' % (product.product_name,))
             except ObjectDoesNotExist, MultipleObjectsReturned:
                 pass
