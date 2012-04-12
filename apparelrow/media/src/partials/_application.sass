@@ -2375,3 +2375,49 @@ body.settings
   width: 360px
   height: 126px
   margin: 61px 40px 0 20px
+
+body.profile-login-flow
+  background-color: #ffffff
+  #inner-header
+    #search, #nav-main, #nav-gender, #nav-user
+      display: none
+  #login-pane
+    display: none
+  #inner-container
+    margin-top: 20px
+  #footer
+    display: none
+  #content
+    ul.profiles
+      li
+        width: 218px
+        float: left
+        &.column-1
+          clear: left
+  .content-footer
+    background: image_url("login_flow/knappbg.jpg") repeat scroll center bottom #ffffff
+    float: left
+    height: 51px
+    position: static
+    width: 100%
+    margin-top: 20px
+    border: solid 1px #353535
+    @media screen and (max-height: 600px)
+      margin: 0
+      top: auto
+      width: 697px
+      bottom: 20px
+      position: fixed
+    &:hover
+      background-position: top
+      border: solid 1px #d9d9d9
+    a
+      color: #fefefe
+      font-weight: bold
+      float: left
+      height: 34px
+      padding: 17px 0 0
+      text-align: center
+      width: 697px
+      &:hover
+        color: #333333

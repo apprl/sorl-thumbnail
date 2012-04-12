@@ -1,0 +1,24 @@
+{% extends "profile/base_login_flow.html" %}
+{% load i18n %}
+
+{% block login-flow-content %}
+        <div id="steps">
+            <div id="ett">
+                <a href="#" id="abovefollow">Följ alla dina vänner</a>
+                <a href="#" id="abovefollowothers">Följ andra populära medlemmar</a>
+            </div>
+            <div id="tva">
+                <ul class="suggested-friends profiles">
+                {% for profile in profiles %}
+                    <li class="{% cycle 'column-1' 'column-2' 'column-3' %}">
+                    {% include 'apparel/fragments/avatar_link_no_cache.html' %}
+                    </li>
+                {% endfor %}    
+                </ul>
+            </div>
+        </div>
+{% endblock %}
+
+{% block login-flow-footer %}
+<a href="{{ next_url }}">{% trans "Proceed" %}</a>
+{% endblock %}

@@ -4,9 +4,8 @@ import uuid
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect, HttpResponseNotFound
-from django.template import RequestContext
 from django.db.models import Q, Count
 from django.contrib import auth
 from django.contrib.contenttypes.models import ContentType
@@ -102,7 +101,7 @@ def profile(request, profile, page=0):
         }
     content.update(get_profile_sidebar_info(profile.user))
 
-    return render_to_response('profile/profile.html', content, context_instance=RequestContext(request))
+    return render(request, 'profile/profile.html', content)
 
 @get_current_user
 def looks(request, profile, page=0):
@@ -124,7 +123,7 @@ def looks(request, profile, page=0):
         }
     content.update(get_profile_sidebar_info(profile.user))
 
-    return render_to_response('profile/looks.html', content, context_instance=RequestContext(request))
+    return render(request, 'profile/looks.html', content)
     
 @get_current_user
 def followers(request, profile, page=0):
@@ -145,7 +144,7 @@ def followers(request, profile, page=0):
         }
     content.update(get_profile_sidebar_info(profile.user))
 
-    return render_to_response('profile/followers.html', content, context_instance=RequestContext(request))
+    return render(request, 'profile/followers.html', content)
 
 @get_current_user
 def following(request, profile, page=0):
@@ -166,7 +165,7 @@ def following(request, profile, page=0):
         }
     content.update(get_profile_sidebar_info(profile.user))
 
-    return render_to_response('profile/following.html', content, context_instance=RequestContext(request))
+    return render(request, 'profile/following.html', content)
 
 #
 # Settings
@@ -191,8 +190,7 @@ def settings_notification(request):
     form = NotificationForm(instance=request.user.get_profile())
     newsletter_form = NewsletterForm(instance=request.user.get_profile())
 
-    return render_to_response('profile/settings_notification.html',
-            {'notification_form': form, 'newsletter_form': newsletter_form}, context_instance=RequestContext(request))
+    return render(request, 'profile/settings_notification.html', {'notification_form': form, 'newsletter_form': newsletter_form})
 
 @login_required
 def confirm_email(request):
@@ -242,26 +240,67 @@ def settings_email(request):
     except EmailChange.DoesNotExist:
         email_change = None
 
-    return render_to_response('profile/settings_email.html', {
+    return render(request, 'profile/settings_email.html', {
             'email_form': form,
             'email_change': email_change
-        }, context_instance=RequestContext(request))
+        })
+
+#
+# Welcome login flow
+#
 
 @login_required
-def welcome_dialog(request):
+def login_flow_initial(request):
     """
-    Welcome dialog, shown on first login
+    Login flow step 1.
     """
-    apparel_profile = request.user.get_profile()
-    apparel_profile.first_visit = False
-    apparel_profile.save()
+    profile = request.user.get_profile()
+    if profile.login_flow == 'complete':
+        return HttpResponseRedirect(reverse('shop'))
+
+    profile.first_visit = False
+    profile.login_flow = 'initial'
+    profile.save()
 
     context = {
-            'first_name': request.user.first_name,
-            'facebook_friends': get_facebook_friends(request),
-            'most_followed_users': get_most_followed_users(limit=6)}
+        'next_url': reverse('profile.views.login_flow_members'),
+        'profiles': get_facebook_friends(request)
+    }
+    return render(request, 'profile/login_flow_initial.html', context)
 
-    return render_to_response('profile/dialog_welcome.html', context, context_instance=RequestContext(request))
+@login_required
+def login_flow_members(request):
+    """
+    Login flow step 2.
+    """
+    profile = request.user.get_profile()
+    if profile.login_flow == 'complete':
+        return HttpResponseRedirect(reverse('shop'))
+
+    profile.first_visit = False
+    profile.login_flow = 'members'
+    profile.save()
+
+    context = {
+        'next_url': reverse('profile.views.login_flow_complete'),
+        'profiles': get_most_followed_users(limit=20)
+    }
+    return render(request, 'profile/login_flow_members.html', context)
+
+@login_required
+def login_flow_brands(request):
+    """
+    Login flow step 3. Not used yet.
+    """
+    return HttpResponseRedirect(reverse('shop'))
+
+@login_required
+def login_flow_complete(request):
+    profile = request.user.get_profile()
+    profile.first_visit = False
+    profile.login_flow = 'complete'
+    profile.save()
+    return HttpResponseRedirect(reverse('shop'))
 
 def _get_next(request):
     """
@@ -286,8 +325,8 @@ def login(request):
         user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token)
         if user is not None and user.is_active:
             auth.login(request, user)
-            if user.get_profile().first_visit:
-                return HttpResponseRedirect(reverse('apparel.views.home'))
+            if user.get_profile().login_flow != 'complete':
+                return HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (user.get_profile().login_flow)))
 
             return HttpResponseRedirect(_get_next(request))
 

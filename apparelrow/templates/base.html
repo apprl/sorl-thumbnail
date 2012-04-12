@@ -59,12 +59,6 @@
                 event.preventDefault();
             });
 
-            if(isAuthenticated && isFirstTimeVisit) {
-                create_html_dialog('{% url profile.views.welcome_dialog %}', true, function() {
-                    window.location.reload();
-                });
-            }
-
             // FIXME: quick solution to not have to send the form to validate
             jQuery('.create-look-dialog form').live('submit', function(e) {
                 if(!jQuery(this).find('#id_title').val()) {

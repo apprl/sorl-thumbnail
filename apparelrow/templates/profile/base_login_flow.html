@@ -1,0 +1,30 @@
+{% extends "profile/base_profile.html" %}
+{% load i18n %}
+
+{% block body-classes %}two-columns profile profile-login-flow{% endblock body-classes %}
+
+{% block body %}
+    <div class="sidebar">
+        <div id="profile-image">
+            <img src="{{ user.profile.avatar_large }}" class="avatar large">
+            {% if user.is_authenticated and user == profile.user %}
+                <button class="edit">{% trans "Change picture" %}</button>
+                <button class="cancel-edit">{% trans "Cancel" %}</button>
+                {% with "multipart/form-data" as form_enctype %}
+                {% include 'profile/fragments/change_image_form.html' %}
+                {% endwith %}
+            {% endif %}
+        </div>
+        <h1 class="sidebar-profile-name">{% blocktrans with user.profile.display_name as username %}Hi {{ username }}!{% endblocktrans %}</h1>
+        <p>{% blocktrans %}Follow your friends and other members to keep up when they like products, create looks, comments and more.{% endblocktrans %}</p>
+    </div>
+    <div id="content">
+        {% block login-flow-content %}{% endblock %}
+    </div>
+
+    <div class="content-footer">
+        {% block login-flow-footer %}
+        <a href="{{ next_url }}">{% trans "Proceed" %}</a>
+        {% endblock %}
+    </div>
+{% endblock %}

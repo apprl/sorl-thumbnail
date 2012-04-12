@@ -28,6 +28,13 @@ def profile_image_path(instance, filename):
 GENDERS = ( ('M', 'Men'),
             ('W', 'Women'))
 
+LOGIN_FLOW = (
+    ('initial', 'Initial'),
+    ('members', 'Members'),
+    ('brands', 'Brands'),
+    ('complete', 'Complete'),
+)
+
 class ApparelProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     
@@ -37,6 +44,9 @@ class ApparelProfile(models.Model):
     language            = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     gender              = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     updates_last_visit  = models.DateTimeField(_('Last visit home'), default=datetime.datetime.now)
+
+    # profile login flow
+    login_flow = models.CharField(_('Login flow'), max_length=20, choices=LOGIN_FLOW, null=False, blank=False, default='initial')
 
     # newsletter settings
     newsletter = models.BooleanField(default=True, blank=False, null=False, help_text=_('Participating in newsletter'))
