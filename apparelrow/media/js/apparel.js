@@ -353,7 +353,7 @@ jQuery(document).ready(function() {
                         }
                         element.removeClass('liked');
 
-                        var likes = jQuery('.likes span.count');
+                        var likes = jQuery('.activity .likes span.count');
                         likes.text(parseInt(likes.text(), 10) - 1);
 
                         pending = false;
@@ -367,7 +367,7 @@ jQuery(document).ready(function() {
                         likes.show().text(parseInt(likes.text(), 10) + 1)
                         element.addClass('liked');
 
-                        var likes = jQuery('.likes span.count');
+                        var likes = jQuery('.activity .likes span.count');
                         likes.text(parseInt(likes.text(), 10) + 1);
 
                         pending = false;
