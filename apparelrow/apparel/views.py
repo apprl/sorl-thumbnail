@@ -79,6 +79,9 @@ def product_detail(request, slug):
     content_type =ContentType.objects.get_for_model(Product)
     comments =  Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_public=True, is_removed=False).select_related('user', 'user__profile')
 
+    # Likes
+    likes = product.likes.filter(active=True).order_by('-modified').select_related('user', 'user__profile')
+
     return render_to_response(
             'apparel/product_detail.html',
             {
@@ -90,7 +93,8 @@ def product_detail(request, slug):
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri(),
                 'more_like_this': more_like_this_product(product.id, product.gender, 20),
-                'comments': comments
+                'comments': comments,
+                'likes': likes
             }, context_instance=RequestContext(request),
         )
 
