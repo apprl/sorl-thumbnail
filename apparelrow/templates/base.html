@@ -27,7 +27,7 @@
             FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, oauth: true, xfbml: true});
             {% block facebook_code %}{% endblock %}
             FB.getLoginStatus(function(response) {
-                if (response.status === 'unknown') {
+                if(!response.authResponse) {
                     jQuery('#ar-facepile').html('').addClass('ar-facepile');
                 }
             });
