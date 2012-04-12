@@ -10,7 +10,7 @@
             google.load("jquery", "1.4.2");
         </script>
         {% block scripts %}{% endblock %}
-        <style>body{background-image: url('{{ MEDIA_URL }}{% staticfile image %}');}</style>
+        {% block background_image %}<style>body{background-image: url('{{ MEDIA_URL }}{% staticfile image %}');}</style>{% endblock %}
     </head>
     <body>
         <div id="header-container">
