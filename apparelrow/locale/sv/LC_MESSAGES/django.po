@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-12 22:16+0200\n"
+"POT-Creation-Date: 2012-04-12 22:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1718,12 +1718,12 @@ msgid "Do you really want to delete product"
 msgstr "Vill du verkligen ta bort produkten"
 
 #: templates/profile/likes.html:55
-msgid "You do not have any products in your wardrobe right now."
-msgstr "Du har inga produkter i garderoben just nu."
+msgid "You do not like any products right now."
+msgstr "Du gillar inte några produkter."
 
 #: templates/profile/likes.html:57
-msgid "does not have any products in the wardrobe right now."
-msgstr "har inga produkter i garderoben just nu."
+msgid "does not like any products."
+msgstr "gillar inte några produkter."
 
 #: templates/profile/looks.html:10
 #, python-format
@@ -2065,6 +2065,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "does not have any products in the wardrobe right now."
+#~ msgstr "har inga produkter i garderoben just nu."
 
 #~ msgid "Participate in our weekly newsletter"
 #~ msgstr "Delta i vårt veckobrev"

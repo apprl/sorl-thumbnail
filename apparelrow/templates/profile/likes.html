@@ -52,9 +52,9 @@
     <div class="wardrobe-empty">
         {% url profile-likes request.user.username as profile_likes_url %}
         {% if request.path == profile_likes_url %}
-            <div class="message warning">{% trans "You do not have any products in your wardrobe right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+            <div class="message warning">{% trans "You do not like any products right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
         {% else %}
-            <div class="message warning">{{ profile.display_name }} {% trans "does not have any products in the wardrobe right now." %}</div>
+            <div class="message warning">{{ profile.display_name }} {% trans "does not like any products." %}</div>
         {% endif %}
     </div>
     {% endif %}
