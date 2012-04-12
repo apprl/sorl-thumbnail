@@ -88,7 +88,6 @@
 
 {% endcache %}
     <ul id="add-menu" class="menu hover-menu">
-        {% include 'apparel/fragments/share.html' %}
         <li id="add-to-look">
             <a href="/apparel/look/">{% trans "Add to look" %}</a>
             <form action="{% url apparel.views.add_to_look %}" method="post">
