@@ -94,10 +94,11 @@ class DataMapper(object):
 
         # If there is a discount price but no price, use discount as price
         price = decimal.Decimal(price)
-        discount_price = decimal.Decimal(discount_price)
-        if price <= ZERO and discount_price > ZERO:
-            self.mapped_record['product']['price'] = self.mapped_record['product']['discount-price']
-            self.mapped_record['product']['discount-price'] = None
+        if discount_price is not None:
+            discount_price = decimal.Decimal(discount_price)
+            if price <= ZERO and discount_price > ZERO:
+                self.mapped_record['product']['price'] = self.mapped_record['product']['discount-price']
+                self.mapped_record['product']['discount-price'] = None
     
     def translate(self):
         """
