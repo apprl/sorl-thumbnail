@@ -54,6 +54,11 @@ jQuery(document).ready(function() {
         // Call getQuery with empty query and force reset
         filter(getQuery({}, true));
 
+        // Reset autoscrolling
+        jQuery(window)
+            .data('first-scroll', true)
+            .data('dont-scroll', false);
+
         return false;
     });
 
@@ -206,27 +211,28 @@ jQuery(document).ready(function() {
     function infiniteScroll() {
         var $window = jQuery(window),
             $document = jQuery(document),
-            $body = jQuery('body'),
             lastOffset = $window.scrollTop(),
-            firstScroll = true,
             loading = false;
 
         function bottomDistance() {
             return $document.height() - $window.scrollTop();
         }
 
+        // Keep track of the first auto-scroll
+        $window.data('first-scroll', true);
+
         $window.bind('scroll', function() {
-            if($body.data('dont-scroll'))
+            if($window.data('dont-scroll'))
                 return;
 
             var offset = $window.scrollTop(),
                 height = $window.height();
 
-            if(bottomDistance() < 2 * height && offset > lastOffset && !loading) {
-                if(firstScroll) {
+            if(!loading && bottomDistance() < 2 * height && offset > lastOffset) {
+                if($window.data('first-scroll')) {
                     // Just auto-scroll one page until user clicks "load more"
-                    $body.data('dont-scroll', true);
-                    firstScroll = false;
+                    $window.data('dont-scroll', true);
+                    $window.data('first-scroll', false);
                 }
 
                 loading = true;
@@ -235,6 +241,7 @@ jQuery(document).ready(function() {
                 });
             }
 
+            // Store offset to see scroll direction
             lastOffset = offset;
         });
     }
@@ -247,7 +254,7 @@ jQuery(document).ready(function() {
         fetchPage(page);
 
         // Set up auto-scrolling
-        jQuery('body').data('dont-scroll', false);
+        jQuery(window).data('dont-scroll', false);
 
         return false;
     });
