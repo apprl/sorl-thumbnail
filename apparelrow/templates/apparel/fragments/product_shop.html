@@ -16,7 +16,7 @@
         </div>
         <div class="footer">
             <a class="footer-button info" href="{{ object.get_absolute_url }}">More info</a>
-            <a class="footer-button buy" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}">Buy</a>
+            <a class="footer-button buy" target="_blank" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}">Buy</a>
         </div>
     </div>
     <h4><a href="{{ object.get_absolute_url }}">{{ object.manufacturer }}</a></h4>

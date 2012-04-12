@@ -23,7 +23,7 @@
                 </div>
                 {% else %}
                 <div class="vendors">
-                    <a target="_new" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ component.product.id }}&u={{ component.product.default_vendor.buy_url|urlencode }}"><span class="vendor">{{ component.product.default_vendor.vendor }}</span><span class="buy-now">{% trans "Buy" %}</span></a>
+                    <a target="_blank" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ component.product.id }}&u={{ component.product.default_vendor.buy_url|urlencode }}"><span class="vendor">{{ component.product.default_vendor.vendor }}</span><span class="buy-now">{% trans "Buy" %}</span></a>
                 </div>
                 {% endif %}
             {% else %}

@@ -37,9 +37,9 @@
     <p class="bodycopy vendors">
       {% if object.default_vendor %}
         {% if object.default_vendor.availability == 0 %}
-        <a target="_new" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
+        <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
         {% else %}
-        <a target="_new" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}">{% trans "Available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
+        <a target="_blank" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}">{% trans "Available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
         {% endif %}
       {% endif %}
     </p>
@@ -50,7 +50,7 @@
                 {% if vendorproduct.availability == 0 %}
                 <span class="sold-out{% if vendorproduct.currency != vendorproduct.original_currency %} higher{% endif %}">{% trans "Sold out" %}</span>
                 {% else %}
-                <a href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_new" class="buy-now{% if vendorproduct.currency != vendorproduct.original_currency %} higher{% endif %}">{% trans "Buy" %}</a>
+                <a href="{% url apparelrow.statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_blank" class="buy-now{% if vendorproduct.currency != vendorproduct.original_currency %} higher{% endif %}">{% trans "Buy" %}</a>
                 {% endif %}
             {% endif %}
             <div class="product-vendor">
