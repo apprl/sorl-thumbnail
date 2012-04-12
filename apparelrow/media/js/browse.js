@@ -192,17 +192,63 @@ jQuery(document).ready(function() {
         return false;
     });
 
-    function fetchPage(page) {
-        filter(getQuery({page: page}), renderPage);
+    function fetchPage(page, callback) {
+        filter(getQuery({page: page}), function() {
+            renderPage.apply(null, arguments);
+            callback && callback();
+        });
     }
 
+    function parsePage(link) {
+        return parseInt(link.attr('href').split('=')[1], 10);
+    }
+
+    function infiniteScroll() {
+        var $window = jQuery(window),
+            $document = jQuery(document),
+            $body = jQuery('body'),
+            lastOffset = $window.scrollTop(),
+            firstScroll = true,
+            loading = false;
+
+        function bottomDistance() {
+            return $document.height() - $window.scrollTop();
+        }
+
+        $window.bind('scroll', function() {
+            if($body.data('dont-scroll'))
+                return;
+
+            var offset = $window.scrollTop(),
+                height = $window.height();
+
+            if(bottomDistance() < 2 * height && offset > lastOffset && !loading) {
+                if(firstScroll) {
+                    // Just auto-scroll one page until user clicks "load more"
+                    $body.data('dont-scroll', true);
+                    firstScroll = false;
+                }
+
+                loading = true;
+                fetchPage(parsePage(jQuery('.pagination .next')), function() {
+                    loading = false;
+                });
+            }
+
+            lastOffset = offset;
+        });
+    }
+
+    infiniteScroll();
+
     jQuery('.pagination a').live('click', function(e) {
-        // FIXME: Move out logic to section that handles page-swapping
-        
-        var link = jQuery(this);
-        var page = parseInt(link.attr('href').split('=')[1], 10);
+        var page = parsePage(jQuery(this));
         
         fetchPage(page);
+
+        // Set up auto-scrolling
+        jQuery('body').data('dont-scroll', false);
+
         return false;
     });
 
