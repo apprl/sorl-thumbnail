@@ -54,7 +54,7 @@
         {% if request.path == profile_likes_url %}
             <div class="message warning">{% trans "You do not like any products right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
         {% else %}
-            <div class="message warning">{{ profile.display_name }} {% trans "does not like any products." %}</div>
+            <div class="message warning">{{ profile.display_name }} {% trans "does not like any products so far." %}</div>
         {% endif %}
     </div>
     {% endif %}
