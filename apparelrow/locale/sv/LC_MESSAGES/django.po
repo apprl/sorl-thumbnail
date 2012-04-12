@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-12 16:15+0200\n"
+"POT-Creation-Date: 2012-04-12 22:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -484,8 +484,10 @@ msgid "New e-mail address"
 msgstr "Ny e-postadress"
 
 #: profile/forms.py:35
-msgid "Participate in our weekly newsletter"
-msgstr "Delta i vårt veckobrev"
+msgid ""
+"I'd like to receive e-mails with trending products, looks and other "
+"inspiration."
+msgstr "Jag vill ha e-post med populära produkter och annan inspiration."
 
 #: profile/models.py:20 templates/apparel/user_list.html:25
 #: templates/apparel/user_list.html:29
@@ -724,7 +726,6 @@ msgstr ""
 #: templates/base.html:255 templates/apparel/look_list.html:39
 #: templates/apparel/look_list.html:50 templates/apparel/user_home.html:34
 #: templates/apparel/fragments/browse_follow_user.html:5
-#: templates/profile/dialog_welcome.html:25
 msgid "See all members"
 msgstr "Se alla medlemmar"
 
@@ -1082,6 +1083,15 @@ msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] "Tillagd i <span class=\"count\">%(counter)s</span> look"
 msgstr[1] "Tillagd i <span class=\"count\">%(counter)s</span> looks"
 
+#: templates/apparel/product_detail.html:212
+#: templates/apparel/fragments/likes.html:5
+#: templates/apparel/fragments/likes_link.html:5
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> like"
+msgid_plural "<span class=\"count\">%(counter)s</span> likes"
+msgstr[0] "<span class=\"count\">%(counter)s</span> som gillar"
+msgstr[1] "<span class=\"count\">%(counter)s</span> som gillar"
+
 #: templates/apparel/product_detail.html:215
 msgid "Recently viewed"
 msgstr "Senast besökta"
@@ -1114,7 +1124,6 @@ msgid "No updates"
 msgstr "Inga händelser"
 
 #: templates/apparel/user_home.html:32 templates/apparel/user_list.html:46
-#: templates/profile/dialog_welcome.html:17
 msgid "Your friends are here!"
 msgstr "Dina vänner är här!"
 
@@ -1271,14 +1280,6 @@ msgstr "Gilla"
 msgid "Unlike"
 msgstr "Ogilla"
 
-#: templates/apparel/fragments/likes.html:5
-#: templates/apparel/fragments/likes_link.html:5
-#, python-format
-msgid "<span class=\"count\">%(counter)s</span> like"
-msgid_plural "<span class=\"count\">%(counter)s</span> likes"
-msgstr[0] "<span class=\"count\">%(counter)s</span> som gillar"
-msgstr[1] "<span class=\"count\">%(counter)s</span> som gillar"
-
 #: templates/apparel/fragments/look_create.html:5
 msgid ""
 "Begin by selecting a name for your look (you can change the name later): "
@@ -1341,7 +1342,7 @@ msgstr ""
 "Produkten säljs i %(original_currency)s och översättningen till SEK är "
 "ungefärlig."
 
-#: templates/apparel/fragments/product_detail.html:93
+#: templates/apparel/fragments/product_detail.html:92
 msgid "Add to look"
 msgstr "Lägg i look"
 
@@ -1692,9 +1693,8 @@ msgid "%(name)s's latest looks"
 msgstr "%(name)ss senaste looks"
 
 #: templates/profile/base_settings.html:10
-#: templates/profile/settings_notification.html:5
-msgid "Events"
-msgstr "Händelser"
+msgid "E-mail Notifications & Newsletters"
+msgstr "E-postutskick & händelser"
 
 #: templates/profile/confirm_email.html:5
 #, python-format
@@ -1712,29 +1712,6 @@ msgstr ""
 #: templates/profile/confirm_email_subject.html:1
 msgid "Confirm e-mail address change"
 msgstr "Bekräfta e-postadress förändring"
-
-#: templates/profile/dialog_welcome.html:5
-#, python-format
-msgid "Welcome %(first_name)s"
-msgstr "Välkommen %(first_name)s!"
-
-#: templates/profile/dialog_welcome.html:7
-msgid ""
-"The first thing you should do now is to follow members here on the site, to "
-"keep you updated when they create looks, see which products they like and "
-"what which products they have in their closet."
-msgstr ""
-"Det första du borde göra nu är att följa andra medlemmar här på siten, för "
-"att hålla dig uppdaterad när de skapar looks, se vad de gillar för produkter "
-"och vad de har i garderoben."
-
-#: templates/profile/dialog_welcome.html:8
-msgid "Find your friends below, or among all our other members."
-msgstr "Hitta dina vänner nedan eller bland alla våra andra medlemmar."
-
-#: templates/profile/dialog_welcome.html:9
-msgid "Most popular to follow"
-msgstr "Mest populära att följa"
 
 #: templates/profile/likes.html:21
 msgid "Do you really want to delete product"
@@ -1778,6 +1755,10 @@ msgstr "Nuvarande e-postadress:"
 #: templates/profile/settings_email.html:13
 msgid "Update"
 msgstr "Uppdatera"
+
+#: templates/profile/settings_notification.html:5
+msgid "Events"
+msgstr "Händelser"
 
 #: templates/profile/settings_notification.html:6
 msgid "Here you can set which events you want to be notified about via email:"
@@ -2084,6 +2065,27 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Participate in our weekly newsletter"
+#~ msgstr "Delta i vårt veckobrev"
+
+#~ msgid "Welcome %(first_name)s"
+#~ msgstr "Välkommen %(first_name)s!"
+
+#~ msgid ""
+#~ "The first thing you should do now is to follow members here on the site, "
+#~ "to keep you updated when they create looks, see which products they like "
+#~ "and what which products they have in their closet."
+#~ msgstr ""
+#~ "Det första du borde göra nu är att följa andra medlemmar här på siten, "
+#~ "för att hålla dig uppdaterad när de skapar looks, se vad de gillar för "
+#~ "produkter och vad de har i garderoben."
+
+#~ msgid "Find your friends below, or among all our other members."
+#~ msgstr "Hitta dina vänner nedan eller bland alla våra andra medlemmar."
+
+#~ msgid "Most popular to follow"
+#~ msgstr "Mest populära att följa"
 
 #~ msgid "Unlike product"
 #~ msgstr "Ogilla en produkt"

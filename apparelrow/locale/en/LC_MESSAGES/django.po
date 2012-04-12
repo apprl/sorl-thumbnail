@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-12 16:15+0200\n"
+"POT-Creation-Date: 2012-04-12 22:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -478,7 +478,9 @@ msgid "New e-mail address"
 msgstr ""
 
 #: profile/forms.py:35
-msgid "Participate in our weekly newsletter"
+msgid ""
+"I'd like to receive e-mails with trending products, looks and other "
+"inspiration."
 msgstr ""
 
 #: profile/models.py:20 templates/apparel/user_list.html:25
@@ -713,7 +715,6 @@ msgstr ""
 #: templates/base.html:255 templates/apparel/look_list.html:39
 #: templates/apparel/look_list.html:50 templates/apparel/user_home.html:34
 #: templates/apparel/fragments/browse_follow_user.html:5
-#: templates/profile/dialog_welcome.html:25
 msgid "See all members"
 msgstr ""
 
@@ -1053,6 +1054,15 @@ msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] ""
 msgstr[1] ""
 
+#: templates/apparel/product_detail.html:212
+#: templates/apparel/fragments/likes.html:5
+#: templates/apparel/fragments/likes_link.html:5
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> like"
+msgid_plural "<span class=\"count\">%(counter)s</span> likes"
+msgstr[0] ""
+msgstr[1] ""
+
 #: templates/apparel/product_detail.html:215
 msgid "Recently viewed"
 msgstr ""
@@ -1085,7 +1095,6 @@ msgid "No updates"
 msgstr ""
 
 #: templates/apparel/user_home.html:32 templates/apparel/user_list.html:46
-#: templates/profile/dialog_welcome.html:17
 msgid "Your friends are here!"
 msgstr ""
 
@@ -1217,14 +1226,6 @@ msgstr ""
 msgid "Unlike"
 msgstr ""
 
-#: templates/apparel/fragments/likes.html:5
-#: templates/apparel/fragments/likes_link.html:5
-#, python-format
-msgid "<span class=\"count\">%(counter)s</span> like"
-msgid_plural "<span class=\"count\">%(counter)s</span> likes"
-msgstr[0] ""
-msgstr[1] ""
-
 #: templates/apparel/fragments/look_create.html:5
 msgid ""
 "Begin by selecting a name for your look (you can change the name later): "
@@ -1285,7 +1286,7 @@ msgid ""
 "approximate."
 msgstr ""
 
-#: templates/apparel/fragments/product_detail.html:93
+#: templates/apparel/fragments/product_detail.html:92
 msgid "Add to look"
 msgstr ""
 
@@ -1589,8 +1590,7 @@ msgid "%(name)s's latest looks"
 msgstr ""
 
 #: templates/profile/base_settings.html:10
-#: templates/profile/settings_notification.html:5
-msgid "Events"
+msgid "E-mail Notifications & Newsletters"
 msgstr ""
 
 #: templates/profile/confirm_email.html:5
@@ -1606,26 +1606,6 @@ msgstr ""
 
 #: templates/profile/confirm_email_subject.html:1
 msgid "Confirm e-mail address change"
-msgstr ""
-
-#: templates/profile/dialog_welcome.html:5
-#, python-format
-msgid "Welcome %(first_name)s"
-msgstr ""
-
-#: templates/profile/dialog_welcome.html:7
-msgid ""
-"The first thing you should do now is to follow members here on the site, to "
-"keep you updated when they create looks, see which products they like and "
-"what which products they have in their closet."
-msgstr ""
-
-#: templates/profile/dialog_welcome.html:8
-msgid "Find your friends below, or among all our other members."
-msgstr ""
-
-#: templates/profile/dialog_welcome.html:9
-msgid "Most popular to follow"
 msgstr ""
 
 #: templates/profile/likes.html:21
@@ -1664,6 +1644,10 @@ msgstr ""
 
 #: templates/profile/settings_email.html:13
 msgid "Update"
+msgstr ""
+
+#: templates/profile/settings_notification.html:5
+msgid "Events"
 msgstr ""
 
 #: templates/profile/settings_notification.html:6

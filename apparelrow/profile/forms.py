@@ -32,7 +32,7 @@ class NotificationForm(ModelForm):
 
 
 class NewsletterForm(ModelForm):
-    newsletter = BooleanField(required=False, help_text=_('Participate in our weekly newsletter'))
+    newsletter = BooleanField(required=False, help_text=_('I\'d like to receive e-mails with trending products, looks and other inspiration.'))
 
     class Meta:
         model = ApparelProfile
