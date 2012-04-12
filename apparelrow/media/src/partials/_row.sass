@@ -2,7 +2,7 @@ $default_row_width: $large_width !default
 $default_row_height: 118px !default
 $default_browse_height: 8px !default
 
-=row($width: $default_row_width, $height: $default_row_height)
+=row($width: $default_row_width, $height: $default_row_height, $border: true)
   +clearfix
   a.prev, a.next
     +float-left
@@ -46,7 +46,8 @@ $default_browse_height: 8px !default
       li
         margin-right: 10px
         a
-          +border(all)
+          @if $border == true
+            +border(all)
           display: block
           background: white
           height: 116px
