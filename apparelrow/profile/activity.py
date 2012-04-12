@@ -26,13 +26,11 @@ def comments_handler(sender, **kwargs):
     if instance.content_type is None:
         return
 
-    look_content_type = ContentType.objects.get_by_natural_key('apparel', 'Look')
-    if instance.content_type == look_content_type:
+    if instance.content_type.model == 'look':
         process_comment_look_created.delay(instance.content_object.user, request.user, instance)
         process_comment_look_comment.delay(instance.content_object.user, request.user, instance)
 
-    product_content_type = ContentType.objects.get_by_natural_key('apparel', 'Product')
-    if instance.content_type == product_content_type:
+    elif instance.content_type.model == 'product':
         process_comment_product_comment.delay(None, request.user, instance)
         process_comment_product_wardrobe.delay(None, request.user, instance)
 
