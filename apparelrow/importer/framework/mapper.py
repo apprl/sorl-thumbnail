@@ -80,7 +80,7 @@ class DataMapper(object):
         self.mapped_record['product']['patterns'] = self.map_patterns(self.mapped_record['product'].get('product-name', '') + self.mapped_record['product'].get('description'))
 
         # Remove manufacturer from product name
-        product_name = re.sub(r'(?iu)^%s' % (self.mapped_record['product']['manufacturer'],), '', self.mapped_record['product']['product-name'], count=1)
+        product_name = re.sub(r'(?iu)^%s' % (re.escape(self.mapped_record['product']['manufacturer']),), '', self.mapped_record['product']['product-name'], count=1)
         product_name = product_name.lstrip(' -_')
         if product_name:
             product_name = product_name[0].upper() + product_name[1:]
@@ -93,9 +93,17 @@ class DataMapper(object):
             self.mapped_record['product']['discount-price'] = None
 
         # If there is a discount price but no price, use discount as price
-        price = decimal.Decimal(price)
-        if discount_price is not None:
-            discount_price = decimal.Decimal(discount_price)
+        try:
+            price = decimal.Decimal(price)
+        except decimal.InvalidOperation:
+            raise SkipProduct('Not a valid price')
+
+        if discount_price:
+            try:
+                discount_price = decimal.Decimal(discount_price)
+            except decimal.InvalidOperation:
+                raise SkipProduct('Not a valid discount price')
+
             if price <= ZERO and discount_price > ZERO:
                 self.mapped_record['product']['price'] = self.mapped_record['product']['discount-price']
                 self.mapped_record['product']['discount-price'] = None
