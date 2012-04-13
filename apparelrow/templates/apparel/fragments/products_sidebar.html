@@ -8,7 +8,7 @@
     <a title="{{ product.product_name }}" href="{{ product.get_absolute_url }}">
         <div class="product-small">
             <div class="product-image">
-                {% thumbnail product.product_image "93x124" crop="center" as im %}
+                {% thumbnail product.product_image "93" as im %}
                 <img src="{{ im.url }}" alt="{{ product.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
                 {% endthumbnail %}
                 <span class="likes">x</span>
