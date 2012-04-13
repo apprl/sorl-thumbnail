@@ -53,7 +53,7 @@ class Command(BaseCommand):
                     post_save.send(sender=product.__class__, instance=product)
                     bad_counter = bad_counter + 1
                 elif product.availability == 0:
-                    self.log('Product %s is unavailable, but not in search' % (product_id,))
+                    self.log('Product %s is unavailable, but available in search' % (product_id,))
                     post_save.send(sender=product.__class__, instance=product)
                     bad_counter = bad_counter + 1
 
