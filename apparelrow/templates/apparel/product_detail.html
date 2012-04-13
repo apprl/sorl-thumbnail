@@ -183,7 +183,11 @@
                 <h2>{% trans "Likes" %}</h2>
                 <ul>
                 {% for like in likes %}
-                    <li{% if forloop.counter|divisibleby:6 %} class="last-column"{% endif %}><a href="{{ like.user.get_absolute_url }}"><img src="{{ like.user.get_profile.avatar }}"></a></li>
+                    <li{% if forloop.counter|divisibleby:6 %} class="last-column"{% endif %}>
+                        <a href="{{ like.user.get_absolute_url }}" title="{{ like.user.get_profile.display_name }}">
+                            <img alt="{{ like.user.get_profile.display_name }}" title="{{ like.user.get_profile.display_name }}" src="{{ like.user.get_profile.avatar }}">
+                        </a>
+                    </li>
                 {% endfor %}
                 </ul>
             </div>
