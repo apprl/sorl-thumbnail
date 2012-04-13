@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-12 22:39+0200\n"
+"POT-Creation-Date: 2012-04-13 19:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -328,8 +328,6 @@ msgstr ""
 #: beta/templates/beta/beta.html:56 beta/templates/beta/beta.html.py:67
 #: templates/beta/dialog_invite_user.html:16
 #: templates/beta/dialog_invite_user.html:29
-#: templates/profile/base_settings.html:11
-#: templates/profile/settings_email.html:5
 msgid "E-mail address"
 msgstr ""
 
@@ -1590,7 +1588,13 @@ msgid "%(name)s's latest looks"
 msgstr ""
 
 #: templates/profile/base_settings.html:10
+#: templates/profile/settings_notification.html:5
 msgid "E-mail Notifications & Newsletters"
+msgstr ""
+
+#: templates/profile/base_settings.html:11
+#: templates/profile/settings_email.html:5
+msgid "E-mail Address"
 msgstr ""
 
 #: templates/profile/confirm_email.html:5
@@ -1646,12 +1650,9 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: templates/profile/settings_notification.html:5
-msgid "Events"
-msgstr ""
-
 #: templates/profile/settings_notification.html:6
-msgid "Here you can set which events you want to be notified about via email:"
+msgid ""
+"Here you can set which notifications you want to be notified about via email:"
 msgstr ""
 
 #: templates/profile/settings_notification.html:9
@@ -1659,7 +1660,7 @@ msgid "Who?"
 msgstr ""
 
 #: templates/profile/settings_notification.html:10
-msgid "Event"
+msgid "Notifications"
 msgstr ""
 
 #: templates/profile/settings_notification.html:22

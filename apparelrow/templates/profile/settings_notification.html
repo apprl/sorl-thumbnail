@@ -2,12 +2,12 @@
 {% load i18n %}
 
 {% block content %}
-        <h2 id="events">{% trans "Events" %}</h2>
-        <p>{% trans "Here you can set which events you want to be notified about via email:" %}</p>
+        <h2 id="events">{% trans "E-mail Notifications & Newsletters" %}</h2>
+        <p>{% trans "Here you can set which notifications you want to be notified about via email:" %}</p>
         <form action="{% url profile.views.settings_notification %}" method="post">{% csrf_token %}
             <div class="form-content">
                 <h3 class="left">{% trans "Who?" %}</h3>
-                <h3 class="right">{% trans "Event" %}</h3>
+                <h3 class="right">{% trans "Notifications" %}</h3>
                 {% for field in notification_form %}
                 <div class="left">{{ field }}</div>
                 <div class="right">{{ field.help_text }}</div>

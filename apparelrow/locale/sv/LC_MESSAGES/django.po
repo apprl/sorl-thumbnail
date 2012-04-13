@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-12 22:38+0200\n"
+"POT-Creation-Date: 2012-04-13 19:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -329,8 +329,6 @@ msgstr "sedan"
 #: beta/templates/beta/beta.html:56 beta/templates/beta/beta.html.py:67
 #: templates/beta/dialog_invite_user.html:16
 #: templates/beta/dialog_invite_user.html:29
-#: templates/profile/base_settings.html:11
-#: templates/profile/settings_email.html:5
 msgid "E-mail address"
 msgstr "E-postadress"
 
@@ -1693,8 +1691,14 @@ msgid "%(name)s's latest looks"
 msgstr "%(name)ss senaste looks"
 
 #: templates/profile/base_settings.html:10
+#: templates/profile/settings_notification.html:5
 msgid "E-mail Notifications & Newsletters"
 msgstr "E-postutskick & händelser"
+
+#: templates/profile/base_settings.html:11
+#: templates/profile/settings_email.html:5
+msgid "E-mail Address"
+msgstr "E-postadress"
 
 #: templates/profile/confirm_email.html:5
 #, python-format
@@ -1756,12 +1760,9 @@ msgstr "Nuvarande e-postadress:"
 msgid "Update"
 msgstr "Uppdatera"
 
-#: templates/profile/settings_notification.html:5
-msgid "Events"
-msgstr "Händelser"
-
 #: templates/profile/settings_notification.html:6
-msgid "Here you can set which events you want to be notified about via email:"
+msgid ""
+"Here you can set which notifications you want to be notified about via email:"
 msgstr ""
 "Här kan du ställa in vilka händelser du vill bli meddelad om via e-mail:"
 
@@ -1770,8 +1771,8 @@ msgid "Who?"
 msgstr "Vem?"
 
 #: templates/profile/settings_notification.html:10
-msgid "Event"
-msgstr "Händelse"
+msgid "Notifications"
+msgstr ""
 
 #: templates/profile/settings_notification.html:22
 msgid "Save changes"
@@ -2065,6 +2066,12 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Events"
+#~ msgstr "Händelser"
+
+#~ msgid "Event"
+#~ msgstr "Händelse"
 
 #~ msgid "does not have any products in the wardrobe right now."
 #~ msgstr "har inga produkter i garderoben just nu."
