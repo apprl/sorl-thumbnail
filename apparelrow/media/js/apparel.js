@@ -545,7 +545,7 @@ ApparelSearch = {
             model: 'product',
             query: {
                 'q': s,
-                'limit': 8
+                'limit': 12
             },
             selector: '#search-result-products',
             text: {
