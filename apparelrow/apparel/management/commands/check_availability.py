@@ -41,21 +41,19 @@ class Command(BaseCommand):
             self.email = True
             self.log_buffer = []
 
-        for product_id, published in Product.objects.values_list('pk', 'published').iterator():
+        for product_id in Product.objects.values_list('pk', flat=True).iterator():
             if counter % 5000 == 0 and counter > 0:
                 print 'Checked %s products' % (counter,)
 
             result = ApparelSearch('id:apparel.product.%s AND availability:true AND published:true' % product_id, connection=solr_connection)
             if len(result):
-                availability = VendorProduct.objects.filter(product=product_id).order_by('price').values_list('availability', flat=True)[0]
-                if published == False:
+                product = Product.objects.get(pk=product_id)
+                if product.published == False:
                     self.log('Product %s is unpublished, but available in search' % (product_id,))
-                    product = Product.objects.get(pk=product_id)
                     post_save.send(sender=product.__class__, instance=product)
                     bad_counter = bad_counter + 1
-                elif availability == 0:
+                elif product.availability == 0:
                     self.log('Product %s is unavailable, but not in search' % (product_id,))
-                    product = Product.objects.get(pk=product_id)
                     post_save.send(sender=product.__class__, instance=product)
                     bad_counter = bad_counter + 1
 
