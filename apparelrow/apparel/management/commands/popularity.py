@@ -28,7 +28,7 @@ class Command(BaseCommand):
     help = 'Updates popularity for all products (takes awhile)'
 
     def handle(self, *args, **options):
-        for start, end, total, query_set in batch_qs(Product.objects.filter(published=True, category__isnull=False, vendorproduct__isnull=False), batch_size=100):
+        for start, end, total, query_set in batch_qs(Product.valid_objects.all(), batch_size=100):
             for product in query_set:
                 product_click_count = 0
                 try:
@@ -43,5 +43,8 @@ class Command(BaseCommand):
                 votes = like_count + 3 * product_click_count
                 timedelta = datetime.datetime.now() - product.date_added
                 item_half_hour_age =  (timedelta.days * 86400 + timedelta.seconds) / 7200
-                product.popularity = str(votes / pow(item_half_hour_age, 1.53))
+                if item_half_hour_age > 0:
+                    product.popularity = str(votes / pow(item_half_hour_age, 1.53))
+                else:
+                    product.popularity = 0
                 product.save()
