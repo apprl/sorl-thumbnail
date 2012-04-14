@@ -131,6 +131,9 @@ def product_save(instance, **kwargs):
     if not hasattr(instance, 'id'):
         return
 
+    if instance.published == False or not instance.category or not instance.gender:
+        return
+
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
