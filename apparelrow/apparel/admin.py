@@ -176,12 +176,7 @@ class VendorCategoryAdmin(admin.ModelAdmin):
 
     def num_products(self, vendor_category):
         vp = VendorProduct.objects.filter(vendor_category=vendor_category).count()
-
-        available_vp = 0
-        if vp > 0:
-            available_vp = VendorProduct.objects.filter(vendor_category=vendor_category).exclude(availability=0).count()
-
-        return '%s (%s)' % (vp, available_vp)
+        return '%s' % (vp,)
 
     def reset_gender(self, request, queryset):
         num_products = 0

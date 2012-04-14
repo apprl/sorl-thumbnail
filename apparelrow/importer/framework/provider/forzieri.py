@@ -14,13 +14,7 @@ class ForzieriMapper(LinkshareMapper):
         return [(large_image, self.IMAGE_MEDIUM), (image, self.IMAGE_SMALL)]
 
     def get_category(self):
-        category = self.record.get('category')
-        gender = self.get_gender()
-        if gender:
-            category = '%s > %s' % (gender, category)
-
-        if self.record.get('secondary-category'):
-            category += ' > %s' % self.record.get('secondary-category')
+        category = super(ForzieriMapper, self).get_category()
         if self.record.get('type'):
             category += ' > %s' % self.record.get('type')
 

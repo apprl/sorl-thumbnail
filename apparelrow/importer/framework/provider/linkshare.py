@@ -15,6 +15,13 @@ class LinkshareMapper(DataMapper):
         if product_id == 'HDR' or product_id == 'TRL':
             raise SkipProduct('remove header / footer from linkshare feeds')
 
+        # remove kids products
+        agegroup = self.record.get('agegroup')
+        if agegroup:
+            agegroup = agegroup.lower()
+            if agegroup == 'kids' or agegroup == 'kid' or agegroup == 'children' or agegroup == 'child':
+                raise SkipProduct('kids product')
+
         return product_id
 
     def get_product_name(self):
@@ -55,7 +62,6 @@ class LinkshareMapper(DataMapper):
     def get_gender(self):
         gender = self.map_gender(self.record.get('gender', ''))
         if not gender:
-            # Gender can be in category (for example in Stylebop feed)
             gender = self.map_gender(self.record.get('category', ''))
 
         return gender
@@ -89,10 +95,12 @@ class LinkshareMapper(DataMapper):
     def get_category(self):
         category = self.record.get('category')
 
+        gender = self.get_gender()
+        if gender:
+            category = '%s > %s' % (gender, category)
+
         if self.record.get('secondary-category'):
             category += ' > %s' % self.record.get('secondary-category')
-        if self.record.get('type'):
-            category += ' > %s' % self.record.get('type')
 
         return category
 

@@ -3,17 +3,7 @@ from importer.framework.provider.linkshare import LinkshareMapper, Provider as L
 # See linkshare.py
 
 class FarfetchMapper(LinkshareMapper): 
-
-    def get_category(self):
-        category = self.record.get('category')
-
-        if self.record.get('secondary-category'):
-            category += ' > %s' % self.record.get('secondary-category')
-
-        if self.record.get('gender'):
-            category = '%s > %s' % (self.record.get('gender'), category)
-
-        return category
+    pass
 
 class Provider(LinkshareProvider):
     def __init__(self, *args, **kwargs):
