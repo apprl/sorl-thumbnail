@@ -366,6 +366,11 @@ LOGGING = {
             'propagate': True,
             'handlers': ['app_core'],
         },
+        'pysolr': {
+            'level': 'ERROR',
+            'propagate': False,
+            'handlers': ['app_core'],
+        },
         'django': {
             'level': 'INFO',
             'propagate': True,
