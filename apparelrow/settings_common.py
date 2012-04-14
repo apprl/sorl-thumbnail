@@ -304,7 +304,6 @@ CELERY_QUEUES = {
     'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
 }
 CELERY_ROUTES = ({
-    'apparelrow.tasks.ProcessClicksTask': {'queue': 'importer'},
     'apparelrow.tasks.ProcessPopularityTask': {'queue': 'importer'},
     'apparelrow.tasks.search_index_update_task': {'queue': 'standard'},
     'beta.tasks.send_email_task': {'queue': 'standard'},
