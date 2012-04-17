@@ -20,11 +20,15 @@
     </div>
     <div id="content">
         {% block login-flow-content %}{% endblock %}
+
+        <div class="content-footer">
+            {% block login-flow-footer %}
+            <a href="{{ next_url }}" class="footer-button">{% trans "Proceed" %}</a>
+            {% endblock %}
+        </div>  
+
     </div>
 
-    <div class="content-footer">
-        {% block login-flow-footer %}
-        <a href="{{ next_url }}">{% trans "Proceed" %}</a>
-        {% endblock %}
-    </div>
+
+    
 {% endblock %}

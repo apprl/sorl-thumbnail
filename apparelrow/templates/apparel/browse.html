@@ -27,13 +27,17 @@
             {% include 'apparel/fragments/product_menu_browse.html' %}
         </div>
         <div id="content">
+          <div id="sort-wrap"> 
+            <span class="dd-introtext">Sortera efter</span>
+              <select class="dd-sort-by">
+                <option value="pop">Popular</option>
+                <option value="lat">Latest</option>
+                <option value="exp">Expensive</option>
+                <option value="che">Cheap</option>
+             </select>
+          </div>
             <h2 id="product-count">
-                <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
-                {% if user.is_authenticated %}
-                <a href="{% gender_url APPAREL_GENDER 'shop' %}#f=1">{% trans "Show popular products in your network" %}</a>
-                {% else %}
-                <a class="open-dialog" href="{% url dialog-login-friends %}">{% trans "Show popular products in your network" %}</a>
-                {% endif %}
+
             </h2>
             <div id="product-list" class="product-list">
                 {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination only %}

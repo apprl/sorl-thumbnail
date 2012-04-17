@@ -4,8 +4,8 @@
 {% block login-flow-content %}
         <div id="steps">
             <div id="ett">
-                <a href="#" id="abovefollow">Följ alla dina vänner</a>
-                <a href="#" id="abovefollowothers">Följ andra populära medlemmar</a>
+                <a href="#" id="abovefollow">Följ dina vänner</a>
+                <a href="#" id="abovefollowothers">Följ populära medlemmar</a>
             </div>
             <div id="tva">
                 <a href="#" id="followmyfriends">Följ dina vänner</a>
@@ -21,5 +21,5 @@
 {% endblock %}
 
 {% block login-flow-footer %}
-<a href="{{ next_url }}">{% trans "Proceed" %}</a>
+<a href="{{ next_url }}" class="footer-button">{% trans "Proceed" %}</a>
 {% endblock %}

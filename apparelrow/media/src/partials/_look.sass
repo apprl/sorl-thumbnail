@@ -12,6 +12,7 @@ $input_border_color: $highlight_border_color !default
   height: 69px
   position: relative
   overflow: hidden
+  border: none
   .collage-image
     position: absolute
 
@@ -247,7 +248,8 @@ ul.looks
   li
     &:hover
       z-index: 100
-      +box-shadow
+      background-color: #d9d9d9
+
   
 body.look
   .collage, .photo
@@ -281,7 +283,7 @@ body.look
       background-color: white
 
 #look-header
-  margin: 0 -20px
+  margin: 0 0 0 -20px
   padding: 1em 20px 0 20px
   position: relative
   +border(bottom)
@@ -395,7 +397,7 @@ body
   ul.looks.wide
     li
       display: block
-      padding: none
+      padding: 10px
       float: none
       margin-right: 0
       +clearfix

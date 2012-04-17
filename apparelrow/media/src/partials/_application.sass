@@ -78,6 +78,8 @@ button
     clear: both
     +pie-clearfix
     overflow: visible
+    .profile-login-flow &
+      padding-top: 20px
 
 #header
   background: #333333
@@ -88,12 +90,13 @@ button
 
   #inner-header
     width: 940px
-    @media screen and (min-width: 1212px)
-      width: 940px + 232
-    @media screen and (min-width: 1444px)
-      width: 940px + 464
-    @media screen and (min-width: 1676px)
-      width: 940px + 696
+    .page-shop &
+      @media screen and (min-width: 1212px)
+        width: 940px + 232
+      @media screen and (min-width: 1444px)
+        width: 940px + 464
+      @media screen and (min-width: 1676px)
+        width: 940px + 696
     margin-left: 20px
     position: relative
     overflow: visible
@@ -111,6 +114,8 @@ button
       position: absolute
       top: 63px
       left: 244px
+      .profile-login-flow &
+        display: none
       a
         display: block
         text-decoration: none
@@ -132,6 +137,8 @@ button
       position: absolute
       top: 59px
       right: 244px
+      .profile-login-flow &
+        display: none
       li
         display: inline-block
         height: 28px
@@ -149,6 +156,8 @@ button
       position: absolute
       top: 18px
       right: 0
+      .profile-login-flow &
+        display: none
       li
         display: inline-block
         line-height: 28px
@@ -210,16 +219,18 @@ button
             position: relative
             top: 4px
     #search
-      background: transparent image_url(unquote("search.png")) scroll no-repeat right top
+      background: url("../images/searchdubble.png") no-repeat scroll center bottom transparent
       top: 52px
-      right: -9px
+      right: 9px
       position: absolute
       width: 216px
       height: 40px
       overflow: visible
       z-index: 1000
+      .profile-login-flow &
+        display: none
       &.expanded
-        background: transparent image_url(unquote("searchresult-box.png")) scroll no-repeat right top
+        background: url("../images/searchdubble.png") no-repeat scroll center top transparent
         height: 60px
         width: 216px
       & input
@@ -246,6 +257,8 @@ button
 
 #footer
   height: 124px
+  .profile-login-flow &
+    display: none
   #inner-footer
     width: 940px
     margin-left: 38px
@@ -281,6 +294,8 @@ button
   border-right: none
   margin: 0
   padding: 0
+  .profile-login-flow &
+    display: none
   div
     &.left
       float: left
@@ -535,11 +550,11 @@ ul.looks
     .look
       +look_small
     span.button
-      +button
+      background-color: #fff
+      background-image: none
       line-height: 1.5em
-      border-top: 0
+      border: 0
       display: block
-      +border-bottom-radius(unquote("3px"))
       text-align: center
     span.inline-date
       margin-top: 5px
@@ -860,6 +875,12 @@ span, a
 .product-photo
   border: 1px solid #dadada
 
+.page-shop #product-count
+  margin: 37px 0 20px
+  
+.page-shop .sidebar h2
+  margin: 12px 0 20px
+
 #product-count
   font-weight: bold
   a
@@ -1129,12 +1150,13 @@ body.three-columns .pagination
     border-top: none
     top: 0
     display: none
-  height: 57px
+  height: 34px
   background-color: $button_color
   .prev, .next
     display: inline-block
     width: 506px
-    height: 57px
+    height: 34px
+
   .prev
     float: left
     +replace-text(unquote("prev-page.png"), center, center)
@@ -1145,14 +1167,25 @@ body.three-columns .pagination
     display: none
   .next
     float: left
-    +replace-text(unquote("more-btn.png"), top, center)
+    +replace-text(unquote("knappbg.jpg"))
+    background-repeat: repeat-x
+    background-position: bottom
+    border: solid 1px #353535
+    text-indent: 0
+    color: #f9f9f9
+    text-align: center
+    padding-top: 17px
+    font-weight: bold
+    font-size: 1.25em
   .next.disabled
     +replace-text(unquote("next-page-disabled.png"), center, center)
     display: none
   .next:hover, .prev:hover
-    background-position: 0 -57px
+    background-position: top
+    border: solid 1px #d9d9d9
+    color: #353535
   .next:active, .prev:active
-    background-position: 0 -114px
+    background-position: bottom
   .next.disabled:hover, .prev.disabled:hover
     background-color: inherit
   ol
@@ -1161,7 +1194,7 @@ body.three-columns .pagination
       font-weight: bold
   div
     float: left
-    line-height: 57px
+    line-height: 34px
     margin: 0 auto
     ol
       text-align: center
@@ -1251,7 +1284,6 @@ body.product #container .product-image img
     position: relative
     display: inline-block
     margin: 0 auto
-    +box-shadow
     img
       vertical-align: top
     .close
@@ -1428,6 +1460,7 @@ body.brand-list
     &:hover, &:active
       text-decoration: underline
   .sidebar
+    clear: both
     h3
       clear: both
       font-weight: bold
@@ -1473,6 +1506,26 @@ body.create-look
   #content
     p
       margin: 1em 0
+#sort-wrap
+  float: right
+  width: 190px
+
+span.dd-introtext
+  font-weight: bold
+  margin: 6px 0 0
+  float: left
+  font-size: 1.2em
+
+select.dd-sort-by
+  float: right
+  width: 100px
+  background: white
+  font-family: arial
+  font-weight: bold
+  margin: 5px 0 0
+  border: none
+  font-size: 1em
+  color: #999
 
 body.create-look, div.create-look-dialog
   form
@@ -1521,9 +1574,9 @@ body.product
       width: $small_width - 73px
 
 #recentlyviewed
-  +row($aside_width, $default_row_height, false)
+  +row($aside_width)
 #more-like-this
-  +row($semi_large_width, $default_row_height, false)
+  +row($semi_large_width)
 
 a h2
   background: transparent image_url("arrow-bg.png") scroll no-repeat right center
@@ -1597,14 +1650,15 @@ body.product .product-image, body.look #content
     top: 0px
     right: 0px
     button
-      margin: 5px 0 0
+      margin: 5px 5px 0 0
+      padding: 0
       border: none
       background: transparent image_url(unquote("heartbg.jpg")) no-repeat scroll top center
       font-family: $font_family
       color: $like_color
       text-transform: uppercase
       height: 35px
-      width: 32px
+      width: 34px
       cursor: pointer
       text-align: center
       text-indent: -9999em
@@ -1702,7 +1756,7 @@ a.block_link
   width: 100%
   +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 5px, 5px)
   #inner-search-result
-    background-color: $box_color
+    background-color: #FFF
     padding: 0 20px
     position: relative
     overflow: visible
@@ -1740,7 +1794,7 @@ a.block_link
       cursor: default
     .product-list
       border-left: none
-      width: 464px
+      width: auto
     ul
       +clearfix
       li
@@ -1760,7 +1814,7 @@ a.block_link
           &.last
             border-color: $border_color
           &:hover
-            background-color: #f5f5f5
+            background-color: none
             a
               color: #55b8c8
       &#search-result-looks
@@ -1781,8 +1835,15 @@ a.block_link
             margin: -1px -1px -1px 0
             img
               width: 115px
+          .product-medium
+            img
+              width: 224px
+              height: auto
     &.wide
       width: 466px
+      @media screen and (min-width: 1212px)
+        width: 466px + 232
+
     &.last
       margin-right: 0px
 
@@ -1966,31 +2027,28 @@ ul.suggested-friends
   +clearfix
   position: relative
   padding: 1em 0
+  margin: 0
   ul
     +horizontal-list(0)
     display: inline
     z-index: 1
     position: relative
     li
-      min-width: 78px
-      text-align: center
+      /* min-width: 78px */
+      /* text-align: center */
       a
         display: block
         height: 26px
         line-height: 26px
-        padding-left: 1em
-        padding-right: 1em
-        padding-top: 2px
-        border-style: solid
-        border-color: #d9d9d9
-        border-width: 1px 1px 1px 0
-        background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x top left
+        font-size: 1.3em
+        font-weight: bold
+        padding-right: 20px
+        color: #c1c1c1
         &.first
           border-width: 1px
         &.selected, &:hover
-          background-image: image_url(unquote("profile-nav-bg-selected.png"))
-          border-right-color: #ababab
-          border-left-color: #ababab
+          color: #353535
+          text-decoration: underline
         &.profile-image
           border-right: none
           padding: 0
@@ -2021,39 +2079,51 @@ ul.suggested-friends
     display: block
     margin: 0 0 1.5em 0
     &:hover
-      +box_shadow
   li.activity
+    padding: 10px
     margin: 0 0 1.5em 0
     background-color: transparent
     background-repeat: no-repeat
     background-attachment: scroll
     background-position: 104px 6px
     &:hover
-      +box_shadow
     &.liked, &.liked_product, &.liked_look
       background-image: image_url("activity_heart.png")
-      background-position: 106px 6px
+      background-position: 120px 20px
+      &:hover
+        background: image_url("activity_heart.png") no-repeat #d9d9d9
+        background-position: 120px 20px
     &.commented
       background-image: image_url("activity_talk.png")
-      background-position: 107px 6px
+      background-position: 121px 6px
+      &:hover
+        background: image_url("activity_talk.png") no-repeat #d9d9d9
+        background-position: 121px 6px
     &.created
       background-image: image_url("activity_new.png")
-      background-position: 104px 6px
+      background-position: 118px 18px
+      &:hover
+        background: image_url("activity_new.png") no-repeat #d9d9d9
+        background-position: 118px 18px
     &.added
       background-image: image_url("activity_add.png")
-      background-position: 109px 6px
+      background-position: 122px 19px
+      &:hover
+        background: image_url("activity_add.png") no-repeat #d9d9d9
+        background-position: 122px 19px
     &.following
-      background-image: image_url("activity_follow.png")
-      background-position: 107px 6px
+      &:hover
+        background: #d9d9d9
     +clearfix
     border: none
     position: relative
     .activity-image
-      margin-right: 45px
+      margin-right: 28px
       float: left
       overflow: hidden
     .activity-image
       width: $aside_width / 2 - $gutter_width / 4 - 2
+      +border("all")
       .look
         +look_small
         border: none
@@ -2061,8 +2131,8 @@ ul.suggested-friends
         width: $aside_width / 2 - $gutter_width / 4 - 2
         vertical-align: top
     .activity-info
-      padding: 0.5em 0.5em 0.5em 0
-      width: $middle_width - $aside_width / 2 - 45
+      padding: 0.5em 0 0.5em 0
+      width: $middle_width - $aside_width / 2 - 58
       float: right
       .activity-content
         h3
@@ -2190,36 +2260,23 @@ a#create-look
 ul.look-list-tabs, ul.user-list-tabs
   +horizontal-list(0)
   margin: 16px 0 10px 0
-  +border(all)
-  +border-top-left-radius
-  +border-top-right-radius
   li
-    +border(all)
+    padding-left: 20px
     display: block
-    border-style: none solid none none
-    &:first-child, &.first, &:first-child a, &.first a
-      +border-top-left-radius
     &:last-child, &.last, &:last-child a, &.last a
-      +border-top-right-radius
-      border-right: none
-      width: 225px
     a
-      +button
-      width: 224px
-      text-align: center
+      font-size: 1.3em
+      font-weight: bold
+      color: #c1c1c1
       display: block
-      border: none
       &.current, &.current:hover
-        background-image: image_url(unquote("gradient-darker-bg.png"))
-        cursor: default
-      &:active, &:hover
-        background-image: image_url(unquote("gradient-dark-bg.png"))
+        text-decoration: underline
+        color: #353535
+      &:hover
+        color: #353535
+      &:active
+        text-decoration: underline
       span
-        padding-left: 16px
-        background:
-          color: transparent
-          repeat: no-repeat
-          position: left center
 
 ul.gender-tabs
   +horizontal_list
@@ -2262,7 +2319,7 @@ body.settings
       line-height: 25px
   .sidebar
     h2
-      margin: 30px 0 0 0
+      margin: -10px 0 0 0
     .settings-list
       li
         padding: 5px 0
@@ -2391,48 +2448,80 @@ body.settings
   height: 126px
   margin: 61px 40px 0 20px
 
-body.profile-login-flow
-  background-color: #ffffff
-  #inner-header
-    #search, #nav-main, #nav-gender, #nav-user
-      display: none
-  #login-pane
-    display: none
-  #inner-container
-    margin-top: 20px
-  #footer
-    display: none
-  #content
-    ul.profiles
-      li
-        width: 218px
-        float: left
-        &.column-1
-          clear: left
-  .content-footer
-    background: image_url("login_flow/knappbg.jpg") repeat scroll center bottom #ffffff
+.profile-login-flow
+  background-color: #fff
+  .sidebar p
+    font-size: 1.3em
+    line-height: normal
+  .sidebar-profile-name
+    line-height: normal
+    margin: 15px 0 15px 0
+  #ett
+    width: 100%
+    float: left
+    margin: 20px 0
+  #tva
+    border-top: 3px solid #333
+    width: 100%
+    float: left
+    padding: 20px 0
+  #steps
+    width: 697px
+    float: left
+    height: auto
+  #abovefollow
+    background: image_url(unquote("face1.png")) no-repeat
+    padding: 8px 0 0 45px
+    margin: 0 0 0 100px
+    height: 27px
+    float: left
+    clear: right
+    font-size: 1.3em
+  #abovefollowothers
+    background: image_url(unquote("face2.png")) no-repeat
+    padding: 8px 0 0 45px
+    margin: 0 0 0 100px
+    height: 27px
+    float: left
+    clear: right
+    font-size: 1.3em
+    opacity: 0.3
+  #followmyfriends
+    background: image_url(unquote("flwbtnfriends.png")) no-repeat
+    padding: 8px 0 0 45px
+    margin: 0 0 20px 0
+    height: 27px
+    float: left
+    clear: right
+  & .content-footer
+    background: image_url(unquote("knappbg.jpg")) repeat scroll center bottom #fff
     float: left
     height: 51px
     position: static
-    width: 100%
+    width: 697px
     margin-top: 20px
     border: solid 1px #353535
-    @media screen and (max-height: 600px)
+    &:hover
+      background-position: top
+      border: solid 1px #d9d9d9
+      cursor: pointer
+  & a.footer-button
+    color: #fefefe
+    font-weight: bold
+    font-size: 1.3em
+    float: left
+    height: 34px
+    padding: 18px 0 0
+    text-align: center
+    width: 697px
+    &:hover
+      color: #333333
+  @media screen and (max-height: 600px)
+    .content-footer
       margin: 0
       top: auto
       width: 697px
       bottom: 20px
       position: fixed
-    &:hover
-      background-position: top
-      border: solid 1px #d9d9d9
-    a
-      color: #fefefe
-      font-weight: bold
-      float: left
-      height: 34px
-      padding: 17px 0 0
-      text-align: center
-      width: 697px
-      &:hover
-        color: #333333
+      z-index: 1000
+    
