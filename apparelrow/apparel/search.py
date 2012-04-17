@@ -177,7 +177,7 @@ def get_product_document(instance):
     }
     boost = {}
 
-    if instance.published == True and instance.category is not None and instance.gender is not None:
+    if instance.published == True and instance.category and instance.gender:
         availability = instance.availability
         discount = False
         price = decimal.Decimal('0.0')
