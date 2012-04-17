@@ -322,12 +322,13 @@ button
     &.holder
       float: left
       width: $page_width - 20px
-      @media screen and (min-width: 1212px)
-        width: $page_width - 20 + 232
-      @media screen and (min-width: 1444px)
-        width: $page_width - 20 + 464
-      @media screen and (min-width: 1676px)
-        width: $page_width - 20 + 696
+      .page-shop &
+        @media screen and (min-width: 1212px)
+          width: $page_width - 20 + 232
+        @media screen and (min-width: 1444px)
+          width: $page_width - 20 + 464
+        @media screen and (min-width: 1676px)
+          width: $page_width - 20 + 696
     #logout
       display: inline-block
       color: $easy-color
