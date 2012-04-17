@@ -9,13 +9,22 @@ class ProductManager(models.Manager):
     """
     Adds a shortcut to get valid products only.
     """
+    def __init__(self, *args, **kwargs):
+        if 'availability' in kwargs:
+            self.availability = kwargs['availability']
+            del kwargs['availability']
+
+        super(ProductManager, self).__init__(*args, **kwargs)
+
     def get_query_set(self):
-        return super(ProductManager, self).get_query_set() \
-                                          .filter(vendorproduct__isnull=False,
-                                                  published=True,
-                                                  category__isnull=False,
-                                                  gender__isnull=False,
-                                                  availability=True)
+        queryset = super(ProductManager, self).get_query_set() \
+                                              .filter(published=True,
+                                                      category__isnull=False,
+                                                      gender__isnull=False)
+        if self.availability:
+            queryset = queryset.filter(vendorproduct__isnull=False, availability=True)
+
+        return queryset
 
 class SearchManager(models.Manager):
     """

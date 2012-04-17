@@ -51,7 +51,8 @@ def get_profile_sidebar_info(user):
     """
     info = {'products': 0, 'following': 0}
 
-    info['products'] = user.product_likes.filter(active=True).count()
+    info['products'] = Product.published_objects.filter(likes__user=user, likes__active=True).count()
+    #info['products'] = user.product_likes.filter(active=True).count()
 
     content_type = ContentType.objects.get_for_model(User)
     info['following'] = Follow.objects.filter(content_type=content_type, user=user).count()
@@ -64,7 +65,7 @@ def likes(request, profile, page=0):
     Displays the profile likes page.
     """
     form = handle_change_image(request, profile)
-    queryset = Product.objects.filter(likes__user=profile.user, likes__active=True).order_by('-likes__modified')
+    queryset = Product.published_objects.filter(likes__user=profile.user, likes__active=True).order_by('-likes__modified')
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
 
     content = {

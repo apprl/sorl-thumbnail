@@ -530,11 +530,9 @@ jQuery(document).ready(function() {
 <div id="product-chooser">
     <h3>{% trans "Products" %}<a class="reset" href="#">{% trans "Close" %}</a></h3>
     <ul>
-    {% with wardrobe as products %}
-    {% for product in products %}
+    {% for product in wardrobe %}
         <li id="option-{{ product.id }}">{% include 'apparel/fragments/product_thumb.html' %}</li>
     {% endfor %}
-    {% endwith %}
     </ul>
 </div>
 <div id="look-tooltips">
