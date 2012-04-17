@@ -3,6 +3,8 @@
 {% load cache %}
 {% load apparel_extras %}
 
+{% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Brands Men" %}{% else %}{% trans "Brands Women" %}{% endif %} | {% endblock %}
+
 {% block body-classes %}three-columns brand-list{% endblock body-classes %}
 
 {% block body %}

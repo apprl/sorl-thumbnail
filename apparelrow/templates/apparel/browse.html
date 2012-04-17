@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load apparel_extras %}
 
-{% block extra-title %}{% trans "Browse" %} | {% endblock %}
+{% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Shop Men" %}{% else %}{% trans "Shop Women" %}{% endif %} | {% endblock %}
 
 {% block 'extra-styles' %}
     <style type="text/css">
@@ -42,6 +42,6 @@
             <div id="product-list" class="product-list">
                 {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination only %}
             </div>
-            <p id="back-top"><a href="#top"><span>{% blocktrans %} Till toppen {% endblocktrans %}</span></a></p>
+            <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
         </div>
 {% endblock body %}

@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load apparel_extras %}
 
+{% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Looks Men" %}{% else %}{% trans "Looks Women" %}{% endif %} | {% endblock %}
+
 {% block body-classes %}three-columns look-list{% endblock body-classes %}
 
 {% block body %}
