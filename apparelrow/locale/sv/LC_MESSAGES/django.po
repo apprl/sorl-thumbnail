@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-17 20:48+0200\n"
+"POT-Creation-Date: 2012-04-17 21:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,8 +34,8 @@ msgstr ""
 msgid "Swe"
 msgstr ""
 
-#: apparel/browse.py:239 templates/apparel/look_list.html:31
-#: templates/apparel/look_list.html:33
+#: apparel/browse.py:239 templates/apparel/look_list.html:27
+#: templates/apparel/look_list.html:29
 msgid "Showing"
 msgstr "Visar"
 
@@ -786,7 +786,7 @@ msgstr "Föregående"
 msgid "Next"
 msgstr "Nästa"
 
-#: templates/index.html:162 templates/apparel/look_list.html:26
+#: templates/index.html:162 templates/apparel/look_list.html:22
 msgid "Popular looks"
 msgstr "Populära looks"
 
@@ -853,23 +853,23 @@ msgstr "Nytt lösenord (bekräfta)"
 msgid "Update password"
 msgstr "Ändra lösenord"
 
-#: templates/apparel/brand_list.html:7
+#: templates/apparel/brand_list.html:6
 msgid "Brands Men"
 msgstr "Varumärken Herr"
 
-#: templates/apparel/brand_list.html:9
+#: templates/apparel/brand_list.html:6
 msgid "Brands Women"
 msgstr "Varumärken Dam"
 
-#: templates/apparel/brand_list.html:16
+#: templates/apparel/brand_list.html:12
 msgid "Popular brands"
 msgstr "Populära varumärken"
 
-#: templates/apparel/brand_list.html:48
+#: templates/apparel/brand_list.html:44
 msgid "Popular brands in your network"
 msgstr "Populära bland dina vänner"
 
-#: templates/apparel/brand_list.html:50
+#: templates/apparel/brand_list.html:46
 msgid ""
 "To see popular brands in your network you need to connect with your Facebook "
 "account."
@@ -877,15 +877,35 @@ msgstr ""
 "För att se vilka varumärken som är populära bland dina vänner behöver du "
 "logga in med ditt Facebookkonto."
 
-#: templates/apparel/browse.html:6
+#: templates/apparel/browse.html:5
 msgid "Shop Men"
 msgstr ""
 
-#: templates/apparel/browse.html:8
+#: templates/apparel/browse.html:5
 msgid "Shop Women"
 msgstr "Shop Dam"
 
-#: templates/apparel/browse.html:49
+#: templates/apparel/browse.html:31
+msgid "Sort by"
+msgstr "Sortera efter"
+
+#: templates/apparel/browse.html:33
+msgid "Popular"
+msgstr "Populära"
+
+#: templates/apparel/browse.html:34
+msgid "Latest"
+msgstr "Senaste"
+
+#: templates/apparel/browse.html:35
+msgid "Expensive"
+msgstr "Dyrast"
+
+#: templates/apparel/browse.html:36
+msgid "Cheap"
+msgstr "Billigast"
+
+#: templates/apparel/browse.html:45
 msgid "Back to Top"
 msgstr "Till Toppen"
 
@@ -1007,30 +1027,30 @@ msgstr "Gillade produkter"
 msgid "Products"
 msgstr "Produkter"
 
-#: templates/apparel/look_list.html:6
+#: templates/apparel/look_list.html:5
 msgid "Looks Men"
 msgstr "Looks Herr"
 
-#: templates/apparel/look_list.html:8
+#: templates/apparel/look_list.html:5
 msgid "Looks Women"
 msgstr "Looks Dam"
 
-#: templates/apparel/look_list.html:15
+#: templates/apparel/look_list.html:11
 msgid "Latest looks"
 msgstr "Senaste looks"
 
-#: templates/apparel/look_list.html:27 templates/apparel/user_home.html:15
+#: templates/apparel/look_list.html:23 templates/apparel/user_home.html:15
 msgid "Popular looks in your network"
 msgstr "Populära looks bland vänner"
 
-#: templates/apparel/look_list.html:31 templates/apparel/look_list.html:33
+#: templates/apparel/look_list.html:27 templates/apparel/look_list.html:29
 #, python-format
 msgid "%(counter)s look"
 msgid_plural "%(counter)s looks"
 msgstr[0] "%(counter)s look"
 msgstr[1] "%(counter)s looks"
 
-#: templates/apparel/look_list.html:38
+#: templates/apparel/look_list.html:34
 msgid ""
 "To see popular looks in your network you need to connect with your Facebook "
 "account."
@@ -1038,7 +1058,7 @@ msgstr ""
 "För att se vilka looks som är populära bland dina vänner behöver du logga in "
 "med ditt Facebookkonto."
 
-#: templates/apparel/look_list.html:44
+#: templates/apparel/look_list.html:40
 msgid ""
 "You currently don't follow anyone who has liked any looks, find friends to "
 "follow amoung our members."
@@ -1046,17 +1066,17 @@ msgstr ""
 "Du följer just nu ingen som gillar någon look, hitta vänner att följa bland "
 "våra medlemmar."
 
-#: templates/apparel/look_list.html:45 templates/apparel/look_list.html:56
+#: templates/apparel/look_list.html:41 templates/apparel/look_list.html:52
 #: templates/apparel/user_home.html:36
 #: templates/apparel/fragments/browse_follow_user.html:5
 msgid "See all members"
 msgstr "Se alla medlemmar"
 
-#: templates/apparel/look_list.html:52
+#: templates/apparel/look_list.html:48
 msgid "Friends with most looks"
 msgstr "Vänner med flest looks"
 
-#: templates/apparel/look_list.html:55
+#: templates/apparel/look_list.html:51
 msgid ""
 "You currently don't follow anyone who has created any looks, find friends to "
 "follow among our members."
@@ -1064,12 +1084,12 @@ msgstr ""
 "Du följer just nu ingen som har skapat någon looks, hitta vänner att följa "
 "bland våra medlemmar."
 
-#: templates/apparel/look_list.html:63
+#: templates/apparel/look_list.html:59
 #, python-format
 msgid "See all %(looks)s looks"
 msgstr "Se alla %(looks)s looks"
 
-#: templates/apparel/look_list.html:70
+#: templates/apparel/look_list.html:66
 msgid ""
 "To see which of your friends have created the most looks, connect with your "
 "Facebook account."

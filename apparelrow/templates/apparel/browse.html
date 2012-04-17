@@ -28,12 +28,12 @@
         </div>
         <div id="content">
           <div id="sort-wrap"> 
-            <span class="dd-introtext">Sortera efter</span>
-              <select class="dd-sort-by">
-                <option value="pop">Popular</option>
-                <option value="lat">Latest</option>
-                <option value="exp">Expensive</option>
-                <option value="che">Cheap</option>
+              <span class="dd-introtext">{% trans "Sort by" %}</span>
+              <select id="sort-by" class="dd-sort-by">
+                  <option value="pop">{% trans "Popular" %}</option>
+                  <option value="lat">{% trans "Latest" %}</option>
+                  <option value="exp">{% trans "Expensive" %}</option>
+                  <option value="che">{% trans "Cheap" %}</option>
              </select>
           </div>
             <h2 id="product-count">
