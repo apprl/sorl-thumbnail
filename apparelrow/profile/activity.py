@@ -1,6 +1,6 @@
 import logging
 
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, pre_delete
 from django.contrib.comments import signals as comments_signals
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
@@ -59,7 +59,7 @@ def post_save_follow_handler(sender, **kwargs):
     apparel_profile.followers_count = apparel_profile.followers_count + 1
     apparel_profile.save()
 
-def post_delete_follow_handler(sender, **kwargs):
+def pre_delete_follow_handler(sender, **kwargs):
     """
     Post save handler for follow objects. Updates followers count on user
     profile.
@@ -81,4 +81,4 @@ def post_delete_follow_handler(sender, **kwargs):
                           verb='started following').delete()
 
 post_save.connect(post_save_follow_handler, sender=Follow)
-post_delete.connect(post_delete_follow_handler, sender=Follow)
+pre_delete.connect(pre_delete_follow_handler, sender=Follow)

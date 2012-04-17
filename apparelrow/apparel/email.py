@@ -11,7 +11,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models import Q, Count
-from django.db.models.signals import pre_save, post_delete
+from django.db.models.signals import pre_save, pre_delete
 from django.dispatch import receiver
 from django.template import RequestContext, loader
 from django.contrib.auth.decorators import login_required
@@ -57,8 +57,8 @@ def pre_save_profile_newsletter(sender, instance, **kwargs):
     else:
         mailchimp_unsubscribe.delay(instance.user)
 
-@receiver(post_delete, sender=ApparelProfile, dispatch_uid='post_delete_profile_newsletter')
-def post_delete_profile_newsletter(sender, instance, **kwargs):
+@receiver(pre_delete, sender=ApparelProfile, dispatch_uid='pre_delete_profile_newsletter')
+def pre_delete_profile_newsletter(sender, instance, **kwargs):
     """
     Update mailchimp list on profile delete.
     """
