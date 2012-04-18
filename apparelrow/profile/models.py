@@ -180,7 +180,7 @@ def create_profile(signal, instance, **kwargs):
     if kwargs['created']:
         profile, created = ApparelProfile.objects.get_or_create(user=instance)
 
-        subject = _('Welcome %(username)s') % {'username': profile.display_name}
+        subject = 'Välkommen till Apparelrow %(username)s' % {'username': instance.first_name}
         body = render_to_string('profile/email_welcome.html', {'username': profile.display_name})
         send_email_confirm_task.delay(subject, body, instance.email)
 

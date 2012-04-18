@@ -1,7 +1,11 @@
+import logging
+
 from django.conf import settings
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
 from celery.task import task
+
+logger = logging.getLogger('apparel.tasks')
 
 @task(name='apparel.email.mailchimp_subscribe', max_retries=5, ignore_result=True)
 def mailchimp_subscribe(user):

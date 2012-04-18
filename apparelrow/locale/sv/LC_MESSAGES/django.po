@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-17 21:41+0200\n"
+"POT-Creation-Date: 2012-04-18 20:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,11 +95,11 @@ msgstr "Kategorin visas på förstasidan"
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:144 apparel/models.py:405
+#: apparel/models.py:144 apparel/models.py:406
 msgid "Slug Name"
 msgstr "Slug"
 
-#: apparel/models.py:145 apparel/models.py:406
+#: apparel/models.py:145 apparel/models.py:407
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr "Används i URLer. Om den är tom, auto-genereras den från namnet"
 
@@ -115,8 +115,8 @@ msgstr "Måste vara unikt för tillverkaren"
 msgid "Time added"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:150 apparel/models.py:266 apparel/models.py:412
-#: apparel/models.py:586 apparel/models.py:687
+#: apparel/models.py:150 apparel/models.py:267 apparel/models.py:413
+#: apparel/models.py:587 apparel/models.py:688
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -128,7 +128,7 @@ msgstr "Produktbeskrivning"
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:155 apparel/models.py:416 apparel/models.py:688
+#: apparel/models.py:155 apparel/models.py:417 apparel/models.py:689
 #: profile/models.py:45
 msgid "Gender"
 msgstr "Kön"
@@ -137,185 +137,185 @@ msgstr "Kön"
 msgid "Feed gender"
 msgstr ""
 
-#: apparel/models.py:159 apparel/models.py:384
+#: apparel/models.py:159 apparel/models.py:385
 msgid "In stock"
 msgstr "I lager"
 
-#: apparel/models.py:265 apparel/models.py:411 apparel/models.py:585
-#: apparel/models.py:671 apparel/models.py:686 beta/models.py:7
+#: apparel/models.py:266 apparel/models.py:412 apparel/models.py:586
+#: apparel/models.py:672 apparel/models.py:687 beta/models.py:7
 #: beta/models.py:15
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:279
+#: apparel/models.py:280
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:280
+#: apparel/models.py:281
 msgid "Name"
 msgstr "Namn"
 
-#: apparel/models.py:282
+#: apparel/models.py:283
 msgid "Default gender"
 msgstr ""
 
-#: apparel/models.py:283
+#: apparel/models.py:284
 msgid "Override gender"
 msgstr ""
 
-#: apparel/models.py:333
+#: apparel/models.py:334
 msgid "Buy URL"
 msgstr "URL till köpsida"
 
-#: apparel/models.py:334
+#: apparel/models.py:335
 #: templates/apparel/fragments/product_menu_browse.html:21
 msgid "Price"
 msgstr "Pris"
 
-#: apparel/models.py:334
+#: apparel/models.py:335
 msgid "Price converted to base currency"
 msgstr "Pris konverterat till basvaluta"
 
-#: apparel/models.py:335 importer/models.py:138
+#: apparel/models.py:336 importer/models.py:138
 msgid "Currency"
 msgstr "Valuta"
 
-#: apparel/models.py:335
+#: apparel/models.py:336
 msgid "Base currency as three-letter ISO code"
 msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:336
+#: apparel/models.py:337
 msgid "Original price"
 msgstr "Ursprungligt pris"
 
-#: apparel/models.py:337
+#: apparel/models.py:338
 msgid "Original currency"
 msgstr "Ursprunglig valuta"
 
-#: apparel/models.py:337 apparel/models.py:339 apparel/models.py:341
+#: apparel/models.py:338 apparel/models.py:340 apparel/models.py:342
 msgid "Currency as three-letter ISO code"
 msgstr "Valuta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:338
+#: apparel/models.py:339
 msgid "Discount price"
 msgstr ""
 
-#: apparel/models.py:339
+#: apparel/models.py:340
 msgid "Discount currency"
 msgstr "Rabattvaluta"
 
-#: apparel/models.py:340
+#: apparel/models.py:341
 msgid "Original discount price"
 msgstr "Ursprungligt rabatterat pris"
 
-#: apparel/models.py:341
+#: apparel/models.py:342
 msgid "Original discount currency"
 msgstr "Ursprunglig rabattvaluta"
 
-#: apparel/models.py:342 apparel/models.py:375
+#: apparel/models.py:343 apparel/models.py:376
 msgid "Items in stock"
 msgstr "Antal i lager"
 
-#: apparel/models.py:342 apparel/models.py:375
+#: apparel/models.py:343 apparel/models.py:376
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:380
+#: apparel/models.py:381
 msgid "No information available"
 msgstr "Ingen information tillgänglig"
 
-#: apparel/models.py:382
+#: apparel/models.py:383
 msgid "Out of stock"
 msgstr "Ej i lager"
 
-#: apparel/models.py:386
+#: apparel/models.py:387
 msgid "items in stock"
 msgstr "i lager"
 
-#: apparel/models.py:404 apparel/models.py:679
+#: apparel/models.py:405 apparel/models.py:680
 msgid "Title"
 msgstr "Titel"
 
-#: apparel/models.py:407
+#: apparel/models.py:408
 msgid "Look description"
 msgstr "Beskrivning"
 
-#: apparel/models.py:414
+#: apparel/models.py:415
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:415
+#: apparel/models.py:416
 msgid "The look will be shown on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:603
+#: apparel/models.py:604
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:604
+#: apparel/models.py:605
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:605
+#: apparel/models.py:606
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:606
+#: apparel/models.py:607
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:607
+#: apparel/models.py:608
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:608
+#: apparel/models.py:609
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:680
+#: apparel/models.py:681
 msgid "Short description"
 msgstr "Kort Beskrivning"
 
-#: apparel/models.py:681
+#: apparel/models.py:682
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:681
+#: apparel/models.py:682
 msgid "HTML allowed. This field is ignored if an image is set."
 msgstr ""
 
-#: apparel/models.py:682
+#: apparel/models.py:683
 msgid "URL"
 msgstr "URL"
 
-#: apparel/models.py:683 apparel/models.py:715
+#: apparel/models.py:684 apparel/models.py:716
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:683
+#: apparel/models.py:684
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:685
+#: apparel/models.py:686
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:689 profile/models.py:44 templates/account/base.html:20
+#: apparel/models.py:690 profile/models.py:44 templates/account/base.html:20
 msgid "Language"
 msgstr "Språk"
 
-#: apparel/models.py:690
+#: apparel/models.py:691
 msgid "Sorting order"
 msgstr ""
 
-#: apparel/models.py:733
+#: apparel/models.py:734
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:733
+#: apparel/models.py:734
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -548,11 +548,6 @@ msgstr "När någon börjat följa mig"
 #: profile/models.py:69
 msgid "Is this the first visit?"
 msgstr ""
-
-#: profile/models.py:183 templates/profile/email_welcome.html:5
-#, python-format
-msgid "Welcome %(username)s"
-msgstr "Välkommen %(username)s"
 
 #: statistics/models.py:35 statistics/models.py:36
 msgid "Product clicks"
@@ -1572,18 +1567,13 @@ msgstr "Skicka"
 msgid "Hi!"
 msgstr "Hej!"
 
-#: templates/beta/mail_body.html:6 templates/beta/mail_subject.html:1
-#, python-format
-msgid "%(name)s has invited you to the beta version of Apparelrow."
-msgstr "%(name)s har bjudit in dig till betaversionen av Apparelrow."
-
 #: templates/beta/mail_body.html:6
 msgid ""
-"A service that makes it more easy and fun to find clothes and be inspired by "
-"your friends."
+"Apparelrow is a service that makes it more easy and fun to find clothes and "
+"be inspired by your friends."
 msgstr ""
-"En tjänst som gör det enklare och roligare att hitta kläder och inspireras "
-"av dina vänner."
+"Apparelrow är en tjänst som gör det enklare och roligare att hitta kläder "
+"och inspireras av dina vänner."
 
 #: templates/beta/mail_body.html:8
 msgid "says"
@@ -1595,7 +1585,7 @@ msgid ""
 "To enter the site, go to <a href=\"%(domain)s\">%(domain)s</a> and log in "
 "with:"
 msgstr ""
-"För att komma in på siten, gå till <a href=\"%(domain)s\">%(domain)s</a> och "
+"För att komma till siten, gå till <a href=\"%(domain)s\">%(domain)s</a> och "
 "logga in med:"
 
 #: templates/beta/mail_body.html:12
@@ -1611,16 +1601,20 @@ msgstr "Invite code: %(password)s"
 #: templates/beta/mail_body.html:14
 msgid ""
 "Then log in with your Facebook account on the site to find your friends."
-msgstr ""
-"Logga sen in med ditt facebook-konto på siten för att hitta dina vänner."
+msgstr "Logga sedan in med ditt Facebook-konto för att hitta dina vänner."
 
 #: templates/beta/mail_body.html:15
-msgid "See you!"
-msgstr "Vi ses!"
+msgid "Welcome!"
+msgstr "Välkommen!"
 
 #: templates/beta/mail_body.html:16 templates/profile/confirm_email.html:8
-msgid "/ Apparelrow"
-msgstr "/ Apparelrow"
+msgid "/The Apparelrow team"
+msgstr "/The Apparelrow team"
+
+#: templates/beta/mail_subject.html:1
+#, python-format
+msgid "%(name)s has invited you to Apparelrow"
+msgstr "%(name)s har bjudit in dig till Apparelrow."
 
 #: templates/comments/form.html:20
 msgid "Comment"
@@ -1758,12 +1752,12 @@ msgid ""
 "You have requested an e-mail address change, if you wish to continue with it "
 "click on the link below to complete it:"
 msgstr ""
-"Du har begärt att ändra din e-postadress, om du vill slutföra ändringen "
-"klicka på länken nedan:"
+"Du har begärt att ändra din e-postadress hos oss. Om du vill slutföra "
+"ändringen klicka på länken nedan:"
 
 #: templates/profile/confirm_email_subject.html:1
 msgid "Confirm e-mail address change"
-msgstr "Bekräfta e-postadress förändring"
+msgstr "Bekräfta byte av e-postadress"
 
 #: templates/profile/following.html:4
 msgid "Follows"
@@ -2118,6 +2112,15 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Welcome %(username)s"
+#~ msgstr "Välkommen %(username)s"
+
+#~ msgid "See you!"
+#~ msgstr "Vi ses!"
+
+#~ msgid "/ Apparelrow"
+#~ msgstr "/ Apparelrow"
 
 #~ msgid "Shop %(APPAREL_GENDER_TEXT)s"
 #~ msgstr "Shop "
