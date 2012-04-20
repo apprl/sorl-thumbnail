@@ -43,7 +43,7 @@ def look_like_delete(sender, instance, **kwargs):
 
 
 models.signals.post_save.connect(look_like, sender=LookLike)
-models.signals.post_delete.connect(look_like_delete, sender=LookLike)
+models.signals.pre_delete.connect(look_like_delete, sender=LookLike)
 
 #
 # Product like activity handlers
@@ -79,7 +79,7 @@ def product_like_delete(sender, instance, **kwargs):
 
 
 models.signals.post_save.connect(product_like, sender=ProductLike)
-models.signals.post_delete.connect(product_like_delete, sender=ProductLike)
+models.signals.pre_delete.connect(product_like_delete, sender=ProductLike)
 
 #
 # Comment activity handler
@@ -124,7 +124,7 @@ models.signals.post_save.connect(post_save_handler, sender=Look)
 def pre_delete_handler(sender, **kwargs):
     instance = kwargs['instance']
     if not hasattr(instance, 'user'):
-        logging.warning('Trying to remove an activity on post_delete, but %s has not user attribute' % instance)
+        logging.warning('Trying to remove an activity on pre_delete, but %s has not user attribute' % instance)
         return
 
     verb = 'created'
@@ -174,7 +174,7 @@ def look_product_delhandler(sender, **kwargs):
     """
     instance = kwargs['instance']
     if not hasattr(instance.look, 'user'):
-        logging.warning('Trying to remove an activity on post_delete, but %s has not user attribute' % instance)
+        logging.warning('Trying to remove an activity on pre_delete, but %s has not user attribute' % instance)
         return
 
     product_content_type = ContentType.objects.get_for_model(Product)
