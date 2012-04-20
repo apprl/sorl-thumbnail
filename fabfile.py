@@ -250,6 +250,7 @@ def copy_config():
         sudo('update-rc.d celeryd defaults', pty=True)
         upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
         sudo('cp ./releases/%(release)s/etc/redis.conf /etc/redis.conf' % env, pty=True)
+        sudo('cp ./releases/%(release)s/etc/crontab /etc/crontab' % env, pty=True)
 
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
