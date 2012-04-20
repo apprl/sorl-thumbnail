@@ -392,10 +392,7 @@ def look_edit(request, slug):
     else:
         form = LookForm(instance=look)
 
-    product_likes = []
-    product_likes_queryset = ProductLike.objects.filter(user=request.user, active=True, product__published=True).order_by('-created')
-    if product_likes_queryset:
-        product_likes = [x.product for x in product_likes_queryset]
+    product_likes = Product.published_objects.filter(likes__user=request.user, likes__active=True).order_by('-likes__modified')
 
     context = RequestContext(request)
 

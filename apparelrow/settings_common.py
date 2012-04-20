@@ -171,6 +171,7 @@ INSTALLED_APPS = (
     'importer',             # Internal: Product importer module
     'apparel_comments',
     'statistics',           # Internal: Click statistics module
+    'apparelrow',
 )
 
 COMMENTS_APP = 'apparel_comments'

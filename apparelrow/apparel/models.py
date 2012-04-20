@@ -159,7 +159,8 @@ class Product(models.Model):
     availability  = models.BooleanField(_('In stock'), null=False, blank=False, default=False)
 
     objects = models.Manager()
-    valid_objects = ProductManager()
+    valid_objects = ProductManager(availability=True)
+    published_objects = ProductManager(availability=False)
 
     def score(self):
         return ProductLike.objects.filter(product=self, active=True).count()

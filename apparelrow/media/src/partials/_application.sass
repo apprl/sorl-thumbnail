@@ -326,12 +326,13 @@ button
     &.holder
       float: left
       width: $page_width - 20px
-      @media screen and (min-width: 1212px)
-        width: $page_width - 20 + 232
-      @media screen and (min-width: 1444px)
-        width: $page_width - 20 + 464
-      @media screen and (min-width: 1676px)
-        width: $page_width - 20 + 696
+      .page-shop &
+        @media screen and (min-width: 1212px)
+          width: $page_width - 20 + 232
+        @media screen and (min-width: 1444px)
+          width: $page_width - 20 + 464
+        @media screen and (min-width: 1676px)
+          width: $page_width - 20 + 696
     #logout
       display: inline-block
       color: $easy-color
@@ -1464,7 +1465,6 @@ body.brand-list
     &:hover, &:active
       text-decoration: underline
   .sidebar
-    clear: both
     h3
       clear: both
       font-weight: bold
@@ -1566,6 +1566,8 @@ body.create-look, div.create-look-dialog
           margin-right: 0
   .dialog-footer
     display: none
+  .errorlist
+    color: red
 
 body.look
   #comments-and-links
@@ -2328,7 +2330,7 @@ body.settings
       line-height: 25px
   .sidebar
     h2
-      margin: -10px 0 0 0
+      margin-bottom: 0
     .settings-list
       li
         padding: 5px 0

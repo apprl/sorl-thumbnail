@@ -51,6 +51,9 @@ jQuery(document).ready(function() {
         // Select both genders
         jQuery('#product-gender li:first > a').addClass('selected');
 
+        // Sort by
+        jQuery('#sort-by').val('pop');
+
         // Call getQuery with empty query and force reset
         filter(getQuery({}, true));
 
@@ -148,6 +151,11 @@ jQuery(document).ready(function() {
         filter(getQuery());
         
         return false;
+    });
+
+    // Sort by
+    jQuery('#sort-by').change(function(e) {
+        filter(getQuery());
     });
 
     // Set selected and clear selected from related element and then call filter
@@ -278,6 +286,11 @@ jQuery(document).ready(function() {
 function getQuery(query, reset) {
     query = query || {}
     reset = typeof(reset) != 'undefined' ? reset : false;
+
+    sort_by = jQuery('#sort-by option:selected').val();
+    if(sort_by != 'pop') {
+        query['sort'] = sort_by;
+    }
 
     category_list = getElementIds(jQuery('#product-category li > a.selected'));
     if(category_list.length > 0) {

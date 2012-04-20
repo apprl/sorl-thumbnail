@@ -1,6 +1,8 @@
 {% extends "profile/base_profile.html" %}
 {% load i18n %}
 
+{% block extra-title %}{{ profile.display_name }} - {% trans "Updates" %} | {% endblock %}
+
 {% block body-classes %}three-columns profile{% endblock body-classes %}
 {% block content %}
     <ul class="activity-list">

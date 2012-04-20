@@ -58,7 +58,13 @@ def invite(request):
                         invite = Invite.objects.create(code=''.join(random.choice(string.letters + string.digits) for i in xrange(8)))
                         invitee = Invitee.objects.create(email=email, invite=invite)
 
-                    send_email_task.delay(name, invitee.email, invitee.invite.code, request.POST.get('email-message', ''))
+                    language = settings.LANGUAGE_CODE
+                    if request.user.get_profile().language:
+                        language = request.user.get_profile().language
+
+                    print language
+
+                    send_email_task.delay(language, name, invitee.email, invitee.invite.code, request.POST.get('email-message', ''))
                     email_count += 1
 
             if email_count > 0:

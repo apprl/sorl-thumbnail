@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-13 19:50+0200\n"
+"POT-Creation-Date: 2012-04-18 20:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,8 +34,8 @@ msgstr ""
 msgid "Swe"
 msgstr ""
 
-#: apparel/browse.py:239 templates/apparel/look_list.html:25
-#: templates/apparel/look_list.html:27
+#: apparel/browse.py:239 templates/apparel/look_list.html:27
+#: templates/apparel/look_list.html:29
 msgid "Showing"
 msgstr "Visar"
 
@@ -95,11 +95,11 @@ msgstr "Kategorin visas på förstasidan"
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:144 apparel/models.py:405
+#: apparel/models.py:144 apparel/models.py:406
 msgid "Slug Name"
 msgstr "Slug"
 
-#: apparel/models.py:145 apparel/models.py:406
+#: apparel/models.py:145 apparel/models.py:407
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr "Används i URLer. Om den är tom, auto-genereras den från namnet"
 
@@ -115,8 +115,8 @@ msgstr "Måste vara unikt för tillverkaren"
 msgid "Time added"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:150 apparel/models.py:266 apparel/models.py:412
-#: apparel/models.py:586 apparel/models.py:687
+#: apparel/models.py:150 apparel/models.py:267 apparel/models.py:413
+#: apparel/models.py:587 apparel/models.py:688
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -128,7 +128,7 @@ msgstr "Produktbeskrivning"
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:155 apparel/models.py:416 apparel/models.py:688
+#: apparel/models.py:155 apparel/models.py:417 apparel/models.py:689
 #: profile/models.py:45
 msgid "Gender"
 msgstr "Kön"
@@ -137,185 +137,185 @@ msgstr "Kön"
 msgid "Feed gender"
 msgstr ""
 
-#: apparel/models.py:159 apparel/models.py:384
+#: apparel/models.py:159 apparel/models.py:385
 msgid "In stock"
 msgstr "I lager"
 
-#: apparel/models.py:265 apparel/models.py:411 apparel/models.py:585
-#: apparel/models.py:671 apparel/models.py:686 beta/models.py:7
+#: apparel/models.py:266 apparel/models.py:412 apparel/models.py:586
+#: apparel/models.py:672 apparel/models.py:687 beta/models.py:7
 #: beta/models.py:15
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:279
+#: apparel/models.py:280
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:280
+#: apparel/models.py:281
 msgid "Name"
 msgstr "Namn"
 
-#: apparel/models.py:282
+#: apparel/models.py:283
 msgid "Default gender"
 msgstr ""
 
-#: apparel/models.py:283
+#: apparel/models.py:284
 msgid "Override gender"
 msgstr ""
 
-#: apparel/models.py:333
+#: apparel/models.py:334
 msgid "Buy URL"
 msgstr "URL till köpsida"
 
-#: apparel/models.py:334
+#: apparel/models.py:335
 #: templates/apparel/fragments/product_menu_browse.html:21
 msgid "Price"
 msgstr "Pris"
 
-#: apparel/models.py:334
+#: apparel/models.py:335
 msgid "Price converted to base currency"
 msgstr "Pris konverterat till basvaluta"
 
-#: apparel/models.py:335 importer/models.py:138
+#: apparel/models.py:336 importer/models.py:138
 msgid "Currency"
 msgstr "Valuta"
 
-#: apparel/models.py:335
+#: apparel/models.py:336
 msgid "Base currency as three-letter ISO code"
 msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:336
+#: apparel/models.py:337
 msgid "Original price"
 msgstr "Ursprungligt pris"
 
-#: apparel/models.py:337
+#: apparel/models.py:338
 msgid "Original currency"
 msgstr "Ursprunglig valuta"
 
-#: apparel/models.py:337 apparel/models.py:339 apparel/models.py:341
+#: apparel/models.py:338 apparel/models.py:340 apparel/models.py:342
 msgid "Currency as three-letter ISO code"
 msgstr "Valuta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:338
+#: apparel/models.py:339
 msgid "Discount price"
 msgstr ""
 
-#: apparel/models.py:339
+#: apparel/models.py:340
 msgid "Discount currency"
 msgstr "Rabattvaluta"
 
-#: apparel/models.py:340
+#: apparel/models.py:341
 msgid "Original discount price"
 msgstr "Ursprungligt rabatterat pris"
 
-#: apparel/models.py:341
+#: apparel/models.py:342
 msgid "Original discount currency"
 msgstr "Ursprunglig rabattvaluta"
 
-#: apparel/models.py:342 apparel/models.py:375
+#: apparel/models.py:343 apparel/models.py:376
 msgid "Items in stock"
 msgstr "Antal i lager"
 
-#: apparel/models.py:342 apparel/models.py:375
+#: apparel/models.py:343 apparel/models.py:376
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:380
+#: apparel/models.py:381
 msgid "No information available"
 msgstr "Ingen information tillgänglig"
 
-#: apparel/models.py:382
+#: apparel/models.py:383
 msgid "Out of stock"
 msgstr "Ej i lager"
 
-#: apparel/models.py:386
+#: apparel/models.py:387
 msgid "items in stock"
 msgstr "i lager"
 
-#: apparel/models.py:404 apparel/models.py:679
+#: apparel/models.py:405 apparel/models.py:680
 msgid "Title"
 msgstr "Titel"
 
-#: apparel/models.py:407
+#: apparel/models.py:408
 msgid "Look description"
 msgstr "Beskrivning"
 
-#: apparel/models.py:414
+#: apparel/models.py:415
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:415
+#: apparel/models.py:416
 msgid "The look will be shown on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:603
+#: apparel/models.py:604
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:604
+#: apparel/models.py:605
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:605
+#: apparel/models.py:606
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:606
+#: apparel/models.py:607
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:607
+#: apparel/models.py:608
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:608
+#: apparel/models.py:609
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:680
+#: apparel/models.py:681
 msgid "Short description"
 msgstr "Kort Beskrivning"
 
-#: apparel/models.py:681
+#: apparel/models.py:682
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:681
+#: apparel/models.py:682
 msgid "HTML allowed. This field is ignored if an image is set."
 msgstr ""
 
-#: apparel/models.py:682
+#: apparel/models.py:683
 msgid "URL"
 msgstr "URL"
 
-#: apparel/models.py:683 apparel/models.py:715
+#: apparel/models.py:684 apparel/models.py:716
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:683
+#: apparel/models.py:684
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:685
+#: apparel/models.py:686
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:689 profile/models.py:44 templates/account/base.html:20
+#: apparel/models.py:690 profile/models.py:44 templates/account/base.html:20
 msgid "Language"
 msgstr "Språk"
 
-#: apparel/models.py:690
+#: apparel/models.py:691
 msgid "Sorting order"
 msgstr ""
 
-#: apparel/models.py:733
+#: apparel/models.py:734
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:733
+#: apparel/models.py:734
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -487,8 +487,8 @@ msgid ""
 "inspiration."
 msgstr "Jag vill ha e-post med populära produkter och annan inspiration."
 
-#: profile/models.py:20 templates/apparel/user_list.html:25
-#: templates/apparel/user_list.html:29
+#: profile/models.py:20 templates/apparel/user_list.html:27
+#: templates/apparel/user_list.html:31
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "All"
 msgstr "Alla"
@@ -505,7 +505,7 @@ msgstr "Inga"
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:43
+#: profile/models.py:43 templates/base.html:267
 msgid "About"
 msgstr "Om"
 
@@ -549,11 +549,6 @@ msgstr "När någon börjat följa mig"
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:183 templates/profile/email_welcome.html:5
-#, python-format
-msgid "Welcome %(username)s"
-msgstr "Välkommen %(username)s"
-
 #: statistics/models.py:35 statistics/models.py:36
 msgid "Product clicks"
 msgstr "Produkt klick"
@@ -591,17 +586,17 @@ msgstr "Sök efter produkter"
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:98 templates/base.html.py:241
+#: templates/base.html:98 templates/base.html.py:246
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:99 templates/base.html.py:242
+#: templates/base.html:99 templates/base.html.py:247
 #: templates/apparel/fragments/product_menu_browse.html:15
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:103 templates/base.html.py:240
+#: templates/base.html:103 templates/base.html.py:245
 msgid "Shop"
 msgstr ""
 
@@ -609,13 +604,14 @@ msgstr ""
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:105 templates/base.html.py:190 templates/base.html:245
+#: templates/base.html:105 templates/base.html.py:190 templates/base.html:250
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:6
+#: templates/profile/looks.html:4
 #: templates/profile/fragments/menu_items.html:14
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/base.html:106
+#: templates/base.html:106 templates/apparel/user_list.html:5
 msgid "Members"
 msgstr "Medlemmar"
 
@@ -670,11 +666,13 @@ msgstr ""
 msgid "Likes"
 msgstr "Gillar"
 
-#: templates/base.html:189 templates/profile/fragments/menu_items.html:11
+#: templates/base.html:189 templates/profile/profile.html:4
+#: templates/profile/fragments/menu_items.html:11
 msgid "Updates"
 msgstr "Uppdateringar"
 
-#: templates/base.html:191 templates/profile/fragments/menu_items.html:17
+#: templates/base.html:191 templates/profile/followers.html:4
+#: templates/profile/fragments/menu_items.html:17
 msgid "Followers"
 msgstr "Följs av"
 
@@ -688,7 +686,8 @@ msgstr "Följer"
 msgid "Friends' updates"
 msgstr "Vänners uppdateringar"
 
-#: templates/base.html:205 templates/profile/base_settings.html:8
+#: templates/base.html:205 templates/profile/base_settings.html:4
+#: templates/profile/base_settings.html:10
 msgid "Settings"
 msgstr "Inställningar"
 
@@ -697,7 +696,7 @@ msgstr "Inställningar"
 msgid "Invite friends (%(invites)s)"
 msgstr "Bjud in vänner (%(invites)s)"
 
-#: templates/base.html:219 templates/base.html.py:248 templates/base.html:250
+#: templates/base.html:219 templates/base.html.py:253 templates/base.html:255
 #: templates/apparel/look_create_dialog.html:6
 #: templates/apparel/look_create_unauthenticated.html:5
 #: templates/apparel/look_create_unauthenticated.html:11
@@ -713,46 +712,43 @@ msgstr "Vänners favoriter"
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:246
+#: templates/base.html:242
+msgid "Sweden"
+msgstr "Sverige"
+
+#: templates/base.html:251
 msgid "All looks"
 msgstr "Alla looks"
 
-#: templates/base.html:254
+#: templates/base.html:259
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:255 templates/apparel/look_list.html:39
-#: templates/apparel/look_list.html:50 templates/apparel/user_home.html:34
-#: templates/apparel/fragments/browse_follow_user.html:5
-msgid "See all members"
-msgstr "Se alla medlemmar"
+#: templates/base.html:260
+msgid "All members"
+msgstr "Alla medlemmar"
 
-#: templates/base.html:261
+#: templates/base.html:266
 msgid "About Apparelrow"
 msgstr "Om Apparelrow"
 
-#: templates/base.html:262
-msgid "About the beta"
-msgstr "Om betaversionen"
-
-#: templates/base.html:263
+#: templates/base.html:268
 msgid "Blog"
 msgstr "Blogg"
 
-#: templates/base.html:264
+#: templates/base.html:269
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:265
-#: templates/apparel/fragments/dialog_about_cookies.html:4
-msgid "About cookies"
-msgstr "Om cookies"
+#: templates/base.html:270
+msgid "Cookies"
+msgstr "Cookies"
 
-#: templates/base.html:297
+#: templates/base.html:302
 msgid "No"
 msgstr "Nej"
 
-#: templates/base.html:298
+#: templates/base.html:303
 msgid "Yes"
 msgstr "Ja"
 
@@ -775,17 +771,17 @@ msgstr "Aktuellt"
 msgid "by"
 msgstr "av"
 
-#: templates/index.html:148 templates/apparel/product_detail.html:236
+#: templates/index.html:148 templates/apparel/product_detail.html:240
 #: templates/apparel/fragments/product_row.html:3
 msgid "Previous"
 msgstr "Föregående"
 
-#: templates/index.html:157 templates/apparel/product_detail.html:244
+#: templates/index.html:157 templates/apparel/product_detail.html:248
 #: templates/apparel/fragments/product_row.html:13
 msgid "Next"
 msgstr "Nästa"
 
-#: templates/index.html:162 templates/apparel/look_list.html:20
+#: templates/index.html:162 templates/apparel/look_list.html:22
 msgid "Popular looks"
 msgstr "Populära looks"
 
@@ -852,15 +848,23 @@ msgstr "Nytt lösenord (bekräfta)"
 msgid "Update password"
 msgstr "Ändra lösenord"
 
-#: templates/apparel/brand_list.html:10
+#: templates/apparel/brand_list.html:6
+msgid "Brands Men"
+msgstr "Varumärken Herr"
+
+#: templates/apparel/brand_list.html:6
+msgid "Brands Women"
+msgstr "Varumärken Dam"
+
+#: templates/apparel/brand_list.html:12
 msgid "Popular brands"
 msgstr "Populära varumärken"
 
-#: templates/apparel/brand_list.html:42
+#: templates/apparel/brand_list.html:44
 msgid "Popular brands in your network"
 msgstr "Populära bland dina vänner"
 
-#: templates/apparel/brand_list.html:44
+#: templates/apparel/brand_list.html:46
 msgid ""
 "To see popular brands in your network you need to connect with your Facebook "
 "account."
@@ -869,23 +873,36 @@ msgstr ""
 "logga in med ditt Facebookkonto."
 
 #: templates/apparel/browse.html:5
-msgid "Browse"
-msgstr "Bläddra"
+msgid "Shop Men"
+msgstr ""
+
+#: templates/apparel/browse.html:5
+msgid "Shop Women"
+msgstr "Shop Dam"
 
 #: templates/apparel/browse.html:31
-#, python-format
-msgid "%(counter)s product"
-msgid_plural "%(counter)s products"
-msgstr[0] "%(counter)s produkt"
-msgstr[1] "%(counter)s produkter"
+msgid "Sort by"
+msgstr "Sortera efter"
 
-#: templates/apparel/browse.html:33 templates/apparel/browse.html.py:35
-msgid "Show popular products in your network"
-msgstr "Visa populära produkter bland dina vänner"
+#: templates/apparel/browse.html:33
+msgid "Popular"
+msgstr "Populära"
 
-#: templates/apparel/browse.html:41
-msgid " Till toppen "
-msgstr ""
+#: templates/apparel/browse.html:34
+msgid "Latest"
+msgstr "Senaste"
+
+#: templates/apparel/browse.html:35
+msgid "Expensive"
+msgstr "Dyrast"
+
+#: templates/apparel/browse.html:36
+msgid "Cheap"
+msgstr "Billigast"
+
+#: templates/apparel/browse.html:45
+msgid "Back to Top"
+msgstr "Till Toppen"
 
 #: templates/apparel/look_create.html:5
 msgid "Create new look"
@@ -902,7 +919,7 @@ msgstr ""
 "För att kunna skapa en look behöver du logga in med ditt Facebookkonto:"
 
 #: templates/apparel/look_detail.html:29 templates/apparel/look_edit.html:453
-#: templates/profile/base_profile.html:13 templates/profile/likes.html:20
+#: templates/profile/base_profile.html:13 templates/profile/likes.html:21
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
@@ -977,7 +994,7 @@ msgstr "Taggar (valfritt)"
 msgid "To create a look, you need to have liked at least one product."
 msgstr "För att skapa en look behöver du först gilla minst en produkt."
 
-#: templates/apparel/look_edit.html:490 templates/profile/likes.html:55
+#: templates/apparel/look_edit.html:490 templates/profile/likes.html:56
 msgid "Find products!"
 msgstr "Hitta produkter!"
 
@@ -1005,22 +1022,30 @@ msgstr "Gillade produkter"
 msgid "Products"
 msgstr "Produkter"
 
-#: templates/apparel/look_list.html:9
+#: templates/apparel/look_list.html:5
+msgid "Looks Men"
+msgstr "Looks Herr"
+
+#: templates/apparel/look_list.html:5
+msgid "Looks Women"
+msgstr "Looks Dam"
+
+#: templates/apparel/look_list.html:11
 msgid "Latest looks"
 msgstr "Senaste looks"
 
-#: templates/apparel/look_list.html:21 templates/apparel/user_home.html:13
+#: templates/apparel/look_list.html:23 templates/apparel/user_home.html:15
 msgid "Popular looks in your network"
 msgstr "Populära looks bland vänner"
 
-#: templates/apparel/look_list.html:25 templates/apparel/look_list.html:27
+#: templates/apparel/look_list.html:27 templates/apparel/look_list.html:29
 #, python-format
 msgid "%(counter)s look"
 msgid_plural "%(counter)s looks"
 msgstr[0] "%(counter)s look"
 msgstr[1] "%(counter)s looks"
 
-#: templates/apparel/look_list.html:32
+#: templates/apparel/look_list.html:34
 msgid ""
 "To see popular looks in your network you need to connect with your Facebook "
 "account."
@@ -1028,7 +1053,7 @@ msgstr ""
 "För att se vilka looks som är populära bland dina vänner behöver du logga in "
 "med ditt Facebookkonto."
 
-#: templates/apparel/look_list.html:38
+#: templates/apparel/look_list.html:40
 msgid ""
 "You currently don't follow anyone who has liked any looks, find friends to "
 "follow amoung our members."
@@ -1036,11 +1061,17 @@ msgstr ""
 "Du följer just nu ingen som gillar någon look, hitta vänner att följa bland "
 "våra medlemmar."
 
-#: templates/apparel/look_list.html:46
+#: templates/apparel/look_list.html:41 templates/apparel/look_list.html:52
+#: templates/apparel/user_home.html:36
+#: templates/apparel/fragments/browse_follow_user.html:5
+msgid "See all members"
+msgstr "Se alla medlemmar"
+
+#: templates/apparel/look_list.html:48
 msgid "Friends with most looks"
 msgstr "Vänner med flest looks"
 
-#: templates/apparel/look_list.html:49
+#: templates/apparel/look_list.html:51
 msgid ""
 "You currently don't follow anyone who has created any looks, find friends to "
 "follow among our members."
@@ -1048,12 +1079,12 @@ msgstr ""
 "Du följer just nu ingen som har skapat någon looks, hitta vänner att följa "
 "bland våra medlemmar."
 
-#: templates/apparel/look_list.html:57
+#: templates/apparel/look_list.html:59
 #, python-format
 msgid "See all %(looks)s looks"
 msgstr "Se alla %(looks)s looks"
 
-#: templates/apparel/look_list.html:64
+#: templates/apparel/look_list.html:66
 msgid ""
 "To see which of your friends have created the most looks, connect with your "
 "Facebook account."
@@ -1069,19 +1100,19 @@ msgstr "Lägger till..."
 msgid "Back"
 msgstr "Tillbaka"
 
-#: templates/apparel/product_detail.html:191
+#: templates/apparel/product_detail.html:195
 #: templates/apparel/fragments/comments.html:4
 msgid "Comments"
 msgstr "Kommentarer"
 
-#: templates/apparel/product_detail.html:211
+#: templates/apparel/product_detail.html:215
 #, python-format
 msgid "Added to <span class=\"count\">%(counter)s</span> look"
 msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] "Tillagd i <span class=\"count\">%(counter)s</span> look"
 msgstr[1] "Tillagd i <span class=\"count\">%(counter)s</span> looks"
 
-#: templates/apparel/product_detail.html:212
+#: templates/apparel/product_detail.html:216
 #: templates/apparel/fragments/likes.html:5
 #: templates/apparel/fragments/likes_link.html:5
 #, python-format
@@ -1090,62 +1121,66 @@ msgid_plural "<span class=\"count\">%(counter)s</span> likes"
 msgstr[0] "<span class=\"count\">%(counter)s</span> som gillar"
 msgstr[1] "<span class=\"count\">%(counter)s</span> som gillar"
 
-#: templates/apparel/product_detail.html:215
+#: templates/apparel/product_detail.html:219
 msgid "Recently viewed"
 msgstr "Senast besökta"
 
-#: templates/apparel/product_detail.html:224
+#: templates/apparel/product_detail.html:228
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> look with this product"
 msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
 msgstr[0] "<span class=\"count\">%(counter)s</span> look med denna produkt"
 msgstr[1] "<span class=\"count\">%(counter)s</span> looks med denna produkt"
 
-#: templates/apparel/product_detail.html:234
+#: templates/apparel/product_detail.html:238
 msgid "You may also like"
 msgstr "Se även"
 
-#: templates/apparel/product_detail.html:251
+#: templates/apparel/product_detail.html:255
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
-#: templates/apparel/user_home.html:10
+#: templates/apparel/user_home.html:6
+msgid "Friend’s Updates"
+msgstr "Vänners uppdateringar"
+
+#: templates/apparel/user_home.html:12
 msgid "Popular products in your network"
 msgstr "Populära produkter bland vänner"
 
-#: templates/apparel/user_home.html:19
+#: templates/apparel/user_home.html:21
 msgid "Your friend's latest updates"
 msgstr "Senaste händelser bland dina vänner"
 
-#: templates/apparel/user_home.html:24 templates/profile/profile.html:10
+#: templates/apparel/user_home.html:26 templates/profile/profile.html:12
 msgid "No updates"
 msgstr "Inga händelser"
 
-#: templates/apparel/user_home.html:32 templates/apparel/user_list.html:46
+#: templates/apparel/user_home.html:34 templates/apparel/user_list.html:48
 msgid "Your friends are here!"
 msgstr "Dina vänner är här!"
 
-#: templates/apparel/user_list.html:9
+#: templates/apparel/user_list.html:11
 msgid "Latest members"
 msgstr "Senaste medlemmar"
 
-#: templates/apparel/user_list.html:20
+#: templates/apparel/user_list.html:22
 msgid "Most followers"
 msgstr "Följs av flest"
 
-#: templates/apparel/user_list.html:21
+#: templates/apparel/user_list.html:23
 msgid "Members in alphabetical order"
 msgstr "Medlemmar i bokstavsordning"
 
-#: templates/apparel/user_list.html:26 templates/apparel/user_list.html:30
+#: templates/apparel/user_list.html:28 templates/apparel/user_list.html:32
 msgid "Females"
 msgstr "Tjejer"
 
-#: templates/apparel/user_list.html:27 templates/apparel/user_list.html:31
+#: templates/apparel/user_list.html:29 templates/apparel/user_list.html:33
 msgid "Males"
 msgstr "Killar"
 
-#: templates/apparel/user_list.html:48
+#: templates/apparel/user_list.html:50
 msgid "Connect with your Facebook account to find your friends."
 msgstr "Logga in med ditt Facebookkonto för att hitta dina vänner."
 
@@ -1179,6 +1214,10 @@ msgstr ""
 "på länken 'Tyck Till' i högerkanten på siten och dela med dig av dina "
 "tankar. Eller maila oss på info@apparelrow.com. så blir vi också glada. Have "
 "fun!"
+
+#: templates/apparel/fragments/dialog_about_cookies.html:4
+msgid "About cookies"
+msgstr "Om cookies"
 
 #: templates/apparel/fragments/dialog_about_cookies.html:6
 msgid ""
@@ -1322,6 +1361,10 @@ msgstr "Gillar looken"
 #: templates/apparel/fragments/look_widget.html:14
 msgid "By"
 msgstr "från"
+
+#: templates/apparel/fragments/pagination.html:36
+msgid "Keep it coming!"
+msgstr ""
 
 #: templates/apparel/fragments/product_detail.html:40
 msgid "Was available at "
@@ -1524,18 +1567,13 @@ msgstr "Skicka"
 msgid "Hi!"
 msgstr "Hej!"
 
-#: templates/beta/mail_body.html:6 templates/beta/mail_subject.html:1
-#, python-format
-msgid "%(name)s has invited you to the beta version of Apparelrow."
-msgstr "%(name)s har bjudit in dig till betaversionen av Apparelrow."
-
 #: templates/beta/mail_body.html:6
 msgid ""
-"A service that makes it more easy and fun to find clothes and be inspired by "
-"your friends."
+"Apparelrow is a service that makes it more easy and fun to find clothes and "
+"be inspired by your friends."
 msgstr ""
-"En tjänst som gör det enklare och roligare att hitta kläder och inspireras "
-"av dina vänner."
+"Apparelrow är en tjänst som gör det enklare och roligare att hitta kläder "
+"och inspireras av dina vänner."
 
 #: templates/beta/mail_body.html:8
 msgid "says"
@@ -1547,7 +1585,7 @@ msgid ""
 "To enter the site, go to <a href=\"%(domain)s\">%(domain)s</a> and log in "
 "with:"
 msgstr ""
-"För att komma in på siten, gå till <a href=\"%(domain)s\">%(domain)s</a> och "
+"För att komma till siten, gå till <a href=\"%(domain)s\">%(domain)s</a> och "
 "logga in med:"
 
 #: templates/beta/mail_body.html:12
@@ -1563,16 +1601,20 @@ msgstr "Invite code: %(password)s"
 #: templates/beta/mail_body.html:14
 msgid ""
 "Then log in with your Facebook account on the site to find your friends."
-msgstr ""
-"Logga sen in med ditt facebook-konto på siten för att hitta dina vänner."
+msgstr "Logga sedan in med ditt Facebook-konto för att hitta dina vänner."
 
 #: templates/beta/mail_body.html:15
-msgid "See you!"
-msgstr "Vi ses!"
+msgid "Welcome!"
+msgstr "Välkommen!"
 
 #: templates/beta/mail_body.html:16 templates/profile/confirm_email.html:8
-msgid "/ Apparelrow"
-msgstr "/ Apparelrow"
+msgid "/The Apparelrow team"
+msgstr "/The Apparelrow team"
+
+#: templates/beta/mail_subject.html:1
+#, python-format
+msgid "%(name)s has invited you to Apparelrow"
+msgstr "%(name)s har bjudit in dig till Apparelrow."
 
 #: templates/comments/form.html:20
 msgid "Comment"
@@ -1645,7 +1687,7 @@ msgstr ""
 "Följ dina vänner och andra medlemmar för att hålla dig uppdaterad när de "
 "gillar produkter, skapar looks, kommenterar och annat."
 
-#: templates/profile/base_login_flow.html:27
+#: templates/profile/base_login_flow.html:26
 #: templates/profile/login_flow_initial.html:23
 #: templates/profile/login_flow_members.html:24
 msgid "Proceed"
@@ -1690,12 +1732,12 @@ msgstr "Följs av"
 msgid "%(name)s's latest looks"
 msgstr "%(name)ss senaste looks"
 
-#: templates/profile/base_settings.html:10
+#: templates/profile/base_settings.html:12
 #: templates/profile/settings_notification.html:5
 msgid "E-mail Notifications & Newsletters"
 msgstr "E-postutskick & händelser"
 
-#: templates/profile/base_settings.html:11
+#: templates/profile/base_settings.html:13
 #: templates/profile/settings_email.html:5
 msgid "E-mail Address"
 msgstr "E-postadress"
@@ -1710,26 +1752,30 @@ msgid ""
 "You have requested an e-mail address change, if you wish to continue with it "
 "click on the link below to complete it:"
 msgstr ""
-"Du har begärt att ändra din e-postadress, om du vill slutföra ändringen "
-"klicka på länken nedan:"
+"Du har begärt att ändra din e-postadress hos oss. Om du vill slutföra "
+"ändringen klicka på länken nedan:"
 
 #: templates/profile/confirm_email_subject.html:1
 msgid "Confirm e-mail address change"
-msgstr "Bekräfta e-postadress förändring"
+msgstr "Bekräfta byte av e-postadress"
 
-#: templates/profile/likes.html:21
+#: templates/profile/following.html:4
+msgid "Follows"
+msgstr "Följer"
+
+#: templates/profile/likes.html:22
 msgid "Do you really want to delete product"
 msgstr "Vill du verkligen ta bort produkten"
 
-#: templates/profile/likes.html:55
+#: templates/profile/likes.html:56
 msgid "You do not like any products right now."
 msgstr "Du gillar inte några produkter än."
 
-#: templates/profile/likes.html:57
+#: templates/profile/likes.html:58
 msgid "does not like any products so far."
 msgstr "gillar inte några produkter än."
 
-#: templates/profile/looks.html:10
+#: templates/profile/looks.html:12
 #, python-format
 msgid "%(name)s's popular looks"
 msgstr "%(name)ss populära looks"
@@ -2066,6 +2112,32 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Welcome %(username)s"
+#~ msgstr "Välkommen %(username)s"
+
+#~ msgid "See you!"
+#~ msgstr "Vi ses!"
+
+#~ msgid "/ Apparelrow"
+#~ msgstr "/ Apparelrow"
+
+#~ msgid "Shop %(APPAREL_GENDER_TEXT)s"
+#~ msgstr "Shop "
+
+#~ msgid "About the beta"
+#~ msgstr "Om betaversionen"
+
+#~ msgid "Browse"
+#~ msgstr "Bläddra"
+
+#~ msgid "%(counter)s product"
+#~ msgid_plural "%(counter)s products"
+#~ msgstr[0] "%(counter)s produkt"
+#~ msgstr[1] "%(counter)s produkter"
+
+#~ msgid "Show popular products in your network"
+#~ msgstr "Visa populära produkter bland dina vänner"
 
 #~ msgid "Events"
 #~ msgstr "Händelser"

@@ -235,7 +235,12 @@
 
     <div id="footer">
         <div id="inner-footer">
-            <div class="copyright">&#169; APPARELROW AB</div>
+            <ul class="copyright">
+                <li><h3>Apparelrow AB</h3></li>
+                <li>Birger Jarlsgatan 18A</li>
+                <li>114 34 Stockholm</li>
+                <li>{% trans "Sweden" %}</li>
+            </ul>
             <ul>
                 <li><h3>{% trans "Shop" %}</h3></li>
                 <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
@@ -252,17 +257,17 @@
             </ul>
             <ul>
                 <li><h3>{% trans "Social" %}</h3></li>
-                <li><a href="{% url user-list %}">{% trans "See all members" %}</a></li>
+                <li><a href="{% url user-list %}">{% trans "All members" %}</a></li>
                 {% if not user.is_authenticated %}
                 <li class="facebook">{% apparel_facebook_button "facebook-footer.png" %}</li>
                 {% endif %}
             </ul>
             <ul>
                 <li><h3>{% trans "About Apparelrow" %}</h3></li>
-                <li><a class="about-beta-popup" href="{% url beta.views.about %}">{% trans "About the beta" %}</a></li>
+                <li><a class="about-beta-popup" href="{% url beta.views.about %}">{% trans "About" %}</a></li>
                 <li><a target="_blank" href="http://blog.apparelrow.com/">{% trans "Blog" %}</a></li>
                 <li><a href="mailto:info@apparelrow.com">{% trans "Contact" %}</a></li>
-                <li><a class="about-cookies-popup" href="/">{% trans "About cookies" %}</a></li>
+                <li><a class="about-cookies-popup" href="/">{% trans "Cookies" %}</a></li>
             </ul>
         </div>
     </div>
