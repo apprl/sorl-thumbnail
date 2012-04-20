@@ -67,14 +67,18 @@ button
 #container
   background: $white_color
   #inner-container
-    width: 940px
+    min-width: 940px
+    width: auto
     padding: 0 0 20px 20px
     @media screen and (min-width: 1212px)
-      width: 940px + 232
+      min-width: 940px + 232
+      width: auto
     @media screen and (min-width: 1444px)
-      width: 940px + 464
+      min-width: 940px + 464
+      width: auto
     @media screen and (min-width: 1676px)
-      width: 940px + 696
+      min-width: 940px + 696
+      width: auto
     clear: both
     +pie-clearfix
     overflow: visible
@@ -876,7 +880,7 @@ span, a
   border: 1px solid #dadada
 
 .page-shop #product-count
-  margin: 37px 0 20px
+  margin: 12px 0 20px
   
 .page-shop .sidebar h2
   margin: 12px 0 20px
@@ -1509,6 +1513,10 @@ body.create-look
 #sort-wrap
   float: right
   width: 190px
+  margin-top: 12px
+  h2
+    margin: 0
+    border: none
 
 span.dd-introtext
   font-weight: bold
@@ -1517,12 +1525,12 @@ span.dd-introtext
   font-size: 1.2em
 
 select.dd-sort-by
-  float: right
+  position: absolute
   width: 100px
   background: white
   font-family: arial
   font-weight: bold
-  margin: 5px 0 0
+  margin: -21px 0 0 89px
   border: none
   font-size: 1em
   color: #999
@@ -2023,6 +2031,7 @@ ul.suggested-friends
       .follow span, .unfollow span
         display: inline
 
+
 #profile-nav
   +clearfix
   position: relative
@@ -2452,7 +2461,7 @@ body.settings
   background-color: #fff
   .sidebar p
     font-size: 1.3em
-    line-height: normal
+    line-height: 18px
   .sidebar-profile-name
     line-height: normal
     margin: 15px 0 15px 0
@@ -2469,30 +2478,35 @@ body.settings
     width: 697px
     float: left
     height: auto
-  #abovefollow
-    background: image_url(unquote("face1.png")) no-repeat
-    padding: 8px 0 0 45px
-    margin: 0 0 0 100px
-    height: 27px
-    float: left
-    clear: right
-    font-size: 1.3em
-  #abovefollowothers
-    background: image_url(unquote("face2.png")) no-repeat
-    padding: 8px 0 0 45px
-    margin: 0 0 0 100px
-    height: 27px
-    float: left
-    clear: right
-    font-size: 1.3em
-    opacity: 0.3
+    .fbflowbtn
+      padding: 8px 0 0 45px
+      margin: 0 0 0 100px
+      height: 27px
+      float: left
+      clear: right
+      font-size: 1.3em
+    #abovefollow
+      background: image_url(unquote("face1.png")) no-repeat
+    #abovefollowothers
+      background: image_url(unquote("face2.png")) no-repeat
+  .inimembers
+    #abovefollowothers
+      opacity: 0.3
+      &:hover
+        opacity: 1
+  .popmembers
+    #abovefollow
+      opacity: 0.3
+      &:hover
+        opacity: 1
   #followmyfriends
     background: image_url(unquote("flwbtnfriends.png")) no-repeat
     padding: 8px 0 0 45px
     margin: 0 0 20px 0
     height: 27px
-    float: left
-    clear: right
+    clear: both
+    display: block
+    font-size: 1.25em
   & .content-footer
     background: image_url(unquote("knappbg.jpg")) repeat scroll center bottom #fff
     float: left
@@ -2507,6 +2521,7 @@ body.settings
       cursor: pointer
   & a.footer-button
     color: #fefefe
+    background: image_url(unquote("arr-butt.png")) no-repeat right 20px transparent
     font-weight: bold
     font-size: 1.3em
     float: left
@@ -2521,7 +2536,23 @@ body.settings
       margin: 0
       top: auto
       width: 697px
-      bottom: 20px
+      bottom: 0
       position: fixed
       z-index: 1000
-    
+  ul.suggested-friends
+    li
+      +clearfix
+      border-bottom: 1px solid #353535
+      margin-bottom: 1em
+      width: 210px
+      float: left
+      height: 50px
+      overflow: hidden
+      padding-bottom: 10px
+      margin-right: 33px
+      margin-top: 20px
+      &.column-3
+        margin-right: 0
+      a.profile-link
+        font-size: 1.1em
+        font-weight: bold

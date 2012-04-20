@@ -27,8 +27,9 @@
             {% include 'apparel/fragments/product_menu_browse.html' %}
         </div>
         <div id="content">
+
           <div id="sort-wrap"> 
-            <span class="dd-introtext">Sortera efter</span>
+            <h2>Sortera efter</h2>
               <select class="dd-sort-by">
                 <option value="pop">Popular</option>
                 <option value="lat">Latest</option>
@@ -37,6 +38,8 @@
              </select>
           </div>
             <h2 id="product-count">
+
+<span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
 
             </h2>
             <div id="product-list" class="product-list">
