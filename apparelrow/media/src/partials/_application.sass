@@ -1914,11 +1914,11 @@ p.large_follow
   .following .unfollow, .not_following .follow
     display: block
 
-a.profile-link
+a.profile-link, span.profile-link
   img.avatar
     margin-right: 0.5em
-  &:hover
-    text-decoration: underline
+a.profile-link:hover
+  text-decoration: underline
 
 body.profile-small
   #content
@@ -2554,6 +2554,6 @@ body.settings
       margin-top: 20px
       &.column-3
         margin-right: 0
-      a.profile-link
+      a.profile-link, span.profile-link
         font-size: 1.1em
         font-weight: bold

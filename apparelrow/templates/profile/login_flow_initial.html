@@ -11,7 +11,7 @@
                 <ul class="suggested-friends profiles">
                 {% for profile in profiles %}
                     <li class="{% cycle 'column-1' 'column-2' 'column-3' %}">
-                    {% include 'apparel/fragments/avatar_link_no_cache.html' %}
+                    {% include 'profile/fragments/avatar.html' %}
                     </li>
                 {% endfor %}    
                 </ul>
