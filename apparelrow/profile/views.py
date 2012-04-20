@@ -284,7 +284,7 @@ def login_flow_members(request):
 
     context = {
         'next_url': reverse('profile.views.login_flow_complete'),
-        'profiles': get_most_followed_users(limit=20)
+        'profiles': get_most_followed_users(limit=21)
     }
     return render(request, 'profile/login_flow_members.html', context)
 
