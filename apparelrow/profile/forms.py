@@ -1,5 +1,5 @@
 from django.forms import ModelForm, EmailField, BooleanField
-from django.forms.widgets import RadioSelect
+from django.forms.widgets import RadioSelect, FileInput
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
@@ -9,6 +9,7 @@ class ProfileImageForm(ModelForm):
     class Meta:
         model = ApparelProfile
         fields = ('image',)
+        widgets = {'image': FileInput}
 
 class EmailForm(ModelForm):
     email = EmailField(label=_('New e-mail address'))
