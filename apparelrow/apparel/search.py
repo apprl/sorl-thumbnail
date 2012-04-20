@@ -131,13 +131,14 @@ def product_save(instance, **kwargs):
     if not hasattr(instance, 'id'):
         return
 
-    if instance.published == False or not instance.category or not instance.gender:
-        return
-
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
         connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+
+    #if instance.published == False or not instance.category or not instance.gender:
+        #connection.delete('%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk), commit=True)
+        #return
 
     document, boost = get_product_document(instance)
 

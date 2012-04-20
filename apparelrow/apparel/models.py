@@ -225,7 +225,7 @@ class Product(models.Model):
 
         if not self.sku:
             self.sku = self.slug
-        
+
         if not self.category:
             self.published = False
 
