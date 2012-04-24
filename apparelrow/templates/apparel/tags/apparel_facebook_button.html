@@ -8,6 +8,6 @@
 {% if next %}
     <input type="hidden" name="next" value="{{ next }}">
 {% endif %}
-<a href="" onclick="facebookConnect(jQuery('form[name=login]:first'));return false;">{% trans "Log in" %}</a>
+<a href="" onclick="facebookConnect(jQuery(this).parents('form:first'));return false;">{% trans "Log in" %}</a>
 <input type="image" onclick="facebookConnect(jQuery(this.form));return false;" src="{{ button }}">
 </form>

@@ -5,11 +5,11 @@
 {% if is_liked %}
 <form method="post" class="like" action="{{ unlike_url }}" data-alternate-action="{{ like_url }}">
     {% csrf_token %}
-    <button type="submit" name="like" id="like" data-done-text="{% trans "Unliked!" %}" data-alternate-done-text="{% trans "Liked!" %}" data-alternate-text="{% trans "Like" %}">{% trans "Unlike" %}</button>
+    <button type="submit" name="like" id="like" data-slug="{{ slug }}" data-done-text="{% trans "Unliked!" %}" data-alternate-done-text="{% trans "Liked!" %}" data-alternate-text="{% trans "Like" %}">{% trans "Unlike" %}</button>
 </form>
 {% else %}
 <form method="post" class="like" action="{{ like_url }}" data-alternate-action="{{ unlike_url }}">
     {% csrf_token %}
-    <button type="submit" name="like" id="like" data-done-text="{% trans "Liked!" %}" data-alternate-done-text="{% trans "Unliked!" %}" data-alternate-text="{% trans "Unlike" %}"{% if not user.is_authenticated %}href="{{ dialog_url }}?next={{ request.get_full_path }}" class="open-dialog"{% endif %}>{% trans "Like" %}</button>
+    <button type="submit" name="like" id="like" data-slug="{{ slug }}" data-done-text="{% trans "Liked!" %}" data-alternate-done-text="{% trans "Unliked!" %}" data-alternate-text="{% trans "Unlike" %}"{% if not user.is_authenticated %}href="{{ dialog_url }}?next={{ request.get_full_path }}" class="open-dialog"{% endif %}>{% trans "Like" %}</button>
 </form>
 {% endif %}

@@ -102,6 +102,33 @@ jQuery(document).ready(function() {
         }
     });
 
+    // Track custom events
+
+    function trackEvent(category, action) {
+        return function() {
+            var el = $(this),
+                slug = el.attr('data-slug'),
+                vendor = el.attr('data-vendor'),
+                price = parseInt(el.attr('data-price'), 10);
+
+            _gaq.push(['_trackEvent', category, action, vendor + ' - ' + slug, price]);
+
+            return true;
+        }
+    }
+
+    // Track buy clicks
+
+    $('body.product a.buy-now').live('click', trackEvent('Product', 'BuyReferral'));
+    $('body.page-shop a.buy-now').live('click', trackEvent('Shop', 'BuyReferral'));
+    $('body.profile a.buy-now').live('click', trackEvent('Profile', 'BuyReferral'));
+
+    // Track likes
+
+    $('body.product a.product-heart').live('click', trackEvent('Product', 'ProductLike'));
+    $('body.page-shop a.product-heart').live('click', trackEvent('Shop', 'ProductLike'));
+    $('body.profile a.product-heart').live('click', trackEvent('Profile', 'ProductLike'));
+
     // All elements with class open-dialog should open a dialog and load html from href-url
     jQuery('.open-dialog').live('click', function(event) {
         // TODO: replace attr with data when we change to new jquery version
@@ -152,6 +179,9 @@ jQuery(document).ready(function() {
             if(/^\/(\w+)\/([\w-]+)\/like/.test(action) && response.success == true) {
                 elem = jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count');
                 elem.text(parseInt(elem.text(), 10) + 1);
+
+                // Track look like to GA
+                _gaq.push(['_trackEvent', 'Look', 'Like', button.attr('data-slug')]);
             }
             if(/^\/(\w+)\/([\w-]+)\/unlike/.test(action) && response.success == true) {
                 elem = jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count');

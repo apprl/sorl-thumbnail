@@ -5,5 +5,5 @@
 {% if next %}
     <input type="hidden" name="next" value="{{ next }}" />
 {% endif %}
-<input type="image" onclick="facebookConnect(this.form);return false;" src="{% if button %}{{ button }}{% else %}http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_large_long.gif{% endif %}" />
+<input type="image" onclick="facebookConnect(jQuery(this.form));return false;" src="{% if button %}{{ button }}{% else %}http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_large_long.gif{% endif %}" />
 </form>
