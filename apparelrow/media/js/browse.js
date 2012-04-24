@@ -52,7 +52,8 @@ jQuery(document).ready(function() {
         jQuery('#product-gender li:first > a').addClass('selected');
 
         // Sort by
-        jQuery('#sort-by').val('pop');
+        var sort_elem = jQuery('.browse-sort-hover-menu li:first a');
+        jQuery('.browse-sort-selected').attr('data-sort', sort_elem.attr('data-sort')).text(sort_elem.text());
 
         // Call getQuery with empty query and force reset
         filter(getQuery({}, true));
@@ -154,8 +155,25 @@ jQuery(document).ready(function() {
     });
 
     // Sort by
-    jQuery('#sort-by').change(function(e) {
+    var browse_sort_menu = false;
+    jQuery('.browse-sort-selected').live('click', function(e) {
+        if(browse_sort_menu == false) {
+            jQuery(this).siblings('.browse-sort-hover-menu').show();
+            browse_sort_menu = true;
+        } else {
+            jQuery(this).siblings('.browse-sort-hover-menu').hide();
+            browse_sort_menu = false;
+        }
+    });
+    jQuery('.browse-sort-hover-menu li a').live('click', function(e) {
+        var elem = jQuery(this);
+        jQuery('.browse-sort-selected').attr('data-sort', elem.attr('data-sort'))
+                                       .text(elem.text());
         filter(getQuery());
+        jQuery('.browse-sort-hover-menu').hide();
+        browse_sort_menu = false;
+
+        return false;
     });
 
     // Set selected and clear selected from related element and then call filter
@@ -287,7 +305,7 @@ function getQuery(query, reset) {
     query = query || {}
     reset = typeof(reset) != 'undefined' ? reset : false;
 
-    sort_by = jQuery('#sort-by option:selected').val();
+    sort_by = jQuery('.browse-sort-selected').attr('data-sort');
     if(sort_by != 'pop') {
         query['sort'] = sort_by;
     }

@@ -28,19 +28,18 @@
         </div>
         <div id="content">
 
-          <div id="sort-wrap"> 
-              <h2>{% trans "Sort by" %}</h2>
-              <select id="sort-by" class="dd-sort-by">
-                  <option value="pop">{% trans "Popular" %}</option>
-                  <option value="lat">{% trans "Latest" %}</option>
-                  <option value="exp">{% trans "Expensive" %}</option>
-                  <option value="che">{% trans "Cheap" %}</option>
-             </select>
-          </div>
+            <div id="sort-wrap">
+                <h2>{% trans "Sort by" %}</h2>
+                <div class="browse-sort-selected" data-sort="pop">{% trans "Popular" %}</div>
+                <ul class="browse-sort-hover-menu" style="display: none;">
+                    <li class="first"><a data-sort="pop" href="?sort=pop">{% trans "Popular" %}</a></li>
+                    <li><a data-sort="lat" href="?sort=lat">{% trans "Latest" %}</a></li>
+                    <li><a data-sort="exp" href="?sort=exp">{% trans "Expensive" %}</a></li>
+                    <li class="last"><a data-sort="che" href="sort-che" href="?sort=che">{% trans "Cheap" %}</a></li>
+                </ul>
+            </div>
             <h2 id="product-count">
-
-<span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
-
+                <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
             </h2>
             <div id="product-list" class="product-list">
                 {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination only %}
