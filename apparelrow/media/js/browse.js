@@ -55,6 +55,10 @@ jQuery(document).ready(function() {
         var sort_elem = jQuery('.browse-sort-hover-menu li:first a');
         jQuery('.browse-sort-selected').attr('data-sort', sort_elem.attr('data-sort')).text(sort_elem.text());
 
+        // Sort by dd
+        var sort_elem = jQuery('.browse-sort-hover-menu #dd-switch');
+        jQuery('.browse-sort-selected').attr('data-sort', sort_elem.attr('data-sort')).text(sort_elem.text());
+
         // Call getQuery with empty query and force reset
         filter(getQuery({}, true));
 

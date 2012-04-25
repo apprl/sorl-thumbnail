@@ -1511,10 +1511,11 @@ body.create-look
       margin: 1em 0
 #sort-wrap
   float: right
-  width: 190px
-  margin-top: 12px
+  height: 28px
+  margin-top: 3px
+  width: 192px
   h2
-    margin: 0
+    margin: 9px 0 0
     border: none
 
 span.dd-introtext
@@ -1523,25 +1524,46 @@ span.dd-introtext
   float: left
   font-size: 1.2em
 
-.dd-lista
-  color: #999
-
-.dd-lista:hover
-  background: red
-
-
-select.dd-sort-by
-  position: absolute
-  width: 100px
-  background: url("../images/dd-grad.jpg") repeat-x #FBFBFB
+.browse-sort-selected
+  background: url("../images/dd-bg.jpg") bottom no-repeat
   font-family: arial
-  font-weight: bold
-  margin: -25px 0 0 90px
-  border: none
   font-size: 1em
-  color: #333
-  padding: 2px
+  font-weight: bold
+  height: 21px
+  line-height: 23px
+  margin: -25px 0 0 80px
+  position: absolute
+  text-indent: 5px
+  width: 112px
+
+#dd-switch
+  background: url("../images/dd-bg.jpg") top no-repeat
+
+.browse-sort-hover-menu
+  width: 110px
+  background: #FBFBFB
   border: 1px solid #d9d9d9
+  margin: -5px 0 0 80px
+  li
+    padding: 0 0 4px 0
+    border-bottom: 1px solid #d9d9d9
+    font-weight: bold
+    height: 16px
+    text-indent: 4px
+  li:hover
+    background: #333
+  li a
+    color: #999
+    height: 21px
+    float: left
+    width: 109px
+    line-height: 21px
+  li a:hover
+    color: #fff
+
+
+li.last
+  border: none
 
 body.create-look, div.create-look-dialog
   form
