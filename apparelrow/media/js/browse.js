@@ -164,8 +164,15 @@ jQuery(document).ready(function() {
             jQuery(this).removeClass('selected').siblings('.browse-sort-hover-menu').hide();
             browse_sort_menu = false;
         }
+        e.stopPropagation();
 
         return false;
+    });
+    jQuery('body').click(function(e) {
+        if(browse_sort_menu == true) {
+            jQuery('.browse-sort-selected').removeClass('selected').siblings('.browse-sort-hover-menu').hide();
+            browse_sort_menu = false;
+        }
     });
     jQuery('.browse-sort-hover-menu li a').live('click', function(e) {
         var elem = jQuery(this);
