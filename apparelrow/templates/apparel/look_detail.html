@@ -68,10 +68,7 @@
         <p class="description">{{ object.description }}</p>
     {% endif %}
     <div class="share-created">
-    <ul id="add-menu" class="menu hover-menu">
-      {% include 'apparel/fragments/share.html' %}
-    </ul>
-    <span class="created">{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</span>
+        <span class="created">{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</span>
     </div>
 {% endcache %}
     {% get_comment_count for object as comment_count %}
