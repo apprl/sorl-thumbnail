@@ -33,16 +33,7 @@
             <li {% if view_gender == 'M' %}class="active"{% endif %} ><a href="{% url user-list-men %}">{% trans "Males" %}</a></li>
             {% endif %}
         </ul>
-        <ul class="users">
-        {% for profile in current_page.object_list %}
-            <li>
-                {% if profile %}{% include 'profile/fragments/follow_profile.html' %}{% endif %}
-            </li>
-        {% endfor %}
-        </ul>
-        <div class="pagination">
-            {% include 'apparel/fragments/pagination.html' %}
-        </div>
+        {% include 'apparel/fragments/user_list.html' %}
     </div>
     <div class="sidebar last">
         <h2>{% trans "Your friends are here!" %}</h2>

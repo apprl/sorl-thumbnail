@@ -1,0 +1,11 @@
+<ul class="users">
+{% for profile in current_page.object_list %}
+    <li>
+        {% if profile %}{% include 'profile/fragments/follow_profile.html' %}{% endif %}
+    </li>
+{% endfor %}
+</ul>
+<div class="pagination">
+    {% include 'apparel/fragments/pagination.html' %}
+</div>
+

@@ -335,16 +335,22 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
-    response = render_to_response('apparel/look_list.html', {
-                'query': request.GET.get('q'),
-                'paginator': paged_result.paginator,
-                'pagination': pagination,
-                'current_page': paged_result,
-                'next': request.get_full_path(),
-                'most_looks_users': most_looks_users,
-                'latest_looks': latest_looks,
-                'APPAREL_GENDER': gender
-            }, context_instance=RequestContext(request))
+    if request.is_ajax():
+        response = render_to_response('apparel/fragments/looks_middle_column.html', {
+                    'pagination': pagination,
+                    'current_page': paged_result,
+                }, context_instance=RequestContext(request))
+    else:
+        response = render_to_response('apparel/look_list.html', {
+                    'query': request.GET.get('q'),
+                    'paginator': paged_result.paginator,
+                    'pagination': pagination,
+                    'current_page': paged_result,
+                    'next': request.get_full_path(),
+                    'most_looks_users': most_looks_users,
+                    'latest_looks': latest_looks,
+                    'APPAREL_GENDER': gender
+                }, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 
@@ -649,15 +655,21 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
     # Latest active members
     latest_members = ApparelProfile.objects.select_related('user').filter(user__is_active=True).order_by('-user__date_joined')[:13]
 
-    response = render_to_response('apparel/user_list.html', {
-            'pagination': pagination,
-            'current_page': paged_result,
-            'next': request.get_full_path(),
-            'facebook_friends': get_facebook_friends(request),
-            'view_gender': view_gender[0] if len(view_gender) > 0 and view_gender[0] in ['W', 'M'] else 'A',
-            'latest_members': latest_members,
-            'APPAREL_GENDER': gender
-        }, context_instance=RequestContext(request))
+    if request.is_ajax():
+        response = render_to_response('apparel/fragments/user_list.html', {
+                    'pagination': pagination,
+                    'current_page': paged_result,
+            }, context_instance=RequestContext(request))
+    else:
+        response = render_to_response('apparel/user_list.html', {
+                'pagination': pagination,
+                'current_page': paged_result,
+                'next': request.get_full_path(),
+                'facebook_friends': get_facebook_friends(request),
+                'view_gender': view_gender[0] if len(view_gender) > 0 and view_gender[0] in ['W', 'M'] else 'A',
+                'latest_members': latest_members,
+                'APPAREL_GENDER': gender
+            }, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 
@@ -737,6 +749,12 @@ def home(request, profile):
 
     paged_result, pagination = get_pagination_page(queryset,
             FAVORITES_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
+
+    if request.is_ajax():
+        return render_to_response('apparel/fragments/activity/list.html', {
+            'pagination': pagination,
+            'current_page': paged_result
+        }, context_instance=RequestContext(request))
 
     return render_to_response('apparel/user_home.html', {
             'pagination': pagination,

@@ -768,6 +768,52 @@ function updateHash(name, value, remove) {
     window.location.hash = decodeURIComponent(jQuery.param(hash_object));
 }
 
+/**
+ * Infinite scroll
+ * Automatically scrolls one page
+ * To keep auto-scrolling after first page, set $(window).data('dont-scroll', false)
+ *
+ * To reset, set $(window).data('first-scroll', true)
+ * */
+
+function infiniteScroll(callback) {
+    var $window = jQuery(window),
+        $document = jQuery(document),
+        lastOffset = $window.scrollTop(),
+        loading = false;
+
+    function bottomDistance() {
+        return $document.height() - $window.scrollTop();
+    }
+
+    // Keep track of the first auto-scroll
+    $window.data('first-scroll', true);
+
+    $window.bind('scroll', function() {
+        if($window.data('dont-scroll'))
+            return;
+
+        var offset = $window.scrollTop(),
+            height = $window.height();
+
+        if(!loading && bottomDistance() < 2 * height && offset > lastOffset) {
+            if($window.data('first-scroll')) {
+                // Just auto-scroll one page until user clicks "load more"
+                $window.data('dont-scroll', true);
+                $window.data('first-scroll', false);
+            }
+
+            loading = true;
+            callback(function() {
+                loading = false;
+            });
+        }
+
+        // Store offset to see scroll direction
+        lastOffset = offset;
+    });
+}
+
 // DOM bindings
 
 jQuery(document).ready(function() {
@@ -856,5 +902,45 @@ jQuery(document).ready(function() {
         }
 
         return false;
+    }
+
+    var $body = jQuery('body'),
+        $pagination = jQuery('.pagination');
+
+    // Set up infinite scroll on all pages with pagination except shop and likes,
+    // which has it's own pagination logic
+    if($pagination.length && !$body.hasClass('page-shop') && !$body.hasClass('profile-likes')) {
+        var $container = $pagination.prev();
+
+        function getPage(link) {
+            jQuery.get(link.attr('href'), function(data, statusText, xhr) {
+                    var $data = jQuery(data),
+                    newPagination = $data.filter('.pagination'),
+                    content = newPagination.prev();
+
+                $container.append(content.html());
+                $pagination.html(newPagination.html());
+            });
+        }
+
+        // Fetch via ajax on pagination clicks
+        $('a.next', $pagination).live('click', function() {
+            // Keep fetching automatically after the first click
+
+            $(window).data('dont-scroll', false);
+
+            getPage(jQuery(this));
+            return false;
+        });
+
+        // Set up infinite scroll
+        infiniteScroll(function(callback) {
+            var link = $pagination.find('a.next');
+
+            if(link.length)
+                getPage(link);
+
+            callback();
+        });
     }
 });

@@ -114,6 +114,12 @@ def looks(request, profile, page=0):
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
+    if request.is_ajax():
+        return render(request, 'apparel/fragments/looks_middle_column.html', {
+                'pagination': pagination,
+                'current_page': paged_result
+            })
+
     content = {
         'pagination': pagination,
         'current_page': paged_result,

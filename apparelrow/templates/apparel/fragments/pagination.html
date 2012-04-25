@@ -1,35 +1,4 @@
-{# NOTE: If you change this, also change pagination_js.html #}
 {% load i18n %}
-{% if not current_page.has_previous %}
-<span class="prev disabled">&lt;</span>
-{% else %}
-<a class="prev" href="{{ request.path }}?page={{ current_page.previous_page_number }}">&lt;</a>
-{% endif %}
-<div>
-<ol>
-{% if pagination.left %}
-    {% for page in pagination.left %}
-        <li><a href="{{ request.path }}?page={{ page }}">{{ page }}</a></li>
-    {% endfor %}
-    <li class="pagination-dots">&hellip;</li>
-{% endif %}
-
-{% for page in pagination.mid %}
-    {% if page == current_page.number %}
-        <li class="current">{{ page }}</li>
-    {% else %}
-        <li><a href="{{ request.path }}?page={{ page }}">{{ page }}</a></li>
-    {% endif %}
-{% endfor %}
-
-{% if pagination.right %}
-    <li class="pagination-dots">&hellip;</li>
-    {% for page in pagination.right %}
-        <li><a href="{{ request.path }}?page={{ page }}">{{ page }}</a></li>
-    {% endfor %}
-{% endif %}
-</ol>
-</div>
 {% if not current_page.has_next or True %}
 <span class="next disabled">&gt;</span>
 {% else %}
