@@ -55,10 +55,6 @@ jQuery(document).ready(function() {
         var sort_elem = jQuery('.browse-sort-hover-menu li:first a');
         jQuery('.browse-sort-selected').attr('data-sort', sort_elem.attr('data-sort')).text(sort_elem.text());
 
-        // Sort by dd
-        var sort_elem = jQuery('.browse-sort-hover-menu #dd-switch');
-        jQuery('.browse-sort-selected').attr('data-sort', sort_elem.attr('data-sort')).text(sort_elem.text());
-
         // Call getQuery with empty query and force reset
         filter(getQuery({}, true));
 
@@ -162,12 +158,14 @@ jQuery(document).ready(function() {
     var browse_sort_menu = false;
     jQuery('.browse-sort-selected').live('click', function(e) {
         if(browse_sort_menu == false) {
-            jQuery(this).siblings('.browse-sort-hover-menu').show();
+            jQuery(this).addClass('selected').siblings('.browse-sort-hover-menu').show();
             browse_sort_menu = true;
         } else {
-            jQuery(this).siblings('.browse-sort-hover-menu').hide();
+            jQuery(this).removeClass('selected').siblings('.browse-sort-hover-menu').hide();
             browse_sort_menu = false;
         }
+
+        return false;
     });
     jQuery('.browse-sort-hover-menu li a').live('click', function(e) {
         var elem = jQuery(this);

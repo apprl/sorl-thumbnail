@@ -1525,7 +1525,7 @@ span.dd-introtext
   font-size: 1.2em
 
 .browse-sort-selected
-  background: url("../images/dd-bg.jpg") bottom no-repeat
+  background: image_url("dd-bg.jpg") bottom no-repeat
   font-family: arial
   font-size: 1em
   font-weight: bold
@@ -1535,11 +1535,18 @@ span.dd-introtext
   position: absolute
   text-indent: 5px
   width: 112px
-
-#dd-switch
-  background: url("../images/dd-bg.jpg") top no-repeat
+  -moz-user-select: -moz-none
+  -khtml-user-select: none
+  -webkit-user-select: none
+  /* Introduced in IE 10. See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/ */
+  -ms-user-select: none
+  user-select: none
+  &.selected
+    background: image_url("dd-bg.jpg") top no-repeat
 
 .browse-sort-hover-menu
+  position: relative
+  z-index: 50
   width: 110px
   background: #FBFBFB
   border: 1px solid #d9d9d9
@@ -2588,7 +2595,3 @@ body.settings
       a.profile-link, span.profile-link
         font-size: 1.1em
         font-weight: bold
-
-.browse-sort-hover-menu
-  position: relative
-  z-index: 50

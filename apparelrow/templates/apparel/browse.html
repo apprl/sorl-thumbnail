@@ -30,12 +30,12 @@
 
             <div id="sort-wrap">
                 <h2>{% trans "Sort by" %}</h2>
-                <div class="browse-sort-selected" id="dd-switch" data-sort="pop">{% trans "Popular" %}</div>
+                <a href="#" class="browse-sort-selected" data-sort="pop">{% trans "Trending" %}</a>
                 <ul class="browse-sort-hover-menu" style="display: none;">
-                    <li class="first"><a data-sort="pop" href="?sort=pop">{% trans "Popular" %}</a></li>
+                    <li class="first"><a data-sort="pop" href="?sort=pop">{% trans "Trending" %}</a></li>
                     <li><a data-sort="lat" href="?sort=lat">{% trans "Latest" %}</a></li>
-                    <li><a data-sort="exp" href="?sort=exp">{% trans "Expensive" %}</a></li>
-                    <li class="last"><a data-sort="che" href="sort-che" href="?sort=che">{% trans "Cheap" %}</a></li>
+                    <li><a data-sort="che" href="?sort=che">{% trans "Low price" %}</a></li>
+                    <li class="last"><a data-sort="exp" href="?sort=exp">{% trans "High price" %}</a></li>
                 </ul>
             </div>
 
