@@ -907,12 +907,12 @@ jQuery(document).ready(function() {
     var $body = jQuery('body'),
         $pagination = jQuery('.pagination');
 
-    // Set up infinite scroll on all pages with pagination except shop and likes,
+    // Set up infinite scroll on all pages with pagination except shop,
     // which has it's own pagination logic
-    if($pagination.length && !$body.hasClass('page-shop') && !$body.hasClass('profile-likes')) {
+    if($pagination.length && !$body.hasClass('page-shop')) {
         var $container = $pagination.prev();
 
-        function getPage(link) {
+        function getPage(link, callback) {
             jQuery.get(link.attr('href'), function(data, statusText, xhr) {
                     var $data = jQuery(data),
                     newPagination = $data.filter('.pagination'),
@@ -920,6 +920,8 @@ jQuery(document).ready(function() {
 
                 $container.append(content.html());
                 $pagination.html(newPagination.html());
+
+                if('function' == typeof callback) callback();
             });
         }
 
@@ -938,9 +940,9 @@ jQuery(document).ready(function() {
             var link = $pagination.find('a.next');
 
             if(link.length)
-                getPage(link);
-
-            callback();
+                getPage(link, callback);
+            else
+                callback();
         });
     }
 });

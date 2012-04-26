@@ -1128,45 +1128,14 @@ a.prev.disabled, a.next.disabled
   cursor: default
 
 body.two-columns .pagination
-  div
-    width: $large_width - 2 * (115 + 2) + 1
-body.three-columns .pagination
-  div
-    width: $middle_width - 2 * (115 + 2)
+  width: 506px
+  margin: 0 auto
 
 .pagination
-  &#pagination-top, &#pagination-bottom
-    position: relative
-    border-left: none
-    border-right: none
-  &#pagination-bottom
-    border-bottom: none
-    bottom: 0
-    margin: 0 auto
-    width: 506px
-    background: white
-    clear: both
-  &#pagination-top
-    border-top: none
-    top: 0
-    display: none
-  height: 34px
-  background-color: $button_color
-  .prev, .next
-    display: inline-block
-    width: 506px
-    height: 34px
-
-  .prev
-    float: left
-    +replace-text(unquote("prev-page.png"), center, center)
-    +border(right)
-    display: none
-  .prev.disabled
-    +replace-text(unquote("prev-page-disabled.png"), center, center)
-    display: none
   .next
-    float: left
+    display: block
+    width: 100%
+    height: 34px
     +replace-text(unquote("knappbg.jpg"))
     background-repeat: repeat-x
     background-position: bottom
@@ -1177,36 +1146,12 @@ body.three-columns .pagination
     padding-top: 17px
     font-weight: bold
     font-size: 1.25em
-  .next.disabled
-    +replace-text(unquote("next-page-disabled.png"), center, center)
-    display: none
-  .next:hover, .prev:hover
-    background-position: top
-    border: solid 1px #d9d9d9
-    color: #353535
-  .next:active, .prev:active
-    background-position: bottom
-  .next.disabled:hover, .prev.disabled:hover
-    background-color: inherit
-  ol
-    a:hover
-      font-family: $font_family
-      font-weight: bold
-  div
-    float: left
-    line-height: 34px
-    margin: 0 auto
-    ol
-      text-align: center
-      li
-        display: inline-block
-        padding: 0px 4px 0px 4px
-        a
-          display: block
-        &.current
-          font-family: $font_family
-          font-weight: bold
-          background: transparent image_url(unquote("current-page.png")) no-repeat scroll center bottom
+    &:hover
+      background-position: top
+      border: solid 1px #d9d9d9
+      color: #353535
+    &:active
+      background-position: bottom
 
 .product-back
   padding-top: 20px

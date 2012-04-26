@@ -68,6 +68,12 @@ def likes(request, profile, page=0):
     queryset = Product.published_objects.filter(likes__user=profile.user, likes__active=True).order_by('-likes__modified')
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
 
+    if request.is_ajax():
+        return render(request, 'profile/fragments/likes.html', {
+                'pagination': pagination,
+                'current_page': paged_result,
+        })
+
     content = {
         'pagination': pagination,
         'current_page': paged_result,
@@ -92,6 +98,13 @@ def profile(request, profile, page=0):
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
+
+    if request.is_ajax():
+        return render(request, 'apparel/fragments/activity/list.html', {
+            'pagination': pagination,
+            'current_page': paged_result,
+        })
+
     content = {
         'pagination': pagination,
         'current_page': paged_result,

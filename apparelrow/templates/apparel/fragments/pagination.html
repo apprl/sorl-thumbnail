@@ -1,6 +1,4 @@
 {% load i18n %}
-{% if not current_page.has_next or True %}
-<span class="next disabled">&gt;</span>
-{% else %}
+{% if current_page.has_next %}
 <a class="next" href="{{ request.path }}?page={{ current_page.next_page_number }}">{% trans "Keep it coming!" %}</a>
 {% endif %}

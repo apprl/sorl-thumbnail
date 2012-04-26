@@ -42,11 +42,7 @@
 <div id="content">
     {% if current_page.paginator.count != 0 %}
     <div id="product-list" class="product-list">
-        <ul class="list">
-        {% for object in current_page.object_list %}
-            {% include 'apparel/fragments/product_shop.html' %}
-        {% endfor %}
-        </ul>
+        {% include 'profile/fragments/likes.html' %}
     </div>
     <div class="clear"></div>
     {% else %}

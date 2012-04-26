@@ -5,11 +5,5 @@
 
 {% block body-classes %}three-columns profile{% endblock body-classes %}
 {% block content %}
-    <ul class="activity-list">
-    {% for object in current_page.object_list %}
-        {% include 'apparel/fragments/activity/activity.html' %}
-    {% empty %}
-        <li>{% trans "No updates" %}</li>
-    {% endfor %}
-    </ul>
+    {% include 'apparel/fragments/activity/list.html' %}
 {% endblock %}

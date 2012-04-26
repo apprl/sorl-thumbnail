@@ -1,0 +1,8 @@
+<ul class="list">
+{% for object in current_page.object_list %}
+    {% include 'apparel/fragments/product_shop.html' %}
+{% endfor %}
+</ul>
+<div class="pagination">
+    {% include 'apparel/fragments/pagination.html' %}
+</div>
