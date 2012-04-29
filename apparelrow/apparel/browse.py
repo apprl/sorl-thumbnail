@@ -230,6 +230,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         selected_price       = selected_price,
         selected_gender      = request.GET.get('gender', None),
         selected_discount    = bool(request.GET.get('discount', None)),
+        selected_sort        = request.GET.get('sort', None),
     )
 
     if request.GET.get('q', None):

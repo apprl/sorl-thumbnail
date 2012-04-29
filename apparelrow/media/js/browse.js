@@ -169,6 +169,12 @@ jQuery(document).ready(function() {
         return false;
     });
     jQuery('body').click(function(e) {
+        if(browse_sort_menu == true && jQuery(e.target).hasClass('browse-sort-selected')) {
+            jQuery('.browse-sort-selected').removeClass('selected').siblings('.browse-sort-hover-menu').hide();
+            browse_sort_menu = false;
+            e.stopPropagation();
+            return false;
+        }
         if(browse_sort_menu == true) {
             jQuery('.browse-sort-selected').removeClass('selected').siblings('.browse-sort-hover-menu').hide();
             browse_sort_menu = false;
@@ -528,6 +534,17 @@ function updateSelected(products) {
             ).prependTo('#selected-manufacturers');
         });
         jQuery('#product-manufacturers').addClass('active').prev().addClass('active');
+    }
+
+    // Select sort
+    if(products.selected_sort) {
+        jQuery('.browse-sort-hover-menu li a').each(function(i, e) {
+            var elem = jQuery(e);
+            if(elem.attr('data-sort') == products.selected_sort) {
+                jQuery('.browse-sort-selected').attr('data-sort', elem.attr('data-sort'))
+                                               .text(elem.text());
+            }
+        });
     }
 }
 
