@@ -312,7 +312,7 @@ def login_flow_brands(request):
     """
     Login flow step 3. Not used yet.
     """
-    return HttpResponseRedirect(reverse('shop'))
+    return HttpResponseRedirect(reverse('apparel.views.home'))
 
 @login_required
 def login_flow_complete(request):
@@ -320,7 +320,7 @@ def login_flow_complete(request):
     profile.first_visit = False
     profile.login_flow = 'complete'
     profile.save()
-    return HttpResponseRedirect(reverse('shop'))
+    return HttpResponseRedirect(reverse('apparel.views.home'))
 
 def _get_next(request):
     """
