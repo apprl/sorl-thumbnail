@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-25 21:29+0200\n"
+"POT-Creation-Date: 2012-05-02 22:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,12 +33,12 @@ msgstr ""
 msgid "Swe"
 msgstr "Sve"
 
-#: apparel/browse.py:236 templates/apparel/look_list.html:27
-#: templates/apparel/look_list.html:29
+#: apparel/browse.py:237 templates/apparel/look_list.html:26
+#: templates/apparel/look_list.html:28
 msgid "Showing"
 msgstr ""
 
-#: apparel/browse.py:238
+#: apparel/browse.py:239
 msgid "Showing your friends' favorites"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgid "Time added"
 msgstr ""
 
 #: apparel/models.py:150 apparel/models.py:267 apparel/models.py:413
-#: apparel/models.py:587 apparel/models.py:688
+#: apparel/models.py:591 apparel/models.py:695
 msgid "Time modified"
 msgstr ""
 
@@ -127,7 +127,7 @@ msgstr ""
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:155 apparel/models.py:417 apparel/models.py:689
+#: apparel/models.py:155 apparel/models.py:417 apparel/models.py:696
 #: profile/models.py:47
 msgid "Gender"
 msgstr ""
@@ -140,8 +140,8 @@ msgstr ""
 msgid "In stock"
 msgstr ""
 
-#: apparel/models.py:266 apparel/models.py:412 apparel/models.py:586
-#: apparel/models.py:672 apparel/models.py:687 beta/models.py:7
+#: apparel/models.py:266 apparel/models.py:412 apparel/models.py:590
+#: apparel/models.py:679 apparel/models.py:694 beta/models.py:7
 #: beta/models.py:15
 msgid "Time created"
 msgstr ""
@@ -234,7 +234,7 @@ msgstr ""
 msgid "items in stock"
 msgstr ""
 
-#: apparel/models.py:405 apparel/models.py:680
+#: apparel/models.py:405 apparel/models.py:687
 msgid "Title"
 msgstr ""
 
@@ -250,71 +250,71 @@ msgstr ""
 msgid "The look will be shown on the front page"
 msgstr ""
 
-#: apparel/models.py:604
+#: apparel/models.py:611
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:605
+#: apparel/models.py:612
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:606
+#: apparel/models.py:613
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:607
+#: apparel/models.py:614
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:608
+#: apparel/models.py:615
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:609
+#: apparel/models.py:616
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:681
+#: apparel/models.py:688
 msgid "Short description"
 msgstr ""
 
-#: apparel/models.py:682
+#: apparel/models.py:689
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:682
+#: apparel/models.py:689
 msgid "HTML allowed. This field is ignored if an image is set."
 msgstr ""
 
-#: apparel/models.py:683
+#: apparel/models.py:690
 msgid "URL"
 msgstr ""
 
-#: apparel/models.py:684 apparel/models.py:716
+#: apparel/models.py:691 apparel/models.py:723
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:684
+#: apparel/models.py:691
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:686
+#: apparel/models.py:693
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:690 profile/models.py:46 templates/account/base.html:20
+#: apparel/models.py:697 profile/models.py:46 templates/account/base.html:20
 msgid "Language"
 msgstr ""
 
-#: apparel/models.py:691
+#: apparel/models.py:698
 msgid "Sorting order"
 msgstr ""
 
-#: apparel/models.py:734
+#: apparel/models.py:741
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:734
+#: apparel/models.py:741
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -771,7 +771,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: templates/index.html:162 templates/apparel/look_list.html:22
+#: templates/index.html:162 templates/apparel/look_list.html:21
 msgid "Popular looks"
 msgstr ""
 
@@ -928,27 +928,27 @@ msgstr ""
 msgid "%(name)s's looks"
 msgstr ""
 
-#: templates/apparel/look_detail.html:74
+#: templates/apparel/look_detail.html:71
 msgid "Created"
 msgstr ""
 
-#: templates/apparel/look_detail.html:86
+#: templates/apparel/look_detail.html:83
 msgid "Embed this look on your blog or site"
 msgstr ""
 
-#: templates/apparel/look_detail.html:89
+#: templates/apparel/look_detail.html:86
 msgid "Direct link to this page"
 msgstr ""
 
-#: templates/apparel/look_detail.html:93
+#: templates/apparel/look_detail.html:90
 msgid "More looks by"
 msgstr ""
 
-#: templates/apparel/look_detail.html:99
+#: templates/apparel/look_detail.html:96
 msgid "Similar looks"
 msgstr ""
 
-#: templates/apparel/look_detail.html:129
+#: templates/apparel/look_detail.html:126
 msgid "Tags"
 msgstr ""
 
@@ -981,7 +981,7 @@ msgstr ""
 msgid "To create a look, you need to have liked at least one product."
 msgstr ""
 
-#: templates/apparel/look_edit.html:490 templates/profile/likes.html:56
+#: templates/apparel/look_edit.html:490 templates/profile/likes.html:52
 msgid "Find products!"
 msgstr ""
 
@@ -1009,66 +1009,45 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: templates/apparel/look_list.html:5
+#: templates/apparel/look_list.html:4
 msgid "Looks Men"
 msgstr ""
 
-#: templates/apparel/look_list.html:5
+#: templates/apparel/look_list.html:4
 msgid "Looks Women"
 msgstr ""
 
-#: templates/apparel/look_list.html:11
-msgid "Latest looks"
-msgstr ""
-
-#: templates/apparel/look_list.html:23 templates/apparel/user_home.html:15
+#: templates/apparel/look_list.html:22 templates/apparel/user_home.html:15
 msgid "Popular looks in your network"
 msgstr ""
 
-#: templates/apparel/look_list.html:27 templates/apparel/look_list.html:29
+#: templates/apparel/look_list.html:26 templates/apparel/look_list.html:28
 #, python-format
 msgid "%(counter)s look"
 msgid_plural "%(counter)s looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/look_list.html:34
+#: templates/apparel/look_list.html:33
 msgid ""
 "To see popular looks in your network you need to connect with your Facebook "
 "account."
 msgstr ""
 
-#: templates/apparel/look_list.html:40
+#: templates/apparel/look_list.html:39
 msgid ""
 "You currently don't follow anyone who has liked any looks, find friends to "
 "follow amoung our members."
 msgstr ""
 
-#: templates/apparel/look_list.html:41 templates/apparel/look_list.html:52
-#: templates/apparel/user_home.html:27
+#: templates/apparel/look_list.html:40 templates/apparel/user_home.html:27
 #: templates/apparel/fragments/browse_follow_user.html:5
 msgid "See all members"
 msgstr ""
 
-#: templates/apparel/look_list.html:48
-msgid "Friends with most looks"
-msgstr ""
-
-#: templates/apparel/look_list.html:51
-msgid ""
-"You currently don't follow anyone who has created any looks, find friends to "
-"follow among our members."
-msgstr ""
-
-#: templates/apparel/look_list.html:59
+#: templates/apparel/look_list.html:76
 #, python-format
-msgid "See all %(looks)s looks"
-msgstr ""
-
-#: templates/apparel/look_list.html:66
-msgid ""
-"To see which of your friends have created the most looks, connect with your "
-"Facebook account."
+msgid "By %(username)s"
 msgstr ""
 
 #: templates/apparel/product_detail.html:66
@@ -1312,7 +1291,7 @@ msgstr ""
 msgid "By"
 msgstr ""
 
-#: templates/apparel/fragments/pagination.html:5
+#: templates/apparel/fragments/pagination.html:3
 msgid "Keep it coming!"
 msgstr ""
 
@@ -1455,7 +1434,6 @@ msgid ""
 msgstr ""
 
 #: templates/apparel/fragments/activity/list.html:6
-#: templates/profile/profile.html:12
 msgid "No updates"
 msgstr ""
 
@@ -1676,11 +1654,11 @@ msgstr ""
 msgid "Do you really want to delete product"
 msgstr ""
 
-#: templates/profile/likes.html:56
+#: templates/profile/likes.html:52
 msgid "You do not like any products right now."
 msgstr ""
 
-#: templates/profile/likes.html:58
+#: templates/profile/likes.html:54
 msgid "does not like any products so far."
 msgstr ""
 

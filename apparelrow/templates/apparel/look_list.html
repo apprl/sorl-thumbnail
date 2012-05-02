@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
-                        <p>{% blocktrans with object.user.get_profile.display_name as user %}By {{ user }}{% endblocktrans %}</p>
+                        <p>{% blocktrans with object.user.get_profile.display_name as username %}By {{username}}{% endblocktrans %}</p>
                         <div id="look-tooltips">
                         {% if object.display_with_component == 'P' %}
                             {% for component in object.photo_components.all %}
