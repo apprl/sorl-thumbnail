@@ -1,18 +1,17 @@
 {% extends 'base.html' %}
-{% load i18n %}
-{% load apparel_extras %}
+{% load i18n cache thumbnail apparel_extras %}
 
 {% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Looks Men" %}{% else %}{% trans "Looks Women" %}{% endif %} | {% endblock %}
+{% block 'extra-scripts' %}
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        makeProductTooltip('.collage .product, .photo .product');
+    });
+</script>
+{% endblock 'extra-scripts' %}
 
-{% block body-classes %}three-columns look-list{% endblock body-classes %}
-
+{% block body-classes %}one-column look-list{% endblock body-classes %}
 {% block body %}
-    <div class="sidebar">
-        <h2>{% trans "Latest looks" %}</h2>
-        {% with latest_looks as looks %}
-            {% include 'apparel/fragments/looks.html' %}
-        {% endwith %}
-    </div>
     <div id="content">
         {% url look-list-men as look_list_men %}
         {% url look-list-women as look_list_women %}
@@ -40,33 +39,61 @@
                 <div>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</div>
                 <a class="all-users" href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a>
             {% else %}
-                {% include 'apparel/fragments/looks_middle_column.html' %}
+                <ul class="looks">
+                {% for object in current_page.object_list %}
+                    <li{% cycle '' ' class="last"' %}>
+
+                        {% cache CACHE_TIMEOUT look_list object.id LANGUAGE_CODE %}
+                        <div class="look-medium {% if object.display_with_component == 'P' %}photo{% else %}collage{% endif %}">
+                            {% if object.display_with_component == 'P' %}
+                                <div id="photo-background" class="look-photo"
+                                    {% if object.image %}
+                                    {% thumbnail object.image "450x334" as im %}
+                                    style="background-image: url('{{ im.url }}'); width: {{ im.width }}px; height: {{ im.height }}px"
+                                    {% endthumbnail %}
+                                    {% endif %}
+                                >
+                                {% for component in object.photo_components.all %}
+                                    <a href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style_middle }}"></a>
+                                {% endfor %}
+                                </div>
+                            {% else %}
+                                {% for component in object.collage_components.all %}
+                                    {% thumbnail component.product.product_image "450x334" crop="noop" format="PNG" transparent=True as im %}
+                                    <a href="{{ component.product.get_absolute_url }}">
+                                        <img id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_middle }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+                                    </a>
+                                    {% endthumbnail %}
+                                {% endfor %}
+                            {% endif %}
+                            <!--<a class="look-heart" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>-->
+                            <div class="stats">
+                                <div class="comments">{{ object.comments }}</div>
+                                <div class="likes">{{ object.score }}</div>
+                            </div>
+                        </div>
+                        <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
+                        <p>{% blocktrans with object.user.get_profile.display_name as user %}By {{ user }}{% endblocktrans %}</p>
+                        <div id="look-tooltips">
+                        {% if object.display_with_component == 'P' %}
+                            {% for component in object.photo_components.all %}
+                                {% include "apparel/fragments/look_product_tooltip.html" %}
+                            {% endfor %}
+                        {% else %}
+                            {% for component in object.collage_components.all %}
+                                {% include "apparel/fragments/look_product_tooltip.html" %}
+                            {% endfor %}
+                        {% endif %}
+                        </div>
+                        {% endcache %}
+
+                    </li>
+                {% endfor %}
+                </ul>
+                <div class="pagination">
+                    {% include 'apparel/fragments/pagination.html' %}
+                </div>
             {% endif %}
-        {% endif %}
-    </div>
-    <div class="sidebar last">
-        <h2>{% trans "Friends with most looks" %}</h2>
-        {% if user.is_authenticated %}
-        {% if not most_looks_users %}
-        <div>{% trans "You currently don't follow anyone who has created any looks, find friends to follow among our members." %}</div>
-        <a class="all-users" href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a>
-        {% else %}
-        <ul class="suggested-friends">
-        {% for profile in most_looks_users %}
-            <li>
-            {% include 'apparel/fragments/avatar_link_no_cache.html' %}
-            <a href="{% url profile.views.looks profile.user.username %}">
-                {% blocktrans with profile.looks as looks %}See all {{ looks }} looks{% endblocktrans %}
-            </a>
-            </li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-        {% else %}
-        <div>{% trans "To see which of your friends have created the most looks, connect with your Facebook account." %}</div>
-        {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
-            {% facebook_button facebook_login_image %}
-        {% endwith %}
         {% endif %}
     </div>
 {% endblock body %}

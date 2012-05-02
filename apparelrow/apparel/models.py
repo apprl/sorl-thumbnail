@@ -487,6 +487,10 @@ class Look(models.Model):
     def score(self):
         return LookLike.objects.filter(look=self, active=True).count()
 
+    def comments(self):
+        content_type = ContentType.objects.get_for_model(Product)
+        return Comment.objects.filter(content_type=content_type, object_pk=self.pk, is_removed=False, is_public=True).count()
+
     def total_price(self, component=None):
         """
         Returns the total price of the given component, or default if none specified
@@ -592,6 +596,9 @@ class LookLike(models.Model):
 
     class Meta:
         unique_together = (('look', 'user'),)
+
+models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookLike)
+models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookLike)
 
 class LookComponent(models.Model):
     """

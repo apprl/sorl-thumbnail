@@ -17,6 +17,17 @@ $input_border_color: $highlight_border_color !default
   .collage-image
     position: absolute
 
+=look_medium
+  +box
+  width: 450px
+  height: 334px
+  position: relative
+  overflow: hidden
+  border: 1px solid #DEDEDE
+  background: #fff
+  .collage-image
+    position: absolute
+
 
 // EDIT
 
@@ -405,4 +416,49 @@ body
       div.look
         +float-left
         margin-right: 18px
-  
+
+
+body.look-list
+  a.look-heart
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 100
+    display: block
+    margin: 10px 0 0 10px
+    float: left
+    width: 34px
+    height: 35px
+    background: image_url("heartbg.jpg") top
+    &:hover, &.liked
+      background: image_url("heartbg.jpg") bottom
+
+  ul.looks
+    li
+      margin: 0 36px 36px 0
+      &.last
+        margin-right: 0
+      &:hover
+        background: transparent
+      > h3, p
+        text-align: center
+      > h3
+        font-weight: bold
+        font-size: 1.25em
+      p
+        color: $easier_color
+      .stats
+        position: absolute
+        top: 10px
+        right: 10px
+        overflow: hidden
+        .likes, .comments
+          float: right
+          padding-left: 18px
+        .likes
+          background: image_url("heartico.png") no-repeat 0px 2px
+          margin-right: 5px
+        .comments
+          background: image_url("commentico.png") no-repeat 0px 2px
+      .look-medium
+        +look_medium
