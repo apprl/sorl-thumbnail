@@ -488,7 +488,7 @@ class Look(models.Model):
         return LookLike.objects.filter(look=self, active=True).count()
 
     def comments(self):
-        content_type = ContentType.objects.get_for_model(Product)
+        content_type = ContentType.objects.get_for_model(Look)
         return Comment.objects.filter(content_type=content_type, object_pk=self.pk, is_removed=False, is_public=True).count()
 
     def total_price(self, component=None):
@@ -764,5 +764,8 @@ class SynonymFile(models.Model):
                 raise ValidationError('Lines can not start or end with "," or "=>"')
 
 models.signals.post_save.connect(save_synonym_file, sender=SynonymFile)
+
+import django.contrib.comments.signals
+django.contrib.comments.signals.comment_was_posted.connect(cache.invalidate_model_handler)
 
 import apparel.activity
