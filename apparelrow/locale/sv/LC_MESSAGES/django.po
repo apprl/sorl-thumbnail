@@ -1338,7 +1338,7 @@ msgstr "Gillar looken"
 
 #: templates/apparel/fragments/look_widget.html:14
 msgid "By"
-msgstr "från"
+msgstr "Av"
 
 #: templates/apparel/fragments/pagination.html:3
 msgid "Keep it coming!"

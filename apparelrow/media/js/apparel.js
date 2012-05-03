@@ -410,7 +410,7 @@ jQuery(document).ready(function() {
     });
 
     // Product hover
-    jQuery('a.product-image').live('mouseenter', function() {
+    jQuery('.product-medium a.product-image').live('mouseenter', function() {
         var element = jQuery(this);
         if(element.parents('#search-result-products').length == 0) {
             var hover_element = element.siblings('.product-hover');
@@ -443,7 +443,7 @@ jQuery(document).ready(function() {
     jQuery('.product-hover').live('mouseleave', function() {
         jQuery('.product-hover').hide();
     }).live('click', function() {
-        window.location.href = jQuery(this).siblings('.product-image').attr('href');
+        window.location.href = jQuery(this).siblings('a.product-image').attr('href');
     });
 
 });

@@ -66,14 +66,21 @@
                                     {% endthumbnail %}
                                 {% endfor %}
                             {% endif %}
-                            <!--<a class="look-heart" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>-->
-                            <div class="stats">
-                                <div class="comments">{{ object.comments }}</div>
-                                <div class="likes">{{ object.score }}</div>
-                            </div>
+                            {% url apparel.views.look_like object.slug 'like' as like_url %}
+                            {% url apparel.views.look_like object.slug 'unlike' as unlike_url %}
+                            {% url dialog-like-look as dialog_url %}
+                            {% with is_liked=user|likes_look:object slug=object.slug %}
+                            {% include 'apparel/fragments/like_button.html' %}
+                            {% endwith %}
                         </div>
                         <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
-                        <p>{% blocktrans with object.user.get_profile.display_name as username %}By {{username}}{% endblocktrans %}</p>
+                        <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>
+                        <div class="stats">
+                            <div class="likes">{{ object.score }}</div>
+                            {% if object.comments > 0 %}
+                            <div class="comments">{{ object.comments }}</div>
+                            {% endif %}
+                        </div>
                         <div id="look-tooltips">
                         {% if object.display_with_component == 'P' %}
                             {% for component in object.photo_components.all %}
