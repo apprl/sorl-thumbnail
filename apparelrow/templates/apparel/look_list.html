@@ -56,6 +56,7 @@
                                 {% for component in object.photo_components.all %}
                                     <a href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style_middle }}"></a>
                                 {% endfor %}
+                                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>
                                 </div>
                             {% else %}
                                 {% for component in object.collage_components.all %}
@@ -65,13 +66,8 @@
                                     </a>
                                     {% endthumbnail %}
                                 {% endfor %}
+                                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>
                             {% endif %}
-                            {% url apparel.views.look_like object.slug 'like' as like_url %}
-                            {% url apparel.views.look_like object.slug 'unlike' as unlike_url %}
-                            {% url dialog-like-look as dialog_url %}
-                            {% with is_liked=user|likes_look:object slug=object.slug %}
-                            {% include 'apparel/fragments/like_button.html' %}
-                            {% endwith %}
                         </div>
                         <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
                         <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>

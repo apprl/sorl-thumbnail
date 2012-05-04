@@ -350,6 +350,33 @@ jQuery(document).ready(function() {
         }
     });
 
+    // Look like
+    jQuery('a.look-like').live('click', function() {
+        if(isAuthenticated == false) {
+            create_html_dialog(dialog_like_look); // from templates/base.html
+        } else {
+            var element = jQuery(this);
+            if(element.hasClass('liked')) {
+                jQuery.post(element.attr('data-unlike-url'), function(data) {
+                    if(data['success'] == true) {
+                        var likes = element.closest('li').find('.stats .likes');
+                        likes.text(parseInt(likes.text(), 10) - 1);
+                        element.removeClass('liked');
+                    }
+                });
+            } else {
+                jQuery.post(element.attr('data-like-url'), function(data) {
+                    if(data['success'] == true) {
+                        var likes = element.closest('li').find('.stats .likes');
+                        likes.text(parseInt(likes.text(), 10) + 1);
+                        element.addClass('liked');
+                    }
+                });
+            }
+        }
+        return false;
+    });
+
     // Product like
     jQuery('a.product-heart').live('mouseenter', function() {
         if(isAuthenticated == true && hasLiked == false) {
@@ -367,7 +394,7 @@ jQuery(document).ready(function() {
     var pending = false;
     jQuery('a.product-heart').live('click', function() {
         if(isAuthenticated == false) {
-            create_html_dialog(dialog_like_product);
+            create_html_dialog(dialog_like_product); // from templates/base.html
         } else {
             var element = jQuery(this);
             if(element.hasClass('liked')) {

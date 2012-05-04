@@ -18,6 +18,7 @@
 
         var hasLiked = {% if user.is_authenticated and user.get_profile.has_liked %}true{% else %}false{% endif %};
         var dialog_like_product = '{% url dialog-like-product %}';
+        var dialog_like_look = '{% url dialog-like-look %}';
         var product_popup_url = '{% url product-popup %}';
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};

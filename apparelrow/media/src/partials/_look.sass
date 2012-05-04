@@ -72,8 +72,6 @@ $input_border_color: $highlight_border_color !default
 
 #photo-background
   +apparel_hotspot
-  top: 12px
-
   .delete
     z-index: 10001
     left: 5px
@@ -423,9 +421,8 @@ body.look-list
     position: absolute
     top: 0
     left: 0
-    z-index: 100
     display: block
-    margin: 10px 0 0 10px
+    margin: 5px 0 0 5px
     float: left
     width: 34px
     height: 35px
@@ -444,13 +441,16 @@ body.look-list
       > h3
         margin-top: 6px
         font-weight: bold
-        font-size: 1.25em
+        font-size: 1.273em
       > p
         margin-top: 3px
+        font-size: 1.182em
       p, p > a
         color: $easier_color
       .stats
         margin-top: 3px
+        font-size: 1.182em
+        font-weight: bold
         text-align: center
         .likes, .comments
           display: inline-block
@@ -462,3 +462,5 @@ body.look-list
           background: image_url("commentico.png") no-repeat 0px 2px
       .look-medium
         +look_medium
+        &.photo
+          border: 0

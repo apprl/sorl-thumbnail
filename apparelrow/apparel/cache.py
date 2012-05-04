@@ -70,15 +70,20 @@ new_template_cache_map = {
 AVAILABLE_GENDERS = ['M', 'W']
 
 def invalidate_model_handler(sender, **kwargs):
+    if 'instance' in kwargs:
+        instance = kwargs['instance']
+    elif 'comment' in kwargs:
+        instance = kwargs['comment']
+
     try:
         for fragment, cache_data in new_template_cache_map[sender.__name__].items():
             if cache_data[0] == 'id_language':
-                arguments = [cache_data[1](kwargs['instance'])]
+                arguments = [cache_data[1](instance)]
                 for language in settings.LANGUAGES:
                     invalidate_template_cache(fragment, arguments + [language[0]])
 
             elif cache_data[0] == 'id_language_gender':
-                arguments = [cache_data[1](kwargs['instance'])]
+                arguments = [cache_data[1](instance)]
                 for language in settings.LANGUAGES:
                     for gender in AVAILABLE_GENDERS:
                         invalidate_template_cache(fragment, arguments + [language[0]] + [gender])
