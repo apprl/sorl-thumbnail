@@ -7,6 +7,9 @@ urlpatterns = patterns('',
     url(r'^men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
     url(r'^women/$', 'apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
 
+    # About
+    url(r'^about/$', 'apparel.views.about', name='about'),
+
     # Home
     (r'^home/$', 'apparel.views.home'),
 

@@ -704,6 +704,24 @@ def gender(request, view=None, gender=None):
             'image': str(image)
         }, context_instance=RequestContext(request))
 
+def about(request):
+    # Set language to user's browser language for gender select view
+    language = translation.get_language_from_request(request)
+    translation.activate(language)
+    request.LANGUAGE_CODE = translation.get_language()
+    image = BackgroundImage.objects.get_random_image()
+
+    view = 'shop'
+
+    return render_to_response('apparel/gender.html', {
+            'men_url': reverse('%s-men' % (view,)),
+            'women_url': reverse('%s-women' % (view,)),
+            'next': request.GET.get('next', '/'),
+            'image': str(image)
+        }, context_instance=RequestContext(request))
+
+
+
 def jobs(request):
     # Set language to user's browser language for gender select view
     language = translation.get_language_from_request(request)
