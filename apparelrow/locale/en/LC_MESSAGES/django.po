@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-02 22:35+0200\n"
+"POT-Creation-Date: 2012-05-04 18:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Showing your friends' favorites"
 msgstr ""
 
-#: apparel/forms.py:8 templates/base.html:82
+#: apparel/forms.py:8 templates/base.html:83
 msgid "You have to name your look before your create it."
 msgstr ""
 
@@ -499,7 +499,7 @@ msgstr ""
 msgid "User profile image"
 msgstr ""
 
-#: profile/models.py:45 templates/base.html:283
+#: profile/models.py:45 templates/base.html:284
 msgid "About"
 msgstr ""
 
@@ -571,121 +571,119 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
-#: templates/base.html:109
+#: templates/base.html:110
 msgid "Search for products"
 msgstr ""
 
-#: templates/base.html:110 templates/profile/base_login_flow.html:12
-#: templates/profile/base_profile.html:52
+#: templates/base.html:111 templates/profile/base_login_flow.html:12
+#: templates/profile/base_profile.html:16
 msgid "Cancel"
 msgstr ""
 
-#: templates/base.html:114 templates/base.html.py:262
+#: templates/base.html:115 templates/base.html.py:263
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Women"
 msgstr ""
 
-#: templates/base.html:115 templates/base.html.py:263
+#: templates/base.html:116 templates/base.html.py:264
 #: templates/apparel/fragments/product_menu_browse.html:15
 msgid "Men"
 msgstr ""
 
-#: templates/base.html:119 templates/base.html.py:261
+#: templates/base.html:120 templates/base.html.py:262
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:120
+#: templates/base.html:121
 msgid "Brands"
 msgstr ""
 
-#: templates/base.html:121 templates/base.html.py:206 templates/base.html:266
+#: templates/base.html:122 templates/base.html.py:207 templates/base.html:267
 #: templates/apparel/look_detail.html:10 templates/apparel/look_edit.html:6
 #: templates/profile/looks.html:4
 #: templates/profile/fragments/menu_items.html:14
 msgid "Looks"
 msgstr ""
 
-#: templates/base.html:122 templates/apparel/user_list.html:5
+#: templates/base.html:123 templates/apparel/user_list.html:5
 msgid "Members"
 msgstr ""
 
-#: templates/base.html:139
+#: templates/base.html:140
 msgid "Matching products"
 msgstr ""
 
-#: templates/base.html:143
+#: templates/base.html:144
 msgid "Matching looks"
 msgstr ""
 
-#: templates/base.html:147
+#: templates/base.html:148
 msgid "Matching brands"
 msgstr ""
 
-#: templates/base.html:151
+#: templates/base.html:152
 msgid "Show all products"
 msgstr ""
 
-#: templates/base.html:152
+#: templates/base.html:153
 msgid "Show all looks"
 msgstr ""
 
-#: templates/base.html:153
+#: templates/base.html:154
 msgid "Show all manufacturers"
 msgstr ""
 
-#: templates/base.html:164
+#: templates/base.html:165
 msgid "Socialize!"
 msgstr ""
 
-#: templates/base.html:166
+#: templates/base.html:167
 msgid ""
-"Now you can start to browse clothes, shoes & accessories on the SHOP-page, "
-"or by using the search function on the top right.<br/><br/>You can make "
-"Apparelrow even smarter and more personal by connecting to your Facebook "
-"account. For example you can see what clothes your friends like and see what "
-"brands are the most popular in your network. "
+"You can make Apparelrow even smarter and more personal by connecting to your "
+"Facebook account. For example you can see what clothes your friends like and "
+"see what brands are the most popular in your network."
 msgstr ""
 
-#: templates/base.html:171
-msgid "Life is <em>funner</em> connected"
+#: templates/base.html:172
+msgid "Life is <em>more fun</em> connected"
 msgstr ""
 
-#: templates/base.html:204 templates/apparel/product_detail.html:183
+#: templates/base.html:205 templates/apparel/product_detail.html:183
 #: templates/profile/fragments/menu_items.html:8
 msgid "Likes"
 msgstr ""
 
-#: templates/base.html:205 templates/profile/profile.html:4
+#: templates/base.html:206 templates/profile/profile.html:4
 #: templates/profile/fragments/menu_items.html:11
 msgid "Updates"
 msgstr ""
 
-#: templates/base.html:207 templates/profile/followers.html:4
+#: templates/base.html:208 templates/profile/followers.html:4
 #: templates/profile/fragments/menu_items.html:17
 msgid "Followers"
 msgstr ""
 
-#: templates/base.html:208 templates/apparel/fragments/follow.html:6
-#: templates/profile/base_profile.html:83
+#: templates/base.html:209 templates/apparel/fragments/follow.html:6
+#: templates/profile/base_profile.html:47
 #: templates/profile/fragments/menu_items.html:20
 msgid "Following"
 msgstr ""
 
-#: templates/base.html:214
+#: templates/base.html:215
 msgid "Friends' updates"
 msgstr ""
 
-#: templates/base.html:221 templates/profile/base_settings.html:4
+#: templates/base.html:222 templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:10
 msgid "Settings"
 msgstr ""
 
-#: templates/base.html:228
+#: templates/base.html:229
 #, python-format
 msgid "Invite friends (%(invites)s)"
 msgstr ""
 
-#: templates/base.html:235 templates/base.html.py:269 templates/base.html:271
+#: templates/base.html:236 templates/base.html.py:270 templates/base.html:272
 #: templates/apparel/look_create_dialog.html:6
 #: templates/apparel/look_create_unauthenticated.html:5
 #: templates/apparel/look_create_unauthenticated.html:11
@@ -693,52 +691,52 @@ msgstr ""
 msgid "Create a look"
 msgstr ""
 
-#: templates/base.html:238
+#: templates/base.html:239
 msgid "Friends' Favorites"
 msgstr ""
 
-#: templates/base.html:241
+#: templates/base.html:242
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:258
+#: templates/base.html:259
 #, fuzzy
 msgid "Sweden"
 msgstr "Svenska"
 
-#: templates/base.html:267
+#: templates/base.html:268
 msgid "All looks"
 msgstr ""
 
-#: templates/base.html:275
+#: templates/base.html:276
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:276
+#: templates/base.html:277
 msgid "All members"
 msgstr ""
 
-#: templates/base.html:282
+#: templates/base.html:283
 msgid "About Apparelrow"
 msgstr ""
 
-#: templates/base.html:284
+#: templates/base.html:285
 msgid "Blog"
 msgstr ""
 
-#: templates/base.html:285
+#: templates/base.html:286
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:286
+#: templates/base.html:287
 msgid "Cookies"
 msgstr ""
 
-#: templates/base.html:318
+#: templates/base.html:319
 msgid "No"
 msgstr ""
 
-#: templates/base.html:319
+#: templates/base.html:320
 msgid "Yes"
 msgstr ""
 
@@ -757,7 +755,6 @@ msgstr ""
 
 #: templates/index.html:140 templates/apparel/look_detail.html:10
 #: templates/apparel/look_edit.html:6 templates/apparel/product_detail.html:10
-#: templates/apparel/fragments/look_wide.html:10
 msgid "by"
 msgstr ""
 
@@ -906,12 +903,12 @@ msgid "To create a look you need to connect with your Facebook account:"
 msgstr ""
 
 #: templates/apparel/look_detail.html:29 templates/apparel/look_edit.html:453
-#: templates/profile/base_profile.html:13 templates/profile/likes.html:21
+#: templates/profile/likes.html:21 templates/profile/looks.html:15
 msgid "Are you sure?"
 msgstr ""
 
 #: templates/apparel/look_detail.html:30 templates/apparel/look_edit.html:454
-#: templates/profile/base_profile.html:14
+#: templates/profile/looks.html:16
 msgid "Do you really want to delete look"
 msgstr ""
 
@@ -964,8 +961,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: templates/apparel/look_edit.html:474
-#: templates/apparel/fragments/look_wide.html:8
+#: templates/apparel/look_edit.html:474 templates/profile/looks.html:74
 msgid "Delete look"
 msgstr ""
 
@@ -1045,9 +1041,10 @@ msgstr ""
 msgid "See all members"
 msgstr ""
 
-#: templates/apparel/look_list.html:76
-#, python-format
-msgid "By %(username)s"
+#: templates/apparel/look_list.html:73
+#: templates/apparel/fragments/look_widget.html:14
+#: templates/profile/looks.html:75
+msgid "By"
 msgstr ""
 
 #: templates/apparel/product_detail.html:66
@@ -1285,10 +1282,6 @@ msgstr ""
 
 #: templates/apparel/fragments/look_user_like_list.html:4
 msgid "Likes this look"
-msgstr ""
-
-#: templates/apparel/fragments/look_widget.html:14
-msgid "By"
 msgstr ""
 
 #: templates/apparel/fragments/pagination.html:3
@@ -1566,7 +1559,7 @@ msgid "Connect with facebook only"
 msgstr ""
 
 #: templates/profile/base_login_flow.html:11
-#: templates/profile/base_profile.html:51
+#: templates/profile/base_profile.html:15
 #: templates/profile/fragments/change_image_form.html:13
 msgid "Change picture"
 msgstr ""
@@ -1588,18 +1581,18 @@ msgstr ""
 msgid "Proceed"
 msgstr ""
 
-#: templates/profile/base_profile.html:60
+#: templates/profile/base_profile.html:24
 msgid "Member since"
 msgstr ""
 
-#: templates/profile/base_profile.html:69
+#: templates/profile/base_profile.html:33
 #, python-format
 msgid "Likes %(prod)s product"
 msgid_plural "Likes %(prod)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/base_profile.html:73
+#: templates/profile/base_profile.html:37
 #, python-format
 msgid ""
 "\n"
@@ -1612,11 +1605,11 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/base_profile.html:81
+#: templates/profile/base_profile.html:45
 msgid "Followed by"
 msgstr ""
 
-#: templates/profile/base_profile.html:96
+#: templates/profile/base_profile.html:60
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr ""
@@ -1660,11 +1653,6 @@ msgstr ""
 
 #: templates/profile/likes.html:54
 msgid "does not like any products so far."
-msgstr ""
-
-#: templates/profile/looks.html:12
-#, python-format
-msgid "%(name)s's popular looks"
 msgstr ""
 
 #: templates/profile/settings_email.html:6
