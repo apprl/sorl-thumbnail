@@ -1,17 +1,103 @@
 {% extends "profile/base_profile.html" %}
-{% load i18n %}
+{% load i18n cache thumbnail apparel_extras %}
 
 {% block extra-title %}{{ profile.display_name }} - {% trans "Looks" %} | {% endblock %}
+{% block 'extra-scripts' %}
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        makeProductTooltip('.collage .product, .photo .product');
 
-{% block body-classes %}three-columns profile profile-looks{% endblock body-classes %}
+        jQuery('.inline-delete-look').click(function(event) {
+            var title = jQuery(this).prev('a').attr('title');
+            var href = jQuery(this).attr('href');
+            var li = jQuery(this).closest('li');
+            create_modal_dialog(
+                '{% trans "Are you sure?" %}',
+                ['{% trans "Do you really want to delete look" %} <span class="bold">' + title + '</span>?'],
+                function (modal_dialog) {
+                    jQuery.ajax({
+                        url: href,
+                        success: function(data) {
+                            if (data.data) {
+                                li.remove();
+                            }
+                        },
+                        complete: function() { modal_dialog.close(); }
+                    });
+                },
+                function (modal_dialog) { modal_dialog.close(); }
+            );
+            event.preventDefault();
+        });
+
+        {% url profile-looks user.username as looks_url %}
+        {% if request.path == looks_url %}
+        jQuery('.inline-delete-look').show();
+        {% endif %}
+    });
+</script>
+{% endblock 'extra-scripts' %}
+
+{% block body-classes %}two-columns profile profile-looks{% endblock body-classes %}
 {% block content %}
-    {% include 'apparel/fragments/looks_middle_column.html' %}
+
+<ul class="looks">
+{% for object in current_page.object_list %}
+    <li>
+
+        {% cache CACHE_TIMEOUT look_list object.id LANGUAGE_CODE %}
+        <div class="look-large {% if object.display_with_component == 'P' %}photo{% else %}collage{% endif %}">
+            {% if object.display_with_component == 'P' %}
+                <div id="photo-background" class="look-photo"
+                    {% if object.image %}
+                    {% thumbnail object.image "694x512" as im %}
+                    style="background-image: url('{{ im.url }}'); width: {{ im.width }}px; height: {{ im.height }}px"
+                    {% endthumbnail %}
+                    {% endif %}
+                >
+                {% for component in object.photo_components.all %}
+                    <a href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style }}"></a>
+                {% endfor %}
+                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>
+                </div>
+            {% else %}
+                {% for component in object.collage_components.all %}
+                    {% thumbnail component.product.product_image "694x512" crop="noop" format="PNG" transparent=True as im %}
+                    <a href="{{ component.product.get_absolute_url }}">
+                        <img id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+                    </a>
+                    {% endthumbnail %}
+                {% endfor %}
+                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>
+            {% endif %}
+        </div>
+        <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a> <a href="{% url apparel.views.look_delete object.slug %}" title="{% trans "Delete look" %}" class="inline-delete-look">{% trans "Delete look" %}</a></h3>
+        <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>
+        <div class="stats">
+            <div class="likes">{{ object.score }}</div>
+            {% if object.comments > 0 %}
+            <div class="comments">{{ object.comments }}</div>
+            {% endif %}
+        </div>
+        <div id="look-tooltips">
+        {% if object.display_with_component == 'P' %}
+            {% for component in object.photo_components.all %}
+                {% include "apparel/fragments/look_product_tooltip.html" %}
+            {% endfor %}
+        {% else %}
+            {% for component in object.collage_components.all %}
+                {% include "apparel/fragments/look_product_tooltip.html" %}
+            {% endfor %}
+        {% endif %}
+        </div>
+        {% endcache %}
+
+    </li>
+{% endfor %}
+</ul>
+<div class="pagination">
+    {% include 'apparel/fragments/pagination.html' %}
+</div>
 {% endblock %}
 
-{% block profile_right_sidebar %}
-    <h2>{% blocktrans with profile.display_name as name %}{{ name }}'s popular looks{% endblocktrans %}</h2>
-    {% with popular_looks as looks %}
-        {% include 'apparel/fragments/looks.html' %}
-    {% endwith %}
-
-{% endblock %}
+{% block profile_right_sidebar %}{% endblock %}

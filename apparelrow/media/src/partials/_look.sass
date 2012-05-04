@@ -28,6 +28,16 @@ $input_border_color: $highlight_border_color !default
   .collage-image
     position: absolute
 
+=look_large
+  +box
+  width: 694px
+  height: 512px
+  position: relative
+  overflow: hidden
+  border: 1px solid #DEDEDE
+  background: #fff
+  .collage-image
+    position: absolute
 
 // EDIT
 
@@ -416,7 +426,7 @@ body
         margin-right: 18px
 
 
-body.look-list
+body.look-list, body.profile-looks
   a.look-heart
     position: absolute
     top: 0
@@ -462,5 +472,9 @@ body.look-list
           background: image_url("commentico.png") no-repeat 0px 2px
       .look-medium
         +look_medium
+        &.photo
+          border: 0
+      .look-large
+        +look_large
         &.photo
           border: 0

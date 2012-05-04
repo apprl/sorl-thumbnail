@@ -564,16 +564,13 @@ ul.looks
     span.inline-date
       margin-top: 5px
     a.inline-delete-look
-      display: none
-      float: right
+      display: inline-block
       width: 17px
       height: 15px
-      margin: 5px 5px 0 5px
       text-indent: -9999px
       background: transparent image_url(unquote("delete-button.png")) no-repeat scroll right center
       &:hover
         background: transparent image_url(unquote("delete-button-hover.png")) no-repeat scroll right center
-
 
 
 ul.products
@@ -1622,7 +1619,7 @@ form.standard-form
 
 body.product .product-image
   border: 1px solid #dadada
-body.product .product-image, body.look #content, body.look-list #content
+body.product .product-image, body.look #content
   a.product-heart
     position: absolute
     top: 0
