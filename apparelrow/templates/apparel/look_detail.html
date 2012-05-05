@@ -133,14 +133,6 @@
     </div>
     {% endif %}
 </div>
-{% comment %}
-<h2>{% trans "Articles in this look" %}</h2>
-<div id="lookproducts">
-    {% with object.products.all as products %}
-    {% include 'apparel/fragments/product_row.html' %}
-    {% endwith %}
-</div>
-{% endcomment %}
 {% endcache %}
 <div id="look-tooltips">
 {% if object.display_with_component == 'P' %}
