@@ -45,7 +45,7 @@
 {% for object in current_page.object_list %}
     <li>
 
-        {% cache CACHE_TIMEOUT look_list object.id LANGUAGE_CODE %}
+        {% cache CACHE_TIMEOUT look_list_profile object.id LANGUAGE_CODE %}
         <div class="look-large {% if object.display_with_component == 'P' %}photo{% else %}collage{% endif %}">
             {% if object.display_with_component == 'P' %}
                 <div id="photo-background" class="look-photo"
