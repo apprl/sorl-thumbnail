@@ -36,7 +36,6 @@ new_template_cache_map = {
     },
     'Look': {
         'look_widget': ['id_language', lambda x: x.pk],
-        'look_wide': ['id_language', lambda x: x.pk],
         'look_small': ['id_language', lambda x: x.pk],
         'look_small_like': ['id_language', lambda x: x.pk],
         'look_detail1': ['id_language', lambda x: x.pk],
@@ -47,7 +46,6 @@ new_template_cache_map = {
     },
     'LookComponent': {
         'look_widget': ['id_language', lambda x: x.look_id],
-        'look_wide': ['id_language', lambda x: x.look_id],
         'look_small': ['id_language', lambda x: x.look_id],
         'look_small_like': ['id_language', lambda x: x.look_id],
         'look_detail1': ['id_language', lambda x: x.look_id],
@@ -58,7 +56,6 @@ new_template_cache_map = {
     },
     'LookLike': {
         'look_widget': ['id_language', lambda x: x.look_id],
-        'look_wide': ['id_language', lambda x: x.look_id],
         'look_small': ['id_language', lambda x: x.look_id],
         'look_small_like': ['id_language', lambda x: x.look_id],
         'look_detail1': ['id_language', lambda x: x.look_id],

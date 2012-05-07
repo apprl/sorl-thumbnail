@@ -336,7 +336,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
             request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
-        response = render_to_response('apparel/fragments/looks_middle_column.html', {
+        response = render_to_response('apparel/fragments/looks_medium.html', {
                     'pagination': pagination,
                     'current_page': paged_result,
                 }, context_instance=RequestContext(request))

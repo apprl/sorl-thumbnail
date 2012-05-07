@@ -39,59 +39,7 @@
                 <div>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</div>
                 <a class="all-users" href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a>
             {% else %}
-                <ul class="looks">
-                {% for object in current_page.object_list %}
-                    <li{% cycle '' ' class="last"' %}>
-
-                        {% cache CACHE_TIMEOUT look_list object.id LANGUAGE_CODE %}
-                        <div class="look-medium {% if object.display_with_component == 'P' %}photo{% else %}collage{% endif %}">
-                            {% if object.display_with_component == 'P' %}
-                                <div id="photo-background" class="look-photo"
-                                    {% if object.image %}
-                                    {% thumbnail object.image "450x334" as im %}
-                                    style="background-image: url('{{ im.url }}'); width: {{ im.width }}px; height: {{ im.height }}px"
-                                    {% endthumbnail %}
-                                    {% endif %}
-                                >
-                                {% for component in object.photo_components.all %}
-                                    <a href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style_middle }}"></a>
-                                {% endfor %}
-                                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>
-                                </div>
-                            {% else %}
-                                {% for component in object.collage_components.all %}
-                                    {% thumbnail component.product.product_image "450x334" crop="noop" format="PNG" transparent=True as im %}
-                                    <a href="{{ component.product.get_absolute_url }}">
-                                        <img id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_middle }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
-                                    </a>
-                                    {% endthumbnail %}
-                                {% endfor %}
-                                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>
-                            {% endif %}
-                        </div>
-                        <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
-                        <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>
-                        <div class="stats">
-                            <div class="likes">{{ object.score }}</div>
-                            {% if object.comment_count > 0 %}
-                            <div class="comments">{{ object.comment_count }}</div>
-                            {% endif %}
-                        </div>
-                        {% endcache %}
-                        <div id="look-tooltips">
-                            {% for component in object.display_components.all %}
-                                {% cache CACHE_TIMEOUT look_product_tooltip component.product_id LANGUAGE_CODE %}
-                                {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
-                                {% endcache %}
-                            {% endfor %}
-                        </div>
-
-                    </li>
-                {% endfor %}
-                </ul>
-                <div class="pagination">
-                    {% include 'apparel/fragments/pagination.html' %}
-                </div>
+                {% include 'apparel/fragments/looks_medium.html' %}
             {% endif %}
         {% endif %}
     </div>
