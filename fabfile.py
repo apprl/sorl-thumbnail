@@ -209,10 +209,9 @@ def upload_tar_from_git(snapshot='master'):
 def install_site():
     "Add the virtualhost config file to the webserver's config, activate logrotate"
     require('release', provided_by=[deploy, setup])
-    with cd('%(path)s/releases/%(release)s' % env):
-        upload_template('etc/%(webserver)s.conf.default' % env, '/etc/%(webserver)s/conf-available/%(project_name)s.conf' % env, context=env, use_sudo=True)
+    upload_template('etc/%(webserver)s.conf.default' % env, '/etc/%(webserver)s/conf-available/%(project_name)s.conf' % env, context=env, use_sudo=True)
     with settings(warn_only=True):
-        sudo('cd /etc/%(webserver)s/conf-enabled/; ln -s ../conf-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
+        sudo('cd /etc/%(webserver)s/conf-enabled/; ln -sf ../conf-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
     
 def install_requirements():
     "Install the required packages from the requirements file using pip"
@@ -239,18 +238,19 @@ def copy_config():
         run('cp ./releases/%(release)s/etc/requirements.pip ./etc/requirements.pip' %env, pty=True)
         run('cp ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
         run('cd releases/%(release)s/apparelrow; cp %(settings)s.py.default settings.py' % env, pty=True)
-        upload_template('etc/logrotate.conf', '/etc/logrotate.d/apparelrow', context=env, use_sudo=True)
-        upload_template('etc/arimport.cron', '/etc/cron.daily/arimport', context=env, use_sudo=True)
-        sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
-        upload_template('etc/availability.cron', '/etc/cron.weekly/availability', context=env, use_sudo=True)
-        sudo('chmod a+x /etc/cron.weekly/availability', pty=True)
-        upload_template('etc/solr.conf.init', '/etc/init/solr.conf', context=env, use_sudo=True)
-        upload_template('etc/celeryd.default', '/etc/default/celeryd', context=env, use_sudo=True)
-        sudo('cp ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
-        sudo('update-rc.d celeryd defaults', pty=True)
-        upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
         sudo('cp ./releases/%(release)s/etc/redis.conf /etc/redis.conf' % env, pty=True)
         sudo('cp ./releases/%(release)s/etc/crontab /etc/crontab' % env, pty=True)
+        sudo('cp ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
+
+    upload_template('etc/logrotate.conf', '/etc/logrotate.d/apparelrow', context=env, use_sudo=True)
+    upload_template('etc/arimport.cron', '/etc/cron.daily/arimport', context=env, use_sudo=True)
+    sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
+    upload_template('etc/availability.cron', '/etc/cron.weekly/availability', context=env, use_sudo=True)
+    sudo('chmod a+x /etc/cron.weekly/availability', pty=True)
+    upload_template('etc/solr.conf.init', '/etc/init/solr.conf', context=env, use_sudo=True)
+    upload_template('etc/celeryd.default', '/etc/default/celeryd', context=env, use_sudo=True)
+    sudo('update-rc.d celeryd defaults', pty=True)
+    upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
 
 def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
