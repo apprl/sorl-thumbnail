@@ -8,7 +8,6 @@ from django.db import models
 from django.db.models import Sum, Min
 from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
-from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
@@ -165,8 +164,12 @@ class Product(models.Model):
     def score(self):
         return ProductLike.objects.filter(product=self, active=True).count()
 
+    @property
     def comment_count(self):
-        return Comment.objects.filter(content_type=ContentType.objects.get_for_model(Product), object_pk=self, is_removed=False, is_public=True).count()
+        if not hasattr(self, '_comment_count'):
+            self._comment_count = Comment.objects.for_model(self).filter(is_removed=False, is_public=True).count()
+
+        return self._comment_count
 
     @property
     def default_vendor(self):
@@ -487,9 +490,12 @@ class Look(models.Model):
     def score(self):
         return LookLike.objects.filter(look=self, active=True).count()
 
-    def comments(self):
-        content_type = ContentType.objects.get_for_model(Look)
-        return Comment.objects.filter(content_type=content_type, object_pk=self.pk, is_removed=False, is_public=True).count()
+    @property
+    def comment_count(self):
+        if not hasattr(self, '_comment_count'):
+            self._comment_count = Comment.objects.for_model(self).filter(is_removed=False, is_public=True).count()
+
+        return self._comment_count
 
     def total_price(self, component=None):
         """
