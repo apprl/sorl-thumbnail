@@ -1,29 +1,28 @@
-{% load i18n %}
-{% load thumbnail %}
-<div id="tooltip-{{ component.product.id }}" class="tooltip">
-    <a href="{{ component.product.get_absolute_url }}" class="product-image">
-        {% thumbnail component.product.product_image "90x115" crop="center" as im %}
-        <img src="{{ im.url }}" alt="{{ component.product.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
+{% load i18n thumbnail %}
+<div id="tooltip-{{ product.id }}" class="tooltip">
+    <a href="{{ product.get_absolute_url }}" class="product-image">
+        {% thumbnail product.product_image "90x115" crop="center" as im %}
+        <img src="{{ im.url }}" alt="{{ product.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}
     </a>
     <div class="product-meta">
-        <a href="{{ component.product.get_absolute_url }}">
-            <h2>{{ component.product.manufacturer.name }}</h2>
-            {% if component.product.product_name %}<h3>{{ component.product.product_name }}</h3>{% endif %}
+        <a href="{{ product.get_absolute_url }}">
+            <h2>{{ product.manufacturer.name }}</h2>
+            {% if product.product_name %}<h3>{{ product.product_name }}</h3>{% endif %}
             <div>
-                {% with component.product as object %}{% include 'apparel/fragments/likes.html' %}{% endwith %}
+                {% with product as object %}{% include 'apparel/fragments/likes.html' %}{% endwith %}
             </div>
-            {% if component.product.default_vendor %}
+            {% if product.default_vendor %}
                 <div>
-                    <span class="price">{{ component.product.default_vendor.price|floatformat:0 }}</span> <span class="currency">{{ component.product.default_vendor.currency }}</span>
+                    <span class="price">{{ product.default_vendor.price|floatformat:0 }}</span> <span class="currency">{{ product.default_vendor.currency }}</span>
                 </div>
-                {% if component.product.default_vendor.availability == 0 %}
+                {% if product.default_vendor.availability == 0 %}
                 <div class="vendors">
-                    <span class="vendor">{{ component.product.default_vendor.vendor.name }}</span><span class="sold-out">{% trans "Sold out" %}</span>
+                    <span class="vendor">{{ product.default_vendor.vendor.name }}</span><span class="sold-out">{% trans "Sold out" %}</span>
                 </div>
                 {% else %}
                 <div class="vendors">
-                    <a target="_blank" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ component.product.id }}&u={{ component.product.default_vendor.buy_url|urlencode }}"><span class="vendor">{{ component.product.default_vendor.vendor }}</span><span class="buy-now">{% trans "Buy" %}</span></a>
+                    <a target="_blank" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ product.id }}&u={{ product.default_vendor.buy_url|urlencode }}"><span class="vendor">{{ product.default_vendor.vendor }}</span><span class="buy-now">{% trans "Buy" %}</span></a>
                 </div>
                 {% endif %}
             {% else %}

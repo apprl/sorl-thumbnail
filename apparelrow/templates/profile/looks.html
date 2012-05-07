@@ -79,18 +79,14 @@
             <div class="comments">{{ object.comment_count }}</div>
             {% endif %}
         </div>
-        <div id="look-tooltips">
-        {% if object.display_with_component == 'P' %}
-            {% for component in object.photo_components.all %}
-                {% include "apparel/fragments/look_product_tooltip.html" %}
-            {% endfor %}
-        {% else %}
-            {% for component in object.collage_components.all %}
-                {% include "apparel/fragments/look_product_tooltip.html" %}
-            {% endfor %}
-        {% endif %}
-        </div>
         {% endcache %}
+        <div id="look-tooltips">
+            {% for component in object.display_components.all %}
+                {% cache CACHE_TIMEOUT look_product_tooltip component.product.id LANGUAGE_CODE %}
+                {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
+                {% endcache %}
+            {% endfor %}
+        </div>
 
     </li>
 {% endfor %}

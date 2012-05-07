@@ -25,12 +25,14 @@ new_template_cache_map = {
         'product_detail_fragment': ['id_language', lambda x: x.pk],
         'product_shop': ['id_language', lambda x: x.pk],
         'product_thumb': ['id_language', lambda x: x.pk],
+        'look_product_tooltip': ['id_language', lambda x: x.pk],
     },
     'VendorProduct': {
         'products_sidebar': ['id_language', lambda x: x.product_id],
         'product_detail_fragment': ['id_language', lambda x: x.product_id],
         'product_shop': ['id_language', lambda x: x.product_id],
         'product_thumb': ['id_language', lambda x: x.product_id], # not sure if needed
+        'look_product_tooltip': ['id_language', lambda x: x.product_id],
     },
     'Look': {
         'look_widget': ['id_language', lambda x: x.pk],

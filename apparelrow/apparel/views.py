@@ -539,7 +539,7 @@ def save_look_component(request):
             'look_component': form.instance,
             'added': added,
             'html': loader.render_to_string('apparel/fragments/%s.html' % template, {'component': form.instance}, context_instance=RequestContext(request)),
-            'tooltip_html': loader.render_to_string('apparel/fragments/look_product_tooltip.html', {'component': form.instance}, context_instance=RequestContext(request)),
+            'tooltip_html': loader.render_to_string('apparel/fragments/look_product_tooltip.html', {'product': form.instance.product}, context_instance=RequestContext(request)),
         },                                                                                        # JSON response
         HttpResponseRedirect(reverse('apparel.views.look_edit', args=(request.POST['look'],)))   # Browser request response
     )
