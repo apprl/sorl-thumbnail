@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
-{% load apparel_extras %}
-{% load thumbnail %}
+{% load i18n apparel_extras thumbnail cache %}
 
 {% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
 
