@@ -121,10 +121,8 @@ def profile(request, profile, page=0):
 def looks(request, profile, page=0):
     form = handle_change_image(request, profile)
     queryset = profile.user.look.order_by('-modified')
-    # Returns a list of objects for the most popular looks for the given user.
-    popular_by_user = Look.objects.filter(Q(likes__active=True) & Q(user=profile.user)).annotate(num_likes=Count('likes')).order_by('-num_likes')[:10]
     
-    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
+    paged_result, pagination = get_pagination_page(queryset, 6,
             request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
@@ -139,7 +137,6 @@ def looks(request, profile, page=0):
         'next': request.get_full_path(),
         'change_image_form': form,
         'profile': profile,
-        "popular_looks": popular_by_user
         }
     content.update(get_profile_sidebar_info(profile.user))
 
