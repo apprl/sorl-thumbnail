@@ -350,6 +350,20 @@ jQuery(document).ready(function() {
         }
     });
 
+    // Look medium and large hover
+    jQuery('.look-medium .look-photo, .look-medium.collage, .look-large.collage, .look-large .look-photo').live('mouseenter', function() {
+        jQuery('.look-like', this).show();
+        jQuery('.hotspot', this).show();
+    }).live('mouseleave', function() {
+        jQuery('.look-like').hide();
+        jQuery('.hotspot').hide();
+    });
+    //jQuery('.look-tooltips div').live('mouseenter', function() {
+        //jQuery(this).parent().parent().find('.look-like').show().end().find('.hotspot').show();
+    //}).live('mouseleave', function() {
+        //jQuery(this).parent().parent().find('.look-like').hide().end().find('.hotspot').hide();
+    //});
+
     // Look like
     jQuery('a.look-like').live('click', function() {
         if(isAuthenticated == false) {

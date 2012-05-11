@@ -14,9 +14,9 @@
                     {% endif %}
                 >
                 {% for component in object.photo_components.all %}
-                    <a href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style_middle }}"></a>
+                    <a href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style_middle }}display:none;"></a>
                 {% endfor %}
-                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>
+                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" style="display:none;"></a>
                 </div>
             {% else %}
                 {% for component in object.collage_components.all %}
@@ -26,7 +26,7 @@
                     </a>
                     {% endthumbnail %}
                 {% endfor %}
-                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}"></a>
+                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" style="display:none;"></a>
             {% endif %}
         </div>
         <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
@@ -38,7 +38,7 @@
             {% endif %}
         </div>
         {% endcache %}
-        <div id="look-tooltips">
+        <div class="look-tooltips">
             {% for component in object.display_components.all %}
                 {% cache CACHE_TIMEOUT look_product_tooltip component.product_id LANGUAGE_CODE %}
                 {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}

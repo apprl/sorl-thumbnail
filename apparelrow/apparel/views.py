@@ -43,7 +43,7 @@ from apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopu
 from profile.notifications import process_like_look_created
 
 FAVORITES_PAGE_SIZE = 30
-LOOK_PAGE_SIZE = 10
+LOOK_PAGE_SIZE = 6
 
 def product_redirect(request, pk):
     """
@@ -325,13 +325,6 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     else:
         queryset = Look.objects.filter(likes__active=True, gender__in=[gender, 'U']).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)
 
-    if request.user.is_authenticated():
-        user_ids = Follow.objects.filter(user=request.user).values_list('object_id', flat=True)
-        most_looks_users = ApparelProfile.objects.annotate(look_count=Count('user__look')).order_by('-look_count').filter(look_count__gt=0, user__in=user_ids)
-    else:
-        most_looks_users = None
-
-    latest_looks = Look.objects.filter(gender__in=[gender, 'U']).order_by('-created')[:16]
     paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
@@ -347,8 +340,6 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
                     'pagination': pagination,
                     'current_page': paged_result,
                     'next': request.get_full_path(),
-                    'most_looks_users': most_looks_users,
-                    'latest_looks': latest_looks,
                     'APPAREL_GENDER': gender
                 }, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
