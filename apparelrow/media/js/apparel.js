@@ -953,17 +953,21 @@ jQuery(document).ready(function() {
     if($pagination.length && !$body.hasClass('page-shop')) {
         var $container = $pagination.prev();
 
+        var last_link = null;
         function getPage(link, callback) {
-            jQuery.get(link.attr('href'), function(data, statusText, xhr) {
+            if(link.attr('href') != last_link) {
+                last_link = link.attr('href');
+                jQuery.get(last_link, function(data, statusText, xhr) {
                     var $data = jQuery(data),
-                    newPagination = $data.filter('.pagination'),
-                    content = newPagination.prev();
+                        newPagination = $data.filter('.pagination'),
+                        content = newPagination.prev();
 
-                $container.append(content.html());
-                $pagination.html(newPagination.html());
+                    $container.append(content.html());
+                    $pagination.html(newPagination.html());
 
-                if('function' == typeof callback) callback();
-            });
+                    if('function' == typeof callback) callback();
+                });
+            }
         }
 
         // Fetch via ajax on pagination clicks
