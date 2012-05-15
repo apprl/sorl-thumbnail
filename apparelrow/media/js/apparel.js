@@ -168,6 +168,7 @@ jQuery(document).ready(function() {
             form.attr('action', newAction).attr('data-alternate-action', action);
 
             var button = jQuery('button', form);
+            button.toggleClass('liked');
             var doneText = button.attr('data-done-text');
             var newDoneText = button.attr('data-alternate-done-text');
             var buttonText = button.text();

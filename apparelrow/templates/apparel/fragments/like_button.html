@@ -5,7 +5,7 @@
 {% if is_liked %}
 <form method="post" class="like" action="{{ unlike_url }}" data-alternate-action="{{ like_url }}">
     {% csrf_token %}
-    <button type="submit" name="like" id="like" data-slug="{{ slug }}" data-done-text="{% trans "Unliked!" %}" data-alternate-done-text="{% trans "Liked!" %}" data-alternate-text="{% trans "Like" %}">{% trans "Unlike" %}</button>
+    <button class="liked" type="submit" name="like" id="like" data-slug="{{ slug }}" data-done-text="{% trans "Unliked!" %}" data-alternate-done-text="{% trans "Liked!" %}" data-alternate-text="{% trans "Like" %}">{% trans "Unlike" %}</button>
 </form>
 {% else %}
 <form method="post" class="like" action="{{ like_url }}" data-alternate-action="{{ unlike_url }}">
