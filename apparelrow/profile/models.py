@@ -17,6 +17,7 @@ from actstream.models import Follow, Action, user_stream
 from sorl.thumbnail import get_thumbnail
 
 from profile.tasks import send_email_confirm_task
+from profile.signals import user_created_with_email
 
 EVENT_CHOICES = (
     ('A', _('All')),
@@ -182,9 +183,15 @@ def create_profile(signal, instance, **kwargs):
     if kwargs['created']:
         profile, created = ApparelProfile.objects.get_or_create(user=instance)
 
-        subject = 'Välkommen till Apparelrow %(username)s' % {'username': instance.first_name}
-        body = render_to_string('profile/email_welcome.html', {'username': profile.display_name})
-        send_email_confirm_task.delay(subject, body, instance.email)
+@receiver(user_created_with_email, sender=User, dispatch_uid='send_welcome_mail')
+def send_welcome_mail(sender, user, **kwargs):
+    """
+    Send welcome email on user created with email signal.
+    """
+    if user.email:
+        subject = u'Välkommen till Apparelrow %(username)s' % {'username': user.first_name}
+        body = render_to_string('profile/email_welcome.html')
+        send_email_confirm_task.delay(subject, body, user.email)
 
 #
 # Delete follows and actions when a user is deleted.

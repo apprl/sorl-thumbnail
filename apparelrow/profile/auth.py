@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
 import facebook
 
+from profile.signals import user_created_with_email
+
 FB_GENDER_MAP = { 'male': 'M', 'female': 'W' }
 
 class FacebookProfileBackend(ModelBackend):
@@ -31,6 +33,8 @@ class FacebookProfileBackend(ModelBackend):
                     if me.get('email'):
                         user.email = me['email']
                     user.save()
+                    user_created_with_email.send(sender=User, user=user)
+
             profile = user.get_profile()
             if profile.gender is None:
                 if me.get('gender'):

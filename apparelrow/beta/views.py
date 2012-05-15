@@ -62,8 +62,6 @@ def invite(request):
                     if request.user.get_profile().language:
                         language = request.user.get_profile().language
 
-                    print language
-
                     send_email_task.delay(language, name, invitee.email, invitee.invite.code, request.POST.get('email-message', ''))
                     email_count += 1
 
