@@ -21,6 +21,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['category', 'gender', 'published']
     list_display_links = ['product_name']
     actions = ['publish', 'hide', 'change_category', 'change_options']
+    search_fields = ['product_name']
     list_per_page = 50
 
     def image(self, obj):
