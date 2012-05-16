@@ -5,16 +5,5 @@
 
 {% block body-classes %}three-columns profile profile-following{% endblock body-classes %}
 {% block content %}
-    <ul class="users">
-    {% for following in current_page.object_list %}
-    <li>
-    {% with following.actor.get_profile as profile %}
-        {% if profile %}{% include 'profile/fragments/follow_profile.html' %}{% endif %}
-    {% endwith %}
-    </li>
-    {% endfor %}
-    </ul>
-    <div class="pagination">
-        {% include 'apparel/fragments/pagination.html' %}
-    </div>
+{% include 'profile/fragments/following.html' %}
 {% endblock %}
