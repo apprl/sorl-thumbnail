@@ -488,7 +488,7 @@ class Look(models.Model):
         Man, Woman or Man & Woman.
         """
         unique_genders = set(self.display_components.values_list('product__gender', flat=True))
-        unique_genders = list(unique_genders - set('U'))
+        unique_genders = list(unique_genders - set(['U', None]))
         if len(unique_genders) == 1:
             return unique_genders[0]
 
