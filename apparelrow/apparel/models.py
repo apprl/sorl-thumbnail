@@ -424,7 +424,14 @@ class Look(models.Model):
     featured = FeaturedManager()
 
     def save(self, *args, **kwargs):
+        """
+        Save the model in the database. Currently we issue two save calls. This
+        is needed because the build function for the static image requires that
+        the photo image is stored on disk.
+        """
         self.gender = self.calculate_gender()
+        super(Look, self).save(*args, **kwargs)
+
         self._build_static_image()
         super(Look, self).save(*args, **kwargs)
 
