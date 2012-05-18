@@ -13,10 +13,12 @@ $(document).ready(function() {
             success: function() {
                 $("form").fadeOut("fast");
                 $(".error-message").hide();
+                $(".bottom-message").hide();
                 $("p").text($(".success-message").text());
             },
             error: function() {
                 $(".success-message").hide();
+                $(".bottom-message").hide();
                 $(".error-message").show();
                 $("input[name=email]", $form)
                     .addClass("error")
@@ -69,10 +71,12 @@ $(document).ready(function() {
         <button>{% trans "Unlock beta" %}</button>
     </form>
 
-    <p class="italic">{% blocktrans %}If you have forgotten your password, drop us an e-mail on <a href="mailto:info@apparelrow.com">info@apparelrow.com</a>.{% endblocktrans %}</p>
-
     <div class="success-message" style="display: none">
         {% trans "Thanks! When we're able to handle more users we'll send you an invite." %}
+    </div>
+
+    <div class="bottom-message">
+        <p>{% blocktrans %}If you have forgotten your password, drop us an e-mail on <a href="mailto:info@apparelrow.com">info@apparelrow.com</a>.{% endblocktrans %}</p>
     </div>
 </div>
 {% endblock %}
