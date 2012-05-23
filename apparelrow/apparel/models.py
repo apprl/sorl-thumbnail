@@ -99,7 +99,7 @@ class Vendor(models.Model):
 
 class Category(MPTTModel):
     name          = models.CharField(max_length=100, db_index=True)
-    name_order    = models.CharField(max_length=100, null=True, blank=True)
+    name_order    = models.CharField(max_length=100)
     parent        = TreeForeignKey('self', null=True, blank=True, related_name='children')
     active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'), db_index=True)
     option_types  = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
