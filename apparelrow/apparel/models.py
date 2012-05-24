@@ -418,6 +418,7 @@ class Look(models.Model):
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     is_featured = models.BooleanField(default=False, help_text=_('The look will be shown on the front page'))
     gender      = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=False, blank=False, default='U')
+    popularity  = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
     
     
     objects  = SearchManager()

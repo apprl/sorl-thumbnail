@@ -306,6 +306,7 @@ CELERY_QUEUES = {
 }
 CELERY_ROUTES = ({
     'apparelrow.tasks.ProcessPopularityTask': {'queue': 'importer'},
+    'apparelrow.tasks.ProcessLookPopularity': {'queue': 'importer'},
     'apparelrow.tasks.search_index_update_task': {'queue': 'standard'},
     'beta.tasks.send_email_task': {'queue': 'standard'},
     'profile.notifications.process_comment_look_comment': {'queue': 'standard'},

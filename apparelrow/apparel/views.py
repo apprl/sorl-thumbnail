@@ -323,7 +323,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     elif contains:
         queryset = Look.objects.filter(id__in=LookComponent.objects.filter(product__slug=contains).values_list('look', flat=True))
     else:
-        queryset = Look.objects.filter(likes__active=True, gender__in=[gender, 'U']).annotate(num_likes=Count('likes')).order_by('-num_likes').filter(num_likes__gt=0)
+        queryset = Look.objects.filter(gender__in=[gender, 'U']).order_by('-popularity')
 
     paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
@@ -913,8 +913,8 @@ def get_top_looks(request, limit=10, gender=None):
     also filter looks by gender.
     """
     if gender is not None:
-        return Look.objects.filter(likes__active=True).filter(gender__in=['U', gender]).annotate(num_likes=CountPopularity('likes', field_two='apparel_look.created')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
-    return Look.objects.filter(likes__active=True).annotate(num_likes=CountPopularity('likes', field_two='apparel_look.created')).order_by('-num_likes').filter(num_likes__gt=0)[:limit]
+        return Look.objects.filter(gender__in=['U', gender], popularity__gt=0).order_by('-popularity', '-created')[:limit]
+    return Look.objects.filter(popularity__gt=0).order_by('-popularity', '-created')[:limit]
 
 def get_most_followed_users(limit=2):
     #object_ids = [x['object_id'] for x in Follow.objects.values('object_id').annotate(Count('id')).order_by('-id__count')[:limit]]
@@ -928,7 +928,7 @@ def get_most_followed_users(limit=2):
 def get_top_looks_in_network(user, limit=None):
     content_type = ContentType.objects.get_for_model(User)
     user_ids = Follow.objects.filter(content_type=content_type, user=user).values_list('object_id', flat=True)
-    looks = Look.objects.filter(Q(likes__active=True) & Q(user__in=user_ids)).annotate(num_likes=CountPopularity('likes', field_two='apparel_look.created')).order_by('-num_likes')
+    looks = Look.objects.filter(user__in=user_ids).order_by('-popularity', '-created')
 
     if limit:
         return looks[:limit]

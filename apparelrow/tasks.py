@@ -27,3 +27,12 @@ class ProcessPopularityTask(PeriodicTask):
         logger = self.get_logger(**kwargs)
         logger.info('update popularity for products')
         call_command('popularity')
+
+class ProcessLookPopularity(PeriodicTask):
+    run_every = crontab(minute='*/30')
+    ignore_result = True
+
+    def run(self, **kwargs):
+        logger = self.get_logger(**kwargs)
+        logger.info('update popularity for looks')
+        call_command('look_popularity')
