@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-15 18:37+0200\n"
+"POT-Creation-Date: 2012-05-26 23:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,7 +115,7 @@ msgid "Time added"
 msgstr ""
 
 #: apparel/models.py:149 apparel/models.py:270 apparel/models.py:416
-#: apparel/models.py:597 apparel/models.py:701
+#: apparel/models.py:605 apparel/models.py:709
 msgid "Time modified"
 msgstr ""
 
@@ -127,7 +127,7 @@ msgstr ""
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:154 apparel/models.py:420 apparel/models.py:702
+#: apparel/models.py:154 apparel/models.py:420 apparel/models.py:710
 #: profile/models.py:48
 msgid "Gender"
 msgstr ""
@@ -140,8 +140,8 @@ msgstr ""
 msgid "In stock"
 msgstr ""
 
-#: apparel/models.py:269 apparel/models.py:415 apparel/models.py:596
-#: apparel/models.py:685 apparel/models.py:700 beta/models.py:7
+#: apparel/models.py:269 apparel/models.py:415 apparel/models.py:604
+#: apparel/models.py:693 apparel/models.py:708 beta/models.py:7
 #: beta/models.py:15
 msgid "Time created"
 msgstr ""
@@ -234,7 +234,7 @@ msgstr ""
 msgid "items in stock"
 msgstr ""
 
-#: apparel/models.py:408 apparel/models.py:693
+#: apparel/models.py:408 apparel/models.py:701
 msgid "Title"
 msgstr ""
 
@@ -250,71 +250,71 @@ msgstr ""
 msgid "The look will be shown on the front page"
 msgstr ""
 
-#: apparel/models.py:617
+#: apparel/models.py:625
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:618
+#: apparel/models.py:626
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:619
+#: apparel/models.py:627
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:620
+#: apparel/models.py:628
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:621
+#: apparel/models.py:629
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:622
+#: apparel/models.py:630
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:694
+#: apparel/models.py:702
 msgid "Short description"
 msgstr ""
 
-#: apparel/models.py:695
+#: apparel/models.py:703
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:695
+#: apparel/models.py:703
 msgid "HTML allowed. This field is ignored if an image is set."
 msgstr ""
 
-#: apparel/models.py:696
+#: apparel/models.py:704
 msgid "URL"
 msgstr ""
 
-#: apparel/models.py:697 apparel/models.py:729
+#: apparel/models.py:705 apparel/models.py:737
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:697
+#: apparel/models.py:705
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:699
+#: apparel/models.py:707
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:703 profile/models.py:47 templates/account/base.html:20
+#: apparel/models.py:711 profile/models.py:47 templates/account/base.html:20
 msgid "Language"
 msgstr ""
 
-#: apparel/models.py:704
+#: apparel/models.py:712
 msgid "Sorting order"
 msgstr ""
 
-#: apparel/models.py:747
+#: apparel/models.py:755
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:747
+#: apparel/models.py:755
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -325,7 +325,7 @@ msgid "ago"
 msgstr ""
 
 #: apparel_comments/__init__.py:6 beta/models.py:30
-#: beta/templates/beta/beta.html:56 beta/templates/beta/beta.html.py:67
+#: beta/templates/beta/beta.html:58 beta/templates/beta/beta.html.py:69
 #: templates/beta/dialog_invite_user.html:16
 #: templates/beta/dialog_invite_user.html:29
 msgid "E-mail address"
@@ -359,11 +359,11 @@ msgstr ""
 msgid "Welcome to the Apparelrow beta!"
 msgstr ""
 
-#: beta/templates/beta/beta.html:50
+#: beta/templates/beta/beta.html:52
 msgid "Beta login"
 msgstr ""
 
-#: beta/templates/beta/beta.html:52
+#: beta/templates/beta/beta.html:54
 msgid ""
 "Apparelrow is currently available to a limited number of people. Submit your "
 "e-mail address below if you want us to send you an invite when we are able "
@@ -371,36 +371,36 @@ msgid ""
 "info@apparelrow.com\">info@apparelrow.com</a> instead! "
 msgstr ""
 
-#: beta/templates/beta/beta.html:57
+#: beta/templates/beta/beta.html:59
 msgid "Request invite"
 msgstr ""
 
-#: beta/templates/beta/beta.html:59
+#: beta/templates/beta/beta.html:61
 msgid ""
 "There was an error processing your request. Please double-check your e-mail "
 "address above."
 msgstr ""
 
-#: beta/templates/beta/beta.html:65
+#: beta/templates/beta/beta.html:67
 msgid "If you already have an invite:"
 msgstr ""
 
-#: beta/templates/beta/beta.html:68
+#: beta/templates/beta/beta.html:70
 msgid "Invite code"
 msgstr ""
 
-#: beta/templates/beta/beta.html:69
+#: beta/templates/beta/beta.html:71
 msgid "Unlock beta"
 msgstr ""
 
-#: beta/templates/beta/beta.html:70
+#: beta/templates/beta/beta.html:75
+msgid "Thanks! When we're able to handle more users we'll send you an invite."
+msgstr ""
+
+#: beta/templates/beta/beta.html:79
 msgid ""
 "If you have forgotten your password, drop us an e-mail on <a href=\"mailto:"
 "info@apparelrow.com\">info@apparelrow.com</a>."
-msgstr ""
-
-#: beta/templates/beta/beta.html:74
-msgid "Thanks! When we're able to handle more users we'll send you an invite."
 msgstr ""
 
 #: importer/models.py:18
@@ -1646,8 +1646,33 @@ msgstr ""
 msgid "Confirm e-mail address change"
 msgstr ""
 
+#: templates/profile/followers.html:13
+msgid ""
+"No one is following you yet, but if you start following people they might "
+"follow you back."
+msgstr ""
+
+#: templates/profile/followers.html:14 templates/profile/following.html:14
+#: templates/profile/profile.html:14
+msgid "Find members to follow!"
+msgstr ""
+
+#: templates/profile/followers.html:17
+#, python-format
+msgid "No one is following %(display_name)s yet."
+msgstr ""
+
 #: templates/profile/following.html:4
 msgid "Follows"
+msgstr ""
+
+#: templates/profile/following.html:13
+msgid "You currently don't follow anyone."
+msgstr ""
+
+#: templates/profile/following.html:17
+#, python-format
+msgid "%(display_name)s is not following anyone yet."
 msgstr ""
 
 #: templates/profile/likes.html:22
@@ -1660,6 +1685,30 @@ msgstr ""
 
 #: templates/profile/likes.html:54
 msgid "does not like any products so far."
+msgstr ""
+
+#: templates/profile/looks.html:48
+msgid "You have not created any looks yet."
+msgstr ""
+
+#: templates/profile/looks.html:49
+msgid "Create look!"
+msgstr ""
+
+#: templates/profile/looks.html:52
+#, python-format
+msgid "%(display_name)s has not created any looks yet."
+msgstr ""
+
+#: templates/profile/profile.html:13
+msgid ""
+"You have not done anything yet. Why don't you start off by following some "
+"people whose style you like?"
+msgstr ""
+
+#: templates/profile/profile.html:17
+#, python-format
+msgid "%(display_name)s has not done anything yet."
 msgstr ""
 
 #: templates/profile/settings_email.html:6

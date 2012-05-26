@@ -5,5 +5,16 @@
 
 {% block body-classes %}three-columns profile profile-followers{% endblock body-classes %}
 {% block content %}
-{% include 'profile/fragments/followers.html' %}
+    {% if current_page.object_list %}
+        {% include 'profile/fragments/followers.html' %}
+    {% else %}
+        {% if profile == request.user.get_profile %}
+        <div class="empty">
+            {% trans "No one is following you yet, but if you start following people they might follow you back." %}
+            <p><a class="button" href="{% url user-list-popular %}">{% trans "Find members to follow!" %}</a></p>
+        </div>
+        {% else %}
+        <div class="empty">{% blocktrans with profile.display_name as display_name %}No one is following {{ display_name }} yet.{% endblocktrans %}</div>
+        {% endif %}
+    {% endif %}
 {% endblock %}

@@ -40,7 +40,18 @@
 
 {% block body-classes %}two-columns profile profile-looks{% endblock body-classes %}
 {% block content %}
-{% include 'apparel/fragments/looks_large.html' %}
+    {% if current_page.object_list %}
+        {% include 'apparel/fragments/looks_large.html' %}
+    {% else %}
+        {% if profile == request.user.get_profile %}
+        <div class="empty">
+            {% trans "You have not created any looks yet." %}
+            <p><a class="button create-look open-dialog" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "Create look!" %}</a></p>
+        </div>
+        {% else %}
+        <div class="empty">{% blocktrans with profile.display_name as display_name %}{{ display_name }} has not created any looks yet.{% endblocktrans %}</div>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block profile_right_sidebar %}{% endblock %}
