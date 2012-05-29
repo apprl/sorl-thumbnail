@@ -5,7 +5,7 @@ admin.site.register(Invite)
 
 class InviteeAdmin(admin.ModelAdmin):
     search_fields = ['email']
-    list_display = ['email', 'invite']
+    list_display = ['email', 'invite', 'created', 'used_count', 'seen']
     ordering = ['email']
 
 admin.site.register(Invitee, InviteeAdmin)
