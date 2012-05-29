@@ -1747,27 +1747,38 @@ a.block_link
     cursor: pointer
     &:hover
       background-image: image_url(unquote("arrow-bg-hover.png"))
-  #search-links
+  #search-result-clear
     +clearfix
     clear: both
-    padding: 20px 0
-    div
-      text-align: right
-      a
-        +button
-        +border-radius(3px)
-        padding: 5px 10px
-        line-height: 2em
-        &:hover
-          +hover_button
-          line-height: 2em
-        &.disabled
-          visibility: hidden
-
   .result-container
     width: 200px
     float: left
     margin-right: 30px
+    .search-link
+      padding: 20px 0
+      text-align: right
+      a
+        display: block
+        width: 100%
+        height: 34px
+        +replace-text(unquote("knappbg.jpg"))
+        background-repeat: repeat-x
+        background-position: bottom
+        border: solid 1px #353535
+        text-indent: 0
+        color: #f9f9f9
+        text-align: center
+        padding-top: 17px
+        font-weight: bold
+        font-size: 1.25em
+        &:hover
+          background-position: top
+          border: solid 1px #d9d9d9
+          color: #353535
+        &:active
+          background-position: bottom
+        &.disabled
+          visibility: hidden
     h2.disabled
       background: none
       cursor: default
@@ -1779,7 +1790,6 @@ a.block_link
       li
         float: left
       &#search-result-manufacturers
-        margin-top: -8px
         li
           height: auto
           float: none
@@ -1792,6 +1802,8 @@ a.block_link
             display: block
           &.last
             border-color: $border_color
+          &.first
+            margin-top: -8px
           &:hover
             background-color: none
             a
