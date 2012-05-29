@@ -40,7 +40,7 @@ class Command(BaseCommand):
                         product=product,
                         active=True,
                         created__gte=two_weeks_behind).count()
-                votes = like_count + 3 * product_click_count
+                votes = like_count + 1 * product_click_count
                 timedelta = datetime.datetime.now() - product.date_added
                 item_half_hour_age =  (timedelta.days * 86400 + timedelta.seconds) / 7200
                 if item_half_hour_age > 0:
