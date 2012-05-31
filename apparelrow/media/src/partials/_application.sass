@@ -1906,10 +1906,19 @@ body.profile-small
     overflow: visible
 
 body.profile
-  .button
-    +highlight_button(22px, 3px)
-    margin: 5px 0
-    padding: 0 5px
+  .empty
+    margin: 30px auto 0 auto
+    width: 320px
+    text-align: center
+    a
+      +highlight_button(30px, 3px)
+      margin: 1em 0 0 0
+      padding: 0 1em
+      display: block
+      &.add
+        background-image: image_url(unquote("add.png"))
+        background-repeat: no-repeat
+        background-position: 10px center
   #profile-nav
     ul
       display: block
@@ -2325,10 +2334,7 @@ body.settings
           &:hover
             text-decoration: underline
 
-.wardrobe-empty
-  margin: 30px 0 0 320px
-
-.wardrobe-empty, .look-empty
+.look-empty
   width: 320px
   text-align: center
   button, a

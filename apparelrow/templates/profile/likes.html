@@ -46,10 +46,10 @@
     </div>
     <div class="clear"></div>
     {% else %}
-    <div class="wardrobe-empty">
+    <div class="empty">
         {% url profile-likes request.user.username as profile_likes_url %}
         {% if request.path == profile_likes_url %}
-            <div class="message warning">{% trans "You do not like any products right now." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+            <div class="message warning">{% trans "You do not like any products right now." %} <a class="add" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
         {% else %}
             <div class="message warning">{{ profile.display_name }} {% trans "does not like any products so far." %}</div>
         {% endif %}

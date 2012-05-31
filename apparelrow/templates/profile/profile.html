@@ -8,13 +8,15 @@
     {% if current_page.object_list %}
         {% include 'apparel/fragments/activity/list.html' %}
     {% else %}
-        {% if profile == request.user.get_profile %}
         <div class="empty">
-            {% trans "You have not done anything yet. Why don't you start off by following some people whose style you like?" %}
-            <p><a class="button" href="{% url user-list-popular %}">{% trans "Find members to follow!" %}</a></p>
-        </div>
+        {% if profile == request.user.get_profile %}
+            <div class="message warning">
+                {% trans "You have not done anything yet. Why don't you start off by following some people whose style you like?" %}
+                <a class="button" href="{% url user-list-popular %}">{% trans "Find members to follow!" %}</a>
+            </div>
         {% else %}
-        <div class="empty">{% blocktrans with profile.display_name as display_name %}{{ display_name }} has not done anything yet.{% endblocktrans %}</div>
+            <div class="message warning">{% blocktrans with profile.display_name as display_name %}{{ display_name }} has not done anything yet.{% endblocktrans %}</div>
         {% endif %}
+        </div>
     {% endif %}
 {% endblock %}
