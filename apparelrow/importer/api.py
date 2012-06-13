@@ -605,6 +605,6 @@ class IncompleteDataSet(ImporterError):
     
     def __str__(self):
         if self.field:
-            return 'Missing field %s' % self.field
+            return 'Missing field %s (%s)' % (self.field, self.msg)
     
         return '[No reason given]' if self.msg is None else self.msg
