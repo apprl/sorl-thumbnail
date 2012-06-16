@@ -34,7 +34,7 @@ from profile.models import ApparelProfile
 from profile.utils import get_facebook_user
 from apparel.decorators import seamless_request_handling
 from apparel.decorators import get_current_user
-from apparel.models import Product, ProductLike, Manufacturer, Category, Option, VendorProduct, BackgroundImage
+from apparel.models import Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
 from apparel.models import Look, LookLike, LookComponent, FirstPageContent
 from apparel.forms import LookForm, LookComponentForm
 from apparel.search import ApparelSearch

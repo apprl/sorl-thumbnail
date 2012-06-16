@@ -27,15 +27,18 @@ from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 
 class Manufacturer(models.Model):
-    name   = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True)
     active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
     logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype')) 
     homepage = models.URLField(_('Home page'))
 
-    objects = SearchManager()
+class Brand(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype'), null=True, blank=True)
+    homepage = models.URLField(_('Home page'), null=True, blank=True)
 
     def __unicode__(self):
-        return u"%s" % self.name
+        return u'%s' % self.name
 
     class Meta:
         ordering = ['name']
@@ -43,8 +46,7 @@ class Manufacturer(models.Model):
         verbose_name_plural = 'Brands'
 
     class Exporter:
-        export_fields = ['__all__', '-active']
-
+        export_fields = ['__all__']
 
 class OptionType(MPTTModel):
     name = models.CharField(max_length=100, unique=True)
@@ -137,13 +139,14 @@ PRODUCT_GENDERS = (
 
 
 class Product(models.Model):
-    manufacturer = models.ForeignKey(Manufacturer)
+    manufacturer = models.ForeignKey(Brand, blank=True, null=True, on_delete=models.SET_NULL)
+    static_brand = models.CharField(max_length=100, default='')
     category = TreeForeignKey(Category, blank=True, null=True)
     options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
-    slug = AutoSlugField(_("Slug Name"), populate_from=("manufacturer", "product_name",), blank=True,
+    slug = AutoSlugField(_("Slug Name"), populate_from=("static_brand", "product_name",), blank=True,
         help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
-        help_text=_("Has to be unique with the manufacturer"))
+        help_text=_("Has to be unique with the static_brand"))
     product_name  = models.CharField(max_length=200, null=True, blank=True)
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True, db_index=True)
     modified      = models.DateTimeField(_("Time modified"), null=True, auto_now=True)
@@ -330,10 +333,36 @@ class VendorCategory(models.Model):
         verbose_name_plural = 'vendor categories'
 
 
+class VendorBrand(models.Model):
+    """
+    Vendor brand contains the brand name for vendor products.
+    """
+    name = models.CharField(max_length=100)
+    brand = models.ForeignKey(Brand, related_name='vendor_brands', blank=True, null=True)
+    vendor = models.ForeignKey(Vendor, related_name='vendor_brands')
+
+    def save(self, *args, **kwargs):
+        if self.brand:
+            for product in Product.objects.filter(vendorproduct__vendor_brand=self).iterator():
+                if product.manufacturer_id != self.brand_id:
+                    product.manufacturer_id = self.brand_id
+                    product.save()
+
+        super(VendorBrand, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return u"%s" % self.name
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Vendor brand'
+        verbose_name_plural = 'Vendor brands'
+
 class VendorProduct(models.Model):
-    vendor            = models.ForeignKey(Vendor)
     product           = models.ForeignKey(Product, related_name='vendorproduct')
-    vendor_category   = models.ForeignKey(VendorCategory, related_name='vendorproducts', null=True,)
+    vendor            = models.ForeignKey(Vendor)
+    vendor_brand      = models.ForeignKey(VendorBrand, related_name='vendor_products', null=True)
+    vendor_category   = models.ForeignKey(VendorCategory, related_name='vendor_products', null=True)
     buy_url           = models.URLField(_('Buy URL'), null=True, blank=True, max_length=555,)
     price             = models.DecimalField(_('Price'), null=True, blank=True, max_digits=10, decimal_places=2, db_index=True, help_text=_('Price converted to base currency'))
     currency          = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Base currency as three-letter ISO code'))

@@ -89,6 +89,7 @@ class API(object):
         self._import_log      = import_log
         self._vendor_product  = None
         self._vendor_category = None
+        self._vendor_brand    = None
         self._manufacturer    = None
         self._vendor          = None
         self._product_image   = None
@@ -108,7 +109,7 @@ class API(object):
             
             self.validate()
 
-            logger.debug('ID [%s]  Name [%s] Manufacturer [%s]  ' % (
+            logger.debug('ID [%s]  Name [%s] Brand [%s]  ' % (
                 self.dataset['product']['product-id'].encode('utf8'),
                 self.dataset['product']['product-name'].encode('utf8'),
                 self.dataset['product']['manufacturer'].encode('utf8')
@@ -137,6 +138,8 @@ class API(object):
             'product_name': self.dataset['product']['product-name'],
             'description': self.dataset['product']['description'],
             'category': self.category,
+            'manufacturer': self.manufacturer,
+            'static_brand': self.dataset['product']['manufacturer'],
             'product_image': self.product_image,
             'gender': self.dataset['product']['gender'],
             'feed_gender': self.dataset['product']['gender'],
@@ -145,21 +148,20 @@ class API(object):
         
         try:
             self.product = Product.objects.get(
-                manufacturer__id__exact=self.manufacturer.id,
+                static_brand=self.dataset['product']['manufacturer'],
                 sku__exact=self.dataset['product']['product-id']
             )
             logger.debug('Found existing product: [id %s] %s' % (self.product.id, self.product))
         except ObjectDoesNotExist:
             self.product = Product.objects.create(
-                manufacturer=self.manufacturer, 
                 sku=self.dataset['product']['product-id'],
                 **fields
             )
             logger.debug('Created new product: [id %s] %s' % (self.product.id, self.product))
         
         except MultipleObjectsReturned:
-            raise SkipProduct('Multiple products found with sku %s for manufacturer %s' % (self.manufacturer.name, self.fields['sku']))
-            
+            raise SkipProduct('Multiple products found with sku %s for vendor brand %s' % (self.fields['sku'], self.fields['static_brand']))
+
         else:
             # Update product
             for f in fields:
@@ -250,6 +252,7 @@ class API(object):
             )
             
             self._vendor_product.vendor_category = self.vendor_category
+            self._vendor_product.vendor_brand = self.vendor_brand
             self._vendor_product.save()
             logger.debug('Added product data to vendor: %s', self._vendor_product)
 
@@ -400,20 +403,6 @@ class API(object):
             if isinstance(category_names, list):
                 category_names = ' '.join(category_names)
 
-            @transaction.commit_manually
-            def vendor_category_get_or_create(vendor, category):
-                created = True
-                try:
-                    obj = VendorCategory.objects.create(vendor=vendor, name=category)
-                except IntegrityError:
-                    transaction.rollback()
-                    created = False
-                    obj = VendorCategory.objects.get(vendor=vendor, name=category)
-                else:
-                    transaction.commit()
-                return obj, created
-
-            #self._vendor_category, created = vendor_category_get_or_create(self.vendor, category_names)
             self._vendor_category, created = VendorCategory.objects.get_or_create(vendor=self.vendor, name=category_names)
 
             if created:
@@ -433,6 +422,33 @@ class API(object):
         return self.vendor_category.category
 
     @property
+    def vendor_brand(self):
+        """
+        Returns the VendorBrand instance that maps the extracted brand to a
+        manually defined one by Apparelrow.
+        """
+        if not self._vendor_brand:
+            name = self.dataset['product']['manufacturer']
+            self._vendor_brand, created = VendorBrand.objects.get_or_create(vendor=self.vendor, name=name)
+            if created:
+                self._import_log.messages.create(
+                    status='attention',
+                    message='New VendorBrand: %s, add mapping to Brand to update related products' % (self._vendor_brand,)
+                )
+                logger.debug('Created new vendor brand [id: %s] %s' % (self._vendor_brand.id, self._vendor_brand))
+            else:
+                logger.debug('Using vendor brand [id: %s] %s' % (self._vendor_brand.id, self._vendor_brand))
+
+        return self._vendor_brand
+
+    @property 
+    def manufacturer(self):
+        """
+        Returns the mapped brand for the product. This may return None.
+        """
+        return self.vendor_brand.brand
+
+    @property
     def availability(self):
         availability = self.dataset['product']['availability']
         if availability == 0:
@@ -448,25 +464,7 @@ class API(object):
 
         logger.debug('Adding availability to product: No information available')
         return None
-            
-    @property 
-    def manufacturer(self):
-        """
-        Retrieves, or creates, the product's manufacturer.
-        """
-        
-        if not self._manufacturer:
-            name = self.dataset['product']['manufacturer']
-            
-            self._manufacturer, created = Manufacturer.objects.get_or_create(name=name)
-            
-            if created: 
-                logger.debug('Created new manufacturer [id: %s] %s' % (self._manufacturer.id, self._manufacturer))
-            else:
-                logger.debug('Using manufacturer [id: %s] %s' % (self._manufacturer.id, self._manufacturer))
-        
-        return self._manufacturer
-    
+
     @property
     def vendor(self):
         """

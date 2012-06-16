@@ -20,6 +20,7 @@ class ProductManager(models.Manager):
         queryset = super(ProductManager, self).get_query_set() \
                                               .filter(published=True,
                                                       category__isnull=False,
+                                                      manufacturer__isnull=False,
                                                       gender__isnull=False)
         if self.availability:
             queryset = queryset.filter(vendorproduct__isnull=False, availability=True)
@@ -68,7 +69,7 @@ class QueryParser():
     model_shorthands = {
         # Maps a short hand to the field used as foreign key on the current object 
         # FIXME: Make this list smart somehow. Properly map for example Vendor > Products and Product > Vendors
-        'Manufacturer' : 'm',
+        'Brand'        : 'm',
         'Option'       : 'o',
         'Category'     : 'c',
         'Product'      : 'p',

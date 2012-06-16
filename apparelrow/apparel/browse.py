@@ -22,7 +22,7 @@ from actstream.models import Follow
 from apparel.search import PRODUCT_SEARCH_FIELDS
 from apparel.search import ApparelSearch
 from apparel.models import Product
-from apparel.models import Manufacturer
+from apparel.models import Brand
 from apparel.models import Option
 from apparel.models import Category
 from apparel.decorators import get_current_user
@@ -104,7 +104,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     if 'discount' in request.GET:
         query_arguments['fq'].append('{!tag=%s}discount:true' % ('price',))
 
-    # Manufacturer
+    # Brand
     if 'manufacturer' in request.GET:
         query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer_data', 'manufacturer_id', ' OR '.join([x for x in request.GET['manufacturer'].split(',')])))
 
@@ -217,7 +217,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
 
     selected_brands = filter(None, map(_to_int, request.GET.get('manufacturer', '').split(',')))
     selected_brands_data = {}
-    for brand in Manufacturer.objects.values('id', 'name').filter(pk__in=selected_brands):
+    for brand in Brand.objects.values('id', 'name').filter(pk__in=selected_brands):
         brand['href'] = '%s?manufacturer=%s' % (reverse('apparel.browse.browse_products'), brand['id'])
         selected_brands_data[brand['id']] = brand
 

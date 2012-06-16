@@ -136,7 +136,7 @@ def product_save(instance, **kwargs):
     else:
         connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
 
-    #if instance.published == False or not instance.category or not instance.gender:
+    #if instance.published == False or not instance.category or not instance.manufacturer or not instance.gender:
         #connection.delete('%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk), commit=True)
         #return
 
@@ -178,7 +178,7 @@ def get_product_document(instance):
     }
     boost = {}
 
-    if instance.published == True and instance.category and instance.gender:
+    if instance.published == True and instance.category and instance.manufacturer and instance.gender:
         availability = instance.availability
         discount = False
         price = decimal.Decimal('0.0')
@@ -242,7 +242,7 @@ def get_product_document(instance):
         # Users
         document['user_likes'] = user_likes
 
-        # Manufacturer
+        # Brand
         document['manufacturer_auto'] = instance.manufacturer.name
         document['manufacturer_data'] = '%s|%s' % (instance.manufacturer.name, instance.manufacturer_id)
 

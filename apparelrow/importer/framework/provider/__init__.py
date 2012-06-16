@@ -184,7 +184,7 @@ class Provider(object):
 
             # Try to set availability to zero if product already exists
             try:
-                product = Product.objects.get(manufacturer__name__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product = Product.objects.get(static_brand__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
                 product.availability=False
                 product.vendorproduct.update(availability=0)
                 product.save()
@@ -202,7 +202,7 @@ class Provider(object):
 
             # Try to set availability to zero if product already exists
             try:
-                product = Product.objects.get(manufacturer__name__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product = Product.objects.get(static_brand__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
                 product.availability=False
                 product.vendorproduct.update(availability=0)
                 product.save()
@@ -221,7 +221,7 @@ class Provider(object):
 
             # Try to set availability to zero if product already exists
             try:
-                product = Product.objects.get(manufacturer__name__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product = Product.objects.get(static_brand__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
                 product.availability=False
                 product.vendorproduct.update(availability=0)
                 product.save()

@@ -22,7 +22,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display_links = ['product_name']
     actions = ['publish', 'hide', 'change_category', 'change_options']
     search_fields = ['product_name']
-    list_per_page = 50
+    list_per_page = 25
 
     def image(self, obj):
         thumbnail = get_thumbnail(obj.product_image, '50x50', crop='noop', quality=99)
@@ -42,8 +42,8 @@ class ProductAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj:
             if ProductLike.objects.filter(active=True, product=obj) or LookComponent.objects.filter(product=obj):
-                return ['published']
-        return []
+                return ['published', 'static_brand']
+        return ['static_brand']
 
     class ChangeCategoryForm(Form):
         _selected_action = CharField(widget=MultipleHiddenInput)
@@ -120,14 +120,13 @@ class LookComponentAdmin(admin.ModelAdmin):
 admin.site.register(LookComponent, LookComponentAdmin)
 
 #
-# MANUFACTURER
+# BRAND
 #
 
-class ManufacturerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'active',)
-    list_filter = ['active']
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ('name', 'homepage')
 
-admin.site.register(Manufacturer, ManufacturerAdmin)
+admin.site.register(Brand, BrandAdmin)
 
 #
 # CATEGORY
@@ -200,6 +199,18 @@ class VendorCategoryAdmin(admin.ModelAdmin):
 admin.site.register(VendorCategory, VendorCategoryAdmin)
 
 #
+# VENDOR BRAND
+#
+
+class VendorBrandAdmin(admin.ModelAdmin):
+    list_display = ('vendor', 'name', 'brand')
+    list_filter = ('vendor',)
+    list_display_links = ('name',)
+    list_per_page = 25
+
+admin.site.register(VendorBrand, VendorBrandAdmin)
+
+#
 # OPTION TYPE
 #
 
@@ -234,7 +245,7 @@ class VendorProductVariationInline(admin.StackedInline):
     extra = 0
 
 class VendorProductAdmin(admin.ModelAdmin):
-    raw_id_fields = ['product', 'vendor_category']
+    raw_id_fields = ['product', 'vendor_category', 'vendor_brand']
     list_display = ['product', 'vendor', 'price', 'in_stock']
     list_filter = ['vendor']
     inlines = [VendorProductVariationInline]
