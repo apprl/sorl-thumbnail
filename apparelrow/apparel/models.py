@@ -683,6 +683,10 @@ class LookComponent(models.Model):
         return self._style(450 / 694.0)
 
     @property
+    def style_search(self):
+        return self._style(200 / 694.0)
+
+    @property
     def style(self):
         return self._style(1)
     

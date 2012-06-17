@@ -632,7 +632,7 @@ ApparelSearch = {
             model: 'look',
             query: {
                 'q': s,
-                'limit': 6
+                'limit': 5
             },
             selector: '#search-result-looks',
             text: {

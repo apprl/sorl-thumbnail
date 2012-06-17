@@ -288,7 +288,7 @@ def get_look_document(instance):
     document['created'] = instance.created
     document['modified'] = instance.modified
     document['user'] = instance.user.username
-    document['template'] = render_to_string('apparel/fragments/look_small_like_content.html', {'object': instance})
+    document['template'] = render_to_string('apparel/fragments/look_search_content.html', {'object': instance})
     document['text'] = render_to_string('search/indexes/apparel/look_text.txt', {'object': instance})
 
     return document, boost
