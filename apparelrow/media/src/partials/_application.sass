@@ -541,7 +541,7 @@ button
 
 ul.looks
   +horizontal-list(0)
-  overflow: hidden
+  overflow: visible
   li
     margin-right: $gutter_width / 2
     margin-bottom: 10px
@@ -993,7 +993,6 @@ a.product-heart
 div#product-list, .product-list
   position: relative
   ul.list
-    overflow: hidden
     li
       float: left
       +product_list_item
@@ -1130,6 +1129,7 @@ body.two-columns .pagination
   margin: 0 auto
 
 .pagination
+  clear: both
   .next
     display: block
     width: 100%
