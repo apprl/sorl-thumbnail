@@ -65,8 +65,8 @@ msgstr "Köp"
 #: media/js/apparel.1334342368.js:662 media/js/apparel.js:662
 msgid "Found %(count)s product"
 msgid_plural "Found %(count)s products"
-msgstr[0] "%(count)s träff bland plagg"
-msgstr[1] "%(count)s träffar bland plagg"
+msgstr[0] "%(count)s träff bland produkter"
+msgstr[1] "%(count)s träffar bland produkter"
 
 #: media/js/apparel.1327592246.js:663 media/js/apparel.1330712141.js:663
 #: media/js/apparel.1330712150.js:663 media/js/apparel.1330934728.js:663
@@ -107,8 +107,8 @@ msgstr[1] "%(count)s träffar bland varumärken"
 #: media/js/apparel.1334342368.js:665 media/js/apparel.js:665
 msgid "Show %(count)s product"
 msgid_plural "Show all %(count)s products"
-msgstr[0] "Visa %(count)s plagg"
-msgstr[1] "Visa alla %(count)s plagg"
+msgstr[0] "Visa %(count)s produkter"
+msgstr[1] "Visa alla %(count)s produkter"
 
 #: media/js/apparel.1327592246.js:666 media/js/apparel.1330712141.js:666
 #: media/js/apparel.1330712150.js:666 media/js/apparel.1330934728.js:666
