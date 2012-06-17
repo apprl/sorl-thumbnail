@@ -140,7 +140,7 @@ def get_weekly_mail_content(gender, timeframe):
             break
 
     product_names = product_names[:5]
-    subject = u'%s och andra varumärken i Veckans Bästa!' % (', '.join(product_names),)
+    subject = u'%s och mer i Veckans Bästa!' % (', '.join(product_names),)
 
     # Looks
     looks = []
@@ -254,6 +254,8 @@ def generate_weekly_mail(request):
                 'email_weekly_bottom': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-bottom-sv.gif'),
             })
 
+            text_template = loader.render_to_string('email/weekly.txt')
+
             options = {
                     'list_id': settings.MAILCHIMP_WEEKLY_LIST,
                     'subject': subject,
@@ -271,7 +273,7 @@ def generate_weekly_mail(request):
                                                'value': gender}]}
 
             try:
-                result = mailchimp.campaignCreate(type='regular', options=options, content={'html': template}, segment_opts=segment_options)
+                result = mailchimp.campaignCreate(type='regular', options=options, content={'html': template, 'text': text_template}, segment_opts=segment_options)
             except MailSnakeException, e:
                 return HttpResponse('Error [%s]: could not create campaign: %s' % (gender, e))
 
