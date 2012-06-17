@@ -1968,6 +1968,22 @@ body.profile
         margin-top: 1em
         color: $font-color
 
+body.profiles
+  .gender-tabs
+    height: 16px
+    +horizontal_list
+    +border("bottom")
+    padding: 0 0 5px 0
+    font-weight: bold
+    li
+      a
+        font-size: 1.1em
+        color: $easier_color
+      &.active > a, a:hover
+        color: $font_color
+  .sidebar
+    h2
+      margin-top: 39px
   ul.users
     li
       +clearfix
@@ -2284,17 +2300,7 @@ ul.look-list-tabs, ul.user-list-tabs
         text-decoration: underline
       span
 
-ul.gender-tabs
-  +horizontal_list
-  +border("bottom")
-  padding: 0 0 5px 0
-  font-weight: bold
-  li
-    a
-      font-size: 1.1em
-      color: $easier_color
-    &.active > a, a:hover
-      color: $font_color
+
 
 //
 // Settings page
