@@ -49,7 +49,7 @@ def prod_db():
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
 
 def staging():
-    env.hosts = ['staging1.apparelrow.com']
+    env.hosts = ['ec2-176-34-85-220.eu-west-1.compute.amazonaws.com']
     env.hostname = 'staging1'
     env.user = 'deploy'
     env.group = 'nogroup'

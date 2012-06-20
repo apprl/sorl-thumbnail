@@ -5,7 +5,7 @@ sorl-thumbnail==11.12
 PyYAML==3.09
 flup==1.0.2
 mock==0.7.0b3
-south==0.7
+south==0.7.5
 django-debug-toolbar==0.9.4
 python-memcached==1.48
 -e git+http://github.com/pythonforfacebook/facebook-sdk.git#egg=facebook-sdk
