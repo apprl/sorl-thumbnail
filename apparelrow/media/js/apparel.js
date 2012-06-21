@@ -213,7 +213,7 @@ jQuery(document).ready(function() {
     );
     jQuery('.share').click(function() { jQuery(this).find('ul').toggle(); return false; })
 
-    jQuery('ul.hover-menu li[class!=active]')
+    jQuery('ul.hover-menu li[class!="active"]')
         .live('mouseenter', function(e) {
             jQuery(this).addClass('hover');
             return true;
@@ -234,13 +234,13 @@ jQuery(document).ready(function() {
         return path; // just the filename
     }
 
-    jQuery('.upload-field input[type=text], .upload-field .button').click(function(e) {
+    jQuery('.upload-field input[type="text"], .upload-field .button').click(function(e) {
         // Forward click events from the fake controls to file object. This doesn't work in FF
         jQuery('input[type=file]', jQuery(this).parent()).focus();
         return false;
     });
-    jQuery('.upload-field input[type=file]').change(function(e) {
-        jQuery('input[type=text]', jQuery(this).closest('.upload-field')).val(extractFilename(this.value));
+    jQuery('.upload-field input[type="file"]').change(function(e) {
+        jQuery('input[type="text"]', jQuery(this).closest('.upload-field')).val(extractFilename(this.value));
     });
 
     /*jQuery('.dialog .buttons>.ok').live('click', function(e) {
@@ -254,10 +254,10 @@ jQuery(document).ready(function() {
         $parent = $this.parent();
         $.post($this.attr('href'), function(response) {
             if($parent.is('.following')) {
-                jQuery('.following a[href=' + $this.attr('href') + ']').parent().removeClass('following').addClass('not_following');
+                jQuery('.following a[href="' + $this.attr('href') + '"]').parent().removeClass('following').addClass('not_following');
                 $parent.removeClass('following').addClass('not_following');
             } else {
-                jQuery('.not_following a[href=' + $this.attr('href') + ']').parent().removeClass('not_following').addClass('following');
+                jQuery('.not_following a[href="' + $this.attr('href') + '"]').parent().removeClass('not_following').addClass('following');
                 $parent.removeClass('not_following').addClass('following');
             }
         });
@@ -330,8 +330,8 @@ jQuery(document).ready(function() {
         hover_edit_button = true;
         return false;
     });
-    jQuery('#profile-image input[type=file]').change(function(e) {
-        jQuery('button[type=submit]', jQuery(this).closest('ul')).show();
+    jQuery('#profile-image input[type="file"]').change(function(e) {
+        jQuery('button[type="submit"]', jQuery(this).closest('ul')).show();
     });
 
     // Login pane profile hover menu

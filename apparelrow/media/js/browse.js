@@ -111,7 +111,7 @@ jQuery(document).ready(function() {
         var element = jQuery(this);
         var selected_manufacturers = jQuery('#selected-manufacturers');
         var id = 'manufacturer-' + getElementId(element);
-        
+
         if(element.hasClass('selected')) {
             jQuery('#' + id, selected_manufacturers).click(); // selected class is removed in this click handler
         } else {
@@ -246,17 +246,25 @@ jQuery(document).ready(function() {
     }
 
     function parsePage(link) {
-        return parseInt(link.attr('href').split('=')[1], 10);
+        var attr_href = link.attr('href');
+        if (typeof attr_href !== 'undefined' && attr_href !== false) {
+            return parseInt(link.attr('href').split('=')[1], 10);
+        }
+        return false;
     }
 
     infiniteScroll(function(callback) {
-        fetchPage(parsePage(jQuery('.pagination .next')), callback);
+        var page = parsePage(jQuery('.pagination .next'));
+        if (page) {
+            fetchPage(page, callback);
+        }
     });
 
     jQuery('.pagination a').live('click', function(e) {
         var page = parsePage(jQuery(this));
-        
-        fetchPage(page);
+        if (page) {
+            fetchPage(page);
+        }
 
         // Set up auto-scrolling
         jQuery(window).data('dont-scroll', false);
@@ -354,12 +362,17 @@ function getQuery(query, reset) {
     return query;
 }
 
-function getElementId(element, numeric) {
-    return jQuery(element).attr('id').split('-').pop()
-}
+function getElementId(element) {
+    var result = false;
+    var attr_id = jQuery(element).attr('id');
+    if (typeof attr_id !== 'undefined' && attr_id !== false) {
+        var attr_id_split = attr_id.split('-');
+        if (attr_id_split.length >= 2) {
+            result = attr_id_split.pop();
+        }
+    }
 
-function getNumericElementId(element) {
-    return parseInt(jQuery(element).attr('id').split('-').pop(), 10);
+    return result;
 }
 
 function getElementIds(elements) {
@@ -525,6 +538,7 @@ function updateSelected(products) {
     }
 
     // Select brands
+    console.log(products.selected_brands);
     if(products.selected_brands && products.selected_brands.length > 0) {
         jQuery.each(products.selected_brands, function(i, id) {
             var data = products.selected_brands_data[id];
