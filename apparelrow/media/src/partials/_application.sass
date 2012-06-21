@@ -1573,20 +1573,14 @@ form .upload-field
   width: 240px
   height: $button_height
   input, .button
-    position: absolute
     height: $button_height
     line-height: $button_height
-    top: 0px
-    z-index: 1
-    width: 112px
   input
     +text_input
     +box-shadow-inset(#f6f6f6 - #222222, 0, 0, 0)
     font-style: normal
     right: 0px
     padding: 0
-    padding-left: 1em
-    width: 100px
   .button
     +button
     +border-radius(3px)
@@ -1597,11 +1591,12 @@ form .upload-field
     padding-left: 5px
     left: 0px
     cursor: default
+    margin-bottom: 0
   span input
-    width: 240px
+    padding-left: 10px
+    width: 228px
     left: 0px
     z-index: 2
-    opacity: 0
 
 form.standard-form
   li

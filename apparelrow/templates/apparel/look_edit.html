@@ -427,13 +427,8 @@ var chooser = {
 jQuery(document).ready(function() {
     chooser.dialog = jQuery('#product-chooser');
     
-    jQuery('#photo>.look-empty button[type=submit]').click(function(e) {
-        this.form.action += '#photo-tab'
-        return true;
-    });
-
-    jQuery('#photo input[type=file]').change(function(e) {
-        jQuery('button[type=submit]', jQuery(this).closest('.look-empty')).show();
+    jQuery('#photo input[type="file"]').change(function(e) {
+        jQuery('button[type="submit"]', jQuery(this).closest('.look-empty')).show();
     });
 
     jQuery('.look-empty button, .look-empty a').hover(
@@ -441,9 +436,6 @@ jQuery(document).ready(function() {
         function(e) { jQuery(this).removeClass('hover') }
     );
     
-    if('{{ object.display_with_component }}' == 'P' && location.hash == '')
-        jQuery('a[href=photo-tab]').click();
-
     jQuery('#look-title .delete').click(function(event) {
         var title = jQuery(this).attr('title');
         var href = jQuery(this).attr('href');
@@ -495,14 +487,10 @@ jQuery(document).ready(function() {
         <div id="photo">
             {% include 'apparel/fragments/look_photo.html' %}
             <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
-                <p>
-                    {% trans "Upload a photo to create a tagged image" %}
-                </p>
+                <p>{% trans "Upload a photo to create a tagged image" %}</p>
                 <div class="message">
                     <div class="upload-field">
-                        <input type="text" name="_not_used" />
-                        <span class="button">{% trans "Choose file" %}</span>
-                        <span>{{ form.image }}</span>
+                        <span><input type="file" name="image" id="id_image"></span>
                     </div>
                     <button type="submit">{% trans "Upload" %}</button>
                 </div>
