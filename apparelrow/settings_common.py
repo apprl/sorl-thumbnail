@@ -180,7 +180,7 @@ COMMENTS_APP = 'apparel_comments'
 COMPRESS_CSS = {}
 COMPRESS_JS = {
     'widget': {
-        'source_filenames': ('js/jquery/jquery-1.4.2.js',
+        'source_filenames': ('js/jquery/jquery-1.7.2.min.js',
                              'js/jquery/jquery.tools.min.js',
                              'js/widget.js'),
         'output_filename': 'js/compiled/widget.js',

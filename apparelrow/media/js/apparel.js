@@ -50,7 +50,7 @@ function create_html_dialog(url_to_html, large_dialog, close_callback, width) {
 
     dialog.load(url_to_html).appendTo('body').overlay({
         mask: {
-            color: '#000',
+            color: '#000000',
             loadSpeed: 200,
             opacity: 0.5
         },

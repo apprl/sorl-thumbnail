@@ -6,13 +6,13 @@
     <title>{% if updates %}({{ updates }}) {% endif %}{% block extra-title %}{% endblock %}Apparelrow</title>
     {% endwith %}
     <meta charset="utf-8" />
-    <link type="text/css" href="{{ MEDIA_URL }}{% staticfile "styles/smoothness/jquery-ui-1.8rc3.custom.css" %}" rel="stylesheet" />
+    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/screen.css" %}" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/print.css" %}" type="text/css" media="print">
     {% block 'extra-styles' %}
     {% endblock 'extra-styles' %}
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
     <script type="text/javascript">
         var hasLiked = {% if user.is_authenticated and user.get_profile.has_liked %}true{% else %}false{% endif %};
         var dialog_like_product = '{% url dialog-like-product %}';
