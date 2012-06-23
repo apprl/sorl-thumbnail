@@ -11,7 +11,7 @@
     <div class="sidebar">
         <h2>{% trans "Popular brands" %}</h2>
         {% for manufacturer_id, manufacturer_name, products in popular_brands %}
-        <a href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ manufacturer_id }}"><h3>{{ forloop.counter }}. {{ manufacturer_name }}</h3></a>
+        <a href="{% url brand-redirect manufacturer_id %}"><h3>{{ forloop.counter }}. {{ manufacturer_name }}</h3></a>
         {% include 'apparel/fragments/products_sidebar.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
         {% endfor %}
     </div>
@@ -32,7 +32,7 @@
                 <div class="brand-anchor"><a name="{{ brand_char }}">{{ brand_char }}</a></div>
                 <ul class="brands">
                 {% for brand in brand_list %}
-                    <li><a href="{% url shop %}#manufacturer={{ brand.id }}">{{ brand.name }}</a></li>
+                    <li><a href="{% url brand-redirect brand.id %}">{{ brand.name }}</a></li>
                 {% endfor %}
                 </ul>
                 <br>
@@ -49,7 +49,7 @@
             {% endwith %}
         {% else %}
             {% for manufacturer_id, manufacturer_name, products in popular_brands_in_network %}
-            <a href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ manufacturer_id }}"><h3>{{ forloop.counter }}. {{ manufacturer_name }}</h3></a>
+            <a href="{% url brand-redirect manufacturer_id %}"><h3>{{ forloop.counter }}. {{ manufacturer_name }}</h3></a>
             {% include 'apparel/fragments/products_sidebar.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
             {% endfor %}
         {% endif %}

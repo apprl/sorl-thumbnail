@@ -1,0 +1,21 @@
+{% extends 'apparel/fragments/activity/base.html' %}
+{% load apparel_extras %}
+{% load i18n %}
+
+{% block activity_link %}{{ object.actor.get_profile.get_absolute_url }}{% endblock %}
+
+{% block activity_image %}
+    {% with object.action_object as object %}
+        {% include 'apparel/fragments/activity/choose_image.html' %}
+    {% endwith %}
+{% endblock %}
+
+{% block activity_header %}
+{% blocktrans count object.description as count with object.actor.get_profile.get_absolute_url as user_url and object.actor.get_profile.display_name as user %}<a href="{{user_url}}">{{user}}</a> have added {{count}} new product
+{% plural %}<a href="{{user_url}}">{{user}}</a> have added {{count}} new products
+{% endblocktrans %}
+{% endblock %}
+
+{% block activity_content %}
+    <p></p>
+{% endblock %}

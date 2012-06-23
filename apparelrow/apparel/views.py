@@ -34,7 +34,7 @@ from profile.models import ApparelProfile
 from profile.utils import get_facebook_user
 from apparel.decorators import seamless_request_handling
 from apparel.decorators import get_current_user
-from apparel.models import Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
+from apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
 from apparel.models import Look, LookLike, LookComponent, FirstPageContent
 from apparel.forms import LookForm, LookComponentForm
 from apparel.search import ApparelSearch
@@ -51,6 +51,13 @@ def product_redirect(request, pk):
     """
     product = get_object_or_404(Product, pk=pk, published=True)
     return HttpResponsePermanentRedirect(product.get_absolute_url())
+
+def brand_redirect(request, pk):
+    """
+    Redirect from a brand id to brand profile page.
+    """
+    brand = get_object_or_404(Brand, pk=pk)
+    return HttpResponsePermanentRedirect(brand.profile.get_absolute_url())
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, published=True, gender__isnull=False)

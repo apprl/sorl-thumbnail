@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     (r'^products/(?P<slug>[\w-]+)/users/$', 'apparel.views.product_user_like_list'),
 
     # Brand
+    url(r'^brands/(?P<pk>[\d]+)/$', 'apparel.views.brand_redirect', name='brand-redirect'),
     url(r'^brands/$', 'apparel.views.gender', {'view': 'brand-list'}, name='brand-list'),
     url(r'^brands/men/$', 'apparel.views.brand_list', {'gender': 'M'}, name='brand-list-men'),
     url(r'^brands/women/$', 'apparel.views.brand_list', {'gender': 'W'}, name='brand-list-women'),

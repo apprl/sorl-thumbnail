@@ -1081,7 +1081,7 @@ div#product-list, .product-list
                 margin-right: 10px
                 float: right
 
-.brand-list .sidebar .product-small, .profile .sidebar .product-small
+.brand-list .sidebar .product-small, .profile .sidebar .product-small, .updates .sidebar .product-small
   width: 93px
   & h4
     font-size: 0.9em
@@ -1190,10 +1190,13 @@ body.two-columns .pagination
   h2
     border-bottom: 0
     margin: 0
-    padding: 0 0 10px 0
+    padding: 5px 0 10px 0
+    line-height: 1em
   h1
     padding: 10px 0 5px 0
     text-transform: uppercase
+    a:hover
+      text-decoration: underline
   div.breadcrumb
     line-height: 2em
     vertical-align: top
@@ -1964,6 +1967,12 @@ body.profile
       &.description
         margin-top: 1em
         color: $font-color
+      .shop-button
+        +button(none, 30px, 3px)
+        display: block
+        margin-bottom: 15px
+        text-align: center
+        text-decoration: none
 
 body.profiles
   .gender-tabs

@@ -538,7 +538,6 @@ function updateSelected(products) {
     }
 
     // Select brands
-    console.log(products.selected_brands);
     if(products.selected_brands && products.selected_brands.length > 0) {
         jQuery.each(products.selected_brands, function(i, id) {
             var data = products.selected_brands_data[id];

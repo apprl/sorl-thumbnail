@@ -65,7 +65,11 @@ def likes(request, profile, page=0):
     Displays the profile likes page.
     """
     form = handle_change_image(request, profile)
-    queryset = Product.published_objects.filter(likes__user=profile.user, likes__active=True).order_by('-likes__modified')
+    if profile.brand_id:
+        queryset = Product.valid_objects.filter(manufacturer=profile.brand_id).order_by('-date_added')
+    else:
+        queryset = Product.published_objects.filter(likes__user=profile.user, likes__active=True).order_by('-likes__modified')
+
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
@@ -94,7 +98,7 @@ def profile(request, profile, page=0):
     form = handle_change_image(request, profile)
 
     queryset = actor_stream(profile.user)
-    queryset = queryset.filter(verb__in=['added', 'commented', 'created', 'liked_look', 'liked_product', 'started following'])
+    queryset = queryset.filter(verb__in=['added', 'commented', 'created', 'liked_look', 'liked_product', 'started following', 'added_products'])
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)

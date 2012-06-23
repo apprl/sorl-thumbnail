@@ -48,6 +48,8 @@ class ApparelProfile(models.Model):
     gender              = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     updates_last_visit  = models.DateTimeField(_('Last visit home'), default=datetime.datetime.now)
 
+    brand = models.OneToOneField('apparel.Brand', default=None, null=True, on_delete=models.SET_NULL, related_name='profile')
+
     # profile login flow
     login_flow = models.CharField(_('Login flow'), max_length=20, choices=LOGIN_FLOW, null=False, blank=False, default='initial')
 
@@ -147,7 +149,7 @@ class ApparelProfile(models.Model):
         return None
 
     def get_friend_updates(self):
-        return user_stream(self.user).filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following'])
+        return user_stream(self.user).filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following', 'added_products'])
 
     @property
     def get_updates_last_visit(self):
@@ -158,6 +160,9 @@ class ApparelProfile(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
+        #if self.brand:
+            #return ('profile.views.bla', [str(self.user.username)])
+
         return ('profile.views.likes', [str(self.user.username)])
     
     def __unicode__(self):

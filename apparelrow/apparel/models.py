@@ -14,6 +14,8 @@ from django.conf import settings
 from django.forms import ValidationError
 from django.core.files import storage
 from django.core.files.base import ContentFile
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 from apparel.manager import ProductManager, SearchManager, FeaturedManager, FirstPageManager
 from apparel import cache
@@ -37,6 +39,7 @@ class Brand(models.Model):
     slug = AutoSlugField(populate_from=('name',), max_length=100, unique=True, null=True)
     logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype'), null=True, blank=True)
     homepage = models.URLField(_('Home page'), null=True, blank=True)
+    last_update = models.DateTimeField(_("Last update"), null=True, blank=True)
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -48,6 +51,16 @@ class Brand(models.Model):
 
     class Exporter:
         export_fields = ['__all__']
+
+@receiver(post_save, sender=Brand, dispatch_uid='brand_create_user')
+def brand_create_user(sender, instance, **kwargs):
+    if 'created' in kwargs:
+        user, created = User.objects.get_or_create(username=instance.slug)
+        if created:
+            profile = user.get_profile()
+            profile.name = instance.name
+            profile.brand = instance
+            profile.save()
 
 class OptionType(MPTTModel):
     name = models.CharField(max_length=100, unique=True)
