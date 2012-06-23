@@ -124,7 +124,7 @@ admin.site.register(LookComponent, LookComponentAdmin)
 #
 
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ('name', 'homepage')
+    list_display = ('name', 'slug', 'homepage')
 
 admin.site.register(Brand, BrandAdmin)
 
