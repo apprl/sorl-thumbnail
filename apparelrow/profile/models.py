@@ -48,6 +48,8 @@ class ApparelProfile(models.Model):
     gender              = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     updates_last_visit  = models.DateTimeField(_('Last visit home'), default=datetime.datetime.now)
 
+    # brand profile
+    is_brand = models.BooleanField(default=False)
     brand = models.OneToOneField('apparel.Brand', default=None, null=True, on_delete=models.SET_NULL, related_name='profile')
 
     # profile login flow

@@ -5,7 +5,7 @@
 {% url profile-followers profile.user.username as followers_url %}
 {% url profile-following profile.user.username as following_url %}
 <li>
-    {% if profile and profile.brand %}
+    {% if profile and profile.is_brand %}
     <a class="{% if request.path == profile_likes_url %}selected{% else %}first{% endif %}" href="{{ profile_likes_url }}">{% trans "Shop" %}</a>
     {% else %}
     <a class="{% if request.path == profile_likes_url %}selected{% else %}first{% endif %}" href="{{ profile_likes_url }}">{% trans "Likes" %}</a>

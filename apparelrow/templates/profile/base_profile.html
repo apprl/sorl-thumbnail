@@ -29,7 +29,7 @@
         {% url profile-followers profile.user.username as followers_url %}
         {% url profile-following profile.user.username as following_url %}
         </div>
-        {% if not profile.brand %}
+        {% if not profile.is_brand %}
         <p>
             <a href="{{ likes_url }}">{% blocktrans count products as prod %}Likes {{ prod }} product{% plural %}Likes {{ prod }} products{% endblocktrans %}</a>
         </p>
@@ -50,7 +50,7 @@
         </p>
         {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
         <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
-        {% if profile.brand %}
+        {% if profile.is_brand %}
         <p><a href="{% gender_url 'W' 'shop' %}#manufacturer={{ profile.brand.id }}" class="shop-button">{% trans "See all women's products" %}</a></p>
         <p><a href="{% gender_url 'M' 'shop' %}#manufacturer={{ profile.brand.id }}" class="shop-button">{% trans "See all men's products" %}</a></p>
         {% endif %}
