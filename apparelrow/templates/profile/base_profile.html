@@ -51,8 +51,7 @@
         {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
         <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
         {% if profile.is_brand %}
-        <p><a href="{% gender_url 'W' 'shop' %}#manufacturer={{ profile.brand.id }}" class="shop-button">{% trans "See all women's products" %}</a></p>
-        <p><a href="{% gender_url 'M' 'shop' %}#manufacturer={{ profile.brand.id }}" class="shop-button">{% trans "See all men's products" %}</a></p>
+        <p><a href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ profile.brand.id }}" class="shop-button">{% trans "Go to shop" %}</a></p>
         {% endif %}
     </div>
     {% block extended_content %}

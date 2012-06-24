@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-23 18:56+0200\n"
+"POT-Creation-Date: 2012-06-24 21:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,7 +119,7 @@ msgid "Time added"
 msgstr ""
 
 #: apparel/models.py:166 apparel/models.py:287 apparel/models.py:459
-#: apparel/models.py:648 apparel/models.py:756
+#: apparel/models.py:637 apparel/models.py:745
 msgid "Time modified"
 msgstr ""
 
@@ -131,7 +131,7 @@ msgstr ""
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:171 apparel/models.py:463 apparel/models.py:757
+#: apparel/models.py:171 apparel/models.py:463 apparel/models.py:746
 #: profile/models.py:48
 msgid "Gender"
 msgstr ""
@@ -144,8 +144,8 @@ msgstr ""
 msgid "In stock"
 msgstr ""
 
-#: apparel/models.py:286 apparel/models.py:458 apparel/models.py:647
-#: apparel/models.py:740 apparel/models.py:755 beta/models.py:7
+#: apparel/models.py:286 apparel/models.py:458 apparel/models.py:636
+#: apparel/models.py:729 apparel/models.py:744 beta/models.py:7
 #: beta/models.py:15
 msgid "Time created"
 msgstr ""
@@ -238,7 +238,7 @@ msgstr ""
 msgid "items in stock"
 msgstr ""
 
-#: apparel/models.py:451 apparel/models.py:748
+#: apparel/models.py:451 apparel/models.py:737
 msgid "Title"
 msgstr ""
 
@@ -254,77 +254,77 @@ msgstr ""
 msgid "The look will be shown on the front page"
 msgstr ""
 
-#: apparel/models.py:668
+#: apparel/models.py:657
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:669
+#: apparel/models.py:658
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:670
+#: apparel/models.py:659
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:671
+#: apparel/models.py:660
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:672
+#: apparel/models.py:661
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:673
+#: apparel/models.py:662
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:749
+#: apparel/models.py:738
 msgid "Short description"
 msgstr ""
 
-#: apparel/models.py:750
+#: apparel/models.py:739
 msgid "Content"
 msgstr ""
 
-#: apparel/models.py:750
+#: apparel/models.py:739
 msgid "HTML allowed. This field is ignored if an image is set."
 msgstr ""
 
-#: apparel/models.py:751
+#: apparel/models.py:740
 msgid "URL"
 msgstr ""
 
-#: apparel/models.py:752 apparel/models.py:784
+#: apparel/models.py:741 apparel/models.py:773
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:752
+#: apparel/models.py:741
 msgid "Publish size 450x327"
 msgstr ""
 
-#: apparel/models.py:754
+#: apparel/models.py:743
 msgid "Publish date"
 msgstr ""
 
-#: apparel/models.py:758 profile/models.py:47 templates/account/base.html:20
+#: apparel/models.py:747 profile/models.py:47 templates/account/base.html:20
 msgid "Language"
 msgstr ""
 
-#: apparel/models.py:759
+#: apparel/models.py:748
 msgid "Sorting order"
 msgstr ""
 
-#: apparel/models.py:802
+#: apparel/models.py:791
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:802
+#: apparel/models.py:791
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:284
+#: apparel/templatetags/apparel_extras.py:285
 msgid "ago"
 msgstr ""
 
@@ -475,7 +475,7 @@ msgstr ""
 msgid "Exchange rate"
 msgstr ""
 
-#: importer/models.py:215
+#: importer/models.py:214
 msgid ""
 "Mapping aliases should be separated with a single command and no spaces, "
 "example: \"svart,night,coal\""
@@ -517,39 +517,39 @@ msgstr ""
 msgid "Last visit home"
 msgstr ""
 
-#: profile/models.py:54
+#: profile/models.py:56
 msgid "Login flow"
 msgstr ""
 
-#: profile/models.py:57
+#: profile/models.py:59
 msgid "Participating in newsletter"
 msgstr ""
 
-#: profile/models.py:61
+#: profile/models.py:63
 msgid "When someone commented on a product that I have liked"
 msgstr ""
 
-#: profile/models.py:63
+#: profile/models.py:65
 msgid "When someone commented on a product that I have commented on"
 msgstr ""
 
-#: profile/models.py:65
+#: profile/models.py:67
 msgid "When someone commented on a look that I have created"
 msgstr ""
 
-#: profile/models.py:67
+#: profile/models.py:69
 msgid "When someone commented on a look that I have commented on"
 msgstr ""
 
-#: profile/models.py:69
+#: profile/models.py:71
 msgid "When someone likes a look that I have created"
 msgstr ""
 
-#: profile/models.py:71
+#: profile/models.py:73
 msgid "When someone starts to follow me"
 msgstr ""
 
-#: profile/models.py:74
+#: profile/models.py:76
 msgid "Is this the first visit?"
 msgstr ""
 
@@ -674,7 +674,7 @@ msgstr ""
 msgid "Followers"
 msgstr ""
 
-#: templates/base.html:206 templates/apparel/fragments/follow.html:6
+#: templates/base.html:206 templates/apparel/fragments/follow.html:5
 #: templates/profile/base_profile.html:49
 #: templates/profile/fragments/menu_items.html:24
 msgid "Following"
@@ -1021,7 +1021,7 @@ msgstr ""
 msgid "Looks Women"
 msgstr ""
 
-#: templates/apparel/look_list.html:22 templates/apparel/user_home.html:15
+#: templates/apparel/look_list.html:22 templates/apparel/user_home.html:13
 msgid "Popular looks in your network"
 msgstr ""
 
@@ -1044,7 +1044,7 @@ msgid ""
 "follow amoung our members."
 msgstr ""
 
-#: templates/apparel/look_list.html:40 templates/apparel/user_home.html:27
+#: templates/apparel/look_list.html:40 templates/apparel/user_home.html:25
 #: templates/apparel/fragments/browse_follow_user.html:5
 msgid "See all members"
 msgstr ""
@@ -1097,19 +1097,19 @@ msgstr ""
 msgid "No product found!"
 msgstr ""
 
-#: templates/apparel/user_home.html:6
+#: templates/apparel/user_home.html:4
 msgid "Friend’s Updates"
 msgstr ""
 
-#: templates/apparel/user_home.html:12
+#: templates/apparel/user_home.html:10
 msgid "Popular products in your network"
 msgstr ""
 
-#: templates/apparel/user_home.html:21
+#: templates/apparel/user_home.html:19
 msgid "Your friend's latest updates"
 msgstr ""
 
-#: templates/apparel/user_home.html:25 templates/apparel/user_list.html:39
+#: templates/apparel/user_home.html:23 templates/apparel/user_list.html:39
 msgid "Your friends are here!"
 msgstr ""
 
@@ -1216,12 +1216,12 @@ msgid ""
 "your friends."
 msgstr ""
 
-#: templates/apparel/fragments/follow.html:6
+#: templates/apparel/fragments/follow.html:5
 msgid "Stop following"
 msgstr ""
 
-#: templates/apparel/fragments/follow.html:7
-#: templates/apparel/fragments/follow.html:12
+#: templates/apparel/fragments/follow.html:6
+#: templates/apparel/fragments/follow.html:11
 msgid "Follow"
 msgstr ""
 
@@ -1593,8 +1593,7 @@ msgid ""
 msgstr ""
 
 #: templates/profile/base_login_flow.html:26
-#: templates/profile/login_flow_initial.html:23
-#: templates/profile/login_flow_members.html:23
+#: templates/profile/login_flow_content.html:24
 msgid "Proceed"
 msgstr ""
 
@@ -1627,14 +1626,10 @@ msgid "Followed by"
 msgstr ""
 
 #: templates/profile/base_profile.html:54
-msgid "See all women's products"
+msgid "Go to shop"
 msgstr ""
 
-#: templates/profile/base_profile.html:55
-msgid "See all men's products"
-msgstr ""
-
-#: templates/profile/base_profile.html:67
+#: templates/profile/base_profile.html:66
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr ""
@@ -1767,16 +1762,16 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
-#: templates/profile/fragments/follow_profile.html:10
+#: templates/profile/fragments/follow_profile.html:8
 msgid "Following you"
 msgstr ""
 
-#: templates/profile/fragments/follow_profile.html:14
+#: templates/profile/fragments/follow_profile.html:12
 #, python-format
 msgid "Member since %(date_joined)s"
 msgstr ""
 
-#: templates/profile/fragments/follow_profile.html:17
+#: templates/profile/fragments/follow_profile.html:14
 #, python-format
 msgid "Followed by %(follower_count)s"
 msgstr ""
