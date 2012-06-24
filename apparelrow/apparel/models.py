@@ -528,13 +528,17 @@ class Look(models.Model):
         """
         Calculate looks gender based on displayed products.
 
-        Implementation uses set difference which result in a set with either
-        Man, Woman or Man & Woman.
+        If ratio of either male or female products is larger than 0.5 select
+        gender, else it is unisex.
         """
-        unique_genders = set(self.display_components.values_list('product__gender', flat=True))
-        unique_genders = list(unique_genders - set(['U', None]))
-        if len(unique_genders) == 1:
-            return unique_genders[0]
+        genders = list(self.display_components.values_list('product__gender', flat=True))
+        genders_len = float(len(genders))
+
+        if genders_len:
+            if ((genders.count('M')) / genders_len) > 0.5:
+                return 'M'
+            elif ((genders.count('W')) / genders_len) > 0.5:
+                return 'W'
 
         return 'U'
     
