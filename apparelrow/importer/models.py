@@ -5,8 +5,8 @@ from django.conf import settings
 from django.db import models, connection, transaction
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
+from django.db.models.loading import get_model
 
-from apparel import models as apparel
 from importer.framework.provider import load_provider
 
 logger = logging.getLogger('apparel.importer.models')
@@ -14,7 +14,7 @@ logger = logging.getLogger('apparel.importer.models')
 AVAILABLE_UTILS = [(v, v,) for v in settings.APPAREL_DECOMPRESS_UTILS.keys()]
 
 class VendorFeed(models.Model):
-    vendor   = models.ForeignKey(apparel.Vendor)
+    vendor   = models.ForeignKey('apparel.Vendor')
     name     = models.CharField(max_length=15, unique=True, help_text=_('a-z, 0-9 and _'))
     url      = models.CharField(max_length=2550)
     username = models.CharField(max_length=50, null=True, blank=True)
@@ -143,7 +143,6 @@ class FXRate(models.Model):
         """
         Update the price of all products whose original currency matches this
         """
-        
         # NOTE: We should really execute the statement below, however MySQLs 
         # handling of the Decimal type is flawed. This issue is described here 
         # http://bugs.mysql.com/bug.php?id=24541 and seems to be fixed in 
@@ -168,7 +167,7 @@ class FXRate(models.Model):
             WHERE
               original_currency = '%(currency)s'
         """ % {
-            'table': apparel.VendorProduct._meta.db_table,
+            'table': get_model('apparel', 'VendorProduct')._meta.db_table,
             'currency': self.currency,
             'base_currency': self.base_currency,
             'price': 1 / self.rate

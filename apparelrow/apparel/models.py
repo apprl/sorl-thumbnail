@@ -179,7 +179,7 @@ class Product(models.Model):
     published_objects = ProductManager(availability=False)
 
     def score(self):
-        return ProductLike.objects.filter(product=self, active=True).count()
+        return self.likes.filter(active=True).count()
 
     @property
     def comment_count(self):
@@ -539,7 +539,7 @@ class Look(models.Model):
         return 'U'
     
     def score(self):
-        return LookLike.objects.filter(look=self, active=True).count()
+        return self.likes.filter(active=True).count()
 
     @property
     def comment_count(self):
@@ -548,24 +548,14 @@ class Look(models.Model):
 
         return self._comment_count
 
-    def total_price(self, component=None):
+    @property
+    def total_price(self):
         """
         Returns the total price of the given component, or default if none specified
         To get the price of all components, specify A
         """
-        components = None
-        
-        if component == 'C':
-            components = self.collage_components
-        elif components == 'P':
-            components = self.photo_components
-        elif components == 'A':
-            components = self.components
-        else:
-            components = self.display_components
-
-        total = decimal.Decimal('0.00')
-        for component in components:
+        total = decimal.Decimal('0.0')
+        for component in self.display_components:
             if component.product.default_vendor:
                 if component.product.default_vendor.discount_price:
                     total += component.product.default_vendor.discount_price
@@ -574,15 +564,14 @@ class Look(models.Model):
 
         return total
         #return components.annotate(price=Min('product__vendorproduct__price')).aggregate(Sum('price'))['price__sum']
-    
-    
+
     @property
     def photo_components(self):
         """
         All components in the photo view
         """
         return self.components.filter(component_of='P')
-    
+
     @property
     def collage_components(self):
         """
@@ -830,3 +819,4 @@ import django.contrib.comments.signals
 django.contrib.comments.signals.comment_was_posted.connect(cache.invalidate_model_handler)
 
 import apparel.activity
+import apparel.search

@@ -1,6 +1,6 @@
 import logging
 
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save, pre_delete, post_delete
 from django.contrib.comments import signals as comments_signals
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
@@ -82,3 +82,43 @@ def pre_delete_follow_handler(sender, **kwargs):
 
 post_save.connect(post_save_follow_handler, sender=Follow)
 pre_delete.connect(pre_delete_follow_handler, sender=Follow)
+
+
+#
+# Delete follows and actions when a user is deleted.
+#
+
+def delete_user_followings(signal, instance, **kwargs):
+    """
+    This signal attempts to delete any followings which is related to Follow
+    through a generic relation.
+    """
+    Follow.objects.filter(
+        object_id=instance.pk,
+        content_type=ContentType.objects.get_for_model(instance)
+        ).delete()
+    Follow.objects.filter(user=instance).delete()
+
+# XXX: If actions get missing, look here...
+def delete_object_activities(sender, instance, **kwargs):
+    """
+    This signal attempts to delete any activity which is related to Action
+    through a generic relation. This should keep the Action table sane.
+    """
+    Action.objects.filter(
+        action_object_object_id=instance.pk,
+        action_object_content_type=ContentType.objects.get_for_model(instance)
+        ).delete()
+    Action.objects.filter(
+        actor_object_id=instance.pk,
+        actor_content_type=ContentType.objects.get_for_model(instance)
+        ).delete()
+    Action.objects.filter(
+        target_object_id=instance.pk,
+        target_content_type=ContentType.objects.get_for_model(instance)
+        ).delete()
+
+
+# FIXME: Move these to actstream?
+post_delete.connect(delete_user_followings, sender=User)
+post_delete.connect(delete_object_activities, sender=User)

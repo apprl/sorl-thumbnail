@@ -16,8 +16,8 @@ from django.db import transaction
 from django.db import IntegrityError
 from django.db.models import Count
 from django.conf import settings
+from django.db.models.loading import get_model
 
-from apparel.models import *
 from importer.framework.fetcher import fetch
 
 try:
@@ -26,10 +26,10 @@ except ImportError:
     class DBError(Exception):
         pass
 
-
 logger = logging.getLogger('apparel.importer.api')
 image_logger = logging.getLogger('apparel.importer.api.image')
 
+GENDERS = ['M', 'W', 'U']
 
 """
 Provides an API for importing and setting up product data for the Apparelrow
@@ -147,13 +147,13 @@ class API(object):
         }
         
         try:
-            self.product = Product.objects.get(
+            self.product = get_model('apparel', 'Product').objects.get(
                 static_brand=self.dataset['product']['manufacturer'],
                 sku__exact=self.dataset['product']['product-id']
             )
             logger.debug('Found existing product: [id %s] %s' % (self.product.id, self.product))
         except ObjectDoesNotExist:
-            self.product = Product.objects.create(
+            self.product = get_model('apparel', 'Product').objects.create(
                 sku=self.dataset['product']['product-id'],
                 **fields
             )
@@ -178,12 +178,12 @@ class API(object):
         """
         Private method that adds, update and maintain vendor product options
         """
-        vp = VendorProduct.objects.get( product=self.product, vendor=self.vendor )
-        types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in OptionType.objects.all()])
+        vp = get_model('apparel', 'VendorProduct').objects.get( product=self.product, vendor=self.vendor )
+        types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in get_model('apparel', 'OptionType').objects.all()])
 
         if 'pattern' in types.keys():
             for pattern in self.dataset['product']['patterns']:
-                option, created = Option.objects.get_or_create(option_type=types['pattern'], value=pattern)
+                option, created = get_model('apparel', 'Option').objects.get_or_create(option_type=types['pattern'], value=pattern)
 
                 if created:
                     logger.debug('Created option %s' % option)
@@ -197,7 +197,7 @@ class API(object):
             
             # Create a list of options used for each variation
             for key in filter(lambda k: k in types.keys(), variation.keys()):
-                option, created = Option.objects.get_or_create(option_type=types[key], value=variation[key])
+                option, created = get_model('apparel', 'Option').objects.get_or_create(option_type=types[key], value=variation[key])
                 
                 if created:
                     logger.debug('Created option %s' % option)
@@ -226,7 +226,7 @@ class API(object):
             
             else:
                 # Create variation
-                db_variation = VendorProductVariation.objects.create( vendor_product=vp )
+                db_variation = get_model('apparel', 'VendorProductVariation').objects.create( vendor_product=vp )
                 # FIXME: Pass in when creating variant?
                 for o in options:
                     db_variation.options.add(o)
@@ -246,7 +246,7 @@ class API(object):
     @property
     def vendorproduct(self):
         if not self._vendor_product:
-            self._vendor_product, created = VendorProduct.objects.get_or_create( 
+            self._vendor_product, created = get_model('apparel', 'VendorProduct').objects.get_or_create(
                 product=self.product, 
                 vendor=self.vendor,
             )
@@ -357,9 +357,7 @@ class API(object):
 
         # Check that the gender field is valid (it may be None)
         if self.dataset['product']['gender'] is not None:
-            try:
-                dict(PRODUCT_GENDERS)[self.dataset['product']['gender']]
-            except KeyError, key:
+            if self.dataset['product']['gender'] not in GENDERS:
                 raise IncompleteDataSet('gender', '%s is not a recognised gender' % key)
 
         # Make sure the image-url is a list
@@ -403,7 +401,7 @@ class API(object):
             if isinstance(category_names, list):
                 category_names = ' '.join(category_names)
 
-            self._vendor_category, created = VendorCategory.objects.get_or_create(vendor=self.vendor, name=category_names)
+            self._vendor_category, created = get_model('apparel', 'VendorCategory').objects.get_or_create(vendor=self.vendor, name=category_names)
 
             if created:
                 self._import_log.messages.create(
@@ -429,7 +427,7 @@ class API(object):
         """
         if not self._vendor_brand:
             name = self.dataset['product']['manufacturer']
-            self._vendor_brand, created = VendorBrand.objects.get_or_create(vendor=self.vendor, name=name)
+            self._vendor_brand, created = get_model('apparel', 'VendorBrand').objects.get_or_create(vendor=self.vendor, name=name)
             if created:
                 self._import_log.messages.create(
                     status='attention',
@@ -477,7 +475,7 @@ class API(object):
             except KeyError, key:
                 raise IncompleteDataSet(key)
             
-            self._vendor, created = Vendor.objects.get_or_create(name=name)
+            self._vendor, created = get_model('apparel', 'Vendor').objects.get_or_create(name=name)
             
             if created: 
                 logger.debug('Created new vendor [id: %s] %s' % (self._vendor.id, self._vendor))

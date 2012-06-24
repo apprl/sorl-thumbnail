@@ -10,8 +10,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import transaction
 from django.db.models import Q
-
-from apparel.models import Product, VendorProduct
+from django.db.models.loading import get_model
 
 from importer.framework import fetcher, parser
 from importer.api import API, SkipProduct, ImporterError, IncompleteDataSet
@@ -54,7 +53,7 @@ class Provider(object):
         self.mapper    = None
         self.count     = 0
 
-        self.product_ids = set(Product.objects.filter(vendors=self.feed.vendor_id, availability=True).values_list('id', flat=True))
+        self.product_ids = set(get_model('apparel', 'Product').objects.filter(vendors=self.feed.vendor_id, availability=True).values_list('id', flat=True))
 
     def __del__(self, *args, **kwargs):
         if self.file and not self.file.closed:
@@ -114,7 +113,7 @@ class Provider(object):
         the manufacturer name
         """
         for product_id in self.product_ids:
-            product = Product.objects.get(pk=product_id)
+            product = get_model('apparel', 'Product').objects.get(pk=product_id)
             product.availability=False
             product.vendorproduct.update(availability=0)
             product.save()
@@ -184,7 +183,7 @@ class Provider(object):
 
             # Try to set availability to zero if product already exists
             try:
-                product = Product.objects.get(static_brand__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product = get_model('apparel', 'Product').objects.get(static_brand__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
                 product.availability=False
                 product.vendorproduct.update(availability=0)
                 product.save()
@@ -202,7 +201,7 @@ class Provider(object):
 
             # Try to set availability to zero if product already exists
             try:
-                product = Product.objects.get(static_brand__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product = get_model('apparel', 'Product').objects.get(static_brand__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
                 product.availability=False
                 product.vendorproduct.update(availability=0)
                 product.save()
@@ -221,7 +220,7 @@ class Provider(object):
 
             # Try to set availability to zero if product already exists
             try:
-                product = Product.objects.get(static_brand__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
+                product = get_model('apparel', 'Product').objects.get(static_brand__exact=record['product']['manufacturer'], sku__exact=record['product']['product-id'])
                 product.availability=False
                 product.vendorproduct.update(availability=0)
                 product.save()

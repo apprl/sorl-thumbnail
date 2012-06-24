@@ -9,7 +9,7 @@ from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.translation import get_language, activate
-from actstream.models import Follow
+from actstream.actions import is_following
 from celery.task import task
 
 from profile.models import NotificationCache
@@ -88,8 +88,6 @@ def process_comment_look_created(recipient, sender, comment, **kwargs):
     if is_duplicate('comment_look_created', recipient, sender, comment):
         return 'duplicate'
 
-    sender_content_type = ContentType.objects.get_for_model(sender)
-
     if sender == recipient:
         return 'same user'
 
@@ -97,7 +95,7 @@ def process_comment_look_created(recipient, sender, comment, **kwargs):
     if recipient.get_profile().comment_look_created == 'A':
         notify_user = recipient
     elif recipient.get_profile().comment_look_created == 'F':
-        if Follow.objects.filter(user=recipient, content_type=sender_content_type, object_id=sender.pk):
+        if is_following(user, sender):
             notify_user = recipient
 
     if notify_user and sender:
@@ -130,7 +128,6 @@ def process_comment_product_comment(recipient, sender, comment, **kwargs):
     if is_duplicate('comment_product_comment', recipient, sender, comment):
         return 'duplicate'
 
-    sender_content_type = ContentType.objects.get_for_model(sender)
     content_object = comment.content_object
     content_object_content_type = ContentType.objects.get_for_model(content_object)
 
@@ -142,7 +139,7 @@ def process_comment_product_comment(recipient, sender, comment, **kwargs):
             if notification_setting == 'A':
                 notify_users.add(comment_obj.user)
             elif notification_setting == 'F':
-                if Follow.objects.filter(user=comment_obj.user, content_type=sender_content_type, object_id=sender.pk):
+                if is_following(comment_obj.user, sender):
                     notify_users.add(comment_obj.user)
 
     title = u'%s %s' % (content_object.manufacturer, content_object.product_name)
@@ -176,7 +173,6 @@ def process_comment_look_comment(recipient, sender, comment, **kwargs):
     if is_duplicate('comment_look_comment', recipient, sender, comment):
         return 'duplicate'
 
-    sender_content_type = ContentType.objects.get_for_model(sender)
     content_object = comment.content_object
     content_object_content_type = ContentType.objects.get_for_model(content_object)
 
@@ -188,7 +184,7 @@ def process_comment_look_comment(recipient, sender, comment, **kwargs):
             if notification_setting == 'A':
                 notify_users.add(comment_obj.user)
             elif notification_setting == 'F':
-                if Follow.objects.filter(user=comment_obj.user, content_type=sender_content_type, object_id=sender.pk):
+                if is_following(comment_obj.user, sender):
                     notify_users.add(comment_obj.user)
 
     title = content_object.title
@@ -222,7 +218,6 @@ def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
     if is_duplicate('comment_product_wardrobe', recipient, sender, comment):
         return 'duplicate'
 
-    sender_content_type = ContentType.objects.get_for_model(sender)
     content_object = comment.content_object
 
     notify_users = set()
@@ -231,7 +226,7 @@ def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
             if product_like.user.get_profile().comment_product_wardrobe == 'A':
                 notify_users.add(product_like.user)
             elif product_like.user.get_profile().comment_product_wardrobe == 'F':
-                if Follow.objects.filter(user=product_like.user, content_type=sender_content_type, object_id=sender.pk):
+                if is_following(product_like.user, sender):
                     notify_users.add(product_like.user)
 
     if notify_users and sender:
@@ -266,13 +261,11 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
     if sender == recipient:
         return 'sender is recipient, no notification'
 
-    sender_content_type = ContentType.objects.get_for_model(sender)
-
     notify_user = None
     if recipient.get_profile().comment_look_created == 'A':
         notify_user = recipient
     elif recipient.get_profile().comment_look_created == 'F':
-        if Follow.objects.filter(user=recipient, content_type=sender_content_type, object_id=sender.pk):
+        if is_following(recipient, sender):
             notify_user = recipient
 
     if notify_user and sender:
@@ -304,13 +297,12 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         return 'duplicate'
 
     recipient_content_type = ContentType.objects.get_for_model(recipient)
-    sender_content_type = ContentType.objects.get_for_model(sender)
 
     notify_user = None
     template_name = 'follow_user'
     if recipient.get_profile().follow_user == 'A':
         notify_user = recipient
-        if Follow.objects.filter(user=recipient, content_type=sender_content_type, object_id=sender.pk):
+        if is_following(recipient, sender):
             template_name = 'follow_user_following'
 
     if notify_user and sender:

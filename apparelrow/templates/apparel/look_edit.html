@@ -133,7 +133,7 @@ var look = {
         
         jQuery.post('{% url apparel.views.save_look_component %}', data,
             function(response, status, request) {
-                var component = response.data.look_component;
+                //var component = response.data.look_component;
                 
                 if(!response.success) {
                     console.error('Bad AJAX request', response, status, request);

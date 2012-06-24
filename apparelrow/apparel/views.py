@@ -534,7 +534,7 @@ def save_look_component(request):
     template = 'look_collage_product_image' if form.instance.component_of == 'C' else 'look_photo_product'
     return (
         {
-            'look_component': form.instance,
+            #'look_component': form.instance,
             'added': added,
             'html': loader.render_to_string('apparel/fragments/%s.html' % template, {'component': form.instance}, context_instance=RequestContext(request)),
             'tooltip_html': loader.render_to_string('apparel/fragments/look_product_tooltip.html', {'product': form.instance.product}, context_instance=RequestContext(request)),

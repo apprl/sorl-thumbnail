@@ -19,7 +19,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
-from actstream.models import Follow, Action
+from actstream.models import Action
 from sorl.thumbnail import get_thumbnail
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException

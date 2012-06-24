@@ -13,7 +13,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
-from actstream.models import Follow, Action, user_stream
+from actstream import models as actstream_models
 from sorl.thumbnail import get_thumbnail
 
 from profile.tasks import send_email_confirm_task
@@ -151,7 +151,7 @@ class ApparelProfile(models.Model):
         return None
 
     def get_friend_updates(self):
-        return user_stream(self.user).filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following', 'added_products'])
+        return actstream_models.user_stream(self.user).filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following', 'added_products'])
 
     @property
     def get_updates_last_visit(self):
@@ -200,44 +200,6 @@ def send_welcome_mail(sender, user, **kwargs):
         body = render_to_string('profile/email_welcome.html')
         send_email_confirm_task.delay(subject, body, user.email)
 
-#
-# Delete follows and actions when a user is deleted.
-#
-
-def delete_user_followings(signal, instance, **kwargs):
-    """
-    This signal attempts to delete any followings which is related to Follow
-    through a generic relation.
-    """
-    Follow.objects.filter(
-        object_id=instance.pk,
-        content_type=ContentType.objects.get_for_model(instance)
-        ).delete()
-    Follow.objects.filter(user=instance).delete()
-
-# XXX: If actions get missing, look here...
-def delete_object_activities(sender, instance, **kwargs):
-    """
-    This signal attempts to delete any activity which is related to Action
-    through a generic relation. This should keep the Action table sane.
-    """
-    Action.objects.filter(
-        action_object_object_id=instance.pk,
-        action_object_content_type=ContentType.objects.get_for_model(instance)
-        ).delete()
-    Action.objects.filter(
-        actor_object_id=instance.pk,
-        actor_content_type=ContentType.objects.get_for_model(instance)
-        ).delete()
-    Action.objects.filter(
-        target_object_id=instance.pk,
-        target_content_type=ContentType.objects.get_for_model(instance)
-        ).delete()
-
-
-# FIXME: Move these to actstream?
-post_delete.connect(delete_user_followings, sender=User)
-post_delete.connect(delete_object_activities, sender=User)
 
 #def delete_user_comments(signal, instance, **kwargs):
     #"""

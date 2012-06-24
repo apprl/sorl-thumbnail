@@ -10,6 +10,7 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.urlresolvers import reverse
+from django.contrib.contenttypes.models import ContentType
 
 from apparel.models import ProductLike, LookLike
 
@@ -375,3 +376,32 @@ def gender_url(gender, named_url):
         return reverse('%s-women' % (named_url,))
 
     return reverse(named_url)
+
+class DisplayActivityFollowUrl(Node):
+    def __init__(self, actor, follow):
+        self.actor = Variable(actor)
+        self.follow = follow
+
+    def render(self, context):
+        actor_instance = self.actor.resolve(context)
+        content_type = ContentType.objects.get_for_model(actor_instance).pk
+        if self.follow:
+            return reverse('actstream_follow', kwargs={'content_type_id': content_type, 'object_id': actor_instance.pk})
+
+        return reverse('actstream_unfollow', kwargs={'content_type_id': content_type, 'object_id': actor_instance.pk})
+
+@register.tag
+def unfollow_tag(parser, token):
+    bits = token.split_contents()
+    if len(bits) != 2:
+        raise TemplateSyntaxError, "Accepted format {% unfollow_tag [instance] %}"
+    else:
+        return DisplayActivityFollowUrl(bits[1], False)
+
+@register.tag
+def follow_tag(parser, token):
+    bits = token.split_contents()
+    if len(bits) != 2:
+        raise TemplateSyntaxError, "Accepted format {% follow_tag [instance] %}"
+    else:
+        return DisplayActivityFollowUrl(bits[1], True)

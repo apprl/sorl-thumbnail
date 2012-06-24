@@ -1,20 +1,17 @@
-{% load i18n %}
-{% load follower_tags %}
-{% load humanize %}
+{% load i18n activity_tags humanize %}
 
 <a href="{{ profile.get_absolute_url }}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/></a>
 <div class="profile-info">
     <a href="{{ profile.get_absolute_url }}"><h3>{{ profile.display_name }}</h3></a>
     {% include 'apparel/fragments/follow.html' %}
     {% if user.is_authenticated %}
-        {% if_is_following profile.user request.user %}<span class="user_is_following">{% trans "Following you" %}</span>{% endif %}
+        {% if profile.user|is_following:request.user %}<span class="user_is_following">{% trans "Following you" %}</span>{% endif %}
     {% endif %}
     {% if profile.about %}<p class="about">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
     <p>
       <span class="member_since">{% blocktrans with profile.user.date_joined|naturalday:"Y-m-d" as date_joined %}Member since {{ date_joined }}{% endblocktrans %}</span>
       <span class="follower_count">
-          {% get_follower_count for profile.user %}
-          {% blocktrans %}Followed by {{ follower_count }}{% endblocktrans %}
+          {% blocktrans with profile.followers_count as follower_count %}Followed by {{ follower_count }}{% endblocktrans %}
       </span>
       <span class="following_count"></span>
     </p>

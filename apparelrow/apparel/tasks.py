@@ -1,11 +1,13 @@
 import logging
 import datetime
 
+from django.db.models.loading import get_model
+from django.core.management import call_command
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
-from celery.task import task, periodic_task
+from celery.task import task, periodic_task, PeriodicTask
 from celery.schedules import crontab
 from actstream.models import Action
 
@@ -68,3 +70,21 @@ def brand_updates():
 
         brand.last_update = datetime.datetime.now()
         brand.save()
+
+class ProcessPopularityTask(PeriodicTask):
+    run_every = crontab(hour=4, minute=15)
+    ignore_result = True
+
+    def run(self, **kwargs):
+        logger = self.get_logger(**kwargs)
+        logger.info('update popularity for products')
+        call_command('popularity')
+
+class ProcessLookPopularity(PeriodicTask):
+    run_every = crontab(minute='*/30')
+    ignore_result = True
+
+    def run(self, **kwargs):
+        logger = self.get_logger(**kwargs)
+        logger.info('update popularity for looks')
+        call_command('look_popularity')

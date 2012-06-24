@@ -1,10 +1,9 @@
-{% load i18n %}
-{% load follower_tags %}
+{% load i18n activity_tags apparel_extras %}
 
 {% if user.is_authenticated and user != profile.user and profile.user %}
-<span class="{% if_is_following request.user profile.user %}following{% else %}not_following{% endif %}">
-    <a href="{% url_to_unfollow profile.user %}" class="unfollow" data-original-text="{% trans 'Following' %}" data-hover-text="{% trans 'Stop following' %}"><span>{% trans "Following" %}</span></a>
-    <a href="{% url_to_follow profile.user %}" class="follow"><span>{% trans "Follow" %}</span></a>
+<span class="{% if request.user|is_following:profile.user %}following{% else %}not_following{% endif %}">
+    <a href="{% unfollow_tag profile.user %}" class="unfollow" data-original-text="{% trans 'Following' %}" data-hover-text="{% trans 'Stop following' %}"><span>{% trans "Following" %}</span></a>
+    <a href="{% follow_tag profile.user %}" class="follow"><span>{% trans "Follow" %}</span></a>
 </span>
 {% else %}
     {% if user != profile.user %}

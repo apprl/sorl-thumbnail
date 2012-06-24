@@ -1,10 +1,10 @@
 import re, datetime, sys
 from optparse import make_option
 
+from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from apparel.models import Product, ProductLike, LookComponent, VendorCategory
 from importer.models import VendorFeed, ImportLog
 
 class Command(BaseCommand):
@@ -81,13 +81,13 @@ class Command(BaseCommand):
             raise CommandError('Feed named %s does not exist' % name)
 
         vendor = feed.vendor
-        VendorCategory.objects.filter(vendor=vendor).delete()
+        get_model('apparel', 'VendorCategory').objects.filter(vendor=vendor).delete()
 
-        likes_product_ids = set(ProductLike.objects.filter(active=True).values_list('product__id', flat=True))
-        look_product_ids = set(LookComponent.objects.values_list('product__id', flat=True))
+        likes_product_ids = set(get_model('apparel', 'ProductLike').objects.filter(active=True).values_list('product__id', flat=True))
+        look_product_ids = set(get_model('apparel', 'LookComponent').objects.values_list('product__id', flat=True))
         product_ids = likes_product_ids.union(look_product_ids)
 
-        for product in Product.objects.filter(vendorproduct__vendor=vendor):
+        for product in get_model('apparel', 'Product').objects.filter(vendorproduct__vendor=vendor):
             if product.id in product_ids:
                 print 'Product is in use: %s' % (product,)
                 for variation in product.vendorproduct.get(vendor=vendor).variations.all():

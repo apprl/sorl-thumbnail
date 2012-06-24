@@ -12,13 +12,14 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from actstream.models import actor_stream, Follow
+
 
 from apparel.decorators import get_current_user
-from apparel.models import Look, Product
+from apparel.models import Product
 # FIXME: Move get_facebook_friends and get_most_followed_users to a util module
 from apparel.views import get_facebook_friends, get_most_followed_users
 from apparel.utils import get_pagination_page
-from actstream.models import user_stream, actor_stream, Follow
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm
 from profile.models import EmailChange, ApparelProfile
 from profile.tasks import send_email_confirm_task

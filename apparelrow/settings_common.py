@@ -151,7 +151,6 @@ INSTALLED_APPS = (
     'sorl.thumbnail',       # External: Thumbnail module
     'django_static',        # External: Generates static files
     'djcelery',
-    'actstream',            # External: Actions and follow
     'tagging',
     'pagination',
     'ajaxcomments',
@@ -171,7 +170,10 @@ INSTALLED_APPS = (
     'importer',             # Internal: Product importer module
     'apparel_comments',
     'statistics',           # Internal: Click statistics module
-    'apparelrow',
+
+    'actstream',            # External: Actions and follows
+                            # This app must be included last because it depends
+                            # on a populated app cache for get_model
 )
 
 COMMENTS_APP = 'apparel_comments'
@@ -218,7 +220,7 @@ LOGIN_REDIRECT_URL = "/"
 AUTH_PROFILE_MODULE = 'profile.ApparelProfile'
 
 # django-modeltranslation
-TRANSLATION_REGISTRY = 'translation'
+TRANSLATION_REGISTRY = 'apparel.translation'
 
 # django-tinymce
 TINYMCE_DEFAULT_CONFIG = {
@@ -251,6 +253,10 @@ CACHE_TEMPLATE_TIMEOUT = 60 * 15
 APPAREL_DOMAIN = '.apparelrow.com' # FIXME: We should probably get this from the Sites framework
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-21990268-1'
 GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
+
+# ACTSTREAM
+ACTSTREAM_MANAGER = 'actstream.managers.ActionManager'
+ACTSTREAM_ACTION_MODELS = ['auth.User', 'apparel.Look', 'apparel.Product', 'comments.comment']
 
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'
@@ -305,9 +311,8 @@ CELERY_QUEUES = {
     'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
 }
 CELERY_ROUTES = ({
-    'apparelrow.tasks.ProcessPopularityTask': {'queue': 'importer'},
-    'apparelrow.tasks.ProcessLookPopularity': {'queue': 'importer'},
-    'apparelrow.tasks.search_index_update_task': {'queue': 'standard'},
+    'apparel.tasks.ProcessPopularityTask': {'queue': 'importer'},
+    'apparel.tasks.ProcessLookPopularity': {'queue': 'importer'},
     'beta.tasks.send_email_task': {'queue': 'standard'},
     'profile.notifications.process_comment_look_comment': {'queue': 'standard'},
     'profile.notifications.process_comment_look_created': {'queue': 'standard'},
