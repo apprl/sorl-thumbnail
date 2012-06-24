@@ -637,10 +637,10 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
     if not gender:
         gender = get_gender_from_cookie(request)
 
+    queryset = ApparelProfile.objects.select_related('user').filter(user__is_active=True, is_brand=False)
+
     if view_gender and set(view_gender).issubset(set(['W', 'M'])):
-        queryset = ApparelProfile.objects.select_related('user').filter(user__is_active=True, gender__in=view_gender)
-    else:
-        queryset = ApparelProfile.objects.select_related('user').filter(user__is_active=True)
+        queryset = queryset.filter(gender__in=view_gender)
 
     if popular:
         queryset = queryset.order_by('-followers_count', 'user__first_name', 'user__last_name', 'user__username')
@@ -651,7 +651,7 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
             10, request.GET.get('page', 1), 1, 2)
 
     # Latest active members
-    latest_members = ApparelProfile.objects.select_related('user').filter(user__is_active=True).order_by('-user__date_joined')[:13]
+    latest_members = ApparelProfile.objects.select_related('user').filter(user__is_active=True, is_brand=False).order_by('-user__date_joined')[:13]
 
     if request.is_ajax():
         response = render_to_response('apparel/fragments/user_list.html', {
@@ -929,7 +929,10 @@ def get_most_followed_users(limit=2):
     # FIXME: This is inefficient because it creates a query for everyone object_id, better solution?
     apparel_profiles = []
     for object_id in Follow.objects.values_list('object_id', flat=True).annotate(count=Count('id')).order_by('-count')[:limit]:
-        apparel_profiles.append(ApparelProfile.objects.select_related('user').get(user__id=object_id))
+        try:
+            apparel_profiles.append(ApparelProfile.objects.select_related('user').get(is_brand=False, user__id=object_id))
+        except ApparelProfile.DoesNotExists:
+            pass
     return apparel_profiles
 
 def get_top_looks_in_network(user, limit=None):
