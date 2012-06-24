@@ -50,7 +50,7 @@ class ApparelProfile(models.Model):
 
     # brand profile
     is_brand = models.BooleanField(default=False)
-    brand = models.OneToOneField('apparel.Brand', default=None, null=True, on_delete=models.SET_NULL, related_name='profile')
+    brand = models.OneToOneField('apparel.Brand', default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='profile')
 
     # profile login flow
     login_flow = models.CharField(_('Login flow'), max_length=20, choices=LOGIN_FLOW, null=False, blank=False, default='initial')
