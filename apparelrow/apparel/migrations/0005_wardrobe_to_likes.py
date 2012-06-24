@@ -5,7 +5,7 @@ from south.v2 import DataMigration
 from django.db import models
 from django.db.models.signals import post_save
 
-from apparelrow.tasks import search_index_update_task
+#from apparelrow.tasks import search_index_update_task
 from actstream.models import Action
 
 class Migration(DataMigration):
@@ -20,7 +20,7 @@ class Migration(DataMigration):
                     product_like.active = True
                     product_like.save()
 
-                    search_index_update_task(wp.product._meta.app_label, wp.product._meta.module_name, wp.product._get_pk_val())
+                    #search_index_update_task(wp.product._meta.app_label, wp.product._meta.module_name, wp.product._get_pk_val())
 
                     product_content_type = orm['contenttypes.ContentType'].objects.get(model='product')
                     user_content_type = orm['contenttypes.ContentType'].objects.get(model='user')
