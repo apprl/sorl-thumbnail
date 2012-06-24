@@ -20,7 +20,7 @@ from apparel.views import get_facebook_friends, get_most_followed_users
 from apparel.utils import get_pagination_page
 from actstream.models import user_stream, actor_stream, Follow
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm
-from profile.models import EmailChange
+from profile.models import EmailChange, ApparelProfile
 from profile.tasks import send_email_confirm_task
 
 PROFILE_PAGE_SIZE = 30
@@ -285,7 +285,7 @@ def settings_email(request):
 @login_required
 def login_flow_initial(request):
     """
-    Login flow step 1.
+    Login flow step 1, friends.
     """
     profile = request.user.get_profile()
     if profile.login_flow == 'complete':
@@ -296,15 +296,16 @@ def login_flow_initial(request):
     profile.save()
 
     context = {
+        'login_flow_step': 'step-initial',
         'next_url': reverse('profile.views.login_flow_members'),
         'profiles': get_facebook_friends(request)
     }
-    return render(request, 'profile/login_flow_initial.html', context)
+    return render(request, 'profile/login_flow_content.html', context)
 
 @login_required
 def login_flow_members(request):
     """
-    Login flow step 2.
+    Login flow step 2, members.
     """
     profile = request.user.get_profile()
     if profile.login_flow == 'complete':
@@ -315,17 +316,31 @@ def login_flow_members(request):
     profile.save()
 
     context = {
-        'next_url': reverse('profile.views.login_flow_complete'),
-        'profiles': get_most_followed_users(limit=21)
+        'login_flow_step': 'step-members',
+        'next_url': reverse('profile.views.login_flow_brands'),
+        'profiles': ApparelProfile.objects.filter(is_brand=False).order_by('-followers_count')[:21]
     }
-    return render(request, 'profile/login_flow_members.html', context)
+    return render(request, 'profile/login_flow_content.html', context)
 
 @login_required
 def login_flow_brands(request):
     """
-    Login flow step 3. Not used yet.
+    Login flow step 3, brands.
     """
-    return HttpResponseRedirect(reverse('apparel.views.home'))
+    profile = request.user.get_profile()
+    if profile.login_flow == 'complete':
+        return HttpResponseRedirect(reverse('shop'))
+
+    profile.first_visit = False
+    profile.login_flow = 'brands'
+    profile.save()
+
+    context = {
+        'login_flow_step': 'step-brands',
+        'next_url': reverse('profile.views.login_flow_complete'),
+        'profiles': ApparelProfile.objects.filter(is_brand=True).order_by('-followers_count')[:21]
+    }
+    return render(request, 'profile/login_flow_content.html', context)
 
 @login_required
 def login_flow_complete(request):

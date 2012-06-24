@@ -931,7 +931,7 @@ def get_most_followed_users(limit=2):
     for object_id in Follow.objects.values_list('object_id', flat=True).annotate(count=Count('id')).order_by('-count')[:limit]:
         try:
             apparel_profiles.append(ApparelProfile.objects.select_related('user').get(is_brand=False, user__id=object_id))
-        except ApparelProfile.DoesNotExists:
+        except ApparelProfile.DoesNotExist:
             pass
     return apparel_profiles
 

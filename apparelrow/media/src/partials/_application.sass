@@ -2471,44 +2471,38 @@ body.settings
   .sidebar-profile-name
     line-height: normal
     margin: 15px 0 15px 0
-  #ett
-    width: 100%
-    float: left
-    margin: 20px 0
-  #tva
-    border-top: 3px solid #333
-    width: 100%
-    float: left
-    padding: 20px 0
   #steps
     width: 697px
     float: left
     height: auto
+    .steps-top, .steps-bottom
+      width: 100%
+      float: left
+      padding: 20px 0
+    .steps-bottom
+      border-top: 3px solid #333333
     .fbflowbtn
       padding: 8px 0 0 45px
-      margin: 0 0 0 100px
+      margin: 0 0 0 30px
       height: 27px
       float: left
       clear: right
       font-size: 1.3em
-    #abovefollow
+    #step-initial
       background: image_url(unquote("face1.png")) no-repeat
-    #abovefollowothers
+    #step-members
       background: image_url(unquote("face2.png")) no-repeat
-  .inimembers
-    #abovefollowothers
-      opacity: 0.3
-  .popmembers
-    #abovefollow
-      opacity: 0.3
-  #followmyfriends
-    background: image_url(unquote("flwbtnfriends.png")) no-repeat
-    padding: 8px 0 0 45px
-    margin: 0 0 20px 0
-    height: 27px
-    clear: both
-    display: block
-    font-size: 1.25em
+    #step-brands
+      background: image_url(unquote("face2.png")) no-repeat
+    &.step-initial
+      #step-members, #step-brands
+        @include opacity(0.3)
+    &.step-members
+      #step-initial, #step-brands
+        @include opacity(0.3)
+    &.step-brands
+      #step-initial, #step-members
+        @include opacity(0.3)
   & .content-footer
     background: image_url(unquote("knappbg.jpg")) repeat scroll center bottom #fff
     float: left
