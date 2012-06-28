@@ -84,7 +84,7 @@ server.modules      += ("mod_setenv")
 server.modules      += ("mod_redirect")
 
 
-$HTTP["host"] =~ "^.*apparelrow\.se$" {
+$HTTP["host"] =~ "^.*(?:apparelrow\.se|apprl\.com|apprl\.se)$" {
     url.redirect = ( "^/(.*)" => "http://apparelrow.com/$1" )
 }
 
