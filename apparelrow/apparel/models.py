@@ -188,7 +188,7 @@ models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Catego
 #
 
 class Product(models.Model):
-    manufacturer = models.ForeignKey(Brand, blank=True, null=True, on_delete=models.SET_NULL)
+    manufacturer = models.ForeignKey(Brand, related_name='products', blank=True, null=True, on_delete=models.SET_NULL)
     static_brand = models.CharField(max_length=100, default='')
     category = TreeForeignKey(Category, blank=True, null=True)
     options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
