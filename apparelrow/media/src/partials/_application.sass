@@ -1407,13 +1407,17 @@ body.brand-list
     &:hover, &:active
       text-decoration: underline
   .sidebar
-    h3
+    a.title
+      display: inline-block
       clear: both
-      font-weight: bold
-      padding: 0.5em 0
-    .product-small
-      h4, span
-        display: none
+      h3
+        font-weight: bold
+        padding: 0.5em 0
+    .products
+      +clearfix
+      .product-small
+        h4, span
+          display: none
   .alphabet-list
     +horizontal_list
     margin-top: 30px

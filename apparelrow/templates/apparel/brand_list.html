@@ -10,8 +10,9 @@
 {% block body %}
     <div class="sidebar">
         <h2>{% trans "Popular brands" %}</h2>
-        {% for manufacturer_id, manufacturer_name, products in popular_brands %}
-        <a href="{% url brand-redirect manufacturer_id %}"><h3>{{ forloop.counter }}. {{ manufacturer_name }}</h3></a>
+        {% for brand, products in popular_brands %}
+        <a class="title" href="{% url brand-redirect brand.id %}"><h3>{{ brand.name }}</h3></a>
+        {% include 'apparel/fragments/follow.html' with profile=brand.profile %}
         {% include 'apparel/fragments/products_sidebar.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
         {% endfor %}
     </div>
@@ -48,8 +49,9 @@
                 {% facebook_button facebook_login_image %}
             {% endwith %}
         {% else %}
-            {% for manufacturer_id, manufacturer_name, products in popular_brands_in_network %}
-            <a href="{% url brand-redirect manufacturer_id %}"><h3>{{ forloop.counter }}. {{ manufacturer_name }}</h3></a>
+            {% for brand, products in popular_brands_in_network %}
+            <a class="title" href="{% url brand-redirect brand.id %}"><h3>{{ brand.name }}</h3></a>
+            {% include 'apparel/fragments/follow.html' with profile=brand.profile %}
             {% include 'apparel/fragments/products_sidebar.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
             {% endfor %}
         {% endif %}
