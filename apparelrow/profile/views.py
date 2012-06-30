@@ -20,6 +20,7 @@ from apparel.models import Product
 # FIXME: Move get_facebook_friends and get_most_followed_users to a util module
 from apparel.views import get_facebook_friends, get_most_followed_users
 from apparel.utils import get_pagination_page
+from profile.utils import get_facebook_user
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm
 from profile.models import EmailChange, ApparelProfile
 from profile.tasks import send_email_confirm_task
@@ -316,10 +317,17 @@ def login_flow_members(request):
     profile.login_flow = 'members'
     profile.save()
 
+    profiles = ApparelProfile.objects.filter(is_brand=False).order_by('-followers_count')
+    facebook_user = get_facebook_user(request)
+    if request.user.is_authenticated() and facebook_user:
+        friends = facebook_user.graph.get_connections('me', 'friends')
+        friends_uids = [f['id'] for f in friends['data']]
+        profiles = profiles.exclude(user__username__in=(f['id'] for f in friends['data']))
+
     context = {
         'login_flow_step': 'step-members',
         'next_url': reverse('profile.views.login_flow_brands'),
-        'profiles': ApparelProfile.objects.filter(is_brand=False).order_by('-followers_count')[:21]
+        'profiles': profiles[:21]
     }
     return render(request, 'profile/login_flow_content.html', context)
 
