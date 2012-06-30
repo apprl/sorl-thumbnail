@@ -12,9 +12,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
-from apparel.models import Look
-from apparel.models import Product
-from apparel.models import ProductLike
+from apparel.models import Product, ProductLike, Look
 from apparel.utils import get_gender_from_cookie
 
 from pysolr import Solr

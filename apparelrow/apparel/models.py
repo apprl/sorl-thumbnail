@@ -6,6 +6,7 @@ import datetime
 
 from django.db import models
 from django.db.models import Sum, Min
+from django.db.models.loading import get_model
 from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.utils.translation import get_language, ugettext_lazy as _
@@ -14,12 +15,14 @@ from django.conf import settings
 from django.forms import ValidationError
 from django.core.files import storage
 from django.core.files.base import ContentFile
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
+from django.contrib.contenttypes.models import ContentType
 
 from apparel.manager import ProductManager, SearchManager, FeaturedManager, FirstPageManager
 from apparel import cache
 
+from actstream import action
 from cStringIO import StringIO
 from PIL import Image
 from tagging.fields import TagField
@@ -27,6 +30,28 @@ from sorl.thumbnail import ImageField, get_thumbnail, delete as sorl_delete
 from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
+
+
+PRODUCT_GENDERS = (
+    ('W', 'Women',),
+    ('M', 'Men',),
+    ('U', 'Unisex',),
+)
+
+LOOK_COMPONENT_TYPES = (
+    ('C', 'Collage'),
+    ('P', 'Picture'),
+)
+
+LOOK_COMPONENT_POSITIONED = (
+    ('A', 'Automatically'),
+    ('M', 'Manually'),
+)
+
+
+#
+# Brand
+#
 
 class Manufacturer(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -61,6 +86,11 @@ def brand_create_user(sender, instance, **kwargs):
             profile.name = instance.name
             profile.brand = instance
             profile.save()
+
+
+#
+# Option
+#
 
 class OptionType(MPTTModel):
     name = models.CharField(max_length=100, unique=True)
@@ -97,6 +127,9 @@ class Option(models.Model):
         export_fields = ['__all__', '-active']
 
 
+#
+# Vendor
+#
 
 class Vendor(models.Model):
     name     = models.CharField(max_length=100, db_index=True)
@@ -112,6 +145,11 @@ class Vendor(models.Model):
 
     def __unicode__(self):
         return u"%s" % self.name
+
+
+#
+# Category
+#
 
 class Category(MPTTModel):
     name          = models.CharField(max_length=100, db_index=True)
@@ -144,13 +182,10 @@ class Category(MPTTModel):
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Category)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Category)
 
-PRODUCT_GENDERS = (
-    ('W', 'Women',),
-    ('M', 'Men',),
-    ('U', 'Unisex',),
-)
 
-
+#
+# Product
+#
 
 class Product(models.Model):
     manufacturer = models.ForeignKey(Brand, blank=True, null=True, on_delete=models.SET_NULL)
@@ -269,13 +304,17 @@ class Product(models.Model):
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Product)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Product)
 
-def delete_product_likes(sender, instance, **kwargs):
+@receiver(post_delete, sender=Product, dispatch_uid='product_post_delete')
+def product_post_delete(sender, instance, **kwargs):
     """
     Delete all likes for the sender.
     """
     ProductLike.objects.filter(product=instance).delete()
 
-models.signals.post_delete.connect(delete_product_likes, sender=Product)
+
+#
+# ProductLike
+#
 
 class ProductLike(models.Model):
     """
@@ -293,9 +332,40 @@ class ProductLike(models.Model):
     class Meta:
         unique_together = (('product', 'user'),)
 
-# Maps products for a specific vendor 
-# This is used for importing stuff - when this category is changed,
-# all related products will be updated to reflect the category
+@receiver(post_save, sender=ProductLike, dispatch_uid='product_like_post_save')
+def product_like_post_save(sender, instance, **kwargs):
+    if not hasattr(instance, 'user'):
+        logging.warning('Trying to register an activity, but %s has not user attribute' % instance)
+        return
+
+    if instance.active == True:
+        get_model('actstream', 'Action').objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(instance.user),
+                                                               actor_object_id=instance.user.pk,
+                                                               verb='liked_product',
+                                                               action_object_content_type=ContentType.objects.get_for_model(instance.product),
+                                                               action_object_object_id=instance.product.pk)
+    else:
+        get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
+                                                        verb='liked_product',
+                                                        action_object_content_type=ContentType.objects.get_for_model(instance.product),
+                                                        action_object_object_id=instance.product.pk).delete()
+
+@receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
+def product_like_pre_delete(sender, instance, **kwargs):
+    if not hasattr(instance, 'user'):
+        logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
+        return
+
+    get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
+                                                    verb='liked_product',
+                                                    action_object_content_type=ContentType.objects.get_for_model(instance.product),
+                                                    action_object_object_id=instance.product.pk).delete()
+
+
+#
+# VendorCategory
+#
+
 class VendorCategory(models.Model):
     category = TreeForeignKey(Category, verbose_name=_('category'), blank=True, null=True)
     name     = models.CharField(_('Name'), max_length=555)
@@ -347,6 +417,10 @@ class VendorCategory(models.Model):
         verbose_name_plural = 'vendor categories'
 
 
+#
+# VendorBrand
+#
+
 class VendorBrand(models.Model):
     """
     Vendor brand contains the brand name for vendor products.
@@ -371,6 +445,11 @@ class VendorBrand(models.Model):
         ordering = ['name']
         verbose_name = 'Vendor brand'
         verbose_name_plural = 'Vendor brands'
+
+
+#
+# VendorProduct
+#
 
 class VendorProduct(models.Model):
     product           = models.ForeignKey(Product, related_name='vendorproduct')
@@ -401,15 +480,9 @@ models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorPr
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=VendorProduct)
 
 
-LOOK_COMPONENT_TYPES = (
-    ('C', 'Collage'),
-    ('P', 'Picture'),
-)
-
-LOOK_COMPONENT_POSITIONED = (
-    ('A', 'Automatically'),
-    ('M', 'Manually'),
-)
+#
+# VendorProductVariation
+#
 
 class VendorProductVariation(models.Model):
     """
@@ -436,6 +509,11 @@ class VendorProductVariation(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
+
+
+#
+# Look
+#
 
 def look_image_path(instance, filename):
     return os.path.join(settings.APPAREL_LOOK_IMAGE_ROOT, uuid.uuid4().hex)
@@ -623,13 +701,50 @@ class Look(models.Model):
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=Look)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Look)
 
-def delete_look_likes(sender, instance, **kwargs):
+@receiver(post_delete, sender=Look, dispatch_uid='look_post_delete')
+def look_post_delete(sender, instance, **kwargs):
     """
     Delete all likes for the sender.
     """
     LookLike.objects.filter(look=instance).delete()
 
-models.signals.post_delete.connect(delete_look_likes, sender=Look)
+@receiver(post_save, sender=Look, dispatch_uid='look_post_save')
+def look_post_save(sender, instance, created, **kwargs):
+    if not hasattr(instance, 'user'):
+        logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % instance)
+        return
+
+    if created:
+        action.send(instance.user, verb='created', action_object=instance)
+
+@receiver(pre_delete, sender=Look, dispatch_uid='look_pre_delete')
+def look_pre_delete(sender, instance, **kwargs):
+    if not hasattr(instance, 'user'):
+        logging.warning('Trying to remove an activity on pre_delete, but %s has not user attribute' % instance)
+        return
+
+    product_content_type = ContentType.objects.get_for_model(Product)
+    user_content_type = ContentType.objects.get_for_model(User)
+    look_content_type = ContentType.objects.get_for_model(Look)
+
+    for look_component in instance.components.select_related('product'):
+        product = look_component.product
+        get_model('actstream', 'Action').objects.filter(actor_content_type=user_content_type,
+                                                        actor_object_id=instance.user.pk,
+                                                        target_content_type=look_content_type,
+                                                        target_object_id=instance.pk,
+                                                        action_object_content_type=product_content_type,
+                                                        action_object_object_id=product.pk).delete()
+
+    get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
+                                                    verb='created',
+                                                    action_object_content_type=ContentType.objects.get_for_model(instance),
+                                                    action_object_object_id=instance.pk).delete()
+
+
+#
+# LookLike
+#
 
 class LookLike(models.Model):
     """
@@ -649,6 +764,40 @@ class LookLike(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookLike)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookLike)
+
+@receiver(post_save, sender=LookLike, dispatch_uid='look_like_post_save')
+def look_like_post_save(sender, instance, **kwargs):
+    if not hasattr(instance, 'user'):
+        logging.warning('Trying to register an activity, but %s has not user attribute' % instance)
+        return
+
+    if instance.active == True:
+        get_model('actstream', 'Action').objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(instance.user),
+                                                               actor_object_id=instance.user.pk,
+                                                               verb='liked_look',
+                                                               action_object_content_type=ContentType.objects.get_for_model(instance.look),
+                                                               action_object_object_id=instance.look.pk)
+    else:
+        get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
+                                                        verb='liked_look',
+                                                        action_object_content_type=ContentType.objects.get_for_model(instance.look),
+                                                        action_object_object_id=instance.look.pk).delete()
+
+@receiver(pre_delete, sender=LookLike, dispatch_uid='look_like_pre_delete')
+def look_like_pre_delete(sender, instance, **kwargs):
+    if not hasattr(instance, 'user'):
+        logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
+        return
+
+    get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
+                                                    verb='liked_look',
+                                                    action_object_content_type=ContentType.objects.get_for_model(instance.look),
+                                                    action_object_object_id=instance.look.pk).delete()
+
+
+#
+# LookComponent
+#
 
 class LookComponent(models.Model):
     """
@@ -718,24 +867,42 @@ class LookComponent(models.Model):
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookComponent)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookComponent)
 
-class Wardrobe(models.Model):
-    user     = models.ForeignKey(User)
-    products = models.ManyToManyField(Product, through='WardrobeProduct')
-
-    def __unicode__(self):
-        return u'Wardrobe for %s' % self.user.get_profile().display_name
-
-class WardrobeProduct(models.Model):
+@receiver(post_save, sender=LookComponent, dispatch_uid='look_component_post_save')
+def look_component_post_save(sender, instance, created, **kwargs):
     """
-    Maps the relation between products and a users wardrobe, with the addition
-    of creation time.
+    Stores an action when a new look component containing a product is added.
     """
-    created  = models.DateTimeField(_("Time created"), auto_now_add=True)
-    wardrobe = models.ForeignKey(Wardrobe)
-    product = models.ForeignKey(Product)
+    if not hasattr(instance.look, 'user'):
+        logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % instance)
+        return
 
-    class Meta:
-        db_table = 'apparel_wardrobe_products'
+    if created:
+        action.send(instance.look.user, verb='added', action_object=instance.product, target=instance.look)
+
+@receiver(pre_delete, sender=LookComponent, dispatch_uid='look_component_pre_delete')
+def look_component_pre_delete(sender, instance, **kwargs):
+    """
+    Deletes an action when a look component containing a product is removed.
+    """
+    if not hasattr(instance.look, 'user'):
+        logging.warning('Trying to remove an activity on pre_delete, but %s has not user attribute' % instance)
+        return
+
+    product_content_type = ContentType.objects.get_for_model(Product)
+    user_content_type = ContentType.objects.get_for_model(User)
+    look_content_type = ContentType.objects.get_for_model(Look)
+
+    get_model('actstream', 'Action').objects.filter(actor_content_type=user_content_type,
+                                                    actor_object_id=instance.look.user.pk,
+                                                    target_content_type=look_content_type,
+                                                    target_object_id=instance.look.pk,
+                                                    action_object_content_type=product_content_type,
+                                                    action_object_object_id=instance.product.pk,
+                                                    verb='added').delete()
+
+
+#
+# FirstPageContent
 
 class FirstPageContent(models.Model):
     title       = models.CharField(_('Title'), max_length=127, blank=True)
@@ -764,6 +931,11 @@ class FirstPageContent(models.Model):
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=FirstPageContent)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=FirstPageContent)
 
+
+#
+# BackgroundImage
+#
+
 class BackgroundImageManager(models.Manager):
     def get_random_image(self):
         try:
@@ -780,6 +952,11 @@ class BackgroundImage(models.Model):
 
     def __unicode__(self):
         return u'%s' % (self.image,)
+
+
+#
+# SynonymFile
+#
 
 def save_synonym_file(sender, **kwargs):
     instance = kwargs['instance']
@@ -819,8 +996,24 @@ class SynonymFile(models.Model):
 
 models.signals.post_save.connect(save_synonym_file, sender=SynonymFile)
 
+
+#
+# Comments
+#
+
+def comments_handler(sender, comment, request, **kwargs):
+    if not hasattr(request, 'user'):
+        return
+
+    action.send(request.user, verb='commented', action_object=comment)
+
 import django.contrib.comments.signals
+django.contrib.comments.signals.comment_was_posted.connect(comments_handler)
 django.contrib.comments.signals.comment_was_posted.connect(cache.invalidate_model_handler)
 
-import apparel.activity
+
+#
+# Search
+#
+
 import apparel.search
