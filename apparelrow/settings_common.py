@@ -256,7 +256,7 @@ GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 
 # ACTSTREAM
 ACTSTREAM_MANAGER = 'actstream.managers.ActionManager'
-ACTSTREAM_ACTION_MODELS = ['auth.User', 'apparel.Look', 'apparel.Product', 'comments.comment']
+ACTSTREAM_ACTION_MODELS = ['auth.user', 'apparel.Look', 'apparel.Product', 'comments.comment']
 
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'
