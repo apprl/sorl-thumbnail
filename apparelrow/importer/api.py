@@ -17,6 +17,7 @@ from django.db import IntegrityError
 from django.db.models import Count
 from django.conf import settings
 from django.db.models.loading import get_model
+from django.utils.encoding import smart_str
 
 from importer.framework.fetcher import fetch
 
@@ -493,10 +494,10 @@ class API(object):
         try:
             path, filename = os.path.split(url)
         except TypeError, AttributeError:
-            raise IncompleteDataSet('image-url', '[%s] is not a string' % (url,))
+            raise IncompleteDataSet('image-url', '[%s] is not a string' % (smart_str(url),))
 
         if not path:
-            raise IncompleteDataSet('image-url', '[%s] is not a valid url' % (url,))
+            raise IncompleteDataSet('image-url', '[%s] is not a valid url' % (smart_str(url),))
 
         return '%s/%s/%s__%s__%s' % (
             settings.APPAREL_PRODUCT_IMAGE_ROOT,
