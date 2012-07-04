@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-04 12:21+0200\n"
+"POT-Creation-Date: 2012-07-04 13:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1174,11 +1174,15 @@ msgid ""
 "lot of other sites) will not work as well."
 msgstr ""
 
-#: templates/apparel/fragments/dialog_follow_user.html:5
+#: templates/apparel/fragments/dialog_follow_user.html:7
+msgid "Follow a brand"
+msgstr ""
+
+#: templates/apparel/fragments/dialog_follow_user.html:9
 msgid "Follow a member"
 msgstr ""
 
-#: templates/apparel/fragments/dialog_follow_user.html:7
+#: templates/apparel/fragments/dialog_follow_user.html:13
 msgid ""
 "To follow someone on the site, you need to connect with your Facebook "
 "account:"

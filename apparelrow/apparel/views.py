@@ -834,8 +834,15 @@ def dialog_follow_user(request):
     Display a dialog tailored for the look detail page with information about
     facebook login. On successful login redirect to same page.
     """
+    brand = 0
+    try:
+        brand = int(request.GET.get('brand', 0))
+    except ValueError:
+        pass
+
     return render_to_response('apparel/fragments/dialog_follow_user.html',
-            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+            {'next': request.GET.get('next', '/'),
+             'brand': brand}, context_instance=RequestContext(request))
 
 def index(request, gender=None):
     """

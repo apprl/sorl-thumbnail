@@ -2,7 +2,13 @@
 {% load apparel_extras %}
 {% load i18n %}
 
-{% block title %}{% trans "Follow a member" %}{% endblock %}
+{% block title %}
+    {% if brand %}
+        {% trans "Follow a brand" %}
+    {% else %}
+        {% trans "Follow a member" %}
+    {% endif %}
+{% endblock %}
 {% block content %}
 <p>{% trans "To follow someone on the site, you need to connect with your Facebook account:" %}</p>
 {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}

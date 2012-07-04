@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-04 12:21+0200\n"
+"POT-Creation-Date: 2012-07-04 13:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1213,11 +1213,15 @@ msgstr ""
 "stänga av cookies i din webbläsare, men Apparelrow (och många andra siter) "
 "kommer att fungera sämre då."
 
-#: templates/apparel/fragments/dialog_follow_user.html:5
+#: templates/apparel/fragments/dialog_follow_user.html:7
+msgid "Follow a brand"
+msgstr "Följ ett varumärke"
+
+#: templates/apparel/fragments/dialog_follow_user.html:9
 msgid "Follow a member"
 msgstr "Följ en medlem"
 
-#: templates/apparel/fragments/dialog_follow_user.html:7
+#: templates/apparel/fragments/dialog_follow_user.html:13
 msgid ""
 "To follow someone on the site, you need to connect with your Facebook "
 "account:"
