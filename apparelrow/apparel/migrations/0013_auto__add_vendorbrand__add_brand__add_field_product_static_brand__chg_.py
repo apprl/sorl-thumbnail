@@ -3,6 +3,7 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 
 class Migration(SchemaMigration):
 
@@ -29,11 +30,8 @@ class Migration(SchemaMigration):
         db.send_create_signal('apparel', ['Brand'])
 
         # Copy data from 'Manufacturer' to 'Brand'
-        for manufacturer in orm['apparel.Manufacturer'].objects.iterator():
-            brand, created = orm['apparel.Brand'].objects.get_or_create(id=manufacturer.id,
-                                                                        name=manufacturer.name,
-                                                                        homepage=manufacturer.homepage,
-                                                                        logotype=manufacturer.logotype)
+        for manufacturer in orm['apparel.Manufacturer'].objects.order_by('id').iterator():
+            brand, created = orm['apparel.Brand'].objects.get_or_create(name=manufacturer.name, defaults={'id': manufacturer.id, 'homepage': '', 'logotype': ''})
 
         # Adding field 'Product.static_brand'
         db.add_column('apparel_product', 'static_brand', self.gf('django.db.models.fields.CharField')(default='', max_length=100), keep_default=False)
@@ -46,19 +44,25 @@ class Migration(SchemaMigration):
 
         # Field 'Product.static_brand' should have same value as 'Product.manufacturer.name'
         for product in orm['apparel.Product'].objects.iterator():
-            product.static_brand = product.manufacturer.name
-            product.save()
+            try:
+                product.static_brand = product.manufacturer.name
+                product.save()
+            except ObjectDoesNotExist:
+                pass
 
         # Adding field 'VendorProduct.vendor_brand'
         db.add_column('apparel_vendorproduct', 'vendor_brand', self.gf('django.db.models.fields.related.ForeignKey')(related_name='vendor_products', null=True, to=orm['apparel.VendorBrand']), keep_default=False)
 
         # Populate 'VendorBrand'
         for vp in orm['apparel.VendorProduct'].objects.iterator():
-            brand = vp.product.manufacturer
-            if brand:
-                vendor_brand, created = orm['apparel.VendorBrand'].objects.get_or_create(brand=brand, vendor=vp.vendor, name=brand.name)
-                vp.vendor_brand = vendor_brand
-                vp.save()
+            try:
+                brand = vp.product.manufacturer
+                if brand:
+                    vendor_brand, created = orm['apparel.VendorBrand'].objects.get_or_create(brand=brand, vendor=vp.vendor, name=brand.name)
+                    vp.vendor_brand = vendor_brand
+                    vp.save()
+            except ObjectDoesNotExist:
+                pass
 
     def backwards(self, orm):
         
