@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-04 11:03+0200\n"
+"POT-Creation-Date: 2012-07-04 12:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1802,7 +1802,11 @@ msgstr "Vill du verkligen ta bort produkten"
 msgid "You do not like any products right now."
 msgstr "Du gillar inte några produkter än."
 
-#: templates/profile/likes.html:54
+#: templates/profile/likes.html:55
+msgid "currently does not have any products."
+msgstr "har just nu inga produkter."
+
+#: templates/profile/likes.html:57
 msgid "does not like any products so far."
 msgstr "gillar inte några produkter än."
 
