@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-04 12:12+0200\n"
+"POT-Creation-Date: 2012-07-04 12:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -782,7 +782,7 @@ msgstr ""
 msgid "Popular looks"
 msgstr ""
 
-#: templates/index.html:164
+#: templates/index.html:164 templates/profile/looks.html:50
 msgid "Create a look!"
 msgstr ""
 
@@ -1663,8 +1663,7 @@ msgstr ""
 
 #: templates/profile/followers.html:14
 msgid ""
-"No one is following you yet, but if you start following people they might "
-"follow you back."
+"No one is currently following you, but start off by following other members!"
 msgstr ""
 
 #: templates/profile/followers.html:15 templates/profile/following.html:15
@@ -1695,7 +1694,7 @@ msgid "Do you really want to delete product"
 msgstr ""
 
 #: templates/profile/likes.html:52
-msgid "You do not like any products right now."
+msgid "All products that you ♥ are placed here."
 msgstr ""
 
 #: templates/profile/likes.html:55
@@ -1707,11 +1706,7 @@ msgid "does not like any products so far."
 msgstr ""
 
 #: templates/profile/looks.html:49
-msgid "You have not created any looks yet."
-msgstr ""
-
-#: templates/profile/looks.html:50
-msgid "Create look!"
+msgid "All looks that you create end up here."
 msgstr ""
 
 #: templates/profile/looks.html:53
@@ -1720,9 +1715,7 @@ msgid "%(display_name)s has not created any looks yet."
 msgstr ""
 
 #: templates/profile/profile.html:14
-msgid ""
-"You have not done anything yet. Why don't you start off by following some "
-"people whose style you like?"
+msgid "All your activity is shown here as a timeline"
 msgstr ""
 
 #: templates/profile/profile.html:18

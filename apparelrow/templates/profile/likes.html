@@ -49,7 +49,7 @@
     <div class="empty">
         {% url profile-likes request.user.username as profile_likes_url %}
         {% if request.path == profile_likes_url %}
-            <div class="message warning">{% trans "You do not like any products right now." %} <a class="add" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
+            <div class="message warning">{% trans "All products that you ♥ are placed here." %} <a class="add" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
         {% else %}
             {% if profile.is_brand %}
             <div class="message warning">{{ profile.display_name }} {% trans "currently does not have any products." %}</div>

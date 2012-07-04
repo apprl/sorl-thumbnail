@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-04 12:12+0200\n"
+"POT-Creation-Date: 2012-07-04 12:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -792,7 +792,7 @@ msgstr "Nästa"
 msgid "Popular looks"
 msgstr "Populära looks"
 
-#: templates/index.html:164
+#: templates/index.html:164 templates/profile/looks.html:50
 msgid "Create a look!"
 msgstr "Skapa en look!"
 
@@ -1766,10 +1766,8 @@ msgstr "Bekräfta byte av e-postadress"
 
 #: templates/profile/followers.html:14
 msgid ""
-"No one is following you yet, but if you start following people they might "
-"follow you back."
-msgstr ""
-"Ingen följer dig än, men om du följer andra så börjar de kanske följa dig."
+"No one is currently following you, but start off by following other members!"
+msgstr "Ingen följer dig ännu, men börja med att följa fler medlemmar!"
 
 #: templates/profile/followers.html:15 templates/profile/following.html:15
 #: templates/profile/profile.html:15
@@ -1799,8 +1797,8 @@ msgid "Do you really want to delete product"
 msgstr "Vill du verkligen ta bort produkten"
 
 #: templates/profile/likes.html:52
-msgid "You do not like any products right now."
-msgstr "Du gillar inte några produkter än."
+msgid "All products that you ♥ are placed here."
+msgstr "Här hamnar alla produkter som du ♥-ar på siten."
 
 #: templates/profile/likes.html:55
 msgid "currently does not have any products."
@@ -1811,12 +1809,8 @@ msgid "does not like any products so far."
 msgstr "gillar inte några produkter än."
 
 #: templates/profile/looks.html:49
-msgid "You have not created any looks yet."
-msgstr "Du har inte skapat några looks än."
-
-#: templates/profile/looks.html:50
-msgid "Create look!"
-msgstr "Skapa look!"
+msgid "All looks that you create end up here."
+msgstr "Här visas alla looks du skapar."
 
 #: templates/profile/looks.html:53
 #, python-format
@@ -1824,12 +1818,8 @@ msgid "%(display_name)s has not created any looks yet."
 msgstr "%(display_name)s har inte skapat några looks än."
 
 #: templates/profile/profile.html:14
-msgid ""
-"You have not done anything yet. Why don't you start off by following some "
-"people whose style you like?"
-msgstr ""
-"Du har inte gjort något än. Börja till exempel med att följa andra medlemmar "
-"som verkar ha bra stil."
+msgid "All your activity is shown here as a timeline"
+msgstr "Här visas din aktivitet på siten som en tidslinje."
 
 #: templates/profile/profile.html:18
 #, python-format
@@ -2172,6 +2162,22 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "You do not like any products right now."
+#~ msgstr "Du gillar inte några produkter än."
+
+#~ msgid "You have not created any looks yet."
+#~ msgstr "Du har inte skapat några looks än."
+
+#~ msgid "Create look!"
+#~ msgstr "Skapa look!"
+
+#~ msgid ""
+#~ "You have not done anything yet. Why don't you start off by following some "
+#~ "people whose style you like?"
+#~ msgstr ""
+#~ "Du har inte gjort något än. Börja till exempel med att följa andra "
+#~ "medlemmar som verkar ha bra stil."
 
 #~ msgid "See all women's products"
 #~ msgstr "Visa alla damprodukter"
