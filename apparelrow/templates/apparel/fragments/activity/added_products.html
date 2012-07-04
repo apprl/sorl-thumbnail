@@ -11,11 +11,9 @@
 {% endblock %}
 
 {% block activity_header %}
-{% blocktrans count object.description as count with object.actor.get_profile.get_absolute_url as user_url and object.actor.get_profile.display_name as user %}<a href="{{user_url}}">{{user}}</a> have added {{count}} new product
-{% plural %}<a href="{{user_url}}">{{user}}</a> have added {{count}} new products
+{% blocktrans count object.description as count with object.actor.get_profile.get_absolute_url as user_url and object.actor.get_profile.display_name as user %}<a href="{{user_url}}">{{user}}</a> have added <a href="{{user_url}}">{{count}} new product</a>
+{% plural %}<a href="{{user_url}}">{{user}}</a> have added <a href="{{user_url}}">{{count}} new products</a>
 {% endblocktrans %}
 {% endblock %}
 
-{% block activity_content %}
-    <p></p>
-{% endblock %}
+{% block activity_content %}{% endblock %}
