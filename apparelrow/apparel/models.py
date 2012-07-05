@@ -61,8 +61,7 @@ class Manufacturer(models.Model):
 
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype'), null=True, blank=True)
-    homepage = models.URLField(_('Home page'), null=True, blank=True)
+    old_name = models.CharField(max_length=100, null=True, blank=True)
     last_update = models.DateTimeField(_("Last update"), null=True, blank=True)
 
     def __unicode__(self):
