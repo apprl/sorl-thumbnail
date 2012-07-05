@@ -8,7 +8,19 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         for brand in orm['apparel.Brand'].objects.iterator():
-            user, created = orm['auth.User'].objects.get_or_create(username=brand.slug)
+            fragments = brand.slug.split('-')
+            new_slug = fragments[0][:28]
+            for fragment in fragments[1:]:
+                if len(new_slug + '-' + fragment) < 28:
+                    new_slug = new_slug + '-' + fragment
+
+            if orm['auth.User'].objects.filter(username=new_slug).exists():
+                for x in xrange(1, 10):
+                    new_slug = new_slug + '-' + str(x)
+                    if not orm['auth.User'].objects.filter(username=new_slug).exists():
+                        break
+
+            user, created = orm['auth.User'].objects.get_or_create(username=new_slug)
             if created:
                 profile, created = orm['profile.ApparelProfile'].objects.get_or_create(user=user)
                 profile.name = brand.name
