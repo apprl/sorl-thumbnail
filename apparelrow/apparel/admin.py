@@ -203,11 +203,15 @@ admin.site.register(VendorCategory, VendorCategoryAdmin)
 #
 
 class VendorBrandAdmin(admin.ModelAdmin):
-    list_display = ('vendor', 'name', 'brand')
+    list_display = ('vendor', 'name', 'brand', 'num_products')
     list_filter = ('vendor',)
     list_display_links = ('name',)
     list_per_page = 25
     search_fields = ('name',)
+
+    def num_products(self, vendor_brand):
+        vp = VendorProduct.objects.filter(vendor_brand=vendor_brand).count()
+        return '%s' % (vp,)
 
 admin.site.register(VendorBrand, VendorBrandAdmin)
 
