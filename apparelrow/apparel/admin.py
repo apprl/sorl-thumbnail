@@ -208,6 +208,7 @@ class VendorBrandAdmin(admin.ModelAdmin):
     list_display_links = ('name',)
     list_per_page = 25
     search_fields = ('name',)
+    readonly_fields = ('vendor', 'name')
 
     def num_products(self, vendor_brand):
         vp = VendorProduct.objects.filter(vendor_brand=vendor_brand).count()
