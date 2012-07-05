@@ -61,7 +61,6 @@ class Manufacturer(models.Model):
 
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    slug = AutoSlugField(populate_from=('name',), max_length=100, unique=True, null=True)
     logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype'), null=True, blank=True)
     homepage = models.URLField(_('Home page'), null=True, blank=True)
     last_update = models.DateTimeField(_("Last update"), null=True, blank=True)
@@ -80,7 +79,7 @@ class Brand(models.Model):
 @receiver(post_save, sender=Brand, dispatch_uid='brand_create_user')
 def brand_create_user(sender, instance, **kwargs):
     if 'created' in kwargs:
-        user, created = User.objects.get_or_create(username=instance.slug)
+        user, created = User.objects.get_or_create(username='brand-%s' % (instance.id,))
         if created:
             profile = user.get_profile()
             profile.name = instance.name

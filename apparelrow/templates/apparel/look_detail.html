@@ -50,7 +50,7 @@
             <a class="delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
         {% endif %}
         <div class="look-user-url">
-            {% url profile.views.looks object.user.username as looks_url %}
+            {% url profile.views.looks object.user.get_profile.slug as looks_url %}
             <a href="{{ looks_url }}">{% blocktrans with object.user.get_profile.display_name as name %}{{name}}'s looks{% endblocktrans %}</a>
         </div>
     </div>

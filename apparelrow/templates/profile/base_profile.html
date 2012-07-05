@@ -24,10 +24,10 @@
             {% trans "Member since" %} {{ profile.user.date_joined|date:"SHORT_DATE_FORMAT" }}
         </p>
         <div id="sidebar-profile-info">
-        {% url profile-likes profile.user.username as likes_url %}
-        {% url profile-looks profile.user.username as looks_url %}
-        {% url profile-followers profile.user.username as followers_url %}
-        {% url profile-following profile.user.username as following_url %}
+        {% url profile-likes profile.slug as likes_url %}
+        {% url profile-looks profile.slug as looks_url %}
+        {% url profile-followers profile.slug as followers_url %}
+        {% url profile-following profile.slug as following_url %}
         </div>
         {% if not profile.is_brand %}
         <p>

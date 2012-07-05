@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-
+from django.db.models.loading import get_model
 
 from hanssonlarsson.django.exporter import json
 
@@ -98,20 +98,19 @@ def get_current_user(view_func):
     The decorated funciton is expected to add the profile to the context used
     to render the template.
     """
-    def _decorator(request, username=None, *args, **kwargs):
-        
-        if not username:
+    def _decorator(request, slug=None, *args, **kwargs):
+        if not slug:
             if not request.user.is_authenticated():
                 return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
             
-            user = request.user
+            profile = request.user.get_profile()
         else:
             try:
-                user = get_object_or_404(User, username=username) 
-            except User.DoesNotExist:
+                profile = get_object_or_404(get_model('profile', 'ApparelProfile'), slug=slug)
+            except get_model('profile', 'ApparelProfile').DoesNotExist:
                 return HttpResponseNotFound
         
-        return view_func(request, user.get_profile(), *args, **kwargs)
+        return view_func(request, profile, *args, **kwargs)
             
     _decorator.__name__ = view_func.__name__
     _decorator.__dict__ = view_func.__dict__

@@ -25,7 +25,6 @@ from apparel.models import Product
 from apparel.models import Brand
 from apparel.models import Option
 from apparel.models import Category
-from apparel.decorators import get_current_user
 from apparel.utils import get_pagination_page
 
 BROWSE_PAGE_SIZE = 30

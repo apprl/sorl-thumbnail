@@ -13,8 +13,10 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
+
 from actstream import models as actstream_models
 from sorl.thumbnail import get_thumbnail
+from django_extensions.db.fields import AutoSlugField
 
 from profile.tasks import send_email_confirm_task
 from profile.signals import user_created_with_email
@@ -41,7 +43,8 @@ LOGIN_FLOW = (
 class ApparelProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     
-    name                = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    name                = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    slug                = AutoSlugField(populate_from=('name',), max_length=100, unique=True, null=True)
     image               = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True) 
     about               = models.TextField(_('About'), null=True, blank=True)
     language            = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
@@ -165,7 +168,7 @@ class ApparelProfile(models.Model):
         #if self.brand:
             #return ('profile.views.bla', [str(self.user.username)])
 
-        return ('profile.views.likes', [str(self.user.username)])
+        return ('profile.views.likes', [str(self.slug)])
     
     def __unicode__(self):
         return self.display_name

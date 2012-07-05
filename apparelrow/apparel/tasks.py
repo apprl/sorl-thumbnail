@@ -1,7 +1,6 @@
 import logging
 import datetime
 
-from django.db.models.loading import get_model
 from django.core.management import call_command
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings

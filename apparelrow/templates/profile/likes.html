@@ -8,7 +8,7 @@
 
 {% block 'extra-scripts' %}
     <script type="text/javascript">
-        {% url profile-likes user.username as likes_url %}
+        {% url profile-likes user.get_profile.slug as likes_url %}
         {% if request.path == likes_url %}
         jQuery(document).ready(function() {
             jQuery('a.product-heart').die('click').live('click', function() {
@@ -47,7 +47,7 @@
     <div class="clear"></div>
     {% else %}
     <div class="empty">
-        {% url profile-likes request.user.username as profile_likes_url %}
+        {% url profile-likes request.user.get_profile.slug as profile_likes_url %}
         {% if request.path == profile_likes_url %}
             <div class="message warning">{% trans "All products that you ♥ are placed here." %} <a class="add" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
         {% else %}

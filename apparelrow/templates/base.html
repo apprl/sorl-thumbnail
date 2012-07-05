@@ -182,11 +182,11 @@
         {% url profile.views.settings_notification as notification_settings_url %}
         {% url profile.views.settings_email as email_settings_url %}
 
-        {% url profile-updates user.username as url_updates %}
-        {% url profile-likes user.username as url_likes %}
-        {% url profile-looks user.username as url_looks %}
-        {% url profile-followers user.username as url_followers %}
-        {% url profile-following user.username as url_following %}
+        {% url profile-updates user.get_profile.slug as url_updates %}
+        {% url profile-likes user.get_profile.slug as url_likes %}
+        {% url profile-looks user.get_profile.slug as url_looks %}
+        {% url profile-followers user.get_profile.slug as url_followers %}
+        {% url profile-following user.get_profile.slug as url_following %}
 
         <div id="login-pane">
             <div class="holder">
