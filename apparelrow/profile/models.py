@@ -13,6 +13,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
+from django.template.defaultfilters import slugify
 
 from actstream import models as actstream_models
 from sorl.thumbnail import get_thumbnail
@@ -44,7 +45,7 @@ class ApparelProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     
     name                = models.CharField(max_length=100, unique=True, blank=True, null=True)
-    slug                = AutoSlugField(populate_from=('name',), max_length=100, unique=True, null=True)
+    slug                = models.CharField(max_length=100, unique=True, null=True)
     image               = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True) 
     about               = models.TextField(_('About'), null=True, blank=True)
     language            = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
@@ -192,6 +193,8 @@ def create_profile(signal, instance, **kwargs):
     """
     if kwargs['created']:
         profile, created = ApparelProfile.objects.get_or_create(user=instance)
+        profile.slug = slugify(profile.display_name)
+        profile.save()
 
 @receiver(user_created_with_email, sender=User, dispatch_uid='send_welcome_mail')
 def send_welcome_mail(sender, user, **kwargs):
