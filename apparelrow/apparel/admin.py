@@ -207,6 +207,7 @@ class VendorBrandAdmin(admin.ModelAdmin):
     list_filter = ('vendor',)
     list_display_links = ('name',)
     list_per_page = 25
+    search_fields = ('name',)
 
 admin.site.register(VendorBrand, VendorBrandAdmin)
 
