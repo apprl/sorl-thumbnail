@@ -5,6 +5,7 @@ class ApparelProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'name', 'slug', 'is_brand', 'language', 'followers_count',)
     list_filter = ('is_brand',)
     search_fields = ('name',)
+    raw_id_fields = ('user', 'brand')
 
 admin.site.register(ApparelProfile, ApparelProfileAdmin)
 
