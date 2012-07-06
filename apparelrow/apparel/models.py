@@ -77,7 +77,7 @@ class Brand(models.Model):
 
 @receiver(post_save, sender=Brand, dispatch_uid='brand_create_user')
 def brand_create_user(sender, instance, **kwargs):
-    if 'created' in kwargs:
+    if 'created' in kwargs and kwargs['created']:
         user, created = User.objects.get_or_create(username=u'brand-%s' % (instance.id,))
         if created:
             profile = user.get_profile()
