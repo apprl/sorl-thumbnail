@@ -10,7 +10,7 @@ from celery.task import task, periodic_task, PeriodicTask
 from celery.schedules import crontab
 from actstream.models import Action
 
-from apparel.models import Brand, Product
+from apparel.models import Brand, Product, VendorBrand, VendorCategory
 
 logger = logging.getLogger('apparel.tasks')
 
@@ -69,6 +69,40 @@ def brand_updates():
 
         brand.last_update = datetime.datetime.now()
         brand.save()
+
+
+# XXX: offline
+#@periodic_task(name='apparel.tasks.update_vendor_data', run_every=crontab(minute='0,15,30,45'), max_retries=1, ignore_result=True)
+def update_vendor_data():
+    """
+    Updates vendor data every half hour.
+    """
+    timestamp = datetime.datetime.now() - datetime.timedelta(minutes=20)
+    for vendor_brand in VendorBrand.objects.filter(modified__gt=timestamp).iterator():
+        if vendor_brand.brand:
+            for product in Product.objects.filter(vendorproduct__vendor_brand_id=vendor_brand.id).iterator():
+                if product.manufacturer_id != vendor_brand.brand_id:
+                    product.manufacturer_id = vendor_brand.brand_id
+                    product.save()
+        else:
+            queryset = Product.objects.filter(vendorproduct__vendor_brand_id=vendor_brand.id, manufacturer__isnull=False)
+            for product in queryset:
+                product.manufacturer_id = None
+                product.save()
+
+    for vendor_category in VendorCategory.objects.filter(modified__gt=timestamp).iterator():
+        if vendor_category.category:
+            queryset = Product.objects.filter(vendorproduct__vendor_category=vendor_category)
+            for product in queryset:
+                product.category = self.category
+                product.published = True
+                product.save()
+        else:
+            queryset = Product.objects.filter(vendorproduct__vendor_category=vendor_category, category__isnull=False)
+            for product in queryset:
+                product.category = None
+                product.save()
+
 
 class ProcessPopularityTask(PeriodicTask):
     run_every = crontab(hour=4, minute=15)
