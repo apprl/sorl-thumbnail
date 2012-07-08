@@ -437,11 +437,6 @@ class VendorBrand(models.Model):
                 if product.manufacturer_id != self.brand_id:
                     product.manufacturer_id = self.brand_id
                     product.save()
-        else:
-            queryset = Product.objects.filter(vendorproduct__vendor_brand=self, manufacturer__isnull=False)
-            for product in queryset:
-                product.manufacturer = None
-                product.save()
 
         super(VendorBrand, self).save(*args, **kwargs)
 
