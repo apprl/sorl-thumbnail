@@ -16,6 +16,15 @@ urlpatterns = patterns('',
     # Search
     (r'^search/(?P<model_name>\w+)/', 'apparel.search.search_view'),
 
+    # Notifications
+    url(r'^notification/like_product/$', 'apparel.views.notification_like_product', name='notification-like-product'),
+    url(r'^notification/like_look/$', 'apparel.views.notification_like_look', name='notification-like-look'),
+    url(r'^notification/create_look/$', 'apparel.views.notification_create_look', name='notification-create-look'),
+    url(r'^notification/follow_profile/$', 'apparel.views.notification_follow_profile', name='notification-follow-profile'),
+
+    # Facebook
+    url(r'^facebook/share/(?P<activity>add|remove)/?$', 'apparel.views.facebook_share', name='facebook-share'),
+
     # Products
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
     url(r'^products/(?P<pk>[\d]+)/(?P<action>like|unlike)/?$', 'apparel.views.product_action', name='product-action'),
@@ -32,9 +41,6 @@ urlpatterns = patterns('',
 
     # Shop
     url(r'^shop/popup/$', 'apparel.views.product_popup', name='product-popup'),
-
-    # Likes
-    (r'^likes/delete_product/$', 'apparel.views.product_unlike'),
 
     # Looks
     url(r'^looks/$', 'apparel.views.gender', {'view': 'look-list'}, name='look-list'),

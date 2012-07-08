@@ -955,6 +955,18 @@ class BackgroundImage(models.Model):
     def __unicode__(self):
         return u'%s' % (self.image,)
 
+#
+# FacebookAction
+#
+
+class FacebookAction(models.Model):
+    user = models.ForeignKey(User, related_name='facebook_actions')
+    action_id = models.CharField(max_length=30)
+    object_type = models.CharField(max_length=30)
+    object_id = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return u'%s' % (self.action_id,)
 
 #
 # SynonymFile

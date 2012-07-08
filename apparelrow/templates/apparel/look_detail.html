@@ -1,17 +1,20 @@
 {% extends 'profile/base_profile.html' %}
-{% load i18n %}
-{% load humanize %}
-{% load trackback_tags %}
-{% load tagging_tags %}
-{% load comments %}
-{% load cache %}
-{% load apparel_extras %}
+{% load i18n humanize trackback_tags tagging_tags comments cache apparel_extras %}
 
 {% block extra-title %}{{ object.title }} {% trans "by" %} {{ object.user.get_profile.display_name }} | {% trans "Looks" %} | {% endblock %}
+
+{% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
 
 {% block 'extra-styles' %}
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
+    <meta property="og:title" content="{{ object }}"/>
+    <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:look"/>
+    <meta property="og:image" content="{{ look_full_image }}"/>
+    <meta property="og:url" content="{{ object_url }}"/>
+    <meta property="og:description" content="{{ object.description }}"/>
+    <meta property="og:site_name" content="{{ CURRENT_NAME }}"/>
+    <meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}"/>
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
@@ -111,12 +114,7 @@
         </div>
     {% endif %}
 {% endcache %}
-    {% url apparel.views.look_like object.slug 'like' as like_url %}
-    {% url apparel.views.look_like object.slug 'unlike' as unlike_url %}
-    {% url dialog-like-look as dialog_url %}
-    {% with is_liked=user|likes_look:object slug=object.slug %}
-    {% include 'apparel/fragments/like_button.html' %}
-    {% endwith %}
+    <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
     {% get_trackbacks_for object as trackbacks %}
     {% include 'apparel/fragments/comments.html' %}
 {% cache CACHE_TIMEOUT look_detail3 object.id LANGUAGE_CODE %}

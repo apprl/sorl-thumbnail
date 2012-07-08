@@ -1,0 +1,6 @@
+<p>Du har ♥ {{ object.manufacturer.name }} <a href="{{ object.get_absolute_url }}">{{ object.product_name }}</a></p>
+
+<p>Du kan dela med dig av dina ♥ på på Facebook.</p>
+
+<p><a class="notification-share" data-id="{{ object.id }}" data-action="like" data-type="product" data-url="{{ url }}" href="#share">Dela den här gången</a></p>
+<p><a class="notification-share share-save" data-id="{{ object.id }}" data-action="like" data-type="product" data-url="{{ url }}" href="#share">Dela alltid</a></p>

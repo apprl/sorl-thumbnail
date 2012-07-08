@@ -1,7 +1,7 @@
 {% load i18n apparel_extras django_static %}
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
-<head>
+<head{% block head-data %}{% endblock head-data %}>
     {% with user.get_profile.get_updates_last_visit as updates %}
     <title>{% if updates %}({{ updates }}) {% endif %}{% block extra-title %}{% endblock %}Apprl</title>
     {% endwith %}
@@ -22,6 +22,12 @@
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         var isFirstTimeVisit = {% if user.is_authenticated and user.get_profile.first_visit %}true{% else %}false{% endif %};
+        var share_settings = {
+            'like_product': {% if user.is_authenticated and user.get_profile.fb_share_like_product %}true{% else %}false{% endif %},
+            'like_look': {% if user.is_authenticated and user.get_profile.fb_share_like_look %}true{% else %}false{% endif %},
+            'follow_profile': {% if user.is_authenticated and user.get_profile.fb_share_follow %}true{% else %}false{% endif %},
+            'create_look': {% if user.is_authenticated and user.get_profile.fb_share_create_look %}true{% else %}false{% endif %}
+        };
 
         window.fbAsyncInit = function() {
             FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, oauth: true, xfbml: true});
@@ -221,7 +227,7 @@
                             <div class="arrow"></div>
                         </a>
                     </li>
-                    {% if user.get_profile.beta and user.get_profile.beta.invites > 0 %}
+                    {% if user.get_profile.beta and user.get_profile.beta.invites > 0 and 1 == 0 %}
                     <li class="invites">
                         <a class="open-dialog" href="{% url beta.views.invite %}?next={{ request.path }}">
                             {% blocktrans with user.get_profile.beta.invites as invites %}Invite friends ({{ invites }}){% endblocktrans %}

@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 {% load i18n apparel_extras %}
 
+{% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
+
+{% block extra-styles %}
+    <meta property="og:title" content="{{ profile }}"/>
+    <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:profile"/>
+    <meta property="og:image" content="{{ profile.avatar_large }}"/>
+    <meta property="og:url" content="{{ profile.get_absolute_url }}"/>
+    <meta property="og:description" content="{{ profile.about }}"/>
+    <meta property="og:site_name" content="{{ CURRENT_NAME }}"/>
+    <meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}"/>
+{% endblock extra-styles %}
+
 {% block body-classes %}three-columns profile{% endblock body-classes %}
 {% block body %}
     <div id="profile-nav">

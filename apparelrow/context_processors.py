@@ -5,6 +5,7 @@ from django.contrib.sites.models import Site
 from apparel.utils import get_gender_from_cookie
 
 def exposed_settings(request):
+    current_site = Site.objects.get_current()
     return {
         'CACHE_TIMEOUT': django_settings.CACHE_TEMPLATE_TIMEOUT,
         'DEFAULT_AVATAR': django_settings.APPAREL_DEFAULT_AVATAR,
@@ -12,9 +13,11 @@ def exposed_settings(request):
         'GOOGLE_ANALYTICS_ACCOUNT': django_settings.GOOGLE_ANALYTICS_ACCOUNT,
         'GOOGLE_ANALYTICS_DOMAIN': django_settings.GOOGLE_ANALYTICS_DOMAIN,
         'SHORT_LANGUAGES': django_settings.SHORT_LANGUAGES,
-        'CURRENT_DOMAIN': Site.objects.get_current().domain,
+        'CURRENT_DOMAIN': current_site.domain,
+        'CURRENT_NAME': current_site.name,
         'FACEBOOK_APP_ID': django_settings.FACEBOOK_APP_ID,
-        'FACEBOOK_SCOPE': django_settings.FACEBOOK_PERMS
+        'FACEBOOK_SCOPE': django_settings.FACEBOOK_PERMS,
+        'FACEBOOK_OG_TYPE': django_settings.FACEBOOK_OG_TYPE
     }
 
 def next_redirects(request):

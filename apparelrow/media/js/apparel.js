@@ -1,3 +1,7 @@
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 function increase_counts(counts, new_count) {
     // For each element, set to new_count if available, otherwise increase the current count with 1
     counts.each(function() {
@@ -125,9 +129,9 @@ jQuery(document).ready(function() {
 
     // Track likes
 
-    $('body.product a.product-heart').live('click', trackEvent('Product', 'ProductLike'));
-    $('body.page-shop a.product-heart').live('click', trackEvent('Shop', 'ProductLike'));
-    $('body.profile a.product-heart').live('click', trackEvent('Profile', 'ProductLike'));
+    $('body.product a.product-like').live('click', trackEvent('Product', 'ProductLike'));
+    $('body.page-shop a.product-like').live('click', trackEvent('Shop', 'ProductLike'));
+    $('body.profile a.product-like').live('click', trackEvent('Profile', 'ProductLike'));
 
     // All elements with class open-dialog should open a dialog and load html from href-url
     jQuery('.open-dialog').live('click', function(event) {
@@ -158,38 +162,6 @@ jQuery(document).ready(function() {
         suffix: '*/'
     }
 
-    // Clone products for hovering in browse and search results
-
-    jQuery('form.like').hyperSubmit({
-        success: function(response, statusText, req, form) {
-            // Match "/model/slug/like"
-            var action = form.attr('action');
-            var newAction = form.attr('data-alternate-action');
-            form.attr('action', newAction).attr('data-alternate-action', action);
-
-            var button = jQuery('button', form);
-            button.toggleClass('liked');
-            var doneText = button.attr('data-done-text');
-            var newDoneText = button.attr('data-alternate-done-text');
-            var buttonText = button.text();
-            var newButtonText = button.attr('data-alternate-text');
-            button.attr('data-alternate-text', buttonText)
-                  .attr('data-alternate-done-text', doneText)
-                  .attr('data-done-text', newDoneText)
-                  .text(doneText).delay(1000).text(newButtonText);
-            if(/^\/(\w+)\/([\w-]+)\/like/.test(action) && response.success == true) {
-                elem = jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count');
-                elem.text(parseInt(elem.text(), 10) + 1);
-
-                // Track look like to GA
-                _gaq.push(['_trackEvent', 'Look', 'Like', button.attr('data-slug')]);
-            }
-            if(/^\/(\w+)\/([\w-]+)\/unlike/.test(action) && response.success == true) {
-                elem = jQuery('#like-' + RegExp.$1 + '-' + RegExp.$2 + ' > span.count');
-                elem.text(parseInt(elem.text(), 10) - 1);
-            }
-        }
-    });
     // Comments posting
     var comment_area = jQuery('#comments-and-links textarea');
     if(comment_area.val() == '')
@@ -259,6 +231,7 @@ jQuery(document).ready(function() {
             } else {
                 jQuery('.not_following a[href="' + $this.attr('href') + '"]').parent().removeClass('not_following').addClass('following');
                 $parent.removeClass('not_following').addClass('following');
+                //ApparelActivity.notification('follow', 'profile', 0);
             }
         });
         return false;
@@ -365,35 +338,8 @@ jQuery(document).ready(function() {
         //jQuery(this).parent().parent().find('.look-like').hide().end().find('.hotspot').hide();
     //});
 
-    // Look like
-    jQuery('a.look-like').live('click', function() {
-        if(isAuthenticated == false) {
-            create_html_dialog(dialog_like_look); // from templates/base.html
-        } else {
-            var element = jQuery(this);
-            if(element.hasClass('liked')) {
-                jQuery.post(element.attr('data-unlike-url'), function(data) {
-                    if(data['success'] == true) {
-                        var likes = element.closest('li').find('.stats .likes');
-                        likes.text(parseInt(likes.text(), 10) - 1);
-                        element.removeClass('liked');
-                    }
-                });
-            } else {
-                jQuery.post(element.attr('data-like-url'), function(data) {
-                    if(data['success'] == true) {
-                        var likes = element.closest('li').find('.stats .likes');
-                        likes.text(parseInt(likes.text(), 10) + 1);
-                        element.addClass('liked');
-                    }
-                });
-            }
-        }
-        return false;
-    });
-
-    // Product like
-    jQuery('a.product-heart').live('mouseenter', function() {
+    // Product like - show tooltip if no previously likes
+    jQuery('a.product-heart, .product-like').live('mouseenter', function() {
         if(isAuthenticated == true && hasLiked == false) {
             var element = jQuery(this);
             if(element.children().length == 0) {
@@ -406,49 +352,32 @@ jQuery(document).ready(function() {
         jQuery(this).children().hide();
     });
 
-    var pending = false;
-    jQuery('a.product-heart').live('click', function() {
-        if(isAuthenticated == false) {
-            create_html_dialog(dialog_like_product); // from templates/base.html
-        } else {
-            var element = jQuery(this);
-            if(element.hasClass('liked')) {
-                pending = true;
-                jQuery.post(element.attr('data-unlike-url'), function(data) {
-                    if(data['success'] == true && pending) {
-                        var likes = element.parents('.header').find('.likes');
-                        var likes_count = parseInt(likes.text(), 10) - 1;
-                        if(likes_count <= 0) {
-                            likes.hide().text(likes_count);
-                        } else {
-                            likes.text(likes_count);
-                        }
-                        element.removeClass('liked');
+    // Click on like hearts
+    jQuery('body').on('click', '.product-like', {type: 'product'}, ApparelActivity.like_handler)
+                  .on('click', '.look-like', {type: 'look'}, ApparelActivity.like_handler);
 
-                        var likes = jQuery('.activity .likes span.count');
-                        likes.text(parseInt(likes.text(), 10) - 1);
+    // Update likes count
+    jQuery(document).on('like', function(event, element, type) {
+      if(type == 'look') {
+        ApparelActivity.update_count(element.closest('li').find('.stats .likes'), true);
+      } else if(type == 'product') {
+        var like_element = element.parents('.header').find('.likes').show();
+        ApparelActivity.update_count(like_element, true);
+      }
+      ApparelActivity.update_count(jQuery('.activity .likes .count'), true);
+    });
 
-                        pending = false;
-                    }
-                });
-            } else {
-                pending = true;
-                jQuery.post(element.attr('data-like-url'), function(data) {
-                    if(data['success'] == true && pending) {
-                        var likes = element.parents('.header').find('.likes');
-                        likes.show().text(parseInt(likes.text(), 10) + 1)
-                        element.addClass('liked');
-
-                        var likes = jQuery('.activity .likes span.count');
-                        likes.text(parseInt(likes.text(), 10) + 1);
-
-                        pending = false;
-                    }
-                });
-            }
-            hasLiked = true;
+    jQuery(document).on('unlike', function(event, element, type) {
+      if(type == 'look') {
+        ApparelActivity.update_count(element.closest('li').find('.stats .likes'), false);
+      } else if(type == 'product') {
+        var like_element = element.parents('.header').find('.likes');
+        var count = ApparelActivity.update_count(like_element, false);
+        if(count <= 0) {
+          like_element.hide();
         }
-        return false;
+      }
+      ApparelActivity.update_count(jQuery('.activity .likes .count'), false);
     });
 
     // Product hover
@@ -464,6 +393,7 @@ jQuery(document).ready(function() {
                     hover_element.find('.header').show();
                     if(json[0].liked == true) {
                         hover_element.find('.product-heart').addClass('liked');
+                        hover_element.find('.product-like').addClass('liked');
                     }
                     if(json[0].likes > 0) {
                         hover_element.find('.likes').show().text(json[0].likes);
@@ -488,6 +418,7 @@ jQuery(document).ready(function() {
         window.location.href = jQuery(this).siblings('a.product-image').attr('href');
     });
 
+    ApparelActivity.setup_share();
 });
 
 function getElementId(element, numeric) {
@@ -562,6 +493,105 @@ function makeProductTooltip(selector) {
             jQuery(e.currentTarget).parent().find('.product-meta > a').removeClass('hover');
         });
 }
+
+
+/**
+ * Activity functionality
+ */
+
+ApparelActivity = {
+    /**
+     * Like handler for products and looks
+     *
+     * Required data attributes: unlike-url, like-url, slug, id, (dialog-url)
+     */
+    like_handler: function(event) {
+        if(isAuthenticated == false) {
+            create_html_dialog(window['dialog_like_' + event.data.type]);
+        } else {
+            var element = jQuery(this);
+            if(element.hasClass('liked')) {
+                jQuery.post(element.data('unlike-url'), function(data) {
+                    if(data && data['success'] == true) {
+                        jQuery(document).trigger('unlike', [element, event.data.type]);
+                        element.removeClass('liked');
+
+                        // Try to remove from facebook
+                        //var data = {'object_type': element.data('type'), 'object_url': element.data('url'), 'action': element.data('action')}
+                        //jQuery.post('/facebook/pull/', data, function(response) {
+                            //if(response && response['success'] == true) { }
+                        //});
+                    }
+                });
+            } else {
+                jQuery.post(element.data('like-url'), function(data) {
+                    if(data['success'] == true) {
+                        jQuery(document).trigger('like', [element, event.data.type]);
+                        element.addClass('liked');
+
+                        // Push likes to google analytics
+                        _gaq.push(['_trackEvent', event.data.type.capitalize(), 'Like', element.data('slug')]);
+
+                        // Notify user about like
+                        if(share_settings['like_' + event.data.type] === false) {
+                            ApparelActivity.notification('like', event.data.type, element.data('id'));
+                        }
+                    }
+                });
+            }
+        }
+        return false;
+    },
+
+    /**
+     * Increase or decrease like count for element.
+     */
+    update_count: function(element, like) {
+        var count = parseInt(element.text(), 10) + (like === true ? 1 : -1);
+        element.text(count);
+        return count;
+    },
+
+    /**
+     * Queue a notification.
+     */
+    notification: function(action, object, id) {
+        jQuery('<div>').load('/notification/' + action + '_' + object + '/?id=' + id, function() {
+            jQuery(this).sticky();
+        });
+    },
+
+    /**
+     * Handler for share links, content is shared on facebook.
+     *
+     * Required data attributes: type, id, url, action
+     */
+    setup_share: function() {
+        jQuery(document).on('click', '.notification-share', function(event) {
+            var element = jQuery(this);
+            var data = {
+                'object_type': element.data('type'),
+                'object_id': element.data('id'),
+                'object_url': element.data('url'),
+                'action': element.data('action')
+            }
+
+            if(element.hasClass('share-save')) {
+                share_settings[element.data('action') + '_' + element.data('type')] = true;
+                data['save'] = true;
+            }
+
+            jQuery.post('/facebook/share/add/', data, function(response) {
+                if(response && response['success'] == true) {
+                    element.parents('.sticky').sticky('close');
+                }
+            });
+
+            return false;
+        });
+    }
+}
+
 
 /**
  *  Search functionality

@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
-{% load i18n %}
-{% load thumbnail %}
-{% load comments %}
-{% load trackback_tags %}
-{% load apparel_extras %}
-{% load cache %}
+{% load i18n thumbnail comments trackback_tags apparel_extras %}
 
 {# FIXME: we should reverse the list of categories. I think we need to create a filter for this #}
 {% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.categories|join:' | ' }} | {% endblock %}
 
+{% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
+
 {% block 'extra-styles' %}
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
+    <meta property="og:title" content="{{ object }}"/>
+    <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:product"/>
+    <meta property="og:image" content="{{ product_full_image }}"/>
+    <meta property="og:url" content="{{ product_full_url }}"/>
+    <meta property="og:description" content="{{ object.description }}"/>
+    <meta property="og:site_name" content="{{ CURRENT_NAME }}"/>
+    <meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}"/>
 {% endblock 'extra-styles' %}
 
 {% block 'extra-scripts' %}
@@ -169,7 +173,7 @@
                 {% thumbnail object.product_image "328" upscale=False crop="noop" as im %}
                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" />
                 {% endthumbnail %}
-                <a class="product-heart{% if user|likes_product:object %} liked{% endif %}" href="#" data-like-url="{% url product-action object.id 'like' %}" data-unlike-url="{% url product-action object.id 'unlike' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.price|floatformat:0 }}"></a>
+                <a class="product-like heart{% if user|likes_product:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-product %}" data-like-url="{% url product-action object.id 'like' %}" data-unlike-url="{% url product-action object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.price|floatformat:0 }}"></a>
             </div>
             <div id="gallery-container">
                 <div id="gallery">

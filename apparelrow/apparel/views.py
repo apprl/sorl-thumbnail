@@ -10,7 +10,7 @@ import csv
 import StringIO
 
 from django.conf import settings
-from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
@@ -41,9 +41,14 @@ from apparel.search import ApparelSearch
 from apparel.search import more_like_this_product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity
 from profile.notifications import process_like_look_created
+from apparel.tasks import facebook_push_graph, facebook_pull_graph
 
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 6
+
+#
+# Redirects
+#
 
 def product_redirect(request, pk):
     """
@@ -58,6 +63,93 @@ def brand_redirect(request, pk):
     """
     brand = get_object_or_404(Brand, pk=pk)
     return HttpResponsePermanentRedirect(brand.profile.get_absolute_url())
+
+#
+# Notifications
+#
+
+def notification_like_product(request):
+    try:
+        product_id = int(request.GET.get('id', None))
+    except (ValueError, TypeError):
+        return HttpResponseNotFound()
+
+    product = get_object_or_404(Product, pk=product_id)
+    url = request.build_absolute_uri(product.get_absolute_url())
+    return render(request, 'apparel/notifications/like_product.html', {'object': product, 'url': url})
+
+def notification_like_look(request):
+    try:
+        look_id = int(request.GET.get('id', None))
+    except (ValueError, TypeError):
+        return HttpResponseNotFound()
+
+    look = get_object_or_404(Look, pk=look_id)
+    url = request.build_absolute_uri(look.get_absolute_url())
+    return render(request, 'apparel/notifications/like_look.html', {'object': look, 'url': url})
+
+def notification_create_look(request):
+    try:
+        look_id = int(request.GET.get('id', None))
+    except (ValueError, TypeError):
+        return HttpResponseNotFound()
+
+    look = get_object_or_404(Look, pk=look_id)
+    url = request.build_absolute_uri(look.get_absolute_url())
+    return render(request, 'apparel/notifications/create_look.html', {'object': look, 'url': url})
+
+def notification_follow_profile(request):
+    try:
+        profile_id = int(request.GET.get('id', None))
+    except (ValueError, TypeError):
+        return HttpResponseNotFound()
+
+    profile = get_object_or_404(get_model('profile', 'ApparelProfile'), pk=profile_id)
+    url = request.build_absolute_uri(profile.get_absolute_url())
+    return render(request, 'apparel/notifications/follow_profile.html', {'object': profile, 'url': url})
+
+
+#
+# Facebook calls
+#
+
+SETTINGS_MATRIX = {
+    'like': {
+        'product': 'fb_share_like_product',
+        'look': 'fb_share_like_look'
+    },
+    'create': {
+        'look': 'fb_share_create_look'
+    },
+    'follow': {
+        'profile': 'fb_share_follows'
+    }
+}
+
+
+@login_required
+def facebook_share(request, activity):
+    action = request.POST.get('action', '')
+    object_type = request.POST.get('object_type', '')
+    object_url = request.POST.get('object_url', '')
+    object_id = request.POST.get('object_id', '')
+
+    if 'save' in request.POST and request.POST['save']:
+        profile = request.user.get_profile()
+        setattr(profile, SETTINGS_MATRIX[action][object_type], True)
+        profile.save()
+
+    facebook_user = get_facebook_user(request)
+    if activity == 'add':
+        facebook_push_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_id, object_url)
+    elif activity == 'remove':
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_id, object_url)
+
+    return HttpResponse(json.dumps(dict(success=True, error='')), mimetype='application/json')
+
+#
+# Products
+#
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, published=True, gender__isnull=False)
@@ -101,6 +193,8 @@ def product_detail(request, slug):
                 'object_url': request.build_absolute_uri(),
                 'more_like_this': more_like_this_product(product.id, product.gender, 20),
                 'comments': comments,
+                'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
+                'product_full_image': request.build_absolute_uri('%s%s' % (settings.MEDIA_URL, product.product_image.name)),
                 'likes': likes
             }, context_instance=RequestContext(request),
         )
@@ -137,20 +231,7 @@ def product_popup(request):
 
     return HttpResponse(json.dumps(result), mimetype='application/json')
 
-
 @login_required
-def product_unlike(request):
-    try:
-        product = Product.objects.get(pk=request.POST.get('product', 0))
-    except Product.MultipleObjectsReturned, Product.DoesNotExist:
-        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
-
-    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
-    product_like.active = False
-    product_like.save()
-
-    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
-
 def product_action(request, pk, action):
     """
     Like or unlike a product through ajax.
@@ -167,11 +248,7 @@ def product_action(request, pk, action):
     except Product.MultipleObjectsReturned, Product.DoesNotExist:
         return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
 
-    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
-    product_like.active = True if action == 'like' else False
-    product_like.save()
-
-    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
+    return _product_like(request, product, action)
 
 @login_required
 def product_like(request, slug, action):
@@ -189,6 +266,17 @@ def product_like(request, slug, action):
         product = Product.objects.get(slug=slug)
     except Product.MultipleObjectsReturned, Product.DoesNotExist:
         return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
+
+    return _product_like(request, product, action)
+
+def _product_like(request, product, action):
+    if action == 'like':
+        if request.user.get_profile().fb_share_like_product:
+            facebook_user = get_facebook_user(request)
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'product', product.pk, request.build_absolute_uri(product.get_absolute_url()))
+    elif action == 'unlike':
+        facebook_user = get_facebook_user(request)
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'product', product.pk, request.build_absolute_uri(product.get_absolute_url()))
 
     product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
     product_like.active = True if action == 'like' else False
@@ -212,6 +300,14 @@ def look_like(request, slug, action):
         look = Look.objects.get(slug=slug)
     except Look.MultipleObjectsReturned, Look.DoesNotExist:
         return HttpResponse(json.dumps(dict(success=False, error_message='No look found')), mimetype='application/json')
+
+    if action == 'like':
+        if request.user.get_profile().fb_share_like_look:
+            facebook_user = get_facebook_user(request)
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
+    elif action == 'unlike':
+        facebook_user = get_facebook_user(request)
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
 
     look_like, created = LookLike.objects.get_or_create(user=request.user, look=look)
     look_like.active = True if action == 'like' else False
@@ -369,7 +465,8 @@ def look_detail(request, slug):
                 'looks_by_user': looks_by_user,
                 'similar_looks': similar_looks,
                 'tooltips': True,
-                'object_url': request.build_absolute_uri(look.get_absolute_url())
+                'object_url': request.build_absolute_uri(look.get_absolute_url()),
+                'look_full_image': request.build_absolute_uri('%s%s' % (settings.MEDIA_URL, look.static_image.name)),
             },
             context_instance=RequestContext(request),
         )

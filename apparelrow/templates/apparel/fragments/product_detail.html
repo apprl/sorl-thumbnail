@@ -20,7 +20,13 @@
     \ <a href="{% gender_url object.gender 'shop' %}#category={{ last_category.id }}&manufacturer={{ object.manufacturer.id }}">{{ object.manufacturer }}</a>
     {% endwith %}
     </div>
-    <h1><a href="{{ object.manufacturer.profile.get_absolute_url }}">{{ object.manufacturer }}</a></h1>
+    <h1>
+      {% if object.manufacturer.profile %}
+      <a href="{{ object.manufacturer.profile.get_absolute_url }}">{{ object.manufacturer }}</a>
+      {% else %}
+      {{ object.manufacturer }}
+      {% endif %}
+    </h1>
     {% if object.product_name %}<h2>{{ object.product_name }}</h2>{% endif %}
     {% regroup object.options.all by option_type as option_list %}
     <!-- FIXME: Style this properly. See ticket #300 
@@ -90,21 +96,22 @@
     {% endif %}
 
 {% endcache %}
-    <ul id="add-menu" class="menu hover-menu">
-        <li id="add-to-look">
-            <a href="/apparel/look/">{% trans "Add to look" %}</a>
-            <form action="{% url apparel.views.add_to_look %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="look" />
-            <input type="hidden" name="product" value="{{ object.id }}" />
-            <ul>
-            {% for look in user_looks %}
-                {% include "apparel/fragments/look_button.html" %}
-            {% endfor %}
-            </ul>
-            </form>
-        </li>
-    </ul>
+    <!--<ul id="add-menu" class="menu hover-menu">-->
+        <!--<li id="add-to-look">-->
+            <!--<a href="/apparel/look/">{% trans "Add to look" %}</a>-->
+            <!--<form action="{% url apparel.views.add_to_look %}" method="post">-->
+            <!--{% csrf_token %}-->
+            <!--<input type="hidden" name="look" />-->
+            <!--<input type="hidden" name="product" value="{{ object.id }}" />-->
+            <!--<ul>-->
+            <!--{% for look in user_looks %}-->
+                <!--{% include "apparel/fragments/look_button.html" %}-->
+            <!--{% endfor %}-->
+            <!--</ul>-->
+            <!--</form>-->
+        <!--</li>-->
+    <!--</ul>-->
+    <div class="fb-like" data-send="true" data-layout="button_count" data-width="250" data-show-faces="false" data-font="arial"></div>
 </div>
 {% endif %}
 

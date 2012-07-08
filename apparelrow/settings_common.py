@@ -123,7 +123,7 @@ MIDDLEWARE_CLASSES = (
     'pagination.middleware.PaginationMiddleware',
     'trackback.middleware.PingbackUrlInjectionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'beta.middleware.BetaMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.flatpages',
     'django.contrib.comments',
+    'django.contrib.messages',
     'django.contrib.admin',
     
     # External
@@ -165,7 +166,6 @@ INSTALLED_APPS = (
 
     # Internal
     'apparel',              # Internal: Product display module
-    'beta',                 # Internal: Beta module
     'profile',              # Internal: User related module
     'importer',             # Internal: Product importer module
     'apparel_comments',
@@ -195,7 +195,8 @@ COMPRESS_JS = {
                              'js/jquery/jquery.ui.rotatable.js',
                              'js/jquery/jquery.html5-placeholder-shim.js',
                              'js/jquery/autoresize.jquery.min.js',
-                             'js/jquery/jquery.scrollable.js'),
+                             'js/jquery/jquery.scrollable.js',
+                             'js/jquery/jquery.apprl-sticky.js'),
         'output_filename': 'js/compiled/jquery.js',
     }
 }
@@ -232,6 +233,7 @@ FACEBOOK_APP_ID = '177090790853'
 FACEBOOK_API_KEY = '44d47ef3e7285cace9a4c7c88f645742'
 FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
 FACEBOOK_PERMS = 'email'
+FACEBOOK_OG_TYPE = 'apparelrow'
 
 # EMAIL CONFIGURATION
 DEFAULT_FROM_EMAIL = 'Apprl <no-reply@apprl.com>'
@@ -325,6 +327,8 @@ CELERY_ROUTES = ({
     'apparel.email.mailchimp_subscribe': {'queue': 'standard'},
     'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
     'apparel.brand_updates': {'queue': 'standard'},
+    'apparel.facebook_push_graph': {'queue': 'standard'},
+    'apparel.facebook_pull_graph': {'queue': 'standard'},
     'statistics.tasks.increment_click': {'queue': 'standard'}
 },)
 

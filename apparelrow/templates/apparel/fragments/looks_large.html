@@ -16,7 +16,7 @@
                 {% for component in object.photo_components.all %}
                     <a href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style }}display:none;"></a>
                 {% endfor %}
-                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" style="display:none;"></a>
+                <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" style="display:none;"></a>
                 </div>
             {% else %}
                 {% for component in object.collage_components.all %}
@@ -26,7 +26,7 @@
                     </a>
                     {% endthumbnail %}
                 {% endfor %}
-                <a class="look-like look-heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" style="display:none;"></a>
+                <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" style="display:none;"></a>
             {% endif %}
         </div>
         <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a> <a href="{% url apparel.views.look_delete object.slug %}" style="display:none;" title="{% trans "Delete look" %}" class="inline-delete-look">{% trans "Delete look" %}</a></h3>

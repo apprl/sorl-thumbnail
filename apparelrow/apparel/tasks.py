@@ -9,8 +9,9 @@ from mailsnake.exceptions import MailSnakeException
 from celery.task import task, periodic_task, PeriodicTask
 from celery.schedules import crontab
 from actstream.models import Action
+import requests
 
-from apparel.models import Brand, Product, VendorBrand, VendorCategory
+from apparel.models import Brand, Product, VendorBrand, VendorCategory, FacebookAction
 
 logger = logging.getLogger('apparel.tasks')
 
@@ -38,6 +39,31 @@ def mailchimp_unsubscribe(user, delete=False):
                                   send_notify=False)
     except MailSnakeException, e:
         logger.error('Could not unsubscribe user from mailchimp: %s' % (e,))
+
+
+@task(name='apparel.facebook_push_graph', max_retries=1, ignore_result=True)
+def facebook_push_graph(user_id, access_token, action, object_type, object_id, object_url):
+    url = 'https://graph.facebook.com/me/%s:%s/?access_token=%s' % (settings.FACEBOOK_OG_TYPE, action, access_token)
+
+    response = requests.post(url, data={object_type: object_url})
+    data = response.json
+
+    if 'id' in data:
+        FacebookAction.objects.create(user_id=user_id, action_id=data['id'], object_type=object_type, object_id=object_id)
+
+    logger.info(data)
+
+@task(name='apparel.facebook_pull_graph', max_retries=1, ignore_result=True)
+def facebook_pull_graph(user_id, access_token, action, object_type, object_id, object_url):
+    try:
+        facebook_action = FacebookAction.objects.get(user_id=user_id, object_type=object_type, object_id=object_id)
+        url = 'https://graph.facebook.com/%s/?access_token=%s' % (facebook_action.action_id, access_token)
+        response = requests.delete(url)
+        facebook_action.delete()
+
+        logger.info(response.json)
+    except FacebookAction.DoesNotExist:
+        logger.warning('Could not find a matching facebook action id for uid=%s type=%s id=%s' % (user_id, object_type, object_id))
 
 @periodic_task(name='apparel.brand_updates', run_every=crontab(minute=13), max_retries=1, ignore_result=True)
 def brand_updates():

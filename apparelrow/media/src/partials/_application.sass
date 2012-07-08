@@ -2,6 +2,7 @@
 @import partials/filter.sass
 @import partials/row.sass
 @import partials/look.sass
+@import partials/sticky.sass
 
 body
   +font
@@ -922,7 +923,10 @@ div#product-list
           +hover_button
           line-height: 2em
 
-a.product-heart
+.heart, .product-heart
+  position: absolute
+  top: 0
+  left: 0
   display: block
   margin: 10px 0 0 10px
   float: left
@@ -931,7 +935,8 @@ a.product-heart
   background: image_url("heartbg.jpg") top
   &:hover, &.liked
     background: image_url("heartbg.jpg") bottom
-  
+
+.product-heart
   .product-heart-tooltip
     position: relative
     background: #eaeaea
@@ -1558,6 +1563,8 @@ body.look
       width: $middle_width - 73px
 
 body.product
+  .fb-like
+    margin-top: 10px
   #comments-and-links
     form
       width: $small_width - 59px
@@ -1626,30 +1633,6 @@ form.standard-form
 
 body.product .product-image
   border: 1px solid #dadada
-body.product .product-image, body.look #content
-  a.product-heart
-    position: absolute
-    top: 0
-    left: 0
-  form.like
-    position: absolute
-    top: 0px
-    right: 0px
-    button
-      margin: 5px 5px 0 0
-      padding: 0
-      border: none
-      background: transparent image_url(unquote("heartbg.jpg")) no-repeat scroll top center
-      font-family: $font_family
-      color: $like_color
-      text-transform: uppercase
-      height: 35px
-      width: 34px
-      cursor: pointer
-      text-align: center
-      text-indent: -9999em
-      &:hover, &.liked
-        background-position: bottom center
 
 .similar-product
   .product-photo
