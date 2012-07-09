@@ -49,14 +49,14 @@ def facebook_push_graph(user_id, access_token, action, object_type, object_id, o
     data = response.json
 
     if 'id' in data:
-        FacebookAction.objects.create(user_id=user_id, action_id=data['id'], object_type=object_type, object_id=object_id)
+        FacebookAction.objects.get_or_create(user_id=user_id, action=action, action_id=data['id'], object_type=object_type, object_id=object_id)
 
     logger.info(data)
 
 @task(name='apparel.facebook_pull_graph', max_retries=1, ignore_result=True)
 def facebook_pull_graph(user_id, access_token, action, object_type, object_id, object_url):
     try:
-        facebook_action = FacebookAction.objects.get(user_id=user_id, object_type=object_type, object_id=object_id)
+        facebook_action = FacebookAction.objects.get(user_id=user_id, action=action, object_type=object_type, object_id=object_id)
         url = 'https://graph.facebook.com/%s/?access_token=%s' % (facebook_action.action_id, access_token)
         response = requests.delete(url)
         facebook_action.delete()

@@ -961,6 +961,7 @@ class BackgroundImage(models.Model):
 
 class FacebookAction(models.Model):
     user = models.ForeignKey(User, related_name='facebook_actions')
+    action = models.CharField(max_length=30)
     action_id = models.CharField(max_length=30)
     object_type = models.CharField(max_length=30)
     object_id = models.PositiveIntegerField()
