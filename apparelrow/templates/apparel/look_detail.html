@@ -36,6 +36,10 @@
             );
             event.preventDefault();
         });
+
+        {% if look_saved %}
+        ApparelActivity.notification('create', 'look', {{ object.id }});
+        {% endif %}
     });
 
 </script>

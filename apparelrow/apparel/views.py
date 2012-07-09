@@ -459,6 +459,17 @@ def look_detail(request, slug):
     looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:8]
     similar_looks = []
 
+
+    look_saved = False
+    if 'look_saved' in request.session:
+        if request.user.get_profile().fb_share_create_look:
+            facebook_user = get_facebook_user(request)
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
+        else:
+            look_saved = request.session['look_saved']
+
+        del request.session['look_saved']
+
     return render_to_response(
             'apparel/look_detail.html',
             {
@@ -468,6 +479,7 @@ def look_detail(request, slug):
                 'tooltips': True,
                 'object_url': request.build_absolute_uri(look.get_absolute_url()),
                 'look_full_image': request.build_absolute_uri('%s%s' % (settings.MEDIA_URL, look.static_image.name)),
+                'look_saved': look_saved,
             },
             context_instance=RequestContext(request),
         )
@@ -492,6 +504,7 @@ def look_edit(request, slug):
         if form.is_valid():
             form.save()
             if not request.is_ajax() and not request.FILES:
+                request.session['look_saved'] = True
                 return HttpResponseRedirect(form.instance.get_absolute_url())
         else:
             logging.debug('Form errors: %s', form.errors.__unicode__())
@@ -562,13 +575,14 @@ def look_create(request):
 def look_delete(request, slug):
     look = get_object_or_404(Look, slug=slug, user=request.user)
     if look:
-        look.delete()
-        return (True, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.username,))))
-    else:
-        return (False, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.username,))))
+        # pull create look activity from facebook (cannot be in a pre_delete signal because request object requirement)
+        facebook_user = get_facebook_user(request)
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
 
-def looks():
-    pass
+        look.delete()
+        return (True, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.get_profile().slug,))))
+    else:
+        return (False, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.get_profile().slug,))))
 
 def widget(request, object_id, template_name, model):
     try:
