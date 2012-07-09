@@ -4,11 +4,15 @@
 {% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
 
 {% block extra-styles %}
-    <meta property="og:title" content="{{ profile }}"/>
-    <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:profile"/>
-    <meta property="og:image" content="{{ profile.avatar_large }}"/>
-    <meta property="og:url" content="{{ profile.get_absolute_url }}"/>
-    <meta property="og:description" content="{{ profile.about }}"/>
+    <meta property="og:title" content="{{ profile.display_name }}"/>
+    {% if profile.is_brand %}
+    <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:brand"/>
+    {% else %}
+    <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:member"/>
+    {% endif %}
+    <meta property="og:image" content="{{ avatar_absolute_uri }}"/>
+    <meta property="og:url" content="{{ request.build_absolute_uri }}"/>
+    <meta property="og:description" content="{% if profile.about %}{{ profile.about }}{% else %}{% endif %}"/>
     <meta property="og:site_name" content="{{ CURRENT_NAME }}"/>
     <meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}"/>
 {% endblock extra-styles %}

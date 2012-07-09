@@ -4,7 +4,7 @@
 
 {% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Shop Men" %}{% else %}{% trans "Shop Women" %}{% endif %} | {% endblock %}
 
-{% block 'extra-styles' %}
+{% block extra-styles %}
     <style type="text/css">
         .tooltip {
             display: none;
@@ -15,7 +15,7 @@
             z-index: 200;
         }
     </style>
-{% endblock 'extra-styles' %}
+{% endblock extra-styles %}
 {% block 'extra-scripts' %}
     {% include 'apparel/fragments/browse_scripts.html' %}
 {% endblock 'extra-scripts' %}

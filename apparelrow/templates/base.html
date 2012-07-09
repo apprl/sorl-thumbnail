@@ -9,9 +9,9 @@
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/screen.css" %}" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/print.css" %}" type="text/css" media="print">
-    {% block 'extra-styles' %}
-    {% endblock 'extra-styles' %}
     <link rel="shortcut icon" href="{{ MEDIA_URL }}{% staticfile "images/favicon.ico" %}">
+    {% block extra-styles %}
+    {% endblock extra-styles %}
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
     <script type="text/javascript">

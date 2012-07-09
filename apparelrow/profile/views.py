@@ -88,6 +88,7 @@ def likes(request, profile, page=0):
         'next': request.get_full_path(),
         'change_image_form': form,
         'profile': profile,
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request)
     }
 
     content.update(get_profile_sidebar_info(profile.user))
@@ -119,6 +120,7 @@ def profile(request, profile, page=0):
         'next': request.get_full_path(),
         'change_image_form': form,
         'profile': profile,
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'recent_looks': profile.user.look.order_by('-modified')[:20]
         }
     content.update(get_profile_sidebar_info(profile.user))
@@ -145,6 +147,7 @@ def looks(request, profile, page=0):
         'next': request.get_full_path(),
         'change_image_form': form,
         'profile': profile,
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request)
         }
     content.update(get_profile_sidebar_info(profile.user))
 
@@ -171,6 +174,7 @@ def followers(request, profile, page=0):
         'next': request.get_full_path(),
         'change_image_form': form,
         'profile': profile,
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'recent_looks': profile.user.look.order_by('-modified')[:4]
         }
     content.update(get_profile_sidebar_info(profile.user))
@@ -198,6 +202,7 @@ def following(request, profile, page=0):
         'next': request.get_full_path(),
         'change_image_form': form,
         'profile': profile,
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'recent_looks': profile.user.look.order_by('-modified')[:4]
         }
     content.update(get_profile_sidebar_info(profile.user))

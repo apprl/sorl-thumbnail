@@ -156,16 +156,27 @@ class ApparelProfile(models.Model):
 
         return settings.APPAREL_DEFAULT_AVATAR_LARGE
 
+    def avatar_large_absolute_uri(self, request):
+        if self.image:
+            return request.build_absolute_uri(get_thumbnail(self.image, '200').url)
+
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_uid
+
+        return request.build_absolute_uri(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+
+
     @property
     def facebook_uid(self):
         """
         Try to convert username to int, if possible it is safe to assume that
         the user is a facebook-user and not an admin created user.
         """
-        try:
-            return int(self.user.username)
-        except ValueError:
-            pass
+        if not self.is_brand:
+            try:
+                return int(self.user.username)
+            except ValueError:
+                pass
 
         return None
 

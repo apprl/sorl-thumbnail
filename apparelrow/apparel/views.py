@@ -195,6 +195,7 @@ def product_detail(request, slug):
                 'comments': comments,
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
                 'product_full_image': request.build_absolute_uri('%s%s' % (settings.MEDIA_URL, product.product_image.name)),
+                'product_brand_full_url': request.build_absolute_uri(product.manufacturer.profile.get_absolute_url()),
                 'likes': likes
             }, context_instance=RequestContext(request),
         )
