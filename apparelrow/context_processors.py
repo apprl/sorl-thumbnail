@@ -16,7 +16,7 @@ def exposed_settings(request):
         'CURRENT_DOMAIN': current_site.domain,
         'CURRENT_NAME': current_site.name,
         'FACEBOOK_APP_ID': django_settings.FACEBOOK_APP_ID,
-        'FACEBOOK_SCOPE': django_settings.FACEBOOK_PERMS,
+        'FACEBOOK_SCOPE': django_settings.FACEBOOK_SCOPE,
         'FACEBOOK_OG_TYPE': django_settings.FACEBOOK_OG_TYPE
     }
 
