@@ -126,6 +126,7 @@ admin.site.register(LookComponent, LookComponentAdmin)
 class BrandAdmin(admin.ModelAdmin):
     list_display = ('name',)
     readonly_fields = ('old_name',)
+    search_fields = ('name',)
 
 admin.site.register(Brand, BrandAdmin)
 
