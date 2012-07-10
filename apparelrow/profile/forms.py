@@ -38,3 +38,13 @@ class NewsletterForm(ModelForm):
     class Meta:
         model = ApparelProfile
         fields = ('newsletter',)
+
+class FacebookSettingsForm(ModelForm):
+    fb_share_like_product = BooleanField(required=False, help_text=_('Share product likes on facebook'))
+    fb_share_like_look = BooleanField(required=False, help_text=_('Share look likes on facebook'))
+    fb_share_create_look = BooleanField(required=False, help_text=_('Share look creations on facebook'))
+    fb_share_follow_profile = BooleanField(required=False, help_text=_('Share follows on facebook'))
+
+    class Meta:
+        model = ApparelProfile
+        fields = ('fb_share_like_product', 'fb_share_like_look', 'fb_share_follow_profile', 'fb_share_create_look')

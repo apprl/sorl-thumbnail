@@ -21,7 +21,7 @@ from apparel.models import Product
 from apparel.views import get_facebook_friends, get_most_followed_users
 from apparel.utils import get_pagination_page, get_gender_from_cookie
 from profile.utils import get_facebook_user
-from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm
+from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm
 from profile.models import EmailChange, ApparelProfile
 from profile.tasks import send_email_confirm_task
 
@@ -286,6 +286,22 @@ def settings_email(request):
             'email_form': form,
             'email_change': email_change
         })
+
+@login_required
+def settings_facebook(request):
+    """
+    Handles the facebook settings form.
+    """
+    if request.method == 'POST':
+        form = FacebookSettingsForm(request.POST, request.FILES, instance=request.user.get_profile())
+        if form.is_valid():
+            form.save()
+
+        return HttpResponseRedirect(reverse('profile.views.settings_facebook'))
+
+    form = FacebookSettingsForm(instance=request.user.get_profile())
+
+    return render(request, 'profile/settings_facebook.html', {'facebook_settings_form': form})
 
 #
 # Welcome login flow
