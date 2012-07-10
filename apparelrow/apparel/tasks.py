@@ -41,17 +41,20 @@ def mailchimp_unsubscribe(user, delete=False):
         logger.error('Could not unsubscribe user from mailchimp: %s' % (e,))
 
 
-@task(name='apparel.facebook_push_graph', max_retries=1, ignore_result=True)
+@task(name='apparel.facebook_push_graph', max_retries=5, ignore_result=True)
 def facebook_push_graph(user_id, access_token, action, object_type, object_id, object_url):
     url = 'https://graph.facebook.com/me/%s:%s/?access_token=%s' % (settings.FACEBOOK_OG_TYPE, action, access_token)
 
     response = requests.post(url, data={object_type: object_url})
     data = response.json
 
+    logger.info(data)
+
     if 'id' in data:
         FacebookAction.objects.get_or_create(user_id=user_id, action=action, action_id=data['id'], object_type=object_type, object_id=object_id)
+    elif 'error' in data and data['error']['code'] == 2:
+        facebook_push_graph.retry()
 
-    logger.info(data)
 
 @task(name='apparel.facebook_pull_graph', max_retries=1, ignore_result=True)
 def facebook_pull_graph(user_id, access_token, action, object_type, object_id, object_url):
