@@ -5,6 +5,8 @@
 
 (function($) {
 
+    var STICKY_OFFSET = 30;
+
     var settings = {
         'speed': 'slow',
         'duplicates': false,
@@ -38,13 +40,22 @@
         
             // Make sure the sticky queue exists
             if(!$('body').find('.sticky-queue').html()) {
-                $('body').append('<div class="sticky-queue top-right"></div>');
+                var offset_container = jQuery('#inner-container').offset().top + STICKY_OFFSET;
+                var offset_scroll = $(window).scrollTop();
+                var offset = offset_container - offset_scroll;
+                var queue = jQuery('<div class="sticky-queue"></div>').css('top', (offset < STICKY_OFFSET ? STICKY_OFFSET : offset));
+                $('body').append(queue);
+                $(window).scroll(function(event) {
+                    var offset_scroll = $(window).scrollTop();
+                    var offset = offset_container - (offset_scroll < 0 ? 0 : offset_scroll);
+                    queue.css('top', (offset < STICKY_OFFSET ? STICKY_OFFSET : offset));
+                });
             }
         
             // Can it be displayed?
             if(display) {
                 // Building and inserting sticky note
-                $('.sticky-queue').prepend('<div class="sticky border-top-right" id="' + uniqID + '"></div>');
+                $('.sticky-queue').prepend('<div class="sticky" id="' + uniqID + '"></div>');
                 $('#' + uniqID).append('<div class="sticky-note" rel="' + uniqID + '">' + note + '</div>');
           
                 // Smoother animation

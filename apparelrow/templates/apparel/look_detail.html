@@ -8,7 +8,7 @@
 {% block extra-styles %}
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
-    <meta property="og:title" content="{{ object }}"/>
+    <meta property="og:title" content="{{ object.title }}"/>
     <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:look"/>
     <meta property="og:image" content="{{ look_full_image }}"/>
     <meta property="og:url" content="{{ object_url }}"/>

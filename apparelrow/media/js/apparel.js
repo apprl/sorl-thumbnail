@@ -576,7 +576,7 @@ ApparelActivity = {
                 'action': element.data('action')
             }
 
-            if(element.hasClass('share-save')) {
+            if(element.parents('div.sticky-note').find('#save-share').is(':checked')) {
                 share_settings[element.data('action') + '_' + element.data('type')] = true;
                 data['save'] = true;
             }
