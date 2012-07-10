@@ -90,7 +90,7 @@ def admin_user_list_csv(request):
         writer.writerow([user.email.encode('utf-8'), user.first_name.encode('utf-8'), user.last_name.encode('utf-8')])
 
     response = HttpResponse(csv_string.getvalue(), content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=apparelrow-users.csv'
+    response['Content-Disposition'] = 'attachment; filename=apprl-users.csv'
 
     csv_string.close()
 
@@ -259,8 +259,8 @@ def generate_weekly_mail(request):
             options = {
                     'list_id': settings.MAILCHIMP_WEEKLY_LIST,
                     'subject': subject,
-                    'from_email': 'postman@apparelrow.com',
-                    'from_name': 'Apparelrow',
+                    'from_email': 'postman@apprl.com',
+                    'from_name': 'Apprl',
                     'to_name': '*|FNAME|*',
                     'inline_css': True,
                     'generate_text': True,

@@ -657,11 +657,11 @@ msgstr ""
 
 #: templates/base.html:164
 msgid ""
-"You can make Apparelrow even smarter and more personal by connecting to your "
+"You can make Apprl even smarter and more personal by connecting to your "
 "Facebook account. For example you can see what clothes your friends like and "
 "see what brands are the most popular in your network."
 msgstr ""
-"Du kan göra Apparelrow ännu smartare och mer personligt genom att logga in "
+"Du kan göra Apprl ännu smartare och mer personligt genom att logga in "
 "med ditt Facebookkonto. Exempelvis kan du se vad dina vänner gillar för "
 "kläder och vilka varumärken som är mest populära i ditt nätverk."
 
@@ -737,8 +737,8 @@ msgid "All members"
 msgstr "Alla medlemmar"
 
 #: templates/base.html:280
-msgid "About Apparelrow"
-msgstr "Om Apparelrow"
+msgid "About Apprl"
+msgstr "Om Apprl"
 
 #: templates/base.html:282
 msgid "Blog"
@@ -1172,23 +1172,19 @@ msgstr ""
 msgid "comments"
 msgstr "kommentarer"
 
-#: templates/apparel/fragments/dialog_about_apparelrow.html:4
-msgid "About Apparelrow beta"
-msgstr "Om Apparelrows beta"
-
 #: templates/apparel/fragments/dialog_about_apparelrow.html:6
 msgid ""
-"Apparelrow is currently available to a limited number of people. We look "
+"Apprl is currently available to a limited number of people. We look "
 "forward to making the site better together with you. We appreciate all "
 "questions, suggestions and problems from you, the more the better. Click the "
 "link 'Tyck Till' on the right hand side to share your thoughts. Or send us "
-"an email on info@apparelrow.com. Have fun!"
+"an email on info@apprl.com. Have fun!"
 msgstr ""
-"Apparelrow är just nu bara tillgänglig för ett begränsat antal personer. Vi "
+"Apprl är just nu bara tillgänglig för ett begränsat antal personer. Vi "
 "ser fram emot att göra siten bättre tillsammans med dig. Vi uppskattar alla "
 "frågor, förslag och problem vi kan få från dig, ju mer desto bättre. Klicka "
 "på länken 'Tyck Till' i högerkanten på siten och dela med dig av dina "
-"tankar. Eller maila oss på info@apparelrow.com. så blir vi också glada. Have "
+"tankar. Eller maila oss på info@apprl.com. så blir vi också glada. Have "
 "fun!"
 
 #: templates/apparel/fragments/dialog_about_cookies.html:4
@@ -1197,20 +1193,20 @@ msgstr "Om cookies"
 
 #: templates/apparel/fragments/dialog_about_cookies.html:6
 msgid ""
-"Apparelrow uses cookies to make it easier for users to use the site. A "
+"Apprl uses cookies to make it easier for users to use the site. A "
 "cookie is an unharmful, small text file that is stored on your computer, "
 "which makes it possible to recognize your web browser when you visit the "
 "site. The information that we store in cookies is anonymous and cannot be "
 "used to identify personal information about users. If you want, you may "
-"disable the use of cookies in your browser settings, but Apparelrow (and a "
+"disable the use of cookies in your browser settings, but Apprl (and a "
 "lot of other sites) will not work as well."
 msgstr ""
-"Apparelrow använder cookies för att göra tjänsten enklare och smartare för "
+"Apprl använder cookies för att göra tjänsten enklare och smartare för "
 "användaren. En cookie är en liten ofarlig textfil som lagras på din dator, "
 "som gör det möjligt att känna igen din webbläsare när du besöker oss igen. "
 "Informationen vi sparar i cookies är helt anonym och den kan inte användas "
 "för att identifiera personlig information om användare. Om du vill kan du "
-"stänga av cookies i din webbläsare, men Apparelrow (och många andra siter) "
+"stänga av cookies i din webbläsare, men Apprl (och många andra siter) "
 "kommer att fungera sämre då."
 
 #: templates/apparel/fragments/dialog_follow_user.html:7
@@ -1547,8 +1543,8 @@ msgid "Invite friends"
 msgstr "Bjud in vänner"
 
 #: templates/beta/dialog_invite_user.html:12
-msgid "Right now a limited number of people have access to Apparelrow."
-msgstr "Just nu har ett begränsat antal personer tillgång till Apparelrow."
+msgid "Right now a limited number of people have access to Apprl."
+msgstr "Just nu har ett begränsat antal personer tillgång till Apprl."
 
 #: templates/beta/dialog_invite_user.html:13
 #, python-format
@@ -1562,8 +1558,8 @@ msgid "Add more e-mail addresses"
 msgstr "Lägg till fler e-postadresser"
 
 #: templates/beta/dialog_invite_user.html:22
-msgid "Follow me on Apparelrow"
-msgstr "Följ mig på Apparelrow"
+msgid "Follow me on Apprl"
+msgstr "Följ mig på Apprl"
 
 #: templates/beta/dialog_invite_user.html:25
 msgid "Send"
@@ -1575,10 +1571,10 @@ msgstr "Hej!"
 
 #: templates/beta/mail_body.html:6
 msgid ""
-"Apparelrow is a service that makes it more easy and fun to find clothes and "
+"Apprl is a service that makes it more easy and fun to find clothes and "
 "be inspired by your friends."
 msgstr ""
-"Apparelrow är en tjänst som gör det enklare och roligare att hitta kläder "
+"Apprl är en tjänst som gör det enklare och roligare att hitta kläder "
 "och inspireras av dina vänner."
 
 #: templates/beta/mail_body.html:8
@@ -1614,13 +1610,13 @@ msgid "Welcome!"
 msgstr "Välkommen!"
 
 #: templates/beta/mail_body.html:16 templates/profile/confirm_email.html:8
-msgid "/The Apparelrow team"
-msgstr "/The Apparelrow team"
+msgid "/The Apprl team"
+msgstr "/The Apprl team"
 
 #: templates/beta/mail_subject.html:1
 #, python-format
-msgid "%(name)s has invited you to Apparelrow"
-msgstr "%(name)s har bjudit in dig till Apparelrow."
+msgid "%(name)s has invited you to Apprl"
+msgstr "%(name)s har bjudit in dig till Apprl."
 
 #: templates/comments/form.html:20
 msgid "Comment"
@@ -1629,22 +1625,22 @@ msgstr "Kommentera"
 #: templates/email/base.html:5
 msgid ""
 "\n"
-"The Apparelrow Team\n"
+"The Apprl Team\n"
 msgstr ""
 "\n"
-"Apparelrow-teamet\n"
+"Apprl-teamet\n"
 
 #: templates/facebook/setup.html:11
 msgid ""
 "\n"
-"        If you already have an account at Apparelrow, enter your username "
+"        If you already have an account at Apprl, enter your username "
 "and password below to link it with your facebook account. If you do not have "
 "an account, click Continue with facebook only - you will not have to "
 "remember a username and password.    \n"
 "    "
 msgstr ""
 "\n"
-"        Om du redan har ett konto på Apparelrow, ange ditt användarnamn och "
+"        Om du redan har ett konto på Apprl, ange ditt användarnamn och "
 "lösenord nedan för att länka det med ditt Facebook-konto. Om du inte har ett "
 "konto, klicka Fortsätt med endast Facebook - du behöver inte komma ihåg ditt "
 "användarnamn och lösenord.\n"
@@ -1834,10 +1830,10 @@ msgstr "%(display_name)s har inte gjort något än."
 #: templates/profile/settings_share.html:6
 msgid ""
 "Here you can set which e-mail adress you want to receive messages and "
-"updates to from Apparelrow"
+"updates to from Apprl"
 msgstr ""
 "Här kan du ställa in vilken e-mailadress du vill få meddelanden och "
-"händelser till från Apparelrow."
+"händelser till från Apprl."
 
 #: templates/profile/settings_email.html:8
 #: templates/profile/settings_share.html:8
@@ -1928,8 +1924,8 @@ msgstr " som du har gillat:"
 
 #: templates/profile/notifications/email_follow_user.html:2
 #: templates/profile/notifications/email_follow_user_following.html:2
-msgid " now follow your updates on Apparelrow."
-msgstr " följer nu dina uppdateringar på Apparelrow."
+msgid " now follow your updates on Apprl."
+msgstr " följer nu dina uppdateringar på Apprl."
 
 #: templates/profile/notifications/email_follow_user.html:3
 msgid "You are not currently following "
@@ -1997,8 +1993,8 @@ msgstr ""
 #: templates/profile/notifications/subject_follow_user_following.html:1
 #, python-format
 msgid ""
-"%(sender_first_name)s %(sender_last_name)s now follows you on Apparelrow"
-msgstr "%(sender_first_name)s %(sender_last_name)s följer dig nu på Apparelrow"
+"%(sender_first_name)s %(sender_last_name)s now follows you on Apprl"
+msgstr "%(sender_first_name)s %(sender_last_name)s följer dig nu på Apprl"
 
 #: templates/profile/notifications/subject_like_look_created.html:1
 #, python-format
@@ -2028,11 +2024,11 @@ msgstr ""
 #: templates/registration/activation_complete.html:9
 msgid ""
 "\n"
-"        Done! Your account at Apparelrow is now active.\n"
+"        Done! Your account at Apprl is now active.\n"
 "    "
 msgstr ""
 "\n"
-"        Klar! Ditt konto på Apparelrow är nu aktiverat.\n"
+"        Klar! Ditt konto på Apprl är nu aktiverat.\n"
 "    "
 
 #: templates/registration/activation_complete.html:13

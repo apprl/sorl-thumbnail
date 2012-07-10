@@ -58,7 +58,7 @@ urlpatterns = patterns('',
     url(r'^dialog/like-look/$', 'apparel.views.dialog_like_look', name='dialog-like-look'),
     url(r'^dialog/follow-user/$', 'apparel.views.dialog_follow_user', name='dialog-follow-user'),
     url(r'^dialog/about-cookies/$', 'django.views.generic.simple.direct_to_template', {'template': 'apparel/fragments/dialog_about_cookies.html'}, name='dialog-about-cookies'),
-    url(r'^dialog/about-apparelrow/$', 'django.views.generic.simple.direct_to_template', {'template': 'apparel/fragments/dialog_about_apparelrow.html'}, name='dialog-about-apparelrow'),
+    url(r'^dialog/about-apprl/$', 'django.views.generic.simple.direct_to_template', {'template': 'apparel/fragments/dialog_about_apparelrow.html'}, name='dialog-about-apparelrow'),
 
     # Widget
     url(r'^widget/look/(?P<object_id>\d+)/collage/$', 'apparel.views.widget', {

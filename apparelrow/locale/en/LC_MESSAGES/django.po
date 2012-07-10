@@ -649,7 +649,7 @@ msgstr ""
 
 #: templates/base.html:164
 msgid ""
-"You can make Apparelrow even smarter and more personal by connecting to your "
+"You can make Apprl even smarter and more personal by connecting to your "
 "Facebook account. For example you can see what clothes your friends like and "
 "see what brands are the most popular in your network."
 msgstr ""
@@ -727,7 +727,7 @@ msgid "All members"
 msgstr ""
 
 #: templates/base.html:280
-msgid "About Apparelrow"
+msgid "About Apprl"
 msgstr ""
 
 #: templates/base.html:282
@@ -1146,17 +1146,13 @@ msgstr ""
 msgid "comments"
 msgstr ""
 
-#: templates/apparel/fragments/dialog_about_apparelrow.html:4
-msgid "About Apparelrow beta"
-msgstr ""
-
 #: templates/apparel/fragments/dialog_about_apparelrow.html:6
 msgid ""
-"Apparelrow is currently available to a limited number of people. We look "
+"Apprl is currently available to a limited number of people. We look "
 "forward to making the site better together with you. We appreciate all "
 "questions, suggestions and problems from you, the more the better. Click the "
 "link 'Tyck Till' on the right hand side to share your thoughts. Or send us "
-"an email on info@apparelrow.com. Have fun!"
+"an email on info@apprl.com. Have fun!"
 msgstr ""
 
 #: templates/apparel/fragments/dialog_about_cookies.html:4
@@ -1165,12 +1161,12 @@ msgstr ""
 
 #: templates/apparel/fragments/dialog_about_cookies.html:6
 msgid ""
-"Apparelrow uses cookies to make it easier for users to use the site. A "
+"Apprl uses cookies to make it easier for users to use the site. A "
 "cookie is an unharmful, small text file that is stored on your computer, "
 "which makes it possible to recognize your web browser when you visit the "
 "site. The information that we store in cookies is anonymous and cannot be "
 "used to identify personal information about users. If you want, you may "
-"disable the use of cookies in your browser settings, but Apparelrow (and a "
+"disable the use of cookies in your browser settings, but Apprl (and a "
 "lot of other sites) will not work as well."
 msgstr ""
 
@@ -1470,7 +1466,7 @@ msgid "Invite friends"
 msgstr ""
 
 #: templates/beta/dialog_invite_user.html:12
-msgid "Right now a limited number of people have access to Apparelrow."
+msgid "Right now a limited number of people have access to Apprl."
 msgstr ""
 
 #: templates/beta/dialog_invite_user.html:13
@@ -1485,7 +1481,7 @@ msgid "Add more e-mail addresses"
 msgstr ""
 
 #: templates/beta/dialog_invite_user.html:22
-msgid "Follow me on Apparelrow"
+msgid "Follow me on Apprl"
 msgstr ""
 
 #: templates/beta/dialog_invite_user.html:25
@@ -1498,7 +1494,7 @@ msgstr ""
 
 #: templates/beta/mail_body.html:6
 msgid ""
-"Apparelrow is a service that makes it more easy and fun to find clothes and "
+"Apprl is a service that makes it more easy and fun to find clothes and "
 "be inspired by your friends."
 msgstr ""
 
@@ -1533,12 +1529,12 @@ msgid "Welcome!"
 msgstr ""
 
 #: templates/beta/mail_body.html:16 templates/profile/confirm_email.html:8
-msgid "/The Apparelrow team"
+msgid "/The Apprl team"
 msgstr ""
 
 #: templates/beta/mail_subject.html:1
 #, python-format
-msgid "%(name)s has invited you to Apparelrow"
+msgid "%(name)s has invited you to Apprl"
 msgstr ""
 
 #: templates/comments/form.html:20
@@ -1548,13 +1544,13 @@ msgstr ""
 #: templates/email/base.html:5
 msgid ""
 "\n"
-"The Apparelrow Team\n"
+"The Apprl Team\n"
 msgstr ""
 
 #: templates/facebook/setup.html:11
 msgid ""
 "\n"
-"        If you already have an account at Apparelrow, enter your username "
+"        If you already have an account at Apprl, enter your username "
 "and password below to link it with your facebook account. If you do not have "
 "an account, click Continue with facebook only - you will not have to "
 "remember a username and password.    \n"
@@ -1731,7 +1727,7 @@ msgstr ""
 #: templates/profile/settings_share.html:6
 msgid ""
 "Here you can set which e-mail adress you want to receive messages and "
-"updates to from Apparelrow"
+"updates to from Apprl"
 msgstr ""
 
 #: templates/profile/settings_email.html:8
@@ -1817,7 +1813,7 @@ msgstr ""
 
 #: templates/profile/notifications/email_follow_user.html:2
 #: templates/profile/notifications/email_follow_user_following.html:2
-msgid " now follow your updates on Apparelrow."
+msgid " now follow your updates on Apprl."
 msgstr ""
 
 #: templates/profile/notifications/email_follow_user.html:3
@@ -1878,7 +1874,7 @@ msgstr ""
 #: templates/profile/notifications/subject_follow_user_following.html:1
 #, python-format
 msgid ""
-"%(sender_first_name)s %(sender_last_name)s now follows you on Apparelrow"
+"%(sender_first_name)s %(sender_last_name)s now follows you on Apprl"
 msgstr ""
 
 #: templates/profile/notifications/subject_like_look_created.html:1
@@ -1904,7 +1900,7 @@ msgstr ""
 #: templates/registration/activation_complete.html:9
 msgid ""
 "\n"
-"        Done! Your account at Apparelrow is now active.\n"
+"        Done! Your account at Apprl is now active.\n"
 "    "
 msgstr ""
 

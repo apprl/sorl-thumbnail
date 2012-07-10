@@ -29,7 +29,7 @@ TIME_ZONE = 'Europe/Stockholm'
 
 
 SITE_ID = 1
-SITE_NAME = "Apparelrow"
+SITE_NAME = "Apprl"
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -234,10 +234,10 @@ FACEBOOK_SECRET_KEY = '1701399a0a6126f84d08d7e702285c56'
 FACEBOOK_PERMS = 'email'
 
 # EMAIL CONFIGURATION
-DEFAULT_FROM_EMAIL = 'Apparelrow <no-reply@apparelrow.com>'
+DEFAULT_FROM_EMAIL = 'Apprl <no-reply@apprl.com>'
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587
-EMAIL_HOST_USER     = 'postman@apparelrow.com'
+EMAIL_HOST_USER     = 'postman@apprl.com'
 EMAIL_HOST_PASSWORD = 'lat3Del!vEry'
 EMAIL_USE_TLS       = True
 
@@ -250,7 +250,7 @@ CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_TEMPLATE_TIMEOUT = 60 * 15
 
 # GOOGLE ANALYTICS CONFIGURATION
-APPAREL_DOMAIN = '.apparelrow.com' # FIXME: We should probably get this from the Sites framework
+APPAREL_DOMAIN = '.apprl.com' # FIXME: We should probably get this from the Sites framework
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-21990268-1'
 GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 

@@ -3,7 +3,7 @@
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
     {% with user.get_profile.get_updates_last_visit as updates %}
-    <title>{% if updates %}({{ updates }}) {% endif %}{% block extra-title %}{% endblock %}Apparelrow</title>
+    <title>{% if updates %}({{ updates }}) {% endif %}{% block extra-title %}{% endblock %}Apprl</title>
     {% endwith %}
     <meta charset="utf-8" />
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />
@@ -102,7 +102,7 @@
  <div id="outer">
     <div id="header">
         <div id="inner-header">
-            <a href="{% gender_url APPAREL_GENDER 'shop' %}"><h1>Apparelrow</h1></a>
+            <a href="{% gender_url APPAREL_GENDER 'shop' %}"><h1>Apprl</h1></a>
 
             <form action="/apparel/search" method="get" onSubmit="return false" id="search" autocomplete="off">
                 <input type="text" name="s" placeholder="{% trans 'Search for products' %}" />
@@ -161,7 +161,7 @@
                 <span class="row-span">
                     <h1 class="rowrubbe">{% trans "Socialize!" %}</h1>
                     <p class="p-row">
-                    {% blocktrans %}You can make Apparelrow even smarter and more personal by connecting to your Facebook account. For example you can see what clothes your friends like and see what brands are the most popular in your network.{% endblocktrans %}
+                    {% blocktrans %}You can make Apprl even smarter and more personal by connecting to your Facebook account. For example you can see what clothes your friends like and see what brands are the most popular in your network.{% endblocktrans %}
                     </p>
                 </span>
                 <a class="btn-slide ar_welcome" href="#"></a>
@@ -277,10 +277,10 @@
                 {% endif %}
             </ul>
             <ul>
-                <li><h3>{% trans "About Apparelrow" %}</h3></li>
+                <li><h3>{% trans "About Apprl" %}</h3></li>
                 <li><a href="{% url about %}">{% trans "About" %}</a></li>
-                <li><a target="_blank" href="http://blog.apparelrow.com/">{% trans "Blog" %}</a></li>
-                <li><a href="mailto:info@apparelrow.com">{% trans "Contact" %}</a></li>
+                <li><a target="_blank" href="http://blog.apprl.com/">{% trans "Blog" %}</a></li>
+                <li><a href="mailto:info@apprl.com">{% trans "Contact" %}</a></li>
                 <li><a class="about-cookies-popup" href="/">{% trans "Cookies" %}</a></li>
             </ul>
         </div>
