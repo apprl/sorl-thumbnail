@@ -19,7 +19,7 @@ from apparel.decorators import get_current_user
 from apparel.models import Product
 # FIXME: Move get_facebook_friends and get_most_followed_users to a util module
 from apparel.views import get_facebook_friends, get_most_followed_users
-from apparel.utils import get_pagination_page
+from apparel.utils import get_pagination_page, get_gender_from_cookie
 from profile.utils import get_facebook_user
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm
 from profile.models import EmailChange, ApparelProfile
@@ -67,8 +67,10 @@ def likes(request, profile, page=0):
     Displays the profile likes page.
     """
     form = handle_change_image(request, profile)
+
     if profile.brand_id:
-        queryset = Product.valid_objects.filter(manufacturer=profile.brand_id).order_by('-date_added')
+        gender = get_gender_from_cookie(request)
+        queryset = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added')
     else:
         queryset = Product.published_objects.filter(likes__user=profile.user, likes__active=True).order_by('-likes__modified')
 
