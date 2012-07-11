@@ -231,7 +231,7 @@ jQuery(document).ready(function() {
             } else {
                 jQuery('.not_following a[href="' + $this.attr('href') + '"]').parent().removeClass('not_following').addClass('following');
                 $parent.removeClass('not_following').addClass('following');
-                //ApparelActivity.notification('follow', 'profile', 0);
+                ApparelActivity.notification('follow', $this.data('profile-type'), $this.data('profile-id'));
             }
         });
         return false;

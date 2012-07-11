@@ -386,9 +386,9 @@ class DisplayActivityFollowUrl(Node):
         actor_instance = self.actor.resolve(context)
         content_type = ContentType.objects.get_for_model(actor_instance).pk
         if self.follow:
-            return reverse('actstream_follow', kwargs={'content_type_id': content_type, 'object_id': actor_instance.pk})
+            return reverse('apprl-follow', kwargs={'content_type_id': content_type, 'object_id': actor_instance.pk})
 
-        return reverse('actstream_unfollow', kwargs={'content_type_id': content_type, 'object_id': actor_instance.pk})
+        return reverse('apprl-unfollow', kwargs={'content_type_id': content_type, 'object_id': actor_instance.pk})
 
 @register.tag
 def unfollow_tag(parser, token):

@@ -20,10 +20,15 @@ urlpatterns = patterns('',
     url(r'^notification/like_product/$', 'apparel.views.notification_like_product', name='notification-like-product'),
     url(r'^notification/like_look/$', 'apparel.views.notification_like_look', name='notification-like-look'),
     url(r'^notification/create_look/$', 'apparel.views.notification_create_look', name='notification-create-look'),
-    url(r'^notification/follow_profile/$', 'apparel.views.notification_follow_profile', name='notification-follow-profile'),
+    url(r'^notification/follow_member/$', 'apparel.views.notification_follow_member', name='notification-follow-member'),
+    url(r'^notification/follow_brand/$', 'apparel.views.notification_follow_brand', name='notification-follow-brand'),
 
     # Facebook
     url(r'^facebook/share/(?P<activity>add|remove)/?$', 'apparel.views.facebook_share', name='facebook-share'),
+
+    # Follow/Unfollow API
+    url(r'^follow/(?P<content_type_id>\d+)/(?P<object_id>\d+)/$', 'apparel.views.follow_unfollow', name='apprl-follow'),
+    url(r'^unfollow/(?P<content_type_id>\d+)/(?P<object_id>\d+)/$', 'apparel.views.follow_unfollow', {'do_follow': False}, name='apprl-unfollow'),
 
     # Products
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),

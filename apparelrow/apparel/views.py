@@ -28,6 +28,7 @@ from django.utils import translation
 from django.utils.encoding import smart_unicode
 from hanssonlarsson.django.exporter import json as special_json
 from actstream.models import Follow, Action
+from actstream.views import follow_unfollow as actstream_follow_unfollow
 from sorl.thumbnail import get_thumbnail
 
 from profile.models import ApparelProfile
@@ -98,7 +99,7 @@ def notification_create_look(request):
     url = request.build_absolute_uri(look.get_absolute_url())
     return render(request, 'apparel/notifications/create_look.html', {'object': look, 'url': url})
 
-def notification_follow_profile(request):
+def notification_follow_member(request):
     try:
         profile_id = int(request.GET.get('id', None))
     except (ValueError, TypeError):
@@ -106,8 +107,17 @@ def notification_follow_profile(request):
 
     profile = get_object_or_404(get_model('profile', 'ApparelProfile'), pk=profile_id)
     url = request.build_absolute_uri(profile.get_absolute_url())
-    return render(request, 'apparel/notifications/follow_profile.html', {'object': profile, 'url': url})
+    return render(request, 'apparel/notifications/follow_member.html', {'object': profile, 'url': url})
 
+def notification_follow_brand(request):
+    try:
+        profile_id = int(request.GET.get('id', None))
+    except (ValueError, TypeError):
+        return HttpResponseNotFound()
+
+    profile = get_object_or_404(get_model('profile', 'ApparelProfile'), pk=profile_id)
+    url = request.build_absolute_uri(profile.get_absolute_url())
+    return render(request, 'apparel/notifications/follow_brand.html', {'object': profile, 'url': url})
 
 #
 # Facebook calls
@@ -146,6 +156,26 @@ def facebook_share(request, activity):
         facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_id, object_url)
 
     return HttpResponse(json.dumps(dict(success=True, error='')), mimetype='application/json')
+
+#
+# Follow/Unfollow
+#
+
+@login_required
+def follow_unfollow(request, content_type_id, object_id, do_follow=True):
+    user = User.objects.get(pk=object_id)
+    profile = user.get_profile()
+    profile_type = 'brand' if profile.is_brand else 'member'
+
+    if do_follow:
+        if request.user.get_profile().fb_share_follow_profile:
+            facebook_user = get_facebook_user(request)
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow_%s' % (profile_type,), profile_type, profile.pk, request.build_absolute_uri(profile.get_absolute_url()))
+    else:
+        facebook_user = get_facebook_user(request)
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow_%s' % (profile_type,), profile_type, profile.pk, request.build_absolute_uri(profile.get_absolute_url()))
+
+    return actstream_follow_unfollow(request, content_type_id, object_id, do_follow)
 
 #
 # Products
