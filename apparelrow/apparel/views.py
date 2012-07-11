@@ -274,10 +274,10 @@ def _product_like(request, product, action):
     if action == 'like':
         if request.user.get_profile().fb_share_like_product:
             facebook_user = get_facebook_user(request)
-            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'product', product.pk, request.build_absolute_uri(product.get_absolute_url()))
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like_product', 'product', product.pk, request.build_absolute_uri(product.get_absolute_url()))
     elif action == 'unlike':
         facebook_user = get_facebook_user(request)
-        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'product', product.pk, request.build_absolute_uri(product.get_absolute_url()))
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like_product', 'product', product.pk, request.build_absolute_uri(product.get_absolute_url()))
 
     product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
     product_like.active = True if action == 'like' else False
@@ -305,10 +305,10 @@ def look_like(request, slug, action):
     if action == 'like':
         if request.user.get_profile().fb_share_like_look:
             facebook_user = get_facebook_user(request)
-            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like_look', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
     elif action == 'unlike':
         facebook_user = get_facebook_user(request)
-        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like_look', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
 
     look_like, created = LookLike.objects.get_or_create(user=request.user, look=look)
     look_like.active = True if action == 'like' else False

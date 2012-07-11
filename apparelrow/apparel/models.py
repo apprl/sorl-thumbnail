@@ -234,6 +234,13 @@ class Product(models.Model):
         return self._default_vendor
 
     @property
+    def default_vendor_price(self):
+        if self.default_vendor.discount_price:
+            return self.default_vendor.discount_price
+
+        return self.default_vendor.price
+
+    @property
     def original_currency(self):
         if not hasattr(self, '_original_currency'):
             self._original_currency = []
