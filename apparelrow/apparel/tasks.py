@@ -53,7 +53,7 @@ def facebook_push_graph(user_id, access_token, action, object_type, object_id, o
     if 'id' in data:
         FacebookAction.objects.get_or_create(user_id=user_id, action=action, action_id=data['id'], object_type=object_type, object_id=object_id)
     elif 'error' in data and data['error']['code'] == 2:
-        facebook_push_graph.retry()
+        facebook_push_graph.retry(countdown=15)
 
 
 @task(name='apparel.facebook_pull_graph', max_retries=1, ignore_result=True)

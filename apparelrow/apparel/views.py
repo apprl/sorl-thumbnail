@@ -124,18 +124,12 @@ def notification_follow_brand(request):
 #
 
 SETTINGS_MATRIX = {
-    'like': {
-        'product': 'fb_share_like_product',
-        'look': 'fb_share_like_look'
-    },
-    'create': {
-        'look': 'fb_share_create_look'
-    },
-    'follow': {
-        'profile': 'fb_share_follows'
-    }
+    'like_product': 'fb_share_like_product',
+    'like_look': 'fb_share_like_look',
+    'create_look': 'fb_share_create_look',
+    'follow_brand': 'fb_share_follows',
+    'follow_member': 'fb_share_follows',
 }
-
 
 @login_required
 def facebook_share(request, activity):
@@ -146,7 +140,7 @@ def facebook_share(request, activity):
 
     if 'save' in request.POST and request.POST['save']:
         profile = request.user.get_profile()
-        setattr(profile, SETTINGS_MATRIX[action][object_type], True)
+        setattr(profile, SETTINGS_MATRIX[action], True)
         profile.save()
 
     facebook_user = get_facebook_user(request)

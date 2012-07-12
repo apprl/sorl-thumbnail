@@ -25,7 +25,8 @@
         var share_settings = {
             'like_product': {% if user.is_authenticated and user.get_profile.fb_share_like_product %}true{% else %}false{% endif %},
             'like_look': {% if user.is_authenticated and user.get_profile.fb_share_like_look %}true{% else %}false{% endif %},
-            'follow_profile': {% if user.is_authenticated and user.get_profile.fb_share_follow %}true{% else %}false{% endif %},
+            'follow_member': {% if user.is_authenticated and user.get_profile.fb_share_follow %}true{% else %}false{% endif %},
+            'follow_brand': {% if user.is_authenticated and user.get_profile.fb_share_follow %}true{% else %}false{% endif %},
             'create_look': {% if user.is_authenticated and user.get_profile.fb_share_create_look %}true{% else %}false{% endif %}
         };
 
