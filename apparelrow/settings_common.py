@@ -237,7 +237,7 @@ FACEBOOK_PERMS = 'email'
 DEFAULT_FROM_EMAIL = 'Apprl <no-reply@apprl.com>'
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587
-EMAIL_HOST_USER     = 'postman@apprl.com'
+EMAIL_HOST_USER     = 'postman@apparelrow.com'
 EMAIL_HOST_PASSWORD = 'lat3Del!vEry'
 EMAIL_USE_TLS       = True
 
