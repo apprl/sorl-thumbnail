@@ -91,6 +91,7 @@ $HTTP["host"] =~ "^.*(?:apparelrow\.se|apparelrow\.com)$" {
     server.document-root = var.deploy-dir + "/www/root/apprltransition"
 
     url.rewrite-once = (
+        "^/apprl\.jpg$" => "/apprl.jpg",
         "^/.*$" => "/"
     )
 }
