@@ -30,7 +30,7 @@
         };
 
         window.fbAsyncInit = function() {
-            FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, channelUrl: '//{{ CURRENT_DOMAIN }}{{ MEDIA_URL }}channel.html'});
+            FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, xfbml: true, channelUrl: '//{{ CURRENT_DOMAIN }}{{ MEDIA_URL }}channel.html'});
             {% block facebook_code %}{% endblock %}
             FB.getLoginStatus(function(response) {
                 if(!response.authResponse) {
