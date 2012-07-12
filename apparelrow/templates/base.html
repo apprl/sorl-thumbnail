@@ -167,9 +167,12 @@
             <div id="panelwrap">
                 <span class="row-span">
                     <h1 class="rowrubbe">{% trans "Socialize!" %}</h1>
-                    <p class="p-row">
-                    {% blocktrans %}You can make Apprl even smarter and more personal by connecting to your Facebook account. For example you can see what clothes your friends like and see what brands are the most popular in your network.{% endblocktrans %}
-                    </p>
+                    <p class="p-row">{% trans "Connect your Facebook account to:" %}</p>
+                    <ul>
+                        <li>{% trans "Collect products you like under your profile" %}</li>
+                        <li>{% trans "Follow your favourite brands, bloggers & members" %}</li>
+                        <li>{% trans "See what clothes & looks your friends like" %}</li>
+                    </ul>
                     <p class="p-row p-light">{% trans "You will always control what is being shared to your Facebook profile." %}</p>
                 </span>
                 <a class="btn-slide ar_welcome" href="#"></a>

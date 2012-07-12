@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-12 22:19+0200\n"
+"POT-Creation-Date: 2012-07-12 22:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -541,7 +541,7 @@ msgstr "Inga"
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:50 templates/base.html:281
+#: profile/models.py:50 templates/base.html:284
 msgid "About"
 msgstr "Om"
 
@@ -622,17 +622,17 @@ msgstr "Sök efter produkter"
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:120 templates/base.html.py:260
+#: templates/base.html:120 templates/base.html.py:263
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:121 templates/base.html.py:261
+#: templates/base.html:121 templates/base.html.py:264
 #: templates/apparel/fragments/product_menu_browse.html:15
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:125 templates/base.html.py:259
+#: templates/base.html:125 templates/base.html.py:262
 #: templates/profile/fragments/menu_items.html:9
 msgid "Shop"
 msgstr ""
@@ -641,7 +641,7 @@ msgstr ""
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:127 templates/base.html.py:212 templates/base.html:264
+#: templates/base.html:127 templates/base.html.py:215 templates/base.html:267
 #: templates/apparel/look_detail.html:4 templates/apparel/look_edit.html:4
 #: templates/profile/looks.html:4
 #: templates/profile/fragments/menu_items.html:18
@@ -680,55 +680,61 @@ msgstr "Visa alla varumärken"
 msgid "Socialize!"
 msgstr ""
 
-#: templates/base.html:171
-msgid ""
-"You can make Apprl even smarter and more personal by connecting to your "
-"Facebook account. For example you can see what clothes your friends like and "
-"see what brands are the most popular in your network."
-msgstr ""
-"Du kan göra Apprl ännu smartare och mer personligt genom att logga in med "
-"ditt Facebookkonto. Exempelvis kan du se vad dina vänner gillar för kläder "
-"och vilka varumärken som är mest populära i ditt nätverk."
+#: templates/base.html:170
+msgid "Connect your Facebook account to:"
+msgstr "Logga in med ditt Facebookkonto för att:"
+
+#: templates/base.html:172
+msgid "Collect products you like under your profile"
+msgstr "Samla alla produkter du gillar under din profil"
 
 #: templates/base.html:173
+msgid "Follow your favourite brands, bloggers & members"
+msgstr "Följa dina favoritvarumärken, bloggare och vänner"
+
+#: templates/base.html:174
+msgid "See what clothes & looks your friends like"
+msgstr "Se vad dina vänner gillar för kläder & looks"
+
+#: templates/base.html:176
 msgid "You will always control what is being shared to your Facebook profile."
 msgstr "Du kommer alltid ha kontroll över vad som delas till din Facebooksida."
 
-#: templates/base.html:177
+#: templates/base.html:180
 msgid "Life is <em>more fun</em> connected"
 msgstr ""
 
-#: templates/base.html:210 templates/apparel/product_detail.html:190
+#: templates/base.html:213 templates/apparel/product_detail.html:190
 #: templates/profile/fragments/menu_items.html:11
 msgid "Likes"
 msgstr "Gillar"
 
-#: templates/base.html:211 templates/profile/profile.html:4
+#: templates/base.html:214 templates/profile/profile.html:4
 #: templates/profile/fragments/menu_items.html:15
 msgid "Updates"
 msgstr "Uppdateringar"
 
-#: templates/base.html:213 templates/profile/followers.html:4
+#: templates/base.html:216 templates/profile/followers.html:4
 #: templates/profile/fragments/menu_items.html:21
 msgid "Followers"
 msgstr "Följs av"
 
-#: templates/base.html:214 templates/apparel/fragments/follow.html:5
+#: templates/base.html:217 templates/apparel/fragments/follow.html:5
 #: templates/profile/base_profile.html:68
 #: templates/profile/fragments/menu_items.html:24
 msgid "Following"
 msgstr "Följer"
 
-#: templates/base.html:220
+#: templates/base.html:223
 msgid "Friends' updates"
 msgstr "Vänners uppdateringar"
 
-#: templates/base.html:227 templates/profile/base_settings.html:4
+#: templates/base.html:230 templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:10
 msgid "Settings"
 msgstr "Inställningar"
 
-#: templates/base.html:233 templates/base.html.py:267 templates/base.html:269
+#: templates/base.html:236 templates/base.html.py:270 templates/base.html:272
 #: templates/apparel/look_create_dialog.html:6
 #: templates/apparel/look_create_unauthenticated.html:5
 #: templates/apparel/look_create_unauthenticated.html:11
@@ -736,52 +742,52 @@ msgstr "Inställningar"
 msgid "Create a look"
 msgstr "Skapa en look"
 
-#: templates/base.html:236
+#: templates/base.html:239
 msgid "Friends' Favorites"
 msgstr "Vänners favoriter"
 
-#: templates/base.html:239
+#: templates/base.html:242
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:256
+#: templates/base.html:259
 msgid "Sweden"
 msgstr "Sverige"
 
-#: templates/base.html:265
+#: templates/base.html:268
 msgid "All looks"
 msgstr "Alla looks"
 
-#: templates/base.html:273
+#: templates/base.html:276
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:274
+#: templates/base.html:277
 msgid "All members"
 msgstr "Alla medlemmar"
 
-#: templates/base.html:280
+#: templates/base.html:283
 #: templates/apparel/fragments/dialog_about_apparelrow.html:4
 msgid "About Apprl"
 msgstr "Om Apprl"
 
-#: templates/base.html:282
+#: templates/base.html:285
 msgid "Blog"
 msgstr "Blogg"
 
-#: templates/base.html:283
+#: templates/base.html:286
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:284
+#: templates/base.html:287
 msgid "Cookies"
 msgstr "Cookies"
 
-#: templates/base.html:316
+#: templates/base.html:319
 msgid "No"
 msgstr "Nej"
 
-#: templates/base.html:317
+#: templates/base.html:320
 msgid "Yes"
 msgstr "Ja"
 
@@ -2270,6 +2276,15 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid ""
+#~ "You can make Apprl even smarter and more personal by connecting to your "
+#~ "Facebook account. For example you can see what clothes your friends like "
+#~ "and see what brands are the most popular in your network."
+#~ msgstr ""
+#~ "Du kan göra Apprl ännu smartare och mer personligt genom att logga in med "
+#~ "ditt Facebookkonto. Exempelvis kan du se vad dina vänner gillar för "
+#~ "kläder och vilka varumärken som är mest populära i ditt nätverk."
 
 #, fuzzy
 #~ msgid "Share product likes on facebook"
