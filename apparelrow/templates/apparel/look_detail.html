@@ -12,7 +12,7 @@
     <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:look"/>
     <meta property="og:image" content="{{ look_full_image }}"/>
     <meta property="og:url" content="{{ object_url }}"/>
-    <meta property="og:description" content="{{ object.score }} ♥ {% if object.description %} | {{ object.description }}{% endif %}"/>
+    <meta property="og:description" content="{{ object.score }} ♥ {% if object.product_brands_unique %} | {{ object.product_brands_unique|join:", " }}{% endif %}"/>
     <meta property="og:site_name" content="{{ CURRENT_NAME }}"/>
     <meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}"/>
     <meta property="{{ FACEBOOK_OG_TYPE }}:likes" content="{{ object.score }}"/>

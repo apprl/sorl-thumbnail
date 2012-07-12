@@ -698,6 +698,10 @@ class Look(models.Model):
     @property
     def product_manufacturers(self):
         return self.display_components.values_list('product__manufacturer__name', flat=True)
+
+    @property
+    def product_brands_unique(self):
+        return set(self.product_manufacturers)
     
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user.get_profile().display_name)
