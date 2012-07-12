@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.forms import ModelForm, EmailField, BooleanField
 from django.forms.widgets import RadioSelect, FileInput
 from django.contrib.auth.models import User
@@ -40,10 +41,10 @@ class NewsletterForm(ModelForm):
         fields = ('newsletter',)
 
 class FacebookSettingsForm(ModelForm):
-    fb_share_like_product = BooleanField(required=False, help_text=_('Share product likes on facebook'))
-    fb_share_like_look = BooleanField(required=False, help_text=_('Share look likes on facebook'))
-    fb_share_create_look = BooleanField(required=False, help_text=_('Share look creations on facebook'))
-    fb_share_follow_profile = BooleanField(required=False, help_text=_('Share follows on facebook'))
+    fb_share_like_product = BooleanField(required=False, help_text=_('When you ♥ a product'))
+    fb_share_like_look = BooleanField(required=False, help_text=_('When you ♥ a look'))
+    fb_share_create_look = BooleanField(required=False, help_text=_('When you follow someone'))
+    fb_share_follow_profile = BooleanField(required=False, help_text=_('When you create a look'))
 
     class Meta:
         model = ApparelProfile

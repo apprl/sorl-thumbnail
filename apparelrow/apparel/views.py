@@ -25,6 +25,7 @@ from django.contrib.comments.models import Comment
 from django.contrib.sites.models import Site
 from django.views.i18n import set_language
 from django.utils import translation
+from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_unicode
 from hanssonlarsson.django.exporter import json as special_json
 from actstream.models import Follow, Action
@@ -139,12 +140,15 @@ def facebook_share(request, activity):
             profile.save()
 
     facebook_user = get_facebook_user(request)
+    if not facebook_user:
+        return HttpResponse(json.dumps(dict(success=False, message='', error=_('Check your browser settings.').encode('utf-8'))), mimetype='application/json')
+
     if activity == 'push':
         facebook_push_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_url)
     elif activity == 'pull':
         facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_url)
 
-    return HttpResponse(json.dumps(dict(success=True, error='')), mimetype='application/json')
+    return HttpResponse(json.dumps(dict(success=True, message=_('Shared to your Facebook timeline!').encode('utf-8'), error='')), mimetype='application/json')
 
 #
 # Follow/Unfollow

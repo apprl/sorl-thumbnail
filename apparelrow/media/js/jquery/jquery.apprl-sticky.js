@@ -70,7 +70,8 @@
             $('.sticky').ready(function() {
                 // If 'autoclose' is enabled, set a timer to close the sticky
                 if(settings['autoclose']) {
-                    $('#' + uniqID).delay(settings['autoclose']).fadeOut(settings['speed']);
+                    var elem = $('#' + uniqID);
+                    elem.data('timer', setTimeout(function() { elem.fadeOut(settings['speed']); }, settings['autoclose']));
                 }
             });
 
@@ -90,7 +91,16 @@
 
         },
         close: function() {
-            $(this).dequeue().fadeOut(settings['speed']);
+            clearTimeout($(this).data('timer'));
+            $(this).fadeOut(settings['speed']);
+        },
+        stay: function() {
+            clearTimeout($(this).data('timer'));
+        },
+        extend: function() {
+            var elem = $(this);
+            clearTimeout(elem.data('timer'));
+            elem.data('timer', setTimeout(function() { elem.fadeOut(settings['speed']); }, settings['autoclose']));
         }
     };
 
