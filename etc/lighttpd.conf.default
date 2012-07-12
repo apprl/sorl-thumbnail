@@ -84,15 +84,23 @@ server.modules      += ("mod_setenv")
 server.modules      += ("mod_redirect")
 
 
-$HTTP["host"] =~ "^.*(?:apparelrow\.se|apprl\.com|apprl\.se)$" {
-    url.redirect = ( "^/(.*)" => "http://apparelrow.com/$1" )
+$HTTP["host"] =~ "^.*(?:apparelrow\.se|apparelrow\.com)$" {
+    var.project-name = "apparelrow"
+    var.deploy-base  = "%(path)s"
+    var.deploy-dir   = var.deploy-base + "/releases/current"
+
+    server.document-root = var.deploy-dir + "/www/root/apprltransition"
 }
 
-$HTTP["host"] =~ "^(demo|www)\.(apparelrow\.com)$" {
+$HTTP["host"] =~ "^.*(?:apprl\.se)$" {
+    url.redirect = ( "^/(.*)" => "http://apprl.com/$1" )
+}
+
+$HTTP["host"] =~ "^(www)\.(apprl\.com)$" {
     url.redirect = ( "^/(.*)" => "http://%%2/$1" )
 }
 
-$HTTP["host"] =~ "^(%(hostname)s\.)?apparelrow\.com" {
+$HTTP["host"] =~ "^(%(hostname)s\.)?apprl\.com" {
     var.project-name = "apparelrow"
     var.deploy-base  = "%(path)s"
     var.deploy-dir   = var.deploy-base + "/releases/current"
