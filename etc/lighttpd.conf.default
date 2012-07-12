@@ -85,7 +85,6 @@ server.modules      += ("mod_redirect")
 
 
 $HTTP["host"] =~ "^.*(?:apparelrow\.se|apparelrow\.com)$" {
-    var.project-name = "apparelrow"
     var.deploy-base  = "%(path)s"
     var.deploy-dir   = var.deploy-base + "/releases/current"
 
@@ -123,8 +122,8 @@ $HTTP["host"] =~ "^(%(hostname)s\.)?apprl\.com" {
     )
     
     alias.url = (
+        "/media/admin"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/static/admin",
         "/media"           => var.deploy-dir + "/apparelrow/media",
-        "/media/admin"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/media",
         "/screenshots"     => var.deploy-dir + "/www/root/screenshots",
     )
 
