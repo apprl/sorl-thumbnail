@@ -89,6 +89,10 @@ $HTTP["host"] =~ "^.*(?:apparelrow\.se|apparelrow\.com)$" {
     var.deploy-dir   = var.deploy-base + "/releases/current"
 
     server.document-root = var.deploy-dir + "/www/root/apprltransition"
+
+    url.rewrite-once = (
+        "^/.*$" => "/"
+    )
 }
 
 $HTTP["host"] =~ "^.*(?:apprl\.se)$" {
@@ -105,7 +109,7 @@ $HTTP["host"] =~ "^(%(hostname)s\.)?apprl\.com" {
     var.deploy-dir   = var.deploy-base + "/releases/current"
 
     server.document-root = var.deploy-dir + "/" + var.project-name
-    
+
     fastcgi.server = (
         "/apparelrow.fcgi" => (
             "main" => (
@@ -120,7 +124,7 @@ $HTTP["host"] =~ "^(%(hostname)s\.)?apprl\.com" {
             )
         ),
     )
-    
+
     alias.url = (
         "/media/admin"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/static/admin",
         "/media"           => var.deploy-dir + "/apparelrow/media",
