@@ -572,6 +572,7 @@ ApparelActivity = {
     setup_share: function() {
         jQuery(document).on('click', '.notification-share', function(event) {
             var element = jQuery(this);
+            var sticky = element.parents('.sticky');
             var data = {
                 'object_type': element.data('type'),
                 'object_url': element.data('url'),
@@ -584,10 +585,17 @@ ApparelActivity = {
                 data['auto_share'] = auto_share;
             }
 
-            jQuery.post('/facebook/share/push/', data, function(response) {
+            sticky.sticky('stay');
+            jQuery.post('/facebook/share/push/', data).success(function(response) {
+                sticky.sticky('extend');
+                element.parents('.sticky-note').find('p:last-child').remove();
                 if(response && response['success'] == true) {
-                    element.parents('.sticky').sticky('close');
+                    element.parent().html(response['message']);
+                } else if(response && response['success'] == false) {
+                    element.parent().html(response['error']).addClass('error');
                 }
+            }).error(function() {
+                sticky.sticky('close');
             });
 
             return false;

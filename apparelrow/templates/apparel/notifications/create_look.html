@@ -1,4 +1,4 @@
 {% load i18n %}
-<p>Nice look!</p>
+<p>{{ object.title }} - {% trans "Nice look!" %}</p>
 <p><a class="notification-share" data-auto-share="create_look" data-action="create" data-type="look" data-url="{{ url }}" href="#"><span>{% trans "Share on facebook" %}</span></a></p>
-<p><input type="checkbox" name="save-share" id="save-share"> <label for="save-share">{% trans "Always share your creations on facebook" %}</label></p>
+<p><input type="checkbox" name="save-share" id="save-share"> <label for="save-share">{% trans "Always share looks that you create" %}</label></p>

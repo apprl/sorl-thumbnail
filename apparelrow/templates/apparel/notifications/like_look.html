@@ -1,4 +1,4 @@
 {% load i18n %}
-<p>Du har ♥ <a href="{{ object.get_absolute_url }}">{{ object.title }}</a></p>
+<p>{% trans "You have ♥" %} <a href="{{ object.get_absolute_url }}">{{ object.title }}</a></p>
 <p><a class="notification-share" data-auto-share="like_look" data-action="like" data-type="object" data-url="{{ url }}" href="#"><span>{% trans "Share on facebook" %}</span></a></p>
-<p><input type="checkbox" name="save-share" id="save-share"> <label for="save-share">{% trans "Always share your ♥ on facebook" %}</label></p>
+<p><input type="checkbox" name="save-share" id="save-share"> <label for="save-share">{% trans "Always share when you ♥ a look" %}</label></p>
