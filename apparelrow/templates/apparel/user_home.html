@@ -22,6 +22,6 @@
     <div class="sidebar last">
         <h2>{% trans "Your friends are here!" %}</h2>
         {% include 'apparel/fragments/facebook_friends.html' %}
-        <a class="all-users" href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a>
+        <a class="all-users" href="{% url user-list-popular %}">{% trans "See all members" %}</a>
     </div>
 {% endblock body %}

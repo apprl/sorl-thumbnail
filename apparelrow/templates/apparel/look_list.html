@@ -37,7 +37,7 @@
         {% else %}
             {% if not current_page.object_list and request.path == popular_look_list_url %}
                 <div>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</div>
-                <a class="all-users" href="{% url apparel.views.user_list %}">{% trans "See all members" %}</a>
+                <a class="all-users" href="{% url user-list-popular %}">{% trans "See all members" %}</a>
             {% else %}
                 {% include 'apparel/fragments/looks_medium.html' %}
             {% endif %}
