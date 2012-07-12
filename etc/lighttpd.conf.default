@@ -124,13 +124,12 @@ $HTTP["host"] =~ "^(%(hostname)s\.)?apprl\.com" {
     
     alias.url = (
         "/media"           => var.deploy-dir + "/apparelrow/media",
-        "/admin_media"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/media",
+        "/media/admin"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/media",
         "/screenshots"     => var.deploy-dir + "/www/root/screenshots",
     )
 
     expire.url = (
         "/media"           => "access plus 1 years",
-        "/admin_media"     => "access plus 1 years",
         "/screenshots"     => "access plus 1 years",
     )
 
@@ -147,7 +146,7 @@ $HTTP["host"] =~ "^(%(hostname)s\.)?apprl\.com" {
     url.rewrite-once = (
         "^/robots\.txt$"           => "/media/robots.txt",           # Robots.txt
         "^/favicon\.ico$"          => "/media/favicon.ico",          # Favicon, redirect to static folder
-        "^(/(?:admin_)?media.*)$"  => "$1",                          # Static files
+        "^(/media.*)$"             => "$1",                          # Static files
         "^/(screenshots/.*)$"      => "$1",                          # Screenshots
         "^(/admin(?:\/.*|$))"      => "/apparelrow-admin.fcgi$1",    # FCGI Admin site configuration
         "^(/.*)$"                  => "/apparelrow.fcgi$1",          # FCGI configuration
