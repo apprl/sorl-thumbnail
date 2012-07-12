@@ -1,6 +1,10 @@
 from django.conf import settings
+from django.db.models.loading import get_model
 import facebook
 import time
+import datetime
+
+from profile.models import ApparelProfile
 
 FB_USER_SESSION_KEY = '_fb_user'
 FB_USER_EXPIRES_SESSION_KEY = '_fb_user_expires'
@@ -22,10 +26,23 @@ def get_facebook_user(request):
     """
     fb_user = request.session.get(FB_USER_SESSION_KEY)
     expires = request.session.get(FB_USER_EXPIRES_SESSION_KEY)
-    if not fb_user or expires < time.time() + 2:
+    if not fb_user or expires < time.time():
         fb_user = facebook.get_user_from_cookie(request.COOKIES, settings.FACEBOOK_APP_ID, settings.FACEBOOK_SECRET_KEY)
         if fb_user:
+            try:
+                extended_user = facebook.GraphAPI(fb_user['access_token']).extend_access_token(settings.FACEBOOK_APP_ID, settings.FACEBOOK_SECRET_KEY)
+                fb_user.update(extended_user)
+            except facebook.GraphAPIError:
+                pass
+
+            expires = time.time() + int(fb_user['expires'])
+
             request.session[FB_USER_SESSION_KEY] = fb_user
-            request.session[FB_USER_EXPIRES_SESSION_KEY] = time.time() + int(fb_user['expires'])
+            request.session[FB_USER_EXPIRES_SESSION_KEY] = expires
+
+            ApparelProfile.objects.filter(user__username=fb_user['uid']).update(
+                facebook_access_token=fb_user['access_token'],
+                facebook_access_token_expire=datetime.datetime.fromtimestamp(expires)
+            )
 
     return FacebookAccessor(fb_user) if fb_user else None

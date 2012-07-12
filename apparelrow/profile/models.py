@@ -68,6 +68,10 @@ class ApparelProfile(models.Model):
     fb_share_follow_profile = models.BooleanField(default=False, blank=False, null=False)
     fb_share_create_look = models.BooleanField(default=False, blank=False, null=False)
 
+    # facebook
+    facebook_access_token = models.CharField(max_length=255, null=True, blank=True)
+    facebook_access_token_expire = models.DateTimeField(null=True, blank=True)
+
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone commented on a product that I have liked'))
