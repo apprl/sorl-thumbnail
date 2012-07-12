@@ -1,4 +1,4 @@
 {% load i18n %}
 <p>Du har ♥ {{ object.manufacturer.name }} {{ object.product_name }}</p>
-<p><a class="notification-share" data-id="{{ object.id }}" data-action="like_product" data-type="product" data-url="{{ url }}" href="#"><span>{% trans "Share on facebook" %}</span></a></p>
+<p><a class="notification-share" data-auto-share="like_product" data-action="like" data-type="object" data-url="{{ url }}" href="#"><span>{% trans "Share on facebook" %}</span></a></p>
 <p><input type="checkbox" name="save-share" id="save-share"> <label for="save-share">{% trans "Always share your ♥ on facebook" %}</label></p>

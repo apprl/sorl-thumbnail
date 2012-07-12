@@ -1,4 +1,4 @@
 {% load i18n %}
 <p>Du följer nu {{ object.display_name }}</p>
-<p><a class="notification-share" data-id="{{ object.id }}" data-action="follow_member" data-type="member" data-url="{{ url }}" href="#"><span>{% trans "Share on facebook" %}</span></a></p>
+<p><a class="notification-share" data-auto-share="follow_profile" data-action="follow" data-type="profile" data-url="{{ url }}" href="#"><span>{% trans "Share on facebook" %}</span></a></p>
 <p><input type="checkbox" name="save-share" id="save-share"> <label for="save-share">{% trans "Always share your follows on facebook" %}</label></p>

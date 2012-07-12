@@ -936,67 +936,65 @@ div#product-list
   &:hover, &.liked
     background: image_url("heartbg.jpg") bottom
 
-.product-heart
-  .product-heart-tooltip
-    position: relative
-    background: #eaeaea
-    display: inline-block
-    text-decoration: none
-    color: #222
-    outline: none
-    span
-      visibility: visible
+.product-heart-tooltip
+  position: relative
+  background: #eaeaea
+  display: inline-block
+  text-decoration: none
+  color: #222
+  outline: none
+  span
+    visibility: visible
+    position: absolute
+    text-align: center
+    bottom: 8px
+    left: 50%
+    z-index: 999
+    width: 156px
+    margin-left: -94px
+    padding: 15px
+    border: 1px solid #ccc
+    opacity: .9
+    background: #f8f8f8 /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y4ZjhmOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2ZjZmNmYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmOGY4ZjgiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+)
+    background: -moz-linear-gradient(top, #f8f8f8 0%, #fcfcfc 50%, #f8f8f8 100%) /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(50%,#fcfcfc), color-stop(100%,#f8f8f8)) /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* IE10+ */
+    background: linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#f8f8f8',GradientType=0 ) /* IE6-8 */
+    +single-box-shadow(rgba(50, 50, 50, 0.27), 0, 0, 2px)
+    text-shadow: 0 1px 0 rgba(255,255,255,.4)
+    -webkit-transition: all 1s ease-in-out
+    -moz-transition: all 1s ease-in-out
+    -o-transition: all 1s ease-in-out
+    -ms-transition: all 1s ease-in-out
+    transition: all 1s ease-in-out
+    &:before, &:after
+      content: ""
       position: absolute
-      text-align: center
-      bottom: 8px
+      z-index: 1000
+      bottom: -7px
       left: 50%
-      z-index: 999
-      width: 156px
-      margin-left: -94px
-      padding: 15px
-      border: 1px solid #ccc
-      opacity: .9
-      background: #f8f8f8 /* Old browsers */
-      /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-      background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y4ZjhmOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2ZjZmNmYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmOGY4ZjgiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+)
-      background: -moz-linear-gradient(top, #f8f8f8 0%, #fcfcfc 50%, #f8f8f8 100%) /* FF3.6+ */
-      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(50%,#fcfcfc), color-stop(100%,#f8f8f8)) /* Chrome,Safari4+ */
-      background: -webkit-linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* Chrome10+,Safari5.1+ */
-      background: -o-linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* Opera 11.10+ */
-      background: -ms-linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* IE10+ */
-      background: linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* W3C */
-      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#f8f8f8',GradientType=0 ) /* IE6-8 */
-      +single-box-shadow(rgba(50, 50, 50, 0.27), 0, 0, 2px)
-      text-shadow: 0 1px 0 rgba(255,255,255,.4)
-      -webkit-transition: all 1s ease-in-out
-      -moz-transition: all 1s ease-in-out
-      -o-transition: all 1s ease-in-out
-      -ms-transition: all 1s ease-in-out
-      transition: all 1s ease-in-out
-      &:before, &:after
-        content: ""
-        position: absolute
-        z-index: 1000
-        bottom: -7px
-        left: 50%
-        margin-left: -8px
-        border-top: 8px solid #f8f8f8
-        border-left: 8px solid transparent
-        border-right: 8px solid transparent
-        border-bottom: 0
-      &:before
-        border-top-color: #ccc
-        bottom: -8px
-    &:hover
-      border: 0 /* IE6 fix */
-    &:hover
-      span
-        visibility: hidden
+      margin-left: -8px
+      border-top: 8px solid #f8f8f8
+      border-left: 8px solid transparent
+      border-right: 8px solid transparent
+      border-bottom: 0
+    &:before
+      border-top-color: #ccc
+      bottom: -8px
+  &:hover
+    border: 0 /* IE6 fix */
+  &:hover
+    span
+      visibility: hidden
 
 div#product-list, .product-list
   position: relative
   ul.list
-    +clearfix
     li
       float: left
       +product_list_item

@@ -231,7 +231,9 @@ jQuery(document).ready(function() {
             } else {
                 jQuery('.not_following a[href="' + $this.attr('href') + '"]').parent().removeClass('not_following').addClass('following');
                 $parent.removeClass('not_following').addClass('following');
-                ApparelActivity.notification('follow', $this.data('profile-type'), $this.data('profile-id'));
+                if(share_settings['follow_profile'] === false) {
+                    ApparelActivity.notification('follow', $this.data('profile-type'), $this.data('profile-id'));
+                }
             }
         });
         return false;
@@ -363,6 +365,7 @@ jQuery(document).ready(function() {
       } else if(type == 'product') {
         var like_element = element.parents('.header').find('.likes').show();
         ApparelActivity.update_count(like_element, true);
+        hasLiked = true;
       }
       ApparelActivity.update_count(jQuery('.activity .likes .count'), true);
     });
@@ -571,17 +574,17 @@ ApparelActivity = {
             var element = jQuery(this);
             var data = {
                 'object_type': element.data('type'),
-                'object_id': element.data('id'),
                 'object_url': element.data('url'),
                 'action': element.data('action')
             }
 
             if(element.parents('div.sticky-note').find('#save-share').is(':checked')) {
-                share_settings[element.data('action') + '_' + element.data('type')] = true;
-                data['save'] = true;
+                var auto_share = element.data('auto-share');
+                share_settings[auto_share] = true;
+                data['auto_share'] = auto_share;
             }
 
-            jQuery.post('/facebook/share/add/', data, function(response) {
+            jQuery.post('/facebook/share/push/', data, function(response) {
                 if(response && response['success'] == true) {
                     element.parents('.sticky').sticky('close');
                 }

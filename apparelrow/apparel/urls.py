@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     url(r'^notification/follow_brand/$', 'apparel.views.notification_follow_brand', name='notification-follow-brand'),
 
     # Facebook
-    url(r'^facebook/share/(?P<activity>add|remove)/?$', 'apparel.views.facebook_share', name='facebook-share'),
+    url(r'^facebook/share/(?P<activity>push|pull)/?$', 'apparel.views.facebook_share', name='facebook-share'),
 
     # Follow/Unfollow API
     url(r'^follow/(?P<content_type_id>\d+)/(?P<object_id>\d+)/$', 'apparel.views.follow_unfollow', name='apprl-follow'),

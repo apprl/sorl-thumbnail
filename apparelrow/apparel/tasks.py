@@ -41,32 +41,32 @@ def mailchimp_unsubscribe(user, delete=False):
         logger.error('Could not unsubscribe user from mailchimp: %s' % (e,))
 
 
-@task(name='apparel.facebook_push_graph', max_retries=5, ignore_result=True)
-def facebook_push_graph(user_id, access_token, action, object_type, object_id, object_url):
-    url = 'https://graph.facebook.com/me/%s:%s/?access_token=%s' % (settings.FACEBOOK_OG_TYPE, action, access_token)
+ACTION_TRANSLATION = {'like': 'og.likes', 'follow': 'og.follows', 'create': '%s:create' % (settings.FACEBOOK_OG_TYPE,)}
 
-    response = requests.post(url, data={object_type: object_url})
+@task(name='apparel.facebook_push_graph', max_retries=5, ignore_result=True)
+def facebook_push_graph(user_id, access_token, action, object_type, object_url):
+    url = 'https://graph.facebook.com/me/%s' % (ACTION_TRANSLATION[action],)
+    response = requests.post(url, data={object_type: object_url, 'access_token': access_token})
     data = response.json
 
     logger.info(data)
 
     if 'id' in data:
-        FacebookAction.objects.get_or_create(user_id=user_id, action=action, action_id=data['id'], object_type=object_type, object_id=object_id)
+        FacebookAction.objects.get_or_create(user_id=user_id, action=action, action_id=data['id'], object_type=object_type, object_url=object_url)
     elif 'error' in data and data['error']['code'] == 2:
         facebook_push_graph.retry(countdown=15)
 
-
 @task(name='apparel.facebook_pull_graph', max_retries=1, ignore_result=True)
-def facebook_pull_graph(user_id, access_token, action, object_type, object_id, object_url):
+def facebook_pull_graph(user_id, access_token, action, object_type, object_url):
     try:
-        facebook_action = FacebookAction.objects.get(user_id=user_id, action=action, object_type=object_type, object_id=object_id)
-        url = 'https://graph.facebook.com/%s/?access_token=%s' % (facebook_action.action_id, access_token)
-        response = requests.delete(url)
+        facebook_action = FacebookAction.objects.get(user_id=user_id, action=action, object_type=object_type, object_url=object_url)
         facebook_action.delete()
-
+        url = 'https://graph.facebook.com/%s' % (facebook_action.action_id,)
+        response = requests.delete(url, data={'access_token': access_token})
         logger.info(response.json)
     except FacebookAction.DoesNotExist:
-        logger.warning('Could not find a matching facebook action id for uid=%s type=%s id=%s' % (user_id, object_type, object_id))
+        logger.warning('No facebook action_id found for uid=%s action=%s type=%s' % (user_id, action, object_type))
+
 
 @periodic_task(name='apparel.brand_updates', run_every=crontab(minute=13), max_retries=1, ignore_result=True)
 def brand_updates():

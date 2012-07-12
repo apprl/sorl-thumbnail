@@ -123,31 +123,26 @@ def notification_follow_brand(request):
 # Facebook calls
 #
 
-SETTINGS_MATRIX = {
-    'like_product': 'fb_share_like_product',
-    'like_look': 'fb_share_like_look',
-    'create_look': 'fb_share_create_look',
-    'follow_brand': 'fb_share_follows',
-    'follow_member': 'fb_share_follows',
-}
 
 @login_required
 def facebook_share(request, activity):
     action = request.POST.get('action', '')
     object_type = request.POST.get('object_type', '')
     object_url = request.POST.get('object_url', '')
-    object_id = request.POST.get('object_id', '')
+    auto_share = request.POST.get('auto_share', '')
 
-    if 'save' in request.POST and request.POST['save']:
-        profile = request.user.get_profile()
-        setattr(profile, SETTINGS_MATRIX[action], True)
-        profile.save()
+    if auto_share:
+        share_settings = ['like_product', 'like_look', 'create_look', 'follow_profile']
+        if auto_share in share_settings:
+            profile = request.user.get_profile()
+            setattr(profile, 'fb_share_%s' % (auto_share,), True)
+            profile.save()
 
     facebook_user = get_facebook_user(request)
-    if activity == 'add':
-        facebook_push_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_id, object_url)
-    elif activity == 'remove':
-        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_id, object_url)
+    if activity == 'push':
+        facebook_push_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_url)
+    elif activity == 'pull':
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_url)
 
     return HttpResponse(json.dumps(dict(success=True, error='')), mimetype='application/json')
 
@@ -164,10 +159,10 @@ def follow_unfollow(request, content_type_id, object_id, do_follow=True):
     if do_follow:
         if request.user.get_profile().fb_share_follow_profile:
             facebook_user = get_facebook_user(request)
-            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow_%s' % (profile_type,), profile_type, profile.pk, request.build_absolute_uri(profile.get_absolute_url()))
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
     else:
         facebook_user = get_facebook_user(request)
-        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow_%s' % (profile_type,), profile_type, profile.pk, request.build_absolute_uri(profile.get_absolute_url()))
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
 
     return actstream_follow_unfollow(request, content_type_id, object_id, do_follow)
 
@@ -298,10 +293,10 @@ def _product_like(request, product, action):
     if action == 'like':
         if request.user.get_profile().fb_share_like_product:
             facebook_user = get_facebook_user(request)
-            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like_product', 'product', product.pk, request.build_absolute_uri(product.get_absolute_url()))
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(product.get_absolute_url()))
     elif action == 'unlike':
         facebook_user = get_facebook_user(request)
-        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like_product', 'product', product.pk, request.build_absolute_uri(product.get_absolute_url()))
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(product.get_absolute_url()))
 
     product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
     product_like.active = True if action == 'like' else False
@@ -329,10 +324,10 @@ def look_like(request, slug, action):
     if action == 'like':
         if request.user.get_profile().fb_share_like_look:
             facebook_user = get_facebook_user(request)
-            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like_look', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(look.get_absolute_url()))
     elif action == 'unlike':
         facebook_user = get_facebook_user(request)
-        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like_look', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(look.get_absolute_url()))
 
     look_like, created = LookLike.objects.get_or_create(user=request.user, look=look)
     look_like.active = True if action == 'like' else False
@@ -487,8 +482,9 @@ def look_detail(request, slug):
     look_saved = False
     if 'look_saved' in request.session:
         if request.user.get_profile().fb_share_create_look:
-            facebook_user = get_facebook_user(request)
-            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
+            if look.display_components.count() > 0:
+                facebook_user = get_facebook_user(request)
+                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', request.build_absolute_uri(look.get_absolute_url()))
         else:
             look_saved = request.session['look_saved']
 
@@ -601,7 +597,7 @@ def look_delete(request, slug):
     if look:
         # pull create look activity from facebook (cannot be in a pre_delete signal because request object requirement)
         facebook_user = get_facebook_user(request)
-        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', look.pk, request.build_absolute_uri(look.get_absolute_url()))
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', request.build_absolute_uri(look.get_absolute_url()))
 
         look.delete()
         return (True, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.get_profile().slug,))))

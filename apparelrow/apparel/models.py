@@ -971,10 +971,10 @@ class FacebookAction(models.Model):
     action = models.CharField(max_length=30)
     action_id = models.CharField(max_length=30)
     object_type = models.CharField(max_length=30)
-    object_id = models.PositiveIntegerField()
+    object_url = models.CharField(max_length=255)
 
     def __unicode__(self):
-        return u'%s' % (self.action_id,)
+        return u'%s: %s' % (self.action, self.action_id)
 
 #
 # SynonymFile

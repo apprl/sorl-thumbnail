@@ -25,13 +25,12 @@
         var share_settings = {
             'like_product': {% if user.is_authenticated and user.get_profile.fb_share_like_product %}true{% else %}false{% endif %},
             'like_look': {% if user.is_authenticated and user.get_profile.fb_share_like_look %}true{% else %}false{% endif %},
-            'follow_member': {% if user.is_authenticated and user.get_profile.fb_share_follow %}true{% else %}false{% endif %},
-            'follow_brand': {% if user.is_authenticated and user.get_profile.fb_share_follow %}true{% else %}false{% endif %},
+            'follow_profile': {% if user.is_authenticated and user.get_profile.fb_share_follow_profile %}true{% else %}false{% endif %},
             'create_look': {% if user.is_authenticated and user.get_profile.fb_share_create_look %}true{% else %}false{% endif %}
         };
 
         window.fbAsyncInit = function() {
-            FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, oauth: true, xfbml: true});
+            FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, channelUrl: '//{{ CURRENT_DOMAIN }}{{ MEDIA_URL }}channel.html'});
             {% block facebook_code %}{% endblock %}
             FB.getLoginStatus(function(response) {
                 if(!response.authResponse) {
@@ -68,7 +67,7 @@
                     form.submit();
                 }
             }
-            FB.login(handleResponse, {scope: '{{ FACEBOOK_SCOPE }}' });
+            FB.login(handleResponse, {scope: '{{ FACEBOOK_SCOPE }}'});
         };
 
         jQuery(document).ready(function() {
