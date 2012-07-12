@@ -304,7 +304,6 @@ class Product(models.Model):
     
     class Meta:
         ordering = ('-id',)
-        unique_together = (('static_brand', 'sku'),)
     
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'default_vendor', 'score']
