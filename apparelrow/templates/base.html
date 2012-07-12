@@ -227,14 +227,6 @@
                             <div class="arrow"></div>
                         </a>
                     </li>
-                    {% if user.get_profile.beta and user.get_profile.beta.invites > 0 and 1 == 0 %}
-                    <li class="invites">
-                        <a class="open-dialog" href="{% url beta.views.invite %}?next={{ request.path }}">
-                            {% blocktrans with user.get_profile.beta.invites as invites %}Invite friends ({{ invites }}){% endblocktrans %}
-                            <div class="arrow"></div>
-                        </a>
-                    </li>
-                    {% endif %}
                 </ul>
                 <div class="create-look">
                     <a class="open-dialog create-look" data-dialog-width="380" href="{{ look_create_url }}">{% trans "Create a look" %}</a>
