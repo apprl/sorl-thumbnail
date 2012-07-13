@@ -145,7 +145,14 @@ var look = {
                 }
                 
                 if(response.data.added) {
-                    var new_product = jQuery(response.data.html).appendTo(pane).css('z-index', 50);
+                    var highest_z_index = 0;
+                    jQuery('#collage .product, #photo .product').each(function() {
+                        var z_index = parseInt(jQuery(this).css('z-index'), 10);
+                        if(z_index > highest_z_index) {
+                            highest_z_index = z_index;
+                        }
+                    });
+                    var new_product = jQuery(response.data.html).appendTo(pane).css('z-index', highest_z_index + 1);
                     jQuery(response.data.tooltip_html).appendTo(jQuery('#look-tooltips'));
                     look.initialize(new_product.first());
                 }
