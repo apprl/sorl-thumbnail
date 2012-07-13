@@ -279,7 +279,10 @@ def class_name(o):
 
 @register.filter(is_safe=True)
 def apprl_intcomma(value):
-    return number_format(value, use_l10n=False, force_grouping=True)
+    if value:
+        return number_format(value, use_l10n=False, force_grouping=True)
+    else:
+        return ''
 
 
 @register.filter(name='since')
