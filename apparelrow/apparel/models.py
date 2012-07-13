@@ -22,8 +22,6 @@ from django.contrib.contenttypes.models import ContentType
 from apparel.manager import ProductManager, SearchManager, FeaturedManager, FirstPageManager
 from apparel import cache
 
-from scale import get_transparent
-
 from actstream import action
 from cStringIO import StringIO
 from PIL import Image
@@ -597,8 +595,8 @@ class Look(models.Model):
                     continue
 
                 # Reuse transparent thumbnail image
-                thumbnail_path, thumbnail_ext = get_transparent(component.product.product_image.path)
-                component_image = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail_path))
+                thumbnail = get_thumbnail(component.product.product_image, '%s' % (settings.APPAREL_LOOK_MAX_SIZE,), format='PNG', transparent=True)
+                component_image = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
                 component_image = component_image.resize((component.width, component.height), Image.ANTIALIAS).convert('RGBA')
                 if component.rotation:
                     rotation = component_image.rotate(-component.rotation, Image.BICUBIC, 1)
