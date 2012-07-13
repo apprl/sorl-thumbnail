@@ -600,7 +600,7 @@ class Look(models.Model):
                 component_image = component_image.resize((component.width, component.height), Image.ANTIALIAS).convert('RGBA')
                 if component.rotation:
                     rotation = component_image.rotate(-component.rotation, Image.BICUBIC, 1)
-                    blank = Image.new('RGBA', rotation.size, (255, 255, 255, 255))
+                    blank = Image.new('RGBA', rotation.size, (255, 255, 255, 0))
                     component_image = Image.composite(rotation, blank, rotation)
 
             image.paste(component_image, (offset_left + component.left, offset_top + component.top), component_image)
