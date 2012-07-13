@@ -25,8 +25,11 @@ class ProductAdmin(admin.ModelAdmin):
     list_per_page = 25
 
     def image(self, obj):
-        thumbnail = get_thumbnail(obj.product_image, '50x50', crop='noop', quality=99)
-        return u'<a href="%s"><img src="%s" /></a>' % (obj.product_image.url, thumbnail.url,)
+        try:
+            thumbnail = get_thumbnail(obj.product_image, '50x50', crop='noop', quality=99)
+            return u'<a href="%s"><img src="%s" /></a>' % (obj.product_image.url, thumbnail.url,)
+        except IOError:
+            return u'<a href="%s">no image</a>' % (obj.product_image.url,)
 
     image.short_description = 'Image'
     image.allow_tags = True
@@ -34,7 +37,7 @@ class ProductAdmin(admin.ModelAdmin):
     def publish(self, request, queryset):
         queryset.update(published=True)
     publish.short_description = "Publish selected products"
-    
+
     def hide(self, request, queryset):
         queryset.update(published=False)
     hide.short_description = "Hide selected products"
@@ -142,11 +145,11 @@ class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
     def publish_on_front_page(self, request, queryset):
         queryset.update(on_front_page=True)
     publish_on_front_page.short_description = "Publish selected on front page"
-    
+
     def hide_on_front_page(self, request, queryset):
         queryset.update(on_front_page=False)
     hide_on_front_page.short_description = "Hide selected on front page"
-    
+
     def ancestors(self, category):
         return ' > '.join([c.name for c in category.get_ancestors()])
 
