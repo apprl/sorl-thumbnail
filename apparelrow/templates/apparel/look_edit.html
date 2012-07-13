@@ -447,6 +447,14 @@ jQuery(document).ready(function() {
         );
         event.preventDefault();
     });
+
+    jQuery('#save_look').click(function(event) {
+        var components = jQuery('#collage .ui-wrapper');
+        if(components.length) {
+            jQuery('input[name="z_index"]').attr('value', components.map(function(x,y) { return jQuery(y).css('z-index'); }).get().join(','));
+            jQuery('input[name="product_ids"]').attr('value', components.find('img.product').map(function(x,y) { return jQuery(y).attr('id').split('-').pop(); }).get().join(','));
+        }
+    });
 });
 
 
@@ -458,9 +466,11 @@ jQuery(document).ready(function() {
 
 {% block body %}
 <form enctype="multipart/form-data" action="{% url apparel.views.look_edit object.slug %}" method="POST" id="look-form">
+    <input type="hidden" name="z_index" value="">
+    <input type="hidden" name="product_ids" value="">
 {% csrf_token %}
 <div id="look-title">
-    {{ form.title }}<button type="submit">{% trans "Save" %}</button>
+    {{ form.title }}<button id="save_look" type="submit">{% trans "Save" %}</button>
     <a class="delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete look" %}</a>
 </div>
 <div class="sidebar">

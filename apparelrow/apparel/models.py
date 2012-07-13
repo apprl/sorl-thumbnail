@@ -838,9 +838,12 @@ class LookComponent(models.Model):
 
     def _style(self, scale=1):
         s = []
-        for attr in ('top', 'left', 'width', 'height', 'z_index'):
+        for attr in ('top', 'left', 'width', 'height'):
             if(attr in self.__dict__.keys() and self.__dict__[attr]):
                 s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr] * scale))
+
+        if self.z_index:
+            s.append('z-index: %s;' % (self.z_index,))
         
         if self.rotation:
             s.append('-moz-transform: rotate(%sdeg); ' % self.rotation)

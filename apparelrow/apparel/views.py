@@ -526,6 +526,13 @@ def look_edit(request, slug):
     look = get_object_or_404(Look, slug=slug, user=request.user)
 
     if request.method == 'POST':
+        z_index = request.POST.get('z_index', '')
+        product_ids = request.POST.get('product_ids', '')
+
+        if z_index and product_ids:
+            for product_id, z_index in zip(product_ids.split(','), z_index.split(',')):
+                look.display_components.filter(product_id=product_id).update(z_index=z_index)
+
         form = LookForm(request.POST, request.FILES, instance=look)
 
         if form.is_valid():
