@@ -145,7 +145,7 @@ var look = {
                 }
                 
                 if(response.data.added) {
-                    var new_product = jQuery(response.data.html).appendTo(pane);
+                    var new_product = jQuery(response.data.html).appendTo(pane).css('z-index', 50);
                     jQuery(response.data.tooltip_html).appendTo(jQuery('#look-tooltips'));
                     look.initialize(new_product.first());
                 }
