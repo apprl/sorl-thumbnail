@@ -143,7 +143,7 @@ class ApparelProfile(models.Model):
             return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_uid
 
         if self.is_brand:
-            return settings.APPAREL_DEFAULT_BRAND_AVATAR
+            return settings.APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM
 
         return settings.APPAREL_DEFAULT_AVATAR
 
@@ -156,7 +156,7 @@ class ApparelProfile(models.Model):
             return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_uid
 
         if self.is_brand:
-            return settings.APPAREL_DEFAULT_BRAND_AVATAR
+            return settings.APPAREL_DEFAULT_BRAND_AVATAR_LARGE
 
         return settings.APPAREL_DEFAULT_AVATAR_LARGE
 
@@ -166,6 +166,9 @@ class ApparelProfile(models.Model):
 
         if self.facebook_uid:
             return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_uid
+
+        if self.is_brand:
+            return request.build_absolute_uri(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
         return request.build_absolute_uri(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
