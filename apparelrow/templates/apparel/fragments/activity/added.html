@@ -1,6 +1,5 @@
 {% extends 'apparel/fragments/activity/base.html' %}
-{% load apparel_extras %}
-{% load i18n %}
+{% load i18n humanize apparel_extras %}
 
 {% block activity_link %}{% if object.target|class_name == 'Look' %}{{ object.target.get_absolute_url }}{% else %}{{ object.action_object.get_absolute_url }}{% endif %}{% endblock %}
 
@@ -20,9 +19,9 @@
     {% if object.action_object|class_name == "Product" %}
     <p>
         {% if object.action_object.default_vendor.discount_price %}
-        <span class="discount-price">{{ object.action_object.default_vendor.discount_price|floatformat:0 }} {{ object.action_object.default_vendor.currency }}</span>
+        <span class="discount-price">{{ object.action_object.default_vendor.discount_price|floatformat:0|intcomma }} {{ object.action_object.default_vendor.currency }}</span>
         {% endif %}
-        <span class="price"{% if object.action_object.default_vendor.discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.action_object.default_vendor.price|floatformat:0 }} {{ object.action_object.default_vendor.currency }}</span>
+        <span class="price"{% if object.action_object.default_vendor.discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.action_object.default_vendor.price|floatformat:0|intcomma }} {{ object.action_object.default_vendor.currency }}</span>
     </p>
     {% endif %}
 {% endblock %}
