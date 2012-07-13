@@ -235,7 +235,7 @@ def send_welcome_mail(sender, user, **kwargs):
     Send welcome email on user created with email signal.
     """
     if user.email:
-        subject = u'Välkommen till Apparelrow %(username)s' % {'username': user.first_name}
+        subject = u'Välkommen till Apprl %(username)s' % {'username': user.first_name}
         body = render_to_string('profile/email_welcome.html')
         send_email_confirm_task.delay(subject, body, user.email)
 
