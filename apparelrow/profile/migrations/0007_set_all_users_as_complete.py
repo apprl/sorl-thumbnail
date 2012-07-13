@@ -7,8 +7,7 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        from profile.models import ApparelProfile
-        for profile in ApparelProfile.objects.iterator():
+        for profile in orm['profile.ApparelProfile'].objects.iterator():
             profile.login_flow = 'complete'
             profile.save()
 

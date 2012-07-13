@@ -7,8 +7,7 @@ from django.db import models
 class Migration(DataMigration):
     
     def forwards(self, orm):
-        from apparel.models import Product
-        for product in Product.objects.filter(published=True).iterator():
+        for product in orm['apparel.Product'].objects.filter(published=True).iterator():
             if product.default_vendor and product.default_vendor.availability != 0:
                 product.availability = True
                 product.save()

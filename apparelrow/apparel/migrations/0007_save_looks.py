@@ -3,12 +3,11 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from apparel.models import Look
 
 class Migration(DataMigration):
     
     def forwards(self, orm):
-        for look in Look.objects.iterator():
+        for look in orm['apparel.Look'].objects.iterator():
             look.save(force_update=True)
     
     
