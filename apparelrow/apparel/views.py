@@ -204,6 +204,9 @@ def product_detail(request, slug):
     # Likes
     likes = product.likes.filter(active=True).order_by('-modified').select_related('user', 'user__profile')
 
+    # Full image url
+    product_full_image = request.build_absolute_uri(get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
+
     return render_to_response(
             'apparel/product_detail.html',
             {
@@ -217,7 +220,7 @@ def product_detail(request, slug):
                 'more_like_this': more_like_this_product(product.id, product.gender, 20),
                 'comments': comments,
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
-                'product_full_image': request.build_absolute_uri('%s%s' % (settings.MEDIA_URL, product.product_image.name)),
+                'product_full_image': product_full_image,
                 'product_brand_full_url': request.build_absolute_uri(product.manufacturer.profile.get_absolute_url()),
                 'likes': likes
             }, context_instance=RequestContext(request),
@@ -502,7 +505,7 @@ def look_detail(request, slug):
                 'similar_looks': similar_looks,
                 'tooltips': True,
                 'object_url': request.build_absolute_uri(look.get_absolute_url()),
-                'look_full_image': request.build_absolute_uri('%s%s' % (settings.MEDIA_URL, look.static_image.name)),
+                'look_full_image': request.build_absolute_uri(look.static_image.url),
                 'look_saved': look_saved,
             },
             context_instance=RequestContext(request),
