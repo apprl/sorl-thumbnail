@@ -447,7 +447,7 @@ function filterCriteria(criteria_filter) {
             }
         });
         jQuery('#product-category > li.first').removeClass('first');
-        jQuery('#product-category > li[class!=filtered]:first').addClass('first');
+        jQuery('#product-category > li:not(.filtered):first').addClass('first');
     }
 
     if('colors' in criteria_filter) {
