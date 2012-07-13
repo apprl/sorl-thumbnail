@@ -243,8 +243,13 @@ MAILCHIMP_API_URL = 'http://us4.api.mailchimp.com/1.3/'
 MAILCHIMP_WEEKLY_LIST = '18083c690f'
 
 # CACHE CONFIGURATION
-CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
-CACHE_TEMPLATE_TIMEOUT = 60 * 15
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT': 60 * 15,
+    }
+}
 
 # GOOGLE ANALYTICS CONFIGURATION
 APPAREL_DOMAIN = '.apprl.com' # FIXME: We should probably get this from the Sites framework
