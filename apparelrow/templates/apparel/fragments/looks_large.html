@@ -29,7 +29,7 @@
                 <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" style="display:none;"></a>
             {% endif %}
         </div>
-        <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a> <a href="{% url apparel.views.look_delete object.slug %}" style="display:none;" title="{% trans "Delete look" %}" class="inline-delete-look">{% trans "Delete look" %}</a></h3>
+        <h3><a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.title }}</a> <a href="{% url apparel.views.look_delete object.slug %}" style="display:none;" title="{% trans "Delete look" %}" class="inline-delete-look">{% trans "Delete look" %}</a></h3>
         <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>
         <div class="stats">
             <div class="likes">{{ object.score }}</div>
