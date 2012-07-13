@@ -1,4 +1,4 @@
-{% load i18n humanize %}
+{% load i18n apparel_extras %}
 <p>
 <span class="price">
 {% blocktrans count object.display_components.count as number %}
@@ -8,6 +8,6 @@
 {% endblocktrans %}
 </span>
 {% if object.display_components.count > 0 %}
-<span class="sum"> - {{ object.total_price|floatformat:0|intcomma }} SEK</span>
+<span class="sum"> - {{ object.total_price|floatformat:0|apprl_intcomma }} SEK</span>
 {% endif %}
 </p>

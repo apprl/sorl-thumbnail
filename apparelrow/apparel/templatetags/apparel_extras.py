@@ -7,6 +7,7 @@ from django.template.defaultfilters import linebreaksbr
 from django.utils.html import escape
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext as _
+from django.utils.formats import number_format
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.urlresolvers import reverse
@@ -276,7 +277,9 @@ def class_name(o):
         return ''
 
 
-
+@register.filter(is_safe=True)
+def apprl_intcomma(value):
+    return number_format(value, use_l10n=False, force_grouping=True)
 
 
 @register.filter(name='since')

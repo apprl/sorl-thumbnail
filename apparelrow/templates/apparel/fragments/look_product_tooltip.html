@@ -1,4 +1,4 @@
-{% load i18n thumbnail humanize %}
+{% load i18n thumbnail apparel_extras %}
 <div id="tooltip-{{ product.id }}" class="tooltip">
     <a href="{{ product.get_absolute_url }}" class="product-image">
         {% thumbnail product.product_image "90x115" crop="center" as im %}
@@ -14,7 +14,7 @@
             </div>
             {% if product.default_vendor %}
                 <div>
-                    <span class="price">{{ product.default_vendor.price|floatformat:0|intcomma }}</span> <span class="currency">{{ product.default_vendor.currency }}</span>
+                    <span class="price">{{ product.default_vendor.price|floatformat:0|apprl_intcomma }}</span> <span class="currency">{{ product.default_vendor.currency }}</span>
                 </div>
                 {% if product.default_vendor.availability == 0 %}
                 <div class="vendors">

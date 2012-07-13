@@ -39,6 +39,9 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+THOUSAND_SEPARATOR = ' '
+NUMBER_GROUPING = 3
+
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'sv'

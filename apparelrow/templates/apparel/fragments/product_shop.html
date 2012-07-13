@@ -1,4 +1,4 @@
-{% load i18n thumbnail thumbnail_extras humanize %}
+{% load i18n thumbnail thumbnail_extras apparel_extras %}
 <li id="product-{{ object.id }}">
 <div class="product-medium">
     <a class="product-image" href="{{ object.get_absolute_url }}">
@@ -8,7 +8,7 @@
     </a>
     <div class="product-hover">
         <div class="header">
-            <a class="product-like heart" href="#" data-dialog-url="{% url dialog-like-product %}" data-like-url="{% url product-action object.id 'like' %}" data-unlike-url="{% url product-action object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.price|floatformat:0|intcomma }}"></a>
+            <a class="product-like heart" href="#" data-dialog-url="{% url dialog-like-product %}" data-like-url="{% url product-action object.id 'like' %}" data-unlike-url="{% url product-action object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.price|floatformat:0|apprl_intcomma }}"></a>
             <div class="right">
                 <div class="comments">0</div>
                 <div class="likes">0</div>
@@ -24,10 +24,10 @@
     <span class="sold-out">SOLD OUT</span>
     {% else %}
         {% if object.default_vendor.discount_price %}
-        <span class="discount-price">{{ object.default_vendor.discount_price|floatformat:0|intcomma }} {{ object.default_vendor.currency }}</span>
-        <span class="price discounted">{{ object.default_vendor.price|floatformat:0|intcomma }} {{ object.default_vendor.currency }}</span>
+        <span class="discount-price">{{ object.default_vendor.discount_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.currency }}</span>
+        <span class="price discounted">{{ object.default_vendor.price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.currency }}</span>
         {% else %}
-        <span class="price">{{ object.default_vendor.price|floatformat:0|intcomma }} {{ object.default_vendor.currency }}</span>
+        <span class="price">{{ object.default_vendor.price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.currency }}</span>
         {% endif %}
     {% endif %}
 </div>
