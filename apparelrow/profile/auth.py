@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
+from django.template.defaultfilters import slugify
 import facebook
 
 from profile.signals import user_created_with_email
@@ -34,6 +35,12 @@ class FacebookProfileBackend(ModelBackend):
                         user.email = me['email']
                     user.save()
                     user_created_with_email.send(sender=User, user=user)
+
+                    profile = user.get_profile()
+                    if me.get('name'):
+                        profile.name = me.get('name')
+                    profile.slug = slugify(profile.display_name)
+                    profile.save()
 
             profile = user.get_profile()
             if profile.gender is None:
