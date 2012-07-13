@@ -10,7 +10,7 @@ var look = {
     initialize: function(ele) {
         var pane    = ele.parent();
         var wrapper = ele;
-        
+
         switch(pane.attr('id')) {
             case 'collage':
                 ele.resizable({
@@ -22,6 +22,10 @@ var look = {
                     minWidth: 30,
                     zIndex: 100000,
                     //grid: [10, 10],
+                    create: function(event, ui) {
+                        var z_index = jQuery(event.target).find('.product').get(0).style.zIndex;
+                        jQuery(event.target).css('z-index', z_index);
+                    },
                     stop: function(event, ui) {
                         look.saveComponent({
                             id: ui.element.find('.product').attr('id').split('-').pop(),
@@ -30,6 +34,7 @@ var look = {
                         }, pane);
                     }
                 });
+
                 wrapper = ele.parent('.ui-wrapper');
                 wrapper.rotatable({ 
                     handles: 'ne',
@@ -113,8 +118,7 @@ var look = {
         data = {
             look: {{ object.id }},
             product: args.id,
-            component_of: context.component_of,
-            z_index: 50 // FIXME: We need to create a stack
+            component_of: context.component_of
         }
         
         if('position' in args) {
