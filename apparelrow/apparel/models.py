@@ -198,6 +198,7 @@ class Product(models.Model):
         help_text=_("Has to be unique with the static_brand"))
     product_name  = models.CharField(max_length=200, null=True, blank=True)
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True, db_index=True)
+    date_published= models.DateTimeField(_("Time published"), null=True, blank=True)
     modified      = models.DateTimeField(_("Time modified"), null=True, auto_now=True)
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image'))
@@ -205,7 +206,7 @@ class Product(models.Model):
     # FIXME: Could we have ForeignKey to VendorProduct instead?
     gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
     feed_gender   = models.CharField(_('Feed gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
-    published     = models.BooleanField(default=True, db_index=True)
+    published     = models.BooleanField(default=False, db_index=True)
     popularity    = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
     availability  = models.BooleanField(_('In stock'), null=False, blank=False, default=False)
 
@@ -288,14 +289,20 @@ class Product(models.Model):
         if not self.sku:
             self.sku = self.slug
 
-        if not self.category:
-            self.published = False
-
         if not self.gender:
             try:
                 self.gender = self.vendorproduct.get().vendor_category.default_gender
             except:
                 pass
+
+        if self.category and self.manufacturer and self.gender:
+            self.published = True
+        else:
+            self.published = False
+
+        # If no published date and published is true we mark this date as the published date
+        if not self.date_published and self.published == True:
+            self.date_published = datetime.datetime.now()
 
         super(Product, self).save(*args, **kwargs)
 
@@ -388,7 +395,6 @@ class VendorCategory(models.Model):
             queryset = Product.objects.filter(vendorproduct__vendor_category=self)
             for product in queryset:
                 product.category = self.category
-                product.published = True
                 product.save()
         else:
             queryset = Product.objects.filter(vendorproduct__vendor_category=self, category__isnull=False)
