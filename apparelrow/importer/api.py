@@ -161,7 +161,7 @@ class API(object):
             logger.debug('Created new product: [id %s] %s' % (self.product.id, self.product))
         
         except MultipleObjectsReturned:
-            raise SkipProduct('Multiple products found with sku %s for vendor brand %s' % (self.fields['sku'], self.fields['static_brand']))
+            raise SkipProduct('Multiple products found with sku %s for unmapped (static) vendor brand %s' % (self.fields['sku'], self.fields['static_brand']))
 
         else:
             # Update product
@@ -355,6 +355,10 @@ class API(object):
         # Check that we support this version
         if self.dataset['version'] != self.version:
             raise ImporterError('Incompatable version number "%s" (this is version %s)', self.dataset.get('version'), self.version)
+
+        # Check for empty manufacturer
+        if not self.dataset['product']['manufacturer']:
+            raise IncompleteDataSet('manufacturer', 'The field manufacturer cannot be empty or null')
 
         # Check that the gender field is valid (it may be None)
         if self.dataset['product']['gender'] is not None:
