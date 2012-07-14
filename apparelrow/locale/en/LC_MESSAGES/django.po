@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-14 17:46+0200\n"
+"POT-Creation-Date: 2012-07-14 18:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -579,6 +579,11 @@ msgstr ""
 
 #: profile/models.py:90
 msgid "Is this the first visit?"
+msgstr ""
+
+#: profile/models.py:238
+#, python-format
+msgid "Welcome to Apprl %(username)s"
 msgstr ""
 
 #: statistics/models.py:35 statistics/models.py:36
@@ -1806,6 +1811,43 @@ msgstr ""
 
 #: templates/profile/confirm_email_subject.html:1
 msgid "Confirm e-mail address change"
+msgstr ""
+
+#: templates/profile/email_welcome.html:5
+msgid ""
+"At Apprl we have collected clothes, shoes and accessories from all the "
+"leading international brands and retailers in one place."
+msgstr ""
+
+#: templates/profile/email_welcome.html:6
+msgid ""
+"By ♥-ing products and following other members & brands you'll make the site "
+"smarter and more personalized. For example:"
+msgstr ""
+
+#: templates/profile/email_welcome.html:8
+msgid ""
+"Products that you ♥ will be placed under your <a href=\"http://apprl.com/"
+"profile/\">profile</a>. You can create <a href=\"http://apprl.com/looks/"
+"\">looks</a> from these to share on Apprl, Facebook or your blog."
+msgstr ""
+
+#: templates/profile/email_welcome.html:9
+msgid ""
+"You find all the products that you friends ♥ under <a href=\"http://apprl."
+"com/#f=1\">Friends' Favourites</a>."
+msgstr ""
+
+#: templates/profile/email_welcome.html:10
+msgid ""
+"Keep yourself updated when your friends ♥, comment and create looks under <a "
+"href=\"http://apprl.com/home/\">Friends' Updates</a>"
+msgstr ""
+
+#: templates/profile/email_welcome.html:12
+msgid ""
+"If you have questions, feedback or just want to get in touch let us know on "
+"<a href=\"mailto:info@apprl.com\">info@apprl.com</a>!"
 msgstr ""
 
 #: templates/profile/followers.html:14

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-14 17:46+0200\n"
+"POT-Creation-Date: 2012-07-14 18:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -588,6 +588,11 @@ msgstr "När någon börjat följa mig"
 #: profile/models.py:90
 msgid "Is this the first visit?"
 msgstr ""
+
+#: profile/models.py:238
+#, python-format
+msgid "Welcome to Apprl %(username)s"
+msgstr "Välkommen till Apprl %(username)s"
 
 #: statistics/models.py:35 statistics/models.py:36
 msgid "Product clicks"
@@ -1913,6 +1918,56 @@ msgstr ""
 msgid "Confirm e-mail address change"
 msgstr "Bekräfta byte av e-postadress"
 
+#: templates/profile/email_welcome.html:5
+msgid ""
+"At Apprl we have collected clothes, shoes and accessories from all the "
+"leading international brands and retailers in one place."
+msgstr ""
+"Hos oss hittar du kläder, skor och accessoarer från de bästa online-"
+"butikerna på ett ställe."
+
+#: templates/profile/email_welcome.html:6
+msgid ""
+"By ♥-ing products and following other members & brands you'll make the site "
+"smarter and more personalized. For example:"
+msgstr ""
+"Genom att ♥ produkter och följa andra medlemmar & varumärken kan du göra "
+"siten smartare och mer personligt anpassad."
+
+#: templates/profile/email_welcome.html:8
+msgid ""
+"Products that you ♥ will be placed under your <a href=\"http://apprl.com/"
+"profile/\">profile</a>. You can create <a href=\"http://apprl.com/looks/"
+"\">looks</a> from these to share on Apprl, Facebook or your blog."
+msgstr ""
+"Produkter du ♥-ar samlas under din <a href=\"http://apprl.com/profile/"
+"\">profil</a>. Av dessa kan du sedan skapa <a href=\"http://apprl.com/looks/"
+"\">looks</a> att dela på Apprl, Facebook eller på din blogg."
+
+#: templates/profile/email_welcome.html:9
+msgid ""
+"You find all the products that you friends ♥ under <a href=\"http://apprl."
+"com/#f=1\">Friends' Favourites</a>."
+msgstr ""
+"Du hittar alla produkter som dina vänner ♥-ar under <a href=\"http://apprl."
+"com/#f=1\">Vänners favoriter</a>."
+
+#: templates/profile/email_welcome.html:10
+msgid ""
+"Keep yourself updated when your friends ♥, comment and create looks under <a "
+"href=\"http://apprl.com/home/\">Friends' Updates</a>"
+msgstr ""
+"Du kan hålla dig uppdaterad när dina vänner ♥-ar, kommenterar och skapar "
+"looks under <a href=\"http://apprl.com/home/\">Vänners uppdateringar</a>."
+
+#: templates/profile/email_welcome.html:12
+msgid ""
+"If you have questions, feedback or just want to get in touch let us know on "
+"<a href=\"mailto:info@apprl.com\">info@apprl.com</a>!"
+msgstr ""
+"Har du frågor eller feedback tar vi gärna emot det på <a href=\"mailto:"
+"info@apprl.com\">info@apprl.com</a>!"
+
 #: templates/profile/followers.html:14
 msgid ""
 "No one is currently following you, but start off by following other members!"
@@ -2435,9 +2490,6 @@ msgstr "Varför mejlet inte skickades"
 
 #~ msgid "Cheap"
 #~ msgstr "Billigast"
-
-#~ msgid "Welcome %(username)s"
-#~ msgstr "Välkommen %(username)s"
 
 #~ msgid "See you!"
 #~ msgstr "Vi ses!"
