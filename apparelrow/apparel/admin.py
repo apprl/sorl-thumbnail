@@ -127,9 +127,15 @@ admin.site.register(LookComponent, LookComponentAdmin)
 #
 
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'followers_count')
     readonly_fields = ('old_name',)
     search_fields = ('name',)
+
+    def followers_count(self, brand):
+        if brand.profile and brand.profile.followers_count:
+            return brand.profile.followers_count
+
+        return 0
 
 admin.site.register(Brand, BrandAdmin)
 
