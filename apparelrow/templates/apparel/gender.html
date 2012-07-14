@@ -6,7 +6,7 @@
 {% block body %}
 <style type="text/css">
 * {margin: 0}
-html, body {height: 100%;font-family: Helvetica, Arial, sans-serif;font-size:15px;color:#333}
+html, body {height: 100%;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:15px;color:#333}
 p{text-align:center}
 img{border:none;}
 body #header-container {
@@ -17,15 +17,15 @@ h3, .vth{font-size: 1.2em;color:#666;letter-spacing:3px;font-weight:normal;line-
     .wrapper {max-height:200px;height: auto !important;height: 100%;margin: 0 auto -53px}
     .push{background:black;min-width:980px;height: 67px;clear: both}
     .footer {height: 200px;clear:both;}
-        #content{text-align:center;padding:20px 0 0;width:980px;height:100%;min-height:700px;overflow: hidden;margin:0 auto}
-        .footer-content {background: url("{{ MEDIA_URL }}/images/genderimg/footerbg.jpg") no-repeat scroll 0 bottom transparent;bottom: 0;height: 53px;left: 50%;margin: 0 0 0 -490px;position: fixed;width: 980px}
-@media screen and (min-height: 850px) {.footer-content {background: url("{{ MEDIA_URL }}/images/genderimg/footerbg.jpg") no-repeat scroll 0 bottom transparent;top:800px;height: 53px;left: 50%;margin: 0 0 0 -490px;position: absolute;width: 980px}}
-        .header-content{margin:0 auto;width:980px;height:53px}
+    #content{text-align:center;padding:20px 0 0;width:980px;height:100%;min-height:700px;overflow: hidden;margin:0 auto}
+    .footer-content {background: url("{{ MEDIA_URL }}/images/genderimg/welcome-footer-buttons.png") no-repeat scroll 0 bottom transparent;bottom: 0;height: 53px;left: 50%;margin: 0 0 0 -490px;position: fixed;width: 980px}
+@media screen and (min-height: 850px) {.footer-content {background: url("{{ MEDIA_URL }}/images/genderimg/welcome-footer-buttons.png") no-repeat scroll 0 bottom transparent;top:800px;height: 53px;left: 50%;margin: 0 0 0 -490px;position: absolute;width: 980px}}
+    .header-content{margin:0 auto;width:980px;height:53px}
             #logo {color: white;float: left;margin:21px 0 0;text-align: center;background:url("{{ MEDIA_URL }}/images/logo.png") no-repeat top center;width: 980px}
-            .footer-button-left{float:left;width:489px;height:53px}
-            .footer-button-right{float:right;width:489px;height:53px}
-            .footer-button-left:hover{background:url("{{ MEDIA_URL }}/images/genderimg/footerbg.jpg") no-repeat left top}
-            .footer-button-right:hover{background:url("{{ MEDIA_URL }}/images/genderimg/footerbg.jpg") no-repeat right top}
+            .footer-button-left{float:left;width:489px;height:53px;text-align:center;line-height:53px;font-weight:bold;color:#f9f9f9;letter-spacing:1px;}
+            .footer-button-right{float:right;width:489px;height:53px;text-align:center;line-height:53px;font-weight:bold;color:#f9f9f9;letter-spacing:1px;}
+            .footer-button-left:hover{background:url("{{ MEDIA_URL }}/images/genderimg/welcome-footer-buttons.png") no-repeat left top;color:#333;}
+            .footer-button-right:hover{background:url("{{ MEDIA_URL }}/images/genderimg/welcome-footer-buttons.png") no-repeat right top;color:#333;}
                 .content-row-ett{float:left;width:100%;min-width:10px;height:176px;border-top:5px solid #f0f0f0;border-bottom:1px solid #f0f0f0;margin:20px 0 0}
                 .content-row-tva{float:left;width:100%;min-width:10px;height:176px;border-bottom:1px solid #f0f0f0;margin:4px 0}
                 .content-row-tre{float:left;width:100%;min-width:10px;height:176px;border-bottom:1px solid #f0f0f0;margin:4px 0}
@@ -61,7 +61,7 @@ h3, .vth{font-size: 1.2em;color:#666;letter-spacing:3px;font-weight:normal;line-
                     <div class="startbubble"><img src="{{ MEDIA_URL }}/images/genderimg/bubble-1.png" /></div>
                     <span class="row-span">
                         <h2 class="rowrubbe">{% trans "All in one place" %}</h2>
-                        <p class="p-row">{% trans "Find all your favourite stores & brands in one place! We have selected clothes, shoes & accessories from the best international online stores." %}</p>
+                        <p class="p-row">{% trans "We have collected clothes, shoes & accessories from all the best international brands & online retailers." %}</p>
                     </span>
                     <div id="logoladdan-ett">
                     <div class="logo-row-ett"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_stores/liberty.png" /></div>
@@ -80,7 +80,7 @@ h3, .vth{font-size: 1.2em;color:#666;letter-spacing:3px;font-weight:normal;line-
                     <div class="row-wrapper">
                     <div class="startbubble"><img src="{{ MEDIA_URL }}/images/genderimg/bubble-2.png" /></div>
                     <span class="row-span">
-                        <h2 class="rowrubbe">{% trans "Get inspired" %}</h2>
+                        <h2 class="rowrubbe">{% trans "Follow friends & brands" %}</h2>
                         <p class="p-row">{% trans "See what your friends like, get inspired by bloggers & follow your favourite brands!" %}</p>
                     </span>
                     <div id="logoladdan-tva">
@@ -98,7 +98,7 @@ h3, .vth{font-size: 1.2em;color:#666;letter-spacing:3px;font-weight:normal;line-
                     <div class="startbubble"><img src="{{ MEDIA_URL }}/images/genderimg/bubble-3.png" /></div>
                     <span class="row-span">
                         <h2 class="rowrubbe">{% trans "Create looks" %}</h2>
-                        <p class="p-row">{% trans "Create & share looks on Apprl, Facebook or your blog. Tag photos with products or mix & match collages!" %}</p>
+                        <p class="p-row">{% trans "Create & share looks to Apprl, Facebook or your blog. Tag photos with products or mix & match collages!" %}</p>
                     </span>
                     <div id="logoladdan-tre">
                     <div class="logo-row-tre"><img src="{{ MEDIA_URL }}/images/genderimg/frontpage_looks/look1.png" /></div>
@@ -112,8 +112,8 @@ h3, .vth{font-size: 1.2em;color:#666;letter-spacing:3px;font-weight:normal;line-
 </div> <!--wrapper-->
 <div class="footer">
     <div class="footer-content">
-        <a href="{{ women_url }}" class="footer-button-left"></a>
-        <a href="{{ men_url }}" class="footer-button-right"></a>
+        <a href="{{ women_url }}" class="footer-button-left">{% trans "Shop Woman" %}</a>
+        <a href="{{ men_url }}" class="footer-button-right">{% trans "Shop Man" %}</a>
     </div><!--footer-content-->
 </div><!--footer-->
 {% endblock %}

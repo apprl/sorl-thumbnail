@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-14 16:58+0200\n"
+"POT-Creation-Date: 2012-07-14 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,9 +120,8 @@ msgid "Time added"
 msgstr "Tid tillagd"
 
 #: apparel/models.py:201
-#, fuzzy
 msgid "Time published"
-msgstr "Senast kollad"
+msgstr "Tid publicerad"
 
 #: apparel/models.py:202 apparel/models.py:341 apparel/models.py:390
 #: apparel/models.py:446 apparel/models.py:558 apparel/models.py:781
@@ -980,24 +979,23 @@ msgstr "Social Shopping!"
 
 #: templates/apparel/gender.html:63
 msgid "All in one place"
-msgstr "Allt på ett ställe"
+msgstr "Hitta allt på ett ställe"
 
 #: templates/apparel/gender.html:64
 msgid ""
-"Find all your favourite stores & brands in one place! We have selected "
-"clothes, shoes & accessories from the best international online stores."
+"We have collected clothes, shoes & accessories from all the best "
+"international brands & online retailers."
 msgstr ""
-"Hitta alla dina favoritbutiker & varumärken på en plats! Vi har valt ut "
-"kläder, skor & accessoarer från de bästa svenska och internationella "
-"onlinebutikerna."
+"Vi har valt ut kläder, skor & accessoarer från alla de bästa svenska och "
+"internationella onlinebutikerna."
 
 #: templates/apparel/gender.html:75
 msgid "... and many more!"
 msgstr "... och många fler!"
 
 #: templates/apparel/gender.html:83
-msgid "Get inspired"
-msgstr "Inspireras av andra"
+msgid "Follow friends & brands"
+msgstr "Följ vänner, bloggare och varumärken"
 
 #: templates/apparel/gender.html:84
 msgid ""
@@ -1013,11 +1011,19 @@ msgstr "Skapa looks"
 
 #: templates/apparel/gender.html:101
 msgid ""
-"Create & share looks on Apprl, Facebook or your blog. Tag photos with "
+"Create & share looks to Apprl, Facebook or your blog. Tag photos with "
 "products or mix & match collages!"
 msgstr ""
 "Skapa och dela looks på Apprl, Facebook eller på din egen blogg. Tagga upp "
 "foton med plagg eller mixa och matcha kollage!"
+
+#: templates/apparel/gender.html:115
+msgid "Shop Woman"
+msgstr "Shop Dam"
+
+#: templates/apparel/gender.html:116
+msgid "Shop Man"
+msgstr "Shop Herr"
 
 #: templates/apparel/look_create.html:5
 msgid "Create new look"
@@ -2330,6 +2336,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Get inspired"
+#~ msgstr "Inspireras av andra"
 
 #~ msgid ""
 #~ "You can make Apprl even smarter and more personal by connecting to your "

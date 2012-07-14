@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-14 16:58+0200\n"
+"POT-Creation-Date: 2012-07-14 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -967,8 +967,8 @@ msgstr ""
 
 #: templates/apparel/gender.html:64
 msgid ""
-"Find all your favourite stores & brands in one place! We have selected "
-"clothes, shoes & accessories from the best international online stores."
+"We have collected clothes, shoes & accessories from all the best "
+"international brands & online retailers."
 msgstr ""
 
 #: templates/apparel/gender.html:75
@@ -976,7 +976,7 @@ msgid "... and many more!"
 msgstr ""
 
 #: templates/apparel/gender.html:83
-msgid "Get inspired"
+msgid "Follow friends & brands"
 msgstr ""
 
 #: templates/apparel/gender.html:84
@@ -991,8 +991,16 @@ msgstr ""
 
 #: templates/apparel/gender.html:101
 msgid ""
-"Create & share looks on Apprl, Facebook or your blog. Tag photos with "
+"Create & share looks to Apprl, Facebook or your blog. Tag photos with "
 "products or mix & match collages!"
+msgstr ""
+
+#: templates/apparel/gender.html:115
+msgid "Shop Woman"
+msgstr ""
+
+#: templates/apparel/gender.html:116
+msgid "Shop Man"
 msgstr ""
 
 #: templates/apparel/look_create.html:5
