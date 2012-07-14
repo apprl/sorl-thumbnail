@@ -150,7 +150,7 @@ def deploy(param='', snapshot='master'):
     require('hosts', provided_by=[localhost,demo,prod])
     require('path')
     import time
-    env.release = time.strftime('%Y%m%d%H%M%S')
+    env.release = '%s-%s' % (time.strftime('%Y%m%d%H%M%S'), snapshot)
     upload_tar_from_git(snapshot)
     install_requirements()
     install_site()
