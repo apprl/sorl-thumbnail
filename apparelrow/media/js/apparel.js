@@ -232,7 +232,7 @@ jQuery(document).ready(function() {
                 jQuery('.not_following a[href="' + $this.attr('href') + '"]').parent().removeClass('not_following').addClass('following');
                 $parent.removeClass('not_following').addClass('following');
                 if(share_settings['follow_profile'] === false) {
-                    ApparelActivity.notification('follow', $this.data('profile-type'), $this.data('profile-id'));
+                    //ApparelActivity.notification('follow', $this.data('profile-type'), $this.data('profile-id'));
                 }
             }
         });
