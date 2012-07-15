@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-14 18:13+0200\n"
+"POT-Creation-Date: 2012-07-15 13:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -493,29 +493,29 @@ msgid ""
 "example: \"svart,night,coal\""
 msgstr ""
 
-#: profile/forms.py:16
+#: profile/forms.py:17
 msgid "New e-mail address"
 msgstr ""
 
-#: profile/forms.py:37
+#: profile/forms.py:38
 msgid ""
 "I'd like to receive e-mails with trending products, looks and other "
 "inspiration."
 msgstr ""
 
-#: profile/forms.py:44
+#: profile/forms.py:45
 msgid "When you ♥ a product"
 msgstr ""
 
-#: profile/forms.py:45
+#: profile/forms.py:46
 msgid "When you ♥ a look"
 msgstr ""
 
-#: profile/forms.py:46
+#: profile/forms.py:47
 msgid "When you follow someone"
 msgstr ""
 
-#: profile/forms.py:47
+#: profile/forms.py:48
 msgid "When you create a look"
 msgstr ""
 
@@ -537,7 +537,7 @@ msgstr ""
 msgid "User profile image"
 msgstr ""
 
-#: profile/models.py:50 templates/base.html:284
+#: profile/models.py:50 templates/base.html:285
 msgid "About"
 msgstr ""
 
@@ -623,17 +623,17 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: templates/base.html:120 templates/base.html.py:263
+#: templates/base.html:120 templates/base.html.py:264
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Women"
 msgstr ""
 
-#: templates/base.html:121 templates/base.html.py:264
+#: templates/base.html:121 templates/base.html.py:265
 #: templates/apparel/fragments/product_menu_browse.html:15
 msgid "Men"
 msgstr ""
 
-#: templates/base.html:125 templates/base.html.py:262
+#: templates/base.html:125 templates/base.html.py:263
 #: templates/profile/fragments/menu_items.html:9
 msgid "Shop"
 msgstr ""
@@ -642,7 +642,7 @@ msgstr ""
 msgid "Brands"
 msgstr ""
 
-#: templates/base.html:127 templates/base.html.py:215 templates/base.html:267
+#: templates/base.html:127 templates/base.html.py:216 templates/base.html:268
 #: templates/apparel/look_detail.html:4 templates/apparel/look_edit.html:4
 #: templates/profile/looks.html:4
 #: templates/profile/fragments/menu_items.html:18
@@ -705,37 +705,42 @@ msgstr ""
 msgid "Life is <em>more fun</em> connected"
 msgstr ""
 
-#: templates/base.html:213 templates/apparel/product_detail.html:190
+#: templates/base.html:182
+#: templates/apparel/fragments/dialog_why_facebook.html:4
+msgid "Why Facebook?"
+msgstr ""
+
+#: templates/base.html:214 templates/apparel/product_detail.html:190
 #: templates/profile/fragments/menu_items.html:11
 msgid "Likes"
 msgstr ""
 
-#: templates/base.html:214 templates/profile/profile.html:4
+#: templates/base.html:215 templates/profile/profile.html:4
 #: templates/profile/fragments/menu_items.html:15
 msgid "Updates"
 msgstr ""
 
-#: templates/base.html:216 templates/profile/followers.html:4
+#: templates/base.html:217 templates/profile/followers.html:4
 #: templates/profile/fragments/menu_items.html:21
 msgid "Followers"
 msgstr ""
 
-#: templates/base.html:217 templates/apparel/fragments/follow.html:5
+#: templates/base.html:218 templates/apparel/fragments/follow.html:5
 #: templates/profile/base_profile.html:68
 #: templates/profile/fragments/menu_items.html:24
 msgid "Following"
 msgstr ""
 
-#: templates/base.html:223
+#: templates/base.html:224
 msgid "Friends' updates"
 msgstr ""
 
-#: templates/base.html:230 templates/profile/base_settings.html:4
+#: templates/base.html:231 templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:10
 msgid "Settings"
 msgstr ""
 
-#: templates/base.html:236 templates/base.html.py:270 templates/base.html:272
+#: templates/base.html:237 templates/base.html.py:271 templates/base.html:273
 #: templates/apparel/look_create_dialog.html:6
 #: templates/apparel/look_create_unauthenticated.html:5
 #: templates/apparel/look_create_unauthenticated.html:11
@@ -743,53 +748,53 @@ msgstr ""
 msgid "Create a look"
 msgstr ""
 
-#: templates/base.html:239
+#: templates/base.html:240
 msgid "Friends' Favorites"
 msgstr ""
 
-#: templates/base.html:242
+#: templates/base.html:243
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:259
+#: templates/base.html:260
 #, fuzzy
 msgid "Sweden"
 msgstr "Svenska"
 
-#: templates/base.html:268
+#: templates/base.html:269
 msgid "All looks"
 msgstr ""
 
-#: templates/base.html:276
+#: templates/base.html:277
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:277
+#: templates/base.html:278
 msgid "All members"
 msgstr ""
 
-#: templates/base.html:283
+#: templates/base.html:284
 #: templates/apparel/fragments/dialog_about_apparelrow.html:4
 msgid "About Apprl"
 msgstr ""
 
-#: templates/base.html:285
+#: templates/base.html:286
 msgid "Blog"
 msgstr ""
 
-#: templates/base.html:286
+#: templates/base.html:287
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:287
+#: templates/base.html:288
 msgid "Cookies"
 msgstr ""
 
-#: templates/base.html:319
+#: templates/base.html:320
 msgid "No"
 msgstr ""
 
-#: templates/base.html:320
+#: templates/base.html:321
 msgid "Yes"
 msgstr ""
 
@@ -1322,6 +1327,32 @@ msgstr ""
 msgid ""
 "Log in using your Facebook account to see which products are popular among "
 "your friends."
+msgstr ""
+
+#: templates/apparel/fragments/dialog_why_facebook.html:29
+msgid ""
+"Right now you can only create an Apprl account by connecting your Facebook "
+"account. In the future we'll offer more ways to create an account."
+msgstr ""
+
+#: templates/apparel/fragments/dialog_why_facebook.html:30
+msgid ""
+"We will never share anything to your Facebook timeline without you actively "
+"deciding to do so."
+msgstr ""
+
+#: templates/apparel/fragments/dialog_why_facebook.html:31
+msgid ""
+"If you want to keep yourself posted about alternative login ways and other "
+"news from Apparelrow, submit your e-mail address:"
+msgstr ""
+
+#: templates/apparel/fragments/dialog_why_facebook.html:35
+msgid "Thank you!"
+msgstr ""
+
+#: templates/apparel/fragments/dialog_why_facebook.html:36
+msgid "Not a valid email address"
 msgstr ""
 
 #: templates/apparel/fragments/follow.html:5

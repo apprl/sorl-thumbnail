@@ -173,6 +173,7 @@ INSTALLED_APPS = (
     'importer',             # Internal: Product importer module
     'apparel_comments',
     'statistics',           # Internal: Click statistics module
+    'newsletter',
 
     'actstream',            # External: Actions and follows
                             # This app must be included last because it depends

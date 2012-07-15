@@ -37,6 +37,7 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     (r'^tinymce/', include('tinymce.urls')),
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
+    (r'^newsletter/', include('newsletter.urls')),
     
     (r'', include('apparel.urls')),
     (r'^beta/', include('beta.urls')),

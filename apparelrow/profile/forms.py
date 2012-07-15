@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from profile.models import ApparelProfile
 
+
 class ProfileImageForm(ModelForm):
     class Meta:
         model = ApparelProfile

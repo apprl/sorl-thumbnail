@@ -2411,7 +2411,7 @@ body.settings
       width: 281px
       height: 38px
       float: left
-      margin: 19px 0 0 40px
+      margin: 12px 0 0 40px
       text-indent: -9999em
       &:hover
         background: image_url(unquote("fb-btn.png")) no-repeat bottom center transparent
@@ -2454,9 +2454,17 @@ body.settings
 #login-fb
   background: image_url(unquote("fb-bg.png")) no-repeat top center
   float: right
-  width: 360px
+  width: 361px
   height: 126px
   margin: 35px 40px 0 20px
+  position: relative
+  .dialog-why-facebook
+    display: inline-block
+    position: absolute
+    right: 42px
+    bottom: 15px
+    &:hover
+      text-decoration: underline
 
 .profile-login-flow
   background-color: #fff
