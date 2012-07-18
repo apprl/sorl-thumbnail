@@ -21,6 +21,11 @@
     <meta property="{{ FACEBOOK_OG_TYPE }}:price" content="{{ object.default_vendor_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.currency }}"/>
 {% endblock extra-styles %}
 
+{% block body-scripts %}
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+{% endblock %}
+
 {% block 'extra-scripts' %}
     <script type="text/javascript">
         jQuery(document).ready(function() {
@@ -127,7 +132,7 @@
                     input = jQuery('#add-to-look-new input[name=new_name]');
                     input.hide();
                     input.value = input.defaultValue;
-                    
+
                     jQuery('#add-to-look-new button').show();
                     return false;
                     // FIXME: Show the new look in list. Should we reload or just display?

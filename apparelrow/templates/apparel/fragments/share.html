@@ -1,13 +1,5 @@
-{% load i18n %}
-<li class="share">
-<a href="#">{% trans "Share" %}</a>
-<ul>
-  <li>
-  <a href="http://www.facebook.com/share.php?u={% filter urlencode %}{{ object_url }}{% endfilter %}" class="facebook">Facebook</a>
-  </li>
-  <li>
-  <a href="http://twitter.com/home/?status={% filter urlencode %}{% trans "Check out" %} {{ object }} at Apprl {{ object_url }}{% endfilter %}" class="twitter">Twitter</a>
-  </li>
+<ul class="share">
+  <li class="fb"><div class="fb-like" data-send="true" data-layout="button_count" data-width="50" data-show-faces="false" data-font="arial"></div></li>
+  <li class="tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a></li>
+  <li class="pin"><a href="http://pinterest.com/pin/create/button/?url={{ url }}&media={{ image }}" class="pin-it-button" count-layout="none"><img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" /></a></li>
 </ul>
-</li>
- 

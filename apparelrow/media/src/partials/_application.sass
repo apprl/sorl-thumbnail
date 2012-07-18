@@ -880,7 +880,7 @@ span, a
 
 .page-shop #product-count
   margin: 12px 0 20px
-  
+
 .page-shop .sidebar h2
   margin: 12px 0 20px
 
@@ -1556,16 +1556,14 @@ body.create-look, div.create-look-dialog
   .errorlist
     color: red
 
-body.look
-  #comments-and-links
-    form
-      width: $middle_width - 59px
-    textarea
-      width: $middle_width - 73px
-
-body.product
-  .fb-like
+body.look, body.product
+  .share
+    +clearfix
     margin-top: 10px
+    li
+      float: left
+      &.pin, &.tweet
+        margin-right: 10px
   #comments-and-links
     form
       width: $small_width - 59px

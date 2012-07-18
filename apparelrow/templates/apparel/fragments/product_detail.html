@@ -25,7 +25,7 @@
     </h1>
     {% if object.product_name %}<h2>{{ object.product_name }}</h2>{% endif %}
     {% regroup object.options.all by option_type as option_list %}
-    <!-- FIXME: Style this properly. See ticket #300 
+    <!-- FIXME: Style this properly. See ticket #300
     <ul class="product-options">
     {% for option in option_list %}
         <li>{{ option.grouper }}
@@ -107,7 +107,7 @@
             <!--</form>-->
         <!--</li>-->
     <!--</ul>-->
-    <div class="fb-like" data-send="true" data-layout="button_count" data-width="250" data-show-faces="false" data-font="arial"></div>
+    {% include 'apparel/fragments/share.html' with image=product_full_image url=product_full_url %}
 </div>
 {% endif %}
 
