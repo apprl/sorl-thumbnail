@@ -33,6 +33,7 @@
         {% url profile-looks user.get_profile.slug as looks_url %}
         {% if request.path == looks_url %}
         jQuery('.inline-delete-look').show();
+        jQuery('.inline-edit-look').show();
         {% endif %}
     });
 </script>

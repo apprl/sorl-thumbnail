@@ -565,15 +565,14 @@ ul.looks
       text-align: center
     span.inline-date
       margin-top: 5px
+    a.inline-delete-look, a.inline-edit-look
+      font-size: 1em
+      font-weight: normal
+      font-size: 11px
     a.inline-delete-look
-      display: inline-block
-      width: 17px
-      height: 15px
-      text-indent: -9999px
-      background: transparent image_url(unquote("delete-button.png")) no-repeat scroll right center
-      &:hover
-        background: transparent image_url(unquote("delete-button-hover.png")) no-repeat scroll right center
-
+      +delete_button(22px, 3px)
+    a.inline-edit-look
+      +edit_button(22px, 3px)
 
 ul.products
   +horizontal-list(0)
