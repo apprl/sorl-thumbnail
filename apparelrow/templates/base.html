@@ -3,7 +3,7 @@
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
     {% with user.get_profile.get_updates_last_visit as updates %}
-    <title>{% if updates %}({{ updates }}) {% endif %}{% block extra-title %}{% endblock %}Apprl</title>
+    <title>{% if updates %}({{ updates }}) {% endif %}{% block extra-title %}{% endblock %}Apprl - Social Shopping</title>
     {% endwith %}
     <meta charset="utf-8" />
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />
