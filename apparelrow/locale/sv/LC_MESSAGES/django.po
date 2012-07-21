@@ -985,7 +985,7 @@ msgstr "Välkommen tilll"
 
 #: templates/apparel/gender.html:57
 msgid "Social Shopping!"
-msgstr "Social Shopping!"
+msgstr "Social shopping!"
 
 #: templates/apparel/gender.html:63
 msgid "All in one place"
