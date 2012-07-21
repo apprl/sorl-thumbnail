@@ -11,7 +11,7 @@
     <p>
       <span class="member_since">{% blocktrans with profile.user.date_joined|naturalday:"Y-m-d" as date_joined %}Member since {{ date_joined }}{% endblocktrans %}</span>
       <span class="follower_count">
-          {% blocktrans with profile.followers_count as follower_count %}Followed by {{ follower_count }}{% endblocktrans %}
+          <a href="{% url profile-followers profile.slug %}">{% blocktrans with profile.followers_count as follower_count %}Followed by {{ follower_count }}{% endblocktrans %}</a>
       </span>
       <span class="following_count"></span>
     </p>
