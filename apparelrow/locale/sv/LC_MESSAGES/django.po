@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-18 20:56+0200\n"
+"POT-Creation-Date: 2012-07-21 09:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgstr "Visar"
 msgid "Showing your friends' favorites"
 msgstr "Visar dina vänners favoriter"
 
-#: apparel/forms.py:8 templates/base.html:88
+#: apparel/forms.py:7 templates/base.html:88
 msgid "You have to name your look before your create it."
 msgstr "Du måste ange ett namn på din look."
 
@@ -805,7 +805,7 @@ msgstr "Nej"
 msgid "Yes"
 msgstr "Ja"
 
-#: templates/dialog_base.html:5 templates/apparel/look_edit.html:538
+#: templates/dialog_base.html:5 templates/apparel/look_edit.html:536
 #: templates/beta/dialog_invite_user.html:5
 msgid "Close"
 msgstr "Stäng"
@@ -1094,11 +1094,7 @@ msgstr "Fler looks av"
 msgid "Similar looks"
 msgstr "Liknande looks"
 
-#: templates/apparel/look_detail.html:136
-msgid "Tags"
-msgstr "Taggar"
-
-#: templates/apparel/look_edit.html:260 templates/apparel/look_edit.html:527
+#: templates/apparel/look_edit.html:260 templates/apparel/look_edit.html:525
 msgid "Hide"
 msgstr "Göm"
 
@@ -1118,35 +1114,31 @@ msgstr "Ta bort look"
 msgid "Description (optional):"
 msgstr "Beskrivning (valfritt)"
 
-#: templates/apparel/look_edit.html:490
-msgid "Tags:"
-msgstr "Taggar (valfritt)"
-
-#: templates/apparel/look_edit.html:501
+#: templates/apparel/look_edit.html:499
 msgid "To create a look, you need to have liked at least one product."
 msgstr "För att skapa en look behöver du först gilla minst en produkt."
 
-#: templates/apparel/look_edit.html:501 templates/profile/likes.html:52
+#: templates/apparel/look_edit.html:499 templates/profile/likes.html:52
 msgid "Find products!"
 msgstr "Hitta produkter!"
 
-#: templates/apparel/look_edit.html:503
+#: templates/apparel/look_edit.html:501
 msgid "Drag products here to start building a collage"
 msgstr "Dra produkter hit för att börja skapa ditt kollage"
 
-#: templates/apparel/look_edit.html:511
+#: templates/apparel/look_edit.html:509
 msgid "Upload a photo to create a tagged image"
 msgstr "Börja med att ladda upp ett foto"
 
-#: templates/apparel/look_edit.html:516
+#: templates/apparel/look_edit.html:514
 msgid "Upload"
 msgstr "Ladda upp"
 
-#: templates/apparel/look_edit.html:526
+#: templates/apparel/look_edit.html:524
 msgid "Your likes"
 msgstr "Gillade produkter"
 
-#: templates/apparel/look_edit.html:538
+#: templates/apparel/look_edit.html:536
 msgid "Products"
 msgstr "Produkter"
 
@@ -1444,27 +1436,30 @@ msgid "Unlike"
 msgstr "Ogilla"
 
 #: templates/apparel/fragments/look_create.html:5
-msgid ""
-"Begin by selecting a name for your look (you can change the name later): "
-msgstr "Börja med att ge din look ett namn (du kan ändra namnet i efterhand): "
+msgid "First, you need to ♥ the products you wish to place in your look."
+msgstr "Börja med att ♥ de produkter du vill ha i din look."
 
-#: templates/apparel/fragments/look_create.html:12
+#: templates/apparel/fragments/look_create.html:6
+msgid "Then select a name for your look (you may change that name later):"
+msgstr "Välj sedan ett namn till din look (du kan ändra namnet i efterhand):"
+
+#: templates/apparel/fragments/look_create.html:13
 msgid "You can then choose to create a tagged photo or a collage: "
 msgstr "Välj sedan om du vill skapa en taggad bild eller ett kollage: "
 
-#: templates/apparel/fragments/look_create.html:15
+#: templates/apparel/fragments/look_create.html:16
 msgid "Tagged photo"
 msgstr "Taggad bild"
 
-#: templates/apparel/fragments/look_create.html:17
+#: templates/apparel/fragments/look_create.html:18
 msgid "Create a tagged photo"
 msgstr "Skapa taggad bild"
 
-#: templates/apparel/fragments/look_create.html:20
+#: templates/apparel/fragments/look_create.html:21
 msgid "Collage"
 msgstr "Kollage"
 
-#: templates/apparel/fragments/look_create.html:22
+#: templates/apparel/fragments/look_create.html:23
 msgid "Create a collage"
 msgstr "Skapa kollage"
 
@@ -2422,6 +2417,12 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Tags"
+#~ msgstr "Taggar"
+
+#~ msgid "Tags:"
+#~ msgstr "Taggar (valfritt)"
 
 #~ msgid "Share"
 #~ msgstr "Dela"

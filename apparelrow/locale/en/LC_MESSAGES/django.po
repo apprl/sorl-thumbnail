@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-18 20:56+0200\n"
+"POT-Creation-Date: 2012-07-21 09:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Showing your friends' favorites"
 msgstr ""
 
-#: apparel/forms.py:8 templates/base.html:88
+#: apparel/forms.py:7 templates/base.html:88
 msgid "You have to name your look before your create it."
 msgstr ""
 
@@ -798,7 +798,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: templates/dialog_base.html:5 templates/apparel/look_edit.html:538
+#: templates/dialog_base.html:5 templates/apparel/look_edit.html:536
 #: templates/beta/dialog_invite_user.html:5
 msgid "Close"
 msgstr ""
@@ -1071,11 +1071,7 @@ msgstr ""
 msgid "Similar looks"
 msgstr ""
 
-#: templates/apparel/look_detail.html:136
-msgid "Tags"
-msgstr ""
-
-#: templates/apparel/look_edit.html:260 templates/apparel/look_edit.html:527
+#: templates/apparel/look_edit.html:260 templates/apparel/look_edit.html:525
 msgid "Hide"
 msgstr ""
 
@@ -1095,35 +1091,31 @@ msgstr ""
 msgid "Description (optional):"
 msgstr ""
 
-#: templates/apparel/look_edit.html:490
-msgid "Tags:"
-msgstr ""
-
-#: templates/apparel/look_edit.html:501
+#: templates/apparel/look_edit.html:499
 msgid "To create a look, you need to have liked at least one product."
 msgstr ""
 
-#: templates/apparel/look_edit.html:501 templates/profile/likes.html:52
+#: templates/apparel/look_edit.html:499 templates/profile/likes.html:52
 msgid "Find products!"
 msgstr ""
 
-#: templates/apparel/look_edit.html:503
+#: templates/apparel/look_edit.html:501
 msgid "Drag products here to start building a collage"
 msgstr ""
 
-#: templates/apparel/look_edit.html:511
+#: templates/apparel/look_edit.html:509
 msgid "Upload a photo to create a tagged image"
 msgstr ""
 
-#: templates/apparel/look_edit.html:516
+#: templates/apparel/look_edit.html:514
 msgid "Upload"
 msgstr ""
 
-#: templates/apparel/look_edit.html:526
+#: templates/apparel/look_edit.html:524
 msgid "Your likes"
 msgstr ""
 
-#: templates/apparel/look_edit.html:538
+#: templates/apparel/look_edit.html:536
 msgid "Products"
 msgstr ""
 
@@ -1386,27 +1378,30 @@ msgid "Unlike"
 msgstr ""
 
 #: templates/apparel/fragments/look_create.html:5
-msgid ""
-"Begin by selecting a name for your look (you can change the name later): "
+msgid "First, you need to ♥ the products you wish to place in your look."
 msgstr ""
 
-#: templates/apparel/fragments/look_create.html:12
+#: templates/apparel/fragments/look_create.html:6
+msgid "Then select a name for your look (you may change that name later):"
+msgstr ""
+
+#: templates/apparel/fragments/look_create.html:13
 msgid "You can then choose to create a tagged photo or a collage: "
 msgstr ""
 
-#: templates/apparel/fragments/look_create.html:15
+#: templates/apparel/fragments/look_create.html:16
 msgid "Tagged photo"
 msgstr ""
 
-#: templates/apparel/fragments/look_create.html:17
+#: templates/apparel/fragments/look_create.html:18
 msgid "Create a tagged photo"
 msgstr ""
 
-#: templates/apparel/fragments/look_create.html:20
+#: templates/apparel/fragments/look_create.html:21
 msgid "Collage"
 msgstr ""
 
-#: templates/apparel/fragments/look_create.html:22
+#: templates/apparel/fragments/look_create.html:23
 msgid "Create a collage"
 msgstr ""
 

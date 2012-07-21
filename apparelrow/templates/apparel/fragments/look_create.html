@@ -2,7 +2,8 @@
 <form action="{{ request.path }}" method="post" class="standard-form">
     {% csrf_token %}
     <div>
-        <p>{% trans "Begin by selecting a name for your look (you can change the name later): " %}</p>
+        <p>{% trans "First, you need to ♥ the products you wish to place in your look." %}</p>
+        <p>{% trans "Then select a name for your look (you may change that name later):" %}</p>
         {{ form.title }}
         {% if form.title.errors %}
             {{ form.title.errors }}
