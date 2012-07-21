@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
             parseInt(jQuery(this).siblings('input[type=text]').val()),
             (isNaN(this.value)) ? false : parseInt(this.value)
         ];
-        
+
         // values = [min, max]
         if(this.name == 'pricerange_min') {
             values.reverse();
@@ -30,7 +30,7 @@ jQuery(document).ready(function() {
                 values[1] = values[0] + 1;
             }
         }
-        
+
         slider.option('values', values);
         return true;
     });
@@ -80,20 +80,20 @@ jQuery(document).ready(function() {
                 clearTimeout(_manufacturerSearchTimeout);
             _manufacturerSearchTimeout = setTimeout(function() { ManufacturerBrowser.filterByName(name) }, 400);
         })
-        .focus(function(e) { 
+        .focus(function(e) {
             if(this.value == this.defaultValue) {
                 this.value = '';
                 jQuery(this).removeClass('default');
             }
         })
-        .blur(function(e) { 
+        .blur(function(e) {
             if(this.value == '') {
-                this.value = this.defaultValue; 
+                this.value = this.defaultValue;
                 jQuery(this).addClass('default');
             }
         });
     ;
-    
+
     // Initially hide all subcategories
     jQuery('#product-category li > ul').hide();
     // Except those with selected categories inside
@@ -116,6 +116,10 @@ jQuery(document).ready(function() {
                 return false;
             }
         } else {
+            // Deselect all top level categories and slide up subcategories when changing top level category
+            if($this.parent().parent().hasClass('level-0')) {
+                $this.parent().siblings().find('a').removeClass('selected').end().find('ul').slideUp();
+            }
             // Deselect parent category
             $this.parent().parent().prev().removeClass('selected');
             // Hide too deep categories
@@ -137,12 +141,12 @@ jQuery(document).ready(function() {
 
 var ManufacturerBrowser = {
     $availableList: null,
-    
+
     init: function() {
         var self = ManufacturerBrowser;
         this.$availableList = jQuery('#available-manufacturers');
     },
-    
+
     reset: function(hard) {
         if(hard === true) {
             this.$availableList.html('');
@@ -152,22 +156,22 @@ var ManufacturerBrowser = {
             });
         }
     },
-    
+
     renderItem: function(item, $list) {
         // FIXME: When we render template on server, drop this method all together
         var $a = jQuery('<a>')
             .attr('href', browse_url + '?manufacturer=' + item[0])
             .attr('id', 'available-manufacturer-' + item[0])
             .text(item[1]);
-        
+
         if(jQuery('#manufacturer-' + item[0]).length > 0)
             $a.addClass('selected');
-        
+
         jQuery('<li>')
             .append($a)
             .appendTo(this.$availableList);
     },
-    
+
     filterByName: function(name) {
         this.reset();
         this.brandName = name;

@@ -150,7 +150,7 @@ jQuery(document).ready(function() {
         jQuery('#available-manufacturer-' + getElementId(this)).removeClass('selected');
         jQuery(this).closest('li').remove();
         filter(getQuery());
-        
+
         return false;
     });
 
@@ -229,7 +229,6 @@ jQuery(document).ready(function() {
         filter(getQuery());
         return false;
     });
-
 
     // Discount price filter
     jQuery('#product-price #discount-price').click(function() {
@@ -334,9 +333,9 @@ function getQuery(query, reset) {
     }
 
     if(jQuery('#price-slider').is('.selected')) {
-        query['price'] = 
+        query['price'] =
               jQuery("input[name=pricerange_min]").val()
-            + ',' 
+            + ','
             + jQuery("input[name=pricerange_max]").val();
         jQuery('#product-price').prev().addClass('active');
     }
@@ -597,6 +596,5 @@ function renderProducts(products) {
     }
 
     filterCriteria(products);
-    
     calculateProductLayout();
 }
