@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n humanize trackback_tags tagging_tags comments cache apparel_extras %}
+{% load i18n humanize trackback_tags comments cache apparel_extras %}
 
 {% block extra-title %}{{ object.title }} {% trans "by" %} {{ object.user.get_profile.display_name }} | {% trans "Looks" %} | {% endblock %}
 
@@ -129,21 +129,7 @@
     <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
     {% get_trackbacks_for object as trackbacks %}
     {% include 'apparel/fragments/comments.html' %}
-{% cache CACHE_TIMEOUT look_detail3 object.id LANGUAGE_CODE %}
-    {% tags_for_object object as tags %}
-    {% if tags %}
-    <div id="tags">
-        <h2>{% trans "Tags" %}</h2>
-        <ul>
-            {% for tag in tags %}
-            {% tagged_objects tag in apparel.look as looks_with_tag %}
-            <li>{{ tag.name }}<span>{{ looks_with_tag|length }}</span></li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
 </div>
-{% endcache %}
 <div id="look-tooltips">
     {% for component in object.display_components.all %}
         {% cache CACHE_TIMEOUT look_product_tooltip component.product.id LANGUAGE_CODE %}
