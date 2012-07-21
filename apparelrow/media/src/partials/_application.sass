@@ -47,7 +47,6 @@ button
   border: none
   cursor: pointer
 /*  height: 100px */
-  
 
 .clear
   clear: both
@@ -60,11 +59,11 @@ button
 #outer
   width: 100%
   min-width: 1000px
-  @media and screen (min-width: 1212px)
+  @media screen and (min-width: 1212px)
     min-width: 1212px
-  @media and screen (min-width: 1444px)
+  @media screen and (min-width: 1444px)
     min-width: 1444px
-  @media and screen (min-width: 1676px)
+  @media screen and (min-width: 1676px)
     min-width: 1676px
   margin: 0 auto
 
@@ -98,6 +97,7 @@ button
 
   #inner-header
     width: 940px
+    height: 118px
     .page-shop &, .profile-likes &
       @media screen and (min-width: 1212px)
         width: 940px + 232
@@ -2379,83 +2379,89 @@ body.settings
   background: #f6f6f6
   display: block
   width: 100%
-  min-width: 870px
   overflow: hidden
   border-bottom: 1px solid #E6E6E6
-
-#panelwrap
-  width: 870px
-  float: left
-  margin: 0 0 0 72px
-  #ar-facepile
-    &.ar-facepile
-      background: image_url('welcome_userthumbs.png') no-repeat
-  .slide
-    margin: 0
-    padding: 0
-  .btn-slide
-    display: block
-    background: image_url(unquote("kryss.png")) no-repeat top left
-    height: 22px
-    width: 23px
-    float: right
-    margin: 35px 0 0
-    &:hover
-      background: image_url(unquote("kryss.png")) no-repeat top right
-  .active
-    background-position: right 0px
-  .connect-button
-    a
-      background: image_url(unquote("fb-btn.png")) no-repeat top center transparent
-      width: 281px
-      height: 38px
-      float: left
-      margin: 12px 0 0 40px
-      text-indent: -9999em
+  #panelwrap
+    position: relative
+    width: 960px - 72
+    .page-shop &, .profile-likes &
+      @media screen and (min-width: 1212px)
+        width: 960px + 232 - 72
+      @media screen and (min-width: 1444px)
+        width: 960px + 464 - 72
+      @media screen and (min-width: 1676px)
+        width: 960px + 696 - 72
+    float: left
+    margin: 0 0 0 72px
+    #ar-facepile
+      &.ar-facepile
+        background: image_url('welcome_userthumbs.png') no-repeat
+    .slide
+      margin: 0
+      padding: 0
+    .btn-slide
+      display: block
+      float: right
+      background: image_url(unquote("kryss.png")) no-repeat top left
+      margin-top: 35px
+      height: 22px
+      width: 23px
       &:hover
-        background: image_url(unquote("fb-btn.png")) no-repeat bottom center transparent
-  .bild
-    float: left
-    width: 281px
-    height: 115px
-    margin: 15px 0 0 69px
-  h1
-    font-size: 4em
-    line-height: 38px
-  h3
-    color: #666
-    letter-spacing: 3px
-    font-weight: normal
-  ul
-    li
+        background: image_url(unquote("kryss.png")) no-repeat top right
+    .active
+      background-position: right 0px
+    .connect-button
+      a
+        background: image_url(unquote("fb-btn.png")) no-repeat top center transparent
+        width: 281px
+        height: 38px
+        float: left
+        margin: 12px 0 0 40px
+        text-indent: -9999em
+        &:hover
+          background: image_url(unquote("fb-btn.png")) no-repeat bottom center transparent
+    .bild
+      float: left
+      width: 281px
+      height: 115px
+      margin: 15px 0 0 69px
+    h1
+      font-size: 4em
+      line-height: 38px
+    h3
+      color: #666
+      letter-spacing: 3px
+      font-weight: normal
+    ul
+      li
+        font-size: 1.3em
+        list-style-type: disc
+        margin-left: 20px
+    .row-span
+      float: left
+      width: 385px
+      margin: 35px 0 43px 37px
+    .p-row
+      margin: 20px 0 0
       font-size: 1.3em
-      list-style-type: disc
-      margin-left: 20px
-  .row-span
-    float: left
-    width: 385px
-    margin: 35px 0 43px 37px
-  .p-row
-    margin: 20px 0 0
-    font-size: 1.3em
-    text-align: left
-    line-height: 20px
-    strong
-      font-weight: bold
-  .p-light
-    color: #999999
-  .rowrubbe
-    line-height: 1em
-    width: 375px
-    text-transform: none
-  p
-    text-align: center
+      text-align: left
+      line-height: 20px
+      strong
+        font-weight: bold
+    .p-light
+      color: #999999
+    .rowrubbe
+      line-height: 1em
+      width: 375px
+      text-transform: none
+    p
+      text-align: center
 #login-fb
   background: image_url(unquote("fb-bg.png")) no-repeat top center
-  float: right
+  float: left
   width: 361px
   height: 126px
-  margin: 35px 40px 0 20px
+  margin: 35px 0 0 28px
   position: relative
   .dialog-why-facebook
     display: inline-block
