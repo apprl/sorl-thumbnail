@@ -1,5 +1,4 @@
 {% extends "profile/notifications/email_base.html" %}{% load i18n %}{% block content %}
 <p><a href="{{ sender_link }}">{{ sender_first_name }} {{ sender_last_name }}</a>{% trans " now follow your updates on Apprl." %}</p>
-<p>{% trans "You are not currently following " %}<a href="{{ sender_link }}">{% if sender_first_name|last == 's' %}{% blocktrans %}{{ sender_first_name }}'{% endblocktrans %}{% else %}{% blocktrans %}{{ sender_first_name }}'s{% endblocktrans %}{% endif %}</a>{% trans " updates." %}
-</p>
+<p><a href="{{ sender_updates_link }}">{% trans "Follow" %} {% if sender_first_name|last == 's' %}{% blocktrans %}{{ sender_first_name }}'{% endblocktrans %}{% else %}{% blocktrans %}{{ sender_first_name }}'s{% endblocktrans %}{% endif %} {% trans "updates here!" %}</a></p>
 {% endblock %}

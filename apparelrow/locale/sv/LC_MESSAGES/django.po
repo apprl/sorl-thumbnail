@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-21 09:58+0200\n"
+"POT-Creation-Date: 2012-07-21 11:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1412,6 +1412,7 @@ msgstr "Sluta följa"
 
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:11
+#: templates/profile/notifications/email_follow_user.html:3
 msgid "Follow"
 msgstr "Följ"
 
@@ -2163,10 +2164,6 @@ msgid " now follow your updates on Apprl."
 msgstr " följer nu dina uppdateringar på Apprl."
 
 #: templates/profile/notifications/email_follow_user.html:3
-msgid "You are not currently following "
-msgstr "Du följer just nu inte "
-
-#: templates/profile/notifications/email_follow_user.html:3
 #, python-format
 msgid "%(sender_first_name)s'"
 msgstr "%(sender_first_name)s"
@@ -2177,8 +2174,8 @@ msgid "%(sender_first_name)s's"
 msgstr "%(sender_first_name)ss"
 
 #: templates/profile/notifications/email_follow_user.html:3
-msgid " updates."
-msgstr " uppdateringar."
+msgid "updates here!"
+msgstr "uppdateringar här!"
 
 #: templates/profile/notifications/email_follow_user_following.html:3
 msgid "You are currently following "
@@ -2417,6 +2414,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "You are not currently following "
+#~ msgstr "Du följer just nu inte "
 
 #~ msgid "Tags"
 #~ msgstr "Taggar"

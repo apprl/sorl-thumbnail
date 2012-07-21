@@ -9,6 +9,8 @@ from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.translation import get_language, activate
+from django.core.urlresolvers import reverse
+
 from actstream.actions import is_following
 from celery.task import task
 
@@ -44,7 +46,9 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     extra_context['domain'] = Site.objects.get_current().domain
     extra_context['sender_first_name'] = sender.first_name
     extra_context['sender_last_name'] = sender.last_name
-    extra_context['sender_link'] = 'http://%s%s' % (extra_context['domain'], sender.get_profile().get_absolute_url())
+    profile = sender.get_profile()
+    extra_context['sender_link'] = 'http://%s%s' % (extra_context['domain'], profile.get_absolute_url())
+    extra_context['sender_updates_link'] = 'http://%s%s' % (extra_context['domain'], reverse('profile-updates', args=[profile.slug]))
     if 'object_link' in extra_context:
         extra_context['object_link'] = 'http://%s%s' % (extra_context['domain'], extra_context['object_link'])
 

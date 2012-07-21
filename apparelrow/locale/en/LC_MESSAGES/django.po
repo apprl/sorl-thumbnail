@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-21 09:58+0200\n"
+"POT-Creation-Date: 2012-07-21 11:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1354,6 +1354,7 @@ msgstr ""
 
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:11
+#: templates/profile/notifications/email_follow_user.html:3
 msgid "Follow"
 msgstr ""
 
@@ -2028,10 +2029,6 @@ msgid " now follow your updates on Apprl."
 msgstr ""
 
 #: templates/profile/notifications/email_follow_user.html:3
-msgid "You are not currently following "
-msgstr ""
-
-#: templates/profile/notifications/email_follow_user.html:3
 #, python-format
 msgid "%(sender_first_name)s'"
 msgstr ""
@@ -2042,7 +2039,7 @@ msgid "%(sender_first_name)s's"
 msgstr ""
 
 #: templates/profile/notifications/email_follow_user.html:3
-msgid " updates."
+msgid "updates here!"
 msgstr ""
 
 #: templates/profile/notifications/email_follow_user_following.html:3
