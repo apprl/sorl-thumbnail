@@ -87,9 +87,20 @@
 {% endcache %}
     {% get_comment_count for object as comment_count %}
     <div class="activity">
-    {% include 'apparel/fragments/comment_count.html' %}
-      {% url apparel.views.look_user_like_list object.slug as likes_url %}
-      <p class="last">{% include 'apparel/fragments/likes_link.html' %}</p>
+        {% include 'apparel/fragments/comment_count.html' %}
+        <p class="last"><a class="likes" href="#likes" id="like-{{ object|class_name|lower }}s-{{ object.slug }}">{% blocktrans count object.score as counter %}<span class="count">{{ counter }}</span> like{% plural %}<span class="count">{{ counter }}</span> likes{% endblocktrans %}</a></p>
+    </div>
+    <div id="likes">
+        <h2>{% trans "Likes" %}</h2>
+        <ul>
+        {% for like in likes %}
+            <li{% if forloop.counter|divisibleby:6 %} class="last-column"{% endif %}>
+                <a href="{{ like.user.get_absolute_url }}" title="{{ like.user.get_profile.display_name }}">
+                    <img alt="{{ like.user.get_profile.display_name }}" title="{{ like.user.get_profile.display_name }}" src="{{ like.user.get_profile.avatar }}">
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
     </div>
 {% cache CACHE_TIMEOUT look_detail2 object.id LANGUAGE_CODE %}
     <div class="spread">

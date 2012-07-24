@@ -497,6 +497,9 @@ def look_detail(request, slug):
 
         del request.session['look_saved']
 
+    # Likes
+    likes = look.likes.filter(active=True).order_by('-modified').select_related('user', 'user__profile')
+
     return render_to_response(
             'apparel/look_detail.html',
             {
@@ -507,6 +510,7 @@ def look_detail(request, slug):
                 'object_url': request.build_absolute_uri(look.get_absolute_url()),
                 'look_full_image': request.build_absolute_uri(look.static_image.url),
                 'look_saved': look_saved,
+                'likes': likes
             },
             context_instance=RequestContext(request),
         )
