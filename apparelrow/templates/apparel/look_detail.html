@@ -92,8 +92,8 @@
       <p class="last">{% include 'apparel/fragments/likes_link.html' %}</p>
     </div>
 {% cache CACHE_TIMEOUT look_detail2 object.id LANGUAGE_CODE %}
-    {% include 'apparel/fragments/share.html' with image=look_full_image url=object_url %}
     <div class="spread">
+        {% include 'apparel/fragments/share.html' with image=look_full_image url=object_url %}
         <div class="first">
             <label>{% trans "Embed this look on your blog or site" %}:<input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code"></label>
         </div>
