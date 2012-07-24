@@ -20,6 +20,7 @@
         <ul class="look-list-tabs">
             <li><a class="first latest{% if 'popular' not in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Popular looks" %}</a></li>
             <li><a class="last popular{% if 'popular' in request.path %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
+            <li class="right"><a class="open-dialog create-look" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a></li>
         </ul>
         {% else %}
             {% if 'products/' in request.path %}

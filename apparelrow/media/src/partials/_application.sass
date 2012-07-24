@@ -2278,12 +2278,21 @@ a#create-look
         border: 0
         background-color: transparent
 
+ul.look-list-tabs
+  line-height: 22px
+
 ul.look-list-tabs, ul.user-list-tabs
   +horizontal-list(0)
   margin: 16px 0 10px 0
   li
     padding-left: 20px
     display: block
+    &.right
+      float: right
+      .create-look
+        font-weight: normal
+        font-size: 1em
+        +plus_button(22px, 3px)
     a
       font-size: 1.3em
       font-weight: bold
