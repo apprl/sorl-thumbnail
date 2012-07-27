@@ -90,18 +90,6 @@
         {% include 'apparel/fragments/comment_count.html' %}
         <p class="last"><a class="likes" href="#likes" id="like-{{ object|class_name|lower }}s-{{ object.slug }}">{% blocktrans count object.score as counter %}<span class="count">{{ counter }}</span> like{% plural %}<span class="count">{{ counter }}</span> likes{% endblocktrans %}</a></p>
     </div>
-    <div id="likes">
-        <h2>{% trans "Likes" %}</h2>
-        <ul>
-        {% for like in likes %}
-            <li{% if forloop.counter|divisibleby:6 %} class="last-column"{% endif %}>
-                <a href="{{ like.user.get_absolute_url }}" title="{{ like.user.get_profile.display_name }}">
-                    <img alt="{{ like.user.get_profile.display_name }}" title="{{ like.user.get_profile.display_name }}" src="{{ like.user.get_profile.avatar }}">
-                </a>
-            </li>
-        {% endfor %}
-        </ul>
-    </div>
 {% cache CACHE_TIMEOUT look_detail2 object.id LANGUAGE_CODE %}
     <div class="spread">
         {% include 'apparel/fragments/share.html' with image=look_full_image url=object_url %}
@@ -139,6 +127,18 @@
 {% endcache %}
     <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
     {% get_trackbacks_for object as trackbacks %}
+    <div id="likes">
+        <h2>{% trans "Likes" %}</h2>
+        <ul>
+        {% for like in likes %}
+            <li{% if forloop.counter|divisibleby:6 %} class="last-column"{% endif %}>
+                <a href="{{ like.user.get_absolute_url }}" title="{{ like.user.get_profile.display_name }}">
+                    <img alt="{{ like.user.get_profile.display_name }}" title="{{ like.user.get_profile.display_name }}" src="{{ like.user.get_profile.avatar }}">
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
     {% include 'apparel/fragments/comments.html' %}
 </div>
 <div id="look-tooltips">
