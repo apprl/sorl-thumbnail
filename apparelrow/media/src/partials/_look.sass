@@ -300,37 +300,31 @@ body.look
       padding-top: 1.5em
 
   #content
-    margin-top: -1.8em
+    margin-top: -20px
     .collage, .photo
       background-color: white
 
 #look-header
+  height: 50px
   margin: 0 0 0 -20px
-  padding: 1em 20px 0 20px
+  padding: 0 20px 0 20px
   position: relative
   +border(bottom)
-  .profile-image
-    position: absolute
-    left: 20px
-    top: 1em
   .look-header-content
-    margin-left: 70px
-    h1
-      float: left
-      line-height: 1.5em
-      height: 2em
-      margin-bottom: -2px
+    position: absolute
+    top: 0
+    left: 90px
     a.edit, a.delete
-      float: left
-      margin-left: 2em
+      margin: 13px 0
     a.edit
       +edit_button(22px, 3px)
     a.delete
       +delete_button(22px, 3px)
-    div.look-user-url
-      clear: both
-      a:hover
-        text-decoration: underline
+    .large_follow
+      width: $aside_width - 70px // minus avatar width and margins
+      margin: 11px 0
+      .following, .not_following
+        margin: 0
 
 #wardrobe
   clear: both
@@ -429,7 +423,7 @@ body
 
 body.look-list
   ul.looks
-    margin-top: 30px
+    margin-top: 10px
 
 body.look-list, body.profile-looks
   a.look-heart

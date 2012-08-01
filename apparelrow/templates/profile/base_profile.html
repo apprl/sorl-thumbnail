@@ -20,13 +20,44 @@
     {% endif %}
 {% endblock extra-styles %}
 
-{% block body-classes %}three-columns profile{% endblock body-classes %}
-{% block body %}
-    <div id="profile-nav">
+{% block body-header %}
+{% url profile-likes profile.slug as profile_likes_url %}
+{% url profile-updates profile.slug as updates_url %}
+{% url profile-looks profile.slug as looks_url %}
+{% url profile-followers profile.slug as followers_url %}
+{% url profile-following profile.slug as following_url %}
+<div id="body-header">
+    <div class="column_one">
+        <h1 class="max-width">{{ profile.display_name }}</h1>
+    </div>
+    <div class="column_two">
         <ul>
-            {% include 'profile/fragments/menu_items.html' %}
+            <li>
+                {% if profile and profile.is_brand %}
+                <a class="{% if request.path == profile_likes_url %}selected{% else %}first{% endif %}" href="{{ profile_likes_url }}">{% trans "Shop" %}</a>
+                {% else %}
+                <a class="{% if request.path == profile_likes_url %}selected{% else %}first{% endif %}" href="{{ profile_likes_url }}">{% trans "Likes" %}</a>
+                {% endif %}
+            </li>
+            <li>
+                <a class="{% if request.path == updates_url %}selected{% endif %}" href="{{ updates_url }}">{% trans "Updates" %}</a>
+            </li>
+            <li>
+                <a class="{% if request.path == looks_url %} selected{% endif %}" href="{{ looks_url }}">{% trans "Looks" %}</a>
+            </li>
+            <li>
+                <a class="{% if request.path == followers_url %} selected{% endif %}" href="{{ followers_url }}">{% trans "Followers" %}</a>
+            </li>
+            <li>
+                <a class="last{% if request.path == following_url %} selected{% endif %}" href="{{ following_url }}">{% trans "Following" %}</a>
+            </li>
         </ul>
     </div>
+</div>
+{% endblock body-header %}
+
+{% block body-classes %}three-columns profile{% endblock body-classes %}
+{% block body %}
     <div class="sidebar">
         <div id="profile-image">
             <a href="{{ profile.get_absolute_url }}" class="profile-link"><img src="{{ profile.avatar_large }}" class="avatar large"></a>
@@ -38,7 +69,6 @@
                 {% endwith %}
             {% endif %}
         </div>
-        <h1 class="sidebar-profile-name"><a href="{{ profile.get_absolute_url }}" class="profile-link">{{ profile.display_name }}</a></h1>
         <p>
             {% trans "Member since" %} {{ profile.user.date_joined|date:"SHORT_DATE_FORMAT" }}
         </p>

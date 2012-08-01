@@ -10,6 +10,20 @@
 </script>
 {% endblock 'extra-scripts' %}
 
+{% block body-header %}
+<div id="body-header">
+    <div class="column_one">
+        <h1 class="max-width">{% trans "Looks" %}</h1>
+    </div>
+    <div class="column_two">
+        <ul>
+            <li><a class="first latest{% if 'popular' not in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Popular looks" %}</a></li>
+            <li><a class="last popular{% if 'popular' in request.path %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
+        </ul>
+    </div>
+    <a class="open-dialog create-look" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a>
+</div>
+{% endblock body-header %}
 {% block body-classes %}one-column look-list{% endblock body-classes %}
 {% block body %}
     <div id="content">
@@ -17,11 +31,6 @@
         {% url look-list-women as look_list_women %}
         {% url popular-look-list as popular_look_list_url %}
         {% if request.path == look_list_women or request.path == look_list_men or request.path == popular_look_list_url %}
-        <ul class="look-list-tabs">
-            <li><a class="first latest{% if 'popular' not in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Popular looks" %}</a></li>
-            <li><a class="last popular{% if 'popular' in request.path %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
-            <li class="right"><a class="open-dialog create-look" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a></li>
-        </ul>
         {% else %}
             {% if 'products/' in request.path %}
             <h2>{% trans "Showing" %} {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>

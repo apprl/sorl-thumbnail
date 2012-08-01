@@ -206,6 +206,10 @@ def product_detail(request, slug):
 
     # Full image url
     product_full_image = request.build_absolute_uri(get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
+    # Full brand url
+    product_brand_full_url = ''
+    if product.manufacturer and product.manufacturer.profile:
+        product_brand_full_url = request.build_absolute_uri(product.manufacturer.profile.get_absolute_url())
 
     return render_to_response(
             'apparel/product_detail.html',
@@ -221,7 +225,7 @@ def product_detail(request, slug):
                 'comments': comments,
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
                 'product_full_image': product_full_image,
-                'product_brand_full_url': request.build_absolute_uri(product.manufacturer.profile.get_absolute_url()),
+                'product_brand_full_url': product_brand_full_url,
                 'likes': likes
             }, context_instance=RequestContext(request),
         )

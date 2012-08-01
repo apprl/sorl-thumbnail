@@ -87,6 +87,67 @@ button
     overflow: visible
     .profile-login-flow &
       padding-top: 20px
+    #body-header
+      position: relative
+      background: image_url("body-header-icon.png") no-repeat scroll left 25px transparent
+      min-height: 40px
+      padding: 25px 0 25px 25px
+      width: 940px
+      .page-shop &, .profile-likes &
+        @media screen and (min-width: 1212px)
+          width: 940px + 232
+        @media screen and (min-width: 1444px)
+          width: 940px + 464
+        @media screen and (min-width: 1676px)
+          width: 940px + 696
+      .column_one, .column_two
+        position: absolute
+        bottom: 25px - 3px
+      .column_two
+        left: $aside_width + $gutter_width
+      h1, h2, h3
+        position: relative
+        bottom: 0
+        display: inline-block
+        margin: 0
+        padding: 0
+        font-weight: normal
+      h1, h2
+        line-height: 23px
+        font-family: 'Lato', sans-serif
+        font-size: 23px
+        text-transform: uppercase
+        border: 0
+        &.max-width
+          max-width: $aside_width + 10px
+      h3
+        padding-left: 10px
+        line-height: 20px
+        font-family: 'IM Fell Great Primer', sans-serif
+        font-size: 20px
+        font-style: italic
+        text-transform: lowercase
+        color: $easier_color
+      ul
+        +horizontal-list(10px)
+        overflow: visible
+        li a
+          padding-bottom: 8px
+          font-family: 'IM Fell Great Primer', sans-serif
+          font-size: 20px
+          font-style: italic
+          text-transform: lowercase
+          color: #bfbfbf
+          &.current, &.selected, &:hover
+            color: $black_color
+            border-bottom: 3px solid $black_color
+      .create-look
+        position: absolute
+        right: 20px
+        bottom: 0
+        font-weight: normal
+        font-size: 1em
+        +plus_button(22px, 3px)
 
 #header
   background: black
@@ -148,7 +209,7 @@ button
       li
         display: inline-block
         height: 28px
-        margin-left: 2em
+        margin-left: 1em
         a
           display: inline-block
           text-decoration: none
@@ -1193,7 +1254,7 @@ body.two-columns .pagination
   h2
     border-bottom: 0
     margin: 0
-    padding: 5px 0 10px 0
+    padding: 15px 0 10px 0
     line-height: 1em
   h1
     padding: 10px 0 5px 0
@@ -1428,7 +1489,7 @@ body.brand-list
           display: none
   .alphabet-list
     +horizontal_list
-    margin-top: 30px
+    margin-top: 4px
     li
       padding-left: 3px
       font-size: 1em
@@ -1763,6 +1824,8 @@ a.block_link
           background-position: bottom
         &.disabled
           visibility: hidden
+    h2
+      margin-top: 30px
     h2.disabled
       background: none
       cursor: default
@@ -1962,10 +2025,10 @@ body.profile
 
 body.profiles
   .gender-tabs
-    height: 16px
+    height: 20px
     +horizontal_list
     +border("bottom")
-    padding: 0 0 5px 0
+    padding: 4px 0 0 0
     font-weight: bold
     li
       a
@@ -1973,9 +2036,6 @@ body.profiles
         color: $easier_color
       &.active > a, a:hover
         color: $font_color
-  .sidebar
-    h2
-      margin-top: 39px
 
 body.profiles, body.profile
   ul.users
@@ -2272,35 +2332,6 @@ a#create-look
       &[type=image]
         border: 0
         background-color: transparent
-
-ul.look-list-tabs
-  line-height: 22px
-
-ul.look-list-tabs, ul.user-list-tabs
-  +horizontal-list(0)
-  margin: 16px 0 10px 0
-  li
-    padding-left: 20px
-    display: block
-    &.right
-      float: right
-      .create-look
-        font-weight: normal
-        font-size: 1em
-        +plus_button(22px, 3px)
-    a
-      font-size: 1.3em
-      font-weight: bold
-      color: #c1c1c1
-      display: block
-      &.current, &.current:hover
-        text-decoration: underline
-        color: #353535
-      &:hover
-        color: #353535
-      &:active
-        text-decoration: underline
-
 
 //
 // Settings page

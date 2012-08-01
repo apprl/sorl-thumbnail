@@ -16,13 +16,6 @@
     \ <a href="{% gender_url object.gender 'shop' %}#category={{ last_category.id }}&manufacturer={{ object.manufacturer.id }}">{{ object.manufacturer }}</a>
     {% endwith %}
     </div>
-    <h1>
-      {% if object.manufacturer.profile %}
-      <a href="{{ object.manufacturer.profile.get_absolute_url }}">{{ object.manufacturer }}</a>
-      {% else %}
-      {{ object.manufacturer }}
-      {% endif %}
-    </h1>
     {% if object.product_name %}<h2>{{ object.product_name }}</h2>{% endif %}
     {% regroup object.options.all by option_type as option_list %}
     <!-- FIXME: Style this properly. See ticket #300

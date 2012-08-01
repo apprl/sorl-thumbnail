@@ -52,8 +52,7 @@ jQuery(document).ready(function() {
         jQuery('#product-gender li:first > a').addClass('selected');
 
         // Sort by
-        var sort_elem = jQuery('.browse-sort-hover-menu li:first a');
-        jQuery('.browse-sort-selected').attr('data-sort', sort_elem.attr('data-sort')).text(sort_elem.text());
+        jQuery('.browse-sort li:first a').addClass('selected');
 
         // Call getQuery with empty query and force reset
         filter(getQuery({}, true));
@@ -155,39 +154,10 @@ jQuery(document).ready(function() {
     });
 
     // Sort by
-    var browse_sort_menu = false;
-    jQuery('.browse-sort-selected').live('click', function(e) {
-        if(browse_sort_menu == false) {
-            jQuery(this).addClass('selected').siblings('.browse-sort-hover-menu').show();
-            browse_sort_menu = true;
-        } else {
-            jQuery(this).removeClass('selected').siblings('.browse-sort-hover-menu').hide();
-            browse_sort_menu = false;
-        }
-        e.stopPropagation();
-
-        return false;
-    });
-    jQuery('body').click(function(e) {
-        if(browse_sort_menu == true && jQuery(e.target).hasClass('browse-sort-selected')) {
-            jQuery('.browse-sort-selected').removeClass('selected').siblings('.browse-sort-hover-menu').hide();
-            browse_sort_menu = false;
-            e.stopPropagation();
-            return false;
-        }
-        if(browse_sort_menu == true) {
-            jQuery('.browse-sort-selected').removeClass('selected').siblings('.browse-sort-hover-menu').hide();
-            browse_sort_menu = false;
-        }
-    });
-    jQuery('.browse-sort-hover-menu li a').live('click', function(e) {
-        var elem = jQuery(this);
-        jQuery('.browse-sort-selected').attr('data-sort', elem.attr('data-sort'))
-                                       .text(elem.text());
+    jQuery(document).on('click', '.browse-sort li a', function(e) {
+        jQuery('.browse-sort li a').removeClass('selected');
+        jQuery(this).addClass('selected');
         filter(getQuery());
-        jQuery('.browse-sort-hover-menu').hide();
-        browse_sort_menu = false;
-
         return false;
     });
 
@@ -291,7 +261,7 @@ function getQuery(query, reset) {
     query = query || {}
     reset = typeof(reset) != 'undefined' ? reset : false;
 
-    sort_by = jQuery('.browse-sort-selected').attr('data-sort');
+    sort_by = jQuery('.browse-sort li a.selected').attr('data-sort');
     if(sort_by != 'pop') {
         query['sort'] = sort_by;
     }
@@ -550,11 +520,12 @@ function updateSelected(products) {
 
     // Select sort
     if(products.selected_sort) {
-        jQuery('.browse-sort-hover-menu li a').each(function(i, e) {
+        jQuery('.browse-sort li a').each(function(i, e) {
             var elem = jQuery(e);
             if(elem.attr('data-sort') == products.selected_sort) {
-                jQuery('.browse-sort-selected').attr('data-sort', elem.attr('data-sort'))
-                                               .text(elem.text());
+                elem.addClass('selected');
+            } else {
+                elem.removeClass('selected');
             }
         });
     }

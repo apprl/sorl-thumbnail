@@ -52,30 +52,31 @@
 </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}look two-columns{% endblock %}
-
+{% block body-header %}
+<div id="body-header">
+    <div class="column_one">
+        <h1>{{ object.title }}</h1>
+        <h3>{% trans "By" %} {{ object.user.get_profile.display_name }} </h3>
+    </div>
+</div>
+{% endblock body-header %}
+{% block body-classes %}look two-columns{% endblock body-classes %}
 {% block body %}
 <div id="look-header">
     <a href="{{ object.user.get_profile.get_absolute_url }}"><img src="{{ object.user.get_profile.avatar }}" class="profile-image" /></a>
     <div class="look-header-content">
-        <h1>{{ object.title }}</h1>
-        {% if object.user == request.user %}
+        {% if object.user != request.user %}
+            {% with object.user.get_profile as profile %}
+            <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
+            {% endwith %}
+        {% else %}
             <a class="edit" href="{% url apparel.views.look_edit object.slug %}">{% trans "Edit" %}</a>
             <a class="delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
         {% endif %}
-        <div class="look-user-url">
-            {% url profile.views.looks object.user.get_profile.slug as looks_url %}
-            <a href="{{ looks_url }}">{% blocktrans with object.user.get_profile.display_name as name %}{{name}}'s looks{% endblocktrans %}</a>
-        </div>
     </div>
 </div>
 
 <div class="sidebar">
-    {% if object.user != request.user %}
-        {% with object.user.get_profile as profile %}
-        <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
-        {% endwith %}
-    {% endif %}
 {% cache CACHE_TIMEOUT look_detail1 object.id LANGUAGE_CODE %}
     {% include 'apparel/fragments/total_price.html' %}
     {% if object.description %}

@@ -20,25 +20,27 @@
     {% include 'apparel/fragments/browse_scripts.html' %}
 {% endblock 'extra-scripts' %}
 
+{% block body-header %}
+<div id="body-header">
+    <div class="column_one">
+        <h2><span>SHOP</span></h2>
+    </div>
+    <div class="column_two">
+        <ul class="browse-sort">
+            <li><a href="?sort=pop" data-sort="pop" class="selected">{% trans "Trending" %}</a></li>
+            <li><a href="?sort=lat" data-sort="lat">{% trans "Latest" %}</a></li>
+            <li><a href="?sort=che" data-sort="che">{% trans "Low price" %}</a></li>
+            <li><a href="?sort=exp" data-sort="exp">{% trans "High price" %}</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock body-header %}
 {% block body-classes %}two-columns page-shop{% endblock body-classes %}
-
 {% block body %}
         <div class="sidebar">
             {% include 'apparel/fragments/product_menu_browse.html' %}
         </div>
         <div id="content">
-
-            <div id="sort-wrap">
-                <h2>{% trans "Sort by" %}</h2>
-                <a href="#" class="browse-sort-selected" data-sort="pop">{% trans "Trending" %}</a>
-                <ul class="browse-sort-hover-menu" style="display: none;">
-                    <li class="first"><a data-sort="pop" href="?sort=pop">{% trans "Trending" %}</a></li>
-                    <li><a data-sort="lat" href="?sort=lat">{% trans "Latest" %}</a></li>
-                    <li><a data-sort="che" href="?sort=che">{% trans "Low price" %}</a></li>
-                    <li class="last"><a data-sort="exp" href="?sort=exp">{% trans "High price" %}</a></li>
-                </ul>
-            </div>
-
             <h2 id="product-count">
                 <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
             </h2>

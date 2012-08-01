@@ -5,8 +5,14 @@
 
 {% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Brands Men" %}{% else %}{% trans "Brands Women" %}{% endif %} | {% endblock %}
 
+{% block body-header %}
+<div id="body-header">
+    <div class="column_one">
+        <h1 class="max-width">{% trans "Brands" %}</h1>
+    </div>
+</div>
+{% endblock body-header %}
 {% block body-classes %}three-columns brand-list{% endblock body-classes %}
-
 {% block body %}
     <div class="sidebar">
         <h2>{% trans "Popular brands" %}</h2>
