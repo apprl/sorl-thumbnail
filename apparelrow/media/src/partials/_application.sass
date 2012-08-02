@@ -105,14 +105,16 @@ button
         bottom: 25px - 3px
       .column_two
         left: $aside_width + $gutter_width
-      h1, h2, h3
+      h1, h2
         position: relative
         bottom: 0
         display: inline-block
         margin: 0
         padding: 0
+        border: 0
         font-weight: normal
-      h1, h2
+        text-decoration: none
+      h1
         line-height: 23px
         font-family: 'Lato', sans-serif
         font-size: 23px
@@ -120,14 +122,17 @@ button
         border: 0
         &.max-width
           max-width: $aside_width + 10px
-      h3
+      h2
         padding-left: 10px
         line-height: 20px
         font-family: 'IM Fell Great Primer', sans-serif
         font-size: 20px
         font-style: italic
-        text-transform: lowercase
         color: $easier_color
+        &.lowercase
+          text-transform: lowercase
+        a
+          color: $easier_color
       ul
         +horizontal-list(10px)
         overflow: visible
@@ -138,9 +143,11 @@ button
           font-style: italic
           text-transform: lowercase
           color: #bfbfbf
-          &.current, &.selected, &:hover
+          &.current, &.selected
             color: $black_color
             border-bottom: 3px solid $black_color
+          &:hover
+            color: $black_color
       .create-look
         position: absolute
         right: 20px
@@ -1272,7 +1279,7 @@ body.two-columns .pagination
       text-decoration: underline
   p.description
     width: $aside_width + $gutter_width
-    margin-bottom: 18px
+    margin: 10px 0 18px 0
 
 .product-image
   position: relative
@@ -1974,6 +1981,7 @@ body.profile
       display: block
       margin-left: $aside_width + 36px
   .sidebar
+    margin-top: 12px
     h2
       margin-top: 0
     #profile-image
