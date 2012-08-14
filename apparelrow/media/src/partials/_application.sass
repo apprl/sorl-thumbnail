@@ -1244,12 +1244,9 @@ body.two-columns .pagination
 .product-right
   +float-left
   width: $semi_large_width
-  .product-content
-    clear: left
-    overflow: hidden
   .product-similar
-    clear: left
-    margin-top: 30px
+    clear: both
+    padding-top: 30px
   .product-looks
     +float-right
     width: $aside_width
@@ -1625,7 +1622,6 @@ body.create-look, div.create-look-dialog
 
 body.look, body.product
   .share
-    +clearfix
     margin: 20px 0 10px 0
   #comments-and-links
     form
