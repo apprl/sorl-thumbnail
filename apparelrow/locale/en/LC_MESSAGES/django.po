@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-02 23:18+0200\n"
+"POT-Creation-Date: 2012-08-16 18:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,8 +33,8 @@ msgstr ""
 msgid "Swe"
 msgstr "Sve"
 
-#: apparel/browse.py:236 templates/apparel/look_list.html:36
-#: templates/apparel/look_list.html:38
+#: apparel/browse.py:236 templates/apparel/look_list.html:37
+#: templates/apparel/look_list.html:39
 msgid "Showing"
 msgstr ""
 
@@ -747,7 +747,7 @@ msgstr ""
 #: templates/apparel/look_create_dialog.html:6
 #: templates/apparel/look_create_unauthenticated.html:5
 #: templates/apparel/look_create_unauthenticated.html:11
-#: templates/apparel/look_list.html:24
+#: templates/apparel/look_list.html:25
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
 msgstr ""
@@ -782,8 +782,9 @@ msgstr ""
 msgid "About Apprl"
 msgstr ""
 
-#: templates/base.html:300
-msgid "Blog"
+#: templates/base.html:300 templates/profile/base_settings.html:20
+#: templates/profile/settings_facebook.html:5
+msgid "Facebook"
 msgstr ""
 
 #: templates/base.html:301
@@ -821,17 +822,17 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: templates/index.html:148 templates/apparel/product_detail.html:260
+#: templates/index.html:148 templates/apparel/product_detail.html:258
 #: templates/apparel/fragments/product_row.html:3
 msgid "Previous"
 msgstr ""
 
-#: templates/index.html:157 templates/apparel/product_detail.html:268
+#: templates/index.html:157 templates/apparel/product_detail.html:266
 #: templates/apparel/fragments/product_row.html:13
 msgid "Next"
 msgstr ""
 
-#: templates/index.html:162 templates/apparel/look_list.html:20
+#: templates/index.html:162 templates/apparel/look_list.html:21
 msgid "Popular looks"
 msgstr ""
 
@@ -1052,7 +1053,7 @@ msgid "Created"
 msgstr ""
 
 #: templates/apparel/look_detail.html:92
-#: templates/apparel/product_detail.html:236
+#: templates/apparel/product_detail.html:235
 #: templates/apparel/fragments/likes.html:5
 #: templates/apparel/fragments/likes_link.html:5
 #, python-format
@@ -1133,30 +1134,30 @@ msgstr ""
 msgid "Looks Women"
 msgstr ""
 
-#: templates/apparel/look_list.html:21 templates/apparel/user_home.html:19
+#: templates/apparel/look_list.html:22 templates/apparel/user_home.html:19
 msgid "Popular looks in your network"
 msgstr ""
 
-#: templates/apparel/look_list.html:36 templates/apparel/look_list.html:38
+#: templates/apparel/look_list.html:37 templates/apparel/look_list.html:39
 #, python-format
 msgid "%(counter)s look"
 msgid_plural "%(counter)s looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/look_list.html:43
+#: templates/apparel/look_list.html:44
 msgid ""
 "To see popular looks in your network you need to connect with your Facebook "
 "account."
 msgstr ""
 
-#: templates/apparel/look_list.html:49
+#: templates/apparel/look_list.html:50
 msgid ""
 "You currently don't follow anyone who has liked any looks, find friends to "
 "follow amoung our members."
 msgstr ""
 
-#: templates/apparel/look_list.html:50 templates/apparel/user_home.html:31
+#: templates/apparel/look_list.html:51 templates/apparel/user_home.html:31
 #: templates/apparel/fragments/browse_follow_user.html:5
 msgid "See all members"
 msgstr ""
@@ -1174,29 +1175,29 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: templates/apparel/product_detail.html:235
+#: templates/apparel/product_detail.html:234
 #, python-format
 msgid "Added to <span class=\"count\">%(counter)s</span> look"
 msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:239
+#: templates/apparel/product_detail.html:238
 msgid "Recently viewed"
 msgstr ""
 
-#: templates/apparel/product_detail.html:248
+#: templates/apparel/product_detail.html:247
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> look with this product"
 msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:258
+#: templates/apparel/product_detail.html:256
 msgid "You may also like"
 msgstr ""
 
-#: templates/apparel/product_detail.html:275
+#: templates/apparel/product_detail.html:273
 msgid "No product found!"
 msgstr ""
 
@@ -1808,11 +1809,6 @@ msgstr ""
 #: templates/profile/base_settings.html:19
 #: templates/profile/settings_email.html:5
 msgid "E-mail Address"
-msgstr ""
-
-#: templates/profile/base_settings.html:20
-#: templates/profile/settings_facebook.html:5
-msgid "Facebook"
 msgstr ""
 
 #: templates/profile/confirm_email.html:5
