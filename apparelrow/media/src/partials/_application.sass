@@ -2343,7 +2343,43 @@ a#create-look
 // Settings page
 //
 
-body.settings
+body.settings, body.about
+  .about-content
+    .dynamic-content
+      h1,h2,h3,h4,h5
+        margin: 0
+        padding: 0
+        border: 0
+      h1
+        font-size: 2em
+        margin: 0.67em 0
+      h2
+        font-size: 1.5em
+        margin: 0.75em 0
+      h3
+        font-size: 1.17em
+        margin: 0.83em 0
+      h4, p, ul, ol
+        font-size: 1em
+        margin: 1.12em 0
+      h5
+        font-size: 0.83em
+        margin: 1.5em 0
+      i, cite, em, var, address
+        font-style: italic
+      h1, h2, h3, h4, h5, h6, b, strong
+        font-weight: bolder
+      ul, ol
+        padding-left: 20px
+      ul
+        list-style-type: disc
+        li
+          list-style-type: disc
+      ol
+        list-style-type: decimal
+        li
+          list-style-type: decimal
+
   .settings-content
     form
       overflow: hidden
@@ -2369,7 +2405,7 @@ body.settings
   .sidebar
     h2
       margin-bottom: 0
-    .settings-list
+    .settings-list, .about-list
       li
         padding: 5px 0
         border-bottom: 1px solid $easy_border_color

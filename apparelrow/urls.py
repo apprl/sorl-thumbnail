@@ -17,10 +17,10 @@ admin.autodiscover()
 urlpatterns = patterns('',
 #    url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),
 #    url(r'^account/signup/$', signup_view, name="acct_signup"),
-    
+
 #    (r'^about/', include('about.urls')),
-    
-    (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', { 'domain': 'djangojs', 'packages': ('apparelrow',),}), 
+
+    (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', { 'domain': 'djangojs', 'packages': ('apparelrow',),}),
     # FIXME: Is it possible to include this in some other way? All I want to do
     # is to pass the next_page attribute (and not do it via query)
     url(r'^accounts/login/$', auth_views.login, {'template_name': 'registration/login.html'}, name='auth_login'),
@@ -28,21 +28,22 @@ urlpatterns = patterns('',
 
     (r'^profile/', include('profile.urls')),
     (r'^watcher/', include('watcher.urls')),
-    
+
     (r'^comments/', include('django.contrib.comments.urls')),
     (r'^ping/', include('trackback.urls')),
     ('^activity/', include('actstream.urls')),
     (r'^i18n/setlang/$', 'apparel.views.apparel_set_language'), # override builtin set_language
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^tinymce/', include('tinymce.urls')),
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
     (r'^newsletter/', include('newsletter.urls')),
-    
+
     (r'', include('apparel.urls')),
     (r'^beta/', include('beta.urls')),
     (r'^s/', include('statistics.urls')),
     url(r'^facebook/login', 'profile.views.login', name='facebook_login'),
+    (r'^tinymce/', include('tinymce.urls')),
+    (r'^(?P<url>.*)$', 'django.contrib.flatpages.views.flatpage'),
 )
 
 

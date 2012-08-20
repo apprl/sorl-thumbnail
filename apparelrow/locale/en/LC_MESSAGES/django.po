@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-16 18:56+0200\n"
+"POT-Creation-Date: 2012-08-21 00:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -792,7 +792,7 @@ msgid "Contact"
 msgstr ""
 
 #: templates/base.html:302
-msgid "Cookies"
+msgid "Privacy & Terms"
 msgstr ""
 
 #: templates/base.html:334
@@ -822,12 +822,12 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: templates/index.html:148 templates/apparel/product_detail.html:258
+#: templates/index.html:148 templates/apparel/product_detail.html:260
 #: templates/apparel/fragments/product_row.html:3
 msgid "Previous"
 msgstr ""
 
-#: templates/index.html:157 templates/apparel/product_detail.html:266
+#: templates/index.html:157 templates/apparel/product_detail.html:268
 #: templates/apparel/fragments/product_row.html:13
 msgid "Next"
 msgstr ""
@@ -906,6 +906,76 @@ msgid ""
 "\n"
 "Apprl Support Team\n"
 "support@apprl.com\n"
+msgstr ""
+
+#: templates/apparel/about_cookies.html:5 templates/apparel/base_about.html:23
+msgid "Cookies"
+msgstr ""
+
+#: templates/apparel/about_cookies.html:6
+#: templates/apparel/fragments/dialog_about_cookies.html:6
+msgid ""
+"Apprl uses cookies to make it easier for users to use the site. A cookie is "
+"an unharmful, small text file that is stored on your computer, which makes "
+"it possible to recognize your web browser when you visit the site. The "
+"information that we store in cookies is anonymous and cannot be used to "
+"identify personal information about users. If you want, you may disable the "
+"use of cookies in your browser settings, but Apprl (and a lot of other "
+"sites) will not work as well."
+msgstr ""
+
+#: templates/apparel/about_copyright_policy.html:5
+#: templates/apparel/base_about.html:21
+msgid "Copyright Policy"
+msgstr ""
+
+#: templates/apparel/about_copyright_policy.html:6
+msgid ""
+"Apprl respects the intellectual property rights of others and expects its "
+"users to do the same. It is Apprl’s policy, in appropriate circumstances and "
+"at its discretion, to disable and/or terminate the accounts of users who "
+"repeatedly infringe or are repeatedly charged with infringing the copyrights "
+"or other intellectual property rights of others."
+msgstr ""
+
+#: templates/apparel/about_privacy_policy.html:5
+#: templates/apparel/base_about.html:18
+msgid "Privacy Policy"
+msgstr ""
+
+#: templates/apparel/about_trademark_policy.html:5
+#: templates/apparel/base_about.html:22
+msgid "Trademark Policy"
+msgstr ""
+
+#: templates/apparel/about_trademark_policy.html:6
+msgid ""
+"Apprl respects the trademark rights of others. Accounts with usernames, Look "
+"names, or any other content that misleads others or violates another’s "
+"trademark may be updated, transferred or permanently suspended."
+msgstr ""
+
+#: templates/apparel/about_trademark_policy.html:7
+msgid ""
+"If you are concerned that someone may be using your trademark in an "
+"infringing way on our site you can let us know by emailing us at info@apprl."
+"com. Apprl will review your submission and take whatever action, in its sole "
+"discretion, it deems appropriate, including temporary or permanent removal "
+"of the trademark from the Apprl site"
+msgstr ""
+
+#: templates/apparel/base_about.html:4 templates/apparel/base_about.html:9
+#: templates/apparel/base_about.html:16 templates/flatpages/default.html:4
+#: templates/flatpages/default.html.py:9 templates/flatpages/default.html:16
+msgid "Privacy Policy & Terms of Service"
+msgstr ""
+
+#: templates/apparel/base_about.html:19
+msgid "Terms of Service"
+msgstr ""
+
+#: templates/apparel/base_about.html:20
+msgid "Acceptable Use Policy"
 msgstr ""
 
 #: templates/apparel/brand_list.html:6
@@ -1053,7 +1123,7 @@ msgid "Created"
 msgstr ""
 
 #: templates/apparel/look_detail.html:92
-#: templates/apparel/product_detail.html:235
+#: templates/apparel/product_detail.html:237
 #: templates/apparel/fragments/likes.html:5
 #: templates/apparel/fragments/likes_link.html:5
 #, python-format
@@ -1170,34 +1240,34 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: templates/apparel/product_detail.html:215
+#: templates/apparel/product_detail.html:217
 #: templates/apparel/fragments/comments.html:4
 msgid "Comments"
 msgstr ""
 
-#: templates/apparel/product_detail.html:234
+#: templates/apparel/product_detail.html:236
 #, python-format
 msgid "Added to <span class=\"count\">%(counter)s</span> look"
 msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:238
+#: templates/apparel/product_detail.html:240
 msgid "Recently viewed"
 msgstr ""
 
-#: templates/apparel/product_detail.html:247
+#: templates/apparel/product_detail.html:249
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> look with this product"
 msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/product_detail.html:256
+#: templates/apparel/product_detail.html:258
 msgid "You may also like"
 msgstr ""
 
-#: templates/apparel/product_detail.html:273
+#: templates/apparel/product_detail.html:275
 msgid "No product found!"
 msgstr ""
 
@@ -1262,17 +1332,6 @@ msgstr ""
 
 #: templates/apparel/fragments/dialog_about_cookies.html:4
 msgid "About cookies"
-msgstr ""
-
-#: templates/apparel/fragments/dialog_about_cookies.html:6
-msgid ""
-"Apprl uses cookies to make it easier for users to use the site. A cookie is "
-"an unharmful, small text file that is stored on your computer, which makes "
-"it possible to recognize your web browser when you visit the site. The "
-"information that we store in cookies is anonymous and cannot be used to "
-"identify personal information about users. If you want, you may disable the "
-"use of cookies in your browser settings, but Apprl (and a lot of other "
-"sites) will not work as well."
 msgstr ""
 
 #: templates/apparel/fragments/dialog_follow_user.html:7

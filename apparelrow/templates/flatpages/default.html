@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n flatpages %}
+
+{% block extra-title %}{{ flatpage.title }} | {% trans "Privacy Policy & Terms of Service" %} | {% endblock %}
+
+{% block body-header %}
+<div id="body-header">
+    <div class="column_one">
+        <h1>{% trans "Privacy Policy & Terms of Service" %}</h1>
+    </div>
+</div>
+{% endblock body-header %}
+{% block body-classes %}two-columns about{% endblock body-classes %}
+{% block body %}
+    <div class="sidebar">
+        <h2>{% trans "Privacy Policy & Terms of Service" %}</h2>
+        {% get_flatpages as flatpages %}
+        <ul class="about-list">
+        {% for page in flatpages %}
+            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div id="content" class="about-content">
+        <h2>{{ flatpage.title }}</h2>
+        {% if LANGUAGE_CODE == 'sv' %}
+        <p>Samtliga villkor är skrivna på Engelska för att kunna tillgängliggöra villkoren för så många som möjligt av våra användare. Är det något i våra villkor & policies som du inte förstår och vill ha förklarat på Svenska, hör av dig till oss på <a href="mailto:info@apprl.com">info@apprl.com</a>.</p>
+        {% endif %}
+        <div class="dynamic-content">
+            {{ flatpage.content }}
+        </div>
+    </div>
+{% endblock body %}
