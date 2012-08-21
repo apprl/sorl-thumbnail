@@ -166,22 +166,24 @@
 
 
 {% block body-header %}
+<div class="product-back">
+    {% if request.META.HTTP_REFERER and CURRENT_DOMAIN in request.META.HTTP_REFERER %}
+    <a href="{{ request.META.HTTP_REFERER }}" onClick="history.back(1);return false;">{% trans "Back" %}</a>
+    {% endif %}
+</div>
 <div id="body-header">
     <div class="column_one">
-        <h1>{{ object.manufacturer }}</h1>
+        {% if object.manufacturer.profile %}
+        <h1><a href="{{ object.manufacturer.profile.get_absolute_url }}">{{ object.manufacturer }}</a></h1>
+        {% else %}
+        <h1>{{ object.manufacturer }}</h1>
+        {% endif %}
         {% if object.product_name %}<h2 class="lowercase">{{ object.product_name }}</h2>{% endif %}
     </div>
 </div>
 {% endblock body-header %}
 {% block body-classes %}product two-columns right{% endblock %}
 {% block body %}
-
-<!--<div class="product-back">-->
-    <!--{% if request.META.HTTP_REFERER and CURRENT_DOMAIN in request.META.HTTP_REFERER %}-->
-    <!--<a href="{{ request.META.HTTP_REFERER }}" onClick="history.back(1);return false;">{% trans "Back" %}</a>-->
-    <!--{% endif %}-->
-<!--</div>-->
-
 {% if object %}
 {% url apparel.views.product_user_like_list object.slug as likes_url %}
         <div class="product-left">
