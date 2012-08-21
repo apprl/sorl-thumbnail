@@ -209,7 +209,7 @@ def upload_tar_from_git(snapshot='master'):
 def install_site():
     "Add the virtualhost config file to the webserver's config, activate logrotate"
     require('release', provided_by=[deploy, setup])
-    upload_template('etc/%(webserver)s.conf.default' % env, '/etc/%(webserver)s/conf-available/%(project_name)s.conf' % env, context=env, use_sudo=True)
+    upload_template('etc/%(webserver)s.conf.%(hostname)s' % env, '/etc/%(webserver)s/conf-available/%(project_name)s.conf' % env, context=env, use_sudo=True)
     with settings(warn_only=True):
         sudo('cd /etc/%(webserver)s/conf-enabled/; ln -sf ../conf-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
     

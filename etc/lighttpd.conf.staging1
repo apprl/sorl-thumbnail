@@ -96,63 +96,20 @@ $HTTP["host"] =~ "^.*(?:apparelrow\.se|apparelrow\.com)$" {
     )
 }
 
-$HTTP["host"] =~ "^.*(?:apprl\.se)$" {
-    url.redirect = ( "^/(.*)" => "http://apprl.com/$1" )
-}
-
-$HTTP["host"] =~ "^(www)\.(apprl\.com)$" {
-    url.redirect = ( "^/(.*)" => "http://%%2/$1" )
-}
-
 $HTTP["host"] =~ "^(%(hostname)s\.)?apprl\.com" {
     var.project-name = "apparelrow"
     var.deploy-base  = "%(path)s"
     var.deploy-dir   = var.deploy-base + "/releases/current"
 
-    server.document-root = var.deploy-dir + "/" + var.project-name
-
-    fastcgi.server = (
-        "/apparelrow.fcgi" => (
-            "main" => (
-                "socket"      => var.deploy-base + "/var/" + var.project-name + ".sock",
-                "check-local" => "disable",
-            )
-        ),
-        "/apparelrow-admin.fcgi" => (
-            "main" => (
-                "socket"      => var.deploy-base + "/var/" + var.project-name + ".sock-admin",
-                "check-local" => "disable",
-            )
-        ),
-    )
-
-    alias.url = (
-        "/media/admin"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/static/admin",
-        "/media"           => var.deploy-dir + "/apparelrow/media",
-        "/screenshots"     => var.deploy-dir + "/www/root/screenshots",
-    )
-
-    expire.url = (
-        "/media"           => "access plus 1 years",
-        "/screenshots"     => "access plus 1 years",
-    )
-
     auth.backend = "htpasswd"
-    auth.backend.htpasswd.userfile = var.deploy-dir + "/www/etc/htpasswd"
-    auth.debug = 2
-    auth.require = ( "/screenshots" => (
+    auth.backend.htpasswd.userfile = var.deploy-dir + "/etc/htpasswd"
+    auth.require = ( "/" => (
            "method" => "basic",
-           "realm"  => "ApparelRow Preview",
+           "realm"  => "Apprl Staging",
            "require" => "valid-user"
        )
     )
+    server.document-root = var.deploy-dir + "/" + var.project-name
 
-    url.rewrite-once = (
-        "^/robots\.txt$"           => "/media/robots.txt",           # Robots.txt
-        "^/favicon\.ico$"          => "/media/favicon.ico",          # Favicon, redirect to static folder
-        "^(/media.*)$"             => "$1",                          # Static files
-        "^/(screenshots/.*)$"      => "$1",                          # Screenshots
-        "^(/admin(?:\/.*|$))"      => "/apparelrow-admin.fcgi$1",    # FCGI Admin site configuration
-        "^(/.*)$"                  => "/apparelrow.fcgi$1",          # FCGI configuration
-    )
+    include var.deploy-dir + "/etc/lighttpd.incl.conf"
 }
