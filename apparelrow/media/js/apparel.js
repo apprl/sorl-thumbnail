@@ -124,8 +124,8 @@ jQuery(document).ready(function() {
     // Track buy clicks
 
     $('body.product a.buy-now').live('click', trackEvent('Product', 'BuyReferral'));
-    $('body.page-shop a.buy-now').live('click', trackEvent('Shop', 'BuyReferral'));
-    $('body.profile a.buy-now').live('click', trackEvent('Profile', 'BuyReferral'));
+    $('body.page-shop a.buy').live('click', trackEvent('Shop', 'BuyReferral'));
+    $('body.profile a.buy').live('click', trackEvent('Profile', 'BuyReferral'));
 
     // Track likes
 
