@@ -61,13 +61,13 @@ def staging():
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
     env.celery_processes='2,1'
-   
+
 # tasks
 
 def test():
     "Run the test suite and bail out if it fails"
     local("cd %(path)s; python manage.py test" % env)
-    
+
 def setup_db():
     """
     Setup a DB server
@@ -92,7 +92,7 @@ def setup_db():
         sudo('psql < /tmp/setup.sql', user='postgres')
         sudo('/etc/init.d/postgresql-8.4 restart')
     sudo('rm -f /tmp/setup.sql')
-    
+
 def setup(snapshot='master'):
     """
     Setup a fresh virtualenv as well as a few useful directories, then run
@@ -124,11 +124,11 @@ def setup(snapshot='master'):
         sudo('apt-get install -y python-psycopg2')
     if env.webserver=='lighttpd':
         sudo('apt-get install -y lighttpd')
-        
+
     # disable default site
     with settings(warn_only=True):
         sudo('cd /etc/%(webserver)s/conf-enabled/; rm -f default;' % env, pty=True)
-    
+
     # new project setup
     sudo('mkdir -p %(path)s; chown %(user)s:%(group)s %(path)s;' % env, pty=True)
     with cd(env.path):
@@ -140,11 +140,11 @@ def setup(snapshot='master'):
     install_redis()
     deploy('first', snapshot=snapshot)
     load_fixtures()
-    
+
 def deploy(param='', snapshot='master'):
     """
     Deploy the latest version of the site to the servers, install any
-    required third party modules, install the virtual host and 
+    required third party modules, install the virtual host and
     then restart the webserver
     """
     require('hosts', provided_by=[localhost,demo,prod])
@@ -164,7 +164,7 @@ def deploy(param='', snapshot='master'):
     restart_django()
     restart_memcached()
     restart_webserver()
-    
+
 def deploy_version(version):
     "Specify a specific version to be made live"
     require('hosts', provided_by=[localhost,demo,prod])
@@ -174,7 +174,7 @@ def deploy_version(version):
         run('rm -rf releases/previous; mv releases/current releases/previous;', pty=True)
         run('ln -s %(version)s releases/current' % env, pty=True)
     restart_webserver()
-    
+
 def rollback():
     """
     Limited rollback capability. Simply loads the previously current
@@ -187,8 +187,8 @@ def rollback():
         run('mv releases/previous releases/current;', pty=True)
         run('mv releases/_previous releases/previous;', pty=True)
         # TODO: use South to migrate back
-    restart_webserver()    
-    
+    restart_webserver()
+
 # Helpers. These are called by other functions rather than directly
 
 def load_fixtures():
@@ -205,14 +205,14 @@ def upload_tar_from_git(snapshot='master'):
     put('%(release)s.tar.gz' % env, '%(path)s/packages/' % env)
     run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz' % env, pty=True)
     local('rm %(release)s.tar.gz' % env)
-    
+
 def install_site():
     "Add the virtualhost config file to the webserver's config, activate logrotate"
     require('release', provided_by=[deploy, setup])
     upload_template('etc/%(webserver)s.conf.%(hostname)s' % env, '/etc/%(webserver)s/conf-available/%(project_name)s.conf' % env, context=env, use_sudo=True)
     with settings(warn_only=True):
         sudo('cd /etc/%(webserver)s/conf-enabled/; ln -sf ../conf-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
-    
+
 def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
@@ -262,14 +262,13 @@ def build_styles_and_scripts():
         sudo('ln -s ../../../../shared/cache media/cache', pty=True, user=env.run_user)
         sudo('ln -s ../../../../../lib/python2.6/site-packages/tinymce/media/tiny_mce media/js/tiny_mce', pty=True, user=env.run_user)
 
-    
 def symlink_current_release():
     "Symlink our current release"
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
         run('rm releases/previous; mv releases/current releases/previous;', pty=True)
         run('ln -s %(release)s releases/current' % env, pty=True)
-    
+
 def migrate(param=''):
     "Update the database"
     require('project_name')
@@ -281,7 +280,7 @@ def migrate(param=''):
             sudo('%(path)s/bin/python manage.py migrate apparel' % env, pty=True, user=env.run_user)
             sudo('%(path)s/bin/python manage.py migrate profile' % env, pty=True, user=env.run_user)
         sudo('%(path)s/bin/python manage.py migrate' % env, pty=True, user=env.run_user)
-    
+
 def install_redis():
     run('mkdir -p /tmp/redis', pty=True)
     env.redis_release = 'redis-2.4.6'
