@@ -1,0 +1,33 @@
+server.document-root = var.deploy-dir + "/" + var.project-name
+
+fastcgi.server = (
+    "/" + var.project-name + ".fcgi" => (
+        "main" => (
+            "socket"      => var.deploy-base + "/var/" + var.project-name + ".sock",
+            "check-local" => "disable",
+        )
+    ),
+    "/" + var.project-name + "-admin.fcgi" => (
+        "main" => (
+            "socket"      => var.deploy-base + "/var/" + var.project-name + ".sock-admin",
+            "check-local" => "disable",
+        )
+    ),
+)
+
+alias.url = (
+    "/media/admin"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/static/admin",
+    "/media"           => server.document-root + "/media",
+)
+
+expire.url = (
+    "/media"           => "access plus 1 years",
+)
+
+url.rewrite-once = (
+    "^/robots\.txt$"           => "/media/robots.%(hostname)s.txt",               # Robots.txt
+    "^/favicon\.ico$"          => "/media/images/favicon.ico",                    # Favicon, redirect to static folder
+    "^(/media.*)$"             => "$1",                                           # Static files
+    "^(/admin(?:\/.*|$))"      => "/" + var.project-name + "-admin.fcgi$1",       # FCGI Admin site configuration
+    "^(/.*)$"                  => "/" + var.project-name + ".fcgi$1",             # FCGI configuration
+)

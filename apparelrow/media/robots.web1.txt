@@ -1,0 +1,32 @@
+User-agent: googlebot
+Disallow:
+
+User-agent: msnbot
+Disallow:
+
+User-agent: yahoo-slurp
+Disallow:
+
+User-agent: teoma
+Disallow:
+
+User-agent: gigabot
+Disallow:
+
+User-agent: scrubby
+Disallow:
+
+User-agent: robozilla
+Disallow:
+
+User-agent: nutch
+Disallow:
+
+User-agent: ia_archiver
+Disallow:
+
+User-agent: baiduspider
+Disallow:
+
+User-agent: *
+Disallow: /

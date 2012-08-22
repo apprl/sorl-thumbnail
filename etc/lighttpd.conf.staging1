@@ -97,19 +97,22 @@ $HTTP["host"] =~ "^.*(?:apparelrow\.se|apparelrow\.com)$" {
 }
 
 $HTTP["host"] =~ "^(%(hostname)s\.)?apprl\.com" {
-    var.project-name = "apparelrow"
+    var.project-name = "%(project_name)s"
     var.deploy-base  = "%(path)s"
     var.deploy-dir   = var.deploy-base + "/releases/current"
 
-    auth.backend = "htpasswd"
-    auth.backend.htpasswd.userfile = var.deploy-dir + "/etc/htpasswd"
-    auth.require = ( "/" => (
-           "method" => "basic",
-           "realm"  => "Apprl Staging",
-           "require" => "valid-user"
-       )
-    )
-    server.document-root = var.deploy-dir + "/" + var.project-name
+    # Password protect everything except /robots.txt
+    # The url to /robots.txt has been rewritten (see include.conf)
+    $HTTP["url"] !~ "^/media/robots\.%(hostname)s\.txt$" {
+        auth.backend = "htpasswd"
+        auth.backend.htpasswd.userfile = var.deploy-dir + "/etc/htpasswd"
+        auth.require = ( "" => (
+               "method" => "basic",
+               "realm"  => "Apprl Staging",
+               "require" => "valid-user"
+           )
+        )
+    }
 
-    include var.deploy-dir + "/etc/lighttpd.incl.conf"
+    include "conf-available/%(project_name)s.include.conf"
 }
