@@ -72,7 +72,7 @@ def likes(request, profile, page=0):
         gender = get_gender_from_cookie(request)
         queryset = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added')
     else:
-        queryset = Product.published_objects.filter(likes__user=profile.user, likes__active=True).order_by('-likes__modified')
+        queryset = Product.published_objects.filter(likes__user=profile.user, likes__active=True).order_by('-availability', '-likes__modified')
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
 
@@ -131,7 +131,7 @@ def profile(request, profile, page=0):
 def looks(request, profile, page=0):
     form = handle_change_image(request, profile)
     queryset = profile.user.look.order_by('-modified')
-    
+
     paged_result, pagination = get_pagination_page(queryset, 6,
             request.GET.get('page', 1), 1, 2)
 
@@ -152,7 +152,7 @@ def looks(request, profile, page=0):
     content.update(get_profile_sidebar_info(profile.user))
 
     return render(request, 'profile/looks.html', content)
-    
+
 @get_current_user
 def followers(request, profile, page=0):
     form = handle_change_image(request, profile)
