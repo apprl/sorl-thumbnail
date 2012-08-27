@@ -1,4 +1,5 @@
 server.document-root = var.deploy-dir + "/" + var.project-name
+dir-listing.activate = "disable"
 
 fastcgi.server = (
     "/" + var.project-name + ".fcgi" => (
