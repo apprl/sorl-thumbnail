@@ -156,17 +156,17 @@ def facebook_share(request, activity):
 
 @login_required
 def follow_unfollow(request, content_type_id, object_id, do_follow=True):
-    #user = User.objects.get(pk=object_id)
-    #profile = user.get_profile()
-    #profile_type = 'brand' if profile.is_brand else 'member'
+    user = User.objects.get(pk=object_id)
+    profile = user.get_profile()
+    profile_type = 'brand' if profile.is_brand else 'member'
 
-    #if do_follow:
-        #if request.user.get_profile().fb_share_follow_profile:
-            #facebook_user = get_facebook_user(request)
-            #facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
-    #else:
-        #facebook_user = get_facebook_user(request)
-        #facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
+    if do_follow:
+        if request.user.get_profile().fb_share_follow_profile:
+            facebook_user = get_facebook_user(request)
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
+    else:
+        facebook_user = get_facebook_user(request)
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
 
     return actstream_follow_unfollow(request, content_type_id, object_id, do_follow)
 

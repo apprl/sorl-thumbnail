@@ -5,11 +5,7 @@
 
 {% block extra-styles %}
     <meta property="og:title" content="{{ profile.display_name }}"/>
-    {% if profile.is_brand %}
-    <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:brand"/>
-    {% else %}
-    <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:member"/>
-    {% endif %}
+    <meta property="og:type" content="profile"/>
     <meta property="og:image" content="{{ avatar_absolute_uri }}"/>
     <meta property="og:url" content="{{ request.build_absolute_uri }}"/>
     <meta property="og:description" content="{% if profile.about %}{{ profile.about }}{% else %}{% endif %}"/>
