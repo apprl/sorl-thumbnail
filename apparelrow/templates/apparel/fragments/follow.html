@@ -1,12 +1,12 @@
 {% load i18n activity_tags apparel_extras %}
 
-{% if user.is_authenticated and user != profile.user and profile.user %}
+{% if request.user.is_authenticated and request.user != profile.user and profile.user %}
 <span class="{% if request.user|is_following:profile.user %}following{% else %}not_following{% endif %}">
     <a href="{% unfollow_tag profile.user %}" class="unfollow" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-original-text="{% trans 'Following' %}" data-hover-text="{% trans 'Stop following' %}"><span>{% trans "Following" %}</span></a>
     <a href="{% follow_tag profile.user %}" class="follow" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}"><span>{% trans "Follow" %}</span></a>
 </span>
 {% else %}
-    {% if user != profile.user %}
+    {% if request.user != profile.user %}
     <span class="not_following">
       <a href="{% url dialog-follow-user %}?brand={% if profile.is_brand %}1{% else %}0{% endif %}&next={{ request.get_full_path }}" class="follow open-dialog"><span>{% trans "Follow" %}</span></a>
     </span>

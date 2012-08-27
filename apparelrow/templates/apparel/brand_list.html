@@ -10,6 +10,12 @@
     <div class="column_one">
         <h1 class="max-width">{% trans "Brands" %}</h1>
     </div>
+    <!--<div class="column_two">-->
+        <!--<ul>-->
+            <!--<li><a class="first{% if popular %} current{% endif %}" href="{% url brand-list-popular %}">{% trans "Most followed" %}</a></li>-->
+            <!--<li><a class="last{% if not popular %} current{% endif %}" href="{% url brand-list %}">{% trans "In alphabetical order" %}</a></li>-->
+        <!--</ul>-->
+    <!--</div>-->
 </div>
 {% endblock body-header %}
 {% block body-classes %}three-columns brand-list{% endblock body-classes %}
@@ -18,14 +24,14 @@
         <h2>{% trans "Popular brands" %}</h2>
         {% for brand, products in popular_brands %}
         <a class="title" href="{% url brand-redirect brand.id %}"><h3>{{ brand.name }}</h3></a>
-        {% include 'apparel/fragments/follow.html' with profile=brand.profile %}
-        {% include 'apparel/fragments/products_sidebar.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
+        {% include 'apparel/fragments/follow.html' with profile=brand.profile request=request only %}
+        {% include 'apparel/fragments/products_sidebar_simple.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
         {% endfor %}
     </div>
     <div id="content">
         <ul class="alphabet-list">
-        {% for brand_char, brand_empty, _ in brands %}
-            {% if brand_empty %}
+        {% for brand_char, brand_list in brands %}
+            {% if not brand_list %}
             <li class="empty">{{ brand_char }}</li>
             {% else %}
             <li><a href="#{{ brand_char }}">{{ brand_char }}</a></li>
@@ -33,8 +39,8 @@
         {% endfor %}
         </ul>
 
-        {% for brand_char, brand_empty, brand_list in brands %}
-            {% if not brand_empty %}
+        {% for brand_char, brand_list in brands %}
+            {% if brand_list %}
             <div class="brand-container">
                 <div class="brand-anchor"><a name="{{ brand_char }}">{{ brand_char }}</a></div>
                 <ul class="brands">
@@ -57,8 +63,8 @@
         {% else %}
             {% for brand, products in popular_brands_in_network %}
             <a class="title" href="{% url brand-redirect brand.id %}"><h3>{{ brand.name }}</h3></a>
-            {% include 'apparel/fragments/follow.html' with profile=brand.profile %}
-            {% include 'apparel/fragments/products_sidebar.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
+            {% include 'apparel/fragments/follow.html' with profile=brand.profile request=request only %}
+            {% include 'apparel/fragments/products_sidebar_simple.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
             {% endfor %}
         {% endif %}
     </div>

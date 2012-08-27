@@ -11,7 +11,7 @@
     </div>
     <div class="column_two">
         <ul>
-            <li><a class="first latest{% if 'popular' in request.path %} current{% endif %}" href="{% url user-list-popular %}">{% trans "Popular" %}</a></li>
+            <li><a class="first latest{% if 'popular' in request.path %} current{% endif %}" href="{% url user-list-popular %}">{% trans "Most followed" %}</a></li>
             <li><a class="last popular{% if 'popular' not in request.path %} current{% endif %}" href="{% url user-list %}">{% trans "In alphabetical order" %}</a></li>
         </ul>
     </div>

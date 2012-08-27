@@ -349,7 +349,7 @@ def look_like(request, slug, action):
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
-def brand_list(request, gender=None):
+def brand_list(request, gender=None, popular=False):
     """
     List all brands.
     """
@@ -358,35 +358,32 @@ def brand_list(request, gender=None):
     brands_mapper = {}
     for index, alpha in enumerate(alphabet):
         brands_mapper[alpha] = index
-        brands.append([alpha, False, []])
+        brands.append([alpha, []])
 
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    query_arguments = {'fl': 'manufacturer_auto, manufacturer_id',
-                       'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender,)],
-                       'start': 0,
-                       'rows': -1,
-                       'group': 'true',
-                       'group.field': 'manufacturer_id'}
-    for brand in ApparelSearch('*:*', **query_arguments).get_docs():
-        if hasattr(brand, 'manufacturer_auto') and hasattr(brand, 'manufacturer_id'):
-            brand_name = brand.manufacturer_auto
-            brand_id = brand.manufacturer_id
+    #if popular:
+        #queryset = queryset.order_by('-followers_count', 'user__first_name', 'user__last_name', 'user__username')
+    #else:
+        #queryset = queryset.order_by('user__first_name', 'user__last_name', 'user__username')
 
-            if brand_name:
-                normalized_name = unicodedata.normalize('NFKD', smart_unicode(brand_name)).lower()
-                for index, char in enumerate(normalized_name):
-                    if char in alphabet:
-                        brands[brands_mapper[char]][2].append({'id': brand_id, 'name': brand_name})
-                        break
-                    elif char.isdigit():
-                        brands[brands_mapper[u'#']][2].append({'id': brand_id, 'name': brand_name})
-                        break
-
-    for index, alpha in enumerate(alphabet):
-        brands[index][1] = len(brands[index][2]) == 0
-        brands[index][2] = sorted(brands[index][2], key=lambda k: k['name'])
+    for brand in Brand.objects.distinct('name') \
+                              .filter(products__gender__in=[gender, 'U'],
+                                      products__published=True,
+                                      products__category__isnull=False,
+                                      products__vendorproduct__isnull=False,
+                                      products__availability=True) \
+                              .order_by('name') \
+                              .values('name', 'id'):
+        normalized_name = unicodedata.normalize('NFKD', smart_unicode(brand.get('name'))).lower()
+        for index, char in enumerate(normalized_name):
+            if char in alphabet:
+                brands[brands_mapper[char]][1].append(brand)
+                break
+            elif char.isdigit():
+                brands[brands_mapper[u'#']][1].append(brand)
+                break
 
     # Popular brands with products
     popular_brands = []
@@ -397,7 +394,7 @@ def brand_list(request, gender=None):
                                        products__availability=True,
                                        profile__is_brand=True) \
                                .order_by('-profile__followers_count') \
-                               .distinct()[:20]
+                               .distinct('name', 'profile__followers_count').select_related('profile', 'profile__user')[:10]
     for brand in temp_brands:
         popular_brands.append([brand,
                                Product.valid_objects.filter(gender__in=[gender, 'U'],
@@ -409,14 +406,13 @@ def brand_list(request, gender=None):
     user_ids = []
     if request.user and request.user.is_authenticated():
         user_ids.extend(Follow.objects.filter(user=request.user).values_list('object_id', flat=True))
-    # TODO: in django 1.4, sort by products__popularity and use distinct with specific fields
     temp_brands = Brand.objects.filter(products__gender__in=[gender, 'U'],
                                        products__published=True,
                                        products__category__isnull=False,
                                        products__vendorproduct__isnull=False,
                                        products__availability=True,
                                        products__likes__user__in=user_ids) \
-                               .distinct()[:20]
+                               .distinct('name').select_related('profile', 'profile__user')[:10]
     for brand in temp_brands:
         popular_brands_in_network.append([brand,
                                           Product.valid_objects.filter(gender__in=[gender, 'U'],
@@ -427,6 +423,7 @@ def brand_list(request, gender=None):
                 'brands': brands,
                 'popular_brands': popular_brands,
                 'popular_brands_in_network': popular_brands_in_network,
+                'popular': popular,
                 'next': request.get_full_path(),
                 'APPAREL_GENDER': gender
             }, context_instance=RequestContext(request))

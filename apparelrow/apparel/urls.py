@@ -45,6 +45,9 @@ urlpatterns = patterns('',
     url(r'^brands/$', 'apparel.views.gender', {'view': 'brand-list'}, name='brand-list'),
     url(r'^brands/men/$', 'apparel.views.brand_list', {'gender': 'M'}, name='brand-list-men'),
     url(r'^brands/women/$', 'apparel.views.brand_list', {'gender': 'W'}, name='brand-list-women'),
+    url(r'^brands/popular/$', 'apparel.views.gender', {'view': 'brand-list-popular'}, name='brand-list-popular'),
+    url(r'^brands/men/popular/$', 'apparel.views.brand_list', {'gender': 'M', 'popular': True}, name='brand-list-popular-men'),
+    url(r'^brands/women/popular/$', 'apparel.views.brand_list', {'gender': 'W', 'popular': True}, name='brand-list-popular-women'),
 
     # Shop
     url(r'^shop/popup/$', 'apparel.views.product_popup', name='product-popup'),
