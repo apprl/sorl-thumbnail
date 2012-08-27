@@ -363,27 +363,29 @@ def brand_list(request, gender=None, popular=False):
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    #if popular:
-        #queryset = queryset.order_by('-followers_count', 'user__first_name', 'user__last_name', 'user__username')
-    #else:
-        #queryset = queryset.order_by('user__first_name', 'user__last_name', 'user__username')
+    query_arguments = {'fl': 'manufacturer_auto, manufacturer_id',
+                       'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender,)],
+                       'start': 0,
+                       'rows': -1,
+                       'group': 'true',
+                       'group.field': 'manufacturer_id'}
+    for brand in ApparelSearch('*:*', **query_arguments).get_docs():
+        if hasattr(brand, 'manufacturer_auto') and hasattr(brand, 'manufacturer_id'):
+            brand_name = brand.manufacturer_auto
+            brand_id = brand.manufacturer_id
 
-    for brand in Brand.objects.distinct('name') \
-                              .filter(products__gender__in=[gender, 'U'],
-                                      products__published=True,
-                                      products__category__isnull=False,
-                                      products__vendorproduct__isnull=False,
-                                      products__availability=True) \
-                              .order_by('name') \
-                              .values('name', 'id'):
-        normalized_name = unicodedata.normalize('NFKD', smart_unicode(brand.get('name'))).lower()
-        for index, char in enumerate(normalized_name):
-            if char in alphabet:
-                brands[brands_mapper[char]][1].append(brand)
-                break
-            elif char.isdigit():
-                brands[brands_mapper[u'#']][1].append(brand)
-                break
+            if brand_name:
+                normalized_name = unicodedata.normalize('NFKD', smart_unicode(brand_name)).lower()
+                for index, char in enumerate(normalized_name):
+                    if char in alphabet:
+                        brands[brands_mapper[char]][1].append({'id': brand_id, 'name': brand_name})
+                        break
+                    elif char.isdigit():
+                        brands[brands_mapper[u'#']][1].append({'id': brand_id, 'name': brand_name})
+                        break
+
+    for index, alpha in enumerate(alphabet):
+        brands[index][1] = sorted(brands[index][1], key=lambda k: k['name'])
 
     # Popular brands with products
     popular_brands = []
@@ -394,7 +396,7 @@ def brand_list(request, gender=None, popular=False):
                                        products__availability=True,
                                        profile__is_brand=True) \
                                .order_by('-profile__followers_count') \
-                               .distinct('name', 'profile__followers_count').select_related('profile', 'profile__user')[:10]
+                               .distinct().select_related('profile', 'profile__user')[:10]
     for brand in temp_brands:
         popular_brands.append([brand,
                                Product.valid_objects.filter(gender__in=[gender, 'U'],
@@ -412,7 +414,7 @@ def brand_list(request, gender=None, popular=False):
                                        products__vendorproduct__isnull=False,
                                        products__availability=True,
                                        products__likes__user__in=user_ids) \
-                               .distinct('name').select_related('profile', 'profile__user')[:10]
+                               .distinct().select_related('profile', 'profile__user')[:10]
     for brand in temp_brands:
         popular_brands_in_network.append([brand,
                                           Product.valid_objects.filter(gender__in=[gender, 'U'],
