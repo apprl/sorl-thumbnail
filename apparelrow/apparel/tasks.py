@@ -8,10 +8,9 @@ from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
 from celery.task import task, periodic_task, PeriodicTask
 from celery.schedules import crontab
-from actstream.models import Action
 import requests
 
-from apparel.models import Brand, Product, VendorBrand, VendorCategory, FacebookAction
+from apparel.models import Product, VendorBrand, VendorCategory, FacebookAction
 
 logger = logging.getLogger('apparel.tasks')
 
@@ -66,38 +65,6 @@ def facebook_pull_graph(user_id, access_token, action, object_type, object_url):
         logger.info(response.json)
     except FacebookAction.DoesNotExist:
         logger.warning('No facebook action_id found for uid=%s action=%s type=%s' % (user_id, action, object_type))
-
-
-@periodic_task(name='apparel.brand_updates', run_every=crontab(minute=13), max_retries=1, ignore_result=True)
-def brand_updates():
-    """
-    A task to check for brand updates.
-
-    Every hour the task will iterate through all brands and check if any new
-    products are added. If there are new products the task will create a new
-    actstream action.
-    """
-    for brand in Brand.objects.iterator():
-        first_product = None
-        count_product = 0
-        last_update = brand.last_update
-        if last_update is None:
-            last_update = datetime.datetime.now() - datetime.timedelta(days=365)
-        for product in Product.valid_objects.filter(date_added__gt=last_update, manufacturer=brand).iterator():
-            if first_product is None:
-                first_product = product
-            count_product += 1
-
-        if first_product is not None:
-            action_object = Action.objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(brand.profile.user),
-                                                         actor_object_id=brand.profile.user.pk,
-                                                         verb='added_products',
-                                                         description=count_product,
-                                                         action_object_content_type=ContentType.objects.get_for_model(first_product),
-                                                         action_object_object_id=first_product.pk)
-
-        brand.last_update = datetime.datetime.now()
-        brand.save()
 
 
 # XXX: offline
