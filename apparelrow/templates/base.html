@@ -277,29 +277,27 @@
                 <li><h3>{% trans "Shop" %}</h3></li>
                 <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
                 <li><a class="men" href="{% gender_url 'M' 'shop' %}">{% trans "Men" %}</a></li>
+                <li><a href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
+                <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
             </ul>
             <ul>
-                <li><h3>{% trans "Looks" %}</h3></li>
-                <li><a href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "All looks" %}</a></li>
-                {% if not user.is_authenticated %}
-                <li><a class="open-dialog" href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a></li>
-                {% else %}
-                <li><a class="open-dialog" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a></li>
-                {% endif %}
-            </ul>
-            <ul>
-                <li><h3>{% trans "Social" %}</h3></li>
-                <li><a href="{% url user-list %}">{% trans "All members" %}</a></li>
+                <li><h3>{% trans "Membership" %}</h3></li>
                 {% if not user.is_authenticated %}
                 <li class="facebook">{% apparel_facebook_button "facebook-footer.png" %}</li>
                 {% endif %}
+                <li><a href="{% url user-list %}">{% trans "Members" %}</a></li>
             </ul>
             <ul>
-                <li><h3>{% trans "About Apprl" %}</h3></li>
-                <li><a href="{% url about %}">{% trans "About" %}</a></li>
+                <li><h3>{% trans "Follow us" %}</h3></li>
                 <li><a target="_blank" href="http://www.facebook.com/apprl">{% trans "Facebook" %}</a></li>
+                <li><a target="_blank" href="{% url newsletter-redirect %}">{% trans "E-mail newsletter" %}</a></li>
+            </ul>
+            <ul>
+                <li><h3>{% trans "Apprl" %}</h3></li>
+                <li><a href="{% url about %}">{% trans "About" %}</a></li>
                 <li><a href="mailto:info@apprl.com">{% trans "Contact" %}</a></li>
                 <li><a href="{% url django.contrib.flatpages.views.flatpage url='about/terms-of-use/' %}">{% trans "Privacy & Terms" %}</a></li>
+                <li><a href="{% url django.contrib.flatpages.views.flatpage url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
             </ul>
         </div>
     </div>

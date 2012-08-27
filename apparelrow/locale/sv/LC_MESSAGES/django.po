@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-27 13:18+0200\n"
+"POT-Creation-Date: 2012-08-27 23:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -545,7 +545,7 @@ msgstr "Inga"
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:50 templates/base.html:299
+#: profile/models.py:50 templates/base.html:297
 msgid "About"
 msgstr "Om"
 
@@ -646,19 +646,20 @@ msgstr "Herr"
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:139 templates/apparel/brand_list.html:11
+#: templates/base.html:139 templates/base.html.py:281
+#: templates/apparel/brand_list.html:11
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:140 templates/base.html.py:229 templates/base.html:282
+#: templates/base.html:140 templates/base.html.py:229 templates/base.html:280
 #: templates/apparel/look_detail.html:4 templates/apparel/look_edit.html:4
 #: templates/apparel/look_list.html:16 templates/profile/base_profile.html:42
 #: templates/profile/looks.html:4
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/base.html:141 templates/apparel/user_list.html:5
-#: templates/apparel/user_list.html:10
+#: templates/base.html:141 templates/base.html.py:288
+#: templates/apparel/user_list.html:5 templates/apparel/user_list.html:10
 msgid "Members"
 msgstr "Medlemmar"
 
@@ -751,8 +752,7 @@ msgstr "Vänners uppdateringar"
 msgid "Settings"
 msgstr "Inställningar"
 
-#: templates/base.html:250 templates/base.html.py:285 templates/base.html:287
-#: templates/apparel/look_create_dialog.html:6
+#: templates/base.html:250 templates/apparel/look_create_dialog.html:6
 #: templates/apparel/look_create_unauthenticated.html:5
 #: templates/apparel/look_create_unauthenticated.html:11
 #: templates/apparel/look_list.html:25
@@ -772,41 +772,44 @@ msgstr "Logga ut"
 msgid "Sweden"
 msgstr "Sverige"
 
-#: templates/base.html:283
-msgid "All looks"
-msgstr "Alla looks"
+#: templates/base.html:284
+msgid "Membership"
+msgstr "Medlemskap"
 
 #: templates/base.html:291
-msgid "Social"
-msgstr ""
+msgid "Follow us"
+msgstr "Följ oss"
 
-#: templates/base.html:292
-msgid "All members"
-msgstr "Alla medlemmar"
-
-#: templates/base.html:298
-#: templates/apparel/fragments/dialog_about_apparelrow.html:4
-msgid "About Apprl"
-msgstr "Om Apprl"
-
-#: templates/base.html:300 templates/profile/base_settings.html:20
+#: templates/base.html:292 templates/profile/base_settings.html:20
 #: templates/profile/settings_facebook.html:5
 msgid "Facebook"
 msgstr "Facebook"
 
-#: templates/base.html:301
+#: templates/base.html:293
+msgid "E-mail newsletter"
+msgstr "E-post"
+
+#: templates/base.html:296
+msgid "Apprl"
+msgstr "Apprl"
+
+#: templates/base.html:298
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:302
+#: templates/base.html:299
 msgid "Privacy & Terms"
 msgstr "Användarvillkor"
 
-#: templates/base.html:334
+#: templates/base.html:300 templates/flatpages/default.html:23
+msgid "Cookies"
+msgstr "Cookies"
+
+#: templates/base.html:332
 msgid "No"
 msgstr "Nej"
 
-#: templates/base.html:335
+#: templates/base.html:333
 msgid "Yes"
 msgstr "Ja"
 
@@ -1279,6 +1282,10 @@ msgstr ""
 #: templates/apparel/fragments/comment_count.html:2
 msgid "comments"
 msgstr "kommentarer"
+
+#: templates/apparel/fragments/dialog_about_apparelrow.html:4
+msgid "About Apprl"
+msgstr "Om Apprl"
 
 #: templates/apparel/fragments/dialog_about_apparelrow.html:6
 msgid ""
@@ -2433,11 +2440,14 @@ msgstr "Mejl skickat"
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
 
+#~ msgid "All looks"
+#~ msgstr "Alla looks"
+
+#~ msgid "All members"
+#~ msgstr "Alla medlemmar"
+
 #~ msgid "Popular"
 #~ msgstr "Populära"
-
-#~ msgid "Cookies"
-#~ msgstr "Cookies"
 
 #~ msgid "Blog"
 #~ msgstr "Blogg"
