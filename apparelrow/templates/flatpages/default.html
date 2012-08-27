@@ -1,24 +1,25 @@
 {% extends 'base.html' %}
 {% load i18n flatpages %}
 
-{% block extra-title %}{{ flatpage.title }} | {% trans "Privacy Policy & Terms of Service" %} | {% endblock %}
+{% block extra-title %}{{ flatpage.title }} | {% trans "Privacy Policy & Terms of Use" %} | {% endblock %}
 
 {% block body-header %}
 <div id="body-header">
     <div class="column_one">
-        <h1>{% trans "Privacy Policy & Terms of Service" %}</h1>
+        <h1>{% trans "Privacy Policy & Terms of Use" %}</h1>
     </div>
 </div>
 {% endblock body-header %}
 {% block body-classes %}two-columns about{% endblock body-classes %}
 {% block body %}
     <div class="sidebar">
-        <h2>{% trans "Privacy Policy & Terms of Service" %}</h2>
-        {% get_flatpages as flatpages %}
+        <h2>{% trans "Privacy Policy & Terms of Use" %}</h2>
         <ul class="about-list">
-        {% for page in flatpages %}
-            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
-        {% endfor %}
+            <li><a href="{% url django.contrib.flatpages.views.flatpage url='about/terms-of-use/' %}">{% trans "Terms of Use" %}</a></li>
+            <li><a href="{% url django.contrib.flatpages.views.flatpage url='about/privacy-policy/' %}">{% trans "Privacy Policy" %}</a></li>
+            <li><a href="{% url django.contrib.flatpages.views.flatpage url='about/acceptable-use-policy/' %}">{% trans "Acceptable Use Policy" %}</a></li>
+            <li><a href="{% url django.contrib.flatpages.views.flatpage url='about/copyright-policy/' %}">{% trans "Copyright Policy" %}</a></li>
+            <li><a href="{% url django.contrib.flatpages.views.flatpage url='about/trademark-policy/' %}">{% trans "Trademark Policy" %}</a></li>
         </ul>
     </div>
     <div id="content" class="about-content">
