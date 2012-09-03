@@ -186,8 +186,7 @@ class VendorCategoryAdmin(admin.ModelAdmin):
         return ' > '.join([c.name for c in vendor_category.category.get_ancestors()])
 
     def num_products(self, vendor_category):
-        vp = VendorProduct.objects.filter(vendor_category=vendor_category).count()
-        return '%s' % (vp,)
+        return vendor_category.vendor_products.count()
 
     def reset_gender(self, request, queryset):
         num_products = 0
