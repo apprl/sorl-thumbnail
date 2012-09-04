@@ -45,7 +45,7 @@ def handle_change_image(request, profile):
     return form
 
 
-def get_profile_sidebar_info(user):
+def get_profile_sidebar_info(request, profile):
     """
     Get the misc. information needed in the sidebar of the profile page
 
@@ -53,11 +53,14 @@ def get_profile_sidebar_info(user):
     """
     info = {'products': 0, 'following': 0}
 
-    info['products'] = Product.published_objects.filter(likes__user=user, likes__active=True).count()
-    #info['products'] = user.product_likes.filter(active=True).count()
+    if profile.is_brand:
+        gender = get_gender_from_cookie(request)
+        info['products'] = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added').count()
+    else:
+        info['products'] = Product.published_objects.filter(likes__user=profile.user, likes__active=True).count()
 
     content_type = ContentType.objects.get_for_model(User)
-    info['following'] = Follow.objects.filter(content_type=content_type, user=user).count()
+    info['following'] = Follow.objects.filter(content_type=content_type, user=profile.user).count()
 
     return info
 
@@ -68,7 +71,7 @@ def likes(request, profile, page=0):
     """
     form = handle_change_image(request, profile)
 
-    if profile.brand_id:
+    if profile.is_brand:
         gender = get_gender_from_cookie(request)
         queryset = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added')
     else:
@@ -91,7 +94,7 @@ def likes(request, profile, page=0):
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request)
     }
 
-    content.update(get_profile_sidebar_info(profile.user))
+    content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/likes.html', content)
 
@@ -123,7 +126,7 @@ def profile(request, profile, page=0):
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'recent_looks': profile.user.look.order_by('-modified')[:20]
         }
-    content.update(get_profile_sidebar_info(profile.user))
+    content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/profile.html', content)
 
@@ -149,7 +152,7 @@ def looks(request, profile, page=0):
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request)
         }
-    content.update(get_profile_sidebar_info(profile.user))
+    content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/looks.html', content)
 
@@ -177,7 +180,7 @@ def followers(request, profile, page=0):
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'recent_looks': profile.user.look.order_by('-modified')[:4]
         }
-    content.update(get_profile_sidebar_info(profile.user))
+    content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/followers.html', content)
 
@@ -205,7 +208,7 @@ def following(request, profile, page=0):
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'recent_looks': profile.user.look.order_by('-modified')[:4]
         }
-    content.update(get_profile_sidebar_info(profile.user))
+    content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/following.html', content)
 

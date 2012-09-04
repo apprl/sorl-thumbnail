@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-27 23:07+0200\n"
+"POT-Creation-Date: 2012-09-04 15:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -798,11 +798,11 @@ msgstr ""
 msgid "Cookies"
 msgstr ""
 
-#: templates/base.html:332
+#: templates/base.html:333
 msgid "No"
 msgstr ""
 
-#: templates/base.html:333
+#: templates/base.html:334
 msgid "Yes"
 msgstr ""
 
@@ -1800,10 +1800,17 @@ msgstr ""
 msgid "Member since"
 msgstr ""
 
-#: templates/profile/base_profile.html:79
+#: templates/profile/base_profile.html:78
 #, python-format
 msgid "Likes %(prod)s product"
 msgid_plural "Likes %(prod)s products"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/profile/base_profile.html:80
+#, python-format
+msgid "%(prod)s product"
+msgid_plural "%(prod)s products"
 msgstr[0] ""
 msgstr[1] ""
 
