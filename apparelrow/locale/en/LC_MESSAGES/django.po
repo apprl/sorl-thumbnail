@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-04 15:43+0200\n"
+"POT-Creation-Date: 2012-09-05 22:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -798,11 +798,15 @@ msgstr ""
 msgid "Cookies"
 msgstr ""
 
-#: templates/base.html:333
+#: templates/base.html:307
+msgid "Hi Apprl! I have a question / idea / complaint / complement"
+msgstr ""
+
+#: templates/base.html:337
 msgid "No"
 msgstr ""
 
-#: templates/base.html:334
+#: templates/base.html:338
 msgid "Yes"
 msgstr ""
 
