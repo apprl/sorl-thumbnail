@@ -104,21 +104,38 @@ class ApparelProfile(models.Model):
     @property
     def looks(self):
         """Number of looks"""
-        return self.user.look.count()
-    
+        if not hasattr(self, '_looks_count'):
+            self._looks_count = self.user.look.count()
+
+        return self._looks_count
+
     @property
     def likes(self):
         """Number of likes on products and looks combined"""
-        return self.user.look_likes.filter(active=True).count() + self.user.product_likes.filter(active=True).count()
+        return self.product_likes_count + self.look_likes_count
+
+    @property
+    def product_likes_count(self):
+        if not hasattr(self, '_product_likes_count'):
+            self._product_likes_count = self.user.product_likes.filter(active=True).count()
+
+        return self._product_likes_count
+
+    @property
+    def look_likes_count(self):
+        if not hasattr(self, '_look_likes_count'):
+            self._look_likes_count = self.user.look_likes.filter(active=True).count()
+
+        return self._look_likes_count
 
     @property
     def display_name(self):
         if self.name is not None:
             return self.name
-        
+
         if self.user.first_name:
             return u'%s %s' % (self.user.first_name, self.user.last_name)
-         
+
         return u'%s' % self.user
 
     @property

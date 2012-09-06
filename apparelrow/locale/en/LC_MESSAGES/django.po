@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-05 22:56+0200\n"
+"POT-Creation-Date: 2012-09-06 23:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -581,7 +581,7 @@ msgstr ""
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:238
+#: profile/models.py:255
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr ""
@@ -2019,10 +2019,19 @@ msgstr ""
 
 #: templates/profile/fragments/follow_profile.html:12
 #, python-format
-msgid "Member since %(date_joined)s"
-msgstr ""
+msgid "Likes %(likes_count)s product"
+msgid_plural "Likes %(likes_count)s products"
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/profile/fragments/follow_profile.html:14
+#, python-format
+msgid "Created %(look_count)s look"
+msgid_plural "Created %(look_count)s looks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/profile/fragments/follow_profile.html:17
 #, python-format
 msgid "Followed by %(follower_count)s"
 msgstr ""

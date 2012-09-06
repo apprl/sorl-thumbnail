@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-05 22:56+0200\n"
+"POT-Creation-Date: 2012-09-06 23:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -589,7 +589,7 @@ msgstr "När någon börjat följa mig"
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:238
+#: profile/models.py:255
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr "Välkommen till Apprl %(username)s"
@@ -2152,10 +2152,19 @@ msgstr "Följer dig"
 
 #: templates/profile/fragments/follow_profile.html:12
 #, python-format
-msgid "Member since %(date_joined)s"
-msgstr "Medlem sedan %(date_joined)s"
+msgid "Likes %(likes_count)s product"
+msgid_plural "Likes %(likes_count)s products"
+msgstr[0] "Gillar %(likes_count)s produkt"
+msgstr[1] "Gillar %(likes_count)s produkter"
 
 #: templates/profile/fragments/follow_profile.html:14
+#, python-format
+msgid "Created %(look_count)s look"
+msgid_plural "Created %(look_count)s looks"
+msgstr[0] "Skapat %(look_count)s look"
+msgstr[1] "Skapat %(look_count)s looks"
+
+#: templates/profile/fragments/follow_profile.html:17
 #, python-format
 msgid "Followed by %(follower_count)s"
 msgstr "Följs av %(follower_count)s"
@@ -2450,6 +2459,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Member since %(date_joined)s"
+#~ msgstr "Medlem sedan %(date_joined)s"
 
 #~ msgid "All looks"
 #~ msgstr "Alla looks"

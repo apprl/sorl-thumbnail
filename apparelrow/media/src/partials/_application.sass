@@ -2088,13 +2088,17 @@ body.profiles, body.profile
               max-width: 75px
               overflow: hidden
               display: inline-block
-        .member_since, .follower_count, .following_count
-          color: $easier_color
-          white-space: nowrap
-          a
+        p
+          position: relative
+          .member_since, .follower_count, .following_count, .likes_count, .looks_count
             color: $easier_color
-        .follower_count, .following_count
-          float: right
+            white-space: nowrap
+            a
+              color: $easier_color
+          .follower_count, .following_count
+            position: absolute
+            top: 0
+            right: 0
 
 ul.suggested-friends
   li
