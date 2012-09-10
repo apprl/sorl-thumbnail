@@ -14,6 +14,7 @@ from django.db.models import Q, Count
 from django.db.models.signals import pre_save, pre_delete
 from django.dispatch import receiver
 from django.template import RequestContext, loader
+from django.utils.translation import activate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -140,7 +141,7 @@ def get_weekly_mail_content(gender, timeframe):
             break
 
     product_names = product_names[:5]
-    subject = u'%s och mer i Veckans Bästa!' % (', '.join(product_names),)
+    subject = u'%s and more trending this week!' % (', '.join(product_names),)
 
     # Looks
     looks = []
@@ -258,7 +259,7 @@ def generate_weekly_mail(request):
             text_template = loader.render_to_string('email/weekly.txt')
 
             options = {
-                    'list_id': settings.MAILCHIMP_WEEKLY_LIST,
+                    'list_id': settings.MAILCHIMP_NEWSLETTER_LIST,
                     'subject': subject,
                     'from_email': 'postman@apprl.com',
                     'from_name': 'Apprl',
@@ -282,6 +283,8 @@ def generate_weekly_mail(request):
 
         return HttpResponse('Created two campaigns: %s' % (', '.join(message),))
 
+    # Bad solution to force templatetag 'now' to use english date
+    activate('en')
 
     one_week_ago = datetime.datetime.now() - datetime.timedelta(weeks=1)
     subject, products, looks, members = get_weekly_mail_content(request.GET.get('gender', 'M'), one_week_ago)
@@ -293,6 +296,6 @@ def generate_weekly_mail(request):
             'products_3': products[6:9],
             'looks': looks,
             'members': members,
-            'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-sv.gif'),
+            'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-en.gif'),
             'email_weekly_bottom': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-bottom-sv.gif'),
         }, context_instance=RequestContext(request))

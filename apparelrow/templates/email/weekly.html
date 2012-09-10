@@ -1,3 +1,4 @@
+{% load l10n %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
@@ -98,7 +99,7 @@
 				font-weight:normal;
 				text-decoration:underline;
 			}
-			
+
 			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: HEADER /\/\/\/\/\/\/\/\/\/\ */
 			.headerContent{
 				color:#666666;
@@ -170,7 +171,7 @@
             .bodyHeader{padding:25px;}
 
             .weekly_top{height:69px;background-image:url({{ email_weekly_top }});background-repeat:no-repeat;}
-            .weekly_bottom{text-align:center;font-size:14px;color:#666666;height:40px;background-image:url({{ email_weekly_bottom }});background-repeat:no-repeat;}
+            .weekly_bottom{text-align:center;font-size:14px;color:#666666;height:20px;}
 
 			/**
 			* @tab Body
@@ -249,9 +250,7 @@
             }
 
             /* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: POSTFOOTER /\/\/\/\/\/\/\/\/\/\ */
-			#templatePostfooter{
-            
-            }
+			#templatePostfooter{}
 
 			.postfooterContent div{
 				color:#505050;
@@ -265,7 +264,7 @@
 			    font-weight:normal;
 			    text-decoration:underline;
 			}
-			
+
 			.postfooterContent div img{
 				height:auto;
 				max-width:600px;
@@ -286,12 +285,12 @@
                                     	<tr>
                                         	<td valign="top">
                                                 <div mc:edit="std_preheader_content">
-                                                    Veckans bästa: De mest populära produkterna, looksen och medlemmarna<br/>från veckan som gått på Apprl!
+                                                    See this week's trending items, looks, members & brands!
                                                 </div>
                                             </td>
                                             <td valign="top" width="180">
                                                 <div mc:edit="std_preheader_links">
-                                                    <!-- *|IFNOT:ARCHIVE_PAGE|* -->Ser mailet konstigt ut?<br/><a href="*|ARCHIVE|*" target="_blank">Öppna det i din webläsare</a>.<!-- *|END:IF|* -->
+                                                    <!-- *|IFNOT:ARCHIVE_PAGE|* -->Is this email not displaying correctly?<br/><a href="*|ARCHIVE|*" target="_blank">View it in your browser</a>.<!-- *|END:IF|* -->
                                                 </div>
                                             </td>
                                         </tr>
@@ -319,9 +318,9 @@
                                                     <tr>
                                                         <td valign="top" align="center">
                                                             <a href="http://apprl.com/" target="_blank">SHOP</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                            <a href="http://apprl.com/brands/" target="_blank">VARUMÄRKEN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <a href="http://apprl.com/brands/" target="_blank">BRANDS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             <a href="http://apprl.com/looks/" target="_blank">LOOKS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                            <a href="http://apprl.com/users/" target="_blank">MEDLEMMAR</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <a href="http://apprl.com/users/" target="_blank">MEMBERS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -340,7 +339,7 @@
                                         </tr>
                                         <tr>
                                             <td valign="top" height="40px" class="weekly_bottom">
-                                                {% now "j F Y" %}
+                                                {% localize off %}{% now "j F Y" %}{% endlocalize %}
                                             </td>
                                         </tr>
                                         <tr>
@@ -414,7 +413,7 @@
                                                         {% endfor %}
                                                     </tr>
                                                 </table>
-                                            
+
                                             </td>
                                         </tr>
                                         <tr>
@@ -422,11 +421,11 @@
                                         </tr>
                                         <tr>
                                             <td valign="top" class="bodyContent">
-                                            
+
                                                 <table border="0" cellpadding="10" cellspacing="0" width="100%">
                                                     <tr>
                                                         <td colspan="2" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
-                                                            <h3 mc:edit="look_header">The looks!</h3>
+                                                            <h3 mc:edit="look_header">The Looks!</h3>
 														</td>
                                                     </tr>
                                                     <tr>
@@ -444,7 +443,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="look-profile-name" align="center">
-                                                                        <a href="{{ look.user_url }}">Av {{ look.user_name }}</a>
+                                                                        <a href="{{ look.user_url }}">By {{ look.user_name }}</a>
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -452,7 +451,7 @@
                                                         {% endfor %}
                                                     </tr>
                                                 </table>
- 
+
                                             </td>
                                         </tr>
                                         <tr>
@@ -463,11 +462,11 @@
                                         </tr>
                                         <tr>
                                             <td valign="top" class="bodyContent">
-                                            
+
                                                 <table border="0" cellpadding="10" cellspacing="0" width="100%">
                                                     <tr>
                                                         <td colspan="4" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
-                                                            <h3 mc:edit="follow_header">Populära i veckan</h3>
+                                                            <h3 mc:edit="follow_header">Trending Members</h3>
 														</td>
                                                     </tr>
                                                     <tr>
@@ -496,7 +495,7 @@
                                                         {% endfor %}
                                                     </tr>
                                                 </table>
-                                            
+
                                             </td>
                                         </tr>
                                     </table>
@@ -509,7 +508,7 @@
                                 	<table border="0" cellpadding="17" cellspacing="0" width="614" height="131" id="templateFooter">
                                     	<tr>
                                         	<td valign="top" class="footerContent">
-                                            
+
                                                 <!-- // Begin Module: Standard Footer \\ -->
                                                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                                     <tr>
@@ -521,7 +520,7 @@
                                                                 <br />
                                                                 Birger Jarlsgatan 18A
                                                                 <br />
-                                                                114 34 Stockholm
+                                                                114 34 Stockholm, Sweden
                                                                 <br />
                                                                 <a target="_blank" href="mailto:info@apprl.com">info@apprl.com</a>
                                                                 <br />
@@ -530,7 +529,7 @@
                                                     </tr>
                                                 </table>
                                                 <!-- // End Module: Standard Footer \\ -->
-                                            
+
                                             </td>
                                         </tr>
                                     </table>
@@ -548,11 +547,12 @@
                                             <td valign="top" align="center">
                                                 <div mc:edit="std_utility">
                                                     <br>
-                                                    Mailet har skickats till *|EMAIL|*.
+                                                    This e-mail has been sent to *|EMAIL|*.
                                                     <br><br>
                                                     *|LIST:DESCRIPTION|*
                                                     <br><br>
-                                                    Gå till <a href="http://apprl.com/profile/settings/notification/">dina inställningar</a> under din profil på Apprl för att redigera dina e-mailinställningar.<br>Har du inte skapat nån profil kan du <a href="*|UNSUB|*">klicka här</a> för att inte få fler såna här mail.
+                                                    Edit <a href="http://apprl.com/profile/settings/notification/">your e-mail settings</a> on Apprl.
+                                                    <br>If you have not yet become a member, <a href="*|UNSUB|*">click here</a> if you wish to unsubscribe.
                                                     <br><br>
                                                     *|LIST:ADDRESS|*
                                                     <br><br><br><br><br><br><br><br>
@@ -562,7 +562,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                	<!-- // End Module: Standard Postfooter \\ --> 
+                                    <!-- // End Module: Standard Postfooter \\ -->
                                 </td>
                             </tr>
                         </table>
