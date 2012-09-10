@@ -4,6 +4,6 @@
 
 su -s /bin/sh -c "/bin/gzip -q -r %(path)s/shared/warehouse"
 
-# Run import for all configured apparelrow providers
+# Run import for all configured apparelrow providers, in parallel
 
-su -s /bin/sh -c "%(path)s/bin/import 1>> %(path)s/var/logs/importer.log" %(run_user)s
+su -s /bin/sh -c "%(path)s/bin/import --parallel 1>> %(path)s/var/logs/importer.log" %(run_user)s

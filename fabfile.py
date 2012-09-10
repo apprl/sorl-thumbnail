@@ -138,6 +138,7 @@ def setup(snapshot='master'):
             sudo('chown -R %(run_user)s:%(run_group)s var shared/cache shared/warehouse shared/static;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     install_redis()
+    install_parallel()
     deploy('first', snapshot=snapshot)
     load_fixtures()
 
@@ -294,6 +295,16 @@ def install_redis():
     sudo('adduser --system redis', pty=True)
     sudo('mkdir -p /var/lib/redis /var/log/redis', pty=True)
     sudo('chown redis /var/lib/redis /var/log/redis', pty=True)
+
+def install_parallel():
+    run('mkdir -p /tmp/parallel', pty=True)
+    env.parallel_release = 'parallel-20120822'
+    with cd('/tmp/parallel'):
+        run('wget -O- http://ftp.gnu.org/gnu/parallel/%(parallel_release)s.tar.bz2 | tar jxf -' % env, pty=True)
+        with cd(env.parallel_release):
+            run('./configure', pty=True)
+            run('make', pty=True)
+            sudo('make install', pty=True)
 
 def restart_django():
     require('path')
