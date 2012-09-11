@@ -252,8 +252,7 @@ def generate_weekly_mail(request):
                 'products_3': products[6:9],
                 'looks': looks,
                 'members': members,
-                'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-sv.gif'),
-                'email_weekly_bottom': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-bottom-sv.gif'),
+                'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-en.gif'),
             })
 
             text_template = loader.render_to_string('email/weekly.txt')
@@ -297,5 +296,4 @@ def generate_weekly_mail(request):
             'looks': looks,
             'members': members,
             'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-en.gif'),
-            'email_weekly_bottom': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-bottom-sv.gif'),
         }, context_instance=RequestContext(request))
