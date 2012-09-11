@@ -29,7 +29,7 @@ $PROJDIR/bin/python manage.py arfxrates --refresh --no_update
 if [[ -z "$1" ]]; then
     $PROJDIR/bin/python manage.py arimport --all
 elif [ "$1" = "--parallel" ]; then
-    $PROJDIR/bin/python manage.py arimport --list | tail -n +2 | cut -d\  -f1 | parallel -j 4 $PROJDIR/bin/python manage.py arimport
+    $PROJDIR/bin/python manage.py arimport --list | tail -n +2 | cut -d\  -f1 | parallel -j 2 $PROJDIR/bin/python manage.py arimport
 else
     $PROJDIR/bin/python manage.py arimport $1
 fi
