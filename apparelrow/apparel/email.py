@@ -235,7 +235,7 @@ def generate_weekly_mail(request):
                           'GENDER': user.get_profile().gender})
 
         try:
-            mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_WEEKLY_LIST, double_optin=False, update_existing=True, batch=batch)
+            mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_MEMBER_LIST, double_optin=False, update_existing=True, batch=batch)
             mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST, double_optin=False, update_existing=True, batch=batch)
         except MailSnakeException, e:
             return HttpResponse('Error: could not update subscribers list: %s' % (str(e),))

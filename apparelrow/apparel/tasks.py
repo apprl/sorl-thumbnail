@@ -18,7 +18,13 @@ logger = logging.getLogger('apparel.tasks')
 def mailchimp_subscribe(user):
     try:
         mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
-        mailchimp.listSubscribe(id=settings.MAILCHIMP_WEEKLY_LIST,
+        mailchimp.listSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST,
+                                email_address=user.email,
+                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.get_profile().gender},
+                                double_optin=False,
+                                update_existing=True,
+                                send_welcome=False)
+        mailchimp.listSubscribe(id=settings.MAILCHIMP_MEMBER_LIST,
                                 email_address=user.email,
                                 merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.get_profile().gender},
                                 double_optin=False,
@@ -31,11 +37,17 @@ def mailchimp_subscribe(user):
 def mailchimp_unsubscribe(user, delete=False):
     try:
         mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
-        mailchimp.listUnsubscribe(id=settings.MAILCHIMP_WEEKLY_LIST,
+        mailchimp.listUnsubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST,
                                   email_address=user.email,
                                   delete_member=delete,
                                   send_goodbye=False,
                                   send_notify=False)
+        if delete:
+            mailchimp.listUnsubscribe(id=settings.MAILCHIMP_MEMBER_LIST,
+                                      email_address=user.email,
+                                      delete_member=delete,
+                                      send_goodbye=False,
+                                      send_notify=False)
     except MailSnakeException, e:
         logger.error('Could not unsubscribe user from mailchimp: %s' % (e,))
 
