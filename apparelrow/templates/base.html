@@ -73,16 +73,6 @@
         };
 
         jQuery(document).ready(function() {
-            jQuery('.about-beta-popup').click(function(event) {
-                create_html_dialog('{% url dialog-about-apparelrow %}');
-                event.preventDefault();
-            });
-
-            jQuery('.about-cookies-popup').click(function(event) {
-                create_html_dialog('{% url dialog-about-cookies %}');
-                event.preventDefault();
-            });
-
             // FIXME: quick solution to not have to send the form to validate
             jQuery('.create-look-dialog form').live('submit', function(e) {
                 if(!jQuery(this).find('#id_title').val()) {

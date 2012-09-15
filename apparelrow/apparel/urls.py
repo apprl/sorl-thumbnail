@@ -74,8 +74,6 @@ urlpatterns = patterns('',
     url(r'^dialog/like-product/$', 'apparel.views.dialog_like_product', name='dialog-like-product'),
     url(r'^dialog/like-look/$', 'apparel.views.dialog_like_look', name='dialog-like-look'),
     url(r'^dialog/follow-user/$', 'apparel.views.dialog_follow_user', name='dialog-follow-user'),
-    url(r'^dialog/about-cookies/$', TemplateView.as_view(template_name='apparel/fragments/dialog_about_cookies.html'), name='dialog-about-cookies'),
-    url(r'^dialog/about-apprl/$', TemplateView.as_view(template_name='apparel/fragments/dialog_about_apparelrow.html'), name='dialog-about-apparelrow'),
     url(r'^dialog/why-facebook$', TemplateView.as_view(template_name='apparel/fragments/dialog_why_facebook.html'), name='dialog-why-facebook'),
 
     # Widget
