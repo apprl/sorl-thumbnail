@@ -4,6 +4,8 @@
 {# FIXME: we should reverse the list of categories. I think we need to create a filter for this #}
 {% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.categories|join:' | ' }} | {% endblock %}
 
+{% block meta_description %}{{ object.description }}{% endblock %}
+
 {% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
 
 {% block extra-styles %}

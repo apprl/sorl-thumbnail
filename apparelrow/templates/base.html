@@ -6,6 +6,7 @@
     <title>{% if updates %}({{ updates }}) {% endif %}{% block extra-title %}{% endblock %}Apprl - Social Shopping</title>
     {% endwith %}
     <meta charset="utf-8" />
+    <meta name="description" content="{% block meta_description %}{% trans "Follow your favourite brands, bloggers & friends to discover fashion you love." %}{% endblock %}">
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/screen.css" %}" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/print.css" %}" type="text/css" media="print">
