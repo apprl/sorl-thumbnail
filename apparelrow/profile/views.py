@@ -17,8 +17,8 @@ from actstream.models import actor_stream, Follow
 
 from apparel.decorators import get_current_user
 from apparel.models import Product
-# FIXME: Move get_facebook_friends and get_most_followed_users to a util module
-from apparel.views import get_facebook_friends, get_most_followed_users
+# FIXME: Move get_most_followed_users to a util module
+from apparel.views import get_most_followed_users
 from apparel.utils import get_pagination_page, get_gender_from_cookie
 from profile.utils import get_facebook_user
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm
@@ -26,6 +26,13 @@ from profile.models import EmailChange, ApparelProfile
 from profile.tasks import send_email_confirm_task
 
 PROFILE_PAGE_SIZE = 30
+
+def get_facebook_friends(request):
+    facebook_user = get_facebook_user(request)
+    if request.user.is_authenticated() and facebook_user:
+        friends = facebook_user.graph.get_connections('me', 'friends')
+        friends_uids = [f['id'] for f in friends['data']]
+        return ApparelProfile.objects.filter(user__username__in=friends_uids)
 
 # TODO && FIXME: build a better solution, right now we use this in
 # profile/looks/following/followers. Should create a view for the submit form

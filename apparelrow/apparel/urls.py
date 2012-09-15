@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 
     # Home
     (r'^home/$', 'apparel.views.home'),
+    (r'^home/friends/$', 'apparel.views.facebook_friends_widget'),
 
     # Search
     (r'^search/(?P<model_name>\w+)/', 'apparel.search.search_view'),

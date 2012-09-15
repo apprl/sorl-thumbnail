@@ -11,7 +11,7 @@ import StringIO
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.db.models import Q, Max, Min, Count, Sum, connection, signals, get_model
@@ -821,7 +821,6 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
                 'pagination': pagination,
                 'current_page': paged_result,
                 'next': request.get_full_path(),
-                'facebook_friends': get_facebook_friends(request),
                 'view_gender': view_gender[0] if len(view_gender) > 0 and view_gender[0] in ['W', 'M'] else 'A',
                 'latest_members': latest_members,
                 'APPAREL_GENDER': gender
@@ -935,7 +934,6 @@ def home(request, profile):
             'current_page': paged_result,
             'next': request.get_full_path(),
             'profile': profile,
-            'facebook_friends': get_facebook_friends(request),
             'popular_looks_in_network': get_top_looks_in_network(request.user, limit=limit),
             'popular_products_in_network': popular_products
         }, context_instance=RequestContext(request))
@@ -1075,6 +1073,30 @@ try:
 except ImportError:
     pass
 
+
+def facebook_friends_widget(request):
+    """
+    Return html template with facebook friends on apprl. Only works through an
+    ajax request.
+    """
+    if not request.is_ajax():
+        raise Http404
+
+    fids = []
+    try:
+        fids = map(int, request.POST.get('fids', '').split(','))
+    except ValueError:
+        pass
+
+    if not fids:
+        return HttpResponse('')
+
+    friends = ApparelProfile.objects.filter(user__username__in=fids)
+
+    return render_to_response('apparel/fragments/facebook_friends.html', {
+            'facebook_friends': friends,
+        }, context_instance=RequestContext(request))
+
 #
 # Utility routines. FIXME: Move these out
 #
@@ -1109,10 +1131,3 @@ def get_top_looks_in_network(user, limit=None):
         return looks[:limit]
 
     return looks
-
-def get_facebook_friends(request):
-    facebook_user = get_facebook_user(request)
-    if request.user.is_authenticated() and facebook_user:
-        friends = facebook_user.graph.get_connections('me', 'friends')
-        friends_uids = [f['id'] for f in friends['data']]
-        return ApparelProfile.objects.filter(user__username__in=friends_uids)
