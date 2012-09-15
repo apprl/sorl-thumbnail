@@ -25,7 +25,7 @@
         {% for brand, products in popular_brands %}
         <a class="title" href="{% url brand-redirect brand.id %}"><h3>{{ brand.name }}</h3></a>
         {% include 'apparel/fragments/follow.html' with profile=brand.profile request=request only %}
-        {% include 'apparel/fragments/products_sidebar_simple.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
+        {% include 'apparel/fragments/products_sidebar_simple.html' with products=products CACHE_LONG_TIMEOUT=CACHE_LONG_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
         {% endfor %}
     </div>
     <div id="content">
@@ -64,7 +64,7 @@
             {% for brand, products in popular_brands_in_network %}
             <a class="title" href="{% url brand-redirect brand.id %}"><h3>{{ brand.name }}</h3></a>
             {% include 'apparel/fragments/follow.html' with profile=brand.profile request=request only %}
-            {% include 'apparel/fragments/products_sidebar_simple.html' with products=products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
+            {% include 'apparel/fragments/products_sidebar_simple.html' with products=products CACHE_LONG_TIMEOUT=CACHE_LONG_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
             {% endfor %}
         {% endif %}
     </div>

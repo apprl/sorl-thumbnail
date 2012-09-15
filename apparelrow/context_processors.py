@@ -7,6 +7,7 @@ from apparel.utils import get_gender_from_cookie
 def exposed_settings(request):
     current_site = Site.objects.get_current()
     return {
+        'CACHE_LONG_TIMEOUT': 60 * 60 * 12,
         'CACHE_TIMEOUT': django_settings.CACHES.get('default', {}).get('TIMEOUT', 60),
         'DEFAULT_AVATAR': django_settings.APPAREL_DEFAULT_AVATAR,
         'DEFAULT_AVATAR_LARGE': django_settings.APPAREL_DEFAULT_AVATAR_LARGE,

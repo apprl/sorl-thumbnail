@@ -2,7 +2,7 @@
 <ul class="products">
 {% for product in products %}
     {% cycle '<li>' '<li class="last">' %}
-    {% cache CACHE_TIMEOUT products_sidebar_simple product.id LANGUAGE_CODE %}
+    {% cache CACHE_LONG_TIMEOUT products_sidebar_simple product.id LANGUAGE_CODE %}
     <a title="{{ product.product_name }}" href="{{ product.get_absolute_url }}">
         <div class="product-small">
             <div class="product-image">
