@@ -938,24 +938,6 @@ def home(request, profile):
             'popular_products_in_network': popular_products
         }, context_instance=RequestContext(request))
 
-def product_user_like_list(request, slug):
-    product = Product.objects.get(slug=slug)
-    queryset = ApparelProfile.objects.select_related('user').filter(Q(user__product_likes__product=product) & Q(user__product_likes__active=True)).order_by('user__first_name', 'user__last_name', 'user__username')
-    return render_to_response(
-        'apparel/fragments/product_user_like_list.html',
-        {'profiles': queryset, 'slug': slug},
-        context_instance=RequestContext(request)
-    )
-
-def look_user_like_list(request, slug):
-    look = Look.objects.get(slug=slug)
-    queryset = ApparelProfile.objects.select_related('user').filter(Q(user__look_likes__look=look) & Q(user__look_likes__active=True)).order_by('user__first_name', 'user__last_name', 'user__username')
-    return render_to_response(
-        'apparel/fragments/look_user_like_list.html',
-        {'profiles': queryset, 'slug': slug},
-        context_instance=RequestContext(request)
-    )
-
 def dialog_login_favorite_friends(request):
     """
     Display a dialog tailored for the browse page with information about

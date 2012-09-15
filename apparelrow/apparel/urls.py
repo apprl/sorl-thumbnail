@@ -39,7 +39,6 @@ urlpatterns = patterns('',
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list', name='product-look-list'),
     (r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.product_like'),
-    (r'^products/(?P<slug>[\w-]+)/users/$', 'apparel.views.product_user_like_list'),
 
     # Brand
     url(r'^brands/(?P<pk>[\d]+)/$', 'apparel.views.brand_redirect', name='brand-redirect'),
@@ -67,7 +66,6 @@ urlpatterns = patterns('',
     (r'^looks/(?P<slug>[\w-]+?)/delete/$', 'apparel.views.look_delete'),
     (r'^looks/(?P<slug>[\w-]+?)/edit/$', 'apparel.views.look_edit'),
     (r'^looks/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.look_like'),
-    (r'^looks/(?P<slug>[\w-]+)/users/$', 'apparel.views.look_user_like_list'),
 
     # Dialogs
     url(r'^dialog/login-friends/$', 'apparel.views.dialog_login_favorite_friends', name='dialog-login-friends'),
