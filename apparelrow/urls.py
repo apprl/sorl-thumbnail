@@ -1,8 +1,6 @@
 from django.conf.urls.defaults import patterns, url, include, handler404, handler500
 from django.conf import settings
-
 from django.views.generic.simple import direct_to_template
-
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 admin.autodiscover()
@@ -13,6 +11,9 @@ admin.autodiscover()
 #    signup_view = "account.views.signup"
 #else:
 #    signup_view = "signup_codes.views.signup"
+
+from sitemaps import sitemaps
+
 
 urlpatterns = patterns('',
 #    url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),
@@ -42,7 +43,13 @@ urlpatterns = patterns('',
     (r'^s/', include('statistics.urls')),
     url(r'^facebook/login', 'profile.views.login', name='facebook_login'),
     (r'^tinymce/', include('tinymce.urls')),
-    (r'^(?P<url>.*)$', 'django.contrib.flatpages.views.flatpage'),
 )
 
+urlpatterns += patterns('django.contrib.flatpages.views',
+    url(r'^(?P<url>about/.*)$', 'flatpage', name='about'),
+)
 
+urlpatterns += patterns('django.contrib.sitemaps.views',
+    (r'^sitemap\.xml$', 'index', {'sitemaps': sitemaps}),
+    (r'^sitemap-(?P<section>.+)\.xml$', 'sitemap', {'sitemaps': sitemaps}),
+)
