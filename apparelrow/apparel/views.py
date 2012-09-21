@@ -359,7 +359,7 @@ def brand_list(request, gender=None, popular=False):
 
     brands = cache.get('brand_list_brands_%s' % (gender,))
     if brands is None:
-        alphabet = [u'#'] + list(unicode(string.ascii_lowercase)) + [u'å', u'ä', u'ö']
+        alphabet = [u'0-9'] + list(unicode(string.ascii_lowercase))
         brands = []
         brands_mapper = {}
         for index, alpha in enumerate(alphabet):
@@ -384,7 +384,7 @@ def brand_list(request, gender=None, popular=False):
                             brands[brands_mapper[char]][1].append({'id': brand_id, 'name': brand_name})
                             break
                         elif char.isdigit():
-                            brands[brands_mapper[u'#']][1].append({'id': brand_id, 'name': brand_name})
+                            brands[brands_mapper[u'0-9']][1].append({'id': brand_id, 'name': brand_name})
                             break
 
         for index, alpha in enumerate(alphabet):
