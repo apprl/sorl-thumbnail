@@ -39,7 +39,6 @@ urlpatterns = patterns('',
     (r'^newsletter/', include('newsletter.urls')),
 
     (r'', include('apparel.urls')),
-    (r'^beta/', include('beta.urls')),
     (r'^s/', include('statistics.urls')),
     url(r'^facebook/login', 'profile.views.login', name='facebook_login'),
     (r'^tinymce/', include('tinymce.urls')),
