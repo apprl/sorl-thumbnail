@@ -13,6 +13,7 @@ from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 from django.db import IntegrityError
 from django.db.models import Q, Max, Min, Count, Sum, connection, signals, get_model
 from django.template import RequestContext, loader
@@ -353,39 +354,43 @@ def brand_list(request, gender=None, popular=False):
     """
     List all brands.
     """
-    alphabet = [u'#'] + list(unicode(string.ascii_lowercase)) + [u'å', u'ä', u'ö']
-    brands = []
-    brands_mapper = {}
-    for index, alpha in enumerate(alphabet):
-        brands_mapper[alpha] = index
-        brands.append([alpha, []])
-
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    query_arguments = {'fl': 'manufacturer_auto, manufacturer_id',
-                       'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender,)],
-                       'start': 0,
-                       'rows': -1,
-                       'group': 'true',
-                       'group.field': 'manufacturer_id'}
-    for brand in ApparelSearch('*:*', **query_arguments).get_docs():
-        if hasattr(brand, 'manufacturer_auto') and hasattr(brand, 'manufacturer_id'):
-            brand_name = brand.manufacturer_auto
-            brand_id = brand.manufacturer_id
+    brands = cache.get('brand_list_brands_%s' % (gender,))
+    if brands is None:
+        alphabet = [u'#'] + list(unicode(string.ascii_lowercase)) + [u'å', u'ä', u'ö']
+        brands = []
+        brands_mapper = {}
+        for index, alpha in enumerate(alphabet):
+            brands_mapper[alpha] = index
+            brands.append([alpha, []])
 
-            if brand_name:
-                normalized_name = unicodedata.normalize('NFKD', smart_unicode(brand_name)).lower()
-                for index, char in enumerate(normalized_name):
-                    if char in alphabet:
-                        brands[brands_mapper[char]][1].append({'id': brand_id, 'name': brand_name})
-                        break
-                    elif char.isdigit():
-                        brands[brands_mapper[u'#']][1].append({'id': brand_id, 'name': brand_name})
-                        break
+        query_arguments = {'fl': 'manufacturer_auto, manufacturer_id',
+                           'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender,)],
+                           'start': 0,
+                           'rows': -1,
+                           'group': 'true',
+                           'group.field': 'manufacturer_id'}
+        for brand in ApparelSearch('*:*', **query_arguments).get_docs():
+            if hasattr(brand, 'manufacturer_auto') and hasattr(brand, 'manufacturer_id'):
+                brand_name = brand.manufacturer_auto
+                brand_id = brand.manufacturer_id
 
-    for index, alpha in enumerate(alphabet):
-        brands[index][1] = sorted(brands[index][1], key=lambda k: k['name'])
+                if brand_name:
+                    normalized_name = unicodedata.normalize('NFKD', smart_unicode(brand_name)).lower()
+                    for index, char in enumerate(normalized_name):
+                        if char in alphabet:
+                            brands[brands_mapper[char]][1].append({'id': brand_id, 'name': brand_name})
+                            break
+                        elif char.isdigit():
+                            brands[brands_mapper[u'#']][1].append({'id': brand_id, 'name': brand_name})
+                            break
+
+        for index, alpha in enumerate(alphabet):
+            brands[index][1] = sorted(brands[index][1], key=lambda k: k['name'])
+
+        cache.set('brand_list_brands_%s' % (gender,), brands, 60*60*12)
 
     # Popular brands with products
     popular_brands = []
