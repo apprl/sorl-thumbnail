@@ -160,6 +160,7 @@ def deploy(param='', snapshot='master'):
     copy_config()
     build_styles_and_scripts()
     migrate(param)
+    build_brand_list()
     symlink_current_release()
     #restart_celeryd()
     restart_django()
@@ -326,3 +327,10 @@ def restart_webserver():
     require('webserver')
     with settings(warn_only=True):
         sudo('/etc/init.d/%(webserver)s reload' % env, pty=False)
+
+def build_brand_list():
+    """Build static brand list"""
+    require('release', provided_by=[deploy, setup])
+    with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
+        sudo('chown -R %(run_user)s:%(run_group)s ./templates/apparel/generated/' % env, pty=True)
+        sudo('%(path)s/bin/python manage.py build_brand_list' % env, pty=True, user=env.run_user)
