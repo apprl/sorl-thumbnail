@@ -160,7 +160,7 @@ def generate_brand_list_template():
         template_string = render_to_string('apparel/brand_list_generator.html', {'brands': brands})
         temp_filename = os.path.join(settings.PROJECT_ROOT, 'templates', 'apparel', 'generated', template_temp_name)
         filename = os.path.join(settings.PROJECT_ROOT, 'templates', 'apparel', 'generated', template_name)
-        open(temp_filename, 'w').write(template_string)
+        open(temp_filename, 'w').write(template_string.encode('utf-8'))
         os.rename(temp_filename, filename)
 
 class ProcessPopularityTask(PeriodicTask):
