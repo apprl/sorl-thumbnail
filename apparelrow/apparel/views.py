@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-import math
 import json
-import string
-import unicodedata
 import datetime
-import csv
-import StringIO
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
@@ -27,7 +22,6 @@ from django.contrib.sites.models import Site
 from django.views.i18n import set_language
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import smart_unicode
 from hanssonlarsson.django.exporter import json as special_json
 from actstream.models import Follow, Action
 from actstream.views import follow_unfollow as actstream_follow_unfollow
@@ -357,41 +351,6 @@ def brand_list(request, gender=None, popular=False):
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    brands = cache.get('brand_list_brands_%s' % (gender,))
-    if brands is None:
-        alphabet = [u'0-9'] + list(unicode(string.ascii_lowercase))
-        brands = []
-        brands_mapper = {}
-        for index, alpha in enumerate(alphabet):
-            brands_mapper[alpha] = index
-            brands.append([alpha, []])
-
-        query_arguments = {'fl': 'manufacturer_auto, manufacturer_id',
-                           'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender,)],
-                           'start': 0,
-                           'rows': -1,
-                           'group': 'true',
-                           'group.field': 'manufacturer_id'}
-        for brand in ApparelSearch('*:*', **query_arguments).get_docs():
-            if hasattr(brand, 'manufacturer_auto') and hasattr(brand, 'manufacturer_id'):
-                brand_name = brand.manufacturer_auto
-                brand_id = brand.manufacturer_id
-
-                if brand_name:
-                    normalized_name = unicodedata.normalize('NFKD', smart_unicode(brand_name)).lower()
-                    for index, char in enumerate(normalized_name):
-                        if char in alphabet:
-                            brands[brands_mapper[char]][1].append({'id': brand_id, 'name': brand_name})
-                            break
-                        elif char.isdigit():
-                            brands[brands_mapper[u'0-9']][1].append({'id': brand_id, 'name': brand_name})
-                            break
-
-        for index, alpha in enumerate(alphabet):
-            brands[index][1] = sorted(brands[index][1], key=lambda k: k['name'])
-
-        cache.set('brand_list_brands_%s' % (gender,), brands, 60*60*12)
-
     # Popular brands with products
     popular_brands = []
     temp_brands = Brand.objects.filter(products__gender__in=[gender, 'U'],
@@ -427,7 +386,6 @@ def brand_list(request, gender=None, popular=False):
                                                                .order_by('-popularity', '-date_added')[:2]])
 
     response = render_to_response('apparel/brand_list.html', {
-                'brands': brands,
                 'popular_brands': popular_brands,
                 'popular_brands_in_network': popular_brands_in_network,
                 'popular': popular,

@@ -29,29 +29,11 @@
         {% endfor %}
     </div>
     <div id="content">
-        <ul class="alphabet-list">
-        {% for brand_char, brand_list in brands %}
-            {% if not brand_list %}
-            <li class="empty">{{ brand_char }}</li>
-            {% else %}
-            <li><a href="#{{ brand_char }}">{{ brand_char }}</a></li>
-            {% endif %}
-        {% endfor %}
-        </ul>
-
-        {% for brand_char, brand_list in brands %}
-            {% if brand_list %}
-            <div class="brand-container">
-                <div class="brand-anchor"><a name="{{ brand_char }}">{{ brand_char }}</a></div>
-                <ul class="brands">
-                {% for brand in brand_list %}
-                    <li><a href="{% url brand-redirect brand.id %}">{{ brand.name }}</a></li>
-                {% endfor %}
-                </ul>
-                <br>
-            </div>
-            {% endif %}
-        {% endfor %}
+        {% if APPAREL_GENDER = 'M' %}
+            {% include 'apparel/generated/brand_list_men.html' only %}
+        {% elif APPAREL_GENDER = 'W' %}
+            {% include 'apparel/generated/brand_list_women.html' only %}
+        {% endif %}
     </div>
     <div class="sidebar last">
         <h2>{% trans "Popular brands in your network" %}</h2>

@@ -341,7 +341,8 @@ CELERY_ROUTES = ({
     'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
     'apparel.facebook_push_graph': {'queue': 'standard'},
     'apparel.facebook_pull_graph': {'queue': 'standard'},
-    'statistics.tasks.increment_click': {'queue': 'standard'}
+    'statistics.tasks.increment_click': {'queue': 'standard'},
+    'apparel.tasks.generate_brand_list_template': {'queue': 'standard'},
 },)
 
 # LOGGING CONFIGURATION
