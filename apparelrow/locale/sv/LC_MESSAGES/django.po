@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-15 20:39+0200\n"
+"POT-Creation-Date: 2012-09-22 16:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -329,11 +329,11 @@ msgid ""
 "\"#\"."
 msgstr ""
 
-#: apparel/views.py:144
+#: apparel/views.py:139
 msgid "Check your browser settings."
 msgstr ""
 
-#: apparel/views.py:151
+#: apparel/views.py:146
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
@@ -945,29 +945,17 @@ msgstr "Varumärken Herr"
 msgid "Brands Women"
 msgstr "Varumärken Dam"
 
-#: templates/apparel/brand_list.html:15 templates/apparel/user_list.html:14
+#: templates/apparel/brand_list.html:18 templates/apparel/user_list.html:14
 msgid "Most followed"
 msgstr "Mest följda"
 
-#: templates/apparel/brand_list.html:16 templates/apparel/user_list.html:15
-msgid "In alphabetical order"
-msgstr "I bokstavsordning"
+#: templates/apparel/brand_list.html:35
+msgid "Your friends like"
+msgstr "Dina vänner gillar"
 
-#: templates/apparel/brand_list.html:24
-msgid "Popular brands"
-msgstr "Populära varumärken"
-
-#: templates/apparel/brand_list.html:57
-msgid "Popular brands in your network"
-msgstr "Populära bland dina vänner"
-
-#: templates/apparel/brand_list.html:59
-msgid ""
-"To see popular brands in your network you need to connect with your Facebook "
-"account."
-msgstr ""
-"För att se vilka varumärken som är populära bland dina vänner behöver du "
-"logga in med ditt Facebookkonto."
+#: templates/apparel/brand_list.html:37
+msgid "Connect your Facebook account to see what your friends like."
+msgstr "Logga in med ditt Facebookkonto för att se vad dina vänner gillar."
 
 #: templates/apparel/browse.html:5
 msgid "Shop Men"
@@ -1266,6 +1254,10 @@ msgstr "Senaste händelser bland dina vänner"
 #: templates/apparel/user_home.html:29 templates/apparel/user_list.html:47
 msgid "Your friends are here!"
 msgstr "Dina vänner är här!"
+
+#: templates/apparel/user_list.html:15
+msgid "In alphabetical order"
+msgstr "I bokstavsordning"
 
 #: templates/apparel/user_list.html:23
 msgid "Latest members"
@@ -2459,6 +2451,19 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid ""
+#~ "To see popular brands in your network you need to connect with your "
+#~ "Facebook account."
+#~ msgstr ""
+#~ "För att se vilka varumärken som är populära bland dina vänner behöver du "
+#~ "logga in med ditt Facebookkonto."
+
+#~ msgid "Popular brands"
+#~ msgstr "Populära varumärken"
+
+#~ msgid "Popular brands in your network"
+#~ msgstr "Populära bland dina vänner"
 
 #~ msgid "Likes this look"
 #~ msgstr "Gillar looken"

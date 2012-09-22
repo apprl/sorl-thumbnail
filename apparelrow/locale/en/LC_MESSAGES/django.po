@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-15 20:39+0200\n"
+"POT-Creation-Date: 2012-09-22 16:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -328,11 +328,11 @@ msgid ""
 "\"#\"."
 msgstr ""
 
-#: apparel/views.py:144
+#: apparel/views.py:139
 msgid "Check your browser settings."
 msgstr ""
 
-#: apparel/views.py:151
+#: apparel/views.py:146
 msgid "Shared to your Facebook timeline!"
 msgstr ""
 
@@ -929,26 +929,16 @@ msgstr ""
 msgid "Brands Women"
 msgstr ""
 
-#: templates/apparel/brand_list.html:15 templates/apparel/user_list.html:14
+#: templates/apparel/brand_list.html:18 templates/apparel/user_list.html:14
 msgid "Most followed"
 msgstr ""
 
-#: templates/apparel/brand_list.html:16 templates/apparel/user_list.html:15
-msgid "In alphabetical order"
+#: templates/apparel/brand_list.html:35
+msgid "Your friends like"
 msgstr ""
 
-#: templates/apparel/brand_list.html:24
-msgid "Popular brands"
-msgstr ""
-
-#: templates/apparel/brand_list.html:57
-msgid "Popular brands in your network"
-msgstr ""
-
-#: templates/apparel/brand_list.html:59
-msgid ""
-"To see popular brands in your network you need to connect with your Facebook "
-"account."
+#: templates/apparel/brand_list.html:37
+msgid "Connect your Facebook account to see what your friends like."
 msgstr ""
 
 #: templates/apparel/browse.html:5
@@ -1236,6 +1226,10 @@ msgstr ""
 
 #: templates/apparel/user_home.html:29 templates/apparel/user_list.html:47
 msgid "Your friends are here!"
+msgstr ""
+
+#: templates/apparel/user_list.html:15
+msgid "In alphabetical order"
 msgstr ""
 
 #: templates/apparel/user_list.html:23

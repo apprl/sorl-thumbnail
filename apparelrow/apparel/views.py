@@ -351,46 +351,18 @@ def brand_list(request, gender=None, popular=False):
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    # Popular brands with products
-    #popular_brands = []
-    #temp_brands = Brand.objects.filter(products__gender__in=[gender, 'U'],
-                                       #products__published=True,
-                                       #products__category__isnull=False,
-                                       #products__vendorproduct__isnull=False,
-                                       #products__availability=True,
-                                       #profile__is_brand=True) \
-                               #.order_by('-profile__followers_count') \
-                               #.distinct().select_related('profile', 'profile__user')[:10]
-    #for brand in temp_brands:
-        #popular_brands.append([brand.brand,
-                               #Product.valid_objects.filter(gender__in=[gender, 'U'],
-                                                            #manufacturer=brand.brand.pk) \
-                                                    #.order_by('-popularity', '-date_added')[:2]])
-
     # Most popular brand pages
     popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')[:10]
 
-    # Popular brands in your network with products
-    popular_brands_in_network = []
+    # Most popular products
     user_ids = []
     if request.user and request.user.is_authenticated():
         user_ids.extend(Follow.objects.filter(user=request.user).values_list('object_id', flat=True))
-    temp_brands = Brand.objects.filter(products__gender__in=[gender, 'U'],
-                                       products__published=True,
-                                       products__category__isnull=False,
-                                       products__vendorproduct__isnull=False,
-                                       products__availability=True,
-                                       products__likes__user__in=user_ids) \
-                               .distinct().select_related('profile', 'profile__user')[:10]
-    for brand in temp_brands:
-        popular_brands_in_network.append([brand,
-                                          Product.valid_objects.filter(gender__in=[gender, 'U'],
-                                                                       manufacturer=brand.pk) \
-                                                               .order_by('-popularity', '-date_added')[:2]])
+    popular_products = Product.valid_objects.filter(likes__user__in=user_ids).order_by('-popularity')[:10]
 
     response = render_to_response('apparel/brand_list.html', {
                 'popular_brands': popular_brands,
-                'popular_brands_in_network': popular_brands_in_network,
+                'popular_products': popular_products,
                 'popular': popular,
                 'next': request.get_full_path(),
                 'APPAREL_GENDER': gender
