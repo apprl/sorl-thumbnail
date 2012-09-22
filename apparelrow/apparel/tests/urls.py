@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 urlpatterns = patterns('',
     (r'^decorator/auth/$', 'apparel.tests.decorators.view_func_auth'),

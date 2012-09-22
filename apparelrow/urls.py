@@ -1,6 +1,5 @@
-from django.conf.urls.defaults import patterns, url, include, handler404, handler500
+from django.conf.urls import patterns, url, include, handler404, handler500
 from django.conf import settings
-from django.views.generic.simple import direct_to_template
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 admin.autodiscover()
@@ -18,8 +17,6 @@ from sitemaps import sitemaps
 urlpatterns = patterns('',
 #    url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),
 #    url(r'^account/signup/$', signup_view, name="acct_signup"),
-
-#    (r'^about/', include('about.urls')),
 
     (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', { 'domain': 'djangojs', 'packages': ('apparelrow',),}),
     # FIXME: Is it possible to include this in some other way? All I want to do

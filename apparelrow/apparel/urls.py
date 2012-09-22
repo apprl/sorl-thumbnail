@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 
 from apparel.models import Look
@@ -104,9 +104,6 @@ urlpatterns = patterns('',
     url(r'^admin/csv/users/$', 'apparel.email.admin_user_list_csv'),
     url(r'^admin/mail/weekly/$', 'apparel.email.generate_weekly_mail'),
     url(r'^admin/mailchimp/webhook/$', 'apparel.email.mailchimp_webhook'),
-
-    # ???
-    url(r'^monitor/$', 'django.views.generic.simple.direct_to_template', {'template': 'base.html'}),
 )
 
 
