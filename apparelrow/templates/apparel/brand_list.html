@@ -22,11 +22,13 @@
 {% block body %}
     <div class="sidebar">
         <h2>{% trans "Popular brands" %}</h2>
-        {% for brand, products in popular_brands %}
-        <a class="title" href="{% url brand-redirect brand.id %}"><h3>{{ brand.name }}</h3></a>
-        {% include 'apparel/fragments/follow.html' with profile=brand.profile request=request only %}
-        {% include 'apparel/fragments/products_sidebar_simple.html' with products=products CACHE_LONG_TIMEOUT=CACHE_LONG_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
+        <ul class="suggested-friends">
+        {% for profile in popular_brands %}
+            <li>
+            {% include 'apparel/fragments/avatar_link_no_cache.html' %}
+            </li>
         {% endfor %}
+        </ul>
     </div>
     <div id="content">
         {% if APPAREL_GENDER = 'M' %}

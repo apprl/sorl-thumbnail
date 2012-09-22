@@ -352,20 +352,23 @@ def brand_list(request, gender=None, popular=False):
         gender = get_gender_from_cookie(request)
 
     # Popular brands with products
-    popular_brands = []
-    temp_brands = Brand.objects.filter(products__gender__in=[gender, 'U'],
-                                       products__published=True,
-                                       products__category__isnull=False,
-                                       products__vendorproduct__isnull=False,
-                                       products__availability=True,
-                                       profile__is_brand=True) \
-                               .order_by('-profile__followers_count') \
-                               .distinct().select_related('profile', 'profile__user')[:10]
-    for brand in temp_brands:
-        popular_brands.append([brand,
-                               Product.valid_objects.filter(gender__in=[gender, 'U'],
-                                                            manufacturer=brand.pk) \
-                                                    .order_by('-popularity', '-date_added')[:2]])
+    #popular_brands = []
+    #temp_brands = Brand.objects.filter(products__gender__in=[gender, 'U'],
+                                       #products__published=True,
+                                       #products__category__isnull=False,
+                                       #products__vendorproduct__isnull=False,
+                                       #products__availability=True,
+                                       #profile__is_brand=True) \
+                               #.order_by('-profile__followers_count') \
+                               #.distinct().select_related('profile', 'profile__user')[:10]
+    #for brand in temp_brands:
+        #popular_brands.append([brand.brand,
+                               #Product.valid_objects.filter(gender__in=[gender, 'U'],
+                                                            #manufacturer=brand.brand.pk) \
+                                                    #.order_by('-popularity', '-date_added')[:2]])
+
+    # Most popular brand pages
+    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')[:10]
 
     # Popular brands in your network with products
     popular_brands_in_network = []
