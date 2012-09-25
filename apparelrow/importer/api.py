@@ -416,7 +416,7 @@ class API(object):
                 logger.debug('Creating new vendor category: %s' % category_names)
 
         return self._vendor_category
-    
+
     @property
     def category(self):
         """
@@ -428,7 +428,8 @@ class API(object):
     def vendor_brand(self):
         """
         Returns the VendorBrand instance that maps the extracted brand to a
-        manually defined one by Apparelrow.
+        manually defined one by Apprl. If a Brand exists with the same name an
+        automatic mapping will occur.
         """
         if not self._vendor_brand:
             name = self.dataset['product']['manufacturer']
@@ -442,9 +443,19 @@ class API(object):
             else:
                 logger.debug('Using vendor brand [id: %s] %s' % (self._vendor_brand.id, self._vendor_brand))
 
+            if self._vendor_brand.brand is None:
+                brand_model = get_model('apparel', 'Brand')
+                try:
+                    brand = get_model('apparel', 'Brand').objects.get(name__iexact=name)
+                    self._vendor_brand.brand = brand
+                    self._vendor_brand.save()
+                    logger.debug('Direct mapping from VendorBrand %s to Brand %s' % (self._vendor_brand, brand))
+                except brand_model.DoesNotExist:
+                    logger.debug('Direct mapping from VendorBrand %s is not possible' % (self._vendor_brand,))
+
         return self._vendor_brand
 
-    @property 
+    @property
     def manufacturer(self):
         """
         Returns the mapped brand for the product. This may return None.
