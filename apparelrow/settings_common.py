@@ -192,6 +192,11 @@ COMPRESS_JS = {
                              'js/widget.js'),
         'output_filename': 'js/compiled/widget.js',
     },
+    'embed': {
+        'source_filenames': ('js/embed.js',
+                             'js/jquery/jquery.apprl-tooltip.js'),
+        'output_filename': 'js/compiled/embed.js',
+    },
     'jquery': {
         'source_filenames': ('js/jquery/jquery.hypersubmit.js',
                              'js/jquery/jquery.tools.min.js',
@@ -259,7 +264,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
-        'TIMEOUT': 60 * 15,
+        'TIMEOUT': 60 * 60,
     }
 }
 

@@ -441,6 +441,9 @@ def look_detail(request, slug):
     # Likes
     likes = look.likes.filter(active=True).order_by('-modified').select_related('user', 'user__profile')
 
+    # Base url
+    base_url = request.build_absolute_uri('/')[:-1]
+
     return render_to_response(
             'apparel/look_detail.html',
             {
@@ -451,10 +454,17 @@ def look_detail(request, slug):
                 'object_url': request.build_absolute_uri(look.get_absolute_url()),
                 'look_full_image': request.build_absolute_uri(look.static_image.url),
                 'look_saved': look_saved,
-                'likes': likes
+                'likes': likes,
+                'base_url': base_url
             },
             context_instance=RequestContext(request),
         )
+
+def look_embed(request, slug):
+    look = get_object_or_404(Look, slug=slug)
+    base_url = request.build_absolute_uri('/')[:-1]
+
+    return render(request, 'apparel/look_embed.html', {'object': look, 'base_url': base_url})
 
 
 #@login_required - FIXME: Find out why this isn't working anymore

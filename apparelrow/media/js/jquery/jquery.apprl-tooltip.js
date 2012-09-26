@@ -20,9 +20,34 @@
 
         tooltip = jQuery('#tooltip-' + component_id).css({position: 'absolute'}).show();
         if(component_type != 'tooltip') {
-            var container = component.closest('.photo, .collage, #photo');
-            tooltip_top = container.offset().top + component.position().top - tooltip.height() + 5;
-            tooltip_left = container.offset().left + component.position().left;
+            var container = component.closest('div'); //photo, .collage, .look-photo, #photo');
+            var container_o = container.offset();
+            var container_w = container.width();
+            var container_h = container.height();
+            var component_p = component.position();
+            var component_h = component.height();
+            var tooltip_w = tooltip.innerWidth();
+            var tooltip_h = tooltip.innerHeight();
+
+            if(component_p.top >= tooltip_h) {
+                tooltip_top = container_o.top + component_p.top - tooltip_h;
+            } else if(component_h + tooltip_h >= container_h) {
+                tooltip_top = container_o.top + component_p.top + (component_h / 2);
+            } else {
+                tooltip_top = container_o.top + component_p.top + component_h;
+            }
+
+            if((tooltip_top + tooltip_h - container_o.top) >= container_h) {
+                tooltip_top -= (tooltip_top + tooltip_h - container_o.top) - container_h;
+            }
+
+            if(component_p.left < 0 || tooltip_w >= container_w) {
+                tooltip_left = container_o.left + 1;
+            } else if(component_p.left + tooltip_w >= container_w) {
+                tooltip_left = container_o.left + component_p.left - ((component_p.left + tooltip_w) - container_w);
+            } else {
+                tooltip_left = container_o.left + component_p.left;
+            }
         }
         tooltip.css({'top': tooltip_top, 'left': tooltip_left});
         if(!component.hasClass('tooltip') && last_id != component_id) {

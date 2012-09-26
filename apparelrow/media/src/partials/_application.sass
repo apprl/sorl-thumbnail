@@ -627,6 +627,8 @@ ul.looks
         text-decoration: underline
     &.last
       margin-right: 0
+    &:hover
+      background-color: white
     .look
       +look_small
     span.button
@@ -924,23 +926,11 @@ span, a
   &.likes
     +apparel_likes
   &.discount-price
-    padding-right: 8px
-    +apparel_price
-    color: $like_color
-    padding-left: 0
+    +apparel_discount_price
   &.price
     +apparel_price
-    padding-left: 0
-    &.discount
-      color: $like_color
-    &.discounted
-      text-decoration: line-through
-  &.price
-    background: none
-    &.sold-out
-      background: transparent url(../images/out-circle.png) no-repeat scroll 2px center
   &.currency
-    padding: 0 2px
+    +apparel_currency
 
 .profile
   .sidebar

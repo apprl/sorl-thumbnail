@@ -74,6 +74,9 @@ urlpatterns = patterns('',
     url(r'^dialog/follow-user/$', 'apparel.views.dialog_follow_user', name='dialog-follow-user'),
     url(r'^dialog/why-facebook$', TemplateView.as_view(template_name='apparel/fragments/dialog_why_facebook.html'), name='dialog-why-facebook'),
 
+    # Embed
+    url(r'^embed/look/(?P<slug>[\w-]+)/$', 'apparel.views.look_embed'),
+
     # Widget
     url(r'^widget/look/(?P<object_id>\d+)/collage/$', 'apparel.views.widget', {
         'model': Look,

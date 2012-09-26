@@ -91,13 +91,15 @@ $tooltip_width: 242px
   +border(all, $border_color)
   color: $font_color
   text-transform: uppercase
-  
+
 =apparel_hotspot
   position: relative
   margin: 0 auto
   .hotspot, .ar-hotspot
     position: absolute
-    padding: 40px
+    width: 80px
+    height: 80px
+    //padding: 40px
     background: transparent image_url(unquote("look-hotspot.png")) no-repeat scroll center center
 
 =apparel_likes
@@ -110,6 +112,20 @@ $tooltip_width: 242px
 =apparel_price
   font:
     family: $font_family
+  background: none
+  padding-left: 0
   color: $easy_color
-  padding-left: 16px
+  &.discount
+    color: $like_color
+  &.discounted
+    text-decoration: line-through
+  &.sold-out
+    background: transparent url(../images/out-circle.png) no-repeat scroll 2px center
 
+=apparel_discount_price
+  +apparel_price
+  padding-right: 8px
+  color: $like_color
+
+=apparel_currency
+  padding: 0 2px

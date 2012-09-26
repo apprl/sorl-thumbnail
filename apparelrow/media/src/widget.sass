@@ -5,6 +5,10 @@
 @import compass/css3
 @import compass/utilities
 
+html, body
+  margin: 0
+  padding: 0
+
 div#ar-wrapper
   h1, h2, h3, h4, h5, span, p, div, a
     background: none
@@ -38,39 +42,29 @@ div#ar-wrapper
     width: auto
     z-index: auto
 
-.ar-look-collage, .ar-look-photo
+.ar-look-collage, .ar-look-photo, .look-collage, .look-photo
   list-style: none
   margin: 0
   padding: 0
   height: $look_height
 
-#ar-wrapper
+#ar-wrapper, .container
   +font
   +typography
   font-size: 11px
   position: relative
-  .ar-look-photo
+  .ar-look-photo, .look-photo
     +apparel_hotspot
-  .ar-link
+  .ar-link, .link
     cursor: pointer
-  .ar-tooltip
+  .ar-tooltip, .tooltip
     cursor: pointer !important
     +apparel_tooltip
-    div, h3
-      margin: .5em 0
-    p
-      +font
-      +typography
-      font-size: 11px / 1.5 !important
-    h2
-      margin-top: 1em
-      font-size: 11px !important
-    h3
-      +font
-      +typography
-      font-size: 11px !important
-      color: $easy_color
-    .ar-likes
+    .ar-likes, .likes
       +apparel_likes
-    .ar-price
+    .ar-price, .price
       +apparel_price
+    .ar-discount-price, .discount-price
+      +apparel_discount_price
+    .ar-currency, .currency
+      +apparel_currency
