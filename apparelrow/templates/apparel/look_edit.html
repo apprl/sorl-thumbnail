@@ -247,7 +247,7 @@ function getContextFromPane(pane) {
 }
 
 jQuery(document).ready(function() {
-    makeProductTooltip('#photo .product');
+    jQuery('#photo .product').enableApprlTooltip();
     look.initialize(jQuery('#photo-background > .product'));
     look.initialize(jQuery('#collage > .product'));
     look.disable(jQuery('.ui-draggable'));

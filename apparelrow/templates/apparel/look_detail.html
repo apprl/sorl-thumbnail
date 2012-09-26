@@ -27,7 +27,7 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        makeProductTooltip('.collage .product, .photo .product');
+        jQuery('.collage .product, .photo .product').enableApprlTooltip();
         jQuery('#embed-code, #url-code')
             .focus(function(e) { this.select(); })
             .mouseup(function(e) { e.preventDefault() });

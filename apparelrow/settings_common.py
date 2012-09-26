@@ -201,7 +201,8 @@ COMPRESS_JS = {
                              'js/jquery/jquery.html5-placeholder-shim.js',
                              'js/jquery/autoresize.jquery.min.js',
                              'js/jquery/jquery.scrollable.js',
-                             'js/jquery/jquery.apprl-sticky.js'),
+                             'js/jquery/jquery.apprl-sticky.js',
+                             'js/jquery/jquery.apprl-tooltip.js'),
         'output_filename': 'js/compiled/jquery.js',
     }
 }
