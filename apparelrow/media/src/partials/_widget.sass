@@ -15,6 +15,7 @@ $tooltip_width: 242px
   position: relative
   white-space: nowrap
   +opacity(0)
+  width: 300px
   h2
     background: transparent image_url("arrow-bg.png") scroll no-repeat right center
     font-size: 1.1em
@@ -36,19 +37,25 @@ $tooltip_width: 242px
       vertical-align: middle
   .product-meta, .ar-product-meta
     float: left
+    width: 200px
+    h2, h3
+      white-space: nowrap
+      text-overflow: ellipsis
+      overflow: hidden
     h2
       margin-top: 0
       margin-bottom: 0
       border-bottom: none
-      white-space: normal
-      overflow: hidden
       padding-right: 16px
     h3
       color: $easy_color
       font-size: 0.9em
       font-weight: normal
+      margin: 0
     div.vendors, div.ar-vendors
       margin-top: 0.5em
+      position: absolute
+      bottom: 10px
       span.vendor, span.ar-vendor
         +vendor
         display: inline-block

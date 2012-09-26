@@ -20,14 +20,17 @@
 
         tooltip = jQuery('#tooltip-' + component_id).css({position: 'absolute'}).show();
         if(component_type != 'tooltip') {
-            var container = component.closest('div'); //photo, .collage, .look-photo, #photo');
-            var container_o = container.offset();
+            var container = component.closest('div');
+            var container_o = {top: 0, left: 0};
+            if(container.has(tooltip).length == 0) {
+              container_o = container.offset();
+            }
             var container_w = container.width();
             var container_h = container.height();
             var component_p = component.position();
             var component_h = component.height();
-            var tooltip_w = tooltip.innerWidth();
-            var tooltip_h = tooltip.innerHeight();
+            var tooltip_w = tooltip.outerWidth();
+            var tooltip_h = tooltip.outerHeight();
 
             if(component_p.top >= tooltip_h) {
                 tooltip_top = container_o.top + component_p.top - tooltip_h;
