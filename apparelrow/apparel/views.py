@@ -20,6 +20,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
 from django.contrib.sites.models import Site
 from django.views.i18n import set_language
+from django.views.decorators.cache import cache_page
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from hanssonlarsson.django.exporter import json as special_json
@@ -460,10 +461,10 @@ def look_detail(request, slug):
             context_instance=RequestContext(request),
         )
 
+@cache_page(300)
 def look_embed(request, slug):
     look = get_object_or_404(Look, slug=slug)
     base_url = request.build_absolute_uri('/')[:-1]
-
     return render(request, 'apparel/look_embed.html', {'object': look, 'base_url': base_url})
 
 
