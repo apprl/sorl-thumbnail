@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.forms import Form, CharField, MultipleHiddenInput, ModelChoiceField, ModelMultipleChoiceField
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.utils.translation import ugettext_lazy as _
 
 from apparel.models import *
 from modeltranslation.admin import TranslationAdmin
@@ -70,7 +71,7 @@ class ProductAdmin(admin.ModelAdmin):
         if not form:
             form = self.ChangeCategoryForm(initial={'_selected_action': request.POST.getlist(admin.ACTION_CHECKBOX_NAME)})
 
-        return render_to_response('admin/change_category.html', 
+        return render_to_response('admin/change_category.html',
                 {'products': queryset, 'category_form': form}, context_instance=RequestContext(request))
 
     change_category.short_description = "Change category for selected products"
@@ -185,8 +186,13 @@ class VendorCategoryAdmin(admin.ModelAdmin):
     def category_ancestors(self, vendor_category):
         return ' > '.join([c.name for c in vendor_category.category.get_ancestors()])
 
+    def queryset(self, request):
+        qs = super(VendorCategoryAdmin, self).queryset(request)
+        return qs.annotate(models.Count('vendor_products'))
+
     def num_products(self, vendor_category):
         return vendor_category.vendor_products.count()
+    num_products.admin_order_field = 'vendor_products__count'
 
     def reset_gender(self, request, queryset):
         num_products = 0
@@ -212,17 +218,38 @@ admin.site.register(VendorCategory, VendorCategoryAdmin)
 # VENDOR BRAND
 #
 
+
+class BrandIsNullListFilter(admin.SimpleListFilter):
+    title = _('brand mapped')
+    parameter_name = 'brand_mapped'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', _('Yes')),
+            ('no', _('No')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'yes':
+            return queryset.filter(brand__isnull=False)
+        elif self.value() == 'no':
+            return queryset.filter(brand__isnull=True)
+
 class VendorBrandAdmin(admin.ModelAdmin):
     list_display = ('vendor', 'name', 'brand', 'num_products')
-    list_filter = ('vendor',)
+    list_filter = ('vendor', BrandIsNullListFilter)
     list_display_links = ('name',)
     list_per_page = 25
     search_fields = ('name',)
     readonly_fields = ('vendor', 'name')
 
+    def queryset(self, request):
+        qs = super(VendorBrandAdmin, self).queryset(request)
+        return qs.annotate(models.Count('vendor_products'))
+
     def num_products(self, vendor_brand):
-        vp = VendorProduct.objects.filter(vendor_brand=vendor_brand).count()
-        return '%s' % (vp,)
+        return vendor_brand.vendor_products.count()
+    num_products.admin_order_field = 'vendor_products__count'
 
 admin.site.register(VendorBrand, VendorBrandAdmin)
 
