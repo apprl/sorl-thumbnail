@@ -95,7 +95,9 @@
     <div class="spread">
         {% include 'apparel/fragments/share.html' with image=look_full_image url=object_url %}
         <div class="first">
-            <label>{% trans "Embed this look on your blog or site" %}:<input type="text" value="{% filter force_escape %}<iframe width="695" height="526" src="{{ base_url }}{% url apparel.views.look_embed object.slug %}" frameborder="0" scrolling="no"></iframe>{% endfilter %}" id="embed-code"></label>
+            <label>{% trans "Embed this look on your blog or site" %}:
+                <input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code">
+            </label>
         </div>
         <div class="last">
             <label>{% trans "Direct link to this page" %}:<input type="text" value="{% filter force_escape %}{{ object_url }}{% endfilter %}" id="url-code"></label>

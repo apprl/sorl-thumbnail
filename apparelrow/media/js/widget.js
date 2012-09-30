@@ -1,98 +1,83 @@
-/*
- * Apparelrow.com Widget Embedment
- */
+(function($) {
 
-var Apparelrow = {
-    host: __ar_host__ || 'http://www.apparelrow.com',
-    initialized: false,
-    initStack: 0,
-    insert: function(response, node) {
-        // FIXME: Backtracking would be nice here so we could have one rather  
-        // than two replace statements
-        
-        var html = response.html
-            .replace(/class="(.+?)"/g, function(s, clsname) {
-                // FIXME: This prepends 'ar-' to all class names
-                // maybe there's a case for doing this on the server, or just always 
-                // have the classes with this prefix?
-                return 'class="'
-                    + clsname.replace(/(.+?)(?:\s+|$)/g, function(c) { return 'ar-' + c; } )
-                    + '"'
-                ;
-            })
-            .replace(/((?:\b(?:src|href)=(?:"|')?)|(?:\:\s+url\((?:"|')))(?=\/)/g, function(s, attr) {
-                // FIXME: This adds the host name to all html attributes src or href or
-                // inline css attributes url( whos value starts with /
-                return attr + Apparelrow.host;
-            })
-        ;
-        
-        node.html('<div id="ar-wrapper">' + html + '</div>');
-        
-        $('.ar-collage, .ar-product', node).tooltip({
-            tipClass: 'ar-tooltip',
-            effect: 'slide',
-            relative: true,
-            delay: 500,
-            offset: [15, 0]
-        });
-        
-        // Hide hotspots and only show them on mouseover
-        $('.ar-hotspot').hide();
-        $('.ar-look-photo').hover(
-              function(e) { jQuery('.ar-hotspot', this).fadeIn() }
-            , function(e) { 
-                if(!e.originalTarget || e.originalTarget.id != this.id)
-                    return true;
-                jQuery('.ar-hotspot', this).fadeOut();
-            }
-        );
-    },
-    request: function(path, node, callback) {
-        callback = callback || function(response, statusText) {
-            if(response.success) 
-                Apparelrow.insert(response, node);
-            else
-                node.remove();        
-        };
-        
-        $.ajax({
-            url: Apparelrow.host + path + '?callback=?',
-            dataType: 'jsonp',
-            success: callback
-        });
-    },
-    initializers: {
-        'ar-look-collage': function(node) {
-            Apparelrow.request('/widget/look/' + node.attr('id').split('-').pop() + '/collage/', node);
-        },
-        'ar-look-photo': function(node) {
-            Apparelrow.request('/widget/look/' + node.attr('id').split('-').pop() + '/photo/', node);
+  var Apprl = {
+    // Stylesheet string to be included on target page
+    styleString: '.apprl_look{overflow:hidden;clear:both;}\n.apprl_look div{line-height:20px;}\n.apprl_link{font-family:"Helvetica Neue","Helvetica","Arial",sans-serif;font-size:12px;color:#000;text-decoration:none;}\n.apprl_left{float:left;padding-left:5px;}\n.apprl_right{float:right;padding-right:5px;}',
+
+    // Attach stylesheet string on target page
+    attachStyle: function() {
+      if (document.createStyleSheet) {
+        try {
+          document.createStyleSheet().cssText = Apprl.styleString;
+        } catch (error) {
+          if (document.styleSheets[0]) {
+            document.styleSheets[0].cssText += Apprl.styleString;
+          }
         }
+      } else {
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.textContent = Apprl.styleString;
+        document.getElementsByTagName('head')[0].appendChild(style);
+      }
     },
-    initialize: function() {
-        if(Apparelrow.initialized)
-            return;
-        
-        Apparelrow.initialized = true;
-        
-        $('<link/>')
-            .attr('href', Apparelrow.host + '/media/styles/widget.css')
-            .attr('rel', 'stylesheet')
-            .attr('type', 'text/css')
-            .appendTo('head');
 
-        $('.apparelrow').each(function(idx, e) {
-            var element = $(e);
-            for(var cls in Apparelrow.initializers) {
-                if(element.hasClass(cls))
-                    Apparelrow.initializers[cls](element);
-            }
-        });
+    // Run initialize code on ready DOM
+    ready: function() {
+      Apprl.attachStyle();
+
+      $('.apprl_look').each(function(index, elem) {
+        var $elem = $(elem);
+
+        // Width
+        var width = $elem.data('width');
+        if (width == 'auto') {
+          width = $elem.width();
+        }
+
+        // Height
+        var height = $elem.data('height');
+        if (height == 'auto') {
+          //height = $elem.height();
+          height = 546;
+        }
+
+        elem.style.width = width;
+
+        // Iframe
+        var iframe = document.createElement('iframe');
+        iframe.src = $(elem).data('href');
+        iframe.width = width - 2; // Border
+        iframe.height = height - 20; // Footer
+        iframe.frameBorder = 0;
+        iframe.scrolling = 'no';
+
+        // Footer
+        var footer = document.createElement('div');
+        footer.style.width = width;
+        footer.style.height = 20;
+
+        // Footer - user link
+        if ($elem.data('user-href')) {
+          var user = document.createElement('a');
+          user.href = $elem.data('user-href');
+          user.className = 'apprl_left apprl_link';
+          user.innerHTML = '+ follow me';
+          footer.appendChild(user);
+        }
+
+        var home = document.createElement('a');
+        home.href = 'http://apprl.com/';
+        home.className = 'apprl_right apprl_link'
+        home.innerHTML = '\\ powered by APPRL';
+        footer.appendChild(home);
+
+        $(elem).append(iframe).append(footer);
+      });
+
     }
-};
+  };
 
-$(document).ready(function() { Apparelrow.initialize() });
-if(document && document.getElementById && document.getElementById('__ar_widget__'))
-    Apparelrow.initialize();
+  $(document).ready(Apprl.ready);
 
+})(jQuery.noConflict());
