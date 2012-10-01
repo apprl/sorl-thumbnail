@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-22 16:49+0200\n"
+"POT-Creation-Date: 2012-10-01 16:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,6 +33,18 @@ msgstr ""
 #: settings_common.py:59
 msgid "Swe"
 msgstr ""
+
+#: apparel/admin.py:223
+msgid "brand mapped"
+msgstr ""
+
+#: apparel/admin.py:228 templates/base.html:332
+msgid "Yes"
+msgstr "Ja"
+
+#: apparel/admin.py:229 templates/base.html:331
+msgid "No"
+msgstr "Nej"
 
 #: apparel/browse.py:236 templates/apparel/look_list.html:37
 #: templates/apparel/look_list.html:39
@@ -728,7 +740,7 @@ msgstr ""
 msgid "Why Facebook?"
 msgstr "Varför Facebook?"
 
-#: templates/base.html:221 templates/apparel/look_detail.html:132
+#: templates/base.html:221 templates/apparel/look_detail.html:134
 #: templates/apparel/product_detail.html:207
 #: templates/profile/base_profile.html:35
 msgid "Likes"
@@ -816,14 +828,6 @@ msgstr "Cookies"
 #: templates/base.html:301
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr "Hej Apprl! Jag har en fråga / idé / klagomål / beröm"
-
-#: templates/base.html:331
-msgid "No"
-msgstr "Nej"
-
-#: templates/base.html:332
-msgid "Yes"
-msgstr "Ja"
 
 #: templates/dialog_base.html:5 templates/apparel/look_edit.html:536
 #: templates/beta/dialog_invite_user.html:5
@@ -1073,12 +1077,12 @@ msgid "Do you really want to delete look"
 msgstr "Vill du verkligen ta bort looken"
 
 #: templates/apparel/look_detail.html:73 templates/apparel/look_edit.html:4
-#: templates/apparel/fragments/looks_large.html:34
+#: templates/apparel/fragments/looks_large.html:36
 msgid "Edit"
 msgstr "Redigera"
 
 #: templates/apparel/look_detail.html:74
-#: templates/apparel/fragments/looks_large.html:35
+#: templates/apparel/fragments/looks_large.html:37
 msgid "Delete"
 msgstr "Ta bort"
 
@@ -1100,15 +1104,15 @@ msgstr[1] "<span class=\"count\">%(counter)s</span> som gillar"
 msgid "Embed this look on your blog or site"
 msgstr "Lägg in looken på din blogg eller site"
 
-#: templates/apparel/look_detail.html:101
+#: templates/apparel/look_detail.html:103
 msgid "Direct link to this page"
 msgstr "Direktlänk till den här looken"
 
-#: templates/apparel/look_detail.html:105
+#: templates/apparel/look_detail.html:107
 msgid "More looks by"
 msgstr "Fler looks av"
 
-#: templates/apparel/look_detail.html:111
+#: templates/apparel/look_detail.html:113
 msgid "Similar looks"
 msgstr "Liknande looks"
 
@@ -1240,7 +1244,7 @@ msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
 #: templates/apparel/user_home.html:4 templates/apparel/user_home.html.py:9
-msgid "Friend’s Updates"
+msgid "Friends' Updates"
 msgstr "Vänners uppdateringar"
 
 #: templates/apparel/user_home.html:16
@@ -1473,21 +1477,19 @@ msgstr "Kollage"
 msgid "Create a collage"
 msgstr "Skapa kollage"
 
-#: templates/apparel/fragments/look_product_tooltip.html:21
-#: templates/apparel/fragments/look_product_tooltip.html:30
-#: templates/apparel/fragments/product_detail.html:48
-#: templates/apparel/fragments/product_detail.html:72
-msgid "Sold out"
-msgstr "Slut"
-
 #: templates/apparel/fragments/look_product_tooltip.html:25
 #: templates/apparel/fragments/product_detail.html:50
 msgid "Buy"
 msgstr "Köp"
 
-#: templates/apparel/fragments/look_widget.html:14
-#: templates/apparel/fragments/looks_large.html:37
-#: templates/apparel/fragments/looks_medium.html:33
+#: templates/apparel/fragments/look_product_tooltip.html:27
+#: templates/apparel/fragments/product_detail.html:48
+#: templates/apparel/fragments/product_detail.html:72
+msgid "Sold out"
+msgstr "Slut"
+
+#: templates/apparel/fragments/looks_large.html:39
+#: templates/apparel/fragments/looks_medium.html:35
 msgid "By"
 msgstr "Av"
 
@@ -2142,21 +2144,21 @@ msgstr ""
 msgid "Following you"
 msgstr "Följer dig"
 
-#: templates/profile/fragments/follow_profile.html:12
+#: templates/profile/fragments/follow_profile.html:13
 #, python-format
 msgid "Likes %(likes_count)s product"
 msgid_plural "Likes %(likes_count)s products"
 msgstr[0] "Gillar %(likes_count)s produkt"
 msgstr[1] "Gillar %(likes_count)s produkter"
 
-#: templates/profile/fragments/follow_profile.html:14
+#: templates/profile/fragments/follow_profile.html:17
 #, python-format
 msgid "Created %(look_count)s look"
 msgid_plural "Created %(look_count)s looks"
 msgstr[0] "Skapat %(look_count)s look"
 msgstr[1] "Skapat %(look_count)s looks"
 
-#: templates/profile/fragments/follow_profile.html:17
+#: templates/profile/fragments/follow_profile.html:20
 #, python-format
 msgid "Followed by %(follower_count)s"
 msgstr "Följs av %(follower_count)s"
@@ -2451,6 +2453,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Friend’s Updates"
+#~ msgstr "Vänners uppdateringar"
 
 #~ msgid ""
 #~ "To see popular brands in your network you need to connect with your "

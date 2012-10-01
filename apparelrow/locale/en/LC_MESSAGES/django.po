@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-22 16:49+0200\n"
+"POT-Creation-Date: 2012-10-01 16:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,6 +32,18 @@ msgstr ""
 #: settings_common.py:59
 msgid "Swe"
 msgstr "Sve"
+
+#: apparel/admin.py:223
+msgid "brand mapped"
+msgstr ""
+
+#: apparel/admin.py:228 templates/base.html:332
+msgid "Yes"
+msgstr ""
+
+#: apparel/admin.py:229 templates/base.html:331
+msgid "No"
+msgstr ""
 
 #: apparel/browse.py:236 templates/apparel/look_list.html:37
 #: templates/apparel/look_list.html:39
@@ -718,7 +730,7 @@ msgstr ""
 msgid "Why Facebook?"
 msgstr ""
 
-#: templates/base.html:221 templates/apparel/look_detail.html:132
+#: templates/base.html:221 templates/apparel/look_detail.html:134
 #: templates/apparel/product_detail.html:207
 #: templates/profile/base_profile.html:35
 msgid "Likes"
@@ -806,14 +818,6 @@ msgstr ""
 
 #: templates/base.html:301
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
-msgstr ""
-
-#: templates/base.html:331
-msgid "No"
-msgstr ""
-
-#: templates/base.html:332
-msgid "Yes"
 msgstr ""
 
 #: templates/dialog_base.html:5 templates/apparel/look_edit.html:536
@@ -1050,12 +1054,12 @@ msgid "Do you really want to delete look"
 msgstr ""
 
 #: templates/apparel/look_detail.html:73 templates/apparel/look_edit.html:4
-#: templates/apparel/fragments/looks_large.html:34
+#: templates/apparel/fragments/looks_large.html:36
 msgid "Edit"
 msgstr ""
 
 #: templates/apparel/look_detail.html:74
-#: templates/apparel/fragments/looks_large.html:35
+#: templates/apparel/fragments/looks_large.html:37
 msgid "Delete"
 msgstr ""
 
@@ -1077,15 +1081,15 @@ msgstr[1] ""
 msgid "Embed this look on your blog or site"
 msgstr ""
 
-#: templates/apparel/look_detail.html:101
+#: templates/apparel/look_detail.html:103
 msgid "Direct link to this page"
 msgstr ""
 
-#: templates/apparel/look_detail.html:105
+#: templates/apparel/look_detail.html:107
 msgid "More looks by"
 msgstr ""
 
-#: templates/apparel/look_detail.html:111
+#: templates/apparel/look_detail.html:113
 msgid "Similar looks"
 msgstr ""
 
@@ -1213,7 +1217,7 @@ msgid "No product found!"
 msgstr ""
 
 #: templates/apparel/user_home.html:4 templates/apparel/user_home.html.py:9
-msgid "Friend’s Updates"
+msgid "Friends' Updates"
 msgstr ""
 
 #: templates/apparel/user_home.html:16
@@ -1415,21 +1419,19 @@ msgstr ""
 msgid "Create a collage"
 msgstr ""
 
-#: templates/apparel/fragments/look_product_tooltip.html:21
-#: templates/apparel/fragments/look_product_tooltip.html:30
-#: templates/apparel/fragments/product_detail.html:48
-#: templates/apparel/fragments/product_detail.html:72
-msgid "Sold out"
-msgstr ""
-
 #: templates/apparel/fragments/look_product_tooltip.html:25
 #: templates/apparel/fragments/product_detail.html:50
 msgid "Buy"
 msgstr ""
 
-#: templates/apparel/fragments/look_widget.html:14
-#: templates/apparel/fragments/looks_large.html:37
-#: templates/apparel/fragments/looks_medium.html:33
+#: templates/apparel/fragments/look_product_tooltip.html:27
+#: templates/apparel/fragments/product_detail.html:48
+#: templates/apparel/fragments/product_detail.html:72
+msgid "Sold out"
+msgstr ""
+
+#: templates/apparel/fragments/looks_large.html:39
+#: templates/apparel/fragments/looks_medium.html:35
 msgid "By"
 msgstr ""
 
@@ -2009,21 +2011,21 @@ msgstr ""
 msgid "Following you"
 msgstr ""
 
-#: templates/profile/fragments/follow_profile.html:12
+#: templates/profile/fragments/follow_profile.html:13
 #, python-format
 msgid "Likes %(likes_count)s product"
 msgid_plural "Likes %(likes_count)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/fragments/follow_profile.html:14
+#: templates/profile/fragments/follow_profile.html:17
 #, python-format
 msgid "Created %(look_count)s look"
 msgid_plural "Created %(look_count)s looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/fragments/follow_profile.html:17
+#: templates/profile/fragments/follow_profile.html:20
 #, python-format
 msgid "Followed by %(follower_count)s"
 msgstr ""
