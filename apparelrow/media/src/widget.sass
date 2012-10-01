@@ -2,8 +2,9 @@
 @import partials/widget.sass
 @import partials/font_face_extended.scss
 
-@import compass/css3
-@import compass/utilities
+@import "compass/css3"
+@import "compass/utilities"
+@import "compass/css3/transform"
 
 html, body
   margin: 0
@@ -53,12 +54,19 @@ div#ar-wrapper
   +typography
   font-size: 11px
   position: relative
+  .ar-collage, .collage
+    .product
+      position: absolute
+      img
+        width: 100%
+        height: 100%
   .ar-look-photo, .look-photo
     +apparel_hotspot
   .ar-link, .link
     cursor: pointer
+  .ar-tooltip-arrow, .tooltip-arrow
+    +apparel_tooltip_arrow
   .ar-tooltip, .tooltip
-    cursor: pointer !important
     +apparel_tooltip
     .ar-likes, .likes
       +apparel_likes

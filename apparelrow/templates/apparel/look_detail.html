@@ -120,11 +120,11 @@
     {# FIXME: Add a "display_as "whatever" or "dispay_as_whatever" property to thge look object rather than checking the flag #}
     {% if object.display_with_component == 'C' %}
         <div class="collage">
-        {% include 'apparel/fragments/look_collage.html' %}
+            {% include 'apparel/fragments/look_collage.html' %}
         </div>
     {% else %}
         <div class="photo">
-        {% include 'apparel/fragments/look_photo.html' %}
+            {% include 'apparel/fragments/look_photo.html' %}
         </div>
     {% endif %}
 {% endcache %}
@@ -145,12 +145,5 @@
         </ul>
     </div>
     {% include 'apparel/fragments/comments.html' %}
-</div>
-<div id="look-tooltips">
-    {% for component in object.display_components.all %}
-        {% cache CACHE_TIMEOUT look_product_tooltip component.product.id LANGUAGE_CODE %}
-        {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
-        {% endcache %}
-    {% endfor %}
 </div>
 {% endblock body %}

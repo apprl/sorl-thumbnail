@@ -335,11 +335,6 @@ jQuery(document).ready(function() {
         jQuery('.look-like').hide();
         jQuery('.hotspot').hide();
     });
-    //jQuery('.look-tooltips div').live('mouseenter', function() {
-        //jQuery(this).parent().parent().find('.look-like').show().end().find('.hotspot').show();
-    //}).live('mouseleave', function() {
-        //jQuery(this).parent().parent().find('.look-like').hide().end().find('.hotspot').hide();
-    //});
 
     // Product like - show tooltip if no previously likes
     jQuery('a.product-heart, .product-like').live('mouseenter', function() {

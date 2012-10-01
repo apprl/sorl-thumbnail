@@ -1,3 +1,4 @@
 {% for component in object.collage_components.all %}
     {% include "apparel/fragments/look_collage_product.html" %}
+    {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
 {% endfor %}

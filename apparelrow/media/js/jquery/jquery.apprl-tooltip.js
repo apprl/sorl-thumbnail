@@ -18,52 +18,56 @@
             close(event);
         }
 
-        tooltip = jQuery('#tooltip-' + component_id).css({position: 'absolute'}).show();
+        // Tooltip is either component or next to component
+        tooltip = component;
+        if(!component.hasClass('tooltip')) {
+            tooltip = component.next('.tooltip');
+        }
+        tooltip.show();
         if(component_type != 'tooltip') {
+            var padding = 15;
             var container = component.closest('div');
-            var container_o = {top: 0, left: 0};
-            if(container.has(tooltip).length == 0) {
-              container_o = container.offset();
-            }
             var container_w = container.width();
             var container_h = container.height();
             var component_p = component.position();
             var component_h = component.height();
+            var component_w = component.width();
             var tooltip_w = tooltip.outerWidth();
             var tooltip_h = tooltip.outerHeight();
 
-            if(component_p.top >= tooltip_h) {
-                tooltip_top = container_o.top + component_p.top - tooltip_h;
-            } else if(component_h + tooltip_h >= container_h) {
-                tooltip_top = container_o.top + component_p.top + (component_h / 2);
+            tooltip_top = component_p.top + Math.floor(component_h / 2);
+            tooltip_left = component_p.left + Math.floor(component_w / 2) - Math.floor(tooltip_w / 2);
+
+            var tooltip_arrow = tooltip.find('.tooltip-arrow').css({left: 135});
+            if(tooltip_h + padding < tooltip_top) {
+                tooltip_arrow.addClass('tooltip-arrow-bottom');
+                tooltip_top -= tooltip_h + padding;
             } else {
-                tooltip_top = container_o.top + component_p.top + component_h;
+                tooltip_arrow.addClass('tooltip-arrow-top');
+                tooltip_top += padding;
             }
 
-            if((tooltip_top + tooltip_h - container_o.top) >= container_h) {
-                tooltip_top -= (tooltip_top + tooltip_h - container_o.top) - container_h;
-            }
-
-            if(component_p.left < 0 || tooltip_w >= container_w) {
-                tooltip_left = container_o.left + 1;
-            } else if(component_p.left + tooltip_w >= container_w) {
-                tooltip_left = container_o.left + component_p.left - ((component_p.left + tooltip_w) - container_w);
-            } else {
-                tooltip_left = container_o.left + component_p.left;
+            if(tooltip_left < 5) {
+                tooltip_arrow.css('left', 135 - (5 - tooltip_left));
+                tooltip_left = 5;
+            } else if(tooltip_left + tooltip_w + 5 > container_w) {
+                tooltip_arrow.css('left', 135 + (tooltip_w - (container_w - tooltip_left)) + 5);
+                tooltip_left -= (tooltip_w - (container_w - tooltip_left)) + 5;
             }
         }
+
         tooltip.css({'top': tooltip_top, 'left': tooltip_left});
         if(!component.hasClass('tooltip') && last_id != component_id) {
             tooltip.stop().animate({opacity: 1}, 300);
         } else {
-            tooltip.css({opacity: 1});
+            //tooltip.css({opacity: 1});
         }
         last_id = component_id;
     }
 
     function close(event) {
         if(tooltip) {
-            tooltip.stop().animate({opacity: 0}, 250, 'linear', function() { jQuery(this).hide() });
+            tooltip.stop().animate({opacity: 0}, 250, 'linear', function() { jQuery(this).hide(); });
             tooltip = false;
             last_id = false;
         }

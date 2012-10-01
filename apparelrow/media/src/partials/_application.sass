@@ -518,101 +518,13 @@ button
         background-position: bottom left
         left: 36px
 
-#product-menu ul, a.block_link, table.available-sizes td, #add-to-look ul, .product-vendor
+#product-menu ul, table.available-sizes td, #add-to-look ul, .product-vendor
   +box
 
 .product-options
   .option-size, .option-relative-size, .option-shoe-size, .option-pants-length, .option-pants-width
     border: 1px solid #dadada
     background-color: #f2f2f2
-
-#featured-looks
-  position: relative
-  height: 393px
-  #contents
-    li.feature
-      position: absolute
-      top: 0
-      left: 0
-      display: none
-      .look, .page
-        +border("all")
-        border-bottom: none
-        height: 327px
-        width: 450px
-        position: relative
-        .collage-image
-          position: absolute
-      .info-box
-        +box
-        height: 36px
-        padding: 16px 10px 10px
-        background:
-          image: image_url("gradient-tall-bg.png")
-          repeat: repeat-x
-        h3
-          font:
-            family: $font_family
-            size: 1.1em
-          text-transform: uppercase
-        p
-          color: $easy_color
-        h3, p
-          line-height: 1
-        .info
-          display: block
-          background: transparent image_url("arrow-bg.png") no-repeat scroll left 6px
-          padding-left: 20px
-
-  #switchlook
-    +clearfix
-    position: absolute
-    bottom: 29px
-    right: 10px
-    .backward
-      position: relative
-      +replace-text(unquote("prev-page.png"))
-      +float-left
-      display: inline-block
-      width: 6px
-      height: 10px
-      margin-right: 20px
-      margin-top: 1px
-    .forward
-      +replace-text(unquote("next-page.png"))
-      +float-left
-      display: inline-block
-      width: 6px
-      height: 10px
-      margin-left: 10px
-      margin-top: 1px
-    .tabs
-      +float-left
-      +horizontal-list(0)
-      a
-        +replace-text(unquote("switcher-sprite.png"))
-        +sprite-background(unquote("switcher-sprite.png"), unquote("10px"))
-        display: inline-block
-        margin-right: 10px
-        overflow: visible
-        &.current
-          +sprite-position(2, 1, 10px, 10px, 2)
-        &.tab-animation-1
-          +sprite-position(2, 2, 10px, 10px, 2)
-        &.tab-animation-2
-          +sprite-position(2, 3, 10px, 10px, 2)
-        &.tab-animation-3
-          +sprite-position(2, 4, 10px, 10px, 2)
-        &.tab-animation-4
-          +sprite-position(2, 5, 10px, 10px, 2)
-        &.tab-animation-5
-          +sprite-position(2, 6, 10px, 10px, 2)
-        &.tab-animation-6
-          +sprite-position(2, 7, 10px, 10px, 2)
-        &.tab-animation-7
-          +sprite-position(2, 8, 10px, 10px, 2)
-        &:hover
-          +sprite-position(1, 2, 10px, 10px, 2)
 
 ul.looks
   +horizontal-list(0)
@@ -1380,15 +1292,12 @@ a.buy-now
   padding: 7px 9px 3px
   .price
     font-size: 2em
-    background: none
     padding-left: 0
     padding-right: 5px
     color: $font_color
     display: inline-block
   .discount-price
     color: $like_color
-  .currency
-    color: $easier_color
   .original-price
     clear: left
   .original-price, .original-price .price
@@ -1403,9 +1312,6 @@ a.buy-now
   color: $easier_color
   font-size: 1.1em
   margin-top: 8px
-
-.vendor
-  +vendor
 
 .message
   border: unquote("1px") solid $border_color
@@ -1764,12 +1670,6 @@ ul.menu
               +sprite-column(6, 16)
       > a
         background-image: image_url(unquote("share.png"))
-
-a.block_link
-  display: block
-  line-height: 2.5em
-  text-align: center
-  text-transform: uppercase
 
 #search-result
   position: absolute
@@ -2204,9 +2104,6 @@ ul.suggested-friends
       overflow: hidden
     .activity-image
       width: $aside_width / 2 - $gutter_width / 4 - 2
-      .look
-        +look_small
-        border: none
       img
         width: $aside_width / 2 - $gutter_width / 4 - 2
         vertical-align: top
@@ -2227,8 +2124,6 @@ ul.suggested-friends
           .inline-date
             height: 50px
             padding-left: 3px
-      span
-        color: $easier_color
       .discount-price, .price, .sum, .likes
         background-image: none
         padding-left: 0

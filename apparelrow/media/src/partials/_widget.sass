@@ -4,84 +4,88 @@ $look_height: 524px !default
 $tooltip_width: 242px
 
 =apparel_tooltip
-  +box
-  background-color: $box_color - #0b0b0b
-  +border-radius(2px)
-  +border(all)
-  +box-shadow($default_box_shadow_color, $default_box_shadow_h_offset, $default_box_shadow_v_offset, unquote("5px"))
+  background-color: $white_color
+  +single-box-shadow(rgba(0, 0, 0, 0.17), 2px, 2px, 6px)
   display: none
   z-index: 1100
-  padding: 4px !important
-  position: relative
+  position: absolute
   white-space: nowrap
   +opacity(0)
-  width: 300px
-  h2
-    background: transparent image_url("arrow-bg.png") scroll no-repeat right center
-    font-size: 1.1em
-  a:hover, .hover
-    h2
-      background-image: image_url("arrow-bg-hover.png")
-      text-decoration: underline
-  .product-image, .ar-product-image
-    border: 1px solid #dadada
-    text-align: center
-    background-color: white
-    float: left
-    width: 90px
+  width: 280px
+  .tooltip-container
+    width: 260px
     height: 115px
-    line-height: 113px
-    margin-right: 5px
-    overflow: hidden
-    img
-      vertical-align: middle
-  .product-meta, .ar-product-meta
-    float: left
-    width: 200px
-    h2, h3
-      white-space: nowrap
-      text-overflow: ellipsis
+    padding: 10px
+    z-index: 1099
+    background-color: $white_color
+    position: relative
+    .product-image, .ar-product-image
+      text-align: center
+      float: left
+      width: 90px
+      height: 115px
+      line-height: 113px
+      margin-right: 10px
       overflow: hidden
-    h2
-      margin-top: 0
-      margin-bottom: 0
-      border-bottom: none
-      padding-right: 16px
-    h3
-      color: $easy_color
-      font-size: 0.9em
-      font-weight: normal
-      margin: 0
-    div.vendors, div.ar-vendors
-      margin-top: 0.5em
-      position: absolute
-      bottom: 10px
-      span.vendor, span.ar-vendor
-        +vendor
-        display: inline-block
-        color: $easy_color
-        font-size: 0.9em
-      span.buy-now, span.ar-buy-now
-        +buy_now
-        display: inline
-        padding: 3px 4px
-        font-size: smaller
-        margin-left: 5px
-      span.sold-out, span.ar-sold-out
-        +sold_out
-        display: inline
-        padding: 5px
-        font-size: smaller
-        margin-left: 5px
-      a:hover
-        span.vendor, span.ar-vendor
-          text-decoration: underline
-        span.buy-now, span.ar-buy-now
-          background-color: $hover_highlight_bg_color
+      img
+        vertical-align: middle
+    .product-meta, .ar-product-meta
+      float: left
+      width: 160px
+      h2
+        white-space: nowrap
+        text-overflow: ellipsis
+        overflow: hidden
+        text-align: center
+        margin-top: 0
+        margin-bottom: 0
+        border-bottom: none
+        background: none
+      .product_like
+        margin: 4px 0
+        text-align: center
+        .likes
+          display: inline-block
+          line-height: 16px
+          font-size: 12px
+      .vendor_button
+        position: absolute
+        bottom: 10px
+        width: 160px
+        text-align: center
+        z-index: 10
+        span, a
+          border: 1px solid $black_color
+          display: block
+          padding: 10px
+          font-size: 14px
+          text-transform: uppercase
+          background-color: $black_color
+          color: $white_color
+        a:hover
+          background-color: $white_color
+          color: $black_color
+      .vendor_price
+        font-size: 12px
+        text-align: center
+        span
+          padding: 0 2px
+        .discount-price
+          color: $like_color
 
-=vendor
-  background: transparent image_url(unquote("vendor.png")) scroll no-repeat left center
-  padding-left: 15px
+=apparel_tooltip_arrow
+  position: absolute
+  top: 130px
+  z-index: 1000
+  width: 10px
+  height: 10px
+  background-color: $white_color
+  +rotate(45deg)
+  +single-box-shadow(rgba(0, 0, 0, 0.17), 2px, 2px, 6px)
+  &.tooltip-arrow-top
+    top: -5px
+  &.tooltip-arrow-bottom
+    top: 130px
 
 =buy_now
   text-align: center
@@ -106,22 +110,20 @@ $tooltip_width: 242px
     position: absolute
     width: 80px
     height: 80px
-    //padding: 40px
     background: transparent image_url(unquote("look-hotspot.png")) no-repeat scroll center center
 
 =apparel_likes
   font:
     family: $font_family
-  background: transparent image_url(unquote("heart.png")) no-repeat scroll left center
-  padding-left: 16px
+  background: transparent image_url(unquote("heartico.png")) no-repeat scroll left center
+  padding-left: 20px
   color: $like_color
 
 =apparel_price
   font:
     family: $font_family
   background: none
-  padding-left: 0
-  color: $easy_color
+  color: $easier_color
   &.discount
     color: $like_color
   &.discounted
@@ -136,3 +138,4 @@ $tooltip_width: 242px
 
 =apparel_currency
   padding: 0 2px
+  color: $easier_color

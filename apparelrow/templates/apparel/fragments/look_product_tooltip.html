@@ -1,35 +1,33 @@
 {% load i18n thumbnail apparel_extras %}
 <div id="tooltip-{{ product.id }}" class="tooltip">
+  <div class="tooltip-container">
     <a href="{{ product.get_absolute_url }}" class="product-image">
-        {% thumbnail product.product_image "90x115" crop="center" as im %}
-        <img src="{{ im.url }}" alt="{{ product.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
-        {% endthumbnail %}
+      {% thumbnail product.product_image "90x115" crop="center" as im %}
+      <img src="{{ im.url }}" alt="{{ product.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
+      {% endthumbnail %}
     </a>
     <div class="product-meta">
-        <a href="{{ product.get_absolute_url }}">
-            <h2>{{ product.manufacturer.name }}</h2>
-            {% if product.product_name %}<h3>{{ product.product_name }}</h3>{% endif %}
-            <div>
-                {% with product as object %}{% include 'apparel/fragments/likes.html' %}{% endwith %}
-            </div>
-            {% if product.default_vendor %}
-                <div>
-                    <span class="price">{{ product.default_vendor.price|floatformat:0|apprl_intcomma }}</span> <span class="currency">{{ product.default_vendor.currency }}</span>
-                </div>
-                {% if product.default_vendor.availability == 0 %}
-                <div class="vendors">
-                    <span class="vendor">{{ product.default_vendor.vendor.name }}</span><span class="sold-out">{% trans "Sold out" %}</span>
-                </div>
-                {% else %}
-                <div class="vendors">
-                    <a target="_blank" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ product.id }}&u={{ product.default_vendor.buy_url|urlencode }}"><span class="vendor" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.price|floatformat:0|apprl_intcomma }}">{{ product.default_vendor.vendor }}</span><span class="buy-now">{% trans "Buy" %}</span></a>
-                </div>
-                {% endif %}
-            {% else %}
-                <div class="vendors">
-                    <span class="sold-out">{% trans "Sold out" %}</span>
-                </div>
-            {% endif %}
-        </a>
+      <a href="{{ product.get_absolute_url }}"><h2>{{ product.manufacturer.name }}</h2></a>
+      {% if product.default_vendor %}
+      <div class="vendor_price">
+        {% with product.default_vendor as vendor %}
+        {% if vendor.discount_price %}
+        <span class="discount-price price">{{ vendor.discount_price|floatformat:0|apprl_intcomma }}</span>
+        {% endif %}
+        <span class="price"{% if vendor.discount_price %} style="text-decoration:line-through;"{% endif %}>{{ vendor.price|floatformat:0|apprl_intcomma }}</span>
+        <span class="currency">{{ vendor.currency }}</span>
+        {% endwith %}
+      </div>
+      {% endif %}
+      <div class="product_like"><span class="likes">{{ product.score }}</span></div>
+      <div class="vendor_button">
+        {% if product.default_vendor and product.default_vendor.availability != 0 %}
+        <a target="_blank" class="buy-now" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ product.id }}&u={{ product.default_vendor.buy_url|urlencode }}">{% trans "Buy" %}</a>
+        {% else %}
+        <span class="sold-out">{% trans "Sold out" %}</span>
+        {% endif %}
+      </div>
     </div>
+  </div>
+  <div class="tooltip-arrow"></div>
 </div>

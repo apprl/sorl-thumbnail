@@ -9,5 +9,6 @@
 >
     {% for component in object.photo_components.all %}
         {% include "apparel/fragments/look_photo_product.html" %}
+        {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
     {% endfor %}
 </div>
