@@ -2,7 +2,7 @@
 {% load i18n %}
 <div id="photo-background" class="look-photo"
     {% if object.image %}
-    {% thumbnail object.image "694x512" as im %}
+    {% thumbnail object.image "694x524" as im %}
     style="background-image: url('{{ im.url }}'); width: {{ im.width }}px; height: {{ im.height }}px"
     {% endthumbnail %}
     {% endif %}
