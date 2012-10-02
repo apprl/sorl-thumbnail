@@ -6,36 +6,6 @@
 
 {% block extra-title %}{{ profile.display_name }} | {% endblock %}
 
-{% block 'extra-scripts' %}
-    <script type="text/javascript">
-        {% url profile-likes user.get_profile.slug as likes_url %}
-        {% if request.path == likes_url %}
-        jQuery(document).ready(function() {
-            jQuery('a.product-heart').die('click').live('click', function() {
-                var element = jQuery(this);
-                if(element.hasClass('liked')) {
-                    var elem = jQuery(this).closest('li');
-                    var title = elem.find('h4').text() + ' ' + elem.find('.product-image img').attr('alt');
-
-                    create_modal_dialog(
-                        '{% trans "Are you sure?" %}',
-                        ['{% trans "Do you really want to delete product" %} <span class="bold">' + title + '</span>?'],
-                        function (modal_dialog) {
-                            jQuery.post(element.attr('data-unlike-url'), function(data) {
-                                if(data['success'] == true) { elem.remove(); modal_dialog.close(); }
-                            });
-                        },
-                        function (modal_dialog) { modal_dialog.close(); }
-                    );
-
-                }
-                return false;
-            });
-        });
-        {% endif %}
-    </script>
-{% endblock 'extra-scripts' %}
-
 {% block body-classes %}two-columns profile profile-likes{% endblock body-classes %}
 
 {% block extended_content %}
@@ -48,7 +18,7 @@
     {% else %}
     <div class="empty">
         {% url profile-likes request.user.get_profile.slug as profile_likes_url %}
-        {% if request.path == profile_likes_url %}
+        {% if request.path == profile_likes_url and not user.get_profile.is_brand %}
             <div class="message warning">{% trans "All products that you ♥ are placed here." %} <a class="add" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
         {% else %}
             {% if profile.is_brand %}

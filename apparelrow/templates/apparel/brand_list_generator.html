@@ -14,7 +14,7 @@
           <div class="brand-anchor"><a name="{{ brand_char }}">{{ brand_char }}</a></div>
           <ul class="brands">
           {% for brand in brand_list %}
-              <li><a href="{% url profile-likes brand.slug %}">{{ brand.brand__name }}</a></li>
+              <li><a href="{{ brand.url_likes }}">{{ brand.brand.name }}</a></li>
           {% endfor %}
           </ul>
           <br>

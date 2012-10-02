@@ -776,10 +776,13 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 
-def gender(request, view=None, gender=None):
+def gender(request, *args, **kwargs):#view=None, gender=None):
     """
     Display gender selection front page, also handle change from one gender to the other.
     """
+    gender = kwargs.get('gender')
+    view = kwargs.get('view')
+
     if gender is not None:
         response = HttpResponseRedirect(request.GET.get('next', '/'))
         response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
@@ -790,9 +793,11 @@ def gender(request, view=None, gender=None):
 
     gender_cookie = get_gender_from_cookie(request)
     if gender_cookie == 'W':
-        return HttpResponseRedirect(reverse('%s-women' % (view,)))
+        return HttpResponseRedirect(reverse('%s-women' % (view,), args=args))
     elif gender_cookie == 'M':
-        return HttpResponseRedirect(reverse('%s-men' % (view,)))
+        return HttpResponseRedirect(reverse('%s-men' % (view,), args=args))
+    elif view != 'shop':
+        return HttpResponseRedirect(reverse('%s-women' % (view,), args=args))
 
     # Set language to user's browser language for gender select view
     language = translation.get_language_from_request(request)
@@ -808,22 +813,7 @@ def gender(request, view=None, gender=None):
         }, context_instance=RequestContext(request))
 
 def about(request):
-    # Set language to user's browser language for gender select view
-    language = translation.get_language_from_request(request)
-    translation.activate(language)
-    request.LANGUAGE_CODE = translation.get_language()
-    image = BackgroundImage.objects.get_random_image()
-
-    view = 'shop'
-
-    return render_to_response('apparel/gender.html', {
-            'men_url': reverse('%s-men' % (view,)),
-            'women_url': reverse('%s-women' % (view,)),
-            'next': request.GET.get('next', '/'),
-            'image': str(image)
-        }, context_instance=RequestContext(request))
-
-
+    return render_to_response('apparel/about.html', {}, context_instance=RequestContext(request))
 
 def jobs(request):
     # Set language to user's browser language for gender select view
@@ -924,58 +914,6 @@ def dialog_follow_user(request):
     return render_to_response('apparel/fragments/dialog_follow_user.html',
             {'next': request.GET.get('next', '/'),
              'brand': brand}, context_instance=RequestContext(request))
-
-def index(request, gender=None):
-    """
-    NOT USED ANYMORE
-    """
-    ctx = {}
-    ctx['pages'] = FirstPageContent.published_objects.filter(gender__in=['U', gender], language=request.LANGUAGE_CODE)
-    ctx['popular_looks'] = get_top_looks(request, limit=8, gender=gender)
-    ctx['all_colors'] = Option.objects.filter(option_type__name='color')
-    # ctx['categories_all'] contains all categories, they will later be filtered
-    ctx['categories_all'] = Category.objects.filter(on_front_page=True)
-    ctx['featured_looks'] = Look.featured.all().order_by('-modified')[:settings.APPAREL_LOOK_FEATURED]
-
-    pricerange = VendorProduct.objects.filter(product__published=True, product__category__isnull=False).aggregate(min=Min('price'), max=Max('price'))
-    if pricerange['min'] is None:
-        pricerange['min'] = 0
-    else:
-        pricerange['min'] = int(pricerange['min'])
-    if pricerange['max'] is None:
-        pricerange['max'] = 10000
-    else:
-        pricerange['max'] = int(pricerange['max'])
-    pricerange['selected'] = '%s,%s' % (pricerange['min'], pricerange['max'])
-    ctx['pricerange'] = pricerange
-
-    arguments = {'defType': 'edismax',
-                 'start': 0,
-                 'rows': 1,
-                 'fq': ['django_ct:apparel.product', 'availability:true', 'published:true', 'gender:(U OR %s)' % (gender)],
-                 'qf': [],
-                 'facet': 'on',
-                 'facet.limit': -1,
-                 'facet.mincount': 1,
-                 'facet.field':  ['manufacturer_data', 'category']}
-
-    facet_fields = ApparelSearch('*:*', **arguments).get_facet()['facet_fields']
-    ctx['manufacturers'] = []
-    for i, value in enumerate(facet_fields['manufacturer_data']):
-        if i % 2 == 0:
-            split = value.rsplit('|', 1)
-            ctx['manufacturers'].append((int(split[1]), split[0]))
-
-    # Get the categories to actually show
-    category_ids = map(int, facet_fields['category'][::2])
-    category_values = map(int, facet_fields['category'][1::2])
-    ctx['categories'] = dict(zip(category_ids, category_values))
-
-    ctx['APPAREL_GENDER'] = gender
-
-    response = render_to_response('index.html', ctx, context_instance=RequestContext(request))
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-    return response
 
 def apparel_set_language(request):
     language = request.POST.get('language', None)

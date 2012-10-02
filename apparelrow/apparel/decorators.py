@@ -8,7 +8,6 @@ from django.db.models.loading import get_model
 
 from hanssonlarsson.django.exporter import json
 
-
 def seamless_request_handling(view_func):
     """
     Wraps a view to handle AJAX and standard HTTP requests simultaniously. It

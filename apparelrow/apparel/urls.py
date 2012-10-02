@@ -49,6 +49,15 @@ urlpatterns = patterns('',
     url(r'^brands/men/popular/$', 'apparel.views.brand_list', {'gender': 'M', 'popular': True}, name='brand-list-popular-men'),
     url(r'^brands/women/popular/$', 'apparel.views.brand_list', {'gender': 'W', 'popular': True}, name='brand-list-popular-women'),
 
+    # Brand profile
+    url(r'^brand/(?:([^\/]+?)/)?$', 'apparel.views.gender', {'view': 'brand-likes'}, name='brand-likes'),
+    url(r'^brand/(?:([^\/]+?)/)?men/$', 'profile.views.likes', {'gender': 'M'}, name='brand-likes-men'),
+    url(r'^brand/(?:([^\/]+?)/)?women/$', 'profile.views.likes', {'gender': 'W'}, name='brand-likes-women'),
+    url(r'^brand/(?:([^\/]+?)/)?updates/$', 'profile.views.profile', name='brand-updates'),
+    url(r'^brand/(?:([^\/]+?)/)?looks/$', 'profile.views.looks', name='brand-looks'),
+    url(r'^brand/(?:([^\/]+?)/)?followers/$', 'profile.views.followers', name='brand-followers'),
+    url(r'^brand/(?:([^\/]+?)/)?following/$', 'profile.views.following', name='brand-following'),
+
     # Shop
     url(r'^shop/popup/$', 'apparel.views.product_popup', name='product-popup'),
 

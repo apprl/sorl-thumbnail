@@ -30,8 +30,7 @@
             event.preventDefault();
         });
 
-        {% url profile-looks user.get_profile.slug as looks_url %}
-        {% if request.path == looks_url %}
+        {% if request.path == user.get_profile.url_looks %}
         jQuery('.inline-delete-look').show();
         jQuery('.inline-edit-look').show();
         {% endif %}

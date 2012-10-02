@@ -17,11 +17,7 @@
 {% endblock extra-styles %}
 
 {% block body-header %}
-{% url profile-likes profile.slug as profile_likes_url %}
-{% url profile-updates profile.slug as updates_url %}
-{% url profile-looks profile.slug as looks_url %}
-{% url profile-followers profile.slug as followers_url %}
-{% url profile-following profile.slug as following_url %}
+{% with likes_url=profile.url_likes updates_url=profile.url_updates looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
 <div id="body-header">
     <div class="column_one">
         <h1 class="max-width">{{ profile.display_name }}</h1>
@@ -29,11 +25,13 @@
     <div class="column_two">
         <ul>
             <li>
-                {% if profile and profile.is_brand %}
-                <a class="{% if request.path == profile_likes_url %}selected{% else %}first{% endif %}" href="{{ profile_likes_url }}">{% trans "Shop" %}</a>
-                {% else %}
-                <a class="{% if request.path == profile_likes_url %}selected{% else %}first{% endif %}" href="{{ profile_likes_url }}">{% trans "Likes" %}</a>
-                {% endif %}
+            {% if profile and profile.is_brand %}
+                {% url brand-likes-men profile.slug as likes_url_men %}
+                {% url brand-likes-women profile.slug as likes_url_women %}
+                <a class="{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %}selected{% else %}first{% endif %}" href="{{ likes_url }}">{% trans "Shop" %}</a>
+            {% else %}
+                <a class="{% if request.path == likes_url %}selected{% else %}first{% endif %}" href="{{ likes_url }}">{% trans "Likes" %}</a>
+            {% endif %}
             </li>
             <li>
                 <a class="{% if request.path == updates_url %}selected{% endif %}" href="{{ updates_url }}">{% trans "Updates" %}</a>
@@ -50,6 +48,7 @@
         </ul>
     </div>
 </div>
+{% endwith %}
 {% endblock body-header %}
 
 {% block body-classes %}three-columns profile{% endblock body-classes %}
@@ -69,30 +68,28 @@
             {% trans "Member since" %} {{ profile.user.date_joined|date:"SHORT_DATE_FORMAT" }}
         </p>
         <div id="sidebar-profile-info">
-        {% url profile-likes profile.slug as likes_url %}
-        {% url profile-looks profile.slug as looks_url %}
-        {% url profile-followers profile.slug as followers_url %}
-        {% url profile-following profile.slug as following_url %}
+            {% with likes_url=profile.url_likes looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
+            {% if not profile.is_brand %}
+            <p><a href="{{ likes_url }}">{% blocktrans count products as prod %}Likes {{ prod }} product{% plural %}Likes {{ prod }} products{% endblocktrans %}</a></p>
+            {% else %}
+            <p><a href="{{ likes_url }}">{% blocktrans count products as prod %}{{prod}} product{% plural %}{{prod}} products{% endblocktrans %}</a></p>
+            {% endif %}
+            <p>
+                <a href="{{ looks_url }}">
+                {% blocktrans count profile.looks as looks %}
+                    {{ looks }} look
+                {% plural %}
+                    {{ looks }} looks
+                {% endblocktrans %}
+                </a>
+            </p>
+            <p>
+                <a href="{{ followers_url }}">{% trans "Followed by" %} {{ profile.followers_count }}</a>
+            <p>
+                <a href="{{ following_url }}">{% trans "Following" %} {{ following }}</a>
+            </p>
+            {% endwith %}
         </div>
-        {% if not profile.is_brand %}
-        <p><a href="{{ likes_url }}">{% blocktrans count products as prod %}Likes {{ prod }} product{% plural %}Likes {{ prod }} products{% endblocktrans %}</a></p>
-        {% else %}
-        <p><a href="{{ likes_url }}">{% blocktrans count products as prod %}{{prod}} product{% plural %}{{prod}} products{% endblocktrans %}</a></p>
-        {% endif %}
-        <p>
-        <a href="{{ looks_url }}">
-            {% blocktrans count profile.looks as looks %}
-                {{ looks }} look
-            {% plural %}
-                {{ looks }} looks
-            {% endblocktrans %}
-        </a>
-        </p>      
-        <p>
-            <a href="{{ followers_url }}">{% trans "Followed by" %} {{ profile.followers_count }}</a>
-        <p>
-            <a href="{{ following_url }}">{% trans "Following" %} {{ following }}</a>
-        </p>
         {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
         <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
         {% if profile.is_brand %}

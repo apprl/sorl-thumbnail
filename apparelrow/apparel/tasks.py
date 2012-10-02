@@ -140,8 +140,8 @@ def generate_brand_list_template():
             if hasattr(brand, 'manufacturer_id'):
                 brand_ids.append(brand.manufacturer_id)
 
-        for item in ApparelProfile.objects.filter(brand__id__in=brand_ids).values('slug', 'brand__name').order_by('brand__name'):
-            normalized_name = unicodedata.normalize('NFKD', smart_unicode(item['brand__name'])).lower()
+        for item in ApparelProfile.objects.filter(brand__id__in=brand_ids).order_by('brand__name'):
+            normalized_name = unicodedata.normalize('NFKD', smart_unicode(item.brand.name)).lower()
             for index, char in enumerate(normalized_name):
                 if char in alphabet:
                     brands[brands_mapper[char]][1].append(item)

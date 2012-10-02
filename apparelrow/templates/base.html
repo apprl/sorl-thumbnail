@@ -200,13 +200,7 @@
         {% url apparel.views.look_create as look_create_url %}
         {% url profile.views.settings_notification as notification_settings_url %}
         {% url profile.views.settings_email as email_settings_url %}
-
-        {% url profile-updates user.get_profile.slug as url_updates %}
-        {% url profile-likes user.get_profile.slug as url_likes %}
-        {% url profile-looks user.get_profile.slug as url_looks %}
-        {% url profile-followers user.get_profile.slug as url_followers %}
-        {% url profile-following user.get_profile.slug as url_following %}
-
+        {% with url_likes=user.get_profile.url_likes url_updates=user.get_profile.url_updates url_looks=user.get_profile.url_looks url_followers=user.get_profile.url_followers url_following=user.get_profile.url_following %}
         <div id="login-pane">
             <div class="holder">
                 <ul>
@@ -251,6 +245,7 @@
                 </div>
             </div><!-- holder -->
         </div>
+        {% endwith %}
     {% endif %}
 
         <div id="inner-container">

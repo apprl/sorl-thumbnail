@@ -72,14 +72,16 @@ def get_profile_sidebar_info(request, profile):
     return info
 
 @get_current_user
-def likes(request, profile, page=0):
+def likes(request, profile, page=0, gender=None):
     """
     Displays the profile likes page.
     """
     form = handle_change_image(request, profile)
 
-    if profile.is_brand:
+    if not gender:
         gender = get_gender_from_cookie(request)
+
+    if profile.is_brand:
         queryset = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added')
     else:
         queryset = Product.published_objects.filter(likes__user=profile.user, likes__active=True).order_by('-availability', '-likes__modified')
@@ -98,12 +100,15 @@ def likes(request, profile, page=0):
         'next': request.get_full_path(),
         'change_image_form': form,
         'profile': profile,
-        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request)
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
+        'APPAREL_GENDER': gender
     }
 
     content.update(get_profile_sidebar_info(request, profile))
 
-    return render(request, 'profile/likes.html', content)
+    response = render(request, 'profile/likes.html', content)
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+    return response
 
 @get_current_user
 def profile(request, profile, page=0):

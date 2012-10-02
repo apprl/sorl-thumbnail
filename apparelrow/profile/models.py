@@ -14,6 +14,7 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
 from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
 
 from actstream import models as actstream_models
 from sorl.thumbnail import get_thumbnail
@@ -214,13 +215,46 @@ class ApparelProfile(models.Model):
 
         return self._updates_since_last_visit
 
+    @property
+    def url_likes(self):
+        if self.is_brand:
+            return reverse('brand-likes', args=[self.slug])
+
+        return reverse('profile-likes', args=[self.slug])
+
+    @property
+    def url_updates(self):
+        if self.is_brand:
+            return reverse('brand-updates', args=[self.slug])
+
+        return reverse('profile-updates', args=[self.slug])
+
+    @property
+    def url_looks(self):
+        if self.is_brand:
+            return reverse('brand-looks', args=[self.slug])
+
+        return reverse('profile-looks', args=[self.slug])
+    @property
+    def url_followers(self):
+        if self.is_brand:
+            return reverse('brand-followers', args=[self.slug])
+
+        return reverse('profile-followers', args=[self.slug])
+    @property
+    def url_following(self):
+        if self.is_brand:
+            return reverse('brand-following', args=[self.slug])
+
+        return reverse('profile-following', args=[self.slug])
+
     @models.permalink
     def get_absolute_url(self):
-        #if self.brand:
-            #return ('profile.views.bla', [str(self.user.username)])
+        if self.is_brand:
+            return ('brand-likes', [str(self.slug)])
 
-        return ('profile.views.likes', [str(self.slug)])
-    
+        return ('profile-likes', [str(self.slug)])
+
     def __unicode__(self):
         return self.display_name
 
