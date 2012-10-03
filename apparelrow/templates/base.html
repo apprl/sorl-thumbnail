@@ -169,7 +169,10 @@
 
     <div id="container">
 
-        {% if not user.is_authenticated and not request.COOKIES.ar_welcome  %}
+        {% url apparel.browse.browse_products gender='W' as shop_w %}
+        {% url apparel.browse.browse_products gender='M' as shop_m %}
+        {% if not user.is_authenticated and not request.COOKIES.ar_welcome %}
+        {% if request.path == shop_m or request.path == shop_w %}
         <div id="panel">
             <div id="panelwrap">
                 <span class="row-span">
@@ -193,6 +196,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endif %}
 
     {% if user.is_authenticated and user.get_profile %}
