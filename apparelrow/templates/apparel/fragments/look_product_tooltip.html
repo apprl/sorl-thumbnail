@@ -19,7 +19,14 @@
         {% endwith %}
       </div>
       {% endif %}
-      <div class="product_like"><span class="likes">{{ product.score }}</span></div>
+      <div class="product_stats">
+        {% if product.score > 0 %}
+        <span class="likes">{{ product.score }}</span>
+        {% endif %}
+        {% if product.comment_count > 0 %}
+        <span class="comments">{{ product.comment_count }}</span>
+        {% endif %}
+      </div>
       <div class="vendor_button">
         {% if product.default_vendor and product.default_vendor.availability != 0 %}
         <a target="_blank" class="buy-now" href="{% url apparelrow.statistics.views.product_click_count %}?i={{ product.id }}&u={{ product.default_vendor.buy_url|urlencode }}">{% trans "Buy" %}</a>

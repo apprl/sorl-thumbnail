@@ -41,14 +41,13 @@ $tooltip_width: 242px
         margin-bottom: 0
         border-bottom: none
         background: none
-      .product_like
+      .product_stats
         margin: 4px 0
         text-align: center
         .likes
-          background: transparent image_url(unquote("heartico.png")) no-repeat scroll left center
-          display: inline-block
-          line-height: 16px
-          font-size: 12px
+          +large_likes
+        .comments
+          +large_comments
       .vendor_button
         position: absolute
         bottom: 10px
@@ -113,11 +112,33 @@ $tooltip_width: 242px
     height: 80px
     background: transparent image_url(unquote("look-hotspot.png")) no-repeat scroll center center
 
+=large_likes
+  font:
+    family: $font_family
+    weight: bold
+    size: 13px
+  background: transparent image_url(unquote("heartico.png")) no-repeat scroll left center
+  padding-left: 18px
+  color: $font_color
+  display: inline-block
+  line-height: 16px
+
+=large_comments
+  font:
+    family: $font_family
+    weight: bold
+    size: 13px
+  background: transparent image_url("commentico.png") no-repeat 0px 2px
+  padding-left: 18px
+  color: $font_color
+  display: inline-block
+  line-height: 16px
+
 =apparel_likes
   font:
     family: $font_family
   background: transparent image_url(unquote("heart.png")) no-repeat scroll left center
-  padding-left: 20px
+  padding-left: 16px
   color: $like_color
 
 =apparel_price
