@@ -12,7 +12,7 @@
         <div class="look collage" style="height: 526px">
           {% for component in object.collage_components.all %}
             {% thumbnail component.product.product_image "694x524" crop="noop" format="PNG" transparent=True as im %}
-            <a href="{{ component.product.get_absolute_url }}" id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_middle }}">
+            <a target="_blank" href="{{ component.product.get_absolute_url }}" id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_middle }}">
               <img src="{{ im.url }}" title="{{ component.product }}" />
             </a>
             {% endthumbnail %}
@@ -30,7 +30,7 @@
         {% endif %}
         >
         {% for component in object.photo_components.all %}
-          <a target="_parent" href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style }}"></a>
+          <a target="_blank" href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style }}"></a>
           {% cache CACHE_TIMEOUT look_product_tooltip component.product.id LANGUAGE_CODE %}
             {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
           {% endcache %}
@@ -40,10 +40,5 @@
     </div>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript" src="/media/js/compiled/embed.js"></script>
-    <script type="text/javascript">
-      jQuery(document).ready(function() {
-        jQuery('a').attr('target', '_parent');
-      });
-    </script>
   </body>
 </html>
