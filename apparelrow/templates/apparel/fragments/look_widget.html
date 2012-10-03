@@ -1,10 +1,10 @@
-{% load i18n jsminify %}
+{% load jsminify %}
 {% spaceless %}
 <div style="width: {{ object.width|add:2 }}px; margin: 0px auto;">
   <iframe src="http://{{ request.get_host }}{% url apparel.views.look_embed object.slug %}" width="{{ object.width|add:2 }}" height="{{ object.height|add:2 }}" frameborder="0" scrolling="no"></iframe>
   <p style="margin:5px;font-family:'Helvetica Neue','Helvetica',arial,sans-serif;overflow:hidden;">
-    <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}" title="{% trans "Follow me on Apprl!" %}" style="color:#000000;float:left;font-size:12px;">+ follow me</a>
-    <a href="http://apprl.com/" title="{% trans "Social shopping" %}" style="color:#000000;float:right;font-size:12px;">\ powered by APPRL</a>
+    <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}" title="Follow me on Apprl" style="color:#000000;float:left;font-size:12px;">+ follow me</a>
+    <a href="http://{{ request.get_host }}{{ object.get_absolute_url }}" title="View this look & create your own on Apprl" style="color:#000000;float:right;font-size:12px;">\ APPRL</a>
   </p>
 </div>
 {% endspaceless %}
