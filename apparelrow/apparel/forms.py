@@ -7,7 +7,7 @@ class LookForm(ModelForm):
     title = CharField(error_messages={'required': _('You have to name your look before your create it.')})
     class Meta:
         model = Look
-        exclude = ('tags', 'products', 'user', 'gender', 'popularity')
+        exclude = ('tags', 'products', 'user', 'gender', 'popularity', 'width', 'height')
 
 class LookComponentForm(ModelForm):
     class Meta:

@@ -561,8 +561,9 @@ class Look(models.Model):
     is_featured = models.BooleanField(default=False, help_text=_('The look will be shown on the front page'))
     gender      = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=False, blank=False, default='U')
     popularity  = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
-    
-    
+    width       = models.IntegerField(blank=False, null=False, default=694)
+    height      = models.IntegerField(blank=False, null=False, default=524)
+
     objects  = SearchManager()
     featured = FeaturedManager()
 
@@ -592,6 +593,11 @@ class Look(models.Model):
             background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
             offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
             image.paste(background, (offset_left, offset_top))
+            self.width = thumbnail.width
+            self.height = thumbnail.height
+        else:
+            self.width = 694
+            self.height = 524
 
         for component in self.display_components.all():
             if self.display_with_component == 'P':

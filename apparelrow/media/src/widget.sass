@@ -43,18 +43,13 @@ div#ar-wrapper
     width: auto
     z-index: auto
 
-.ar-look-collage, .ar-look-photo, .look-collage, .look-photo
-  list-style: none
-  margin: 0
-  padding: 0
-  height: $look_height
-
 #ar-wrapper, .container
   +font
   +typography
   font-size: 11px
   position: relative
   .ar-collage, .collage
+    +border(all)
     .product
       position: absolute
       img
