@@ -19,6 +19,7 @@
         {% endwith %}
       </div>
       {% endif %}
+      {% if not external %}
       <div class="product_stats">
         {% if product.score > 0 %}
         <span class="likes">{{ product.score }}</span>
@@ -27,12 +28,17 @@
         <span class="comments">{{ product.comment_count }}</span>
         {% endif %}
       </div>
+      {% endif %}
       <div class="vendor_button">
+      {% if external %}
         {% if product.default_vendor and product.default_vendor.availability != 0 %}
         <a target="_blank" class="buy-now" href="{% url product-click-count %}?i={{ product.id }}&u={{ product.default_vendor.buy_url|urlencode }}">{% trans "Buy" %}</a>
         {% else %}
         <span class="sold-out">{% trans "Sold out" %}</span>
         {% endif %}
+      {% else %}
+        <a target="_blank" href="{{ product.get_absolute_url }}">{% trans "More info" %}</a>
+      {% endif %}
       </div>
     </div>
   </div>
