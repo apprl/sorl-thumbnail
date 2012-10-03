@@ -915,33 +915,6 @@ def dialog_follow_user(request):
             {'next': request.GET.get('next', '/'),
              'brand': brand}, context_instance=RequestContext(request))
 
-def apparel_set_language(request):
-    language = request.POST.get('language', None)
-    if request.user.is_authenticated() and language is not None:
-        profile = request.user.get_profile()
-        profile.language = language
-        profile.save()
-
-    return set_language(request)
-
-# Also update the language on the profile after a login, only works in django 1.3
-# FIXME: update this code when django 1.3 is standard...
-try:
-    from django.contrib.auth.signals import user_logged_in
-
-    def update_profile_language(sender, user, request, **kwargs):
-        language = translation.get_language()
-        if user.is_authenticated() and language is not None:
-            profile = user.get_profile()
-            profile.language = language
-            profile.save()
-
-    user_logged_in.connect(update_profile_language)
-
-except ImportError:
-    pass
-
-
 def facebook_friends_widget(request):
     """
     Return html template with facebook friends on apprl. Only works through an

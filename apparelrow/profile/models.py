@@ -13,6 +13,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
+from django.contrib.auth.signals import user_logged_in
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 
@@ -290,6 +291,13 @@ def send_welcome_mail(sender, user, **kwargs):
         body = render_to_string('profile/email_welcome.html')
         send_email_confirm_task.delay(subject, body, user.email)
 
+@receiver(user_logged_in, sender=User, dispatch_uid='update_language_on_login')
+def update_profile_language(sender, user, request, **kwargs):
+    language = get_language()
+    if user.is_authenticated() and language is not None:
+        profile = user.get_profile()
+        profile.language = language
+        profile.save()
 
 #def delete_user_comments(signal, instance, **kwargs):
     #"""
