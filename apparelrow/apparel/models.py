@@ -588,9 +588,8 @@ class Look(models.Model):
 
         if self.display_with_component == 'P' and self.image:
             # Reuse photo image
-            thumbnail = get_thumbnail(self.image, '694x512')
+            thumbnail = get_thumbnail(self.image, '694x524')
             background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
-            offset_top = 12 # ??? from css
             offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
             image.paste(background, (offset_left, offset_top))
 
