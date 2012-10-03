@@ -1,5 +1,5 @@
-from django.conf.urls import patterns
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
-    (r'^$', 'apparelrow.statistics.views.product_click_count'),
+    url(r'$', 'statistics.views.product_click_count', name='product-click-count'),
 )
