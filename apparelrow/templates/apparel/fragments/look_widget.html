@@ -1,15 +1,10 @@
 {% load i18n jsminify %}
 {% spaceless %}
-<div class="apprl_look" data-href="http://{{ request.get_host }}{% url apparel.views.look_embed object.slug %}" data-width="695" data-height="546" data-user-href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}"></div>
-<script type="text/javascript">
-{% minifyjs %}
-(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "http://{{ request.get_host }}/media/js/compiled/widget.js";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'apprl-widget'));
-{% endminifyjs %}
-</script>
+<div style="width: 696px; margin: 0px auto;">
+  <iframe src="http://{{ request.get_host }}{% url apparel.views.look_embed object.slug %}" width="694" height="524" frameborder="0" scrolling="no"></iframe>
+  <p style="margin:5px;font-family:'Helvetica Neue','Helvetica',arial,sans-serif;color:#000000;">
+    <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}" title="{% trans "Follow me on Apprl!" %}" style="float:left;font-size:12px;">+ follow me</a>
+    <a href="http://apprl.com/" title="{% trans "Social shopping" %}" style="float:right;font-size:12px;">\ powered by APPRL</a>
+  </p>
+</div>
 {% endspaceless %}
