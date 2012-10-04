@@ -31,8 +31,10 @@
         });
 
         {% if request.path == user.get_profile.url_looks %}
-        jQuery('.inline-delete-look').show();
-        jQuery('.inline-edit-look').show();
+        jQuery('.inline-delete-look, .inline-edit-look').show();
+        jQuery(document).on('infinite_scroll_data', function(e) {
+            jQuery('.inline-delete-look, .inline-edit-look').show();
+        });
         {% endif %}
     });
 </script>
