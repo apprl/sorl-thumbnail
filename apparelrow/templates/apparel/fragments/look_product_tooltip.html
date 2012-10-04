@@ -8,6 +8,9 @@
     </a>
     <div class="product-meta">
       <a target="_blank" href="{% if external and product.default_vendor and product.default_vendor.availability != 0 %}{% url product-click-count %}?i={{ product.id }}&u={{ product.default_vendor.buy_url|urlencode }}{% else %}{{ product.get_absolute_url }}{% endif %}" title="{{ product }}"><h2>{{ product.manufacturer.name }}</h2></a>
+      {% if external %}
+      <p class="product_name">{{ product.product_name }}</p>
+      {% endif %}
       {% if product.default_vendor %}
       <div class="vendor_price">
         {% with product.default_vendor as vendor %}
