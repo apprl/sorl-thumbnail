@@ -40,7 +40,7 @@ import djcelery
 djcelery.setup_loader()
 
 # Synonyms for Solr.
-SEARCH_SYNONYM_FILE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'solr', 'solr', 'conf', 'synonyms.txt')
+SEARCH_SYNONYM_FILE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'solr', 'solr', 'collection1', 'conf', 'synonyms.txt')
 
 # --- Application wide init code goes here. 
 # It would be nice to move this somewhere, but I'm not sure where to put it

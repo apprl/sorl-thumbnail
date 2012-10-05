@@ -232,7 +232,7 @@ def copy_solr():
     with cd(env.path):
         sudo('cp -rup ./releases/%(release)s/solr/ .' % env, pty=True)
         sudo('chown --silent -R %(run_user)s:%(run_group)s ./solr' % env, pty=True)
-        sudo('touch ./solr/solr/conf/synonyms.txt', user=env.run_user, pty=True)
+        sudo('touch ./solr/solr/collection1/conf/synonyms.txt', user=env.run_user, pty=True)
 
 def copy_config():
     require('release', provided_by=[deploy, setup])
