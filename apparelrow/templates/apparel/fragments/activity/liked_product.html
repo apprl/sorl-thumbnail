@@ -17,9 +17,9 @@
 
 {% block activity_content %}
     <p>
-        {% if object.action_object.default_vendor.discount_price %}
-        <span class="discount-price">{{ object.action_object.default_vendor.discount_price|floatformat:0|apprl_intcomma }} {{ object.action_object.default_vendor.currency }}</span>
+        {% if object.action_object.default_vendor.locale_discount_price %}
+        <span class="discount-price">{{ object.action_object.default_vendor.locale_discount_price|floatformat:0|apprl_intcomma }} {{ object.action_object.default_vendor.locale_currency }}</span>
         {% endif %}
-        <span class="price"{% if object.action_object.default_vendor.discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.action_object.default_vendor.price|floatformat:0|apprl_intcomma }} {{ object.action_object.default_vendor.currency }}</span>
+        <span class="price"{% if object.action_object.default_vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.action_object.default_vendor.locale_price|floatformat:0|apprl_intcomma }} {{ object.action_object.default_vendor.locale_currency }}</span>
     </p>
 {% endblock %}

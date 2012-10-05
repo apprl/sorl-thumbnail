@@ -19,19 +19,19 @@ msgstr ""
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: settings_common.py:54
-msgid "English"
-msgstr "English"
+msgid "English (€)"
+msgstr "English (€)"
 
 #: settings_common.py:55
-msgid "Swedish"
-msgstr "Svenska"
+msgid "Swedish (SEK)"
+msgstr "Svenska (SEK)"
 
 #: settings_common.py:58
-msgid "Eng"
+msgid "Eng (€)"
 msgstr ""
 
 #: settings_common.py:59
-msgid "Swe"
+msgid "Swe (SEK)"
 msgstr ""
 
 #: apparel/admin.py:223

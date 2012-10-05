@@ -31,6 +31,9 @@ jQuery(document).ready(function() {
         }
     });
 
+    // Currency conversion
+    currencyConversion(jQuery('#product-list').find('.price, .discount-price'));
+
     // Initially hide level 1 and 2 categories
     jQuery('#product-category .level-1, #product-category .level-2').hide();
 
@@ -348,6 +351,17 @@ function getElementIds(elements) {
     return jQuery.map(elements, getElementId);
 }
 
+function currencyConversion(elements) {
+    elements.each(function(index, element) {
+        var $element = jQuery(element);
+        var price = $element.text().split(' ');
+        var currency = price.pop();
+        var price = parseInt(price.join(''), 10);
+        var converted_price = Math.round(fx.convert(price, {from: currency, to: current_currency}));
+        $element.text(converted_price + ' ' + current_currency);
+    });
+}
+
 function filter(query, callback) {
     // FIXME: History hack. It is not possible to set window.location.hash and then call
     // doFilter(...) as that will invoke the call twice with a different callback
@@ -366,6 +380,8 @@ function renderPage(products) {
     var $html = $(products.html);
     var $list = $html.filter('ul.list');
     var $pagination = $html.filter('.pagination');
+
+    currencyConversion($list.find('.price, .discount-price'));
 
     jQuery('#product-list > ul.list').append($list.html());
     jQuery('.pagination').html($pagination.html());
@@ -435,14 +451,6 @@ function filterCriteria(criteria_filter) {
         var min = parseInt(criteria_filter.pricerange.min, 10),
             max = parseInt(criteria_filter.pricerange.max, 10),
             mid = parseInt(min + (max - min) / 2, 10);
-
-        jQuery('#price-ruler .min').text(min);
-        jQuery('#price-ruler .mid').text(mid);
-        if(max >= 10000) {
-            jQuery('#price-ruler .max').text('10000+');
-        } else {
-            jQuery('#price-ruler .max').text(max);
-        }
 
         var values = $('#price-slider').slider('values');
         if(values[0] > max)

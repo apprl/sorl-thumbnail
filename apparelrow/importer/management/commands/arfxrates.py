@@ -23,7 +23,7 @@ class Command(BaseCommand):
             default=False,
             help='Run other commands, but do not updated prices',
         ),
-        
+
         make_option('--currency',
             action='store',
             dest='currency',
@@ -49,35 +49,35 @@ class Command(BaseCommand):
             default=settings.APPAREL_BASE_CURRENCY,
         ),
     )
-    
+
     def handle(self, *args, **options):
         kwargs = {}
         cmd = False
-        
+
         if options['refresh']:
             cmd = True
             self.refresh_rates(**options)
-        
+
         if not options['no_update']:
             cmd = True
             self.update_prices(**options)
-         
+
         if not cmd:
             raise CommandError('Nothing to do')
-    
-    
+
+
     def refresh_rates(self, **options):
         kwargs = {}
-        
+
         if options['file']:
             kwargs['file'] = options['file']
         else:
             kwargs['url']  = options['url']
-        
+
         kwargs['base_currency'] = options['base_currency']
-        
+
         importer = FXRateImporter(**kwargs)
-        
+
         try:
             importer.run()
         except urllib2.HTTPError, e:
@@ -86,11 +86,11 @@ class Command(BaseCommand):
             raise CommandError("Error parsing FX rates data: %s" % e)
         else:
             print "Foreign exchange rates successfully refreshed"
-    
+
     def update_prices(self, **options):
-        
+
         fxrates = None
-        
+
         if options['currency']:
             try:
                 fxrates = [
@@ -111,9 +111,9 @@ class Command(BaseCommand):
             )
             if len(fxrates) == 0:
                 raise CommandError('No fx rate matching base currency %s' % options['base_currency'])
-        
-        
+
+
         for fxrate in fxrates:
-            fxrate.update_prices() 
-        
+            fxrate.update_prices()
+
         print "Prices successfully updated"

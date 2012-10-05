@@ -13,6 +13,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
+from django.core.cache import cache
 from django.core.files import storage
 from django.core.files.base import ContentFile
 from django.db.models.signals import post_save, post_delete, pre_delete
@@ -20,7 +21,7 @@ from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 
 from apparel.manager import ProductManager, SearchManager, FeaturedManager, FirstPageManager
-from apparel import cache
+from apparel.cache import invalidate_model_handler
 
 from actstream import action
 from cStringIO import StringIO
@@ -56,7 +57,7 @@ LOOK_COMPONENT_POSITIONED = (
 class Manufacturer(models.Model):
     name = models.CharField(max_length=50, unique=True)
     active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
-    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype')) 
+    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype'))
     homepage = models.URLField(_('Home page'))
 
 class Brand(models.Model):
@@ -115,7 +116,7 @@ class Option(models.Model):
     option_type = models.ForeignKey(OptionType)
 
     def __unicode__(self):
-        return u"%s: %s" % (self.option_type.name, self.value) 
+        return u"%s: %s" % (self.option_type.name, self.value)
 
     class Meta:
         ordering = ['option_type']
@@ -134,7 +135,7 @@ class Option(models.Model):
 class Vendor(models.Model):
     name     = models.CharField(max_length=100, db_index=True)
     homepage = models.URLField(_('Home page'))
-    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype'), max_length=127, blank=True, null=True) 
+    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype'), max_length=127, blank=True, null=True)
 
     objects = SearchManager()
 
@@ -160,18 +161,18 @@ class Category(MPTTModel):
     on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'), db_index=True)
 
     objects = tree = TreeManager()
-    
+
     def save(self, *args, **kwargs):
         # FIXME: Can you get Django to auto truncate fields?
         self.name = self.name[:100]
         super(Category, self).save(*args, **kwargs)
-    
+
     def __unicode__(self):
         return u"%s" % self.name
-    
+
     class Exporter:
         export_fields = ['name', 'name_order', 'option_types']
-    
+
     class Meta:
         ordering = ('tree_id', 'lft')
         verbose_name_plural = 'categories'
@@ -179,8 +180,8 @@ class Category(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name_order']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=Category)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Category)
+models.signals.post_save.connect(invalidate_model_handler, sender=Category)
+models.signals.post_delete.connect(invalidate_model_handler, sender=Category)
 
 
 #
@@ -236,17 +237,20 @@ class Product(models.Model):
 
     @property
     def default_vendor_price(self):
-        if self.default_vendor.discount_price:
-            return self.default_vendor.discount_price
+        if self.default_vendor.locale_discount_price:
+            return self.default_vendor.locale_discount_price
 
-        return self.default_vendor.price
+        return self.default_vendor.locale_price
 
     @property
-    def original_currency(self):
+    def original_currency_list(self):
+        locale = get_language()
+        currency = settings.LANGUAGE_TO_CURRENCY.get(locale, settings.APPAREL_BASE_CURRENCY)
+
         if not hasattr(self, '_original_currency'):
             self._original_currency = []
             for vendorproduct in self.vendorproduct.all():
-                if vendorproduct.original_currency != 'SEK':
+                if vendorproduct.original_currency != currency:
                     self._original_currency.append(vendorproduct.original_currency)
 
         return self._original_currency
@@ -271,15 +275,15 @@ class Product(models.Model):
     @property
     def colors(self):
         return self.options.filter(option_type__name='color').values_list('value', flat=True)
-    
+
     def categories(self):
         c = self.category
         categories = []
-                
+
         while c:
             categories.insert(0, c)
             c = c.parent
-        
+
         return categories
 
     def save(self, *args, **kwargs):
@@ -308,16 +312,16 @@ class Product(models.Model):
 
     def __unicode__(self):
         return u"%s %s" % (self.manufacturer, self.product_name)
-    
+
     class Meta:
         ordering = ('-id',)
         unique_together = (('static_brand', 'sku'),)
-    
+
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'default_vendor', 'score']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=Product)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Product)
+models.signals.post_save.connect(invalidate_model_handler, sender=Product)
+models.signals.post_delete.connect(invalidate_model_handler, sender=Product)
 
 @receiver(post_delete, sender=Product, dispatch_uid='product_post_delete')
 def product_post_delete(sender, instance, **kwargs):
@@ -388,7 +392,7 @@ class VendorCategory(models.Model):
     default_gender = models.CharField(_('Default gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     override_gender = models.CharField(_('Override gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
-    
+
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
         if self.category:
@@ -415,14 +419,14 @@ class VendorCategory(models.Model):
                 product.save()
 
             # NOTE 1: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
-            # NOTE 2: If we do not want to explicitly publish all related products (perhaps they are 
+            # NOTE 2: If we do not want to explicitly publish all related products (perhaps they are
             #   unpublished for a different reason?) we may want to do one of two things:
             #   1) Run code for each product to assess whether it should remain unpublished or not (see NOTE 1)
             #   2) Run a separate update query for all affected products who's category is None and set published=True
-        
+
         # FIXME: Manually release cache for these objects
         super(VendorCategory, self).save(*args, **kwargs)
-    
+
     def __unicode__(self):
         return u'%s: %s <-> %s' % (self.vendor, self.name, self.category)
 
@@ -488,17 +492,69 @@ class VendorProduct(models.Model):
     original_discount_currency = models.CharField(_('Original discount currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
     availability  = models.IntegerField(_('Items in stock'), null=True, blank=True, help_text=_('Negative value means it is in stock, but we have no information about how many. Null means we have no information about availability. 0 means it is sold out'))
 
+    def _calculate_locale_price(self):
+        """
+        Return price and currency based on the locale from get_language.
+        """
+        locale = get_language()
+        if locale not in settings.LANGUAGE_TO_CURRENCY:
+            return self.original_currency
+
+        from_currency = self.original_currency
+        to_currency = settings.LANGUAGE_TO_CURRENCY.get(locale, settings.APPAREL_BASE_CURRENCY)
+
+        if from_currency == to_currency:
+            return self.original_price, self.original_discount_price, to_currency
+
+        key = 'currency_rates_base_%s' % (settings.APPAREL_BASE_CURRENCY,)
+        rates = cache.get(key)
+        if not rates:
+            fxrate_model = get_model('importer', 'FXRate')
+            rates = {}
+            for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY).values('currency', 'rate'):
+                rates[rate_obj['currency']] = rate_obj['rate']
+
+            if rates:
+                cache.set(key, rates, 60*60*6)
+
+        rate = rates[to_currency] * (1 / rates[from_currency])
+        if from_currency == settings.APPAREL_BASE_CURRENCY:
+            rate = rates[to_currency]
+        elif to_currency == settings.APPAREL_BASE_CURRENCY:
+            rate = 1 / rates[from_currency]
+
+        discount_price = self.original_discount_price
+        if discount_price:
+            discount_price = rate * self.original_discount_price
+
+        return rate * self.original_price, discount_price, to_currency
+
+    @property
+    def locale_price(self):
+        price, _, _ = self._calculate_locale_price()
+        return price
+
+    @property
+    def locale_discount_price(self):
+        _, discount_price, _ = self._calculate_locale_price()
+        return discount_price
+
+    @property
+    def locale_currency(self):
+        _, _, currency = self._calculate_locale_price()
+        return currency
+
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)
 
     class Meta:
         ordering = ['vendor', 'product']
-    
+
     class Exporter:
         export_fields = ['__all__', '-product']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProduct)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=VendorProduct)
+models.signals.post_save.connect(invalidate_model_handler, sender=VendorProduct)
+models.signals.post_delete.connect(invalidate_model_handler, sender=VendorProduct)
 
 
 #
@@ -515,7 +571,7 @@ class VendorProductVariation(models.Model):
     # 0 means it is sold out
     in_stock = models.IntegerField(_('Items in stock'), null=True, blank=True, help_text=_('Negative value means it is in stock, but we have no information about how many. Null means we have no information about availability. 0 means it is sold out'))
     options = models.ManyToManyField(Option)
-    
+
     def __unicode__(self):
         if self.in_stock is None:
             s = _('No information available')
@@ -525,11 +581,11 @@ class VendorProductVariation(models.Model):
             s = _('In stock')
         else:
             s = '%i %s' % (self.in_stock, _('items in stock'))
-        
+
         return unicode(s)
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
+models.signals.post_save.connect(invalidate_model_handler, sender=VendorProductVariation)
+models.signals.post_delete.connect(invalidate_model_handler, sender=VendorProductVariation)
 
 
 #
@@ -645,7 +701,7 @@ class Look(models.Model):
                 return 'W'
 
         return 'U'
-    
+
     def score(self):
         return self.likes.filter(active=True).count()
 
@@ -665,13 +721,12 @@ class Look(models.Model):
         total = decimal.Decimal('0.0')
         for component in self.display_components:
             if component.product.default_vendor:
-                if component.product.default_vendor.discount_price:
-                    total += component.product.default_vendor.discount_price
+                if component.product.default_vendor.locale_discount_price:
+                    total += component.product.default_vendor.locale_discount_price
                 else:
-                    total += component.product.default_vendor.price
+                    total += component.product.default_vendor.locale_price
 
         return total
-        #return components.annotate(price=Min('product__vendorproduct__price')).aggregate(Sum('price'))['price__sum']
 
     @property
     def photo_components(self):
@@ -686,7 +741,7 @@ class Look(models.Model):
         All components in the collage view
         """
         return self.components.filter(component_of='C')
-    
+
     @property
     def display_components(self):
         """
@@ -694,7 +749,7 @@ class Look(models.Model):
         logic in "display_with_component"
         """
         return self.photo_components if self.display_with_component == 'P' else self.collage_components
-    
+
     @property
     def display_with_component(self):
         """
@@ -714,22 +769,22 @@ class Look(models.Model):
     @property
     def product_brands_unique(self):
         return set(self.product_manufacturers)
-    
+
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user.get_profile().display_name)
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ('apparel.views.look_detail', [str(self.slug)])
-    
+
     class Meta:
         ordering = ['user', 'title']
 
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'photo_components', 'display_with_component', 'collage_components', 'score']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=Look)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Look)
+models.signals.post_save.connect(invalidate_model_handler, sender=Look)
+models.signals.post_delete.connect(invalidate_model_handler, sender=Look)
 
 @receiver(post_delete, sender=Look, dispatch_uid='look_post_delete')
 def look_post_delete(sender, instance, **kwargs):
@@ -792,8 +847,8 @@ class LookLike(models.Model):
     class Meta:
         unique_together = (('look', 'user'),)
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookLike)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookLike)
+models.signals.post_save.connect(invalidate_model_handler, sender=LookLike)
+models.signals.post_delete.connect(invalidate_model_handler, sender=LookLike)
 
 @receiver(post_save, sender=LookLike, dispatch_uid='look_like_post_save')
 def look_like_post_save(sender, instance, **kwargs):
@@ -831,7 +886,7 @@ def look_like_pre_delete(sender, instance, **kwargs):
 
 class LookComponent(models.Model):
     """
-    This class maps a product to a collage or uploaded image of a look and 
+    This class maps a product to a collage or uploaded image of a look and
     contains necessary information to display the product's image there in.
     """
     look    = models.ForeignKey(Look, related_name='components')
@@ -844,9 +899,9 @@ class LookComponent(models.Model):
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
     rotation = models.IntegerField(_('CSS rotation'), blank=True, null=True)
     positioned = models.CharField(max_length=1, choices=LOOK_COMPONENT_POSITIONED, null=True, blank=True)
-    
+
     # FIXME: Scale product image on initial save and store height and width
-    # properties 
+    # properties
 
     def _style(self, scale=1):
         s = []
@@ -856,13 +911,13 @@ class LookComponent(models.Model):
 
         if self.z_index:
             s.append('z-index: %s;' % (self.z_index,))
-        
+
         if self.rotation:
             s.append('-moz-transform: rotate(%sdeg); ' % self.rotation)
             s.append('-webkit-transform: rotate(%sdeg); ' % self.rotation)
-        
+
         return " ".join(s)
-    
+
     @property
     def style_small(self):
         return self._style(93 / 694.0)
@@ -878,7 +933,7 @@ class LookComponent(models.Model):
     @property
     def style(self):
         return self._style(1)
-    
+
     def save(self, *args, **kwargs):
         if self.component_of == 'C' and self.product.product_image and not self.height and not self.width:
             # This scales collage images to maximum size if height and width isn't defined
@@ -887,7 +942,7 @@ class LookComponent(models.Model):
             self.height = thumb.height
 
         super(LookComponent, self).save(*args, **kwargs)
-    
+
     def __unicode__(self):
         return u"%s (%s, %s [%sx%s] %s) in %s" % (self.product, self.top, self.left, self.width, self.height, self.z_index, self.look)
 
@@ -897,8 +952,8 @@ class LookComponent(models.Model):
     class Exporter:
         export_fields = ['__all__', 'style', 'style_middle', 'style_small', '-look']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookComponent)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookComponent)
+models.signals.post_save.connect(invalidate_model_handler, sender=LookComponent)
+models.signals.post_delete.connect(invalidate_model_handler, sender=LookComponent)
 
 @receiver(post_save, sender=LookComponent, dispatch_uid='look_component_post_save')
 def look_component_post_save(sender, instance, created, **kwargs):
@@ -961,8 +1016,8 @@ class FirstPageContent(models.Model):
     class Meta:
         ordering = ['sorting', '-pub_date']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=FirstPageContent)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=FirstPageContent)
+models.signals.post_save.connect(invalidate_model_handler, sender=FirstPageContent)
+models.signals.post_delete.connect(invalidate_model_handler, sender=FirstPageContent)
 
 
 #
@@ -1055,7 +1110,7 @@ def comments_handler(sender, comment, request, **kwargs):
 
 import django.contrib.comments.signals
 django.contrib.comments.signals.comment_was_posted.connect(comments_handler)
-django.contrib.comments.signals.comment_was_posted.connect(cache.invalidate_model_handler)
+django.contrib.comments.signals.comment_was_posted.connect(invalidate_model_handler)
 
 
 #

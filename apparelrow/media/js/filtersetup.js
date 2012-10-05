@@ -39,7 +39,7 @@ jQuery(document).ready(function() {
         range: true,
         min: pricerange.min,
         max: pricerange.max,
-        step: 1,
+        step: pricerange.max / 100,
         values: [rangemin.val(), rangemax.val()],
         animate: 'fast',
         slide: function(event, ui) {
@@ -47,8 +47,8 @@ jQuery(document).ready(function() {
             rangemax.val(jQuery(this).slider('values', 1));
             display_min.text(jQuery(this).slider('values', 0));
             max_value = jQuery(this).slider('values', 1);
-            if(max_value >= 10000) {
-                display_max.text('10000+');
+            if(max_value >= pricerange.max) {
+                display_max.text(pricerange.max + '+');
             } else {
                 display_max.text(jQuery(this).slider('values', 1));
             }
@@ -58,8 +58,8 @@ jQuery(document).ready(function() {
             rangemax.val(jQuery(this).slider('values', 1));
             display_min.text(jQuery(this).slider('values', 0));
             max_value = jQuery(this).slider('values', 1);
-            if(max_value >= 10000) {
-                display_max.text('10000+');
+            if(max_value >= pricerange.max) {
+                display_max.text(pricerange.max + '+');
             } else {
                 display_max.text(jQuery(this).slider('values', 1));
             }

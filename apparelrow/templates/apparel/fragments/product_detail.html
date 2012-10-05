@@ -36,7 +36,7 @@
         {% if object.default_vendor.availability == 0 %}
         <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
         {% else %}
-        <a target="_blank" href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.price|floatformat:0|apprl_intcomma }}">{% trans "Available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
+        <a target="_blank" href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.locale_price|floatformat:0|apprl_intcomma }}">{% trans "Available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
         {% endif %}
       {% endif %}
     </p>
@@ -45,25 +45,25 @@
         {% for vendorproduct in vendorproducts %}
             {% if forloop.first %}
                 {% if vendorproduct.availability == 0 %}
-                <span class="sold-out{% if vendorproduct.currency != vendorproduct.original_currency %} higher{% endif %}">{% trans "Sold out" %}</span>
+                <span class="sold-out{% if vendorproduct.locale_currency != vendorproduct.original_currency %} higher{% endif %}">{% trans "Sold out" %}</span>
                 {% else %}
-                <a href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_blank" class="buy-now{% if vendorproduct.currency != vendorproduct.original_currency %} higher{% endif %}" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.price|floatformat:0|apprl_intcomma }}">{% trans "Buy" %}</a>
+                <a href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_blank" class="buy-now{% if vendorproduct.locale_currency != vendorproduct.original_currency %} higher{% endif %}" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.locale_price|floatformat:0|apprl_intcomma }}">{% trans "Buy" %}</a>
                 {% endif %}
             {% endif %}
             <div class="product-vendor">
                 <div class="computed-price">
-                    {% if vendorproduct.discount_price %}
-                    <span class="discount-price price">{{ vendorproduct.discount_price|floatformat:0|apprl_intcomma }}</span>
+                    {% if vendorproduct.locale_discount_price %}
+                    <span class="discount-price price">{{ vendorproduct.locale_discount_price|floatformat:0|apprl_intcomma }}</span>
                     {% endif %}
-                    <span class="price"{% if vendorproduct.discount_price %} style="text-decoration:line-through;"{% endif %}>{{ vendorproduct.price|floatformat:0|apprl_intcomma }}</span>
-                    <span class="currency">{{ vendorproduct.currency }}</span>
+                    <span class="price"{% if vendorproduct.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ vendorproduct.locale_price|floatformat:0|apprl_intcomma }}</span>
+                    <span class="currency">{{ vendorproduct.locale_currency }}</span>
                 </div>
-                {% if vendorproduct.currency != vendorproduct.original_currency %}
+                {% if vendorproduct.locale_currency != vendorproduct.original_currency %}
                 <div class="original-price">
-                    {% if vendorproduct.discount_price %}
+                    {% if vendorproduct.locale_discount_price %}
                     <span class="discount-price price">{{ vendorproduct.original_discount_price|floatformat:0|apprl_intcomma }}</span>
                     {% endif %}
-                    <span class="price"{% if vendorproduct.discount_price %} style="text-decoration:line-through;"{% endif %}>{{ vendorproduct.original_price|floatformat:0|apprl_intcomma }}</span>
+                    <span class="price"{% if vendorproduct.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ vendorproduct.original_price|floatformat:0|apprl_intcomma }}</span>
                     <span class="currency">{{ vendorproduct.original_currency }}</span>
                 </div>
                 {% endif %}
@@ -77,9 +77,9 @@
         {% endwith %}
     </div>
 
-    {% if object.original_currency %}
+    {% if object.original_currency_list %}
     <div class="product-original-currency">
-        {% blocktrans with object.original_currency|join:", " as original_currency %}The item is sold in {{ original_currency }} and the conversion to SEK is approximate.{% endblocktrans %}
+        {% blocktrans with object.original_currency_list|join:", " as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}
     </div>
     {% endif %}
 

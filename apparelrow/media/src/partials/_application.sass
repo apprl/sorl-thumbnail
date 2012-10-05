@@ -238,6 +238,8 @@ button
         display: inline-block
         line-height: 28px
         margin-left: 2em
+        &.language
+          margin-right: 9px
         a
           text-decoration: none
           text-transform: uppercase
@@ -245,20 +247,23 @@ button
           padding: 1em 0
         a.language
           display: inline-block
-          width: 50px
-          height: 28px
+          width: 80px
+          height: 23px
+          line-height: 23px
           padding: 0 0 0 7px
           &.current
-            background: transparent image_url(unquote("language-bg.png")) scroll no-repeat 36px center
+            background: transparent image_url(unquote("language-bg.png")) scroll no-repeat 68px center
           &.select
-            background: transparent image_url(unquote("language-bg-selected.png")) scroll no-repeat right center
+            background: #313131 image_url(unquote("language-bg-selected.png")) scroll no-repeat 68px center
+            +single-box-shadow(rgba(0, 0, 0, 0.23), 2px, 2px, 2px, 0px, inset)
+            +border-radius(3px)
         form.select-language
           position: absolute
           top: 25px
-          right: -4px
+          right: 2px
           z-index: 99999
           ul
-            width: 65px
+            width: 100px
             background: #2e2e2e image_url(unquote("language-popup-bg.png")) scroll repeat-x center top
             +border(all, $font_color)
             +border-radius(3px)
@@ -266,7 +271,7 @@ button
             line-height: 0
             li
               +border(bottom, #363636)
-              width: 65px
+              width: 100px
               margin: 0
               padding: 0
               line-height: 24px
@@ -279,7 +284,9 @@ button
                 background: transparent image_url(unquote("language-popup-arrow.png")) scroll no-repeat center top
                 border: none
               button
-                width: 65px
+                text-align: left
+                padding-left: 8px
+                width: 92px
                 height: 24px
         form.select-language, form.connect-button
           display: inline-block
@@ -297,7 +304,7 @@ button
     #search
       background: url("../images/searchdubble.png") no-repeat scroll center bottom transparent
       top: 52px
-      right: 9px
+      right: 0px
       position: absolute
       width: 216px
       height: 40px
