@@ -139,7 +139,7 @@ class Command(BaseCommand):
     def generate_currency_xml_file(self, **options):
         rates = {}
         currencies = []
-        for rate in FXRate.objects.filter(base_currency=options['base_currency'], currency__in=['SEK', 'EUR', 'USD', 'GBP']).order_by('currency').values('currency', 'rate'):
+        for rate in FXRate.objects.filter(base_currency=options['base_currency']).order_by('currency').values('currency', 'rate'):
             rates[rate['currency']] = rate['rate']
             currencies.append(rate['currency'])
 
