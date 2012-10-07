@@ -2,10 +2,12 @@ import re
 import datetime
 import sys
 import urllib2
+import logging
 from optparse import make_option
 from xml.etree import ElementTree
 from xml.etree.cElementTree import Element, SubElement
 from xml.dom import minidom
+import requests
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
@@ -166,5 +168,10 @@ class Command(BaseCommand):
         with open(settings.SOLR_CURRENCY_FILE, 'w') as f:
             f.write(reparsed.toprettyxml(indent='  '))
 
-        import requests
-        requests.get(settings.SOLR_RELOAD_URL)
+        # This try is required because solr might not be running during a
+        # deploy and when we generate currency.xml it is not possible to reload
+        # what is not running...
+        try:
+            requests.get(settings.SOLR_RELOAD_URL)
+        except requests.exceptions.RequestException:
+            logging.error('Could not reload solr core after currency.xml update')
