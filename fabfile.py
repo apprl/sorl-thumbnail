@@ -234,6 +234,9 @@ def copy_solr():
         sudo('chown --silent -R %(run_user)s:%(run_group)s ./solr' % env, pty=True)
         sudo('touch ./solr/solr/collection1/conf/synonyms.txt', user=env.run_user, pty=True)
 
+    with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
+        sudo('%(path)s/bin/python manage.py arfxrates --no_update --solr' % env, pty=True, user=env.run_user)
+
 def copy_config():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
@@ -315,6 +318,10 @@ def restart_django():
 def restart_solr():
     with settings(warn_only=True):
         sudo('restart solr', pty=False)
+
+def rebuild_solr():
+    with cd('%(path)s/releases/current/%(project_name)s' % env):
+        sudo('%(path)s/bin/python manage.py rebuild_index --clean' % env, pty=True, user=env.run_user)
 
 def restart_celeryd():
     sudo('/etc/init.d/celeryd restart', pty=False)
