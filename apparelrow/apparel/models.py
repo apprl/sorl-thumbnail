@@ -1061,13 +1061,12 @@ class FacebookAction(models.Model):
 
 def save_synonym_file(sender, **kwargs):
     instance = kwargs['instance']
-    synonym_file = open(settings.SEARCH_SYNONYM_FILE, "w")
+    synonym_file = open(settings.SOLR_SYNONYM_FILE, "w")
     synonym_file.write(instance.content.encode("utf-8"))
     synonym_file.close()
 
-    # FIXME: Move this link to a config file
     import requests
-    requests.get('http://localhost:8983/solr/admin/cores?action=RELOAD&core=collection1')
+    requests.get(settings.SOLR_RELOAD_URL)
 
 class SynonymFile(models.Model):
     content = models.TextField(_('Synonyms'), null=True, blank=True, help_text=_('Place all synonyms on their own line, comma-separated. Comments start with "#".'))
@@ -1076,8 +1075,8 @@ class SynonymFile(models.Model):
         return u'%s...' % (self.content[0:20],)
 
     def clean(self):
-        if not hasattr(settings, "SEARCH_SYNONYM_FILE"):
-            raise ValidationError("You must define the SEARCH_SYNONYM_FILE before using synonyms.")
+        if not hasattr(settings, "SOLR_SYNONYM_FILE"):
+            raise ValidationError("You must define the SOLR_SYNONYM_FILE setting before using synonyms.")
 
         if self.__class__.objects.count() > 1:
             raise ValidationError("Only one synonym file is allowed.")

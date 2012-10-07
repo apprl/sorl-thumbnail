@@ -35,6 +35,9 @@ FACEBOOK_SECRET_KEY = '0e53ad32bdd85a49bb972fa2f6985908'
 
 SOLR_URL = 'http://127.0.0.1:8983/solr'
 SOLR_COMMIT_WITHIN = '30000'
+SOLR_CONF_DIRECTORY = os.path.join(PROJECT_ROOT, '..', 'solr', 'solr', 'collection1', 'conf')
+SOLR_CURRENCY_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'currency.xml')
+SOLR_SYNONYM_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'synonyms.txt')
 
 BROKER_URL = "redis://localhost:6380/0"
 CELERY_RESULT_BACKEND = "redis"
@@ -45,8 +48,6 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 
 import djcelery
 djcelery.setup_loader()
-
-SEARCH_SYNONYM_FILE = os.path.join(PROJECT_ROOT, '..', 'solr', 'solr', 'collection1', 'conf', 'synonyms.txt')
 
 # --- Application wide init code goes here. 
 # It would be nice to move this somewhere, but I'm not sure where to put it

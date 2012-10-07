@@ -1,5 +1,11 @@
-import re, datetime, sys, urllib2
+import re
+import datetime
+import sys
+import urllib2
 from optparse import make_option
+from xml.etree import ElementTree
+from xml.etree.cElementTree import Element, SubElement
+from xml.dom import minidom
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
@@ -48,6 +54,12 @@ class Command(BaseCommand):
             help='ISO code of base currency to use when. Defaults to APPAREL_BASE_CURRENCY',
             default=settings.APPAREL_BASE_CURRENCY,
         ),
+        make_option('--solr',
+            action='store_true',
+            dest='solr',
+            help='Save currency data to currency.xml in Solr',
+            default=False,
+        ),
     )
 
     def handle(self, *args, **options):
@@ -61,6 +73,10 @@ class Command(BaseCommand):
         if not options['no_update']:
             cmd = True
             self.update_prices(**options)
+
+        if options['solr']:
+            cmd = True
+            self.generate_currency_xml_file(**options)
 
         if not cmd:
             raise CommandError('Nothing to do')
@@ -117,3 +133,38 @@ class Command(BaseCommand):
             fxrate.update_prices()
 
         print "Prices successfully updated"
+
+    def generate_currency_xml_file(self, **options):
+        rates = {}
+        currencies = []
+        for rate in FXRate.objects.filter(base_currency=options['base_currency'], currency__in=['SEK', 'EUR', 'USD', 'GBP']).order_by('currency').values('currency', 'rate'):
+            rates[rate['currency']] = rate['rate']
+            currencies.append(rate['currency'])
+
+        root_element = Element('currencyConfig')
+        root_element.set('version', '1.0')
+        rates_element = SubElement(root_element, 'rates')
+
+        for x in currencies:
+            for y in currencies:
+                if x == y:
+                    continue
+
+                rate = rates[y] * (1 / rates[x])
+                if x == options['base_currency']:
+                    rate = rates[y]
+                elif y == options['base_currency']:
+                    rate = 1 / rates[x]
+
+                rate_element = SubElement(rates_element, 'rate')
+                rate_element.set('from', x)
+                rate_element.set('to', y)
+                rate_element.set('rate', str(rate))
+
+        rough_string = ElementTree.tostring(root_element, 'utf-8')
+        reparsed = minidom.parseString(rough_string)
+        with open(settings.SOLR_CURRENCY_FILE, 'w') as f:
+            f.write(reparsed.toprettyxml(indent='  '))
+
+        import requests
+        requests.get(settings.SOLR_RELOAD_URL)

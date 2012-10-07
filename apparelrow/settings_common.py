@@ -283,6 +283,9 @@ GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 ACTSTREAM_MANAGER = 'actstream.managers.ActionManager'
 ACTSTREAM_ACTION_MODELS = ['auth.user', 'apparel.Look', 'apparel.Product', 'comments.comment']
 
+# SOLR COMMON
+SOLR_RELOAD_URL = 'http://localhost:8983/solr/admin/cores?action=RELOAD&core=collection1'
+
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
