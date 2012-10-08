@@ -19,7 +19,7 @@ from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 
-from apparel.manager import ProductManager, SearchManager, FeaturedManager, FirstPageManager
+from apparel.manager import ProductManager, SearchManager
 from apparel import cache
 
 from actstream import action
@@ -56,7 +56,7 @@ LOOK_COMPONENT_POSITIONED = (
 class Manufacturer(models.Model):
     name = models.CharField(max_length=50, unique=True)
     active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
-    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype')) 
+    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype'))
     homepage = models.URLField(_('Home page'))
 
 class Brand(models.Model):
@@ -115,7 +115,7 @@ class Option(models.Model):
     option_type = models.ForeignKey(OptionType)
 
     def __unicode__(self):
-        return u"%s: %s" % (self.option_type.name, self.value) 
+        return u"%s: %s" % (self.option_type.name, self.value)
 
     class Meta:
         ordering = ['option_type']
@@ -134,7 +134,7 @@ class Option(models.Model):
 class Vendor(models.Model):
     name     = models.CharField(max_length=100, db_index=True)
     homepage = models.URLField(_('Home page'))
-    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype'), max_length=127, blank=True, null=True) 
+    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype'), max_length=127, blank=True, null=True)
 
     objects = SearchManager()
 
@@ -160,18 +160,18 @@ class Category(MPTTModel):
     on_front_page = models.BooleanField(default=False, help_text=_('The category is visible on the front page'), db_index=True)
 
     objects = tree = TreeManager()
-    
+
     def save(self, *args, **kwargs):
         # FIXME: Can you get Django to auto truncate fields?
         self.name = self.name[:100]
         super(Category, self).save(*args, **kwargs)
-    
+
     def __unicode__(self):
         return u"%s" % self.name
-    
+
     class Exporter:
         export_fields = ['name', 'name_order', 'option_types']
-    
+
     class Meta:
         ordering = ('tree_id', 'lft')
         verbose_name_plural = 'categories'
@@ -271,15 +271,15 @@ class Product(models.Model):
     @property
     def colors(self):
         return self.options.filter(option_type__name='color').values_list('value', flat=True)
-    
+
     def categories(self):
         c = self.category
         categories = []
-                
+
         while c:
             categories.insert(0, c)
             c = c.parent
-        
+
         return categories
 
     def save(self, *args, **kwargs):
@@ -308,11 +308,11 @@ class Product(models.Model):
 
     def __unicode__(self):
         return u"%s %s" % (self.manufacturer, self.product_name)
-    
+
     class Meta:
         ordering = ('-id',)
         unique_together = (('static_brand', 'sku'),)
-    
+
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'default_vendor', 'score']
 
@@ -388,7 +388,7 @@ class VendorCategory(models.Model):
     default_gender = models.CharField(_('Default gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     override_gender = models.CharField(_('Override gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
-    
+
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
         if self.category:
@@ -415,14 +415,14 @@ class VendorCategory(models.Model):
                 product.save()
 
             # NOTE 1: If we need to pre_save/post_save hooks for this, we need to explicitly call save()
-            # NOTE 2: If we do not want to explicitly publish all related products (perhaps they are 
+            # NOTE 2: If we do not want to explicitly publish all related products (perhaps they are
             #   unpublished for a different reason?) we may want to do one of two things:
             #   1) Run code for each product to assess whether it should remain unpublished or not (see NOTE 1)
             #   2) Run a separate update query for all affected products who's category is None and set published=True
-        
+
         # FIXME: Manually release cache for these objects
         super(VendorCategory, self).save(*args, **kwargs)
-    
+
     def __unicode__(self):
         return u'%s: %s <-> %s' % (self.vendor, self.name, self.category)
 
@@ -493,7 +493,7 @@ class VendorProduct(models.Model):
 
     class Meta:
         ordering = ['vendor', 'product']
-    
+
     class Exporter:
         export_fields = ['__all__', '-product']
 
@@ -515,7 +515,7 @@ class VendorProductVariation(models.Model):
     # 0 means it is sold out
     in_stock = models.IntegerField(_('Items in stock'), null=True, blank=True, help_text=_('Negative value means it is in stock, but we have no information about how many. Null means we have no information about availability. 0 means it is sold out'))
     options = models.ManyToManyField(Option)
-    
+
     def __unicode__(self):
         if self.in_stock is None:
             s = _('No information available')
@@ -525,7 +525,7 @@ class VendorProductVariation(models.Model):
             s = _('In stock')
         else:
             s = '%i %s' % (self.in_stock, _('items in stock'))
-        
+
         return unicode(s)
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
@@ -558,14 +558,12 @@ class Look(models.Model):
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     tags        = TagField(blank=True)
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
-    is_featured = models.BooleanField(default=False, help_text=_('The look will be shown on the front page'))
     gender      = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=False, blank=False, default='U')
     popularity  = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
     width       = models.IntegerField(blank=False, null=False, default=694)
     height      = models.IntegerField(blank=False, null=False, default=524)
 
     objects  = SearchManager()
-    featured = FeaturedManager()
 
     def save(self, *args, **kwargs):
         """
@@ -645,7 +643,7 @@ class Look(models.Model):
                 return 'W'
 
         return 'U'
-    
+
     def score(self):
         return self.likes.filter(active=True).count()
 
@@ -686,7 +684,7 @@ class Look(models.Model):
         All components in the collage view
         """
         return self.components.filter(component_of='C')
-    
+
     @property
     def display_components(self):
         """
@@ -694,7 +692,7 @@ class Look(models.Model):
         logic in "display_with_component"
         """
         return self.photo_components if self.display_with_component == 'P' else self.collage_components
-    
+
     @property
     def display_with_component(self):
         """
@@ -714,14 +712,14 @@ class Look(models.Model):
     @property
     def product_brands_unique(self):
         return set(self.product_manufacturers)
-    
+
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user.get_profile().display_name)
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ('apparel.views.look_detail', [str(self.slug)])
-    
+
     class Meta:
         ordering = ['user', 'title']
 
@@ -831,7 +829,7 @@ def look_like_pre_delete(sender, instance, **kwargs):
 
 class LookComponent(models.Model):
     """
-    This class maps a product to a collage or uploaded image of a look and 
+    This class maps a product to a collage or uploaded image of a look and
     contains necessary information to display the product's image there in.
     """
     look    = models.ForeignKey(Look, related_name='components')
@@ -844,9 +842,9 @@ class LookComponent(models.Model):
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
     rotation = models.IntegerField(_('CSS rotation'), blank=True, null=True)
     positioned = models.CharField(max_length=1, choices=LOOK_COMPONENT_POSITIONED, null=True, blank=True)
-    
+
     # FIXME: Scale product image on initial save and store height and width
-    # properties 
+    # properties
 
     def _style(self, scale=1):
         s = []
@@ -856,13 +854,13 @@ class LookComponent(models.Model):
 
         if self.z_index:
             s.append('z-index: %s;' % (self.z_index,))
-        
+
         if self.rotation:
             s.append('-moz-transform: rotate(%sdeg); ' % self.rotation)
             s.append('-webkit-transform: rotate(%sdeg); ' % self.rotation)
-        
+
         return " ".join(s)
-    
+
     @property
     def style_small(self):
         return self._style(93 / 694.0)
@@ -878,7 +876,7 @@ class LookComponent(models.Model):
     @property
     def style(self):
         return self._style(1)
-    
+
     def save(self, *args, **kwargs):
         if self.component_of == 'C' and self.product.product_image and not self.height and not self.width:
             # This scales collage images to maximum size if height and width isn't defined
@@ -887,7 +885,7 @@ class LookComponent(models.Model):
             self.height = thumb.height
 
         super(LookComponent, self).save(*args, **kwargs)
-    
+
     def __unicode__(self):
         return u"%s (%s, %s [%sx%s] %s) in %s" % (self.product, self.top, self.left, self.width, self.height, self.z_index, self.look)
 
@@ -899,37 +897,6 @@ class LookComponent(models.Model):
 
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookComponent)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookComponent)
-
-
-#
-# FirstPageContent
-
-class FirstPageContent(models.Model):
-    title       = models.CharField(_('Title'), max_length=127, blank=True)
-    description = models.TextField(_('Short description'), null=True, blank=True)
-    content     = models.TextField(_('Content'), null=True, blank=True, help_text=_('HTML allowed. This field is ignored if an image is set.'))
-    url         = models.URLField(_('URL'), max_length=255, null=True, blank=True,)
-    image       = ImageField(_('Image'), upload_to=settings.APPAREL_MISC_IMAGE_ROOT, max_length=255, null=True, blank=True, help_text=_('Publish size 450x327'))
-    published   = models.BooleanField(default=False)
-    pub_date    = models.DateTimeField(_("Publish date"))
-    created     = models.DateTimeField(_("Time created"), auto_now_add=True)
-    modified    = models.DateTimeField(_("Time modified"), auto_now=True)
-    gender      = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, default='U', null=False, blank=False)
-    language    = models.CharField(_('Language'), max_length=3, choices=settings.LANGUAGES, null=False, blank=False, default='sv')
-    sorting     = models.PositiveIntegerField(_('Sorting order'), default=0, null=False, blank=False)
-
-
-    objects = models.Manager()
-    published_objects = FirstPageManager()
-
-    def __unicode__(self):
-        return u'%s' % (self.title,)
-
-    class Meta:
-        ordering = ['sorting', '-pub_date']
-
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=FirstPageContent)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=FirstPageContent)
 
 
 #

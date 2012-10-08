@@ -97,7 +97,7 @@ class ProductAdmin(admin.ModelAdmin):
         if not form:
             form = self.ChangeOptionsForm(initial={'_selected_action': request.POST.getlist(admin.ACTION_CHECKBOX_NAME)})
 
-        return render_to_response('admin/change_options.html', 
+        return render_to_response('admin/change_options.html',
                 {'products': queryset, 'options_form': form}, context_instance=RequestContext(request))
 
     change_options.short_description = "Change options for selected products"
@@ -109,8 +109,8 @@ admin.site.register(Product, ProductAdmin)
 #
 
 class LookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'component', 'is_featured', 'gender')
-    list_filter = ['is_featured', 'gender']
+    list_display = ('title', 'user', 'component', 'gender')
+    list_filter = ['gender']
 
 admin.site.register(Look, LookAdmin)
 
@@ -329,14 +329,6 @@ class ProductLikeAdmin(admin.ModelAdmin):
     list_filter = ('active',)
 
 admin.site.register(ProductLike, ProductLikeAdmin)
-
-# Front Page
-
-class FirstPageContentAdmin(admin.ModelAdmin):
-    list_display = ['title', 'pub_date', 'published']
-    list_filter = ['published', 'language', 'gender']
-
-admin.site.register(FirstPageContent, FirstPageContentAdmin)
 
 # Search synonyms
 
