@@ -12,17 +12,15 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from actstream.models import actor_stream, Follow
+from actstream.models import actor_stream
 
 
 from apparel.decorators import get_current_user
 from apparel.models import Product
-# FIXME: Move get_most_followed_users to a util module
-from apparel.views import get_most_followed_users
 from apparel.utils import get_pagination_page, get_gender_from_cookie
 from profile.utils import get_facebook_user
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm
-from profile.models import EmailChange, ApparelProfile
+from profile.models import EmailChange, ApparelProfile, Follow
 from profile.tasks import send_email_confirm_task
 
 PROFILE_PAGE_SIZE = 30
@@ -67,7 +65,7 @@ def get_profile_sidebar_info(request, profile):
         info['products'] = Product.published_objects.filter(likes__user=profile.user, likes__active=True).count()
 
     content_type = ContentType.objects.get_for_model(User)
-    info['following'] = Follow.objects.filter(content_type=content_type, user=profile.user).count()
+    info['following'] = Follow.objects.filter(user=profile, active=True).count()
 
     return info
 
@@ -172,7 +170,7 @@ def looks(request, profile, page=0):
 def followers(request, profile, page=0):
     form = handle_change_image(request, profile)
     content_type = ContentType.objects.get_for_model(User)
-    queryset = Follow.objects.filter(content_type=content_type, object_id=profile.user.id)
+    queryset = Follow.objects.filter(user_follow=profile, active=True)
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
@@ -200,7 +198,7 @@ def followers(request, profile, page=0):
 def following(request, profile, page=0):
     form = handle_change_image(request, profile)
     content_type = ContentType.objects.get_for_model(User)
-    queryset = Follow.objects.filter(content_type=content_type, user=profile.user)
+    queryset = Follow.objects.filter(user=profile, active=True)
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)

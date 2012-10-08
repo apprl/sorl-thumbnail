@@ -1,9 +1,9 @@
-{% load activity_tags %}
+{% load follow_tags %}
 
 {% if facebook_friends %}
 <ul class="suggested-friends">
     {% for profile in facebook_friends %}
-        {% if request.user|is_following:profile.user %}{% else %}
+        {% if not request.user.get_profile|is_following_profile:profile %}
         <li>
             {% include 'apparel/fragments/avatar_link_no_cache.html' %}
         </li>

@@ -1,7 +1,7 @@
 <ul class="users">
 {% for following in current_page.object_list %}
 <li>
-{% with following.follow_object.get_profile as profile %}
+{% with following.user_follow as profile %}
     {% if profile %}{% include 'profile/fragments/follow_profile.html' %}{% endif %}
 {% endwith %}
 </li>

@@ -11,10 +11,15 @@ from django.utils.html import strip_tags
 from django.utils.translation import get_language, activate
 from django.core.urlresolvers import reverse
 
-from actstream.actions import is_following
 from celery.task import task
 
-from profile.models import NotificationCache
+from profile.models import NotificationCache, Follow
+
+def is_following(user_one, user_two):
+    profile_one = user_one.get_profile()
+    profile_two = user_two.get_profile()
+
+    return Follow.objects.filter(user=profile_one, user_follow=profile_two, active=True).exists()
 
 def get_key(name, recipient, sender, obj):
     recipient_pk = sender_pk = obj_pk = ''

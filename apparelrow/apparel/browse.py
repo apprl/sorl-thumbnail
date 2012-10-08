@@ -17,8 +17,6 @@ from django.utils.translation import get_language, ugettext_lazy as _
 
 from hanssonlarsson.django.exporter import json
 
-from actstream.models import Follow
-
 from apparel.search import PRODUCT_SEARCH_FIELDS
 from apparel.search import ApparelSearch
 from apparel.models import Product
@@ -26,6 +24,8 @@ from apparel.models import Brand
 from apparel.models import Option
 from apparel.models import Category
 from apparel.utils import get_pagination_page
+
+from profile.models import Follow
 
 BROWSE_PAGE_SIZE = 30
 
@@ -114,23 +114,26 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     if color_pattern_list:
        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join(color_pattern_list)))
 
-    # Extra
-    if 'f' in request.GET and request.user:
-        user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
-        user_ids_or = ' OR '.join(str(x) for x in user_ids)
-        query_arguments['fq'].append('user_likes:({0})'.format(user_ids_or))
-        query_arguments['fq'].append('availability:true')
-        query_arguments['fq'].append(generate_gender_field(request.GET))
-    else:
-        query_arguments['fq'].append('availability:true')
-        query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
-
     return query_arguments
 
 def browse_products(request, template='apparel/browse.html', gender=None):
     facet_fields = ['category', 'price', 'color', 'manufacturer_data']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender)
+
+    # Follower products
+    user_ids = []
+    if 'f' in request.GET and request.user:
+        user_ids = list(Follow.objects.filter(user=request.user.get_profile()).values_list('user_follow__user_id', flat=True))
+        for x in (user_ids + [0]):
+            print x
+        user_ids_or = ' OR '.join(str(x) for x in (user_ids + [0]))
+        query_arguments['fq'].append('user_likes:({0})'.format(user_ids_or))
+        query_arguments['fq'].append('availability:true')
+        query_arguments['fq'].append(generate_gender_field(request.GET))
+    else:
+        query_arguments['fq'].append('availability:true')
+        query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
     # Query string
     query_string = request.GET.get('q')
@@ -194,6 +197,13 @@ def browse_products(request, template='apparel/browse.html', gender=None):
                   colors=colors,
                   categories=categories)
 
+    if request.GET.get('q', None):
+        result.update(help_text=_('Showing') + ' \'' + request.GET.get('q') + '\'')
+    if request.GET.get('f', None):
+        result.update(help_text=_('Showing your friends\' favorites'))
+        if not user_ids:
+            result.update(follow_html=loader.render_to_string('apparel/fragments/browse_follow_user.html', {}, context_instance=RequestContext(request)))
+
     paged_result.html = [o.template for o in paged_result.object_list if o]
     paged_result.object_list = []
 
@@ -231,13 +241,6 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         selected_discount    = bool(request.GET.get('discount', None)),
         selected_sort        = request.GET.get('sort', None),
     )
-
-    if request.GET.get('q', None):
-        result.update(help_text=_('Showing') + ' \'' + request.GET.get('q') + '\'')
-    if request.GET.get('f', None):
-        result.update(help_text=_('Showing your friends\' favorites'))
-        if Follow.objects.filter(user=request.user).count() == 0:
-            result.update(follow_html=loader.render_to_string('apparel/fragments/browse_follow_user.html', {}, context_instance=RequestContext(request)))
 
     # Serve ajax request
     if request.is_ajax():

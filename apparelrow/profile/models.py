@@ -44,11 +44,12 @@ LOGIN_FLOW = (
 )
 
 class ApparelProfile(models.Model):
+    """Every user is mapped against an ApparelProfile"""
     user = models.OneToOneField(User, related_name='profile')
-    
+
     name                = models.CharField(max_length=100, unique=True, blank=True, null=True)
     slug                = models.CharField(max_length=100, unique=True, null=True)
-    image               = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True) 
+    image               = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True)
     about               = models.TextField(_('About'), null=True, blank=True)
     language            = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     gender              = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
@@ -305,6 +306,30 @@ def update_profile_language(sender, user, request, **kwargs):
     #"""
     #Comment.objects.filter(user=instance).delete()
 #post_delete.connect(delete_user_comments, sender=User)
+
+
+#
+# FOLLOWS
+#
+
+
+# TODO: when django 1.5 is released we will only use one profile/user class
+class Follow(models.Model):
+    """
+    Follow model lets a user follow another user.
+    """
+    user = models.ForeignKey(ApparelProfile, related_name='following', on_delete=models.CASCADE)
+    user_follow = models.ForeignKey(ApparelProfile, related_name='followers', on_delete=models.CASCADE)
+    created = models.DateTimeField(_('Time created'), auto_now_add=True, null=True, blank=True)
+    modified = models.DateTimeField(_('Time modified'), auto_now=True, null=True, blank=True)
+    active = models.BooleanField(default=True, db_index=True)
+
+    def __unicode__(self):
+        return u'%s follows %s' % (self.user, self.user_follow)
+
+    class Meta:
+        unique_together = ('user', 'user_follow')
+
 
 #
 # NOTIFICATION CACHE

@@ -23,11 +23,10 @@ from django.views.i18n import set_language
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from hanssonlarsson.django.exporter import json as special_json
-from actstream.models import Follow, Action
-from actstream.views import follow_unfollow as actstream_follow_unfollow
+from actstream.models import Action
 from sorl.thumbnail import get_thumbnail
 
-from profile.models import ApparelProfile
+from profile.models import ApparelProfile, Follow
 from profile.utils import get_facebook_user
 from apparel.decorators import seamless_request_handling
 from apparel.decorators import get_current_user
@@ -150,20 +149,33 @@ def facebook_share(request, activity):
 #
 
 @login_required
-def follow_unfollow(request, content_type_id, object_id, do_follow=True):
-    user = User.objects.get(pk=object_id)
-    profile = user.get_profile()
-    profile_type = 'brand' if profile.is_brand else 'member'
+def follow_unfollow(request, profile_id, do_follow=True):
+    """
+    Either follows or unfollows a profile.
+    """
+    profile = ApparelProfile.objects.get(pk=profile_id)
 
     if do_follow:
         if request.user.get_profile().fb_share_follow_profile:
             facebook_user = get_facebook_user(request)
             facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
-    else:
-        facebook_user = get_facebook_user(request)
-        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
 
-    return actstream_follow_unfollow(request, content_type_id, object_id, do_follow)
+        follow, _ = Follow.objects.get_or_create(user=request.user.get_profile(), user_follow=profile)
+        if not follow.active:
+            follow.active = True
+            follow.save()
+
+        return HttpResponse(status=201)
+
+    follow, _ = Follow.objects.get_or_create(user=request.user.get_profile(), user_follow=profile)
+    if follow.active:
+        follow.active = False
+        follow.save()
+
+    facebook_user = get_facebook_user(request)
+    facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
+
+    return HttpResponse(status=204)
 
 #
 # Products
@@ -357,7 +369,7 @@ def brand_list(request, gender=None, popular=False):
     # Most popular products
     user_ids = []
     if request.user and request.user.is_authenticated():
-        user_ids.extend(Follow.objects.filter(user=request.user).values_list('object_id', flat=True))
+        user_ids.extend(Follow.objects.filter(user=request.user.get_profile(), active=True).values_list('user_follow__user_id', flat=True))
     popular_products = Product.valid_objects.distinct().filter(likes__user__in=user_ids).order_by('-popularity')[:10]
 
     response = render_to_response('apparel/brand_list.html', {
@@ -839,7 +851,7 @@ def home(request, profile):
 
     # Retrieve most popular products in users network
     limit = 2
-    user_ids = list(Follow.objects.filter(user=request.user).values_list('object_id', flat=True)) + [0]
+    user_ids = list(Follow.objects.filter(user=request.user.get_profile(), active=True).values_list('user_follow__user_id', flat=True)) + [0]
     user_ids_or = ' OR '.join(str(x) for x in user_ids)
 
 
@@ -951,21 +963,8 @@ def get_top_looks(request, limit=10, gender=None):
         return Look.objects.filter(gender__in=['U', gender], popularity__gt=0).order_by('-popularity', '-created')[:limit]
     return Look.objects.filter(popularity__gt=0).order_by('-popularity', '-created')[:limit]
 
-def get_most_followed_users(limit=2):
-    #object_ids = [x['object_id'] for x in Follow.objects.values('object_id').annotate(Count('id')).order_by('-id__count')[:limit]]
-    #return ApparelProfile.objects.select_related('user').filter(user__in=object_ids)
-    # FIXME: This is inefficient because it creates a query for everyone object_id, better solution?
-    apparel_profiles = []
-    for object_id in Follow.objects.values_list('object_id', flat=True).annotate(count=Count('id')).order_by('-count')[:limit]:
-        try:
-            apparel_profiles.append(ApparelProfile.objects.select_related('user').get(is_brand=False, user__id=object_id))
-        except ApparelProfile.DoesNotExist:
-            pass
-    return apparel_profiles
-
 def get_top_looks_in_network(user, limit=None):
-    content_type = ContentType.objects.get_for_model(User)
-    user_ids = Follow.objects.filter(content_type=content_type, user=user).values_list('object_id', flat=True)
+    user_ids = Follow.objects.filter(user=user.get_profile(), active=True).values_list('user_follow__user_id', flat=True)
     looks = Look.objects.filter(user__in=user_ids).order_by('-popularity', '-created')
 
     if limit:

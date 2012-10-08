@@ -1,10 +1,14 @@
 import logging
 
 from django.db.models.signals import post_save, pre_delete, post_delete
-from django.contrib.comments import signals as comments_signals
+from django.dispatch import receiver
+from django.contrib.comments.signals import comment_was_posted
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
-from actstream.models import Follow, Action
+from actstream import action
+from actstream.models import Action
+
+from profile.models import Follow
 
 from profile.notifications import process_comment_look_created
 from profile.notifications import process_comment_look_comment
@@ -17,6 +21,7 @@ from profile.notifications import process_follow_user
 # Comment activity handler
 #
 
+@receiver(comment_was_posted, dispatch_uid='profile.activity.comments_handler')
 def comments_handler(sender, **kwargs):
     instance = kwargs['comment']
     request = kwargs['request']
@@ -34,72 +39,43 @@ def comments_handler(sender, **kwargs):
         process_comment_product_comment.delay(None, request.user, instance)
         process_comment_product_wardrobe.delay(None, request.user, instance)
 
-comments_signals.comment_was_posted.connect(comments_handler)
-
 #
 # Follow handlers
 #
 
-def post_save_follow_handler(sender, **kwargs):
+@receiver(post_save, sender=Follow, dispatch_uid='profile.activity.post_save_follow_handler')
+def post_save_follow_handler(sender, instance, **kwargs):
     """
     Post save handler for follow objects. Updates followers count on user
     profile and attempts to notify users about this new follow object.
     """
-    instance = kwargs['instance']
-    if not hasattr(instance, 'user') and instance.content_type == ContentType.objects.get_for_model(instance.user):
-        return
-
-    try:
-        recipient = User.objects.get(pk=instance.object_id)
-        process_follow_user.delay(recipient, instance.user, instance)
-    except User.DoesNotExist:
-        return
-
-    apparel_profile = recipient.get_profile()
-    apparel_profile.followers_count = apparel_profile.followers_count + 1
+    apparel_profile = instance.user_follow
+    if instance.active:
+        apparel_profile.followers_count = apparel_profile.followers_count + 1
+        process_follow_user.delay(instance.user_follow.user, instance.user.user, instance)
+        action.send(instance.user.user, verb='started following', target=instance.user_follow.user)
+    else:
+        apparel_profile.followers_count = apparel_profile.followers_count - 1
     apparel_profile.save()
 
-def pre_delete_follow_handler(sender, **kwargs):
+@receiver(pre_delete, sender=Follow, dispatch_uid='profile.activity.pre_delete_follow_handler')
+def pre_delete_follow_handler(sender, instance, **kwargs):
     """
-    Post save handler for follow objects. Updates followers count on user
+    Pre delete handler for follow objects. Updates followers count on user
     profile.
     """
-    instance = kwargs['instance']
-    try:
-        user = User.objects.get(id=instance.object_id)
-    except User.DoesNotExist:
-        return
-
-    apparel_profile = user.get_profile()
+    apparel_profile = instance.user_follow
     apparel_profile.followers_count = apparel_profile.followers_count - 1
     apparel_profile.save()
 
-    Action.objects.filter(actor_object_id=instance.user.pk,
-                          actor_content_type=instance.content_type,
-                          target_object_id=instance.object_id,
-                          target_content_type=instance.content_type,
-                          verb='started following').delete()
-
-post_save.connect(post_save_follow_handler, sender=Follow)
-pre_delete.connect(pre_delete_follow_handler, sender=Follow)
-
+    Action.objects.filter(actor=instance.user.user, target=instance.user_follow.user, verb='started following').delete()
 
 #
-# Delete follows and actions when a user is deleted.
+# Delete actions when a user is deleted.
 #
-
-def delete_user_followings(signal, instance, **kwargs):
-    """
-    This signal attempts to delete any followings which is related to Follow
-    through a generic relation.
-    """
-    Follow.objects.filter(
-        object_id=instance.pk,
-        content_type=ContentType.objects.get_for_model(instance)
-        ).delete()
-    Follow.objects.filter(user=instance).delete()
 
 # XXX: If actions get missing, look here...
+@receiver(post_delete, sender=User, dispatch_uid='profile.activity.delete_object_activities')
 def delete_object_activities(sender, instance, **kwargs):
     """
     This signal attempts to delete any activity which is related to Action
@@ -117,8 +93,3 @@ def delete_object_activities(sender, instance, **kwargs):
         target_object_id=instance.pk,
         target_content_type=ContentType.objects.get_for_model(instance)
         ).delete()
-
-
-# FIXME: Move these to actstream?
-post_delete.connect(delete_user_followings, sender=User)
-post_delete.connect(delete_object_activities, sender=User)

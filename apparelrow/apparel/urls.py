@@ -30,8 +30,8 @@ urlpatterns = patterns('',
     url(r'^facebook/share/(?P<activity>push|pull)/?$', 'apparel.views.facebook_share', name='facebook-share'),
 
     # Follow/Unfollow API
-    url(r'^follow/(?P<content_type_id>\d+)/(?P<object_id>\d+)/$', 'apparel.views.follow_unfollow', name='apprl-follow'),
-    url(r'^unfollow/(?P<content_type_id>\d+)/(?P<object_id>\d+)/$', 'apparel.views.follow_unfollow', {'do_follow': False}, name='apprl-unfollow'),
+    url(r'^follow/(?P<profile_id>\d+)/$', 'apparel.views.follow_unfollow', name='apprl-follow'),
+    url(r'^unfollow/(?P<profile_id>\d+)/$', 'apparel.views.follow_unfollow', {'do_follow': False}, name='apprl-unfollow'),
 
     # Products
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
