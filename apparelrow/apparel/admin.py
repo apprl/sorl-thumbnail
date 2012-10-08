@@ -317,7 +317,7 @@ class LookLikeAdmin(admin.ModelAdmin):
     fields = ('look', 'user', 'active', 'created', 'modified')
     raw_id_fields = ['look', 'user']
     list_display = ('look', 'user', 'created', 'modified', 'active')
-    list_filter = ('active', 'user')
+    list_filter = ('active',)
 
 admin.site.register(LookLike, LookLikeAdmin)
 
@@ -326,7 +326,7 @@ class ProductLikeAdmin(admin.ModelAdmin):
     fields = ('product', 'user', 'active', 'created', 'modified')
     raw_id_fields = ['product', 'user']
     list_display = ('product', 'user', 'created', 'modified', 'active')
-    list_filter = ('active', 'user')
+    list_filter = ('active',)
 
 admin.site.register(ProductLike, ProductLikeAdmin)
 
