@@ -900,39 +900,6 @@ class LookComponent(models.Model):
 models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookComponent)
 models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookComponent)
 
-@receiver(post_save, sender=LookComponent, dispatch_uid='look_component_post_save')
-def look_component_post_save(sender, instance, created, **kwargs):
-    """
-    Stores an action when a new look component containing a product is added.
-    """
-    if not hasattr(instance.look, 'user'):
-        logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % instance)
-        return
-
-    if created:
-        action.send(instance.look.user, verb='added', action_object=instance.product, target=instance.look)
-
-@receiver(pre_delete, sender=LookComponent, dispatch_uid='look_component_pre_delete')
-def look_component_pre_delete(sender, instance, **kwargs):
-    """
-    Deletes an action when a look component containing a product is removed.
-    """
-    if not hasattr(instance.look, 'user'):
-        logging.warning('Trying to remove an activity on pre_delete, but %s has not user attribute' % instance)
-        return
-
-    product_content_type = ContentType.objects.get_for_model(Product)
-    user_content_type = ContentType.objects.get_for_model(User)
-    look_content_type = ContentType.objects.get_for_model(Look)
-
-    get_model('actstream', 'Action').objects.filter(actor_content_type=user_content_type,
-                                                    actor_object_id=instance.look.user.pk,
-                                                    target_content_type=look_content_type,
-                                                    target_object_id=instance.look.pk,
-                                                    action_object_content_type=product_content_type,
-                                                    action_object_object_id=instance.product.pk,
-                                                    verb='added').delete()
-
 
 #
 # FirstPageContent
