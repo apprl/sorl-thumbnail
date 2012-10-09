@@ -8,7 +8,7 @@
     </a>
     <div class="product-hover">
         <div class="header">
-            <a class="product-like heart" href="#" data-dialog-url="{% url dialog-like-product %}" data-like-url="{% url product-action object.id 'like' %}" data-unlike-url="{% url product-action object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.price|floatformat:0|apprl_intcomma }}"></a>
+            <a class="product-like heart" href="#" data-dialog-url="{% url dialog-like-product %}" data-like-url="{% url product-action object.id 'like' %}" data-unlike-url="{% url product-action object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }}"></a>
             <div class="right">
                 <div class="comments">0</div>
                 <div class="likes">0</div>
@@ -16,7 +16,7 @@
         </div>
         <div class="footer">
             <a class="footer-button info" href="{{ object.get_absolute_url }}">More info</a>
-            <a class="footer-button buy" target="_blank" href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.price|floatformat:0|apprl_intcomma }}">Buy</a>
+            <a class="footer-button buy" target="_blank" href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }}">Buy</a>
         </div>
     </div>
     <h4><a href="{{ object.get_absolute_url }}">{{ object.manufacturer }}</a></h4>
