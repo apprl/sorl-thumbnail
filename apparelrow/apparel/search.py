@@ -152,11 +152,11 @@ def product_delete(instance, **kwargs):
 
 @receiver(post_save, sender=ProductLike, dispatch_uid='product_like_save')
 def product_like_save(instance, **kwargs):
-    product_save(instance.product, commit=True)
+    product_save(instance.product)
 
 @receiver(post_delete, sender=ProductLike, dispatch_uid='product_like_delete')
 def product_like_delete(instance, **kwargs):
-    product_delete(instance.product)
+    product_save(instance.product)
 
 def rebuild_product_index():
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
