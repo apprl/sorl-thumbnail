@@ -323,12 +323,6 @@ class Product(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=Product)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Product)
 
-@receiver(post_delete, sender=Product, dispatch_uid='product_post_delete')
-def product_post_delete(sender, instance, **kwargs):
-    """
-    Delete all likes for the sender.
-    """
-    ProductLike.objects.filter(product=instance).delete()
 
 
 #
@@ -339,7 +333,7 @@ class ProductLike(models.Model):
     """
     Keep track of likes on products
     """
-    product = models.ForeignKey(Product, related_name='likes')
+    product = models.ForeignKey(Product, related_name='likes', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='product_likes')
     created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
@@ -784,13 +778,6 @@ class Look(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=Look)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Look)
 
-@receiver(post_delete, sender=Look, dispatch_uid='look_post_delete')
-def look_post_delete(sender, instance, **kwargs):
-    """
-    Delete all likes for the sender.
-    """
-    LookLike.objects.filter(look=instance).delete()
-
 @receiver(post_save, sender=Look, dispatch_uid='look_post_save')
 def look_post_save(sender, instance, created, **kwargs):
     if not hasattr(instance, 'user'):
@@ -833,7 +820,7 @@ class LookLike(models.Model):
     """
     Keep track of likes on looks
     """
-    look = models.ForeignKey(Look, related_name='likes')
+    look = models.ForeignKey(Look, related_name='likes', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='look_likes')
     created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
