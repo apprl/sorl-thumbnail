@@ -13,6 +13,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
+from django.core.cache import cache
 from django.core.files import storage
 from django.core.files.base import ContentFile
 from django.db.models.signals import post_save, post_delete, pre_delete
@@ -20,7 +21,7 @@ from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 
 from apparel.manager import ProductManager, SearchManager
-from apparel import cache
+from apparel.cache import invalidate_model_handler
 
 from actstream import action
 from cStringIO import StringIO
@@ -179,8 +180,8 @@ class Category(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name_order']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=Category)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Category)
+models.signals.post_save.connect(invalidate_model_handler, sender=Category)
+models.signals.post_delete.connect(invalidate_model_handler, sender=Category)
 
 
 #
@@ -236,17 +237,20 @@ class Product(models.Model):
 
     @property
     def default_vendor_price(self):
-        if self.default_vendor.discount_price:
-            return self.default_vendor.discount_price
+        if self.default_vendor.locale_discount_price:
+            return self.default_vendor.locale_discount_price
 
-        return self.default_vendor.price
+        return self.default_vendor.locale_price
 
     @property
-    def original_currency(self):
+    def original_currency_list(self):
+        locale = get_language()
+        currency = settings.LANGUAGE_TO_CURRENCY.get(locale, settings.APPAREL_BASE_CURRENCY)
+
         if not hasattr(self, '_original_currency'):
             self._original_currency = []
             for vendorproduct in self.vendorproduct.all():
-                if vendorproduct.original_currency != 'SEK':
+                if vendorproduct.original_currency != currency:
                     self._original_currency.append(vendorproduct.original_currency)
 
         return self._original_currency
@@ -316,8 +320,8 @@ class Product(models.Model):
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'default_vendor', 'score']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=Product)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Product)
+models.signals.post_save.connect(invalidate_model_handler, sender=Product)
+models.signals.post_delete.connect(invalidate_model_handler, sender=Product)
 
 @receiver(post_delete, sender=Product, dispatch_uid='product_post_delete')
 def product_post_delete(sender, instance, **kwargs):
@@ -488,6 +492,58 @@ class VendorProduct(models.Model):
     original_discount_currency = models.CharField(_('Original discount currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
     availability  = models.IntegerField(_('Items in stock'), null=True, blank=True, help_text=_('Negative value means it is in stock, but we have no information about how many. Null means we have no information about availability. 0 means it is sold out'))
 
+    def _calculate_locale_price(self):
+        """
+        Return price and currency based on the locale from get_language.
+        """
+        locale = get_language()
+        if locale not in settings.LANGUAGE_TO_CURRENCY:
+            return self.original_currency
+
+        from_currency = self.original_currency
+        to_currency = settings.LANGUAGE_TO_CURRENCY.get(locale, settings.APPAREL_BASE_CURRENCY)
+
+        if from_currency == to_currency:
+            return self.original_price, self.original_discount_price, to_currency
+
+        key = 'currency_rates_base_%s' % (settings.APPAREL_BASE_CURRENCY,)
+        rates = cache.get(key)
+        if not rates:
+            fxrate_model = get_model('importer', 'FXRate')
+            rates = {}
+            for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY).values('currency', 'rate'):
+                rates[rate_obj['currency']] = rate_obj['rate']
+
+            if rates:
+                cache.set(key, rates, 60*60)
+
+        rate = rates[to_currency] * (1 / rates[from_currency])
+        if from_currency == settings.APPAREL_BASE_CURRENCY:
+            rate = rates[to_currency]
+        elif to_currency == settings.APPAREL_BASE_CURRENCY:
+            rate = 1 / rates[from_currency]
+
+        discount_price = self.original_discount_price
+        if discount_price:
+            discount_price = rate * self.original_discount_price
+
+        return rate * self.original_price, discount_price, to_currency
+
+    @property
+    def locale_price(self):
+        price, _, _ = self._calculate_locale_price()
+        return price
+
+    @property
+    def locale_discount_price(self):
+        _, discount_price, _ = self._calculate_locale_price()
+        return discount_price
+
+    @property
+    def locale_currency(self):
+        _, _, currency = self._calculate_locale_price()
+        return currency
+
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)
 
@@ -497,8 +553,8 @@ class VendorProduct(models.Model):
     class Exporter:
         export_fields = ['__all__', '-product']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProduct)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=VendorProduct)
+models.signals.post_save.connect(invalidate_model_handler, sender=VendorProduct)
+models.signals.post_delete.connect(invalidate_model_handler, sender=VendorProduct)
 
 
 #
@@ -528,8 +584,8 @@ class VendorProductVariation(models.Model):
 
         return unicode(s)
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=VendorProductVariation)
+models.signals.post_save.connect(invalidate_model_handler, sender=VendorProductVariation)
+models.signals.post_delete.connect(invalidate_model_handler, sender=VendorProductVariation)
 
 
 #
@@ -663,13 +719,12 @@ class Look(models.Model):
         total = decimal.Decimal('0.0')
         for component in self.display_components:
             if component.product.default_vendor:
-                if component.product.default_vendor.discount_price:
-                    total += component.product.default_vendor.discount_price
+                if component.product.default_vendor.locale_discount_price:
+                    total += component.product.default_vendor.locale_discount_price
                 else:
-                    total += component.product.default_vendor.price
+                    total += component.product.default_vendor.locale_price
 
         return total
-        #return components.annotate(price=Min('product__vendorproduct__price')).aggregate(Sum('price'))['price__sum']
 
     @property
     def photo_components(self):
@@ -726,8 +781,8 @@ class Look(models.Model):
     class Exporter:
         export_fields = ['__all__', 'get_absolute_url', 'photo_components', 'display_with_component', 'collage_components', 'score']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=Look)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=Look)
+models.signals.post_save.connect(invalidate_model_handler, sender=Look)
+models.signals.post_delete.connect(invalidate_model_handler, sender=Look)
 
 @receiver(post_delete, sender=Look, dispatch_uid='look_post_delete')
 def look_post_delete(sender, instance, **kwargs):
@@ -790,8 +845,8 @@ class LookLike(models.Model):
     class Meta:
         unique_together = (('look', 'user'),)
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookLike)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookLike)
+models.signals.post_save.connect(invalidate_model_handler, sender=LookLike)
+models.signals.post_delete.connect(invalidate_model_handler, sender=LookLike)
 
 @receiver(post_save, sender=LookLike, dispatch_uid='look_like_post_save')
 def look_like_post_save(sender, instance, **kwargs):
@@ -895,8 +950,9 @@ class LookComponent(models.Model):
     class Exporter:
         export_fields = ['__all__', 'style', 'style_middle', 'style_small', '-look']
 
-models.signals.post_save.connect(cache.invalidate_model_handler, sender=LookComponent)
-models.signals.post_delete.connect(cache.invalidate_model_handler, sender=LookComponent)
+models.signals.post_save.connect(invalidate_model_handler, sender=LookComponent)
+models.signals.post_delete.connect(invalidate_model_handler, sender=LookComponent)
+
 
 
 #
@@ -940,13 +996,12 @@ class FacebookAction(models.Model):
 
 def save_synonym_file(sender, **kwargs):
     instance = kwargs['instance']
-    synonym_file = open(settings.SEARCH_SYNONYM_FILE, "w")
+    synonym_file = open(settings.SOLR_SYNONYM_FILE, "w")
     synonym_file.write(instance.content.encode("utf-8"))
     synonym_file.close()
 
-    # FIXME: Move this link to a config file
     import requests
-    requests.get('http://localhost:8983/solr/admin/cores?action=RELOAD&core=collection1')
+    requests.get(settings.SOLR_RELOAD_URL)
 
 class SynonymFile(models.Model):
     content = models.TextField(_('Synonyms'), null=True, blank=True, help_text=_('Place all synonyms on their own line, comma-separated. Comments start with "#".'))
@@ -955,8 +1010,8 @@ class SynonymFile(models.Model):
         return u'%s...' % (self.content[0:20],)
 
     def clean(self):
-        if not hasattr(settings, "SEARCH_SYNONYM_FILE"):
-            raise ValidationError("You must define the SEARCH_SYNONYM_FILE before using synonyms.")
+        if not hasattr(settings, "SOLR_SYNONYM_FILE"):
+            raise ValidationError("You must define the SOLR_SYNONYM_FILE setting before using synonyms.")
 
         if self.__class__.objects.count() > 1:
             raise ValidationError("Only one synonym file is allowed.")
@@ -989,7 +1044,7 @@ def comments_handler(sender, comment, request, **kwargs):
 
 import django.contrib.comments.signals
 django.contrib.comments.signals.comment_was_posted.connect(comments_handler)
-django.contrib.comments.signals.comment_was_posted.connect(cache.invalidate_model_handler)
+django.contrib.comments.signals.comment_was_posted.connect(invalidate_model_handler)
 
 
 #

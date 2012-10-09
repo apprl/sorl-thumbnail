@@ -180,11 +180,13 @@ def get_product_document(instance):
         availability = instance.availability
         discount = False
         price = decimal.Decimal('0.0')
+        currency = 'EUR'
         if instance.default_vendor:
-            discount = instance.default_vendor.discount_price > decimal.Decimal('0.0')
-            price = instance.default_vendor.price
-            if instance.default_vendor.discount_price:
-                price = instance.default_vendor.discount_price
+            discount = instance.default_vendor.original_discount_price > decimal.Decimal('0.0')
+            price = instance.default_vendor.original_price
+            currency = instance.default_vendor.original_currency
+            if instance.default_vendor.original_discount_price:
+                price = instance.default_vendor.original_discount_price
         else:
             if availability:
                 logger.warning('Availability is true, but product have no vendorproduct [PID: %s]' % (instance.pk,))
@@ -209,6 +211,7 @@ def get_product_document(instance):
         document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
         document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)
         document['django_id'] = instance.pk
+        document['name'] = instance.product_name
 
         # Search fields
         document['product_name'] = instance.product_name
@@ -219,7 +222,7 @@ def get_product_document(instance):
 
         # Facets
         document['color'] = color_ids
-        document['price'] = int(price.quantize(decimal.Decimal('1.'), rounding=decimal.ROUND_HALF_UP))
+        document['price'] = '%s,%s' % (price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
         document['category'] = category_ids
         document['manufacturer_id'] = instance.manufacturer_id
 
@@ -286,8 +289,12 @@ def get_look_document(instance):
     document['created'] = instance.created
     document['modified'] = instance.modified
     document['user'] = instance.user.username
+    document['name'] = instance.title
+    document['description'] = instance.description
+    product_manufacturers = instance.product_manufacturers
+    if product_manufacturers and product_manufacturers[0]:
+        document['manufacturer_name'] = ', '.join(product_manufacturers)
     document['template'] = render_to_string('apparel/fragments/look_search_content.html', {'object': instance})
-    document['text'] = render_to_string('search/indexes/apparel/look_text.txt', {'object': instance})
 
     return document, boost
 

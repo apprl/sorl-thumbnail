@@ -8,6 +8,6 @@
 {% endblocktrans %}
 </span>
 {% if object.display_components.count > 0 %}
-<span class="sum"> - {{ object.total_price|floatformat:0|apprl_intcomma }} SEK</span>
+<span class="sum"> - {{ object.total_price|floatformat:0|apprl_intcomma }} {{ CURRENCY }}</span>
 {% endif %}
 </p>

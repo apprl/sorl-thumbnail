@@ -51,13 +51,21 @@ LOCALE_PATHS = (
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'sv'
 LANGUAGES = (
-    ('en', gettext('English')),
-    ('sv', gettext('Swedish')),
+    ('en', gettext(u'English (€)')),
+    ('sv', gettext(u'Swedish (SEK)')),
 )
 SHORT_LANGUAGES = (
-    ('en', gettext('Eng')),
-    ('sv', gettext('Swe')),
+    ('en', gettext(u'Eng (€)')),
+    ('sv', gettext(u'Swe (SEK)')),
 )
+LANGUAGE_TO_CURRENCY = {
+    'en': 'EUR',
+    'sv': 'SEK',
+}
+MAX_MIN_CURRENCY = {
+    'en': 1000,
+    'sv': 10000,
+    }
 
 
 # Absolute path to the directory that holds media.
@@ -274,6 +282,9 @@ GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 # ACTSTREAM
 ACTSTREAM_MANAGER = 'actstream.managers.ActionManager'
 ACTSTREAM_ACTION_MODELS = ['auth.user', 'apparel.Look', 'apparel.Product', 'comments.comment']
+
+# SOLR COMMON
+SOLR_RELOAD_URL = 'http://localhost:8983/solr/admin/cores?action=RELOAD&core=collection1'
 
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'

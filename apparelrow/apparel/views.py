@@ -401,9 +401,13 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
         else:
             queryset = Look.objects.none()
     elif search:
+        if not gender:
+            gender_field = 'gender:(U OR M OR W)'
+        else:
+            gender_field = 'gender:(U OR %s)' % (gender,)
         query_arguments = {'qf': 'text',
                            'defType': 'edismax',
-                           'fq': 'django_ct:apparel.look',
+                           'fq': ['django_ct:apparel.look', gender_field],
                            'start': 0,
                            'rows': 500} # XXX: maximum search results, sync this with the count that is displayed in the search result box
         results = ApparelSearch(request.GET.get('q'), **query_arguments)

@@ -15,11 +15,11 @@
             {% if not product.default_vendor or product.default_vendor.availability == 0 %}
             <span class="sold-out">{% trans "SOLD OUT" %}</span>
             {% else %}
-                {% if product.default_vendor.discount_price %}
-                <span class="discount-price">{{ product.default_vendor.discount_price|floatformat:0|apprl_intcomma }} {{ product.default_vendor.currency }}</span>
-                <span class="price discounted">{{ product.default_vendor.price|floatformat:0|apprl_intcomma }} {{ product.default_vendor.currency }}</span>
+                {% if product.default_vendor.locale_discount_price %}
+                <span class="discount-price">{{ product.default_vendor.locale_discount_price|floatformat:0|apprl_intcomma }} {{ product.default_vendor.locale_currency }}</span>
+                <span class="price discounted">{{ product.default_vendor.locale_price|floatformat:0|apprl_intcomma }} {{ product.default_vendor.locale_currency }}</span>
                 {% else %}
-                <span class="price">{{ product.default_vendor.price|floatformat:0|apprl_intcomma }} {{ product.default_vendor.currency }}</span>
+                <span class="price">{{ product.default_vendor.locale_price|floatformat:0|apprl_intcomma }} {{ product.default_vendor.locale_currency }}</span>
                 {% endif %}
             {% endif %}
         </div>

@@ -1,6 +1,7 @@
 from django.conf import settings as django_settings
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
+from django.utils.translation import get_language
 
 from apparel.utils import get_gender_from_cookie
 
@@ -18,7 +19,8 @@ def exposed_settings(request):
         'CURRENT_NAME': current_site.name,
         'FACEBOOK_APP_ID': django_settings.FACEBOOK_APP_ID,
         'FACEBOOK_SCOPE': django_settings.FACEBOOK_SCOPE,
-        'FACEBOOK_OG_TYPE': django_settings.FACEBOOK_OG_TYPE
+        'FACEBOOK_OG_TYPE': django_settings.FACEBOOK_OG_TYPE,
+        'CURRENCY': django_settings.LANGUAGE_TO_CURRENCY.get(get_language(), django_settings.APPAREL_BASE_CURRENCY),
     }
 
 def next_redirects(request):

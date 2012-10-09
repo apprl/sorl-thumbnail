@@ -24,7 +24,7 @@ fi
 cd "$PROJDIR/releases/current/apparelrow"
 
 # Refresh fx rates
-$PROJDIR/bin/python manage.py arfxrates --refresh --no_update
+$PROJDIR/bin/python manage.py arfxrates --refresh --no_update --solr
 
 if [[ -z "$1" ]]; then
     $PROJDIR/bin/python manage.py arimport --all
@@ -35,7 +35,7 @@ else
 fi
 
 # Update fx rates
-$PROJDIR/bin/python manage.py arfxrates --refresh
+$PROJDIR/bin/python manage.py arfxrates --refresh --solr
 
 # Update new products for brands
 $PROJDIR/bin/python manage.py brand_updates

@@ -1,12 +1,14 @@
 import re
 import math
 import os.path
+import decimal
 
 from django.http import HttpResponse
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.db.models import Max
 from django.db.models import Min
+from django.db.models.loading import get_model
 from django.template import RequestContext
 from django.template import loader
 from django.core.paginator import Paginator
@@ -53,24 +55,18 @@ def generate_gender_field(params):
 
     return gender_field
 
-def set_query_arguments(query_arguments, request, facet_fields=None, gender=None):
+def set_query_arguments(query_arguments, request, facet_fields=None, gender=None, currency=None):
     """
     Set query arguments that are common for every browse page access.
     """
     query_arguments['fl'] = 'template'
-    #query_arguments['stats'] = 'on'
-    #query_arguments['stats.field'] = 'price'
-    query_arguments['facet.range'] = 'price'
-    query_arguments['facet.range.start'] = 0
-    query_arguments['facet.range.end'] = 11000
-    query_arguments['facet.range.gap'] = 10
 
     query_arguments['facet'] = 'on'
     query_arguments['facet.limit'] = -1
     query_arguments['facet.mincount'] = 1
     query_arguments['facet.field'] = []
 
-    for field in ['category', 'price', 'manufacturer_data', 'color']:
+    for field in ['category', 'manufacturer_data', 'color']:
         if facet_fields and field in facet_fields:
             query_arguments['facet.field'].append('{!ex=%s}%s' % (field, field))
 
@@ -89,15 +85,22 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
         price = request.GET['price'].split(',')
         if len(price) == 2:
             try:
-                max_price = int(price[1])
-                min_price = int(price[0])
-            except ValueError:
-                max_price = min_price = 0
+                min_price = decimal.Decimal(price[0])
+                max_price = decimal.Decimal(price[1])
+            except decimal.InvalidOperation:
+                min_price = max_price = decimal.Decimal('0.00')
 
-            if max_price >= 10000:
-                query_arguments['fq'].append('{!tag=%s}%s:[%s TO *]' % ('price', 'price', min_price))
+            min_price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP)
+            max_price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP)
+            # Set a large price that we should never encounter
+            if max_price >= decimal.Decimal('10000'):
+                max_price = decimal.Decimal('1000000000.00')
+
+            if currency:
+                query_arguments['fq'].append('{{!tag={0}}}{0}:[{2},{1} TO {3},{1}]'.format('price', currency, str(min_price), str(max_price)))
             else:
-                query_arguments['fq'].append('{!tag=%s}%s:[%s TO %s]' % ('price', 'price', min_price, max_price))
+                query_arguments['fq'].append('{{!tag={0}}}{0}:[{1} TO {2}]'.format('price', str(min_price), str(max_price)))
+
 
     # Only discount
     if 'discount' in request.GET:
@@ -117,9 +120,14 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     return query_arguments
 
 def browse_products(request, template='apparel/browse.html', gender=None):
+    language = get_language()
+    currency = settings.APPAREL_BASE_CURRENCY
+    if language in settings.LANGUAGE_TO_CURRENCY:
+        currency = settings.LANGUAGE_TO_CURRENCY.get(language)
+
     facet_fields = ['category', 'price', 'color', 'manufacturer_data']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
-    query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender)
+    query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, currency=currency)
 
     # Follower products
     user_ids = []
@@ -151,25 +159,18 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     facet = search.get_facet()['facet_fields']
 
     # Calculate price range
-    pricerange = {}
-    prices = [int(value) for i, value in enumerate(facet['price']) if i % 2 == 0]
-    if prices:
-        pricerange['max'] = max(prices)
-        if pricerange['max'] > 10000:
-            pricerange['max'] = 10000
-        pricerange['min'] = min(prices)
-    else:
-        pricerange = {'min': 0, 'max': 0}
-
-    #stats = search.get_stats()['stats_fields']
-    #pricerange = {'min': 0, 'max': 0}
-    #if 'price' in stats:
-        #pricerange['min'] = int(stats['price']['min'])
-        #pricerange['max'] = int(stats['price']['max'])
-        #if pricerange['max'] > 10000:
-            #pricerange['max'] = 10000
-
+    pricerange = {'min': 0, 'max': 10000}
+    if language in settings.MAX_MIN_CURRENCY:
+        pricerange['max'] = settings.MAX_MIN_CURRENCY.get(language)
     pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
+
+    price = request.GET.get('price', '').split(',')
+    if len(price) == 2:
+        pricerange['selected_min'] = price[0]
+        pricerange['selected_max'] = price[1]
+    else:
+        pricerange['selected_min'] = pricerange['min']
+        pricerange['selected_max'] = pricerange['max']
 
     # Calculate manufacturer
     manufacturers = []
@@ -220,7 +221,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     if selected_price:
         selected_price = selected_price.split(',', 1)
         try:
-            map(int, selected_price)
+            selected_price = map(int, selected_price)
         except ValueError:
             selected_price = [0,0]
 
@@ -268,6 +269,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         default_colors = default_colors,
         categories_all = Category.objects.all(),
         current_page = paged_result,
+        currency_rates = get_model('importer', 'FXRate').objects.filter(base_currency='SEK'),
     )
 
     # Set APPAREL_GENDER
