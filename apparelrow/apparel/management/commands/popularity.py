@@ -1,9 +1,13 @@
 import datetime
+import decimal
+import logging
 
 from django.core.management.base import BaseCommand, CommandError
 
 from apparel.models import Product, ProductLike
 from statistics.models import ProductClick
+
+logger = logging.getLogger('apparel.management')
 
 def batch_qs(qs, batch_size=1000):
     """
@@ -23,6 +27,8 @@ def batch_qs(qs, batch_size=1000):
         end = min(start + batch_size, total)
         yield (start, end, total, qs[start:end])
 
+ZERO = decimal.Decimal(0)
+
 class Command(BaseCommand):
     args = ''
     help = 'Updates popularity for all products (takes awhile)'
@@ -33,6 +39,9 @@ class Command(BaseCommand):
                 product_click_count = 0
                 try:
                     product_click_count = ProductClick.objects.get(product=product).click_count
+                except ProductClick.MultipleObjectsReturned:
+                    product_click_count = ProductClick.objects.filter(product=product)[:1][0].click_count
+                    logger.warning('Duplicate item found in ProductClick: %s' % (product.product_name,))
                 except ProductClick.DoesNotExist:
                     pass
                 two_weeks_behind = datetime.datetime.now() - datetime.timedelta(weeks=2)
@@ -45,6 +54,7 @@ class Command(BaseCommand):
                 item_half_hour_age =  (timedelta.days * 86400 + timedelta.seconds) / 7200
                 if item_half_hour_age > 0:
                     product.popularity = str(votes / pow(item_half_hour_age, 1.53))
-                else:
-                    product.popularity = 0
-                product.save()
+                    product.save()
+                elif popularity > ZERO:
+                    product.popularity = ZERO
+                    product.save()
