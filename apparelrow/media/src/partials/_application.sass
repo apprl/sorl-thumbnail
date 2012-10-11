@@ -2061,6 +2061,40 @@ ul.suggested-friends
     height: 1px
     border: none
 
+//
+// Activity elements used in feeds
+//
+.activity
+  border-bottom: 3px solid $black_color
+  padding-bottom: 20px
+  margin-bottom: 20px
+  .activity-header
+    overflow: hidden
+    margin-bottom: 10px
+    &:after
+      display: table
+      clear: both
+      content: ""
+    .activity-image
+      float: left
+      width: 50px
+      height: 50px
+    .activity-short
+      width: 392px
+      margin-left: 10px
+      float: left
+      a
+        font-weight: bold
+        &:hover
+          text-decoration: underline
+      .activity-date
+        color: $easier_color
+  .activity-content
+    width: 452px
+  .activity-comment
+    margin-top: 10px
+
+// Remove inline-date and activity-list later
 .inline-date
   float: right
   color: $easier_color
@@ -2139,11 +2173,6 @@ ul.suggested-friends
         color: $like_color
       .likes
         color: $like_color
-
-a#create-look
-  +highlight_button(unquote("32px"))
-  width: $aside_width - 2
-  text-align: center
 
 .dialog
   +dialog
