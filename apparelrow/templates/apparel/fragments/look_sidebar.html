@@ -1,7 +1,7 @@
 {% load cache thumbnail %}
 {% cache CACHE_TIMEOUT look_sidebar object.id LANGUAGE_CODE %}
 <a title="{{ object.title }}" href="{{ object.get_absolute_url }}">
-    <div class="look">
+    <div class="look-sidebar">
     {% thumbnail object.static_image "206" crop="noop" format="PNG" transparent=True as im %}
         <img id="look-{{ object.id }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
     {% endthumbnail %}
