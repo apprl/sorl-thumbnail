@@ -23,9 +23,13 @@
         {% endfor %}
         </ul>
 
-        <a href="#"><h2>{% trans "Popular brands in your network" %}</h2></a>
-        <ul>
-            <li>brand</li>
+        <h2>{% trans "Most followed brands" %}</h2>
+        <ul class="suggested-friends">
+        {% for profile in popular_brands %}
+            <li>
+            {% include 'apparel/fragments/avatar_link_no_cache.html' %}
+            </li>
+        {% endfor %}
         </ul>
     </div>
     <div id="content">

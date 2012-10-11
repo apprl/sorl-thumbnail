@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 
 from apparel.models import Product
-from profile.models import Follow
+from profile.models import Follow, ApparelProfile
 from apparel.views import get_top_looks_in_network, get_top_products_in_network
 from activity_feed.models import ActivityFeed
 
@@ -55,11 +55,14 @@ def user_feed(request):
             'current_page': paged_result
         })
 
+    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')[:5]
+
     return render(request, 'activity_feed/user_feed.html', {
             'current_page': paged_result,
             'next': request.get_full_path(),
             'popular_products': get_top_products_in_network(profile, 4),
             'popular_looks': get_top_looks_in_network(profile, 3),
+            'popular_brands': popular_brands,
         })
 
 
