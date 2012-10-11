@@ -6,5 +6,5 @@
 {% endblock %}
 
 {% block activity_content %}
-    Product content here...
+    {% include 'apparel/fragments/product_shop.html' with object=object.activity_object %}
 {% endblock %}

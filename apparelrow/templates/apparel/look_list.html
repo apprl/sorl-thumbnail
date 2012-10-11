@@ -2,13 +2,6 @@
 {% load i18n cache thumbnail apparel_extras %}
 
 {% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Looks Men" %}{% else %}{% trans "Looks Women" %}{% endif %} | {% endblock %}
-{% block 'extra-scripts' %}
-<script type="text/javascript">
-    jQuery(document).ready(function() {
-        jQuery('.collage .product, .photo .product').enableApprlTooltip();
-    });
-</script>
-{% endblock 'extra-scripts' %}
 
 {% block body-header %}
 <div id="body-header">

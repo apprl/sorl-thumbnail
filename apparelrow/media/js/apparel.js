@@ -355,6 +355,9 @@ jQuery(document).ready(function() {
         jQuery('.look-like, .hotspot').show();
     }
 
+    // Enable tooltip for large and medium looks
+    jQuery('.look-large .product, .look-medium .product').enableApprlTooltip();
+
     // Product like - show tooltip if no previously likes
     jQuery('a.product-heart, .product-like').live('mouseenter', function() {
         if(isAuthenticated == true && hasLiked == false) {

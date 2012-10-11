@@ -6,5 +6,5 @@
 {% endblock %}
 
 {% block activity_content %}
-    Follow content here...
+    <a href="{{ object.activity_object.get_absolut_url }}"><img src="{{ object.activity_object.avatar_large }}"></a>
 {% endblock %}

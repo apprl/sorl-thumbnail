@@ -13,7 +13,8 @@ from activity_feed.models import ActivityFeed
 
 class ActivityFeedHTML:
 
-    def __init__(self, queryset):
+    def __init__(self, request, queryset):
+        self.request = request
         self.queryset = queryset
 
     def __len__(self):
@@ -26,7 +27,10 @@ class ActivityFeedHTML:
             # Comments
             comments =  Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False).order_by('-submit_date').select_related('user', 'user__profile')[:2]
 
-            data.append(render_to_string('activity_feed/verbs/%s.html' % (result.verb,), {'object': result, 'comments': comments}))
+            data.append(render_to_string('activity_feed/verbs/%s.html' % (result.verb,), {'object': result,
+                                                                                          'comments': comments,
+                                                                                          'CACHE_TIMEOUT': 10,
+                                                                                          'LANGUAGE_CODE': self.request.LANGUAGE_CODE}))
         return data
 
 @login_required
@@ -35,7 +39,7 @@ def user_feed(request):
     profile.updates_last_visit = datetime.datetime.now()
     profile.save()
 
-    htmlset = ActivityFeedHTML(ActivityFeed.objects.get_for_user(profile))
+    htmlset = ActivityFeedHTML(request, ActivityFeed.objects.get_for_user(profile))
     paginator = Paginator(htmlset, 5)
 
     page = request.GET.get('page')

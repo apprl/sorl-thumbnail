@@ -454,6 +454,40 @@ body.look-list
   ul.looks
     margin-top: 10px
 
+.look-medium
+  +look_medium
+  &.photo
+    border: 0
+
+.look-large
+  +look_large
+  &.photo
+    border: 0
+
+.look-footer
+  > h3, p
+    text-align: center
+  > h3
+    margin-top: 6px
+    font-weight: bold
+    font-size: 1.273em
+  > p
+    margin-top: 3px
+    font-size: 1.182em
+  p, p > a
+    color: $easier_color
+  .stats
+    margin-top: 3px
+    font-size: 1.182em
+    font-weight: bold
+    text-align: center
+    .likes
+      +large_likes
+      margin-right: 5px
+    .comments
+      +large_comments
+
+
 body.look-list, body.profile-looks
   ul.looks
     li
@@ -462,32 +496,3 @@ body.look-list, body.profile-looks
         margin-right: 0
       &:hover
         background: transparent
-      > h3, p
-        text-align: center
-      > h3
-        margin-top: 6px
-        font-weight: bold
-        font-size: 1.273em
-      > p
-        margin-top: 3px
-        font-size: 1.182em
-      p, p > a
-        color: $easier_color
-      .stats
-        margin-top: 3px
-        font-size: 1.182em
-        font-weight: bold
-        text-align: center
-        .likes
-          +large_likes
-          margin-right: 5px
-        .comments
-          +large_comments
-      .look-medium
-        +look_medium
-        &.photo
-          border: 0
-      .look-large
-        +look_large
-        &.photo
-          border: 0

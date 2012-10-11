@@ -986,88 +986,81 @@ div#product-list, .product-list
     li
       float: left
       +product_list_item
-      .delete-wardrobe
+
+//
+// Product medium: shop, feed
+//
+.product-medium
+  width: 224px
+  margin: 0 8px 20px 0
+  text-align: center
+  .product-image
+    border: none
+    display: block
+    // The height is defined in the template product_small_content
+    height: 291px
+    img
+      max-width: 224px
+      max-height: 291px
+  h4
+    height: 1.5em
+    overflow: hidden
+    font-family: $font_family
+    font-size: 1.1em
+    font-weight: bold
+    padding-top: 10px
+    a
+      display: block
+  .product-hover
+    display: none
+    position: absolute
+    top: 0
+    left: 0
+    width: 224px
+    height: 291px
+    background-image: image_url("hvbg.png")
+    cursor: pointer
+    &:hover
+      cursor: pointer
+    .header
+      display: none
+      position: absolute
+      top: 0
+      width: 224px
+      height: 40px
+      .right
         position: absolute
-        top: 2px
-        left: 2px
-        width: 20px
-        height: 20px
-        z-index: 150
-        text-indent: -9999px
-        background: transparent image_url(unquote("delete-button-on-image.png")) no-repeat scroll center center
-        &:hover
-          background: transparent image_url(unquote("delete-button-on-image-hover.png")) no-repeat scroll center center
-      .product-medium
-        width: 224px
-        margin: 0 8px 20px 0
+        top: 10px
+        right: 10px
+        width: 165px
+        height: 25px
+        padding-top: 10px
+        .likes, .comments
+          float: right
+        .likes
+          +large_likes
+          margin-right: 5px
+        .comments
+          +large_comments
+    .footer
+      position: absolute
+      bottom: 0
+      width: 224px
+      height: 47px
+      .footer-button
+        width: 95px
+        height: auto
+        padding: 10px 0
         text-align: center
-        .product-image
-          border: none
-          display: block
-          // The height is defined in the template product_small_content
-          height: 291px
-          img
-            max-width: 224px
-            max-height: 291px
-        h4
-          height: 1.5em
-          overflow: hidden
-          font-family: $font_family
-          font-size: 1.1em
-          font-weight: bold
-          padding-top: 10px
-          a
-            display: block
-        .product-hover
-          display: none
-          position: absolute
-          top: 0
-          left: 0
-          width: 224px
-          height: 291px
-          background-image: image_url("hvbg.png")
-          cursor: pointer
-          &:hover
-            cursor: pointer
-          .header
-            display: none
-            position: absolute
-            top: 0
-            width: 224px
-            height: 40px
-            .right
-              position: absolute
-              top: 10px
-              right: 10px
-              width: 165px
-              height: 25px
-              padding-top: 10px
-              .likes, .comments
-                float: right
-              .likes
-                +large_likes
-                margin-right: 5px
-              .comments
-                +large_comments
-          .footer
-            position: absolute
-            bottom: 0
-            width: 224px
-            height: 47px
-            .footer-button
-              width: 95px
-              height: auto
-              padding: 10px 0
-              text-align: center
-              text-transform: uppercase
-              &.info
-                +button(none, 16px, 0)
-                margin-left: 10px
-                float: left
-              &.buy
-                +highlight_button(16px, 0)
-                margin-right: 10px
-                float: right
+        text-transform: uppercase
+        &.info
+          +button(none, 16px, 0)
+          margin-left: 10px
+          float: left
+        &.buy
+          +highlight_button(16px, 0)
+          margin-right: 10px
+          float: right
 
 .brand-list .sidebar .product-small, .profile .sidebar .product-small, .updates .sidebar .product-small
   width: 93px
@@ -2090,7 +2083,9 @@ ul.suggested-friends
       .activity-date
         color: $easier_color
   .activity-content
+    position: relative // used for product-hover among other things
     width: 452px
+    text-align: center
   .activity-comment
     margin-top: 10px
 

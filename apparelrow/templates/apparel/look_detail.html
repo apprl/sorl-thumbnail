@@ -27,7 +27,6 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery('.collage .product, .photo .product').enableApprlTooltip();
         jQuery('#embed-code, #url-code')
             .focus(function(e) { this.select(); })
             .mouseup(function(e) { e.preventDefault() });
@@ -119,11 +118,11 @@
 <div id="content">
     {# FIXME: Add a "display_as "whatever" or "dispay_as_whatever" property to thge look object rather than checking the flag #}
     {% if object.display_with_component == 'C' %}
-        <div class="collage">
+        <div class="look-large collage">
             {% include 'apparel/fragments/look_collage.html' %}
         </div>
     {% else %}
-        <div class="photo">
+        <div class="look-large photo">
             {% include 'apparel/fragments/look_photo.html' %}
         </div>
     {% endif %}
