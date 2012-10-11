@@ -23,7 +23,6 @@ from django.views.i18n import set_language
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from hanssonlarsson.django.exporter import json as special_json
-from actstream.models import Action
 from sorl.thumbnail import get_thumbnail
 
 from profile.models import ApparelProfile, Follow
@@ -205,7 +204,7 @@ def product_detail(request, slug):
     looks_with_product_count = Look.objects.filter(components__product=product).aggregate(Count('id')).get('id__count', 0)
 
     # Comments
-    content_type =ContentType.objects.get_for_model(Product)
+    content_type = ContentType.objects.get_for_model(Product)
     comments =  Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_public=True, is_removed=False).select_related('user', 'user__profile')
 
     # Likes
@@ -397,7 +396,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
 
     if popular:
         if request.user.is_authenticated():
-            queryset = get_top_looks_in_network(request.user)
+            queryset = get_top_looks_in_network(request.user.get_profile())
         else:
             queryset = Look.objects.none()
     elif search:
@@ -888,7 +887,7 @@ def home(request, profile):
             'current_page': paged_result,
             'next': request.get_full_path(),
             'profile': profile,
-            'popular_looks_in_network': get_top_looks_in_network(request.user, limit=limit),
+            'popular_looks_in_network': get_top_looks_in_network(request.user.get_profile(), limit=limit),
             'popular_products_in_network': popular_products
         }, context_instance=RequestContext(request))
 
@@ -958,20 +957,21 @@ def facebook_friends_widget(request):
 # Utility routines. FIXME: Move these out
 #
 
-def get_top_looks(request, limit=10, gender=None):
-    """
-    Get the most popular looks, sorted by number of likes. If gender is set,
-    also filter looks by gender.
-    """
-    if gender is not None:
-        return Look.objects.filter(gender__in=['U', gender], popularity__gt=0).order_by('-popularity', '-created')[:limit]
-    return Look.objects.filter(popularity__gt=0).order_by('-popularity', '-created')[:limit]
-
-def get_top_looks_in_network(user, limit=None):
-    user_ids = Follow.objects.filter(user=user.get_profile(), active=True).values_list('user_follow__user_id', flat=True)
+def get_top_looks_in_network(profile, limit=None):
+    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow__user', flat=True)
+    # TODO: add active/published flag here later
     looks = Look.objects.filter(user__in=user_ids).order_by('-popularity', '-created')
 
     if limit:
         return looks[:limit]
 
     return looks
+
+def get_top_products_in_network(profile, limit=None):
+    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow__user', flat=True)
+    products = Product.valid_objects.filter(likes__active=True, likes__user__in=user_ids).order_by('-popularity')
+
+    if limit:
+        return products[:limit]
+
+    return products

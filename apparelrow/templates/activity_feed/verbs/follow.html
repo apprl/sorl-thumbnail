@@ -1,0 +1,10 @@
+{% extends 'activity_feed/activity.html' %}
+{% load i18n %}
+
+{% block activity_header %}
+    <a href="{{object.user.get_absolute_url}}">{{object.user.display_name}}</a> {% trans "now follows" %} <a href="{{object.activity_object.get_absolute_url}}">{{object.activity_object.display_name}}</a>
+{% endblock %}
+
+{% block activity_content %}
+    Follow content here...
+{% endblock %}

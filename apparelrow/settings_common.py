@@ -183,6 +183,7 @@ INSTALLED_APPS = (
     'statistics',           # Internal: Click statistics module
     'newsletter',
 
+    'activity_feed',
     'actstream',            # External: Actions and follows
                             # This app must be included last because it depends
                             # on a populated app cache for get_model
@@ -336,6 +337,9 @@ APPAREL_DECOMPRESS_SUFFIX = {
 THUMBNAIL_ENGINE = 'apparel.sorl_engine.Engine'
 
 # CELERY CONFIGURATION
+CELERY_DEFAULT_QUEUE = 'standard'
+CELERY_DEFAULT_EXCHANGE_TYPE = 'direct'
+CELERY_DEFAULT_ROUTING_KEY = 'standard'
 CELERY_CREATE_MISSING_QUEUES = True
 CELERY_QUEUES = {
     'clicks': {'exchange': 'clicks', 'exchange_type': 'direct', 'routing_key': 'increment_click'},

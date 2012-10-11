@@ -23,7 +23,8 @@ from django.contrib.contenttypes.models import ContentType
 from apparel.manager import ProductManager, SearchManager
 from apparel.cache import invalidate_model_handler
 
-from actstream import action
+from activity_feed.models import Activity
+
 from cStringIO import StringIO
 from PIL import Image
 from tagging.fields import TagField
@@ -352,16 +353,9 @@ def product_like_post_save(sender, instance, **kwargs):
         return
 
     if instance.active == True:
-        get_model('actstream', 'Action').objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(instance.user),
-                                                               actor_object_id=instance.user.pk,
-                                                               verb='liked_product',
-                                                               action_object_content_type=ContentType.objects.get_for_model(instance.product),
-                                                               action_object_object_id=instance.product.pk)
+        Activity.objects.push_activity(instance.user.get_profile(), 'like', instance.product)
     else:
-        get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
-                                                        verb='liked_product',
-                                                        action_object_content_type=ContentType.objects.get_for_model(instance.product),
-                                                        action_object_object_id=instance.product.pk).delete()
+        Activity.objects.pull_activity(instance.user.get_profile(), 'like', instance.product)
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
@@ -369,10 +363,7 @@ def product_like_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
         return
 
-    get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
-                                                    verb='liked_product',
-                                                    action_object_content_type=ContentType.objects.get_for_model(instance.product),
-                                                    action_object_object_id=instance.product.pk).delete()
+    Activity.objects.pull_activity(instance.user.get_profile(), 'like', instance.product)
 
 
 #
@@ -785,7 +776,7 @@ def look_post_save(sender, instance, created, **kwargs):
         return
 
     if created:
-        action.send(instance.user, verb='created', action_object=instance)
+        Activity.objects.push_activity(instance.user.get_profile(), 'create', instance)
 
 @receiver(pre_delete, sender=Look, dispatch_uid='look_pre_delete')
 def look_pre_delete(sender, instance, **kwargs):
@@ -793,23 +784,7 @@ def look_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity on pre_delete, but %s has not user attribute' % instance)
         return
 
-    product_content_type = ContentType.objects.get_for_model(Product)
-    user_content_type = ContentType.objects.get_for_model(User)
-    look_content_type = ContentType.objects.get_for_model(Look)
-
-    for look_component in instance.components.select_related('product'):
-        product = look_component.product
-        get_model('actstream', 'Action').objects.filter(actor_content_type=user_content_type,
-                                                        actor_object_id=instance.user.pk,
-                                                        target_content_type=look_content_type,
-                                                        target_object_id=instance.pk,
-                                                        action_object_content_type=product_content_type,
-                                                        action_object_object_id=product.pk).delete()
-
-    get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
-                                                    verb='created',
-                                                    action_object_content_type=ContentType.objects.get_for_model(instance),
-                                                    action_object_object_id=instance.pk).delete()
+    Activity.objects.pull_activity(instance.user.get_profile(), 'create', instance)
 
 
 #
@@ -842,16 +817,9 @@ def look_like_post_save(sender, instance, **kwargs):
         return
 
     if instance.active == True:
-        get_model('actstream', 'Action').objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(instance.user),
-                                                               actor_object_id=instance.user.pk,
-                                                               verb='liked_look',
-                                                               action_object_content_type=ContentType.objects.get_for_model(instance.look),
-                                                               action_object_object_id=instance.look.pk)
+        Activity.objects.push_activity(instance.user.get_profile(), 'like', instance.look)
     else:
-        get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
-                                                        verb='liked_look',
-                                                        action_object_content_type=ContentType.objects.get_for_model(instance.look),
-                                                        action_object_object_id=instance.look.pk).delete()
+        Activity.objects.pull_activity(instance.user.get_profile(), 'like', instance.look)
 
 @receiver(pre_delete, sender=LookLike, dispatch_uid='look_like_pre_delete')
 def look_like_pre_delete(sender, instance, **kwargs):
@@ -859,10 +827,7 @@ def look_like_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
         return
 
-    get_model('actstream', 'Action').objects.filter(actor_object_id=instance.user.pk,
-                                                    verb='liked_look',
-                                                    action_object_content_type=ContentType.objects.get_for_model(instance.look),
-                                                    action_object_object_id=instance.look.pk).delete()
+    Activity.objects.pull_activity(instance.user.get_profile(), 'like', instance.look)
 
 
 #
@@ -1023,14 +988,7 @@ models.signals.post_save.connect(save_synonym_file, sender=SynonymFile)
 # Comments
 #
 
-def comments_handler(sender, comment, request, **kwargs):
-    if not hasattr(request, 'user'):
-        return
-
-    action.send(request.user, verb='commented', action_object=comment)
-
 import django.contrib.comments.signals
-django.contrib.comments.signals.comment_was_posted.connect(comments_handler)
 django.contrib.comments.signals.comment_was_posted.connect(invalidate_model_handler)
 
 

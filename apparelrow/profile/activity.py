@@ -5,8 +5,8 @@ from django.dispatch import receiver
 from django.contrib.comments.signals import comment_was_posted
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
-from actstream import action
-from actstream.models import Action
+
+from activity_feed.models import Activity
 
 from profile.models import Follow
 
@@ -53,9 +53,10 @@ def post_save_follow_handler(sender, instance, **kwargs):
     if instance.active:
         apparel_profile.followers_count = apparel_profile.followers_count + 1
         process_follow_user.delay(instance.user_follow.user, instance.user.user, instance)
-        action.send(instance.user.user, verb='started following', target=instance.user_follow.user)
+        Activity.objects.push_activity(instance.user, 'follow', instance.user_follow)
     else:
         apparel_profile.followers_count = apparel_profile.followers_count - 1
+        Activity.objects.pull_activity(instance.user, 'follow', instance.user_follow)
     apparel_profile.save()
 
 @receiver(pre_delete, sender=Follow, dispatch_uid='profile.activity.pre_delete_follow_handler')
@@ -68,28 +69,4 @@ def pre_delete_follow_handler(sender, instance, **kwargs):
     apparel_profile.followers_count = apparel_profile.followers_count - 1
     apparel_profile.save()
 
-    Action.objects.filter(actor=instance.user.user, target=instance.user_follow.user, verb='started following').delete()
-
-#
-# Delete actions when a user is deleted.
-#
-
-# XXX: If actions get missing, look here...
-@receiver(post_delete, sender=User, dispatch_uid='profile.activity.delete_object_activities')
-def delete_object_activities(sender, instance, **kwargs):
-    """
-    This signal attempts to delete any activity which is related to Action
-    through a generic relation. This should keep the Action table sane.
-    """
-    Action.objects.filter(
-        action_object_object_id=instance.pk,
-        action_object_content_type=ContentType.objects.get_for_model(instance)
-        ).delete()
-    Action.objects.filter(
-        actor_object_id=instance.pk,
-        actor_content_type=ContentType.objects.get_for_model(instance)
-        ).delete()
-    Action.objects.filter(
-        target_object_id=instance.pk,
-        target_content_type=ContentType.objects.get_for_model(instance)
-        ).delete()
+    Activity.objects.pull_activity(instance.user, 'follow', instance.user_follow)

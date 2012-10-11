@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n apparel_extras %}
+
+{% block extra-title %}{% trans "Friends' Updates" %} | {% endblock %}
+
+{% block body-header %}
+<div id="body-header">
+    <div class="column_one">
+        <h1>{% trans "Friends' Updates" %}</h1>
+    </div>
+</div>
+{% endblock body-header %}
+{% block body-classes %}three-columns updates{% endblock body-classes %}
+{% block body %}
+    <div class="sidebar">
+        <a href="{% gender_url APPAREL_GENDER 'shop' %}#f=1"><h2>{% trans "Popular products in your network" %}</h2></a>
+        {% include 'apparel/fragments/products_sidebar.html' with products=popular_products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
+
+        <a href="{% url popular-look-list %}"><h2>{% trans "Popular looks in your network" %}</h2></a>
+        <ul class="looks">
+        {% for object in popular_looks %}
+            <li>{% include 'apparel/fragments/look_sidebar.html' %}</li>
+        {% endfor %}
+        </ul>
+
+        <a href="#"><h2>{% trans "Popular brands in your network" %}</h2></a>
+        <ul>
+            <li>brand</li>
+        </ul>
+    </div>
+    <div id="content">
+        <h2>{% trans "Your friend's latest updates" %}</h2>
+        {% include 'activity_feed/feed.html' %}
+    </div>
+    <div class="sidebar last">
+        <h2>{% trans "Your friends are here!" %}</h2>
+        <div class="facebook-friends"></div>
+        <a class="all-users" href="{% url user-list-popular %}">{% trans "See all members" %}</a>
+    </div>
+{% endblock body %}
+
+{% block facebook_code %}
+FB.api('/me/friends', function(response) {
+    var fids = jQuery.map(response.data, function(value) {
+        return value['id'];
+    });
+    jQuery('.facebook-friends').load('/home/friends/', {'fids': fids.join(',')});
+});
+{% endblock %}

@@ -312,6 +312,13 @@ def update_profile_language(sender, user, request, **kwargs):
 # FOLLOWS
 #
 
+class FollowManager(models.Manager):
+
+    def followers(self, profile):
+        return [follow.user for follow in self.filter(user_follow=profile, active=True).select_related('user')]
+
+    def following(self, profile):
+        return [follow.user_follow for follow in self.filter(user=profile, active=True).prefetch_related('user_follow')]
 
 # TODO: when django 1.5 is released we will only use one profile/user class
 class Follow(models.Model):
@@ -323,6 +330,8 @@ class Follow(models.Model):
     created = models.DateTimeField(_('Time created'), auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), auto_now=True, null=True, blank=True)
     active = models.BooleanField(default=True, db_index=True)
+
+    objects = FollowManager()
 
     def __unicode__(self):
         return u'%s follows %s' % (self.user, self.user_follow)

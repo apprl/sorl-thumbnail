@@ -29,13 +29,14 @@ class Command(BaseCommand):
                     first_product = product
                 count_product += 1
 
-            if first_product is not None:
-                action_object = get_model('actstream', 'Action') \
-                                    .objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(brand.profile.user),
-                                                           actor_object_id=brand.profile.user.pk,
-                                                           verb='added_products',
-                                                           description=count_product,
-                                                           action_object_content_type=ContentType.objects.get_for_model(first_product),
-                                                           action_object_object_id=first_product.pk)
-            brand.last_update = datetime.datetime.now()
-            brand.save()
+            # TODO: fix this to use new ActivityFeed
+            #if first_product is not None:
+                #action_object = get_model('actstream', 'Action') \
+                                    #.objects.get_or_create(actor_content_type=ContentType.objects.get_for_model(brand.profile.user),
+                                                           #actor_object_id=brand.profile.user.pk,
+                                                           #verb='added_products',
+                                                           #description=count_product,
+                                                           #action_object_content_type=ContentType.objects.get_for_model(first_product),
+                                                           #action_object_object_id=first_product.pk)
+            #brand.last_update = datetime.datetime.now()
+            #brand.save()
