@@ -353,9 +353,9 @@ def product_like_post_save(sender, instance, **kwargs):
         return
 
     if instance.active == True:
-        Activity.objects.push_activity(instance.user.get_profile(), 'like', instance.product)
+        Activity.objects.push_activity(instance.user.get_profile(), 'like_product', instance.product)
     else:
-        Activity.objects.pull_activity(instance.user.get_profile(), 'like', instance.product)
+        Activity.objects.pull_activity(instance.user.get_profile(), 'like_product', instance.product)
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
@@ -363,7 +363,7 @@ def product_like_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
         return
 
-    Activity.objects.pull_activity(instance.user.get_profile(), 'like', instance.product)
+    Activity.objects.pull_activity(instance.user.get_profile(), 'like_product', instance.product)
 
 
 #
@@ -817,9 +817,9 @@ def look_like_post_save(sender, instance, **kwargs):
         return
 
     if instance.active == True:
-        Activity.objects.push_activity(instance.user.get_profile(), 'like', instance.look)
+        Activity.objects.push_activity(instance.user.get_profile(), 'like_look', instance.look)
     else:
-        Activity.objects.pull_activity(instance.user.get_profile(), 'like', instance.look)
+        Activity.objects.pull_activity(instance.user.get_profile(), 'like_look', instance.look)
 
 @receiver(pre_delete, sender=LookLike, dispatch_uid='look_like_pre_delete')
 def look_like_pre_delete(sender, instance, **kwargs):
@@ -827,7 +827,7 @@ def look_like_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
         return
 
-    Activity.objects.pull_activity(instance.user.get_profile(), 'like', instance.look)
+    Activity.objects.pull_activity(instance.user.get_profile(), 'like_look', instance.look)
 
 
 #
