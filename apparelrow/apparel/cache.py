@@ -45,6 +45,7 @@ new_template_cache_map = {
         'look_detail3': ['id_language', lambda x: x.pk],
         'look_list': ['id_language', lambda x: x.pk],
         'look_list_profile': ['id_language', lambda x: x.pk],
+        'look_sidebar': ['id_language', lambda x: x.pk],
     },
     'LookComponent': {
         'look_widget': ['id_language', lambda x: x.look_id],
@@ -55,6 +56,8 @@ new_template_cache_map = {
         'look_detail3': ['id_language', lambda x: x.look_id],
         'look_list': ['id_language', lambda x: x.look_id],
         'look_list_profile': ['id_language', lambda x: x.look_id],
+        'look_sidebar': ['id_language', lambda x: x.pk],
+
     },
     'LookLike': {
         'look_widget': ['id_language', lambda x: x.look_id],
@@ -65,6 +68,7 @@ new_template_cache_map = {
         'look_detail3': ['id_language', lambda x: x.look_id],
         'look_list': ['id_language', lambda x: x.look_id],
         'look_list_profile': ['id_language', lambda x: x.look_id],
+        'look_sidebar': ['id_language', lambda x: x.pk],
     },
     'Comment': {
         'look_list': ['id_language', lambda x: x.object_pk],
