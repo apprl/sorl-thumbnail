@@ -1,4 +1,4 @@
-{% load apparel_extras %}
+{% load apparel_extras comments %}
 <article class="activity {{ object.verb }}">
     <header class="activity-header">
         <div class="activity-image">
@@ -11,12 +11,15 @@
     </header>
     <div class="activity-content">{% block activity_content %}{% endblock %}</div>
     {% if comments %}
-    <div class="activity-comment">
+    <div class="activity-comment comment-box">
         <ul class="comments-list">
         {% for comment in comments %}
             {% include 'comments/comment.html' %}
         {% endfor %}
         </ul>
+        {% if user and user.is_authenticated %}
+        {% render_comment_form for object %}
+        {% endif %}
     </div>
     {% endif %}
 </article>

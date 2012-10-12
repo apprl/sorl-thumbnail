@@ -1,6 +1,9 @@
 {% extends 'apparel/fragments/trackback_comment_base.html' %}
 {% load humanize %}
 
-{% block title %}{% with comment.user.get_profile as profile %}{% include 'apparel/fragments/avatar_link_no_cache.html' %}{% endwith %}{% endblock %}
+{% block avatar %}
+<a href="{{ comment.user.get_profile.get_absolute_url }}"><img class="avatar" src="{{ comment.user.get_profile.avatar }}" alt="{{ comment.user.get_profile.display_name }}"/></a>
+{% endblock %}
+{% block title %}<a href="{{ comment.user.get_profile.get_absolute_url }}">{{ comment.user.get_profile.display_name }}</a>{% endblock %}
 {% block submit_date %}{{ comment.submit_date|naturalday:"Y-m-d" }} {{ comment.submit_date|date:"H:i"}}{% endblock %}
 {% block content %}{{ comment.comment }}{% endblock %}

@@ -211,7 +211,7 @@ COMPRESS_JS = {
                              'js/jquery/jquery.history.js',
                              'js/jquery/jquery.ui.rotatable.js',
                              'js/jquery/jquery.html5-placeholder-shim.js',
-                             'js/jquery/autoresize.jquery.min.js',
+                             'js/jquery/jquery.autosize-min.js',
                              'js/jquery/jquery.scrollable.js',
                              'js/jquery/jquery.apprl-sticky.js',
                              'js/jquery/jquery.apprl-tooltip.js'),

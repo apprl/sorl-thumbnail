@@ -29,6 +29,7 @@ class ActivityFeedHTML:
 
             data.append(render_to_string('activity_feed/verbs/%s.html' % (result.verb,), {'object': result,
                                                                                           'comments': comments,
+                                                                                          'user': self.request.user,
                                                                                           'CACHE_TIMEOUT': 10,
                                                                                           'LANGUAGE_CODE': self.request.LANGUAGE_CODE}))
         return data

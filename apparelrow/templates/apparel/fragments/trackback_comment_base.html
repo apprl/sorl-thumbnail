@@ -1,4 +1,7 @@
-<li>
-    <h3>{% block title %}{% endblock %}<span class="inline-date">{% block submit_date %}{% endblock %}</span></h3>
-    <p>{% block content %}{% endblock %}</p>
+<li class="comment group">
+    <div class="comment-avatar">{% block avatar %}{% endblock %}</div>
+    <div class="comment-content">
+        <h3>{% block title %}{% endblock %} <span class="inline-date">{% block submit_date %}{% endblock %}</span></h3>
+        <p>{% block content %}{% endblock %}</p>
+    </div>
 </li>

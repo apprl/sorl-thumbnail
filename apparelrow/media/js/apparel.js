@@ -87,7 +87,7 @@ jQuery(document).ready(function() {
         window.console = { log: function() {} };
 
     // Make all textareas autogrow
-    jQuery('textarea').autoResize();
+    //jQuery('textarea').autosize();
 
     // Handle language selection
     var selected = false;
@@ -173,16 +173,16 @@ jQuery(document).ready(function() {
     }
 
     // Comments posting
-    var comment_area = jQuery('#comments-and-links textarea');
+    var comment_area = jQuery('.comment-box textarea');
     if(comment_area.val() == '')
-        jQuery('#comments-and-links button').hide();
+        jQuery('.comment-box button').hide();
     comment_area
-        .focus(function() { jQuery('#comments-and-links button').show() })
-        .blur(function() { if(jQuery(this).val() == '') jQuery('#comments-and-links button').hide() });
-    jQuery('#comments-and-links form').hyperSubmit({
+        .focus(function() { jQuery('.comment-box button').show() })
+        .blur(function() { if(jQuery(this).val() == '') jQuery('.comment-box button').hide() });
+    jQuery('.comment-box form').hyperSubmit({
         success: function(data, statusText, req) {
             comment_area.val('');
-            jQuery('#comments-and-links button').hide();
+            jQuery('.comment-box button').hide();
             jQuery(data.html).hide().appendTo('ul#comments').slideDown('fast');
             increase_counts(jQuery('a.comments > span.count'));
             return false;
