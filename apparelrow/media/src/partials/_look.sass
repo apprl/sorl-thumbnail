@@ -21,14 +21,19 @@ $input_border_color: $highlight_border_color !default
       height: 100%
 
 =look_sidebar
-  +box
-  width: $aside_width - 2
+  width: $aside_width
   position: relative
   overflow: hidden
-  border: 1px solid #DEDEDE
   background: #fff
   img
+    border: 1px solid #DEDEDE
     display: block
+  h5, p
+    text-align: center
+  h5
+    font-weight: bold
+  p
+    border: 0
 
 =look_medium
   +box

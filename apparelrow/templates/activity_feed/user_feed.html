@@ -13,24 +13,27 @@
 {% block body-classes %}three-columns updates{% endblock body-classes %}
 {% block body %}
     <div class="sidebar">
-        <a href="{% gender_url APPAREL_GENDER 'shop' %}#f=1"><h2>{% trans "Popular products in your network" %}</h2></a>
+        <h2>{% trans "Popular products in your network" %}</h2>
         {% include 'apparel/fragments/products_sidebar.html' with products=popular_products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
+        <a class="btn btn-block btn-upper btn-rarrow" href="{% gender_url APPAREL_GENDER 'shop' %}#f=1">{% trans "Show all products" %}</a>
 
-        <a href="{% url popular-look-list %}"><h2>{% trans "Popular looks in your network" %}</h2></a>
-        <ul class="looks">
+        <h2>{% trans "Popular looks in your network" %}</h2>
+        <ul class="looks group">
         {% for object in popular_looks %}
             <li>{% include 'apparel/fragments/look_sidebar.html' %}</li>
         {% endfor %}
         </ul>
+        <a class="btn btn-block btn-upper btn-rarrow" href="{% url popular-look-list %}">{% trans "Show all looks" %}</a>
 
         <h2>{% trans "Most followed brands" %}</h2>
-        <ul class="suggested-friends">
+        <ul class="suggested-friends group">
         {% for profile in popular_brands %}
             <li>
             {% include 'apparel/fragments/avatar_link_no_cache.html' %}
             </li>
         {% endfor %}
         </ul>
+        <a class="btn btn-block btn-upper btn-rarrow" href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Show all brands" %}</a>
     </div>
     <div id="content">
         <h2>{% trans "Your friend's latest updates" %}</h2>
@@ -39,7 +42,7 @@
     <div class="sidebar last">
         <h2>{% trans "Your friends are here!" %}</h2>
         <div class="facebook-friends"></div>
-        <a class="all-users" href="{% url user-list-popular %}">{% trans "See all members" %}</a>
+        <a class="btn btn-block btn-upper btn-rarrow" href="{% url user-list-popular %}">{% trans "Show all members" %}</a>
     </div>
 {% endblock body %}
 

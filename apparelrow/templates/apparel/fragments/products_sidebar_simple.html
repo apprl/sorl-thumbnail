@@ -1,5 +1,5 @@
 {% load cache thumbnail thumbnail_extras %}
-<ul class="products">
+<ul class="products group">
 {% for product in products %}
     {% cycle '<li>' '<li class="last">' %}
     {% cache CACHE_LONG_TIMEOUT products_sidebar_simple product.id LANGUAGE_CODE %}

@@ -61,6 +61,68 @@ button
     clear: both
   zoom: 1 /* For IE 6/7 (trigger hasLayout) */
 
+
+/**
+ * Button
+ */
+.btn
+  display: inline-block
+  padding: 10px 16px
+  background-color: $black_color
+  color: $white_color
+  font-size: 12px
+  font-weight: bold
+  text-align: center
+  cursor: pointer
+  vertical-align: middle
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25)
+
+  // Hover
+  &:hover
+    color: $easiest_color
+    //&.btn-rarrow:after
+      //border-left-color: $easiest_color
+    //&.btn-rarrow:before
+      //border-color: $easiest_color
+
+  // Uppercase
+  &.btn-upper
+    text-transform: uppercase
+
+  // Block variant
+  &.btn-block
+    display: block
+    +box-sizing(border-box)
+
+  &.btn-positive
+    background-color: #67e2b8
+    &:hover
+      color: #ceffee
+  &.btn-negative
+    background-color: #f45c92
+    &:hover
+      color: #ffc1d7
+
+  // Right arrow
+  //&.btn-rarrow
+    //position: relative
+    //&:after
+      //content: ' '
+      //position: absolute
+      //top: 14px
+      //right: 2px
+      //border: solid transparent
+      //border-left-color: $white_color
+      //border-width: 4px
+    //&:before
+      //content: ' '
+      //position: absolute
+      //width: 6px
+      //top: 17px
+      //right: 10px
+      //border: 1px solid $white_color
+
+
 #content.fixed
   position: fixed
   top: 0
@@ -638,6 +700,8 @@ ul.products
     &:hover
       +hover_button
       line-height: 2em
+  > a
+    margin-bottom: 15px // push space after buttons in sidebars
 
 .reset
   background: transparent image_url(unquote("logout.png")) no-repeat scroll right center
