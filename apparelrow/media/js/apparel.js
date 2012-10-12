@@ -344,7 +344,7 @@ jQuery(document).ready(function() {
             jQuery('.look-medium .look-like, .look-large .look-like, .look-medium .hotspot, .look-large .hotspot').hide();
         });
         // Look medium and large hover
-        jQuery('.look-medium .look-photo, .look-medium.collage, .look-large.collage, .look-large .look-photo').live('mouseenter', function() {
+        jQuery('.look-medium, .look-large').live('mouseenter', function() {
             jQuery('.look-like', this).show();
             jQuery('.hotspot', this).show();
         }).live('mouseleave', function() {

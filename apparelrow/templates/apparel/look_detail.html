@@ -115,19 +115,24 @@
     {% endwith %}
     {% endif %}
 </div>
+{% endcache %}
 <div id="content">
     {# FIXME: Add a "display_as "whatever" or "dispay_as_whatever" property to thge look object rather than checking the flag #}
     {% if object.display_with_component == 'C' %}
         <div class="look-large collage">
+            {% cache CACHE_TIMEOUT look_detail3 object.id LANGUAGE_CODE %}
             {% include 'apparel/fragments/look_collage.html' %}
+            {% endcache %}
+            <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
         </div>
     {% else %}
         <div class="look-large photo">
+            {% cache CACHE_TIMEOUT look_detail3 object.id LANGUAGE_CODE %}
             {% include 'apparel/fragments/look_photo.html' %}
+            {% endcache %}
+            <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
         </div>
     {% endif %}
-{% endcache %}
-    <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
     {% get_trackbacks_for object as trackbacks %}
     <div id="likes">
         <h2>{% trans "Likes" %}</h2>
