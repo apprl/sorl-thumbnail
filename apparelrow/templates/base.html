@@ -200,7 +200,6 @@
         {% endif %}
 
     {% if user.is_authenticated and user.get_profile %}
-        {% url apparel.views.home as home_url %}
         {% url apparel.views.look_create as look_create_url %}
         {% url profile.views.settings_notification as notification_settings_url %}
         {% url profile.views.settings_email as email_settings_url %}
@@ -224,7 +223,8 @@
                         </ul>
                     </li>
                     <li class="updates">
-                        <a class="{% if request.path == home_url %} selected{% endif %}" href="{{ home_url }}">
+                        {% url user_feed as user_feed_url %}
+                        <a class="{% if request.path == user_feed_url %} selected{% endif %}" href="{{ user_feed_url }}">
                             {% with user.get_profile.get_updates_last_visit as updates %}
                             <span>{% trans "Friends' updates" %}{% if updates %} ({{ updates }}){% endif %}</span>
                             {% endwith %}
