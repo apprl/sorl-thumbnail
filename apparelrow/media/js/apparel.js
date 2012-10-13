@@ -183,7 +183,7 @@ jQuery(document).ready(function() {
         success: function(data, statusText, req) {
             comment_area.val('');
             jQuery('.comment-box button').hide();
-            jQuery(data.html).hide().appendTo('ul#comments').slideDown('fast');
+            jQuery(data.html).hide().appendTo('ul.comments-list').slideDown('fast');
             increase_counts(jQuery('a.comments > span.count'));
             return false;
         }

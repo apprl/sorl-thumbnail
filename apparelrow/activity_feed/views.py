@@ -5,6 +5,7 @@ from django.contrib.comments.models import Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.template.loader import render_to_string
+from django.middleware import csrf
 
 from apparel.models import Product
 from profile.models import Follow, ApparelProfile
@@ -25,11 +26,12 @@ class ActivityFeedHTML:
         for result in self.queryset[k]:
 
             # Comments
-            comments =  Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False).order_by('-submit_date').select_related('user', 'user__profile')[:2]
+            comments =  list(reversed(Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False).order_by('-submit_date').select_related('user', 'user__profile')[:2]))
 
             data.append(render_to_string('activity_feed/verbs/%s.html' % (result.verb,), {'object': result,
                                                                                           'comments': comments,
                                                                                           'user': self.request.user,
+                                                                                          'csrf_token': csrf.get_token(self.request),
                                                                                           'CACHE_TIMEOUT': 10,
                                                                                           'LANGUAGE_CODE': self.request.LANGUAGE_CODE}))
         return data
