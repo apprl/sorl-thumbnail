@@ -106,10 +106,3 @@ class ActivityFeed(models.Model):
 
     class Meta:
         unique_together = ('owner', 'user', 'verb', 'content_type', 'object_id')
-
-#
-# ON FOLLOW
-#
-@receiver(post_save, sender=get_model('profile', 'follow'), dispatch_uid='activity_feed.models.follow')
-def on_follow(signal, instance, **kwargs):
-    update_activity_feed.delay(instance.user, instance.user_follow, instance.active)

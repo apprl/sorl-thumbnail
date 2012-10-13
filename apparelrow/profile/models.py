@@ -21,6 +21,7 @@ from actstream import models as actstream_models
 from sorl.thumbnail import get_thumbnail
 from django_extensions.db.fields import AutoSlugField
 
+from activity_feed.tasks import update_activity_feed
 from profile.tasks import send_email_confirm_task
 from profile.signals import user_created_with_email
 
@@ -339,6 +340,12 @@ class Follow(models.Model):
     class Meta:
         unique_together = ('user', 'user_follow')
 
+@receiver(post_save, sender=Follow, dispatch_uid='profile.models.on_follow')
+def on_follow(signal, instance, **kwargs):
+    """
+    Update activities on follow update.
+    """
+    update_activity_feed.delay(instance.user, instance.user_follow, instance.active)
 
 #
 # NOTIFICATION CACHE
