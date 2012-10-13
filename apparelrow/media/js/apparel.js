@@ -359,7 +359,7 @@ jQuery(document).ready(function() {
     jQuery('.look-large .product, .look-medium .product').enableApprlTooltip();
 
     // Product like - show tooltip if no previously likes
-    jQuery('a.product-heart, .product-like').live('mouseenter', function() {
+    jQuery('.product-like').live('mouseenter', function() {
         if(isAuthenticated == true && hasLiked == false) {
             var element = jQuery(this);
             if(element.children().length == 0) {
@@ -377,66 +377,51 @@ jQuery(document).ready(function() {
                   .on('click', '.look-like', {type: 'look'}, ApparelActivity.like_handler);
 
     // Update likes count
-    jQuery(document).on('like', function(event, element, type) {
-      if(type == 'look') {
-        ApparelActivity.update_count(element.closest('li').find('.stats .likes'), true);
-      } else if(type == 'product') {
-        var like_element = element.parents('.header').find('.likes').show();
-        ApparelActivity.update_count(like_element, true);
-        hasLiked = true;
-      }
+    jQuery(document).on('like', function(event, element, type, id) {
+      var containers = jQuery('.' + type + '-container[data-id=' + id + ']');
+      containers.find('.heart').addClass('liked');
+      ApparelActivity.update_count(containers.find('.likes'), true);
+      hasLiked = true;
       ApparelActivity.update_count(jQuery('.activity .likes .count'), true);
     });
 
-    jQuery(document).on('unlike', function(event, element, type) {
-      if(type == 'look') {
-        ApparelActivity.update_count(element.closest('li').find('.stats .likes'), false);
-      } else if(type == 'product') {
-        var like_element = element.parents('.header').find('.likes');
-        var count = ApparelActivity.update_count(like_element, false);
-        if(count <= 0) {
-          like_element.hide();
-        }
-      }
+    jQuery(document).on('unlike', function(event, element, type, id) {
+      var containers = jQuery('.' + type + '-container[data-id=' + id + ']');
+      containers.find('.heart').removeClass('liked');
+      ApparelActivity.update_count(containers.find('.likes'), false);
       ApparelActivity.update_count(jQuery('.activity .likes .count'), false);
     });
 
-    // Product hover
-    jQuery('.product-medium a.product-image').live('mouseenter', function() {
+    // Product hover, works with medium and feed
+    jQuery('.product-medium, .product-feed').live('mouseenter', function() {
         var element = jQuery(this);
         if(element.parents('#search-result-products').length == 0) {
-            var hover_element = element.siblings('.product-hover');
-            var product_id = getElementId(element.closest('li'));
-            if(!element.data('complete')) {
-                hover_element.find('.info').text(gettext('More info'));
-                hover_element.find('.buy').text(gettext('Buy'));
+            var product_id = getElementId(element);
+            if(!element.data('load_data')) {
+                element.find('.buy').text(gettext('Buy'));
                 jQuery.getJSON(product_popup_url + '?id=' + product_id, function(json) {
-                    hover_element.find('.header').show();
                     if(json[0].liked == true) {
-                        hover_element.find('.product-heart').addClass('liked');
-                        hover_element.find('.product-like').addClass('liked');
+                        element.find('.product-like').addClass('liked');
                     }
                     if(json[0].likes > 0) {
-                        hover_element.find('.likes').show().text(json[0].likes);
+                        element.find('.likes').show().text(json[0].likes);
                     } else {
-                        hover_element.find('.likes').hide();
+                        element.find('.likes').hide();
                     }
                     if(json[0].comments > 0) {
-                        hover_element.find('.comments').show().text(json[0].comments);
+                        element.find('.comments').show().text(json[0].comments);
                     } else {
-                        hover_element.find('.comments').hide();
+                        element.find('.comments').hide();
                     }
                 });
             }
-            jQuery('.product-hover').hide();
-            element.data('complete', true);
-            hover_element.show();
+            element.data('load_data', true);
+            element.find('.hover').show();
+            element.find('.product-image').css({opacity: 0.3});
         }
-    });
-    jQuery('.product-hover').live('mouseleave', function() {
-        jQuery('.product-hover').hide();
-    }).live('click', function() {
-        window.location.href = jQuery(this).siblings('a.product-image').attr('href');
+    }).live('mouseleave', function() {
+        jQuery(this).css({opacity: 1}).find('.hover').hide();
+        jQuery('.product-image').css({opacity: 1});
     });
 
     ApparelActivity.setup_share();
@@ -467,7 +452,7 @@ ApparelActivity = {
             if(element.hasClass('liked')) {
                 jQuery.post(element.data('unlike-url'), function(data) {
                     if(data && data['success'] == true) {
-                        jQuery(document).trigger('unlike', [element, event.data.type]);
+                        jQuery(document).trigger('unlike', [element, event.data.type, element.data('id')]);
                         element.removeClass('liked');
 
                         // Try to remove from facebook
@@ -480,7 +465,7 @@ ApparelActivity = {
             } else {
                 jQuery.post(element.data('like-url'), function(data) {
                     if(data['success'] == true) {
-                        jQuery(document).trigger('like', [element, event.data.type]);
+                        jQuery(document).trigger('like', [element, event.data.type, element.data('id')]);
                         element.addClass('liked');
 
                         // Push likes to google analytics
@@ -500,10 +485,15 @@ ApparelActivity = {
     /**
      * Increase or decrease like count for element.
      */
-    update_count: function(element, like) {
-        var count = parseInt(element.text(), 10) + (like === true ? 1 : -1);
-        element.text(count);
-        return count;
+    update_count: function(elements, like) {
+        elements.each(function(index, element) {
+            var element = jQuery(element).show();
+            var count = parseInt(element.text(), 10) + (like === true ? 1 : -1);
+            element.text(count);
+            if(count <= 0) {
+                element.hide();
+            }
+        });
     },
 
     /**

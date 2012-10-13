@@ -75,7 +75,7 @@ button
   text-align: center
   cursor: pointer
   vertical-align: middle
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25)
+  //text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25)
 
   // Hover
   &:hover
@@ -84,6 +84,16 @@ button
       //border-left-color: $easiest_color
     //&.btn-rarrow:before
       //border-color: $easiest_color
+
+  // Large
+  &.btn-large
+    font-size: 16px
+    padding: 20px 16px
+
+  // Small
+  &.btn-small
+    font-size: 11px
+    padding: 8px 16px
 
   // Uppercase
   &.btn-upper
@@ -984,7 +994,7 @@ div#product-list
           +hover_button
           line-height: 2em
 
-.heart, .product-heart
+.heart
   position: absolute
   top: 0
   left: 0
@@ -1061,7 +1071,57 @@ div#product-list, .product-list
       +product_list_item
 
 //
-// Product medium: shop, feed
+// Product feed and shop
+//
+.product-feed, .product-medium
+  position: relative
+  .product-footer
+    height: 46px
+    h4
+      height: 1.5em
+      overflow: hidden
+      font-family: $font_family
+      font-size: 1.1em
+      font-weight: bold
+      padding-top: 10px
+      a
+        display: block
+  .hover
+    display: none
+    .likes, .comments
+      float: right
+    .likes
+      +large_likes
+      margin-right: 5px
+      display: none
+    .comments
+      +large_comments
+      display: none
+  .hover-top-right
+    position: absolute
+    top: 20px
+    right: 10px
+  .hover-footer
+    position: absolute
+    bottom: 46px
+    width: 100%
+
+//
+// Product in feed
+//
+.product-feed
+  width: 452px
+  text-align: center
+  position: relative
+  .product-image
+    border: none
+    display: block
+    img
+      max-width: 452px
+      max-height: 587px
+
+//
+// Product medium - shop
 //
 .product-medium
   width: 224px
@@ -1071,69 +1131,11 @@ div#product-list, .product-list
     border: none
     display: block
     // The height is defined in the template product_small_content
-    height: 291px
+    // XXX: testing to remove this
+    //height: 291px
     img
       max-width: 224px
       max-height: 291px
-  h4
-    height: 1.5em
-    overflow: hidden
-    font-family: $font_family
-    font-size: 1.1em
-    font-weight: bold
-    padding-top: 10px
-    a
-      display: block
-  .product-hover
-    display: none
-    position: absolute
-    top: 0
-    left: 0
-    width: 224px
-    height: 291px
-    background-image: image_url("hvbg.png")
-    cursor: pointer
-    &:hover
-      cursor: pointer
-    .header
-      display: none
-      position: absolute
-      top: 0
-      width: 224px
-      height: 40px
-      .right
-        position: absolute
-        top: 10px
-        right: 10px
-        width: 165px
-        height: 25px
-        padding-top: 10px
-        .likes, .comments
-          float: right
-        .likes
-          +large_likes
-          margin-right: 5px
-        .comments
-          +large_comments
-    .footer
-      position: absolute
-      bottom: 0
-      width: 224px
-      height: 47px
-      .footer-button
-        width: 95px
-        height: auto
-        padding: 10px 0
-        text-align: center
-        text-transform: uppercase
-        &.info
-          +button(none, 16px, 0)
-          margin-left: 10px
-          float: left
-        &.buy
-          +highlight_button(16px, 0)
-          margin-right: 10px
-          float: right
 
 .brand-list .sidebar .product-small, .profile .sidebar .product-small, .updates .sidebar .product-small
   width: 93px
