@@ -214,8 +214,12 @@ class Product(models.Model):
     valid_objects = ProductManager(availability=True)
     published_objects = ProductManager(availability=False)
 
+    @property
     def score(self):
-        return self.likes.filter(active=True).count()
+        if not hasattr(self, '_score_count'):
+            self._score_count = self.likes.filter(active=True).count()
+
+        return self._score_count
 
     @property
     def comment_count(self):
@@ -683,8 +687,12 @@ class Look(models.Model):
 
         return 'U'
 
+    @property
     def score(self):
-        return self.likes.filter(active=True).count()
+        if not hasattr(self, '_score_count'):
+            self._score_count = self.likes.filter(active=True).count()
+
+        return self._score_count
 
     @property
     def comment_count(self):
