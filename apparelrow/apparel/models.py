@@ -23,8 +23,6 @@ from django.contrib.contenttypes.models import ContentType
 from apparel.manager import ProductManager, SearchManager
 from apparel.cache import invalidate_model_handler
 
-from activity_feed.models import Activity
-
 from cStringIO import StringIO
 from PIL import Image
 from tagging.fields import TagField
@@ -353,9 +351,9 @@ def product_like_post_save(sender, instance, **kwargs):
         return
 
     if instance.active == True:
-        Activity.objects.push_activity(instance.user.get_profile(), 'like_product', instance.product)
+        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'like_product', instance.product)
     else:
-        Activity.objects.pull_activity(instance.user.get_profile(), 'like_product', instance.product)
+        get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_product', instance.product)
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
@@ -363,7 +361,7 @@ def product_like_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
         return
 
-    Activity.objects.pull_activity(instance.user.get_profile(), 'like_product', instance.product)
+    get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_product', instance.product)
 
 
 #
@@ -776,7 +774,7 @@ def look_post_save(sender, instance, created, **kwargs):
         return
 
     if created:
-        Activity.objects.push_activity(instance.user.get_profile(), 'create', instance)
+        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'create', instance)
 
 @receiver(pre_delete, sender=Look, dispatch_uid='look_pre_delete')
 def look_pre_delete(sender, instance, **kwargs):
@@ -784,7 +782,7 @@ def look_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity on pre_delete, but %s has not user attribute' % instance)
         return
 
-    Activity.objects.pull_activity(instance.user.get_profile(), 'create', instance)
+    get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'create', instance)
 
 
 #
@@ -817,9 +815,9 @@ def look_like_post_save(sender, instance, **kwargs):
         return
 
     if instance.active == True:
-        Activity.objects.push_activity(instance.user.get_profile(), 'like_look', instance.look)
+        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'like_look', instance.look)
     else:
-        Activity.objects.pull_activity(instance.user.get_profile(), 'like_look', instance.look)
+        get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_look', instance.look)
 
 @receiver(pre_delete, sender=LookLike, dispatch_uid='look_like_pre_delete')
 def look_like_pre_delete(sender, instance, **kwargs):
@@ -827,7 +825,7 @@ def look_like_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
         return
 
-    Activity.objects.pull_activity(instance.user.get_profile(), 'like_look', instance.look)
+    get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_look', instance.look)
 
 
 #
