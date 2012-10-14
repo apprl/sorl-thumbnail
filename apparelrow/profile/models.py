@@ -143,6 +143,19 @@ class ApparelProfile(models.Model):
         return u'%s' % self.user
 
     @property
+    def avatar_small(self):
+        if self.image:
+            return get_thumbnail(self.image, '32x32', crop='center').url
+
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_uid
+
+        if self.is_brand:
+            return settings.APPAREL_DEFAULT_BRAND_AVATAR
+
+        return settings.APPAREL_DEFAULT_AVATAR
+
+    @property
     def avatar(self):
         if self.image:
             return get_thumbnail(self.image, '50x50', crop='center').url

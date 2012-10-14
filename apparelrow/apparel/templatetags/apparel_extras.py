@@ -346,13 +346,14 @@ def getdictattribute(value, arg):
 register.filter('getdictattribute', getdictattribute)
 
 @register.simple_tag
-def selected_url(request, pattern):
-    if pattern == '/':
-        if request.path.startswith('/men') or request.path.startswith('/women'):
-            return 'selected'
-    else:
-        if request.path.startswith(pattern):
-            return 'selected'
+def selected_url(request, *args):
+    for pattern in args:
+        if pattern == '/':
+            if request.path.startswith('/men') or request.path.startswith('/women'):
+                return 'selected'
+        else:
+            if request.path.startswith(pattern):
+                return 'selected'
 
     return ''
 

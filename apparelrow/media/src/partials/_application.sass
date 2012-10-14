@@ -247,7 +247,6 @@ button
   position: relative
   width: 100%
   min-width: 1000px
-
   #inner-header
     width: 940px
     height: 118px
@@ -266,127 +265,133 @@ button
       top: 54px
       width: 170px
       height: 25px
-    #nav-gender
-      font-family: $font_family
-      font-size: 1.1em
-      position: absolute
-      top: 63px
-      left: 244px
-      .profile-login-flow &
-        display: none
+    .subnav-handle, .subnav-gray-handle
+      position: relative
+    .subnav-gray-handle
+      background-color: $dark_color
+      +border_radius(3px)
       a
-        display: block
-        text-decoration: none
-        text-transform: uppercase
-        color: $easy_color
-        padding: 2px 0
-        &:hover, &:active, &.selected
-          color: $white_color
-        &.left
-          float: left
-          +border(right, $easy_color)
-          padding-right: 1em
-        &.right
-          float: right
-          padding-left: 1em
-    #nav-main
-      font-family: $font_family
-      font-size: 1.1em
+        color: $white_color
+    .subnav, .subnav-gray
+      display: none
+      z-index: 9999
       position: absolute
-      top: 59px
-      right: 244px
-      .profile-login-flow &
-        display: none
+    .subnav
+      top: 36px
+      left: 0
+      background-color: $white_color
+      +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 10px)
+      &:before
+        content: ''
+        position: absolute
+        top: -10px
+        left: 5px
+        border: solid transparent
+        border-bottom-color: $white_color
+        border-width: 5px
       li
-        display: inline-block
         height: 28px
-        margin-left: 1em
-        a
-          display: inline-block
-          text-decoration: none
-          text-transform: uppercase
-          color: $easy_color
-          padding: 6px 0
-          &:hover, &:active, &.selected
-            color: $white_color
-    #nav-user
-      font-family: $font_family
-      position: absolute
-      top: 18px
-      right: 0
-      .profile-login-flow &
-        display: none
-      li
-        display: inline-block
         line-height: 28px
-        margin-left: 2em
-        &.language
-          margin-right: 9px
         a
-          text-decoration: none
-          text-transform: uppercase
-          color: $white_color
-          padding: 1em 0
-        a.language
-          display: inline-block
-          width: 80px
-          height: 23px
-          line-height: 23px
-          padding: 0 0 0 7px
-          &.current
-            background: transparent image_url(unquote("language-bg.png")) scroll no-repeat 68px center
-          &.select
-            background: #313131 image_url(unquote("language-bg-selected.png")) scroll no-repeat 68px center
-            +single-box-shadow(rgba(0, 0, 0, 0.23), 2px, 2px, 2px, 0px, inset)
-            +border-radius(3px)
-        form.select-language
-          position: absolute
-          top: 25px
-          right: 2px
-          z-index: 99999
-          ul
-            width: 100px
-            background: #2e2e2e image_url(unquote("language-popup-bg.png")) scroll repeat-x center top
-            +border(all, $font_color)
-            +border-radius(3px)
-            +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 5px)
-            line-height: 0
-            li
-              +border(bottom, #363636)
-              width: 100px
-              margin: 0
-              padding: 0
-              line-height: 24px
-              &.last
-                border: 0
-              &.arrow
-                position: absolute
-                top: -4px
-                height: 8px
-                background: transparent image_url(unquote("language-popup-arrow.png")) scroll no-repeat center top
-                border: none
-              button
-                text-align: left
-                padding-left: 8px
-                width: 92px
-                height: 24px
-        form.select-language, form.connect-button
-          display: inline-block
-          button, input
-            display: inline
-            background: transparent
+          display: block
+          padding: 0 20px 0 10px
+          font-size: 13px
+          font-weight: bold
+          color: $black_color
+          &:hover
+            background-color: $black_color
             color: $white_color
-            line-height: 1.5
-            text-transform: uppercase
-            padding: 0
-            margin: 0
-          input
-            position: relative
-            top: 4px
+    .subnav-gray
+      top: 29px
+      left: 0
+      background-color: $dark_color
+      +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 10px)
+      &:before
+        content: ''
+        position: absolute
+        top: -10px
+        left: 5px
+        border: solid transparent
+        border-bottom-color: $dark_color
+        border-width: 5px
+      li
+        background-color: $dark_color
+        a, button
+          text-align: left
+          width: 100px
+          background-color: $dark_color
+          display: block
+          margin: 0
+          padding: 5px 10px
+          font-size: 12px
+          color: $white_color
+          &:hover
+            background-color: $white_color
+            color: $black_color
+            font-size: 12px
+    #nav-main
+      position: absolute
+      top: 52px
+      left: 244px
+      > li
+        display: inline-block
+        margin-right: 25px
+        > a
+          display: block
+          font-size: 15px
+          font-weight: bold
+          color: $white_color
+          padding: 6px 0
+          margin: 6px 0
+          &:hover, &:active, &.selected
+            border-bottom: 3px solid $white_color
+        &.subnav-handle a:hover
+          border-bottom: 0
+    #nav-user
+      position: absolute
+      top: 52px
+      right: 230px
+      > li
+        float: left
+        display: inline-block
+        &.user > a, > form a
+          display: block
+          font-size: 15px
+          font-weight: bold
+          color: $white_color
+          padding: 6px 0
+          margin: 6px 0
+          &:hover, &:active, &.selected
+            border-bottom: 3px solid $white_color
+        &.subnav-handle.user a:hover
+          border-bottom: 0
+        > form input, > form a
+          float: left
+        > form input
+          margin: 12px 0 12px 10px
+        &.avatar
+          margin-right: 10px
+          line-height: 40px
+          img
+            vertical-align: middle
+            width: 32px
+            height: 32px
+            +border-radius(15px)
+    #nav-global
+      position: absolute
+      top: 20px
+      right: 0
+      > li
+        display: inline-block
+        margin-left: 10px
+        > a
+          display: block
+          padding: 3px 8px
+          text-transform: uppercase
     #search
       background: url("../images/searchdubble.png") no-repeat scroll center bottom transparent
       top: 52px
-      right: 0px
+      right: -9px
       position: absolute
       width: 216px
       height: 40px

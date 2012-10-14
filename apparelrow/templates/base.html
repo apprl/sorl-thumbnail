@@ -123,24 +123,63 @@
                 <a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>
             </form>
 
-            <div id="nav-gender">
-                <a class="left{% if APPAREL_GENDER == 'W' %} selected{% endif %}" href="{% change_gender_url request APPAREL_GENDER 'women' %}">{% trans "Women" %}</a>
-                <a class="right{% if APPAREL_GENDER == 'M' %} selected{% endif %}" href="{% change_gender_url request APPAREL_GENDER 'men' %}">{% trans "Men" %}</a>
-            </div>
-
             <ul id="nav-main">
+                <li><a class="{% selected_url request "/feed" %}" href="{% url user_feed %}">{% trans "Feed" %}</a></li>
                 <li><a class="{% selected_url request "/" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
-                <li><a class="{% selected_url request "/brands" %}" href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
                 <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
-                <li><a class="{% selected_url request "/users" %}" href="{% url user-list-popular %}">{% trans "Members" %}</a></li>
+                <li class="subnav-handle">
+                    <a class="{% selected_url request "/users" "/brands" %}" href="#">{% trans "Follow" %}</a>
+                    <ul class="subnav">
+                        <li><a href="{% url user-list-popular %}">{% trans "Members" %}</a></li>
+                        <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
+                    </ul>
+                </li>
             </ul>
 
             <ul id="nav-user">
-                {% if not user.is_authenticated %}
-                <li class="facebook">{% apparel_facebook_button %}</li>
+                {% if not request.user.is_authenticated %}
+                <li class="user facebook">{% apparel_facebook_button %}</li>
+                {% else %}
+                <li class="avatar"><a href="{{ request.user.get_profile.url_likes }}"><img src="{{ request.user.get_profile.avatar_small }}" width="32" height="32"></a></li>
+                <li class="user subnav-handle">
+                    <a class="{% selected_url request "/profile" %}" href="{{ request.user.get_profile.url_likes }}">{{ request.user.get_profile.display_name }}</a>
+                    <ul class="subnav">
+                        <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Profile" %}</a></li>
+                        <li><a href="{% url profile.views.settings_notification %}">{% trans "Settings" %}</a></li>
+                        <li><a href="{% url auth_logout %}">{% trans "Log out" %}</a></li>
+                    </ul>
+                </li>
                 {% endif %}
-                <li class="language">
-                    {% include 'apparel/fragments/set_language.html' with csrf_token=csrf_token LANGUAGES=LANGUAGES SHORT_LANGUAGES=SHORT_LANGUAGES LANGUAGE_CODE=LANGUAGE_CODE only %}
+            </ul>
+
+            <ul id="nav-global">
+                <li class="gender subnav-gray-handle">
+                    <a href="#">{% if APPAREL_GENDER == 'M' %}{% trans "Men" %}{% else %}{% trans "Women" %}{% endif %}</a>
+                    <ul class="subnav-gray">
+                        <li><a href="{% change_gender_url request APPAREL_GENDER 'women' %}">{% trans "Women" %}</a></li>
+                        <li><a href="{% change_gender_url request APPAREL_GENDER 'men' %}">{% trans "Men" %}</a></li>
+                    </ul>
+                </li>
+                <li class="language subnav-gray-handle">
+                    {% for language in SHORT_LANGUAGES %}
+                    {% if language.0 == LANGUAGE_CODE %}
+                    <a class="current language" href="{% url django.views.i18n.set_language %}">{% trans language.1 %}</a>
+                    {% endif %}
+                    {% endfor %}
+                    <form action="{% url django.views.i18n.set_language %}" method="post" class="select-language">
+                        {% csrf_token %}
+                        <ul class="subnav-gray">
+                        {% for language in LANGUAGES %}
+                            <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}">
+                                {% if language.0 == LANGUAGE_CODE %}
+                                <button class="disabled" name="language" value="{{ language.0 }}" type="submit">{% trans language.1 %}</button>
+                                {% else %}
+                                <button name="language" value="{{ language.0 }}" type="submit">{% trans language.1 %}</button>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </form>
                 </li>
             </ul>
         </div>
@@ -198,59 +237,6 @@
         </div>
         {% endif %}
         {% endif %}
-
-    {% if user.is_authenticated and user.get_profile %}
-        {% url apparel.views.look_create as look_create_url %}
-        {% url profile.views.settings_notification as notification_settings_url %}
-        {% url profile.views.settings_email as email_settings_url %}
-        {% with url_likes=user.get_profile.url_likes url_updates=user.get_profile.url_updates url_looks=user.get_profile.url_looks url_followers=user.get_profile.url_followers url_following=user.get_profile.url_following %}
-        <div id="login-pane">
-            <div class="holder">
-                <ul>
-                    <li class="profile">
-                        <a class="{% if request.path == url_updates or request.path == url_likes or request.path == url_looks or request.path == url_followers or request.path == url_following %} selected{% endif %}"href="{{ url_likes }}">
-                            <img src="{{ user.get_profile.avatar }}" class="avatar small">
-                            {{ user.get_profile.display_name }}
-                            <div class="arrow"></div>
-                        </a>
-                        <ul class="profile-hover-menu" style="display: none;">
-                            <li class="arrow"></li>
-                            <li class="first"><a href="{{ url_likes }}">{% trans "Likes" %}</a></li>
-                            <li><a href="{{ url_updates }}">{% trans "Updates" %}</a></li>
-                            <li><a href="{{ url_looks }}">{% trans "Looks" %}</a></li>
-                            <li><a href="{{ url_followers }}">{% trans "Followers" %}</a></li>
-                            <li class="last"><a href="{{ url_following }}">{% trans "Following" %}</a></li>
-                        </ul>
-                    </li>
-                    <li class="updates">
-                        {% url user_feed as user_feed_url %}
-                        <a class="{% if request.path == user_feed_url %} selected{% endif %}" href="{{ user_feed_url }}">
-                            {% with user.get_profile.get_updates_last_visit as updates %}
-                            <span>{% trans "Friends' updates" %}{% if updates %} ({{ updates }}){% endif %}</span>
-                            {% endwith %}
-                            <div class="arrow"></div>
-                        </a>
-                    </li>
-                    <li class="settings">
-                        <a class="{% if request.path == notification_settings_url or request.path == email_settings_url %} selected{% endif %}" href="{{ notification_settings_url }}">
-                            <span>{% trans "Settings" %}</span>
-                            <div class="arrow"></div>
-                        </a>
-                    </li>
-                </ul>
-                <div class="create-look">
-                    <a class="open-dialog create-look" data-dialog-width="380" href="{{ look_create_url }}">{% trans "Create a look" %}</a>
-                </div>
-                <div class="friends-favorites">
-                    <a href="{% gender_url APPAREL_GENDER 'shop' %}#f=1">{% trans "Friends' Favorites" %}</a>
-                </div>
-                <div class="right logout">
-                    <a href="/accounts/logout/" id="logout">{% trans "Logout" %}</a>
-                </div>
-            </div><!-- holder -->
-        </div>
-        {% endwith %}
-    {% endif %}
 
         <div id="inner-container">
             {% block body-header %}{% endblock %}

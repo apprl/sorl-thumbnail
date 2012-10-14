@@ -89,28 +89,61 @@ jQuery(document).ready(function() {
     // Make all textareas autogrow
     //jQuery('textarea').autosize();
 
+    // Subnav popup
+    var closetimer = false;
+    var subnav = false;
+    function close(event) {
+        if(subnav) {
+            subnav.hide();
+            subnav = false;
+        }
+    }
+    function timer(event) {
+        closetimer = window.setTimeout(function() { close(event) }, 300);
+    }
+    function cancel(event) {
+        if(closetimer) {
+            window.clearTimeout(closetimer);
+            closetimer = null;
+        }
+    }
+    function open(event) {
+        cancel(event);
+        var temp_subnav = jQuery(this);
+        if(temp_subnav.hasClass('subnav-handle')) {
+            temp_subnav = temp_subnav.find('.subnav');
+        } else if(temp_subnav.hasClass('subnav-gray-handle')) {
+            temp_subnav = temp_subnav.find('.subnav-gray');
+        }
+        if(temp_subnav != subnav) {
+            close(event);
+        }
+        subnav = temp_subnav.show();
+    }
+    jQuery('.subnav-handle, .subnav-gray-handle').on('mouseenter', open).on('mouseleave', timer);
+
     // Handle language selection
     var selected = false;
-    jQuery('#nav-user li.language a').click(function(event) {
+    jQuery('#nav-global li.language a').click(function(event) {
         if(selected) {
-            jQuery(this).removeClass('select').addClass('current').parent().find('form').hide();
+            jQuery(this).removeClass('select').addClass('current').parent().find('.subnav').hide();
             selected = false;
         } else {
-            jQuery(this).removeClass('current').addClass('select').parent().find('form').show();
+            jQuery(this).removeClass('current').addClass('select').parent().find('.subnav').show();
             selected = true;
         }
         return false;
     });
-    jQuery('#nav-user form.select-language button.disabled').click(function(event) {
+    jQuery('#nav-global form.select-language button.disabled').click(function(event) {
         if(selected) {
-            jQuery('#nav-user li.language a').removeClass('select').addClass('current').parent().find('form').hide();
+            jQuery('#nav-global li.language a').removeClass('select').addClass('current').parent().find('.subnav').hide();
             selected = false;
         }
         return false;
     });
     jQuery(document).click(function(event) {
         if(selected) {
-            jQuery('#nav-user li.language a').removeClass('select').addClass('current').parent().find('form').hide();
+            jQuery('#nav-global li.language a').removeClass('select').addClass('current').parent().find('.subnav').hide();
             selected = false;
         }
     });
