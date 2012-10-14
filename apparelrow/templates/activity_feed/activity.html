@@ -1,16 +1,16 @@
 {% load apparel_extras comments %}
-<article class="activity {{ object.verb }}">
+<article class="activity {{ verb }}">
     <header class="activity-header">
         <div class="activity-image">
-            <a href="{{ object.user.get_absolute_url }}"><img src="{{ object.user.avatar }}" width="50" height="50"></a>
+            <a href="{{ users.0.get_absolute_url }}"><img src="{{ users.0.avatar }}" width="50" height="50"></a>
         </div>
         <div class="activity-short">
             <h3>{% block activity_header %}{% endblock %}</h3>
-            <p class="activity-date">{{ object.created|since }}</p>
+            <p class="activity-date">{{ created|since }}</p>
         </div>
     </header>
     <div class="activity-content">{% block activity_content %}{% endblock %}</div>
-    {% if comments %}
+    {% if comments and objects|length == 1 %}
     <div class="activity-comment comment-box">
         <ul class="comments-list">
         {% for comment in comments %}
@@ -18,7 +18,7 @@
         {% endfor %}
         </ul>
         {% if user and user.is_authenticated %}
-        {% render_comment_form for object.activity_object %}
+        {% render_comment_form for objects.0 %}
         {% endif %}
     </div>
     {% endif %}

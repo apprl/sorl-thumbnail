@@ -2,9 +2,18 @@
 {% load i18n %}
 
 {% block activity_header %}
-    <a href="{{object.user.get_absolute_url}}">{{object.user.display_name}}</a> {% trans "likes" %} <a href="{{object.activity_object.get_absolute_url}}">{{object.activity_object}}</a>
+    {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
+    {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0 count products=objects|length %}
+    likes <a href="{{object_url}}">{{title}}</a>
+    {% plural %}
+    likes {{ products }} products
+    {% endblocktrans %}
 {% endblock %}
 
 {% block activity_content %}
-    {% include 'apparel/fragments/product_feed.html' with object=object.activity_object %}
+    {% if objects|length > 1 %}
+    2 or 4 products layout
+    {% else %}
+    {% include 'apparel/fragments/product_feed.html' with object=objects.0 %}
+    {% endif %}
 {% endblock %}

@@ -82,7 +82,8 @@ class ActivityFeedManager(models.Manager):
     def get_for_user(self, user):
         return ActivityFeed.objects.filter(owner=user) \
                                    .exclude(user=user) \
-                                   .prefetch_related('user', 'owner', 'content_type') \
+                                   .select_related('user', 'owner') \
+                                   .prefetch_related('activity_object', 'content_type') \
                                    .order_by('-created')
 
 class ActivityFeed(models.Model):

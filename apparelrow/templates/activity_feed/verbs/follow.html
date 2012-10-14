@@ -2,9 +2,10 @@
 {% load i18n %}
 
 {% block activity_header %}
-    <a href="{{object.user.get_absolute_url}}">{{object.user.display_name}}</a> {% trans "now follows" %} <a href="{{object.activity_object.get_absolute_url}}">{{object.activity_object.display_name}}</a>
+    {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
+    {% trans "now follows" %} <a href="{{objects.0.get_absolute_url}}">{{objects.0.display_name}}</a>
 {% endblock %}
 
 {% block activity_content %}
-    <a href="{{ object.activity_object.get_absolut_url }}"><img src="{{ object.activity_object.avatar_large }}"></a>
+    <a href="{{ objects.0.get_absolut_url }}"><img src="{{ objects.0.avatar_large }}"></a>
 {% endblock %}

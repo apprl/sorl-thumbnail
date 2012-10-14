@@ -24,23 +24,28 @@ class ActivityFeedHTML:
     def __getitem__(self, k):
         data = []
         for result in self.queryset[k]:
-
             # Comments
+            # TODO: only generate comments if it is a single object
             comments =  list(reversed(Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False).order_by('-submit_date').select_related('user', 'user__profile')[:2]))
 
-            data.append(render_to_string('activity_feed/verbs/%s.html' % (result.verb,), {'object': result,
-                                                                                          'comments': comments,
-                                                                                          'user': self.request.user,
-                                                                                          'csrf_token': csrf.get_token(self.request),
-                                                                                          'CACHE_TIMEOUT': 10,
-                                                                                          'LANGUAGE_CODE': self.request.LANGUAGE_CODE}))
+            template_name = 'activity_feed/verbs/%s.html' % (result.verb,)
+            data.append(render_to_string(template_name, {'user': self.request.user,
+                                                         'verb': result.verb,
+                                                         'created': result.created,
+                                                         'objects': [result.activity_object],
+                                                         'users': [result.user],
+                                                         'comments': comments,
+                                                         'csrf_token': csrf.get_token(self.request),
+                                                         'CACHE_TIMEOUT': 10,
+                                                         'LANGUAGE_CODE': self.request.LANGUAGE_CODE}))
+
         return data
 
 @login_required
 def user_feed(request):
     profile = request.user.get_profile()
-    profile.updates_last_visit = datetime.datetime.now()
-    profile.save()
+    #profile.updates_last_visit = datetime.datetime.now()
+    #profile.save()
 
     htmlset = ActivityFeedHTML(request, ActivityFeed.objects.get_for_user(profile))
     paginator = Paginator(htmlset, 5)

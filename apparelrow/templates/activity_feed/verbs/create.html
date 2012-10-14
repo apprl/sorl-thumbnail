@@ -2,9 +2,10 @@
 {% load i18n %}
 
 {% block activity_header %}
-    <a href="{{object.user.get_absolute_url}}">{{object.user.display_name}}</a> {% trans "created the look" %} <a href="{{object.activity_object.get_absolute_url}}">{{object.activity_object.title}}</a>
+    {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
+    {% trans "created the look" %} <a href="{{objects.0.get_absolute_url}}">{{objects.0.title}}</a>
 {% endblock %}
 
 {% block activity_content %}
-    {% include 'apparel/fragments/look_medium.html' with object=object.activity_object %}
+    {% include 'apparel/fragments/look_medium.html' with object=objects.0 %}
 {% endblock %}
