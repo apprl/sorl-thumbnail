@@ -231,6 +231,36 @@ jQuery(document).ready(function() {
     });
     */
 
+    // Show follow button over avatar lager follow element
+    jQuery(document).on('mouseenter', '.avatar-large-follow', function(event) {
+        jQuery(this).find('.btn').show();
+    }).on('mouseleave', '.avatar-large-follow', function(event) {
+        jQuery(this).find('.btn').hide();
+    });
+
+    // New follow button, uses only a single element
+    jQuery(document).on('click', '.follow-btn, .unfollow-btn', function(event) {
+        var element = jQuery(this);
+        if(element.hasClass('follow-btn')) {
+            jQuery.post(element.data('follow-url'), function(data) {
+                element.removeClass('follow-btn').addClass('unfollow-btn').text(element.data('unfollow-text')).removeClass('btn-positive');
+                if(share_settings['follow_profile'] === false) {
+                    ApparelActivity.notification('follow', element.data('profile-type'), element.data('profile-id'));
+                }
+            });
+        } else {
+            jQuery.post(element.data('unfollow-url'), function(data) {
+                element.removeClass('unfollow-btn').addClass('follow-btn').text(element.data('follow-text')).removeClass('btn-negative').addClass('btn-positive');
+            });
+        }
+        return false;
+    }).on('mouseenter', '.unfollow-btn', function(event) {
+        jQuery(this).text(jQuery(this).data('unfollow-hover')).addClass('btn-negative');
+    }).on('mouseleave', '.unfollow-btn', function(event) {
+        jQuery(this).text(jQuery(this).data('unfollow-text')).removeClass('btn-negative');
+    });
+
+    // Follow
     jQuery('a.follow:not(a.open-dialog), a.unfollow:not(a.open-dialog)').live('click', function(event) {
         $this = $(this);
         $parent = $this.parent();

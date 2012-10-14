@@ -30,6 +30,7 @@ class ActivityFeedHTML:
 
             template_name = 'activity_feed/verbs/%s.html' % (result.verb,)
             data.append(render_to_string(template_name, {'user': self.request.user,
+                                                         'current_user': self.request.user,
                                                          'verb': result.verb,
                                                          'created': result.created,
                                                          'objects': [result.activity_object],
