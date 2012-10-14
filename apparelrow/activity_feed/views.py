@@ -10,7 +10,7 @@ from django.middleware import csrf
 from apparel.models import Product
 from profile.models import Follow, ApparelProfile
 from apparel.views import get_top_looks_in_network, get_top_products_in_network
-from activity_feed.models import ActivityFeed
+from activity_feed.models import Activity, ActivityFeed
 
 class ActivityFeedHTML:
 
@@ -26,7 +26,10 @@ class ActivityFeedHTML:
         for result in self.queryset[k]:
             # Comments
             # TODO: only generate comments if it is a single object
-            comments =  list(reversed(Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False).order_by('-submit_date').select_related('user', 'user__profile')[:2]))
+            comments = Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False) \
+                                      .order_by('-submit_date') \
+                                      .select_related('user', 'user__profile')[:2]
+            comments =  list(reversed(comments))
 
             template_name = 'activity_feed/verbs/%s.html' % (result.verb,)
             data.append(render_to_string(template_name, {'user': self.request.user,
@@ -73,28 +76,3 @@ def user_feed(request):
             'popular_looks': get_top_looks_in_network(profile, 3),
             'popular_brands': popular_brands,
         })
-
-
-
-
-
-    ## Update the time we last checked "friends updates"
-
-
-    #paged_result, pagination = get_pagination_page(queryset,
-            #FAVORITES_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
-
-    #if request.is_ajax():
-        #return render_to_response('apparel/fragments/activity/list.html', {
-            #'pagination': pagination,
-            #'current_page': paged_result
-        #}, context_instance=RequestContext(request))
-
-    #return render_to_response('apparel/user_home.html', {
-            #'pagination': pagination,
-            #'current_page': paged_result,
-            #'next': request.get_full_path(),
-            #'profile': profile,
-            #'popular_looks_in_network': get_top_looks_in_network(request.user, limit=limit),
-            #'popular_products_in_network': popular_products
-        #}, context_instance=RequestContext(request))

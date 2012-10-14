@@ -6,14 +6,13 @@ from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect, HttpResponseNotFound
-from django.db.models import Q, Count
+from django.db.models.loading import get_model
 from django.contrib import auth
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from actstream.models import actor_stream
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from apparel.decorators import get_current_user
 from apparel.models import Product
@@ -22,6 +21,7 @@ from profile.utils import get_facebook_user
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm
 from profile.models import EmailChange, ApparelProfile, Follow
 from profile.tasks import send_email_confirm_task
+from activity_feed.views import ActivityFeedHTML
 
 PROFILE_PAGE_SIZE = 30
 
@@ -115,26 +115,29 @@ def profile(request, profile, page=0):
     """
     form = handle_change_image(request, profile)
 
-    queryset = actor_stream(profile.user)
-    queryset = queryset.filter(verb__in=['added', 'commented', 'created', 'liked_look', 'liked_product', 'started following', 'added_products'])
+    htmlset = ActivityFeedHTML(request, get_model('activity_feed', 'activity').objects.get_for_user(profile))
+    paginator = Paginator(htmlset, 5)
 
-    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
-            request.GET.get('page', 1), 1, 2)
+    page = request.GET.get('page')
+    try:
+        paged_result = paginator.page(page)
+    except PageNotAnInteger:
+        paged_result = paginator.page(1)
+    except EmptyPage:
+        paged_result = paginator.page(paginator.num_pages)
 
     if request.is_ajax():
-        return render(request, 'apparel/fragments/activity/list.html', {
-            'pagination': pagination,
-            'current_page': paged_result,
+        return render(request, 'activity_feed/feed.html', {
+            'current_page': paged_result
         })
 
     content = {
-        'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         'change_image_form': form,
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.user.look.order_by('-modified')[:20]
+        'recent_looks': profile.user.look.order_by('-modified')[:10]
         }
     content.update(get_profile_sidebar_info(request, profile))
 

@@ -6,7 +6,7 @@
 {% block body-classes %}three-columns profile{% endblock body-classes %}
 {% block content %}
     {% if current_page.object_list %}
-        {% include 'apparel/fragments/activity/list.html' %}
+        {% include 'activity_feed/feed.html' %}
     {% else %}
         <div class="empty">
         {% if profile == request.user.get_profile %}

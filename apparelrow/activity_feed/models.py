@@ -1,11 +1,6 @@
 import logging
-import json
-import datetime
 
 from django.db import models
-from django.db.models.loading import get_model
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
@@ -44,6 +39,12 @@ class ActivityManager(models.Manager):
 
         # Start task, remove from all feeds
         pull_activity_feed.delay(profile, verb, content_type, activity_object.pk)
+
+    def get_for_user(self, user):
+        return Activity.objects.filter(user=user) \
+                               .select_related('user', 'owner') \
+                               .prefetch_related('activity_object', 'content_type') \
+                               .order_by('-created')
 
 
 class Activity(models.Model):
