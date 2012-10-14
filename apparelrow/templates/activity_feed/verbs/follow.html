@@ -7,5 +7,8 @@
 {% endblock %}
 
 {% block activity_content %}
-    <a href="{{ objects.0.get_absolute_url }}"><img src="{{ objects.0.avatar_large }}"></a>
+    <div class="avatar-large-follow">
+        <a href="{{ objects.0.get_absolute_url }}"><img src="{{ objects.0.avatar_large }}"></a>
+        <!--{% include 'apparel/fragments/follow.html' with profile=objects.0 %}-->
+    </div>
 {% endblock %}
