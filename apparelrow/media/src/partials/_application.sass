@@ -75,15 +75,18 @@ button
   text-align: center
   cursor: pointer
   vertical-align: middle
+  height: 36px
+  +box-sizing(border-box)
   //text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25)
+
+  &.btn-disabled
+    cursor: auto
+    &:hover, &:active
+      color: $white_color
 
   // Hover
   &:hover
     color: $easiest_color
-    //&.btn-rarrow:after
-      //border-left-color: $easiest_color
-    //&.btn-rarrow:before
-      //border-color: $easiest_color
 
   // Large
   &.btn-large
@@ -107,12 +110,32 @@ button
 
   &.btn-positive
     background-color: #67e2b8
+    border-color: #67e2b8
     &:hover
       color: #ceffee
+
   &.btn-negative
     background-color: #f45c92
+    border-color: #f45c92
     &:hover
       color: #ffc1d7
+
+  // Left external arrow
+  &.btn-learr
+    position: relative
+    margin-left: 10px
+    &.btn-positive:before
+      border-right-color: #67e2b8
+    &.btn-positive:before
+      border-right-color: #f45c92
+    &:before
+      content: ''
+      left: -10px
+      top: 0
+      position: absolute
+      border-top: 18px solid transparent
+      border-bottom: 18px solid transparent
+      border-right: 10px solid $black_color
 
   // Right arrow
   //&.btn-rarrow
@@ -612,9 +635,6 @@ button
         background-position: bottom left
         left: 36px
 
-#product-menu ul, table.available-sizes td, #add-to-look ul, .product-vendor
-  +box
-
 .product-options
   .option-size, .option-relative-size, .option-shoe-size, .option-pants-length, .option-pants-width
     border: 1px solid #dadada
@@ -687,8 +707,8 @@ ul.products
     clear: both
   p
     +border(top)
-  .activity
-    margin-top: 2em
+  .stats-box
+    margin-bottom: 10px
     +border(top)
     p
       border-top: none
@@ -1214,18 +1234,8 @@ body.two-columns .pagination
     &:active
       background-position: bottom
 
-.product-back
-  padding-top: 20px
-  padding-bottom: 10px
-  a
-    background-image: image_url(unquote("left-arrow-button.png"))
-    line-height: 25px
-    display: inline-block
-    width: 81px
-    text-align: center
-    color: $highlight_color
-    &:hover
-      background-image: image_url(unquote("left-arrow-button-hover.png"))
+.btn-product-back
+  margin: 20px 0 0 0
 
 .product-left
   +float-left
@@ -1266,7 +1276,6 @@ body.two-columns .pagination
     a:hover
       text-decoration: underline
   p.description
-    width: $aside_width + $gutter_width
     margin: 10px 0 18px 0
 
 .product-image
@@ -1327,9 +1336,6 @@ table.available-sizes th
     background: transparent url(../images/sprite-colors.png) scroll repeat-x left top
     border-right: 1px solid #dadada
 
-.product-vendors
-  border-bottom: 1px solid #e7e7e7
-
 a.buy-now
   +buy_now
 
@@ -1338,42 +1344,18 @@ a.buy-now
   padding-bottom: 10px
   font-weight: 500
 
-.product-vendors span.sold-out
-  float: right
-  margin-top: -50px
-  padding: 58px 0 0
-  display: block
-  width: 73px
-  height: 30px
-  background: $box_color image_url(unquote("sold-out.png")) scroll no-repeat center 35%
-  font-family: $font_family
-  font-weight: bold
-  text-align: center
-  +border(all, $border_color)
-  color: $easy_color
-  text-transform: uppercase
-  &.higher
-    margin-top: -32px
-
-.product-vendors a.buy-now
-  +buy_now
-  float: right
-  margin-top: -50px
-  padding: 58px 0 0
-  display: block
-  width: 73px
-  height: 30px
-  background: $highlight_bg_color image_url(unquote("check-large.png")) scroll no-repeat center 25%
-  font-family: $font_family
-  font-weight: bold
-  &.higher
-    margin-top: -32px
+.product-vendors
+  .btn-buy, .btn-sold-out
+    display: block
+    overflow-y: auto
 
 .product-vendor
-  border-bottom: none
-  padding: 7px 9px 3px
+  float: left
+  margin-right: 10px
+  margin-top: 2px
+  min-width: 70px
   .price
-    font-size: 2em
+    font-size: 1.6em
     padding-left: 0
     padding-right: 5px
     color: $font_color
@@ -1405,16 +1387,17 @@ a.buy-now
     background-color: $highlight_bg_color
 
 #likes
-  ul
-    +clearfix
-    li
-      margin-right: 6px
-      margin-bottom: 6px
-      float: left
-      max-width: 50px
-      max-height: 50px
-      &.last-column
-        margin-right: 0
+  +clearfix
+  margin-bottom: 8px
+  min-height: 14px
+  li
+    margin: 0 2px 2px 0
+    float: left
+    max-width: 50px
+    max-height: 50px
+    img
+      width: 50px
+      height: 50px
 
 .comment-box
   position: relative

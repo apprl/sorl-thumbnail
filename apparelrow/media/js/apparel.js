@@ -445,14 +445,18 @@ jQuery(document).ready(function() {
       containers.find('.heart').addClass('liked');
       ApparelActivity.update_count(containers.find('.likes'), true);
       hasLiked = true;
-      ApparelActivity.update_count(jQuery('.activity .likes .count'), true);
+      ApparelActivity.update_count(jQuery('.stats-box .likes .count'), true);
+      var avatar = jQuery('.comment-poster-avatar a').clone();
+      jQuery('#likes').prepend(jQuery('<li>').append(avatar));
     });
 
     jQuery(document).on('unlike', function(event, element, type, id) {
       var containers = jQuery('.' + type + '-container[data-id=' + id + ']');
       containers.find('.heart').removeClass('liked');
       ApparelActivity.update_count(containers.find('.likes'), false);
-      ApparelActivity.update_count(jQuery('.activity .likes .count'), false);
+      ApparelActivity.update_count(jQuery('.stats-box .likes .count'), false);
+      var avatar = jQuery('.comment-poster-avatar a');
+      jQuery('#likes a[href="' + avatar.attr('href') + '"]').parent().remove();
     });
 
     // Product hover, works with medium and feed

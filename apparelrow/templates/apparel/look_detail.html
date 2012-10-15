@@ -86,7 +86,7 @@
     </div>
 {% endcache %}
     {% get_comment_count for object as comment_count %}
-    <div class="activity">
+    <div class="stats-box">
         {% include 'apparel/fragments/comment_count.html' %}
         <p class="last"><a class="likes" href="#likes" id="like-{{ object|class_name|lower }}s-{{ object.slug }}">{% blocktrans count object.score as counter %}<span class="count">{{ counter }}</span> like{% plural %}<span class="count">{{ counter }}</span> likes{% endblocktrans %}</a></p>
     </div>

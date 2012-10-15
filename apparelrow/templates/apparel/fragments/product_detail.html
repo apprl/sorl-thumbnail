@@ -40,16 +40,9 @@
         {% endif %}
       {% endif %}
     </p>
-    <div class="product-vendors">
+    <div class="product-vendors group">
         {% with object.vendorproduct.all|dictsort:'price' as vendorproducts %}
         {% for vendorproduct in vendorproducts %}
-            {% if forloop.first %}
-                {% if vendorproduct.availability == 0 %}
-                <span class="sold-out{% if vendorproduct.locale_currency != vendorproduct.original_currency %} higher{% endif %}">{% trans "Sold out" %}</span>
-                {% else %}
-                <a href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_blank" class="buy-now{% if vendorproduct.locale_currency != vendorproduct.original_currency %} higher{% endif %}" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.locale_price|floatformat:0|apprl_intcomma }}">{% trans "Buy" %}</a>
-                {% endif %}
-            {% endif %}
             <div class="product-vendor">
                 <div class="computed-price">
                     {% if vendorproduct.locale_discount_price %}
@@ -68,6 +61,13 @@
                 </div>
                 {% endif %}
             </div>
+            {% if forloop.first %}
+                {% if vendorproduct.availability == 0 %}
+                <span class="btn btn-disabled btn-sold-out">{% trans "Sold out" %}</span>
+                {% else %}
+                <a href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_blank" class="btn btn-positive btn-buy" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.locale_price|floatformat:0|apprl_intcomma }}">{% trans "Buy" %}</a>
+                {% endif %}
+            {% endif %}
         {% empty %}
             <span class="sold-out">{% trans "Sold out" %}</span>
             <div class="product-vendor">

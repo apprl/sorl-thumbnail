@@ -168,11 +168,9 @@
 
 
 {% block body-header %}
-<div class="product-back">
-    {% if request.META.HTTP_REFERER and CURRENT_DOMAIN in request.META.HTTP_REFERER %}
-    <a href="{{ request.META.HTTP_REFERER }}" onClick="history.back(1);return false;">{% trans "Back" %}</a>
-    {% endif %}
-</div>
+{% if request.META.HTTP_REFERER and CURRENT_DOMAIN in request.META.HTTP_REFERER %}
+<a class="btn btn-learr btn-product-back" href="{{ request.META.HTTP_REFERER }}" onClick="history.back(1);return false;">{% trans "Back" %}</a>
+{% endif %}
 <div id="body-header">
     <div class="column_one">
         {% if object.manufacturer.profile %}
@@ -203,21 +201,7 @@
                     {% endthumbnail %}
                 </div>
             </div>
-            <div id="likes">
-                <h2>{% trans "Likes" %}</h2>
-                <ul>
-                {% for like in likes %}
-                    {% if like.user and like.user.get_profile %}
-                    <li{% if forloop.counter|divisibleby:6 %} class="last-column"{% endif %}>
-                        <a href="{{ like.user.get_absolute_url }}" title="{{ like.user.get_profile.display_name }}">
-                            <img alt="{{ like.user.get_profile.display_name }}" title="{{ like.user.get_profile.display_name }}" src="{{ like.user.get_profile.avatar }}">
-                        </a>
-                    </li>
-                    {% endif %}
-                {% endfor %}
-                </ul>
-            </div>
-            <div class="comment-box">
+            <div class="comment-box" id="comments">
                 <ul class="comments-list">
                 {% for comment in comments %}
                     {% include 'comments/comment.html' %}
@@ -231,13 +215,24 @@
         </div>
         <div class="product-right">
             {% get_trackbacks_for object as trackbacks %}
+            {% get_comment_count for object as comment_count %}
             {% include 'apparel/fragments/product_detail.html' %}
             <div class="sidebar last">
-                {% get_comment_count for object as comment_count %}
-                <div class="activity">
+                <ul id="likes" class="group">
+                {% for like in likes %}
+                    {% if like.user and like.user.get_profile %}
+                    <li>
+                        <a href="{{ like.user.get_absolute_url }}" title="{{ like.user.get_profile.display_name }}">
+                            <img alt="{{ like.user.get_profile.display_name }}" title="{{ like.user.get_profile.display_name }}" src="{{ like.user.get_profile.avatar }}">
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+                <div class="stats-box">
+                    <p><a class="likes" href="#likes" id="like-{{ object|class_name|lower }}s-{{ object.slug }}">{% blocktrans count object.score as counter %}<span class="count">{{ counter }}</span> like{% plural %}<span class="count">{{ counter }}</span> likes{% endblocktrans %}</a></p>
                     {% include 'apparel/fragments/comment_count.html' %}
-                    <p{% if not looks_with_product %} class="hidden"{% endif %}><a class="looks" href="#looks">{% blocktrans count looks_with_product_count as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
-                    <p class="last"><a class="likes" href="#likes" id="like-{{ object|class_name|lower }}s-{{ object.slug }}">{% blocktrans count object.score as counter %}<span class="count">{{ counter }}</span> like{% plural %}<span class="count">{{ counter }}</span> likes{% endblocktrans %}</a></p>
+                    <p class="last{% if not looks_with_product %} hidden{% endif %}"><a class="looks" href="#looks">{% blocktrans count looks_with_product_count as counter %}Added to <span class="count">{{ counter }}</span> look{% plural %}Added to <span class="count">{{ counter }}</span> looks{% endblocktrans %}</a></p>
                 </div>
                 {% if viewed_products %}
                 <h2>{% trans "Recently viewed" %}</h2>
