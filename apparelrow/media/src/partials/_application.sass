@@ -68,7 +68,7 @@ button
 .btn
   display: inline-block
   padding: 10px 16px
-  background-color: $black_color
+  background-color: $btn_color
   color: $white_color
   font-size: 11px
   font-weight: bold
@@ -92,6 +92,7 @@ button
   &.btn-large
     font-size: 16px
     padding: 20px 16px
+    height: 56px
 
   // Small
   &.btn-small
@@ -109,25 +110,29 @@ button
     +box-sizing(border-box)
 
   &.btn-positive
-    background-color: #67e2b8
-    border-color: #67e2b8
+    background-color: $btn_positive_color
+    border-color: $btn_positive_color
     &:hover
-      color: #ceffee
+      background-color: $btn_positive_hover_color
+      border-color: $btn_positive_hover_color
+      color: $white_color
 
   &.btn-negative
-    background-color: #f45c92
-    border-color: #f45c92
+    background-color: $btn_negative_color
+    border-color: $btn_negative_color
     &:hover
-      color: #ffc1d7
+      background-color: $btn_negative_hover_color
+      border-color: $btn_negative_hover_color
+      color: $white_color
 
   // Left external arrow
   &.btn-learr
     position: relative
     margin-left: 10px
     &.btn-positive:before
-      border-right-color: #67e2b8
+      border-right-color: $btn_positive_color
     &.btn-positive:before
-      border-right-color: #f45c92
+      border-right-color: $btn_negative_color
     &:before
       content: ''
       left: -10px
