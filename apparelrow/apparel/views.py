@@ -439,8 +439,6 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
     looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:8]
-    similar_looks = []
-
 
     look_saved = False
     if 'look_saved' in request.session:
@@ -464,7 +462,6 @@ def look_detail(request, slug):
             {
                 'object': look,
                 'looks_by_user': looks_by_user,
-                'similar_looks': similar_looks,
                 'tooltips': True,
                 'object_url': request.build_absolute_uri(look.get_absolute_url()),
                 'look_full_image': request.build_absolute_uri(look.static_image.url),

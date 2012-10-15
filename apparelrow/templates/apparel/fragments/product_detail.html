@@ -84,22 +84,17 @@
     {% endif %}
 
 {% endcache %}
-    <!--<ul id="add-menu" class="menu hover-menu">-->
-        <!--<li id="add-to-look">-->
-            <!--<a href="/apparel/look/">{% trans "Add to look" %}</a>-->
-            <!--<form action="{% url apparel.views.add_to_look %}" method="post">-->
-            <!--{% csrf_token %}-->
-            <!--<input type="hidden" name="look" />-->
-            <!--<input type="hidden" name="product" value="{{ object.id }}" />-->
-            <!--<ul>-->
-            <!--{% for look in user_looks %}-->
-                <!--{% include "apparel/fragments/look_button.html" %}-->
-            <!--{% endfor %}-->
-            <!--</ul>-->
-            <!--</form>-->
-        <!--</li>-->
-    <!--</ul>-->
-    {% include 'apparel/fragments/share.html' with image=product_full_image url=product_full_url %}
+    <div class="share">
+      <div class="addthis_toolbox addthis_default_style">
+        <fb:send></fb:send>
+        <fb:like layout="button_count"></fb:like>
+        <a class="addthis_button_tweet" tw:count="none"></a>
+        <a class="addthis_button_google_plusone" g:plusone:size="medium" g:plusone:count="false"></a>
+        <a class="addthis_button_pinterest_pinit"></a>
+      </div>
+      <script type="text/javascript">var addthis_config = {"data_track_addressbar":false};</script>
+      <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-500ff11c3e1dc781"></script>
+    </div>
 </div>
 {% endif %}
 
