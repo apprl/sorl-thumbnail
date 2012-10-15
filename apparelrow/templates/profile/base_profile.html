@@ -57,8 +57,8 @@
         <div id="profile-image">
             <a href="{{ profile.get_absolute_url }}" class="profile-link"><img src="{{ profile.avatar_large }}" class="avatar large"></a>
             {% if user.is_authenticated and user == profile.user %}
-                <button class="edit">{% trans "Change picture" %}</button>
-                <button class="cancel-edit">{% trans "Cancel" %}</button>
+                <a href="#edit" class="btn btn-small btn-block btn-positive btn-edit">{% trans "Change picture" %}</a>
+                <a href="#cancel" class="btn btn-small btn-block btn-negative btn-cancel">{% trans "Cancel" %}</a>
                 {% with "multipart/form-data" as form_enctype %}
                 {% include 'profile/fragments/change_image_form.html' %}
                 {% endwith %}
@@ -91,7 +91,7 @@
             {% endwith %}
         </div>
         {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
-        <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
+        {% include 'apparel/fragments/follow.html' %}
         {% if profile.is_brand %}
         <p><a href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ profile.brand.id }}" class="shop-button">{% trans "Go to shop" %}</a></p>
         {% endif %}

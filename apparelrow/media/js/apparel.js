@@ -262,12 +262,6 @@ jQuery(document).ready(function() {
         jQuery('input[type="text"]', jQuery(this).closest('.upload-field')).val(extractFilename(this.value));
     });
 
-    /*jQuery('.dialog .buttons>.ok').live('click', function(e) {
-        // FIXME: Remove shade and stuff
-        jQuery(this).closest('.dialog').remove();
-    });
-    */
-
     // Show follow button over avatar lager follow element
     jQuery(document).on('mouseenter', '.avatar-large-follow', function(event) {
         jQuery(this).find('.btn').show();
@@ -276,51 +270,25 @@ jQuery(document).ready(function() {
     });
 
     // New follow button, uses only a single element
-    jQuery(document).on('click', '.follow-btn, .unfollow-btn', function(event) {
+    jQuery(document).on('click', '.btn-follow:not(.open-dialog), .btn-unfollow:not(.open-dialog)', function(event) {
         var element = jQuery(this);
-        if(element.hasClass('follow-btn')) {
+        if(element.hasClass('btn-follow')) {
             jQuery.post(element.data('follow-url'), function(data) {
-                element.removeClass('follow-btn').addClass('unfollow-btn').text(element.data('unfollow-text')).removeClass('btn-positive');
+                element.removeClass('btn-follow').addClass('btn-unfollow').text(element.data('unfollow-text')).removeClass('btn-positive');
                 if(share_settings['follow_profile'] === false) {
                     ApparelActivity.notification('follow', element.data('profile-type'), element.data('profile-id'));
                 }
             });
         } else {
             jQuery.post(element.data('unfollow-url'), function(data) {
-                element.removeClass('unfollow-btn').addClass('follow-btn').text(element.data('follow-text')).removeClass('btn-negative').addClass('btn-positive');
+                element.removeClass('btn-unfollow').addClass('btn-follow').text(element.data('follow-text')).removeClass('btn-negative').addClass('btn-positive');
             });
         }
         return false;
-    }).on('mouseenter', '.unfollow-btn', function(event) {
+    }).on('mouseenter', '.btn-unfollow', function(event) {
         jQuery(this).text(jQuery(this).data('unfollow-hover')).addClass('btn-negative');
-    }).on('mouseleave', '.unfollow-btn', function(event) {
+    }).on('mouseleave', '.btn-unfollow', function(event) {
         jQuery(this).text(jQuery(this).data('unfollow-text')).removeClass('btn-negative');
-    });
-
-    // Follow
-    jQuery('a.follow:not(a.open-dialog), a.unfollow:not(a.open-dialog)').live('click', function(event) {
-        $this = $(this);
-        $parent = $this.parent();
-        $.post($this.attr('href'), function(response) {
-            if($parent.is('.following')) {
-                jQuery('.following a[href="' + $this.attr('href') + '"]').parent().removeClass('following').addClass('not_following');
-                $parent.removeClass('following').addClass('not_following');
-            } else {
-                jQuery('.not_following a[href="' + $this.attr('href') + '"]').parent().removeClass('not_following').addClass('following');
-                $parent.removeClass('not_following').addClass('following');
-                if(share_settings['follow_profile'] === false) {
-                    ApparelActivity.notification('follow', $this.data('profile-type'), $this.data('profile-id'));
-                }
-            }
-        });
-        return false;
-    })
-    .hover(function() {
-        $this = $(this);
-        $this.text($this.attr("data-hover-text"));
-    }, function() {
-        $this = $(this);
-        $this.text($this.attr("data-original-text"));
     });
 
     // Send proper CSRF token in all ajax request
@@ -367,41 +335,24 @@ jQuery(document).ready(function() {
     // Profile image
     var hover_edit_button = true;
     jQuery('#profile-image').hover(
-        function() { if (hover_edit_button) $('button.edit', this).show() },
-        function() { if (hover_edit_button) $('button.edit', this).hide() }
+        function() { if (hover_edit_button) $('.btn-edit', this).show() },
+        function() { if (hover_edit_button) $('.btn-edit', this).hide() }
     );
-    jQuery('#profile-image button.edit').click(function() {
-        jQuery('#profile-image button.cancel-edit').show();
+    jQuery('#profile-image .btn-edit').click(function() {
+        jQuery('#profile-image .btn-cancel').show();
         jQuery(this).hide().siblings('form').show();
         hover_edit_button = false;
         return false;
     });
-    jQuery('#profile-image button.cancel-edit').click(function() {
-        jQuery('#profile-image button.edit').show();
+    jQuery('#profile-image .btn-cancel').click(function() {
+        jQuery('#profile-image .btn-edit').show();
         jQuery(this).hide().siblings('form').hide();
         hover_edit_button = true;
         return false;
     });
-    jQuery('#profile-image input[type="file"]').change(function(e) {
-        jQuery('button[type="submit"]', jQuery(this).closest('ul')).show();
-    });
-
-    // Login pane profile hover menu
-    var profile_previously_selected = false;
-    jQuery('#login-pane .profile').hover(function(e) {
-        if (jQuery(this).find('> a').hasClass('selected')) {
-            profile_previously_selected = true;
-            jQuery(this).find('.profile-hover-menu').show();
-        } else {
-            jQuery(this).find('> a').addClass('selected').end().find('.profile-hover-menu').show();
-        }
-    }, function(e) {
-        if (profile_previously_selected) {
-            jQuery(this).find('.profile-hover-menu').hide();
-        } else {
-            jQuery(this).find('> a').removeClass('selected').end().find('.profile-hover-menu').hide();
-        }
-    });
+    //jQuery('#profile-image input[type="file"]').change(function(e) {
+        //jQuery('button[type="submit"]', jQuery(this).closest('ul')).show();
+    //});
 
     // Look-like and hotspots
     if (!is_mobile()) {

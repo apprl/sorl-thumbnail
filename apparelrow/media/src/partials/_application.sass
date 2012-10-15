@@ -97,7 +97,9 @@ button
   // Small
   &.btn-small
     font-size: 11px
-    padding: 8px 16px
+    padding: 3px 16px
+    height: auto
+    line-height: 16px
 
   // Uppercase
   &.btn-upper
@@ -141,26 +143,6 @@ button
       border-top: 18px solid transparent
       border-bottom: 18px solid transparent
       border-right: 10px solid $black_color
-
-  // Right arrow
-  //&.btn-rarrow
-    //position: relative
-    //&:after
-      //content: ' '
-      //position: absolute
-      //top: 14px
-      //right: 2px
-      //border: solid transparent
-      //border-left-color: $white_color
-      //border-width: 4px
-    //&:before
-      //content: ' '
-      //position: absolute
-      //width: 6px
-      //top: 17px
-      //right: 10px
-      //border: 1px solid $white_color
-
 
 #content.fixed
   position: fixed
@@ -261,13 +243,10 @@ button
           &:hover
             color: $black_color
             text-decoration: none
-      .create-look
+      .btn-create-look
         position: absolute
         right: 20px
-        bottom: 22px
-        font-weight: normal
-        font-size: 1em
-        +plus_button(22px, 3px)
+        bottom: 27px
 
 #header
   background: black
@@ -487,162 +466,6 @@ button
           top: 2px
     .copyright
       width: 208px
-
-#login-pane
-  clear: left
-  width: 100%
-  height: 28px
-  line-height: 28px
-  background: transparent image_url(unquote("profile-nav-bg.png")) scroll repeat-x left top
-  border: 1px solid $border_color
-  border-left: none
-  border-right: none
-  margin: 0
-  padding: 0
-  .profile-login-flow &
-    display: none
-  div
-    &.left
-      float: left
-      color: $easier_color
-      margin-top: -1px
-      min-width: 200px
-      a
-        font-weight: bold
-    &.create-look, &.friends-favorites
-      float: left
-      padding-left: 3px
-      a
-        margin-top: 2px
-        height: 22px
-        display: block
-    &.create-look a
-      +plus_button(22px, 3px)
-    &.friends-favorites a
-      +star_button(22px, 3px)
-    &.right
-      float: right
-      text-align: right
-      margin-top: -1px
-    &.holder
-      float: left
-      width: $page_width - 20px
-      .page-shop &, .profile-likes &
-        @media screen and (min-width: 1212px)
-          width: $page_width - 20 + 232
-        @media screen and (min-width: 1444px)
-          width: $page_width - 20 + 464
-        @media screen and (min-width: 1676px)
-          width: $page_width - 20 + 696
-    #logout
-      display: inline-block
-      color: $easy-color
-      background: transparent image_url(unquote("logout.png")) scroll no-repeat right center
-      padding-right: 16px
-      height: 28px
-      line-height: 28px
-
-  ul
-    float: left
-    +horizontal-list(0)
-    z-index: 999
-    position: relative
-    margin-top: -1px
-    overflow: visible
-    li
-      &.profile
-        width: $aside_width + $gutter_width + $margin_width
-        a
-          padding-left: $margin_width + 25px
-          vertical-align: top
-        img
-          position: absolute
-          left: $margin_width
-          top: 4px
-          width: 20px
-          height: 20px
-        ul
-          position: absolute
-          top: 28px
-          left: $margin_width
-          z-index: 99999
-          width: $aside_width - 2px
-          +border(all, $font_color)
-          +border-radius(3px)
-          +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 5px)
-          line-height: 0
-          background-color: #363636
-          li
-            +border(bottom, #363636)
-            width: $aside_width - 2px
-            height: 28px
-            margin: 0
-            padding: 0
-            background: transparent image_url(unquote("dark-menu-bg.png")) scroll repeat-x left top
-            &:hover
-              background: transparent image_url(unquote("dark-menu-hover-bg.png")) scroll repeat-x left top
-            &.last
-              border: 0
-            &.arrow
-              width: $aside_width
-              position: absolute
-              left: 0
-              top: -5px
-              height: 5px
-              background: transparent image_url(unquote("large-arrow-head.png")) scroll no-repeat left top
-              border: none
-            a
-              margin: 0
-              padding: 0 0 0 10px
-              height: 28px
-              line-height: 28px
-              color: $white_color - #333333
-              border: 0
-              &:hover
-                background: none
-
-      &.settings a span
-        padding-left: 20px
-        background: transparent image_url(unquote("icon-settings.png")) scroll no-repeat left center
-      &.updates a span
-        padding-left: 20px
-        background: transparent image_url(unquote("icon-updates.png")) scroll no-repeat left center
-      a
-        display: block
-        height: 28px
-        line-height: 28px
-        padding: 1px 10px 0 10px
-        border-right: 1px solid $border_color
-        position: relative
-        &.selected, &:hover
-          background-image: image_url(unquote("profile-nav-bg-selected.png"))
-          border-top: none
-          border-bottom: none
-          border-right-color: #ababab
-          border-left: 1px solid #ababab
-          margin-left: -1px
-        &.selected
-          border-bottom: none
-          .arrow
-            display: block
-        &.empty
-          width: 50px
-        &.first
-          border-left: 1px solid $border_color
-          &.selected, &:hover
-            margin-left: 0
-            border-left-color: #ababab
-        .arrow
-          display: none
-          background: transparent image_url(unquote("box-arrow-bottom.png")) scroll no-repeat bottom center
-          position: absolute
-          height: 6px
-          left: 0
-          bottom: -1px
-          right: 0
-      &.profile a .arrow
-        background-position: bottom left
-        left: 36px
 
 .product-options
   .option-size, .option-relative-size, .option-shoe-size, .option-pants-length, .option-pants-width
@@ -1466,9 +1289,6 @@ body.brand-list
     &:hover, &:active
       text-decoration: underline
   .sidebar
-    .not_following, .following
-      display: inline-block
-      width: 70px
     a.title
       margin-right: 5px
       display: inline-block
@@ -1873,60 +1693,6 @@ ul.menu
   float: left
   margin-right: 0.5em
 
-.following
-  .follow
-    display: none
-
-.not_following
-  .unfollow
-    display: none
-
-a.follow, a.unfollow
-  +highlight_button(16px, 3px)
-  background-repeat: no-repeat
-  background-attachment: scroll
-  background-position: 4px center
-  padding: 0 4px 0 16px
-  font-weight: normal !important
-  &:hover
-    text-decoration: none !important
-    span
-      display: inline
-
-a.follow
-  background-image: image_url("follow.png")
-  &:hover
-    text-decoration: none !important
-
-a.unfollow
-  background-color: #f0f0f0
-  background-image: image_url("following.png")
-  border-color: #f0f0f0
-  color: $font_color
-  &:hover
-    background-color: $like_color + #666666
-    background-image: image_url("unfollow.png")
-    border-color: $like_color
-    color: $font_color
-    text-decoration: none !important
-
-p.large_follow
-  height: 28px
-  margin-bottom: 15px
-  .following, .not_following
-    display: block
-    margin-top: 0.5em
-    a.follow, a.unfollow
-      line-height: 6px
-      padding: 1em
-      background-position: 90% center
-      padding-right: 24px
-      text-align: center
-      span
-        display: inline
-  .following .unfollow, .not_following .follow
-    display: block
-
 a.profile-link, span.profile-link
   img.avatar
     margin-right: 0.5em
@@ -1942,19 +1708,6 @@ body.profile
     margin: 30px auto 0 auto
     width: 320px
     text-align: center
-    a
-      +highlight_button(30px, 3px)
-      margin: 1em 0 0 0
-      padding: 0 1em
-      display: block
-      &.add
-        background-image: image_url(unquote("add.png"))
-        background-repeat: no-repeat
-        background-position: 10px center
-  #profile-nav
-    ul
-      display: block
-      margin-left: $aside_width + 36px
   #content
     margin-top: 12px
   .sidebar
@@ -1962,39 +1715,31 @@ body.profile
     h2
       margin-top: 0
     #profile-image
+      display: block
       position: relative
       width: 200px
       .avatar.large
         z-index: 1
-      button.edit
+        display: block
+      .btn-edit, .btn-cancel
         position: absolute
         top: 0
         left: 0
         z-index: 2
-        +edit_button(22px, 3px)
-        display: none
-      button.cancel-edit
-        position: absolute
-        top: 0
-        left: 0
-        z-index: 2
-        +delete_button(22px, 3px)
         display: none
       form
+        width: 200px
+        position: absolute
+        bottom: 0
+        left: 0
+        z-index: 2
         display: none
-        li.upload-field
-          width: 198px
-          input
-            width: 188px
-            position: relative
-            padding-left: 10px
-        button.submit
-          width: 198px
-          margin-bottom: 20px
-          z-index: 2
-          +highlight_button(22px, 3px)
-          height: 22px
-          padding: 0
+        input, button
+          margin: 0
+        li.profile-avatar-upload
+          padding: 3px 6px
+          background-color: $black_color
+          color: $white_color
     p
       border: none
       color: $easier_color
@@ -2035,37 +1780,18 @@ body.profiles, body.profile
       .profile-info
         margin-left: 75px
         h3
+          vertical-align: middle
           display: inline-block
           font-weight: bold
           font-family: $font_family
           font-size: 1.25em
-        p
-          margin: 1em 0
-        .user_is_following
+        .btn-follow, .btn-unfollow, .btn-follow-you
           float: right
-          margin-right: 10px
-          +highlight_button(18px, 3px)
-          padding: 0 8px 0 25px
-          background-image: image_url("following_you.png")
-          background-repeat: no-repeat
-          background-attachment: scroll
-          background-position: 8px center
-          cursor: auto
-          &:hover
-            background-color: $highlight_bg_color
-        .following, .not_following
-          float: right
-          .follow, .unfollow
-            background-position: 8px center
-            height: 18px
-            line-height: 18px
-            padding: 0 8px 0 25px
-            span
-              max-width: 75px
-              overflow: hidden
-              display: inline-block
+        .btn-follow-you
+          margin-right: 5px
         p
           position: relative
+          margin: 1em 0
           .member_since, .follower_count, .following_count, .likes_count, .looks_count
             color: $easier_color
             white-space: nowrap
@@ -2083,60 +1809,6 @@ ul.suggested-friends
     img.avatar
       vertical-align: top
       float: left
-    a:hover
-      text-decoration: underline
-    .following, .not_following
-      display: block
-      .follow span, .unfollow span
-        display: inline
-
-
-#profile-nav
-  +clearfix
-  position: relative
-  padding: 1em 0
-  margin: 0
-  ul
-    +horizontal-list(0)
-    display: inline
-    z-index: 1
-    position: relative
-    li
-      /* min-width: 78px */
-      /* text-align: center */
-      a
-        display: block
-        height: 26px
-        line-height: 26px
-        font-size: 1.3em
-        font-weight: bold
-        padding-right: 20px
-        color: #c1c1c1
-        &.first
-          border-width: 1px
-        &.selected, &:hover
-          color: #353535
-          text-decoration: underline
-        &.profile-image
-          border-right: none
-          padding: 0
-          img
-            height: 30px
-            width: 30px
-        &.profile-link
-          border-left: none
-          text-transform: none
-          &:hover
-            text-decoration: none
-  hr
-    top: 16px
-    z-index: 0
-    position: absolute
-    width: $content_width
-    color: $easiest_color
-    background-color: $easiest_color
-    height: 1px
-    border: none
 
 //
 // Activity elements used in feeds
@@ -2181,86 +1853,6 @@ ul.suggested-friends
     position: absolute
     bottom: 0
     left: 0
-
-// Remove inline-date and activity-list later
-.inline-date
-  float: right
-  color: $easier_color
-
-.activity-list
-  a.activity
-    display: block
-    margin: 0 0 1.5em 0
-  li.activity
-    padding: 10px
-    margin: 0 0 1.5em 0
-    background-color: transparent
-    background-repeat: no-repeat
-    background-attachment: scroll
-    background-position: 104px 6px
-    &.liked, &.liked_product, &.liked_look
-      background-image: image_url("activity_heart.png")
-      background-position: 120px 20px
-      &:hover
-        background: image_url("activity_heart.png") no-repeat #d9d9d9
-        background-position: 120px 20px
-    &.commented
-      background-image: image_url("activity_talk.png")
-      background-position: 121px 18px
-      &:hover
-        background: image_url("activity_talk.png") no-repeat #d9d9d9
-        background-position: 121px 18px
-    &.created
-      background-image: image_url("activity_new.png")
-      background-position: 118px 18px
-      &:hover
-        background: image_url("activity_new.png") no-repeat #d9d9d9
-        background-position: 118px 18px
-    &.added
-      background-image: image_url("activity_add.png")
-      background-position: 122px 19px
-      &:hover
-        background: image_url("activity_add.png") no-repeat #d9d9d9
-        background-position: 122px 19px
-    &.following
-      &:hover
-        background: #d9d9d9
-    +clearfix
-    border: none
-    position: relative
-    .activity-image
-      margin-right: 28px
-      float: left
-      overflow: hidden
-    .activity-image
-      width: $aside_width / 2 - $gutter_width / 4 - 2
-      img
-        width: $aside_width / 2 - $gutter_width / 4 - 2
-        vertical-align: top
-    .activity-info
-      padding: 0.5em 0 0.5em 0
-      width: $middle_width - $aside_width / 2 - 58
-      float: right
-      .activity-content
-        h3
-          border: 0
-          background-image: none
-          display: inline
-          overflow: hidden
-          a
-            font-weight: bold
-            &:hover
-              text-decoration: underline
-          .inline-date
-            height: 50px
-            padding-left: 3px
-      .discount-price, .price, .sum, .likes
-        background-image: none
-        padding-left: 0
-      .discount-price
-        color: $like_color
-      .likes
-        color: $like_color
 
 .dialog
   +dialog

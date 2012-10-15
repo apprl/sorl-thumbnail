@@ -65,12 +65,10 @@
     <a href="{{ object.user.get_profile.get_absolute_url }}"><img src="{{ object.user.get_profile.avatar }}" class="profile-image" /></a>
     <div class="look-header-content">
         {% if object.user != request.user %}
-            {% with object.user.get_profile as profile %}
-            <p class="large_follow">{% include 'apparel/fragments/follow.html' %}</p>
-            {% endwith %}
+            {% include 'apparel/fragments/follow.html' with profile=object.user.get_profile %}
         {% else %}
-            <a class="edit" href="{% url apparel.views.look_edit object.slug %}">{% trans "Edit" %}</a>
-            <a class="delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
+            <a class="btn btn-positive btn-edit" href="{% url apparel.views.look_edit object.slug %}">{% trans "Edit" %}</a>
+            <a class="btn btn-negative btn-delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
         {% endif %}
     </div>
 </div>

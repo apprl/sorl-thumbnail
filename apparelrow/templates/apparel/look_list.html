@@ -15,7 +15,7 @@
             <li><a class="last popular{% if 'popular' in request.path %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
         </ul>
     </div>
-    <a class="open-dialog create-look" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a>
+    <a class="open-dialog btn btn-positive btn-create-look" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a>
 </div>
 {% endblock body-header %}
 {% block body-classes %}one-column look-list{% endblock body-classes %}
