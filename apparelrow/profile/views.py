@@ -21,6 +21,7 @@ from profile.utils import get_facebook_user
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm
 from profile.models import EmailChange, ApparelProfile, Follow
 from profile.tasks import send_email_confirm_task
+from profile.decorators import avatar_change
 from activity_feed.views import ActivityFeedHTML
 
 PROFILE_PAGE_SIZE = 30
@@ -31,24 +32,6 @@ def get_facebook_friends(request):
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
         return ApparelProfile.objects.filter(user__username__in=friends_uids)
-
-# TODO && FIXME: build a better solution, right now we use this in
-# profile/looks/following/followers. Should create a view for the submit form
-# maybe?
-def handle_change_image(request, profile):
-    if request.method == 'POST':
-        if profile.user != request.user:
-            return HttpResponseForbidden()
-
-        form = ProfileImageForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(form.instance.get_absolute_url())
-    else:
-        form = ProfileImageForm(instance=profile)
-
-    return form
-
 
 def get_profile_sidebar_info(request, profile):
     """
@@ -70,12 +53,11 @@ def get_profile_sidebar_info(request, profile):
     return info
 
 @get_current_user
-def likes(request, profile, page=0, gender=None):
+@avatar_change
+def likes(request, profile, form, page=0, gender=None):
     """
     Displays the profile likes page.
     """
-    form = handle_change_image(request, profile)
-
     if not gender:
         gender = get_gender_from_cookie(request)
 
@@ -109,12 +91,11 @@ def likes(request, profile, page=0, gender=None):
     return response
 
 @get_current_user
-def profile(request, profile, page=0):
+@avatar_change
+def profile(request, profile, form, page=0):
     """
     Displays the profile page
     """
-    form = handle_change_image(request, profile)
-
     htmlset = ActivityFeedHTML(request, get_model('activity_feed', 'activity').objects.get_for_user(profile))
     paginator = Paginator(htmlset, 5)
 
@@ -144,8 +125,8 @@ def profile(request, profile, page=0):
     return render(request, 'profile/profile.html', content)
 
 @get_current_user
-def looks(request, profile, page=0):
-    form = handle_change_image(request, profile)
+@avatar_change
+def looks(request, profile, form, page=0):
     queryset = profile.user.look.order_by('-modified')
 
     paged_result, pagination = get_pagination_page(queryset, 6,
@@ -170,8 +151,8 @@ def looks(request, profile, page=0):
     return render(request, 'profile/looks.html', content)
 
 @get_current_user
-def followers(request, profile, page=0):
-    form = handle_change_image(request, profile)
+@avatar_change
+def followers(request, profile, form, page=0):
     content_type = ContentType.objects.get_for_model(User)
     queryset = Follow.objects.filter(user_follow=profile, active=True)
 
@@ -198,8 +179,8 @@ def followers(request, profile, page=0):
     return render(request, 'profile/followers.html', content)
 
 @get_current_user
-def following(request, profile, page=0):
-    form = handle_change_image(request, profile)
+@avatar_change
+def following(request, profile, form, page=0):
     content_type = ContentType.objects.get_for_model(User)
     queryset = Follow.objects.filter(user=profile, active=True)
 
