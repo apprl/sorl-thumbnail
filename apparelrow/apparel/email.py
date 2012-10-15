@@ -20,14 +20,13 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
-from actstream.models import Action
 from sorl.thumbnail import get_thumbnail
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
 
 from apparel.tasks import mailchimp_subscribe, mailchimp_unsubscribe
 from apparel.models import Product, Look
-from profile.models import ApparelProfile
+from profile.models import ApparelProfile, Follow
 
 logger = logging.getLogger('apparel.email')
 
@@ -177,11 +176,10 @@ def get_weekly_mail_content(gender, timeframe):
     # Members
     members = []
     base_members = list(ApparelProfile.objects.filter(gender=gender).order_by('-followers_count').values_list('user', flat=True)[:4])
-    temp_week_members = list(Action.objects.filter(verb='started following', timestamp__gt=timeframe)
-                                           .values_list('target_object_id', flat=True)
-                                           .annotate(count=Count('target_object_id'))
+    temp_week_members = list(Follow.objects.filter(modified__gt=timeframe)
+                                           .values_list('user_follow__user', flat=True)
+                                           .annotate(count=Count('user_follow__user'))
                                            .order_by('-count'))
-
 
     week_members = []
     count_week_members = 0
