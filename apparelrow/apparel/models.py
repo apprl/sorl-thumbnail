@@ -483,38 +483,41 @@ class VendorProduct(models.Model):
         """
         Return price and currency based on the locale from get_language.
         """
-        locale = get_language()
-        if locale not in settings.LANGUAGE_TO_CURRENCY:
-            return self.original_currency
+        if not hasattr(self, '_calculated_locale_price'):
+            locale = get_language()
+            if locale not in settings.LANGUAGE_TO_CURRENCY:
+                return self.original_currency
 
-        from_currency = self.original_currency
-        to_currency = settings.LANGUAGE_TO_CURRENCY.get(locale, settings.APPAREL_BASE_CURRENCY)
+            from_currency = self.original_currency
+            to_currency = settings.LANGUAGE_TO_CURRENCY.get(locale, settings.APPAREL_BASE_CURRENCY)
 
-        if from_currency == to_currency:
-            return self.original_price, self.original_discount_price, to_currency
+            if from_currency == to_currency:
+                return self.original_price, self.original_discount_price, to_currency
 
-        key = 'currency_rates_base_%s' % (settings.APPAREL_BASE_CURRENCY,)
-        rates = cache.get(key)
-        if not rates:
-            fxrate_model = get_model('importer', 'FXRate')
-            rates = {}
-            for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY).values('currency', 'rate'):
-                rates[rate_obj['currency']] = rate_obj['rate']
+            key = 'currency_rates_base_%s' % (settings.APPAREL_BASE_CURRENCY,)
+            rates = cache.get(key)
+            if not rates:
+                fxrate_model = get_model('importer', 'FXRate')
+                rates = {}
+                for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY).values('currency', 'rate'):
+                    rates[rate_obj['currency']] = rate_obj['rate']
 
-            if rates:
-                cache.set(key, rates, 60*60)
+                if rates:
+                    cache.set(key, rates, 60*60)
 
-        rate = rates[to_currency] * (1 / rates[from_currency])
-        if from_currency == settings.APPAREL_BASE_CURRENCY:
-            rate = rates[to_currency]
-        elif to_currency == settings.APPAREL_BASE_CURRENCY:
-            rate = 1 / rates[from_currency]
+            rate = rates[to_currency] * (1 / rates[from_currency])
+            if from_currency == settings.APPAREL_BASE_CURRENCY:
+                rate = rates[to_currency]
+            elif to_currency == settings.APPAREL_BASE_CURRENCY:
+                rate = 1 / rates[from_currency]
 
-        discount_price = self.original_discount_price
-        if discount_price:
-            discount_price = rate * self.original_discount_price
+            discount_price = self.original_discount_price
+            if discount_price:
+                discount_price = rate * self.original_discount_price
 
-        return rate * self.original_price, discount_price, to_currency
+            self._calculated_locale_price = (rate * self.original_price, discount_price, to_currency)
+
+        return self._calculated_locale_price
 
     @property
     def locale_price(self):
