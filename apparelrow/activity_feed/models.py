@@ -41,7 +41,7 @@ class ActivityManager(models.Manager):
         pull_activity_feed.delay(profile, verb, content_type, activity_object.pk)
 
     def get_for_user(self, user):
-        return Activity.objects.filter(user=user) \
+        return Activity.objects.filter(user=user, active=True) \
                                .select_related('user', 'owner') \
                                .prefetch_related('activity_object', 'content_type') \
                                .order_by('-created')
