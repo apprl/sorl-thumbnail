@@ -129,7 +129,7 @@
                 <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
                 <li class="subnav-handle">
                     <a class="{% selected_url request "/users" "/brand" "/profile" %}" href="#">{% trans "Follow" %}</a>
-                    <ul class="subnav">
+                    <ul class="subnav" id="subnav-follow">
                         <li><a href="{% url user-list-popular %}">{% trans "Members" %}</a></li>
                         <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
                     </ul>
@@ -143,7 +143,7 @@
                 <li class="avatar"><a href="{{ request.user.get_profile.url_likes }}"><img src="{{ request.user.get_profile.avatar_small }}" width="32" height="32"></a></li>
                 <li class="user subnav-handle">
                     <a class="{% selected_url request "/profile/settings" "/profile/"|add:request.user.get_profile.slug %}" href="{{ request.user.get_profile.url_likes }}">{{ request.user.get_profile.display_name }}</a>
-                    <ul class="subnav">
+                    <ul class="subnav" id="subnav-profile">
                         <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Profile" %}</a></li>
                         <li><a href="{% url profile.views.settings_notification %}">{% trans "Settings" %}</a></li>
                         <li><a href="{% url auth_logout %}">{% trans "Log out" %}</a></li>
@@ -155,7 +155,7 @@
             <ul id="nav-global">
                 <li class="gender subnav-gray-handle">
                     <a href="#">{% if APPAREL_GENDER == 'M' %}{% trans "Men" %}{% else %}{% trans "Women" %}{% endif %}</a>
-                    <ul class="subnav-gray">
+                    <ul class="subnav-gray" id="subnav-gender">
                         <li><a href="{% change_gender_url request APPAREL_GENDER 'women' %}">{% trans "Women" %}</a></li>
                         <li><a href="{% change_gender_url request APPAREL_GENDER 'men' %}">{% trans "Men" %}</a></li>
                     </ul>
@@ -168,7 +168,7 @@
                     {% endfor %}
                     <form action="{% url django.views.i18n.set_language %}" method="post" class="select-language">
                         {% csrf_token %}
-                        <ul class="subnav-gray">
+                        <ul class="subnav-gray" id="subnav-language">
                         {% for language in LANGUAGES %}
                             <li class="{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}">
                                 {% if language.0 == LANGUAGE_CODE %}

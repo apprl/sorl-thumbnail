@@ -95,6 +95,7 @@ jQuery(document).ready(function() {
     function close(event) {
         if(subnav) {
             subnav.hide();
+            subnav.siblings('a').removeClass('suppress-selected');
             subnav = false;
         }
     }
@@ -103,19 +104,20 @@ jQuery(document).ready(function() {
     }
     function cancel(event) {
         if(closetimer) {
+            jQuery(this).find('a').addClass('suppress-selected');
             window.clearTimeout(closetimer);
-            closetimer = null;
         }
     }
     function open(event) {
         cancel(event);
+        var link_handle = jQuery(this).find('a').addClass('suppress-selected');
         var temp_subnav = jQuery(this);
         if(temp_subnav.hasClass('subnav-handle')) {
             temp_subnav = temp_subnav.find('.subnav');
         } else if(temp_subnav.hasClass('subnav-gray-handle')) {
             temp_subnav = temp_subnav.find('.subnav-gray');
         }
-        if(temp_subnav != subnav) {
+        if(temp_subnav && subnav && temp_subnav.attr('id') != subnav.attr('id')) {
             close(event);
         }
         subnav = temp_subnav.show();

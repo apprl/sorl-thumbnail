@@ -373,6 +373,8 @@ button
           margin: 6px 0
           &:hover, &:active, &.selected
             border-bottom: 3px solid $white_color
+          &.selected.suppress-selected
+            border-bottom: 0
         &.subnav-handle a:hover
           border-bottom: 0
     #nav-user
@@ -391,6 +393,8 @@ button
           margin: 6px 0
           &:hover, &:active, &.selected
             border-bottom: 3px solid $white_color
+          &.selected.suppress-selected
+            border-bottom: 0
         &.subnav-handle.user a:hover
           border-bottom: 0
         > form input, > form a
