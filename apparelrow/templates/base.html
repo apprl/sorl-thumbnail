@@ -128,7 +128,7 @@
                 <li><a class="{% selected_url request "/" "/products" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
                 <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
                 <li class="subnav-handle">
-                    <a class="{% selected_url request "/users" "/brands" %}" href="#">{% trans "Follow" %}</a>
+                    <a class="{% selected_url request "/users" "/brand" "/profile" %}" href="#">{% trans "Follow" %}</a>
                     <ul class="subnav">
                         <li><a href="{% url user-list-popular %}">{% trans "Members" %}</a></li>
                         <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
@@ -142,7 +142,7 @@
                 {% else %}
                 <li class="avatar"><a href="{{ request.user.get_profile.url_likes }}"><img src="{{ request.user.get_profile.avatar_small }}" width="32" height="32"></a></li>
                 <li class="user subnav-handle">
-                    <a class="{% selected_url request "/profile" %}" href="{{ request.user.get_profile.url_likes }}">{{ request.user.get_profile.display_name }}</a>
+                    <a class="{% selected_url request "/profile/settings" "/profile/"|add:request.user.get_profile.slug %}" href="{{ request.user.get_profile.url_likes }}">{{ request.user.get_profile.display_name }}</a>
                     <ul class="subnav">
                         <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Profile" %}</a></li>
                         <li><a href="{% url profile.views.settings_notification %}">{% trans "Settings" %}</a></li>
