@@ -1,4 +1,4 @@
-{% load apparel_extras comments %}
+{% load apparel_extras comments i18n %}
 <article class="activity {{ verb }}">
     <header class="activity-header">
         <div class="activity-image">
@@ -12,6 +12,9 @@
     <div class="activity-content">{% block activity_content %}{% endblock %}</div>
     {% if enable_comments and objects|length == 1 %}
     <div class="activity-comment comment-box">
+        {% if comment_count > 2 %}
+        <a class="comment-count" href="{{ objects.0.get_absolute_url }}#comments">{% blocktrans with comment_count=comment_count %}See all {{comment_count}} comments{% endblocktrans %}</a>
+        {% endif %}
         <ul class="comments-list">
         {% for comment in comments %}
             {% include 'comments/comment.html' %}

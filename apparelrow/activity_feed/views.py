@@ -29,6 +29,7 @@ class ActivityFeedHTML:
             comments = Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False) \
                                       .order_by('-submit_date') \
                                       .select_related('user', 'user__profile')[:2]
+            comment_count = Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False).count()
             comments =  list(reversed(comments))
 
             enable_comments = False
@@ -43,6 +44,7 @@ class ActivityFeedHTML:
                                                          'objects': [result.activity_object],
                                                          'users': [result.user],
                                                          'enable_comments': enable_comments,
+                                                         'comment_count': comment_count,
                                                          'comments': comments,
                                                          'csrf_token': csrf.get_token(self.request),
                                                          'CACHE_TIMEOUT': 10,
