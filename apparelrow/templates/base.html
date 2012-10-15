@@ -126,7 +126,7 @@
                 <li><a class="{% selected_url request "/" "/products" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
                 <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
                 <li class="subnav-handle">
-                    <a class="{% selected_url request "/users" "/brand" "/profile" %}" href="#">{% trans "Follow" %}</a>
+                    <a class="{% selected_url request "/users" "/brand" "/profile" %}" href="{% url user-list-popular %}">{% trans "Follow" %}</a>
                     <ul class="subnav" id="subnav-follow">
                         <li><a href="{% url user-list-popular %}">{% trans "Members" %}</a></li>
                         <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
