@@ -352,9 +352,7 @@ def selected_url(request, *args):
             if request.path.startswith('/men') or request.path.startswith('/women'):
                 return 'selected'
         elif pattern == '/profile':
-            print pattern
-            print '/profile/%s' % (request.user.get_profile().slug,), request.path
-            if not request.path.startswith('/profile/%s' % (request.user.get_profile().slug,)) and not request.path.startswith('/profile/settings'):
+            if not request.path.startswith('/profile/%s' % (request.user.get_profile().slug,)) and not request.path.startswith('/profile/settings') and request.path.startswith(pattern):
                 return 'selected'
         else:
             if request.path.startswith(pattern):
