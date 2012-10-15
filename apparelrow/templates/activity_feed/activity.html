@@ -10,7 +10,7 @@
         </div>
     </header>
     <div class="activity-content">{% block activity_content %}{% endblock %}</div>
-    {% if comments and objects|length == 1 %}
+    {% if enable_comments and objects|length == 1 %}
     <div class="activity-comment comment-box">
         <ul class="comments-list">
         {% for comment in comments %}

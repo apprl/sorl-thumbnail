@@ -31,6 +31,10 @@ class ActivityFeedHTML:
                                       .select_related('user', 'user__profile')[:2]
             comments =  list(reversed(comments))
 
+            enable_comments = False
+            if comments or result.verb in ['like_product', 'like_look', 'create']:
+                enable_comments = True
+
             template_name = 'activity_feed/verbs/%s.html' % (result.verb,)
             data.append(render_to_string(template_name, {'user': self.request.user,
                                                          'current_user': self.request.user,
@@ -38,6 +42,7 @@ class ActivityFeedHTML:
                                                          'created': result.created,
                                                          'objects': [result.activity_object],
                                                          'users': [result.user],
+                                                         'enable_comments': enable_comments,
                                                          'comments': comments,
                                                          'csrf_token': csrf.get_token(self.request),
                                                          'CACHE_TIMEOUT': 10,

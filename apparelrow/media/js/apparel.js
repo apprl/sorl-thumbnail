@@ -210,8 +210,9 @@ jQuery(document).ready(function() {
     if(comment_area.val() == '')
         jQuery('.comment-box button').hide();
     comment_area
-        .focus(function() { jQuery('.comment-box button').show() })
-        .blur(function() { if(jQuery(this).val() == '') jQuery('.comment-box button').hide() });
+        .focus(function() { jQuery(this).parents('form').find('button').show(); })
+        .blur(function() { if(jQuery(this).val() == '') jQuery(this).parents('form').find('button').hide(); });
+
     jQuery('.comment-box form').hyperSubmit({
         success: function(data, statusText, req) {
             comment_area.val('');
@@ -221,6 +222,7 @@ jQuery(document).ready(function() {
             return false;
         }
     });
+
     //Hover state for share button
     jQuery('.share').hover(
         function() { jQuery(this).find('ul').show(); },
