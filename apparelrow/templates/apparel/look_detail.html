@@ -80,7 +80,7 @@
         <p class="description">{{ object.description }}</p>
     {% endif %}
     <div class="share-created">
-        <span class="created">{% trans "Created" %} {{ object.created|naturalday:"Y-m-d" }}</span>
+        <span class="created">{% trans "Created" %} {{ object.created|since }}</span>
     </div>
 {% endcache %}
     <h2>{% trans "Likes" %}</h2>
