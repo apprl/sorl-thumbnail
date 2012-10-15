@@ -3,11 +3,13 @@
 
 {% block activity_header %}
     {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
-    {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0 count products=objects|length %}
+    {% if objects|length > 1 %}
+    {% blocktrans with count=objects|length %}likes {{count}} products{% endblocktrans %}
+    {% else %}
+    {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0 %}
     likes <a href="{{object_url}}">{{title}}</a>
-    {% plural %}
-    likes {{ products }} products
     {% endblocktrans %}
+    {% endif %} 
 {% endblock %}
 
 {% block activity_content %}

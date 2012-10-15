@@ -3,11 +3,13 @@
 
 {% block activity_header %}
     {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
-    {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0.title user_url=objects.0.user.get_absolute_url user_name=objects.0.user.display_name count looks=objects|length %}
+    {% if objects|length > 1 %}
+    {% blocktrans with count=objects|length %}likes {{count}} looks{% endblocktrans %}
+    {% else %}
+    {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0.title user_url=objects.0.user.get_absolute_url user_name=objects.0.user.display_name %}
     likes the look <a href="{{object_url}}">{{title}}</a> by <a href="{{user_url}}">{{user_name}}</a> 
-    {% plural %}
-    likes {{ looks }} looks
     {% endblocktrans %}
+    {% endif %}
 {% endblock %}
 
 {% block activity_content %}
