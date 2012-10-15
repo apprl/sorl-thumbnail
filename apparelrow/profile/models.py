@@ -17,7 +17,6 @@ from django.contrib.auth.signals import user_logged_in
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 
-from actstream import models as actstream_models
 from sorl.thumbnail import get_thumbnail
 from django_extensions.db.fields import AutoSlugField
 
@@ -221,15 +220,13 @@ class ApparelProfile(models.Model):
 
         return None
 
-    def get_friend_updates(self):
-        return actstream_models.user_stream(self.user).filter(verb__in=['liked_look', 'liked_product', 'added', 'commented', 'created', 'started following', 'added_products'])
-
     @property
     def get_updates_last_visit(self):
-        if not hasattr(self, '_updates_since_last_visit'):
-            self._updates_since_last_visit = self.get_friend_updates().filter(timestamp__gt=self.updates_last_visit).count()
+        return 0
+        #if not hasattr(self, '_updates_since_last_visit'):
+            #self._updates_since_last_visit = self.get_friend_updates().filter(timestamp__gt=self.updates_last_visit).count()
 
-        return self._updates_since_last_visit
+        #return self._updates_since_last_visit
 
     @property
     def url_likes(self):

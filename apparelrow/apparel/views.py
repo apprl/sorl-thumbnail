@@ -841,56 +841,6 @@ def jobs(request):
             'image': str(image)
         }, context_instance=RequestContext(request))
 
-@get_current_user
-@login_required
-def home(request, profile):
-    """
-    Displays the logged in user's page
-    """
-    # Update the time we last checked "friends updates"
-    profile.updates_last_visit = datetime.datetime.now()
-    queryset = profile.get_friend_updates()
-    profile.save()
-
-    # Retrieve most popular products in users network
-    limit = 2
-    user_ids = list(Follow.objects.filter(user=request.user.get_profile(), active=True).values_list('user_follow__user_id', flat=True)) + [0]
-    user_ids_or = ' OR '.join(str(x) for x in user_ids)
-
-
-    # FIXME: Ugly solution, query solr for popular products, then query db for those two results, should be able to get this directly with db queries.
-    query_arguments = {
-        'sort': 'popularity desc',
-        'start': 0,
-        'rows': limit,
-        'fq': [
-            'django_ct:apparel.product',
-            'user_likes:({0})'.format(user_ids_or),
-            'availability:true',
-            'published:true'
-        ]
-    }
-    result = ApparelSearch('*:*', **query_arguments)
-    popular_products = Product.objects.filter(id__in=[doc.django_id for doc in result.get_docs()])
-
-    paged_result, pagination = get_pagination_page(queryset,
-            FAVORITES_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
-
-    if request.is_ajax():
-        return render_to_response('apparel/fragments/activity/list.html', {
-            'pagination': pagination,
-            'current_page': paged_result
-        }, context_instance=RequestContext(request))
-
-    return render_to_response('apparel/user_home.html', {
-            'pagination': pagination,
-            'current_page': paged_result,
-            'next': request.get_full_path(),
-            'profile': profile,
-            'popular_looks_in_network': get_top_looks_in_network(request.user.get_profile(), limit=limit),
-            'popular_products_in_network': popular_products
-        }, context_instance=RequestContext(request))
-
 def dialog_login_favorite_friends(request):
     """
     Display a dialog tailored for the browse page with information about

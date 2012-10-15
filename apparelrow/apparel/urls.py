@@ -12,8 +12,7 @@ urlpatterns = patterns('',
     # About
     url(r'^about/$', 'apparel.views.about', name='about'),
 
-    # Home
-    (r'^home/$', 'apparel.views.home'),
+    # Facebook friends widget
     (r'^home/friends/$', 'apparel.views.facebook_friends_widget'),
 
     # Search
