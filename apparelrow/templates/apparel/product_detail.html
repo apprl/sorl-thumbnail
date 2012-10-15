@@ -169,7 +169,7 @@
 
 {% block body-header %}
 {% if request.META.HTTP_REFERER and CURRENT_DOMAIN in request.META.HTTP_REFERER %}
-<a class="btn btn-learr btn-product-back" href="{{ request.META.HTTP_REFERER }}" onClick="history.back(1);return false;">{% trans "Back" %}</a>
+<a class="btn btn-learr btn-upper btn-product-back" href="{{ request.META.HTTP_REFERER }}" onClick="history.back(1);return false;">{% trans "Back" %}</a>
 {% endif %}
 <div id="body-header">
     <div class="column_one">

@@ -63,9 +63,9 @@
             </div>
             {% if forloop.first %}
                 {% if vendorproduct.availability == 0 %}
-                <span class="btn btn-disabled btn-sold-out">{% trans "Sold out" %}</span>
+                <span class="btn btn-upper btn-disabled btn-sold-out">{% trans "Sold out" %}</span>
                 {% else %}
-                <a href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_blank" class="btn btn-positive btn-buy" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.locale_price|floatformat:0|apprl_intcomma }}">{% trans "Buy" %}</a>
+                <a href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ vendorproduct.buy_url|urlencode }}" target="_blank" class="btn btn-upper btn-positive btn-buy" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.locale_price|floatformat:0|apprl_intcomma }}">{% trans "Buy" %}</a>
                 {% endif %}
             {% endif %}
         {% empty %}
