@@ -122,8 +122,8 @@
             </form>
 
             <ul id="nav-main">
-                <li><a class="{% selected_url request "/feed" %}" href="{% url user_feed %}">{% trans "Feed" %}</a></li>
-                <li><a class="{% selected_url request "/" "/products" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
+                <li><a class="{% selected_url request "/" "/feed" %}" href="{% if request.user.is_authenticated %}{% url user_feed %}{% else %}{% url public_feed %}{% endif %}">{% trans "Feed" %}</a></li>
+                <li><a class="{% selected_url request "/shop" "/products" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
                 <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
                 <li class="subnav-handle">
                     <a class="{% selected_url request "/users" "/brand" "/profile" %}" href="{% url user-list-popular %}">{% trans "Follow" %}</a>

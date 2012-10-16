@@ -6,8 +6,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.middleware import csrf
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
-from apparel.models import Product
+from apparel.models import Product, Look
 from profile.models import Follow, ApparelProfile
 from apparel.views import get_top_looks_in_network, get_top_products_in_network
 from activity_feed.models import Activity, ActivityFeed
@@ -52,12 +54,42 @@ class ActivityFeedHTML:
 
         return data
 
-@login_required
-def user_feed(request):
-    profile = request.user.get_profile()
-    #profile.updates_last_visit = datetime.datetime.now()
-    #profile.save()
+def public_feed(request):
+    htmlset = ActivityFeedHTML(request, Activity.objects.all())
+    paginator = Paginator(htmlset, 5)
 
+    page = request.GET.get('page')
+    try:
+        paged_result = paginator.page(page)
+    except PageNotAnInteger:
+        paged_result = paginator.page(1)
+    except EmptyPage:
+        paged_result = paginator.page(paginator.num_pages)
+
+    if request.is_ajax():
+        return render(request, 'activity_feed/feed.html', {
+            'current_page': paged_result
+        })
+
+    popular_products = Product.valid_objects.order_by('-popularity')[:4]
+    popular_looks = Look.objects.order_by('-popularity', '-created')[:3]
+    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')[:5]
+    popular_members = ApparelProfile.objects.filter(user__is_active=True, is_brand=False).order_by('-followers_count')[:5]
+
+    return render(request, 'activity_feed/public_feed.html', {
+            'current_page': paged_result,
+            'next': request.get_full_path(),
+            'popular_products': popular_products,
+            'popular_looks': popular_looks,
+            'popular_brands': popular_brands,
+            'popular_members': popular_members,
+        })
+
+def user_feed(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('public_feed'))
+
+    profile = request.user.get_profile()
     htmlset = ActivityFeedHTML(request, ActivityFeed.objects.get_for_user(profile))
     paginator = Paginator(htmlset, 5)
 

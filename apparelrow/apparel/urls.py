@@ -4,10 +4,14 @@ from django.views.generic import TemplateView
 from apparel.models import Look
 
 urlpatterns = patterns('',
-    # Index
-    url(r'^$', 'apparel.views.gender', {'view': 'shop'}, name='shop'),
-    url(r'^men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
-    url(r'^women/$', 'apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
+    # Feed
+    url(r'^all/$', 'activity_feed.views.public_feed', name='public_feed'),
+    url(r'^$', 'activity_feed.views.user_feed', name='user_feed'),
+
+    # Shop
+    url(r'^shop/$', 'apparel.views.gender', {'view': 'shop'}, name='shop'),
+    url(r'^shop/men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
+    url(r'^shop/women/$', 'apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
 
     # About
     url(r'^about/$', 'apparel.views.about', name='about'),
