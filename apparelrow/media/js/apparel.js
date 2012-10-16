@@ -89,7 +89,8 @@ jQuery(document).ready(function() {
     // Make all textareas autogrow
     //jQuery('textarea').autosize();
 
-    // Subnav popup
+    // Subnav dropdown code
+
     var closetimer = false;
     var subnav = false;
     function close(event) {
@@ -123,32 +124,6 @@ jQuery(document).ready(function() {
         subnav = temp_subnav.show();
     }
     jQuery('.subnav-handle, .subnav-gray-handle').on('mouseenter', open).on('mouseleave', timer);
-
-    // Handle language selection
-    var selected = false;
-    jQuery('#nav-global li.language a').click(function(event) {
-        if(selected) {
-            jQuery(this).removeClass('select').addClass('current').parent().find('.subnav').hide();
-            selected = false;
-        } else {
-            jQuery(this).removeClass('current').addClass('select').parent().find('.subnav').show();
-            selected = true;
-        }
-        return false;
-    });
-    jQuery('#nav-global form.select-language button.disabled').click(function(event) {
-        if(selected) {
-            jQuery('#nav-global li.language a').removeClass('select').addClass('current').parent().find('.subnav').hide();
-            selected = false;
-        }
-        return false;
-    });
-    jQuery(document).click(function(event) {
-        if(selected) {
-            jQuery('#nav-global li.language a').removeClass('select').addClass('current').parent().find('.subnav').hide();
-            selected = false;
-        }
-    });
 
     // Track custom events
 

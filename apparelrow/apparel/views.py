@@ -796,6 +796,33 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 
+def change_gender(request, *args, **kwargs):
+    """
+    Handle change from one gender to the other.
+    """
+    current_gender = gender = get_gender_from_cookie(request)
+    if request.method == 'POST':
+        gender = request.POST.get('gender', 'W')
+
+    next_url = request.REQUEST.get('next', None)
+    if not next_url:
+        next_url = request.META.get('HTTP_REFERER', None)
+        if not next_url:
+            next_url = '/'
+
+    if current_gender != gender:
+        next_url_parts = next_url.split('/')
+        if next_url_parts[-2] == 'women':
+            next_url_parts[-2] = 'men'
+        elif next_url_parts[-2] == 'men':
+            next_url_parts[-2] = 'women'
+        next_url = '/'.join(next_url_parts)
+
+    response = HttpResponseRedirect(next_url)
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+
+    return response
+
 def gender(request, *args, **kwargs):#view=None, gender=None):
     """
     Display gender selection front page, also handle change from one gender to the other.

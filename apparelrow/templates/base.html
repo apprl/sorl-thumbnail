@@ -153,10 +153,13 @@
             <ul id="nav-global">
                 <li class="gender subnav-gray-handle">
                     <a href="#">{% if APPAREL_GENDER == 'M' %}{% trans "Men" %}{% else %}{% trans "Women" %}{% endif %}</a>
-                    <ul class="subnav-gray" id="subnav-gender">
-                        <li><a href="{% change_gender_url request APPAREL_GENDER 'women' %}">{% trans "Women" %}</a></li>
-                        <li><a href="{% change_gender_url request APPAREL_GENDER 'men' %}">{% trans "Men" %}</a></li>
-                    </ul>
+                    <form action="{% url change-gender %}" method="post" class="select-gender">
+                        {% csrf_token %}
+                        <ul class="subnav-gray" id="subnav-gender">
+                            <li class="first"><button name="gender" value="W">{% trans "Women" %}</button></li>
+                            <li class="last"><button name="gender" value="M">{% trans "Men" %}</button></li>
+                        </ul>
+                    </form>
                 </li>
                 <li class="language subnav-gray-handle">
                     {% for language in SHORT_LANGUAGES %}

@@ -323,7 +323,8 @@ button
         border-width: 5px
       li
         background-color: $dark_color
-        a, button
+        button
+          width: 100%
           text-align: left
           background-color: $dark_color
           display: block
@@ -331,6 +332,8 @@ button
           padding: 5px 10px
           font-size: 12px
           color: $white_color
+          +box-sizing(border-box)
+          white-space: nowrap
           &:hover
             background-color: $white_color
             color: $black_color
