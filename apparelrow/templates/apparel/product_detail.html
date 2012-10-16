@@ -121,6 +121,9 @@
             {% include 'apparel/fragments/product_detail.html' %}
             <div class="sidebar last">
                 <h2>{% trans "Likes" %}</h2>
+                {% if not likes %}
+                <p class="likes-text">{% trans "No one has liked this produkt yet, do it!" %}</p>
+                {% else %}
                 <ul id="likes" class="group">
                 {% for like in likes %}
                     {% if like.user and like.user.get_profile %}
@@ -132,6 +135,7 @@
                     {% endif %}
                 {% endfor %}
                 </ul>
+                {% endif %}
                 {% if viewed_products %}
                 <h2>{% trans "Recently viewed" %}</h2>
                 <div id="recentlyviewed">
