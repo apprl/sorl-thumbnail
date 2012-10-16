@@ -154,6 +154,9 @@ def follow_unfollow(request, profile_id, do_follow=True):
     """
     profile = ApparelProfile.objects.get(pk=profile_id)
 
+    if request.user.get_profile() == profile:
+        return HttpResponse(status=403)
+
     if do_follow:
         if request.user.get_profile().fb_share_follow_profile:
             facebook_user = get_facebook_user(request)
