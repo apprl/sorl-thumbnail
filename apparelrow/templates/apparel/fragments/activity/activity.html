@@ -1,9 +1,0 @@
-{% load apparel_extras %}
-{% load cache %}
-{% cache CACHE_LONG_TIMEOUT activity object.id LANGUAGE_CODE %}
-    {% with object.verb|slugify as verb_name %}
-        {% with 'apparel/fragments/activity/'|add:verb_name|add:'.html' as template_name %}
-            {% include template_name %}
-        {% endwith %}
-    {% endwith %}
-{% endcache %}
