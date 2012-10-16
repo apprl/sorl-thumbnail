@@ -279,11 +279,29 @@ button
       height: 25px
     .subnav-handle, .subnav-gray-handle
       position: relative
+    .subnav-handle
+      > a
+        &:after
+          display: inline-block
+          content: ' '
+          width: 15px
+          height: 10px
+          background-image: image_url(unquote("dropdown-arrow.png"))
+          background-repeat: no-repeat
+          background-position: 8px center
     .subnav-gray-handle
       background-color: $dark_color
       +border_radius(3px)
-      a
+      > a
         color: $white_color
+        &:after
+          display: inline-block
+          content: ' '
+          width: 15px
+          height: 10px
+          background-image: image_url(unquote("dropdown-arrow.png"))
+          background-repeat: no-repeat
+          background-position: 8px center
     .subnav, .subnav-gray
       display: none
       z-index: 9999
