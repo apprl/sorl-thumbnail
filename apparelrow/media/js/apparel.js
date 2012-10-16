@@ -222,9 +222,9 @@ jQuery(document).ready(function() {
 
     // Show follow button over avatar lager follow element
     jQuery(document).on('mouseenter', '.avatar-large-follow', function(event) {
-        jQuery(this).find('.btn').show();
+        jQuery(this).find('.follow-container').show();
     }).on('mouseleave', '.avatar-large-follow', function(event) {
-        jQuery(this).find('.btn').hide();
+        jQuery(this).find('.follow-container').hide();
     });
 
     // New follow button, uses only a single element

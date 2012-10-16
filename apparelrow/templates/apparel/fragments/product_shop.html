@@ -11,7 +11,8 @@
         <span class="comments">0</span>
         <span class="likes">0</span>
     </div>
-    <div class="hover hover-footer">
+    <div class="hover hover-footer group">
+        <a class="btn btn-large btn-block btn-upper" href="{{ object.get_absolute_url }}">{% trans "Info" %}</a>
         <a class="btn btn-large btn-positive btn-block btn-upper" target="_blank" href="{% url statistics.views.product_click_count %}?i={{ object.id }}&u={{ object.default_vendor.buy_url|urlencode }}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }}">{% trans "Buy" %}</a>
     </div>
     <div class="product-footer">

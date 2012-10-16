@@ -10,7 +10,9 @@
     <div class="avatar-large-follow">
         <a href="{{ objects.0.get_absolute_url }}"><img src="{{ objects.0.avatar_large }}"></a>
         {% if current_user.is_authenticated and current_user.get_profile != objects.0 %}
-        <a style="display:none;" class="btn btn-block {% if current_user.get_profile|is_following_profile:objects.0 %}btn-unfollow{% else %}btn-positive btn-follow{% endif %}" href="#" data-follow-url="{% follow_tag objects.0 %}" data-unfollow-url="{% unfollow_tag objects.0 %}" data-profile-type="{% if objects.0.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ objects.0.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% if current_user.get_profile|is_following_profile:objects.0 %}{% trans "Following" %}{% else %}{% trans "Follow" %}{% endif %}</a>
+        <div class="follow-container">
+            <a class="btn btn-block {% if current_user.get_profile|is_following_profile:objects.0 %}btn-unfollow{% else %}btn-positive btn-follow{% endif %}" href="#" data-follow-url="{% follow_tag objects.0 %}" data-unfollow-url="{% unfollow_tag objects.0 %}" data-profile-type="{% if objects.0.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ objects.0.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% if current_user.get_profile|is_following_profile:objects.0 %}{% trans "Following" %}{% else %}{% trans "Follow" %}{% endif %}</a>
+        </div>
         {% endif %}
     </div>
 {% endblock %}

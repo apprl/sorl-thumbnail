@@ -85,6 +85,7 @@ button
 
   // Hover
   &:hover
+    background-color: #333333
     color: $easiest_color
 
   // Large
@@ -899,6 +900,7 @@ div#product-list, .product-list
 //
 .product-feed, .product-medium
   position: relative
+  margin: 0 auto
   .product-footer
     height: 46px
     h4
@@ -927,14 +929,20 @@ div#product-list, .product-list
     right: 10px
   .hover-footer
     position: absolute
-    bottom: 46px
+    bottom: 10px
     width: 100%
+    +box-sizing(border-box)
+    padding: 0 10px
+    .btn
+      float: left
+      width: 50%
 
 //
 // Product in feed
 //
 .product-feed
   width: 452px
+  min-height: 160px
   text-align: center
   position: relative
   .product-image
@@ -960,6 +968,8 @@ div#product-list, .product-list
     img
       max-width: 224px
       max-height: 291px
+  .hover-footer
+    bottom: 58px
 
 .brand-list .sidebar .product-small, .profile .sidebar .product-small, .updates .sidebar .product-small
   width: 93px
@@ -1827,10 +1837,14 @@ ul.suggested-friends
 .avatar-large-follow
   position: relative
   display: inline-block
-  .btn
+  .follow-container
+    display: none
     position: absolute
-    bottom: 0
+    bottom: 10px
     left: 0
+    +box-sizing(border-box)
+    padding: 0 10px
+    width: 100%
 
 .dialog
   +dialog
