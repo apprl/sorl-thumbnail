@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-16 17:31+0200\n"
+"POT-Creation-Date: 2012-10-16 23:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,13 +34,13 @@ msgstr ""
 msgid "Swe (SEK)"
 msgstr ""
 
-#: activity_feed/models.py:59 activity_feed/models.py:102
+#: activity_feed/models.py:64 activity_feed/models.py:113
 #: apparel/models.py:341 apparel/models.py:603 apparel/models.py:809
 #: beta/models.py:7 beta/models.py:15 profile/models.py:341
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: activity_feed/models.py:60 apparel/models.py:202 apparel/models.py:342
+#: activity_feed/models.py:65 apparel/models.py:202 apparel/models.py:342
 #: apparel/models.py:381 apparel/models.py:437 apparel/models.py:604
 #: apparel/models.py:810 profile/models.py:342
 msgid "Time modified"
@@ -640,7 +640,7 @@ msgstr "Looks"
 
 #: templates/base.html:129 templates/activity_feed/verbs/follow.html:13
 #: templates/apparel/fragments/follow.html:4
-#: templates/apparel/fragments/follow.html:6
+#: templates/apparel/fragments/follow.html:7
 #: templates/profile/notifications/email_follow_user.html:3
 msgid "Follow"
 msgstr "Följ"
@@ -930,13 +930,37 @@ msgstr "Senaste händelser bland dina vänner"
 msgid "Your friends are here!"
 msgstr "Dina vänner är här!"
 
-#: templates/activity_feed/verbs/add.html:5
+#: templates/activity_feed/verbs/add_product.html:5
 #: templates/activity_feed/verbs/create.html:5
 #: templates/activity_feed/verbs/follow.html:5
 #: templates/activity_feed/verbs/like_look.html:5
 #: templates/activity_feed/verbs/like_product.html:5
 msgid "and"
 msgstr "och"
+
+#: templates/activity_feed/verbs/add_product.html:6
+#, python-format
+msgid ""
+"\n"
+"    has added <a href=\"%(user_url)s\">a new product</a>\n"
+"    "
+msgid_plural ""
+"\n"
+"    has added <a href=\"%(user_url)s\">%(count)s new products</a>\n"
+"    "
+msgstr[0] ""
+"\n"
+"    har lagt till <a href=\"%(user_url)s\">en ny produkt</a>\n"
+"    "
+msgstr[1] ""
+"\n"
+"    har lagt till <a href=\"%(user_url)s\">%(count)s nya produkter</a>\n"
+"    "
+
+#: templates/activity_feed/verbs/add_product.html:27
+#, python-format
+msgid "+ %(count)s more"
+msgstr "+ %(count)s till"
 
 #: templates/activity_feed/verbs/base.html:16
 #, python-format
@@ -953,7 +977,7 @@ msgstr "följer nu"
 
 #: templates/activity_feed/verbs/follow.html:13
 #: templates/apparel/fragments/follow.html:4
-#: templates/apparel/fragments/follow.html:6
+#: templates/apparel/fragments/follow.html:7
 #: templates/profile/base_profile.html:46
 #: templates/profile/base_profile.html:89
 msgid "Following"
@@ -961,7 +985,7 @@ msgstr "Följer"
 
 #: templates/activity_feed/verbs/follow.html:13
 #: templates/apparel/fragments/follow.html:4
-#: templates/apparel/fragments/follow.html:6
+#: templates/apparel/fragments/follow.html:7
 msgid "Stop following"
 msgstr "Sluta följa"
 
@@ -2462,19 +2486,6 @@ msgstr "Varför mejlet inte skickades"
 #~ msgstr ""
 #~ "<a href=\"%(user_url)s\">%(user)s</a> lade till <a href=\"%(object_url)s"
 #~ "\">%(object)s</a> i looken <a href=\"%(target_url)s\">%(target)s</a>"
-
-#~ msgid ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> has added <a href=\"%(user_url)s\">"
-#~ "%(count)s new product</a>\n"
-#~ msgid_plural ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> has added <a href=\"%(user_url)s\">"
-#~ "%(count)s new products</a>\n"
-#~ msgstr[0] ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> har lagt till <a href=\"%(user_url)s"
-#~ "\">%(count)s ny produkt</a>\n"
-#~ msgstr[1] ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> har lagt till <a href=\"%(user_url)s"
-#~ "\">%(count)s nya produkter</a>\n"
 
 #~ msgid ""
 #~ "<a href=\"%(user_url)s\">%(user)s</a> commented on <a href=\"%(object_url)"

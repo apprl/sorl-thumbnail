@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
@@ -24,35 +25,44 @@ class ActivityFeedHTML:
         return len(self.queryset)
 
     def __getitem__(self, k):
-        data = []
+        return_data = []
         for result in self.queryset[k]:
+            context = {'current_user': self.request.user,
+                       'verb': result.verb,
+                       'created': result.created,
+                       'objects': [result.activity_object],
+                       'users': [result.user],
+                       'csrf_token': csrf.get_token(self.request),
+                       'CACHE_TIMEOUT': 10,
+                       'LANGUAGE_CODE': self.request.LANGUAGE_CODE}
+
             # Comments
             # TODO: only generate comments if it is a single object
             comments = Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False) \
                                       .order_by('-submit_date') \
                                       .select_related('user', 'user__profile')[:2]
-            comment_count = Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False).count()
-            comments =  list(reversed(comments))
+            context['comment_count'] = Comment.objects.filter(content_type=result.content_type, object_pk=result.object_id, is_public=True, is_removed=False).count()
+            context['comments'] =  list(reversed(comments))
 
-            enable_comments = False
-            if comments or result.verb in ['like_product', 'like_look', 'create']:
-                enable_comments = True
+            context['enable_comments'] = False
+            if context['comments'] or result.verb in ['like_product', 'like_look', 'create']:
+                context['enable_comments'] = True
+
+            # Data (TODO: probably temporary until we use proper aggregation)
+            if result.data:
+                data = json.loads(result.data)
+
+                # TODO: ugly hack, see todo above
+                if 'products' in data and result.verb == 'add_product':
+                    context['objects'] = Product.objects.filter(id__in=data['products'])
+                    context['total_objects_count'] = data['product_count']
+                    context['remaining_count'] = data['product_count'] - len(context['objects'])
 
             template_name = 'activity_feed/verbs/%s.html' % (result.verb,)
-            data.append(render_to_string(template_name, {'user': self.request.user,
-                                                         'current_user': self.request.user,
-                                                         'verb': result.verb,
-                                                         'created': result.created,
-                                                         'objects': [result.activity_object],
-                                                         'users': [result.user],
-                                                         'enable_comments': enable_comments,
-                                                         'comment_count': comment_count,
-                                                         'comments': comments,
-                                                         'csrf_token': csrf.get_token(self.request),
-                                                         'CACHE_TIMEOUT': 10,
-                                                         'LANGUAGE_CODE': self.request.LANGUAGE_CODE}))
+            rendered_template = render_to_string(template_name, context)
+            return_data.append(rendered_template)
 
-        return data
+        return return_data
 
 def public_feed(request):
     htmlset = ActivityFeedHTML(request, Activity.objects.all())

@@ -1,6 +1,8 @@
 import logging
 
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
@@ -20,18 +22,20 @@ class ActivityManager(models.Manager):
     """
 
     """
-    def push_activity(self, profile, verb, activity_object):
+    def push_activity(self, profile, verb, activity_object, data=None):
+        defaults = {'active': True}
+        if data is not None:
+            defaults['data'] = data
+
         content_type = ContentType.objects.get_for_model(activity_object)
         activity, created = self.get_or_create(user=profile,
                                                verb=verb,
                                                content_type=content_type,
-                                               object_id=activity_object.pk)
-        if not created and activity.active == False:
-            activity.active = True
-            activity.save()
+                                               object_id=activity_object.pk,
+                                               defaults=defaults)
 
         # Start task, add to all feeds
-        push_activity_feed.delay(profile, verb, content_type, activity_object.pk)
+        push_activity_feed.delay(profile, verb, content_type, activity_object.pk, data=data)
 
     def pull_activity(self, profile, verb, activity_object):
         content_type = ContentType.objects.get_for_model(activity_object)
@@ -56,6 +60,7 @@ class Activity(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     activity_object = generic.GenericForeignKey('content_type', 'object_id')
+    data = models.TextField(default='')
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     active = models.BooleanField(default=True, db_index=True)
@@ -72,6 +77,12 @@ class Activity(models.Model):
     class Meta:
         unique_together = ('user', 'verb', 'content_type', 'object_id')
 
+@receiver(pre_delete, sender=Activity, dispatch_uid='activity_feed.models.delete_activity')
+def delete_activity(sender, instance, **kwargs):
+    """
+    On delete activity remove all activity from feeds.
+    """
+    pull_activity_feed.delay(instance.user, instance.verb, instance.content_type, instance.object_id)
 
 #
 # ACTIVITY FEED
@@ -98,7 +109,7 @@ class ActivityFeed(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     activity_object = generic.GenericForeignKey('content_type', 'object_id')
-    data = models.TextField()
+    data = models.TextField(default='')
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
 
     objects = ActivityFeedManager()

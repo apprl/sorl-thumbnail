@@ -1,0 +1,30 @@
+{% extends 'activity_feed/verbs/base.html' %}
+{% load apparel_extras i18n thumbnail thumbnail_extras %}
+
+{% block activity_header %}
+    {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
+    {% blocktrans with user_url=users.0.get_absolute_url count count=total_objects_count %}
+    has added <a href="{{user_url}}">a new product</a>
+    {% plural %}
+    has added <a href="{{user_url}}">{{count}} new products</a>
+    {% endblocktrans %}
+{% endblock %}
+
+{% block activity_content %}
+    {% if total_objects_count == 1 %}
+        {% thumbnail objects.0.product_image "452" crop=False as im %}
+        <a title="{{objects.0}}" href="{{ objects.0.get_absolute_url }}"><img src="{{ im.url }}" alt="{{ object }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|positive_margin:'452' }}"></a>
+        {% endthumbnail %}
+    {% else %}
+        <ul class="group">
+            {% for object in objects %}
+                {% thumbnail object.product_image "226" crop=False as im %}
+                <li><a title="{{object}}" href="{{ object.get_absolute_url }}"><img src="{{ im.url }}" alt="{{ object }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|positive_margin:'226' }}"></a></li>
+                {% endthumbnail %}
+            {% endfor %}
+        </ul>
+        {% if total_objects_count > 4 %}
+            <a href="{{ users.0.get_absolute_url }}" class="btn btn-block btn-upper">{% blocktrans with count=remaining_count %}+ {{ count }} more{% endblocktrans %}</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
