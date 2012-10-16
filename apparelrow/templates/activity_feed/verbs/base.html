@@ -11,7 +11,7 @@
     </header>
     <div class="activity-content">{% block activity_content %}{% endblock %}</div>
     {% if enable_comments and objects|length == 1 %}
-    {% if comment_count > 0 or user.is_authenticated %}
+    {% if comment_count > 0 or current_user.is_authenticated %}
     <div class="activity-comment comment-box">
         {% if comment_count > 2 %}
         <a class="comment-count" href="{{ objects.0.get_absolute_url }}#comments">{% blocktrans with comment_count=comment_count %}See all {{comment_count}} comments{% endblocktrans %}</a>
@@ -21,7 +21,7 @@
             {% include 'comments/comment.html' %}
         {% endfor %}
         </ul>
-        {% if user and user.is_authenticated %}
+        {% if current_user and current_user.is_authenticated %}
         {% render_comment_form for objects.0 %}
         {% endif %}
     </div>
