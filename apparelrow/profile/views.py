@@ -377,7 +377,7 @@ def login_flow_complete(request):
     profile.first_visit = False
     profile.login_flow = 'complete'
     profile.save()
-    return HttpResponseRedirect(reverse('apparel.views.home'))
+    return HttpResponseRedirect(reverse('user_feed'))
 
 def _get_next(request):
     """

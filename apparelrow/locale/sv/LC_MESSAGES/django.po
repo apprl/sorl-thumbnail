@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-16 16:53+0200\n"
+"POT-Creation-Date: 2012-10-16 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2030,6 +2030,18 @@ msgstr "har just nu inga produkter."
 msgid "does not like any products so far."
 msgstr "gillar inte några produkter än."
 
+#: templates/profile/login_flow_content.html:7
+msgid "Follow your friends"
+msgstr "Följ dina vänner"
+
+#: templates/profile/login_flow_content.html:8
+msgid "Follow popular members"
+msgstr "Följ andra medlemmar"
+
+#: templates/profile/login_flow_content.html:9
+msgid "Follow brands"
+msgstr "Följ varumärken"
+
 #: templates/profile/looks.html:49
 msgid "All looks that you create end up here."
 msgstr "Här visas alla looks du skapar."
@@ -2414,6 +2426,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Follow other members"
+#~ msgstr "Följ andra medlemmar"
 
 #~ msgid "Most followed members"
 #~ msgstr "Mest följda medlemmar"

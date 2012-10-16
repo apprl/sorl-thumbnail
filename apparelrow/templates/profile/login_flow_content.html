@@ -4,9 +4,9 @@
 {% block login-flow-content %}
         <div id="steps" class="{{ login_flow_step }}">
             <div class="steps-top">
-                <div id="step-initial" class="fbflowbtn">Följ dina vänner</div>
-                <div id="step-members" class="fbflowbtn">Följ andra medlemmar</div>
-                <div id="step-brands" class="fbflowbtn">Följ varumärken</div>
+                <div id="step-initial" class="fbflowbtn">{% trans "Follow your friends" %}</div>
+                <div id="step-members" class="fbflowbtn">{% trans "Follow popular members" %}</div>
+                <div id="step-brands" class="fbflowbtn">{% trans "Follow brands" %}</div>
             </div>
             <div class="steps-bottom">
                 <ul class="suggested-friends profiles">
@@ -14,7 +14,7 @@
                     <li class="{% cycle 'column-1' 'column-2' 'column-3' %}">
                     {% include 'profile/fragments/avatar.html' %}
                     </li>
-                {% endfor %}    
+                {% endfor %}
                 </ul>
             </div>
         </div>

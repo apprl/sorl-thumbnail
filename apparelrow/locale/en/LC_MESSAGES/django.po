@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-16 16:53+0200\n"
+"POT-Creation-Date: 2012-10-16 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1918,6 +1918,18 @@ msgstr ""
 
 #: templates/profile/likes.html:27
 msgid "does not like any products so far."
+msgstr ""
+
+#: templates/profile/login_flow_content.html:7
+msgid "Follow your friends"
+msgstr ""
+
+#: templates/profile/login_flow_content.html:8
+msgid "Follow popular members"
+msgstr ""
+
+#: templates/profile/login_flow_content.html:9
+msgid "Follow brands"
 msgstr ""
 
 #: templates/profile/looks.html:49
