@@ -103,6 +103,7 @@
                     {% endthumbnail %}
                 </div>
             </div>
+            {% if comments or user.is_authenticated %}
             <div class="comment-box" id="comments">
                 <ul class="comments-list">
                 {% for comment in comments %}
@@ -114,6 +115,7 @@
                     {% render_comment_form for object %}
                 {% endif %}
             </div>
+            {% endif %}
         </div>
         <div class="product-right">
             {% get_trackbacks_for object as trackbacks %}

@@ -1,5 +1,6 @@
 {% load comments %}
 {% get_comment_list for object as comments %}
+{% if comments or user.is_authenticated %}
 <div class="comment-box">
     <ul class="comments-list">
     {% for comment in comments %}
@@ -11,3 +12,4 @@
     {% render_comment_form for object %}
     {% endif %}
 </div>
+{% endif %}
