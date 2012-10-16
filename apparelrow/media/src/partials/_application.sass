@@ -76,9 +76,9 @@ button
   vertical-align: middle
   height: 36px
   +box-sizing(border-box)
-  //text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25)
 
   &.btn-disabled
+    background-color: #bfbfbf
     cursor: auto
     &:hover, &:active
       color: $white_color
@@ -142,6 +142,10 @@ button
       border-top: 18px solid transparent
       border-bottom: 18px solid transparent
       border-right: 10px solid $black_color
+
+  // Unfollow button
+  &.btn-unfollow
+    background-color: #bfbfbf
 
 #content.fixed
   position: fixed
