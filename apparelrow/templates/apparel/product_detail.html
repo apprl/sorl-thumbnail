@@ -152,7 +152,9 @@
                         {% blocktrans count looks_with_product_count as counter %}<span class="count">{{ counter }}</span> look with this product{% plural %}<span class="count">{{ counter }}</span> looks with this product{% endblocktrans %}
                     </h2>
                     {% include 'apparel/fragments/looks.html' with looks=looks_with_product %}
-                    <a href="looks" class="btn btn-block btn-upper">{% blocktrans count looks_with_product_count as counter %}<span class="count">{{ counter }}</span> look with this product{% plural %}<span class="count">{{ counter }}</span> looks with this product{% endblocktrans %}</a>
+                    {% if looks_with_product_count > 2 %}
+                    <a href="looks" class="btn btn-block btn-upper">{% trans "See all looks" %}</a>
+                    {% endif %}
                 </div>
                 {% endif %}
             </div>
