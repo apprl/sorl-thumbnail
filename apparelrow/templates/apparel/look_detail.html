@@ -57,6 +57,7 @@
         <h1>{{ object.title }}</h1>
         <h2>{% trans "by" %} <a href="{{ object.user.get_profile.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></h2>
     </div>
+    <a class="open-dialog btn btn-positive btn-upper btn-create-look" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "Create a look" %}</a>
 </div>
 {% endblock body-header %}
 {% block body-classes %}look two-columns{% endblock body-classes %}
