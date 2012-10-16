@@ -225,23 +225,6 @@ jQuery(document).ready(function() {
         }
     });
 
-    //Hover state for share button
-    jQuery('.share').hover(
-        function() { jQuery(this).find('ul').show(); },
-        function() { jQuery(this).find('ul').hide(); }
-    );
-    jQuery('.share').click(function() { jQuery(this).find('ul').toggle(); return false; })
-
-    jQuery('ul.hover-menu li[class!="active"]')
-        .live('mouseenter', function(e) {
-            jQuery(this).addClass('hover');
-            return true;
-        })
-        .live('mouseleave', function(e) {
-            jQuery(this).removeClass('hover');
-            return true;
-        });
-
     // From: http://www.w3.org/TR/html5/number-state.html#file-upload-state
     function extractFilename(path) {
         var x = path.lastIndexOf('\\');

@@ -1,16 +1,13 @@
-{% load i18n %}
-{% load apparel_extras %}
-{% load mptt_tags %}
-{% load cache %}
+{% load i18n apparel_extras mptt_tags %}
 
 {% block product_menu_title %}
-<h2>{% trans "Browse articles" %}</h2>
+<h2>{% trans "Choose category" %}</h2>
 {% endblock %}
 
 {% block product_genders %}{% endblock %}
 {% for category, structure in categories_all|tree_info %}
     {% if structure.new_level %}
-        <ul{% if forloop.first %} id="product-category"{% endif %} class="level-{{ category.get_level }}{% if forloop.first %} hover-menu{% endif %}">
+        <ul{% if forloop.first %} id="product-category"{% endif %} class="level-{{ category.get_level }}">
     {% else %}
         </li>
     {% endif %}

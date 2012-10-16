@@ -1,5 +1,4 @@
 @import partials/base.sass
-@import partials/filter.sass
 @import partials/row.sass
 @import partials/look.sass
 @import partials/sticky.sass
@@ -578,76 +577,42 @@ ul.products
   font-size: 0.9em
   font-weight: normal
 
-#product-gender
-  +filter(unquote("list-item.png"), unquote("list-item-radio-selected.png"))
-  li.hover
-    +hover_button
-    border-left: none
-    border-bottom: none
-  li.hover.first
-    border-top: none
-  li.hover.last
-    border-bottom: none
-
-$slider_width: 186px
-$ruler_width: $slider_width
-
+$ruler_width: 202px
 #product-options
-  +border(all)
-  +border-radius(unquote("3px"))
   +no-bullets
   position: relative
   margin-bottom: 10px
   li.header
-    +box
     position: relative
     font-family: $font_family
+    font-size: 1.1em
+    font-weight: 500
+    color: $black_color
+    border-bottom: 3px solid $black_color
     line-height: $button_height
     overflow: hidden
     white-space: nowrap
-    background:
-      color: $button_color
-      image: image_url(unquote("gradient-bg.png"))
-      repeat: repeat-x
-    border-left: none
-    border-right: none
     overflow: visible
-    .arrow
-      display: block
-      background: transparent image_url(unquote("box-arrow-bottom.png")) scroll no-repeat bottom left
-      position: absolute
-      height: 6px
-      left: 0
-      bottom: -1px
-      right: 0
-      z-index: 10
+    margin: 20px 0 10px 0
     .reset
       display: none
       line-height: 29px
     &.active
       .reset
         display: block
-  li.content
-    padding: 10px
-    background: white
-  li
-    padding: 0 10px
-    &.first
-      border-top: none
-      +border-top-radius(unquote("3px"))
-    &.last
-      +border-bottom-radius(unquote("3px"))
-    &.filtered
-      display: none
+  li.filtered
+    display: none
   #product-price
     #discount-price
-      display: block
+      margin-top: 5px
+      font-size: 1.1em
+      display: inline-block
       padding-left: 15px
       background: transparent image_url(unquote("list-item-check.png")) no-repeat scroll left center
       &.selected
         background-image: image_url(unquote("list-item-check-selected.png"))
     #price-min, #price-max
-      font-size: 0.85em
+      font-size: 1em
       padding-bottom: 5px
       span
         font-weight: bold
@@ -655,17 +620,16 @@ $ruler_width: $slider_width
       float: left
     #price-max
       float: right
-      margin-right: 5px
     #price-ruler
-      width: $ruler_width
       margin-top: 6px
-      margin-left: -1px
+      margin-left: 2px
+      margin-right: 3px
       background: transparent image_url(unquote("slider-ruler-bg.png")) repeat-x scroll unquote("2px") top
       +clearfix
       .point
         width: $ruler_width / 3
         line-height: 2em
-        font-size: smaller
+        font-size: 0.85em
         color: $easiest_color
         &.min
           float: left
@@ -677,9 +641,9 @@ $ruler_width: $slider_width
           text-align: center
     #price-slider
       clear: both
-      width: $slider_width - 6
       +border-radius(unquote("6px"))
       border-color: $border_color
+      margin: 0 3px 0 3px
       .ui-slider-handle
         background: transparent image_url(unquote("slider-handle.png")) no-repeat scroll center center
         width: 9px
@@ -707,8 +671,10 @@ $ruler_width: $slider_width
   #product-manufacturers
     input
       +text_input
+      +border-radius(0)
       background-color: $white_color
-      width: 168px
+      width: 100%
+      +box-sizing(border-box)
       padding-left: 8px
       padding-right: 8px
       &.default
@@ -720,7 +686,7 @@ $ruler_width: $slider_width
     #selected-manufacturers
       li
         a
-          margin-left: -6px
+          margin-left: 4px
           padding-left: 14px
           background-image: image_url(unquote("list-item-check-selected.png"))
           background-repeat: no-repeat
@@ -735,43 +701,50 @@ $ruler_width: $slider_width
         height: 20px
         +border(bottom)
         a
-          margin-left: -6px
+          margin-left: 4px
           padding-left: 14px
           background-image: image_url(unquote("list-item-check.png"))
           background-repeat: no-repeat
           &.selected
             background-image: image_url(unquote("list-item-check-selected.png"))
 
-#product-category
-  +filter(unquote("list-item-check.png"), unquote("list-item-check-selected.png"))
-  li > a
-    overflow: hidden
-  li.hover
-    +hover_button
-    border-left: none
-    border-bottom: none
-  li.hover.first
-    border-top: none
-  li.hover.last
-    border-bottom: none
+#product-gender
+  display: none
 
-#product-category li ul
-  overflow-y: auto
-  li
-    border: none
-    +border(top)
-    background-image: image_url(unquote("gradient-dark-bg.png"))
-  &.level-1
+#product-category
+  li.filtered
+    display: none
+  li > a
+    font-size: 12px
+    display: inline-block
+    padding: 5px 5px 5px 5px
+    overflow: hidden
+    margin-bottom: 5px
+    &:before
+      margin-right: 5px
+      display: inline-block
+      content: ''
+      width: 14px
+      height: 15px
+      vertical-align: middle
+      background: transparent image_url(unquote("circle-dot.png")) no-repeat 0px 0px
+    &.selected:before
+      background-position: -14px 0px
+  li ul
+    overflow-y: auto
     li
-      padding-left: 10px
-  &.level-2
-    margin-left: -10px
-    li
-      padding-left: 20px
-  &.level-3
-    margin-left: -20px
-    li
-      padding-left: 30px
+      border: none
+    &.level-1
+      li
+        padding-left: 10px
+    &.level-2
+      margin-left: -10px
+      li
+        padding-left: 20px
+    &.level-3
+      margin-left: -20px
+      li
+        padding-left: 30px
 
 a.comments
   background: transparent image_url(unquote("comments.png")) no-repeat scroll left center
