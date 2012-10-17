@@ -3,6 +3,7 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 
 class Migration(DataMigration):
 
@@ -10,7 +11,7 @@ class Migration(DataMigration):
         for action in orm['actstream.Action'].objects.order_by('-timestamp').all():
             try:
                 profile = orm['profile.ApparelProfile'].objects.get(user_id=action.actor_object_id)
-            except Exception:
+            except ObjectDoesNotExist:
                 continue
 
             if action.verb == 'started following':
