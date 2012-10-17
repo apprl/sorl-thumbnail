@@ -932,7 +932,7 @@ def facebook_friends_widget(request):
 def get_top_looks_in_network(profile, limit=None):
     user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow__user', flat=True)
     # TODO: add active/published flag here later
-    looks = Look.objects.filter(user__in=user_ids).order_by('-popularity', '-created')
+    looks = Look.objects.distinct().filter(user__in=user_ids).order_by('-popularity', '-created')
 
     if limit:
         return looks[:limit]
@@ -941,7 +941,7 @@ def get_top_looks_in_network(profile, limit=None):
 
 def get_top_products_in_network(profile, limit=None):
     user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow__user', flat=True)
-    products = Product.valid_objects.filter(likes__active=True, likes__user__in=user_ids).order_by('-popularity')
+    products = Product.valid_objects.distinct().filter(likes__active=True, likes__user__in=user_ids).order_by('-popularity')
 
     if limit:
         return products[:limit]
