@@ -756,7 +756,7 @@ class Look(models.Model):
 
     @property
     def product_manufacturers(self):
-        return self.display_components.values_list('product__manufacturer__name', flat=True)
+        return [x for x in self.display_components.values_list('product__manufacturer__name', flat=True) if x]
 
     @property
     def product_brands_unique(self):
