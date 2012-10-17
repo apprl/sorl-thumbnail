@@ -27,7 +27,8 @@ class ActivityFeedHTML:
     def __getitem__(self, k):
         return_data = []
         for result in self.queryset[k]:
-            context = {'current_user': self.request.user,
+            context = {'user': self.request.user,
+                       'current_user': self.request.user,
                        'verb': result.verb,
                        'created': result.created,
                        'objects': [result.activity_object],
