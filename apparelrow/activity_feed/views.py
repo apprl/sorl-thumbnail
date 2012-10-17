@@ -96,6 +96,9 @@ def public_feed(request):
             'popular_members': popular_members,
         })
 
+def dialog_user_feed(request):
+    return render(request, 'activity_feed/dialog_user_feed.html', {'next': request.GET.get('next', '/')})
+
 def user_feed(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(reverse('public_feed'))

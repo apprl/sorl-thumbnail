@@ -1,0 +1,18 @@
+{% load i18n %}
+<div id="body-header">
+    <div class="column_one">
+        <h1>{% trans "Feed" %}</h1>
+    </div>
+    <div class="column_two">
+        <ul>
+            {% url user_feed as user_feed_url %}
+            {% url public_feed as public_feed_url %}
+            <li><a class="first{% if request.path == public_feed_url %} current{% endif %}" href="{{ public_feed_url }}">{% trans "Everything" %}</a></li>
+            {% if not request.user.is_authenticated %}
+            <li><a class="last open-dialog{% if request.path == user_feed_url %} current{% endif %}" href="{% url dialog-user-feed %}">{% trans "My Follows" %}</a></li>
+            {% else %}
+            <li><a class="last{% if request.path == user_feed_url %} current{% endif %}" href="{{ user_feed_url }}">{% trans "My Follows" %}</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
