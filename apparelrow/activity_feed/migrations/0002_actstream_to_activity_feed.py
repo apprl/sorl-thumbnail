@@ -8,7 +8,10 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         for action in orm['actstream.Action'].objects.order_by('-timestamp').all():
-            profile = orm['profile.ApparelProfile'].objects.get(user_id=action.actor_object_id)
+            try:
+                profile = orm['profile.ApparelProfile'].objects.get(user_id=action.actor_object_id)
+            except Exception:
+                continue
 
             if action.verb == 'started following':
                 target = orm['profile.ApparelProfile'].objects.get(user_id=action.target_object_id)
