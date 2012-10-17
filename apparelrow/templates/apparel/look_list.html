@@ -34,14 +34,18 @@
         {% endif %}
 
         {% if not user.is_authenticated and request.path == popular_look_list_url %}
-            <div>{% trans "To see popular looks in your network you need to connect with your Facebook account." %}</div>
-            {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
-                {% facebook_button facebook_login_image %}
-            {% endwith %}
+            <div class="empty-content">
+                <p>{% trans "To see popular looks in your network you need to connect with your Facebook account." %}</p>
+                {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
+                    {% facebook_button facebook_login_image %}
+                {% endwith %}
+            </div>
         {% else %}
             {% if not current_page.object_list and request.path == popular_look_list_url %}
-                <div>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</div>
-                <a class="all-users" href="{% url user-list-popular %}">{% trans "See all members" %}</a>
+            <div class="empty-content">
+                <p>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</p>
+                <a class="btn btn-upper" href="{% url user-list-popular %}">{% trans "See all members" %}</a>
+            </div>
             {% else %}
                 {% include 'apparel/fragments/looks_medium.html' %}
             {% endif %}
