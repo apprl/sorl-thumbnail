@@ -74,7 +74,6 @@ button
   text-align: center
   cursor: pointer
   vertical-align: middle
-  height: 36px
   +box-sizing(border-box)
 
   &.btn-disabled
@@ -82,6 +81,7 @@ button
     cursor: auto
     &:hover, &:active
       color: $white_color
+      background-color: #bfbfbf
 
   // Hover
   &:hover
@@ -1040,26 +1040,6 @@ body.two-columns .pagination
 
 .pagination
   clear: both
-  .next
-    display: block
-    width: 100%
-    height: 34px
-    +replace-text(unquote("knappbg.jpg"))
-    background-repeat: repeat-x
-    background-position: bottom
-    border: solid 1px #353535
-    text-indent: 0
-    color: #f9f9f9
-    text-align: center
-    padding-top: 17px
-    font-weight: bold
-    font-size: 1.25em
-    &:hover
-      background-position: top
-      border: solid 1px #d9d9d9
-      color: #353535
-    &:active
-      background-position: bottom
 
 .btn-product-back
   margin: 20px 0 0 0
@@ -1606,28 +1586,6 @@ ul.menu
     .search-link
       padding: 20px 0
       text-align: right
-      a
-        display: block
-        width: 100%
-        height: 34px
-        +replace-text(unquote("knappbg.jpg"))
-        background-repeat: repeat-x
-        background-position: bottom
-        border: solid 1px #353535
-        text-indent: 0
-        color: #f9f9f9
-        text-align: center
-        padding-top: 17px
-        font-weight: bold
-        font-size: 1.25em
-        &:hover
-          background-position: top
-          border: solid 1px #d9d9d9
-          color: #353535
-        &:active
-          background-position: bottom
-        &.disabled
-          visibility: hidden
     h2
       margin-top: 30px
     h2.disabled

@@ -692,10 +692,10 @@ ApparelSearch = {
 
                 if(response.paginator.count == 0) {
                     h2.addClass('disabled');
-                    abutton.addClass('disabled');
+                    abutton.addClass('btn-disabled').addClass('disabled');
                 } else {
                     h2.removeClass('disabled');
-                    abutton.removeClass('disabled');
+                    abutton.removeClass('btn-disabled').removeClass('disabled');
                 }
 
                 list.data('last-query', opts.query);
