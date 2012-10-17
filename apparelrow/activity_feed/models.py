@@ -93,7 +93,7 @@ class ActivityFeedManager(models.Manager):
     """
     """
     def get_for_user(self, user):
-        return ActivityFeed.objects.filter(owner=user, verb__in=['like_product', 'like_look', 'create']) \
+        return ActivityFeed.objects.filter(owner=user, verb__in=['like_product', 'like_look', 'create', 'add_product']) \
                                    .exclude(user=user) \
                                    .select_related('user', 'owner') \
                                    .prefetch_related('activity_object', 'content_type') \
