@@ -112,7 +112,7 @@
  <div id="outer">
     <div id="header">
         <div id="inner-header">
-            <a class="page-logo" href="{% gender_url APPAREL_GENDER 'shop' %}">
+            <a class="page-logo" href="{% if request.user.is_authenticated %}{% url user_feed %}{% else %}{% url public_feed %}{% endif %}">
                 <img src="{{ MEDIA_URL }}{% staticfile "images/logo.png" %}" alt="Apprl">
             </a>
 
