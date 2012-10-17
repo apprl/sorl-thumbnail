@@ -22,10 +22,11 @@ class ActivityManager(models.Manager):
     """
 
     """
-    def push_activity(self, profile, verb, activity_object, data=None):
-        defaults = {'active': True}
-        if data is not None:
-            defaults['data'] = data
+    def push_activity(self, profile, verb, activity_object, data=''):
+        if data is None:
+            data = ''
+
+        defaults = {'active': True, 'data': data}
 
         content_type = ContentType.objects.get_for_model(activity_object)
         activity, created = self.get_or_create(user=profile,

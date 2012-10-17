@@ -1,23 +1,27 @@
 import logging
 import datetime
 
+from django.db import IntegrityError
 from django.db.models.loading import get_model
 from celery.task import task
 
 logger = logging.getLogger('activity_feed.tasks')
 
 @task(name='activity_feed.tasks.push_activity_feed', max_retries=5, ignore_result=True)
-def push_activity_feed(profile, verb, content_type, object_id, data=None):
+def push_activity_feed(profile, verb, content_type, object_id, data=''):
     Follow = get_model('profile', 'follow')
     ActivityFeed = get_model('activity_feed', 'activityfeed')
 
-    defaults = {}
-    if data is not None:
-        defaults['data'] = data
+    try:
+        ActivityFeed.objects.create(owner=profile, user=profile, verb=verb, content_type=content_type, object_id=object_id, data=data)
+    except IntegrityError, e:
+        logger.warning('IntegrityError during my feed update: %s' % (e,))
 
-    ActivityFeed.objects.get_or_create(owner=profile, user=profile, verb=verb, content_type=content_type, object_id=object_id, defaults=defaults)
     for followers in Follow.objects.followers(profile):
-        ActivityFeed.objects.get_or_create(owner=followers, user=profile, verb=verb, content_type=content_type, object_id=object_id, defaults=defaults)
+        try:
+            ActivityFeed.objects.create(owner=followers, user=profile, verb=verb, content_type=content_type, object_id=object_id, data=data)
+        except IntegrityError, e:
+            logger.warning('IntegrityError during followers update: %s' % (e,))
 
 
 @task(name='activity_feed.tasks.pull_activity_feed', max_retries=5, ignore_result=True)
