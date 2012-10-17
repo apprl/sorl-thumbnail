@@ -66,7 +66,7 @@ class ActivityFeedHTML:
         return return_data
 
 def public_feed(request):
-    htmlset = ActivityFeedHTML(request, Activity.objects.filter(verb__in=['like_product', 'like_look', 'create', 'follow'], active=True).order_by('-modified').all())
+    htmlset = ActivityFeedHTML(request, Activity.objects.filter(verb__in=['like_product', 'like_look', 'create', 'add_product'], active=True).order_by('-modified').all())
     paginator = Paginator(htmlset, 5)
 
     page = request.GET.get('page')
