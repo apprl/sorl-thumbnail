@@ -9,13 +9,18 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         for action in orm['actstream.Action'].objects.order_by('-timestamp').all():
-            try:
-                profile = orm['profile.ApparelProfile'].objects.get(user_id=action.actor_object_id)
-            except ObjectDoesNotExist:
+            profile = orm['profile.ApparelProfile'].objects.filter(user_id=action.actor_object_id)
+            if not profile:
                 continue
+            else:
+                profile = profile[0]
 
             if action.verb == 'started following':
-                target = orm['profile.ApparelProfile'].objects.get(user_id=action.target_object_id)
+                target = orm['profile.ApparelProfile'].objects.filter(user_id=action.target_object_id)
+                if not target:
+                    continue
+                else:
+                    target = target[0]
                 content_type = orm['contenttypes.ContentType'].objects.get(app_label='profile', model='apparelprofile')
                 activity, created = orm['activity_feed.Activity'].objects.get_or_create(user=profile,
                                                                                         verb='follow',
