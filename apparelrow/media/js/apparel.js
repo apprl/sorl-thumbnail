@@ -190,14 +190,23 @@ jQuery(document).ready(function() {
         .focus(function() { jQuery(this).parents('form').find('button').show(); })
         .blur(function() { if(jQuery(this).val() == '') jQuery(this).parents('form').find('button').hide(); });
 
-    jQuery('.comment-box form').hyperSubmit({
-        success: function(data, statusText, req) {
-            comment_area.val('');
-            jQuery('.comment-box button').hide();
-            jQuery(data.html).hide().appendTo('ul.comments-list').slideDown('fast');
-            increase_counts(jQuery('a.comments > span.count'));
-            return false;
-        }
+
+    jQuery(document).on('submit', '.comment-box form', function(event) {
+        var formData = jQuery(this).serializeArray();
+        var form = jQuery(this);
+        var params = {
+            type: this.method,
+            url: this.action,
+            data: $.param(formData),
+            success: function(response, statusText, req) {
+                form.find('textarea').val('');
+                form.find('button').hide();
+                jQuery(response.html).hide().appendTo(form.siblings('.comments-list')).slideDown('fast');
+                increase_counts(jQuery('a.comments > span.count'));
+            }
+        };
+        jQuery.ajax(params);
+        return false;
     });
 
     // From: http://www.w3.org/TR/html5/number-state.html#file-upload-state
