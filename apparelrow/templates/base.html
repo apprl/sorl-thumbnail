@@ -209,10 +209,10 @@
 
     <div id="container">
 
-        {% url apparel.browse.browse_products gender='W' as shop_w %}
-        {% url apparel.browse.browse_products gender='M' as shop_m %}
+        {% url public_feed as public_feed %}
+        {% url user_feed as user_feed %}
         {% if not user.is_authenticated and not request.COOKIES.ar_welcome %}
-        {% if request.path == shop_m or request.path == shop_w %}
+        {% if request.path == public_feed or request.path == user_feed %}
         <div id="panel">
             <div id="panelwrap">
                 <span class="row-span">
