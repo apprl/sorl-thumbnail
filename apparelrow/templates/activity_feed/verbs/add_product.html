@@ -12,11 +12,11 @@
 
 {% block activity_content %}
     {% if total_objects_count == 1 %}
-        {% include 'apparel/fragments/product_feed.html' with object=objects.0 width="452" %}
+        {% include 'apparel/fragments/product_feed_452.html' with object=objects.0 width="452" %}
     {% else %}
         <ul class="group">
             {% for object in objects %}
-                <li>{% include 'apparel/fragments/product_feed.html' with object=object width="226" %}</li>
+                <li>{% include 'apparel/fragments/product_feed_226.html' with object=object width="226" %}</li>
             {% endfor %}
         </ul>
         {% if total_objects_count > 4 %}

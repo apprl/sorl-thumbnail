@@ -25,6 +25,8 @@ new_template_cache_map = {
         'products_sidebar_simple': ['id_language', lambda x: x.pk],
         'product_detail_fragment': ['id_language', lambda x: x.pk],
         'product_shop': ['id_language', lambda x: x.pk],
+        'product_feed_452': ['id_language', lambda x: x.pk],
+        'product_feed_226': ['id_language', lambda x: x.pk],
         'product_thumb': ['id_language', lambda x: x.pk],
         'look_product_tooltip': ['id_language', lambda x: x.pk],
     },
@@ -33,7 +35,19 @@ new_template_cache_map = {
         'products_sidebar_simple': ['id_language', lambda x: x.product_id],
         'product_detail_fragment': ['id_language', lambda x: x.product_id],
         'product_shop': ['id_language', lambda x: x.product_id],
+        'product_feed_452': ['id_language', lambda x: x.product_id],
+        'product_feed_226': ['id_language', lambda x: x.product_id],
         'product_thumb': ['id_language', lambda x: x.product_id], # not sure if needed
+        'look_product_tooltip': ['id_language', lambda x: x.product_id],
+    },
+    'ProductLike': {
+        'products_sidebar': ['id_language', lambda x: x.product_id],
+        'products_sidebar_simple': ['id_language', lambda x: x.product_id],
+        'product_detail_fragment': ['id_language', lambda x: x.product_id],
+        'product_shop': ['id_language', lambda x: x.product_id],
+        'product_feed_452': ['id_language', lambda x: x.product_id],
+        'product_feed_226': ['id_language', lambda x: x.product_id],
+        'product_thumb': ['id_language', lambda x: x.product_id],
         'look_product_tooltip': ['id_language', lambda x: x.product_id],
     },
     'Look': {

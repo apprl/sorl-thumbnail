@@ -348,6 +348,9 @@ class ProductLike(models.Model):
     class Meta:
         unique_together = (('product', 'user'),)
 
+models.signals.post_save.connect(invalidate_model_handler, sender=ProductLike)
+models.signals.post_delete.connect(invalidate_model_handler, sender=ProductLike)
+
 @receiver(post_save, sender=ProductLike, dispatch_uid='product_like_post_save')
 def product_like_post_save(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
