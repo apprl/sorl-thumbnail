@@ -98,7 +98,7 @@ def public_feed(request):
 
 def user_feed(request):
     if not request.user.is_authenticated():
-        return render(request, 'activity_feed/user_feed_anon.html', {'next': request.get_full_path()})
+        return HttpResponseRedirect(reverse('public_feed'))
 
     profile = request.user.get_profile()
     htmlset = ActivityFeedHTML(request, ActivityFeed.objects.get_for_user(profile))
