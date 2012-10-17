@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-17 09:02+0200\n"
+"POT-Creation-Date: 2012-10-17 10:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -611,12 +611,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: templates/base.html:125 templates/activity_feed/public_feed.html:4
-#: templates/activity_feed/public_feed.html:9
+#: templates/base.html:125 templates/activity_feed/body_header.html:4
+#: templates/activity_feed/public_feed.html:4
 #: templates/activity_feed/user_feed.html:4
-#: templates/activity_feed/user_feed.html:9
-#: templates/activity_feed/user_feed_anon.html:4
-#: templates/activity_feed/user_feed_anon.html:9
 msgid "Feed"
 msgstr ""
 
@@ -677,8 +674,8 @@ msgstr ""
 msgid "Matching products"
 msgstr ""
 
-#: templates/base.html:194 templates/activity_feed/public_feed.html:26
-#: templates/activity_feed/user_feed.html:26
+#: templates/base.html:194 templates/activity_feed/public_feed.html:14
+#: templates/activity_feed/user_feed.html:14
 msgid "Show all products"
 msgstr ""
 
@@ -686,8 +683,8 @@ msgstr ""
 msgid "Matching looks"
 msgstr ""
 
-#: templates/base.html:199 templates/activity_feed/public_feed.html:34
-#: templates/activity_feed/user_feed.html:34
+#: templates/base.html:199 templates/activity_feed/public_feed.html:22
+#: templates/activity_feed/user_feed.html:22
 msgid "Show all looks"
 msgstr ""
 
@@ -851,78 +848,68 @@ msgid ""
 "support@apprl.com\n"
 msgstr ""
 
+#: templates/activity_feed/body_header.html:10
+msgid "Everyone"
+msgstr ""
+
+#: templates/activity_feed/body_header.html:12
+#: templates/activity_feed/body_header.html:14
+#: templates/activity_feed/dialog_user_feed.html:5
+msgid "My Follows"
+msgstr ""
+
+#: templates/activity_feed/dialog_user_feed.html:7
+msgid ""
+"Connect your Facebook account to see what your friends are doing on Apprl."
+msgstr ""
+
 #: templates/activity_feed/feed.html:6
 msgid "No updates"
 msgstr ""
 
-#: templates/activity_feed/public_feed.html:15
-#: templates/activity_feed/user_feed.html:15
-#: templates/activity_feed/user_feed_anon.html:15
-msgid "Everything"
+#: templates/activity_feed/public_feed.html:12
+#: templates/activity_feed/user_feed.html:12
+msgid "Trending products"
 msgstr ""
 
 #: templates/activity_feed/public_feed.html:16
 #: templates/activity_feed/user_feed.html:16
-#: templates/activity_feed/user_feed_anon.html:16
-msgid "My Follows"
+msgid "Trending looks"
 msgstr ""
 
 #: templates/activity_feed/public_feed.html:24
-msgid "Popular products"
-msgstr ""
-
-#: templates/activity_feed/public_feed.html:28
-#: templates/apparel/look_list.html:14
-msgid "Popular looks"
-msgstr ""
-
-#: templates/activity_feed/public_feed.html:36
 msgid "Most popular brands"
 msgstr ""
 
-#: templates/activity_feed/public_feed.html:44
-#: templates/activity_feed/user_feed.html:44
+#: templates/activity_feed/public_feed.html:32
+#: templates/activity_feed/user_feed.html:32
 msgid "Show all brands"
 msgstr ""
 
-#: templates/activity_feed/public_feed.html:47
+#: templates/activity_feed/public_feed.html:35
 msgid "Latest updates"
 msgstr ""
 
-#: templates/activity_feed/public_feed.html:51
+#: templates/activity_feed/public_feed.html:39
 msgid "Popular members"
 msgstr ""
 
-#: templates/activity_feed/public_feed.html:59
-#: templates/activity_feed/user_feed.html:53
+#: templates/activity_feed/public_feed.html:47
+#: templates/activity_feed/user_feed.html:41
 msgid "Show all members"
 msgstr ""
 
 #: templates/activity_feed/user_feed.html:24
-msgid "Popular products in your network"
-msgstr ""
-
-#: templates/activity_feed/user_feed.html:28
-#: templates/apparel/look_list.html:15
-msgid "Popular looks in your network"
-msgstr ""
-
-#: templates/activity_feed/user_feed.html:36
 msgid "Most followed brands"
 msgstr ""
 
-#: templates/activity_feed/user_feed.html:47
+#: templates/activity_feed/user_feed.html:35
 msgid "Your friend's latest updates"
 msgstr ""
 
-#: templates/activity_feed/user_feed.html:51
+#: templates/activity_feed/user_feed.html:39
 #: templates/apparel/user_list.html:47
 msgid "Your friends are here!"
-msgstr ""
-
-#: templates/activity_feed/user_feed_anon.html:24
-msgid ""
-"Connect your Facebook account to see what your friends are doing on Apprl."
 msgstr ""
 
 #: templates/activity_feed/verbs/add_product.html:5
@@ -1150,29 +1137,29 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: templates/apparel/look_detail.html:84
+#: templates/apparel/look_detail.html:83
 msgid "Created"
 msgstr ""
 
-#: templates/apparel/look_detail.html:87
+#: templates/apparel/look_detail.html:85
 #: templates/apparel/product_detail.html:125
 #: templates/profile/base_profile.html:33
 msgid "Likes"
 msgstr ""
 
-#: templates/apparel/look_detail.html:103
+#: templates/apparel/look_detail.html:101
 msgid "Embed this look on your blog or site"
 msgstr ""
 
-#: templates/apparel/look_detail.html:108
+#: templates/apparel/look_detail.html:106
 msgid "Direct link to this page"
 msgstr ""
 
-#: templates/apparel/look_detail.html:112
+#: templates/apparel/look_detail.html:110
 msgid "More looks by"
 msgstr ""
 
-#: templates/apparel/look_detail.html:116
+#: templates/apparel/look_detail.html:114
 #: templates/apparel/product_detail.html:156
 msgid "See all looks"
 msgstr ""
@@ -1233,6 +1220,14 @@ msgstr ""
 msgid "Looks Women"
 msgstr ""
 
+#: templates/apparel/look_list.html:14
+msgid "Popular looks"
+msgstr ""
+
+#: templates/apparel/look_list.html:15
+msgid "Popular looks in your network"
+msgstr ""
+
 #: templates/apparel/look_list.html:30 templates/apparel/look_list.html:32
 #, python-format
 msgid "%(counter)s look"
@@ -1240,19 +1235,19 @@ msgid_plural "%(counter)s looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/look_list.html:37
+#: templates/apparel/look_list.html:38
 msgid ""
 "To see popular looks in your network you need to connect with your Facebook "
 "account."
 msgstr ""
 
-#: templates/apparel/look_list.html:43
+#: templates/apparel/look_list.html:46
 msgid ""
 "You currently don't follow anyone who has liked any looks, find friends to "
 "follow amoung our members."
 msgstr ""
 
-#: templates/apparel/look_list.html:44
+#: templates/apparel/look_list.html:47
 #: templates/apparel/fragments/browse_follow_user.html:5
 msgid "See all members"
 msgstr ""

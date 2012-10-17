@@ -7,7 +7,7 @@
         <ul>
             {% url user_feed as user_feed_url %}
             {% url public_feed as public_feed_url %}
-            <li><a class="first{% if request.path == public_feed_url %} current{% endif %}" href="{{ public_feed_url }}">{% trans "Everything" %}</a></li>
+            <li><a class="first{% if request.path == public_feed_url %} current{% endif %}" href="{{ public_feed_url }}">{% trans "Everyone" %}</a></li>
             {% if not request.user.is_authenticated %}
             <li><a class="last open-dialog{% if request.path == user_feed_url %} current{% endif %}" href="{% url dialog-user-feed %}">{% trans "My Follows" %}</a></li>
             {% else %}

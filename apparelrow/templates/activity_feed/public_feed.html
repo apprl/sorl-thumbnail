@@ -9,11 +9,11 @@
 {% block body-classes %}three-columns updates{% endblock body-classes %}
 {% block body %}
     <div class="sidebar">
-        <h2>{% trans "Popular products" %}</h2>
+        <h2>{% trans "Trending products" %}</h2>
         {% include 'apparel/fragments/products_sidebar.html' with products=popular_products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
         <a class="btn btn-block btn-upper btn-rarrow" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Show all products" %}</a>
 
-        <h2>{% trans "Popular looks" %}</h2>
+        <h2>{% trans "Trending looks" %}</h2>
         <ul class="looks group">
         {% for object in popular_looks %}
             <li>{% include 'apparel/fragments/look_sidebar.html' %}</li>
