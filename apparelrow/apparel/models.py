@@ -505,7 +505,7 @@ class VendorProduct(models.Model):
                     rates[rate_obj.currency] = rate_obj.rate
 
                 if rates:
-                    cache.set(key, rates, 60*60)
+                    cache.set(settings.APPAREL_RATES_CACHE_KEY, rates, 60*60)
 
             rate = rates[to_currency] * (1 / rates[from_currency])
             if from_currency == settings.APPAREL_BASE_CURRENCY:

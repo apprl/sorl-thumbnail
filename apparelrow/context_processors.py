@@ -47,6 +47,6 @@ def currency(request):
             rates[rate_obj.currency] = rate_obj.rate
 
         if rates:
-            cache.set(key, rates, 60*60)
+            cache.set(django_settings.APPAREL_RATES_CACHE_KEY, rates, 60*60)
 
     return {'currency_rates': rates}
