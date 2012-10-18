@@ -659,7 +659,9 @@ ApparelSearch = {
                     } else {
                         root = jQuery('<li/>').appendTo(list);
                     }
-                    root.append(object)
+                    var $object = jQuery(object);
+                    currencyConversion($object.find('.price, .discount-price'));
+                    root.append($object);
 
                     var item = list.children(':last');
                     item.addClass((i % 2 == 0) ? 'even' : 'odd');

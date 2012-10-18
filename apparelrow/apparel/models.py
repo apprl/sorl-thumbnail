@@ -497,13 +497,12 @@ class VendorProduct(models.Model):
             if from_currency == to_currency:
                 return self.original_price, self.original_discount_price, to_currency
 
-            key = 'currency_rates_base_%s' % (settings.APPAREL_BASE_CURRENCY,)
-            rates = cache.get(key)
+            rates = cache.get(settings.APPAREL_RATES_CACHE_KEY)
             if not rates:
                 fxrate_model = get_model('importer', 'FXRate')
                 rates = {}
-                for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY).values('currency', 'rate'):
-                    rates[rate_obj['currency']] = rate_obj['rate']
+                for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY):
+                    rates[rate_obj.currency] = rate_obj.rate
 
                 if rates:
                     cache.set(key, rates, 60*60)

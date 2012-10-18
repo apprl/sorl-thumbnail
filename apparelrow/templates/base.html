@@ -1,4 +1,4 @@
-{% load i18n apparel_extras django_static %}
+{% load i18n l10n apparel_extras django_static %}
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
@@ -287,6 +287,28 @@
 <a class="feedback" href="mailto:feedback@apprl.com?subject={% trans "Hi Apprl! I have a question / idea / complaint / complement" %}">
     <img src="{{ MEDIA_URL }}/images/feedback-button.png">
 </a>
+
+<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/money.min.js" %}"></script>
+<script type="text/javascript">
+  fx.base = 'SEK';
+  fx.rates = {
+    {% for currency, rate in currency_rates.items %}
+    '{{ currency }}': {{ rate|unlocalize }},
+    {% endfor %}
+    'SEK': 1
+  };
+  var current_currency = '{{ CURRENCY }}';
+  function currencyConversion(elements) {
+    elements.each(function(index, element) {
+      var $element = jQuery(element);
+      var price = $element.text().split(' ');
+      var currency = price.pop();
+      var price = parseInt(price.join(''), 10);
+      var converted_price = Math.round(fx.convert(price, {from: currency, to: current_currency}));
+      $element.text(converted_price + ' ' + current_currency);
+  });
+}
+</script>
 
 <div id="fb-root"></div>
 <script type="text/javascript">

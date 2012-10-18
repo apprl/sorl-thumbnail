@@ -121,6 +121,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "context_processors.exposed_settings",
     "context_processors.next_redirects",
     "context_processors.gender",
+    "context_processors.currency",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -291,6 +292,7 @@ SOLR_RELOAD_URL = 'http://localhost:8983/solr/admin/cores?action=RELOAD&core=col
 APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
+APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/rss-feed/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR = os.path.join('/', MEDIA_URL, 'images', 'avatar_small.png')
 APPAREL_DEFAULT_AVATAR_LARGE = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')

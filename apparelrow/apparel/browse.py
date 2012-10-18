@@ -269,7 +269,6 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         default_colors = default_colors,
         categories_all = Category.objects.all(),
         current_page = paged_result,
-        currency_rates = get_model('importer', 'FXRate').objects.filter(base_currency='SEK'),
     )
 
     # Set APPAREL_GENDER

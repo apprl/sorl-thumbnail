@@ -1,6 +1,8 @@
 from django.conf import settings as django_settings
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
+from django.core.cache import cache
+from django.db.models import get_model
 from django.utils.translation import get_language
 
 from apparel.utils import get_gender_from_cookie
@@ -35,3 +37,16 @@ def next_redirects(request):
 
 def gender(request):
     return {'APPAREL_GENDER': get_gender_from_cookie(request)}
+
+def currency(request):
+    rates = cache.get(django_settings.APPAREL_RATES_CACHE_KEY)
+    if not rates:
+        fxrate_model = get_model('importer', 'FXRate')
+        rates = {}
+        for rate_obj in fxrate_model.objects.filter(base_currency=django_settings.APPAREL_BASE_CURRENCY):#.values('currency', 'rate'):
+            rates[rate_obj.currency] = rate_obj.rate
+
+        if rates:
+            cache.set(key, rates, 60*60)
+
+    return {'currency_rates': rates}

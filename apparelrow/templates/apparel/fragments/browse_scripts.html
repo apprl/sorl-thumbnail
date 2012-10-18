@@ -1,19 +1,10 @@
 {% load apparel_extras django_static l10n %}
 <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/jquery/jquery.history.js" %}"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/money.min.js" %}"></script>
 <script type="text/javascript">
-  fx.base = 'SEK';
-  fx.rates = {
-    {% for rate in currency_rates %}
-    '{{ rate.currency }}': {{ rate.rate|unlocalize }},
-    {% endfor %}
-    'SEK': 1
-  };
   var pricerange = {
     min: {{ pricerange.min }},
     max: {{ pricerange.max }}
   };
-  var current_currency = '{{ CURRENCY }}';
 </script>
 <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/filtersetup.js" %}"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/browse.js" %}"></script>
