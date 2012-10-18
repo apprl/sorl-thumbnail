@@ -489,7 +489,7 @@ def look_embed(request, slug):
     return render(request, 'apparel/look_embed.html', {'object': look, 'base_url': base_url})
 
 
-#@login_required - FIXME: Find out why this isn't working anymore
+@login_required # TODO: try this again- FIXME: Find out why this isn't working anymore
 @seamless_request_handling
 def look_edit(request, slug):
     """
@@ -498,8 +498,6 @@ def look_edit(request, slug):
             - if in AJAX mode, return the look as JSON
             - else redirect to look's view page (unless a new image has been uploaded)
     """
-
-    # FIXME: Ensure user owns look
     look = get_object_or_404(Look, slug=slug, user=request.user)
 
     if request.method == 'POST':
