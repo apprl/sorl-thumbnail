@@ -35,8 +35,6 @@
             <div class="look-footer">
                 <h3>
                   <a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.title }}</a>
-                  <a href="{% url apparel.views.look_edit object.slug %}" style="display:none;" title="{% trans "Edit" %}" class="edit inline-edit-look">{% trans "Edit" %}</a>
-                  <a href="{% url apparel.views.look_delete object.slug %}" style="display:none;" title="{% trans "Delete" %}" class="delete inline-delete-look">{% trans "Delete" %}</a>
                 </h3>
                 <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>
                 <div class="stats">
@@ -46,8 +44,14 @@
                     {% endif %}
                 </div>
             </div>
+            {% endcache %}
+            {% if request.user and request.user.is_authenticated and request.user == object.user %}
+            <div class="look-control">
+                <a href="{% url apparel.views.look_edit object.slug %}" title="{% trans "Edit" %}" class="btn btn-small btn-upper btn-positive btn-edit">{% trans "Edit" %}</a>
+                <a href="{% url apparel.views.look_delete object.slug %}" title="{% trans "Delete" %}" class="btn btn-small btn-upper btn-negative btn-delete">{% trans "Delete" %}</a>
+            </div>
+            {% endif %}
         </div>
-        {% endcache %}
 
     </li>
 {% endfor %}
