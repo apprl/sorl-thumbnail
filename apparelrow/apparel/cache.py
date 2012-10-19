@@ -29,6 +29,7 @@ new_template_cache_map = {
         'product_feed_226': ['id_language', lambda x: x.pk],
         'product_thumb': ['id_language', lambda x: x.pk],
         'look_product_tooltip': ['id_language', lambda x: x.pk],
+        'activity_like_product_header': ['id_language', lambda x: x.pk],
     },
     'VendorProduct': {
         'products_sidebar': ['id_language', lambda x: x.product_id],
@@ -39,6 +40,7 @@ new_template_cache_map = {
         'product_feed_226': ['id_language', lambda x: x.product_id],
         'product_thumb': ['id_language', lambda x: x.product_id], # not sure if needed
         'look_product_tooltip': ['id_language', lambda x: x.product_id],
+        'activity_like_product_header': ['id_language', lambda x: x.product_id],
     },
     'ProductLike': {
         'products_sidebar': ['id_language', lambda x: x.product_id],

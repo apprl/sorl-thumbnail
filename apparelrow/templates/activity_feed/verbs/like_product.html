@@ -1,15 +1,26 @@
 {% extends 'activity_feed/verbs/base.html' %}
-{% load i18n %}
+{% load i18n apparel_extras cache %}
 
 {% block activity_header %}
-    {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
-    {% if objects|length > 1 %}
-    {% blocktrans with count=objects|length %}likes {{count}} products{% endblocktrans %}
-    {% else %}
-    {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0 %}
-    likes <a href="{{object_url}}">{{title}}</a>
-    {% endblocktrans %}
-    {% endif %} 
+{% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
+    {% comment %}TODO: fix objects.0.id when we do aggregations{% endcomment %}
+    {% cache 43200 product_activity_header objects.0.id LANGUAGE_CODE %}
+        {% if objects|length > 1 %}
+            {% blocktrans with count=objects|length %}likes {{count}} products{% endblocktrans %}
+        {% else %}
+            {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0 %}
+            likes <a href="{{object_url}}">{{title}}</a>
+            {% endblocktrans %}
+        {% endif %}
+        {% if objects|length == 1 %}
+            -
+            {% if objects.0.default_vendor.discount_price %}
+            <span class="discount-price price">{{ objects.0.default_vendor.locale_discount_price|floatformat:0|apprl_intcomma }}</span>
+            {% endif %}
+            <span class="price"{% if objects.0.default_vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ objects.0.default_vendor.locale_price|floatformat:0|apprl_intcomma }}</span>
+            <span class="currency">{{ objects.0.default_vendor.locale_currency }}</span>
+        {% endif %}
+    {% endcache %}
 {% endblock %}
 
 {% block activity_content %}
