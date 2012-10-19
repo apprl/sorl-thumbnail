@@ -82,18 +82,22 @@ def public_feed(request):
             'current_page': paged_result
         })
 
-    popular_products = Product.valid_objects.order_by('-popularity')[:4]
-    popular_looks = Look.objects.order_by('-popularity', '-created')[:3]
-    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')[:5]
-    popular_members = ApparelProfile.objects.filter(user__is_active=True, is_brand=False).order_by('-followers_count')[:5]
+    popular_products = Product.valid_objects.order_by('-popularity')
+    popular_looks = Look.objects.order_by('-popularity', '-created')
+    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')
+    popular_members = ApparelProfile.objects.filter(user__is_active=True, is_brand=False).order_by('-followers_count')
+    if request.user and request.user.is_authenticated():
+        follow_ids = Follow.objects.filter(user=request.user.get_profile()).values_list('user_follow', flat=True)
+        popular_brands = popular_brands.exclude(id__in=follow_ids)
+        popular_members = popular_members.exclude(id=request.user.get_profile().id).exclude(id__in=follow_ids)
 
     return render(request, 'activity_feed/public_feed.html', {
             'current_page': paged_result,
             'next': request.get_full_path(),
-            'popular_products': popular_products,
-            'popular_looks': popular_looks,
-            'popular_brands': popular_brands,
-            'popular_members': popular_members,
+            'popular_products': popular_products[:4],
+            'popular_looks': popular_looks[:3],
+            'popular_brands': popular_brands[:5],
+            'popular_members': popular_members[:5],
         })
 
 def dialog_user_feed(request):
@@ -120,12 +124,15 @@ def user_feed(request):
             'current_page': paged_result
         })
 
-    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')[:5]
+    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')
+    if request.user and request.user.is_authenticated():
+        follow_ids = Follow.objects.filter(user=request.user.get_profile()).values_list('user_follow', flat=True)
+        popular_brands = popular_brands.exclude(id__in=follow_ids)
 
     return render(request, 'activity_feed/user_feed.html', {
             'current_page': paged_result,
             'next': request.get_full_path(),
             'popular_products': get_top_products_in_network(profile, 4),
             'popular_looks': get_top_looks_in_network(profile, 3),
-            'popular_brands': popular_brands,
+            'popular_brands': popular_brands[:5],
         })
