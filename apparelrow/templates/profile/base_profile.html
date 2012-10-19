@@ -64,37 +64,21 @@
                 {% endwith %}
             {% endif %}
         </div>
-        <p>
-            {% trans "Member since" %} {{ profile.user.date_joined|date:"SHORT_DATE_FORMAT" }}
-        </p>
-        <div id="sidebar-profile-info">
-            {% with likes_url=profile.url_likes looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
-            {% if not profile.is_brand %}
-            <p><a href="{{ likes_url }}">{% blocktrans count products as prod %}Likes {{ prod }} product{% plural %}Likes {{ prod }} products{% endblocktrans %}</a></p>
-            {% else %}
-            <p><a href="{{ likes_url }}">{% blocktrans count products as prod %}{{prod}} product{% plural %}{{prod}} products{% endblocktrans %}</a></p>
-            {% endif %}
-            <p>
-                <a href="{{ looks_url }}">
-                {% blocktrans count profile.looks as looks %}
-                    {{ looks }} look
-                {% plural %}
-                    {{ looks }} looks
-                {% endblocktrans %}
-                </a>
-            </p>
-            <p>
-                <a href="{{ followers_url }}">{% trans "Followed by" %} {{ profile.followers_count }}</a>
-            <p>
-                <a href="{{ following_url }}">{% trans "Following" %} {{ following }}</a>
-            </p>
-            {% endwith %}
-        </div>
-        {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
         {% include 'apparel/fragments/follow.html' with classes="btn btn-upper btn-block" %}
         {% if profile.is_brand %}
-        <p><a class="btn btn-upper btn-block" href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ profile.brand.id }}">{% trans "Filter products" %}</a></p>
+        <a class="btn btn-upper btn-block" href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ profile.brand.id }}">{% trans "Filter products" %}</a>
         {% endif %}
+        {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
+        <ul class="profile-info-sidebar group">
+            {% if profile.is_brand %}
+            <li class="left"><a href="{{ likes_url }}">{% blocktrans count products as prod %}{{prod}} product{% plural %}{{prod}} products{% endblocktrans %}</a></li>
+            {% else %}
+            <li class="left"><a href="{{ likes_url }}">{% blocktrans count products as prod %}Likes {{prod}} product{% plural %}Likes {{prod}} products{% endblocktrans %}</a></li>
+            {% endif %}
+            <li class="right"><a href="{{ looks_url }}">{% blocktrans count profile.looks as look_count %}Created {{look_count}} look{% plural %}Created {{look_count}} looks{% endblocktrans %}</a></li>
+            <li class="left"><a href="{{ followers_url }}">{% trans "Followed by" %} {{ profile.followers_count }}</a></li>
+            <li class="right"><a href="{{ following_url }}">{% trans "Following" %} {{ following }}</a></li>
+        </ul>
     </div>
     {% block extended_content %}
     <div id="content">

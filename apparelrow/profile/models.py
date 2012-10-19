@@ -183,10 +183,10 @@ class ApparelProfile(models.Model):
     @property
     def avatar_large(self):
         if self.image:
-            return get_thumbnail(self.image, '200').url
+            return get_thumbnail(self.image, '208').url
 
         if self.facebook_uid:
-            return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_uid
+            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_uid
 
         if self.is_brand:
             return settings.APPAREL_DEFAULT_BRAND_AVATAR_LARGE
@@ -195,10 +195,10 @@ class ApparelProfile(models.Model):
 
     def avatar_large_absolute_uri(self, request):
         if self.image:
-            return request.build_absolute_uri(get_thumbnail(self.image, '200').url)
+            return request.build_absolute_uri(get_thumbnail(self.image, '208').url)
 
         if self.facebook_uid:
-            return 'http://graph.facebook.com/%s/picture?type=large' % self.facebook_uid
+            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_uid
 
         if self.is_brand:
             return request.build_absolute_uri(settings.APPAREL_DEFAULT_AVATAR_LARGE)
