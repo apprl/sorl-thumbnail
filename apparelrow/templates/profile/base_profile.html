@@ -106,9 +106,11 @@
     {% block profile_right_sidebar %}
         {% if recent_looks %}
         <h2>{% blocktrans with profile.display_name as name %}{{ name }}'s latest looks{% endblocktrans %}</h2>
-        {% with recent_looks as looks %}
-            {% include 'apparel/fragments/looks.html' %}
-        {% endwith %}
+        <ul class="looks group">
+        {% for object in recent_looks %}
+            <li>{% include 'apparel/fragments/look_sidebar.html' %}</li>
+        {% endfor %}
+        </ul>
         {% endif %}
     {% endblock %}
     </div>
