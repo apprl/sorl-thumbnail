@@ -506,6 +506,8 @@ def look_edit(request, slug):
 
         if z_index and product_ids:
             for product_id, z_index in zip(product_ids.split(','), z_index.split(',')):
+                if z_index == 'auto':
+                    z_index = 0
                 look.display_components.filter(product_id=product_id).update(z_index=z_index)
 
         form = LookForm(request.POST, request.FILES, instance=look)
