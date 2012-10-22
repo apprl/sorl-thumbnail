@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
+from django.core.urlresolvers import reverse_lazy
 
 from apparel.models import Look
 
@@ -9,6 +10,8 @@ urlpatterns = patterns('',
     url(r'^$', 'activity_feed.views.user_feed', name='user_feed'),
 
     # Shop
+    url(r'^men/$', RedirectView.as_view(url=reverse_lazy('shop-men'), permanent=True)),
+    url(r'^women/$', RedirectView.as_view(url=reverse_lazy('shop-women'), permanent=True)),
     url(r'^shop/$', 'apparel.views.gender', {'view': 'shop'}, name='shop'),
     url(r'^shop/men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
     url(r'^shop/women/$', 'apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
