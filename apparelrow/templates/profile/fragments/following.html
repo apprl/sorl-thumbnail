@@ -1,3 +1,4 @@
+{% load i18n %}
 <ul class="users">
 {% for following in current_page.object_list %}
 <li>
@@ -10,4 +11,4 @@
 <div class="pagination">
     {% include 'apparel/fragments/pagination.html' %}
 </div>
-
+<p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>

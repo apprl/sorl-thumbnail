@@ -1,3 +1,4 @@
+{% load i18n %}
 <ul class="looks medium-looks">
 {% for object in current_page.object_list %}
     <li{% cycle '' ' class="last"' %}>
@@ -8,3 +9,4 @@
 <div class="pagination">
     {% include 'apparel/fragments/pagination.html' %}
 </div>
+<p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>

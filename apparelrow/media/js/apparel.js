@@ -418,6 +418,24 @@ jQuery(document).ready(function() {
     });
 
     ApparelActivity.setup_share();
+
+    // Back to top
+	$("#back-top").hide();
+	$(function () {
+		$(window).scroll(function () {
+			if ($(this).scrollTop() > 1500) {
+				$('#back-top').fadeIn();
+			} else {
+				$('#back-top').fadeOut();
+			}
+		});
+		$('#back-top a').click(function () {
+			$('body,html').animate({
+				scrollTop: 0
+			}, 400);
+			return false;
+		});
+	});
 });
 
 function getElementId(element, numeric) {
