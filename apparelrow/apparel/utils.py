@@ -10,7 +10,7 @@ def get_gender_from_cookie(request):
     if cookie_value in ['M', 'W']:
         return cookie_value
 
-    return None
+    return 'W'
 
 def get_pagination_page(queryset, per_page, page_num, on_ends=2, on_each_side=3):
     """

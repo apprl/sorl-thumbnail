@@ -1,17 +1,18 @@
 from django.conf.urls import patterns, url
-from django.views.generic import TemplateView, RedirectView
-from django.core.urlresolvers import reverse_lazy
+from django.views.generic import TemplateView
 
 from apparel.models import Look
 
 urlpatterns = patterns('',
     # Feed
-    url(r'^all/$', 'activity_feed.views.public_feed', name='public_feed'),
     url(r'^$', 'activity_feed.views.user_feed', name='user_feed'),
+    url(r'^men/$', 'activity_feed.views.user_feed', {'gender': 'M'}, name='user_feed-men'),
+    url(r'^women/$', 'activity_feed.views.user_feed', {'gender': 'W'}, name='user_feed-women'),
+    url(r'^all/$', 'activity_feed.views.public_feed', name='public_feed'),
+    url(r'^all/men/$', 'activity_feed.views.public_feed', {'gender': 'M'}, name='public_feed-men'),
+    url(r'^all/women/$', 'activity_feed.views.public_feed', {'gender': 'W'}, name='public_feed-women'),
 
     # Shop
-    url(r'^men/$', RedirectView.as_view(url=reverse_lazy('shop-men'), permanent=True)),
-    url(r'^women/$', RedirectView.as_view(url=reverse_lazy('shop-women'), permanent=True)),
     url(r'^shop/$', 'apparel.views.gender', {'view': 'shop'}, name='shop'),
     url(r'^shop/men/$', 'apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
     url(r'^shop/women/$', 'apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
