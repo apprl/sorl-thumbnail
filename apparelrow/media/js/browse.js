@@ -361,6 +361,9 @@ function filter(query, callback) {
     // 2) If a callback other than renderProducts is required, set the filterCallback property
     //    It will be cleaned up after first use
     // Anyone with a better, cleaner idea how to solve this, just go ahead and implement it. This doesn't feel so nice
+    if(!query.hasOwnProperty('page')) {
+        jQuery('#product-list').css('opacity', 0.3);
+    }
     jQuery.history.filterCallback = callback;
     window.location.hash = decodeURIComponent(jQuery.param(query, true)) || '!';
 }
@@ -397,6 +400,8 @@ function renderPage(products) {
     } else {
         jQuery('#reset').hide()
     }
+
+    jQuery('#product-list').css('opacity', 1);
 }
 
 /**
