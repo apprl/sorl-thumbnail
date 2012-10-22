@@ -78,7 +78,7 @@ button
 
   &.btn-disabled
     background-color: #bfbfbf
-    cursor: auto
+    cursor: default
     &:hover, &:active
       background-color: #bfbfbf
 
@@ -91,7 +91,6 @@ button
   &.btn-large
     font-size: 16px
     padding: 20px 16px
-    height: 56px
 
   // Small
   &.btn-small
@@ -997,6 +996,18 @@ div#product-list, .product-list
     padding-top: 6px
     min-width: 10px
     background-position: center top
+
+a.btn-pagination
+  &.btn-disabled, &.btn-disabled:hover, &.btn-disabled:active
+    background-color: #000000
+  span, img
+    vertical-align: middle
+  img
+    margin-left: 20px
+    display: none
+  &.hover
+    img
+      display: inline
 
 a.prev, a.next
   cursor: pointer

@@ -969,10 +969,12 @@ jQuery(document).ready(function() {
         // Fetch via ajax on pagination clicks
         $('a.next', $pagination).live('click', function() {
             // Keep fetching automatically after the first click
+            var $this = jQuery(this);
+            $this.addClass('btn-disabled hover').find('span').text($this.data('loading-text'));
 
             $(window).data('dont-scroll', false);
 
-            getPage(jQuery(this));
+            getPage($this);
             return false;
         });
 

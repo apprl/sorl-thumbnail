@@ -233,7 +233,9 @@ jQuery(document).ready(function() {
     });
 
     jQuery('.pagination a').live('click', function(e) {
-        var page = parsePage(jQuery(this));
+        var $this = jQuery(this);
+        $this.addClass('btn-disabled hover').find('span').text($this.data('loading-text'));
+        var page = parsePage($this);
         if (page) {
             fetchPage(page);
         }

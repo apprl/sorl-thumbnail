@@ -1,4 +1,7 @@
 {% load i18n %}
 {% if current_page.has_next %}
-<a class="next btn btn-block btn-large btn-upper" href="{{ request.path }}?page={{ current_page.next_page_number }}">{% trans "Show me more!" %}</a>
+<a class="next btn btn-block btn-large btn-upper btn-pagination" data-loading-text="{% trans "More on the way" %}" href="{{ request.path }}?page={{ current_page.next_page_number }}">
+    <span>{% trans "Show me more!" %}</span>
+    <img src="{{ MEDIA_URL }}images/loading.gif">
+</a>
 {% endif %}

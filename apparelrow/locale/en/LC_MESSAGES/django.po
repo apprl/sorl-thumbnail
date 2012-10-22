@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-19 17:50+0200\n"
+"POT-Creation-Date: 2012-10-22 13:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -869,6 +869,17 @@ msgstr ""
 msgid "No updates"
 msgstr ""
 
+#: templates/activity_feed/feed.html:12 templates/apparel/brand_list.html:33
+#: templates/apparel/browse.html:50
+#: templates/apparel/fragments/looks_large.html:62
+#: templates/apparel/fragments/looks_medium.html:12
+#: templates/apparel/fragments/user_list.html:12
+#: templates/profile/likes.html:14
+#: templates/profile/fragments/followers.html:14
+#: templates/profile/fragments/following.html:14
+msgid "Back to Top"
+msgstr ""
+
 #: templates/activity_feed/public_feed.html:12
 #: templates/activity_feed/user_feed.html:12
 msgid "Trending products"
@@ -1049,11 +1060,11 @@ msgstr ""
 msgid "Most followed"
 msgstr ""
 
-#: templates/apparel/brand_list.html:35
+#: templates/apparel/brand_list.html:36
 msgid "Your friends like"
 msgstr ""
 
-#: templates/apparel/brand_list.html:37
+#: templates/apparel/brand_list.html:38
 msgid "Connect your Facebook account to see what your friends like."
 msgstr ""
 
@@ -1087,10 +1098,6 @@ msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
 msgstr[0] ""
 msgstr[1] ""
-
-#: templates/apparel/browse.html:50
-msgid "Back to Top"
-msgstr ""
 
 #: templates/apparel/look_create.html:5
 msgid "Create new look"
@@ -1149,19 +1156,19 @@ msgstr ""
 msgid "Likes"
 msgstr ""
 
-#: templates/apparel/look_detail.html:101
+#: templates/apparel/look_detail.html:111
 msgid "Embed this look on your blog or site"
 msgstr ""
 
-#: templates/apparel/look_detail.html:106
+#: templates/apparel/look_detail.html:116
 msgid "Direct link to this page"
 msgstr ""
 
-#: templates/apparel/look_detail.html:110
+#: templates/apparel/look_detail.html:120
 msgid "More looks by"
 msgstr ""
 
-#: templates/apparel/look_detail.html:114
+#: templates/apparel/look_detail.html:124
 #: templates/apparel/product_detail.html:156
 msgid "See all looks"
 msgstr ""
@@ -1190,7 +1197,7 @@ msgstr ""
 msgid "To create a look, you need to have liked at least one product."
 msgstr ""
 
-#: templates/apparel/look_edit.html:506 templates/profile/likes.html:22
+#: templates/apparel/look_edit.html:506 templates/profile/likes.html:20
 msgid "Find products!"
 msgstr ""
 
@@ -1498,6 +1505,10 @@ msgid "More info"
 msgstr ""
 
 #: templates/apparel/fragments/pagination.html:3
+msgid "More on the way"
+msgstr ""
+
+#: templates/apparel/fragments/pagination.html:4
 msgid "Show me more!"
 msgstr ""
 
@@ -1911,15 +1922,15 @@ msgstr ""
 msgid "%(display_name)s is not following anyone yet."
 msgstr ""
 
-#: templates/profile/likes.html:22
+#: templates/profile/likes.html:20
 msgid "All products that you ♥ are placed here."
 msgstr ""
 
-#: templates/profile/likes.html:25
+#: templates/profile/likes.html:23
 msgid "currently does not have any products."
 msgstr ""
 
-#: templates/profile/likes.html:27
+#: templates/profile/likes.html:25
 msgid "does not like any products so far."
 msgstr ""
 
@@ -1935,15 +1946,15 @@ msgstr ""
 msgid "Follow brands"
 msgstr ""
 
-#: templates/profile/looks.html:49
+#: templates/profile/looks.html:42
 msgid "All looks that you create end up here."
 msgstr ""
 
-#: templates/profile/looks.html:50
+#: templates/profile/looks.html:43
 msgid "Create a look!"
 msgstr ""
 
-#: templates/profile/looks.html:53
+#: templates/profile/looks.html:46
 #, python-format
 msgid "%(display_name)s has not created any looks yet."
 msgstr ""
