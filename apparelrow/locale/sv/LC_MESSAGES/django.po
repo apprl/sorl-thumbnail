@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-22 13:25+0200\n"
+"POT-Creation-Date: 2012-10-22 15:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -908,8 +908,9 @@ msgid "Trending looks"
 msgstr "Populära looks"
 
 #: templates/activity_feed/public_feed.html:24
-msgid "Most popular brands"
-msgstr "Mest populära varumärken"
+#: templates/activity_feed/user_feed.html:24
+msgid "Popular brands"
+msgstr "Populära varumärken"
 
 #: templates/activity_feed/public_feed.html:32
 #: templates/activity_feed/user_feed.html:32
@@ -929,13 +930,9 @@ msgstr "Populära medlemmar"
 msgid "Show all members"
 msgstr "Visa alla medlemmar"
 
-#: templates/activity_feed/user_feed.html:24
-msgid "Most followed brands"
-msgstr "Mest följda varumärken"
-
 #: templates/activity_feed/user_feed.html:35
 msgid "Your friend's latest updates"
-msgstr "Senaste händelser bland dina vänner"
+msgstr "Senaste händelser"
 
 #: templates/activity_feed/user_feed.html:39
 #: templates/apparel/user_list.html:47
@@ -2434,6 +2431,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Most followed brands"
+#~ msgstr "Mest följda varumärken"
 
 #~ msgid "Member since"
 #~ msgstr "Medlem sedan"
