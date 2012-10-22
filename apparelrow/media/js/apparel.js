@@ -338,6 +338,9 @@ jQuery(document).ready(function() {
             jQuery('.hotspot').hide();
         });
     } else {
+        jQuery(document).on('infinite_scroll_data', function(e) {
+            jQuery('.look-like, .hotspot').show();
+        });
         jQuery('.look-like, .hotspot').show();
     }
 
