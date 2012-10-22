@@ -388,30 +388,28 @@ jQuery(document).ready(function() {
     // Product hover, works with medium and feed
     jQuery('.product-medium, .product-feed').live('mouseenter', function() {
         var element = jQuery(this);
-        if(element.parents('#search-result-products').length == 0) {
-            var product_id = getElementId(element);
-            if(!element.data('load_data')) {
-                element.find('.buy').text(gettext('Buy'));
-                jQuery.getJSON(product_popup_url + '?id=' + product_id, function(json) {
-                    if(json[0].liked == true) {
-                        element.find('.product-like').addClass('liked');
-                    }
-                    if(json[0].likes > 0) {
-                        element.find('.likes').show().text(json[0].likes);
-                    } else {
-                        element.find('.likes').hide();
-                    }
-                    if(json[0].comments > 0) {
-                        element.find('.comments').show().text(json[0].comments);
-                    } else {
-                        element.find('.comments').hide();
-                    }
-                });
-            }
-            element.data('load_data', true);
-            element.find('.hover').show();
-            element.find('.product-image').css({opacity: 0.3});
+        var product_id = getElementId(element);
+        if(!element.data('load_data')) {
+            element.find('.buy').text(gettext('Buy'));
+            jQuery.getJSON(product_popup_url + '?id=' + product_id, function(json) {
+                if(json[0].liked == true) {
+                    element.find('.product-like').addClass('liked');
+                }
+                if(json[0].likes > 0) {
+                    element.find('.likes').show().text(json[0].likes);
+                } else {
+                    element.find('.likes').hide();
+                }
+                if(json[0].comments > 0) {
+                    element.find('.comments').show().text(json[0].comments);
+                } else {
+                    element.find('.comments').hide();
+                }
+            });
         }
+        element.data('load_data', true);
+        element.find('.hover').show();
+        element.find('.product-image').css({opacity: 0.3});
     }).live('mouseleave', function() {
         jQuery(this).css({opacity: 1}).find('.hover').hide();
         jQuery('.product-image').css({opacity: 1});
