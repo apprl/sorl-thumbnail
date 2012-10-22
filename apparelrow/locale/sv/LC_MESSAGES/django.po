@@ -1575,7 +1575,7 @@ msgstr "Mer info"
 
 #: templates/apparel/fragments/pagination.html:3
 msgid "More on the way"
-msgstr "Mer kommer"
+msgstr "Mer på väg"
 
 #: templates/apparel/fragments/pagination.html:4
 msgid "Show me more!"
