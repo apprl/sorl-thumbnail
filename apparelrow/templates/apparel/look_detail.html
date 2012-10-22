@@ -68,8 +68,8 @@
         {% if object.user != request.user %}
             {% include 'apparel/fragments/follow.html' with profile=object.user.get_profile %}
         {% else %}
-            <a class="btn btn-upper btn-small btn-positive btn-edit" href="{% url apparel.views.look_edit object.slug %}">{% trans "Edit" %}</a>
-            <a class="btn btn-upper btn-small btn-negative btn-delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
+            <a class="btn btn-small btn-positive btn-edit" href="{% url apparel.views.look_edit object.slug %}">{% trans "Edit" %}</a>
+            <a class="btn btn-small btn-negative btn-delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete" %}</a>
         {% endif %}
     </div>
 </div>
