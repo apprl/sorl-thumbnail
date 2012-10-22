@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-22 15:04+0200\n"
+"POT-Creation-Date: 2012-10-22 17:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -850,12 +850,12 @@ msgid ""
 "support@apprl.com\n"
 msgstr ""
 
-#: templates/activity_feed/body_header.html:10
+#: templates/activity_feed/body_header.html:12
 msgid "Everyone"
 msgstr ""
 
-#: templates/activity_feed/body_header.html:12
 #: templates/activity_feed/body_header.html:14
+#: templates/activity_feed/body_header.html:16
 #: templates/activity_feed/dialog_user_feed.html:5
 msgid "My Follows"
 msgstr ""
@@ -901,6 +901,7 @@ msgid "Show all brands"
 msgstr ""
 
 #: templates/activity_feed/public_feed.html:35
+#: templates/activity_feed/user_feed.html:35
 msgid "Latest updates"
 msgstr ""
 
@@ -911,10 +912,6 @@ msgstr ""
 #: templates/activity_feed/public_feed.html:47
 #: templates/activity_feed/user_feed.html:41
 msgid "Show all members"
-msgstr ""
-
-#: templates/activity_feed/user_feed.html:35
-msgid "Your friend's latest updates"
 msgstr ""
 
 #: templates/activity_feed/user_feed.html:39

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-22 15:04+0200\n"
+"POT-Creation-Date: 2012-10-22 17:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -866,12 +866,12 @@ msgid ""
 "support@apprl.com\n"
 msgstr ""
 
-#: templates/activity_feed/body_header.html:10
+#: templates/activity_feed/body_header.html:12
 msgid "Everyone"
 msgstr "Visa alla"
 
-#: templates/activity_feed/body_header.html:12
 #: templates/activity_feed/body_header.html:14
+#: templates/activity_feed/body_header.html:16
 #: templates/activity_feed/dialog_user_feed.html:5
 msgid "My Follows"
 msgstr "Mina vänner"
@@ -918,6 +918,7 @@ msgid "Show all brands"
 msgstr "Visa alla varumärken"
 
 #: templates/activity_feed/public_feed.html:35
+#: templates/activity_feed/user_feed.html:35
 msgid "Latest updates"
 msgstr "Senaste händelser"
 
@@ -929,10 +930,6 @@ msgstr "Populära medlemmar"
 #: templates/activity_feed/user_feed.html:41
 msgid "Show all members"
 msgstr "Visa alla medlemmar"
-
-#: templates/activity_feed/user_feed.html:35
-msgid "Your friend's latest updates"
-msgstr "Senaste händelser"
 
 #: templates/activity_feed/user_feed.html:39
 #: templates/apparel/user_list.html:47
@@ -2431,6 +2428,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Your friend's latest updates"
+#~ msgstr "Senaste händelser"
 
 #~ msgid "Most followed brands"
 #~ msgstr "Mest följda varumärken"
