@@ -1,8 +1,10 @@
-{% load apparel_extras comments i18n %}
+{% load apparel_extras comments i18n cache %}
 <article class="activity {{ verb }}">
     <header class="activity-header">
         <div class="activity-image">
-            <a href="{{ users.0.get_absolute_url }}"><img src="{{ users.0.avatar }}" width="50" height="50"></a>
+            {% with user=users.0 %}
+            <a href="{{ user.get_absolute_url }}"><img src="{{ user.avatar }}" width="50" height="50"></a>
+            {% endwith %}
         </div>
         <div class="activity-short">
             <h3>{% block activity_header %}{% endblock %}</h3>
@@ -10,14 +12,14 @@
         </div>
     </header>
     <div class="activity-content">{% block activity_content %}{% endblock %}</div>
-    {% if enable_comments and objects|length == 1 %}
+    {% if enable_comments and total_objects == 1 %}
     {% if comment_count > 0 or current_user.is_authenticated %}
     <div class="activity-comment comment-box">
         {% if comment_count > 2 %}
         <a class="comment-count" href="{{ objects.0.get_absolute_url }}#comments">{% blocktrans with comment_count=comment_count %}See all {{comment_count}} comments{% endblocktrans %}</a>
         {% endif %}
         <ul class="comments-list">
-        {% for comment in comments %}
+        {% for comment in comments reversed %}
             {% include 'comments/comment.html' %}
         {% endfor %}
         </ul>

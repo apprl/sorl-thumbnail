@@ -29,6 +29,7 @@ django-flatpages-tinymce==0.1.1
 -e git+https://github.com/jbohman/pysolr.git#egg=pysolr
 celery==2.5.5
 django-celery==2.5.5
+# require redis>=2.4.4
 celery-with-redis==2.5
 requests==0.13.2
 django-static==1.5.5

@@ -10,7 +10,6 @@ from django.utils import timezone
 
 from activity_feed.tasks import push_activity_feed
 from activity_feed.tasks import pull_activity_feed
-from activity_feed.tasks import update_activity_feed
 
 logger = logging.getLogger('activity_feed.models')
 
@@ -22,34 +21,41 @@ class ActivityManager(models.Manager):
     """
 
     """
-    def push_activity(self, profile, verb, activity_object, data=''):
-        if data is None:
-            data = ''
-
-        defaults = {'active': True, 'data': data}
-
+    def push_activity(self, profile, verb, activity_object, gender=None):
+        if gender is not None and gender not in ['M', 'W']:
+            gender = None
         content_type = ContentType.objects.get_for_model(activity_object)
         activity, created = self.get_or_create(user=profile,
                                                verb=verb,
                                                content_type=content_type,
                                                object_id=activity_object.pk,
-                                               defaults=defaults)
+                                               defaults={'active': True, 'gender': gender})
+        if not created:
+            activity.active = True
+            activity.save()
 
         # Start task, add to all feeds
-        push_activity_feed.delay(profile, verb, content_type, activity_object.pk, data=data)
+        push_activity_feed.delay(activity)
 
     def pull_activity(self, profile, verb, activity_object):
         content_type = ContentType.objects.get_for_model(activity_object)
-        self.filter(user=profile, verb=verb, content_type=content_type, object_id=activity_object.pk).update(active=False)
-
-        # Start task, remove from all feeds
-        pull_activity_feed.delay(profile, verb, content_type, activity_object.pk)
+        try:
+            activity = self.get(user=profile, verb=verb, content_type=content_type, object_id=activity_object.pk)
+            activity.active = False
+            activity.save()
+            pull_activity_feed.delay(activity)
+        except self.DoesNotExist:
+            pass
 
     def get_for_user(self, user):
         return Activity.objects.filter(user=user, active=True) \
                                .select_related('user', 'owner') \
                                .prefetch_related('activity_object', 'content_type') \
                                .order_by('-created')
+
+
+GENDERS = ( ('M', 'Men'),
+            ('W', 'Women'))
 
 
 class Activity(models.Model):
@@ -61,7 +67,7 @@ class Activity(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     activity_object = generic.GenericForeignKey('content_type', 'object_id')
-    data = models.TextField(default='')
+    gender = models.CharField(max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     active = models.BooleanField(default=True, db_index=True)

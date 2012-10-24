@@ -162,7 +162,7 @@ def deploy(param='', snapshot='master'):
     migrate(param)
     build_brand_list()
     symlink_current_release()
-    #restart_celeryd()
+    restart_celeryd()
     restart_django()
     restart_memcached()
     restart_webserver()

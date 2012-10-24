@@ -1,9 +1,17 @@
 {% load i18n follow_tags %}
 
 {% if request.user.is_authenticated and request.user.get_profile != profile %}
-<a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} {% if request.user.get_profile|is_following_profile:profile %}btn-unfollow{% else %}btn-positive btn-follow{% endif %}" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% if request.user.get_profile|is_following_profile:profile %}{% trans "Following" %}{% else %}{% trans "Follow" %}{% endif %}</a>
+
+    {% if request.user.get_profile|is_following_profile:profile %}
+    <a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} btn-unfollow" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Following" %}</a>
+    {% else %}
+    <a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} btn-positive btn-follow" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Follow" %}</a>
+    {% endif %}
+
 {% else %}
+
     {% if request.user.get_profile != profile %}
     <a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} btn-positive btn-follow open-dialog" href="{% url dialog-follow-user %}?brand={% if profile.is_brand %}1{% else %}0{% endif %}&next={{ request.get_full_path }}" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Follow" %}</a>
     {% endif %}
+
 {% endif %}

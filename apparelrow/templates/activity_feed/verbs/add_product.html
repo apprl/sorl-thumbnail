@@ -3,7 +3,7 @@
 
 {% block activity_header %}
     {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
-    {% blocktrans with user_url=users.0.get_absolute_url count count=total_objects_count %}
+    {% blocktrans with user_url=users.0.get_absolute_url count count=total_objects %}
     has added <a href="{{user_url}}">a new product</a>
     {% plural %}
     has added <a href="{{user_url}}">{{count}} new products</a>
@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block activity_content %}
-    {% if total_objects_count == 1 %}
+    {% if total_objects == 1 %}
         {% include 'apparel/fragments/product_feed_452.html' with object=objects.0 width="452" %}
     {% else %}
         <ul class="group">
@@ -19,8 +19,8 @@
                 <li>{% include 'apparel/fragments/product_feed_226.html' with object=object width="226" %}</li>
             {% endfor %}
         </ul>
-        {% if total_objects_count > 4 %}
-            <a href="{{ users.0.get_absolute_url }}" class="btn btn-block btn-upper">{% blocktrans with count=remaining_count %}+ {{ count }} more{% endblocktrans %}</a>
+        {% if total_objects > 4 %}
+            <a href="{{ users.0.get_absolute_url }}" class="btn btn-block btn-upper">{% blocktrans with count=remaining_objects %}+ {{ count }} more{% endblocktrans %}</a>
         {% endif %}
     {% endif %}
 {% endblock %}

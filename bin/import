@@ -36,6 +36,3 @@ fi
 
 # Update fx rates
 $PROJDIR/bin/python manage.py arfxrates --refresh --solr
-
-# Update new products for brands
-$PROJDIR/bin/python manage.py brand_updates

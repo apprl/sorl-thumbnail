@@ -25,7 +25,7 @@
         <ul class="suggested-friends group">
         {% for profile in popular_brands %}
             <li>
-            {% include 'apparel/fragments/avatar_link_no_cache.html' %}
+            {% include 'apparel/fragments/avatar_link_no_cache.html' with request=request profile=profile only %}
             </li>
         {% endfor %}
         </ul>
@@ -40,7 +40,7 @@
         <ul class="suggested-friends group">
         {% for profile in popular_members %}
             <li>
-            {% include 'apparel/fragments/avatar_link_no_cache.html' %}
+            {% include 'apparel/fragments/avatar_link_no_cache.html' with request=request profile=profile only %}
             </li>
         {% endfor %}
         </ul>

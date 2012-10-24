@@ -53,7 +53,7 @@ def post_save_follow_handler(sender, instance, **kwargs):
     if instance.active:
         apparel_profile.followers_count = apparel_profile.followers_count + 1
         process_follow_user.delay(instance.user_follow.user, instance.user.user, instance)
-        Activity.objects.push_activity(instance.user, 'follow', instance.user_follow)
+        Activity.objects.push_activity(instance.user, 'follow', instance.user_follow, instance.user.gender)
     else:
         apparel_profile.followers_count = apparel_profile.followers_count - 1
         Activity.objects.pull_activity(instance.user, 'follow', instance.user_follow)

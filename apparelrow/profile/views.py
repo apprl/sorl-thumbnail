@@ -22,7 +22,7 @@ from profile.forms import ProfileImageForm, EmailForm, NotificationForm, Newslet
 from profile.models import EmailChange, ApparelProfile, Follow
 from profile.tasks import send_email_confirm_task
 from profile.decorators import avatar_change
-from activity_feed.views import ActivityFeedHTML
+from activity_feed.views import ActivityFeedRender
 
 PROFILE_PAGE_SIZE = 30
 
@@ -96,7 +96,8 @@ def profile(request, profile, form, page=0):
     """
     Displays the profile page
     """
-    htmlset = ActivityFeedHTML(request, get_model('activity_feed', 'activity').objects.get_for_user(profile))
+    gender = get_gender_from_cookie(request)
+    htmlset = ActivityFeedRender(request, gender, profile, private=True)
     paginator = Paginator(htmlset, 5)
 
     page = request.GET.get('page')

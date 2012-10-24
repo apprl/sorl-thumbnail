@@ -322,9 +322,11 @@ def _product_like(request, product, action):
         if facebook_user:
             facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(product.get_absolute_url()))
 
-    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product)
-    product_like.active = True if action == 'like' else False
-    product_like.save()
+    default_active = True if action == 'like' else False
+    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product, defaults={'active': default_active})
+    if not created:
+        product_like.active = default_active
+        product_like.save()
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
@@ -355,9 +357,11 @@ def look_like(request, slug, action):
         if facebook_user:
             facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(look.get_absolute_url()))
 
-    look_like, created = LookLike.objects.get_or_create(user=request.user, look=look)
-    look_like.active = True if action == 'like' else False
-    look_like.save()
+    default_active = True if action == 'like' else False
+    look_like, created = LookLike.objects.get_or_create(user=request.user, look=look, defaults={'active': default_active})
+    if not created:
+        look_like.active = default_active
+        look_like.save()
 
     if action == 'like':
         process_like_look_created.delay(look.user, request.user, look_like)

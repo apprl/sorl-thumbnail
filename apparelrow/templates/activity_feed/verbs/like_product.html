@@ -2,31 +2,38 @@
 {% load i18n apparel_extras cache %}
 
 {% block activity_header %}
-{% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
+    {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
     {% comment %}TODO: fix objects.0.id when we do aggregations{% endcomment %}
-    {% cache 43200 product_activity_header objects.0.id LANGUAGE_CODE %}
-        {% if objects|length > 1 %}
-            {% blocktrans with count=objects|length %}likes {{count}} products{% endblocktrans %}
+        {% if total_objects > 1 %}
+            {% blocktrans with count=total_objects %}likes {{count}} products{% endblocktrans %}
         {% else %}
             {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0 %}
             likes <a href="{{object_url}}">{{title}}</a>
             {% endblocktrans %}
         {% endif %}
-        {% if objects|length == 1 %}
+        {% if total_objects == 1 %}
+            {% cache CACHE_TIMEOUT product_activity_header objects.0.id LANGUAGE_CODE %}
             -
             <span class="price"{% if objects.0.default_vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ objects.0.default_vendor.locale_price|floatformat:0|apprl_intcomma }} {{ objects.0.default_vendor.locale_currency }}</span>
             {% if objects.0.default_vendor.discount_price %}
             <span class="discount-price price">{{ objects.0.default_vendor.locale_discount_price|floatformat:0|apprl_intcomma }}</span>
             <span class="discount currency">{{ objects.0.default_vendor.locale_currency }}</span>
             {% endif %}
+            {% endcache %}
         {% endif %}
-    {% endcache %}
 {% endblock %}
 
 {% block activity_content %}
-    {% if objects|length > 1 %}
-    2 or 4 products layout
+    {% if total_objects == 1 %}
+        {% include 'apparel/fragments/product_feed_452.html' with object=objects.0 width="452" %}
     {% else %}
-    {% include 'apparel/fragments/product_feed_452.html' with object=objects.0 width="452" %}
+        <ul class="group">
+            {% for object in objects %}
+                <li>{% include 'apparel/fragments/product_feed_226.html' with object=object width="226" %}</li>
+            {% endfor %}
+        </ul>
+        {% if total_objects > 4 %}
+            <a href="{{ users.0.get_absolute_url }}" class="btn btn-block btn-upper">{% blocktrans with count=remaining_objects %}+ {{ count }} more{% endblocktrans %}</a>
+        {% endif %}
     {% endif %}
 {% endblock %}
