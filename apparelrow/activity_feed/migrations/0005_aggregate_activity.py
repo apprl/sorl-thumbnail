@@ -3,6 +3,7 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from django.db.utils import IntegrityError
 
 from activity_feed.tasks import aggregate, trim_feed, get_feed_key
 
@@ -33,14 +34,17 @@ class Migration(DataMigration):
             profile = product.manufacturer.profile
             content_type = orm['contenttypes.ContentType'].objects.get(app_label='apparel',
                                                                        model='product')
-            activity = orm['activity_feed.Activity'].objects.create(user=profile,
-                                                                    verb='add_product',
-                                                                    content_type=content_type,
-                                                                    object_id=product.pk,
-                                                                    gender=product.gender,
-                                                                    created=product.date_published,
-                                                                    modified=product.date_published,
-                                                                    active=True)
+            try:
+                activity = orm['activity_feed.Activity'].objects.create(user=profile,
+                                                                        verb='add_product',
+                                                                        content_type=content_type,
+                                                                        object_id=product.pk,
+                                                                        gender=product.gender,
+                                                                        created=product.date_published,
+                                                                        modified=product.date_published,
+                                                                        active=True)
+            except IntegrityError:
+                pass
 
         for activity in orm['activity_feed.Activity'].objects.filter(modified__gte=since, active=True).order_by('modified'):
             aggregate(None, 'M', activity)
