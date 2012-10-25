@@ -20,6 +20,15 @@
         {% endfor %}
         </ul>
         <a class="btn btn-block btn-upper btn-rarrow" href="{% url popular-look-list %}">{% trans "Show all looks" %}</a>
+    </div>
+    <div id="content">
+        <h2>{% trans "Latest updates" %}</h2>
+        {% include 'activity_feed/feed.html' %}
+    </div>
+    <div class="sidebar last">
+        <h2>{% trans "Your friends are here!" %}</h2>
+        <div class="facebook-friends"></div>
+        <a class="btn btn-block btn-upper btn-rarrow" href="{% url user-list-popular %}">{% trans "Show all members" %}</a>
 
         <h2>{% trans "Popular brands" %}</h2>
         <ul class="suggested-friends group">
@@ -30,15 +39,6 @@
         {% endfor %}
         </ul>
         <a class="btn btn-block btn-upper btn-rarrow" href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Show all brands" %}</a>
-    </div>
-    <div id="content">
-        <h2>{% trans "Latest updates" %}</h2>
-        {% include 'activity_feed/feed.html' %}
-    </div>
-    <div class="sidebar last">
-        <h2>{% trans "Your friends are here!" %}</h2>
-        <div class="facebook-friends"></div>
-        <a class="btn btn-block btn-upper btn-rarrow" href="{% url user-list-popular %}">{% trans "Show all members" %}</a>
     </div>
 {% endblock body %}
 
