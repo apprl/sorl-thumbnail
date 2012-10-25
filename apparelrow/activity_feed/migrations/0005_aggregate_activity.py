@@ -11,6 +11,7 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         since = datetime.datetime.now() - datetime.timedelta(days=90)
+        since_less = datetime.datetime.now() - datetime.timedelta(days=60)
 
         orm['activity_feed.Activity'].objects.filter(verb='add_product').delete()
 
@@ -20,22 +21,21 @@ class Migration(DataMigration):
             activity.gender = obj.gender
             activity.save()
 
+        content_type = orm['contenttypes.ContentType'].objects.get(app_label='apparel',
+                                                                   model='product')
         for product in orm['apparel.Product'].objects.filter(published=True,
                                                              category__isnull=False,
                                                              manufacturer__isnull=False,
                                                              gender__isnull=False,
                                                              vendorproduct__isnull=False,
                                                              availability=True,
-                                                             date_published__gte=since) \
+                                                             date_published__gte=since_less) \
                                              .order_by('date_published'):
-            if not product.manufacturer:
+            if not product.manufacturer or not product.manufacturer.profile:
                 continue
 
-            profile = product.manufacturer.profile
-            content_type = orm['contenttypes.ContentType'].objects.get(app_label='apparel',
-                                                                       model='product')
             try:
-                activity = orm['activity_feed.Activity'].objects.create(user=profile,
+                activity = orm['activity_feed.Activity'].objects.create(user=product.manufacturer.profile,
                                                                         verb='add_product',
                                                                         content_type=content_type,
                                                                         object_id=product.pk,
@@ -49,7 +49,7 @@ class Migration(DataMigration):
         for activity in orm['activity_feed.Activity'].objects.filter(modified__gte=since, active=True).order_by('modified'):
             aggregate(None, 'M', activity)
             aggregate(None, 'W', activity)
-            aggregate(activity.user, 'M', activity)
+            aggregate(activity.user, 'M', activity_less)
             aggregate(activity.user, 'W', activity)
             for followers in orm['profile.Follow'].objects.filter(user_follow=activity.user, active=True).select_related('user'):
                 aggregate(followers.user, 'M', activity)

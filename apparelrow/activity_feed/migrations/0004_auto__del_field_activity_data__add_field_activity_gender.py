@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Deleting field 'Activity.data'
-        db.delete_column('activity_feed_activity', 'data')
+        #db.delete_column('activity_feed_activity', 'data')
 
         # Adding field 'Activity.gender'
         db.add_column('activity_feed_activity', 'gender',
@@ -19,9 +19,9 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         # Adding field 'Activity.data'
-        db.add_column('activity_feed_activity', 'data',
-                      self.gf('django.db.models.fields.TextField')(default=''),
-                      keep_default=False)
+        #db.add_column('activity_feed_activity', 'data',
+                      #self.gf('django.db.models.fields.TextField')(default=''),
+                      #keep_default=False)
 
         # Deleting field 'Activity.gender'
         db.delete_column('activity_feed_activity', 'gender')

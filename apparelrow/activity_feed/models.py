@@ -67,6 +67,7 @@ class Activity(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     activity_object = generic.GenericForeignKey('content_type', 'object_id')
+    data = models.TextField(default='')
     gender = models.CharField(max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
