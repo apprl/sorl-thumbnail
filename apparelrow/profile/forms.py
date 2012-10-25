@@ -23,14 +23,15 @@ class EmailForm(ModelForm):
 class NotificationForm(ModelForm):
     class Meta:
         model = ApparelProfile
-        fields = ('comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user')
+        fields = ('comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user', 'facebook_friends')
         widgets = {
             'comment_product_wardrobe': RadioSelect,
             'comment_product_comment': RadioSelect,
             'comment_look_created': RadioSelect,
             'comment_look_comment': RadioSelect,
             'like_look_created': RadioSelect,
-            'follow_user': RadioSelect
+            'follow_user': RadioSelect,
+            'facebook_friends': RadioSelect,
         }
 
 

@@ -3,6 +3,7 @@ from django.contrib.auth.backends import ModelBackend
 from django.template.defaultfilters import slugify
 import facebook
 
+from profile.notifications import process_facebook_friends
 from profile.signals import user_created_with_email
 
 FB_GENDER_MAP = { 'male': 'M', 'female': 'W' }
@@ -34,6 +35,8 @@ class FacebookProfileBackend(ModelBackend):
                     if me.get('email'):
                         user.email = me['email']
                     user.save()
+
+                    process_facebook_friends.delay(user, fb_graphtoken)
                     user_created_with_email.send(sender=User, user=user)
 
                     profile = user.get_profile()

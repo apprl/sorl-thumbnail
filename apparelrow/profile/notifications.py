@@ -11,9 +11,11 @@ from django.utils.html import strip_tags
 from django.utils.translation import get_language, activate
 from django.core.urlresolvers import reverse
 
+import facebook
+
 from celery.task import task
 
-from profile.models import NotificationCache, Follow
+from profile.models import NotificationCache, Follow, ApparelProfile
 
 def is_following(user_one, user_two):
     profile_one = user_one.get_profile()
@@ -305,8 +307,6 @@ def process_follow_user(recipient, sender, follow, **kwargs):
     if is_duplicate('follow_user', recipient, sender, None):
         return 'duplicate'
 
-    recipient_content_type = ContentType.objects.get_for_model(recipient)
-
     notify_user = None
     template_name = 'follow_user'
     if recipient.get_profile().follow_user == 'A':
@@ -325,3 +325,25 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         logger.error('No user to notify')
     elif not sender:
         logger.error('No sender')
+
+#
+# FACEBOOK FRIENDS
+#
+
+@task(name='profile.notifications.facebook_friends', max_retries=5, ignore_result=True)
+def process_facebook_friends(sender, graph_token, **kwargs):
+    """
+    Process notification for sender joining Apprl. Notifications will be sent
+    to all facebook friends currently on Apprl.
+    """
+    logger = process_facebook_friends.get_logger(**kwargs)
+    graph = facebook.GraphAPI(graph_token)
+    fids = [f['id'] for f in graph.get_connections('me', 'friends').get('data', [])]
+    for recipient in ApparelProfile.objects.filter(user__username__in=fids).select_related('user'):
+        if is_duplicate('facebook_friends', recipient.user, sender, None):
+            logger.info('duplicate %s' % (recipient.user,))
+            continue
+
+        if recipient.facebook_friends == 'A' and sender:
+            notify_by_mail([recipient.user], 'facebook_friends', sender)
+            get_key('facebook_friends', recipient.user, sender, None)

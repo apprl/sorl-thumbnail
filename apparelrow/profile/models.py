@@ -88,6 +88,8 @@ class ApparelProfile(models.Model):
             help_text=_('When someone likes a look that I have created'))
     follow_user = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone starts to follow me'))
+    facebook_friends = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
+            help_text=_('When a Facebook friend has joined Apprl'))
 
     first_visit = models.BooleanField(default=True, blank=False, null=False,
             help_text=_('Is this the first visit?'))
