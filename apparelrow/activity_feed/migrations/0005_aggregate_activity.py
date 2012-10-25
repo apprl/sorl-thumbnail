@@ -49,7 +49,7 @@ class Migration(DataMigration):
         for activity in orm['activity_feed.Activity'].objects.filter(modified__gte=since, active=True).order_by('modified'):
             aggregate(None, 'M', activity)
             aggregate(None, 'W', activity)
-            aggregate(activity.user, 'M', activity_less)
+            aggregate(activity.user, 'M', activity)
             aggregate(activity.user, 'W', activity)
             for followers in orm['profile.Follow'].objects.filter(user_follow=activity.user, active=True).select_related('user'):
                 aggregate(followers.user, 'M', activity)
