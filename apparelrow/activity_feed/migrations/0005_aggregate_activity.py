@@ -2,8 +2,10 @@
 import datetime
 from south.db import db
 from south.v2 import DataMigration
+from django.conf import settings
 from django.db import models
 from django.db.utils import IntegrityError
+import redis
 
 from activity_feed.tasks import aggregate, trim_feed, get_feed_key
 
@@ -46,14 +48,17 @@ class Migration(DataMigration):
             except IntegrityError:
                 pass
 
+        r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
+                              port=settings.CELERY_REDIS_PORT,
+                              db=settings.CELERY_REDIS_DB)
         for activity in orm['activity_feed.Activity'].objects.filter(modified__gte=since, active=True).order_by('modified'):
-            aggregate(None, 'M', activity)
-            aggregate(None, 'W', activity)
-            aggregate(activity.user, 'M', activity)
-            aggregate(activity.user, 'W', activity)
+            aggregate(r, None, 'M', activity)
+            aggregate(r, None, 'W', activity)
+            aggregate(r, activity.user, 'M', activity)
+            aggregate(r, activity.user, 'W', activity)
             for followers in orm['profile.Follow'].objects.filter(user_follow=activity.user, active=True).select_related('user'):
-                aggregate(followers.user, 'M', activity)
-                aggregate(followers.user, 'W', activity)
+                aggregate(r, followers.user, 'M', activity)
+                aggregate(r, followers.user, 'W', activity)
 
     def backwards(self, orm):
         orm['activity_feed.Activity'].objects.filter(verb='add_product').delete()

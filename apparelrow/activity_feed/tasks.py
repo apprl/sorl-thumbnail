@@ -4,6 +4,7 @@ import redis
 import json
 import time
 
+from django.conf import settings
 from django.utils import timezone
 from django.db.models.loading import get_model
 
@@ -29,9 +30,8 @@ def get_score(activity):
     return time.mktime(activity.modified.timetuple())
 
 
-def trim_feed(feed_key):
+def trim_feed(r, feed_key):
     keys = []
-    r = redis.StrictRedis(host='localhost', port=6380, db=0)
     with r.pipeline() as pipe:
         try:
             pipe.watch(feed_key)
@@ -45,9 +45,7 @@ def trim_feed(feed_key):
 
     return keys
 
-def remove_aggregate(user, gender, activity):
-    r = redis.StrictRedis(host='localhost', port=6380, db=0)
-
+def remove_aggregate(r, user, gender, activity):
     for item_json in r.zrevrangebyscore(get_feed_key(user, gender), '+inf', '-inf'):
         item = json.loads(item_json)
 
@@ -90,7 +88,7 @@ def remove_aggregate(user, gender, activity):
                 continue
 
 
-def aggregate(user, gender, activity):
+def aggregate(r, user, gender, activity):
     """
     Aggregate activity for user.
 
@@ -99,7 +97,6 @@ def aggregate(user, gender, activity):
     ct stands for content type
     v stands for verb
     """
-    r = redis.StrictRedis(host='localhost', port=6380, db=0)
     six_hours = time.mktime((activity.modified - datetime.timedelta(hours=6)).timetuple())
 
     # Special rule 1: if user is equal to activity.user this means that this is
@@ -184,47 +181,56 @@ def aggregate(user, gender, activity):
             r.zadd(feed_key, get_score(activity), activity_json)
 
     # Trim feed to 100 activity posts
-    trim_feed(feed_key)
+    trim_feed(r, feed_key)
 
 
 @task(name='activity_feed.tasks.push_activity_feed', max_retries=5, ignore_result=True)
 def push_activity_feed(activity):
+    r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
+                          port=settings.CELERY_REDIS_PORT,
+                          db=settings.CELERY_REDIS_DB)
     for followers in get_model('profile', 'follow').objects.followers(activity.user):
-        aggregate(followers, 'M', activity)
-        aggregate(followers, 'W', activity)
+        aggregate(r, followers, 'M', activity)
+        aggregate(r, followers, 'W', activity)
 
-    aggregate(None, 'M', activity)
-    aggregate(None, 'W', activity)
+    aggregate(r, None, 'M', activity)
+    aggregate(r, None, 'W', activity)
 
-    aggregate(activity.user, 'M', activity)
-    aggregate(activity.user, 'W', activity)
+    aggregate(r, activity.user, 'M', activity)
+    aggregate(r, activity.user, 'W', activity)
 
 
 @task(name='activity_feed.tasks.pull_activity_feed', max_retries=5, ignore_result=True)
 def pull_activity_feed(activity):
+    r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
+                          port=settings.CELERY_REDIS_PORT,
+                          db=settings.CELERY_REDIS_DB)
     for followers in get_model('profile', 'follow').objects.followers(activity.user):
-        remove_aggregate(followers, 'M', activity)
-        remove_aggregate(followers, 'W', activity)
+        remove_aggregate(r, followers, 'M', activity)
+        remove_aggregate(r, followers, 'W', activity)
 
-    remove_aggregate(None, 'M', activity)
-    remove_aggregate(None, 'W', activity)
+    remove_aggregate(r, None, 'M', activity)
+    remove_aggregate(r, None, 'W', activity)
 
-    remove_aggregate(activity.user, 'M', activity)
-    remove_aggregate(activity.user, 'W', activity)
+    remove_aggregate(r, activity.user, 'M', activity)
+    remove_aggregate(r, activity.user, 'W', activity)
 
 
 @task(name='activity_feed.tasks.update_activity_feed', max_retries=5, ignore_result=True)
 def update_activity_feed(profile, followee, add=True):
+    r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
+                          port=settings.CELERY_REDIS_PORT,
+                          db=settings.CELERY_REDIS_DB)
     Activity = get_model('activity_feed', 'activity')
     if add:
         since = datetime.datetime.now() - datetime.timedelta(days=30)
         for activity in Activity.objects.filter(user=followee,
                                                 modified__gte=since,
                                                 active=True):
-            aggregate(profile, 'M', activity)
-            aggregate(profile, 'W', activity)
+            aggregate(r, profile, 'M', activity)
+            aggregate(r, profile, 'W', activity)
     else:
         for activity in Activity.objects.filter(user=followee,
                                                 active=True):
-            remove_aggregate(profile, 'M', activity)
-            remove_aggregate(profile, 'W', activity)
+            remove_aggregate(r, profile, 'M', activity)
+            remove_aggregate(r, profile, 'W', activity)
