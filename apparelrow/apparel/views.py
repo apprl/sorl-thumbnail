@@ -216,7 +216,12 @@ def product_detail(request, slug):
     likes = product.likes.filter(active=True).order_by('-modified').select_related('user', 'user__profile')
 
     # Full image url
-    product_full_image = request.build_absolute_uri(get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
+    try:
+        product_full_image = request.build_absolute_uri(get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
+    except IOError:
+        logging.error('Product id %s does not have a valid image on disk' % (product.pk,))
+        raise Http404
+
     # Full brand url
     product_brand_full_url = ''
     if product.manufacturer and product.manufacturer.profile:
