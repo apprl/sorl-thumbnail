@@ -70,6 +70,7 @@
         {% endif %}
         {% if profile.about %}<p class="description">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
         <ul class="profile-info-sidebar group">
+            {% with likes_url=profile.url_likes looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
             {% if profile.is_brand %}
             <li class="left"><a href="{{ likes_url }}">{% blocktrans count products as prod %}{{prod}} product{% plural %}{{prod}} products{% endblocktrans %}</a></li>
             {% else %}
@@ -78,6 +79,7 @@
             <li class="right"><a href="{{ looks_url }}">{% blocktrans count profile.looks as look_count %}Created {{look_count}} look{% plural %}Created {{look_count}} looks{% endblocktrans %}</a></li>
             <li class="left"><a href="{{ followers_url }}">{% trans "Followed by" %} {{ profile.followers_count }}</a></li>
             <li class="right"><a href="{{ following_url }}">{% trans "Following" %} {{ following }}</a></li>
+            {% endwith %}
         </ul>
     </div>
     {% block extended_content %}
