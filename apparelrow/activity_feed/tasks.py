@@ -32,17 +32,16 @@ def get_score(activity):
 def trim_feed(feed_key):
     keys = []
     r = redis.StrictRedis(host='localhost', port=6380, db=0)
-    try:
-        r.watch(feed_key)
-        keys = r.zrevrange(feed_key, HARD_MAX, -1)
-        pipe = r.pipeline()
-        for key in keys:
-            pipe.zrem(feed_key, key)
-        pipe.execute()
-    except redis.exceptions.WatchError:
-        pass
-    finally:
-        r.unwatch()
+    with r.pipeline() as pipe:
+        try:
+            pipe.watch(feed_key)
+            keys = pipe.zrevrange(feed_key, HARD_MAX, -1)
+            pipe.multi()
+            for key in keys:
+                pipe.zrem(feed_key, key)
+            pipe.execute()
+        except redis.exceptions.WatchError:
+            pass
 
     return keys
 
