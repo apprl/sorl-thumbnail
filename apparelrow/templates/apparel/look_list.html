@@ -6,7 +6,7 @@
 {% block body-header %}
 <div id="body-header">
     <div class="column_one">
-        <h1 class="max-width">{% trans "Looks" %}</h1>
+        <h1 class="max-width">{% if APPAREL_GENDER == 'M' %}{% trans "Looks Men" %}{% else %}{% trans "Looks Women" %}{% endif %}</h1>
     </div>
     <div class="column_two">
         <ul>
