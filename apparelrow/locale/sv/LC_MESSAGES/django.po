@@ -1024,7 +1024,7 @@ msgstr ""
 #: templates/activity_feed/verbs/like_product.html:9
 #, python-format
 msgid "likes %(count)s products"
-msgstr "gillar %(count)s produkt"
+msgstr "gillar %(count)s produkter"
 
 #: templates/activity_feed/verbs/like_product.html:11
 #, python-format
