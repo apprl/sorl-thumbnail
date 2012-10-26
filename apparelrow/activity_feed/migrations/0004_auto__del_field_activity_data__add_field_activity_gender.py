@@ -8,9 +8,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Deleting field 'Activity.data'
-        #db.delete_column('activity_feed_activity', 'data')
-
         # Adding field 'Activity.gender'
         db.add_column('activity_feed_activity', 'gender',
                       self.gf('django.db.models.fields.CharField')(default=None, max_length=1, null=True, blank=True),
@@ -18,11 +15,6 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Adding field 'Activity.data'
-        #db.add_column('activity_feed_activity', 'data',
-                      #self.gf('django.db.models.fields.TextField')(default=''),
-                      #keep_default=False)
-
         # Deleting field 'Activity.gender'
         db.delete_column('activity_feed_activity', 'gender')
 
@@ -33,6 +25,7 @@ class Migration(SchemaMigration):
             'active': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'db_index': 'True'}),
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'data': ('django.db.models.fields.TextField', [], {'default': "''"}),
             'gender': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),

@@ -5,6 +5,7 @@ from south.v2 import DataMigration
 from django.conf import settings
 from django.db import models
 from django.db.utils import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 import redis
 
 from activity_feed.tasks import aggregate, trim_feed, get_feed_key
@@ -33,19 +34,23 @@ class Migration(DataMigration):
                                                              availability=True,
                                                              date_published__gte=since_less) \
                                              .order_by('date_published'):
-            if not product.manufacturer or not product.manufacturer.profile:
+
+            try:
+                profile = orm['profile.ApparelProfile'].objects.get(brand_id=product.manufacturer_id)
+            except ObjectDoesNotExist:
                 continue
 
             try:
-                activity = orm['activity_feed.Activity'].objects.create(user=product.manufacturer.profile,
+                activity = orm['activity_feed.Activity'].objects.create(user=profile,
                                                                         verb='add_product',
                                                                         content_type=content_type,
                                                                         object_id=product.pk,
                                                                         gender=product.gender,
                                                                         created=product.date_published,
                                                                         modified=product.date_published,
-                                                                        active=True)
-            except IntegrityError:
+                                                                        active=True,
+                                                                        data='')
+            except IntegrityError, e:
                 pass
 
         r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
@@ -71,6 +76,7 @@ class Migration(DataMigration):
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '1', 'null': 'True', 'blank': 'True'}),
+            'data': ('django.db.models.fields.TextField', [], {'default': "''"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
