@@ -109,7 +109,11 @@ def aggregate(r, user, gender, activity):
     if user is None and activity.gender is not None and gender != activity.gender:
         return
 
-    # Special rule 3: if user feed and activity is add product and activity
+    # Special rule 3: if public feed and verb is add_product, do not add to public feed
+    if user is None and activity.verb == 'add_product':
+        return
+
+    # Special rule 4: if user feed and activity is add product and activity
     # gender does not match gender do not add to feed
     if user is not None and activity.verb == 'add_product' and activity.gender is not None and gender != activity.gender:
         return
@@ -138,7 +142,7 @@ def aggregate(r, user, gender, activity):
                    activity.user.pk in item['u'] and \
                    activity.pk not in item['a']:
 
-                    # Special rule 4: do not aggregate objects for like_look and create
+                    # Special rule 5: do not aggregate objects for like_look and create
                     if activity.verb == 'like_look' or activity.verb == 'create':
                         continue
 

@@ -44,7 +44,7 @@ class ActivityManager(models.Manager):
             activity.active = False
             activity.save()
             pull_activity_feed.delay(activity)
-        except self.DoesNotExist:
+        except Activity.DoesNotExist:
             pass
 
     def get_for_user(self, user):

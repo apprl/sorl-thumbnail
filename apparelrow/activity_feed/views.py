@@ -53,6 +53,10 @@ class ActivityFeedRender:
             activities = Activity.objects.filter(pk__in=activity_ids[:4]) \
                                                   .prefetch_related('activity_object') \
                                                   .order_by('-modified')
+
+            if not activities:
+                continue
+
             context['created'] = False
             for activity in activities:
                 if context['created'] == False:
