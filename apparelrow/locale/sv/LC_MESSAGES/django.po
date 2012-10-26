@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-25 17:37+0200\n"
+"POT-Creation-Date: 2012-10-26 10:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,13 +34,13 @@ msgstr ""
 msgid "Swe (SEK)"
 msgstr ""
 
-#: activity_feed/models.py:71 activity_feed/models.py:120
+#: activity_feed/models.py:72 activity_feed/models.py:121
 #: apparel/models.py:341 apparel/models.py:605 apparel/models.py:811
 #: beta/models.py:7 beta/models.py:15 profile/models.py:343
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: activity_feed/models.py:72 apparel/models.py:202 apparel/models.py:342
+#: activity_feed/models.py:73 apparel/models.py:202 apparel/models.py:342
 #: apparel/models.py:384 apparel/models.py:440 apparel/models.py:606
 #: apparel/models.py:812 profile/models.py:344
 msgid "Time modified"
@@ -2167,10 +2167,10 @@ msgstr "Följs av %(follower_count)s"
 msgid "Hi %(recipient_first_name)s!"
 msgstr "Hej %(recipient_first_name)s!"
 
-#: templates/profile/notifications/email_base.html:7
+#: templates/profile/notifications/email_base.html:9
 #, python-format
 msgid ""
-"If you do not want to receive these messages, go to <a href=\"http://"
+"If you wish to change your e-mail preferences go to <a href=\"http://"
 "%(domain)s/profile/settings/\">your settings</a>."
 msgstr ""
 "Om du inte vill ha såna här meddelanden, gå till <a href=\"http://%(domain)s/"
@@ -2200,12 +2200,11 @@ msgstr " som du har gillat:"
 #, python-format
 msgid ""
 "Your Facebook friend <a href=\"%(sender_link)s\">%(sender_first_name)s "
-"%(sender_last_name)s</a> has just joined Apprl - *Follow "
-"%(sender_first_name)s <a href=\"%(sender_link)s\">here</a>*!"
+"%(sender_last_name)s</a> has just joined Apprl - <a href=\"%(sender_link)s"
+"\">Follow %(sender_first_name)s here</a>!"
 msgstr ""
 "<a href=\"%(sender_link)s\">%(sender_first_name)s %(sender_last_name)s</a> "
-"finns nu på Apprl - *Följ %(sender_first_name)s <a href=\"%(sender_link)s"
-"\">här</a> här*!"
+"finns nu på Apprl - <a href=\"%(sender_link)s\">Följ %(sender_first_name)s här</a>!"
 
 #: templates/profile/notifications/email_follow_user.html:2
 #: templates/profile/notifications/email_follow_user_following.html:2

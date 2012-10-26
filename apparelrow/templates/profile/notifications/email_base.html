@@ -4,7 +4,8 @@
     <body>
         <p>{% blocktrans %}Hi {{ recipient_first_name }}!{% endblocktrans %}</p>
         {% block content %}{% endblock %}
-        <p>{% blocktrans %}If you do not want to receive these messages, go to <a href="http://{{ domain }}/profile/settings/">your settings</a>.{% endblocktrans %}</p>
         <p>/The Apprl team</p>
+        <p>------------------------------------------------------------------<br>
+        {% blocktrans %}If you wish to change your e-mail preferences go to <a href="http://{{ domain }}/profile/settings/">your settings</a>.{% endblocktrans %}</p>
     </body>
 </html>
