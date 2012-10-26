@@ -51,8 +51,8 @@ class ActivityFeedRender:
 
             activity_ids = result.get('a', [])[::-1]
             activities = Activity.objects.filter(pk__in=activity_ids[:4]) \
-                                                  .prefetch_related('activity_object') \
-                                                  .order_by('-modified')
+                                         .prefetch_related('activity_object') \
+                                         .order_by('-modified')
 
             if not activities:
                 continue
@@ -61,12 +61,16 @@ class ActivityFeedRender:
             for activity in activities:
                 if context['created'] == False:
                     context['created'] = activity.modified
-                context['objects'].append(activity.activity_object)
+                if activity.activity_object:
+                    context['objects'].append(activity.activity_object)
 
             context['users'] = ApparelProfile.objects.filter(pk__in=result.get('u', [])) \
                                                      .select_related('user')
             context['total_objects'] = len(activity_ids)
             context['remaining_objects'] = len(activity_ids) - len(activity_ids[:4])
+
+            if len(context['objects']) < 1:
+                continue
 
             # Comments
             if context['total_objects'] == 1:
