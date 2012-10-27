@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-27 20:12+0200\n"
+"POT-Creation-Date: 2012-10-27 20:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -940,7 +940,6 @@ msgid "Popular members"
 msgstr "Populära medlemmar"
 
 #: templates/activity_feed/public_feed.html:37
-#: templates/activity_feed/user_feed.html:31
 msgid "Show all members"
 msgstr "Visa alla medlemmar"
 
@@ -958,6 +957,10 @@ msgstr "Visa alla varumärken"
 #: templates/apparel/user_list.html:47
 msgid "Follow your friends!"
 msgstr "Följ dina vänner!"
+
+#: templates/activity_feed/user_feed.html:31
+msgid "+ Invite your friends"
+msgstr "+ Bjud in vänner"
 
 #: templates/activity_feed/verbs/add_product.html:5
 #: templates/activity_feed/verbs/create.html:5
