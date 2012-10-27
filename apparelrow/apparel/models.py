@@ -326,15 +326,6 @@ class Product(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=Product)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Product)
 
-@receiver(post_save, sender=Product, dispatch_uid='apparel.models.product_post_save')
-def product_post_save(sender, instance, created, **kwargs):
-    if not instance.manufacturer or not instance.manufacturer.profile:
-        return
-
-    if instance.date_published and instance.published:
-        get_model('activity_feed', 'activity').objects.push_activity(instance.manufacturer.profile, 'add_product', instance, instance.gender)
-    else:
-        get_model('activity_feed', 'activity').objects.pull_activity(instance.manufacturer.profile, 'add_product', instance)
 
 #
 # ProductLike
