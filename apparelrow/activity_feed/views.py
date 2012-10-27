@@ -34,12 +34,23 @@ class ActivityFeedRender:
         self.r = redis.StrictRedis(host='localhost', port=6380, db=0)
 
     def __len__(self):
-        return int(self.r.zcount(get_feed_key(self.user, self.gender, self.private), '-inf', '+inf'))
+        item_count = 0
+        try:
+            return int(self.r.zcount(get_feed_key(self.user, self.gender, self.private), '-inf', '+inf'))
+        except redis.exceptions.ConnectionError:
+            return 0
+
+        return item_count
 
     def __getitem__(self, k):
         rendered_templates = []
 
-        for result in self.r.zrevrange(get_feed_key(self.user, self.gender, self.private), k.start, k.stop - 1):
+        try:
+            results = self.r.zrevrange(get_feed_key(self.user, self.gender, self.private), k.start, k.stop - 1)
+        except redis.exceptions.ConnectionError:
+            return rendered_templates
+
+        for result in results:
             result = json.loads(result)
 
             context = {'user': self.request.user, 'current_user': self.request.user,
