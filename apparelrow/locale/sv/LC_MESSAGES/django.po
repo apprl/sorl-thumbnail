@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-27 20:18+0200\n"
+"POT-Creation-Date: 2012-10-27 20:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -511,8 +511,8 @@ msgstr "När du följer någon"
 msgid "When you create a look"
 msgstr "När du skapar en look"
 
-#: profile/models.py:28 templates/apparel/user_list.html:35
-#: templates/apparel/user_list.html:39
+#: profile/models.py:28 templates/apparel/user_list.html:38
+#: templates/apparel/user_list.html:42
 #: templates/apparel/fragments/product_menu_browse.html:12
 msgid "All"
 msgstr "Alla"
@@ -631,7 +631,7 @@ msgid "Search for products"
 msgstr "Sök efter produkter"
 
 #: templates/base.html:121 templates/profile/base_login_flow.html:16
-#: templates/profile/base_profile.html:61
+#: templates/profile/base_profile.html:64
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -672,7 +672,8 @@ msgstr "Varumärken"
 msgid "+ Invite friends"
 msgstr "+ Bjud in vänner"
 
-#: templates/base.html:146
+#: templates/base.html:146 templates/apparel/look_detail.html:60
+#: templates/apparel/look_list.html:18 templates/profile/base_profile.html:51
 msgid "+ Create look"
 msgstr "+ Skapa look"
 
@@ -954,11 +955,12 @@ msgid "Show all brands"
 msgstr "Visa alla varumärken"
 
 #: templates/activity_feed/user_feed.html:29
-#: templates/apparel/user_list.html:47
+#: templates/apparel/user_list.html:50
 msgid "Follow your friends!"
 msgstr "Följ dina vänner!"
 
 #: templates/activity_feed/user_feed.html:31
+#: templates/apparel/user_list.html:19
 msgid "+ Invite your friends"
 msgstr "+ Bjud in vänner"
 
@@ -1013,7 +1015,7 @@ msgstr "följer nu"
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
 #: templates/profile/base_profile.html:46
-#: templates/profile/base_profile.html:81
+#: templates/profile/base_profile.html:84
 msgid "Following"
 msgstr "Följer"
 
@@ -1171,7 +1173,6 @@ msgstr "Skapa en ny look"
 #: templates/apparel/look_create_dialog.html:6
 #: templates/apparel/look_create_unauthenticated.html:5
 #: templates/apparel/look_create_unauthenticated.html:11
-#: templates/apparel/look_detail.html:60 templates/apparel/look_list.html:18
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
 msgstr "Skapa en look"
@@ -1368,19 +1369,19 @@ msgstr "Ingen produkt hittad!"
 msgid "In alphabetical order"
 msgstr "I bokstavsordning"
 
-#: templates/apparel/user_list.html:23
+#: templates/apparel/user_list.html:26
 msgid "Latest members"
 msgstr "Senaste medlemmar"
 
-#: templates/apparel/user_list.html:36 templates/apparel/user_list.html:40
+#: templates/apparel/user_list.html:39 templates/apparel/user_list.html:43
 msgid "Females"
 msgstr "Tjejer"
 
-#: templates/apparel/user_list.html:37 templates/apparel/user_list.html:41
+#: templates/apparel/user_list.html:40 templates/apparel/user_list.html:44
 msgid "Males"
 msgstr "Killar"
 
-#: templates/apparel/user_list.html:49
+#: templates/apparel/user_list.html:52
 msgid "Connect with your Facebook account to find your friends."
 msgstr "Logga in med ditt Facebookkonto för att hitta dina vänner."
 
@@ -1887,7 +1888,7 @@ msgid "Trademark Policy"
 msgstr ""
 
 #: templates/profile/base_login_flow.html:15
-#: templates/profile/base_profile.html:60
+#: templates/profile/base_profile.html:63
 #: templates/profile/fragments/change_image_form.html:13
 msgid "Change picture"
 msgstr "Ändra bild"
@@ -1918,25 +1919,25 @@ msgstr "Uppdateringar"
 msgid "Followers"
 msgstr "Följs av"
 
-#: templates/profile/base_profile.html:69
+#: templates/profile/base_profile.html:72
 msgid "Filter products"
 msgstr "Filtrera produkter"
 
-#: templates/profile/base_profile.html:75
+#: templates/profile/base_profile.html:78
 #, python-format
 msgid "%(prod)s product"
 msgid_plural "%(prod)s products"
 msgstr[0] "%(prod)s produkt"
 msgstr[1] "%(prod)s produkter"
 
-#: templates/profile/base_profile.html:77
+#: templates/profile/base_profile.html:80
 #, python-format
 msgid "Likes %(prod)s product"
 msgid_plural "Likes %(prod)s products"
 msgstr[0] "Gillar %(prod)s produkt"
 msgstr[1] "Gillar %(prod)s produkter"
 
-#: templates/profile/base_profile.html:79
+#: templates/profile/base_profile.html:82
 #: templates/profile/fragments/follow_profile.html:17
 #, python-format
 msgid "Created %(look_count)s look"
@@ -1944,11 +1945,11 @@ msgid_plural "Created %(look_count)s looks"
 msgstr[0] "Skapat %(look_count)s look"
 msgstr[1] "Skapat %(look_count)s looks"
 
-#: templates/profile/base_profile.html:80
+#: templates/profile/base_profile.html:83
 msgid "Followed by"
 msgstr "Följs av"
 
-#: templates/profile/base_profile.html:94
+#: templates/profile/base_profile.html:97
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr "%(name)ss senaste looks"
@@ -2087,8 +2088,8 @@ msgid "All looks that you create end up here."
 msgstr "Här visas alla looks du skapar."
 
 #: templates/profile/looks.html:43
-msgid "Create a look!"
-msgstr "Skapa en look!"
+msgid "+ Create look!"
+msgstr "+ Skapa look!"
 
 #: templates/profile/looks.html:46
 #, python-format
@@ -2503,6 +2504,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Create a look!"
+#~ msgstr "Skapa en look!"
 
 #~ msgid "Your friends are here!"
 #~ msgstr "Dina vänner är här!"
