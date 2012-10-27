@@ -29,6 +29,7 @@ urlpatterns = patterns('',
 
     (r'^comments/', include('django.contrib.comments.urls')),
     (r'^ping/', include('trackback.urls')),
+    (r'^i18n/setlang/$', 'apparel.views.apparel_set_language'), # override builtin set_language
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^admin/', include(admin.site.urls)),
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),

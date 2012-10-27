@@ -22,6 +22,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from apparel.manager import ProductManager, SearchManager
 from apparel.cache import invalidate_model_handler
+from apparel.utils import currency_exchange_locale
 
 from cStringIO import StringIO
 from PIL import Image
@@ -486,37 +487,13 @@ class VendorProduct(models.Model):
         Return price and currency based on the locale from get_language.
         """
         if not hasattr(self, '_calculated_locale_price'):
-            locale = get_language()
-            if locale not in settings.LANGUAGE_TO_CURRENCY:
-                return self.original_currency
-
-            from_currency = self.original_currency
-            to_currency = settings.LANGUAGE_TO_CURRENCY.get(locale, settings.APPAREL_BASE_CURRENCY)
-
-            if from_currency == to_currency:
-                return self.original_price, self.original_discount_price, to_currency
-
-            rates = cache.get(settings.APPAREL_RATES_CACHE_KEY)
-            if not rates:
-                fxrate_model = get_model('importer', 'FXRate')
-                rates = {}
-                for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY):
-                    rates[rate_obj.currency] = rate_obj.rate
-
-                if rates:
-                    cache.set(settings.APPAREL_RATES_CACHE_KEY, rates, 60*60)
-
-            rate = rates[to_currency] * (1 / rates[from_currency])
-            if from_currency == settings.APPAREL_BASE_CURRENCY:
-                rate = rates[to_currency]
-            elif to_currency == settings.APPAREL_BASE_CURRENCY:
-                rate = 1 / rates[from_currency]
+            rate, currency = currency_exchange_locale(get_language(), self.original_currency)
 
             discount_price = self.original_discount_price
             if discount_price:
                 discount_price = rate * self.original_discount_price
 
-            self._calculated_locale_price = (rate * self.original_price, discount_price, to_currency)
+            self._calculated_locale_price = (rate * self.original_price, discount_price, currency)
 
         return self._calculated_locale_price
 

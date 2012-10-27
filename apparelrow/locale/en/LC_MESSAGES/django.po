@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-26 10:33+0200\n"
+"POT-Creation-Date: 2012-10-27 20:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,14 +34,14 @@ msgid "Swe (SEK)"
 msgstr ""
 
 #: activity_feed/models.py:72 activity_feed/models.py:121
-#: apparel/models.py:341 apparel/models.py:605 apparel/models.py:811
-#: beta/models.py:7 beta/models.py:15 profile/models.py:343
+#: apparel/models.py:341 apparel/models.py:581 apparel/models.py:787
+#: beta/models.py:7 beta/models.py:15 profile/models.py:346
 msgid "Time created"
 msgstr ""
 
-#: activity_feed/models.py:73 apparel/models.py:202 apparel/models.py:342
-#: apparel/models.py:384 apparel/models.py:440 apparel/models.py:606
-#: apparel/models.py:812 profile/models.py:344
+#: activity_feed/models.py:73 apparel/models.py:203 apparel/models.py:342
+#: apparel/models.py:384 apparel/models.py:440 apparel/models.py:582
+#: apparel/models.py:788 profile/models.py:347
 msgid "Time modified"
 msgstr ""
 
@@ -70,99 +70,99 @@ msgstr ""
 msgid "You have to name your look before your create it."
 msgstr ""
 
-#: apparel/models.py:58
+#: apparel/models.py:59
 msgid "Products can only be displayed for an active manufactorer"
 msgstr ""
 
-#: apparel/models.py:59 apparel/models.py:137
+#: apparel/models.py:60 apparel/models.py:138
 msgid "Logotype"
 msgstr ""
 
-#: apparel/models.py:60 apparel/models.py:136
+#: apparel/models.py:61 apparel/models.py:137
 msgid "Home page"
 msgstr ""
 
-#: apparel/models.py:65
+#: apparel/models.py:66
 msgid "Last update"
 msgstr ""
 
-#: apparel/models.py:110
+#: apparel/models.py:111
 msgid "Option Type"
 msgstr ""
 
-#: apparel/models.py:111
+#: apparel/models.py:112
 msgid "Option Types"
 msgstr ""
 
-#: apparel/models.py:114
+#: apparel/models.py:115
 msgid "Option value"
 msgstr ""
 
-#: apparel/models.py:123
+#: apparel/models.py:124
 msgid "Option Item"
 msgstr ""
 
-#: apparel/models.py:124
+#: apparel/models.py:125
 msgid "Option Items"
 msgstr ""
 
-#: apparel/models.py:158
+#: apparel/models.py:159
 msgid "Only active categories are visible and searchable on the website"
 msgstr ""
 
-#: apparel/models.py:159
+#: apparel/models.py:160
 msgid "Option types"
 msgstr ""
 
-#: apparel/models.py:160
+#: apparel/models.py:161
 msgid "The category is visible on the front page"
 msgstr ""
 
-#: apparel/models.py:194
+#: apparel/models.py:195
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:195 apparel/models.py:599
+#: apparel/models.py:196 apparel/models.py:575
 msgid "Slug Name"
 msgstr ""
 
-#: apparel/models.py:196 apparel/models.py:600
+#: apparel/models.py:197 apparel/models.py:576
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr ""
 
-#: apparel/models.py:197
+#: apparel/models.py:198
 msgid "Stock Keeping Unit"
 msgstr ""
 
-#: apparel/models.py:198
+#: apparel/models.py:199
 msgid "Has to be unique with the static_brand"
 msgstr ""
 
-#: apparel/models.py:200
+#: apparel/models.py:201
 msgid "Time added"
 msgstr ""
 
-#: apparel/models.py:201
+#: apparel/models.py:202
 msgid "Time published"
 msgstr ""
 
-#: apparel/models.py:203
+#: apparel/models.py:204
 msgid "Product description"
 msgstr ""
 
-#: apparel/models.py:204
+#: apparel/models.py:205
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:207 apparel/models.py:609 profile/models.py:55
+#: apparel/models.py:208 apparel/models.py:585 profile/models.py:55
 msgid "Gender"
 msgstr ""
 
-#: apparel/models.py:208
+#: apparel/models.py:209
 msgid "Feed gender"
 msgstr ""
 
-#: apparel/models.py:211 apparel/models.py:573
+#: apparel/models.py:212 apparel/models.py:549
 msgid "In stock"
 msgstr ""
 
@@ -231,74 +231,74 @@ msgstr ""
 msgid "Original discount currency"
 msgstr ""
 
-#: apparel/models.py:483 apparel/models.py:564
+#: apparel/models.py:483 apparel/models.py:540
 msgid "Items in stock"
 msgstr ""
 
-#: apparel/models.py:483 apparel/models.py:564
+#: apparel/models.py:483 apparel/models.py:540
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:569
+#: apparel/models.py:545
 msgid "No information available"
 msgstr ""
 
-#: apparel/models.py:571
+#: apparel/models.py:547
 msgid "Out of stock"
 msgstr ""
 
-#: apparel/models.py:575
+#: apparel/models.py:551
 msgid "items in stock"
 msgstr ""
 
-#: apparel/models.py:598
+#: apparel/models.py:574
 msgid "Title"
 msgstr ""
 
-#: apparel/models.py:601
+#: apparel/models.py:577
 msgid "Look description"
 msgstr ""
 
-#: apparel/models.py:608
+#: apparel/models.py:584
 msgid "What compontent to show"
 msgstr ""
 
-#: apparel/models.py:856
+#: apparel/models.py:832
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:857
+#: apparel/models.py:833
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:858
+#: apparel/models.py:834
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:859
+#: apparel/models.py:835
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:860
+#: apparel/models.py:836
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:861
+#: apparel/models.py:837
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:935
+#: apparel/models.py:911
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:970
+#: apparel/models.py:946
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:970
+#: apparel/models.py:946
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -483,19 +483,23 @@ msgid ""
 "inspiration."
 msgstr ""
 
-#: profile/forms.py:46
-msgid "When you ♥ a product"
+#: profile/forms.py:40
+msgid "I want to receive sale alerts on items that I ♥."
 msgstr ""
 
 #: profile/forms.py:47
-msgid "When you ♥ a look"
+msgid "When you ♥ a product"
 msgstr ""
 
 #: profile/forms.py:48
-msgid "When you follow someone"
+msgid "When you ♥ a look"
 msgstr ""
 
 #: profile/forms.py:49
+msgid "When you follow someone"
+msgstr ""
+
+#: profile/forms.py:50
 msgid "When you create a look"
 msgstr ""
 
@@ -537,39 +541,43 @@ msgstr ""
 msgid "Participating in newsletter"
 msgstr ""
 
-#: profile/models.py:80
+#: profile/models.py:69
+msgid "Receiving sale alerts"
+msgstr ""
+
+#: profile/models.py:83
 msgid "When someone commented on a product that I have liked"
 msgstr ""
 
-#: profile/models.py:82
+#: profile/models.py:85
 msgid "When someone commented on a product that I have commented on"
 msgstr ""
 
-#: profile/models.py:84
+#: profile/models.py:87
 msgid "When someone commented on a look that I have created"
 msgstr ""
 
-#: profile/models.py:86
+#: profile/models.py:89
 msgid "When someone commented on a look that I have commented on"
 msgstr ""
 
-#: profile/models.py:88
+#: profile/models.py:91
 msgid "When someone likes a look that I have created"
 msgstr ""
 
-#: profile/models.py:90
+#: profile/models.py:93
 msgid "When someone starts to follow me"
 msgstr ""
 
-#: profile/models.py:92
+#: profile/models.py:95
 msgid "When a Facebook friend has joined Apprl"
 msgstr ""
 
-#: profile/models.py:95
+#: profile/models.py:98
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:304
+#: profile/models.py:307
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr ""
@@ -2082,6 +2090,13 @@ msgid ""
 "\">Follow %(sender_first_name)s here</a>!"
 msgstr ""
 
+#: templates/profile/notifications/email_first_sale_alert.html:2
+#, python-format
+msgid ""
+"<a href=\"%(object_link)s\">%(brand_name)s %(product_name)s</a> that you "
+"have ♥ is reduced from %(original_price)s to %(discount_price)s."
+msgstr ""
+
 #: templates/profile/notifications/email_follow_user.html:2
 #: templates/profile/notifications/email_follow_user_following.html:2
 msgid " now follow your updates on Apprl."
@@ -2107,6 +2122,13 @@ msgstr ""
 
 #: templates/profile/notifications/email_like_look_created.html:2
 msgid " likes your look "
+msgstr ""
+
+#: templates/profile/notifications/email_second_sale_alert.html:2
+#, python-format
+msgid ""
+"<a href=\"%(object_link)s\">%(brand_name)s %(product_name)s</a> that you "
+"have ♥ is now reduced from %(original_price)s to %(discount_price)s."
 msgstr ""
 
 #: templates/profile/notifications/subject_comment_look_comment.html:1
@@ -2142,6 +2164,11 @@ msgstr ""
 msgid "%(sender_first_name)s %(sender_last_name)s is now on Apprl!"
 msgstr ""
 
+#: templates/profile/notifications/subject_first_sale_alert.html:1
+#, python-format
+msgid "A %(brand_name)s product that you ♥ is on sale"
+msgstr ""
+
 #: templates/profile/notifications/subject_follow_user.html:1
 #: templates/profile/notifications/subject_follow_user_following.html:1
 #, python-format
@@ -2152,6 +2179,11 @@ msgstr ""
 #, python-format
 msgid ""
 "%(sender_first_name)s %(sender_last_name)s likes your look %(object_title)s"
+msgstr ""
+
+#: templates/profile/notifications/subject_second_sale_alert.html:1
+#, python-format
+msgid "%(brand_name)s %(product_name)s has been further reduced"
 msgstr ""
 
 #: templates/registration/activate.html:8

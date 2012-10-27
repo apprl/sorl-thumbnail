@@ -65,6 +65,9 @@ class ApparelProfile(models.Model):
     # newsletter settings
     newsletter = models.BooleanField(default=True, blank=False, null=False, help_text=_('Participating in newsletter'))
 
+    # discount notification setting
+    discount_notification = models.BooleanField(default=True, blank=False, null=False, help_text=_('Receiving sale alerts'))
+
     # share settings
     fb_share_like_product = models.BooleanField(default=False, blank=False, null=False)
     fb_share_like_look = models.BooleanField(default=False, blank=False, null=False)

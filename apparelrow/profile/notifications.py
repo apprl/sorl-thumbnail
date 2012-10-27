@@ -1,4 +1,5 @@
 import logging
+import decimal
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -10,10 +11,13 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.translation import get_language, activate
 from django.core.urlresolvers import reverse
+from django.utils.formats import number_format
 
 import facebook
 
 from celery.task import task
+
+from apparel.utils import currency_exchange_locale
 
 from profile.models import NotificationCache, Follow, ApparelProfile
 
@@ -43,9 +47,12 @@ def is_duplicate(name, recipient, sender, obj):
 
     return True
 
+# TODO: should use display_name instead of first_name and last_name
 def notify_by_mail(users, notification_name, sender, extra_context=None):
     """
     Sends an email to all users for the specified notification
+
+    Variable users is a list of django auth user instances.
     """
     if extra_context is None:
         extra_context = {}
@@ -346,4 +353,41 @@ def process_facebook_friends(sender, graph_token, **kwargs):
 
         if recipient.facebook_friends == 'A' and sender:
             notify_by_mail([recipient.user], 'facebook_friends', sender)
-            get_key('facebook_friends', recipient.user, sender, None)
+
+
+#
+# SALE ALERT
+#
+
+@task(name='profile.notifications.process_sale_alert', max_retries=5, ignore_result=True)
+def process_sale_alert(sender, product, original_currency, original_price, discount_price, first, **kwargs):
+    """
+    Process a new sale alert.
+    """
+    logger = process_sale_alert.get_logger(**kwargs)
+
+    template_name = 'first_sale_alert' if first else 'second_sale_alert'
+    for likes in product.likes.filter(user__profile__discount_notification=True, active=True).select_related('user', 'user__profile'):
+        if likes.user.get_profile() and likes.user.get_profile().discount_notification:
+            # If we already sent a notification for this product and user it
+            # must mean that the price has increased and then decreased.
+            if is_duplicate('sale_alert', likes.user, sender.user, product):
+                template_name = 'second_sale_alert'
+
+            # Use the exchange rate from the user language
+            language = settings.LANGUAGE_CODE
+            if likes.user.get_profile().language:
+                language = likes.user.get_profile().language
+            rate, currency = currency_exchange_locale(language, original_currency)
+
+            # Round prices to no digits after the decimal comma
+            locale_original_price = (original_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
+            locale_discount_price = (discount_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
+
+            notify_by_mail([likes.user], template_name, sender.user, {
+                'brand_name': sender.display_name,
+                'product_name': product.product_name,
+                'object_link': product.get_absolute_url(),
+                'original_price': '%s %s' % (number_format(locale_original_price, use_l10n=False, force_grouping=True), currency),
+                'discount_price': '%s %s' % (number_format(locale_discount_price, use_l10n=False, force_grouping=True), currency),
+            })

@@ -36,11 +36,12 @@ class NotificationForm(ModelForm):
 
 
 class NewsletterForm(ModelForm):
-    newsletter = BooleanField(required=False, help_text=_('I\'d like to receive e-mails with trending products, looks and other inspiration.'))
+    newsletter = BooleanField(required=False, help_text=_(u'I\'d like to receive e-mails with trending products, looks and other inspiration.'))
+    discount_notification = BooleanField(required=False, help_text=_(u'I want to receive sale alerts on items that I ♥.'))
 
     class Meta:
         model = ApparelProfile
-        fields = ('newsletter',)
+        fields = ('discount_notification', 'newsletter')
 
 class FacebookSettingsForm(ModelForm):
     fb_share_like_product = BooleanField(required=False, help_text=_(u'When you ♥ a product'))

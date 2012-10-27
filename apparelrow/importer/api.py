@@ -293,12 +293,33 @@ class API(object):
             'original_discount_currency': self.dataset['product']['currency'],
             'availability': self.availability
         }
-        
+
+        # Handle user notification on sale alerts
+        if self.dataset['product']['discount-price'] and decimal.Decimal(self.dataset['product']['discount-price']) > decimal.Decimal('0.0'):
+            from profile.notifications import process_sale_alert
+            # First discount observed
+            if self.vendorproduct.original_discount_price is None:
+                process_sale_alert.delay(self.product.manufacturer.profile,
+                                   self.product,
+                                   self.dataset['product']['currency'],
+                                   decimal.Decimal(self.vendorproduct.original_price),
+                                   decimal.Decimal(self.dataset['product']['discount-price']),
+                                   True)
+            # If discount is larger than 0 and the imported discount
+            elif self.vendorproduct.original_discount_price > decimal.Decimal('0.0') and \
+                 self.vendorproduct.original_discount_price >= decimal.Decimal('1.1') * decimal.Decimal(self.dataset['product']['discount-price']):
+                process_sale_alert.delay(self.product.manufacturer.profile,
+                                   self.product,
+                                   self.dataset['product']['currency'],
+                                   decimal.Decimal(self.vendorproduct.original_discount_price),
+                                   decimal.Decimal(self.dataset['product']['discount-price']),
+                                   False)
+
         rates = self.fxrates()
-        
+
         if len(rates.keys()) > 0:
             fields['currency'] = settings.APPAREL_BASE_CURRENCY
-            
+
             if settings.APPAREL_BASE_CURRENCY == fields['original_currency']:
                 fields['price'] = fields['original_price']
                 logger.debug('Setting price to %s %s', fields['original_price'], fields['original_currency'])

@@ -872,6 +872,16 @@ def jobs(request):
             'image': str(image)
         }, context_instance=RequestContext(request))
 
+
+def apparel_set_language(request):
+    language = request.POST.get('language', None)
+    profile = request.user.get_profile()
+    profile.language = language
+    profile.save()
+
+    return set_language(request)
+
+
 def dialog_login_favorite_friends(request):
     """
     Display a dialog tailored for the browse page with information about
