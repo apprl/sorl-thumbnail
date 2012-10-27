@@ -31,7 +31,9 @@ class ActivityFeedRender:
         self.gender = gender
         self.user = user
         self.private = private
-        self.r = redis.StrictRedis(host='localhost', port=6380, db=0)
+        self.r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
+                                   port=settings.CELERY_REDIS_PORT,
+                                   db=settings.FEED_REDIS_DB)
 
     def __len__(self):
         item_count = 0

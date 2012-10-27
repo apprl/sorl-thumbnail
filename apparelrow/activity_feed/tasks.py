@@ -192,7 +192,7 @@ def aggregate(r, user, gender, activity):
 def push_activity_feed(activity):
     r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
                           port=settings.CELERY_REDIS_PORT,
-                          db=settings.CELERY_REDIS_DB)
+                          db=settings.FEED_REDIS_DB)
     for followers in get_model('profile', 'follow').objects.followers(activity.user):
         aggregate(r, followers, 'M', activity)
         aggregate(r, followers, 'W', activity)
@@ -208,7 +208,7 @@ def push_activity_feed(activity):
 def pull_activity_feed(activity):
     r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
                           port=settings.CELERY_REDIS_PORT,
-                          db=settings.CELERY_REDIS_DB)
+                          db=settings.FEED_REDIS_DB)
     for followers in get_model('profile', 'follow').objects.followers(activity.user):
         remove_aggregate(r, followers, 'M', activity)
         remove_aggregate(r, followers, 'W', activity)
@@ -224,7 +224,7 @@ def pull_activity_feed(activity):
 def update_activity_feed(profile, followee, add=True):
     r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
                           port=settings.CELERY_REDIS_PORT,
-                          db=settings.CELERY_REDIS_DB)
+                          db=settings.FEED_REDIS_DB)
     Activity = get_model('activity_feed', 'activity')
     if add:
         since = datetime.datetime.now() - datetime.timedelta(days=30)

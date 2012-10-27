@@ -55,7 +55,7 @@ class Migration(DataMigration):
 
         r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
                               port=settings.CELERY_REDIS_PORT,
-                              db=settings.CELERY_REDIS_DB)
+                              db=settings.FEED_REDIS_DB)
         for activity in orm['activity_feed.Activity'].objects.filter(modified__gte=since, active=True).order_by('modified'):
             aggregate(r, None, 'M', activity)
             aggregate(r, None, 'W', activity)
