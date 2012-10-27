@@ -290,7 +290,7 @@ def migrate(param=''):
 
 def install_redis():
     run('mkdir -p /tmp/redis', pty=True)
-    env.redis_release = 'redis-2.4.6'
+    env.redis_release = 'redis-2.4.17'
     with cd('/tmp/redis'):
         run('wget http://redis.googlecode.com/files/%(redis_release)s.tar.gz' % env, pty=True)
         run('tar zxf %(redis_release)s.tar.gz' % env, pty=True)
@@ -320,10 +320,6 @@ def restart_solr():
     with settings(warn_only=True):
         sudo('restart solr', pty=False)
 
-def rebuild_solr():
-    with cd('%(path)s/releases/current/%(project_name)s' % env):
-        sudo('%(path)s/bin/python manage.py rebuild_index --clean' % env, pty=True, user=env.run_user)
-
 def restart_celeryd():
     sudo('/etc/init.d/celeryd restart', pty=False)
 
@@ -342,3 +338,8 @@ def build_brand_list():
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         sudo('chown -R %(run_user)s:%(run_group)s ./templates/apparel/generated/' % env, pty=True)
         sudo('%(path)s/bin/python manage.py build_brand_list' % env, pty=True, user=env.run_user)
+
+def manage_py(command):
+    env.manage_py_command = command
+    with cd('%(path)s/releases/current/%(project_name)s' % env):
+        sudo('%(path)s/bin/python manage.py %(manage_py_command)s' % env, pty=True, user=env.run_user)
