@@ -15,6 +15,9 @@
             <li><a class="last popular{% if 'popular' not in request.path %} current{% endif %}" href="{% url user-list %}">{% trans "In alphabetical order" %}</a></li>
         </ul>
     </div>
+    {% if request.user.is_authenticated %}
+    <a class="btn btn-positive btn-upper facebook-invite" href="#invite">{% trans "+ Invite your friends" %}</a>
+    {% endif %}
 </div>
 {% endblock body-header %}
 {% block body-classes %}three-columns profiles{% endblock body-classes %}
