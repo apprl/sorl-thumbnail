@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-27 20:03+0200\n"
+"POT-Creation-Date: 2012-10-27 20:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -717,23 +717,23 @@ msgid "Show all manufacturers"
 msgstr ""
 
 #: templates/base.html:223
-msgid "Socialize!"
+msgid "Welcome to Social Shopping!"
 msgstr ""
 
 #: templates/base.html:224
-msgid "Connect your Facebook account to:"
+msgid "Become a member to:"
 msgstr ""
 
 #: templates/base.html:226
-msgid "Collect products you like under your profile"
+msgid "Get sale alerts on your favourite items"
 msgstr ""
 
 #: templates/base.html:227
-msgid "Follow your favourite brands, bloggers & members"
+msgid "Follow your friends, bloggers & brands"
 msgstr ""
 
 #: templates/base.html:228
-msgid "See what clothes & looks your friends like"
+msgid "Create & share looks on your blog"
 msgstr ""
 
 #: templates/base.html:230

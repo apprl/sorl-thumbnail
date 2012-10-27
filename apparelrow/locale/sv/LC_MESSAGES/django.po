@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-27 20:03+0200\n"
+"POT-Creation-Date: 2012-10-27 20:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -727,24 +727,24 @@ msgid "Show all manufacturers"
 msgstr "Visa alla varumärken"
 
 #: templates/base.html:223
-msgid "Socialize!"
-msgstr ""
+msgid "Welcome to Social Shopping!"
+msgstr "Välkommen till social shopping!"
 
 #: templates/base.html:224
-msgid "Connect your Facebook account to:"
-msgstr "Logga in med ditt Facebookkonto för att:"
+msgid "Become a member to:"
+msgstr "Bli medlem för att:"
 
 #: templates/base.html:226
-msgid "Collect products you like under your profile"
-msgstr "Samla alla produkter du gillar under din profil"
+msgid "Get sale alerts on your favourite items"
+msgstr "Bli meddelad när dina favoritprodukter prissänks"
 
 #: templates/base.html:227
-msgid "Follow your favourite brands, bloggers & members"
-msgstr "Följa dina favoritvarumärken, bloggare och vänner"
+msgid "Follow your friends, bloggers & brands"
+msgstr "Följa dina vänner, bloggare & favoritmärken"
 
 #: templates/base.html:228
-msgid "See what clothes & looks your friends like"
-msgstr "Se vad dina vänner gillar för kläder & looks"
+msgid "Create & share looks on your blog"
+msgstr "Skapa och dela looks på din blogg"
 
 #: templates/base.html:230
 msgid "You will always control what is being shared to your Facebook profile."
@@ -2501,6 +2501,15 @@ msgstr "Mejl skickat"
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
 
+#~ msgid "Connect your Facebook account to:"
+#~ msgstr "Logga in med ditt Facebookkonto för att:"
+
+#~ msgid "Collect products you like under your profile"
+#~ msgstr "Samla alla produkter du gillar under din profil"
+
+#~ msgid "See what clothes & looks your friends like"
+#~ msgstr "Se vad dina vänner gillar för kläder & looks"
+
 #~ msgid "likes %(count)s looks"
 #~ msgstr "gillar %(count)s looks"
 
@@ -2544,9 +2553,6 @@ msgstr "Varför mejlet inte skickades"
 
 #~ msgid "Welcome to"
 #~ msgstr "Välkommen till"
-
-#~ msgid "Social Shopping!"
-#~ msgstr "Social shopping!"
 
 #~ msgid "Shop Woman"
 #~ msgstr "Shop Dam"
