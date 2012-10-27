@@ -20,7 +20,7 @@
 {% with likes_url=profile.url_likes updates_url=profile.url_updates looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
 <div id="body-header">
     <div class="column_one">
-        <h1 class="max-width">{{ profile.display_name }}</h1>
+        <h1 class="max-width"><a href="{{ profile.get_absolute_url }}">{{ profile.display_name }}</a></h1>
     </div>
     <div class="column_two">
         <ul>
