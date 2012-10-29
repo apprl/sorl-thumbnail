@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-29 15:39+0100\n"
+"POT-Creation-Date: 2012-10-29 17:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -667,16 +667,16 @@ msgid "Brands"
 msgstr ""
 
 #: templates/base.html:144
+msgid "Your profile"
+msgstr ""
+
+#: templates/base.html:145
 msgid "+ Invite friends"
 msgstr ""
 
-#: templates/base.html:145 templates/apparel/look_detail.html:60
+#: templates/base.html:146 templates/apparel/look_detail.html:60
 #: templates/apparel/look_list.html:18 templates/profile/base_profile.html:51
 msgid "+ Create look"
-msgstr ""
-
-#: templates/base.html:146
-msgid "Your profile"
 msgstr ""
 
 #: templates/base.html:147 templates/profile/base_settings.html:4
