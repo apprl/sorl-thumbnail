@@ -349,7 +349,9 @@ register.filter('getdictattribute', getdictattribute)
 def selected_url(request, *args):
     for pattern in args:
         if pattern == '/':
-            if request.path == pattern:
+            if request.path.startswith('/men') or request.path.startswith('/women'):
+                return 'selected'
+            elif request.path == pattern:
                 return 'selected'
         elif pattern == '/profile':
             slug = '--------------------------------------'
