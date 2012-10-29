@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
+from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
 import facebook
 
@@ -47,7 +48,7 @@ class FacebookProfileBackend(ModelBackend):
 
                     # Follow all facebook friends
                     fids = [f['id'] for f in graph.get_connections('me', 'friends').get('data', [])]
-                    for friend in ApparelProfile.objects.filter(user__username__in=fids):
+                    for friend in get_model('profile', 'apparelprofile').objects.filter(user__username__in=fids):
                         follow, _ = Follow.objects.get_or_create(user=profile, user_follow=friend)
 
             profile = user.get_profile()

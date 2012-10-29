@@ -7,7 +7,6 @@ from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect, HttpResponseNotFound
-from django.db.models.loading import get_model
 from django.contrib import auth
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
