@@ -264,11 +264,15 @@
                 <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
             </ul>
             <ul>
-                <li><h3>{% trans "Membership" %}</h3></li>
+                <li><h3>{% trans "Social" %}</h3></li>
                 {% if not user.is_authenticated %}
                 <li class="facebook">{% apparel_facebook_button "facebook-footer.png" %}</li>
                 {% endif %}
                 <li><a href="{% url user-list %}">{% trans "Members" %}</a></li>
+                {% if user.is_authenticated %}
+                <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
+                {% endif %}
+                <li><a class="open-dialog" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "+ Create look" %}</a>
             </ul>
             <ul>
                 <li><h3>{% trans "Follow us" %}</h3></li>
