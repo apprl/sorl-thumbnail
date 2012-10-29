@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-29 17:09+0100\n"
+"POT-Creation-Date: 2012-10-29 17:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -929,8 +929,8 @@ msgstr "Till Toppen"
 
 #: templates/activity_feed/public_feed.html:4
 #: templates/activity_feed/user_feed.html:4
-msgid "Feed"
-msgstr ""
+msgid "Apparel, shoes, bags & accessories from the best online stores"
+msgstr "Kläder, skor, väskor & accessoarer från de bästa online-butikerna"
 
 #: templates/activity_feed/public_feed.html:12
 #: templates/activity_feed/user_feed.html:12
