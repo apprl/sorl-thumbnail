@@ -1167,13 +1167,15 @@ a.buy-now
   margin-top: 8px
 
 .message
-  border: unquote("1px") solid $border_color
-  padding: 0.5em
+  border: 1px solid $border_color
+  padding: 10px
   +border-radius(5px)
   +single-box-shadow(#f6f6f6 - #222222, 0, 2px, 2px)
   .highlight
     color: #408994
     background-color: $highlight_bg_color
+  > p
+    margin-bottom: 10px
 
 .likes-text
   margin: 10px 0
@@ -2120,67 +2122,64 @@ body.settings, body.about
   .sidebar-profile-name
     line-height: normal
     margin: 15px 0 15px 0
+  .steps-nav-container
+    text-align: center
+    .steps-nav
+      display: inline-block
+      margin: 1.5em auto
+      li
+        float: left
+        margin-right: 30px
+        font-size: 1.3em
+        a, span
+          display: inline-block
+          color: $grey_color
+          span
+            display: inline-block
+            width: 32px
+            height: 32px
+            margin-right: 6px
+            line-height: 32px
+            text-align: center
+            background-color: $grey_color
+            color: $white_color
+            +border-radius(16px)
+        a
+          &.selected, &:hover
+            color: $black_color
+            span
+              background-color: $black_color
+  .facebook-invite
+    margin: 30px 0 0 0
   #steps
     width: 697px
     float: left
     height: auto
-    .steps-top, .steps-bottom
-      width: 100%
-      float: left
-      padding: 20px 0
     .steps-bottom
+      width: 100%
+      margin-bottom: 30px
+      padding: 20px 0
       border-top: 3px solid #333333
-    .fbflowbtn
-      padding: 8px 0 0 45px
-      margin: 0 0 0 45px
-      height: 27px
-      float: left
-      clear: right
-      font-size: 1.3em
-    #step-initial
-      background: image_url(unquote("face1.png")) no-repeat
-    #step-members
-      background: image_url(unquote("face2.png")) no-repeat
-    #step-brands
-      background: image_url(unquote("face3.png")) no-repeat
-    &.step-initial
-      #step-members, #step-brands
-        @include opacity(0.3)
-    &.step-members
-      #step-initial, #step-brands
-        @include opacity(0.3)
-    &.step-brands
-      #step-initial, #step-members
-        @include opacity(0.3)
+      h2
+        border: 0
+        font-size: 2em
+      form
+        label
+          display: block
+          font-size: 1.2em
+          margin: 10px 0 5px 0
+        input, textarea
+          border: 1px solid $black_color
+          padding: 4px
   & .content-footer
-    background: image_url(unquote("knappbg.jpg")) repeat scroll center bottom #fff
     float: left
-    height: 51px
     position: static
     width: 697px
     margin-top: 20px
-    border: solid 1px #353535
-    &:hover
-      background-position: top
-      border: solid 1px #d9d9d9
-      cursor: pointer
-  & a.footer-button
-    color: #fefefe
-    background: image_url(unquote("arr-butt.png")) no-repeat right 20px transparent
-    font-weight: bold
-    font-size: 1.3em
-    float: left
-    height: 34px
-    padding: 18px 0 0
-    text-align: center
-    width: 697px
-    &:hover
-      color: #333333
   @media screen and (max-height: 600px)
     .content-footer
       margin: 0
       top: auto
-      width: 697px
       bottom: 0
       position: fixed
       z-index: 1000

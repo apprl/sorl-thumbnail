@@ -45,11 +45,18 @@ class FacebookProfileBackend(ModelBackend):
                     profile.slug = slugify(profile.display_name)
                     profile.save()
 
+                    # Follow all facebook friends
+                    fids = [f['id'] for f in graph.get_connections('me', 'friends').get('data', [])]
+                    for friend in ApparelProfile.objects.filter(user__username__in=fids):
+                        follow, _ = Follow.objects.get_or_create(user=profile, user_follow=friend)
+
             profile = user.get_profile()
             if profile.gender is None:
                 if me.get('gender'):
                     if me['gender'] in FB_GENDER_MAP:
                         profile.gender = FB_GENDER_MAP[me['gender']]
                         profile.save()
+
             return user
+
         return None

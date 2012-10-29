@@ -11,7 +11,7 @@
         <div class="empty">
         {% if profile == request.user.get_profile %}
             <div class="message warning">
-                {% trans "No one is currently following you, but start off by following other members!" %}
+                <p>{% trans "No one is currently following you, but start off by following other members!" %}</p>
                 <a class="btn btn-block btn-positive" href="{% url user-list-popular %}">{% trans "Find members to follow!" %}</a>
             </div>
         {% else %}

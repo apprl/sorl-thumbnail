@@ -37,9 +37,11 @@ GENDERS = ( ('M', 'Men'),
             ('W', 'Women'))
 
 LOGIN_FLOW = (
-    ('initial', 'Initial'),
-    ('members', 'Members'),
+    ('bio', 'Bio'),
+    ('friends', 'Friends'),
+    ('featured', 'Featured'),
     ('brands', 'Brands'),
+    ('like', 'Like'),
     ('complete', 'Complete'),
 )
 
@@ -362,6 +364,7 @@ def on_follow(signal, instance, **kwargs):
     """
     update_activity_feed.delay(instance.user, instance.user_follow, instance.active)
 
+
 #
 # NOTIFICATION CACHE
 #
@@ -371,5 +374,24 @@ class NotificationCache(models.Model):
 
     def __unicode__(self):
         return '%s' % (self.key,)
+
+
+#
+# FEATURED
+#
+
+class FeaturedProfile(models.Model):
+    """
+    """
+    profile = models.ForeignKey(ApparelProfile, on_delete=models.CASCADE)
+    gender = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
+    rank = models.IntegerField(default=0, blank=False, null=False)
+
+    def __unicode__(self):
+        return '%s: %s' % (self.gender, self.profile)
+
+    class Meta:
+        ordering = ['rank']
+
 
 import profile.activity

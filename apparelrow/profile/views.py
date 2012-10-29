@@ -1,5 +1,6 @@
 import logging
 import uuid
+import itertools
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -18,10 +19,10 @@ from apparel.decorators import get_current_user
 from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie
 from profile.utils import get_facebook_user
-from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm
-from profile.models import EmailChange, ApparelProfile, Follow
+from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm
+from profile.models import EmailChange, ApparelProfile, Follow, FeaturedProfile
 from profile.tasks import send_email_confirm_task
-from profile.decorators import avatar_change
+from profile.decorators import avatar_change, login_flow
 from activity_feed.views import ActivityFeedRender
 
 PROFILE_PAGE_SIZE = 30
@@ -270,7 +271,7 @@ def settings_email(request):
                     'link': 'http://%s%s' % (Site.objects.get_current().domain, reverse('profile.views.confirm_email')),
                     'token': token,
                 })
-            send_email_confirm_task.delay(subject, body, email)
+            send_email_confirm_task.delay(subject, body, request.user.get_profile().email)
 
         return HttpResponseRedirect(reverse('profile.views.settings_email'))
 
@@ -301,84 +302,155 @@ def settings_facebook(request):
 
     return render(request, 'profile/settings_facebook.html', {'facebook_settings_form': form})
 
+
 #
 # Welcome login flow
 #
 
-@login_required
-def login_flow_initial(request):
+@get_current_user
+@login_flow
+def login_flow_bio(request, profile):
     """
-    Login flow step 1, friends.
+    Step 1: Bio
     """
-    profile = request.user.get_profile()
-    if profile.login_flow == 'complete':
-        return HttpResponseRedirect(reverse('shop'))
-
     profile.first_visit = False
-    profile.login_flow = 'initial'
+    profile.login_flow = 'bio'
+    profile.save()
+
+    if request.method == 'POST':
+        form = BioForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            if 'email' in form.changed_data:
+                # Remove old email change confirmations
+                EmailChange.objects.filter(user=request.user).delete()
+
+                token = uuid.uuid4().hex
+                email = form.cleaned_data['email']
+                old_email = profile.user.email
+                email_change = EmailChange.objects.create(user=request.user, email=email, token=token)
+
+                subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
+                body = render_to_string('profile/confirm_email.html', {
+                        'username': request.user.get_profile().display_name,
+                        'link': 'http://%s%s' % (Site.objects.get_current().domain, reverse('profile.views.confirm_email')),
+                        'token': token,
+                    })
+                send_email_confirm_task.delay(subject, body, old_email)
+
+                form.changed_data.remove('email')
+                form.cleaned_data['email'] = profile.user.email
+
+            form.save()
+
+        return HttpResponseRedirect(reverse('profile.views.login_flow_friends'))
+
+    form = BioForm(instance=profile)
+
+    context = {
+        'next_url': reverse('profile.views.login_flow_friends'),
+        'email_form': form,
+    }
+    return render(request, 'profile/login_flow_bio.html', context)
+
+
+@get_current_user
+@login_flow
+def login_flow_friends(request, profile):
+    """
+    Step 2: Friends
+    """
+    profile.first_visit = False
+    profile.login_flow = 'friends'
     profile.save()
 
     context = {
         'login_flow_step': 'step-initial',
-        'next_url': reverse('profile.views.login_flow_members'),
+        'next_url': reverse('profile.views.login_flow_featured'),
         'profiles': get_facebook_friends(request)
     }
-    return render(request, 'profile/login_flow_content.html', context)
+    return render(request, 'profile/login_flow_friends.html', context)
 
-@login_required
-def login_flow_members(request):
-    """
-    Login flow step 2, members.
-    """
-    profile = request.user.get_profile()
-    if profile.login_flow == 'complete':
-        return HttpResponseRedirect(reverse('shop'))
 
+@get_current_user
+@login_flow
+def login_flow_featured(request, profile):
+    """
+    Step 3: Featured members
+    """
     profile.first_visit = False
-    profile.login_flow = 'members'
+    profile.login_flow = 'featured'
     profile.save()
 
-    profiles = ApparelProfile.objects.filter(is_brand=False).order_by('-followers_count')
+    featured_profiles = [x.profile for x in FeaturedProfile.objects.filter(gender=profile.gender).order_by('rank')]
+
+    profiles = ApparelProfile.objects.filter(is_brand=False, gender=profile.gender).order_by('-followers_count')
     facebook_user = get_facebook_user(request)
     if request.user.is_authenticated() and facebook_user:
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
         profiles = profiles.exclude(user__username__in=(f['id'] for f in friends['data']))
+        profiles = profiles.exclude(pk__in=(x.profile_id for x in FeaturedProfile.objects.filter(gender=profile.gender)))
+
+    missing_profile_count = 21 - len(featured_profiles)
+    profiles = itertools.chain(featured_profiles, profiles[:missing_profile_count])
 
     context = {
         'login_flow_step': 'step-members',
         'next_url': reverse('profile.views.login_flow_brands'),
-        'profiles': profiles[:21]
+        'profiles': profiles,
     }
-    return render(request, 'profile/login_flow_content.html', context)
+    return render(request, 'profile/login_flow_featured.html', context)
 
-@login_required
-def login_flow_brands(request):
-    """
-    Login flow step 3, brands.
-    """
-    profile = request.user.get_profile()
-    if profile.login_flow == 'complete':
-        return HttpResponseRedirect(reverse('shop'))
 
+@get_current_user
+@login_flow
+def login_flow_brands(request, profile):
+    """
+    Step 4: Brands
+    """
     profile.first_visit = False
     profile.login_flow = 'brands'
     profile.save()
 
     context = {
         'login_flow_step': 'step-brands',
-        'next_url': reverse('profile.views.login_flow_complete'),
+        'next_url': reverse('profile.views.login_flow_like'),
         'profiles': ApparelProfile.objects.filter(is_brand=True).order_by('-followers_count')[:21]
     }
-    return render(request, 'profile/login_flow_content.html', context)
+    return render(request, 'profile/login_flow_brands.html', context)
 
-@login_required
-def login_flow_complete(request):
-    profile = request.user.get_profile()
+
+@get_current_user
+@login_flow
+def login_flow_like(request, profile):
+    """
+    Step 5: Like us on facebook
+    """
+    profile.first_visit = False
+    profile.login_flow = 'like'
+    profile.save()
+
+    context = {
+        'next_url': reverse('profile.views.login_flow_complete'),
+    }
+    return render(request, 'profile/login_flow_like.html', context)
+
+@get_current_user
+@login_flow
+def login_flow_complete(request, profile):
+    """
+    Step 6: Login flow is complete
+    """
     profile.first_visit = False
     profile.login_flow = 'complete'
     profile.save()
-    return HttpResponseRedirect(reverse('user_feed'))
+
+    return HttpResponseRedirect(reverse('profile-likes'))
+
+
+#
+# Login view
+#
 
 def _get_next(request):
     """
@@ -395,6 +467,7 @@ def _get_next(request):
     else:
         return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
+
 def login(request):
     if request.POST:
         access_token = request.POST.get('access_token', '')
@@ -404,7 +477,9 @@ def login(request):
         if user is not None and user.is_active:
             auth.login(request, user)
             if user.get_profile().login_flow != 'complete':
-                return HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (user.get_profile().login_flow)))
+                response = HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (user.get_profile().login_flow)))
+                response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.get_profile().gender, max_age=365 * 24 * 60 * 60)
+                return response
 
             return HttpResponseRedirect(_get_next(request))
 

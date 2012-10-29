@@ -11,7 +11,7 @@
         <div class="empty">
         {% if profile == request.user.get_profile %}
             <div class="message warning">
-                {% trans "All your activity is shown here as a timeline." %}
+                <p>{% trans "All your activity is shown here as a timeline." %}</p>
                 <a class="btn btn-block btn-positive" href="{% url user-list-popular %}">{% trans "Find members to follow!" %}</a>
             </div>
         {% else %}

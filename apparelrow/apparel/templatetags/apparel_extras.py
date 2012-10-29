@@ -364,6 +364,13 @@ def selected_url(request, *args):
     return ''
 
 @register.simple_tag
+def selected_reverse(request, url):
+    path = request.path
+    if path == reverse(url):
+        return 'selected'
+    return ''
+
+@register.simple_tag
 def change_gender_url(request, current_gender, gender):
     """
     Calculate new url from current gender and the gender to be.

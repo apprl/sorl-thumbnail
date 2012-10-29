@@ -1,0 +1,13 @@
+{% extends "profile/base_login_flow.html" %}
+{% load i18n %}
+
+{% block login-flow-content %}
+    <h2>{% trans "Follow favourite brands" %}</h2>
+    <ul class="suggested-friends profiles group">
+    {% for profile in profiles %}
+        <li class="{% cycle 'column-1' 'column-2' 'column-3' %}">
+        {% include 'profile/fragments/avatar.html' %}
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,5 +1,5 @@
 {% extends "profile/base_profile.html" %}
-{% load i18n %}
+{% load i18n apparel_extras %}
 
 {% block body-classes %}two-columns profile profile-login-flow{% endblock body-classes %}
 
@@ -11,28 +11,30 @@
     <div class="sidebar">
         <div id="profile-image">
             <img src="{{ user.profile.avatar_large }}" class="avatar large">
-            {% if user.is_authenticated and user == profile.user %}
-                <button class="edit">{% trans "Change picture" %}</button>
-                <button class="cancel-edit">{% trans "Cancel" %}</button>
-                {% with "multipart/form-data" as form_enctype %}
-                {% include 'profile/fragments/change_image_form.html' %}
-                {% endwith %}
-            {% endif %}
         </div>
         <h1 class="sidebar-profile-name">{% blocktrans with user.profile.display_name as username %}Hi {{ username }}!{% endblocktrans %}</h1>
-        <p>{% blocktrans %}Follow your friends and other members to keep up when they like products, create looks, comments and more.{% endblocktrans %}</p>
     </div>
     <div id="content">
-        {% block login-flow-content %}{% endblock %}
-
+        <div id="steps" class="{{ login_flow_step }}">
+            <div class="steps-nav-container">
+                {% block login-flow-nav %}
+                <ul class="steps-nav group">
+                    <li><a class="{% selected_reverse request "login-flow-bio" %}" href="{% url login-flow-bio %}"><span class="btn-step">1</span> {% trans "Your bio" %}</a></li>
+                    <li><a class="{% selected_reverse request "login-flow-friends" %}"href="{% url login-flow-friends %}"><span class="btn-step">2</span> {% trans "Friends" %}</a></li>
+                    <li><a class="{% selected_reverse request "login-flow-featured" %}"href="{% url login-flow-featured %}"><span class="btn-step">3</span> {% trans "Featured" %}</a></li>
+                    <li><a class="{% selected_reverse request "login-flow-brands" %}"href="{% url login-flow-brands %}"><span class="btn-step">4</span> {% trans "Brands" %}</a></li>
+                    <li><a class="{% selected_reverse request "login-flow-like" %}"href="{% url login-flow-like %}"><span class="btn-step">5</span> {% trans "Follow us" %}</a></li>
+                </ul>
+                {% endblock %}
+            </div>
+            <div class="steps-bottom">
+                {% block login-flow-content %}{% endblock %}
+            </div>
+        </div>
         <div class="content-footer">
             {% block login-flow-footer %}
-            <a href="{{ next_url }}" class="footer-button">{% trans "Proceed" %}</a>
+            <a href="{{ next_url }}" class="btn btn-block btn-large btn-upper">{% trans "Proceed" %}</a>
             {% endblock %}
-        </div>  
-
+        </div>
     </div>
-
-
-    
 {% endblock %}

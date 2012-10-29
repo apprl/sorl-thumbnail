@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.forms import ModelForm, EmailField, BooleanField
-from django.forms.widgets import RadioSelect, FileInput
+from django.forms import ModelForm, EmailField, BooleanField, CharField
+from django.forms.widgets import RadioSelect, FileInput, Textarea
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
@@ -12,6 +12,26 @@ class ProfileImageForm(ModelForm):
         model = ApparelProfile
         fields = ('image',)
         widgets = {'image': FileInput}
+
+
+class BioForm(ModelForm):
+    email = EmailField(label=_('Your e-mail address'))
+    about = CharField(widget=Textarea, label=_('About'))
+
+    def __init__(self, *args, **kwargs):
+        super(BioForm, self).__init__(*args, **kwargs)
+
+        self.fields['email'].initial = self.instance.user.email
+
+    def save(self, *args, **kwargs):
+        super(BioForm, self).save(*args, **kwargs)
+
+        self.instance.user.email = self.cleaned_data.get('email')
+        self.instance.user.save()
+
+    class Meta:
+        model = ApparelProfile
+        fields = ('email', 'about')
 
 class EmailForm(ModelForm):
     email = EmailField(label=_('New e-mail address'))

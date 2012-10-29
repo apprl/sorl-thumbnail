@@ -21,7 +21,6 @@
         var product_popup_url = '{% url product-popup %}';
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
-        var isFirstTimeVisit = {% if user.is_authenticated and user.get_profile.first_visit %}true{% else %}false{% endif %};
         var share_settings = {
             'like_product': {% if user.is_authenticated and user.get_profile.fb_share_like_product %}true{% else %}false{% endif %},
             'like_look': {% if user.is_authenticated and user.get_profile.fb_share_like_look %}true{% else %}false{% endif %},
