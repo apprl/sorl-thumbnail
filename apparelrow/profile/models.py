@@ -62,7 +62,7 @@ class ApparelProfile(models.Model):
     brand = models.OneToOneField('apparel.Brand', default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='profile')
 
     # profile login flow
-    login_flow = models.CharField(_('Login flow'), max_length=20, choices=LOGIN_FLOW, null=False, blank=False, default='initial')
+    login_flow = models.CharField(_('Login flow'), max_length=20, choices=LOGIN_FLOW, null=False, blank=False, default='bio')
 
     # newsletter settings
     newsletter = models.BooleanField(default=True, blank=False, null=False, help_text=_('Participating in newsletter'))
