@@ -141,9 +141,9 @@
                 <li class="user subnav-handle">
                     <a class="{% selected_url request "/profile/settings" "/profile/"|add:request.user.get_profile.slug %}" href="{{ request.user.get_profile.url_likes }}">{{ request.user.get_profile.display_name }}</a>
                     <ul class="subnav" id="subnav-profile">
+                        <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Your profile" %}</a></li>
                         <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
                         <li><a class="open-dialog" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "+ Create look" %}</a>
-                        <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Your profile" %}</a></li>
                         <li><a href="{% url profile.views.settings_notification %}">{% trans "Settings" %}</a></li>
                         <li><a href="{% url auth_logout %}">{% trans "Log out" %}</a></li>
                     </ul>
