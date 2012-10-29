@@ -52,10 +52,9 @@ class Command(BaseCommand):
                 votes = like_count + 1 * product_click_count
                 timedelta = datetime.datetime.now() - product.date_added
                 item_half_hour_age =  (timedelta.days * 86400 + timedelta.seconds) / 7200
-                popularity = decimal.Decimal(votes / pow(item_half_hour_age, 1.53))
                 if item_half_hour_age > 0:
-                    product.popularity = popularity
+                    product.popularity = decimal.Decimal(votes / pow(item_half_hour_age, 1.53))
                     product.save()
-                elif popularity > ZERO:
+                elif product.popularity > ZERO:
                     product.popularity = ZERO
                     product.save()
