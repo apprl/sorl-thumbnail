@@ -13,7 +13,6 @@
             <img src="{{ user.profile.avatar_large }}" class="avatar large">
         </div>
         <h1 class="sidebar-profile-name">{% blocktrans with user.profile.display_name as username %}Hi {{ username }}!{% endblocktrans %}</h1>
-        <p>{% trans "Complete all steps to personalise Apprl for you." %}</p>
     </div>
     <div id="content">
         <div id="steps" class="{{ login_flow_step }}">

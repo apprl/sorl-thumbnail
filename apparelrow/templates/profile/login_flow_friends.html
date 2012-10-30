@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block login-flow-content %}
+    {% if profiles %}
     <h2>{% trans "Step 2: Follow your friends to see what they like" %}</h2>
     <ul class="suggested-friends profiles group">
     {% for profile in profiles %}
@@ -20,6 +21,11 @@
         </li>
     {% endfor %}
     </ul>
-    <p class="friends">{% trans "Fashion is more fun together with your friends!" %}</p>
+    <p class="friends">{% trans "APPRL is more fun together with your friends!" %}</p>
     <a class="btn btn-upper btn-positive facebook-invite" href="#invite">{% trans "+ Invite more friends!" %}</a>
+    {% else %}
+    <h2>{% trans "Step 2: Invite your friends" %}</h2>
+    <p class="friends">{% trans "APPRL is more fun together with your friends!" %}</p>
+    <a class="btn btn-upper btn-positive facebook-invite" href="#invite">{% trans "+ Invite friends!" %}</a>
+    {% endif %}
 {% endblock %}

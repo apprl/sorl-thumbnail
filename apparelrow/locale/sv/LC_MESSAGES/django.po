@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-30 10:00+0100\n"
+"POT-Creation-Date: 2012-10-30 13:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -488,7 +488,8 @@ msgstr "Din e-postadress"
 
 #: profile/forms.py:19
 msgid "Write something about yourself, include links to your blog or website"
-msgstr "Skriv något om dig själv, inkludera länkar till din blogg eller website"
+msgstr ""
+"Skriv något om dig själv, inkludera länkar till din blogg eller website"
 
 #: profile/forms.py:37
 msgid "New e-mail address"
@@ -673,7 +674,7 @@ msgstr "Medlemmar"
 
 #: templates/base.html:131 templates/base.html.py:264
 #: templates/apparel/brand_list.html:11
-#: templates/profile/base_login_flow.html:26
+#: templates/profile/base_login_flow.html:25
 #: templates/profile/login_flow_bio.html:9
 #: templates/profile/login_flow_featured.html:9
 #: templates/profile/login_flow_friends.html:9
@@ -781,7 +782,7 @@ msgstr "Sverige"
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:278 templates/profile/base_login_flow.html:27
+#: templates/base.html:278 templates/profile/base_login_flow.html:26
 #: templates/profile/login_flow_bio.html:10
 #: templates/profile/login_flow_featured.html:10
 #: templates/profile/login_flow_friends.html:10
@@ -1908,32 +1909,28 @@ msgstr ""
 msgid "Hi %(username)s!"
 msgstr "Hej %(username)s!"
 
-#: templates/profile/base_login_flow.html:16
-msgid "Complete all steps to personalise Apprl for you."
-msgstr "Gå igenom alla stegen för att anpassa Apprl efter dig."
-
-#: templates/profile/base_login_flow.html:23
+#: templates/profile/base_login_flow.html:22
 #: templates/profile/login_flow_bio.html:6
 #: templates/profile/login_flow_featured.html:6
 #: templates/profile/login_flow_friends.html:6
 msgid "Your info"
 msgstr "Din info"
 
-#: templates/profile/base_login_flow.html:24
+#: templates/profile/base_login_flow.html:23
 #: templates/profile/login_flow_bio.html:7
 #: templates/profile/login_flow_featured.html:7
 #: templates/profile/login_flow_friends.html:7
 msgid "Friends"
 msgstr "Vänner"
 
-#: templates/profile/base_login_flow.html:25
+#: templates/profile/base_login_flow.html:24
 #: templates/profile/login_flow_bio.html:8
 #: templates/profile/login_flow_featured.html:8
 #: templates/profile/login_flow_friends.html:8
 msgid "Featured"
 msgstr "Medlemmar"
 
-#: templates/profile/base_login_flow.html:37
+#: templates/profile/base_login_flow.html:36
 #: templates/profile/login_flow_bio.html:20
 msgid "Next step"
 msgstr "Gå vidare"
@@ -2097,11 +2094,11 @@ msgstr "Välkommen till din Apprl-sida!"
 
 #: templates/profile/likes.html:22
 msgid ""
-"All the items that you ♥ will end up here (and you will get alerts once they "
-"go on sale)."
+"All the items that you ♥ will end up here<br>(and you will get alerts once "
+"they go on sale)."
 msgstr ""
-"Här hamnar alla produkter som du ♥-ar (och du kommer få ett meddelande när "
-"de prissänks)."
+"Här hamnar alla produkter som du ♥-ar<br>(och du kommer få ett meddelande "
+"när de prissänks)."
 
 #: templates/profile/likes.html:23
 msgid "Go find items!"
@@ -2127,17 +2124,26 @@ msgstr "Steg 4: Följ varumärken du gillar"
 msgid "Step 3: Follow featured members & bloggers"
 msgstr "Steg 3: Följ andra medlemmar & bloggare"
 
-#: templates/profile/login_flow_friends.html:15
+#: templates/profile/login_flow_friends.html:16
 msgid "Step 2: Follow your friends to see what they like"
 msgstr "Steg 2: Följ dina vänner för att se vad de gillar"
 
-#: templates/profile/login_flow_friends.html:23
-msgid "Fashion is more fun together with your friends!"
-msgstr "Mode är roligare tillsammans med dina vänner!"
-
 #: templates/profile/login_flow_friends.html:24
+#: templates/profile/login_flow_friends.html:28
+msgid "APPRL is more fun together with your friends!"
+msgstr "APPRL är roligare tillsammans med dina vänner!"
+
+#: templates/profile/login_flow_friends.html:25
 msgid "+ Invite more friends!"
 msgstr "+ Bjud in fler vänner!"
+
+#: templates/profile/login_flow_friends.html:27
+msgid "Step 2: Invite your friends"
+msgstr "Steg 2: Bjud in dina vänner"
+
+#: templates/profile/login_flow_friends.html:29
+msgid "+ Invite friends!"
+msgstr "+ Bjud in vänner"
 
 #: templates/profile/login_flow_like.html:5
 msgid "Step 5: Like us on Facebook for news, inspiration, offers & sales"
@@ -2194,6 +2200,7 @@ msgid "Current e-mail address:"
 msgstr "Nuvarande e-postadress:"
 
 #: templates/profile/settings_email.html:13
+#: templates/profile/fragments/change_about_form.html:13
 msgid "Update"
 msgstr "Uppdatera"
 
@@ -2570,6 +2577,9 @@ msgstr "Mejl skickat"
 #: watcher/models.py:31
 msgid "Why e-mail was not sent"
 msgstr "Varför mejlet inte skickades"
+
+#~ msgid "Complete all steps to personalise Apprl for you."
+#~ msgstr "Gå igenom alla stegen för att anpassa Apprl efter dig."
 
 #~ msgid "Your bio"
 #~ msgstr "Din info"

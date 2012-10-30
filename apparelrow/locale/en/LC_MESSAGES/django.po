@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-30 10:00+0100\n"
+"POT-Creation-Date: 2012-10-30 13:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -663,7 +663,7 @@ msgstr ""
 
 #: templates/base.html:131 templates/base.html.py:264
 #: templates/apparel/brand_list.html:11
-#: templates/profile/base_login_flow.html:26
+#: templates/profile/base_login_flow.html:25
 #: templates/profile/login_flow_bio.html:9
 #: templates/profile/login_flow_featured.html:9
 #: templates/profile/login_flow_friends.html:9
@@ -772,7 +772,7 @@ msgstr "Svenska"
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:278 templates/profile/base_login_flow.html:27
+#: templates/base.html:278 templates/profile/base_login_flow.html:26
 #: templates/profile/login_flow_bio.html:10
 #: templates/profile/login_flow_featured.html:10
 #: templates/profile/login_flow_friends.html:10
@@ -1813,32 +1813,28 @@ msgstr ""
 msgid "Hi %(username)s!"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:16
-msgid "Complete all steps to personalise Apprl for you."
-msgstr ""
-
-#: templates/profile/base_login_flow.html:23
+#: templates/profile/base_login_flow.html:22
 #: templates/profile/login_flow_bio.html:6
 #: templates/profile/login_flow_featured.html:6
 #: templates/profile/login_flow_friends.html:6
 msgid "Your info"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:24
+#: templates/profile/base_login_flow.html:23
 #: templates/profile/login_flow_bio.html:7
 #: templates/profile/login_flow_featured.html:7
 #: templates/profile/login_flow_friends.html:7
 msgid "Friends"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:25
+#: templates/profile/base_login_flow.html:24
 #: templates/profile/login_flow_bio.html:8
 #: templates/profile/login_flow_featured.html:8
 #: templates/profile/login_flow_friends.html:8
 msgid "Featured"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:37
+#: templates/profile/base_login_flow.html:36
 #: templates/profile/login_flow_bio.html:20
 msgid "Next step"
 msgstr ""
@@ -1987,8 +1983,8 @@ msgstr ""
 
 #: templates/profile/likes.html:22
 msgid ""
-"All the items that you ♥ will end up here (and you will get alerts once they "
-"go on sale)."
+"All the items that you ♥ will end up here<br>(and you will get alerts once "
+"they go on sale)."
 msgstr ""
 
 #: templates/profile/likes.html:23
@@ -2015,16 +2011,25 @@ msgstr ""
 msgid "Step 3: Follow featured members & bloggers"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:15
+#: templates/profile/login_flow_friends.html:16
 msgid "Step 2: Follow your friends to see what they like"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:23
-msgid "Fashion is more fun together with your friends!"
+#: templates/profile/login_flow_friends.html:24
+#: templates/profile/login_flow_friends.html:28
+msgid "APPRL is more fun together with your friends!"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:24
+#: templates/profile/login_flow_friends.html:25
 msgid "+ Invite more friends!"
+msgstr ""
+
+#: templates/profile/login_flow_friends.html:27
+msgid "Step 2: Invite your friends"
+msgstr ""
+
+#: templates/profile/login_flow_friends.html:29
+msgid "+ Invite friends!"
 msgstr ""
 
 #: templates/profile/login_flow_like.html:5
@@ -2075,6 +2080,7 @@ msgid "Current e-mail address:"
 msgstr ""
 
 #: templates/profile/settings_email.html:13
+#: templates/profile/fragments/change_about_form.html:13
 msgid "Update"
 msgstr ""
 
