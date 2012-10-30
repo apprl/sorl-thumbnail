@@ -444,7 +444,7 @@ def login_flow_complete(request, profile):
     profile.login_flow = 'complete'
     profile.save()
 
-    return HttpResponseRedirect(reverse('profile-likes'))
+    return HttpResponseRedirect(reverse('profile-likes', args=[profile.slug]))
 
 
 #
