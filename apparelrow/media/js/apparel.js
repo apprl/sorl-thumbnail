@@ -352,7 +352,7 @@ jQuery(document).ready(function() {
         if(isAuthenticated == true && hasLiked == false) {
             var element = jQuery(this);
             if(element.children().length == 0) {
-                element.append('<a href="#" class="product-heart-tooltip"><span>' + gettext('Like a product to save it to your profile') + '</span></a>');
+                element.append('<a href="#" class="product-heart-tooltip"><span>' + gettext('Like products to save it to your profile and get sale alerts') + '</span></a>');
             } else {
                 element.children().show();
             }
