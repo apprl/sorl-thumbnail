@@ -16,7 +16,7 @@ class ProfileImageForm(ModelForm):
 
 class BioForm(ModelForm):
     email = EmailField(label=_('Your e-mail address'))
-    about = CharField(widget=Textarea, label=_('About'))
+    about = CharField(widget=Textarea, label=_('Write something about yourself, include links to your blog or website'))
 
     def __init__(self, *args, **kwargs):
         super(BioForm, self).__init__(*args, **kwargs)

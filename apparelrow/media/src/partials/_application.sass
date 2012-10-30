@@ -2149,8 +2149,8 @@ body.settings, body.about
             color: $black_color
             span
               background-color: $black_color
-  .facebook-invite
-    margin: 30px 0 0 0
+  //.facebook-invite
+    //margin: 30px 0 0 0
   #steps
     width: 697px
     float: left
@@ -2163,12 +2163,19 @@ body.settings, body.about
       h2
         border: 0
         font-size: 2em
+      p
+        font-size: 1.3em
+        &.friends
+        margin-top: 20px
+      .facebook-invite
+        margin: 10px 0
       form
         label
           display: block
-          font-size: 1.2em
-          margin: 10px 0 5px 0
+          margin: 20px 0 8px 0
         input, textarea
+          font-size: 0.9em
+          width: 320px
           border: 1px solid $black_color
           padding: 4px
   & .content-footer

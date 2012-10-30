@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-29 17:12+0100\n"
+"POT-Creation-Date: 2012-10-30 10:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,11 +49,11 @@ msgstr ""
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:228 templates/base.html:343
+#: apparel/admin.py:228 templates/base.html:347
 msgid "Yes"
 msgstr ""
 
-#: apparel/admin.py:229 templates/base.html:342
+#: apparel/admin.py:229 templates/base.html:346
 msgid "No"
 msgstr ""
 
@@ -478,8 +478,8 @@ msgstr ""
 msgid "Your e-mail address"
 msgstr ""
 
-#: profile/forms.py:19 profile/models.py:55 templates/base.html:280
-msgid "About"
+#: profile/forms.py:19
+msgid "Write something about yourself, include links to your blog or website"
 msgstr ""
 
 #: profile/forms.py:37
@@ -528,6 +528,10 @@ msgstr ""
 
 #: profile/models.py:54
 msgid "User profile image"
+msgstr ""
+
+#: profile/models.py:55 templates/base.html:284
+msgid "About"
 msgstr ""
 
 #: profile/models.py:56 templates/account/base.html:20
@@ -659,7 +663,7 @@ msgstr ""
 
 #: templates/base.html:131 templates/base.html.py:264
 #: templates/apparel/brand_list.html:11
-#: templates/profile/base_login_flow.html:25
+#: templates/profile/base_login_flow.html:26
 #: templates/profile/login_flow_bio.html:9
 #: templates/profile/login_flow_featured.html:9
 #: templates/profile/login_flow_friends.html:9
@@ -670,12 +674,13 @@ msgstr ""
 msgid "Your profile"
 msgstr ""
 
-#: templates/base.html:145
+#: templates/base.html:145 templates/base.html.py:273
 msgid "+ Invite friends"
 msgstr ""
 
-#: templates/base.html:146 templates/apparel/look_detail.html:60
-#: templates/apparel/look_list.html:18 templates/profile/base_profile.html:51
+#: templates/base.html:146 templates/base.html.py:275
+#: templates/apparel/look_detail.html:60 templates/apparel/look_list.html:18
+#: templates/profile/base_profile.html:51
 msgid "+ Create look"
 msgstr ""
 
@@ -764,42 +769,42 @@ msgid "Sweden"
 msgstr "Svenska"
 
 #: templates/base.html:267
-msgid "Membership"
+msgid "Social"
 msgstr ""
 
-#: templates/base.html:274 templates/profile/base_login_flow.html:26
+#: templates/base.html:278 templates/profile/base_login_flow.html:27
 #: templates/profile/login_flow_bio.html:10
 #: templates/profile/login_flow_featured.html:10
 #: templates/profile/login_flow_friends.html:10
 msgid "Follow us"
 msgstr ""
 
-#: templates/base.html:275 templates/profile/base_settings.html:20
+#: templates/base.html:279 templates/profile/base_settings.html:20
 #: templates/profile/settings_facebook.html:5
 msgid "Facebook"
 msgstr ""
 
-#: templates/base.html:276
+#: templates/base.html:280
 msgid "E-mail newsletter"
 msgstr ""
 
-#: templates/base.html:279
+#: templates/base.html:283
 msgid "Apprl"
 msgstr ""
 
-#: templates/base.html:281
+#: templates/base.html:285
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:282
+#: templates/base.html:286
 msgid "Privacy & Terms"
 msgstr ""
 
-#: templates/base.html:283 templates/flatpages/default.html:23
+#: templates/base.html:287 templates/flatpages/default.html:23
 msgid "Cookies"
 msgstr ""
 
-#: templates/base.html:290
+#: templates/base.html:294
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr ""
 
@@ -1808,30 +1813,34 @@ msgstr ""
 msgid "Hi %(username)s!"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:22
-#: templates/profile/login_flow_bio.html:6
-#: templates/profile/login_flow_featured.html:6
-#: templates/profile/login_flow_friends.html:6
-msgid "Your bio"
+#: templates/profile/base_login_flow.html:16
+msgid "Complete all steps to personalise Apprl for you."
 msgstr ""
 
 #: templates/profile/base_login_flow.html:23
+#: templates/profile/login_flow_bio.html:6
+#: templates/profile/login_flow_featured.html:6
+#: templates/profile/login_flow_friends.html:6
+msgid "Your info"
+msgstr ""
+
+#: templates/profile/base_login_flow.html:24
 #: templates/profile/login_flow_bio.html:7
 #: templates/profile/login_flow_featured.html:7
 #: templates/profile/login_flow_friends.html:7
 msgid "Friends"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:24
+#: templates/profile/base_login_flow.html:25
 #: templates/profile/login_flow_bio.html:8
 #: templates/profile/login_flow_featured.html:8
 #: templates/profile/login_flow_friends.html:8
 msgid "Featured"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:36
+#: templates/profile/base_login_flow.html:37
 #: templates/profile/login_flow_bio.html:20
-msgid "Proceed"
+msgid "Next step"
 msgstr ""
 
 #: templates/profile/base_profile.html:37 templates/profile/profile.html:4
@@ -1995,27 +2004,35 @@ msgid "does not like any products so far."
 msgstr ""
 
 #: templates/profile/login_flow_bio.html:15
-msgid "Information about you"
+msgid "Step 1: Information about you"
 msgstr ""
 
 #: templates/profile/login_flow_brands.html:5
-msgid "Follow favourite brands"
+msgid "Step 4: Follow your favourite brands"
 msgstr ""
 
 #: templates/profile/login_flow_featured.html:15
-msgid "Followed featured members & bloggers"
+msgid "Step 3: Follow featured members & bloggers"
 msgstr ""
 
 #: templates/profile/login_flow_friends.html:15
-msgid "Follow your friends to see what they like"
+msgid "Step 2: Follow your friends to see what they like"
 msgstr ""
 
 #: templates/profile/login_flow_friends.html:23
-msgid "Invite more friends!"
+msgid "Fashion is more fun together with your friends!"
+msgstr ""
+
+#: templates/profile/login_flow_friends.html:24
+msgid "+ Invite more friends!"
 msgstr ""
 
 #: templates/profile/login_flow_like.html:5
-msgid "Like us on Facebook for news, inspiration & offers"
+msgid "Step 5: Like us on Facebook for news, inspiration, offers & sales"
+msgstr ""
+
+#: templates/profile/login_flow_like.html:10
+msgid "You're done"
 msgstr ""
 
 #: templates/profile/looks.html:42

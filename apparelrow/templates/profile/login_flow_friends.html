@@ -3,7 +3,7 @@
 
 {% block login-flow-nav %}
 <ul class="steps-nav group">
-    <li><a class="{% selected_reverse request "login-flow-bio" %}" href="{% url login-flow-bio %}"><span class="btn-step">1</span> {% trans "Your bio" %}</a></li>
+    <li><a class="{% selected_reverse request "login-flow-bio" %}" href="{% url login-flow-bio %}"><span class="btn-step">1</span> {% trans "Your info" %}</a></li>
     <li><a class="{% selected_reverse request "login-flow-friends" %}"href="{% url login-flow-friends %}"><span class="btn-step">2</span> {% trans "Friends" %}</a></li>
     <li><a class="{% selected_reverse request "login-flow-featured" %}"href="{% url login-flow-featured %}"><span class="btn-step">3</span> {% trans "Featured" %}</a></li>
     <li><span class="{% selected_reverse request "login-flow-brands" %}"href="{% url login-flow-brands %}"><span class="btn-step">4</span> {% trans "Brands" %}</span></li>
@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block login-flow-content %}
-    <h2>{% trans "Follow your friends to see what they like" %}</h2>
+    <h2>{% trans "Step 2: Follow your friends to see what they like" %}</h2>
     <ul class="suggested-friends profiles group">
     {% for profile in profiles %}
         <li class="{% cycle 'column-1' 'column-2' 'column-3' %}">
@@ -20,5 +20,6 @@
         </li>
     {% endfor %}
     </ul>
-    <a class="btn btn-upper btn-positive facebook-invite" href="#invite">{% trans "Invite more friends!" %}</a>
+    <p class="friends">{% trans "Fashion is more fun together with your friends!" %}</p>
+    <a class="btn btn-upper btn-positive facebook-invite" href="#invite">{% trans "+ Invite more friends!" %}</a>
 {% endblock %}

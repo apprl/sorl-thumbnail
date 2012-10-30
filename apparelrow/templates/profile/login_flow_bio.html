@@ -3,7 +3,7 @@
 
 {% block login-flow-nav %}
 <ul class="steps-nav group">
-    <li><a class="{% selected_reverse request "login-flow-bio" %}" href="{% url login-flow-bio %}"><span class="btn-step">1</span> {% trans "Your bio" %}</a></li>
+    <li><a class="{% selected_reverse request "login-flow-bio" %}" href="{% url login-flow-bio %}"><span class="btn-step">1</span> {% trans "Your info" %}</a></li>
     <li><a class="{% selected_reverse request "login-flow-friends" %}"href="{% url login-flow-friends %}"><span class="btn-step">2</span> {% trans "Friends" %}</a></li>
     <li><span class="{% selected_reverse request "login-flow-featured" %}"href="{% url login-flow-featured %}"><span class="btn-step">3</span> {% trans "Featured" %}</span></li>
     <li><span class="{% selected_reverse request "login-flow-brands" %}"href="{% url login-flow-brands %}"><span class="btn-step">4</span> {% trans "Brands" %}</span></li>
@@ -12,12 +12,12 @@
 {% endblock %}
 
 {% block login-flow-content %}
-    <h2>{% trans "Information about you" %}</h2>
+    <h2>{% trans "Step 1: Information about you" %}</h2>
     <form action="{% url login-flow-bio %}" method="post">
         {% csrf_token %}
         {{ email_form.as_p }}
         <div class="content-footer">
-            <button type="submit" href="{{ next_url }}" class="btn btn-block btn-large btn-upper">{% trans "Proceed" %}</button>
+            <button type="submit" href="{{ next_url }}" class="btn btn-block btn-large btn-upper">{% trans "Next step" %}</button>
         </div>
     </form>
 {% endblock %}

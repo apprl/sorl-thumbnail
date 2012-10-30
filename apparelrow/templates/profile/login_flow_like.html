@@ -2,6 +2,10 @@
 {% load i18n %}
 
 {% block login-flow-content %}
-    <h2>{% trans "Like us on Facebook for news, inspiration & offers" %}</h2>
-    <div class="fb-like-box" data-href="http://www.facebook.com/apprl" data-width="697" data-height="400" data-show-faces="false" data-stream="true" data-header="false"></div>
+    <h2>{% trans "Step 5: Like us on Facebook for news, inspiration, offers & sales" %}</h2>
+    <div class="fb-like-box" data-href="http://www.facebook.com/apprl" data-width="697" data-show-faces="true" data-stream="false" data-header="false"></div>
+{% endblock %}
+
+{% block login-flow-footer %}
+<a href="{{ next_url }}" class="btn btn-block btn-large btn-upper">{% trans "You're done" %}</a>
 {% endblock %}
