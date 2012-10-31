@@ -2,7 +2,7 @@
 {% load thumbnail %}
 {% cache CACHE_TIMEOUT product_thumb product.id LANGUAGE_CODE %}
 <a href="{{ product.get_absolute_url }}">
-    {% thumbnail produt.product_image "100x100" crop="center" as im %}
+    {% thumbnail product.product_image "100x100" crop="center" as im %}
     <img src="{{ im.url }}" alt="{{ product.product_name }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
     <h4>{{ product.product_name }}</h4>
