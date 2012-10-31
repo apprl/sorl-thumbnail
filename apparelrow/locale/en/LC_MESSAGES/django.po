@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-30 13:37+0100\n"
+"POT-Creation-Date: 2012-10-31 17:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -313,7 +313,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:290
+#: apparel/templatetags/apparel_extras.py:288
 msgid "ago"
 msgstr ""
 
@@ -474,41 +474,41 @@ msgid ""
 "example: \"svart,night,coal\""
 msgstr ""
 
-#: profile/forms.py:18
+#: profile/forms.py:25
 msgid "Your e-mail address"
 msgstr ""
 
-#: profile/forms.py:19
+#: profile/forms.py:26
 msgid "Write something about yourself, include links to your blog or website"
 msgstr ""
 
-#: profile/forms.py:37
+#: profile/forms.py:45
 msgid "New e-mail address"
 msgstr ""
 
-#: profile/forms.py:59
+#: profile/forms.py:68
 msgid ""
 "I'd like to receive e-mails with trending products, looks and other "
 "inspiration."
 msgstr ""
 
-#: profile/forms.py:60
+#: profile/forms.py:69
 msgid "I want to receive sale alerts on items that I ♥."
 msgstr ""
 
-#: profile/forms.py:67
+#: profile/forms.py:77
 msgid "When you ♥ a product"
 msgstr ""
 
-#: profile/forms.py:68
+#: profile/forms.py:78
 msgid "When you ♥ a look"
 msgstr ""
 
-#: profile/forms.py:69
+#: profile/forms.py:79
 msgid "When you follow someone"
 msgstr ""
 
-#: profile/forms.py:70
+#: profile/forms.py:80
 msgid "When you create a look"
 msgstr ""
 
@@ -630,6 +630,7 @@ msgid "Search for products"
 msgstr ""
 
 #: templates/base.html:120 templates/profile/base_profile.html:64
+#: templates/profile/base_profile.html:79
 msgid "Cancel"
 msgstr ""
 
@@ -652,6 +653,7 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
+#: templates/profile/login_flow_friends.html:47
 #: templates/profile/notifications/email_follow_user.html:3
 msgid "Follow"
 msgstr ""
@@ -665,8 +667,9 @@ msgstr ""
 #: templates/apparel/brand_list.html:11
 #: templates/profile/base_login_flow.html:25
 #: templates/profile/login_flow_bio.html:9
+#: templates/profile/login_flow_brands.html:9
 #: templates/profile/login_flow_featured.html:9
-#: templates/profile/login_flow_friends.html:9
+#: templates/profile/login_flow_friends.html:33
 msgid "Brands"
 msgstr ""
 
@@ -774,8 +777,9 @@ msgstr ""
 
 #: templates/base.html:278 templates/profile/base_login_flow.html:26
 #: templates/profile/login_flow_bio.html:10
+#: templates/profile/login_flow_brands.html:10
 #: templates/profile/login_flow_featured.html:10
-#: templates/profile/login_flow_friends.html:10
+#: templates/profile/login_flow_friends.html:34
 msgid "Follow us"
 msgstr ""
 
@@ -1008,7 +1012,8 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
 #: templates/profile/base_profile.html:46
-#: templates/profile/base_profile.html:84
+#: templates/profile/base_profile.html:98
+#: templates/profile/login_flow_friends.html:47
 msgid "Following"
 msgstr ""
 
@@ -1016,6 +1021,7 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
+#: templates/profile/login_flow_friends.html:47
 msgid "Stop following"
 msgstr ""
 
@@ -1632,6 +1638,7 @@ msgstr ""
 #: templates/apparel/notifications/follow_member.html:3
 #: templates/apparel/notifications/like_look.html:3
 #: templates/apparel/notifications/like_product.html:3
+#: templates/profile/login_flow_friends.html:54
 msgid "Share on facebook"
 msgstr ""
 
@@ -1815,27 +1822,31 @@ msgstr ""
 
 #: templates/profile/base_login_flow.html:22
 #: templates/profile/login_flow_bio.html:6
+#: templates/profile/login_flow_brands.html:6
 #: templates/profile/login_flow_featured.html:6
-#: templates/profile/login_flow_friends.html:6
+#: templates/profile/login_flow_friends.html:30
 msgid "Your info"
 msgstr ""
 
 #: templates/profile/base_login_flow.html:23
 #: templates/profile/login_flow_bio.html:7
+#: templates/profile/login_flow_brands.html:7
 #: templates/profile/login_flow_featured.html:7
-#: templates/profile/login_flow_friends.html:7
+#: templates/profile/login_flow_friends.html:31
 msgid "Friends"
 msgstr ""
 
 #: templates/profile/base_login_flow.html:24
 #: templates/profile/login_flow_bio.html:8
+#: templates/profile/login_flow_brands.html:8
 #: templates/profile/login_flow_featured.html:8
-#: templates/profile/login_flow_friends.html:8
+#: templates/profile/login_flow_friends.html:32
 msgid "Featured"
 msgstr ""
 
 #: templates/profile/base_login_flow.html:36
 #: templates/profile/login_flow_bio.html:20
+#: templates/profile/login_flow_friends.html:64
 msgid "Next step"
 msgstr ""
 
@@ -1857,20 +1868,28 @@ msgid "Filter products"
 msgstr ""
 
 #: templates/profile/base_profile.html:78
+msgid "Edit bio"
+msgstr ""
+
+#: templates/profile/base_profile.html:84
+msgid "Add bio"
+msgstr ""
+
+#: templates/profile/base_profile.html:92
 #, python-format
 msgid "%(prod)s product"
 msgid_plural "%(prod)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/base_profile.html:80
+#: templates/profile/base_profile.html:94
 #, python-format
 msgid "Likes %(prod)s product"
 msgid_plural "Likes %(prod)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/base_profile.html:82
+#: templates/profile/base_profile.html:96
 #: templates/profile/fragments/follow_profile.html:17
 #, python-format
 msgid "Created %(look_count)s look"
@@ -1878,11 +1897,11 @@ msgid_plural "Created %(look_count)s looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/base_profile.html:83
+#: templates/profile/base_profile.html:97
 msgid "Followed by"
 msgstr ""
 
-#: templates/profile/base_profile.html:97
+#: templates/profile/base_profile.html:111
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr ""
@@ -2003,7 +2022,7 @@ msgstr ""
 msgid "Step 1: Information about you"
 msgstr ""
 
-#: templates/profile/login_flow_brands.html:5
+#: templates/profile/login_flow_brands.html:15
 msgid "Step 4: Follow your favourite brands"
 msgstr ""
 
@@ -2011,24 +2030,24 @@ msgstr ""
 msgid "Step 3: Follow featured members & bloggers"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:16
+#: templates/profile/login_flow_friends.html:40
 msgid "Step 2: Follow your friends to see what they like"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:24
-#: templates/profile/login_flow_friends.html:28
+#: templates/profile/login_flow_friends.html:56
+#: templates/profile/login_flow_friends.html:60
 msgid "APPRL is more fun together with your friends!"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:25
+#: templates/profile/login_flow_friends.html:57
 msgid "+ Invite more friends!"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:27
+#: templates/profile/login_flow_friends.html:59
 msgid "Step 2: Invite your friends"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:29
+#: templates/profile/login_flow_friends.html:61
 msgid "+ Invite friends!"
 msgstr ""
 
