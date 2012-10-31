@@ -309,6 +309,7 @@ jQuery(document).ready(function() {
     );
     jQuery('#profile-image .btn-edit').click(function() {
         jQuery('#profile-about form, #profile-about .btn-cancel').hide();
+        jQuery('#profile-about .description').show();
         hover_about_edit = true;
         jQuery('#profile-image .btn-cancel').show();
         jQuery(this).hide().siblings('form').show();
