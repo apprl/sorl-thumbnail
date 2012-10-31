@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 
-from profile.forms import ProfileImageForm
+from profile.forms import ProfileImageForm, ProfileAboutForm
 
 
 def login_flow(view_func):
@@ -30,14 +30,31 @@ def avatar_change(view_func):
             if profile.user != request.user:
                 return HttpResponseForbidden()
 
-            form = ProfileImageForm(request.POST, request.FILES, instance=profile)
-            if form.is_valid():
-                form.save()
-                return HttpResponseRedirect(form.instance.get_absolute_url())
-        else:
-            form = ProfileImageForm(instance=profile)
+            success = False
 
-        return view_func(request, profile, form, *args, **kwargs)
+            image_form = ProfileImageForm(request.POST, request.FILES, instance=profile)
+            if image_form.is_valid():
+                image_form.save()
+                success = True
+
+            about_form = ProfileAboutForm(request.POST, request.FILES, instance=profile)
+            if about_form.is_valid():
+                about_form.save()
+                success = True
+
+            if success:
+                return HttpResponseRedirect(profile.get_absolute_url())
+
+        else:
+            image_form = ProfileImageForm(instance=profile)
+            about_form = ProfileAboutForm(instance=profile)
+
+        forms = [
+            ('change_image_form', image_form),
+            ('change_about_form', about_form),
+        ]
+
+        return view_func(request, profile, forms, *args, **kwargs)
 
     _decorator.__name__ = view_func.__name__
     _decorator.__dict__ = view_func.__dict__

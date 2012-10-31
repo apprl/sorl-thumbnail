@@ -1683,13 +1683,43 @@ body.profile
           padding: 3px 6px
           background-color: $black_color
           color: $white_color
+    #profile-about
+      position: relative
+      .btn-edit, .btn-cancel
+        position: absolute
+        top: -22px
+        left: 0
+        z-index: 2
+        display: none
+        height: 22px
+      form
+        margin-top: 22px
+        width: 208px
+        height: 100%
+        z-index: 2
+        display: none
+        textarea
+          resize: none
+          +box-sizing(border-box)
+          width: 208px
+          max-width: 208px
+          min-height: 100px
+          margin: 0
+          padding: 0
+          border: 0
+          line-height: 1.5em
+          font-family: $font_family
+          font-size: 1.1em
+          color: $easy_color
     p
       border: none
       color: $easier_color
       &.description
-        margin-top: 1em
+        line-height: 1.5em
+        margin-top: 22px
         font-size: 1.1em
         color: $easy_color
+        letter-spacing: normal
 
 body.profiles
   .gender-tabs

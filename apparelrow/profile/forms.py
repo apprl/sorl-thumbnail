@@ -14,6 +14,13 @@ class ProfileImageForm(ModelForm):
         widgets = {'image': FileInput}
 
 
+class ProfileAboutForm(ModelForm):
+    class Meta:
+        model = ApparelProfile
+        fields = ('about',)
+        widgets = {'about': Textarea}
+
+
 class BioForm(ModelForm):
     email = EmailField(label=_('Your e-mail address'))
     about = CharField(widget=Textarea, label=_('Write something about yourself, include links to your blog or website'))
@@ -33,12 +40,14 @@ class BioForm(ModelForm):
         model = ApparelProfile
         fields = ('email', 'about')
 
+
 class EmailForm(ModelForm):
     email = EmailField(label=_('New e-mail address'))
 
     class Meta:
         model = User
         fields = ('email',)
+
 
 class NotificationForm(ModelForm):
     class Meta:
@@ -62,6 +71,7 @@ class NewsletterForm(ModelForm):
     class Meta:
         model = ApparelProfile
         fields = ('discount_notification', 'newsletter')
+
 
 class FacebookSettingsForm(ModelForm):
     fb_share_like_product = BooleanField(required=False, help_text=_(u'When you ♥ a product'))

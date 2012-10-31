@@ -19,7 +19,7 @@ from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie
 from apparel.tasks import facebook_push_graph
 from profile.utils import get_facebook_user
-from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm
+from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm
 from profile.models import EmailChange, ApparelProfile, Follow, FeaturedProfile
 from profile.tasks import send_email_confirm_task
 from profile.decorators import avatar_change, login_flow
@@ -79,12 +79,11 @@ def likes(request, profile, form, page=0, gender=None):
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
-        'change_image_form': form,
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'APPAREL_GENDER': gender
     }
-
+    content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
 
     response = render(request, 'profile/likes.html', content)
@@ -117,11 +116,11 @@ def profile(request, profile, form, page=0):
     content = {
         'current_page': paged_result,
         'next': request.get_full_path(),
-        'change_image_form': form,
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'recent_looks': profile.user.look.order_by('-modified')[:10]
         }
+    content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/profile.html', content)
@@ -144,10 +143,10 @@ def looks(request, profile, form, page=0):
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
-        'change_image_form': form,
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request)
         }
+    content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/looks.html', content)
@@ -171,11 +170,11 @@ def followers(request, profile, form, page=0):
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
-        'change_image_form': form,
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'recent_looks': profile.user.look.order_by('-modified')[:4]
         }
+    content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/followers.html', content)
@@ -199,11 +198,11 @@ def following(request, profile, form, page=0):
         'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
-        'change_image_form': form,
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
         'recent_looks': profile.user.look.order_by('-modified')[:4]
         }
+    content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/following.html', content)

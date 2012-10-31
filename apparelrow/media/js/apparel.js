@@ -300,13 +300,16 @@ jQuery(document).ready(function() {
         });
     });
 
-    // Profile image
+    // Profile image and about inline form
     var hover_edit_button = true;
+    var hover_about_edit = true;
     jQuery('#profile-image').hover(
         function() { if (hover_edit_button) $('.btn-edit', this).show() },
         function() { if (hover_edit_button) $('.btn-edit', this).hide() }
     );
     jQuery('#profile-image .btn-edit').click(function() {
+        jQuery('#profile-about form, #profile-about .btn-cancel').hide();
+        hover_about_edit = true;
         jQuery('#profile-image .btn-cancel').show();
         jQuery(this).hide().siblings('form').show();
         hover_edit_button = false;
@@ -318,9 +321,28 @@ jQuery(document).ready(function() {
         hover_edit_button = true;
         return false;
     });
-    //jQuery('#profile-image input[type="file"]').change(function(e) {
-        //jQuery('button[type="submit"]', jQuery(this).closest('ul')).show();
-    //});
+
+    jQuery('#profile-about').hover(
+        function() { if (hover_about_edit) $('.btn-edit', this).show() },
+        function() { if (hover_about_edit) $('.btn-edit', this).hide() }
+    );
+    jQuery('#profile-about .btn-edit, #profile-about .btn-add').on('click', function() {
+        jQuery('#profile-about .description').hide();
+        jQuery('#profile-image form, #profile-image .btn-cancel').hide();
+        hover_edit_button = true;
+        jQuery('#profile-about .btn-cancel').show();
+        jQuery(this).hide().siblings('form').show().find('textarea').focus();
+        hover_about_edit = false;
+        return false;
+    });
+    jQuery('#profile-about .btn-cancel').on('click', function() {
+        jQuery('#profile-about .description').show();
+        jQuery('#profile-about .btn-edit').show();
+        jQuery(this).hide().siblings('form').hide();
+        hover_about_edit = true;
+        return false;
+    });
+
 
     // Look-like and hotspots
     if (!is_mobile()) {

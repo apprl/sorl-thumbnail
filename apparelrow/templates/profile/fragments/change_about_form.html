@@ -1,0 +1,16 @@
+{% load i18n %}
+<form action="{{ request.path }}" method="post">
+    {% csrf_token %}
+    {% block extra_fields %}{% endblock %}
+    <ul>
+    {% for field in change_about_form %}
+        <li class="profile-about">
+            {{ field }}
+            {{ field.errors }}
+        </li>
+    {% endfor %}
+        <li>
+            <button type="submit" class="btn btn-small btn-block btn-positive">{% trans "Update" %}</button>
+        </li>
+    </ul>
+</form>
