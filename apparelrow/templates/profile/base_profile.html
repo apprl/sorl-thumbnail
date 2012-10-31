@@ -73,7 +73,7 @@
         {% endif %}
         <div id="profile-about">
             {% if profile.about %}
-            <p class="description">{{ profile.about|urlize|linebreaksbr }}</p>
+            <p class="description">{{ profile.about|urlize_target_blank|linebreaksbr }}</p>
                 {% if user.is_authenticated and user == profile.user %}
                     <a href="#edit" class="btn btn-small btn-block btn-positive btn-edit">{% trans "Edit bio" %}</a>
                     <a href="#cancel" class="btn btn-small btn-block btn-negative btn-cancel">{% trans "Cancel" %}</a>

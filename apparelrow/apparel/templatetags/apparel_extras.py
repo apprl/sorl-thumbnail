@@ -1,4 +1,5 @@
 import logging
+from pprint import pformat
 
 from hanssonlarsson.django.exporter import json
 from django.template import Library, Variable, TemplateSyntaxError, Node, VariableDoesNotExist
@@ -11,14 +12,11 @@ from django.utils.formats import number_format
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import stringfilter
+from django.utils.html import urlize
+from django.utils.safestring import mark_safe
 
 from apparel.models import ProductLike, LookLike
-
-try:
-    from django.utils.safestring import mark_safe
-except ImportError: # v0.96 and 0.97-pre-autoescaping compat
-    def mark_safe(x): return x
-from pprint import pformat
 
 register = Library()
 
@@ -397,3 +395,10 @@ def gender_url(gender, named_url):
         return reverse('%s-women' % (named_url,))
 
     return reverse(named_url)
+
+@register.filter
+def urlize_target_blank(value, limit=None, autoescape=None):
+    return mark_safe(urlize(value, trim_url_limit=limit, nofollow=True, autoescape=autoescape).replace('<a', '<a target="_blank"'))
+urlize_target_blank.is_safe = True
+urlize_target_blank.needs_autoescape = True
+urlize_target_blank = stringfilter(urlize_target_blank)
