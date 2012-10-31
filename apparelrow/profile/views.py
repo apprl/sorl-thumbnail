@@ -17,6 +17,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from apparel.decorators import get_current_user
 from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie
+from apparel.tasks import facebook_push_graph
 from profile.utils import get_facebook_user
 from profile.forms import ProfileImageForm, EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm
 from profile.models import EmailChange, ApparelProfile, Follow, FeaturedProfile
@@ -361,6 +362,20 @@ def login_flow_friends(request, profile):
     profile.first_visit = False
     profile.login_flow = 'friends'
     profile.save()
+
+    if request.method == 'POST':
+        facebook_share = request.POST.get('facebook_share', False)
+        for friend in ApparelProfile.objects.filter(id__in=request.POST.getlist('profile_ids', [])):
+            if facebook_share:
+                facebook_user = get_facebook_user(request)
+                if facebook_user:
+                    facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
+            follow, created = Follow.objects.get_or_create(user=profile, user_follow=friend)
+            if not created and follow.active == False:
+                follow.active = True
+                follow.save()
+
+        return HttpResponseRedirect(reverse('login-flow-featured'))
 
     context = {
         'login_flow_step': 'step-initial',

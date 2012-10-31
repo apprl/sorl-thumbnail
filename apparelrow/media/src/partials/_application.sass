@@ -105,6 +105,7 @@ button
 
   // Block variant
   &.btn-block
+    margin: 0
     width: 100%
     display: block
     +box-sizing(border-box)
@@ -2152,8 +2153,6 @@ body.settings, body.about
             color: $black_color
             span
               background-color: $black_color
-  //.facebook-invite
-    //margin: 30px 0 0 0
   #steps
     width: 697px
     float: left
@@ -2173,7 +2172,7 @@ body.settings, body.about
         margin-top: 20px
       .facebook-invite
         margin: 10px 0
-      form
+      form.bio
         label
           display: block
           margin: 20px 0 8px 0
@@ -2194,7 +2193,7 @@ body.settings, body.about
       bottom: 0
       position: fixed
       z-index: 1000
-  ul.suggested-friends
+  ul.suggested-friends, .profile-list
     li
       +clearfix
       border-bottom: 1px solid #353535
@@ -2206,6 +2205,9 @@ body.settings, body.about
       padding-bottom: 10px
       margin-right: 33px
       margin-top: 20px
+      img
+        vertical-align: top
+        float: left
       &.column-3
         margin-right: 0
       a.profile-link, span.profile-link
