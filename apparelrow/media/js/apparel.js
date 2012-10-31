@@ -323,6 +323,7 @@ jQuery(document).ready(function() {
         return false;
     });
 
+    jQuery('#profile-about textarea').autosize();
     jQuery('#profile-about').hover(
         function() { if (hover_about_edit) $('.btn-edit', this).show() },
         function() { if (hover_about_edit) $('.btn-edit', this).hide() }
