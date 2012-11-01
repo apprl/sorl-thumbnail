@@ -27,10 +27,10 @@ django-tinymce==1.5.1b2
 django-flatpages-tinymce==0.1.1
 #pysolr==2.0.15
 -e git+https://github.com/jbohman/pysolr.git#egg=pysolr
-celery==2.5.5
-django-celery==2.5.5
+celery==3.0.11
+django-celery==3.0.11
 # require redis>=2.4.4
-celery-with-redis==2.5
+celery-with-redis==3.0
 requests==0.13.2
 django-static==1.5.5
 mailsnake==1.3.3
