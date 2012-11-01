@@ -407,7 +407,7 @@ def login_flow_featured(request, profile):
         profiles = profiles.exclude(user__username__in=friends_uids)
         profiles = profiles.exclude(pk__in=[x.profile_id for x in FeaturedProfile.objects.filter(gender=profile.gender)])
 
-    missing_profile_count = 21 - len(featured_profiles)
+    missing_profile_count = max(21 - len(featured_profiles), 0)
     profiles = itertools.chain(featured_profiles, profiles[:missing_profile_count])
 
     context = {
