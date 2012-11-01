@@ -155,7 +155,7 @@ def get_weekly_mail_content(gender, timeframe):
             static_image = get_thumbnail(look.static_image, '278', crop='noop')
             static_email_image = os.path.join(settings.APPAREL_EMAIL_IMAGE_ROOT, '%s__%s' % (datetime.date.today(), os.path.basename(static_image.name)))
             shutil.copyfile(os.path.join(settings.MEDIA_ROOT, static_image.name), os.path.join(settings.MEDIA_ROOT, static_email_image))
-            static_email_image = os.path.join(settings.MEDIA_URL, static_email_image)
+            static_email_image = os.path.join(settings.STATIC_URL, static_email_image)
 
             look_class = 'photo' if look.display_with_component == 'P' else 'collage'
             looks.append({
@@ -250,7 +250,7 @@ def generate_weekly_mail(request):
                 'products_3': products[6:9],
                 'looks': looks,
                 'members': members,
-                'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-en.gif'),
+                'email_weekly_top': request.build_absolute_uri(settings.STATIC_URL + '/images/weekly-top-en.gif'),
             })
 
             text_template = loader.render_to_string('email/weekly.txt')
@@ -293,5 +293,5 @@ def generate_weekly_mail(request):
             'products_3': products[6:9],
             'looks': looks,
             'members': members,
-            'email_weekly_top': request.build_absolute_uri(settings.MEDIA_URL + '/images/weekly-top-en.gif'),
+            'email_weekly_top': request.build_absolute_uri(settings.STATIC_URL + '/images/weekly-top-en.gif'),
         }, context_instance=RequestContext(request))

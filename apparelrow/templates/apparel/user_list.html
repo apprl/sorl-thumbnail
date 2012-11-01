@@ -50,7 +50,7 @@
         <h2>{% trans "Follow your friends!" %}</h2>
         {% if not user.is_authenticated %}
         <div>{% trans "Connect with your Facebook account to find your friends." %}</div>
-        {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
+        {% with STATIC_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
         {% facebook_button facebook_login_image %}
         {% endwith %}
         {% else %}

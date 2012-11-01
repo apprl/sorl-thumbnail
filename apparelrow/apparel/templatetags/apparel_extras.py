@@ -30,9 +30,9 @@ def apparel_facebook_button(context, image=None):
     else:
         next = None
     if image is not None:
-        button = settings.MEDIA_URL + 'images/' + image
+        button = settings.STATIC_URL + 'images/' + image
     else:
-        button = settings.MEDIA_URL + 'images/fblogo.png'
+        button = settings.STATIC_URL + 'images/fblogo.png'
     return dict(next=next, logged_in=logged_in, button=button, request=context['request'])
 
 @register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)

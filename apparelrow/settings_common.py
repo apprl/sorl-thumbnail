@@ -78,15 +78,15 @@ MEDIA_URL = '/media/'
 
 # Absolute path to the directory that holds static files like app media.
 # Example: "/home/media/media.lawrence.com/apps/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'media')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_root')
 
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
-STATIC_URL = '/media/'
+STATIC_URL = 'http://s-staging.apprl.com'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
-    ('apparelrow', os.path.join(PROJECT_ROOT, 'media')),
+    ('', os.path.join(PROJECT_ROOT, 'static')),
 )
 
 # List of finder classes that know how to find static files in
@@ -94,10 +94,19 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-DJANGO_STATIC = True
+# Django-storages
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 's-staging.apprl.com'
+AWS_HEADERS = {
+        'Expires': 'Sat, Nov 01 2014 20:00:00 GMT',
+        'Cache-Control': 'max-age=86400',
+}
+STATICFILES_STORAGE = 'storage.CachedStaticS3BotoStorage'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'zb*p6d^l!by6hhugm+^f34m@-yex9c90yz)c_71t=+lxo%mn(3'
@@ -118,6 +127,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
+    "django.core.context_processors.static",
     "context_processors.exposed_settings",
     "context_processors.next_redirects",
     "context_processors.gender",
@@ -157,12 +167,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.sitemaps',
+    'django.contrib.staticfiles',
 
     # External
     'pagination',
     'mptt',                 # External: Category tree
     'sorl.thumbnail',       # External: Thumbnail module
-    'django_static',        # External: Generates static files
     'djcelery',
     'tagging',
     'pagination',
@@ -175,6 +185,7 @@ INSTALLED_APPS = (
     'compress',
     'tinymce',
     'flatpages_tinymce',
+    'storages',
 
     # Internal
     'apparel',              # Internal: Product display module
@@ -294,11 +305,11 @@ APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/rss-feed/SEK/rss.xml'
-APPAREL_DEFAULT_AVATAR = os.path.join('/', MEDIA_URL, 'images', 'avatar_small.png')
-APPAREL_DEFAULT_AVATAR_LARGE = os.path.join('/', MEDIA_URL, 'images', 'avatar.jpg')
-APPAREL_DEFAULT_BRAND_AVATAR = os.path.join('/', MEDIA_URL, 'images', 'brand-avatar.png')
-APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM = os.path.join('/', MEDIA_URL, 'images', 'brand-avatar-medium.png')
-APPAREL_DEFAULT_BRAND_AVATAR_LARGE = os.path.join('/', MEDIA_URL, 'images', 'brand-avatar-large.png')
+APPAREL_DEFAULT_AVATAR = os.path.join('/', STATIC_URL, 'images', 'avatar_small.png')
+APPAREL_DEFAULT_AVATAR_LARGE = os.path.join('/', STATIC_URL, 'images', 'avatar.jpg')
+APPAREL_DEFAULT_BRAND_AVATAR = os.path.join('/', STATIC_URL, 'images', 'brand-avatar.png')
+APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM = os.path.join('/', STATIC_URL, 'images', 'brand-avatar-medium.png')
+APPAREL_DEFAULT_BRAND_AVATAR_LARGE = os.path.join('/', STATIC_URL, 'images', 'brand-avatar-large.png')
 APPAREL_MISC_IMAGE_ROOT = 'static/images'
 APPAREL_BACKGROUND_IMAGE_ROOT = 'static/images/background'
 APPAREL_PRODUCT_IMAGE_ROOT = 'static/products'

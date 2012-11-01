@@ -5,7 +5,7 @@
 {% block title %}{% trans "Like a look" %}{% endblock %}
 {% block content %}
 <p>{% trans "To 'like' a look on the site, you need to login with your Facebook account. (Please note that this will not show up on your Facebook wall by default.)" %}</p>
-{% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
+{% with STATIC_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
 {% facebook_button facebook_login_image %}
 {% endwith %}
 {% endblock %}

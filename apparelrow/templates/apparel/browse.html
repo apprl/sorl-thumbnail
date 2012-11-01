@@ -45,7 +45,7 @@
                 <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
             </h2>
             <div id="product-list" class="product-list">
-                {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination MEDIA_URL=MEDIA_URL only %}
+                {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination STATIC_URL=STATIC_URL only %}
             </div>
             <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
         </div>

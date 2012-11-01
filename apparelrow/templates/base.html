@@ -1,4 +1,5 @@
-{% load i18n l10n apparel_extras django_static %}
+{% load i18n l10n apparel_extras %}
+{% load static from staticfiles %}
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
@@ -6,9 +7,9 @@
     <meta charset="utf-8" />
     <meta name="description" content="{% block meta_description %}{% trans "Follow your favourite brands, bloggers & friends to discover fashion you love." %}{% endblock %}">
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/screen.css" %}" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="{{ MEDIA_URL }}{% staticfile "styles/print.css" %}" type="text/css" media="print">
-    <link rel="shortcut icon" href="{{ MEDIA_URL }}{% staticfile "images/favicon.ico" %}">
+    <link rel="stylesheet" href="{% static "styles/screen.css" %}" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="{% static "styles/print.css" %}" type="text/css" media="print">
+    <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
     <link href='http://fonts.googleapis.com/css?family=Lato:400|IM+Fell+Great+Primer:400italic' rel='stylesheet' type='text/css'>
     {% block extra-styles %}
     {% endblock extra-styles %}
@@ -29,7 +30,7 @@
         };
 
         window.fbAsyncInit = function() {
-            FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, xfbml: true, channelUrl: '//{{ CURRENT_DOMAIN }}{{ MEDIA_URL }}channel.html'});
+            FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, xfbml: true, channelUrl: '//{{ CURRENT_DOMAIN }}{{ STATIC_URL }}channel.html'});
             FB.getLoginStatus(function(response) {
                 if(!response.authResponse) {
                     jQuery('#ar-facepile').html('').addClass('ar-facepile');
@@ -40,8 +41,8 @@
         }
     </script>
     <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/compiled/jquery.js" %}"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/apparel.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/compiled/jquery.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/apparel.js" %}"></script>
     <script type="text/javascript">
          function facebookConnect(form){
             var label = '';
@@ -112,7 +113,7 @@
     <div id="header">
         <div id="inner-header">
             <a class="page-logo" href="{% if request.user.is_authenticated %}{% url user_feed %}{% else %}{% url public_feed %}{% endif %}">
-                <img src="{{ MEDIA_URL }}{% staticfile "images/logo.png" %}" alt="Apprl">
+                <img src="{% static "images/logo.png" %}" alt="Apprl">
             </a>
 
             <form action="/apparel/search" method="get" onSubmit="return false" id="search" autocomplete="off">
@@ -292,10 +293,10 @@
 </div>
 
 <a class="feedback" href="mailto:feedback@apprl.com?subject={% trans "Hi Apprl! I have a question / idea / complaint / complement" %}">
-    <img src="{{ MEDIA_URL }}/images/feedback-button.png">
+    <img src="{{ STATIC_URL }}/images/feedback-button.png">
 </a>
 
-<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/money.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/money.min.js" %}"></script>
 <script type="text/javascript">
   fx.base = 'SEK';
   fx.rates = {

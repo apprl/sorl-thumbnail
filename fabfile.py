@@ -264,7 +264,7 @@ def build_styles_and_scripts():
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
         sudo('%(path)s/bin/python manage.py synccompress' % env, pty=True, user=env.run_user)
-        sudo('cd ./media; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
+        sudo('cd ./sass; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
         sudo('ln -s ../../../../shared/cache media/cache', pty=True, user=env.run_user)
         sudo('ln -s ../../../../../lib/python2.6/site-packages/tinymce/media/tiny_mce media/js/tiny_mce', pty=True, user=env.run_user)

@@ -5,6 +5,6 @@
     {% endfor %}
 </ul>
 <div id="pagination-bottom" class="pagination">
-    {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page MEDIA_URL=MEDIA_URL only %}
+    {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page STATIC_URL=STATIC_URL only %}
 </div>
 {% endspaceless %}

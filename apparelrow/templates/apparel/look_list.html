@@ -36,7 +36,7 @@
         {% if not user.is_authenticated and request.path == popular_look_list_url %}
             <div class="empty-content">
                 <p>{% trans "To see popular looks in your network you need to connect with your Facebook account." %}</p>
-                {% with MEDIA_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
+                {% with STATIC_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
                     {% facebook_button facebook_login_image %}
                 {% endwith %}
             </div>

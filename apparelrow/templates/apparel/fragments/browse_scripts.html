@@ -1,10 +1,11 @@
-{% load apparel_extras django_static l10n %}
-<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/jquery/jquery.history.js" %}"></script>
+{% load apparel_extras l10n %}
+{% load static from staticfiles %}
+<script type="text/javascript" src="{% static "js/jquery/jquery.history.js" %}"></script>
 <script type="text/javascript">
   var pricerange = {
     min: {{ pricerange.min }},
     max: {{ pricerange.max }}
   };
 </script>
-<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/filtersetup.js" %}"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}{% staticfile "js/browse.js" %}"></script>
+<script type="text/javascript" src="{% static "js/filtersetup.js" %}"></script>
+<script type="text/javascript" src="{% static "js/browse.js" %}"></script>

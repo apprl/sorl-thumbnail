@@ -32,13 +32,19 @@ urlpatterns = patterns('',
     (r'^i18n/setlang/$', 'apparel.views.apparel_set_language'), # override builtin set_language
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT } ),
     (r'^newsletter/', include('newsletter.urls')),
     (r'', include('apparel.urls')),
     (r'^s/', include('statistics.urls')),
     url(r'^facebook/login', 'profile.views.login', name='facebook_login'),
     (r'^tinymce/', include('tinymce.urls')),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+   )
 
 urlpatterns += patterns('django.contrib.flatpages.views',
     url(r'^(?P<url>about/.*)$', 'flatpage', name='about'),
