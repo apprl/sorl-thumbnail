@@ -31,7 +31,6 @@ class Command(BaseCommand):
             if last_update is None:
                 last_update = datetime.datetime.now() - datetime.timedelta(days=30)
 
-            last_update = datetime.datetime.now() - datetime.timedelta(days=2)
             for product in Product.valid_objects.filter(date_added__gt=last_update, manufacturer=brand).order_by('-modified').iterator():
                 #get_model('activity_feed', 'activity').objects.push_activity(brand.profile, 'add_product', product, product.gender)
                 # Code below is taken from activity_feed.models and
