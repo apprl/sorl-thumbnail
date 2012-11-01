@@ -394,15 +394,18 @@ def login_flow_featured(request, profile):
     profile.login_flow = 'featured'
     profile.save()
 
-    featured_profiles = [x.profile for x in FeaturedProfile.objects.filter(gender=profile.gender).order_by('rank')]
+    if profile.gender not in ['M', 'W']:
+        featured_profiles = [x.profile for x in FeaturedProfile.objects.order_by('-rank')]
+    else:
+        featured_profiles = [x.profile for x in FeaturedProfile.objects.filter(gender=profile.gender).order_by('-rank')]
 
     profiles = ApparelProfile.objects.filter(is_brand=False, gender=profile.gender).order_by('-followers_count')
     facebook_user = get_facebook_user(request)
     if request.user.is_authenticated() and facebook_user:
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
-        profiles = profiles.exclude(user__username__in=(f['id'] for f in friends['data']))
-        profiles = profiles.exclude(pk__in=(x.profile_id for x in FeaturedProfile.objects.filter(gender=profile.gender)))
+        profiles = profiles.exclude(user__username__in=friends_uids)
+        profiles = profiles.exclude(pk__in=[x.profile_id for x in FeaturedProfile.objects.filter(gender=profile.gender)])
 
     missing_profile_count = 21 - len(featured_profiles)
     profiles = itertools.chain(featured_profiles, profiles[:missing_profile_count])
