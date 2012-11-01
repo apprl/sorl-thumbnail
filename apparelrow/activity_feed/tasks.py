@@ -97,7 +97,7 @@ def aggregate(r, user, gender, activity):
     ct stands for content type
     v stands for verb
     """
-    six_hours = time.mktime((activity.modified - datetime.timedelta(hours=6)).timetuple())
+    twelve_hours = time.mktime((timezone.now() - datetime.timedelta(hours=12)).timetuple())
 
     # Special rule 1: if user is equal to activity.user this means that this is
     # a private feed and should be displayed on the users update page and we
@@ -123,7 +123,7 @@ def aggregate(r, user, gender, activity):
     if activity.user == user:
         feed_key = get_feed_key(user, gender, private=True)
 
-    count = r.zcount(feed_key, six_hours, '+inf')
+    count = r.zcount(feed_key, twelve_hours, '+inf')
     if count == 0:
         activity_json = json.dumps({'u': [activity.user.pk],
                                     'v': activity.verb,
@@ -132,7 +132,7 @@ def aggregate(r, user, gender, activity):
         r.zadd(feed_key, get_score(activity), activity_json)
     else:
         already_aggregated = False
-        for item_json in r.zrevrangebyscore(feed_key, '+inf', six_hours):
+        for item_json in r.zrevrangebyscore(feed_key, '+inf', twelve_hours):
             item = json.loads(item_json)
             if item['v'] == activity.verb and \
                item['ct'] == activity.content_type.pk:
