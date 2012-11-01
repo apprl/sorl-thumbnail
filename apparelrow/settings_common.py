@@ -104,8 +104,10 @@ AWS_SECRET_ACCESS_KEY = 'VLxYKMZ09WoYL20YoKjD/d/4CJvQS+HKiWGGhJQU'
 AWS_STORAGE_BUCKET_NAME = 's-staging.apprl.com'
 AWS_HEADERS = {
         'Expires': 'Sat, Nov 01 2014 20:00:00 GMT',
-        'Cache-Control': 'max-age=86400',
+        'Cache-Control': 'max-age=86400, public',
 }
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_SECURE_URLS = False
 STATICFILES_STORAGE = 'storage.CachedStaticS3BotoStorage'
 
 # Make this unique, and don't share it with anybody.
