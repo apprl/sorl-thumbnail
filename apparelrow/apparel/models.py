@@ -843,7 +843,7 @@ class LookComponent(models.Model):
     def _style(self, scale=1):
         s = []
         for attr in ('top', 'left', 'width', 'height'):
-            if(attr in self.__dict__.keys() and self.__dict__[attr]):
+            if(attr in self.__dict__.keys() and self.__dict__[attr] is not None):
                 s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr] * scale))
 
         if self.z_index:

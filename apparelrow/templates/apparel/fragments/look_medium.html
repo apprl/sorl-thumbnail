@@ -18,11 +18,11 @@
             </div>
         {% else %}
             {% for component in object.collage_components.all %}
-                {% thumbnail component.product.product_image "450x334" crop="noop" format="PNG" transparent=True as im %}
                 <a href="{{ component.product.get_absolute_url }}" id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_middle }}">
+                    {% thumbnail component.product.product_image "450x334" crop="noop" format="PNG" transparent=True as im %}
                     <img src="{{ im.url }}" title="{{ component.product }}" />
+                    {% endthumbnail %}
                 </a>
-                {% endthumbnail %}
                 {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
             {% endfor %}
             <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
