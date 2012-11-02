@@ -152,17 +152,11 @@ def get_weekly_mail_content(gender, timeframe):
     count_looks = 0
     for look in week_looks + base_looks:
         if look.pk not in used_looks:
-            # Generate a thumbnail of look static image and store it forever
-            static_image = get_thumbnail(look.static_image, '278', crop='noop')
-            static_email_image = os.path.join(settings.APPAREL_EMAIL_IMAGE_ROOT, '%s__%s' % (datetime.date.today(), os.path.basename(static_image.name)))
-            shutil.copyfile(os.path.join(settings.MEDIA_ROOT, static_image.name), os.path.join(settings.MEDIA_ROOT, static_email_image))
-            static_email_image = os.path.join(settings.STATIC_URL, static_email_image)
-
             look_class = 'photo' if look.display_with_component == 'P' else 'collage'
             looks.append({
                 'class': look_class,
                 'url': ''.join(['http://', Site.objects.get_current().domain, look.get_absolute_url()]),
-                'image': ''.join(['http://', Site.objects.get_current().domain, static_email_image]),
+                'image': get_thumbnail(look.static_image, '278', crop='noop').url,
                 'name': look.title,
                 'user_url': ''.join(['http://', Site.objects.get_current().domain, look.user.get_absolute_url()]),
                 'user_name': look.user.get_profile().display_name,
