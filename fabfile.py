@@ -267,7 +267,7 @@ def build_styles_and_scripts():
         run('mkdir media', pty=True)
         sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
-        sudo('%(path)s/bin/python manage.py collectstatic' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python manage.py collectstatic --noinput' % env, pty=True, user=env.run_user)
 
 def symlink_current_release():
     "Symlink our current release"
