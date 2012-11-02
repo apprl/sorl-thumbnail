@@ -10,8 +10,6 @@
 <div id="content">
     <h2>{% trans "Create a look" %}</h2>
     <p>{% trans "To create a look you need to connect with your Facebook account:" %}</p>
-    {% with STATIC_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
-    {% facebook_button facebook_login_image %}
-    {% endwith %}
+    {% facebook_button %}
 </div>
 {% endblock body %}

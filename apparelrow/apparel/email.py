@@ -20,6 +20,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.staticfiles.storage import staticfiles_storage
 from sorl.thumbnail import get_thumbnail
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
@@ -250,7 +251,7 @@ def generate_weekly_mail(request):
                 'products_3': products[6:9],
                 'looks': looks,
                 'members': members,
-                'email_weekly_top': request.build_absolute_uri(settings.STATIC_URL + '/images/weekly-top-en.gif'),
+                'email_weekly_top': request.build_absolute_uri(staticfiles_storage.url('images/weekly-top-en.gif')),
             })
 
             text_template = loader.render_to_string('email/weekly.txt')
@@ -293,5 +294,5 @@ def generate_weekly_mail(request):
             'products_3': products[6:9],
             'looks': looks,
             'members': members,
-            'email_weekly_top': request.build_absolute_uri(settings.STATIC_URL + '/images/weekly-top-en.gif'),
+            'email_weekly_top': request.build_absolute_uri(staticfiles_storage.url('images/weekly-top-en.gif')),
         }, context_instance=RequestContext(request))

@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import stringfilter
 from django.utils.html import urlize
 from django.utils.safestring import mark_safe
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 from apparel.models import ProductLike, LookLike
 
@@ -30,9 +31,9 @@ def apparel_facebook_button(context, image=None):
     else:
         next = None
     if image is not None:
-        button = settings.STATIC_URL + 'images/' + image
+        button = staticfiles_storage.url('images/' + image)
     else:
-        button = settings.STATIC_URL + 'images/fblogo.png'
+        button = staticfiles_storage.url('images/fblogo.png')
     return dict(next=next, logged_in=logged_in, button=button, request=context['request'])
 
 @register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)
@@ -44,6 +45,8 @@ def facebook_button(context, button=None):
         next = context['next']
     else:
         next = None
+    if button is None:
+        button = staticfiles_storage.url('images/facebook-%s.png' % (context['request'].LANGUAGE_CODE,))
     return dict(next=next, logged_in=logged_in, button=button, request=context['request'])
 
 @register.filter

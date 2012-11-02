@@ -5,7 +5,5 @@
 {% block title %}{% trans "My Follows" %}{% endblock %}
 {% block content %}
 <p>{% trans "Connect your Facebook account to see what your friends are doing on Apprl." %}</p>
-{% with STATIC_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
-{% facebook_button facebook_login_image %}
-{% endwith %}
+{% facebook_button %}
 {% endblock %}

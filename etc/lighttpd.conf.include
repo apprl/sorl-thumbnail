@@ -16,19 +16,10 @@ fastcgi.server = (
     ),
 )
 
-alias.url = (
-    "/media/admin"     => var.deploy-base + "/lib/python2.6/site-packages/django/contrib/admin/static/admin",
-    "/media"           => server.document-root + "/media",
-)
-
-expire.url = (
-    "/media"           => "access plus 1 years",
-)
-
 url.rewrite-once = (
-    "^/robots\.txt$"           => "/media/robots.%(hostname)s.txt",               # Robots.txt
-    "^/favicon\.ico$"          => "/media/images/favicon.ico",                    # Favicon, redirect to static folder
-    "^(/media.*)$"             => "$1",                                           # Static files
+    "^/robots\.txt$"           => "/static/robots.%(hostname)s.txt",              # Robots.txt
+    "^/favicon\.ico$"          => "/static/images/favicon.ico",                   # Favicon, redirect to static folder
+    "^/channel\.html$"         => "/static/channel.html",                         # For facebook channelUrl
     "^(/admin(?:\/.*|$))"      => "/" + var.project-name + "-admin.fcgi$1",       # FCGI Admin site configuration
     "^(/.*)$"                  => "/" + var.project-name + ".fcgi$1",             # FCGI configuration
 )

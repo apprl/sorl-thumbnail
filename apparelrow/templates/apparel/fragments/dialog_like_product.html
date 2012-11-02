@@ -4,7 +4,5 @@
 {% block title %}{% trans "Like a product" %}{% endblock %}
 {% block content %}
 <p>{% trans "To 'like' a product on the site, you need to login with your Facebook account. (Please note that this will not show up on your Facebook wall by default.)" %}</p>
-{% with STATIC_URL|add:'images/facebook-'|add:LANGUAGE_CODE|add:'.png' as facebook_login_image %}
-{% facebook_button facebook_login_image %}
-{% endwith %}
+{% facebook_button %}
 {% endblock %}
