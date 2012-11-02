@@ -42,6 +42,8 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 import djcelery
 djcelery.setup_loader()
 
+AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'
+
 # --- Application wide init code goes here. 
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated
