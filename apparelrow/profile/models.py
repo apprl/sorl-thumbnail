@@ -152,7 +152,7 @@ class ApparelProfile(models.Model):
     @property
     def avatar_small(self):
         if self.image:
-            return get_thumbnail(settings.MEDIA_ROOT + '/' + self.image, '32x32', crop='center').url
+            return get_thumbnail(self.image, '32x32', crop='center').url
 
         if self.facebook_uid:
             return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_uid
