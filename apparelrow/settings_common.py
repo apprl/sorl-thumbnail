@@ -82,7 +82,7 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_root')
 
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
-STATIC_URL = 'http://s-staging.apprl.com'
+STATIC_URL = 'http://s-staging.apprl.com/'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
@@ -186,7 +186,7 @@ INSTALLED_APPS = (
     'south',                # External: Database migration
     'modeltranslation',     # External: Used for category translation
     'jsmin',
-    'compress',
+    'pipeline',
     'tinymce',
     'flatpages_tinymce',
     'storages',
@@ -207,9 +207,9 @@ INSTALLED_APPS = (
 
 COMMENTS_APP = 'apparel_comments'
 
-# - COMPRESS SETTINGS -
-COMPRESS_CSS = {}
-COMPRESS_JS = {
+# - PIPELINE SETTINGS -
+PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
+PIPELINE_JS = {
     'widget': {
         'source_filenames': ('js/jquery/jquery-1.8.2.min.js',
                              'js/widget.js'),
@@ -234,8 +234,6 @@ COMPRESS_JS = {
         'output_filename': 'js/compiled/jquery.js',
     }
 }
-
-COMPRESS = True
 
 CSRF_FAILURE_VIEW = 'apparel.views.csrf_failure'
 
