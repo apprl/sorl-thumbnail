@@ -134,8 +134,8 @@ def setup(snapshot='master'):
     with cd(env.path):
         run('virtualenv --no-site-packages .')
         with settings(warn_only=True):
-            run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared/warehouse shared/cache shared/static packages backup;', pty=True)
-            sudo('chown -R %(run_user)s:%(run_group)s var shared/cache shared/warehouse shared/static;' % env, pty=True)
+            run('mkdir -m a+w -p var/logs; mkdir -p etc releases shared/warehouse packages backup;', pty=True)
+            sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     install_redis()
     install_parallel()
@@ -265,9 +265,7 @@ def build_styles_and_scripts():
         sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
         sudo('%(path)s/bin/python manage.py synccompress' % env, pty=True, user=env.run_user)
         sudo('cd ./sass; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
-        sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
-        sudo('ln -s ../../../../shared/cache media/cache', pty=True, user=env.run_user)
-        sudo('ln -s ../../../../../lib/python2.6/site-packages/tinymce/media/tiny_mce media/js/tiny_mce', pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python manage.py collectstatic' % env, pty=True, user=env.run_user)
 
 def symlink_current_release():
     "Symlink our current release"
