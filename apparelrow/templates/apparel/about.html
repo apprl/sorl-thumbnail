@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static from staticfiles %}
 
 {% block body-header %}
 <div id="body-header">
@@ -35,53 +36,53 @@
 <div id="content">
     <div class="content-row-ett">
         <div class="row-wrapper">
-            <div class="startbubble"><img src="{{ STATIC_URL }}/images/genderimg/bubble-1.png" /></div>
+            <div class="startbubble"><img src="{% static "images/genderimg/bubble-1.png" %}" /></div>
             <span class="row-span">
                 <h2 class="rowrubbe">{% trans "All in one place" %}</h2>
                 <p class="p-row">{% trans "We have collected clothes, shoes & accessories from all the best international brands & online retailers." %}</p>
             </span>
             <div id="logoladdan-ett">
-                <div class="logo-row-ett"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_stores/liberty.png" /></div>
-                <div class="logo-row-ett"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_stores/harrods.png" /></div>
-                <div class="logo-row-ett"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_stores/v_ave_shoerepair.png" /></div>
-                <div class="logo-row-ett" style="margin: 0 0 12px 0;"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_stores/nelly.png" /></div>
-                <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_stores/ralphlauren.png" /></div>
-                <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_stores/asos.png" /></div>
-                <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_stores/urbanoutfitters.png" /></div>
-                <div class="logo-row-ett" style="margin:0;"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_stores/mytheresa.png" /></div>
+                <div class="logo-row-ett"><img src="{% static "images/genderimg/frontpage_stores/liberty.png" %}" /></div>
+                <div class="logo-row-ett"><img src="{% static "images/genderimg/frontpage_stores/harrods.png" %}" /></div>
+                <div class="logo-row-ett"><img src="{% static "images/genderimg/frontpage_stores/v_ave_shoerepair.png" %}" /></div>
+                <div class="logo-row-ett" style="margin: 0 0 12px 0;"><img src="{% static "images/genderimg/frontpage_stores/nelly.png" %}" /></div>
+                <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{% static "images/genderimg/frontpage_stores/ralphlauren.png" %}" /></div>
+                <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{% static "images/genderimg/frontpage_stores/asos.png" %}" /></div>
+                <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{% static "images/genderimg/frontpage_stores/urbanoutfitters.png" %}" /></div>
+                <div class="logo-row-ett" style="margin:0;"><img src="{% static "images/genderimg/frontpage_stores/mytheresa.png" %}" /></div>
                 <p class="mktmer">{% trans "... and many more!" %}</p>
             </div>
         </div>
     </div>
     <div class="content-row-tva">
         <div class="row-wrapper">
-            <div class="startbubble"><img src="{{ STATIC_URL }}/images/genderimg/bubble-2.png" /></div>
+            <div class="startbubble"><img src="{% static "images/genderimg/bubble-2.png" %}" /></div>
             <span class="row-span">
                 <h2 class="rowrubbe">{% trans "Follow friends & brands" %}</h2>
                 <p class="p-row">{% trans "See what your friends like, get inspired by bloggers & follow your favourite brands!" %}</p>
             </span>
             <div id="logoladdan-tva">
-                <div class="logo-row-tva"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_profilepics/aliciavikander.png" /></div>
-                <div class="logo-row-tva"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_profilepics/elinkling.png" /></div>
-                <div class="logo-row-tva"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_profilepics/viktortell.png" /></div>
-                <div class="logo-row-tva"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_profilepics/idarislow.png" /></div>
-                <div class="logo-row-tva"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_profilepics/kimstrom.png" /></div>
-                <div class="logo-row-tva" style="margin:0;"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_profilepics/fridafahrman.png" /></div>
+                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/aliciavikander.png" %}" /></div>
+                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/elinkling.png" %}" /></div>
+                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/viktortell.png" %}" /></div>
+                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/idarislow.png" %}" /></div>
+                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/kimstrom.png" %}" /></div>
+                <div class="logo-row-tva" style="margin:0;"><img src="{% static "images/genderimg/frontpage_profilepics/fridafahrman.png" %}" /></div>
             </div>
         </div>
     </div>
     <div class="content-row-tre">
         <div class="row-wrapper">
-            <div class="startbubble"><img src="{{ STATIC_URL }}/images/genderimg/bubble-3.png" /></div>
+            <div class="startbubble"><img src="{% static "images/genderimg/bubble-3.png" %}" /></div>
             <span class="row-span">
                 <h2 class="rowrubbe">{% trans "Create looks" %}</h2>
                 <p class="p-row">{% trans "Create & share looks to Apprl, Facebook or your blog. Tag photos with products or mix & match collages!" %}</p>
             </span>
             <div id="logoladdan-tre">
-                <div class="logo-row-tre"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_looks/look1.png" /></div>
-                <div class="logo-row-tre"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_looks/look2.png" /></div>
-                <div class="logo-row-tre"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_looks/look3.png" /></div>
-                <div class="logo-row-tre" style="margin:0;"><img src="{{ STATIC_URL }}/images/genderimg/frontpage_looks/look4.png" /></div>
+                <div class="logo-row-tre"><img src="{% static "images/genderimg/frontpage_looks/look1.png" %}" /></div>
+                <div class="logo-row-tre"><img src="{% static "images/genderimg/frontpage_looks/look2.png" %}" /></div>
+                <div class="logo-row-tre"><img src="{% static "images/genderimg/frontpage_looks/look3.png" %}" /></div>
+                <div class="logo-row-tre" style="margin:0;"><img src="{% static "images/genderimg/frontpage_looks/look4.png" %}" /></div>
             </div>
         </div>
     </div>

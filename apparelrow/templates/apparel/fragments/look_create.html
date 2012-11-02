@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static from staticfiles %}
 <form action="{{ request.path }}" method="post" class="standard-form">
     {% csrf_token %}
     <div>
@@ -14,12 +15,12 @@
         <ul class="choices">
             <li>
                 <h3>{% trans "Tagged photo" %}</h3>
-                <input name="look_photo_image" type="image" src="{{ STATIC_URL }}/images/example-photo.png" alt="">
+                <input name="look_photo_image" type="image" src="{% static "images/example-photo.png" %}" alt="">
                 <input name="look_photo" type="submit" value="{% trans "Create a tagged photo" %}">
             </li>
             <li class="last">
                 <h3>{% trans "Collage" %}</h3>
-                <input name="look_collage_image" type="image" src="{{ STATIC_URL }}/images/example-collage.png" alt="">
+                <input name="look_collage_image" type="image" src="{% static "images/example-collage.png" %}" alt="">
                 <input name="look_collage" type="submit" value="{% trans "Create a collage" %}">
             </li>
         </ul>

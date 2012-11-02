@@ -12,8 +12,6 @@ def exposed_settings(request):
     return {
         'CACHE_LONG_TIMEOUT': 60 * 60 * 12,
         'CACHE_TIMEOUT': django_settings.CACHES.get('default', {}).get('TIMEOUT', 60),
-        'DEFAULT_AVATAR': django_settings.APPAREL_DEFAULT_AVATAR,
-        'DEFAULT_AVATAR_LARGE': django_settings.APPAREL_DEFAULT_AVATAR_LARGE,
         'GOOGLE_ANALYTICS_ACCOUNT': django_settings.GOOGLE_ANALYTICS_ACCOUNT,
         'GOOGLE_ANALYTICS_DOMAIN': django_settings.GOOGLE_ANALYTICS_DOMAIN,
         'SHORT_LANGUAGES': django_settings.SHORT_LANGUAGES,

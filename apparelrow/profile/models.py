@@ -16,6 +16,7 @@ from django.contrib.comments.models import Comment
 from django.contrib.auth.signals import user_logged_in
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 from sorl.thumbnail import get_thumbnail
 from django_extensions.db.fields import AutoSlugField
@@ -157,9 +158,9 @@ class ApparelProfile(models.Model):
             return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_uid
 
         if self.is_brand:
-            return settings.APPAREL_DEFAULT_BRAND_AVATAR
+            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
 
-        return settings.APPAREL_DEFAULT_AVATAR
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
 
     @property
     def avatar(self):
@@ -170,9 +171,9 @@ class ApparelProfile(models.Model):
             return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_uid
 
         if self.is_brand:
-            return settings.APPAREL_DEFAULT_BRAND_AVATAR
+            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
 
-        return settings.APPAREL_DEFAULT_AVATAR
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
 
     @property
     def avatar_medium(self):
@@ -183,9 +184,9 @@ class ApparelProfile(models.Model):
             return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_uid
 
         if self.is_brand:
-            return settings.APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM
+            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM)
 
-        return settings.APPAREL_DEFAULT_AVATAR
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
 
     @property
     def avatar_large(self):
@@ -196,9 +197,9 @@ class ApparelProfile(models.Model):
             return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_uid
 
         if self.is_brand:
-            return settings.APPAREL_DEFAULT_BRAND_AVATAR_LARGE
+            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR_LARGE)
 
-        return settings.APPAREL_DEFAULT_AVATAR_LARGE
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
     def avatar_large_absolute_uri(self, request):
         if self.image:
@@ -208,9 +209,9 @@ class ApparelProfile(models.Model):
             return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_uid
 
         if self.is_brand:
-            return request.build_absolute_uri(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+            return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
 
-        return request.build_absolute_uri(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+        return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
 
 
     @property
