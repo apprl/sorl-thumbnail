@@ -39,6 +39,7 @@ def prod():
     env.settings = 'production'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
     env.celery_processes='6,3'
+    env.bucket_name = 's.apprl.com'
 
 def prod_db():
     "Use our EC2 server"
@@ -61,6 +62,7 @@ def staging():
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
     env.celery_processes='2,1'
+    env.bucket_name = 's-staging.apprl.com'
 
 # tasks
 
@@ -159,6 +161,7 @@ def deploy(param='', snapshot='master'):
     copy_config()
     copy_solr()
     build_styles_and_scripts()
+    migrate_s3()
     migrate(param)
     build_brand_list()
     symlink_current_release()
@@ -268,6 +271,13 @@ def build_styles_and_scripts():
         sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
         sudo('%(path)s/bin/python manage.py collectstatic --noinput' % env, pty=True, user=env.run_user)
+
+def migrate_s3():
+    require('release', provided_by=[deploy, setup])
+    with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
+        sudo('%(path)s/bin/python manage.py thumbnail clear' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python manage.py thumbnail cleanup' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python manage.py sync_media_s3 %(bucket_name)s' % env, pty=True, user=env.run_user)
 
 def symlink_current_release():
     "Symlink our current release"
