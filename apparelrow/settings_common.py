@@ -187,8 +187,6 @@ INSTALLED_APPS = (
     'modeltranslation',     # External: Used for category translation
     'jsmin',
     'pipeline',
-    'tinymce',
-    'flatpages_tinymce',
     'storages',
 
     # Internal

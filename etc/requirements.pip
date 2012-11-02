@@ -22,8 +22,6 @@ libxml2-python==2.6.15
 django-activity-stream==0.4.3
 -f http://django-modeltranslation.googlecode.com/files/django-modeltranslation-0.2.tar.gz
 django-modeltranslation==0.2
-django-tinymce==1.5.1b2
-django-flatpages-tinymce==0.1.1
 #pysolr==2.0.15
 -e git+https://github.com/jbohman/pysolr.git#egg=pysolr
 celery==3.0.11
