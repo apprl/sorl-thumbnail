@@ -89,7 +89,7 @@ def delete_activity(sender, instance, **kwargs):
     """
     On delete activity remove all activity from feeds.
     """
-    pull_activity_feed.delay(instance.user, instance.verb, instance.content_type, instance.object_id)
+    pull_activity_feed.delay(instance)
 
 #
 # ACTIVITY FEED
