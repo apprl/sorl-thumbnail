@@ -128,7 +128,7 @@ def profile(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def looks(request, profile, form, page=0):
-    queryset = profile.user.look.order_by('-modified')
+    queryset = profile.user.look.order_by('-created')
 
     paged_result, pagination = get_pagination_page(queryset, 6,
             request.GET.get('page', 1), 1, 2)
