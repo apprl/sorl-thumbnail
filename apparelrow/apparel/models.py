@@ -623,7 +623,7 @@ class Look(models.Model):
 
         for component in self.display_components.all():
             if self.display_with_component == 'P':
-                component_image = Image.open(os.path.join(settings.MEDIA_ROOT, 'images', 'look-hotspot.png'))
+                component_image = Image.open(os.path.join('static', 'images', 'look-hotspot.png'))
             else:
                 if not component.product.product_image:
                     continue
