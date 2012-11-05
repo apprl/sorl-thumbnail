@@ -1,4 +1,4 @@
-{% load i18n l10n apparel_extras %}
+{% load i18n l10n apparel_extras compressed %}
 {% load static from staticfiles %}
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
@@ -41,7 +41,7 @@
         }
     </script>
     <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
-    <script type="text/javascript" src="{% static "js/compiled/jquery.js" %}"></script>
+    {% compressed_js 'jquery' %}
     <script type="text/javascript" src="{% static "js/apparel.js" %}"></script>
     <script type="text/javascript">
          function facebookConnect(form){

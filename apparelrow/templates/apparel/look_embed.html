@@ -1,4 +1,4 @@
-{% load thumbnail cache %}
+{% load thumbnail cache compressed %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
   <head>
@@ -39,6 +39,6 @@
       {% endif %}
     </div>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="/media/js/compiled/embed.js"></script>
+    {% compressed_js 'embed' %}
   </body>
 </html>
