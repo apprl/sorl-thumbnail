@@ -19,6 +19,11 @@ DATABASES = {
     }
 }
 
+# Storage
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+STATIC_URL = '/static/'
+
 APPAREL_DECOMPRESS_UTILS = {
     'gzip': '/bin/gunzip',
     'zip':  '/bin/zip',

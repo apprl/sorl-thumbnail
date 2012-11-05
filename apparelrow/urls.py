@@ -1,5 +1,6 @@
-from django.conf.urls import patterns, url, include, handler404, handler500
 from django.conf import settings
+from django.conf.urls import patterns, url, include, handler404, handler500
+from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 admin.autodiscover()
@@ -37,14 +38,7 @@ urlpatterns = patterns('',
     (r'^s/', include('statistics.urls')),
     url(r'^facebook/login', 'profile.views.login', name='facebook_login'),
     (r'^tinymce/', include('tinymce.urls')),
-)
-
-if settings.DEBUG:
-    urlpatterns += patterns('',
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-   )
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += patterns('django.contrib.flatpages.views',
     url(r'^(?P<url>about/.*)$', 'flatpage', name='about'),
