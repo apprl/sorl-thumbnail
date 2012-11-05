@@ -141,7 +141,6 @@ class API(object):
             'category': self.category,
             'manufacturer': self.manufacturer,
             'static_brand': self.dataset['product']['manufacturer'],
-            'product_image': self.product_image,
             'gender': self.dataset['product']['gender'],
             'feed_gender': self.dataset['product']['gender'],
             'availability': False if self.dataset['product']['availability'] == 0 else True
@@ -154,6 +153,7 @@ class API(object):
             )
             logger.debug('Found existing product: [id %s] %s' % (self.product.id, self.product))
         except ObjectDoesNotExist:
+            fields['product_image'] = self.product_image
             self.product = get_model('apparel', 'Product').objects.create(
                 sku=self.dataset['product']['product-id'],
                 **fields
