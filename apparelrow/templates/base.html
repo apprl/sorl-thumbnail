@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
-    <title>{% block extra-title %}{% endblock %}Apprl - Social Shopping</title>
+    <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - Social Shopping{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% block meta_description %}{% trans "Follow your favourite brands, bloggers & friends to discover fashion you love." %}{% endblock %}">
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />
