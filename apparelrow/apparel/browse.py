@@ -143,14 +143,17 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         query_arguments['fq'].append('availability:true')
         query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
+    # Sort
+    if 'sort' not in query_arguments:
+        query_arguments['sort'] = DEFAULT_SORT_ARGUMENTS.get(request.GET.get('sort'), DEFAULT_SORT_ARGUMENTS['pop'])
+
     # Query string
     query_string = request.GET.get('q')
     if not query_string:
-        if 'sort' not in query_arguments:
-            query_arguments['sort'] = DEFAULT_SORT_ARGUMENTS.get(request.GET.get('sort'), DEFAULT_SORT_ARGUMENTS['pop'])
         query_string = '*:*'
-
-    if query_string != '*:*':
+    else:
+        # If we have a query string use edismax search type and search in
+        # specified fields
         query_arguments['qf'] = PRODUCT_SEARCH_FIELDS
         query_arguments['defType'] = 'edismax'
 
