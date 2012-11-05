@@ -273,8 +273,9 @@ def build_styles_and_scripts():
 def migrate_s3():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
-        sudo('%(path)s/bin/python manage.py thumbnail clear' % env, pty=True, user=env.run_user)
-        sudo('%(path)s/bin/python manage.py thumbnail cleanup' % env, pty=True, user=env.run_user)
+        # XXX: running thumbnail clear/cleanup requires lots of ram
+        #sudo('%(path)s/bin/python manage.py thumbnail clear' % env, pty=True, user=env.run_user)
+        #sudo('%(path)s/bin/python manage.py thumbnail cleanup' % env, pty=True, user=env.run_user)
         sudo('%(path)s/bin/python manage.py sync_media_s3 -d %(path)s/shared/static -p static' % env, pty=True, user=env.run_user)
 
 def symlink_current_release():
