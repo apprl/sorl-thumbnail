@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-05 12:11+0100\n"
+"POT-Creation-Date: 2012-11-05 12:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1069,8 +1069,12 @@ msgstr ""
 
 #: templates/activity_feed/verbs/like_product.html:9
 #, python-format
-msgid "<span class=\"likes-text\">likes</span> %(count)s products"
-msgstr "<span class=\"likes-text\">gillar</span> %(count)s produkter"
+msgid ""
+"<span class=\"likes-text\">likes</span> <a href=\"%(user_url)s\">%(count)s "
+"products</a>"
+msgstr ""
+"<span class=\"likes-text\">gillar</span> <a href=\"%(user_url)s\">%(count)s "
+"produkter</a>"
 
 #: templates/activity_feed/verbs/like_product.html:11
 #, python-format

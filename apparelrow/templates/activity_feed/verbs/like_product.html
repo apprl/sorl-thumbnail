@@ -5,7 +5,7 @@
     {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
     {% comment %}TODO: fix objects.0.id when we do aggregations{% endcomment %}
         {% if total_objects > 1 %}
-            {% blocktrans with count=total_objects %}<span class="likes-text">likes</span> {{count}} products{% endblocktrans %}
+            {% blocktrans with count=total_objects user_url=users.0.get_absolute_url %}<span class="likes-text">likes</span> <a href="{{user_url}}">{{count}} products</a>{% endblocktrans %}
         {% else %}
             {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0 %}
             <span class="likes-text">likes</span> <a href="{{object_url}}">{{title}}</a>
