@@ -20,7 +20,7 @@
             <div class="message warning">
                 <p>{% trans "Welcome to your Apprl profile!" %}</p>
                 <p>{% trans "All the items that you ♥ will end up here<br>(and you will get alerts once they go on sale)." %}</p>
-                <a class="btn btn-block btn-positive" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Go find items!" %}</a>
+                <a class="btn btn-upper btn-block btn-positive" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Go find items!" %}</a>
             </div>
         {% else %}
             {% if profile.is_brand %}

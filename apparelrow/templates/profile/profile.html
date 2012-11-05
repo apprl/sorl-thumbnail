@@ -12,7 +12,7 @@
         {% if profile == request.user.get_profile %}
             <div class="message warning">
                 <p>{% trans "All your activity is shown here as a timeline." %}</p>
-                <a class="btn btn-block btn-positive" href="{% url user-list-popular %}">{% trans "Find members to follow!" %}</a>
+                <a class="btn btn-upper btn-block btn-positive" href="{% url user-list-popular %}">{% trans "Find members to follow!" %}</a>
             </div>
         {% else %}
             <div class="message warning">{% blocktrans with profile.display_name as display_name %}{{ display_name }} has not done anything yet.{% endblocktrans %}</div>
