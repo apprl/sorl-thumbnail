@@ -22,7 +22,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from apparel.manager import ProductManager, SearchManager
 from apparel.cache import invalidate_model_handler
-from apparel.utils import currency_exchange_locale
+from apparel.utils import currency_exchange
 
 from cStringIO import StringIO
 from PIL import Image
@@ -482,35 +482,51 @@ class VendorProduct(models.Model):
     original_discount_currency = models.CharField(_('Original discount currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
     availability  = models.IntegerField(_('Items in stock'), null=True, blank=True, help_text=_('Negative value means it is in stock, but we have no information about how many. Null means we have no information about availability. 0 means it is sold out'))
 
-    def _calculate_locale_price(self):
+    def _calculate_exchange_price(self):
         """
-        Return price and currency based on the locale from get_language.
+        Return price and currency based on the selected currency. If no
+        currency is selected currency language is converted to a currency if
+        possible else APPAREL_BASE_CURRENCY is used.
         """
         if not hasattr(self, '_calculated_locale_price'):
-            rate, currency = currency_exchange_locale(get_language(), self.original_currency)
+            to_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)
+            rate = currency_exchange(to_currency, self.original_currency)
 
             discount_price = self.original_discount_price
             if discount_price:
                 discount_price = rate * self.original_discount_price
 
-            self._calculated_locale_price = (rate * self.original_price, discount_price, currency)
+            self._calculated_locale_price = (rate * self.original_price, discount_price, to_currency)
 
         return self._calculated_locale_price
 
     @property
     def locale_price(self):
-        price, _, _ = self._calculate_locale_price()
+        price, _, _ = self._calculate_exchange_price()
         return price
 
     @property
     def locale_discount_price(self):
-        _, discount_price, _ = self._calculate_locale_price()
+        _, discount_price, _ = self._calculate_exchange_price()
         return discount_price
 
     @property
     def locale_currency(self):
-        _, _, currency = self._calculate_locale_price()
+        _, _, currency = self._calculate_exchange_price()
         return currency
+
+    @property
+    def lowest_price_in_sek(self):
+        if not hasattr(self, '_lowest_price_in_sek'):
+            rate = currency_exchange('SEK', self.original_currency)
+
+            discount_price = self.original_discount_price
+            if discount_price:
+                self._lowest_price_in_sek = rate * self.original_discount_price
+            else:
+                self._lowest_price_in_sek = rate * self.original_price
+
+        return self._lowest_price_in_sek
 
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)

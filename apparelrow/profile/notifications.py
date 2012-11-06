@@ -17,7 +17,7 @@ import facebook
 
 from celery.task import task
 
-from apparel.utils import currency_exchange_locale
+from apparel.utils import currency_exchange
 
 from profile.models import NotificationCache, Follow, ApparelProfile
 
@@ -378,7 +378,9 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             language = settings.LANGUAGE_CODE
             if likes.user.get_profile().language:
                 language = likes.user.get_profile().language
-            rate, currency = currency_exchange_locale(language, original_currency)
+
+            currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
+            rate = currency_exchange(currency, original_currency)
 
             # Round prices to no digits after the decimal comma
             locale_original_price = (original_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)

@@ -4,17 +4,12 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db import connections, models
 from django.db.models.loading import get_model
 
-def currency_exchange_locale(locale, from_currency):
+def currency_exchange(to_currency, from_currency):
     """
-    Based on locale return exchange rate.
+    Return exchange rate.
     """
-    if locale not in settings.LANGUAGE_TO_CURRENCY:
-        return 1, from_currency
-
-    to_currency = settings.LANGUAGE_TO_CURRENCY.get(locale, settings.APPAREL_BASE_CURRENCY)
-
     if from_currency == to_currency:
-        return 1, to_currency
+        return 1
 
     rates = cache.get(settings.APPAREL_RATES_CACHE_KEY)
     if not rates:
@@ -32,7 +27,7 @@ def currency_exchange_locale(locale, from_currency):
     elif to_currency == settings.APPAREL_BASE_CURRENCY:
         rate = 1 / rates[from_currency]
 
-    return rate, to_currency
+    return rate
 
 
 def get_gender_from_cookie(request):
