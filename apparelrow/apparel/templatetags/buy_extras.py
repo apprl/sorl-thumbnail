@@ -48,7 +48,7 @@ def buy_url(product_id, vendor, target_user_id='0', page='Default'):
         url = set_query_parameter(url, 'SID', sid)
     # Zanox
     elif vendor_feed.provider_class == 'zanox':
-        url = set_query_parameter(url, 'zpar0', sid)
+        url = '%s&zpar0=%s' % (url, sid)
     # Linkshare
     elif vendor_feed.provider_class == 'linkshare':
         url = set_query_parameter(url, 'u1', sid)
