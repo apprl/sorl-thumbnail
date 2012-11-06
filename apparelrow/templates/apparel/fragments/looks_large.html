@@ -16,7 +16,7 @@
                     >
                     {% for component in object.photo_components.all %}
                         <a href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style }}display:none;"></a>
-                        {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
+                        {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
                     {% endfor %}
                     <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
                     </div>
@@ -27,7 +27,7 @@
                             <img src="{{ im.url }}" title="{{ component.product }}" />
                         </a>
                         {% endthumbnail %}
-                        {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
+                        {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
                     {% endfor %}
                     <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
                 {% endif %}

@@ -550,7 +550,7 @@ jQuery(document).ready(function() {
 <div id="look-tooltips">
     {% for component in object.display_components.all %}
         {% cache CACHE_TIMEOUT look_product_tooltip component.product.id LANGUAGE_CODE %}
-        {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
+        {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
         {% endcache %}
     {% endfor %}
 </div>

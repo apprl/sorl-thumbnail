@@ -1,4 +1,4 @@
 {% for component in object.collage_components.all %}
     {% include "apparel/fragments/look_collage_product.html" %}
-    {% include "apparel/fragments/look_product_tooltip.html" with product=component.product only %}
+    {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
 {% endfor %}
