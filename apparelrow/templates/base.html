@@ -306,14 +306,21 @@
     'SEK': 1
   };
   var current_currency = '{{ CURRENCY }}';
+  function formatNumber(num) {
+    var array = num.toFixed().split('');
+    var index = -3;
+    while (array.length + index > 0) {
+      array.splice(index, 0, ' ');
+      index -= 4;
+    }
+    return array.join('');
+  };
   function currencyConversion(elements) {
     elements.each(function(index, element) {
       var $element = jQuery(element);
-      var price = $element.text().split(' ');
-      var currency = price.pop();
-      var price = parseInt(price.join(''), 10);
-      var converted_price = Math.round(fx.convert(price, {from: currency, to: current_currency}));
-      $element.text(converted_price + ' ' + current_currency);
+      var data = $element.data();
+      var converted_price = Math.round(fx.convert(data.price, {from: data.currency, to: current_currency}));
+      $element.text(formatNumber(converted_price) + ' ' + current_currency);
   });
 }
 </script>
