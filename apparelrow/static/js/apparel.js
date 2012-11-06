@@ -142,10 +142,11 @@ jQuery(document).ready(function() {
 
     // Track buy clicks
 
-    $('body.product a.btn-buy').live('click', trackEvent('Product', 'BuyReferral'));
-    $('body.page-shop a.btn-buy').live('click', trackEvent('Shop', 'BuyReferral'));
-    $('body.profile a.btn-buy').live('click', trackEvent('Profile', 'BuyReferral'));
-    $('body.feed a.btn-buy').live('click', trackEvent('Feed', 'BuyReferral'));
+    $('#search-result a.btn-buy').live('click', trackEvent('Search', 'BuyReferral'));
+    $('body.product .product-info a.btn-buy').live('click', trackEvent('Product', 'BuyReferral'));
+    $('body.page-shop #content a.btn-buy').live('click', trackEvent('Shop', 'BuyReferral'));
+    $('body.profile #content a.btn-buy').live('click', trackEvent('Profile', 'BuyReferral'));
+    $('body.feed #content a.btn-buy').live('click', trackEvent('Feed', 'BuyReferral'));
     $('.tooltip a.buy-now').live('click', trackEvent('Look', 'BuyReferral'));
 
     // Track likes
