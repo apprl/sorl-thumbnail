@@ -42,7 +42,7 @@ class ZanoxMapper(DataMapper):
             return price
 
         return self.record.get('ProductPrice')
-        
+
     def get_currency(self):
         return self.record.get('CurrencySymbolOfPrice')
 
