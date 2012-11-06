@@ -18,12 +18,9 @@ class ProductManager(models.Manager):
 
     def get_query_set(self):
         queryset = super(ProductManager, self).get_query_set() \
-                                              .filter(published=True,
-                                                      category__isnull=False,
-                                                      manufacturer__isnull=False,
-                                                      gender__isnull=False)
+                                              .filter(published=True)
         if self.availability:
-            queryset = queryset.filter(vendorproduct__isnull=False, availability=True)
+            queryset = queryset.filter(availability=True)
 
         return queryset
 
