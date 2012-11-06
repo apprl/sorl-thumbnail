@@ -188,7 +188,7 @@ class Provider(object):
                 product.vendorproduct.update(availability=0)
                 product.save()
                 logger.info('Setting availability for product %s to sold out' % (product.product_name,))
-            except ObjectDoesNotExist, MultipleObjectsReturned:
+            except (ObjectDoesNotExist, MultipleObjectsReturned):
                 pass
 
         except ImporterError as e:
@@ -206,13 +206,13 @@ class Provider(object):
                 product.vendorproduct.update(availability=0)
                 product.save()
                 logger.info('Setting availability for product %s to sold out' % (product.product_name,))
-            except ObjectDoesNotExist, MultipleObjectsReturned:
+            except (ObjectDoesNotExist, MultipleObjectsReturned):
                 pass
 
         except Exception as e:
             # FIXME: No need to add anything here as the process will terminate
             self.feed.latest_import_log.messages.create(
-                status='error', 
+                status='error',
                 message=u"Aborting import due to unhandled error.\nProduct: %s\nError: %s\n\nStacktrace:\n%s" % (
                     prod_id, unicode(e.__str__(), 'utf-8'), ''.join(traceback.format_tb(sys.exc_info()[2]))
                 )
@@ -225,10 +225,10 @@ class Provider(object):
                 product.vendorproduct.update(availability=0)
                 product.save()
                 logger.info('Setting availability for product %s to sold out' % (product.product_name,))
-            except ObjectDoesNotExist, MultipleObjectsReturned:
+            except (ObjectDoesNotExist, MultipleObjectsReturned):
                 pass
 
-            raise 
+            raise e
         else:
             self.count += 1
 
