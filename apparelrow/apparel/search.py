@@ -140,10 +140,11 @@ def product_save(instance, **kwargs):
 
     document, boost = get_product_document(instance)
 
-    if 'commit' in kwargs and kwargs['commit']:
-        connection.add([document], commit=True, boost=boost)
-    else:
-        connection.add([document], commit=False, boost=boost, commitWithin=getattr(settings, 'SOLR_COMMIT_WITHIN', 30000))
+    if document is not None:
+        if 'commit' in kwargs and kwargs['commit']:
+            connection.add([document], commit=True, boost=boost)
+        else:
+            connection.add([document], commit=False, boost=boost, commitWithin=getattr(settings, 'SOLR_COMMIT_WITHIN', 30000))
 
 @receiver(post_delete, sender=Product, dispatch_uid='product_delete')
 def product_delete(instance, **kwargs):
@@ -188,9 +189,12 @@ def get_product_document(instance):
             if instance.default_vendor.original_discount_price:
                 price = instance.default_vendor.original_discount_price
         else:
+            # If availability is true but product has no default vendor we do
+            # not need to add the product to solr, return None and 0
             if availability:
-                logger.warning('Availability is true, but product have no vendorproduct [PID: %s]' % (instance.pk,))
+                logger.error('Availability is true, but product have no vendorproduct [PID: %s]' % (instance.pk,))
                 availability = False
+                return None, 0
 
         color_names = []
         color_ids = []
