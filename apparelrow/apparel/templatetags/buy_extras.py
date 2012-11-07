@@ -37,6 +37,10 @@ def buy_url(product_id, vendor, target_user_id='0', page='Default'):
         sid = 0
     sid = '%s-%s' % (sid, page)
 
+    # TODO: good solution? what should we return if we have no vendorproduct?
+    if not vendor:
+        return ''
+
     vendor_feed = vendor.vendor.vendor_feed
     url = vendor.buy_url
 
