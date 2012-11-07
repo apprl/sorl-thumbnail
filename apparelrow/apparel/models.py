@@ -19,10 +19,14 @@ from django.core.files.base import ContentFile
 from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.contrib.staticfiles import finders
 
 from apparel.manager import ProductManager, SearchManager
 from apparel.cache import invalidate_model_handler
 from apparel.utils import currency_exchange
+
+import requests
 
 from cStringIO import StringIO
 from PIL import Image
@@ -628,7 +632,11 @@ class Look(models.Model):
         if self.display_with_component == 'P' and self.image:
             # Reuse photo image
             thumbnail = get_thumbnail(self.image, '694x524')
-            background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
+            # TODO: better solution?
+            if thumbnail.url.startswith('http'):
+                background = Image.open(StringIO(requests.get(thumbnail.url).content))
+            else:
+                background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
             offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
             image.paste(background, (offset_left, offset_top))
             self.width = thumbnail.width
@@ -639,14 +647,18 @@ class Look(models.Model):
 
         for component in self.display_components.all():
             if self.display_with_component == 'P':
-                component_image = Image.open(os.path.join('static', 'images', 'look-hotspot.png'))
+                component_image = Image.open(finders.find('images/look-hotspot.png'))
             else:
                 if not component.product.product_image:
                     continue
 
                 # Reuse transparent thumbnail image
                 thumbnail = get_thumbnail(component.product.product_image, '%s' % (settings.APPAREL_LOOK_MAX_SIZE,), format='PNG', transparent=True)
-                component_image = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
+                # TODO: better solution?
+                if thumbnail.url.startswith('http'):
+                    component_image = Image.open(StringIO(requests.get(thumbnail.url).content))
+                else:
+                    component_image = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
                 component_image = component_image.resize((component.width, component.height), Image.ANTIALIAS).convert('RGBA')
                 if component.rotation:
                     rotation = component_image.rotate(-component.rotation, Image.BICUBIC, 1)
@@ -955,7 +967,6 @@ def save_synonym_file(sender, **kwargs):
     synonym_file.write(instance.content.encode("utf-8"))
     synonym_file.close()
 
-    import requests
     requests.get(settings.SOLR_RELOAD_URL)
 
 class SynonymFile(models.Model):
