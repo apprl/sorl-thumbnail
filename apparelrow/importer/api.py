@@ -569,6 +569,7 @@ class API(object):
 
             temp_fh = NamedTemporaryFile(prefix='ar_importer_', suffix=str(time.time()), delete=True)
             temp_fh.write(request_handler.raw.read())
+            temp_fh.seek(0)
             storage.default_storage.save(product_image, File(temp_fh))
             temp_fh.close()
 
