@@ -20,7 +20,7 @@ class ProductManager(models.Manager):
         queryset = super(ProductManager, self).get_query_set() \
                                               .filter(published=True)
         if self.availability:
-            queryset = queryset.filter(availability=True)
+            queryset = queryset.filter(vendorproduct__isnull=False, availability=True)
 
         return queryset
 
