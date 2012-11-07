@@ -480,7 +480,7 @@ jQuery(document).ready(function() {
     // Facebook invite
     jQuery('.facebook-invite').on('click', function(event) {
         FB.ui({method: 'apprequests', message: 'I think you should try Apprl! All the best stores in one place and you can follow friends, bloggers & brands.', filters: ['app_non_users']});
-        return false;
+        event.preventDefault();
     });
 });
 
