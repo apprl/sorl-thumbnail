@@ -1,4 +1,5 @@
 {% load l10n %}
+{% load static from staticfiles %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
@@ -109,7 +110,7 @@
 				padding:0;
 				text-align:center;
                 vertical-align:middle;
-                background-image:url('http://apprl.com/media/images/email-header.png');
+                background-image:url({% static 'images/email-header.png' %});
 			}
 
 			.headerContent a:link, .headerContent a:visited{
@@ -134,7 +135,7 @@
 			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: MAIN BODY /\/\/\/\/\/\/\/\/\/\ */
             #templateBody{
                 background-color:transparent;
-                background-image:url(http://apprl.com/media/images/email-bg-shadow.png);
+                background-image:url({% static 'images/email-bg-shadow.png' %});
                 background-repeat:repeat-y;
                 padding-left:7px;
                 padding-right:7px;
@@ -218,7 +219,7 @@
 
 			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: FOOTER /\/\/\/\/\/\/\/\/\/\ */
             #templateFooter{
-                background-image:url(http://apprl.com/media/images/email-footer.png);
+                background-image:url({% static 'images/email-footer.png' %});
 			}
 
             .footerContent{
@@ -312,7 +313,7 @@
                                                     <tr>
                                                         <td valign="top" align="center" height="44" class="logo">
                                                             <a href="http://apprl.com/" target="_blank">
-                                                                <img border="0" width="170" height="25" src="http://apprl.com/media/images/logo.png" alt="apprl.com">
+                                                                <img border="0" width="170" height="25" src="{% static 'images/logo.png' %}" alt="apprl.com">
                                                             </a>
                                                         </td>
                                                     </tr>

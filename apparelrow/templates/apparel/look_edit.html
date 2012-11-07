@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static from staticfiles %}
 {% load i18n apparel_extras thumbnail cache %}
 
 {% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
@@ -339,7 +340,7 @@ jQuery(document).ready(function() {
     });
 
     jQuery('<img/>')
-        .attr('src', '/media/images/delete.png')
+        .attr('src', '{% static "images/delete.png" %}')
         .attr('id',  'delete-photo')
         .click(function(e) {
             look.deleteAllComponents(jQuery('#photo-background'));
