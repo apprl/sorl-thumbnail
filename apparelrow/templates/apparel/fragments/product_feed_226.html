@@ -16,7 +16,7 @@
         {% if not object.default_vendor or object.default_vendor.availability == 0 %}
         <a class="btn btn-large btn-block btn-upper btn-sold-out btn-disabled" href="{{ object.get_absolute_url }}">{% trans "Sold out" %}</a>
         {% else %}
-        <a class="btn btn-large btn-positive btn-block btn-upper btn-buy" target="_blank" href="{% buy_url object object.default_vendor '0' 'Feed' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+        <a class="btn btn-large btn-positive btn-block btn-upper btn-buy" target="_blank" href="{% buy_url object.id object.default_vendor '0' 'Feed' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
         {% endif %}
     </div>
 </div>
