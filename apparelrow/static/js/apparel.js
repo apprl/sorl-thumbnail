@@ -140,6 +140,14 @@ jQuery(document).ready(function() {
         }
     }
 
+    function trackInviteEvent(category) {
+        return function() {
+            _gaq.push(['_trackEvent', category, 'InviteFriends']);
+
+            return true;
+        }
+    }
+
     // Track buy clicks
 
     $('#search-result a.btn-buy').live('click', trackEvent('Search', 'BuyReferral'));
@@ -154,6 +162,14 @@ jQuery(document).ready(function() {
     $('body.product a.product-like').live('click', trackEvent('Product', 'ProductLike'));
     $('body.page-shop a.product-like').live('click', trackEvent('Shop', 'ProductLike'));
     $('body.profile a.product-like').live('click', trackEvent('Profile', 'ProductLike'));
+
+    // Track invites
+
+    $('#nav-user .facebook-invite').live('click', trackInviteEvent('Menu'));
+    $('body.feed .sidebar .facebook-invite').live('click', trackInviteEvent('Profile'));
+    $('body.profiles #body-header .facebook-invite').live('click', trackInviteEvent('Members'));
+    $('body.profile-login-flow #content .facebook-invite').live('click', trackInviteEvent('Welcome'));
+    $('#footer .facebook-invite').live('click', trackInviteEvent('Footer'));
 
     // All elements with class open-dialog should open a dialog and load html from href-url
     jQuery('.open-dialog').live('click', function(event) {
