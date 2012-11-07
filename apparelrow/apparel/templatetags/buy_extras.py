@@ -31,10 +31,6 @@ def buy_url(product_id, vendor, target_user_id='0', page='Default'):
     """
     Append custom SID to every buy URL.
     """
-    # TODO: good solution? what should we return if we have no vendorproduct?
-    if not vendor:
-        return ''
-
     try:
         sid = int(target_user_id)
     except (TypeError, ValueError, AttributeError):
