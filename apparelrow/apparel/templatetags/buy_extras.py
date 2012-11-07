@@ -1,8 +1,8 @@
 from urlparse import parse_qs, urlsplit, urlunsplit
-from urllib import urlencode
 
 from django.template import Library
-from django.utils.http import urlquote
+from django.utils.encoding import smart_str
+from django.utils.http import urlquote, urlencode
 from django.core.urlresolvers import reverse
 
 register = Library()
@@ -31,18 +31,18 @@ def buy_url(product_id, vendor, target_user_id='0', page='Default'):
     """
     Append custom SID to every buy URL.
     """
-    try:
-        sid = int(target_user_id)
-    except (TypeError, ValueError, AttributeError):
-        sid = 0
-    sid = '%s-%s' % (sid, page)
-
     # TODO: good solution? what should we return if we have no vendorproduct?
     if not vendor:
         return ''
 
+    try:
+        sid = int(target_user_id)
+    except (TypeError, ValueError, AttributeError):
+        sid = 0
+    sid = smart_str('%s-%s' % (sid, page))
+
     vendor_feed = vendor.vendor.vendor_feed
-    url = vendor.buy_url
+    url = smart_str(vendor.buy_url)
 
     # Tradedoubler
     if vendor_feed.provider_class == 'tradedoubler':
