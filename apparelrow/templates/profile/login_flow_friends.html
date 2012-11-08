@@ -36,8 +36,8 @@ jQuery(document).ready(function() {
 {% endblock %}
 
 {% block login-flow-content %}
-    <form class="friends" action="{% url login-flow-friends %}" method="post">
     {% if profiles %}
+    <form class="friends" action="{% url login-flow-friends %}" method="post">
     <h2>{% trans "Step 2: Follow your friends to see what they like" %}</h2>
         {% csrf_token %}
         <ul class="profile-list group">
@@ -55,15 +55,18 @@ jQuery(document).ready(function() {
         </p>
         <p class="friends">{% trans "APPRL is more fun together with your friends!" %}</p>
         <a class="btn btn-upper btn-positive facebook-invite" href="#invite">{% trans "+ Invite more friends!" %}</a>
-        {% else %}
-        <h2>{% trans "Step 2: Invite your friends" %}</h2>
-        <p class="friends">{% trans "APPRL is more fun together with your friends!" %}</p>
-        <a class="btn btn-upper btn-positive facebook-invite" href="#invite">{% trans "+ Invite friends!" %}</a>
-        {% endif %}
         <div class="content-footer">
             <button type="submit" href="{{ next_url }}" class="btn btn-block btn-large btn-upper">{% trans "Next step" %}</button>
         </div>
     </form>
+    {% else %}
+        <h2>{% trans "Step 2: Invite your friends" %}</h2>
+        <p class="friends">{% trans "APPRL is more fun together with your friends!" %}</p>
+        <a class="btn btn-upper btn-positive facebook-invite" href="#invite">{% trans "+ Invite friends!" %}</a>
+        <div class="content-footer">
+            <a href="{{ next_url }}" class="btn btn-block btn-large btn-upper">{% trans "Next step" %}</a>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block login-flow-footer %}{% endblock %}
