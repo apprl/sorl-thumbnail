@@ -4,6 +4,9 @@ from django.contrib.sitemaps import Sitemap, FlatPageSitemap, GenericSitemap
 from apparel.models import Product, Look
 from profile.models import ApparelProfile
 
+class LimitGenericSitemap(GenericSitemap):
+    limit = 250
+
 class ViewSitemap(Sitemap):
     changefreq = 'daily'
     priority = 0.5
@@ -36,8 +39,8 @@ class UserSitemap(Sitemap):
 
 sitemaps = {
     'flatpages': FlatPageSitemap,
-    'product': GenericSitemap({'queryset': Product.published_objects.all(), 'date_field': 'modified'}, priority=0.5),
-    'look': GenericSitemap({'queryset': Look.objects.all(), 'date_field': 'modified'}, priority=0.5),
+    'product': LimitGenericSitemap({'queryset': Product.published_objects.all(), 'date_field': 'modified'}, priority=0.5),
+    'look': LimitGenericSitemap({'queryset': Look.objects.all(), 'date_field': 'modified'}, priority=0.5),
     'user': UserSitemap,
     'views': ViewSitemap,
 }
