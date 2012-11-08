@@ -21,10 +21,12 @@ from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles import finders
+from django.utils import timezone
 
 from apparel.manager import ProductManager, SearchManager
 from apparel.cache import invalidate_model_handler
 from apparel.utils import currency_exchange
+from apparel.base_62_converter import saturate, dehydrate
 
 import requests
 
@@ -373,6 +375,31 @@ def product_like_pre_delete(sender, instance, **kwargs):
         return
 
     get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_product', instance.product)
+
+
+#
+# ShortProductLink
+#
+
+SHORT_CONSTANT = 999999
+
+class ShortProductLinkManager(models.Manager):
+    def get_for_short_link(self, short_link):
+        return ShortProductLink.objects.select_related('product').get(pk=(saturate(short_link) - SHORT_CONSTANT))
+
+
+class ShortProductLink(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='short_product_links')
+    created = models.DateTimeField(default=timezone.now)
+
+    objects = ShortProductLinkManager()
+
+    def link(self):
+        return dehydrate(self.pk + SHORT_CONSTANT)
+
+    class Meta:
+        unique_together = ('product', 'user')
 
 
 #

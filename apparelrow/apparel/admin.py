@@ -105,6 +105,17 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 
 #
+# SHORT PRODUCT LINK
+#
+
+class ShortProductLinkAdmin(admin.ModelAdmin):
+    raw_id_fields = ('product', 'user')
+    list_display = ('product', 'user', 'created')
+
+
+admin.site.register(ShortProductLink, ShortProductLinkAdmin)
+
+#
 # LOOK
 #
 

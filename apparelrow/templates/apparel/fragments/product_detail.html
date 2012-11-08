@@ -85,6 +85,15 @@
 
 {% endcache %}
     {% include 'apparel/fragments/share.html' %}
+    {% if request.user.get_profile.is_partner %}
+    <div class="short-link-container">
+        {% if product_short_link %}
+        {% include 'apparel/fragments/product_short_link.html' with product_short_link=product_short_link only %}
+        {% else %}
+        <a href="{% url product-generate-short-link object.slug %}" class="btn btn-upper btn-short-link">{% trans "Get product link" %}</a>
+        {% endif %}
+    </div>
+    {% endif %}
 </div>
 {% endif %}
 

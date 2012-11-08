@@ -64,6 +64,18 @@
 
             // Recently viewed scrollable
             jQuery('#recentlyviewed .row').simple_scrollable();
+
+            jQuery('.btn-short-link').click(function(event) {
+                jQuery(this).parent().load(jQuery(this).attr('href'));
+                return false;
+            });
+            jQuery(document)
+                .on('focus', '.short-link-container input', function(e) {
+                    jQuery(this).select();
+                })
+                .on('mouseup', '.short-link-container input', function(e) {
+                    e.preventDefault();
+                });
         });
     </script>
 {% endblock 'extra-scripts' %}

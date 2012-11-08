@@ -44,8 +44,12 @@ urlpatterns = patterns('',
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
     url(r'^products/(?P<pk>[\d]+)/(?P<action>like|unlike)/?$', 'apparel.views.product_action', name='product-action'),
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
+    url(r'^products/(?P<slug>[\w-]+)/short/$', 'apparel.views.product_generate_short_link', name='product-generate-short-link'),
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list', name='product-look-list'),
     (r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.product_like'),
+
+    # Short product link
+    url(r'^p/(?P<short_link>[\w]+)/$', 'apparel.views.product_short_link', name='product-short-link'),
 
     # Brand
     url(r'^brands/(?P<pk>[\d]+)/$', 'apparel.views.brand_redirect', name='brand-redirect'),

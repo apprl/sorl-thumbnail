@@ -30,11 +30,11 @@ from profile.utils import get_facebook_user
 from apparel.decorators import seamless_request_handling
 from apparel.decorators import get_current_user
 from apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
-from apparel.models import Look, LookLike, LookComponent
+from apparel.models import Look, LookLike, LookComponent, ShortProductLink
 from apparel.forms import LookForm, LookComponentForm
 from apparel.search import ApparelSearch
 from apparel.search import more_like_this_product
-from apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity
+from apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url
 from profile.notifications import process_like_look_created
 from apparel.tasks import facebook_push_graph, facebook_pull_graph
 
@@ -227,6 +227,16 @@ def product_detail(request, slug):
     if product.manufacturer and product.manufacturer.profile:
         product_brand_full_url = request.build_absolute_uri(product.manufacturer.profile.get_absolute_url())
 
+    # Partner user
+    product_short_link = None
+    if request.user.is_authenticated() and request.user.get_profile().is_partner:
+        try:
+            partner_short = ShortProductLink.objects.get(product=product, user=request.user)
+            product_short_link = reverse('product-short-link', args=[partner_short.link()])
+            product_short_link = request.build_absolute_uri(product_short_link)
+        except ShortProductLink.DoesNotExist:
+            pass
+
     return render_to_response(
             'apparel/product_detail.html',
             {
@@ -242,9 +252,41 @@ def product_detail(request, slug):
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
                 'product_full_image': product_full_image,
                 'product_brand_full_url': product_brand_full_url,
-                'likes': likes
+                'likes': likes,
+                'product_short_link': product_short_link,
             }, context_instance=RequestContext(request),
         )
+
+
+def product_generate_short_link(request, slug):
+    """
+    Generate a short product link and return it in a JSON response.
+    """
+    if not request.user.is_authenticated() or not request.user.get_profile().is_partner:
+        raise Http404
+
+    product = get_object_or_404(Product, slug=slug, published=True)
+    product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
+    product_short_link = reverse('product-short-link', args=[product_short_link.link()])
+    product_short_link = request.build_absolute_uri(product_short_link)
+
+    return render(request, 'apparel/fragments/product_short_link.html', {'product_short_link': product_short_link})
+
+
+def product_short_link(request, short_link):
+    """
+    Takes a short product link and redirect to buy url.
+    """
+    try:
+        short_product = ShortProductLink.objects.get_for_short_link(short_link)
+    except ShortProductLink.DoesNotExist:
+        raise Http404
+
+    return HttpResponseRedirect(vendor_buy_url(short_product.product.pk,
+                                               short_product.product.default_vendor,
+                                               short_product.user_id,
+                                               'Ext-Link'))
+
 
 def product_popup(request):
     product_ids = []
