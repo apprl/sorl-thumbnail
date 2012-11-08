@@ -535,11 +535,14 @@ class API(object):
         except TypeError, AttributeError:
             raise IncompleteDataSet('image-url', '[%s] is not a string' % (smart_str(url),))
 
-        return '%s/%s/__%s__%s%s' % (
+        brand_name = self.manufacturer or self.dataset['product']['manufacturer']
+
+        return '%s/%s/%s/%s__%s%s' % (
             settings.APPAREL_PRODUCT_IMAGE_ROOT,
             slugify(self.vendor.name),
-            slugify(self.dataset['product']['product-id']),
+            slugify(brand_name),
             slugify(self.dataset['product']['product-name']),
+            slugify(self.dataset['product']['product-id']),
             ext
         )
 
