@@ -347,7 +347,8 @@ APPAREL_DECOMPRESS_SUFFIX = {
 }
 
 # THUMBNAIL CONFIGURATION
-THUMBNAIL_ENGINE = 'apparel.sorl_engine.Engine'
+THUMBNAIL_ENGINE = 'apparel.sorl_extension.Engine'
+THUMBNAIL_BACKEND = 'apparel.sorl_extension.NamedThumbnailBackend'
 
 # FEED
 FEED_REDIS_DB = 1

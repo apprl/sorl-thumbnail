@@ -523,26 +523,24 @@ class API(object):
         
         return self._vendor
 
-    def _product_image_path(self, url, image_number):
+    def _product_image_path(self, url):
         """
         Returns the local path for the given URL.
 
         APPAREL_PRODUCT_IMAGE_ROOT/vendor_name/image_number__product_id__orignal_image_filename
         """
+
         try:
-            path, filename = os.path.split(url)
+            root, ext = os.path.splitext(url)
         except TypeError, AttributeError:
             raise IncompleteDataSet('image-url', '[%s] is not a string' % (smart_str(url),))
 
-        if not path:
-            raise IncompleteDataSet('image-url', '[%s] is not a valid url' % (smart_str(url),))
-
-        return '%s/%s/%s__%s__%s' % (
+        return '%s/%s/__%s__%s%s' % (
             settings.APPAREL_PRODUCT_IMAGE_ROOT,
             slugify(self.vendor.name),
-            image_number,
             slugify(self.dataset['product']['product-id']),
-            filename
+            slugify(self.dataset['product']['product-name']),
+            ext
         )
 
     def _download_product_image(self, product_image, url, min_content_length):
@@ -591,7 +589,7 @@ class API(object):
 
             for url, content_length in self.dataset['product']['image-url']:
                 image_logger.debug(u'Downloading image [%s]' % (url,))
-                self._product_image = self._product_image_path(url, 1)
+                self._product_image = self._product_image_path(url)
                 if self._download_product_image(self._product_image, url, content_length):
                     image_logger.debug(u'Saved image [%s]' % (self._product_image,))
                     return self._product_image
