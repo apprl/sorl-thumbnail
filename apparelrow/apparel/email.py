@@ -129,7 +129,7 @@ def get_weekly_mail_content(gender, timeframe):
 
             products.append({
                 'url': ''.join(['http://', Site.objects.get_current().domain, product.get_absolute_url()]),
-                'image': ''.join(['http://', Site.objects.get_current().domain, product_image]),
+                'image': product_image,
                 'name': product.manufacturer.name,
                 'text': product_price
             })
