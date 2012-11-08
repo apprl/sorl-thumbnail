@@ -85,7 +85,7 @@
 
 {% endcache %}
     {% include 'apparel/fragments/share.html' %}
-    {% if request.user.get_profile.is_partner %}
+    {% if request.user.get_profile.is_partner and object.default_vendor and object.default_vendor.availability != 0 %}
     <div class="short-link-container">
         {% if product_short_link %}
         {% include 'apparel/fragments/product_short_link.html' with product_short_link=product_short_link only %}
