@@ -66,7 +66,9 @@
             jQuery('#recentlyviewed .row').simple_scrollable();
 
             jQuery('.btn-short-link').click(function(event) {
-                jQuery(this).parent().load(jQuery(this).attr('href'));
+                jQuery(this).parent().load(jQuery(this).attr('href'), function() {
+                   jQuery('.short-link-container input').focus().select();
+                });
                 return false;
             });
             jQuery(document)
