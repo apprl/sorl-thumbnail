@@ -19,4 +19,20 @@ jQuery(document).ready(function() {
             jQuery('.hotspot', this).stop(true, true).fadeOut(300);
         });
     }
+
+    function trackEvent(category, action) {
+        return function() {
+            var el = $(this),
+                sid = el.attr('data-sid'),
+                slug = el.attr('data-slug'),
+                vendor = el.attr('data-vendor'),
+                price = parseInt(el.attr('data-price'), 10);
+
+            _gaq.push(['_trackEvent', category, action, sid + ' - ' + vendor + ' - ' + slug, price]);
+
+            return true;
+        }
+    }
+
+    $('body.look-embed a.btn-buy-external').live('click', trackEvent('Ext-Look', 'BuyReferral'));
 });

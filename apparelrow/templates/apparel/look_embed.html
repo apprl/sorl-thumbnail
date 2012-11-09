@@ -6,6 +6,18 @@
     <title>{{ object.title }} by {{ object.user.get_profile.display_name }} | Apprl - Social Shopping</title>
     <link rel="stylesheet" href="{% static 'styles/widget.css' %}">
     <link rel="canonical" href="{% url apparel.views.look_detail object.slug %}">
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
+        _gaq.push(['_setDomainName', '{{ GOOGLE_ANALYTICS_DOMAIN }}']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
   </head>
   <body class="look-embed">
     <div class="container">
@@ -13,7 +25,7 @@
         <div class="look collage" style="height: 524px">
           {% for component in object.collage_components.all %}
             {% thumbnail component.product.product_image "694x524" crop="noop" format="PNG" transparent=True as im %}
-            <a target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style }}">
+            <a target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style }}">
               <img src="{{ im.url }}" title="{{ component.product }}" />
             </a>
             {% endthumbnail %}
@@ -31,7 +43,7 @@
         {% endif %}
         >
         {% for component in object.photo_components.all %}
-          <a target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style }}"></a>
+          <a target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" class="hotspot product btn-buy-external" id="hotspot-{{ component.product.id }}" data-sid="{% get_sid object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style }}"></a>
           {% cache CACHE_TIMEOUT look_product_tooltip component.product.id LANGUAGE_CODE %}
             {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product external="yes" only %}
           {% endcache %}

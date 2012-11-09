@@ -27,15 +27,20 @@ def set_query_parameter(url, param_name, param_value):
     return urlunsplit((scheme, netloc, path, new_query_string, fragment))
 
 
-def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
-    """
-    Append custom SID to every vendor buy URL.
-    """
+def generate_sid(target_user_id=0, page='Default'):
     try:
         sid = int(target_user_id)
     except (TypeError, ValueError, AttributeError):
         sid = 0
-    sid = smart_str('%s-%s' % (sid, page))
+
+    return smart_str('%s-%s' % (sid, page))
+
+
+def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
+    """
+    Append custom SID to every vendor buy URL.
+    """
+    sid = generate_sid(target_user_id, page)
 
     if not vendor:
         return ''

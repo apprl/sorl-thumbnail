@@ -2,7 +2,7 @@ from django.template import Library
 from django.core.urlresolvers import reverse
 from django.utils.http import urlquote
 
-from apparel.utils import vendor_buy_url
+from apparel.utils import vendor_buy_url, generate_sid
 
 register = Library()
 
@@ -14,3 +14,8 @@ def buy_url(product_id, vendor, target_user_id=0, page='Default'):
     return '%s?i=%s&u=%s' % (reverse('product-click-count'),
                              product_id,
                              urlquote(vendor_buy_url(product_id, vendor, target_user_id, page)))
+
+
+@register.simple_tag
+def get_sid(target_user_id=0, page='Default'):
+    return generate_sid(target_user_id, page)

@@ -155,7 +155,7 @@ jQuery(document).ready(function() {
     $('body.page-shop #content a.btn-buy').live('click', trackEvent('Shop', 'BuyReferral'));
     $('body.profile #content a.btn-buy').live('click', trackEvent('Profile', 'BuyReferral'));
     $('body.feed #content a.btn-buy').live('click', trackEvent('Feed', 'BuyReferral'));
-    $('.tooltip a.buy-now').live('click', trackEvent('Look', 'BuyReferral'));
+    $('.tooltip a.btn-buy').live('click', trackEvent('Look', 'BuyReferral'));
 
     // Track likes
 
