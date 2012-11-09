@@ -31,7 +31,6 @@ GENDER_REGEXES = dict(
     for m in Mapping.objects.filter(mapping_type='gender')
 )
 
-ZERO = decimal.Decimal('0.0')
 
 class DataMapper(object):
     color_regexes = None
@@ -86,35 +85,46 @@ class DataMapper(object):
             product_name = product_name[0].upper() + product_name[1:]
             self.mapped_record['product']['product-name'] = product_name
 
-        # If price and discount price is equal, there is no discount
         price = self.mapped_record['product']['price']
         discount_price = self.mapped_record['product']['discount-price']
-        if price == discount_price:
-            self.mapped_record['product']['discount-price'] = None
 
-        # If there is a discount price but no price, use discount as price
+        # Skip product if price is not set
+        if not price:
+            raise SkipProduct('No price field set')
+
+        # Skip product if price is invalid
         try:
             price = decimal.Decimal(price)
-        except decimal.InvalidOperation:
+        except (decimal.InvalidOperation, ValueError, AttributeError, TypeError):
             raise SkipProduct('Not a valid price')
 
+        # Skip product if price is less than or equal to zero
+        if price < decimal.Decimal('0.00'):
+            raise SkipProduct('Price is less than or equal to zero')
+
         if discount_price:
+            # Skip product if discount price is invalid
             try:
                 discount_price = decimal.Decimal(discount_price)
-            except decimal.InvalidOperation:
+            except (decimal.InvalidOperation, ValueError, AttributeError, TypeError):
                 raise SkipProduct('Not a valid discount price')
 
-            if price <= ZERO and discount_price > ZERO:
-                self.mapped_record['product']['price'] = self.mapped_record['product']['discount-price']
+            # Skip product if discount product is less than or equal to zero
+            if discount_price < decimal.Decimal('0.00'):
+                raise SkipProduct('Discount price is less than or equal to zero')
+
+            # If price and discount price is equal or discount price is larger,
+            # there is no discount
+            # TODO: is this ok?
+            if price <= discount_price:
                 self.mapped_record['product']['discount-price'] = None
-    
+
     def translate(self):
         """
         Returns a hash of correctly formatted fields
         """
-        
         self.preprocess()
-        
+
         self.mapped_record.update({
             'version': '0.1',
             'date':    self.map_field('date') or datetime.datetime.now().strftime('%Y-%m-%dT%H:%m:%SZ%z'),

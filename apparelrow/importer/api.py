@@ -269,19 +269,14 @@ class API(object):
         #   - delivery time
         #   - delivery cost (Property of vendor?)
 
-
         # No discount price is mapped but we can get it from the stored original price
-        if self.vendorproduct.original_price and not self.dataset['product']['discount-price']:
-            decimal_type = decimal.Decimal('0.0')
-            try:
-                decimal_type = decimal.Decimal(self.dataset['product']['price'])
-            except:
-                pass
-
-            if decimal_type > decimal.Decimal('0.0') and self.vendorproduct.original_currency == self.dataset['product']['currency'] and self.vendorproduct.original_price > (decimal_type * decimal.Decimal('1.1')):
+        if self.vendorproduct.original_price and not self.dataset['product']['discount-price'] and self.vendorproduct.original_currency == self.dataset['product']['currency']:
+            price_decimal = decimal.Decimal(self.dataset['product']['price'])
+            if price_decimal > decimal.Decimal('0.0') and  self.vendorproduct.original_price > (price_decimal * decimal.Decimal('1.1')):
                 self.dataset['product']['discount-price'] = self.dataset['product']['price']
-                self.dataset['product']['price'] = self.vendorproduct.original_price
+                self.dataset['product']['price'] = str(self.vendorproduct.original_price)
 
+        # Make sure that discount-price is None
         if not self.dataset['product']['discount-price']:
             self.dataset['product']['discount-price'] = None
 
@@ -317,8 +312,9 @@ class API(object):
                                        decimal.Decimal(self.dataset['product']['discount-price']),
                                        False)
 
+        # TODO: we should remove this, we do the currency exchange during
+        # presentation
         rates = self.fxrates()
-
         if len(rates.keys()) > 0:
             fields['currency'] = settings.APPAREL_BASE_CURRENCY
 

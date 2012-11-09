@@ -34,7 +34,7 @@ class LinkshareMapper(DataMapper):
 
     def get_variations(self):
         availability = self.get_availability()
-        
+
         colors = self.get_color()
         sizes = self.get_size()
 
@@ -70,7 +70,7 @@ class LinkshareMapper(DataMapper):
         return self.record.get('discount-price') or None
 
     def get_price(self):
-        return self.record.get('retail-price') or self.record.get('discount-price') or '0.00'
+        return self.record.get('retail-price') or None
 
     def get_manufacturer(self):
         manufacturer = self.record.get('manufacturer') or self.record.get('brand')
