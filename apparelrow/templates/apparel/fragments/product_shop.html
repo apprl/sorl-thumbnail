@@ -1,4 +1,4 @@
-{% load i18n thumbnail thumbnail_extras apparel_extras buy_extras %}
+{% load l10n i18n thumbnail thumbnail_extras apparel_extras buy_extras %}
 <li>
 <div class="product-medium product-container" id="product-{{ object.id }}" data-id="{{ object.id }}">
     <a class="product-image" href="{{ object.get_absolute_url }}">
@@ -22,10 +22,10 @@
         {% else %}
         <p>
             {% if object.default_vendor.discount_price %}
-            <span class="discount-price" data-price="{{ object.default_vendor.original_discount_price }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_discount_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.original_currency }}</span>
-            <span class="price discounted" data-price="{{ object.default_vendor.original_price }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.original_currency }}</span>
+            <span class="discount-price" data-price="{{ object.default_vendor.original_discount_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_discount_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.original_currency }}</span>
+            <span class="price discounted" data-price="{{ object.default_vendor.original_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.original_currency }}</span>
             {% else %}
-            <span class="price" data-price="{{ object.default_vendor.original_price }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.original_currency }}</span>
+            <span class="price" data-price="{{ object.default_vendor.original_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.original_currency }}</span>
             {% endif %}
         </p>
         {% endif %}
