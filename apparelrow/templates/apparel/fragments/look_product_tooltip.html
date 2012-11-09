@@ -33,14 +33,10 @@
       </div>
       {% endif %}
       <div class="vendor_button">
-      {% if external %}
-        {% if product.default_vendor and product.default_vendor.availability != 0 %}
+      {% if product.default_vendor and product.default_vendor.availability != 0 %}
         <a{% if external %} target="_blank"{% endif %} class="buy-now" href="{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}">{% trans "Buy" %}</a>
-        {% else %}
-        <span class="sold-out">{% trans "Sold out" %}</span>
-        {% endif %}
       {% else %}
-        <a{% if external %} target="_blank"{% endif %} href="{{ product.get_absolute_url }}">{% trans "More info" %}</a>
+        <span class="sold-out">{% trans "Sold out" %}</span>
       {% endif %}
       </div>
     </div>
