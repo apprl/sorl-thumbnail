@@ -61,17 +61,9 @@ $tooltip_width: 242px
         width: 160px
         text-align: center
         z-index: 10
-        span, a
-          border: 1px solid $black_color
-          display: block
-          padding: 10px
+        .btn-look-tooltip
           font-size: 14px
-          text-transform: uppercase
-          background-color: $black_color
-          color: $white_color
-        a:hover
-          background-color: $white_color
-          color: $black_color
+          font-weight: normal
       .vendor_price
         font-size: 12px
         text-align: center
@@ -93,15 +85,6 @@ $tooltip_width: 242px
     top: -5px
   &.tooltip-arrow-bottom
     top: 130px
-
-=buy_now
-  text-align: center
-  background-color: $highlight_bg_color
-  +border(all, $highlight_border_color)
-  color: $highlight_color
-  text-transform: uppercase
-  &:hover
-    background-color: $hover_highlight_bg_color
 
 =sold_out
   text-align: center

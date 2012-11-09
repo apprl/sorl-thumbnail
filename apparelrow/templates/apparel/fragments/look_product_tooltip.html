@@ -34,9 +34,9 @@
       {% endif %}
       <div class="vendor_button">
       {% if product.default_vendor and product.default_vendor.availability != 0 %}
-        <a{% if external %} target="_blank"{% endif %} class="buy-now" href="{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}">{% trans "Buy" %}</a>
+        <a{% if external %} target="_blank"{% endif %} class="btn btn-upper btn-block btn-look-tooltip {% if external %}btn-external{% else %}btn-positive{% endif %}" href="{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}">{% trans "Buy" %}</a>
       {% else %}
-        <span class="sold-out">{% trans "Sold out" %}</span>
+        <a href="{{ product.get_absolute_url }}" class="btn btn-upper btn-block btn-look-tooltip">{% trans "Sold out" %}</a>
       {% endif %}
       </div>
     </div>

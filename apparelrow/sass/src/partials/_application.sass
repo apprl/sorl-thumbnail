@@ -6,6 +6,7 @@
 body
   +font
   +typography
+  +btn_helper
   background-color: #e6e6e6
   .ui-draggable-dragging a
     cursor: move
@@ -60,93 +61,6 @@ button
     clear: both
   zoom: 1 /* For IE 6/7 (trigger hasLayout) */
 
-
-/**
- * Button
- */
-.btn
-  display: inline-block
-  padding: 10px 16px
-  background-color: $btn_color
-  color: $white_color
-  font-size: 11px
-  font-weight: bold
-  text-align: center
-  cursor: pointer
-  vertical-align: middle
-  +box-sizing(border-box)
-
-  &.btn-disabled
-    background-color: #bfbfbf
-    cursor: default
-    &:hover, &:active
-      background-color: #bfbfbf
-
-  // Hover
-  &:hover
-    background-color: #333333
-    text-decoration: none
-
-  // Large
-  &.btn-large
-    font-size: 16px
-    padding: 20px 16px
-
-  // Small
-  &.btn-small
-    font-size: 11px
-    padding: 3px 16px
-    height: auto
-    line-height: 16px
-
-  // Uppercase
-  &.btn-upper
-    text-transform: uppercase
-
-  // Block variant
-  &.btn-block
-    width: 100%
-    display: block
-    +box-sizing(border-box)
-
-  &.btn-positive
-    background-color: $btn_positive_color
-    border-color: $btn_positive_color
-    &:hover
-      background-color: $btn_positive_hover_color
-      border-color: $btn_positive_hover_color
-      color: $white_color
-
-  &.btn-negative
-    background-color: $btn_negative_color
-    border-color: $btn_negative_color
-    &:hover
-      background-color: $btn_negative_hover_color
-      border-color: $btn_negative_hover_color
-      color: $white_color
-
-  // Left external arrow
-  &.btn-learr
-    position: relative
-    margin-left: 10px
-    &.btn-positive:before
-      border-right-color: $btn_positive_color
-    &.btn-positive:before
-      border-right-color: $btn_negative_color
-    &:hover:before
-      border-right-color: #333333
-    &:before
-      content: ''
-      left: -10px
-      top: 0
-      position: absolute
-      border-top: 18px solid transparent
-      border-bottom: 18px solid transparent
-      border-right: 10px solid $black_color
-
-  // Unfollow button
-  &.btn-unfollow
-    background-color: #bfbfbf
 
 #content.fixed
   position: fixed
@@ -1129,9 +1043,6 @@ table.available-sizes th
   .option-color
     background: transparent url(../images/sprite-colors.png) scroll repeat-x left top
     border-right: 1px solid #dadada
-
-a.buy-now
-  +buy_now
 
 .bodycopy.vendors
   color: $font_color
