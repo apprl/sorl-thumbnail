@@ -144,8 +144,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
     # Sort
-    if 'sort' not in query_arguments:
-        query_arguments['sort'] = DEFAULT_SORT_ARGUMENTS.get(request.GET.get('sort'), DEFAULT_SORT_ARGUMENTS['pop'])
+    query_arguments['sort'] = DEFAULT_SORT_ARGUMENTS.get(request.GET.get('sort'), DEFAULT_SORT_ARGUMENTS['pop'])
 
     # Query string
     query_string = request.GET.get('q')
@@ -156,6 +155,10 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         # specified fields
         query_arguments['qf'] = PRODUCT_SEARCH_FIELDS
         query_arguments['defType'] = 'edismax'
+
+        sort_get = request.GET.get('sort')
+        if not sort_get or sort_get == '':
+            query_arguments['sort'] = 'score desc'
 
     search = ApparelSearch(query_string, **query_arguments)
 
