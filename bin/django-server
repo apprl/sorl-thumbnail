@@ -50,6 +50,6 @@ if [[ "$1" == "restart" ]] || [[ "$1" == "start" ]]; then
         
     echo "Starting FCGI process (admin)"
     ./manage.py runfcgi method=threaded socket=$SOCKET-admin pidfile=$PIDFILE-admin \
-        maxchildren=1 workdir=$HL_APP_ROOT
+        maxspare=1 maxchildren=1 workdir=$HL_APP_ROOT
 fi
 
