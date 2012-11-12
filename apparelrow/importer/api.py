@@ -9,8 +9,8 @@ import time
 
 import requests
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.core.files import storage, File
-from django.core.files.temp import NamedTemporaryFile
+from django.core.files import storage
+from django.core.files.base import ContentFile
 from django.template.defaultfilters import slugify
 from django.db import transaction
 from django.db import IntegrityError
@@ -564,11 +564,7 @@ class API(object):
 
             image_logger.debug(u'Image data [R: %s] [L: %s] [T: %s]' % (request_handler.status_code, content_length, content_type))
 
-            temp_fh = NamedTemporaryFile(prefix='ar_importer_', suffix=str(time.time()), delete=True)
-            temp_fh.write(request_handler.raw.read())
-            temp_fh.seek(0)
-            storage.default_storage.save(product_image, File(temp_fh))
-            temp_fh.close()
+            storage.default_storage.save(product_image, ContentFile(request_handler.raw.read()))
 
         return True
 
