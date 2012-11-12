@@ -70,7 +70,7 @@ class LinkshareMapper(DataMapper):
         return self.record.get('discount-price') or None
 
     def get_price(self):
-        return self.record.get('retail-price') or None
+        return self.record.get('retail-price') or self.record.get('discount-price') or None
 
     def get_manufacturer(self):
         manufacturer = self.record.get('manufacturer') or self.record.get('brand')
