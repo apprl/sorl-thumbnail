@@ -589,7 +589,7 @@ ApparelActivity = {
                 element.parents('.sticky-note').find('p:last-child').remove();
                 if(response && response['success'] == true) {
                     element.parent().html(response['message']);
-                    trackShare(element);
+                    trackShare(element.data());
                 } else if(response && response['success'] == false) {
                     element.parent().html(response['error']).addClass('error');
                 }
@@ -600,12 +600,11 @@ ApparelActivity = {
             return false;
         });
 
-        function trackShare(element) {
-            var data = element.data();
+        function trackShare(data) {
             var category = data.type;
 
             if(category === 'object') {
-                category = data['auto-share'].split('_').pop();
+                category = data.autoShare.split('_').pop();
             }
 
             _gaq.push(['_trackEvent', category, 'FB ' + data.action, data.url]);
