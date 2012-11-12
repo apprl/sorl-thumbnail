@@ -390,7 +390,7 @@ jQuery(document).ready(function() {
 
     // Product like - show tooltip if no previously likes
     jQuery('.product-like').live('mouseenter', function() {
-        if(isAuthenticated == true && hasLiked == false) {
+        if(hasLiked == false) {
             var element = jQuery(this);
             if(element.children().length == 0) {
                 element.append('<a href="#" class="product-heart-tooltip"><span>' + gettext('Like products to save it to your profile and get sale alerts') + '</span></a>');
