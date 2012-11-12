@@ -237,11 +237,13 @@ class DataMapper(object):
         """
         Strings argument from all HTML-tags and expands HTML entities.
         """
-        
+        if text is None:
+            return None
+
         return self.trim(
                     expand_entities(
                         self.re_html.sub(
-                            ' ', 
+                            ' ',
                             text
                         )
                     )
@@ -252,9 +254,8 @@ class DataMapper(object):
         Trims whitespaces to the left and right of text. Argument may be a list
         of strings which will be trimmed.
         """
-        
         repl = lambda x: self.re_trunc_ws.sub(' ', self.re_trim.sub('', x))
-        
+
         try:
             if isinstance(text, list):
                 text = map(repl, text)
@@ -262,7 +263,7 @@ class DataMapper(object):
                 text = repl(text)
         except TypeError:
             pass
-                
+
         return text
 
 def expand_entities(text):
