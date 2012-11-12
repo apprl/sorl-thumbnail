@@ -99,7 +99,7 @@ class DataMapper(object):
             raise SkipProduct('Not a valid price')
 
         # Skip product if price is less than or equal to zero
-        if price < decimal.Decimal('0.00'):
+        if price <= decimal.Decimal('0.00'):
             raise SkipProduct('Price is less than or equal to zero')
 
         if discount_price:
@@ -110,7 +110,7 @@ class DataMapper(object):
                 raise SkipProduct('Not a valid discount price')
 
             # Skip product if discount product is less than or equal to zero
-            if discount_price < decimal.Decimal('0.00'):
+            if discount_price <= decimal.Decimal('0.00'):
                 raise SkipProduct('Discount price is less than or equal to zero')
 
             # If price and discount price is equal or discount price is larger,
