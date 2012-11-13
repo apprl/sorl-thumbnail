@@ -11,9 +11,11 @@ def buy_url(product_id, vendor, target_user_id=0, page='Default'):
     """
     Append custom SID to every buy URL.
     """
-    return '%s?i=%s&u=%s' % (reverse('product-click-count'),
-                             product_id,
-                             urlquote(vendor_buy_url(product_id, vendor, target_user_id, page)))
+    return '%s?i=%s&u=%s&s=%s&p=%s' % (reverse('product-click-count'),
+                                       product_id,
+                                       urlquote(vendor_buy_url(product_id, vendor, target_user_id, page)),
+                                       target_user_id,
+                                       page)
 
 
 @register.simple_tag

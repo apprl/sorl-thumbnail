@@ -1,7 +1,7 @@
 from django.core import urlresolvers
 from django.contrib import admin
 
-from statistics.models import ProductClick
+from statistics.models import ProductClick, ProductStats
 
 class ProductClickAdmin(admin.ModelAdmin):
     list_display = ('product', 'click_count', 'link')
@@ -21,3 +21,10 @@ class ProductClickAdmin(admin.ModelAdmin):
         return False
 
 admin.site.register(ProductClick, ProductClickAdmin)
+
+
+class ProductStatsAdmin(admin.ModelAdmin):
+    list_display = ('action', 'user_id', 'page', 'product', 'vendor', 'price', 'created')
+    list_filter = ('action', 'page')
+
+admin.site.register(ProductStats, ProductStatsAdmin)

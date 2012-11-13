@@ -38,6 +38,9 @@ from apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopu
 from profile.notifications import process_like_look_created
 from apparel.tasks import facebook_push_graph, facebook_pull_graph
 
+from statistics.tasks import product_buy_click
+from statistics.utils import get_client_referer, get_client_ip
+
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 6
 
@@ -281,6 +284,8 @@ def product_short_link(request, short_link):
         short_product = ShortProductLink.objects.get_for_short_link(short_link)
     except ShortProductLink.DoesNotExist:
         raise Http404
+
+    product_buy_click.delay(short_product.product.pk, get_client_referer(request), get_client_ip(request), short_product.user_id, 'Ext-Link')
 
     return HttpResponseRedirect(vendor_buy_url(short_product.product.pk,
                                                short_product.product.default_vendor,

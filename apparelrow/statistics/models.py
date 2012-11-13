@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 class ProductClickManager(models.Manager):
 
@@ -22,6 +23,7 @@ class ProductClickManager(models.Manager):
             except ObjectDoesNotExist:
                 pass
 
+
 class ProductClick(models.Model):
     product = models.ForeignKey('apparel.Product')
     click_count = models.PositiveIntegerField(default=0)
@@ -35,3 +37,18 @@ class ProductClick(models.Model):
         verbose_name = _(u'Product clicks')
         verbose_name_plural = _(u'Product clicks')
         ordering = ['-click_count']
+
+
+class ProductStats(models.Model):
+    action = models.CharField(max_length=50)
+    product = models.CharField(max_length=100)
+    vendor = models.CharField(max_length=100)
+    price = models.IntegerField()
+    user_id = models.IntegerField(default=0)
+    page = models.CharField(max_length=50)
+    created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False)
+    referer = models.TextField(null=True, blank=True)
+    ip = models.GenericIPAddressField()
+
+    class Meta:
+        ordering = ['-created']
