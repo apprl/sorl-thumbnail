@@ -120,23 +120,13 @@ class AffiliateWindowMapper(DataMapper):
 
     def get_variations(self):
         availability = self.get_availability()
-        specification = self.record.get('specification', '')
-
-        colors = ['']
-        colors.extend(self.map_colors(self.get_product_name() + specification))
-
-        sizes = ['']
-        if specification:
-            result = re.match(r'Sizes: (.+)\|Colours', specification)
-            if result:
-                sizes.extend(result.group(1).split('|'))
-            else:
-                sizes.extend([specification])
+        specifications = self.record.get('specifications', '')
+        colors = self.map_colors(self.get_product_name() + ' ' + specifications)
 
         variations = []
-        for color, size in itertools.product(colors, sizes):
-            if color or size:
-                variations.append({'color': color, 'size': size, 'availability': availability})
+        for color in colors:
+            if color:
+                variations.append({'color': color, 'size': '', 'availability': availability})
 
         return variations
 
