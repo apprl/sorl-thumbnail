@@ -184,31 +184,33 @@ class API(object):
 
         if 'pattern' in types.keys():
             for pattern in self.dataset['product']['patterns']:
-                option, created = get_model('apparel', 'Option').objects.get_or_create(option_type=types['pattern'], value=pattern)
+                if pattern:
+                    option, created = get_model('apparel', 'Option').objects.get_or_create(option_type=types['pattern'], value=pattern)
 
-                if created:
-                    logger.debug('Created option %s' % option)
+                    if created:
+                        logger.debug('Created option %s' % option)
 
-                if not self.product.options.filter(pk=option.pk):
-                    logger.debug("Attaching option %s" % option)
-                    self.product.options.add(option)
+                    if not self.product.options.filter(pk=option.pk):
+                        logger.debug("Attaching option %s" % option)
+                        self.product.options.add(option)
 
         for variation in self.dataset['product']['variations']:
             options = []
-            
+
             # Create a list of options used for each variation
             for key in filter(lambda k: k in types.keys(), variation.keys()):
-                option, created = get_model('apparel', 'Option').objects.get_or_create(option_type=types[key], value=variation[key])
-                
-                if created:
-                    logger.debug('Created option %s' % option)
-                
-                if not self.product.options.filter(pk=option.pk):
-                    logger.debug("Attaching option %s" % option)
-                    self.product.options.add(option)
-                
-                options.append(option)
-            
+                if variation[key]:
+                    option, created = get_model('apparel', 'Option').objects.get_or_create(option_type=types[key], value=variation[key])
+
+                    if created:
+                        logger.debug('Created option %s' % option)
+
+                    if not self.product.options.filter(pk=option.pk):
+                        logger.debug("Attaching option %s" % option)
+                        self.product.options.add(option)
+
+                    options.append(option)
+
             if len(options) == 0:
                 continue
             
