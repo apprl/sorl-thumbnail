@@ -16,7 +16,7 @@ from django.forms import ValidationError
 from django.core.cache import cache
 from django.core.files import storage
 from django.core.files.base import ContentFile
-from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -27,6 +27,8 @@ from apparel.manager import ProductManager, SearchManager
 from apparel.cache import invalidate_model_handler
 from apparel.utils import currency_exchange
 from apparel.base_62_converter import saturate, dehydrate
+
+from profile.notifications import process_sale_alert
 
 import requests
 
@@ -529,13 +531,31 @@ class VendorProduct(models.Model):
     buy_url           = models.URLField(_('Buy URL'), null=True, blank=True, max_length=555,)
     price             = models.DecimalField(_('Price'), null=True, blank=True, max_digits=10, decimal_places=2, db_index=True, help_text=_('Price converted to base currency'))
     currency          = models.CharField(_('Currency'), null=True, blank=True, max_length=3, help_text=_('Base currency as three-letter ISO code'))
-    original_price    = models.DecimalField(_('Original price'), null=True, blank=True, max_digits=10, decimal_places=2,)
+    _original_price    = models.DecimalField(_('Original price'), db_column='original_price', null=True, blank=True, max_digits=10, decimal_places=2,)
     original_currency = models.CharField(_('Original currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
     discount_price    = models.DecimalField(_('Discount price'), null=True, blank=True, max_digits=10, decimal_places=2)
     discount_currency = models.CharField(_('Discount currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
-    original_discount_price = models.DecimalField(_('Original discount price'), null=True, blank=True, max_digits=10, decimal_places=2)
+    _original_discount_price = models.DecimalField(_('Original discount price'), db_column='original_discount_price', null=True, blank=True, max_digits=10, decimal_places=2)
     original_discount_currency = models.CharField(_('Original discount currency'), null=True, blank=True, max_length=3, help_text=_('Currency as three-letter ISO code'))
     availability  = models.IntegerField(_('Items in stock'), null=True, blank=True, help_text=_('Negative value means it is in stock, but we have no information about how many. Null means we have no information about availability. 0 means it is sold out'))
+
+    @property
+    def original_price(self):
+        return self._original_price
+
+    @original_price.setter
+    def original_price(self, new_price):
+        self.previous_original_price = self._original_price
+        self._original_price = new_price
+
+    @property
+    def original_discount_price(self):
+        return self._original_discount_price
+
+    @original_discount_price.setter
+    def original_discount_price(self, new_price):
+        self.previous_original_discount_price = self._original_discount_price
+        self._original_discount_price = new_price
 
     def _calculate_exchange_price(self):
         """
@@ -594,6 +614,37 @@ class VendorProduct(models.Model):
 
 models.signals.post_save.connect(invalidate_model_handler, sender=VendorProduct)
 models.signals.post_delete.connect(invalidate_model_handler, sender=VendorProduct)
+
+
+@receiver(pre_save, sender=VendorProduct, dispatch_uid='vendor_product_pre_save')
+def vendor_product_pre_save(sender, instance, **kwargs):
+
+    if hasattr(instance, 'previous_original_discount_price') and instance.original_discount_price and instance.original_discount_price > decimal.Decimal('0.0'):
+        price = discount_price = None
+
+        # First discount observed
+        if instance.previous_original_discount_price is None and instance.original_price is not None:
+            price = decimal.Decimal(instance.original_price)
+            discount_price = decimal.Decimal(instance.original_discount_price)
+            first = True
+
+        # Another discount observered if the change is larger than 10% of the
+        # previous value
+        elif instance.previous_original_discount_price > decimal.Decimal('0.0') and instance.previous_original_discount_price > decimal.Decimal('1.1') * decimal.Decimal(instance.original_discount_price):
+            price = decimal.Decimal(instance.previous_original_discount_price)
+            discount_price = decimal.Decimal(instance.original_discount_price)
+            first = False
+
+        # Only process sale alerts if price and discount price is set and the
+        # vendorproduct has a product. The product should be available,
+        # published and an manufacturer should be attached with a profile.
+        if price and discount_price and instance.product and instance.product.manufacturer and instance.product.manufacturer.profile and instance.product.availability == True and instance.product.published == True:
+            process_sale_alert.delay(instance.product.manufacturer.profile,
+                                     instance.product,
+                                     instance.original_currency,
+                                     price,
+                                     discount_price,
+                                     first)
 
 
 #

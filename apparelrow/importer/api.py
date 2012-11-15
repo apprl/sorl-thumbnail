@@ -291,29 +291,6 @@ class API(object):
             'availability': self.availability
         }
 
-        # Handle user notification on sale alerts
-        if self.dataset['product']['discount-price'] and decimal.Decimal(self.dataset['product']['discount-price']) > decimal.Decimal('0.0'):
-            from profile.notifications import process_sale_alert
-            # First discount observed
-            if self.vendorproduct.original_discount_price is None and self.vendorproduct.original_price is not None:
-                if self.product.manufacturer and self.product.manufacturer.profile:
-                    process_sale_alert.delay(self.product.manufacturer.profile,
-                                       self.product,
-                                       self.dataset['product']['currency'],
-                                       decimal.Decimal(self.vendorproduct.original_price),
-                                       decimal.Decimal(self.dataset['product']['discount-price']),
-                                       True)
-            # If discount is larger than 0 and the imported discount
-            elif self.vendorproduct.original_discount_price > decimal.Decimal('0.0') and \
-                 self.vendorproduct.original_discount_price >= decimal.Decimal('1.1') * decimal.Decimal(self.dataset['product']['discount-price']):
-                if self.product.manufacturer and self.product.manufacturer.profile:
-                    process_sale_alert.delay(self.product.manufacturer.profile,
-                                       self.product,
-                                       self.dataset['product']['currency'],
-                                       decimal.Decimal(self.vendorproduct.original_discount_price),
-                                       decimal.Decimal(self.dataset['product']['discount-price']),
-                                       False)
-
         # TODO: we should remove this, we do the currency exchange during
         # presentation
         rates = self.fxrates()
