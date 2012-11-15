@@ -2,7 +2,7 @@
 {% load i18n humanize thumbnail comments trackback_tags apparel_extras %}
 
 {# FIXME: we should reverse the list of categories. I think we need to create a filter for this #}
-{% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {{ object.categories|join:' | ' }} | {% trans object.get_gender_display %} | {% endblock %}
+{% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {% if object.color_list_locale %}{% for color in object.color_list_locale %}{{ color }}{% if not forloop.last %}{% if forloop.revcounter == 2 %} & {% else %}, {% endif %}{% endif %}{% endfor %} |{% endif %} {{ object.categories|join:' | ' }} | {% trans object.get_gender_display %} | {% endblock %}
 
 {% block meta_description %}{{ object.description }}{% endblock %}
 

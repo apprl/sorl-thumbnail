@@ -117,6 +117,23 @@ class OptionType(MPTTModel):
         verbose_name = _("Option Type")
         verbose_name_plural = _("Option Types")
 
+# XXX: force translations of colors
+_('Black')
+_('Grey')
+_('White')
+_('Beige')
+_('Brown')
+_('Red')
+_('Yellow')
+_('Green')
+_('Blue')
+_('Silver')
+_('Gold')
+_('Pink')
+_('Orange')
+_('Magenta')
+_('Purple')
+
 class Option(models.Model):
     value       = models.CharField(_('Option value'), max_length=255)
     option_type = models.ForeignKey(OptionType)
@@ -285,6 +302,13 @@ class Product(models.Model):
     @property
     def colors(self):
         return self.options.filter(option_type__name='color').values_list('value', flat=True)
+
+    @property
+    def color_list_locale(self):
+        if not hasattr(self, '_color_list_locale'):
+            self._color_list_locale = [_(o.title()) for o in self.options.filter(option_type__name='color').values_list('value', flat=True)]
+
+        return self._color_list_locale
 
     def categories(self):
         c = self.category
