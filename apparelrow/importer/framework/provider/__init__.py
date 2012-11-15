@@ -228,7 +228,7 @@ class Provider(object):
             except (ObjectDoesNotExist, MultipleObjectsReturned):
                 pass
 
-            raise e
+            raise
         else:
             self.count += 1
 
