@@ -12,6 +12,7 @@ from django.utils.html import strip_tags
 from django.utils.translation import get_language, activate
 from django.core.urlresolvers import reverse
 from django.utils.formats import number_format
+from django.db.models.loading import get_model
 
 import facebook
 
@@ -19,13 +20,11 @@ from celery.task import task
 
 from apparel.utils import currency_exchange
 
-from profile.models import NotificationCache, Follow, ApparelProfile
-
 def is_following(user_one, user_two):
     profile_one = user_one.get_profile()
     profile_two = user_two.get_profile()
 
-    return Follow.objects.filter(user=profile_one, user_follow=profile_two, active=True).exists()
+    return get_model('profile', 'Follow').objects.filter(user=profile_one, user_follow=profile_two, active=True).exists()
 
 def get_key(name, recipient, sender, obj):
     recipient_pk = sender_pk = obj_pk = ''
@@ -41,7 +40,7 @@ def get_key(name, recipient, sender, obj):
 
 def is_duplicate(name, recipient, sender, obj):
     key = get_key(name, recipient, sender, obj)
-    cache, created = NotificationCache.objects.get_or_create(key=key)
+    cache, created = get_model('profile', 'NotificationCache').objects.get_or_create(key=key)
     if created:
         return False
 
@@ -346,7 +345,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
     logger = process_facebook_friends.get_logger(**kwargs)
     graph = facebook.GraphAPI(graph_token)
     fids = [f['id'] for f in graph.get_connections('me', 'friends').get('data', [])]
-    for recipient in ApparelProfile.objects.filter(user__username__in=fids).select_related('user'):
+    for recipient in get_model('profile', 'ApparelProfile').objects.filter(user__username__in=fids).select_related('user'):
         if is_duplicate('facebook_friends', recipient.user, sender, None):
             logger.info('duplicate %s' % (recipient.user,))
             continue
