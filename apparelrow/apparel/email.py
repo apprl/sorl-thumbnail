@@ -123,9 +123,9 @@ def get_weekly_mail_content(gender, timeframe):
             if product.manufacturer.name not in product_names:
                 product_names.append(product.manufacturer.name)
             product_image = get_thumbnail(product.product_image, '176', crop='noop').url
-            product_price = u'%.0f %s' % (product.default_vendor.price, product.default_vendor.currency)
-            if product.default_vendor.discount_price:
-                product_price = u'<span class="discount">%.0f %s</span> <span class="original">%.0f %s</span>' % (product.default_vendor.discount_price, product.default_vendor.currency, product.default_vendor.price, product.default_vendor.currency)
+            product_price = u'%.0f %s' % (product.default_vendor.locale_price, product.default_vendor.locale_currency)
+            if product.default_vendor.locale_discount_price:
+                product_price = u'<span class="discount">%.0f %s</span> <span class="original">%.0f %s</span>' % (product.default_vendor.locale_discount_price, product.default_vendor.locale_currency, product.default_vendor.locale_price, product.default_vendor.locale_currency)
 
             products.append({
                 'url': ''.join(['http://', Site.objects.get_current().domain, product.get_absolute_url()]),
