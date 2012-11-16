@@ -781,6 +781,9 @@ class Look(models.Model):
         storage.default_storage.save(filename, ContentFile(temp_handle.read()))
         self.static_image = filename
 
+        # refresh thumbnail in mails
+        get_thumbnail(self.static_image, '278', crop='noop')
+
     def calculate_gender(self):
         """
         Calculate looks gender based on displayed products.
