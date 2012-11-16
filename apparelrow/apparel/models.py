@@ -705,6 +705,7 @@ class Look(models.Model):
     popularity  = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
     width       = models.IntegerField(blank=False, null=False, default=694)
     height      = models.IntegerField(blank=False, null=False, default=524)
+    published   = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         """
