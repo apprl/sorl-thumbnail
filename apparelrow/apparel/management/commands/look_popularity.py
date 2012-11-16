@@ -19,5 +19,4 @@ class Command(BaseCommand):
             if item_half_hour_age > 0:
                 popularity += decimal.Decimal(str(like_count / pow(item_half_hour_age, 1.53)))
 
-            look.popularity = popularity
-            look.save()
+            Look.objects.filter(pk=look.pk).update(popularity=popularity)
