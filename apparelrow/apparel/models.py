@@ -748,7 +748,7 @@ class Look(models.Model):
             self.width = 694
             self.height = 524
 
-        for component in self.display_components.all():
+        for component in self.display_components.order_by('z_index').all():
             if self.display_with_component == 'P':
                 component_image = Image.open(finders.find('images/look-hotspot.png'))
             else:
