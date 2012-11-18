@@ -42,7 +42,7 @@
     </script>
     <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
     {% compressed_js 'jquery' %}
-    <script type="text/javascript" src="{% static "js/apparel.js" %}"></script>
+    {% compressed_js 'apparel' %}
     <script type="text/javascript">
          function facebookConnect(form){
             var label = '';

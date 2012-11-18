@@ -208,6 +208,10 @@ COMMENTS_APP = 'apparel_comments'
 # - PIPELINE SETTINGS -
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
 PIPELINE_JS = {
+    'apparel': {
+        'source_filenames': ('js/apparel.js',),
+        'output_filename': 'js/compiled/apparel.js',
+    },
     'widget': {
         'source_filenames': ('js/jquery/jquery-1.8.2.min.js',
                              'js/widget.js'),
