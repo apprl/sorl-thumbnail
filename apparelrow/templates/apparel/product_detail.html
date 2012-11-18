@@ -71,13 +71,12 @@
                 });
                 return false;
             });
-            jQuery(document)
-                .on('focus', '.short-link-container input', function(e) {
-                    jQuery(this).select();
-                })
-                .on('mouseup', '.short-link-container input', function(e) {
-                    e.preventDefault();
-                });
+            jQuery(document).on('blur', '.short-link-container input', function(e) {
+                var $this = jQuery(this);
+                $this.val($this.data('url'));
+            }).on('click', '.short-link-container input', function(e) {
+                jQuery(this).select();
+            });
         });
     </script>
 {% endblock 'extra-scripts' %}
