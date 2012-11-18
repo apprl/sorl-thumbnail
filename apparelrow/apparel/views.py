@@ -600,6 +600,9 @@ def look_edit(request, slug):
         render_to_response('apparel/look_edit.html', data, context_instance=context)
     )
 
+def look_create_initial(request):
+    return render(request, 'apparel/look_create_initial.html', {})
+
 def look_create(request):
     """
     POST - Save changes to a look

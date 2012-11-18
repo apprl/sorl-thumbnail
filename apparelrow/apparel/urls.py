@@ -73,6 +73,9 @@ urlpatterns = patterns('',
     url(r'^shop/popup/$', 'apparel.views.product_popup', name='product-popup'),
 
     # Looks
+    url(r'^create/look/$', 'apparel.views.look_create_initial', name='look-create-initial'),
+    url(r'^create/look/photo/$', 'apparel.views.look_create_initial', name='look-create-photo'),
+    url(r'^create/look/collage/$', 'apparel.views.look_create_initial', name='look-create-collage'),
     url(r'^looks/$', 'apparel.views.gender', {'view': 'look-list'}, name='look-list'),
     url(r'^looks/men/$', 'apparel.views.look_list', {'gender': 'M'}, name='look-list-men'),
     url(r'^looks/women/$', 'apparel.views.look_list', {'gender': 'W'}, name='look-list-women'),
