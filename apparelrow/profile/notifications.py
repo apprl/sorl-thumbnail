@@ -1,5 +1,6 @@
 import logging
 import decimal
+import HTMLParser
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -81,8 +82,12 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
             extra_context['recipient_last_name'] = user.last_name
 
             subject = ''.join(render_to_string(subject_template_name, extra_context).splitlines())
+            # XXX: undocumented feature in HTMLParser, look here if python is
+            # upgraded
+            subject = HTMLParser.HTMLParser().unescape(subject)
             html_body = render_to_string(body_template_name, extra_context)
             text_body = strip_tags(html_body)
+            text_body = HTMLParser.HTMLParser().unescape(text_body)
             recipients = [user.email]
 
             msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, recipients)
