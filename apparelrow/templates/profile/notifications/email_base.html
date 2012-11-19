@@ -1,11 +1,11 @@
 {% load i18n %}
 <html>
-    <head></head>
-    <body>
-        <p>{% blocktrans %}Hi {{ recipient_first_name }}!{% endblocktrans %}</p>
-        {% block content %}{% endblock %}
-        <p>/The Apprl team</p>
-        <p>------------------------------------------------------------------<br>
-        {% blocktrans %}If you wish to change your e-mail preferences go to <a href="http://{{ domain }}/profile/settings/">your settings</a>.{% endblocktrans %}</p>
-    </body>
+<head></head>
+<body>
+<p>{% blocktrans %}Hi {{ recipient_first_name }}!{% endblocktrans %}</p>
+{% block content %}{% endblock %}
+<p>/The Apprl team</p>
+<p>------------------------------------------------------------------<br>
+{% blocktrans %}If you wish to change your e-mail preferences go to <a href="http://{{ domain }}/profile/settings/">your settings</a>.{% endblocktrans %}</p>
+</body>
 </html>
