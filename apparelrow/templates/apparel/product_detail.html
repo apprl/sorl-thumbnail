@@ -112,7 +112,7 @@
                 <div id="gallery">
                     <div class="close"></div>
                     {% thumbnail object.product_image "960" upscale=False crop="noop" as im %}
-                    <img src="{{ im.url }}" alt="{{ object }}">
+                    <img src="{{ im.url }}" alt="{{ object.alt_text }}">
                     {% endthumbnail %}
                 </div>
             </div>

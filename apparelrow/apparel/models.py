@@ -309,9 +309,13 @@ class Product(models.Model):
     @property
     def color_list_locale(self):
         if not hasattr(self, '_color_list_locale'):
-            self._color_list_locale = [_(o.title()) for o in self.options.filter(option_type__name='color').values_list('value', flat=True)]
+            self._color_list_locale = [unicode(_(o.title())) for o in self.options.filter(option_type__name='color').values_list('value', flat=True)]
 
         return self._color_list_locale
+
+    @property
+    def alt_text(self):
+        return u'%s %s %s' % (self.manufacturer, self.product_name, (', '.join(self.color_list_locale)))
 
     def categories(self):
         c = self.category
