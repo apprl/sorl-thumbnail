@@ -1020,6 +1020,17 @@ models.signals.post_save.connect(invalidate_model_handler, sender=LookComponent)
 models.signals.post_delete.connect(invalidate_model_handler, sender=LookComponent)
 
 
+#
+# TemporaryImage
+#
+
+class TemporaryImage(models.Model):
+    image = models.ImageField(upload_to=settings.APPAREL_TEMPORARY_IMAGE_ROOT, max_length=255, null=False, blank=False)
+    created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
+    user_id = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return u'%s (uid=%s)' % (self.image, self.user_id)
 
 #
 # BackgroundImage
