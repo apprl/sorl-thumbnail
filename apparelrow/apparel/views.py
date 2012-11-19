@@ -603,6 +603,9 @@ def look_edit(request, slug):
 def look_create_initial(request):
     return render(request, 'apparel/look_create_initial.html', {})
 
+def look_editor(request, component, slug=None):
+    return render(request, 'apparel/look_editor.html', {'component': component, 'form': LookForm()})
+
 def look_create(request):
     """
     POST - Save changes to a look

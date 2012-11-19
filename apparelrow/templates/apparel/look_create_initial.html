@@ -15,7 +15,7 @@
 {% endblock body-header %}
 {% block body %}
 <div id="content">
-    <a href="{% url look-create-photo %}" class="btn btn-block btn-upper">{% trans "Create a tagged photo" %}</a>
-    <a href="{% url look-create-collage %}" class="btn btn-block btn-upper">{% trans "Create a collage" %}</a>
+    <a href="{% url look-editor 'photo' %}" class="btn btn-block btn-upper">{% trans "Create a tagged photo" %}</a>
+    <a href="{% url look-editor 'collage' %}" class="btn btn-block btn-upper">{% trans "Create a collage" %}</a>
 </div>
 {% endblock body %}
