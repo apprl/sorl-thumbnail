@@ -317,6 +317,10 @@ class Product(models.Model):
     def alt_text(self):
         return u'%s %s %s' % (self.manufacturer, self.product_name, (', '.join(self.color_list_locale)))
 
+    @property
+    def category_and_brand(self):
+        return u'%s - %s' % (self.category.singular_name, self.manufacturer)
+
     def categories(self):
         c = self.category
         categories = []

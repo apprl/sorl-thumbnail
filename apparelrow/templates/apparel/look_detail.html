@@ -76,11 +76,18 @@
 
 <div class="sidebar">
 {% cache CACHE_TIMEOUT look_detail1 object.id LANGUAGE_CODE %}
-    {% if object.description %}
+    <div class="info">
+        {% if object.description %}
         <p class="description">{{ object.description }}</p>
-    {% endif %}
-    {% include 'apparel/fragments/total_price.html' %}
-    <p class="share-created"><span class="created">{% trans "Created" %} {{ object.created|since }}</span></p>
+        {% endif %}
+        <ul class="brands">
+        {% for component in object.display_components %}
+            <li>{{ component.product.category_and_brand }}</li>
+        {% endfor %}
+        </ul>
+        {% include 'apparel/fragments/total_price.html' %}
+        <p class="created">{% trans "Created" %} {{ object.created|since }}</p>
+    </div>
 {% endcache %}
     <h2>{% trans "Likes" %}</h2>
     <ul id="likes" class="group">
