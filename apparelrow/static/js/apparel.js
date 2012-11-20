@@ -697,7 +697,7 @@ ApparelSearch = {
             model: 'manufacturer',
             query: {
                 'q': s,
-                'limit': 10
+                'limit': 8
             },
             selector: '#search-result-manufacturers',
             text: {
@@ -705,6 +705,21 @@ ApparelSearch = {
                 header_singular: 'Found %(count)s matching brand',
                 button_plural: 'Show all %(count)s matching brands',
                 button_singular: 'Show %(count)s matching brand'
+            }
+        });
+
+        ApparelSearch._doSearch({
+            model: 'apparelprofile',
+            query: {
+                'q': s,
+                'limit': 8
+            },
+            selector: '#search-result-profiles',
+            text: {
+                header_plural: 'Found %(count)s matching profiles',
+                header_singular: 'Found %(count)s matching profile',
+                button_plural: 'Show all %(count)s matching profiles',
+                button_singular: 'Show %(count)s matching profile'
             }
         });
 
@@ -756,7 +771,7 @@ ApparelSearch = {
                 var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1) + ' search';
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
-                var h2 = list.closest('.result-container').children('h2').text(
+                var h2 = jQuery('h2.' + opts.selector.substring(1)).text(
                     interpolate(
                         ngettext(
                             opts.text.header_singular,
@@ -800,9 +815,11 @@ ApparelSearch = {
         ngettext('Found %(count)s product', 'Found %(count)s products', 0);
         ngettext('Found %(count)s look', 'Found %(count)s looks', 0);
         ngettext('Found %(count)s matching brand', 'Found %(count)s matching brands', 0);
+        ngettext('Found %(count)s matching profile', 'Found %(count)s matching profiles', 0);
         ngettext('Show %(count)s product', 'Show all %(count)s products', 0);
         ngettext('Show %(count)s look', 'Show all %(count)s looks', 0);
         ngettext('Show %(count)s matching brand', 'Show all %(count)s matching brands', 0);
+        ngettext('Show %(count)s matching profile', 'Show all %(count)s matching profiles', 0);
         ngettext('%s product', '%s products', 0);
     },
 

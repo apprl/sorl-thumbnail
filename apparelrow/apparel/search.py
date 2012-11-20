@@ -11,6 +11,7 @@ from django.dispatch import receiver
 from django.http import Http404
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.db.models.loading import get_model
 
 from apparel.models import Product, ProductLike, Look
 from apparel.utils import get_gender_from_cookie
@@ -281,7 +282,7 @@ def look_delete(instance, **kwargs):
 def rebuild_look_index():
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
     look_count = 0
-    for look in Look.objects.all().iterator():
+    for look in Look.objects.iterator():
         look_save(look, solr=connection)
         look_count = look_count + 1
 
@@ -305,6 +306,52 @@ def get_look_document(instance):
     document['template'] = render_to_string('apparel/fragments/look_search_content.html', {'object': instance})
 
     return document, boost
+
+
+#
+# Profile index (brands not counted)
+#
+
+@receiver(post_save, sender=get_model('auth', 'User'), dispatch_uid='search_index_user_save')
+def search_index_user_save(instance, **kwargs):
+    search_index_profile_save(instance.get_profile(), **kwargs)
+
+@receiver(post_save, sender=get_model('profile', 'ApparelProfile'), dispatch_uid='search_index_profile_save')
+def search_index_profile_save(instance, **kwargs):
+    if 'solr' in kwargs and kwargs['solr']:
+        connection = kwargs['solr']
+    else:
+        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+
+    document, boost = get_profile_document(instance)
+    connection.add([document], commit=False, boost=boost, commitWithin=getattr(settings, 'SOLR_COMMIT_WITHIN', 30000))
+
+@receiver(post_delete, sender=get_model('profile', 'ApparelProfile'), dispatch_uid='search_index_profile_delete')
+def search_index_profile_delete(instance, **kwargs):
+    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
+
+def rebuild_profile_index():
+    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    profile_count = 0
+    for profile in get_model('profile', 'ApparelProfile').objects.filter(is_brand=False).iterator():
+        search_index_profile_save(profile, solr=connection)
+        profile_count = profile_count + 1
+
+    return profile_count
+
+def get_profile_document(instance):
+    boost = {}
+    document = {}
+    document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
+    document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)
+    document['django_id'] = instance.pk
+    document['name'] = instance.display_name
+    document['gender'] = instance.gender
+    document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
+
+    return document, boost
+
 
 #
 # Generic search
@@ -332,10 +379,14 @@ def search_view(request, model_name):
     else:
         gender_field = 'gender:(U OR %s)' % (gender,)
 
+    app_label = 'apparel'
+    if model_name == 'apparelprofile':
+        app_label = 'profile'
+
     # Base arguments
     arguments = {'qf': ['text'],
                  'defType': 'edismax',
-                 'fq': ['django_ct:apparel.%s' % (model_name,)],
+                 'fq': ['django_ct:%s.%s' % (app_label, model_name,)],
                  'start': 0,
                  'rows': limit}
 
@@ -348,6 +399,8 @@ def search_view(request, model_name):
     elif model_name == 'look':
         arguments['qf'] = ['text']
         arguments['fq'].append(gender_field)
+    elif model_name == 'apparelprofile':
+        arguments['qf'] = ['text']
     elif model_name == 'manufacturer':
         # override fq cause we do not have a separate manufacturer index
         arguments['fq'] = ['django_ct:apparel.product', 'availability:true', gender_field, 'published:true']
@@ -385,6 +438,8 @@ def search_view(request, model_name):
     if model_name == 'product':
         object_list = [o.template for o in paged_result.object_list if o]
     elif model_name == 'look':
+        object_list = [o.template for o in paged_result.object_list if o]
+    elif model_name == 'apparelprofile':
         object_list = [o.template for o in paged_result.object_list if o]
     elif model_name == 'manufacturer':
         object_list = [render_to_string('apparel/fragments/manufacturer_search.html', {'object': obj, 'gender': gender}) for obj in paged_result.object_list]

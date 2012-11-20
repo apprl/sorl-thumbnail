@@ -3,7 +3,7 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-from apparel.search import clean_index, rebuild_product_index, rebuild_look_index
+from apparel.search import clean_index, rebuild_product_index, rebuild_look_index, rebuild_profile_index
 
 class Command(BaseCommand):
     args = ''
@@ -27,6 +27,13 @@ class Command(BaseCommand):
         rebuild_map = {
             'look': rebuild_look_index,
             'product': rebuild_product_index,
+            'apparelprofile': rebuild_profile_index,
+        }
+
+        app_label_map = {
+            'look': 'apparel',
+            'product': 'apparel',
+            'apparelprofile': 'profile',
         }
 
         if options['model']:
@@ -34,7 +41,7 @@ class Command(BaseCommand):
                 return 'INCORRECT MODEL'
 
             if options['clean_rebuild']:
-                clean_index('apparel', options['model'])
+                clean_index(app_label_map[options['model']], options['model'])
 
             rebuild_count = rebuild_map[options['model']]()
             print 'Reindex %s %ss' % (rebuild_count, options['model'])
