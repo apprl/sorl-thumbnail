@@ -22,6 +22,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles import finders
 from django.utils import timezone
+from django.utils.functional import cached_property
 
 from apparel.manager import ProductManager, SearchManager
 from apparel.cache import invalidate_model_handler
@@ -241,55 +242,47 @@ class Product(models.Model):
     valid_objects = ProductManager(availability=True)
     published_objects = ProductManager(availability=False)
 
-    @property
+    @cached_property
     def score(self):
-        if not hasattr(self, '_score_count'):
-            self._score_count = self.likes.filter(active=True).count()
+        return self.likes.filter(active=True).count()
 
-        return self._score_count
-
-    @property
+    @cached_property
     def comment_count(self):
-        if not hasattr(self, '_comment_count'):
-            self._comment_count = Comment.objects.for_model(self).filter(is_removed=False, is_public=True).count()
+        return Comment.objects.for_model(self).filter(is_removed=False, is_public=True).count()
 
-        return self._comment_count
-
-    @property
+    @cached_property
     def default_vendor(self):
-        if not hasattr(self, '_default_vendor'):
-            try:
-                self._default_vendor = self.vendorproduct.order_by('price')[0]
-            except IndexError:
-                self._default_vendor = None
+        try:
+            return self.vendorproduct.order_by('price')[0]
+        except IndexError:
+            pass
 
-        return self._default_vendor
+        return None
 
-    @property
+    @cached_property
     def default_vendor_price(self):
         if self.default_vendor.locale_discount_price:
             return self.default_vendor.locale_discount_price
 
         return self.default_vendor.locale_price
 
-    @property
+    @cached_property
     def original_currency_list(self):
         locale = get_language()
         currency = settings.LANGUAGE_TO_CURRENCY.get(locale, settings.APPAREL_BASE_CURRENCY)
 
-        if not hasattr(self, '_original_currency'):
-            self._original_currency = []
-            for vendorproduct in self.vendorproduct.all():
-                if vendorproduct.original_currency != currency:
-                    self._original_currency.append(vendorproduct.original_currency)
+        original_currency = []
+        for vendorproduct in self.vendorproduct.all():
+            if vendorproduct.original_currency != currency:
+                original_currency.append(vendorproduct.original_currency)
 
-        return self._original_currency
+        return original_currency
 
     @models.permalink
     def get_absolute_url(self):
         return ('apparel.views.product_detail', [str(self.slug)])
 
-    @property
+    @cached_property
     def categories_all_languages(self):
         current_category = self.category
         categories = []
@@ -302,25 +295,26 @@ class Product(models.Model):
 
         return categories
 
-    @property
+    @cached_property
     def colors(self):
         return self.options.filter(option_type__name='color').values_list('value', flat=True)
 
-    @property
+    @cached_property
     def color_list_locale(self):
         if not hasattr(self, '_color_list_locale'):
             self._color_list_locale = [unicode(_(o.title())) for o in self.options.filter(option_type__name='color').values_list('value', flat=True)]
 
         return self._color_list_locale
 
-    @property
+    @cached_property
     def alt_text(self):
         return u'%s %s %s' % (self.manufacturer, self.product_name, (', '.join(self.color_list_locale)))
 
-    @property
+    @cached_property
     def category_and_brand(self):
         return u'%s - %s' % (self.category.singular_name, self.manufacturer)
 
+    @cached_property
     def categories(self):
         c = self.category
         categories = []
@@ -584,33 +578,29 @@ class VendorProduct(models.Model):
 
         return self._calculated_locale_price
 
-    @property
+    @cached_property
     def locale_price(self):
         price, _, _ = self._calculate_exchange_price()
         return price
 
-    @property
+    @cached_property
     def locale_discount_price(self):
         _, discount_price, _ = self._calculate_exchange_price()
         return discount_price
 
-    @property
+    @cached_property
     def locale_currency(self):
         _, _, currency = self._calculate_exchange_price()
         return currency
 
-    @property
+    @cached_property
     def lowest_price_in_sek(self):
-        if not hasattr(self, '_lowest_price_in_sek'):
-            rate = currency_exchange('SEK', self.original_currency)
+        rate = currency_exchange('SEK', self.original_currency)
+        discount_price = self.original_discount_price
+        if discount_price:
+            return rate * self.original_discount_price
 
-            discount_price = self.original_discount_price
-            if discount_price:
-                self._lowest_price_in_sek = rate * self.original_discount_price
-            else:
-                self._lowest_price_in_sek = rate * self.original_price
-
-        return self._lowest_price_in_sek
+        return rate * self.original_price
 
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)
@@ -810,21 +800,15 @@ class Look(models.Model):
 
         return 'U'
 
-    @property
+    @cached_property
     def score(self):
-        if not hasattr(self, '_score_count'):
-            self._score_count = self.likes.filter(active=True).count()
+        return self.likes.filter(active=True).count()
 
-        return self._score_count
-
-    @property
+    @cached_property
     def comment_count(self):
-        if not hasattr(self, '_comment_count'):
-            self._comment_count = Comment.objects.for_model(self).filter(is_removed=False, is_public=True).count()
+        return Comment.objects.for_model(self).filter(is_removed=False, is_public=True).count()
 
-        return self._comment_count
-
-    @property
+    @cached_property
     def total_price(self):
         """
         Returns the total price of the given component, or default if none specified
@@ -840,21 +824,21 @@ class Look(models.Model):
 
         return total
 
-    @property
+    @cached_property
     def photo_components(self):
         """
         All components in the photo view
         """
         return self.components.filter(component_of='P')
 
-    @property
+    @cached_property
     def collage_components(self):
         """
         All components in the collage view
         """
         return self.components.filter(component_of='C')
 
-    @property
+    @cached_property
     def display_components(self):
         """
         All components in the view that should be displayed according to the
@@ -862,7 +846,7 @@ class Look(models.Model):
         """
         return self.photo_components if self.display_with_component == 'P' else self.collage_components
 
-    @property
+    @cached_property
     def display_with_component(self):
         """
         Returns the component that should be displayed by default by
@@ -874,13 +858,17 @@ class Look(models.Model):
         if self.photo_components.count() > 0: return 'P'
         return 'C'
 
-    @property
+    @cached_property
     def product_manufacturers(self):
         return [x for x in self.display_components.values_list('product__manufacturer__name', flat=True) if x]
 
-    @property
+    @cached_property
     def product_brands_unique(self):
         return set(self.product_manufacturers)
+
+    @cached_property
+    def category_and_brand(self):
+        return [c.product.category_and_brand for c in self.display_components]
 
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user.get_profile().display_name)

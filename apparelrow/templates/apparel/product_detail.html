@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
-{% load i18n humanize thumbnail comments trackback_tags apparel_extras %}
+{% load cache i18n humanize thumbnail comments trackback_tags apparel_extras %}
 
-{# FIXME: we should reverse the list of categories. I think we need to create a filter for this #}
-{% block extra-title %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {% if object.color_list_locale %}{% for color in object.color_list_locale %}{{ color }}{% if not forloop.last %}{% if forloop.revcounter == 2 %} & {% else %}, {% endif %}{% endif %}{% endfor %} |{% endif %} {{ object.categories|join:' | ' }} | {% trans object.get_gender_display %} | {% endblock %}
+{% block extra-title %}{% cache CACHE_TIMEOUT product_detail_title object.id LANGUAGE_CODE %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {% if object.color_list_locale %}{% for color in object.color_list_locale %}{{ color }}{% if not forloop.last %}{% if forloop.revcounter == 2 %} & {% else %}, {% endif %}{% endif %}{% endfor %} |{% endif %} {{ object.categories|join:' | ' }} | {% trans object.get_gender_display %} | {% endcache %}{% endblock %}
 
 {% block meta_description %}{{ object.description }}{% endblock %}
 
 {% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
 
 {% block extra-styles %}
+    {% cache CACHE_TIMEOUT product_detail_metaextra object.id LANGUAGE_CODE %}
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
     <meta property="og:title" content="{{ object.manufacturer }} - {{ object.product_name }}"/>
@@ -21,6 +21,7 @@
     <meta property="{{ FACEBOOK_OG_TYPE }}:likes" content="{{ object.score }}"/>
     <meta property="{{ FACEBOOK_OG_TYPE }}:brand" content="{{ product_brand_full_url }}"/>
     <meta property="{{ FACEBOOK_OG_TYPE }}:price" content="{{ object.default_vendor_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.locale_currency }}"/>
+    {% endcache %}
 {% endblock extra-styles %}
 
 {% block body-scripts %}

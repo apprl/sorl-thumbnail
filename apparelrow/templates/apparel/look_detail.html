@@ -6,6 +6,7 @@
 {% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
 
 {% block extra-styles %}
+    {% cache CACHE_TIMEOUT look_detail_metaextra object.id LANGUAGE_CODE %}
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}
     <meta property="og:title" content="{{ object.title }}"/>
@@ -17,6 +18,7 @@
     <meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}"/>
     <meta property="{{ FACEBOOK_OG_TYPE }}:likes" content="{{ object.score }}"/>
     <meta property="{{ FACEBOOK_OG_TYPE }}:products" content="{{ object.display_components.count }}"/>
+    {% endcache %}
 {% endblock extra-styles %}
 
 {% block body-scripts %}
@@ -51,6 +53,12 @@
 </script>
 {% endblock 'extra-scripts' %}
 
+{% block meta_description %}
+    {% cache CACHE_TIMEOUT look_detail_metadesc object.id LANGUAGE_CODE %}
+    {% if object.description %}{{ object.description }} - {% endif %}{{ object.category_and_brand|join:', ' }}
+    {% endcache %}
+{% endblock %}
+
 {% block body-header %}
 <div id="body-header">
     <div class="column_one">
@@ -81,8 +89,8 @@
         <p class="description">{{ object.description }}</p>
         {% endif %}
         <ul class="brands">
-        {% for component in object.display_components %}
-            <li>{{ component.product.category_and_brand }}</li>
+        {% for category_and_brand in object.category_and_brand %}
+            <li>{{ category_and_brand }}</li>
         {% endfor %}
         </ul>
         {% include 'apparel/fragments/total_price.html' %}
