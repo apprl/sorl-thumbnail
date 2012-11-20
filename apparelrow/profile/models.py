@@ -17,6 +17,7 @@ from django.contrib.auth.signals import user_logged_in
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.utils.functional import cached_property
 
 from sorl.thumbnail import get_thumbnail
 from django_extensions.db.fields import AutoSlugField
@@ -110,39 +111,30 @@ class ApparelProfile(models.Model):
         return ('looks_by_user', [str(self.user.username)])
 
     # XXX: make this a real column on the model?
-    @property
+    @cached_property
     def has_liked(self):
         """User has liked"""
         return self.user.product_likes.exists()
 
-    @property
+    @cached_property
     def looks(self):
         """Number of looks"""
-        if not hasattr(self, '_looks_count'):
-            self._looks_count = self.user.look.count()
+        return self.user.look.count()
 
-        return self._looks_count
-
-    @property
+    @cached_property
     def likes(self):
         """Number of likes on products and looks combined"""
         return self.product_likes_count + self.look_likes_count
 
-    @property
+    @cached_property
     def product_likes_count(self):
-        if not hasattr(self, '_product_likes_count'):
-            self._product_likes_count = self.user.product_likes.filter(active=True).count()
+        return self.user.product_likes.filter(active=True).count()
 
-        return self._product_likes_count
-
-    @property
+    @cached_property
     def look_likes_count(self):
-        if not hasattr(self, '_look_likes_count'):
-            self._look_likes_count = self.user.look_likes.filter(active=True).count()
+        return self.user.look_likes.filter(active=True).count()
 
-        return self._look_likes_count
-
-    @property
+    @cached_property
     def display_name(self):
         if self.name is not None:
             return self.name
@@ -152,7 +144,7 @@ class ApparelProfile(models.Model):
 
         return u'%s' % self.user
 
-    @property
+    @cached_property
     def avatar_small(self):
         if self.image:
             return get_thumbnail(self.image, '32x32', crop='center').url
@@ -165,7 +157,7 @@ class ApparelProfile(models.Model):
 
         return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
 
-    @property
+    @cached_property
     def avatar(self):
         if self.image:
             return get_thumbnail(self.image, '50x50', crop='center').url
@@ -178,7 +170,7 @@ class ApparelProfile(models.Model):
 
         return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
 
-    @property
+    @cached_property
     def avatar_medium(self):
         if self.image:
             return get_thumbnail(self.image, '125').url
@@ -191,7 +183,7 @@ class ApparelProfile(models.Model):
 
         return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
 
-    @property
+    @cached_property
     def avatar_large(self):
         if self.image:
             return get_thumbnail(self.image, '208').url
@@ -217,7 +209,7 @@ class ApparelProfile(models.Model):
         return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
 
 
-    @property
+    @cached_property
     def facebook_uid(self):
         """
         Try to convert username to int, if possible it is safe to assume that
@@ -231,41 +223,33 @@ class ApparelProfile(models.Model):
 
         return None
 
-    @property
-    def get_updates_last_visit(self):
-        return 0
-        #if not hasattr(self, '_updates_since_last_visit'):
-            #self._updates_since_last_visit = self.get_friend_updates().filter(timestamp__gt=self.updates_last_visit).count()
-
-        #return self._updates_since_last_visit
-
-    @property
+    @cached_property
     def url_likes(self):
         if self.is_brand:
             return reverse('brand-likes', args=[self.slug])
 
         return reverse('profile-likes', args=[self.slug])
 
-    @property
+    @cached_property
     def url_updates(self):
         if self.is_brand:
             return reverse('brand-updates', args=[self.slug])
 
         return reverse('profile-updates', args=[self.slug])
 
-    @property
+    @cached_property
     def url_looks(self):
         if self.is_brand:
             return reverse('brand-looks', args=[self.slug])
 
         return reverse('profile-looks', args=[self.slug])
-    @property
+    @cached_property
     def url_followers(self):
         if self.is_brand:
             return reverse('brand-followers', args=[self.slug])
 
         return reverse('profile-followers', args=[self.slug])
-    @property
+    @cached_property
     def url_following(self):
         if self.is_brand:
             return reverse('brand-following', args=[self.slug])
