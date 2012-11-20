@@ -15,13 +15,34 @@ class Command(BaseCommand):
             default=False,
             help='Delete indexes and start from a clean index'
         ),
+        make_option('--model',
+            action='store',
+            dest='model',
+            default=False,
+            help='Operate only on this model'
+        ),
     )
 
     def handle(self, *args, **options):
-        if options['clean_rebuild']:
-            clean_index()
+        rebuild_map = {
+            'look': rebuild_look_index,
+            'product': rebuild_product_index,
+        }
 
-        product_count = rebuild_product_index()
-        print 'Reindexed %s products' % (product_count,)
-        look_count = rebuild_look_index()
-        print 'Reindexed %s looks' % (look_count,)
+        if options['model']:
+            if options['model'] not in rebuild_map:
+                return 'INCORRECT MODEL'
+
+            if options['clean_rebuild']:
+                clean_index('apparel', options['model'])
+
+            rebuild_count = rebuild_map[options['model']]()
+            print 'Reindex %s %ss' % (rebuild_count, options['model'])
+        else:
+            if options['clean_rebuild']:
+                clean_index()
+
+            product_count = rebuild_product_index()
+            print 'Reindexed %s products' % (product_count,)
+            look_count = rebuild_look_index()
+            print 'Reindexed %s looks' % (look_count,)

@@ -116,9 +116,13 @@ class ApparelSearch(object):
 
         return self._get_results()[k]
 
-def clean_index():
+def clean_index(app_label=None, module_name=None):
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
-    connection.delete(q='*:*')
+
+    if app_label and module_name:
+        connection.delete(q=('django_ct:%s.%s' % (app_label, module_name)))
+    else:
+        connection.delete(q='*:*')
 
 #
 # ProductIndex
