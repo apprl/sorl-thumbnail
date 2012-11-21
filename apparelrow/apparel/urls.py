@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 
 from apparel.models import Look
+from apparel.views.products import ProductList
 
 urlpatterns = patterns('',
     # Feed
@@ -41,6 +42,7 @@ urlpatterns = patterns('',
     url(r'^unfollow/(?P<profile_id>\d+)/$', 'apparel.views.follow_unfollow', {'do_follow': False}, name='apprl-unfollow'),
 
     # Products
+    url(r'^products/$', ProductList.as_view(), name='product_list'),
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
     url(r'^products/(?P<pk>[\d]+)/(?P<action>like|unlike)/?$', 'apparel.views.product_action', name='product-action'),
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
