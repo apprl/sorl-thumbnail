@@ -240,6 +240,9 @@ def product_detail(request, slug):
         except ShortProductLink.DoesNotExist:
             pass
 
+    # More like this body
+    mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors), ', '.join([x.name for x in product.categories]))
+
     return render_to_response(
             'apparel/product_detail.html',
             {
@@ -250,7 +253,7 @@ def product_detail(request, slug):
                 'looks_with_product_count': looks_with_product_count,
                 'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri(),
-                'more_like_this': more_like_this_product(product.id, product.gender, 20),
+                'more_like_this': more_like_this_product(mlt_body, product.gender, 20),
                 'comments': comments,
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
                 'product_full_image': product_full_image,
