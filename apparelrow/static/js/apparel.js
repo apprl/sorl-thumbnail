@@ -887,7 +887,7 @@ function updateHash(name, value, remove) {
  * To reset, set $(window).data('first-scroll', true)
  * */
 
-function infiniteScroll(callback) {
+window.infiniteScroll = function infiniteScroll(callback) {
     var $window = jQuery(window),
         $document = jQuery(document),
         lastOffset = $window.scrollTop(),
