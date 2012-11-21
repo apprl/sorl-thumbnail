@@ -234,7 +234,17 @@ PIPELINE_JS = {
                              'js/jquery/jquery.apprl-sticky.js',
                              'js/jquery/jquery.apprl-tooltip.js'),
         'output_filename': 'js/compiled/jquery.js',
-    }
+    },
+    'look_editor': {
+        'source_filenames': ('js/vendor/underscore.js',
+                             'js/vendor/json2.js',
+                             'js/vendor/backbone.js',
+                             'js/app/main.js',
+                             'js/app/models/search_product.js',
+                             'js/app/models/product.js',
+                             'js/app/collections/products.js'),
+        'output_filename': 'js/compiled/look_editor.js',
+    },
 }
 
 CSRF_FAILURE_VIEW = 'apparel.views.csrf_failure'
