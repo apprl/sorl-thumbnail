@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-20 17:36+0100\n"
+"POT-Creation-Date: 2012-11-22 09:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,12 +59,12 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nej"
 
-#: apparel/browse.py:208 templates/apparel/look_list.html:30
+#: apparel/browse.py:206 templates/apparel/look_list.html:30
 #: templates/apparel/look_list.html:32
 msgid "Showing"
 msgstr "Visar"
 
-#: apparel/browse.py:210
+#: apparel/browse.py:208
 msgid "Showing your friends' favorites"
 msgstr "Visar dina vänners favoriter"
 
@@ -2632,21 +2632,17 @@ msgstr "Logga in med ditt Facebook ID"
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
 
-#: watcher/models.py:15
-msgid "Search"
-msgstr "Sök"
+#~ msgid "Search"
+#~ msgstr "Sök"
 
-#: watcher/models.py:29
-msgid "Time last checked"
-msgstr "Senast kollad"
+#~ msgid "Time last checked"
+#~ msgstr "Senast kollad"
 
-#: watcher/models.py:30
-msgid "E-mail successfully sent"
-msgstr "Mejl skickat"
+#~ msgid "E-mail successfully sent"
+#~ msgstr "Mejl skickat"
 
-#: watcher/models.py:31
-msgid "Why e-mail was not sent"
-msgstr "Varför mejlet inte skickades"
+#~ msgid "Why e-mail was not sent"
+#~ msgstr "Varför mejlet inte skickades"
 
 #~ msgid "Unliked!"
 #~ msgstr "Ogillade!"

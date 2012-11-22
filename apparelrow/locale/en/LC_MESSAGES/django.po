@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-20 17:36+0100\n"
+"POT-Creation-Date: 2012-11-22 09:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,12 +58,12 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: apparel/browse.py:208 templates/apparel/look_list.html:30
+#: apparel/browse.py:206 templates/apparel/look_list.html:30
 #: templates/apparel/look_list.html:32
 msgid "Showing"
 msgstr ""
 
-#: apparel/browse.py:210
+#: apparel/browse.py:208
 msgid "Showing your friends' favorites"
 msgstr ""
 
@@ -2469,22 +2469,6 @@ msgstr ""
 
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
-msgstr ""
-
-#: watcher/models.py:15
-msgid "Search"
-msgstr ""
-
-#: watcher/models.py:29
-msgid "Time last checked"
-msgstr ""
-
-#: watcher/models.py:30
-msgid "E-mail successfully sent"
-msgstr ""
-
-#: watcher/models.py:31
-msgid "Why e-mail was not sent"
 msgstr ""
 
 #~ msgid "Swe"

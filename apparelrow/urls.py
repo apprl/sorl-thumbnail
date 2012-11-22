@@ -26,7 +26,6 @@ urlpatterns = patterns('',
     url(r'^accounts/logout/$', auth_views.logout, {'template_name': 'registration/logout.html'}, name='auth_logout'),
 
     (r'^profile/', include('profile.urls')),
-    (r'^watcher/', include('watcher.urls')),
 
     (r'^comments/', include('django.contrib.comments.urls')),
     (r'^ping/', include('trackback.urls')),
