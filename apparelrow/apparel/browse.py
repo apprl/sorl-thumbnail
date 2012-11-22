@@ -66,7 +66,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     query_arguments['facet.mincount'] = 1
     query_arguments['facet.field'] = []
 
-    for field in ['category', 'manufacturer_data', 'color']:
+    for field in ['category', 'manufacturer', 'color']:
         if facet_fields and field in facet_fields:
             query_arguments['facet.field'].append('{!ex=%s}%s' % (field, field))
 
@@ -108,7 +108,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
 
     # Brand
     if 'manufacturer' in request.GET:
-        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer_data', 'manufacturer_id', ' OR '.join([x for x in request.GET['manufacturer'].split(',')])))
+        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer', 'manufacturer_id', ' OR '.join([x for x in request.GET['manufacturer'].split(',')])))
 
     # Color and pattern
     color_pattern_list = request.GET.get('color', '').split(',')
@@ -125,7 +125,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     if language in settings.LANGUAGE_TO_CURRENCY:
         currency = settings.LANGUAGE_TO_CURRENCY.get(language)
 
-    facet_fields = ['category', 'price', 'color', 'manufacturer_data']
+    facet_fields = ['category', 'price', 'color', 'manufacturer']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, currency=currency)
 
@@ -178,7 +178,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
 
     # Calculate manufacturer
     manufacturers = []
-    for i, value in enumerate(facet['manufacturer_data']):
+    for i, value in enumerate(facet['manufacturer']):
         if i % 2 == 0:
             split = value.rsplit('|', 1)
             manufacturers.append((int(split[1]), split[0]))

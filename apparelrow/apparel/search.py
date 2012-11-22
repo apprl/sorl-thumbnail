@@ -262,7 +262,7 @@ def get_product_document(instance):
 
         # Brand
         document['manufacturer_auto'] = instance.manufacturer.name
-        document['manufacturer_data'] = '%s|%s' % (instance.manufacturer.name, instance.manufacturer_id)
+        document['manufacturer'] = '%s|%s' % (instance.manufacturer.name, instance.manufacturer_id)
 
         boost = {'product_name': '0.5', 'description': '0.4', 'manufacturer_name': '1.2'}
 
@@ -416,7 +416,7 @@ def search_view(request, model_name):
         arguments['facet'] = 'on'
         arguments['facet.limit'] = -1
         arguments['facet.mincount'] = 1
-        arguments['facet.field'] = ['manufacturer_data']
+        arguments['facet.field'] = ['manufacturer']
 
     # Used in look image to bring up popup with products
     ids = request.GET.get('ids', False)
@@ -429,7 +429,7 @@ def search_view(request, model_name):
     if model_name == 'manufacturer':
         facet = results.get_facet()['facet_fields']
         results = []
-        for i, value in enumerate(facet['manufacturer_data']):
+        for i, value in enumerate(facet['manufacturer']):
             if i % 2 == 0:
                 split = value.rsplit('|', 1)
                 results.append({'id': int(split[1]), 'name': split[0]})

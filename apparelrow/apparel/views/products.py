@@ -12,14 +12,6 @@ from apparel.browse import set_query_arguments
 from apparel.utils import set_query_parameter
 
 
-FILTER_TO_SOLR_MAP = {
-    'category': 'category',
-    'price': 'price',
-    'color': 'color',
-    'manufacturer': 'manufacturer_data',
-}
-
-
 BROWSE_PAGE_SIZE = 30
 
 
@@ -32,7 +24,6 @@ class ProductList(View):
             currency = settings.LANGUAGE_TO_CURRENCY.get(language)
 
         facet_fields = request.GET.get('facet', '')
-        facet_fields = [FILTER_TO_SOLR_MAP[x] for x in facet_fields.split(',') if x in FILTER_TO_SOLR_MAP]
 
         # TODO: better gender handling
         gender = request.GET.get('gender', 'W')
@@ -45,6 +36,7 @@ class ProductList(View):
         # Sort
         query_arguments['sort'] = request.GET.get('sort', 'popularity desc, created desc')
 
+        # TODO: which fields, template?
         query_arguments['fl'] = 'name'
 
         # Query string
@@ -61,6 +53,65 @@ class ProductList(View):
             if not sort_get or sort_get == '':
                 query_arguments['sort'] = 'score desc'
 
+        if request.GET.get('facet', False):
+            return self.get_facet(request, query_string, query_arguments, *args, **kwargs)
+
+        return self.get_products(request, query_string, query_arguments, *args, **kwargs)
+
+    def get_facet(self, request, query_string, query_arguments, *args, **kwargs):
+        for key in request.GET.keys():
+            if key.startswith('f.'):
+                query_arguments[key] = request.GET.get(key)
+
+        search = ApparelSearch(query_string, **query_arguments)
+
+        # Facet
+        facet = search.get_facet()['facet_fields']
+        result = {}
+
+        # Calculate price range
+        if 'price' in facet:
+            pricerange = {'min': 0, 'max': 10000}
+            if language in settings.MAX_MIN_CURRENCY:
+                pricerange['max'] = settings.MAX_MIN_CURRENCY.get(language)
+            pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
+
+            price = request.GET.get('price', '').split(',')
+            if len(price) == 2:
+                pricerange['selected_min'] = price[0]
+                pricerange['selected_max'] = price[1]
+            else:
+                pricerange['selected_min'] = pricerange['min']
+                pricerange['selected_max'] = pricerange['max']
+
+            result.update(facet_price=pricerange)
+
+        # Calculate manufacturer
+        if 'manufacturer' in facet:
+            ids = facet['manufacturer'][::2]
+            values = map(int, facet['manufacturer'][1::2])
+            manufacturers = []
+            for key, value in zip(ids, values):
+                split_key = key.rsplit('|', 1)
+                manufacturers.append({'id': int(split_key[1]),
+                                      'name': split_key[0],
+                                      'count': value,})
+
+            result.update(facet_manufacturer=manufacturers)
+
+        # Calculate colors
+        if 'color' in facet:
+            result.update(facet_color=map_facets(facet['color']))
+
+        # Calculate category
+        if 'category' in facet:
+            result.update(facet_category=map_facets(facet['category']))
+
+        return HttpResponse(json.dumps(result), mimetype='application/json')
+
+
+    def get_products(self, request, query_string, query_arguments, *args, **kwargs):
+        query_arguments['facet'] = 'false'
         search = ApparelSearch(query_string, **query_arguments)
 
         # Calculate paginator
@@ -86,50 +137,6 @@ class ProductList(View):
             result.update(prev_page=prev_page)
 
         result.update(products=[x.__dict__ for x in paged_result.object_list])
-
-
-        # Facet
-        if facet_fields:
-            facet = search.get_facet()['facet_fields']
-
-            # Calculate price range
-            if 'price' in facet_fields:
-                pricerange = {'min': 0, 'max': 10000}
-                if language in settings.MAX_MIN_CURRENCY:
-                    pricerange['max'] = settings.MAX_MIN_CURRENCY.get(language)
-                pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
-
-                price = request.GET.get('price', '').split(',')
-                if len(price) == 2:
-                    pricerange['selected_min'] = price[0]
-                    pricerange['selected_max'] = price[1]
-                else:
-                    pricerange['selected_min'] = pricerange['min']
-                    pricerange['selected_max'] = pricerange['max']
-
-                result.update(facet_price=pricerange)
-
-            # Calculate manufacturer
-            if 'manufacturer_data' in facet_fields:
-                ids = facet['manufacturer_data'][::2]
-                values = map(int, facet['manufacturer_data'][1::2])
-                manufacturers = []
-                for key, value in zip(ids, values):
-                    split_key = key.rsplit('|', 1)
-                    manufacturers.append({'id': int(split_key[1]),
-                                          'name': split_key[0],
-                                          'count': value,})
-
-                result.update(facet_manufacturer=manufacturers)
-
-            # Calculate colors
-            if 'color' in facet_fields:
-                result.update(facet_color=map_facets(facet['color']))
-
-            # Calculate category
-            if 'category' in facet_fields:
-                result.update(facet_category=map_facets(facet['category']))
-
 
         return HttpResponse(json.dumps(result), mimetype='application/json')
 

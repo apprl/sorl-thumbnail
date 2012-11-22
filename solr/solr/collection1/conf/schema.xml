@@ -126,7 +126,7 @@
 
     <!-- Used in manufacturer search and product faceting -->
     <field name="manufacturer_id" type="string" indexed="true" stored="true" multiValued="false"/>
-    <field name="manufacturer_data" type="string" indexed="true" stored="true" multiValued="false"/>
+    <field name="manufacturer" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="manufacturer_auto" type="ngram" indexed="true" stored="true" multiValued="false"/>
 
     <!-- Used in product search -->
