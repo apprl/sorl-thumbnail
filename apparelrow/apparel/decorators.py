@@ -74,7 +74,7 @@ def seamless_request_handling(view_func):
             
             return HttpResponse(
                 json.encode(rsp_dict),
-                mimetype='text/json'
+                mimetype='application/json'
             )
         
         if isinstance(http_rsp, HttpResponseForbidden):

@@ -259,7 +259,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
                 context_instance=RequestContext(request)
             ),
         )
-        return HttpResponse(json.encode(result), mimetype='text/json')
+        return HttpResponse(json.encode(result), mimetype='application/json')
 
     # Default colors
     default_colors = Option.objects.filter(option_type__name='color').exclude(value__exact='').all()

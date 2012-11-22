@@ -69,7 +69,7 @@ def save_query(request, query):
         # Return something that is good for ajax client
         HttpResponse(
            {'status': 'ok'},
-            mimetype='text/json'
+            mimetype='application/json'
         )
     
     # Back to original page, or if not availble to the management page for

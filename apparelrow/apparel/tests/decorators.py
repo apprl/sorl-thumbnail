@@ -39,7 +39,7 @@ class TestDecorators(TestCase):
         r = self.client.get('/decorator/ok/', {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         
         self.assertTrue(isinstance(r, HttpResponse), 'Got 200')
-        self.assertEquals(r['Content-Type'], 'text/json')
+        self.assertEquals(r['Content-Type'], 'application/json')
         
         try:
             content = json.loads(r.content)
@@ -60,7 +60,7 @@ class TestDecorators(TestCase):
         r = self.client.get('/decorator/tuple/', {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         
         self.assertTrue(isinstance(r, HttpResponse), 'Got 200')
-        self.assertEquals(r['Content-Type'], 'text/json')
+        self.assertEquals(r['Content-Type'], 'application/json')
         
         try:
             content = json.loads(r.content)
@@ -128,7 +128,3 @@ class TestDecorators(TestCase):
         self.assertEquals(content['success'], False, 'Status set to false')
         self.assertEquals(content['error_message'], 302)
         self.assertEquals(content['location'], '%s?next=/decorator/auth/' % settings.LOGIN_URL)
-    
-
-
-        
