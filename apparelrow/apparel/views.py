@@ -924,7 +924,7 @@ def jobs(request):
 
 
 def apparel_set_language(request):
-    language = request.POST.get('language', None)
+    language = request.POST.get('language', translation.get_language())
     if request.user.is_authenticated():
         profile = request.user.get_profile()
         profile.language = language
