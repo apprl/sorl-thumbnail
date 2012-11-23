@@ -99,7 +99,7 @@
     <!-- Filters -->
     <field name="category" type="text_general" indexed="true" stored="false" multiValued="true"/>
     <field name="color" type="text_general" indexed="true" stored="false" multiValued="true"/>
-    <field name="price" type="currency" indexed="true" stored="false" multiValued="false"/>
+    <field name="price" type="currency" indexed="true" stored="true" multiValued="false"/>
     <field name="gender" type="text_general" indexed="true" stored="false" multiValued="false"/>
 
     <!-- Boolean filters -->
@@ -111,8 +111,6 @@
     <field name="popularity" type="double" indexed="true" stored="true" multiValued="false"/>
 
     <!-- User related fields -->
-    <field name="user" type="text_general" indexed="true" stored="false" multiValued="true"/>
-    <field name="user_wardrobe" type="string" indexed="true" stored="false" multiValued="true"/>
     <field name="user_likes" type="string" indexed="true" stored="false" multiValued="true"/>
 
     <!-- Stored templates -->

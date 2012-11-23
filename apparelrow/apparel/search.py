@@ -309,7 +309,6 @@ def get_look_document(instance):
     document['gender'] = instance.gender
     document['created'] = instance.created
     document['modified'] = instance.modified
-    document['user'] = instance.user.username
     document['name'] = instance.title
     document['description'] = instance.description
     product_manufacturers = instance.product_manufacturers
