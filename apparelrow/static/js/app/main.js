@@ -1,5 +1,6 @@
 window.App = {
     Models: {},
     Collections: {},
-    Views: {}
+    Views: {},
+    Events: _.extend({}, Backbone.Events)
 };

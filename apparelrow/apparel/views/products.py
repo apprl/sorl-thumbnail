@@ -6,13 +6,12 @@ from django.views.generic import View
 from django.utils.translation import get_language
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from apparel.search import PRODUCT_SEARCH_FIELDS
-from apparel.search import ApparelSearch
+from apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
 from apparel.browse import set_query_arguments
-from apparel.utils import set_query_parameter
+from apparel.utils import set_query_parameter, get_gender_from_cookie
 
 
-BROWSE_PAGE_SIZE = 30
+BROWSE_PAGE_SIZE = 12
 
 
 class ProductList(View):
@@ -22,11 +21,8 @@ class ProductList(View):
         currency = settings.APPAREL_BASE_CURRENCY
         if language in settings.LANGUAGE_TO_CURRENCY:
             currency = settings.LANGUAGE_TO_CURRENCY.get(language)
-
-        facet_fields = request.GET.get('facet', '')
-
-        # TODO: better gender handling
-        gender = request.GET.get('gender', 'W')
+        gender = request.GET.get('gender', get_gender_from_cookie(request))
+        facet_fields = request.GET.get('facet', '').split(',')
 
         query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
         query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, currency=currency)
@@ -37,7 +33,7 @@ class ProductList(View):
         query_arguments['sort'] = request.GET.get('sort', 'popularity desc, created desc')
 
         # TODO: which fields, template?
-        query_arguments['fl'] = 'name'
+        query_arguments['fl'] = 'template'
 
         # Query string
         query_string = request.GET.get('q')
@@ -59,9 +55,11 @@ class ProductList(View):
         return self.get_products(request, query_string, query_arguments, *args, **kwargs)
 
     def get_facet(self, request, query_string, query_arguments, *args, **kwargs):
-        for key in request.GET.keys():
+        for key, value in request.GET.items():
             if key.startswith('f.'):
-                query_arguments[key] = request.GET.get(key)
+                if key == 'f.manufacturer.facet.prefix':
+                    value = value.lower()
+                query_arguments[key] = value
 
         search = ApparelSearch(query_string, **query_arguments)
 
@@ -70,7 +68,10 @@ class ProductList(View):
         result = {}
 
         # Calculate price range
-        if 'price' in facet:
+        # TODO: price is not a real facet because solr does not support facet.range on currency field
+        temp_facet_fields = request.GET.get('facet', '').split(',')
+        language = get_language()
+        if 'price' in temp_facet_fields:
             pricerange = {'min': 0, 'max': 10000}
             if language in settings.MAX_MIN_CURRENCY:
                 pricerange['max'] = settings.MAX_MIN_CURRENCY.get(language)
@@ -84,7 +85,7 @@ class ProductList(View):
                 pricerange['selected_min'] = pricerange['min']
                 pricerange['selected_max'] = pricerange['max']
 
-            result.update(facet_price=pricerange)
+            result.update(price=pricerange)
 
         # Calculate manufacturer
         if 'manufacturer' in facet:
@@ -92,20 +93,20 @@ class ProductList(View):
             values = map(int, facet['manufacturer'][1::2])
             manufacturers = []
             for key, value in zip(ids, values):
-                split_key = key.rsplit('|', 1)
-                manufacturers.append({'id': int(split_key[1]),
-                                      'name': split_key[0],
-                                      'count': value,})
+                id, name, _ = decode_manufacturer_facet(key)
+                manufacturers.append({'id': id,
+                                      'name': name,
+                                      'count': value})
 
-            result.update(facet_manufacturer=manufacturers)
+            result.update(manufacturer=manufacturers)
 
         # Calculate colors
         if 'color' in facet:
-            result.update(facet_color=map_facets(facet['color']))
+            result.update(color=map_facets(facet['color']))
 
         # Calculate category
         if 'category' in facet:
-            result.update(facet_category=map_facets(facet['category']))
+            result.update(category=map_facets(facet['category']))
 
         return HttpResponse(json.dumps(result), mimetype='application/json')
 

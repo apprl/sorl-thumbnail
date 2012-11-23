@@ -62,14 +62,19 @@
         {% endif %}
         </div>
         <div id="product-chooser">
-            <div class="tabs">
-                <a href="#likes">{% trans "Your ♥" %}</a>
-                <a href="#all">{% trans "All products" %}</a>
+            <div id="product-filter">
+                <div class="tabs">
+                    <a href="#likes">{% trans "Your ♥" %}</a>
+                    <a href="#all">{% trans "All products" %}</a>
+                </div>
+                <div class="main-filters">
+                    <input type="search" name="q" placeholder="{% trans "Search for your product here.." %}">
+                    <label><input type="radio" name="gender" value="W"{% if APPAREL_GENDER == 'W' %} checked{% endif %}> {% trans "Women" %}</label>
+                    <label><input type="radio" name="gender" value="M"{% if APPAREL_GENDER == 'M' %} checked{% endif %}> {% trans "Men" %}</label>
+                    <div class="sub-filters"></div>
+                </div>
             </div>
-            <div class="filters">
-                filters include search, category, color and price
-            </div>
-            <ul class="product-list"></ul>
+            <ul id="product-list"></ul>
         </div>
 
         <div id="publish-container">

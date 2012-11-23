@@ -1,6 +1,7 @@
 import json
 import decimal
 import logging
+import re
 
 from django.conf import settings
 from django.core.paginator import Paginator
@@ -22,6 +23,8 @@ logger = logging.getLogger('apparel.search')
 
 RESULTS_PER_PAGE = 10
 PRODUCT_SEARCH_FIELDS = ['manufacturer_name', 'category_names^40', 'product_name', 'color_names^40', 'description']
+
+REGEX_STRIP = re.compile('[^\w ]', re.U)
 
 #
 # Apparel search
@@ -262,7 +265,8 @@ def get_product_document(instance):
 
         # Brand
         document['manufacturer_auto'] = instance.manufacturer.name
-        document['manufacturer'] = '%s|%s' % (instance.manufacturer.name, instance.manufacturer_id)
+        manufacturer_lower = REGEX_STRIP.sub('', instance.manufacturer.name.lower())
+        document['manufacturer'] = '%s|%s|%s' % (manufacturer_lower, instance.manufacturer.name, instance.manufacturer_id)
 
         boost = {'product_name': '0.5', 'description': '0.4', 'manufacturer_name': '1.2'}
 
@@ -360,6 +364,12 @@ def get_profile_document(instance):
 
     return document, boost
 
+def decode_manufacturer_facet(data):
+    name_combo, ident = data.rsplit('|', 1)
+    lower_name, name = name_combo.split('|', 1)
+
+    return int(ident), name, lower_name
+
 
 #
 # Generic search
@@ -431,8 +441,8 @@ def search_view(request, model_name):
         results = []
         for i, value in enumerate(facet['manufacturer']):
             if i % 2 == 0:
-                split = value.rsplit('|', 1)
-                results.append({'id': int(split[1]), 'name': split[0]})
+                id, name, _ = decode_manufacturer_facet(value)
+                results.append({'id': int(id), 'name': name})
 
     paginator = Paginator(results, limit)
     try:

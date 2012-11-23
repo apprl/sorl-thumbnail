@@ -28,6 +28,7 @@
             'follow_profile': {% if user.is_authenticated and user.get_profile.fb_share_follow_profile %}true{% else %}false{% endif %},
             'create_look': {% if user.is_authenticated and user.get_profile.fb_share_create_look %}true{% else %}false{% endif %}
         };
+        var selected_gender = '{{ APPAREL_GENDER }}';
 
         window.fbAsyncInit = function() {
             FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, xfbml: true, channelUrl: '//{{ CURRENT_DOMAIN }}/channel.html'});
