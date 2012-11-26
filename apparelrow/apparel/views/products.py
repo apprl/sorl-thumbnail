@@ -5,6 +5,8 @@ from django.conf import settings
 from django.views.generic import View
 from django.utils.translation import get_language
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
+from django.db.models.loading import get_model
 
 from apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
 from apparel.browse import set_query_arguments
@@ -13,6 +15,15 @@ from apparel.utils import set_query_parameter, get_gender_from_cookie
 
 BROWSE_PAGE_SIZE = 12
 
+
+options = get_model('apparel', 'Option').objects \
+                                        .filter(Q(option_type__name='color') | Q(option_type__name='pattern')) \
+                                        .exclude(value__exact='') \
+                                        .values_list('id', 'value')
+options = dict(options)
+
+categories = {'en': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_en')),
+              'sv': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_sv'))}
 
 class ProductList(View):
 
@@ -102,11 +113,21 @@ class ProductList(View):
 
         # Calculate colors
         if 'color' in facet:
-            result.update(color=map_facets(facet['color']))
+            ids = map(int, facet['color'][::2])
+            values = map(int, facet['color'][1::2])
+
+            result.update(color=[{'id': oid, 'count': count, 'name': options[oid]} for oid, count in zip(ids, values)])
 
         # Calculate category
         if 'category' in facet:
-            result.update(category=map_facets(facet['category']))
+            ids = map(int, facet['category'][::2])
+            values = map(int, facet['category'][1::2])
+
+            language = get_language()
+            if language not in categories:
+                language = 'en'
+
+            result.update(category=[{'id': oid, 'count': count, 'name': categories[language][oid]} for oid, count in zip(ids, values)])
 
         return HttpResponse(json.dumps(result), mimetype='application/json')
 
@@ -140,9 +161,3 @@ class ProductList(View):
         result.update(products=[x.__dict__ for x in paged_result.object_list])
 
         return HttpResponse(json.dumps(result), mimetype='application/json')
-
-
-def map_facets(facet_data, func=int):
-    ids = map(func, facet_data[::2])
-    values = map(int, facet_data[1::2])
-    return [{'id': id, 'count': count} for id, count in zip(ids, values)]
