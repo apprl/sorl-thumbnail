@@ -24,7 +24,7 @@ from django.contrib.staticfiles import finders
 from django.utils import timezone
 from django.utils.functional import cached_property
 
-from apparel.manager import ProductManager, SearchManager
+from apparel.manager import ProductManager
 from apparel.cache import invalidate_model_handler
 from apparel.utils import currency_exchange
 from apparel.base_62_converter import saturate, dehydrate
@@ -162,8 +162,6 @@ class Vendor(models.Model):
     name     = models.CharField(max_length=100, db_index=True)
     homepage = models.URLField(_('Home page'))
     logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype'), max_length=127, blank=True, null=True)
-
-    objects = SearchManager()
 
     class Meta:
         ordering = ['name']
@@ -707,8 +705,6 @@ class Look(models.Model):
     popularity  = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
     width       = models.IntegerField(blank=False, null=False, default=694)
     height      = models.IntegerField(blank=False, null=False, default=524)
-
-    objects  = SearchManager()
 
     def save(self, *args, **kwargs):
         """
