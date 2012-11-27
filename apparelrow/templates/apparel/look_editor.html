@@ -5,14 +5,8 @@
 {% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
 
 {% block extra-styles %}
-<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<!--<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />-->
 {% endblock %}
-
-
-{% block 'extra-scripts' %}
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
-{% compressed_js 'look_editor' %}
-{% endblock 'extra-scripts' %}
 
 {% block body-classes %}look-editor{% endblock %}
 {% block body-header %}
@@ -28,45 +22,21 @@
     {{ form.component.as_hidden }}
     <input type="hidden" name="z_index" value="">
     <input type="hidden" name="product_ids" value="">
+</form>
 
     <div id="content" class="group">
         <div class="button-container">
-            <button class="btn btn-upper btn-save" name="save" type="submit">{% trans "Save" %}</button>
-            <button class="btn btn-upper btn-positive btn-publish" name="publish" type="submit">{% trans "Publish" %}</button>
-            {% if object.slug %}
-            <button class="btn btn-upper btn-delete" title="{{ object.title }}" href="{% url apparel.views.look_delete object.slug %}">{% trans "Delete look" %}</button>
+            <button class="btn btn-upper btn-save" name="look_save">{% trans "Save" %}</button>
+            <button class="btn btn-upper btn-positive btn-publish" name="look_publish">{% trans "Publish" %}</button>
+            {% if object and object.slug %}
+            <button class="btn btn-upper btn-delete" name="look_delete">{% trans "Delete look" %}</button>
             {% else %}
-            <button class="btn btn-upper btn-clean" href="#clean">{% trans "Clean" %}</button>
+            <button class="btn btn-upper btn-reset" name="look_reset">{% trans "Reset look" %}</button>
             {% endif %}
         </div>
 
-        <div id="edit-look">
-        {% if object.display_with_component == 'C' %}
-            <div id="collage">
-                {% include 'apparel/fragments/look_collage_edit.html' %}
-                <div class="look-empty"{% if object.collage_components.all.count > 0 %} style="display: none"{% endif %}>
-                    {% if wardrobe|length == 0 %}
-                        <div class="message warning">{% trans "To create a look, you need to have liked at least one product." %} <a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Find products!" %}</a></div>
-                    {% else %}
-                        <div class="message">{% trans "Drag products here to start building a collage" %}</div>
-                    {% endif %}
-                </div>
-            </div>
-        {% else %}
-            <div id="photo">
-                {% include 'apparel/fragments/look_photo.html' %}
-                <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
-                    <p>{% trans "Upload a photo to create a tagged image" %}</p>
-                    <div class="message">
-                        <div class="upload-field">
-                            <span><input type="file" name="image" id="id_image"></span>
-                        </div>
-                        <button type="submit">{% trans "Upload" %}</button>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        </div>
+        <div id="edit-look"></div>
+
         <div id="product-chooser">
             <div id="product-filter">
                 <div class="tabs">
@@ -90,15 +60,33 @@
             {{ form.description }}
         </div>
     </div>
-</form>
 
-{% comment %}
-<div id="look-tooltips">
-    {% for component in object.display_components.all %}
-        {% cache CACHE_TIMEOUT look_product_tooltip component.product.id LANGUAGE_CODE %}
-        {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
-        {% endcache %}
-    {% endfor %}
-</div>
-{% endcomment %}
+    <script type="text/template" id="edit_look_template">
+        <div class="look-container" id="<%= look_type %>"<% if(look_type == 'photo' && look.image) { %> style="background-image: url('<%= look.image %>');"<% } %>>
+            <div class="look_data">Look data: <%= JSON.stringify(look) %></div>
+        </div>
+    </script>
+
+    <script type="text/template" id="temporary_image_form_template">
+        <form enctype="multipart/form-data" action="{% url temporary-image %}" method="POST" id="temporaryimage">
+            {% csrf_token %}
+            <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
+                <p>{% trans "Upload a photo to create a tagged image" %}</p>
+                <div class="message">
+                    <div class="upload-field">
+                        <span><input type="file" name="image_file"></span>
+                    </div>
+                    <button type="submit">{% trans "Upload" %}</button>
+                </div>
+            </div>
+        </form>
+    </script>
+
+    <script type="text/javascript">
+        var external_look_type = '{{ component }}';
+        var external_look_id = {% if object %}{{ object.id }}{% else %}-1{% endif %};
+    </script>
+    <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>-->
+    {% compressed_js 'look_editor' %}
+
 {% endblock body %}

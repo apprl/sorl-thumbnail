@@ -6,4 +6,7 @@ jQuery(document).ready(function() {
                                                          products: products,
                                                          facet_container: facet_container});
     window.product_list = new App.Views.Products({collection: products});
+
+    // Look edit view
+    window.edit_look = new App.Views.EditLook();
 });

@@ -1,5 +1,15 @@
 from django.db import models
 
+class LookManager(models.Manager):
+    """
+    Adds a shortcut to get published looks only.
+    """
+    def get_query_set(self):
+        queryset = super(LookManager, self).get_query_set() \
+                                           .filter(published=True)
+
+        return queryset
+
 class ProductManager(models.Manager):
     """
     Adds a shortcut to get valid products only.

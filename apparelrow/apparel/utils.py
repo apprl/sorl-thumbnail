@@ -1,4 +1,7 @@
 from urlparse import parse_qs, urlsplit, urlunsplit
+import json
+import decimal
+import datetime
 
 from django.conf import settings
 from django.core.cache import cache
@@ -8,6 +11,8 @@ from django.db.models.loading import get_model
 from django.utils.encoding import smart_str
 from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
+
 
 def set_query_parameter(url, param_name, param_value):
     """
@@ -184,3 +189,23 @@ class CountPopularity(models.Aggregate):
                                        is_summary=is_summary,
                                        **self.extra)
         query.aggregates[alias] = aggregate
+
+
+
+class CustomEncoder(json.JSONEncoder):
+    def default(self, o):
+        print 'here'
+        if isinstance(o, decimal.Decimal):
+            return (str(o),)
+        elif isinstance(o, datetime.datetime):
+            return (o.isoformat(),)
+        elif isinstance(o, datetime.date):
+            return (o.isoformat(),)
+        return super(CustomEncoder, self).default(o)
+
+class JSONResponse(HttpResponse):
+    """
+    JSON response class.
+    """
+    def __init__(self, obj='', json_opts={}, mimetype='application/json', *args, **kwargs):
+        super(JSONResponse, self).__init__(json.dumps(obj, cls=CustomEncoder, **json_opts), mimetype, *args, **kwargs)

@@ -24,7 +24,7 @@ from django.contrib.staticfiles import finders
 from django.utils import timezone
 from django.utils.functional import cached_property
 
-from apparel.manager import ProductManager
+from apparel.manager import ProductManager, LookManager
 from apparel.cache import invalidate_model_handler
 from apparel.utils import currency_exchange
 from apparel.base_62_converter import saturate, dehydrate
@@ -706,6 +706,9 @@ class Look(models.Model):
     width       = models.IntegerField(blank=False, null=False, default=694)
     height      = models.IntegerField(blank=False, null=False, default=524)
     published   = models.BooleanField(default=False)
+
+    objects = models.Manager()
+    published_objects = LookManager()
 
     def save(self, *args, **kwargs):
         """

@@ -3,6 +3,8 @@ from django.views.generic import TemplateView
 
 from apparel.models import Look
 from apparel.views.products import ProductList
+from apparel.views.images import TemporaryImageView
+from apparel.views.looks import LookView
 
 urlpatterns = patterns('',
     # Feed
@@ -41,6 +43,10 @@ urlpatterns = patterns('',
     url(r'^follow/(?P<profile_id>\d+)/$', 'apparel.views.follow_unfollow', name='apprl-follow'),
     url(r'^unfollow/(?P<profile_id>\d+)/$', 'apparel.views.follow_unfollow', {'do_follow': False}, name='apprl-unfollow'),
 
+    # Temporary Images
+    url(r'^images/temporary/$', TemporaryImageView.as_view(), name='temporary-image'),
+    url(r'^images/temporary/(?P<pk>[\d]+)/$', TemporaryImageView.as_view(), name='temporary-image-delete'),
+
     # Products
     url(r'^products/$', ProductList.as_view(), name='product_list'),
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
@@ -77,7 +83,11 @@ urlpatterns = patterns('',
     # Looks
     url(r'^look/create/$', 'apparel.views.look_create_initial', name='look-create-initial'),
     url(r'^look/editor/(?P<component>photo|collage)/$', 'apparel.views.look_editor', name='look-editor'),
-    url(r'^look/editor/(?P<component>photo|collage)/(?P<slug>[\w-]+)/$', 'apparel.views.look_editor', name='look-editor'),
+    url(r'^look/editor/(?P<slug>[\w-]+)/$', 'apparel.views.look_editor', name='look-editor'),
+
+    url(r'^look/$', LookView.as_view(), name='look_list'),
+    url(r'^look/(?P<pk>\d+)/?$', LookView.as_view(), name='look'),
+
     url(r'^looks/$', 'apparel.views.gender', {'view': 'look-list'}, name='look-list'),
     url(r'^looks/men/$', 'apparel.views.look_list', {'gender': 'M'}, name='look-list-men'),
     url(r'^looks/women/$', 'apparel.views.look_list', {'gender': 'W'}, name='look-list-women'),
