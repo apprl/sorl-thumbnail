@@ -4,9 +4,10 @@ App.Views.TemporaryImageUploadForm = Backbone.View.extend({
 
     initialize: function(options) {
         if(options.look_type == 'photo') {
-            this.model.fetch();
             this.model.on('change', this.render, this);
             this.model.on('destroy', this.render, this);
+            this.model.fetch();
+
             this.render();
         }
     },

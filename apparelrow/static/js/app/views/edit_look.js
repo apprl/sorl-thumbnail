@@ -17,43 +17,63 @@ App.Views.EditLook = Backbone.View.extend({
         $('.btn-reset').on('click', _.bind(this.reset, this));
         $('.btn-save').on('click', _.bind(this.save_look, this));
         $('.btn-publish').on('click', _.bind(this.publish_look, this));
+        $('.btn-delete').on('click', _.bind(this.delete_look, this));
+    },
+
+    _image2base64: function(image_url, callback) {
+        var canvas = document.createElement('canvas');
+        var image = new Image();
+        image.src = image_url;
+
+        image.onload = function() {
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0);
+            var dataURL = canvas.toDataURL('image/png');
+
+            callback(dataURL.replace(/^data:image\/(png|jpg);base64,/, ''));
+        }
     },
 
     reset: function() {
-        // TODO: this results in two calls to render
-        this.temporary_image.destroy({wait: true});
-        this.model.clear();
+        this.temporary_image.destroy();
+        this.model.clear({silent: true});
+        this.model.set(_.clone(this.model.defaults), {silent: true});
         this.model.save();
+    },
+
+    delete_look: function() {
+        this.model.destroy();
     },
 
     save_look: function() {
         // TODO: force login
         if(this.model.backend == 'client') {
             this.model.backend = 'server';
-            this.model.unset('id');
+            this.model.unset('id', {silent: true});
+
+            // TODO: Get image data from <img> tag instead of downloading it again
+            this._image2base64(this.model.get('image'), _.bind(function(base64_image) {
+                this.model.set('image_base64', base64_image, {silent: true});
+                this.model.save();
+            }, this));
+        } else {
             this.model.save();
         }
     },
 
     publish_look: function() {
-        if(this.model.backend == 'client') {
-            this.model.backend = 'server';
-            this.model.unset('id');
-            this.model.set('published', true);
-            this.model.save();
-        }
+        this.model.set('published', true);
+
+        return this.save_look();
     },
 
     initialize_temporary_image: function() {
         this.temporary_image = new App.Models.TemporaryImage();
         this.temporary_image_view = new App.Views.TemporaryImageUploadForm({model: this.temporary_image, look_type: external_look_type});
         this.temporary_image.on('change', this.update_temporary_image, this);
-        this.temporary_image.on('destroy', this.destroy_temporary_image, this);
-    },
-
-    destroy_temporary_image: function(model) {
-        this.model.unset('image');
-        this.model.save();
     },
 
     update_temporary_image: function(model) {

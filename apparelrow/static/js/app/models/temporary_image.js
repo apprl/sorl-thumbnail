@@ -28,7 +28,7 @@ window.App.Models.TemporaryImage = Backbone.Model.extend({
         if (resp) {
             options.success(resp);
         } else {
-            options.error("Record not found");
+            options.error('Record not found');
         }
     }
 

@@ -1,19 +1,25 @@
 window.App.Models.Look = Backbone.Model.extend({
 
-    urlRoot: '/look',
+    urlRoot: '/look/',
 
     localStorage: new Store('edit_look'),
 
     defaults: {
-        'components': []
+        'components': [],
+        'published': false,
+        'component': (external_look_type == 'photo') ? 'P' : 'C',
+        'description': '',
+        'title': '',
+        'id': external_look_type
     },
 
     initialize: function() {
         if(external_look_id > 0) {
             this.backend = 'server';
-            this.id = this.attributes.id = external_look_id;
+            this.set('id', external_look_id, {silent: true});
         } else {
             this.backend = 'client';
+            this.set('id', external_look_type, {silent: true});
         }
     },
 
@@ -22,8 +28,7 @@ window.App.Models.Look = Backbone.Model.extend({
             var resp;
             var store = model.localStorage || model.collection.localStorage;
 
-            // TODO: ugly solution to set id for when backend is client
-            model.id = model.attributes.id = external_look_type;
+            //model.id = model.attributes.id = external_look_type;
 
             switch (method) {
                 case 'read':
