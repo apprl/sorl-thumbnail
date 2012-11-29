@@ -309,7 +309,7 @@
   };
   var current_currency = '{{ CURRENCY }}';
   function formatNumber(num) {
-    var array = num.toFixed().split('');
+    var array = parseInt(num, 10).toFixed().split('');
     var index = -3;
     while (array.length + index > 0) {
       array.splice(index, 0, ' ');

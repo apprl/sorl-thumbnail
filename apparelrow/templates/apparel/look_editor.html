@@ -82,6 +82,29 @@
         </form>
     </script>
 
+    <script type="text/template" id="product_small_template">
+        <div class="product-small product-container">
+            <a class="product-image" href="#">
+                <img src="/media/<%= image_small %>">
+            </a>
+            <div class="product-footer">
+                <h4><%= brand_name %></h4>
+                <% if(!availability) { %>
+                <span class="sold-out">SOLD OUT</span>
+                <% } else { %>
+                <p>
+                    <% if(discount) { %>
+                        <span class="discount-price"><%= formatNumber(discount_price) %> <%= currency %></span>
+                        <span class="price discounted"><%= formatNumber(price) %> <%= currency %></span>
+                    <% } else { %>
+                        <span class="price"><%= formatNumber(price) %> <%= currency %></span>
+                    <% } %>
+                </p>
+                <% } %>
+            </div>
+        </div>
+    </script>
+
     <script type="text/javascript">
         var external_look_type = '{{ component }}';
         var external_look_id = {% if object %}{{ object.id }}{% else %}-1{% endif %};

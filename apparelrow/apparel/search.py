@@ -17,6 +17,8 @@ from django.db.models.loading import get_model
 from apparel.models import Product, ProductLike, Look
 from apparel.utils import get_gender_from_cookie
 
+from sorl.thumbnail import get_thumbnail
+
 from pysolr import Solr
 
 logger = logging.getLogger('apparel.search')
@@ -196,14 +198,16 @@ def get_product_document(instance):
     if instance.published == True and instance.category and instance.manufacturer and instance.gender:
         availability = instance.availability
         discount = False
-        price = decimal.Decimal('0.0')
+        price = stored_price = stored_discount = decimal.Decimal('0.0')
         currency = 'EUR'
         if instance.default_vendor:
             discount = instance.default_vendor.original_discount_price > decimal.Decimal('0.0')
             price = instance.default_vendor.original_price
             currency = instance.default_vendor.original_currency
+            stored_price = instance.default_vendor.original_price
             if instance.default_vendor.original_discount_price:
                 price = instance.default_vendor.original_discount_price
+                stored_discount = instance.default_vendor.original_discount_price
         else:
             # If availability is true but product has no default vendor we do
             # not need to add the product to solr, return None and 0
@@ -253,10 +257,13 @@ def get_product_document(instance):
         document['discount'] = discount
         document['published'] = instance.published
 
-        # Templates
+        # Templates and stored fields
         document['template'] = template_browse
         document['template_mlt'] = template_mlt
-
+        document['slug'] = instance.slug
+        document['stored_price'] = '%s,%s' % (stored_price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
+        document['stored_discount'] = '%s,%s' % (stored_discount.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
+        document['image_small'] = get_thumbnail(instance.product_image, '112x145', crop=False)
         # Dates
         document['created'] = instance.date_added
 

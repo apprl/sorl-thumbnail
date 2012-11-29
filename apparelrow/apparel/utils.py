@@ -194,13 +194,13 @@ class CountPopularity(models.Aggregate):
 
 class CustomEncoder(json.JSONEncoder):
     def default(self, o):
-        print 'here'
         if isinstance(o, decimal.Decimal):
-            return (str(o),)
+            return str(o)
         elif isinstance(o, datetime.datetime):
-            return (o.isoformat(),)
+            return o.isoformat()
         elif isinstance(o, datetime.date):
-            return (o.isoformat(),)
+            return o.isoformat()
+
         return super(CustomEncoder, self).default(o)
 
 class JSONResponse(HttpResponse):

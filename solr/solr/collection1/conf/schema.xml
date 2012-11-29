@@ -113,9 +113,13 @@
     <!-- User related fields -->
     <field name="user_likes" type="string" indexed="true" stored="false" multiValued="true"/>
 
-    <!-- Stored templates -->
+    <!-- Stored templates and fields -->
     <field name="template" type="string" indexed="false" stored="true" multiValued="false"/>
     <field name="template_mlt" type="string" indexed="false" stored="true" multiValued="false"/>
+    <field name="stored_price" type="currency" indexed="false" stored="true" multiValued="false"/>
+    <field name="stored_discount" type="currency" indexed="false" stored="true" multiValued="false"/>
+    <field name="slug" type="string" indexed="false" stored="true" multiValued="false"/>
+    <field name="image_small" type="string" indexed="false" stored="true" multiValued="false"/>
 
     <!-- Dates -->
     <field name="created" type="date" indexed="true" stored="true" multiValued="false"/>
@@ -129,7 +133,7 @@
 
     <!-- Used in product search -->
     <field name="product_name" type="text_general" indexed="true" stored="false" multiValued="false" termVectors="true"/>
-    <field name="manufacturer_name" type="text_general" indexed="true" stored="false" multiValued="false" termVectors="true"/>
+    <field name="manufacturer_name" type="text_general" indexed="true" stored="true" multiValued="false" termVectors="true"/>
     <field name="description" type="text_general" indexed="true" stored="false" multiValued="false" termVectors="true"/>
     <field name="category_names" type="text_general" indexed="true" stored="false" multiValued="false" termVectors="true"/>
     <field name="color_names" type="text_general" indexed="true" stored="false" multiValued="false" termVectors="true"/>

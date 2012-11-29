@@ -1,6 +1,6 @@
 import json
+import decimal
 
-from django.http import HttpResponse
 from django.conf import settings
 from django.views.generic import View
 from django.utils.translation import get_language
@@ -10,7 +10,7 @@ from django.db.models.loading import get_model
 
 from apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
 from apparel.browse import set_query_arguments
-from apparel.utils import set_query_parameter, get_gender_from_cookie
+from apparel.utils import JSONResponse, set_query_parameter, get_gender_from_cookie, currency_exchange
 
 
 BROWSE_PAGE_SIZE = 12
@@ -44,7 +44,15 @@ class ProductList(View):
         query_arguments['sort'] = request.GET.get('sort', 'popularity desc, created desc')
 
         # TODO: which fields, template?
-        query_arguments['fl'] = 'template'
+        query_arguments['fl'] = ['id:django_id',
+                                 'product_name:name',
+                                 'brand_name:manufacturer_name',
+                                 'price:stored_price',
+                                 'discount_price:stored_discount',
+                                 'slug',
+                                 'image_small',
+                                 'discount',
+                                 'availability']
 
         # Query string
         query_string = request.GET.get('q')
@@ -129,7 +137,7 @@ class ProductList(View):
 
             result.update(category=[{'id': oid, 'count': count, 'name': categories[language][oid]} for oid, count in zip(ids, values)])
 
-        return HttpResponse(json.dumps(result), mimetype='application/json')
+        return JSONResponse(result)
 
 
     def get_products(self, request, query_string, query_arguments, *args, **kwargs):
@@ -158,6 +166,28 @@ class ProductList(View):
             prev_page = set_query_parameter(prev_page, 'page', paged_result.previous_page_number())
             result.update(prev_page=prev_page)
 
-        result.update(products=[x.__dict__ for x in paged_result.object_list])
 
-        return HttpResponse(json.dumps(result), mimetype='application/json')
+        # Language currency
+        language_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)
+
+        result['products'] = []
+        for product in paged_result.object_list:
+            price, currency = product.price.split(',')
+            discount_price, _ = product.discount_price.split(',')
+
+            rate = currency_exchange(language_currency, currency)
+
+            #product._original_price = product.price
+            #product._original_discount_price = product.discount_price
+
+            price = rate * decimal.Decimal(price)
+            product.price = price.quantize(decimal.Decimal('1'),
+                                           rounding=decimal.ROUND_HALF_UP)
+            discount_price = rate * decimal.Decimal(discount_price)
+            product.discount_price = discount_price.quantize(decimal.Decimal('1'),
+                                                             rounding=decimal.ROUND_HALF_UP)
+            product.currency = language_currency
+
+            result['products'].append(product.__dict__)
+
+        return JSONResponse(result)
