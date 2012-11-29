@@ -31,6 +31,9 @@ App.Views.FilterProduct = Backbone.View.extend({
         // Initial fetch of facets
         this.facets.fetch({data: this.search_product.toJSON()});
 
+        // Filter tabs
+        this.filter_tabs = new App.Views.LookEditFilterTabs({model: this.search_product});
+
         // Individual filters for products
         this.filter_category = new App.Views.FilterProductCategory({collection: this.facets.category});
         this.filter_category.render();

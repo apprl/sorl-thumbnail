@@ -252,6 +252,7 @@ PIPELINE_JS = {
                              'js/app/models/look.js',
                              'js/app/collections/facets.js',
                              'js/app/collections/products.js',
+                             'js/app/views/look_edit_filter_tabs.js',
                              'js/app/views/filter_product.js',
                              'js/app/views/filter_product_category.js',
                              'js/app/views/filter_product_color.js',

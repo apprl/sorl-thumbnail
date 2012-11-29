@@ -138,6 +138,22 @@ $input_border_color: $highlight_border_color !default
 
 #product-chooser
   float: right
+  #product-tabs
+    height: 50px
+    li
+      display: inline-block
+      width: 50%
+      a
+        display: block
+        height: 50px
+        line-height: 50px
+        text-align: center
+        background-color: $easiest_color
+        font-size: 1.5em
+        &.selected
+          background-color: #fff
+  #product-filter
+    padding: 10px
 
 #edit-look
   float: left
