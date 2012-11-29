@@ -40,6 +40,11 @@ class ProductList(View):
         query_arguments['fq'].append('availability:true')
         query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
+        # User
+        user_id = request.GET.get('user_id', False)
+        if user_id:
+            query_arguments['fq'].append('user_likes:%s' % (user_id,))
+
         # Sort
         query_arguments['sort'] = request.GET.get('sort', 'popularity desc, created desc')
 

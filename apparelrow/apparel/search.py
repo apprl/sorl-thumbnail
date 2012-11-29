@@ -162,7 +162,7 @@ def product_save(instance, **kwargs):
         if 'commit' in kwargs and kwargs['commit']:
             connection.add([document], commit=True, boost=boost)
         else:
-            connection.add([document], commit=False, boost=boost, commitWithin=getattr(settings, 'SOLR_COMMIT_WITHIN', 30000))
+            connection.add([document], commit=False, boost=boost, commitWithin=False)
 
 @receiver(post_delete, sender=Product, dispatch_uid='product_delete')
 def product_delete(instance, **kwargs):
@@ -291,7 +291,7 @@ def look_save(instance, **kwargs):
         connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
 
     document, boost = get_look_document(instance)
-    connection.add([document], commit=False, boost=boost, commitWithin=getattr(settings, 'SOLR_COMMIT_WITHIN', 30000))
+    connection.add([document], commit=False, boost=boost, commitWithin=False)
 
 @receiver(post_delete, sender=Look, dispatch_uid='look_delete')
 def look_delete(instance, **kwargs):
@@ -342,7 +342,7 @@ def search_index_profile_save(instance, **kwargs):
         connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
 
     document, boost = get_profile_document(instance)
-    connection.add([document], commit=False, boost=boost, commitWithin=getattr(settings, 'SOLR_COMMIT_WITHIN', 30000))
+    connection.add([document], commit=False, boost=boost, commitWithin=False)
 
 @receiver(post_delete, sender=get_model('profile', 'ApparelProfile'), dispatch_uid='search_index_profile_delete')
 def search_index_profile_delete(instance, **kwargs):

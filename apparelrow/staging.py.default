@@ -32,7 +32,7 @@ CACHE_MIDDLEWARE_KEY_PREFIX = 'ar'
 CACHE_MIDDLEWARE_SECONDS = 120
 
 SOLR_URL = 'http://127.0.0.1:8983/solr'
-SOLR_COMMIT_WITHIN = '30000'
+SOLR_COMMIT_WITHIN = '60000'
 SOLR_CONF_DIRECTORY = os.path.join(PROJECT_ROOT, '..', '..', '..', 'solr', 'solr', 'collection1', 'conf')
 SOLR_CURRENCY_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'currency.xml')
 SOLR_SYNONYM_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'synonyms.txt')

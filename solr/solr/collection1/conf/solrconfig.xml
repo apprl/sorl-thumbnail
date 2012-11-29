@@ -311,9 +311,9 @@
          to be flushed to stable storage, but does not cause a new
          searcher to be opened to make those changes visible.
       -->
-     <autoCommit> 
-       <maxTime>15000</maxTime> 
-       <openSearcher>false</openSearcher> 
+     <autoCommit>
+       <maxTime>60000</maxTime>
+       <openSearcher>false</openSearcher>
      </autoCommit>
 
     <!-- softAutoCommit is like autoCommit except it causes a
@@ -321,10 +321,9 @@
          but does not ensure that data is synced to disk.  This is
          faster and more near-realtime friendly than a hard commit.
       -->
-     <!--
-       <autoSoftCommit> 
-         <maxTime>1000</maxTime> 
-       </autoSoftCommit>
+     <autoSoftCommit>
+       <maxTime>1000</maxTime>
+     </autoSoftCommit>
       -->
 
     <!-- Update Related Event Listeners
