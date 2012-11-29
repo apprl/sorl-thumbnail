@@ -13,9 +13,6 @@ from apparel.browse import set_query_arguments
 from apparel.utils import JSONResponse, set_query_parameter, get_gender_from_cookie, currency_exchange
 
 
-BROWSE_PAGE_SIZE = 12
-
-
 options = get_model('apparel', 'Option').objects \
                                         .filter(Q(option_type__name='color') | Q(option_type__name='pattern')) \
                                         .exclude(value__exact='') \
@@ -35,7 +32,14 @@ class ProductList(View):
         gender = request.GET.get('gender', get_gender_from_cookie(request))
         facet_fields = request.GET.get('facet', '').split(',')
 
-        query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
+        try:
+            limit = int(request.GET.get('limit', 10))
+        except ValueError:
+            return HttpResponseBadRequest('bad limit argument')
+
+        clamped_limit = min(30, max(limit, 10))
+
+        query_arguments = {'rows': clamped_limit, 'start': 0}
         query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, currency=currency)
         query_arguments['fq'].append('availability:true')
         query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
@@ -150,7 +154,7 @@ class ProductList(View):
         search = ApparelSearch(query_string, **query_arguments)
 
         # Calculate paginator
-        paginator = Paginator(search, BROWSE_PAGE_SIZE)
+        paginator = Paginator(search, query_arguments['rows'])
 
         page = request.GET.get('page')
         try:
