@@ -84,10 +84,14 @@
 
     <script type="text/template" id="product_small_template">
         <div class="product-small product-container">
-            <a class="product-image" href="#">
+            <a class="image-small" href="#">
                 <img src="/media/<%= image_small %>">
             </a>
-            <div class="product-footer">
+            <div class="hover">
+                <a class="btn btn-upper btn-block btn-info" href="#">{% trans "Info" %}</a>
+                <a class="btn btn-upper btn-block btn-positive btn-add" href="#">{% trans "Add" %}</a>
+            </div>
+            <div class="caption">
                 <h4><%= brand_name %></h4>
                 <% if(!availability) { %>
                 <span class="sold-out">SOLD OUT</span>
