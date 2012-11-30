@@ -1,7 +1,11 @@
-App.Views.EditLook = Backbone.View.extend({
+App.Views.LookEdit = Backbone.View.extend({
 
     el: '#edit-look',
     template: _.template($('#edit_look_template').html()),
+
+    events: {
+        'click .look-container': 'look_click'
+    },
 
     initialize: function() {
         // Initialize model, model events and fetch model

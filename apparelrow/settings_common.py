@@ -261,7 +261,7 @@ PIPELINE_JS = {
                              'js/app/views/products.js',
                              'js/app/views/product.js',
                              'js/app/views/temporary_image_upload_form.js',
-                             'js/app/views/edit_look.js',
+                             'js/app/views/look_edit.js',
                              'js/app/look_editor.js',
                              ),
         'output_filename': 'js/compiled/look_editor.js',
