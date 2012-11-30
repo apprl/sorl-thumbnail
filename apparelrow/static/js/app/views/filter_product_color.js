@@ -28,7 +28,7 @@ App.Views.FilterProductColor = Backbone.View.extend({
 
     update: function() {
         var oid = this.$el.find('option:selected').val();
-        App.Events.trigger('facet_event', {type: 'color', value: oid});
+        App.Events.trigger('product:facet', {type: 'color', value: oid});
     }
 
 });

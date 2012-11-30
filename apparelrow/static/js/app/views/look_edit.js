@@ -24,6 +24,10 @@ App.Views.LookEdit = Backbone.View.extend({
         $('.btn-delete').on('click', _.bind(this.delete_look, this));
     },
 
+    look_click: function(e) {
+        console.log('look_click');
+    },
+
     _image2base64: function(image_url, callback) {
         var canvas = document.createElement('canvas');
         var image = new Image();

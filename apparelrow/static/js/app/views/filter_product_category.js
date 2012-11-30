@@ -28,7 +28,7 @@ App.Views.FilterProductCategory = Backbone.View.extend({
 
     update: function() {
         var category_id = this.$el.find('option:selected').val();
-        App.Events.trigger('facet_event', {type: 'category', value: category_id});
+        App.Events.trigger('product:facet', {type: 'category', value: category_id});
     }
 
 });

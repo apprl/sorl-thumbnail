@@ -17,17 +17,6 @@ App.Views.FilterProduct = Backbone.View.extend({
         // Update filters when search product model changes
         this.search_product.on('change', this.update, this);
 
-        // Facet event handler
-        // TODO: should it be here or in the search product model?
-        // TODO: handle multiple selections, set a list?
-        App.Events.on('facet_event', _.bind(function(data) {
-            if(data.value == 0) {
-                this.search_product.unset(data.type);
-            } else {
-                this.search_product.set(data.type, data.value);
-            }
-        }, this));
-
         // Initial fetch of facets
         this.facets.fetch({data: this.search_product.toJSON()});
 

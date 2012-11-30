@@ -22,7 +22,7 @@ App.Views.FilterProductPrice = Backbone.View.extend({
     },
 
     update: function() {
-        App.Events.trigger('facet_event', {type: 'price', value: '0,100000'});
+        App.Events.trigger('product:facet', {type: 'price', value: '0,100000'});
     }
 
 });
