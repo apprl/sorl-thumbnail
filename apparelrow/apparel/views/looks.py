@@ -11,6 +11,8 @@ from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 
+from sorl.thumbnail import get_thumbnail
+
 from apparel.utils import JSONResponse, set_query_parameter
 
 
@@ -21,11 +23,28 @@ def look_instance_to_dict(look):
         'user': look.user.get_profile().display_name,
         'url': look.get_absolute_url(),
         'slug': look.slug,
-        # TODO fix components
-        'components': [],
         'component': look.component,
         'description': look.description,
     }
+
+    if look.components:
+        look_dict['components'] = []
+        for component in look.display_components.all():
+            look_dict['components'].append({
+                'id': component.id,
+                'component_of': component.component_of,
+                'left': component.left,
+                'top': component.top,
+                'width': component.width,
+                'height': component.height,
+                'z_index': component.z_index,
+                'rotation': component.rotation,
+                'product': {
+                    'id': component.product.id,
+                    'slug': component.product.slug,
+                    'image_small': get_thumbnail(component.product.product_image, '112x145', crop=False).name
+                }
+            })
 
     if look.image:
         look_dict['image'] = look.image.url
@@ -73,8 +92,42 @@ class LookView(View):
         # Set user to the user object
         json_data['user'] = request.user
 
-        # TODO: handle components
-        del json_data['components']
+        # Look components
+        if json_data['components']:
+
+            # Remove components
+            look_components = get_model('apparel', 'LookComponent').objects.filter(look_id=pk)
+            updated_component_ids = [x['id'] for x in json_data['components']]
+            for component in look_components:
+                if component.id not in updated_component_ids:
+                    component.delete()
+
+            # Add new components and update old
+            LookComponent = get_model('apparel', 'LookComponent')
+            for component in json_data['components']:
+                component_id = None
+                if 'id' in component:
+                    component_id = component['id']
+                del component['id']
+
+                product_id = component['product']['id']
+                del component['product']
+
+                #if 'component_of' not in component:
+                    #component_of = json_data['component']
+                #else:
+                    #component_of = component['component_of']
+                    #del component['component_of']
+
+                look_component, created = LookComponent.objects.get_or_create(id=component_id,
+                                                                              product_id=product_id)
+
+                for key, value in component.items():
+                    setattr(look_component, key, value)
+
+                look_component.save()
+
+            del json_data['components']
 
         for key, value in json_data.items():
             setattr(look, key, value)
