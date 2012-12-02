@@ -31,16 +31,18 @@ _.extend(Store.prototype, {
   // have an id of it's own.
   create: function(model) {
     if (!model.id) model.id = model.attributes.id = guid();
-    this.data[model.id] = model;
+    var model_json = model.toJSON();
+    this.data[model.id] = model_json;
     this.save();
-    return model;
+    return model_json;
   },
 
   // Update a model by replacing its copy in `this.data`.
   update: function(model) {
-    this.data[model.id] = model;
+    var model_json = model.toJSON();
+    this.data[model.id] = model_json;
     this.save();
-    return model;
+    return model_json;
   },
 
   // Retrieve a model from `this.data` by id.

@@ -5,7 +5,6 @@ window.App.Models.Look = Backbone.Model.extend({
     localStorage: new Store('edit_look'),
 
     defaults: {
-        'components': [],
         'published': false,
         'component': (external_look_type == 'photo') ? 'P' : 'C',
         'description': '',
@@ -14,6 +13,10 @@ window.App.Models.Look = Backbone.Model.extend({
     },
 
     initialize: function() {
+        console.log('look initialize');
+
+        this.components = new App.Collections.LookComponents();
+
         if(external_look_id > 0) {
             this.backend = 'server';
             this.set('id', external_look_id, {silent: true});
@@ -23,12 +26,34 @@ window.App.Models.Look = Backbone.Model.extend({
         }
     },
 
+    parse: function(response) {
+        cloned_response = _.clone(response);
+
+        if(!cloned_response.hasOwnProperty('components')) {
+            cloned_response.components = [];
+        }
+        this.components.reset(cloned_response.components, {silent: true});
+        delete cloned_response.components;
+
+        console.log('parse look', cloned_response, response);
+
+        return cloned_response;
+    },
+
+    toJSON: function() {
+        var json = _.clone(this.attributes);
+        json.components = this.components.map(function(model) { return model.toJSON(); });
+
+        console.log('look toJSON', json);
+
+        return json;
+    },
+
     sync: function(method, model, options) {
+        console.log('look sync', method);
         if(this.backend == 'client') {
             var resp;
             var store = model.localStorage || model.collection.localStorage;
-
-            //model.id = model.attributes.id = external_look_type;
 
             switch (method) {
                 case 'read':
