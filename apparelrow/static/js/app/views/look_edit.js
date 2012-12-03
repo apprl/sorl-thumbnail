@@ -24,7 +24,8 @@ App.Views.LookEdit = Backbone.View.extend({
         this.model.components.on('add', this.add_component, this);
         this.model.components.on('remove', this.remove_component, this);
         this.model.components.on('reset', this.add_components, this);
-        this.model.fetch({success: _.bind(function() { this.render(); }, this)});
+        // TODO: is it ok to render on error? wil it work for look edits?
+        this.model.fetch({error: _.bind(function() { this.render(); }, this), success: _.bind(function() { this.render(); }, this)});
 
         // TODO: move this to another view or expand this view
         $('.btn-reset').on('click', _.bind(this.look_reset, this));
