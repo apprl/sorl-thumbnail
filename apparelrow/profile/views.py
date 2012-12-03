@@ -16,7 +16,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from apparel.decorators import get_current_user
 from apparel.models import Product
-from apparel.utils import get_pagination_page, get_gender_from_cookie
+from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
 from apparel.tasks import facebook_push_graph
 from profile.utils import get_facebook_user
 from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm
@@ -497,6 +497,9 @@ def login(request):
         user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token)
         if user is not None and user.is_active:
             auth.login(request, user)
+            if request.is_ajax():
+                return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
+
             if user.get_profile().login_flow != 'complete':
                 response = HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (user.get_profile().login_flow)))
                 response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.get_profile().gender, max_age=365 * 24 * 60 * 60)

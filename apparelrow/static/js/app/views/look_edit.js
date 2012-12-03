@@ -127,10 +127,6 @@ App.Views.LookEdit = Backbone.View.extend({
         }
     },
 
-    redirect: function() {
-        window.location.replace('/looks/' + this.model.get('slug'));
-    },
-
     /**
      * Look buttons
      */
@@ -146,12 +142,26 @@ App.Views.LookEdit = Backbone.View.extend({
 
     look_delete: function() {
         this.model.destroy();
-
         window.location.replace('/looks/');
     },
 
     look_save: function() {
+        if(!isAuthenticated) {
+            FB.login(_.bind(function(response) {
+                if(response.authResponse) {
+                    data = {uid: response.authResponse.userID,
+                            access_token: response.authResponse.accessToken};
+                    $.post('/facebook/login', data, _.bind(function(response) {
+                        this._look_save();
+                    }, this));
+                }
+            }, this), {scope: facebook_scope});
+        } else {
+            this._look_save();
+        }
+    },
 
+    _look_save: function() {
         // Reset pending clicks on save
         this.pending_component = false;
         this.pending_product = false;
@@ -171,13 +181,18 @@ App.Views.LookEdit = Backbone.View.extend({
             // TODO: Get image data from <img> tag instead of downloading it again
             this._image2base64(this.model.get('image'), _.bind(function(base64_image) {
                 this.model.set('image_base64', base64_image, {silent: true});
-                this.model.save({}, {success: _.bind(this.redirect, this)});
+                this.model.save({}, {success: _.bind(this.save_success, this)});
             }, this));
         } else {
-            this.model.save({}, {success: _.bind(this.redirect, this)});
+            this.model.save({}, {success: _.bind(this.save_success, this)});
         }
-
     },
+
+    save_success: function() {
+        this.model._dirty = false;
+        window.location.replace('/looks/' + this.model.get('slug'));
+    },
+
 
     look_publish: function() {
         this.model.set('published', true);
