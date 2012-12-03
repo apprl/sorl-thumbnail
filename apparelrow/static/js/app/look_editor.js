@@ -8,7 +8,8 @@ jQuery(document).ready(function() {
     window.product_list = new App.Views.Products({collection: products});
 
     // Look edit view
-    window.look_edit = new App.Views.LookEdit();
+    window.look = new App.Models.Look();
+    window.look_edit = new App.Views.LookEdit({model: look});
 
     // Router
     App.Routers.LookEditor = Backbone.Router.extend({

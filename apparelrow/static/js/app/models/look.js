@@ -26,18 +26,33 @@ window.App.Models.Look = Backbone.Model.extend({
         }
     },
 
+    validate: function(attributes) {
+        console.log('validate', attributes);
+        //if(!attributes.hasOwnProperty('title') || !attributes.title) {
+            //return 'title is required';
+        //}
+
+        //if(attributes.component == 'P') {
+            //if (!attributes.hasOwnProperty('image') || !attributes.image) {
+                //return 'image must be set before a save can take place in a photo look';
+            //}
+        //}
+    },
+
     parse: function(response) {
-        cloned_response = _.clone(response);
+        if(response) {
+            cloned_response = _.clone(response);
 
-        if(!cloned_response.hasOwnProperty('components')) {
-            cloned_response.components = [];
+            if(!cloned_response.hasOwnProperty('components')) {
+                cloned_response.components = [];
+            }
+            this.components.reset(cloned_response.components, {silent: true});
+            delete cloned_response.components;
+
+            console.log('parse look', cloned_response, response);
+
+            return cloned_response;
         }
-        this.components.reset(cloned_response.components, {silent: true});
-        delete cloned_response.components;
-
-        console.log('parse look', cloned_response, response);
-
-        return cloned_response;
     },
 
     toJSON: function() {

@@ -8,27 +8,30 @@ App.Views.LookEdit = Backbone.View.extend({
         'touch .look-container': 'click'
     },
 
-    // Look components classes
-    component_view_classes: {
-        'photo': App.Views.LookComponentPhoto,
-        'collage': App.Views.LookComponentCollage
-    },
-
     initialize: function() {
-        // Initialize model, model events and fetch model
-        this.model = new App.Models.Look();
+        // Look component classes lookup
+        this.component_view_classes = {
+            'photo': App.Views.LookComponentPhoto,
+            'collage': App.Views.LookComponentCollage
+        };
+
+
+        this.initialize_temporary_image();
+
+        // Model events and fetch model
         //this.model.on('change', this.render, this);
         this.model.on('change:image', this.render_image, this);
         this.model.on('destroy', this.render, this);
         this.model.components.on('add', this.add_component, this);
         this.model.components.on('remove', this.remove_component, this);
+        this.model.components.on('reset', this.add_components, this);
         this.model.fetch({success: _.bind(function() { this.render(); }, this)});
 
         // TODO: move this to another view or expand this view
-        $('.btn-reset').on('click', _.bind(this.reset, this));
-        $('.btn-save').on('click', _.bind(this.save_look, this));
-        $('.btn-publish').on('click', _.bind(this.publish_look, this));
-        $('.btn-delete').on('click', _.bind(this.delete_look, this));
+        $('.btn-reset').on('click', _.bind(this.look_reset, this));
+        $('.btn-delete').on('click', _.bind(this.look_delete, this));
+        $('.btn-save').on('click', _.bind(this.look_save, this));
+        $('.btn-publish').on('click', _.bind(this.look_publish, this));
 
         // Listen on product add
         App.Events.on('look_edit:product:add', this.pending_add_component, this);
@@ -40,14 +43,20 @@ App.Views.LookEdit = Backbone.View.extend({
 
     add_component: function(model, collection) {
         console.log('add component', model, collection);
-        this.model.save();
 
-        this.pending_component = model.cid;
+        var view_class = this.component_view_classes[external_look_type];
+        var view = new view_class({model: model, collection: collection});
+        this.$('.look-container').append(view.render().el);
+
+        //this.pending_component = model.cid;
+    },
+
+    add_components: function(collection) {
+        _.each(collection.models, _.bind(function(model) { this.add_component(model, collection); }, this));
     },
 
     remove_component: function(model, collection) {
         console.log('remove component', model, collection);
-        this.model.save();
 
         // Reset pending component
         this.pending_component = false;
@@ -92,6 +101,7 @@ App.Views.LookEdit = Backbone.View.extend({
                     product: null
                 });
                 this.model.components.add(component);
+                this.pending_component = component.cid;
             }
             e.preventDefault();
         }
@@ -115,23 +125,42 @@ App.Views.LookEdit = Backbone.View.extend({
         }
     },
 
-    reset: function() {
-        if(this.hasOwnProperty('temporary_image')) {
-            this.temporary_image.destroy();
-            this.initialize_temporary_image();
-        }
+    redirect: function() {
+        window.location.replace('/looks/' + this.model.get('slug'));
+    },
+
+    /**
+     * Look buttons
+     */
+
+    look_reset: function() {
         this.model.clear({silent: true});
-        //this.model.set({id: external_look_type}, {silent: true});
         this.model.set(_.clone(this.model.defaults), {silent: true});
         this.model.components.reset([], {silent: true});
         this.model.save();
+
+        this.render();
     },
 
-    delete_look: function() {
+    look_delete: function() {
         this.model.destroy();
+
+        window.location.replace('/looks/');
     },
 
-    save_look: function() {
+    look_save: function() {
+
+        // Reset pending clicks on save
+        this.pending_component = false;
+        this.pending_product = false;
+
+        _.each(this.model.components.models, _.bind(function(model) {
+            if(!model.has('product') || !model.get('product')) {
+                this.model.components.remove(model);
+                model.destroy();
+            }
+        }, this));
+
         // TODO: force login
         if(this.model.backend == 'client') {
             this.model.backend = 'server';
@@ -140,33 +169,44 @@ App.Views.LookEdit = Backbone.View.extend({
             // TODO: Get image data from <img> tag instead of downloading it again
             this._image2base64(this.model.get('image'), _.bind(function(base64_image) {
                 this.model.set('image_base64', base64_image, {silent: true});
-                this.model.save();
+                this.model.save({}, {success: _.bind(this.redirect, this)});
             }, this));
         } else {
-            this.model.save();
+            this.model.save({}, {success: _.bind(this.redirect, this)});
         }
+
     },
 
-    publish_look: function() {
+    look_publish: function() {
         this.model.set('published', true);
 
-        return this.save_look();
+        return this.look_save();
     },
 
     initialize_temporary_image: function() {
-        this.temporary_image = new App.Models.TemporaryImage();
-        this.temporary_image_view = new App.Views.TemporaryImageUploadForm({model: this.temporary_image, look_type: external_look_type});
-        this.temporary_image.on('change', this.update_temporary_image, this);
+        console.log('initialize temp');
+
+        if(!this.hasOwnProperty('temporary_image_view')) {
+            this.temporary_image = new App.Models.TemporaryImage();
+            this.temporary_image_view = new App.Views.TemporaryImageUploadForm({model: this.temporary_image, look_type: external_look_type});
+            this.temporary_image.on('change', this.update_temporary_image, this);
+        }
     },
 
     update_temporary_image: function(model) {
+        console.log('update temporary image', this.temporary_image_view);
+
         this.model.set('image', model.get('url'));
-        this.temporary_image_view.remove();
         this.model.save();
     },
 
     render: function() {
         this.$el.html(this.template({look_type: external_look_type, look: this.model.toJSON()}));
+
+        // TODO: this must be done here because it must happen after main
+        // template is rendered or else it will be wiped be the above html
+        // renderning call
+        this.add_components(this.model.components);
 
         this.render_temporary_image();
         this.render_image();
@@ -174,45 +214,23 @@ App.Views.LookEdit = Backbone.View.extend({
 
     render_temporary_image: function() {
         if(external_look_type == 'photo' && !this.model.has('image')) {
-            if(!this.hasOwnProperty('temporary_image_view')) {
-                this.initialize_temporary_image();
-            }
-            this.$el.find('.look-container').append(this.temporary_image_view.render().el);
+            this.$('.look-container').append(this.temporary_image_view.render().el);
         }
     },
 
     render_image: function() {
-        console.log('render_image');
+        console.log('render image');
+
         if(this.model.has('image')) {
-            this.$el.find('.look-container').css('background-image', this.model.get('image'));
+            if(this.hasOwnProperty('temporary_image_view')) {
+                console.log('has image', this.temporary_image_view);
+                this.temporary_image_view.$el.hide();
+            }
+            this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');
         } else {
+            this.temporary_image_view.$el.show();
             this.$el.find('.look-container').css('background-image', '');
         }
-    },
-
-    render_components: function() {
-        if(this.hasOwnProperty('component_views')) {
-            _.each(this.component_views, function(view) { view.render() });
-        } else {
-            this.component_views = new Array();
-
-            _.each(this.model.components.models, _.bind(function(component) {
-                var view_class;
-                if(external_look_type == 'photo') {
-                    view_class = App.Views.LookComponentPhoto;
-                } else {
-                    view_class = App.Views.LookComponentCollage;
-                }
-                var view = new view_class({model: component});
-                this.$('.look-container').append(view.render().el);
-                this.component_views.push(view);
-            }, this));
-        }
-
-        // TODO: bad? must use it because this.$el is update on every render
-        this.delegateEvents();
-
-        return this;
     }
 
 });

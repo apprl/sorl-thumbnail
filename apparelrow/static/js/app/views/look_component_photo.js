@@ -12,7 +12,7 @@ App.Views.LookComponentPhoto = Backbone.View.extend({
 
     delete_component: function(e) {
         this.remove();
-        this.model.destroy();
+        this.collection.remove(this.model);
 
         e.preventDefault();
     },
@@ -23,6 +23,10 @@ App.Views.LookComponentPhoto = Backbone.View.extend({
         this.delegateEvents();
 
         return this;
+    },
+
+    sync: function() {
+        return false;
     }
 
 });

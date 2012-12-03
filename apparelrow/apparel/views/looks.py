@@ -29,7 +29,7 @@ def look_instance_to_dict(look):
 
     if look.components:
         look_dict['components'] = []
-        for component in look.display_components.all():
+        for component in look.components.all():
             look_dict['components'].append({
                 'id': component.id,
                 'component_of': component.component_of,
@@ -97,7 +97,7 @@ class LookView(View):
 
             # Remove components
             look_components = get_model('apparel', 'LookComponent').objects.filter(look_id=pk)
-            updated_component_ids = [x['id'] for x in json_data['components']]
+            updated_component_ids = [x['id'] for x in json_data['components'] if 'id' in x]
             for component in look_components:
                 if component.id not in updated_component_ids:
                     component.delete()
@@ -108,18 +108,13 @@ class LookView(View):
                 component_id = None
                 if 'id' in component:
                     component_id = component['id']
-                del component['id']
+                    del component['id']
 
                 product_id = component['product']['id']
                 del component['product']
 
-                #if 'component_of' not in component:
-                    #component_of = json_data['component']
-                #else:
-                    #component_of = component['component_of']
-                    #del component['component_of']
-
                 look_component, created = LookComponent.objects.get_or_create(id=component_id,
+                                                                              look_id=pk,
                                                                               product_id=product_id)
 
                 for key, value in component.items():
@@ -184,15 +179,22 @@ class LookView(View):
         del json_data['components']
 
         look = get_model('apparel', 'Look')(**json_data)
+        look.save()
 
         # TODO: Handle components creation
         for component in components:
+            component['product_id'] = component['product']['id']
+            del component['product']
+
+            if 'component_of' not in component:
+                component['component_of'] = look.component
+
+            component['look_id'] = look.pk
+
             # TODO: error handling
             look_component = get_model('apparel', 'LookComponent')(**component)
+            look_component.save()
             look.components.add(look_component)
-
-        # TODO: error handling
-        look.save()
 
         response = JSONResponse(look_instance_to_dict(look), status=201)
         response['Location'] = reverse('apparel.views.look_detail', args=[look.slug])
