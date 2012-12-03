@@ -12,8 +12,8 @@
 {% block body-header %}
 <div id="body-header">
     <div class="column_one">
-        <h1>{% if component == 'collage' %}{% trans "Create collage look" %}{% else %}{% trans "Create photo look" %}{% endif %}</h1>
-        {{ form.title }}
+        <h1>{{ look.title }}</h1>
+        <input type="text" name="look_title">
     </div>
 </div>
 {% endblock body-header %}
@@ -50,9 +50,7 @@
     </div>
 
     <script type="text/template" id="edit_look_template">
-        <div class="look-container" id="<%= look_type %>"<% if(look_type == 'photo' && look.image) { %> style="background-image: url('<%= look.image %>');"<% } %>>
-            <div class="look_data">Look data: <%= JSON.stringify(look) %></div>
-        </div>
+        <div class="look-container" id="<%= look_type %>"<% if(look_type == 'photo' && look.image) { %> style="background-image: url('<%= look.image %>');"<% } %>></div>
         <div class="look-description">
             <h2>{% trans "Description" %}</h2>
             {{ form.description }}

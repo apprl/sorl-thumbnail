@@ -9,6 +9,8 @@ jQuery(document).ready(function() {
 
     // Look edit view
     window.look = new App.Models.Look();
+    window.look_edit_title = new App.Views.LookEditTitle({model: look});
+    window.look_edit_description = new App.Views.LookEditDescription({model: look});
     window.look_edit = new App.Views.LookEdit({model: look});
 
     // Router

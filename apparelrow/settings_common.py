@@ -264,6 +264,8 @@ PIPELINE_JS = {
                              'js/app/views/product.js',
                              'js/app/views/temporary_image_upload_form.js',
                              'js/app/views/look_edit.js',
+                             'js/app/views/look_edit_title.js',
+                             'js/app/views/look_edit_description.js',
                              'js/app/views/look_component_photo.js',
                              'js/app/views/look_component_collage.js',
                              'js/app/look_editor.js',
