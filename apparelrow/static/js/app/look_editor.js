@@ -8,10 +8,17 @@ jQuery(document).ready(function() {
     window.product_list = new App.Views.Products({collection: products});
 
     // Look edit view
-    window.look = new App.Models.Look();
-    window.look_edit_title = new App.Views.LookEditTitle({model: look});
-    window.look_edit_description = new App.Views.LookEditDescription({model: look});
-    window.look_edit = new App.Views.LookEdit({model: look});
+    window.look_model = new App.Models.Look();
+    window.look_edit_title = new App.Views.LookEditTitle({model: look_model});
+    window.look_edit_description = new App.Views.LookEditDescription({model: look_model});
+    window.look_edit = new App.Views.LookEdit({model: look_model});
+
+    // Notify the user about unsaved changes
+    $(window).on('beforeunload', _.bind(function(e) {
+        if (look_model._dirty) {
+            return 'You have unsaved changes';
+        }
+    }, this));
 
     // Router
     App.Routers.LookEditor = Backbone.Router.extend({

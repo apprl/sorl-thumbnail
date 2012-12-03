@@ -29,6 +29,7 @@ App.Views.LookEditTitle = Backbone.View.extend({
     },
 
     save: function() {
+        this.model._dirty = true;
         this.model.set('title', this.$el.find('input').val());
         this.render();
     },

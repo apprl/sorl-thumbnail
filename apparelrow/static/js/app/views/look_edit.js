@@ -15,7 +15,6 @@ App.Views.LookEdit = Backbone.View.extend({
             'collage': App.Views.LookComponentCollage
         };
 
-
         this.initialize_temporary_image();
 
         // Model events and fetch model
@@ -60,6 +59,8 @@ App.Views.LookEdit = Backbone.View.extend({
 
         // Reset pending component
         this.pending_component = false;
+
+        this.model._dirty = true;
     },
 
     pending_add_component: function(product) {
@@ -83,6 +84,7 @@ App.Views.LookEdit = Backbone.View.extend({
 
             this.model.components.add(component);
             this.pending_product = false;
+            this.model._dirty = true;
             e.preventDefault();
         } else if(this.model.has('image')) {
             // If pending component is created move it to new touch/click position
@@ -103,9 +105,9 @@ App.Views.LookEdit = Backbone.View.extend({
                 this.model.components.add(component);
                 this.pending_component = component.cid;
             }
+            this.model._dirty = true;
             e.preventDefault();
         }
-
     },
 
     _image2base64: function(image_url, callback) {
@@ -197,7 +199,7 @@ App.Views.LookEdit = Backbone.View.extend({
         console.log('update temporary image', this.temporary_image_view);
 
         this.model.set('image', model.get('url'));
-        this.model.save();
+        this.model._dirty = true;
     },
 
     render: function() {
@@ -223,7 +225,6 @@ App.Views.LookEdit = Backbone.View.extend({
 
         if(this.model.has('image')) {
             if(this.hasOwnProperty('temporary_image_view')) {
-                console.log('has image', this.temporary_image_view);
                 this.temporary_image_view.$el.hide();
             }
             this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');

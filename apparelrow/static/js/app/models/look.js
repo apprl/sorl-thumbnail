@@ -15,6 +15,7 @@ window.App.Models.Look = Backbone.Model.extend({
     initialize: function() {
         console.log('look initialize');
 
+        this._dirty = false;
         this.components = new App.Collections.LookComponents();
 
         if(external_look_id > 0) {
