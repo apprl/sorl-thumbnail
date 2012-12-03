@@ -3,10 +3,10 @@ import base64
 import uuid
 
 from django.conf import settings
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponseBadRequest, HttpResponseForbidden
+from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
@@ -14,6 +14,31 @@ from django.db.models.loading import get_model
 from sorl.thumbnail import get_thumbnail
 
 from apparel.utils import JSONResponse, set_query_parameter
+
+
+def create(request):
+    """
+    Look create initial page, select between collage and photo.
+    """
+    return render(request, 'apparel/look_create_initial.html', {})
+
+
+def editor(request, component=None, slug=None):
+    """
+    Look editor
+    """
+    look = None
+    if slug is not None:
+        if not request.user.is_authenticated():
+            raise Http404()
+
+        look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
+        component = {'P': 'photo', 'C': 'collage'}[look.component]
+
+    if component is None:
+        raise Http404()
+
+    return render(request, 'apparel/look_editor.html', {'component': component, 'object': look})
 
 
 def look_instance_to_dict(look):

@@ -600,19 +600,6 @@ def look_edit(request, slug):
         render_to_response('apparel/look_edit.html', data, context_instance=context)
     )
 
-def look_create_initial(request):
-    return render(request, 'apparel/look_create_initial.html', {})
-
-def look_editor(request, component=None, slug=None):
-    look = None
-    if slug is not None:
-        look = get_object_or_404(Look, slug=slug)
-        component = {'P': 'photo', 'C': 'collage'}[look.component]
-
-    if component is None:
-        raise Http404()
-
-    return render(request, 'apparel/look_editor.html', {'component': component, 'form': LookForm(), 'object': look})
 
 def look_create(request):
     """

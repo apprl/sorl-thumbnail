@@ -81,9 +81,9 @@ urlpatterns = patterns('',
     url(r'^shop/popup/$', 'apparel.views.product_popup', name='product-popup'),
 
     # Looks
-    url(r'^look/create/$', 'apparel.views.look_create_initial', name='look-create-initial'),
-    url(r'^look/editor/(?P<component>photo|collage)/$', 'apparel.views.look_editor', name='look-editor'),
-    url(r'^look/editor/(?P<slug>[\w-]+)/$', 'apparel.views.look_editor', name='look-editor'),
+    url(r'^look/create/$', 'apparel.views.looks.create', name='look-create-initial'),
+    url(r'^look/editor/(?P<component>photo|collage)/$', 'apparel.views.looks.editor', name='look-editor'),
+    url(r'^look/editor/(?P<slug>[\w-]+)/$', 'apparel.views.looks.editor', name='look-editor'),
 
     url(r'^look/$', LookView.as_view(), name='look_list'),
     url(r'^look/(?P<pk>\d+)/?$', LookView.as_view(), name='look'),

@@ -53,7 +53,7 @@
         <div class="look-container" id="<%= look_type %>"<% if(look_type == 'photo' && look.image) { %> style="background-image: url('<%= look.image %>');"<% } %>></div>
         <div class="look-description">
             <h2>{% trans "Description" %}</h2>
-            {{ form.description }}
+            <textarea name="look_description">{{ look.description }}</textarea>
         </div>
     </script>
 
