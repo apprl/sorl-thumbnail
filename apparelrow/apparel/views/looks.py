@@ -117,6 +117,9 @@ class LookView(View):
                                                                               look_id=pk,
                                                                               product_id=product_id)
 
+                if 'component_of' not in component or not component['component_of']:
+                    component['component_of'] = json_data['component']
+
                 for key, value in component.items():
                     setattr(look_component, key, value)
 
