@@ -90,7 +90,8 @@ class LookView(View):
 
             return JSONResponse(status=204)
 
-        return HttpResponseForbidden()
+        return JSONResponse({'message': 'not authenicated'}, status=401)
+
 
     def put(self, request, pk, *args, **kwargs):
         """
@@ -101,15 +102,15 @@ class LookView(View):
         try:
             json_data = json.loads(request.body)
         except ValueError:
-            return HttpResponseBadRequest('invalid body')
+            return JSONResponse({'message': 'invalid json body'}, status=400)
 
         if not request.user.is_authenticated():
-            return HttpResponseForbidden('invalid user')
+            return JSONResponse({'message': 'not authenicated'}, status=401)
 
         required_keys = ['title', 'component', 'components', 'published']
         for key in required_keys:
             if key not in json_data:
-                return HttpResponseBadRequest('missing key %s' % (key))
+                return JSONResponse({'message': 'missing key %s' % (key,)}, status=400)
 
         # Cannot update image without clearing the look
         del json_data['image']
@@ -160,6 +161,7 @@ class LookView(View):
 
         return JSONResponse(status=204)
 
+
     def post(self, request, *args, **kwargs):
         """
         Create a new look.
@@ -167,19 +169,19 @@ class LookView(View):
         try:
             json_data = json.loads(request.body)
         except ValueError:
-            return HttpResponseBadRequest('invalid body')
+            return JSONResponse({'message': 'invalid json body'}, status=400)
 
         if not request.user.is_authenticated():
-            return HttpResponseForbidden('invalid user')
+            return JSONResponse({'message': 'not authenicated'}, status=401)
 
         required_keys = ['title', 'component', 'components', 'published']
         for key in required_keys:
             if key not in json_data:
-                return HttpResponseBadRequest('missing key %s' % (key))
+                return JSONResponse({'message': 'missing key %s' % (key,)}, status=400)
 
         if json_data['component'] == 'P':
             if 'image' not in json_data:
-                return HttpResponseBadRequest('missing image for photo look')
+                return JSONResponse({'message': 'missing image for tagged photo look'}, status=400)
 
             if 'image_base64' in json_data:
                 image_data = base64.decodestring(json_data['image_base64'])
@@ -241,7 +243,7 @@ class LookView(View):
         try:
             limit = int(request.GET.get('limit', 10))
         except ValueError:
-            return HttpResponseBadRequest('bad limit argument')
+            return JSONResponse({'message': 'invalid limit argument'}, status=400)
 
         clamped_limit = min(30, max(limit, 10))
         paginator = Paginator(get_model('apparel', 'Look').published_objects.all(),
