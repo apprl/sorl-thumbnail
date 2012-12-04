@@ -4,8 +4,8 @@ App.Views.LookEdit = Backbone.View.extend({
     template: _.template($('#edit_look_template').html()),
 
     events: {
-        'click .look-container': 'click',
-        'touch .look-container': 'click'
+        'click .look-container': 'on_click',
+        'touch .look-container': 'on_click'
     },
 
     initialize: function() {
@@ -35,9 +35,7 @@ App.Views.LookEdit = Backbone.View.extend({
 
         // Listen on product add
         App.Events.on('look_edit:product:add', this.pending_add_component, this);
-        // Pending product to be added
         this.pending_product = false;
-        // Pending component to receive a product
         this.pending_component = false;
     },
 
@@ -73,42 +71,46 @@ App.Views.LookEdit = Backbone.View.extend({
         }
     },
 
-    click: function(e) {
-        if(this.pending_product && this.model.has('image')) {
-            // Add component to collection and render
-            var component = new App.Models.LookComponent();
-            component.set({
-                top: e.offsetY,
-                left: e.offsetX,
-                product: this.pending_product
-            });
+    _get_hotspot: function(e) {
+        var container_width = this.$el.find('.look-container').width() - 80,
+            container_height = this.$el.find('.look-container').height() - 80;
 
-            this.model.components.add(component);
-            this.pending_product = false;
-            this.model._dirty = true;
-            e.preventDefault();
-        } else if(this.model.has('image')) {
-            // If pending component is created move it to new touch/click position
-            if(this.pending_component) {
-                console.log(this.pending_component, this.model.components, e.offsetY);
-                this.model.components.getByCid(this.pending_component).set({
-                    top: e.offsetY,
-                    left: e.offsetX
-                });
-            // Else create a new pending component on touch/click position
-            } else {
-                var component = new App.Models.LookComponent();
-                component.set({
-                    top: e.offsetY,
-                    left: e.offsetX,
-                    product: null
-                });
-                this.model.components.add(component);
-                this.pending_component = component.cid;
-            }
-            this.model._dirty = true;
-            e.preventDefault();
+        return {top: Math.min(container_height, Math.max(0, e.offsetY - 40)),
+                left: Math.min(container_width, Math.max(0, e.offsetX - 40))};
+    },
+
+    _create_photo_component: function(position, product) {
+        return new App.Models.LookComponent().set(_.extend({product: product}, position));
+    },
+
+    on_click: function(e) {
+        if(!this.model.has('image') || !this.model.get('image')) {
+            return true;
         }
+
+        if(!$(e.target).hasClass('look-container')) {
+            return true;
+        }
+
+        if(this.pending_product) {
+            // If pending product is active (a click has occured on a product add button)
+            var new_component = this._create_photo_component(this._get_hotspot(e), this.pending_product);
+            this.model.components.add(new_component);
+            this.pending_product = false;
+        } else {
+            if(this.pending_component) {
+                // If pending component is active only move it to new touch/click position
+                this.model.components.getByCid(this.pending_component).set(this._get_hotspot(e));
+            } else {
+                // Else create a new pending component on touch/click position
+                var new_component = this._create_photo_component(this._get_hotspot(e), null);
+                this.model.components.add(new_component);
+                this.pending_component = new_component.cid;
+            }
+        }
+
+        this.model._dirty = true;
+        e.preventDefault();
     },
 
     _image2base64: function(image_url, callback) {
