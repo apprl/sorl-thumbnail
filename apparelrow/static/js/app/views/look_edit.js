@@ -147,6 +147,11 @@ App.Views.LookEdit = Backbone.View.extend({
         window.location.replace('/looks/');
     },
 
+    look_publish: function() {
+        this.model.set('published', true);
+        return this.look_save();
+    },
+
     look_save: function() {
         if(!isAuthenticated) {
             FB.login(_.bind(function(response) {
@@ -195,28 +200,9 @@ App.Views.LookEdit = Backbone.View.extend({
         window.location.replace('/looks/' + this.model.get('slug'));
     },
 
-
-    look_publish: function() {
-        this.model.set('published', true);
-
-        return this.look_save();
-    },
-
     initialize_temporary_image: function() {
-        console.log('initialize temp');
-
-        if(!this.hasOwnProperty('temporary_image_view')) {
-            this.temporary_image = new App.Models.TemporaryImage();
-            this.temporary_image_view = new App.Views.TemporaryImageUploadForm({model: this.temporary_image, look_type: external_look_type});
-            this.temporary_image.on('change', this.update_temporary_image, this);
-        }
-    },
-
-    update_temporary_image: function(model) {
-        console.log('update temporary image', this.temporary_image_view);
-
-        this.model.set('image', model.get('url'));
-        this.model._dirty = true;
+        console.log('initialize temporary image form');
+        this.temporary_image_view = new App.Views.TemporaryImageUploadForm({model: this.model, look_type: external_look_type});
     },
 
     render: function() {
@@ -233,7 +219,8 @@ App.Views.LookEdit = Backbone.View.extend({
 
     render_temporary_image: function() {
         if(external_look_type == 'photo' && !this.model.has('image')) {
-            this.$('.look-container').append(this.temporary_image_view.render().el);
+            console.log('render temporary image form');
+            this.$el.find('.look-container').append(this.temporary_image_view.render().el);
         }
     },
 
@@ -241,9 +228,7 @@ App.Views.LookEdit = Backbone.View.extend({
         console.log('render image');
 
         if(this.model.has('image')) {
-            if(this.hasOwnProperty('temporary_image_view')) {
-                this.temporary_image_view.$el.hide();
-            }
+            this.temporary_image_view.$el.hide();
             this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');
         } else {
             this.temporary_image_view.$el.show();

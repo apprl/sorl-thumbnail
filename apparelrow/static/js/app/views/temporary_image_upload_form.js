@@ -2,26 +2,15 @@ App.Views.TemporaryImageUploadForm = Backbone.View.extend({
 
     template: _.template($('#temporary_image_form_template').html()),
 
-    initialize: function(options) {
-        if(options.look_type == 'photo') {
-            this.model.on('change', this.render, this);
-            this.model.on('destroy', this.render, this);
-            this.model.fetch();
-
-            this.render();
-        }
-    },
-
-    upload_done: function(e, data) {
-        // Not using multiple uploads
-        this.model.set(data.result[0]);
-        this.model.save();
+    upload_complete: function(e, data) {
+        this.model.set('image', data.result[0].url);
+        this.model._dirty = true;
     },
 
     render: function() {
         this.setElement(this.template());
         this.$el.fileupload({
-            done: _.bind(this.upload_done, this)
+            done: _.bind(this.upload_complete, this)
         })
 
         return this;

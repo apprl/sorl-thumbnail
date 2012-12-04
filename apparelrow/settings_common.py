@@ -248,7 +248,6 @@ PIPELINE_JS = {
                              'js/app/models/facet.js',
                              'js/app/models/product.js',
                              'js/app/models/facet_container.js',
-                             'js/app/models/temporary_image.js',
                              'js/app/models/look.js',
                              'js/app/models/look_component.js',
                              'js/app/collections/facets.js',
