@@ -47,7 +47,7 @@
             {% endcache %}
             {% if request.user and request.user.is_authenticated and request.user == object.user %}
             <div class="look-control">
-                <a href="{% url apparel.views.look_edit object.slug %}" title="{% trans "Edit" %}" class="btn btn-small btn-positive btn-edit">{% trans "Edit" %}</a>
+                <a href="{% url look-editor object.slug %}" title="{% trans "Edit" %}" class="btn btn-small btn-positive btn-edit">{% trans "Edit" %}</a>
                 <a href="{% url apparel.views.look_delete object.slug %}" title="{% trans "Delete" %}" class="btn btn-small btn-negative btn-delete">{% trans "Delete" %}</a>
             </div>
             {% endif %}
