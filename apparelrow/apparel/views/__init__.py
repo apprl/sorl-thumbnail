@@ -601,46 +601,6 @@ def look_edit(request, slug):
     )
 
 
-def look_create(request):
-    """
-    POST - Save changes to a look
-            - if in AJAX mode, return the look as JSON
-            - else redirect to look's edit page (unless a new image has been uploaded)
-    GET - Display create page
-            - if not logged in display a popup
-            - if in AJAX mode, this won't work
-    """
-
-    if request.method == 'GET' and request.user.is_authenticated():
-        if request.is_ajax():
-            return render_to_response('apparel/look_create_dialog.html', {'form': LookForm()}, context_instance=RequestContext(request))
-
-        return render_to_response('apparel/look_create.html', {'form': LookForm()}, context_instance=RequestContext(request))
-
-    if request.method == 'POST' and request.user.is_authenticated():
-        form = LookForm(request.POST)
-
-        if form.is_valid():
-            look = form.save(commit=False)
-            if request.POST.get('look_photo', None) or request.POST.get('look_photo_image.x', None):
-                look.component = 'P'
-            else:
-                look.component = 'C'
-            look.user = request.user
-            look.save()
-
-            if request.is_ajax():
-                return HttpResponse(json.encode({'success': True, 'data': look}), mimetype='application/json')
-
-            return HttpResponseRedirect(reverse('apparel.views.look_edit', args=(look.slug,)))
-
-        return render_to_response('apparel/look_create.html', {'form': form}, context_instance=RequestContext(request))
-
-    if request.is_ajax():
-        return render_to_response('apparel/fragments/dialog_create_look.html', {}, context_instance=RequestContext(request))
-
-    return render_to_response('apparel/look_create_unauthenticated.html', {}, context_instance=RequestContext(request))
-
 @login_required
 @seamless_request_handling
 def look_delete(request, slug):

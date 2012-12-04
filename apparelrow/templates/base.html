@@ -144,7 +144,7 @@
                     <ul class="subnav" id="subnav-profile">
                         <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Your profile" %}</a></li>
                         <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
-                        <li><a href="{% url look-create-initial %}">{% trans "+ Create look" %}</a>
+                        <li><a href="{% url look-create %}">{% trans "+ Create look" %}</a>
                         <li><a href="{% url profile.views.settings_notification %}">{% trans "Settings" %}</a></li>
                         <li><a href="{% url auth_logout %}">{% trans "Log out" %}</a></li>
                     </ul>
@@ -276,7 +276,7 @@
                 {% if user.is_authenticated %}
                 <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
                 {% endif %}
-                <li><a class="open-dialog" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "+ Create look" %}</a>
+                <li><a href="{% url look-create %}">{% trans "+ Create look" %}</a>
             </ul>
             <ul>
                 <li><h3>{% trans "Follow us" %}</h3></li>

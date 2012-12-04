@@ -18,9 +18,9 @@ from apparel.utils import JSONResponse, set_query_parameter
 
 def create(request):
     """
-    Look create initial page, select between collage and photo.
+    Look create page, select between collage and photo.
     """
-    return render(request, 'apparel/look_create_initial.html', {})
+    return render(request, 'apparel/look_create.html', {})
 
 
 def editor(request, component=None, slug=None):

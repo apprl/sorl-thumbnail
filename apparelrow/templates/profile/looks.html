@@ -40,7 +40,7 @@
         {% if profile == request.user.get_profile %}
             <div class="message warning">
                 <p>{% trans "All looks that you create end up here." %}</p>
-                <a class="btn btn-block btn-positive btn-upper open-dialog" data-dialog-width="380" href="{% url apparel.views.look_create %}">{% trans "+ Create look!" %}</a>
+                <a class="btn btn-block btn-positive btn-upper" href="{% url look-create %}">{% trans "+ Create look!" %}</a>
             </div>
         {% else %}
             <div class="message warning">{% blocktrans with profile.display_name as display_name %}{{ display_name }} has not created any looks yet.{% endblocktrans %}</div>
