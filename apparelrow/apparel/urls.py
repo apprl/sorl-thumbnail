@@ -93,12 +93,8 @@ urlpatterns = patterns('',
     url(r'^looks/women/$', 'apparel.views.look_list', {'gender': 'W'}, name='look-list-women'),
     url(r'^looks/popular/$', 'apparel.views.look_list', {'popular': True}, name='popular-look-list'),
     url(r'^looks/search/$', 'apparel.views.look_list', {'search': True}, name='search-look-list'),
-    (r'^looks/save_component/$', 'apparel.views.save_look_component'),
-    (r'^looks/delete_component/$', 'apparel.views.delete_look_component'),
-    (r'^looks/add_product/$', 'apparel.views.add_to_look'),
     (r'^looks/(?P<slug>[\w-]+)/$', 'apparel.views.look_detail'),
     (r'^looks/(?P<slug>[\w-]+?)/delete/$', 'apparel.views.look_delete'),
-    (r'^looks/(?P<slug>[\w-]+?)/edit/$', 'apparel.views.look_edit'),
     (r'^looks/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.look_like'),
 
     # Dialogs
