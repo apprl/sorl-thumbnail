@@ -1,22 +1,14 @@
 App.Views.LookEditDescription = Backbone.View.extend({
 
-    el: '.column_one',
+    el: '.look-description',
 
     events: {
-        'click': 'edit',
-        'blur input': 'on_blur',
-        'keypress input': 'on_keypress'
+        'blur textarea': 'on_blur',
+        'keypress textarea': 'on_keypress'
     },
 
     initialize: function() {
-        this.model.on('change:title', this.render, this);
-
-        this.render();
-    },
-
-    edit: function() {
-        this.$el.find('h1').hide();
-        this.$el.find('input').show().focus();
+        this.model.on('change:description', this.render, this);
     },
 
     on_blur: function() {
@@ -30,16 +22,13 @@ App.Views.LookEditDescription = Backbone.View.extend({
     },
 
     save: function() {
-        this.model.set('title', this.$el.find('input').val());
+        this.model._dirty = true;
+        this.model.set('description', this.$el.find('textarea').val());
+        this.render();
     },
 
     render: function() {
-        var title = this.model.get('title');
-        if(!title) {
-            title = 'Your look name here';
-        }
-        this.$el.find('h1').html(title).show();
-        this.$el.find('input').val(title).hide();
+        this.$el.find('textarea').val(this.model.get('description'));
 
         return this;
     }
