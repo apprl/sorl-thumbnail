@@ -136,6 +136,7 @@ App.Views.LookEdit = Backbone.View.extend({
         this.model.clear({silent: true});
         this.model.set(_.clone(this.model.defaults), {silent: true});
         this.model.components.reset([], {silent: true});
+        this.model._dirty = false;
         this.model.save();
 
         this.render();
