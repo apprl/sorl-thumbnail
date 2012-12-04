@@ -18,15 +18,11 @@ App.Views.LookComponentPhoto = Backbone.View.extend({
     },
 
     render: function() {
-        console.log('render component', this.model);
+        console.log('render photo component', this.model);
         this.$el.html(this.template(this.model.toJSON()));
         this.delegateEvents();
 
         return this;
-    },
-
-    sync: function() {
-        return false;
     }
 
 });

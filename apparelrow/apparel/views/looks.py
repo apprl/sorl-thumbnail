@@ -67,7 +67,8 @@ def look_instance_to_dict(look):
                 'product': {
                     'id': component.product.id,
                     'slug': component.product.slug,
-                    'image_small': get_thumbnail(component.product.product_image, '112x145', crop=False).name
+                    'image_small': get_thumbnail(component.product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
+                    'image': get_thumbnail(component.product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
                 }
             })
 

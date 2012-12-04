@@ -64,7 +64,10 @@
     </script>
 
     <script type="text/template" id="look_component_collage">
-        <div style="<%= styles %>" data-id="<%= product_id %>" data-slug="<%= product_slug %>">
+        <div class="product" style="left: <%=left%>px; top: <%=top%>px; width: <%=width%>px; height: <%=height%>px; z-index: <%=z_index%>;">
+            <% if(product) { %>
+            <img src="<%= product.image %>" style="width: <%=width%>px; height: <%=height%>px;">
+            <% } %>
             <a href="#" class="delete"></a>
         </div>
     </script>
