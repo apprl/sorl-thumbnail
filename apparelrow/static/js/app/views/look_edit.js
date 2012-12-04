@@ -52,7 +52,7 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     add_components: function(collection) {
-        _.each(collection.models, _.bind(function(model) { this.add_component(model, collection); }, this));
+        collection.each(_.bind(function(model) { this.add_component(model, collection); }, this));
     },
 
     remove_component: function(model, collection) {
@@ -177,7 +177,7 @@ App.Views.LookEdit = Backbone.View.extend({
         this.pending_component = false;
         this.pending_product = false;
 
-        _.each(this.model.components.models, _.bind(function(model) {
+        this.model.components.each(_.bind(function(model) {
             if(!model.has('product') || !model.get('product')) {
                 this.model.components.remove(model);
                 model.destroy();
