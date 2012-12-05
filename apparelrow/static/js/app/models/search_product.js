@@ -11,7 +11,7 @@ window.App.Models.SearchProduct = Backbone.Model.extend({
 
     // TODO: handle multiple selection of values
     on_facet: function(data) {
-        if(!data.value) {
+        if(!data.value || data.value == 0 || data.value == '') {
             this.unset(data.type);
         } else {
             this.set(data.type, data.value);

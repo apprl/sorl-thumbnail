@@ -59,6 +59,12 @@ App.Views.FilterProduct = Backbone.View.extend({
             value = e.currentTarget.value,
             currentValue = this.search_product.get(attr);
 
+        if(value == '') {
+            this.search_product.unset(attr);
+            e.preventDefault();
+            return;
+        }
+
         // TODO: fix for click on empty search input field
         if(!(value || currentValue) || value != currentValue) {
             this.search_product.set(attr, value);
