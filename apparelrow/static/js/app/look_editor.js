@@ -16,13 +16,6 @@ jQuery(document).ready(function() {
     // Look editor popup
     window.look_edit_popup = new App.Views.LookEditPopup();
 
-    // Notify the user about unsaved changes
-    $(window).on('beforeunload', _.bind(function(e) {
-        if (look_model._dirty) {
-            return 'You have unsaved changes';
-        }
-    }, this));
-
     // Router
     App.Routers.LookEditor = Backbone.Router.extend({
         routes: {

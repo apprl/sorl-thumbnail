@@ -25,6 +25,14 @@ window.App.Models.Look = Backbone.Model.extend({
             this.backend = 'client';
             this.set('id', external_look_type, {silent: true});
         }
+
+        // Warn user before leaving page with unsaved changes
+        // TODO: implement auto size
+        $(window).on('beforeunload', _.bind(function(e) {
+            if (look_model._dirty) {
+                return 'You have unsaved changes';
+            }
+        }, this));
     },
 
     validate: function(attributes) {
