@@ -13,6 +13,9 @@ jQuery(document).ready(function() {
     window.look_edit_title = new App.Views.LookEditTitle({model: look_model});
     window.look_edit = new App.Views.LookEdit({model: look_model});
 
+    // Look editor popup
+    window.look_edit_popup = new App.Views.LookEditPopup();
+
     // Notify the user about unsaved changes
     $(window).on('beforeunload', _.bind(function(e) {
         if (look_model._dirty) {
