@@ -43,9 +43,24 @@
                     <label><input type="radio" name="gender" value="W"{% if APPAREL_GENDER == 'W' %} checked{% endif %}> {% trans "Women" %}</label>
                     <label><input type="radio" name="gender" value="M"{% if APPAREL_GENDER == 'M' %} checked{% endif %}> {% trans "Men" %}</label>
                     <div class="sub-filters"></div>
+                    <div class="hidden-filters-container">
+                        <ul class="hidden-filters">
+                            <li id="product-filter-category" class="dropdown">
+                                <a href="#">{% trans "Categories" %}</a>
+                            </li>
+                            <li id="product-filter-color" class="dropdown">
+                                <a href="#">{% trans "Color" %}</a>
+                            </li>
+                            <li id="product-filter-price" class="dropdown">
+                                <a href="#">{% trans "Price" %}</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <ul id="product-list"></ul>
+            <div class="product-list-container">
+                <ul id="product-list"></ul>
+            </div>
         </div>
     </div>
 

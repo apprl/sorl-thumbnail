@@ -25,7 +25,6 @@ App.Views.FilterProduct = Backbone.View.extend({
 
         // Individual filters for products
         this.filter_category = new App.Views.FilterProductCategory({collection: this.facets.category});
-        this.filter_category.render();
 
         this.filter_color = new App.Views.FilterProductColor({collection: this.facets.color});
         this.filter_color.render();
@@ -71,6 +70,10 @@ App.Views.FilterProduct = Backbone.View.extend({
         }
 
         e.preventDefault();
+    },
+
+    render: function() {
+        this.filter_category.setElement(this.$('#product-filter-category')).render();
     }
 
 });

@@ -65,20 +65,8 @@ $input_border_color: $highlight_border_color !default
 
 // EDIT
 
-#edit-look
-  position: relative
-
 #photo, #collage
   height: $look_height
-
-#selection
-  $row_width: $large_width - 20
-  +row($row_width)
-  background: transparent image_url(unquote("look-selection-row-bg.png")) no-repeat scroll
-  padding: 9px 9px 0 9px
-  height: 252px
-
-#collage, #photo
   position: relative
   .product
     position: absolute
@@ -159,6 +147,8 @@ $input_border_color: $highlight_border_color !default
   +box-sizing(border-box)
 
 #edit-look
+  float: left
+  position: relative
   .look-description
     margin: 10px
     textarea
@@ -169,6 +159,8 @@ $input_border_color: $highlight_border_color !default
       padding: 0
       border: 1px solid black
       +box-sizing(border-box)
+  #photo
+    cursor: pointer
 
 #product-chooser
   float: right
@@ -188,9 +180,69 @@ $input_border_color: $highlight_border_color !default
           background-color: #fff
 
   #product-filter
-    margin: 10px 10px 20px 10px
+    margin: 10px 10px 0 10px
     padding-bottom: 10px
     border-bottom: 3px solid #000
+
+  .product-list-container
+    padding: 0 10px 10px 10px
+
+  .hidden-filters-container
+    text-align: right
+    .hidden-filters
+      .dropdown
+        position: relative
+        background-color: $dark_color
+        +border_radius(3px)
+        display: inline-block
+        margin-left: 10px
+        > a
+          display: block
+          padding: 3px 8px
+          color: $white_color
+          &:after
+            display: inline-block
+            content: ' '
+            width: 15px
+            height: 10px
+            background-image: image_url(unquote("dropdown-arrow.png"))
+            background-repeat: no-repeat
+            background-position: 8px center
+        &.open ul
+          display: block
+        ul
+          display: none
+          position: absolute
+          top: 100%
+          left: 0
+          float: left
+          z-index: 1000
+          min-width: 120px
+          padding: 10px
+          margin-top: 13px
+          background-color: $white_color
+          +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 10px)
+          &#product-
+          li
+            text-align: left
+            a
+              display: block
+              clear: both
+              white-space: nowrap
+
+    #product-filter-category ul li
+      a
+        margin: 2px
+        &:before
+          margin-right: 5px
+          display: inline-block
+          content: ''
+          width: 14px
+          height: 15px
+          vertical-align: middle
+          background: transparent image_url(unquote("circle-dot.png")) no-repeat 0px 0px
+        &.selected:before
+          background-position: -14px 0px
 
   #product-list
     margin-left: -20px
@@ -242,37 +294,6 @@ $input_border_color: $highlight_border_color !default
             width: 100%
             overflow: hidden
             text-overflow: ellipsis
-
-#edit-look
-  float: left
-  #photo-background
-    cursor: pointer
-
-#publish-container
-  clear: both
-
-#id_description,
-#id_tags,
-.create-look #id_title
-  +text_input
-  width: 196px
-
-
-#id_description
-  height: 2em
-
-#id_tags
-  height: 1em
-
-body.edit-look
-  .sidebar
-    label
-      display: block
-      margin: 20px 0 10px
-      padding: 0 0 5px
-      +border(bottom)
-  #content
-    margin-bottom: 250px
 
 body.look, .look-medium
   .heart
