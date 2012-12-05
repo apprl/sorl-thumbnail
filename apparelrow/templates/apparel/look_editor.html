@@ -21,13 +21,13 @@
 
     <div id="content" class="group">
         <div class="button-container">
-            <button class="btn btn-upper btn-save" name="look_save">{% trans "Save" %}</button>
-            <button class="btn btn-upper btn-positive btn-publish" name="look_publish">{% trans "Publish" %}</button>
             {% if object and object.slug %}
             <button class="btn btn-upper btn-delete" name="look_delete">{% trans "Delete look" %}</button>
             {% else %}
             <button class="btn btn-upper btn-reset" name="look_reset">{% trans "Reset look" %}</button>
             {% endif %}
+            <button class="btn btn-upper btn-save" name="look_save">{% trans "Save" %}</button>
+            <button class="btn btn-upper btn-positive btn-publish" name="look_publish">{% trans "Publish" %}</button>
         </div>
 
         <div id="edit-look"></div>
