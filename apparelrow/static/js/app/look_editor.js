@@ -5,7 +5,7 @@ jQuery(document).ready(function() {
     window.filter_product = new App.Views.FilterProduct({search_product: search_product,
                                                          products: products,
                                                          facet_container: facet_container});
-    window.product_list = new App.Views.Products({collection: products});
+    window.product_list = new App.Views.Products({collection: products, filter: search_product});
 
     // Look edit view
     window.look_model = new App.Models.Look();

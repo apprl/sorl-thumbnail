@@ -41,7 +41,6 @@ App.Views.FilterProduct = Backbone.View.extend({
 
     update: function(e) {
         this.facets.fetch({data: this.search_product.toJSON()});
-        this.products.fetch({data: this.search_product.toJSON()});
     },
 
     timed_filter: function(e) {
