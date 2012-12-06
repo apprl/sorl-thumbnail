@@ -7,6 +7,7 @@ from django.utils.translation import get_language
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.db.models.loading import get_model
+from django.shortcuts import render, get_object_or_404
 
 from apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
 from apparel.browse import set_query_arguments
@@ -21,6 +22,13 @@ options = dict(options)
 
 categories = {'en': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_en')),
               'sv': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_sv'))}
+
+
+def product_detail_popup(request, pk):
+    product = get_object_or_404(get_model('apparel', 'Product'), pk=pk)
+
+    return render(request, 'apparel/fragments/product_detail.html', {'object': product})
+
 
 class ProductList(View):
 

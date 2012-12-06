@@ -50,6 +50,7 @@ urlpatterns = patterns('',
     # Products
     url(r'^products/$', ProductList.as_view(), name='product_list'),
     (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
+    url(r'^products/(?P<pk>[\wd]+)/popup/$', 'apparel.views.products.product_detail_popup', name='product-detail-popup'),
     url(r'^products/(?P<pk>[\d]+)/(?P<action>like|unlike)/?$', 'apparel.views.product_action', name='product-action'),
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
     url(r'^products/(?P<slug>[\w-]+)/short/$', 'apparel.views.product_generate_short_link', name='product-generate-short-link'),
