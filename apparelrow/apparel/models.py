@@ -985,18 +985,27 @@ class LookComponent(models.Model):
 
         return " ".join(s)
 
+    def _calculate_width(self, fixed_width, fixed_height):
+        width = float(self.look.width)
+        height = float(self.look.height)
+
+        factor = min(fixed_width / width, fixed_height / height)
+        if factor < 1:
+            width = round(width * factor, 0)
+
+        return width
+
     @property
     def style_small(self):
-        #aspect_ratio = self.look.height / self.look.width
-        return self._style(93 / float(self.look.width))
+        return self._style(self._calculate_width(93, 69) / float(self.look.width))
 
     @property
     def style_middle(self):
-        return self._style(450 / float(self.look.width))
+        return self._style(self._calculate_width(450, 334) / float(self.look.width))
 
     @property
     def style_search(self):
-        return self._style(200 / float(self.look.width))
+        return self._style(self._calculate_width(200, 149) / float(self.look.width))
 
     @property
     def style(self):

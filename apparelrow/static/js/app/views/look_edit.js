@@ -85,7 +85,7 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     _create_photo_component: function(position, product) {
-        return new App.Models.LookComponent().set(_.extend({product: product}, position));
+        return new App.Models.LookComponent().set(_.extend({product: product, width: 80, height: 80}, position));
     },
 
     on_click: function(e) {
