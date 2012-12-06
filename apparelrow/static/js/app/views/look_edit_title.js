@@ -1,9 +1,9 @@
 App.Views.LookEditTitle = Backbone.View.extend({
 
-    el: '.column_one',
+    el: '.body-header',
 
     events: {
-        'click': 'edit',
+        'click h1': 'edit',
         'blur input': 'on_blur',
         'keypress input': 'on_keypress'
     },
