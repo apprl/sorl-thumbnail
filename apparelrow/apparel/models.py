@@ -987,15 +987,16 @@ class LookComponent(models.Model):
 
     @property
     def style_small(self):
-        return self._style(93 / 694.0)
+        #aspect_ratio = self.look.height / self.look.width
+        return self._style(93 / float(self.look.width))
 
     @property
     def style_middle(self):
-        return self._style(450 / 694.0)
+        return self._style(450 / float(self.look.width))
 
     @property
     def style_search(self):
-        return self._style(200 / 694.0)
+        return self._style(200 / float(self.look.width))
 
     @property
     def style(self):

@@ -17,9 +17,6 @@ App.Views.FilterProduct = Backbone.View.extend({
         // Update filters when search product model changes
         this.search_product.on('change', this.update, this);
 
-        // Initial fetch of facets
-        this.facets.fetch({data: this.search_product.toJSON()});
-
         // Filter tabs
         this.filter_tabs = new App.Views.LookEditFilterTabs({model: this.search_product});
 
@@ -34,8 +31,9 @@ App.Views.FilterProduct = Backbone.View.extend({
 
         this.$el.find('.sub-filters').append(this.filter_category.el, this.filter_color.el, this.filter_price.el);
 
-        // TODO: fix remaining filters
-        //this.filter_manufacturer = new App.Views.FilterProductManufacturer({collection: this.facets.manufacturer});
+        // Initial fetch of products and facets
+        this.facets.fetch({data: this.search_product.toJSON()});
+        this.products.fetch({data: this.search_product.toJSON()});
     },
 
     update: function(e) {

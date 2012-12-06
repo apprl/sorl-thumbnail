@@ -9,17 +9,17 @@
 {% endblock %}
 
 {% block body-classes %}look-editor{% endblock %}
-{% block body-header %}
-<div id="body-header">
-    <div class="column_one">
-        <h1>{{ look.title }}</h1>
-        <input id="edit-look-title" type="text" name="look_title">
-    </div>
-</div>
-{% endblock body-header %}
 {% block body %}
 
     <div id="content" class="group">
+
+        <div id="body-header">
+            <div class="column_one">
+                <h1>{{ look.title }}</h1>
+                <input id="edit-look-title" type="text" name="look_title">
+            </div>
+        </div>
+
         <div class="button-container">
             {% if object and object.slug %}
             <button class="btn btn-upper btn-delete" name="look_delete">{% trans "Delete look" %}</button>

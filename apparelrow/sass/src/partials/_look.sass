@@ -65,6 +65,15 @@ $input_border_color: $highlight_border_color !default
 
 // EDIT
 
+body.look-editor
+  #container #inner-container #body-header
+    width: auto
+    border-bottom: 3px solid black
+    h1
+      overflow: hidden
+      min-width: 100px
+      display: block
+
 #photo, #collage
   height: $look_height
   position: relative
@@ -94,6 +103,7 @@ $input_border_color: $highlight_border_color !default
 
 #photo-background, #photo
   +apparel_hotspot
+  margin: 0
   .delete
     z-index: 10001
     left: 5px
@@ -127,9 +137,7 @@ $input_border_color: $highlight_border_color !default
   display: none
 
 #product-chooser, #edit-look
-  width: 50%
   +box-sizing(border-box)
-  +border(all)
 
 #edit-look-title
   display: none
@@ -147,10 +155,11 @@ $input_border_color: $highlight_border_color !default
   +box-sizing(border-box)
 
 #edit-look
+  width: 50%
   float: left
   position: relative
   .look-description
-    margin: 10px
+    margin-top: 20px
     textarea
       width: 100%
       max-width: 100%
@@ -163,10 +172,13 @@ $input_border_color: $highlight_border_color !default
     cursor: pointer
 
 #product-chooser
-  float: left
+  overflow: hidden
   max-width: 814px // 6 columns of products
+  min-width: 418px // 3 columns of products
+  padding-left: 10px
   #product-tabs
     height: 50px
+    margin: 0 10px 10px 10px
     li
       display: inline-block
       width: 50%
@@ -250,7 +262,7 @@ $input_border_color: $highlight_border_color !default
     padding: 10px
     list-style: none
     zoom: 1
-    height: 300px
+    height: 340px
     overflow-y: scroll
     &:before, &:after
       display: table

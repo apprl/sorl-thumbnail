@@ -237,6 +237,18 @@ App.Views.LookEdit = Backbone.View.extend({
     render_image: function() {
         console.log('render image');
 
+        this.update_width();
+
+        if(this.model.has('image')) {
+            this.temporary_image_view.$el.hide();
+            this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');
+        } else {
+            this.temporary_image_view.$el.show();
+            this.$el.find('.look-container').css('background-image', '');
+        }
+    },
+
+    update_width: function() {
         if(this.model.has('image')) {
             var self = this;
             this.local_image = new Image();
@@ -252,15 +264,13 @@ App.Views.LookEdit = Backbone.View.extend({
                 new_height = Math.round(new_height);
 
                 self.$el.find('.look-container').css({width: new_width, height: new_height});
+                self.$el.css({width: new_width});
                 self.model.set({width: new_width, height: new_height});
             }
             this.local_image.src = this.model.get('image');
-
-            this.temporary_image_view.$el.hide();
-            this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');
         } else {
-            this.temporary_image_view.$el.show();
-            this.$el.find('.look-container').css('background-image', '');
+            this.$el.find('.look-container').css({width: this.max_width, height: this.max_height});
+            this.$el.css({width: this.max_width});
         }
     }
 

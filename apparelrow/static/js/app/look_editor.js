@@ -2,11 +2,11 @@ jQuery(document).ready(function() {
     window.search_product = new App.Models.SearchProduct();
     window.products = new App.Collections.Products();
     window.facet_container = new App.Models.FacetContainer();
+    window.product_list = new App.Views.Products({collection: products, filter: search_product});
     window.filter_product = new App.Views.FilterProduct({search_product: search_product,
                                                          products: products,
                                                          facet_container: facet_container});
     filter_product.render();
-    window.product_list = new App.Views.Products({collection: products, filter: search_product});
 
     // Look edit view
     window.look_model = new App.Models.Look();
