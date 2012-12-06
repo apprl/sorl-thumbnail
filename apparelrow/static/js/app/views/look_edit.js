@@ -8,6 +8,9 @@ App.Views.LookEdit = Backbone.View.extend({
         'touch .look-container': 'on_click'
     },
 
+    max_width: 694,
+    max_height: 524,
+
     initialize: function() {
         // Look component classes lookup
         this.component_view_classes = {
@@ -141,6 +144,7 @@ App.Views.LookEdit = Backbone.View.extend({
         this.model.set(_.clone(this.model.defaults), {silent: true});
         this.model.components.reset([], {silent: true});
         this.model._dirty = false;
+        this.model.backend = 'client';
         this.model.save();
 
         this.render();
@@ -234,6 +238,24 @@ App.Views.LookEdit = Backbone.View.extend({
         console.log('render image');
 
         if(this.model.has('image')) {
+            var self = this;
+            this.local_image = new Image();
+            this.local_image.onload = function() {
+                var new_width = Math.min(self.max_width, this.width);
+                var new_height = new_width / (this.width / this.height);
+                if(new_height > self.max_height) {
+                    var temp_height = new_height;
+                    var new_height = self.max_height;
+                    var new_width = (new_width / temp_height) * new_height;
+                }
+                new_width = Math.round(new_width);
+                new_height = Math.round(new_height);
+
+                self.$el.find('.look-container').css({width: new_width, height: new_height});
+                self.model.set({width: new_width, height: new_height});
+            }
+            this.local_image.src = this.model.get('image');
+
             this.temporary_image_view.$el.hide();
             this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');
         } else {
