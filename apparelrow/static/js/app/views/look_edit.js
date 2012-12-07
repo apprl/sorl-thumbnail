@@ -77,6 +77,7 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     _get_hotspot: function(e) {
+        // TODO: maybe use dynamic scale for hotspot size instead of 80x80
         var container_width = this.$el.find('.look-container').width() - 80,
             container_height = this.$el.find('.look-container').height() - 80;
 
