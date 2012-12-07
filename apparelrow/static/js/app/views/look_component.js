@@ -17,7 +17,7 @@ App.Views.LookComponent = Backbone.View.extend({
     },
 
     on_click: function(e) {
-        if(this.model.has('product')) {
+        if(this.model.has('product') && !$(e.target).hasClass('delete')) {
             App.Events.trigger('look_edit:product:info', this.model.get('product'));
         }
     },
