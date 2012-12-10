@@ -10,7 +10,6 @@ jQuery(document).ready(function() {
 
     // Look edit view
     window.look_model = new App.Models.Look();
-    window.look_edit_title = new App.Views.LookEditTitle({model: look_model});
     window.look_edit = new App.Views.LookEdit({model: look_model});
 
     // Look editor popup

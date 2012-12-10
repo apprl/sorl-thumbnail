@@ -20,8 +20,6 @@ App.Views.LookEdit = Backbone.View.extend({
 
         this.initialize_temporary_image();
 
-        this.look_edit_description = new App.Views.LookEditDescription({model: this.model});
-
         // Model events and fetch model
         //this.model.on('change', this.render, this);
         this.model.on('change:image', this.render_image, this);
@@ -224,8 +222,6 @@ App.Views.LookEdit = Backbone.View.extend({
 
         this.render_temporary_image();
         this.render_image();
-
-        this.look_edit_description.setElement(this.$('.look-description')).render();
     },
 
     render_temporary_image: function() {

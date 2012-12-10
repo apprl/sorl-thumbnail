@@ -14,8 +14,7 @@
     <div id="content" class="group">
 
         <div class="body-header">
-            <h1>en titel lol{{ look.title }}</h1>
-            <input id="edit-look-title" type="text" name="look_title">
+            <h1>{% if object %}{% trans "Edit look" %}{% else %}{% trans "Create a new look" %}{% endif %}</h1>
         </div>
 
         <div class="button-container">
@@ -64,10 +63,6 @@
 
     <script type="text/template" id="edit_look_template">
         <div class="look-container" id="<%= look_type %>"<% if(look_type == 'photo' && look.image) { %> style="background-image: url('<%= look.image %>');"<% } %>></div>
-        <div class="look-description">
-            <h2>{% trans "Description" %}</h2>
-            <textarea name="look_description">{{ look.description }}</textarea>
-        </div>
     </script>
 
     <script type="text/template" id="look_component_photo">
