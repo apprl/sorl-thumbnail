@@ -20,8 +20,19 @@ options = get_model('apparel', 'Option').objects \
                                         .values_list('id', 'value')
 options = dict(options)
 
-categories = {'en': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_en')),
-              'sv': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_sv'))}
+categories = {'en': {}, 'sv': {}}
+for ident, name, parent_id in get_model('apparel', 'Category').objects.values_list('id', 'name_en', 'parent_id'):
+    if not parent_id:
+        parent_id = 0
+    categories['en'][ident] = (name, parent_id)
+
+for ident, name, parent_id in get_model('apparel', 'Category').objects.values_list('id', 'name_sv', 'parent_id'):
+    if not parent_id:
+        parent_id = 0
+    categories['sv'][ident] = (name, parent_id)
+
+#categories = {'en': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_en')),
+              #'sv': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_sv'))}
 
 
 def product_detail_popup(request, pk):
@@ -152,7 +163,7 @@ class ProductList(View):
             if language not in categories:
                 language = 'en'
 
-            result.update(category=[{'id': oid, 'count': count, 'name': categories[language][oid]} for oid, count in zip(ids, values)])
+            result.update(category=[{'id': oid, 'count': count, 'name': categories[language][oid][0], 'parent': categories[language][oid][1]} for oid, count in zip(ids, values)])
 
         return JSONResponse(result)
 

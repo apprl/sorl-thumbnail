@@ -14,7 +14,17 @@ App.Views.FilterProductCategory = Backbone.View.extend({
 
     select: function(e) {
         var category_id = $(e.target).addClass('selected').data('id');
+        var category = this.collection.get(category_id);
+
         App.Events.trigger('product:facet', {type: 'category', value: category_id});
+
+        if(!category) {
+            App.Events.trigger('product:category_selected', 0);
+            this.$el.find('span').text(this.$el.find('a').data('default-name'));
+        } else {
+            App.Events.trigger('product:category_selected', category_id);
+            this.$el.find('span').text(category.get('name'));
+        }
     },
 
     open: function(e) {
@@ -29,25 +39,34 @@ App.Views.FilterProductCategory = Backbone.View.extend({
     },
 
     close: function(e) {
-        if(!$(e.target).is(this.$el) && !$(e.target).parent().is(this.$el)) {
+        var $target = $(e.target);
+        var $ptarget = $target.parent();
+        var $pptarget = $ptarget.parent();
+
+        if(!$target.is(this.$el) && !$ptarget.is(this.$el) && !$pptarget.is(this.$el)) {
             this.$el.removeClass('open');
             this.sub_open = false;
         }
     },
 
+    make_element: function(id, name, count) {
+        var attrs = {'data-id': id, href: '#'};
+        var text = (count) ? name + ' (' + count + ')' : name;
+        var text_element = $(this.make('a', attrs, text));
+
+        return $(this.make('li', {'data-id': id})).append(text_element);
+    },
+
     render: function() {
-        // TODO: how to handle selected, multiple selections?
-        // TODO: template?
         this.$el.find('ul').remove();
-        this.$el.append(this.make('ul'));
+        var $ul = $(this.make('ul'));
+        $ul.append(this.make_element(0, 'Category'));
         this.collection.each(_.bind(function(model) {
-            var a_attrs = {'data-id': model.get('id'), href: '#'};
-            this.$el.find('ul').append(
-                $(this.make('li', {'data-id': model.get('id')})).append(
-                    this.make('a', a_attrs, model.get('name') + ' (' + model.get('count') + ')')
-                )
-            );
+            if(model.get('parent') == 0) {
+                $ul.append(this.make_element(model.get('id'), model.get('name'), model.get('count')))
+            }
         }, this));
+        this.$el.append($ul);
 
         return this;
     }

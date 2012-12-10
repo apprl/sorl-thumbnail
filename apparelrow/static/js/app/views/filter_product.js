@@ -21,15 +21,14 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.filter_tabs = new App.Views.LookEditFilterTabs({model: this.search_product});
 
         // Individual filters for products
-        this.filter_category = new App.Views.FilterProductCategory({collection: this.facets.category});
+        this.filter_category = new App.Views.FilterProductCategory({collection: this.facets.category, el: '#product-filter-category'});
+        this.filter_subcategory = new App.Views.FilterProductSubCategory({collection: this.facets.category, el: '#product-filter-subcategory'});
 
         this.filter_color = new App.Views.FilterProductColor({collection: this.facets.color});
         this.filter_color.render();
 
         this.filter_price = new App.Views.FilterProductPrice({collection: this.facets.price});
         this.filter_price.render();
-
-        this.$el.find('.sub-filters').append(this.filter_category.el, this.filter_color.el, this.filter_price.el);
 
         // Initial fetch of products and facets
         this.facets.fetch({data: this.search_product.toJSON()});
@@ -71,7 +70,8 @@ App.Views.FilterProduct = Backbone.View.extend({
     },
 
     render: function() {
-        this.filter_category.setElement(this.$('#product-filter-category')).render();
+        this.filter_category.render();
+        this.filter_subcategory.render();
     }
 
 });
