@@ -8,6 +8,16 @@
 <!--<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/smoothness/jquery-ui.css" rel="stylesheet" />-->
 {% endblock %}
 
+{% block header %}
+
+    <div id="header" class="small">
+        <div id="inner-header">
+            {% include 'apparel/shared_header.html' %}
+        </div>
+    </div>
+
+{% endblock %}
+
 {% block body-classes %}look-editor{% endblock %}
 {% block body %}
 

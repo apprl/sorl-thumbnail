@@ -109,48 +109,17 @@
 </head>
 <body class="{% block body-classes %}{% endblock %}">
 
- <div id="outer">
+<div id="outer">
+    {% block header %}
     <div id="header">
         <div id="inner-header">
-            <a class="page-logo" href="{% if request.user.is_authenticated %}{% url user_feed %}{% else %}{% url public_feed %}{% endif %}">
-                <img src="{% static "images/logo.png" %}" alt="Apprl">
-            </a>
+
+            {% include 'apparel/shared_header.html' %}
 
             <form action="/apparel/search" method="get" onSubmit="return false" id="search" autocomplete="off">
                 <input type="text" name="s" placeholder="{% trans 'Search for products' %}" />
                 <a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>
             </form>
-
-            <ul id="nav-main">
-                <li><a class="{% selected_url request "/" "/all" %}" href="{% if request.user.is_authenticated %}{% url user_feed %}{% else %}{% url public_feed %}{% endif %}">{% trans "Newsfeed" %}</a></li>
-                <li><a class="{% selected_url request "/shop" "/products" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
-                <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
-                <li class="subnav-handle">
-                    <a class="{% selected_url request "/users" "/brand" "/profile" %}" href="{% url user-list-popular %}">{% trans "Follow" %}</a>
-                    <ul class="subnav" id="subnav-follow">
-                        <li><a href="{% url user-list-popular %}">{% trans "Members" %}</a></li>
-                        <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
-                    </ul>
-                </li>
-            </ul>
-
-            <ul id="nav-user">
-                {% if not request.user.is_authenticated %}
-                <li class="user facebook">{% apparel_facebook_button %}</li>
-                {% else %}
-                <li class="avatar"><a href="{{ request.user.get_profile.url_likes }}"><img src="{{ request.user.get_profile.avatar_small }}" width="32" height="32"></a></li>
-                <li class="user subnav-handle">
-                    <a class="{% selected_url request "/profile/settings" "/profile/"|add:request.user.get_profile.slug %}" href="{{ request.user.get_profile.url_likes }}">{{ request.user.get_profile.display_name }}</a>
-                    <ul class="subnav" id="subnav-profile">
-                        <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Your profile" %}</a></li>
-                        <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
-                        <li><a href="{% url look-create %}">{% trans "+ Create look" %}</a>
-                        <li><a href="{% url profile.views.settings_notification %}">{% trans "Settings" %}</a></li>
-                        <li><a href="{% url auth_logout %}">{% trans "Log out" %}</a></li>
-                    </ul>
-                </li>
-                {% endif %}
-            </ul>
 
             <ul id="nav-global">
                 <li class="gender subnav-gray-handle">
@@ -211,6 +180,7 @@
             <div id="search-result-clear" class="clear"></div>
         </div>
     </div>
+    {% endblock header %}
 
     <div id="container">
 
