@@ -75,16 +75,17 @@
     </script>
 
     <script type="text/template" id="temporary_image_form_template">
+        <div class="loading" style="display:none;">
+            <span>{% trans "Uploading image" %}</span> <img src="{% static "images/loading_white.gif" %}">
+        </div>
         <form enctype="multipart/form-data" action="{% url temporary-image %}" method="POST" id="temporaryimage">
             {% csrf_token %}
-            <div class="look-empty"{% if object.image %} style="display: none"{% endif %}>
+            <div class="look-empty">
                 <p>{% trans "Upload a photo to create a tagged image" %}</p>
-                <div class="message">
-                    <div class="upload-field">
-                        <span><input type="file" name="image_file"></span>
-                    </div>
-                    <button type="submit">{% trans "Upload" %}</button>
+                <div class="upload-field">
+                    <span><input type="file" name="image_file"></span>
                 </div>
+                <button type="submit">{% trans "Upload" %}</button>
             </div>
         </form>
     </script>
