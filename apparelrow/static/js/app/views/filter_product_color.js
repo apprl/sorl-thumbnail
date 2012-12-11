@@ -1,34 +1,79 @@
 App.Views.FilterProductColor = Backbone.View.extend({
 
-    tagName: 'select',
-
     events: {
-        'change': 'update',
+        'click > a': 'open',
+        'click li': 'select'
     },
 
     initialize: function(options) {
         this.collection.on('reset', this.render, this);
-        this.render();
+        this.sub_open = false;
+
+        $(document).on('click', _.bind(this.close, this));
+    },
+
+    select: function(e) {
+        var color_id = $(e.target).addClass('selected').data('id');
+        var color = this.collection.get(color_id);
+
+        App.Events.trigger('product:facet', {type: 'color', value: color_id});
+
+        if(!color) {
+            this.$el.find('span').text(this.$el.find('a').data('default-name'));
+        } else {
+            this.$el.find('span').text(color.get('name'));
+        }
+    },
+
+    open: function(e) {
+        if(this.sub_open) {
+            this.$el.removeClass('open');
+        } else {
+            this.$el.addClass('open');
+        }
+        this.sub_open = !this.sub_open;
+
+        e.preventDefault();
+    },
+
+    close: function(e) {
+        var $target = $(e.target);
+        var $ptarget = $target.parent();
+        var $pptarget = $ptarget.parent();
+
+        if(!$target.is(this.$el) && !$ptarget.is(this.$el) && !$pptarget.is(this.$el)) {
+            this.$el.removeClass('open');
+            this.sub_open = false;
+        }
+    },
+
+    make_element: function(id, name, count) {
+        if(id <= 0) {
+            var class_name = 'no-color'
+        } else {
+            var class_name = name;
+        }
+        var attrs = {'data-id': id, href: '#', 'class': class_name};
+        var text = (count) ? name + ' (' + count + ')' : name;
+        var text_element = $(this.make('a', attrs, text));
+
+        if(count <= 0) {
+            text_element.addClass('filtered')
+        }
+
+        return $(this.make('li', {'data-id': id})).append(text_element);
     },
 
     render: function() {
-        var category_id = this.$el.find('option:selected').val();
-        this.$el.empty();
-        this.$el.append(this.make('option', {value: 0}, 'COLOR'));
+        this.$el.find('ul').remove();
+        var $ul = $(this.make('ul'));
+        $ul.append(this.make_element(0, 'Color'));
         this.collection.each(_.bind(function(model) {
-            var option_el = this.make('option', {value: model.get('id')}, model.get('name') + ' ' + model.get('count'));
-            if(model.get('id') == category_id) {
-                option_el.selected = 'selected';
-            }
-            this.$el.append(option_el);
+            $ul.append(this.make_element(model.get('id'), model.get('name'), model.get('count')))
         }, this));
+        this.$el.append($ul);
 
         return this;
-    },
-
-    update: function() {
-        var oid = this.$el.find('option:selected').val();
-        App.Events.trigger('product:facet', {type: 'color', value: oid});
     }
 
 });

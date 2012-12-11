@@ -151,8 +151,16 @@ class ProductList(View):
         if 'color' in facet:
             ids = map(int, facet['color'][::2])
             values = map(int, facet['color'][1::2])
+            colors = dict(zip(ids, values))
 
-            result.update(color=[{'id': oid, 'count': count, 'name': options[oid]} for oid, count in zip(ids, values)])
+            color_result = []
+            for key, value in options.items():
+                count = colors[key] if key in colors else 0
+                color_result.append({'id': key,
+                                     'count': count,
+                                     'name': value})
+
+            result.update(color=color_result)
 
         # Calculate category
         if 'category' in facet:

@@ -284,11 +284,10 @@ body.look-editor
           float: left
           z-index: 1000
           min-width: 120px
-          padding: 5px
+          padding: 10px
           margin-top: 13px
           background-color: $white_color
           +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 10px)
-          &#product-
           li
             text-align: left
             a
@@ -302,6 +301,187 @@ body.look-editor
 
     #product-filter-subcategory
       display: none
+
+    #product-filter-color ul
+      height: 140px
+      li
+        background: none
+        border: none
+        padding: 0
+        height: $color_height
+        $offset_top: 30px
+        a:not(.no-color)
+          $y_selected: -$color_height
+          $y_filtered: -$color_height + $y_selected
+          +replace-text(unquote("sprite-colors.png"))
+          padding: 0
+          width: $color_width
+          height: $color_height
+          position: absolute
+          &.black
+            background-position: 0 0
+            top: $offset_top
+            left: 10px
+            &.selected
+              background-position: 0 $y_selected
+            &.filtered
+              background-position: 0 $y_filtered
+          &.grey
+            $x: -$color_width
+            background-position: $x top
+            top: $offset_top
+            left: ($color_width + $color_column_offset) * 1 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.white
+            $x: -$color_width * 2
+            background-position: $x top
+            top: $offset_top
+            left: ($color_width + $color_column_offset) * 2 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.beige
+            $x: -$color_width * 3
+            background-position: $x top
+            top: $offset_top
+            left: ($color_width + $color_column_offset) * 3 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.brown
+            $x: -$color_width * 4
+            background-position: $x top
+            top: $offset_top
+            left: ($color_width + $color_column_offset) * 4 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+
+          &.red
+            $x: -$color_width * 5
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 1 + $offset_top
+            left: 10px
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.orange
+            $x: -$color_width * 6
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 1 + $offset_top
+            left: ($color_width + $color_column_offset) * 1 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.yellow
+            $x: -$color_width * 7
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 1 + $offset_top
+            left: ($color_width + $color_column_offset) * 2 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.green
+            $x: -$color_width * 8
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 1 + $offset_top
+            left: ($color_width + $color_column_offset) * 3 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.blue
+            $x: -$color_width * 9
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 1 + $offset_top
+            left: ($color_width + $color_column_offset) * 4 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+
+          &.magenta
+            $x: -$color_width * 10
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 2 + $offset_top
+            left: 10px
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.pink
+            $x: -$color_width * 12
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 2 + $offset_top
+            left: ($color_width + $color_column_offset) * 1 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.purple
+            $x: -$color_width * 11
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 2 + $offset_top
+            left: ($color_width + $color_column_offset) * 2 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.gold
+            $x: -$color_width * 13
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 2 + $offset_top
+            left: ($color_width + $color_column_offset) * 3 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.silver
+            $x: -$color_width * 14
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 2 + $offset_top
+            left: ($color_width + $color_column_offset) * 4 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+
+          &.striped
+            $x: -$color_width * 15
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 3 + $offset_top
+            left: ($color_width + $color_column_offset) * 1 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.checkers
+            $x: -$color_width * 16
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 3 + $offset_top
+            left: ($color_width + $color_column_offset) * 2 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
+          &.dotted
+            $x: -$color_width * 17
+            background-position: $x top
+            top: ($color_height + $color_row_offset) * 3 + $offset_top
+            left: ($color_width + $color_column_offset) * 3 + 10
+            &.selected
+              background-position: $x $y_selected
+            &.filtered
+              background-position: $x $y_filtered
 
   #product-list
     margin-left: -20px
