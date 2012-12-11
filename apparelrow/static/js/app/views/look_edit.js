@@ -234,7 +234,7 @@ App.Views.LookEdit = Backbone.View.extend({
     render_image: function() {
         console.log('render image');
 
-        this.update_width();
+        this.update_sizes();
 
         if(this.model.has('image')) {
             this.temporary_image_view.$el.hide();
@@ -245,7 +245,7 @@ App.Views.LookEdit = Backbone.View.extend({
         }
     },
 
-    update_width: function() {
+    update_sizes: function() {
         if(this.model.has('image')) {
             var self = this;
             this.local_image = new Image();

@@ -70,6 +70,9 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.filter_subcategory.render();
         this.filter_color.render();
         this.filter_price.render();
+
+        var window_height = $(window).height();
+        $('#product-list').height(window_height - $('.product-list-container').offset().top - 40);
     }
 
 });

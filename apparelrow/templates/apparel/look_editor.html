@@ -43,7 +43,7 @@
                 <li><a class="tab-likes{% if request.user.is_authenticated %} selected{% endif%}"{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} href="#likes">{% trans "Your ♥" %}</a>
                 <li><a class="tab-all{% if not request.user.is_authenticated %} selected{% endif%}" href="#all">{% trans "All products" %}</a></li>
             </ul>
-            <div id="product-filter">
+            <div id="product-filter" class="group">
                 <div class="middle-filters">
                     <input type="search" name="q" placeholder="{% trans "Search for your product here.." %}">
                     <label><input type="radio" name="gender" value="W"{% if APPAREL_GENDER == 'W' %} checked{% endif %}> {% trans "Women" %}</label>
