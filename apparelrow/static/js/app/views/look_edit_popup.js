@@ -3,7 +3,8 @@ App.Views.LookEditPopup = Backbone.View.extend({
     id: 'product-popup-container',
 
     events: {
-        'click': 'hide'
+        'click .product-popup-close': 'hide',
+        'click .btn-add': 'add'
     },
 
     initialize: function() {
@@ -15,11 +16,24 @@ App.Views.LookEditPopup = Backbone.View.extend({
     show: function(model) {
         console.log('render a popup and show it for product with id', model.id);
 
+        $(document).on('click.popup', _.bind(function(e) {
+            if($(e.target).closest('#product-popup-container').length == 0) {
+                this.hide();
+            }
+        }, this));
+
+        this.model = model;
         this.render(model.id);
     },
 
     hide: function() {
+        $(document).off('click.popup');
         this.$el.remove();
+    },
+
+    add: function() {
+        console.log('add lol', this.model);
+        App.Events.trigger('look_edit:product:add', this.model);
     },
 
     render: function(id) {

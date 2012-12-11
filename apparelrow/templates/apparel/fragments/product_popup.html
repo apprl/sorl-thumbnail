@@ -1,0 +1,69 @@
+{% load i18n thumbnail comments apparel_extras buy_extras cache thumbnail_extras %}
+
+<div class="product-header">
+    {% if object.manufacturer.profile %}
+    <h1><a href="{{ object.manufacturer.profile.get_absolute_url }}">{{ object.manufacturer }}</a></h1>
+    {% else %}
+    <h1>{{ object.manufacturer }}</h1>
+    {% endif %}
+    {% if object.product_name %}<h2 class="lowercase">{{ object.product_name }}</h2>{% endif %}
+
+    <a class="product-popup-close" href="#">Close</a>
+</div>
+
+<div class="product-container">
+
+    <div class="product-image">
+        {% thumbnail object.product_image "224x291" crop=False as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" style="margin:{{ im|positive_margin:'224x291' }}">
+        {% endthumbnail %}
+        <a class="product-like heart{% if user|likes_product:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-product %}" data-like-url="{% url product-action object.id 'like' %}" data-unlike-url="{% url product-action object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"></a>
+    </div>
+
+    {% cache CACHE_TIMEOUT product_popup object.id LANGUAGE_CODE %}
+    <div class="product-info">
+        <div class="breadcrumb">
+        <a href="{% gender_url object.gender 'shop' %}">{% trans object.get_gender_display %}</a> \
+        {% for category in object.categories %}
+        {% if forloop.first %}
+        <a href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">{{ category }}</a>
+        {% else %}
+        \ <a href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">{{ category }}</a>
+        {% endif %}
+        {% endfor %}
+        {% with object.categories|last as last_category %}
+        \ <a href="{% gender_url object.gender 'shop' %}#category={{ last_category.id }}&manufacturer={{ object.manufacturer.id }}">{{ object.manufacturer }}</a>
+        {% endwith %}
+        </div>
+        <p class="bodycopy description">{{ object.description }}</p>
+        <div class="product-vendors group">
+            <div class="product-vendor">
+                <div class="computed-price">
+                    {% if object.default_vendor.locale_discount_price %}
+                    <span class="discount-price price">{{ object.default_vendor.locale_discount_price|floatformat:0|apprl_intcomma }}</span>
+                    {% endif %}
+                    <span class="price"{% if object.default_vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.default_vendor.locale_price|floatformat:0|apprl_intcomma }}</span>
+                    <span class="currency">{{ object.default_vendor.locale_currency }}</span>
+                </div>
+                {% if object.default_vendor.locale_currency != object.default_vendor.original_currency %}
+                <div class="original-price">
+                    {% if object.default_vendor.locale_discount_price %}
+                    <span class="discount-price price">{{ object.default_vendor.original_discount_price|floatformat:0|apprl_intcomma }}</span>
+                    {% endif %}
+                    <span class="price"{% if object.default_vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }}</span>
+                    <span class="currency">{{ object.default_vendor.original_currency }}</span>
+                </div>
+                {% endif %}
+            </div>
+            <a href="#" class="btn btn-upper btn-positive btn-add">{% trans "Add to look" %}</a>
+        </div>
+
+        {% if object.original_currency_list %}
+        <div class="product-original-currency">
+            {% blocktrans with object.original_currency_list|join:", " as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}
+        </div>
+        {% endif %}
+    </div>
+    {% endcache %}
+
+</div>

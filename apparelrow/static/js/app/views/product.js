@@ -19,15 +19,15 @@ App.Views.Product = Backbone.View.extend({
     },
 
     info: function(e) {
-        e.preventDefault();
-
         App.Events.trigger('look_edit:product:info', this.model);
+
+        return false;
     },
 
     add: function(e) {
-        e.preventDefault();
-
         App.Events.trigger('look_edit:product:add', this.model);
+
+        return false;
     },
 
     render: function() {
