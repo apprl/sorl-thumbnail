@@ -180,15 +180,23 @@ button
   width: 100%
   min-width: 1000px
   &.small
+    min-width: 1162px
     height: 45px
     #inner-header
       height: 45px
+      width: auto
       .page-logo
         top: 10px
       #nav-main, #nav-user
         top: 1px
       #nav-user
         right: 20px
+      .subnav
+        right: -5px
+        left: auto
+        &:before
+          right: 5px
+          left: auto
   #inner-header
     width: 940px
     height: 118px

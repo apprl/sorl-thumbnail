@@ -25,16 +25,15 @@
 
         <div class="body-header">
             <h1>{% if object %}{% trans "Edit look" %}{% else %}{% trans "Create a new look" %}{% endif %}</h1>
-        </div>
-
-        <div class="button-container">
-            {% if object and object.slug %}
-            <button class="btn btn-upper btn-delete" name="look_delete">{% trans "Delete look" %}</button>
-            {% else %}
-            <button class="btn btn-upper btn-reset" name="look_reset">{% trans "Reset look" %}</button>
-            {% endif %}
-            <button class="btn btn-upper btn-save" name="look_save">{% trans "Save" %}</button>
-            <button class="btn btn-upper btn-positive btn-publish" name="look_publish">{% trans "Publish" %}</button>
+            <div class="button-container">
+                {% if object and object.slug %}
+                <button class="btn btn-upper btn-delete" name="look_delete">{% trans "Delete look" %}</button>
+                {% else %}
+                <button class="btn btn-upper btn-reset" name="look_reset">{% trans "Reset look" %}</button>
+                {% endif %}
+                <button class="btn btn-upper btn-save" name="look_save">{% trans "Save" %}</button>
+                <button class="btn btn-upper btn-positive btn-publish" name="look_publish">{% trans "Publish" %}</button>
+            </div>
         </div>
 
         <div id="edit-look"></div>
