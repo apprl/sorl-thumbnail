@@ -1,28 +1,69 @@
 App.Views.FilterProductPrice = Backbone.View.extend({
 
-    tagName: 'div',
-    className: 'price-filter',
-
     events: {
-        'change': 'update',
+        'click > a': 'open',
+        'click li': 'select'
     },
 
     initialize: function(options) {
         this.collection.on('reset', this.render, this);
-        this.render();
+        this.sub_open = false;
+
+        $(document).on('click', _.bind(this.close, this));
+    },
+
+    select: function(e) {
+        var category_id = $(e.target).addClass('selected').data('id');
+        var category = this.collection.get(category_id);
+
+        App.Events.trigger('product:facet', {type: 'price', value: category_id});
+
+        if(!category) {
+            this.$el.find('span').text(this.$el.find('a').data('default-name'));
+        } else {
+            this.$el.find('span').text(category.get('name'));
+        }
+    },
+
+    open: function(e) {
+        if(this.sub_open) {
+            this.$el.removeClass('open');
+        } else {
+            this.$el.addClass('open');
+        }
+        this.sub_open = !this.sub_open;
+
+        e.preventDefault();
+    },
+
+    close: function(e) {
+        var $target = $(e.target);
+        var $ptarget = $target.parent();
+        var $pptarget = $ptarget.parent();
+
+        if(!$target.is(this.$el) && !$ptarget.is(this.$el) && !$pptarget.is(this.$el)) {
+            this.$el.removeClass('open');
+            this.sub_open = false;
+        }
+    },
+
+    make_element: function(id, name, count) {
+        var attrs = {'data-id': id, href: '#'};
+        var text_element = $(this.make('a', attrs, name));
+
+        return $(this.make('li', {'data-id': id})).append(text_element);
     },
 
     render: function() {
-        var price_model = this.collection.at(0);
-        if(price_model) {
-            this.$el.text(price_model.get('min') + ', ' + price_model.get('max'));
-        }
+        this.$el.find('ul').remove();
+        var $ul = $(this.make('ul'));
+        $ul.append(this.make_element(0, 'No price'));
+        this.collection.each(_.bind(function(model) {
+            $ul.append(this.make_element(model.get('id'), model.get('name'), model.get('count')))
+        }, this));
+        this.$el.append($ul);
 
         return this;
-    },
-
-    update: function() {
-        App.Events.trigger('product:facet', {type: 'price', value: '0,100000'});
     }
 
 });

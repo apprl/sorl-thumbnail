@@ -276,13 +276,17 @@ body.look-editor
             background-position: 8px center
         &.open ul
           display: block
+        &.left
+          ul
+            left: 0
+            right: auto
         ul
           display: none
           position: absolute
           top: 100%
-          left: 0
+          right: 0
           float: left
-          z-index: 1000
+          z-index: 10000
           min-width: 120px
           padding: 10px
           margin-top: 13px
