@@ -152,6 +152,11 @@ App.Views.LookEdit = Backbone.View.extend({
         this.model.backend = 'client';
         this.model.save();
 
+        // If model look type is photo, disable product filter on reset
+        if(this.model.look_type == 'photo') {
+            App.Events.trigger('product:disable');
+        }
+
         this.render();
     },
 
@@ -243,6 +248,8 @@ App.Views.LookEdit = Backbone.View.extend({
         this.update_sizes();
 
         if(this.model.has('image')) {
+            // Enable product on image
+            App.Events.trigger('product:enable');
             this.temporary_image_view.$el.hide();
             this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');
         } else {

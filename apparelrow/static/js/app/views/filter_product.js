@@ -1,6 +1,6 @@
 App.Views.FilterProduct = Backbone.View.extend({
 
-    el: '#product-filter',
+    el: '#product-chooser',
 
     events: {
         'change input[name="q"]': 'filter',
@@ -10,12 +10,16 @@ App.Views.FilterProduct = Backbone.View.extend({
     },
 
     initialize: function(options) {
-        this.product_filter_model = options.product_filter_model;
-        this.facets = options.facet_container;
-        this.products = options.products;
+        // Update facet on product filter model change
+        this.product_filter_model = new App.Models.ProductFilter();
+        this.product_filter_model.on('change', this.update_facet, this);
 
-        // Update filters when search product model changes
-        this.product_filter_model.on('change', this.update, this);
+        // Product collection and view
+        this.products = new App.Collections.Products();
+        this.product_list = new App.Views.Products({collection: this.products, filter: this.product_filter_model});
+
+        // Facets
+        this.facets = new App.Models.FacetContainer();
 
         // Filter tabs
         this.filter_tabs = new App.Views.LookEditFilterTabs({model: this.product_filter_model});
@@ -29,9 +33,43 @@ App.Views.FilterProduct = Backbone.View.extend({
         // Initial fetch of products and facets
         this.facets.fetch({data: this.product_filter_model.toJSON()});
         this.products.fetch({data: this.product_filter_model.toJSON()});
+
+        // Product chooser enable / disable
+        App.Events.on('product:enable', this.enable, this);
+        App.Events.on('product:disable', this.disable, this);
+
+        $(window).on('resize', _.bind(this.update_size, this));
+
+        this.render();
     },
 
-    update: function(e) {
+    disable: function() {
+        var width = this.$el.outerWidth(true),
+            height = this.$el.outerHeight(true);
+
+        overlay_css = {
+            'width': width,
+            'height': height,
+            'position': 'absolute',
+            'top': 0,
+            'left': 0
+        };
+
+        this.$overlay = $(this.make('div', {}));
+        this.$overlay.css(overlay_css);
+
+        this.$el.append(this.$overlay);
+        this.$el.css('opacity', 0.3);
+    },
+
+    enable: function() {
+        if(this.$overlay) {
+            this.$overlay.remove();
+            this.$el.css('opacity', 1);
+        }
+    },
+
+    update_facet: function(e) {
         this.facets.fetch({data: this.product_filter_model.toJSON()});
     },
 
@@ -71,8 +109,26 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.filter_color.render();
         this.filter_price.render();
 
-        var window_height = $(window).height();
-        $('#product-list').height(window_height - $('.product-list-container').offset().top - 40);
+
+        this.update_size();
+    },
+
+    update_size: function() {
+        // TODO: 40 offset?
+        var window_height = $(window).height(),
+            new_height = window_height - this.$el.find('.product-list-container').offset().top - 40;
+
+        if(new_height < 220) {
+            new_height = 220;
+        }
+
+        // Update product list height
+        this.product_list.$el.height(new_height);
+
+        // If overlay is active update height
+        if(this.$overlay) {
+            this.$overlay.css('height', this.$el.outerHeight(true));
+        }
     }
 
 });

@@ -1,12 +1,6 @@
 jQuery(document).ready(function() {
-    window.product_filter_model = new App.Models.ProductFilter();
-    window.products = new App.Collections.Products();
-    window.facet_container = new App.Models.FacetContainer();
-    window.product_list = new App.Views.Products({collection: products, filter: product_filter_model});
-    window.filter_product = new App.Views.FilterProduct({product_filter_model: product_filter_model,
-                                                         products: products,
-                                                         facet_container: facet_container});
-    filter_product.render();
+    // Product filter view
+    window.filter_product_view = new App.Views.FilterProduct();
 
     // Look edit view
     window.look_model = new App.Models.Look();
@@ -25,6 +19,8 @@ jQuery(document).ready(function() {
 
         create_photo: function() {
             console.log('photo');
+
+            filter_product_view.disable();
         },
 
         create_collage: function() {

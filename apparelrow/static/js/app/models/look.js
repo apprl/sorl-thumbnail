@@ -26,6 +26,8 @@ window.App.Models.Look = Backbone.Model.extend({
             this.set('id', external_look_type, {silent: true});
         }
 
+        this.look_type = external_look_type;
+
         // Warn user before leaving page with unsaved changes
         // TODO: implement auto size
         $(window).on('beforeunload', _.bind(function(e) {
@@ -33,19 +35,6 @@ window.App.Models.Look = Backbone.Model.extend({
                 return 'You have unsaved changes';
             }
         }, this));
-    },
-
-    validate: function(attributes) {
-        console.log('validate', attributes);
-        //if(!attributes.hasOwnProperty('title') || !attributes.title) {
-            //return 'title is required';
-        //}
-
-        //if(attributes.component == 'P') {
-            //if (!attributes.hasOwnProperty('image') || !attributes.image) {
-                //return 'image must be set before a save can take place in a photo look';
-            //}
-        //}
     },
 
     parse: function(response) {
