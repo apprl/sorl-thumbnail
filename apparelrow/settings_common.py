@@ -243,7 +243,7 @@ PIPELINE_JS = {
                              'js/vendor/jquery.fileupload.js',
                              'js/jquery/jquery.ui.rotatable.js',
                              'js/app/main.js',
-                             'js/app/models/search_product.js',
+                             'js/app/models/product_filter.js',
                              'js/app/models/facet.js',
                              'js/app/models/product.js',
                              'js/app/models/facet_container.js',

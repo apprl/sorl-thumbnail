@@ -10,15 +10,15 @@ App.Views.FilterProduct = Backbone.View.extend({
     },
 
     initialize: function(options) {
-        this.search_product = options.search_product;
+        this.product_filter_model = options.product_filter_model;
         this.facets = options.facet_container;
         this.products = options.products;
 
         // Update filters when search product model changes
-        this.search_product.on('change', this.update, this);
+        this.product_filter_model.on('change', this.update, this);
 
         // Filter tabs
-        this.filter_tabs = new App.Views.LookEditFilterTabs({model: this.search_product});
+        this.filter_tabs = new App.Views.LookEditFilterTabs({model: this.product_filter_model});
 
         // Individual filters for products
         this.filter_category = new App.Views.FilterProductCategory({collection: this.facets.category, el: '#product-filter-category'});
@@ -27,12 +27,12 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.filter_price = new App.Views.FilterProductPrice({collection: this.facets.price, el: '#product-filter-price'});
 
         // Initial fetch of products and facets
-        this.facets.fetch({data: this.search_product.toJSON()});
-        this.products.fetch({data: this.search_product.toJSON()});
+        this.facets.fetch({data: this.product_filter_model.toJSON()});
+        this.products.fetch({data: this.product_filter_model.toJSON()});
     },
 
     update: function(e) {
-        this.facets.fetch({data: this.search_product.toJSON()});
+        this.facets.fetch({data: this.product_filter_model.toJSON()});
     },
 
     timed_filter: function(e) {
@@ -49,17 +49,17 @@ App.Views.FilterProduct = Backbone.View.extend({
     filter: function(e) {
         var attr = e.currentTarget.name,
             value = e.currentTarget.value,
-            currentValue = this.search_product.get(attr);
+            currentValue = this.product_filter_model.get(attr);
 
         if(value == '') {
-            this.search_product.unset(attr);
+            this.product_filter_model.unset(attr);
             e.preventDefault();
             return;
         }
 
         // TODO: fix for click on empty search input field
         if(!(value || currentValue) || value != currentValue) {
-            this.search_product.set(attr, value);
+            this.product_filter_model.set(attr, value);
         }
 
         e.preventDefault();

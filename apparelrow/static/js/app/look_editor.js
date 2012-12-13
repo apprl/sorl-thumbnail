@@ -1,9 +1,9 @@
 jQuery(document).ready(function() {
-    window.search_product = new App.Models.SearchProduct();
+    window.product_filter_model = new App.Models.ProductFilter();
     window.products = new App.Collections.Products();
     window.facet_container = new App.Models.FacetContainer();
-    window.product_list = new App.Views.Products({collection: products, filter: search_product});
-    window.filter_product = new App.Views.FilterProduct({search_product: search_product,
+    window.product_list = new App.Views.Products({collection: products, filter: product_filter_model});
+    window.filter_product = new App.Views.FilterProduct({product_filter_model: product_filter_model,
                                                          products: products,
                                                          facet_container: facet_container});
     filter_product.render();
