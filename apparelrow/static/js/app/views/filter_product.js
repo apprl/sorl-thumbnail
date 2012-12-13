@@ -44,28 +44,33 @@ App.Views.FilterProduct = Backbone.View.extend({
     },
 
     disable: function() {
-        var width = this.$el.outerWidth(true),
-            height = this.$el.outerHeight(true);
+        if(!this.disabled_view) {
+            var width = this.$el.outerWidth(true),
+                height = this.$el.outerHeight(true);
 
-        overlay_css = {
-            'width': width,
-            'height': height,
-            'position': 'absolute',
-            'top': 0,
-            'left': 0
-        };
+            overlay_css = {
+                'width': width,
+                'height': height,
+                'position': 'absolute',
+                'top': 0,
+                'left': 0
+            };
 
-        this.$overlay = $(this.make('div', {}));
-        this.$overlay.css(overlay_css);
+            this.$overlay = $(this.make('div', {}));
+            this.$overlay.css(overlay_css);
 
-        this.$el.append(this.$overlay);
-        this.$el.css('opacity', 0.3);
+            this.$el.append(this.$overlay);
+            this.$el.css('opacity', 0.3);
+
+            this.disabled_view = true;
+        }
     },
 
     enable: function() {
-        if(this.$overlay) {
+        if(this.disabled_view) {
             this.$overlay.remove();
             this.$el.css('opacity', 1);
+            this.disabled_view = false;
         }
     },
 
@@ -108,7 +113,6 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.filter_subcategory.render();
         this.filter_color.render();
         this.filter_price.render();
-
 
         this.update_size();
     },

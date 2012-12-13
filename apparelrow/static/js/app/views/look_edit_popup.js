@@ -40,6 +40,8 @@ App.Views.LookEditPopup = Backbone.View.extend({
         $(document).off('click.popup');
         this.$el.remove();
 
+        App.Events.trigger('product:enable');
+
         return false;
     },
 
@@ -52,22 +54,25 @@ App.Views.LookEditPopup = Backbone.View.extend({
     },
 
     render_info: function() {
+        App.Events.trigger('product:disable');
+
         this.delegateEvents();
+
 
         var chooser = $('#product-chooser');
         var offset = chooser.offset()
 
         this.$el.empty();
         this.$el.css({left: offset.left + 20,
-                      top: offset.top,
-                      width: chooser.width() - 20,
-                      height: 3 * ($('#product-tabs').outerHeight(true) + $('#product-filter').outerHeight(true))});
+                      top: offset.top});
         // TODO: loader icon
         this.$el.load('/products/' + this.model.get('id') + '/popup/');
         $('body').append(this.el);
     },
 
     render_add: function() {
+        App.Events.trigger('product:disable');
+
 
         console.log('render _addd');
         var chooser = $('#product-chooser');
@@ -77,9 +82,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
         this.$el.html(this.template(this.model.toJSON()));
         this.$el.css({left: offset.left + 20,
-                      top: offset.top,
-                      width: chooser.width() - 20,
-                      height: $('#product-tabs').outerHeight(true) + $('#product-filter').outerHeight(true) - 20});
+                      top: offset.top});
         $('body').append(this.el);
 
         this.delegateEvents();

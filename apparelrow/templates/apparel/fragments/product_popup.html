@@ -1,15 +1,5 @@
 {% load i18n thumbnail comments apparel_extras buy_extras cache thumbnail_extras %}
 
-<div class="product-header">
-    {% if object.manufacturer.profile %}
-    <h1><a href="{{ object.manufacturer.profile.get_absolute_url }}">{{ object.manufacturer }}</a></h1>
-    {% else %}
-    <h1>{{ object.manufacturer }}</h1>
-    {% endif %}
-    {% if object.product_name %}<h2 class="lowercase">{{ object.product_name }}</h2>{% endif %}
-    <a class="popup-close" href="#">Close</a>
-</div>
-
 <div class="product-container">
 
     <div class="product-image">
@@ -21,19 +11,7 @@
 
     {% cache CACHE_TIMEOUT product_popup object.id LANGUAGE_CODE %}
     <div class="product-info">
-        <div class="breadcrumb">
-        <a href="{% gender_url object.gender 'shop' %}">{% trans object.get_gender_display %}</a> \
-        {% for category in object.categories %}
-        {% if forloop.first %}
-        <a href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">{{ category }}</a>
-        {% else %}
-        \ <a href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">{{ category }}</a>
-        {% endif %}
-        {% endfor %}
-        {% with object.categories|last as last_category %}
-        \ <a href="{% gender_url object.gender 'shop' %}#category={{ last_category.id }}&manufacturer={{ object.manufacturer.id }}">{{ object.manufacturer }}</a>
-        {% endwith %}
-        </div>
+        <div class="breadcrumb">{{ object.manufacturer }} - {{ object.product_name }}</div>
         <p class="bodycopy description">{{ object.description }}</p>
         <div class="product-vendors group">
             <div class="product-vendor">
