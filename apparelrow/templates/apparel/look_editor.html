@@ -72,6 +72,11 @@
         </div>
     </div>
 
+    <script type="text/template" id="look_edit_add_popup_template">
+        <a href="#" class="popup-close">close</a>
+        <div class="center">{% trans "Click in your photo to add " %} <%=brand_name%> <%=product_name%></div>
+    </script>
+
     <script type="text/template" id="edit_look_template">
         <div class="look-container" id="<%= look_type %>"<% if(look_type == 'photo' && look.image) { %> style="background-image: url('<%= look.image %>');"<% } %>></div>
     </script>

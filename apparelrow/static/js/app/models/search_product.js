@@ -6,11 +6,16 @@ window.App.Models.SearchProduct = Backbone.Model.extend({
     },
 
     initialize: function() {
-        App.Events.on('product:facet', this.on_facet, this);
+        App.Events.on('product:facet', this.facet, this);
+        App.Events.on('product:reset', this.reset, this);
     },
 
-    // TODO: handle multiple selection of values
-    on_facet: function(data) {
+    reset: function() {
+        this.clear({silent: true});
+        this.set(this.defaults);
+    },
+
+    facet: function(data) {
         if(!data.value || data.value == 0 || data.value == '') {
             this.unset(data.type);
         } else {

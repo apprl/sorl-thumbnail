@@ -48,8 +48,6 @@ App.Views.LookEdit = Backbone.View.extend({
         var view_class = this.component_view_classes[external_look_type];
         var view = new view_class({model: model, collection: collection});
         this.$('.look-container').append(view.render().el);
-
-        //this.pending_component = model.cid;
     },
 
     add_components: function(collection) {
@@ -65,9 +63,16 @@ App.Views.LookEdit = Backbone.View.extend({
         this.model._dirty = true;
     },
 
+    add_product_to_component: function(component, product) {
+        component.set('product', product);
+
+        // Reset product selection
+        App.Events.trigger('product:reset');
+    },
+
     pending_add_component: function(product) {
         if(this.pending_component && this.model.has('image')) {
-            this.model.components.getByCid(this.pending_component).set('product', product);
+            this.add_product_to_component(this.model.components.getByCid(this.pending_component), product);
             this.pending_component = false;
         } else {
             this.pending_product = product;
@@ -83,8 +88,8 @@ App.Views.LookEdit = Backbone.View.extend({
                 left: Math.min(container_width, Math.max(0, e.offsetX - 40))};
     },
 
-    _create_photo_component: function(position, product) {
-        return new App.Models.LookComponent().set(_.extend({product: product, width: 80, height: 80}, position));
+    _create_photo_component: function(position) {
+        return new App.Models.LookComponent().set(_.extend({width: 80, height: 80}, position));
     },
 
     on_click: function(e) {
@@ -98,7 +103,8 @@ App.Views.LookEdit = Backbone.View.extend({
 
         if(this.pending_product) {
             // If pending product is active (a click has occured on a product add button)
-            var new_component = this._create_photo_component(this._get_hotspot(e), this.pending_product);
+            var new_component = this._create_photo_component(this._get_hotspot(e));
+            this.add_product_to_component(new_component, this.pending_product);
             this.model.components.add(new_component);
             this.pending_product = false;
         } else {
@@ -107,7 +113,7 @@ App.Views.LookEdit = Backbone.View.extend({
                 this.model.components.getByCid(this.pending_component).set(this._get_hotspot(e));
             } else {
                 // Else create a new pending component on touch/click position
-                var new_component = this._create_photo_component(this._get_hotspot(e), null);
+                var new_component = this._create_photo_component(this._get_hotspot(e));
                 this.model.components.add(new_component);
                 this.pending_component = new_component.cid;
             }
