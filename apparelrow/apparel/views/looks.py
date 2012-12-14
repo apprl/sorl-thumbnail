@@ -69,6 +69,8 @@ def look_instance_to_dict(look):
                     'slug': component.product.slug,
                     'image_small': get_thumbnail(component.product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
                     'image': get_thumbnail(component.product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
+                    'product_name': component.product.product_name,
+                    'brand_name': component.product.manufacturer.name
                 }
             })
 

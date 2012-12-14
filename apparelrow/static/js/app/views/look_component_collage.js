@@ -4,6 +4,15 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
 
     template: _.template($('#look_component_collage').html()),
 
+    info: function(e) {
+        if(this.model.has('product') && !$(e.target).is('.delete') && !this.$el.is('.ui-draggable-dragging')) {
+            // TODO: this.model.get('product') is not a real model
+            App.Events.trigger('look_edit:product:info', new App.Models.Product(this.model.get('product')));
+
+            return false;
+        }
+    },
+
     render: function() {
         this.$el.css({left: this.model.get('left'),
                       top: this.model.get('top'),
@@ -47,6 +56,10 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                 //console.log('save shit to model', ui.element, ui.rotation);
             //}
         //});
+
+        // TODO: cannot use backbone events because click event must bind after
+        // draggable events
+        this.$el.on('click', _.bind(this.info, this));
 
         return this;
     }
