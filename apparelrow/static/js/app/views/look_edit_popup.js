@@ -23,6 +23,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
     },
 
     product_info: function(model) {
+        this.active_type = 'info';
         this.show(model);
         this.render_info();
     },
@@ -31,6 +32,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
         // Do not show add product popup if we have a pending component waiting
         // for this click
         if(!this.parent_view.pending_component) {
+            this.active_type = 'add';
             this.show(model);
             this.render_add();
         }
@@ -47,6 +49,12 @@ App.Views.LookEditPopup = Backbone.View.extend({
     },
 
     hide: function() {
+        // If we hide product add popup, make sure we disable pending product also
+        if(this.active_type == 'add') {
+            this.parent_view.pending_product = false;
+            this.active_type = false;
+        }
+
         $(document).off('click.popup');
         this.$el.hide();
 
