@@ -99,6 +99,9 @@ $input_border_color: $highlight_border_color !default
   .product
     position: absolute
 
+#collage
+  border: 1px solid $easiest_color
+
 #collage, #photo-background, #photo
   .ui-wrapper
     position: absolute
@@ -110,7 +113,7 @@ $input_border_color: $highlight_border_color !default
     height: 22px
     width: 22px
     background: transparent image_url(unquote("delete.png")) no-repeat scroll center center
-    left: -11px
+    right: -11px
     top: -11px
   .ui-state-disabled, .ui-widget-content .ui-state-disabled
     -moz-box-shadow: none
@@ -655,6 +658,7 @@ body.look
 
 // Resizable
 .ui-icon-gripsmall-diagonal-se
+  position: absolute
   bottom: -11px
   right: -11px
   width: 23px
