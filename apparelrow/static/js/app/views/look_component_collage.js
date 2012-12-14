@@ -26,6 +26,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             minWidth: 50,
             stop: _.bind(function(event, ui) {
                 this.model.set({width: ui.size.width, height: ui.size.height}, {silent: true});
+                App.Events.trigger('look:dirty');
             }, this)
         });
 
@@ -34,6 +35,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             containment: $('.look-container'),
             stop: _.bind(function(event, ui) {
                 this.model.set({left: ui.position.left, top: ui.position.top}, {silent: true});
+                App.Events.trigger('look:dirty');
             }, this)
         });
 

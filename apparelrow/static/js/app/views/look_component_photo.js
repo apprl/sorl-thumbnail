@@ -19,6 +19,7 @@ App.Views.LookComponentPhoto = App.Views.LookComponent.extend({
             containment: $('.look-container'),
             stop: _.bind(function(event, ui) {
                 this.model.set({left: ui.position.left, top: ui.position.top}, {silent: true});
+                App.Events.trigger('look:dirty');
             }, this)
         });
 

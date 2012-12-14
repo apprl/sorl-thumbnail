@@ -35,6 +35,12 @@ window.App.Models.Look = Backbone.Model.extend({
                 return 'You have unsaved changes';
             }
         }, this));
+
+        App.Events.on('look:dirty', this.dirty, this);
+    },
+
+    dirty: function() {
+        this._dirty = true;
     },
 
     parse: function(response) {
