@@ -13,6 +13,8 @@ App.Views.FilterProduct = Backbone.View.extend({
         // Update facet on product filter model change
         this.product_filter_model = new App.Models.ProductFilter();
         this.product_filter_model.on('change', this.update_facet, this);
+        this.product_filter_model.on('change:gender', this.update_gender, this);
+        this.product_filter_model.on('change:q', this.update_search, this);
 
         // Product collection and view
         this.products = new App.Collections.Products();
@@ -71,6 +73,20 @@ App.Views.FilterProduct = Backbone.View.extend({
             this.$overlay.remove();
             this.$el.css('opacity', 1);
             this.disabled_view = false;
+        }
+    },
+
+    update_gender: function(model, value, options) {
+        var checked_element = this.$el.find('input:radio[name=gender]:checked');
+        if(checked_element.val() != value) {
+            checked_element.removeAttr('checked');
+            this.$el.find('input:radio[name=gender][value=' + value + ']').attr('checked', 'checked');
+        }
+    },
+
+    update_search: function(model, value, options) {
+        if(!value) {
+            this.$el.find('input[name=q]').val('');
         }
     },
 
