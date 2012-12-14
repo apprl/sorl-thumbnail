@@ -263,7 +263,7 @@ def get_product_document(instance):
         document['slug'] = instance.slug
         document['stored_price'] = '%s,%s' % (stored_price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
         document['stored_discount'] = '%s,%s' % (stored_discount.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
-        document['image_small'] = get_thumbnail(instance.product_image, '112x145', crop=False)
+        document['image_small'] = get_thumbnail(instance.product_image, '112x145', crop=False).url
         # Dates
         document['created'] = instance.date_added
 

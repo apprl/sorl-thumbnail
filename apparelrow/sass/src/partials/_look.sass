@@ -92,6 +92,16 @@ $input_border_color: $highlight_border_color !default
     .product-info
       margin-left: 20px
       margin-right: 0
+  .add-container
+    width: 330px
+    img, p
+      display: inline-block
+      vertical-align: middle
+    p
+      font-size: 1.3em
+      width: 90px
+      margin: 10px
+      text-align: center
 
 #photo, #collage
   height: $look_height
@@ -193,35 +203,13 @@ body.look-editor
     height: auto
     position: relative
 
-#body-header input
-  display: none
-
 #product-chooser, #edit-look
   +box-sizing(border-box)
-
-#edit-look-title
-  display: none
-  font-size: 23px
-  line-height: 23px
-  font-family: 'Lato', sans-serif
-  text-transform: uppercase
-  min-width: 200px
-  border: 1px solid black
 
 #edit-look
   width: 50%
   float: left
   position: relative
-  .look-description
-    margin-top: 20px
-    textarea
-      width: 100%
-      max-width: 100%
-      height: 80px
-      margin: 0
-      padding: 0
-      border: 1px solid black
-      +box-sizing(border-box)
   #photo
     cursor: pointer
 

@@ -87,7 +87,11 @@
     </script>
 
     <script type="text/template" id="look_edit_add_popup_template">
-        <div class="center">{% trans "Click in your photo to add " %} <%=brand_name%> <%=product_name%></div>
+        <div class="add-container group">
+            <img src="{% static "images/big-larrow.png" %}">
+            <p>{% trans "Click in photo to place item" %}</p>
+            <img src="<%= image_small %>">
+        </div>
     </script>
 
     <script type="text/template" id="edit_look_template">
@@ -122,7 +126,7 @@
     <script type="text/template" id="product_small_template">
         <div class="product-small product-container">
             <a class="image-small" href="#">
-                <img src="/media/<%= image_small %>">
+                <img src="<%= image_small %>">
             </a>
             <div class="hover">
                 <a class="btn btn-upper btn-block btn-info" href="#">{% trans "Info" %}</a>
