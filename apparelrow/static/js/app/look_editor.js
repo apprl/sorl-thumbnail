@@ -6,9 +6,6 @@ jQuery(document).ready(function() {
     window.look_model = new App.Models.Look();
     window.look_edit = new App.Views.LookEdit({model: look_model});
 
-    // Look editor popup
-    window.look_edit_popup = new App.Views.LookEditPopup();
-
     // Router
     App.Routers.LookEditor = Backbone.Router.extend({
         routes: {

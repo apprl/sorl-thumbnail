@@ -18,6 +18,9 @@ App.Views.LookEdit = Backbone.View.extend({
             'collage': App.Views.LookComponentCollage
         };
 
+        // Look editor popup
+        this.look_edit_popup = new App.Views.LookEditPopup({parent_view: this});
+
         this.initialize_temporary_image();
 
         // Model events and fetch model

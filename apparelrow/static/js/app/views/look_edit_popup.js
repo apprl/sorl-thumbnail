@@ -10,8 +10,8 @@ App.Views.LookEditPopup = Backbone.View.extend({
         'click .btn-add': 'add_product'
     },
 
-    initialize: function() {
-        this.active = false;
+    initialize: function(options) {
+        this.parent_view = options.parent_view;
 
         App.Events.on('look_edit:product:info', this.product_info, this);
         App.Events.on('look_edit:product:add', this.product_add, this);
@@ -28,8 +28,12 @@ App.Views.LookEditPopup = Backbone.View.extend({
     },
 
     product_add: function(model) {
-        this.show(model);
-        this.render_add();
+        // Do not show add product popup if we have a pending component waiting
+        // for this click
+        if(!this.parent_view.pending_component) {
+            this.show(model);
+            this.render_add();
+        }
     },
 
     show: function(model) {
