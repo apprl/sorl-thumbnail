@@ -60,7 +60,7 @@ App.Views.FilterProduct = Backbone.View.extend({
             this.$overlay.css(overlay_css);
 
             this.$el.append(this.$overlay);
-            this.$el.css('opacity', 0.3);
+            this.$el.css('opacity', 0.1);
 
             this.disabled_view = true;
         }

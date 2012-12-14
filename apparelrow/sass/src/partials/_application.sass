@@ -62,6 +62,34 @@ button
   zoom: 1 /* For IE 6/7 (trigger hasLayout) */
 
 
+#popup-slim
+  display: none
+  position: absolute
+  top: 50%
+  left: 50%
+  +single-box-shadow(rgba(0, 0, 0, 0.23), 0, 0, 10px)
+  z-index: 10099
+  .header
+    height: 40px
+    line-height: 40px
+    background-color: #000
+    h5
+      font-size: 1.3em
+      color: #fff
+      padding: 0 10px
+      float: left
+    .close
+      float: right
+      padding-right: 10px
+  .content-container
+    background-color: #fff
+    padding: 10px
+    .content
+      &.center
+        text-align: center
+    .loading
+      margin: 20px
+
 #content.fixed
   position: fixed
   top: 0

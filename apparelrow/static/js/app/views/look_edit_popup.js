@@ -1,11 +1,13 @@
 App.Views.LookEditPopup = Backbone.View.extend({
 
-    id: 'product-popup-container',
+    id: 'popup-slim',
     template: _.template($('#look_edit_add_popup_template').html()),
 
+    popup_template: _.template($('#popup_slim_template').html()),
+
     events: {
-        'click .popup-close': 'hide',
-        'click .btn-add': 'add'
+        'click .close': 'hide',
+        'click .btn-add': 'add_product'
     },
 
     initialize: function() {
@@ -13,6 +15,11 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
         App.Events.on('look_edit:product:info', this.product_info, this);
         App.Events.on('look_edit:product:add', this.product_add, this);
+
+        $(document).on('keydown', _.bind(function(e) { if(e.keyCode == 27) { this.hide() } }, this));
+
+        this.$el.html(this.popup_template());
+        $('body').append(this.$el);
     },
 
     product_info: function(model) {
@@ -29,8 +36,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
         this.model = model;
 
         $(document).on('click.popup', _.bind(function(e) {
-            console.log($(e.target), $(e.target).closest('#product-popup-container'));
-            if($(e.target).closest('#product-popup-container').length == 0) {
+            if($(e.target).closest('#popup-slim').length == 0) {
                 this.hide();
             }
         }, this));
@@ -38,17 +44,15 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
     hide: function() {
         $(document).off('click.popup');
-        this.$el.remove();
+        this.$el.hide();
 
         App.Events.trigger('product:enable');
 
         return false;
     },
 
-    add: function() {
+    add_product: function() {
         App.Events.trigger('look_edit:product:add', this.model);
-
-        this.render_add();
 
         return false;
     },
@@ -58,34 +62,50 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
         this.delegateEvents();
 
+        var url = '/products/' + this.model.get('id') + '/popup/';
+        this.$el.css('width', 594);
+        this.$el.find('.title').text('Product info');
+        var content = this.$el.find('.content');
+        content.empty();
+        content.html(_.template($('#look_edit_popup_loading').html())());
+        content.addClass('center');
+        content.load(url, _.bind(function() {
+            content.removeClass('center');
+            this._center();
+        }, this));
 
-        var chooser = $('#product-chooser');
-        var offset = chooser.offset()
-
-        this.$el.empty();
-        this.$el.css({left: offset.left + 20,
-                      top: offset.top});
-        // TODO: loader icon
-        this.$el.load('/products/' + this.model.get('id') + '/popup/');
-        $('body').append(this.el);
+        this._center();
+        this.$el.show();
     },
 
     render_add: function() {
         App.Events.trigger('product:disable');
 
-
-        console.log('render _addd');
-        var chooser = $('#product-chooser');
-        var offset = chooser.offset()
-
-        console.log(this.model);
-
-        this.$el.html(this.template(this.model.toJSON()));
-        this.$el.css({left: offset.left + 20,
-                      top: offset.top});
-        $('body').append(this.el);
-
         this.delegateEvents();
+
+        this.$el.find('.title').text('Add product');
+        this.$el.find('.content').html(this.template(this.model.toJSON()));
+        this._center();
+        this.$el.show();
+    },
+
+    _center: function(){
+        var width = this.$el.width();
+        var height = this.$el.height();
+        var chooser = $('#product-chooser');
+        var chooser_width = chooser.width();
+        var chooser_height = chooser.height();
+        var offset = chooser.offset();
+
+        var left = offset.left + 20 + (chooser_width / 2) - (width / 2);
+        if(left + width > $(window).width()) {
+            left = $(window).width() - width - 20;
+        }
+
+        this.$el.css({
+            'left': left,
+            'top': offset.top + (chooser_height / 2) - (height / 2)
+        });
     }
 
 });
