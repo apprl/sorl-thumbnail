@@ -35,10 +35,18 @@ App.Views.LookEdit = Backbone.View.extend({
         this.model.fetch({error: _.bind(function() { this.render(); }, this), success: _.bind(function() { this.render(); }, this)});
 
         // TODO: move this to another view or expand this view
-        $('.btn-reset').on('click', _.bind(this.look_reset, this));
-        $('.btn-delete').on('click', _.bind(this.look_delete, this));
-        $('.btn-save').on('click', _.bind(this.look_save, this));
-        $('.btn-publish').on('click', _.bind(this.look_publish, this));
+        $(document).on('click', '.btn-reset', _.bind(this.look_reset, this));
+        $(document).on('click', '.btn-delete', _.bind(this.look_delete, this));
+        $(document).on('click', '.btn-save', _.bind(this.look_save, this));
+        $(document).on('click', '.btn-publish', _.bind(this.look_publish, this));
+        $(document).on('click', '.btn-unpublish', _.bind(this.look_unpublish, this));
+
+        this.model.on('change:published', function(model, value, options) {
+            if(value === false) {
+                var $button = $('.btn-unpublish');
+                $button.text($button.data('publish-text')).addClass('btn-publish').removeClass('btn-unpublish');
+            }
+        }, this);
 
         // Listen on product add
         App.Events.on('look_edit:product:add', this.pending_add_component, this);
@@ -155,6 +163,13 @@ App.Views.LookEdit = Backbone.View.extend({
     look_publish: function() {
         this.model.set('published', true);
         this.look_edit_save_popup.show_publish();
+
+        return false;
+    },
+
+    look_unpublish: function() {
+        this.model.set('published', false);
+        this.model.save();
 
         return false;
     },

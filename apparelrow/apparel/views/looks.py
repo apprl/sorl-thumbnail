@@ -50,6 +50,7 @@ def look_instance_to_dict(look):
         'slug': look.slug,
         'component': look.component,
         'description': look.description,
+        'published': look.published,
     }
 
     if look.components:
