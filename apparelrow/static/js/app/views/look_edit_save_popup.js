@@ -21,7 +21,16 @@ App.Views.LookEditSavePopup = Backbone.View.extend({
 
     save_look: function() {
         // TODO: validate title (other fields here?)
-        this.model.set('title', this.$el.find('input[name=title]').val());
+        var $title_input = this.$el.find('input[name=title]'),
+            title_value = $title_input.val();
+
+        if (!title_value) {
+            $title_input.css('border', '1px solid #f00');
+
+            return false;
+        }
+
+        this.model.set('title', title_value);
         this.model.set('description', this.$el.find('textarea[name=description]').val());
 
         if(!isAuthenticated) {
