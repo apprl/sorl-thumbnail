@@ -18,6 +18,11 @@ App.Views.LookEdit = Backbone.View.extend({
             'collage': App.Views.LookComponentCollage
         };
 
+        // Popup dispatcher
+        this.popup_dispatcher = new App.Views.PopupDispatcher();
+        this.popup_dispatcher.add('dialog_reset', new App.Views.DialogReset());
+        this.popup_dispatcher.add('dialog_delete', new App.Views.DialogDelete());
+
         // Look editor popup
         this.look_edit_popup = new App.Views.LookEditPopup({parent_view: this});
         this.look_edit_save_popup = new App.Views.LookEditSavePopup({model: this.model});
@@ -47,6 +52,9 @@ App.Views.LookEdit = Backbone.View.extend({
                 $button.text($button.data('publish-text')).addClass('btn-publish').removeClass('btn-unpublish');
             }
         }, this);
+
+        // Render look edit view on custom look reset event
+        App.Events.on('look:reset', this.render, this);
 
         // Listen on product add
         App.Events.on('look_edit:product:add', this.pending_add_component, this);
@@ -140,24 +148,15 @@ App.Views.LookEdit = Backbone.View.extend({
      */
 
     look_reset: function() {
-        this.model.clear({silent: true});
-        this.model.set(_.clone(this.model.defaults), {silent: true});
-        this.model.components.reset([], {silent: true});
-        this.model._dirty = false;
-        this.model.backend = 'client';
-        this.model.save();
+        this.popup_dispatcher.show('dialog_reset');
 
-        // If model look type is photo, disable product filter on reset
-        if(this.model.look_type == 'photo') {
-            App.Events.trigger('product:disable');
-        }
-
-        this.render();
+        return false;
     },
 
     look_delete: function() {
-        this.model.destroy();
-        window.location.replace('/looks/');
+        this.popup_dispatcher.show('dialog_delete');
+
+        return false;
     },
 
     look_publish: function() {

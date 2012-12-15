@@ -37,10 +37,25 @@ window.App.Models.Look = Backbone.Model.extend({
         }, this));
 
         App.Events.on('look:dirty', this.dirty, this);
+        App.Events.on('look:reset', this.reset, this);
     },
 
     dirty: function() {
         this._dirty = true;
+    },
+
+    reset: function() {
+        this.clear({silent: true});
+        this.set(_.clone(this.defaults), {silent: true});
+        this.components.reset([], {silent: true});
+        this._dirty = false;
+        this.backend = 'client';
+        this.save();
+
+        // If model look type is photo, disable product filter on reset
+        if(this.look_type == 'photo') {
+            App.Events.trigger('product:disable');
+        }
     },
 
     parse: function(response) {

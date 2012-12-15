@@ -1,0 +1,30 @@
+App.Views.DialogDelete = Backbone.View.extend({
+
+    className: 'dialog-content group',
+    title: gettext('Delete look?'),
+    template: _.template($('#dialog_delete_template').html()),
+
+    events: {
+        'click .btn-yes': 'yes',
+        'click .btn-no': 'no'
+    },
+
+    no: function(e) {
+        App.Events.trigger('popup_dispatcher:hide');
+
+        return false;
+    },
+
+    yes: function(e) {
+        this.model.destroy();
+
+        window.location.replace('/looks/');
+    },
+
+    render: function() {
+        this.$el.html(this.template());
+
+        return this;
+    }
+
+});

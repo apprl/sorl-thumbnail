@@ -86,6 +86,22 @@ $input_border_color: $highlight_border_color !default
       font-style: italic
       color: $easier_color
       border: 0
+  .content
+    p
+      font-size: 1.2em
+    .dialog-content
+      width: 320px
+      a
+        display: inline-block
+        width: 155px
+        margin-top: 10px
+        &.btn-yes
+          float: right
+          margin-left: 10px
+        &.btn-no
+          float: left
+
+
   .product-container
     .product-image, .product-info
       float: left
@@ -115,10 +131,9 @@ $input_border_color: $highlight_border_color !default
       margin-top: 10px
       &.btn-cancel
         float: left
-        margin-right: 5px
+        margin-right: 10px
       &.btn-save, &.btn-publish
         float: right
-        margin-left: 5px
   .add-container
     width: 330px
     img, p
