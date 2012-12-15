@@ -72,6 +72,28 @@
         </div>
     </div>
 
+    <script type="text/template" id="save_look_template">
+        <label for="look_title">{% trans "Your look title" %}</label>
+        <input id="look_title" type="text" value="<%= title %>" name="title">
+
+        <label for="look_description">{% trans "Description" %}</label>
+        <textarea name="description" id="look_description"><%= description %></textarea>
+
+        <a href="#" class="btn btn-upper btn-block btn-cancel">{% trans "Cancel" %}</a>
+        <a href="#" class="btn btn-upper btn-block btn-positive btn-save">{% trans "Save" %}</a>
+    </script>
+
+    <script type="text/template" id="publish_look_template">
+        <label for="look_title">{% trans "Your look title" %}</label>
+        <input id="look_title" type="text" value="<%= title %>" name="title">
+
+        <label for="look_description">{% trans "Description" %}</label>
+        <textarea name="description" id="look_description"><%= description %></textarea>
+
+        <a href="#" class="btn btn-upper btn-block btn-cancel">{% trans "Cancel" %}</a>
+        <a href="#" class="btn btn-upper btn-block btn-positive btn-publish">{% trans "Publish" %}</a>
+    </script>
+
     <script type="text/template" id="popup_slim_template">
         <div class="header group">
             <h5 class="title"></h5>
