@@ -123,7 +123,7 @@ App.Views.LookEdit = Backbone.View.extend({
         // Load image to get width and height for look component
         var image = new Image();
         image.onload = function() {
-            component.set({width: this.width, height: this.height});
+            component.set({width: this.width / 1.5, height: this.height / 1.5});
             self.add_product_to_component(component, product);
             self.model.components.add(component);
         }
