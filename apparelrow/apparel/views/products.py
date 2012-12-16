@@ -205,7 +205,6 @@ class ProductList(View):
                                  'slug',
                                  'image_small',
                                  'image_medium',
-                                 'image_large',
                                  'discount',
                                  'availability']
 
