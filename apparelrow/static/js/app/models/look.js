@@ -13,8 +13,6 @@ window.App.Models.Look = Backbone.Model.extend({
     },
 
     initialize: function() {
-        console.log('look initialize');
-
         this._dirty = false;
         this.components = new App.Collections.LookComponents();
 
@@ -68,8 +66,6 @@ window.App.Models.Look = Backbone.Model.extend({
             this.components.reset(cloned_response.components, {silent: true});
             delete cloned_response.components;
 
-            console.log('parse look', cloned_response, response);
-
             return cloned_response;
         }
     },
@@ -78,13 +74,10 @@ window.App.Models.Look = Backbone.Model.extend({
         var json = _.clone(this.attributes);
         json.components = this.components.map(function(model) { return model.toJSON(); });
 
-        console.log('look toJSON', json);
-
         return json;
     },
 
     sync: function(method, model, options) {
-        console.log('look sync', method);
         if(this.backend == 'client') {
             var resp;
             var store = model.localStorage || model.collection.localStorage;

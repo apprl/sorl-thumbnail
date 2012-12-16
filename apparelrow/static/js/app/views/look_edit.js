@@ -75,8 +75,6 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     remove_component: function(model, collection) {
-        console.log('remove component', model, collection);
-
         // Reset pending component
         this.pending_component = false;
 
@@ -84,7 +82,9 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     add_product_to_component: function(component, product) {
-        component.set('product', product);
+        component.set('product', product.toJSON());
+
+        this.model._dirty = true;
 
         // Reset product selection
         App.Events.trigger('product:reset');
@@ -95,7 +95,13 @@ App.Views.LookEdit = Backbone.View.extend({
             this.add_product_to_component(this.model.components.getByCid(this.pending_component), product);
             this.pending_component = false;
         } else {
-            this.pending_product = product;
+            if(external_look_type == 'collage') {
+                var new_component = this._create_collage_component();
+                this.add_product_to_component(new_component, product);
+                this.model.components.add(new_component);
+            } else {
+                this.pending_product = product;
+            }
         }
     },
 
@@ -110,6 +116,10 @@ App.Views.LookEdit = Backbone.View.extend({
 
     _create_photo_component: function(position) {
         return new App.Models.LookComponent().set(_.extend({width: 80, height: 80}, position));
+    },
+
+    _create_collage_component: function() {
+        return new App.Models.LookComponent().set({width: 112, height: 145, top: 0, left: 0});
     },
 
     on_click: function(e) {

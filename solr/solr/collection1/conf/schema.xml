@@ -120,6 +120,8 @@
     <field name="stored_discount" type="currency" indexed="false" stored="true" multiValued="false"/>
     <field name="slug" type="string" indexed="false" stored="true" multiValued="false"/>
     <field name="image_small" type="string" indexed="false" stored="true" multiValued="false"/>
+    <field name="image_medium" type="string" indexed="false" stored="true" multiValued="false"/>
+    <field name="image_large" type="string" indexed="false" stored="true" multiValued="false"/>
 
     <!-- Dates -->
     <field name="created" type="date" indexed="true" stored="true" multiValued="false"/>

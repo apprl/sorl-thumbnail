@@ -30,8 +30,8 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
     product_add: function(model) {
         // Do not show add product popup if we have a pending component waiting
-        // for this click
-        if(!this.parent_view.pending_component) {
+        // for this click or if the look type is collage
+        if(!this.parent_view.pending_component && external_look_type == 'photo') {
             this.active_type = 'add';
             this.show(model);
             this.render_add();
