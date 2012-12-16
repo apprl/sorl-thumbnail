@@ -20,8 +20,8 @@ App.Views.LookEdit = Backbone.View.extend({
 
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
-        this.popup_dispatcher.add('dialog_reset', new App.Views.DialogReset());
-        this.popup_dispatcher.add('dialog_delete', new App.Views.DialogDelete());
+        this.popup_dispatcher.add('dialog_reset', new App.Views.DialogReset({model: this.model}));
+        this.popup_dispatcher.add('dialog_delete', new App.Views.DialogDelete({model: this.model}));
 
         // Look editor popup
         this.look_edit_popup = new App.Views.LookEditPopup({parent_view: this});
