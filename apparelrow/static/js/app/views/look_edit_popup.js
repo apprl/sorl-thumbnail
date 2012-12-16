@@ -77,7 +77,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
         var url = '/products/' + this.model.get('id') + '/popup/';
         // TODO: why this width?
         this.$el.css('width', 594);
-        this.$el.find('.title').text('Product info');
+        this.$el.find('.title').text(gettext('Product info'));
         var content = this.$el.find('.content');
         content.empty();
         content.html(_.template($('#look_edit_popup_loading').html())());
@@ -96,7 +96,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
         this.delegateEvents();
 
-        this.$el.find('.title').text('Add product');
+        this.$el.find('.title').text(gettext('Add product'));
         this.$el.find('.content').html(this.template(this.model.toJSON()));
         this.$el.css('width', 'auto');
         this._center();
