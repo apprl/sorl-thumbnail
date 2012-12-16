@@ -35,6 +35,8 @@ App.Views.LookEditPopup = Backbone.View.extend({
             this.active_type = 'add';
             this.show(model);
             this.render_add();
+        } else if(external_look_type == 'collage') {
+            this.hide();
         }
     },
 
