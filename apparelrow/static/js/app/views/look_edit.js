@@ -96,9 +96,7 @@ App.Views.LookEdit = Backbone.View.extend({
             this.pending_component = false;
         } else {
             if(external_look_type == 'collage') {
-                var new_component = this._create_collage_component();
-                this.add_product_to_component(new_component, product);
-                this.model.components.add(new_component);
+                this._create_collage_component(product);
             } else {
                 this.pending_product = product;
             }
@@ -118,8 +116,18 @@ App.Views.LookEdit = Backbone.View.extend({
         return new App.Models.LookComponent().set(_.extend({width: 80, height: 80}, position));
     },
 
-    _create_collage_component: function() {
-        return new App.Models.LookComponent().set({width: 112, height: 145, top: 0, left: 0});
+    _create_collage_component: function(product) {
+        var self = this;
+        var component = new App.Models.LookComponent().set({top: 0, left: 0});
+
+        // Load image to get width and height for look component
+        var image = new Image();
+        image.onload = function() {
+            component.set({width: this.width, height: this.height});
+            self.add_product_to_component(component, product);
+            self.model.components.add(component);
+        }
+        image.src = product.get('image_medium');
     },
 
     on_click: function(e) {
