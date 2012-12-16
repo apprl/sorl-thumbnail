@@ -59,16 +59,19 @@ App.Views.LookEditSavePopup = Backbone.View.extend({
             }
         }, this));
 
-        // TODO: force login
         if(this.model.backend == 'client') {
             this.model.backend = 'server';
             this.model.unset('id', {silent: true});
 
-            // TODO: Get image data from <img> tag instead of downloading it again
-            this._image2base64(this.model.get('image'), _.bind(function(base64_image) {
-                this.model.set('image_base64', base64_image, {silent: true});
+            if(external_look_type == 'photo') {
+                // TODO: Get image data from <img> tag instead of downloading it again
+                this._image2base64(this.model.get('image'), _.bind(function(base64_image) {
+                    this.model.set('image_base64', base64_image, {silent: true});
+                    this.model.save({}, {success: _.bind(this.save_success, this)});
+                }, this));
+            } else {
                 this.model.save({}, {success: _.bind(this.save_success, this)});
-            }, this));
+            }
         } else {
             this.model.save({}, {success: _.bind(this.save_success, this)});
         }
