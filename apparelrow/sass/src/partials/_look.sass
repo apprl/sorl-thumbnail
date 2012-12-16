@@ -290,15 +290,35 @@ body.look-editor
           background-color: #fff
 
   #product-filter
-    margin: 10px 10px 0 10px
     padding-bottom: 10px
     border-bottom: 3px solid #000
     .middle-filters
       margin: 10px 0
+      #product-search
+        float: left
+        -webkit-appearance: none
+        height: 40px
+        border: 1px solid $easiest_color
+        width: 220px
+        font-size: 1.1em
+        padding: 0 5px
+      .radio-group
+        float: left
+        margin-left: 10px
+        label
+          margin: 1px 0
+          display: block
+          font-size: 1.2em
 
   .product-list-container
     padding: 0 10px
-
+    border-left: 1px solid $easiest_color
+    border-right: 1px solid $easiest_color
+    border-bottom: 1px solid $easiest_color
+  .product-filter-container
+    padding: 0 10px
+    border-left: 1px solid $easiest_color
+    border-right: 1px solid $easiest_color
   .hidden-filters-container
     text-align: right
     .hidden-filters

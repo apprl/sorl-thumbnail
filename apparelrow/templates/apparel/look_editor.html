@@ -47,27 +47,31 @@
                 <li><a class="tab-likes{% if request.user.is_authenticated %} selected{% endif%}"{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} href="#likes">{% trans "Your ♥" %}</a>
                 <li><a class="tab-all{% if not request.user.is_authenticated %} selected{% endif%}" href="#all">{% trans "All products" %}</a></li>
             </ul>
-            <div id="product-filter" class="group">
-                <div class="middle-filters">
-                    <input type="search" name="q" placeholder="{% trans "Search for your product here.." %}">
-                    <label><input type="radio" name="gender" value="W"{% if APPAREL_GENDER == 'W' %} checked{% endif %}> {% trans "Women" %}</label>
-                    <label><input type="radio" name="gender" value="M"{% if APPAREL_GENDER == 'M' %} checked{% endif %}> {% trans "Men" %}</label>
-                </div>
-                <div class="hidden-filters-container">
-                    <ul class="hidden-filters">
-                        <li id="product-filter-category" class="dropdown left">
-                            <a href="#" data-default-name="{% trans "Choose category" %}"><span>{% trans "Choose category" %}</span></a>
-                        </li>
-                        <li id="product-filter-subcategory" class="dropdown left">
-                            <a href="#" data-default-name="{% trans "Subcategory" %}"><span>{% trans "Subcategory" %}</span></a>
-                        </li>
-                        <li id="product-filter-color" class="dropdown">
-                            <a href="#" data-default-name="{% trans "Color" %}"><span>{% trans "Color" %}</span></a>
-                        </li>
-                        <li id="product-filter-price" class="dropdown">
-                            <a href="#" data-default-name="{% trans "Price" %}"><span>{% trans "Price" %}</span></a>
-                        </li>
-                    </ul>
+            <div class="product-filter-container">
+                <div id="product-filter" class="group">
+                    <div class="middle-filters group">
+                        <input id="product-search" type="search" name="q" placeholder="{% trans "Search for your product here..." %}">
+                        <div class="radio-group">
+                            <label><input type="radio" name="gender" value="W"{% if APPAREL_GENDER == 'W' %} checked{% endif %}> {% trans "Women" %}</label>
+                            <label><input type="radio" name="gender" value="M"{% if APPAREL_GENDER == 'M' %} checked{% endif %}> {% trans "Men" %}</label>
+                        </div>
+                    </div>
+                    <div class="hidden-filters-container">
+                        <ul class="hidden-filters">
+                            <li id="product-filter-category" class="dropdown left">
+                                <a href="#" data-default-name="{% trans "Choose category" %}"><span>{% trans "Choose category" %}</span></a>
+                            </li>
+                            <li id="product-filter-subcategory" class="dropdown left">
+                                <a href="#" data-default-name="{% trans "Subcategory" %}"><span>{% trans "Subcategory" %}</span></a>
+                            </li>
+                            <li id="product-filter-color" class="dropdown">
+                                <a href="#" data-default-name="{% trans "Color" %}"><span>{% trans "Color" %}</span></a>
+                            </li>
+                            <li id="product-filter-price" class="dropdown">
+                                <a href="#" data-default-name="{% trans "Price" %}"><span>{% trans "Price" %}</span></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="product-list-container">
