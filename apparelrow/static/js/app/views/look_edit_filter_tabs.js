@@ -9,7 +9,7 @@ App.Views.LookEditFilterTabs = Backbone.View.extend({
     initialize: function() {
         var $tab_likes = this.$el.find('.tab-likes');
         if($tab_likes.hasClass('selected')) {
-            this.model.set('user_id', $tab_likes.data('user'));
+            this.model.set('user_id', $tab_likes.data('user'), {silent: true});
         }
     },
 

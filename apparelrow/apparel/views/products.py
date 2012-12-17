@@ -181,7 +181,6 @@ class ProductList(View):
 
         query_arguments = {'rows': clamped_limit, 'start': 0}
         query_arguments = self.set_query_arguments(query_arguments, request, facet_fields, gender=gender, currency=currency)
-        query_arguments['fq'].append('availability:true')
         query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
         # Price facet query (default in SEK from solr config)
@@ -192,6 +191,8 @@ class ProductList(View):
         user_id = request.GET.get('user_id', False)
         if user_id:
             query_arguments['fq'].append('user_likes:%s' % (user_id,))
+        else:
+            query_arguments['fq'].append('availability:true')
 
         # Sort
         query_arguments['sort'] = request.GET.get('sort', 'popularity desc, created desc')
