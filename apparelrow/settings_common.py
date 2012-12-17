@@ -255,6 +255,7 @@ PIPELINE_JS = {
                              'js/app/views/popup_dispatcher.js',
                              'js/app/views/dialog_reset.js',
                              'js/app/views/dialog_delete.js',
+                             'js/app/views/dialog_unpublish.js',
                              'js/app/views/look_edit_filter_tabs.js',
                              'js/app/views/filter_product.js',
                              'js/app/views/filter_product_category.js',

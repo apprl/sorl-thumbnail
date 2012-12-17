@@ -22,6 +22,7 @@ App.Views.LookEdit = Backbone.View.extend({
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_reset', new App.Views.DialogReset({model: this.model}));
         this.popup_dispatcher.add('dialog_delete', new App.Views.DialogDelete({model: this.model}));
+        this.popup_dispatcher.add('dialog_unpublish', new App.Views.DialogUnpublish({model: this.model}));
 
         // Look editor popup
         this.look_edit_popup = new App.Views.LookEditPopup({parent_view: this});
@@ -185,8 +186,7 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     look_unpublish: function() {
-        this.model.set('published', false);
-        this.model.save();
+        this.popup_dispatcher.show('dialog_unpublish');
 
         return false;
     },

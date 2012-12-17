@@ -31,11 +31,11 @@
                 {% else %}
                 <button class="btn btn-upper btn-reset" name="look_reset">{% trans "Reset look" %}</button>
                 {% endif %}
-                <button class="btn btn-upper btn-save" name="look_save">{% trans "Save" %}</button>
+                <button class="btn btn-upper btn-save" name="look_save">{% trans "Save draft" %}</button>
                 {% if object and object.published %}
-                <button class="btn btn-upper btn-positive btn-unpublish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Unpublish" %}</button>
+                <button class="btn btn-upper btn-positive btn-unpublish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Published" %}">{% trans "Published" %}</button>
                 {% else %}
-                <button class="btn btn-upper btn-positive btn-publish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Publish" %}</button>
+                <button class="btn btn-upper btn-positive btn-publish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Published" %}">{% trans "Publish" %}</button>
                 {% endif %}
             </div>
         </div>
@@ -92,6 +92,12 @@
         <a href="#" class="btn btn-upper btn-block btn-positive btn-yes">{% trans "Yes" %}</a>
     </script>
 
+    <script type="text/template" id="dialog_unpublish_template">
+        <p>{% trans "Are you sure you want to unpublish your look?" %}</p>
+        <a href="#" class="btn btn-upper btn-block btn-no">{% trans "No" %}</a>
+        <a href="#" class="btn btn-upper btn-block btn-positive btn-yes">{% trans "Yes" %}</a>
+    </script>
+
     <script type="text/template" id="save_look_template">
         <label for="look_title">{% trans "Your look title" %}</label>
         <input id="look_title" type="text" value="<%= title %>" name="title">
@@ -100,7 +106,7 @@
         <textarea name="description" id="look_description"><%= description %></textarea>
 
         <a href="#" class="btn btn-upper btn-block btn-cancel">{% trans "Cancel" %}</a>
-        <a href="#" class="btn btn-upper btn-block btn-positive btn-save">{% trans "Save" %}</a>
+        <a href="#" class="btn btn-upper btn-block btn-positive btn-save">{% trans "Save draft" %}</a>
     </script>
 
     <script type="text/template" id="publish_look_template">

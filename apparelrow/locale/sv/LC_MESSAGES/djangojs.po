@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-16 18:09+0100\n"
+"POT-Creation-Date: 2012-12-17 18:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,6 +101,10 @@ msgstr "Ta bort look?"
 msgid "Reset look?"
 msgstr "Återställ look?"
 
+#: static/js/app/views/dialog_unpublish.js:4
+msgid "Unpublish look?"
+msgstr "Avbryt look publicering?"
+
 #: static/js/app/views/filter_product_category.js:63
 #: static/js/app/views/filter_product_color.js:70
 #: static/js/app/views/filter_product_price.js:60
@@ -108,11 +112,11 @@ msgstr "Återställ look?"
 msgid "Reset"
 msgstr "Återställ"
 
-#: static/js/app/views/look_edit_popup.js:80
+#: static/js/app/views/look_edit_popup.js:82
 msgid "Product info"
 msgstr "Produkt info"
 
-#: static/js/app/views/look_edit_popup.js:99
+#: static/js/app/views/look_edit_popup.js:101
 msgid "Add product"
 msgstr "Lägg till produkt"
 

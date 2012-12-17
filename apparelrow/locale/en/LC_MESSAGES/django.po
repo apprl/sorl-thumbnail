@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-16 17:59+0100\n"
+"POT-Creation-Date: 2012-12-17 18:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,11 +52,13 @@ msgstr ""
 
 #: apparel/admin.py:239 templates/base.html:328
 #: templates/apparel/look_editor.html:86 templates/apparel/look_editor.html:92
+#: templates/apparel/look_editor.html:98
 msgid "Yes"
 msgstr ""
 
 #: apparel/admin.py:240 templates/base.html:327
 #: templates/apparel/look_editor.html:85 templates/apparel/look_editor.html:91
+#: templates/apparel/look_editor.html:97
 msgid "No"
 msgstr ""
 
@@ -495,7 +497,7 @@ msgstr ""
 msgid "Number of products created or updated"
 msgstr ""
 
-#: importer/models.py:121 templates/apparel/look_editor.html:174
+#: importer/models.py:121 templates/apparel/look_editor.html:180
 #: templates/apparel/fragments/product_feed_226.html:15
 #: templates/apparel/fragments/product_feed_452.html:15
 #: templates/apparel/fragments/product_shop.html:15
@@ -696,8 +698,8 @@ msgstr ""
 msgid "Search for products"
 msgstr ""
 
-#: templates/base.html:121 templates/apparel/look_editor.html:102
-#: templates/apparel/look_editor.html:113
+#: templates/base.html:121 templates/apparel/look_editor.html:108
+#: templates/apparel/look_editor.html:119
 #: templates/profile/base_profile.html:64
 #: templates/profile/base_profile.html:79
 msgid "Cancel"
@@ -1230,7 +1232,7 @@ msgstr ""
 
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:66
 #: templates/apparel/look_edit.html:5 templates/apparel/look_edit.html:482
-#: templates/apparel/look_editor.html:5
+#: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:27
 #: templates/apparel/product_detail.html:4
 msgid "by"
 msgstr ""
@@ -1291,8 +1293,7 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: templates/apparel/look_edit.html:492 templates/apparel/look_editor.html:34
-#: templates/apparel/look_editor.html:103
+#: templates/apparel/look_edit.html:492
 msgid "Save"
 msgstr ""
 
@@ -1316,11 +1317,11 @@ msgstr ""
 msgid "Drag products here to start building a collage"
 msgstr ""
 
-#: templates/apparel/look_edit.html:517 templates/apparel/look_editor.html:159
+#: templates/apparel/look_edit.html:517 templates/apparel/look_editor.html:165
 msgid "Upload a photo to create a tagged image"
 msgstr ""
 
-#: templates/apparel/look_edit.html:522 templates/apparel/look_editor.html:163
+#: templates/apparel/look_edit.html:522 templates/apparel/look_editor.html:169
 msgid "Upload"
 msgstr ""
 
@@ -1332,21 +1333,22 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: templates/apparel/look_editor.html:27
-msgid "Edit look"
-msgstr ""
-
 #: templates/apparel/look_editor.html:32
 msgid "Reset look"
 msgstr ""
 
+#: templates/apparel/look_editor.html:34
+#: templates/apparel/look_editor.html:109
+msgid "Save draft"
+msgstr ""
+
 #: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
-#: templates/apparel/look_editor.html:114
+#: templates/apparel/look_editor.html:120
 msgid "Publish"
 msgstr ""
 
 #: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
-msgid "Unpublish"
+msgid "Published"
 msgstr ""
 
 #: templates/apparel/look_editor.html:47
@@ -1385,24 +1387,28 @@ msgid "Are you sure you want to permanently delete your look?"
 msgstr ""
 
 #: templates/apparel/look_editor.html:96
-#: templates/apparel/look_editor.html:107
+msgid "Are you sure you want to unpublish your look?"
+msgstr ""
+
+#: templates/apparel/look_editor.html:102
+#: templates/apparel/look_editor.html:113
 msgid "Your look title"
 msgstr ""
 
-#: templates/apparel/look_editor.html:99
-#: templates/apparel/look_editor.html:110
+#: templates/apparel/look_editor.html:105
+#: templates/apparel/look_editor.html:116
 msgid "Description"
 msgstr ""
 
-#: templates/apparel/look_editor.html:134
+#: templates/apparel/look_editor.html:140
 msgid "Click in photo to place item"
 msgstr ""
 
-#: templates/apparel/look_editor.html:154
+#: templates/apparel/look_editor.html:160
 msgid "Uploading image"
 msgstr ""
 
-#: templates/apparel/look_editor.html:175
+#: templates/apparel/look_editor.html:181
 msgid "Add"
 msgstr ""
 
