@@ -980,8 +980,11 @@ class LookComponent(models.Model):
             s.append('z-index: %s;' % (self.z_index,))
 
         if self.rotation:
+            s.append('transform: rotate(%sdeg); ' % self.rotation)
             s.append('-moz-transform: rotate(%sdeg); ' % self.rotation)
             s.append('-webkit-transform: rotate(%sdeg); ' % self.rotation)
+            s.append('-o-transform: rotate%sdeg); ' % self.rotation)
+            s.append('-ms-transform: rotate(%sdeg); ' % self.rotation)
 
         return " ".join(s)
 

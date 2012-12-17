@@ -19,6 +19,11 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                       width: this.model.get('width'),
                       height: this.model.get('height'),
                       'z-index': this.model.get('z_index'),
+                      'transform': 'rotate(' + this.model.get('rotation') + 'deg)',
+                      '-moz-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
+                      '-webkit-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
+                      '-o-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
+                      '-ms-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
                       position: 'absolute'});
 
         this.$el.html(this.template(this.model.toJSON()));
@@ -28,7 +33,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         this.$el.resizable({
             containment: container,
             aspectRatio: true,
-            autoHide: false,
+            autoHide: true,
             maxHeight: container.height(),
             maxWidth: container.width(),
             minHeight: 50,
@@ -41,6 +46,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
 
         this.$el.draggable({
             stack: '.product',
+            cancel: '.ui-rotatable-handle',
             containment: $('.look-container'),
             stop: _.bind(function(event, ui) {
                 this.model.set({left: ui.position.left, top: ui.position.top}, {silent: true});
@@ -48,14 +54,14 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             }, this)
         });
 
-        // TODO: rotatable does not work
-        //this.$el.rotatable({
-            //handles: 'ne',
-            //autoHide: false,
-            //stop: function(event, ui) {
-                //console.log('save shit to model', ui.element, ui.rotation);
-            //}
-        //});
+        this.$el.rotatable({
+            handles: 'nw',
+            autoHide: true,
+            stop: _.bind(function(event, ui) {
+                this.model.set({rotation: ui.rotation}, {silent: true});
+                App.Events.trigger('look:dirty');
+            }, this)
+        });
 
         // TODO: cannot use backbone events because click event must bind after
         // draggable events
