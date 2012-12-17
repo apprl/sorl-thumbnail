@@ -1026,9 +1026,6 @@ class LookComponent(models.Model):
     def __unicode__(self):
         return u"%s (%s, %s [%sx%s] %s) in %s" % (self.product, self.top, self.left, self.width, self.height, self.z_index, self.look)
 
-    class Meta:
-        unique_together = (('product', 'look', 'component_of'),)
-
     class Exporter:
         export_fields = ['__all__', 'style', 'style_middle', 'style_small', '-look']
 
