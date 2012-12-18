@@ -13,6 +13,14 @@ App.Views.Products = Backbone.View.extend({
 
         this.loading = false;
         this.infinite_scroll();
+
+        this.$product_list_empty = this.$el.parent().find('#product-list-empty');
+        this.$product_list_empty.on('click', '.btn-reset', _.bind(this.reset, this));
+    },
+
+    reset: function() {
+        this.filter.reset();
+        this.$product_list_empty.hide();
     },
 
     infinite_scroll: function() {
@@ -28,9 +36,16 @@ App.Views.Products = Backbone.View.extend({
     },
 
     render: function() {
-        this.collection.each(_.bind(function(model) {
-            this.$el.append(new App.Views.Product({model: model}).render().el);
-        }, this));
+        if(this.collection.length == 0) {
+            this.$el.hide();
+            this.$product_list_empty.show();
+        } else {
+            this.$el.show();
+            this.$product_list_empty.hide();
+            this.collection.each(_.bind(function(model) {
+                this.$el.append(new App.Views.Product({model: model}).render().el);
+            }, this));
+        }
     }
 
 });
