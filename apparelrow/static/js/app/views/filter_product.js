@@ -27,10 +27,10 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.filter_tabs = new App.Views.LookEditFilterTabs({model: this.product_filter_model});
 
         // Individual filters for products
-        this.filter_category = new App.Views.FilterProductCategory({collection: this.facets.category, el: '#product-filter-category'});
-        this.filter_subcategory = new App.Views.FilterProductSubCategory({collection: this.facets.category, el: '#product-filter-subcategory'});
-        this.filter_color = new App.Views.FilterProductColor({collection: this.facets.color, el: '#product-filter-color'});
-        this.filter_price = new App.Views.FilterProductPrice({collection: this.facets.price, el: '#product-filter-price'});
+        this.filter_category = new App.Views.FilterProductCategory({model: this.product_filter_model, collection: this.facets.category, el: '#product-filter-category'});
+        this.filter_subcategory = new App.Views.FilterProductSubCategory({model: this.product_filter_model, collection: this.facets.category, el: '#product-filter-subcategory'});
+        this.filter_color = new App.Views.FilterProductColor({model: this.product_filter_model, collection: this.facets.color, el: '#product-filter-color'});
+        this.filter_price = new App.Views.FilterProductPrice({model: this.product_filter_model, collection: this.facets.price, el: '#product-filter-price'});
 
         // Initial fetch of products and facets
         this.facets.fetch({data: this.product_filter_model.toJSON()});

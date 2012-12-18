@@ -11,8 +11,10 @@ window.App.Models.ProductFilter = Backbone.Model.extend({
     },
 
     reset: function() {
+        var gender = this.get('gender');
+        var user_id = this.get('user_id');
         this.clear({silent: true});
-        this.set(this.defaults);
+        this.set(_.extend(this.defaults, {gender: gender, user_id: user_id}));
     },
 
     facet: function(data) {

@@ -9,7 +9,16 @@ App.Views.FilterProductCategory = Backbone.View.extend({
         this.collection.on('reset', this.render, this);
         this.sub_open = false;
 
+        this.model.on('change:category', this.reset, this);
+
         $(document).on('click', _.bind(this.close, this));
+    },
+
+    reset: function(model, value, options) {
+        if(!value || value == 0) {
+            App.Events.trigger('product:category_selected', 0);
+            this.$el.find('span').text(this.$el.find('a').data('default-name'));
+        }
     },
 
     select: function(e) {
