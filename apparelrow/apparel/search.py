@@ -329,6 +329,7 @@ def get_look_document(instance):
     if product_manufacturers and product_manufacturers[0]:
         document['manufacturer_name'] = ', '.join(product_manufacturers)
     document['template'] = render_to_string('apparel/fragments/look_search_content.html', {'object': instance})
+    document['published'] = instance.published
 
     return document, boost
 
@@ -430,6 +431,7 @@ def search_view(request, model_name):
     elif model_name == 'look':
         arguments['qf'] = ['text']
         arguments['fq'].append(gender_field)
+        arguments['fq'].append('published:true')
     elif model_name == 'apparelprofile':
         arguments['qf'] = ['text']
     elif model_name == 'manufacturer':

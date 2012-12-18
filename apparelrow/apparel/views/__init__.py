@@ -205,11 +205,11 @@ def product_detail(request, slug):
     is_in_wardrobe = False
     user_looks = []
     if request.user.is_authenticated():
-        user_looks = Look.objects.filter(user=request.user)
+        user_looks = Look.published_objects.filter(user=request.user)
         is_in_wardrobe = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
 
-    looks_with_product = Look.objects.filter(components__product=product).order_by('-modified')[:2]
-    looks_with_product_count = Look.objects.filter(components__product=product).aggregate(Count('id')).get('id__count', 0)
+    looks_with_product = Look.published_objects.filter(components__product=product).order_by('-modified')[:2]
+    looks_with_product_count = Look.published_objects.filter(components__product=product).aggregate(Count('id')).get('id__count', 0)
 
     # Comments
     content_type = ContentType.objects.get_for_model(Product)
@@ -478,11 +478,11 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
                            'start': 0,
                            'rows': 500} # XXX: maximum search results, sync this with the count that is displayed in the search result box
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
-        queryset = Look.objects.filter(id__in=[doc.django_id for doc in results.get_docs()])
+        queryset = Look.published_objects.filter(id__in=[doc.django_id for doc in results.get_docs()])
     elif contains:
-        queryset = Look.objects.filter(id__in=LookComponent.objects.filter(product__slug=contains).values_list('look', flat=True))
+        queryset = Look.published_objects.filter(id__in=LookComponent.objects.filter(product__slug=contains).values_list('look', flat=True))
     else:
-        queryset = Look.objects.filter(gender__in=[gender, 'U']).order_by('-popularity')
+        queryset = Look.published_objects.filter(gender__in=[gender, 'U']).order_by('-popularity')
 
     paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
@@ -506,7 +506,12 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
 
 def look_detail(request, slug):
     look = get_object_or_404(Look, slug=slug)
-    looks_by_user = Look.objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:8]
+
+    # Only show unpublished looks to creator
+    if not look.published and look.user != request.user:
+        raise Http404()
+
+    looks_by_user = Look.published_objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:8]
 
     look_saved = False
     if 'look_saved' in request.session:
@@ -771,7 +776,7 @@ def facebook_friends_widget(request):
 def get_top_looks_in_network(profile, limit=None):
     user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow__user', flat=True)
     # TODO: add active/published flag here later
-    looks = Look.objects.distinct().filter(user__in=user_ids).order_by('-popularity', '-created')
+    looks = Look.published_objects.distinct().filter(user__in=user_ids).order_by('-popularity', '-created')
 
     if limit:
         return looks[:limit]

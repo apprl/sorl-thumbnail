@@ -118,7 +118,7 @@ def profile(request, profile, form, page=0):
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.user.look.order_by('-modified')[:10]
+        'recent_looks': profile.user.look.filter(published=True).order_by('-modified')[:10]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
@@ -128,7 +128,10 @@ def profile(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def looks(request, profile, form, page=0):
-    queryset = profile.user.look.order_by('-created')
+    if profile.user == request.user:
+        queryset = profile.user.look.order_by('-created')
+    else:
+        queryset = profile.user.look.filter(published=True).order_by('-created')
 
     paged_result, pagination = get_pagination_page(queryset, 6,
             request.GET.get('page', 1), 1, 2)
@@ -172,7 +175,7 @@ def followers(request, profile, form, page=0):
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.user.look.order_by('-modified')[:4]
+        'recent_looks': profile.user.look.filter(published=True).order_by('-modified')[:4]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
@@ -200,7 +203,7 @@ def following(request, profile, form, page=0):
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.user.look.order_by('-modified')[:4]
+        'recent_looks': profile.user.look.filter(published=True).order_by('-modified')[:4]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))

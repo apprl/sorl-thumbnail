@@ -40,7 +40,7 @@ class UserSitemap(Sitemap):
 sitemaps = {
     'flatpages': FlatPageSitemap,
     'product': LimitGenericSitemap({'queryset': Product.published_objects.all(), 'date_field': 'modified'}, priority=0.5),
-    'look': LimitGenericSitemap({'queryset': Look.objects.all(), 'date_field': 'modified'}, priority=0.5),
+    'look': LimitGenericSitemap({'queryset': Look.published_objects.all(), 'date_field': 'modified'}, priority=0.5),
     'user': UserSitemap,
     'views': ViewSitemap,
 }

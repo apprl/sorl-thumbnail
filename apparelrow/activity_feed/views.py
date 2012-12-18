@@ -130,8 +130,8 @@ def public_feed(request, gender=None):
 
     popular_products = Product.valid_objects.filter(gender__in=[gender, 'U']) \
                                             .order_by('-popularity')
-    popular_looks = Look.objects.filter(gender__in=[gender, 'U']) \
-                                .order_by('-popularity', '-created')
+    popular_looks = Look.published_objects.filter(gender__in=[gender, 'U']) \
+                                          .order_by('-popularity', '-created')
     popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True) \
                                            .order_by('-followers_count')
     popular_members = ApparelProfile.objects.filter(user__is_active=True,

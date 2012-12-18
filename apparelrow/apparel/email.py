@@ -145,8 +145,8 @@ def get_weekly_mail_content(gender, timeframe):
 
     # Looks
     looks = []
-    base_looks = list(Look.objects.filter(gender__in=[gender, 'U'], likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
-    week_looks = list(Look.objects.filter(gender__in=[gender, 'U'], likes__active=True, likes__modified__gt=timeframe).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
+    base_looks = list(Look.published_objects.filter(gender__in=[gender, 'U'], likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
+    week_looks = list(Look.published_objects.filter(gender__in=[gender, 'U'], likes__active=True, likes__modified__gt=timeframe).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
 
     used_looks = []
     count_looks = 0
