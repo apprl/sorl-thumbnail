@@ -26,15 +26,15 @@ options = get_model('apparel', 'Option').objects \
 options = dict(options)
 
 categories = {'en': {}, 'sv': {}}
-for ident, name, parent_id in get_model('apparel', 'Category').objects.values_list('id', 'name_en', 'parent_id'):
+for ident, name, parent_id, order in get_model('apparel', 'Category').objects.values_list('id', 'name_en', 'parent_id', 'name_order_en'):
     if not parent_id:
         parent_id = 0
-    categories['en'][ident] = (name, parent_id)
+    categories['en'][ident] = (name, parent_id, order)
 
-for ident, name, parent_id in get_model('apparel', 'Category').objects.values_list('id', 'name_sv', 'parent_id'):
+for ident, name, parent_id, order in get_model('apparel', 'Category').objects.values_list('id', 'name_sv', 'parent_id', 'name_order_sv'):
     if not parent_id:
         parent_id = 0
-    categories['sv'][ident] = (name, parent_id)
+    categories['sv'][ident] = (name, parent_id, order)
 
 #categories = {'en': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_en')),
               #'sv': dict(get_model('apparel', 'Category').objects.values_list('id', 'name_sv'))}
@@ -274,7 +274,14 @@ class ProductList(View):
             if language not in categories:
                 language = 'en'
 
-            result.update(category=[{'id': oid, 'count': count, 'name': categories[language][oid][0], 'parent': categories[language][oid][1]} for oid, count in zip(ids, values)])
+            category_result = []
+            for cid, count in sorted(zip(ids, values), key=lambda (k,v): categories[language][k][2]):
+                category_result.append({'id': cid,
+                                        'count': count,
+                                        'name': categories[language][cid][0],
+                                        'parent': categories[language][cid][1]})
+
+            result.update(category=category_result)
 
         return JSONResponse(result)
 
