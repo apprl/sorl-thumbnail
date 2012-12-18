@@ -123,6 +123,10 @@ class LookView(View):
         # Set user to the user object
         json_data['user'] = request.user
 
+        # If published notify next view
+        if json_data['published']:
+            request.session['look_saved'] = True
+
         # Look components
         if json_data['components']:
 
@@ -208,6 +212,10 @@ class LookView(View):
 
         # Add user
         json_data['user'] = request.user
+
+        # If published notify next view
+        if json_data['published']:
+            request.session['look_saved'] = True
 
         # Exclude components, handle later
         components = json_data['components']
