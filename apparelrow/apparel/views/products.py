@@ -75,7 +75,7 @@ FACET_PRICE_TRANSLATION = {
         5: u'€500 to 1000',
         6: u'over €1000'},
     'sv': {
-        1: u'över 500 SEK',
+        1: u'under 500 SEK',
         2: u'500-1000 SEK',
         3: u'1000-2500 SEK',
         4: u'2500-5000 SEK',
@@ -126,25 +126,6 @@ class ProductList(View):
         if 'price' in request.GET:
             price_id = request.GET['price']
             query_arguments['fq'].append(FACET_PRICE_MAP_ID[get_language()][int(price_id)])
-            #price = request.GET['price'].split(',')
-            #if len(price) == 2:
-                #try:
-                    #min_price = decimal.Decimal(price[0])
-                    #max_price = decimal.Decimal(price[1])
-                #except decimal.InvalidOperation:
-                    #min_price = max_price = decimal.Decimal('0.00')
-
-                #min_price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP)
-                #max_price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP)
-                ## Set a large price that we should never encounter
-                #if max_price >= decimal.Decimal('10000'):
-                    #max_price = decimal.Decimal('1000000000.00')
-
-                #if currency:
-                    #query_arguments['fq'].append('{{!tag={0}}}{0}:[{2},{1} TO {3},{1}]'.format('price', currency, str(min_price), str(max_price)))
-                #else:
-                    #query_arguments['fq'].append('{{!tag={0}}}{0}:[{1} TO {2}]'.format('price', str(min_price), str(max_price)))
-
 
         # Only discount
         if 'discount' in request.GET:
@@ -246,30 +227,15 @@ class ProductList(View):
         temp_facet_fields = request.GET.get('facet', '').split(',')
         language = get_language()
 
-
+        # Calculate price
         if 'price' in temp_facet_fields:
             queries = search.get_facet()['facet_queries']
             price_result = []
-            for key, value in queries.items():
+            for key, value in sorted(queries.iteritems()):
                 price_result.append({'id': key,
                                      'count': value,
                                      'name': FACET_PRICE_TRANSLATION[language][int(key)]})
             result.update(price=price_result)
-
-            #pricerange = {'min': 0, 'max': 10000}
-            #if language in settings.MAX_MIN_CURRENCY:
-                #pricerange['max'] = settings.MAX_MIN_CURRENCY.get(language)
-            #pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
-
-            #price = request.GET.get('price', '').split(',')
-            #if len(price) == 2:
-                #pricerange['selected_min'] = price[0]
-                #pricerange['selected_max'] = price[1]
-            #else:
-                #pricerange['selected_min'] = pricerange['min']
-                #pricerange['selected_max'] = pricerange['max']
-
-            #result.update(price=pricerange)
 
         # Calculate manufacturer
         if 'manufacturer' in facet:
