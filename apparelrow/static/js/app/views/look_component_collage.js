@@ -38,6 +38,12 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             maxWidth: container.width(),
             minHeight: 50,
             minWidth: 50,
+            create: _.bind(function(event, ui) {
+                var z_index = $(event.target).css('z-index');
+                if(!isNaN(parseInt(z_index))) {
+                    this.model.set({z_index: z_index}, {silent: true});
+                }
+            }, this),
             stop: _.bind(function(event, ui) {
                 this.model.set({width: ui.size.width, height: ui.size.height}, {silent: true});
                 App.Events.trigger('look:dirty');
@@ -49,6 +55,10 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             cancel: '.ui-rotatable-handle',
             containment: $('.look-container'),
             stop: _.bind(function(event, ui) {
+                var z_index = $(event.target).css('z-index');
+                if(!isNaN(parseInt(z_index))) {
+                    this.model.set({z_index: z_index}, {silent: true});
+                }
                 this.model.set({left: ui.position.left, top: ui.position.top}, {silent: true});
                 App.Events.trigger('look:dirty');
             }, this)
