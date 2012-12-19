@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-18 17:24+0100\n"
+"POT-Creation-Date: 2012-12-19 13:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -830,7 +830,7 @@ msgstr "Medlemmar"
 msgid "+ Invite friends"
 msgstr "+ Bjud in vänner"
 
-#: templates/base.html:249 templates/apparel/look_detail.html:68
+#: templates/base.html:249 templates/apparel/look_detail.html:116
 #: templates/apparel/look_list.html:18 templates/apparel/shared_header.html:30
 #: templates/profile/base_profile.html:51
 msgid "+ Create look"
@@ -1270,7 +1270,7 @@ msgstr "Skapa taggad bild"
 msgid "Create a collage"
 msgstr "Skapa kollage"
 
-#: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:66
+#: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:114
 #: templates/apparel/look_edit.html:5 templates/apparel/look_edit.html:482
 #: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:27
 #: templates/apparel/product_detail.html:4
@@ -1287,40 +1287,70 @@ msgstr "Är du säker?"
 msgid "Do you really want to delete look"
 msgstr "Vill du verkligen ta bort looken"
 
-#: templates/apparel/look_detail.html:79 templates/apparel/look_edit.html:5
+#: templates/apparel/look_detail.html:56
+msgid "Publish look"
+msgstr "Publicera look"
+
+#: templates/apparel/look_detail.html:57
+msgid "Do you want to publish this look?"
+msgstr "Är du säker på att du vill publicera denna look?"
+
+#: templates/apparel/look_detail.html:79
+msgid "Unpublish look"
+msgstr "Avbryt publicering av look"
+
+#: templates/apparel/look_detail.html:80
+#: templates/apparel/look_editor.html:100
+msgid "Are you sure you want to unpublish your look?"
+msgstr "Är du säker på att du vill avbryta publiceringen?"
+
+#: templates/apparel/look_detail.html:127 templates/apparel/look_edit.html:5
 #: templates/apparel/look_editor.html:5
 #: templates/apparel/fragments/looks_large.html:50
 msgid "Edit"
 msgstr "Redigera"
 
-#: templates/apparel/look_detail.html:80
+#: templates/apparel/look_detail.html:128
 #: templates/apparel/fragments/looks_large.html:51
 msgid "Delete"
 msgstr "Ta bort"
 
-#: templates/apparel/look_detail.html:97
+#: templates/apparel/look_detail.html:130
+#: templates/apparel/look_detail.html:132
+#: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
+#: templates/apparel/look_editor.html:124
+msgid "Publish"
+msgstr "Publicera"
+
+#: templates/apparel/look_detail.html:130
+#: templates/apparel/look_detail.html:132
+#: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
+msgid "Published"
+msgstr "Publicerad"
+
+#: templates/apparel/look_detail.html:150
 msgid "Created"
 msgstr "Skapad"
 
-#: templates/apparel/look_detail.html:100
+#: templates/apparel/look_detail.html:153
 #: templates/apparel/product_detail.html:139
 #: templates/profile/base_profile.html:33
 msgid "Likes"
 msgstr "Gillar"
 
-#: templates/apparel/look_detail.html:126
+#: templates/apparel/look_detail.html:179
 msgid "Embed this look on your blog or site"
 msgstr "Lägg in looken på din blogg eller site"
 
-#: templates/apparel/look_detail.html:131
+#: templates/apparel/look_detail.html:184
 msgid "Direct link to this page"
 msgstr "Direktlänk till den här looken"
 
-#: templates/apparel/look_detail.html:135
+#: templates/apparel/look_detail.html:188
 msgid "More looks by"
 msgstr "Fler looks av"
 
-#: templates/apparel/look_detail.html:139
+#: templates/apparel/look_detail.html:192
 #: templates/apparel/product_detail.html:170
 msgid "See all looks"
 msgstr "Visa alla looks"
@@ -1382,15 +1412,6 @@ msgstr "Återställ look"
 msgid "Save draft"
 msgstr "Spara utkast"
 
-#: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
-#: templates/apparel/look_editor.html:124
-msgid "Publish"
-msgstr "Publicera"
-
-#: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
-msgid "Published"
-msgstr "Publicerad"
-
 #: templates/apparel/look_editor.html:47
 msgid "Your ♥"
 msgstr "Dina ♥"
@@ -1434,10 +1455,6 @@ msgstr ""
 #: templates/apparel/look_editor.html:94
 msgid "Are you sure you want to permanently delete your look?"
 msgstr "Är du säker på att du vill ta bort din look permanent?"
-
-#: templates/apparel/look_editor.html:100
-msgid "Are you sure you want to unpublish your look?"
-msgstr "Är du säker på att du vill avbryta publiceringen?"
 
 #: templates/apparel/look_editor.html:106
 #: templates/apparel/look_editor.html:117
@@ -2726,9 +2743,6 @@ msgstr "Logga in med ditt Facebook ID"
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
-
-#~ msgid "Unpublish"
-#~ msgstr "Avpublicera"
 
 #~ msgid "Edit look"
 #~ msgstr "Ändra look"

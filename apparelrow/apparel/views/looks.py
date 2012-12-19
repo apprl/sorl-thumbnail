@@ -20,7 +20,7 @@ def create(request):
     """
     Look create page, select between collage and photo.
     """
-    return render(request, 'apparel/look_create.html', {})
+    return render(request, 'apparel/look_create.html')
 
 
 def editor(request, component=None, slug=None):
@@ -32,13 +32,41 @@ def editor(request, component=None, slug=None):
         if not request.user.is_authenticated():
             raise Http404()
 
-        look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
+        look = get_object_or_404(get_model('apparel', 'Look'), slug=slug, user=request.user)
         component = {'P': 'photo', 'C': 'collage'}[look.component]
 
     if component is None:
         raise Http404()
 
     return render(request, 'apparel/look_editor.html', {'component': component, 'object': look})
+
+
+def publish(request, slug):
+    """
+    Publish look
+    """
+    if not request.user.is_authenticated():
+        raise Http404()
+
+    look = get_object_or_404(get_model('apparel', 'Look'), slug=slug, user=request.user)
+    look.published = True
+    look.save()
+
+    return JSONResponse(dict(success=True))
+
+
+def unpublish(request, slug):
+    """
+    Unpublish look
+    """
+    if not request.user.is_authenticated():
+        raise Http404()
+
+    look = get_object_or_404(get_model('apparel', 'Look'), slug=slug, user=request.user)
+    look.published = False
+    look.save()
+
+    return JSONResponse(dict(success=True))
 
 
 def look_instance_to_dict(look):
