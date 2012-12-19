@@ -5,7 +5,7 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery('.inline-delete-look').click(function(event) {
+        jQuery('.large-looks .btn-delete').click(function(event) {
             var title = jQuery(this).prev('a').attr('title');
             var href = jQuery(this).attr('href');
             var li = jQuery(this).closest('li');

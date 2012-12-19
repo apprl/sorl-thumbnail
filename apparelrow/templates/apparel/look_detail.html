@@ -33,7 +33,7 @@
             .focus(function(e) { this.select(); })
             .mouseup(function(e) { e.preventDefault() });
 
-        jQuery('#look-header .delete').click(function(event) {
+        jQuery('#look-header .btn-delete').click(function(event) {
             var title = jQuery(this).attr('title');
             var href = jQuery(this).attr('href');
             create_modal_dialog(
