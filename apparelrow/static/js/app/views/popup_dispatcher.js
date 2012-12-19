@@ -24,7 +24,7 @@ App.Views.PopupDispatcher = Backbone.View.extend({
         App.Events.on('popup_dispatcher:hide', this.hide, this);
 
         this.$el.html(this.template());
-        this.$overlay = $(this.make('div')).css({position: 'absolute', top: 0, left: 0, width: '100%', height: $(document).height(), backgroundColor: '#000', opacity: 0.3, display: 'none'});
+        this.$overlay = $(this.make('div')).css({position: 'absolute', top: 0, left: 0, width: '100%', height: $(document).height(), backgroundColor: '#000', opacity: 0.3, display: 'none', zIndex: 10089});
         $('body').append(this.$el, this.$overlay);
     },
 
