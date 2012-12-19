@@ -77,6 +77,10 @@ window.App.Models.Look = Backbone.Model.extend({
         return json;
     },
 
+    save: function(key, value, options) {
+        Backbone.Model.prototype.save.call(this, key, value, options);
+    },
+
     sync: function(method, model, options) {
         if(this.backend == 'client') {
             var resp;

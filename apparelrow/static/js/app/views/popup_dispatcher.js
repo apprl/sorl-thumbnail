@@ -24,7 +24,8 @@ App.Views.PopupDispatcher = Backbone.View.extend({
         App.Events.on('popup_dispatcher:hide', this.hide, this);
 
         this.$el.html(this.template());
-        $('body').append(this.$el);
+        this.$overlay = $(this.make('div')).css({position: 'absolute', top: 0, left: 0, width: '100%', height: $(document).height(), backgroundColor: '#000', opacity: 0.3, display: 'none'});
+        $('body').append(this.$el, this.$overlay);
     },
 
     add: function(name, popup_class) {
@@ -39,11 +40,13 @@ App.Views.PopupDispatcher = Backbone.View.extend({
         var dialog = this.content[name];
 
         this.$el.find('.title').text(dialog.title);
-        this.$el.find('.content').html(dialog.render().el);
+        this.$el.find('.content').html(dialog.render(name).el);
         // TODO: ugly solution no/yes?
         dialog.delegateEvents();
         this._center();
-        this.$el.show();
+
+        this.$overlay.fadeIn(200);
+        this.$el.fadeIn(200);
 
         this.active = name;
     },
@@ -54,7 +57,8 @@ App.Views.PopupDispatcher = Backbone.View.extend({
         if(dialog.hasOwnProperty('hide')) {
             dialog.hide();
         }
-        this.$el.hide();
+        this.$overlay.fadeOut(200);
+        this.$el.fadeOut(200);
         this.active = false;
 
         return false;
@@ -70,6 +74,8 @@ App.Views.PopupDispatcher = Backbone.View.extend({
             'left': (window_width / 2) - (width / 2),
             'top': (window_height / 2) - (height / 2)
         });
+
+        this.$overlay.css('height', $(document).height());
     }
 
 });

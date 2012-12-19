@@ -22,11 +22,12 @@ App.Views.LookEdit = Backbone.View.extend({
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_reset', new App.Views.DialogReset({model: this.model}));
         this.popup_dispatcher.add('dialog_delete', new App.Views.DialogDelete({model: this.model}));
+        this.popup_dispatcher.add('dialog_save', new App.Views.DialogSave({model: this.model, title: gettext('Save look')}));
+        this.popup_dispatcher.add('dialog_publish', new App.Views.DialogSave({model: this.model, title: gettext('Publish look')}));
         this.popup_dispatcher.add('dialog_unpublish', new App.Views.DialogUnpublish({model: this.model}));
 
         // Look editor popup
         this.look_edit_popup = new App.Views.LookEditPopup({parent_view: this});
-        this.look_edit_save_popup = new App.Views.LookEditSavePopup({model: this.model});
 
         this.initialize_temporary_image();
 
@@ -179,8 +180,7 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     look_publish: function() {
-        this.model.set('published', true);
-        this.look_edit_save_popup.show_publish();
+        this.popup_dispatcher.show('dialog_publish');
 
         return false;
     },
@@ -192,7 +192,7 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     look_save: function() {
-        this.look_edit_save_popup.show_save();
+        this.popup_dispatcher.show('dialog_save');
 
         return false;
     },
