@@ -10,6 +10,7 @@ App.Views.TemporaryImageUploadForm = Backbone.View.extend({
     },
 
     upload_complete: function(e, data) {
+        this.model.set('image_id', data.result[0].id);
         this.model.set('image', data.result[0].url);
         this.model._dirty = true;
     },
