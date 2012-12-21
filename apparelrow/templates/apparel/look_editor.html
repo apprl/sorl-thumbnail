@@ -44,8 +44,8 @@
 
         <div id="product-chooser">
             <ul id="product-tabs" class="group">
-                <li><a class="tab-likes{% if request.user.is_authenticated and has_liked %} selected{% endif%}"{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} href="#likes">{% trans "Your ♥" %}</a>
-                <li><a class="tab-all{% if not request.user.is_authenticated or not has_liked %} selected{% endif%}" href="#all">{% trans "All products" %}</a></li>
+                <li class="first"><a class="tab-likes{% if request.user.is_authenticated and has_liked %} selected{% endif%}"{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} href="#likes">{% trans "Your ♥" %}</a>
+                <li class="last"><a class="tab-all{% if not request.user.is_authenticated or not has_liked %} selected{% endif%}" href="#all">{% trans "All products" %}</a></li>
             </ul>
             <div class="product-filter-container">
                 <div id="product-filter" class="group">

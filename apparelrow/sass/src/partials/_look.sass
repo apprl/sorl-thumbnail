@@ -272,10 +272,13 @@ body.look-editor
   padding-left: 20px
   #product-tabs
     height: 50px
-    border-bottom: 1px solid $easiest_color
+    border: 1px solid $easiest_color
     li
+      +box-sizing(border-box)
       display: inline-block
       width: 50%
+      &.first
+        border-right: 1px solid $easiest_color
       a
         display: block
         height: 50px
@@ -284,10 +287,6 @@ body.look-editor
         font-size: 1.6em
         font-weight: bold
         text-transform: uppercase
-        border-top: 1px solid $easiest_color
-        border-right: 1px solid $easiest_color
-        border-left: 1px solid $easiest_color
-        border-bottom: 1px solid $easiest_color
         background-color: #f6f6f6
         &.selected
           &.tab-likes
