@@ -28,17 +28,21 @@ def editor(request, component=None, slug=None):
     Look editor
     """
     look = None
+    has_liked = False
     if slug is not None:
         if not request.user.is_authenticated():
             raise Http404()
 
         look = get_object_or_404(get_model('apparel', 'Look'), slug=slug, user=request.user)
         component = {'P': 'photo', 'C': 'collage'}[look.component]
+        has_liked = request.user.product_likes.exists()
 
     if component is None:
         raise Http404()
 
-    return render(request, 'apparel/look_editor.html', {'component': component, 'object': look})
+    return render(request, 'apparel/look_editor.html', {'component': component,
+                                                        'object': look,
+                                                        'has_liked': has_liked})
 
 
 def publish(request, slug):
