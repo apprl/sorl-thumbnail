@@ -51,10 +51,10 @@
                 <div id="product-filter" class="group">
                     <div class="middle-filters group">
                         <input id="product-search" type="search" name="q" placeholder="{% trans "Search for your product here..." %}">
-                        <div class="radio-group">
-                            <label><input type="radio" name="gender" value="W"{% if APPAREL_GENDER == 'W' %} checked{% endif %}> {% trans "Women" %}</label>
-                            <label><input type="radio" name="gender" value="M"{% if APPAREL_GENDER == 'M' %} checked{% endif %}> {% trans "Men" %}</label>
-                        </div>
+                        <ul id="product-gender">
+                            <li><a href="#" data-value="W"{% if APPAREL_GENDER == 'W' %} class="selected"{% endif %}>{% trans "Women" %}</a></li>
+                            <li><a href="#" data-value="M"{% if APPAREL_GENDER == 'M' %} class="selected"{% endif %}>{% trans "Men" %}</a></li>
+                        </ul>
                     </div>
                     <div class="hidden-filters-container">
                         <ul class="hidden-filters">

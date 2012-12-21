@@ -6,7 +6,7 @@ App.Views.FilterProduct = Backbone.View.extend({
         'change input[name="q"]': 'filter',
         'click input[name="q"]': 'filter',
         'keyup input[name="q"]': 'timed_filter',
-        'change input[name="gender"]': 'filter',
+        'click #product-gender a': 'filter_gender',
     },
 
     initialize: function(options) {
@@ -120,6 +120,15 @@ App.Views.FilterProduct = Backbone.View.extend({
         if(!(value || currentValue) || value != currentValue) {
             this.product_filter_model.set(attr, value);
         }
+
+        e.preventDefault();
+    },
+
+    filter_gender: function(e) {
+        var $target = $(e.target);
+        this.$el.find('#product-gender .selected').removeClass('selected');
+        $target.addClass('selected');
+        this.product_filter_model.set('gender', $target.data('value'));
 
         e.preventDefault();
     },

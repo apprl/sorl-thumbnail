@@ -310,13 +310,25 @@ body.look-editor
         width: 220px
         font-size: 1.1em
         padding: 0 5px
-      .radio-group
+      #product-gender
+        display: block
         float: left
         margin-left: 10px
-        label
-          margin: 1px 0
-          display: block
-          font-size: 1.2em
+        li > a
+          font-size: 12px
+          display: inline-block
+          padding: 2px 5px
+          overflow: hidden
+          &:before
+            margin-right: 5px
+            display: inline-block
+            content: ''
+            width: 14px
+            height: 15px
+            vertical-align: middle
+            background: transparent image_url(unquote("circle-dot.png")) no-repeat 0px 0px
+          &.selected:before
+            background-position: -14px 0px
 
   .product-list-container
     padding: 0 10px
