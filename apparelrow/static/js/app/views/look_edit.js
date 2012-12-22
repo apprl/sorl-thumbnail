@@ -107,11 +107,14 @@ App.Views.LookEdit = Backbone.View.extend({
 
     _get_hotspot: function(e) {
         // TODO: maybe use dynamic scale for hotspot size instead of 80x80
-        var container_width = this.$el.find('.look-container').width() - 80,
-            container_height = this.$el.find('.look-container').height() - 80;
+        var size = 80,
+            $container = this.$el.find('.look-container'),
+            container_offset = $container.offset(),
+            container_width = $container.width() - size,
+            container_height = $container.height() - size;
 
-        return {top: Math.min(container_height, Math.max(0, e.offsetY - 40)),
-                left: Math.min(container_width, Math.max(0, e.offsetX - 40))};
+        return {top: Math.min(container_height, Math.max(0, e.pageY - container_offset.top - (size / 2))),
+                left: Math.min(container_width, Math.max(0, e.pageX - container_offset.left - (size / 2)))};
     },
 
     _create_photo_component: function(position) {
