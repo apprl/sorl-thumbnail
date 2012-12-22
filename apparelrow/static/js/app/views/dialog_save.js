@@ -104,15 +104,6 @@ App.Views.DialogSave = Backbone.View.extend({
         return false;
     },
 
-    //render_publish: function() {
-        //this.delegateEvents();
-
-        //this.$el.find('.title').text(gettext('Publish look'));
-        //this.$el.find('.content').html(this.publish_template(this.model.toJSON())).addClass('look-save').addClass('group');
-        //this._center();
-        //this.$el.show();
-    //},
-
     render: function(name) {
         if(name == 'dialog_save') {
             this.$el.html(this.save_template(this.model.toJSON()));
