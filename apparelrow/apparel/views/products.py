@@ -168,15 +168,18 @@ class ProductList(View):
         if 'price' in facet_fields:
             query_arguments['facet.query'] = [value for value in FACET_PRICE_MAP_ID[language].values()]
 
+        # Sort
+        query_arguments['sort'] = request.GET.get('sort', 'popularity desc, created desc')
+
         # User
         user_id = request.GET.get('user_id', False)
         if user_id:
             query_arguments['fq'].append('user_likes:%s' % (user_id,))
+            query_arguments['sort'] = ', '.join(['availability desc', request.GET.get('sort', 'created desc')])
         else:
             query_arguments['fq'].append('availability:true')
 
-        # Sort
-        query_arguments['sort'] = request.GET.get('sort', 'popularity desc, created desc')
+
 
         # TODO: which fields, template?
         query_arguments['fl'] = ['id:django_id',
@@ -202,7 +205,10 @@ class ProductList(View):
 
             sort_get = request.GET.get('sort')
             if not sort_get or sort_get == '':
-                query_arguments['sort'] = 'score desc'
+                if request.GET.get('user_id', False):
+                    query_arguments['sort'] = 'availability desc, score desc'
+                else:
+                    query_arguments['sort'] = 'score desc'
 
         if request.GET.get('facet', False):
             return self.get_facet(request, query_string, query_arguments, *args, **kwargs)
