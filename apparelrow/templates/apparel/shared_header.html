@@ -19,7 +19,7 @@
 
 <ul id="nav-user">
     {% if not request.user.is_authenticated %}
-    <li class="user facebook">{% apparel_facebook_button %}</li>
+    <li class="user facebook"><a class="btn-facebook facebook-btn" href="#login">{% trans "Log in" %} <i class="icon-facebook"></i></a></li>
     {% else %}
     <li class="avatar"><a href="{{ request.user.get_profile.url_likes }}"><img src="{{ request.user.get_profile.avatar_small }}" width="32" height="32"></a></li>
     <li class="user subnav-handle">

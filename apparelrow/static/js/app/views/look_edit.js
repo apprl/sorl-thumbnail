@@ -25,6 +25,7 @@ App.Views.LookEdit = Backbone.View.extend({
         this.popup_dispatcher.add('dialog_save', new App.Views.DialogSave({model: this.model, title: gettext('Save look')}));
         this.popup_dispatcher.add('dialog_publish', new App.Views.DialogSave({model: this.model, title: gettext('Publish look')}));
         this.popup_dispatcher.add('dialog_unpublish', new App.Views.DialogUnpublish({model: this.model}));
+        this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
 
         // Look editor popup
         this.look_edit_popup = new App.Views.LookEditPopup({parent_view: this});
@@ -40,6 +41,13 @@ App.Views.LookEdit = Backbone.View.extend({
         this.model.components.on('reset', this.add_components, this);
         // TODO: is it ok to render on error? wil it work for look edits?
         this.model.fetch({error: _.bind(function() { this.render(); }, this), success: _.bind(function() { this.render(); }, this)});
+
+        // Facebook button login
+        if(!isAuthenticated) {
+            // TODO: must turn off default click handler, better way to handle this?
+            $('#nav-user .btn-facebook').off('click');
+            $('.facebook-btn').attr('onclick', '').on('click', _.bind(this.login_popup, this));
+        }
 
         // TODO: move this to another view or expand this view
         $('.button-container').on('click', '.btn-reset', _.bind(this.look_reset, this))
@@ -62,6 +70,12 @@ App.Views.LookEdit = Backbone.View.extend({
         App.Events.on('look_edit:product:add', this.pending_add_component, this);
         this.pending_product = false;
         this.pending_component = false;
+    },
+
+    login_popup: function() {
+        this.popup_dispatcher.show('dialog_login');
+
+        return false;
     },
 
     add_component: function(model, collection) {

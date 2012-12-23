@@ -36,7 +36,7 @@ App.Views.PopupDispatcher = Backbone.View.extend({
         delete this.content[name];
     },
 
-    show: function(name) {
+    show: function(name, hide_animation) {
         var dialog = this.content[name];
 
         this.$el.find('.title').text(dialog.title);
@@ -45,20 +45,31 @@ App.Views.PopupDispatcher = Backbone.View.extend({
         dialog.delegateEvents();
         this._center();
 
-        this.$overlay.fadeIn(200);
-        this.$el.fadeIn(200);
+        if(hide_animation) {
+            this.$overlay.show();
+            this.$el.show();
+        } else {
+            this.$overlay.fadeIn(200);
+            this.$el.fadeIn(200);
+        }
 
         this.active = name;
     },
 
-    hide: function() {
+    hide: function(hide_animation) {
         var dialog = this.content[this.active];
 
         if(dialog.hasOwnProperty('hide')) {
             dialog.hide();
         }
-        this.$overlay.fadeOut(200);
-        this.$el.fadeOut(200);
+
+        if(hide_animation) {
+            this.$overlay.hide();
+            this.$el.hide();
+        } else {
+            this.$overlay.fadeOut(200);
+            this.$el.fadeOut(200);
+        }
         this.active = false;
 
         return false;
