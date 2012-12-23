@@ -107,15 +107,17 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     pending_add_component: function(product) {
-        if(this.pending_component && this.model.has('image')) {
-            this.add_product_to_component(this.model.components.getByCid(this.pending_component), product);
-            this.pending_component = false;
+        // XXX: this code might be used in the future when we want to allow a
+        // click in a photo without a pending product
+        //if(this.pending_component && this.model.has('image')) {
+            //this.add_product_to_component(this.model.components.getByCid(this.pending_component), product);
+            //this.pending_component = false;
+        //} else {
+
+        if(external_look_type == 'collage') {
+            this._create_collage_component(product);
         } else {
-            if(external_look_type == 'collage') {
-                this._create_collage_component(product);
-            } else {
-                this.pending_product = product;
-            }
+            this.pending_product = product;
         }
     },
 
@@ -164,17 +166,21 @@ App.Views.LookEdit = Backbone.View.extend({
             this.add_product_to_component(new_component, this.pending_product);
             this.model.components.add(new_component);
             this.pending_product = false;
-        } else {
-            if(this.pending_component) {
-                // If pending component is active only move it to new touch/click position
-                this.model.components.getByCid(this.pending_component).set(this._get_hotspot(e));
-            } else {
-                // Else create a new pending component on touch/click position
-                var new_component = this._create_photo_component(this._get_hotspot(e));
-                this.model.components.add(new_component);
-                this.pending_component = new_component.cid;
-            }
         }
+
+        // XXX: this code might be used in the future when we want to allow a
+        // click in a photo without a pending product
+        //} else {
+            //if(this.pending_component) {
+                //// If pending component is active only move it to new touch/click position
+                //this.model.components.getByCid(this.pending_component).set(this._get_hotspot(e));
+            //} else {
+                //// Else create a new pending component on touch/click position
+                //var new_component = this._create_photo_component(this._get_hotspot(e));
+                //this.model.components.add(new_component);
+                //this.pending_component = new_component.cid;
+            //}
+        //}
 
         this.model._dirty = true;
         e.preventDefault();

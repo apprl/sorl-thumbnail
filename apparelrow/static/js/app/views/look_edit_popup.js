@@ -35,6 +35,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
             this.active_type = 'add';
             this.show(model);
             this.render_add();
+            $('.look-container').css('cursor', 'pointer');
         } else if(external_look_type == 'collage') {
             this.hide();
         }
@@ -56,6 +57,8 @@ App.Views.LookEditPopup = Backbone.View.extend({
             this.parent_view.pending_product = false;
             this.active_type = false;
         }
+
+        $('.look-container').css('cursor', 'auto');
 
         $(document).off('click.popup');
         this.$el.hide();
