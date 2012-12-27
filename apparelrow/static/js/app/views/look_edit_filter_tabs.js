@@ -18,7 +18,10 @@ App.Views.LookEditFilterTabs = Backbone.View.extend({
         var user = $target.data('user');
         if ($target.hasClass('tab-likes') && user) {
             this.model.set('user_id', user);
+        } else if($target.hasClass('tab-likes') && !isAuthenticated) {
+            App.Events.trigger('product_list:unauthenticated', true);
         } else {
+            App.Events.trigger('product_list:unauthenticated', false);
             this.model.unset('user_id');
         }
 

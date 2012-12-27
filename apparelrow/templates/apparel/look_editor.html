@@ -79,6 +79,10 @@
                     <p>{% trans "No matching items" %}</p>
                     <a class="btn btn-upper btn-reset" href="#">{% trans "Reset search" %}</a>
                 </div>
+                <div id="product-list-unauthenticated">
+                    <p>{% trans "Connect with your Facebook account to save your favourite items" %}</p>
+                    <a class="facebook-btn" href="#login"><img src="{% static "images/facebook-"|add:LANGUAGE_CODE|add:".png" %}"></a>
+                </div>
                 <ul id="product-list"></ul>
             </div>
         </div>
