@@ -83,8 +83,8 @@ urlpatterns = patterns('',
 
     # Looks
     url(r'^looks/create/$', 'apparel.views.looks.create', name='look-create'),
-    url(r'^look/editor/(?P<component>photo|collage)/$', 'apparel.views.looks.editor', name='look-editor'),
-    url(r'^look/editor/(?P<slug>[\w-]+)/$', 'apparel.views.looks.editor', name='look-editor'),
+    url(r'^looks/editor/(?P<component>photo|collage)/$', 'apparel.views.looks.editor', name='look-editor'),
+    url(r'^looks/editor/(?P<slug>[\w-]+)/$', 'apparel.views.looks.editor', name='look-editor'),
 
     url(r'^look/$', LookView.as_view(), name='look_list'),
     url(r'^look/(?P<pk>\d+)/?$', LookView.as_view(), name='look'),
