@@ -79,8 +79,6 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     add_component: function(model, collection) {
-        console.log('add component', model, collection);
-
         var view_class = this.component_view_classes[external_look_type];
         var view = new view_class({model: model, collection: collection});
         this.$('.look-container').append(view.render().el);
@@ -221,7 +219,6 @@ App.Views.LookEdit = Backbone.View.extend({
     },
 
     initialize_temporary_image: function() {
-        console.log('initialize temporary image form');
         this.temporary_image_view = new App.Views.TemporaryImageUploadForm({model: this.model, look_type: external_look_type});
     },
 
@@ -239,14 +236,11 @@ App.Views.LookEdit = Backbone.View.extend({
 
     render_temporary_image: function() {
         if(external_look_type == 'photo' && !this.model.has('image')) {
-            console.log('render temporary image form');
             this.$el.find('.look-container').append(this.temporary_image_view.render().el);
         }
     },
 
     render_image: function() {
-        console.log('render image');
-
         this.update_sizes();
 
         if(this.model.has('image')) {

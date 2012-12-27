@@ -15,17 +15,13 @@ jQuery(document).ready(function() {
         },
 
         create_photo: function() {
-            console.log('photo');
-
             filter_product_view.disable();
         },
 
         create_collage: function() {
-            console.log('collage');
         },
 
         look_editor: function(look_slug) {
-            console.log('look editor route', look_slug);
         }
     });
 
