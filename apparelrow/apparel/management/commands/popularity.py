@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 timedelta = datetime.datetime.now() - product.date_added
                 item_half_hour_age =  (timedelta.days * 86400 + timedelta.seconds) / 7200
                 if item_half_hour_age > 0:
-                    product.popularity = decimal.Decimal(votes / pow(item_half_hour_age, 1.53))
+                    product.popularity = decimal.Decimal(str(votes / pow(item_half_hour_age, 1.53)))
                     product.save()
                 elif product.popularity > ZERO:
                     product.popularity = ZERO
