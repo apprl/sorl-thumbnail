@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-23 15:39+0100\n"
+"POT-Creation-Date: 2012-12-27 13:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,16 +52,18 @@ msgid "brand mapped"
 msgstr ""
 
 #: apparel/admin.py:239 templates/base.html:347
-#: templates/apparel/look_editor.html:91 templates/apparel/look_editor.html:97
-#: templates/apparel/look_editor.html:103
-#: templates/apparel/look_editor.html:109
+#: templates/apparel/look_editor.html:95
+#: templates/apparel/look_editor.html:101
+#: templates/apparel/look_editor.html:107
+#: templates/apparel/look_editor.html:113
 msgid "Yes"
 msgstr "Ja"
 
 #: apparel/admin.py:240 templates/base.html:346
-#: templates/apparel/look_editor.html:90 templates/apparel/look_editor.html:96
-#: templates/apparel/look_editor.html:102
-#: templates/apparel/look_editor.html:108
+#: templates/apparel/look_editor.html:94
+#: templates/apparel/look_editor.html:100
+#: templates/apparel/look_editor.html:106
+#: templates/apparel/look_editor.html:112
 msgid "No"
 msgstr "Nej"
 
@@ -507,7 +509,7 @@ msgstr "Importerade produkter"
 msgid "Number of products created or updated"
 msgstr "Antal skapade eller uppdaterade produkter"
 
-#: importer/models.py:121 templates/apparel/look_editor.html:191
+#: importer/models.py:121 templates/apparel/look_editor.html:195
 #: templates/apparel/fragments/product_feed_226.html:15
 #: templates/apparel/fragments/product_feed_452.html:15
 #: templates/apparel/fragments/product_shop.html:15
@@ -711,9 +713,9 @@ msgstr ""
 msgid "Search for products"
 msgstr "Sök efter produkter"
 
-#: templates/base.html:140 templates/apparel/look_editor.html:89
-#: templates/apparel/look_editor.html:119
-#: templates/apparel/look_editor.html:130
+#: templates/base.html:140 templates/apparel/look_editor.html:93
+#: templates/apparel/look_editor.html:123
+#: templates/apparel/look_editor.html:134
 #: templates/profile/base_profile.html:64
 #: templates/profile/base_profile.html:79
 msgid "Cancel"
@@ -1303,7 +1305,7 @@ msgid "Unpublish look"
 msgstr "Avbryt publicering av look"
 
 #: templates/apparel/look_detail.html:80
-#: templates/apparel/look_editor.html:107
+#: templates/apparel/look_editor.html:111
 msgid "Are you sure you want to unpublish your look?"
 msgstr "Är du säker på att du vill avbryta publiceringen?"
 
@@ -1321,7 +1323,7 @@ msgstr "Ta bort"
 #: templates/apparel/look_detail.html:130
 #: templates/apparel/look_detail.html:132
 #: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
-#: templates/apparel/look_editor.html:131
+#: templates/apparel/look_editor.html:135
 msgid "Publish"
 msgstr "Publicera"
 
@@ -1367,7 +1369,7 @@ msgid "Show"
 msgstr "Visa"
 
 #: templates/apparel/look_edit.html:492 templates/apparel/look_editor.html:34
-#: templates/apparel/look_editor.html:120
+#: templates/apparel/look_editor.html:124
 msgid "Save"
 msgstr "Spara"
 
@@ -1391,11 +1393,11 @@ msgstr "Hitta produkter!"
 msgid "Drag products here to start building a collage"
 msgstr "Dra produkter hit för att börja skapa ditt kollage"
 
-#: templates/apparel/look_edit.html:517 templates/apparel/look_editor.html:176
+#: templates/apparel/look_edit.html:517 templates/apparel/look_editor.html:180
 msgid "Upload a photo to create a tagged image"
 msgstr "Börja med att ladda upp ett foto"
 
-#: templates/apparel/look_edit.html:522 templates/apparel/look_editor.html:180
+#: templates/apparel/look_edit.html:522 templates/apparel/look_editor.html:184
 msgid "Upload"
 msgstr "Ladda upp"
 
@@ -1412,7 +1414,7 @@ msgid "Reset look"
 msgstr "Återställ look"
 
 #: templates/apparel/look_editor.html:34
-#: templates/apparel/look_editor.html:120
+#: templates/apparel/look_editor.html:124
 msgid "Save draft"
 msgstr "Spara utkast"
 
@@ -1451,38 +1453,42 @@ msgstr "Inga produkter matchar ditt urval"
 msgid "Reset search"
 msgstr "Nollställ sökning"
 
-#: templates/apparel/look_editor.html:88
+#: templates/apparel/look_editor.html:83
+msgid "Connect with your Facebook account to save your favourite items"
+msgstr "Logga in med ditt Facebookkonto för att kunna spara dina favoritprodukter"
+
+#: templates/apparel/look_editor.html:92
 msgid "Do you want to save this look before logging in with Facebook?"
 msgstr "Vill du spara den här looken innan du loggar in med Facebook?"
 
-#: templates/apparel/look_editor.html:95
+#: templates/apparel/look_editor.html:99
 msgid "Are you sure you want to discard changes and start over?"
 msgstr ""
 "Är du säker på att du vill ångra alla ändringar och börja om från början?"
 
-#: templates/apparel/look_editor.html:101
+#: templates/apparel/look_editor.html:105
 msgid "Are you sure you want to permanently delete your look?"
 msgstr "Är du säker på att du vill ta bort din look permanent?"
 
-#: templates/apparel/look_editor.html:113
-#: templates/apparel/look_editor.html:124
+#: templates/apparel/look_editor.html:117
+#: templates/apparel/look_editor.html:128
 msgid "Your look title"
 msgstr "Din look titel"
 
-#: templates/apparel/look_editor.html:116
-#: templates/apparel/look_editor.html:127
+#: templates/apparel/look_editor.html:120
+#: templates/apparel/look_editor.html:131
 msgid "Description"
 msgstr "Beskrivning"
 
-#: templates/apparel/look_editor.html:151
+#: templates/apparel/look_editor.html:155
 msgid "Click in photo to place item"
 msgstr "Klicka i bilden för att placera produkten"
 
-#: templates/apparel/look_editor.html:171
+#: templates/apparel/look_editor.html:175
 msgid "Uploading image"
 msgstr "Laddar upp bild"
 
-#: templates/apparel/look_editor.html:192
+#: templates/apparel/look_editor.html:196
 msgid "Add"
 msgstr "Lägg till"
 
