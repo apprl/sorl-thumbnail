@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static from staticfiles %}
 
 {% block extra-title %}{% trans "Create a new look" %} | {% endblock %}
 
@@ -10,12 +11,19 @@
 <div id="body-header">
     <div class="column_one">
         <h1>{% trans "Create a new look" %}</h1>
+        <h2>{% trans "Choose type" %}</h2>
     </div>
 </div>
 {% endblock body-header %}
 {% block body %}
 <div id="content">
-    <a href="{% url look-editor 'photo' %}" class="btn btn-block btn-upper">{% trans "Create a tagged photo" %}</a>
-    <a href="{% url look-editor 'collage' %}" class="btn btn-block btn-upper">{% trans "Create a collage" %}</a>
+    <div class="left">
+        <a href="{% url look-editor 'photo' %}"><img src="{% static "images/look_example_photo.jpg" %}"></a>
+        <a href="{% url look-editor 'photo' %}" class="btn btn-block btn-upper">{% trans "Create a tagged photo" %}</a>
+    </div>
+    <div class="right">
+        <a href="{% url look-editor 'collage' %}"><img src="{% static "images/look_example_collage.jpg" %}"></a>
+        <a href="{% url look-editor 'collage' %}" class="btn btn-block btn-upper">{% trans "Create a collage" %}</a>
+    </div>
 </div>
 {% endblock body %}
