@@ -25,7 +25,7 @@ function increase_counts(counts, new_count) {
 /**
  * Creates a modal dialog with yes/no as alternatives.
  */
-function create_modal_dialog(header, messages, yes_action, no_action) {
+window.create_modal_dialog = function(header, messages, yes_action, no_action) {
     var modal_dialog = jQuery('<div class="dialog"></div>').html(
         jQuery('#error_dialog_template').render({
             header: header,
@@ -45,7 +45,7 @@ function create_modal_dialog(header, messages, yes_action, no_action) {
 
     jQuery('.yes', modal_dialog).click(function() { yes_action(jQuery(modal_dialog).overlay()); });
     jQuery('.no', modal_dialog).click(function() { no_action(jQuery(modal_dialog).overlay()); });
-}
+};
 
 /**
  * Creates a dialog from html loaded through ajax, only alternativ is close
