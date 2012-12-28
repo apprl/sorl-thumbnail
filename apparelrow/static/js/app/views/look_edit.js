@@ -138,11 +138,17 @@ App.Views.LookEdit = Backbone.View.extend({
     _create_collage_component: function(product) {
         var self = this;
         var component = new App.Models.LookComponent().set({top: 0, left: 0});
+        var $container = $('.look-container');
 
         // Load image to get width and height for look component
         var image = new Image();
         image.onload = function() {
-            component.set({width: this.width / 1.5, height: this.height / 1.5});
+            var width = this.width / 1.5;
+            var height = this.height / 1.5;
+            component.set({width: width,
+                           height: height,
+                           left: ($container.width() / 2) - width / 2,
+                           top: ($container.height() / 2) - height / 2});
             self.add_product_to_component(component, product);
             self.model.components.add(component);
         }

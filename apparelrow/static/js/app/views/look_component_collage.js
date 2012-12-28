@@ -13,6 +13,17 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         }
     },
 
+    _max_zindex: function() {
+        var current_max = 0;
+        $('.look-container .product').each(function(index, element) {
+            var current_value = parseInt($(element).css('z-index'), 10);
+            if(current_value > current_max) {
+                current_max = current_value;
+            }
+        });
+        return current_max;
+    },
+
     render: function() {
         this.$el.css({left: this.model.get('left'),
                       top: this.model.get('top'),
@@ -29,6 +40,8 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         this.$el.html(this.template(this.model.toJSON()));
 
         var container = $('#collage');
+
+        this.$el.css('z-index', this._max_zindex() + 1);
 
         this.$el.resizable({
             containment: container,
