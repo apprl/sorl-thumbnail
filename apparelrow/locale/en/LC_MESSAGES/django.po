@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-28 11:33+0100\n"
+"POT-Creation-Date: 2012-12-28 15:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,15 +34,15 @@ msgid "Swe (SEK)"
 msgstr ""
 
 #: activity_feed/models.py:71 activity_feed/models.py:120
-#: apparel/models.py:374 apparel/models.py:700 apparel/models.py:917
-#: apparel/models.py:1042 beta/models.py:7 beta/models.py:15
+#: apparel/models.py:374 apparel/models.py:700 apparel/models.py:919
+#: apparel/models.py:1044 beta/models.py:7 beta/models.py:15
 #: profile/models.py:336 statistics/models.py:49
 msgid "Time created"
 msgstr ""
 
 #: activity_feed/models.py:72 apparel/models.py:228 apparel/models.py:375
 #: apparel/models.py:442 apparel/models.py:498 apparel/models.py:701
-#: apparel/models.py:918 profile/models.py:337
+#: apparel/models.py:920 profile/models.py:337
 msgid "Time modified"
 msgstr ""
 
@@ -336,39 +336,39 @@ msgstr ""
 msgid "What compontent to show"
 msgstr ""
 
-#: apparel/models.py:962
+#: apparel/models.py:964
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:963
+#: apparel/models.py:965
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:964
+#: apparel/models.py:966
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:965
+#: apparel/models.py:967
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:966
+#: apparel/models.py:968
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:967
+#: apparel/models.py:969
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1062
+#: apparel/models.py:1064
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1096
+#: apparel/models.py:1098
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1096
+#: apparel/models.py:1098
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -796,7 +796,7 @@ msgid "Shop"
 msgstr ""
 
 #: templates/base.html:256 templates/apparel/look_detail.html:4
-#: templates/apparel/look_edit.html:5 templates/apparel/look_editor.html:5
+#: templates/apparel/look_editor.html:5
 #: templates/apparel/shared_header.html:10
 #: templates/profile/base_profile.html:40 templates/profile/looks.html:4
 msgid "Looks"
@@ -868,8 +868,7 @@ msgstr ""
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr ""
 
-#: templates/dialog_base.html:5 templates/apparel/look_edit.html:544
-#: templates/beta/dialog_invite_user.html:5
+#: templates/dialog_base.html:5 templates/beta/dialog_invite_user.html:5
 msgid "Close"
 msgstr ""
 
@@ -1221,7 +1220,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/apparel/look_create.html:5 templates/apparel/look_create.html:13
-#: templates/apparel/look_editor.html:27
 msgid "Create a new look"
 msgstr ""
 
@@ -1229,30 +1227,25 @@ msgstr ""
 msgid "Choose type"
 msgstr ""
 
-#: templates/apparel/look_create.html:22
-#: templates/apparel/fragments/look_create.html:19
+#: templates/apparel/look_create.html:22 templates/apparel/look_editor.html:27
 msgid "Create a tagged photo"
 msgstr ""
 
-#: templates/apparel/look_create.html:26
-#: templates/apparel/fragments/look_create.html:24
+#: templates/apparel/look_create.html:26 templates/apparel/look_editor.html:27
 msgid "Create a collage"
 msgstr ""
 
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:114
-#: templates/apparel/look_edit.html:5 templates/apparel/look_edit.html:482
 #: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:27
 #: templates/apparel/product_detail.html:4
 msgid "by"
 msgstr ""
 
-#: templates/apparel/look_detail.html:40 templates/apparel/look_edit.html:455
-#: templates/profile/looks.html:13
+#: templates/apparel/look_detail.html:40 templates/profile/looks.html:13
 msgid "Are you sure?"
 msgstr ""
 
-#: templates/apparel/look_detail.html:41 templates/apparel/look_edit.html:456
-#: templates/profile/looks.html:14
+#: templates/apparel/look_detail.html:41 templates/profile/looks.html:14
 msgid "Do you really want to delete look"
 msgstr ""
 
@@ -1273,8 +1266,7 @@ msgstr ""
 msgid "Are you sure you want to unpublish your look?"
 msgstr ""
 
-#: templates/apparel/look_detail.html:127 templates/apparel/look_edit.html:5
-#: templates/apparel/look_editor.html:5
+#: templates/apparel/look_detail.html:127 templates/apparel/look_editor.html:5
 #: templates/apparel/fragments/looks_large.html:50
 msgid "Edit"
 msgstr ""
@@ -1324,57 +1316,17 @@ msgstr ""
 msgid "See all looks"
 msgstr ""
 
-#: templates/apparel/look_edit.html:261 templates/apparel/look_edit.html:533
-msgid "Hide"
-msgstr ""
-
-#: templates/apparel/look_edit.html:265
-msgid "Show"
-msgstr ""
-
-#: templates/apparel/look_edit.html:492 templates/apparel/look_editor.html:34
-#: templates/apparel/look_editor.html:124
-msgid "Save"
-msgstr ""
-
-#: templates/apparel/look_edit.html:493 templates/apparel/look_editor.html:30
+#: templates/apparel/look_editor.html:30
 msgid "Delete look"
-msgstr ""
-
-#: templates/apparel/look_edit.html:496
-msgid "Description (optional):"
-msgstr ""
-
-#: templates/apparel/look_edit.html:507
-msgid "To create a look, you need to have liked at least one product."
-msgstr ""
-
-#: templates/apparel/look_edit.html:507
-msgid "Find products!"
-msgstr ""
-
-#: templates/apparel/look_edit.html:509
-msgid "Drag products here to start building a collage"
-msgstr ""
-
-#: templates/apparel/look_edit.html:517 templates/apparel/look_editor.html:180
-msgid "Upload a photo to create a tagged image"
-msgstr ""
-
-#: templates/apparel/look_edit.html:522 templates/apparel/look_editor.html:184
-msgid "Upload"
-msgstr ""
-
-#: templates/apparel/look_edit.html:532
-msgid "Your likes"
-msgstr ""
-
-#: templates/apparel/look_edit.html:544
-msgid "Products"
 msgstr ""
 
 #: templates/apparel/look_editor.html:32
 msgid "Reset look"
+msgstr ""
+
+#: templates/apparel/look_editor.html:34
+#: templates/apparel/look_editor.html:124
+msgid "Save"
 msgstr ""
 
 #: templates/apparel/look_editor.html:34
@@ -1449,6 +1401,14 @@ msgstr ""
 
 #: templates/apparel/look_editor.html:175
 msgid "Uploading image"
+msgstr ""
+
+#: templates/apparel/look_editor.html:180
+msgid "Start by uploading a photo"
+msgstr ""
+
+#: templates/apparel/look_editor.html:184
+msgid "Upload"
 msgstr ""
 
 #: templates/apparel/look_editor.html:196
@@ -1685,26 +1645,6 @@ msgstr ""
 
 #: templates/apparel/fragments/dialog_why_facebook.html:36
 msgid "Not a valid email address"
-msgstr ""
-
-#: templates/apparel/fragments/look_create.html:6
-msgid "First, you need to ♥ the products you wish to place in your look."
-msgstr ""
-
-#: templates/apparel/fragments/look_create.html:7
-msgid "Then select a name for your look (you may change that name later):"
-msgstr ""
-
-#: templates/apparel/fragments/look_create.html:14
-msgid "You can then choose to create a tagged photo or a collage: "
-msgstr ""
-
-#: templates/apparel/fragments/look_create.html:17
-msgid "Tagged photo"
-msgstr ""
-
-#: templates/apparel/fragments/look_create.html:22
-msgid "Collage"
 msgstr ""
 
 #: templates/apparel/fragments/look_medium.html:33

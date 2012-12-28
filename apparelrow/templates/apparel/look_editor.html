@@ -24,7 +24,7 @@
     <div id="content" class="group">
 
         <div class="body-header">
-            <h1>{% if object %}{{ object.title }} <span>{% trans "by" %} {{ object.user.get_profile.display_name }}</span>{% else %}{% trans "Create a new look" %}{% endif %}</h1>
+            <h1>{% if object %}{{ object.title }} <span>{% trans "by" %} {{ object.user.get_profile.display_name }}</span>{% else %}{% if component == 'photo' %}{% trans "Create a tagged photo" %}{% else %}{% trans "Create a collage" %}{% endif %}{% endif %}</h1>
             <div class="button-container">
                 {% if object and object.slug %}
                 <button class="btn btn-upper btn-delete" name="look_delete">{% trans "Delete look" %}</button>
@@ -177,7 +177,7 @@
         <form enctype="multipart/form-data" action="{% url temporary-image %}" method="POST" id="temporaryimage">
             {% csrf_token %}
             <div class="look-empty">
-                <p>{% trans "Upload a photo to create a tagged image" %}</p>
+                <p>{% trans "Start by uploading a photo" %}</p>
                 <div class="upload-field">
                     <span><input type="file" name="image_file"></span>
                 </div>
