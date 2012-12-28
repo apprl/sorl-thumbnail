@@ -35,3 +35,4 @@ django-storages==1.1.5
 boto==2.6.0
 django-pipeline==1.2.20
 jsmin==2.0.2
+xmltodict==0.4.1

@@ -196,6 +196,7 @@ INSTALLED_APPS = (
     'apparel_comments',
     'statistics',           # Internal: Click statistics module
     'newsletter',
+    'dashboard',
 
     'activity_feed',
     'actstream',            # External: Actions and follows
