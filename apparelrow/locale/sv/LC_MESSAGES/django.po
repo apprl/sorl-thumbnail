@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-27 13:19+0100\n"
+"POT-Creation-Date: 2012-12-28 11:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1260,17 +1260,21 @@ msgid_plural "%(counter)s products"
 msgstr[0] "%(counter)s produkt"
 msgstr[1] "%(counter)s produkter"
 
-#: templates/apparel/look_create.html:4 templates/apparel/look_create.html:12
+#: templates/apparel/look_create.html:5 templates/apparel/look_create.html:13
 #: templates/apparel/look_editor.html:27
 msgid "Create a new look"
 msgstr "Skapa en ny look"
 
-#: templates/apparel/look_create.html:18
+#: templates/apparel/look_create.html:14
+msgid "Choose type"
+msgstr "Välj typ"
+
+#: templates/apparel/look_create.html:22
 #: templates/apparel/fragments/look_create.html:19
 msgid "Create a tagged photo"
 msgstr "Skapa taggad bild"
 
-#: templates/apparel/look_create.html:19
+#: templates/apparel/look_create.html:26
 #: templates/apparel/fragments/look_create.html:24
 msgid "Create a collage"
 msgstr "Skapa kollage"
@@ -1455,7 +1459,8 @@ msgstr "Nollställ sökning"
 
 #: templates/apparel/look_editor.html:83
 msgid "Connect with your Facebook account to save your favourite items"
-msgstr "Logga in med ditt Facebookkonto för att kunna spara dina favoritprodukter"
+msgstr ""
+"Logga in med ditt Facebookkonto för att kunna spara dina favoritprodukter"
 
 #: templates/apparel/look_editor.html:92
 msgid "Do you want to save this look before logging in with Facebook?"
@@ -3110,9 +3115,6 @@ msgstr "... Eller skapa ett nytt konto"
 
 #~ msgid "See all men's products"
 #~ msgstr "Visa alla herrprodukter"
-
-#~ msgid "Choose file"
-#~ msgstr "Välj bild"
 
 #~ msgid "By %(username)s"
 #~ msgstr "Av %(username)s!"

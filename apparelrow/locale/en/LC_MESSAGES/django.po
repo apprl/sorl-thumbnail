@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-27 13:19+0100\n"
+"POT-Creation-Date: 2012-12-28 11:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1220,17 +1220,21 @@ msgid_plural "%(counter)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/apparel/look_create.html:4 templates/apparel/look_create.html:12
+#: templates/apparel/look_create.html:5 templates/apparel/look_create.html:13
 #: templates/apparel/look_editor.html:27
 msgid "Create a new look"
 msgstr ""
 
-#: templates/apparel/look_create.html:18
+#: templates/apparel/look_create.html:14
+msgid "Choose type"
+msgstr ""
+
+#: templates/apparel/look_create.html:22
 #: templates/apparel/fragments/look_create.html:19
 msgid "Create a tagged photo"
 msgstr ""
 
-#: templates/apparel/look_create.html:19
+#: templates/apparel/look_create.html:26
 #: templates/apparel/fragments/look_create.html:24
 msgid "Create a collage"
 msgstr ""
