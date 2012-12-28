@@ -892,8 +892,10 @@ def look_post_save(sender, instance, created, **kwargs):
         logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % instance)
         return
 
-    if created:
+    if instance.published == True:
         get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'create', instance, instance.gender)
+    else:
+        get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'create', instance)
 
 @receiver(pre_delete, sender=Look, dispatch_uid='look_pre_delete')
 def look_pre_delete(sender, instance, **kwargs):
@@ -933,7 +935,7 @@ def look_like_post_save(sender, instance, **kwargs):
         logging.warning('Trying to register an activity, but %s has not user attribute' % instance)
         return
 
-    if instance.active == True:
+    if instance.active == True and instance.look.published == True:
         get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'like_look', instance.look, instance.look.gender)
     else:
         get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_look', instance.look)
