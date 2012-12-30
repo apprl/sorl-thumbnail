@@ -37,7 +37,7 @@ class ZanoxImporter(BaseImporter):
 
         return hmac_signature, timestamp, nonce
 
-    def get_data(self):
+    def get_data(self, start_date, end_date):
         signature, timestamp, nonce = self.get_signature('GET', '/reports/sales/date/2012-12-17')
 
         url = 'http://api.zanox.com/json/2011-03-01/reports/sales/date/2012-12-17'

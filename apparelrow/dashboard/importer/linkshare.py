@@ -9,7 +9,7 @@ class LinkshareImporter(BaseImporter):
     password = 'apprl2010'
     network_id = 3
 
-    def get_data(self):
+    def get_data(self, start_date, end_date):
         url = 'http://cli.linksynergy.com/cli/publisher/reports/downloadReport.php?bdate=%s&edate=%s&cuserid=%s&cpi=%s&nid=%s' % ('20120101', '20121226', self.username, self.password, self.network_id)
 
         response = requests.get(url)

@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.DEBUG)
 #class AffiliateWindowImporter(BaseImporter):
 class AffiliateWindowImporter:
 
-    def get_data(self):
+    def get_data(self, start_date, end_date):
         url = 'http://api.affiliatewindow.com/v4/AffiliateService?wsdl'
         imp = Import('http://schemas.xmlsoap.org/soap/encoding/')
         d = ImportDoctor(imp)
