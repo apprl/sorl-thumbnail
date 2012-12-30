@@ -37,3 +37,5 @@ django-pipeline==1.2.20
 jsmin==2.0.2
 xmltodict==0.4.1
 suds==0.4
+fuzzywuzzy==0.1
+dateutil==2.1
