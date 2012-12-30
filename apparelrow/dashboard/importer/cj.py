@@ -12,4 +12,4 @@ class CJImporter(BaseImporter):
         response = requests.get('https://commission-detail.api.cj.com/v3/commissions?date-type=posting&start-date=2012-11-27&end-date=2012-12-26', headers=headers)
         data = xmltodict.parse(response.text)
         for row in data['cj-api']['commissions']['commission']:
-            yield row
+            yield dict(row)
