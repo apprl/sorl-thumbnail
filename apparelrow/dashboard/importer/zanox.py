@@ -7,6 +7,7 @@ import requests
 import dateutil.parser
 import time
 
+from dashboard.models import Sale
 from dashboard.importer.base import BaseImporter
 
 
@@ -62,33 +63,30 @@ class Importer(BaseImporter):
         Source: http://www.zanox.com/export/sites/default/en/_downloads/help/zanox_UserGuide_Advertiser_EN.pdf
         """
         if status_string == 'confirmed':
-            return 'C'
+            return Sale.CONFIRMED
         elif status_string == 'rejected':
-            return 'D'
+            return Sale.DECLINED
 
-        return 'P'
+        return Sale.PENDING
 
     def get_data(self, start_date, end_date):
-        interval_days = (end_date - start_date).days + 1
-
-        for day in range(interval_days):
-            print start_date
-            signature, timestamp, nonce = self.get_signature('GET', '/reports/sales/date/%s' % (start_date.strftime('%Y-%m-%d')))
-            url = 'http://api.zanox.com/json/2011-03-01/reports/sales/date/%s' % (start_date.strftime('%Y-%m-%d'))
+        for start_date, end_date in self.generate_subdates(start_date, end_date, 1):
+            signature, timestamp, nonce = self.get_signature('GET', '/reports/sales/date/%s' % (end_date.strftime('%Y-%m-%d')))
+            url = 'http://api.zanox.com/json/2011-03-01/reports/sales/date/%s' % (end_date.strftime('%Y-%m-%d'))
             headers = {'Date': timestamp,
                        'Nonce': nonce,
                        'Authorization': 'ZXWS %s:%s' % (self.connect_id, signature)}
             response = requests.get(url, headers=headers)
 
             if 'saleItems' in response.json:
-                data_row = {}
                 for row in response.json['saleItems']['saleItem']:
+                    data_row = {}
                     data_row['original_sale_id'] = row['@id']
                     data_row['affiliate'] = self.name
                     _, data_row['vendor'] = self.map_vendor(row['program']['$'])
-                    data_row['commission'] = row['commission']
-                    data_row['currency'] = row['currency']
-                    data_row['amount'] = row['amount']
+                    data_row['original_commission'] = row['commission']
+                    data_row['original_currency'] = row['currency']
+                    data_row['original_amount'] = row['amount']
                     if 'gpps' in row:
                         sid = row['gpps']['gpp']['$']
                     else:
@@ -97,9 +95,11 @@ class Importer(BaseImporter):
                     data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
                     data_row['status'] = self.map_status(row['reviewState'])
 
+                    data_row = self.validate(data_row)
+                    if not data_row:
+                        continue
+
                     yield data_row
 
             # Be kind to zanox servers
             time.sleep(1)
-
-            start_date = start_date + datetime.timedelta(days=1)

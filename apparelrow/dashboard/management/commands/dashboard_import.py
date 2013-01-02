@@ -1,6 +1,7 @@
 import logging
 import datetime
 import pprint
+import optparse
 
 from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand, CommandError
@@ -11,6 +12,14 @@ logger = logging.getLogger('dashboard_import')
 class Command(BaseCommand):
     args = ''
     help = 'Import dashboard data'
+    option_list = BaseCommand.option_list + (
+        optparse.make_option('--days',
+            action='store',
+            dest='days',
+            help='Start date set to current date - selected number of days',
+            default=90,
+        ),
+    )
 
     affiliates = ['affiliatewindow', 'cj', 'linkshare', 'tradedoubler', 'zanox']
 
@@ -27,7 +36,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         end_date = datetime.date.today()
-        start_date = end_date - datetime.timedelta(days=120)
+        start_date = end_date - datetime.timedelta(days=int(options.get('days')))
 
         if not args:
             args = self.affiliates

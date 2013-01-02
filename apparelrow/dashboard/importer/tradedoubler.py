@@ -2,6 +2,7 @@ import requests
 import xmltodict
 import dateutil.parser
 
+from dashboard.models import Sale
 from dashboard.importer.base import BaseImporter
 
 class Importer(BaseImporter):
@@ -22,31 +23,34 @@ class Importer(BaseImporter):
         http://hst.tradedoubler.com/file/20649/uk/help_centre/uts_documentation/transaction_query_reporting_manual.pdf
         """
         if status_string == 'P':
-            return 'P'
+            return Sale.PENDING
+        elif status_string == 'D':
+            return Sale.DECLINED
+        elif status_string == 'A':
+            return Sale.CONFIRMED
 
-        if status_string == 'D':
-            return 'D'
-
-        if status_string == 'A':
-            return 'C'
-
-        return 'I'
+        return Sale.INCOMPLETE
 
     def get_data(self, start_date, end_date):
         url = self.url % (start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
         response = requests.get(url)
         data = xmltodict.parse(response.text.encode('utf-8'))
 
-        data_row = {}
-        for row in data['report']['matrix']['rows']['row']:
-            data_row['original_sale_id'] = row['orderNR']
-            data_row['affiliate'] = self.name
-            _, data_row['vendor'] = self.map_vendor(row['programName'])
-            data_row['commission'] = row['affiliateCommission']
-            data_row['currency'] = 'SEK'
-            data_row['amount'] = row['orderValue']
-            data_row['user_id'], data_row['placement'] = self.map_placement_and_user(row['epi1'])
-            data_row['status'] = self.map_status(row['pendingStatus'])
-            data_row['sale_date'] = dateutil.parser.parse(row['timeOfEvent'])
+        if int(data['report']['matrix']['@rowcount']) > 1:
+            for row in data['report']['matrix']['rows']['row']:
+                data_row = {}
+                data_row['original_sale_id'] = row['orderNR']
+                data_row['affiliate'] = self.name
+                _, data_row['vendor'] = self.map_vendor(row['programName'])
+                data_row['original_commission'] = row['affiliateCommission']
+                data_row['original_currency'] = 'SEK'
+                data_row['original_amount'] = row['orderValue']
+                data_row['user_id'], data_row['placement'] = self.map_placement_and_user(row['epi1'])
+                data_row['status'] = self.map_status(row['pendingStatus'])
+                data_row['sale_date'] = dateutil.parser.parse(row['timeOfEvent'])
 
-            yield data_row
+                data_row = self.validate(data_row)
+                if not data_row:
+                    continue
+
+                yield data_row
