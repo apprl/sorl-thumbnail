@@ -1,22 +1,18 @@
 import logging
 import datetime
+import pprint
 
 from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand, CommandError
 
-from dashboard.importer.cj import CJImporter
-from dashboard.importer.linkshare import LinkshareImporter
-from dashboard.importer.zanox import ZanoxImporter
-#from dashboard.importer.affiliatenetwork import AffiliateWindowImporter
-from dashboard.importer.tradedoubler import TradedoublerImporter
-
 logger = logging.getLogger('dashboard_import')
 
-import pprint
 
 class Command(BaseCommand):
     args = ''
     help = 'Import dashboard data'
+
+    affiliates = ['affiliatewindow', 'cj', 'linkshare', 'tradedoubler', 'zanox']
 
     def update(self, row):
         instance, created = get_model('dashboard', 'Sale').objects.get_or_create(original_sale_id=row['original_sale_id'], defaults=row)
@@ -33,23 +29,16 @@ class Command(BaseCommand):
         end_date = datetime.date.today()
         start_date = end_date - datetime.timedelta(days=90)
 
-        #print 'AffiliateWindow'
-        #for row in AffiliateWindowImporter().get_data(start_date, end_date):
-            #pprint.pprint(row)
+        if not args:
+            args = self.affiliates
 
-        tradedoubler = TradedoublerImporter()
-        logger.info('Importing %s' % (tradedoubler.name,))
-        for row in tradedoubler.get_data(start_date, end_date):
-            instance = self.update(row)
+        for argument in args:
+            if argument in self.affiliates:
+                module = __import__('dashboard.importer.%s' % argument, fromlist = ['Importer'])
+                instance = module.Importer()
+                logger.info('Importing %s' % (instance.name,))
+                for row in instance.get_data(start_date, end_date):
+                    logger.debug('Updating row: %s' % (row,))
+                    instance = self.update(row)
 
-        #print 'CJ'
-        #for row in CJImporter().get_data(start_date, end_date):
-            #pprint.pprint(row)
-
-        #print 'Linkshare'
-        #for row in LinkshareImporter().get_data(start_date, end_date):
-            #pprint.pprint(row)
-
-        #print 'Zanox'
-        #for row in ZanoxImporter().get_data(start_date, end_date):
-            #pprint.pprint(row)
+                    pprint.pprint(row)
