@@ -15,7 +15,7 @@ class Command(BaseCommand):
     affiliates = ['affiliatewindow', 'cj', 'linkshare', 'tradedoubler', 'zanox']
 
     def update(self, row):
-        instance, created = get_model('dashboard', 'Sale').objects.get_or_create(original_sale_id=row['original_sale_id'], defaults=row)
+        instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
 
         if not created:
             for field in row.keys():

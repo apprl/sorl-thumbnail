@@ -14,6 +14,12 @@ class BaseImporter:
 
         return None
 
+    #def map_product(self, vendor, sku):
+        #try:
+            #vp = get_model('apparel', 'VendorProduct').objects.get(vendor=vendor, pro
+        #except get_model('apparel', 'VendorProduct').DoesNotExist:
+            #pass
+
     def map_placement_and_user(self, sid):
         if sid:
             sid_split = sid.split('-', 1)
