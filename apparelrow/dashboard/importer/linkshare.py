@@ -31,15 +31,20 @@ class Importer(BaseImporter):
             data_row['amount'] = row['Sales($)'].replace(',', '')
             data_row['user_id'], data_row['placement'] = self.map_placement_and_user(row['Member ID'])
             data_row['sale_date'] = dateutil.parser.parse('%s %s' % (row['Transaction Date'], row['Transaction Time']))
+            data_row['status'] = 'P'
 
-            try:
-                sale = get_model('dashboard', 'Sale').objects.get(original_sale_id=data_row['original_sale_id'])
-                if sale and decimal.Decimal(data_row['commission']) + sale.commission == decimal.Decimal(0.0):
-                    data_row['status'] = 'D'
-            except get_model('dashboard', 'Sale').DoesNotExist:
-                pass
-
-            import pprint
-            pprint.pprint(row)
+            # If commission is negative it must be a correction
+            data_row['commission'] = decimal.Decimal(data_row['commission'])
+            data_row['amount'] = decimal.Decimal(data_row['amount'])
+            if data_row['commission'] < decimal.Decimal('0.0'):
+                try:
+                    sale = get_model('dashboard', 'Sale').objects.get(original_sale_id=data_row['original_sale_id'])
+                    if sale:
+                        data_row['commission'] = sale.commission + data_row['commission']
+                        data_row['amount'] = sale.amount + data_row['amount']
+                        if data_row['commission'] <= decimal.Decimal('0.0'):
+                            data_row['status'] = 'D'
+                except get_model('dashboard', 'Sale').DoesNotExist:
+                    logger.error('Correction but no sale in database')
 
             yield data_row

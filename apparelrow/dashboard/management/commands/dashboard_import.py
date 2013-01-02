@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         end_date = datetime.date.today()
-        start_date = end_date - datetime.timedelta(days=90)
+        start_date = end_date - datetime.timedelta(days=120)
 
         if not args:
             args = self.affiliates

@@ -4,6 +4,8 @@ import base64
 import datetime
 import uuid
 import requests
+import dateutil.parser
+import time
 
 from dashboard.importer.base import BaseImporter
 
@@ -17,8 +19,13 @@ class GMT(datetime.tzinfo):
         return datetime.timedelta(hours=0)
 
 
-class ZanoxImporter(BaseImporter):
+class Importer(BaseImporter):
+    """
+    No product information available in sale reports from zanox.
 
+    TODO: how to handle corrections/adjustments for zanox?
+    """
+    name = 'Zanox'
     connect_id = '0FFCC51428993F4F096B'
     secret_key = '68C9E0398Bd44A+1ac9afa55530715/d2b26bB4c'
 
@@ -37,14 +44,62 @@ class ZanoxImporter(BaseImporter):
 
         return hmac_signature, timestamp, nonce
 
+    def map_status(self, status_string):
+        """
+        Open
+        Leads which have not yet been approved by the advertiser
+
+        Approved
+        Leads which have been approved by the advertiser
+
+        Confirmed
+        Leads which have been approved by the advertiser and confirmed by zanox.
+        Leads are only confirmed if the advertiser's account balance is positive.
+
+        Rejected
+        Leads which have been rejected by the advertiser.
+
+        Source: http://www.zanox.com/export/sites/default/en/_downloads/help/zanox_UserGuide_Advertiser_EN.pdf
+        """
+        if status_string == 'confirmed':
+            return 'C'
+        elif status_string == 'rejected':
+            return 'D'
+
+        return 'P'
+
     def get_data(self, start_date, end_date):
-        signature, timestamp, nonce = self.get_signature('GET', '/reports/sales/date/2012-12-17')
+        interval_days = (end_date - start_date).days + 1
 
-        url = 'http://api.zanox.com/json/2011-03-01/reports/sales/date/2012-12-17'
-        headers = {'Date': timestamp,
-                   'Nonce': nonce,
-                   'Authorization': 'ZXWS %s:%s' % (self.connect_id, signature)}
-        response = requests.get(url, headers=headers)
+        for day in range(interval_days):
+            print start_date
+            signature, timestamp, nonce = self.get_signature('GET', '/reports/sales/date/%s' % (start_date.strftime('%Y-%m-%d')))
+            url = 'http://api.zanox.com/json/2011-03-01/reports/sales/date/%s' % (start_date.strftime('%Y-%m-%d'))
+            headers = {'Date': timestamp,
+                       'Nonce': nonce,
+                       'Authorization': 'ZXWS %s:%s' % (self.connect_id, signature)}
+            response = requests.get(url, headers=headers)
 
-        for item in response.json['saleItems']['saleItem']:
-            yield item
+            if 'saleItems' in response.json:
+                data_row = {}
+                for row in response.json['saleItems']['saleItem']:
+                    data_row['original_sale_id'] = row['@id']
+                    data_row['affiliate'] = self.name
+                    _, data_row['vendor'] = self.map_vendor(row['program']['$'])
+                    data_row['commission'] = row['commission']
+                    data_row['currency'] = row['currency']
+                    data_row['amount'] = row['amount']
+                    if 'gpps' in row:
+                        sid = row['gpps']['gpp']['$']
+                    else:
+                        sid = ''
+                    data_row['user_id'], data_row['placement'] = self.map_placement_and_user(sid)
+                    data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
+                    data_row['status'] = self.map_status(row['reviewState'])
+
+                    yield data_row
+
+            # Be kind to zanox servers
+            time.sleep(1)
+
+            start_date = start_date + datetime.timedelta(days=1)
