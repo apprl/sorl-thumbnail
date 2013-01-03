@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load i18n cache %}
+
+{% block extra-title %}{% trans "Partner" %} | {% endblock %}
+{% block 'extra-scripts' %}
+    <script type='text/javascript' src='http://www.google.com/jsapi'></script>
+    <script type='text/javascript'>
+      google.load('visualization', '1', {'packages':['LineChart']});
+//annotatedtimeline']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
+        data.addColumn('number', 'Commission (SEK)');
+        data.addRows([
+          {% for sale in sales %}
+          [new Date({{ sale.sale_date.year }}, {{ sale.sale_date.month }} - 1, {{ sale.sale_date.day }}), {{ sale.commission }}],
+          {% endfor %}
+        ]);
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        //var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
+        chart.draw(data);
+      }
+    </script>
+{% endblock %}
+
+{% block body-header %}
+    {% include 'dashboard/body_header.html' %}
+{% endblock body-header %}
+{% block body-classes %}one-column dashboard{% endblock body-classes %}
+{% block body %}
+<div id="content">
+    <div class="light-block group">
+        <h3 class="left">{{ request.user.get_profile.display_name }}</h3>
+        <a href="#" class="btn btn-upper btn-positive">{% trans "Pay out" %}</a>
+        <h3 class="right">{% blocktrans %}On your account {{ sales_total }}{% endblocktrans %} kr</h3>
+    </div>
+    <div id="chart_div" style="width: 100%; height: 300px"></div>
+</div>
+{% endblock body %}

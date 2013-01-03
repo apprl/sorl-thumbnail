@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load i18n cache %}
+
+{% block extra-title %}{% trans "Partner" %} | {% endblock %}
+
+{% block body-header %}
+    {% include 'dashboard/body_header.html' %}
+{% endblock body-header %}
+{% block body-classes %}one-column dashboard dashboard-info{% endblock body-classes %}
+{% block body %}
+<div id="content">
+
+</div>
+{% endblock %}
