@@ -82,3 +82,11 @@ class FacebookSettingsForm(ModelForm):
     class Meta:
         model = ApparelProfile
         fields = ('fb_share_like_product', 'fb_share_like_look', 'fb_share_follow_profile', 'fb_share_create_look')
+
+
+class PartnerSettingsForm(ModelForm):
+    blog_url = CharField(label=_('Your blog http://'))
+
+    class Meta:
+        model = ApparelProfile
+        fields = ('blog_url',)

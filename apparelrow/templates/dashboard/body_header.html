@@ -7,7 +7,7 @@
         <ul>
             <li><a class="first{% if 'info' not in request.path %} current{% endif %}" href="{% url dashboard %}">{% trans "Your dashboard" %}</a></li>
             <li><a class="{% if 'info' in request.path %} current{% endif %}" href="{% url dashboard-info %}">{% trans "How does it work" %}</a></li>
-            <li><a class="last" href="#">{% trans "Settings" %}</a></li>
+            <li><a class="last" href="{% url profile.views.settings_partner %}">{% trans "Settings" %}</a></li>
         </ul>
     </div>
 </div>

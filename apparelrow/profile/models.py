@@ -84,6 +84,7 @@ class ApparelProfile(models.Model):
 
     # partner
     is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
+    blog_url = models.CharField(max_length=255, null=True, blank=True)
 
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',

@@ -19,7 +19,7 @@ from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
 from apparel.tasks import facebook_push_graph
 from profile.utils import get_facebook_user
-from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm
+from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm
 from profile.models import EmailChange, ApparelProfile, Follow, FeaturedProfile
 from profile.tasks import send_email_confirm_task
 from profile.decorators import avatar_change, login_flow
@@ -304,6 +304,22 @@ def settings_facebook(request):
 
     return render(request, 'profile/settings_facebook.html', {'facebook_settings_form': form})
 
+
+@login_required
+def settings_partner(request):
+    """
+    Handles the partner settings form.
+    """
+    if request.method == 'POST':
+        form = PartnerSettingsForm(request.POST, request.FILES, instance=request.user.get_profile())
+        if form.is_valid():
+            form.save()
+
+        return HttpResponseRedirect(reverse('profile.views.settings_partner'))
+
+    form = PartnerSettingsForm(instance=request.user.get_profile())
+
+    return render(request, 'profile/settings_partner.html', {'form': form})
 
 #
 # Welcome login flow
