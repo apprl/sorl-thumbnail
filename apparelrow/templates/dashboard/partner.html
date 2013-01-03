@@ -13,10 +13,11 @@
         data.addColumn('date', 'Date');
         data.addColumn('number', 'Commission (SEK)');
         data.addRows([
-          {% for sale in sales %}
-          [new Date({{ sale.sale_date.year }}, {{ sale.sale_date.month }} - 1, {{ sale.sale_date.day }}), {{ sale.commission }}],
+          {% for sale_date, commission in sales.items %}
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission }}],
           {% endfor %}
         ]);
+        data.sort(0);
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
         //var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
         chart.draw(data);
