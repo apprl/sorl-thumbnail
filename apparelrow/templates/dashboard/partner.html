@@ -19,8 +19,12 @@
         ]);
         data.sort(0);
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-        //var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
-        chart.draw(data);
+        var options = {
+            legend: {
+                position: 'none'
+            }
+        };
+        chart.draw(data, options);
       }
     </script>
 {% endblock %}
@@ -32,10 +36,19 @@
 {% block body %}
 <div id="content">
     <div class="light-block group">
-        <h3 class="left">{{ request.user.get_profile.display_name }}</h3>
-        <a href="#" class="btn btn-upper btn-positive">{% trans "Pay out" %}</a>
-        <h3 class="right">{% blocktrans %}On your account {{ sales_total }}{% endblocktrans %} kr</h3>
+        <h3>{% trans "Total" %}</h3>
+        <h3>{% blocktrans %}Your commission {{ total_sales }}{% endblocktrans %}kr</h3>
+        <h3>{% blocktrans %}Confirmed commission {{ total_confirmed }}{% endblocktrans %}kr</h3>
+        <h3>{% blocktrans %}Pending payment {{ pending_payment }}{% endblocktrans %}kr</h3>
+        <h3><a href="#">{% trans "More info" %}</a></h3>
     </div>
-    <div id="chart_div" style="width: 100%; height: 300px"></div>
+    <div class="content-chart group">
+        <div class="chart-select">
+            <select>
+                <option data-year="2012" data-month="12">December 2012</option>
+            </select>
+        </div>
+        <div id="chart_div" style="width: 100%; height: 300px"></div>
+    </div>
 </div>
 {% endblock body %}

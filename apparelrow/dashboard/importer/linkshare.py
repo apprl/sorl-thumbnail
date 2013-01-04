@@ -37,8 +37,10 @@ class Importer(BaseImporter):
             # Confirm transaction after 100 days
             # TODO: verify this
             data_row['status'] = Sale.PENDING
-            if data_row['sale_date'] < datetime.datetime.now() - datetime.timedelta(days=100):
+            if data_row['sale_date'] < datetime.datetime.now() - datetime.timedelta(days=61):
                 data_row['status'] = Sale.CONFIRMED
+
+            data_row['adjusted_date'] = dateutil.parser.parse('%s %s' % (row['Process Date'], row['Process Time']))
 
             # If commission is negative it must be a correction
             data_row['original_commission'] = decimal.Decimal(data_row['original_commission'])
@@ -47,8 +49,12 @@ class Importer(BaseImporter):
                 try:
                     sale = Sale.objects.get(original_sale_id=data_row['original_sale_id'])
                     if sale:
-                        data_row['original_commission'] = sale.original_commission + data_row['original_commission']
-                        data_row['original_amount'] = sale.original_amount + data_row['original_amount']
+                        if not sale.adjusted_date or (sale.adjusted_date and timezone.make_aware(sale.adjusted_date, timezone.get_default_timezone()) < data_row['adjusted_date']):
+                            data_row['original_commission'] = sale.original_commission + data_row['original_commission']
+                            data_row['original_amount'] = sale.original_amount + data_row['original_amount']
+                        else:
+                            continue
+
                         data_row['adjusted'] = True
                         if data_row['original_commission'] <= decimal.Decimal('0.0'):
                             data_row['status'] = Sale.DECLINED

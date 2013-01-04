@@ -20,7 +20,6 @@ class Importer(BaseImporter):
         """
         Available statues: confirmed, validation, declined
         """
-        # TODO: paid field should be used to elevate status above confirmed
         if status_string == 'confirmed':
             return Sale.CONFIRMED
         elif status_string == 'declined':

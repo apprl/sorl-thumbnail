@@ -6,6 +6,8 @@ import decimal
 import dateutil.parser
 import logging
 
+from django.utils import timezone
+
 from dashboard.models import Sale
 from dashboard.importer.base import BaseImporter
 
@@ -22,8 +24,13 @@ class Importer(BaseImporter):
             url = 'https://commission-detail.api.cj.com/v3/commissions?date-type=posting&start-date=%s&end-date=%s' % (start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
             response = requests.get(url, headers=headers)
             data = xmltodict.parse(response.text)
-            if int(data['cj-api']['commissions']['@total-matched']) > 0:
-                for row in data['cj-api']['commissions']['commission']:
+            data_count = int(data['cj-api']['commissions']['@total-matched'])
+            if data_count > 0:
+                if data_count == 1:
+                    row_data = [data['cj-api']['commissions']['commission']]
+                else:
+                    row_data = data['cj-api']['commissions']['commission']
+                for row in row_data:
                     data_row = {}
                     data_row['original_sale_id'] = row['original-action-id']
                     data_row['affiliate'] = self.name
@@ -32,9 +39,7 @@ class Importer(BaseImporter):
                     data_row['original_currency'] = 'EUR'
                     data_row['original_amount'] = row['sale-amount']
                     data_row['user_id'], data_row['placement'] = self.map_placement_and_user(row['sid'])
-                    # TODO: not sure when action status sets to closed but it has not happened for
-                    # us yet.
-                    if dateutil.parser.parse(row['locking-date']) < datetime.datetime.now() and row['action-status'] == 'closed':
+                    if row['action-status'] == 'locked':
                         data_row['status'] = Sale.CONFIRMED
                     else:
                         data_row['status'] = Sale.PENDING
@@ -43,17 +48,23 @@ class Importer(BaseImporter):
                     # If original is not true it must be a correction of some sort
                     data_row['original_commission'] = decimal.Decimal(data_row['original_commission'])
                     data_row['original_amount'] = decimal.Decimal(data_row['original_amount'])
+                    data_row['adjusted_date'] = dateutil.parser.parse(row['posting-date'])
                     if row['original'] != 'true':
                         try:
                             sale = Sale.objects.get(original_sale_id=data_row['original_sale_id'])
                             if sale:
-                                data_row['original_commission'] = sale.original_commission + data_row['original_commission']
-                                data_row['original_amount'] = sale.original_amount + data_row['original_amount']
+                                if not sale.adjusted_date or (sale.adjusted_date and timezone.make_aware(sale.adjusted_date, timezone.get_default_timezone()) < data_row['adjusted_date']):
+                                    data_row['original_commission'] = sale.original_commission + data_row['original_commission']
+                                    data_row['original_amount'] = sale.original_amount + data_row['original_amount']
+                                else:
+                                    continue
+
                                 data_row['adjusted'] = True
                                 if data_row['original_commission'] <= decimal.Decimal('0.0'):
                                     data_row['status'] = Sale.DECLINED
                         except Sale.DoesNotExist:
                             logger.error('Correction but no sale in database, should not happen')
+                            continue
 
                     data_row = self.validate(data_row)
                     if not data_row:

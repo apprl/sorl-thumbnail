@@ -32,6 +32,7 @@ class Sale(models.Model):
 
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, null=False, blank=False, db_index=True, default=INCOMPLETE)
     adjusted = models.BooleanField(null=False, blank=False, default=False)
+    adjusted_date = models.DateTimeField(default=None, null=True, blank=True)
 
     amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
     commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale commission'))

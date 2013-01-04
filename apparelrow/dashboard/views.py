@@ -21,18 +21,24 @@ def dashboard(request, year=None, month=None):
         for day in range(1, (end_date - start_date).days + 2):
             data_per_month[start_date.replace(day=day)] = 0
 
-        for sale in Sale.objects.filter(status__gte=Sale.PENDING, status__lt=Sale.PAID) \
+        for sale in Sale.objects.filter(status__gte=Sale.PENDING, status__lte=Sale.CONFIRMED) \
                                 .filter(sale_date__gte=start_date, sale_date__lte=end_date) \
                                 .order_by('sale_date') \
                                 .values('sale_date', 'commission'):
             data_per_month[sale['sale_date'].date()] += sale['commission']
 
-        #sales = Sale.objects.filter(status__gte=Sale.PENDING, status__lt=Sale.PAID).order_by('sale_date')
-        sales_total = Sale.objects.filter(status__gte=Sale.PENDING, status__lt=Sale.PAID) \
-                                  .aggregate(total=Sum('commission'))
+        # Month
+        print request.user.date_joined
+
+        # Total sales counts
+        sales_pending = Sale.objects.filter(status=Sale.PENDING).aggregate(total=Sum('commission'))['total']
+        sales_confirmed = Sale.objects.filter(status=Sale.CONFIRMED).aggregate(total=Sum('commission'))['total']
+        sales_total = sales_pending + sales_confirmed
 
         return render(request, 'dashboard/partner.html', {'sales': data_per_month,
-                                                          'sales_total': sales_total['total']})
+                                                          'total_sales': sales_total,
+                                                          'total_confirmed': sales_confirmed,
+                                                          'pending_payment': 0})
 
     return render(request, 'dashboard/partner_signup.html')
 
