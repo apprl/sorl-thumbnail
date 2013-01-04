@@ -26,6 +26,15 @@
         };
         chart.draw(data, options);
       }
+        $(document).ready(function() {
+            $('.chart-select select').change(function() {
+                var $selected = $(this).find(':selected');
+                var year = $selected.data('year');
+                var month = $selected.data('month');
+
+                window.location.href = '/partner/' + year + '/' + month + '/';
+            });
+        });
     </script>
 {% endblock %}
 
@@ -45,7 +54,9 @@
     <div class="content-chart group">
         <div class="chart-select">
             <select>
-                <option data-year="2012" data-month="12">December 2012</option>
+                {% for date in dates %}
+                <option data-year="{{ date.year }}" data-month="{{ date.month }}"{% if date.year == year and date.month == month %} selected{%endif %}>{{ date|date:"F Y" }}</option>
+                {% endfor %}
             </select>
         </div>
         <div id="chart_div" style="width: 100%; height: 300px"></div>

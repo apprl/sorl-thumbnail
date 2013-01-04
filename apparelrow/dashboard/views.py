@@ -14,6 +14,9 @@ def dashboard(request, year=None, month=None):
         else:
             start_date = datetime.date.today().replace(day=1)
 
+        year = start_date.year
+        month = start_date.month
+
         end_date = start_date
         end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
 
@@ -27,8 +30,14 @@ def dashboard(request, year=None, month=None):
                                 .values('sale_date', 'commission'):
             data_per_month[sale['sale_date'].date()] += sale['commission']
 
-        # Month
-        print request.user.date_joined
+        # Months
+        dt1 = request.user.date_joined.date()
+        dt2 = datetime.date.today()
+        start_month = dt1.month
+        end_months = (dt2.year - dt1.year) * 12 + dt2.month + 1
+        dates = [datetime.datetime(year=yr, month=mn, day=1) for (yr, mn) in (
+            ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
+        )]
 
         # Total sales counts
         sales_pending = Sale.objects.filter(status=Sale.PENDING).aggregate(total=Sum('commission'))['total']
@@ -38,7 +47,10 @@ def dashboard(request, year=None, month=None):
         return render(request, 'dashboard/partner.html', {'sales': data_per_month,
                                                           'total_sales': sales_total,
                                                           'total_confirmed': sales_confirmed,
-                                                          'pending_payment': 0})
+                                                          'pending_payment': 0,
+                                                          'dates': dates,
+                                                          'year': year,
+                                                          'month': month})
 
     return render(request, 'dashboard/partner_signup.html')
 
