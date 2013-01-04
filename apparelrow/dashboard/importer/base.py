@@ -1,6 +1,7 @@
 import datetime
 import math
 import decimal
+import dateutil.parser
 
 from django.conf import settings
 from django.db.models.loading import get_model
@@ -14,6 +15,16 @@ class BaseImporter:
     def __init__(self):
         self.vendors = get_model('apparel', 'Vendor').objects.all()
         self.vendor_map = dict(((x.name, x) for x in self.vendors))
+
+    def parse_to_utc(self, dtstr):
+        """
+        Fails for naive datetimes
+        """
+        dt = dateutil.parser.parse(dtstr)
+        if dt.tzinfo:
+            dt = dt.astimezone(dateutil.tz.tzutc())
+
+        return dt
 
     def generate_subdates(self, start_date, end_date, max_days=30):
         days = (end_date - start_date).days

@@ -6,8 +6,6 @@ import decimal
 import dateutil.parser
 import logging
 
-from django.utils import timezone
-
 from dashboard.models import Sale
 from dashboard.importer.base import BaseImporter
 
@@ -48,12 +46,12 @@ class Importer(BaseImporter):
                     # If original is not true it must be a correction of some sort
                     data_row['original_commission'] = decimal.Decimal(data_row['original_commission'])
                     data_row['original_amount'] = decimal.Decimal(data_row['original_amount'])
-                    data_row['adjusted_date'] = dateutil.parser.parse(row['posting-date'])
+                    data_row['adjusted_date'] = self.parse_to_utc(row['posting-date']).replace(tzinfo=None)
                     if row['original'] != 'true':
                         try:
                             sale = Sale.objects.get(original_sale_id=data_row['original_sale_id'])
                             if sale:
-                                if not sale.adjusted_date or (sale.adjusted_date and timezone.make_aware(sale.adjusted_date, timezone.get_default_timezone()) < data_row['adjusted_date']):
+                                if not sale.adjusted_date or (sale.adjusted_date and sale.adjusted_date < data_row['adjusted_date']):
                                     data_row['original_commission'] = sale.original_commission + data_row['original_commission']
                                     data_row['original_amount'] = sale.original_amount + data_row['original_amount']
                                 else:

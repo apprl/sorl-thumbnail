@@ -38,4 +38,4 @@ jsmin==2.0.2
 xmltodict==0.4.1
 suds==0.4
 fuzzywuzzy==0.1
-dateutil==2.1
+python-dateutil==2.1
