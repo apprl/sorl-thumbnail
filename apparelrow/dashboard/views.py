@@ -1,5 +1,6 @@
 import datetime
 import calendar
+import decimal
 
 from django.shortcuts import render
 from django.db.models import Sum
@@ -24,11 +25,13 @@ def dashboard(request, year=None, month=None):
         for day in range(1, (end_date - start_date).days + 2):
             data_per_month[start_date.replace(day=day)] = 0
 
+        month_commission = decimal.Decimal('0.0')
         for sale in Sale.objects.filter(status__gte=Sale.PENDING, status__lte=Sale.CONFIRMED) \
                                 .filter(sale_date__gte=start_date, sale_date__lte=end_date) \
                                 .order_by('sale_date') \
                                 .values('sale_date', 'commission'):
             data_per_month[sale['sale_date'].date()] += sale['commission']
+            month_commission += sale['commission']
 
         # Months
         dt1 = request.user.date_joined.date()
@@ -48,6 +51,7 @@ def dashboard(request, year=None, month=None):
                                                           'total_sales': sales_total,
                                                           'total_confirmed': sales_confirmed,
                                                           'pending_payment': 0,
+                                                          'month_commission': month_commission,
                                                           'dates': dates,
                                                           'year': year,
                                                           'month': month})

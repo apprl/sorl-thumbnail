@@ -1273,16 +1273,32 @@ body.dashboard
     padding: 1em
     +box-sizing(border-box)
     h3
-      float: left
-      font-size: 1.4em
+      display: inline-block
+      &.total
+        width: 60px
+      &.commission
+        width: 255px
+      &.link
+        width: 80px
+    h3
+      font-size: 1.3em
       color: #fff
       line-height: 36px
-      &.right
-        float: right
-        margin-right: 1em
-      &.left
-        float: left
-    .btn
+      a
+        color: #fff
+  .content-chart
+    margin-top: 2em
+    .chart-menu
+      width: 200px
+      float: left
+      background-color: $easiest_color
+      p, label
+        margin: 1em
+        display: inline-block
+        font-size: 1.2em
+      p
+        margin-top: 0
+    #chart_div
       float: right
 
 body.create-look
