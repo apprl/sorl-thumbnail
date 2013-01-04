@@ -2,6 +2,7 @@ import datetime
 import math
 import decimal
 
+from django.conf import settings
 from django.db.models.loading import get_model
 from fuzzywuzzy import process
 
@@ -46,6 +47,18 @@ class BaseImporter:
                 pass
 
         data = self.exchange_commission(data, instance)
+
+        if 'user_id' in data and data['user_id']:
+            cut = settings.APPAREL_DASHBOARD_CUT_DEFAULT
+            profile = get_model('profile', 'ApparelProfile').objects.filter(user=data['user_id'])
+            if profile:
+                profile = profile[0]
+                if profile.partner_group:
+                    instance = profile.partner_group.cuts.filter(vendor=data['vendor'])
+                    if instance:
+                        cut = instance[0].cut
+
+            data['commission'] = decimal.Decimal(cut) * decimal.Decimal(data['commission'])
 
         return data
 

@@ -84,6 +84,7 @@ class ApparelProfile(models.Model):
 
     # partner
     is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
+    partner_group = models.ForeignKey('dashboard.Group', null=True, blank=True)
     blog_url = models.CharField(max_length=255, null=True, blank=True)
 
     # notification settings

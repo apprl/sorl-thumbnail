@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n cache %}
+{% load i18n l10n cache %}
 
 {% block extra-title %}{% trans "Partner" %} | {% endblock %}
 {% block 'extra-scripts' %}
@@ -14,7 +14,7 @@
         data.addColumn('number', 'Commission (SEK)');
         data.addRows([
           {% for sale_date, commission in sales.items %}
-          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission }}],
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission|unlocalize }}],
           {% endfor %}
         ]);
         data.sort(0);

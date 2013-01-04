@@ -51,3 +51,19 @@ class Sale(models.Model):
 
     def __unicode__(self):
         return u'%s - %s: %s %s %s' % (self.affiliate, self.vendor.name, self.commission, self.currency, self.status)
+
+
+class Group(models.Model):
+    name = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return u'%s' % (self.name,)
+
+
+class Cut(models.Model):
+    group = models.ForeignKey('dashboard.Group', null=False, blank=False, on_delete=models.PROTECT, related_name='cuts')
+    vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, on_delete=models.CASCADE)
+    cut = models.DecimalField(null=False, blank=False, default='0.5', max_digits=10, decimal_places=3, help_text=_('Between 1 and 0'))
+
+    def __unicode__(self):
+        return u'%s - %s: %s' % (self.group, self.vendor, self.cut)

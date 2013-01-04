@@ -346,6 +346,9 @@ ACTSTREAM_ACTION_MODELS = ['auth.user', 'apparel.Look', 'apparel.Product', 'comm
 # SOLR COMMON
 SOLR_RELOAD_URL = 'http://localhost:8983/solr/admin/cores?action=RELOAD&core=collection1'
 
+# DASHBOARD
+APPAREL_DASHBOARD_CUT_DEFAULT = 0.5
+
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500

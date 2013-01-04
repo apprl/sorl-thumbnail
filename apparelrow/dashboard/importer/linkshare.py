@@ -5,6 +5,8 @@ import dateutil.parser
 import logging
 import datetime
 
+from django.utils import timezone
+
 from dashboard.models import Sale
 from dashboard.importer.base import BaseImporter
 
