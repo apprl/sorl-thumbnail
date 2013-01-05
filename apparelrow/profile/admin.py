@@ -4,6 +4,7 @@ from profile.models import ApparelProfile
 from profile.models import Follow
 from profile.models import NotificationCache
 from profile.models import FeaturedProfile
+from profile.models import PaymentDetail
 
 
 class ApparelProfileAdmin(admin.ModelAdmin):
@@ -13,6 +14,7 @@ class ApparelProfileAdmin(admin.ModelAdmin):
     raw_id_fields = ('user', 'brand')
 
 admin.site.register(ApparelProfile, ApparelProfileAdmin)
+
 
 admin.site.register(NotificationCache)
 
@@ -36,3 +38,13 @@ class FeaturedProfileAdmin(admin.ModelAdmin):
         return form
 
 admin.site.register(FeaturedProfile, FeaturedProfileAdmin)
+
+
+class PaymentDetailAdmin(admin.ModelAdmin):
+    list_display = ('custom_user', 'name', 'company', 'orgnr', 'clearingnr', 'banknr')
+    raw_id_fields = ('user',)
+
+    def custom_user(self, obj):
+        return u'%s' % (obj.user.get_profile().display_name,)
+
+admin.site.register(PaymentDetail, PaymentDetailAdmin)

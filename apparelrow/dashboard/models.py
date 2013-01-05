@@ -10,8 +10,8 @@ class Sale(models.Model):
     DECLINED = '1'
     PENDING = '2'
     CONFIRMED = '3'
-    READY = '4'
-    PAID = '5'
+    READY = '4' # not used
+    PAID = '5' # not used
     STATUS_CHOICES = (
         (INCOMPLETE, 'Incomplete'),
         (DECLINED, 'Declined'),
@@ -19,6 +19,15 @@ class Sale(models.Model):
         (CONFIRMED, 'Confirmed'),
         (READY, 'Ready (payment received)'),
         (PAID, 'Paid'),
+    )
+
+    PAID_PENDING = '0'
+    PAID_READY = '1'
+    PAID_COMPLETE = '2'
+    PAID_STATUS_CHOICES = (
+        (PAID_PENDING, 'Pending payment'),
+        (PAID_READY, 'Ready for payment'),
+        (PAID_COMPLETE, 'Payment complete'),
     )
 
     original_sale_id = models.CharField(max_length=100)
@@ -30,7 +39,8 @@ class Sale(models.Model):
     user_id = models.PositiveIntegerField(null=True, blank=True)
     placement = models.CharField(max_length=32, null=True, blank=True)
 
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, null=False, blank=False, db_index=True, default=INCOMPLETE)
+    status = models.CharField(max_length=1, default=INCOMPLETE, choices=STATUS_CHOICES, null=False, blank=False, db_index=True)
+    paid = models.CharField(max_length=1, default=PAID_PENDING, choices=PAID_STATUS_CHOICES, null=False, blank=False)
     adjusted = models.BooleanField(null=False, blank=False, default=False)
     adjusted_date = models.DateTimeField(default=None, null=True, blank=True)
 
@@ -51,6 +61,26 @@ class Sale(models.Model):
 
     def __unicode__(self):
         return u'%s - %s: %s %s %s' % (self.affiliate, self.vendor.name, self.commission, self.currency, self.status)
+
+
+class Payment(models.Model):
+    user = models.ForeignKey('auth.User', null=False, blank=False, on_delete=models.CASCADE)
+    details = models.ForeignKey('profile.PaymentDetail', null=False, blank=False, on_delete=models.CASCADE)
+    amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
+    paid = models.BooleanField(default=False, null=False, blank=False)
+    cancelled = models.BooleanField(default=False, null=False, blank=False)
+    created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
+    modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.modified = timezone.now()
+        super(Payment, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return u'%s %s' % (self.user, self.amount)
+
+    class Meta:
+        ordering = ('-created',)
 
 
 class Group(models.Model):

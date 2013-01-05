@@ -268,6 +268,19 @@ class ApparelProfile(models.Model):
     def __unicode__(self):
         return self.display_name
 
+
+class PaymentDetail(models.Model):
+    user = models.ForeignKey('auth.User')
+    name = models.CharField(max_length=128)
+    company = models.BooleanField(default=False, null=False, blank=False)
+    orgnr = models.CharField(max_length=32)
+    banknr = models.CharField(max_length=32, null=True, blank=True)
+    clearingnr = models.CharField(max_length=32, null=True, blank=True)
+
+    def __unicode__(self):
+        return '%s - %s' % (self.user, self.name)
+
+
 class EmailChange(models.Model):
     user = models.ForeignKey(User)
     token = models.CharField(max_length=42)
