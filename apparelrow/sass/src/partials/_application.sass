@@ -1959,8 +1959,8 @@ ul.suggested-friends
 // Settings page
 //
 
-body.settings, body.about
-  .about-content
+body.settings, body.about, body.dashboard-info
+  .about-content, .content
     a
       color: $font_color
       text-decoration: underline
@@ -1998,6 +1998,23 @@ body.settings, body.about
         list-style-type: decimal
         li
           list-style-type: decimal
+    .dashboard-content
+      font-size: 1.1em
+      h4
+        font-size: 1.1em
+        font-weight: bold
+        margin: 1.12em 0
+      p
+        margin: 0.5em 0
+      ol
+        list-style-type: decimal
+        margin: 0.5em 0
+        padding-left: 2em
+        li
+          list-style-type: decimal
+          padding-left: 1em
+      .center
+        text-align: center
 
   .settings-content
     form
@@ -2024,7 +2041,7 @@ body.settings, body.about
   .sidebar
     h2
       margin-bottom: 0
-    .settings-list, .about-list
+    .settings-list, .about-list, .list
       li
         padding: 5px 0
         border-bottom: 1px solid $easy_border_color

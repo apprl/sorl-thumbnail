@@ -19,8 +19,8 @@ from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
 from apparel.tasks import facebook_push_graph
 from profile.utils import get_facebook_user
-from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm
-from profile.models import EmailChange, ApparelProfile, Follow, FeaturedProfile
+from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm
+from profile.models import EmailChange, ApparelProfile, Follow, FeaturedProfile, PaymentDetail
 from profile.tasks import send_email_confirm_task
 from profile.decorators import avatar_change, login_flow
 from activity_feed.views import ActivityFeedRender
@@ -310,16 +310,28 @@ def settings_partner(request):
     """
     Handles the partner settings form.
     """
+    try:
+        instance = PaymentDetail.objects.get(user=request.user)
+    except PaymentDetail.DoesNotExist:
+        instance = None
+
     if request.method == 'POST':
         form = PartnerSettingsForm(request.POST, request.FILES, instance=request.user.get_profile())
         if form.is_valid():
             form.save()
 
+        details_form = PartnerPaymentDetailForm(request.POST, request.FILES)
+        if details_form.is_valid():
+            instance = details_form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+
         return HttpResponseRedirect(reverse('profile.views.settings_partner'))
 
     form = PartnerSettingsForm(instance=request.user.get_profile())
+    details_form = PartnerPaymentDetailForm(instance=instance)
 
-    return render(request, 'profile/settings_partner.html', {'form': form})
+    return render(request, 'profile/settings_partner.html', {'form': form, 'details_form': details_form})
 
 #
 # Welcome login flow

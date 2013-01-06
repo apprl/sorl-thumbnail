@@ -4,7 +4,7 @@ from django.forms.widgets import RadioSelect, FileInput, Textarea
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from profile.models import ApparelProfile
+from profile.models import ApparelProfile, PaymentDetail
 
 
 class ProfileImageForm(ModelForm):
@@ -83,6 +83,16 @@ class FacebookSettingsForm(ModelForm):
         model = ApparelProfile
         fields = ('fb_share_like_product', 'fb_share_like_look', 'fb_share_follow_profile', 'fb_share_create_look')
 
+
+class PartnerPaymentDetailForm(ModelForm):
+    name = CharField(label=_('Your name'))
+
+    class Meta:
+        model = PaymentDetail
+        fields = ('company', 'name', 'orgnr', 'clearingnr', 'banknr')
+        widgets = {
+            'company': RadioSelect
+        }
 
 class PartnerSettingsForm(ModelForm):
     blog_url = CharField(label=_('Your blog http://'))
