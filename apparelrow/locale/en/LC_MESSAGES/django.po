@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-28 15:47+0100\n"
+"POT-Creation-Date: 2013-01-06 03:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,13 +36,15 @@ msgstr ""
 #: activity_feed/models.py:71 activity_feed/models.py:120
 #: apparel/models.py:374 apparel/models.py:700 apparel/models.py:919
 #: apparel/models.py:1044 beta/models.py:7 beta/models.py:15
-#: profile/models.py:336 statistics/models.py:49
+#: dashboard/models.py:55 dashboard/models.py:72 dashboard/models.py:106
+#: profile/models.py:351 statistics/models.py:49
 msgid "Time created"
 msgstr ""
 
 #: activity_feed/models.py:72 apparel/models.py:228 apparel/models.py:375
 #: apparel/models.py:442 apparel/models.py:498 apparel/models.py:701
-#: apparel/models.py:920 profile/models.py:337
+#: apparel/models.py:920 dashboard/models.py:56 dashboard/models.py:73
+#: profile/models.py:352
 msgid "Time modified"
 msgstr ""
 
@@ -224,7 +226,7 @@ msgid "Product image"
 msgstr ""
 
 #: apparel/models.py:233 apparel/models.py:704 profile/models.py:59
-#: profile/models.py:375
+#: profile/models.py:390
 msgid "Gender"
 msgstr ""
 
@@ -282,6 +284,7 @@ msgid "Original currency"
 msgstr ""
 
 #: apparel/models.py:536 apparel/models.py:538 apparel/models.py:540
+#: dashboard/models.py:49
 msgid "Currency as three-letter ISO code"
 msgstr ""
 
@@ -465,6 +468,34 @@ msgid ""
 "info@apparelrow.com\">info@apparelrow.com</a>."
 msgstr ""
 
+#: dashboard/models.py:47 dashboard/models.py:69
+msgid "Sale amount"
+msgstr ""
+
+#: dashboard/models.py:48
+msgid "Sale commission"
+msgstr ""
+
+#: dashboard/models.py:50
+msgid "Original sale amount"
+msgstr ""
+
+#: dashboard/models.py:51
+msgid "Oiriginal sale commission"
+msgstr ""
+
+#: dashboard/models.py:52
+msgid "Original currency as three-letter ISO code"
+msgstr ""
+
+#: dashboard/models.py:54
+msgid "Time of sale"
+msgstr ""
+
+#: dashboard/models.py:96
+msgid "Between 1 and 0"
+msgstr ""
+
 #: importer/models.py:18
 msgid "a-z, 0-9 and _"
 msgstr ""
@@ -581,6 +612,14 @@ msgstr ""
 msgid "When you create a look"
 msgstr ""
 
+#: profile/forms.py:88
+msgid "Your name"
+msgstr ""
+
+#: profile/forms.py:98
+msgid "Your blog http://"
+msgstr ""
+
 #: profile/models.py:30 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
 #: templates/apparel/fragments/product_menu_browse.html:12
@@ -627,39 +666,39 @@ msgstr ""
 msgid "Partner user"
 msgstr ""
 
-#: profile/models.py:90
+#: profile/models.py:92
 msgid "When someone commented on a product that I have liked"
 msgstr ""
 
-#: profile/models.py:92
+#: profile/models.py:94
 msgid "When someone commented on a product that I have commented on"
 msgstr ""
 
-#: profile/models.py:94
+#: profile/models.py:96
 msgid "When someone commented on a look that I have created"
 msgstr ""
 
-#: profile/models.py:96
+#: profile/models.py:98
 msgid "When someone commented on a look that I have commented on"
 msgstr ""
 
-#: profile/models.py:98
+#: profile/models.py:100
 msgid "When someone likes a look that I have created"
 msgstr ""
 
-#: profile/models.py:100
+#: profile/models.py:102
 msgid "When someone starts to follow me"
 msgstr ""
 
-#: profile/models.py:102
+#: profile/models.py:104
 msgid "When a Facebook friend has joined Apprl"
 msgstr ""
 
-#: profile/models.py:105
+#: profile/models.py:107
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:297
+#: profile/models.py:312
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr ""
@@ -839,7 +878,8 @@ msgstr ""
 msgid "Follow us"
 msgstr ""
 
-#: templates/base.html:272 templates/profile/base_settings.html:20
+#: templates/base.html:272 templates/profile/base_settings.html:21
+#: templates/profile/base_settings.html:24
 #: templates/profile/settings_facebook.html:5
 msgid "Facebook"
 msgstr ""
@@ -1503,6 +1543,7 @@ msgid "Your profile"
 msgstr ""
 
 #: templates/apparel/shared_header.html:31
+#: templates/dashboard/body_header.html:10
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:9
 #: templates/profile/base_settings.html:16
@@ -1872,6 +1913,54 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
+#: templates/dashboard/body_header.html:4 templates/dashboard/info.html:4
+#: templates/dashboard/partner.html:4 templates/profile/base_settings.html:22
+#: templates/profile/settings_partner.html:21
+msgid "Partner"
+msgstr ""
+
+#: templates/dashboard/body_header.html:8
+msgid "Your dashboard"
+msgstr ""
+
+#: templates/dashboard/body_header.html:9 templates/dashboard/info.html:22
+msgid "How does it work"
+msgstr ""
+
+#: templates/dashboard/partner.html:48
+#, python-format
+msgid "Your commission %(total_sales)skr"
+msgstr ""
+
+#: templates/dashboard/partner.html:49
+#, python-format
+msgid "Confirmed commission %(total_confirmed)skr"
+msgstr ""
+
+#: templates/dashboard/partner.html:50
+#, python-format
+msgid "Pending payment %(pending_payment)skr"
+msgstr ""
+
+#: templates/dashboard/partner.html:51
+msgid "More info"
+msgstr ""
+
+#: templates/dashboard/partner.html:55
+msgid "Show: "
+msgstr ""
+
+#: templates/dashboard/partner.html:62
+#, python-format
+msgid "Your commission %(month_commission)skr"
+msgstr ""
+
+#: templates/dashboard/partner_complete.html:4
+#: templates/dashboard/partner_signup.html:4
+#: templates/dashboard/partner_signup.html:9
+msgid "Become a partner"
+msgstr ""
+
 #: templates/email/base.html:5
 msgid ""
 "\n"
@@ -2230,6 +2319,7 @@ msgstr ""
 
 #: templates/profile/settings_facebook.html:14
 #: templates/profile/settings_notification.html:22
+#: templates/profile/settings_partner.html:34
 msgid "Save changes"
 msgstr ""
 

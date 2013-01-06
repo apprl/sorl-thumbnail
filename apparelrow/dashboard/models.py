@@ -48,7 +48,7 @@ class Sale(models.Model):
     commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale commission'))
     currency = models.CharField(null=False, blank=False, default='SEK', max_length=3, help_text=_('Currency as three-letter ISO code'))
     original_amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale amount'))
-    original_commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Oiriginal sale commission'))
+    original_commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale commission'))
     original_currency = models.CharField(null=False, blank=False, default='SEK', max_length=3, help_text=_('Original currency as three-letter ISO code'))
 
     sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True)
