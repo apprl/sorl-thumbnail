@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-06 20:56+0100\n"
+"POT-Creation-Date: 2013-01-06 23:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -860,12 +860,12 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
-#: templates/base.html:266 templates/apparel/shared_header.html:29
+#: templates/base.html:266 templates/apparel/shared_header.html:32
 msgid "+ Invite friends"
 msgstr ""
 
 #: templates/base.html:268 templates/apparel/look_detail.html:116
-#: templates/apparel/look_list.html:18 templates/apparel/shared_header.html:30
+#: templates/apparel/look_list.html:18 templates/apparel/shared_header.html:33
 #: templates/profile/base_profile.html:51
 msgid "+ Create look"
 msgstr ""
@@ -1542,7 +1542,11 @@ msgstr ""
 msgid "Your profile"
 msgstr ""
 
-#: templates/apparel/shared_header.html:31
+#: templates/apparel/shared_header.html:30
+msgid "Your statistics"
+msgstr ""
+
+#: templates/apparel/shared_header.html:34
 #: templates/dashboard/body_header.html:10
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:9
@@ -1550,7 +1554,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: templates/apparel/shared_header.html:32
+#: templates/apparel/shared_header.html:35
 #: templates/registration/logout.html:7
 msgid "Log out"
 msgstr ""

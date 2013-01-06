@@ -26,6 +26,9 @@
         <a class="{% selected_url request "/profile/settings" "/profile/"|add:request.user.get_profile.slug %}" href="{{ request.user.get_profile.url_likes }}">{{ request.user.get_profile.display_name }}</a>
         <ul class="subnav" id="subnav-profile">
             <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Your profile" %}</a></li>
+            {% if request.user.get_profile.is_partner %}
+            <li><a href="{% url dashboard %}">{% trans "Your statistics" %}</a></li>
+            {% endif %}
             <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
             <li><a href="{% url look-create %}">{% trans "+ Create look" %}</a>
             <li><a href="{% url profile.views.settings_notification %}">{% trans "Settings" %}</a></li>
