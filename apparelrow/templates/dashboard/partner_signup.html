@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n cache %}
+{% load static from staticfiles %}
 
 {% block extra-title %}{% trans "Become a partner" %} | {% endblock %}
 
@@ -10,17 +11,18 @@
     <h2>Ansök om att bli partnerbloggare för att öka trafiken till din blogg, tjäna pengar på en mängd olika sätt och skapa looks för att sprida ditt innehåll.</h2>
     <div class="hero group">
         <div class="left">
-            <img>
+            <img src="{% static "images/dashboard_signup1.png" %}">
             <h3>ÖKA TRAFIKEN TILL DIN BLOGG</h3>
             <p>För varje produkt du ♥ på Apprl får du en länk tillbaka till din blogg - och genom att sprida ditt innehåll till Apprl får du nya bloggläsare.</p>
         </div>
         <div class="middle">
+            <img src="{% static "images/dashboard_signup2.png" %}">
             <img>
             <h3>TJÄNA PENGAR</h3>
             <p>När någon köper en produkt du har länkat till tjänar du pengar. Du kan länka från Apprl, din blogg, Facebooksida eller annat!</p>
         </div>
         <div class="right">
-            <img>
+            <img src="{% static "images/dashboard_signup3.png" %}">
             <h3>SKAPA SNYGGA LOOKS</h3>
             <p>Skapa looks för att sprida ditt innehåll och tjäna pengar när någon köper produkter från dina looks.</p>
         </div>
