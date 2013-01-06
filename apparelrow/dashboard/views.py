@@ -3,9 +3,19 @@ import calendar
 import decimal
 
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.db.models import Sum
+from django.forms import ModelForm
+from django.core.urlresolvers import reverse
 
-from dashboard.models import Sale, Payment
+from dashboard.models import Sale, Payment, Signup
+
+
+class SignupForm(ModelForm):
+
+    class Meta:
+        model = Signup
+        fields = ('name', 'email', 'blog')
 
 
 def dashboard(request, year=None, month=None):
@@ -72,7 +82,20 @@ def dashboard(request, year=None, month=None):
                                                           'year': year,
                                                           'month': month})
 
-    return render(request, 'dashboard/partner_signup.html')
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+        return HttpResponseRedirect(reverse('dashboard-complete'))
+
+    form = SignupForm()
+
+    return render(request, 'dashboard/partner_signup.html', {'form': form})
+
+
+def dashboard_complete(request):
+    return render(request, 'dashboard/partner_complete.html')
 
 
 def dashboard_info(request):
