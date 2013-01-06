@@ -320,7 +320,7 @@ def settings_partner(request):
         if form.is_valid():
             form.save()
 
-        details_form = PartnerPaymentDetailForm(request.POST, request.FILES)
+        details_form = PartnerPaymentDetailForm(request.POST, request.FILES, instance=instance)
         if details_form.is_valid():
             instance = details_form.save(commit=False)
             instance.user = request.user
