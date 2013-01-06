@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-06 03:05+0100\n"
+"POT-Creation-Date: 2013-01-06 20:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -490,8 +490,9 @@ msgid "Original sale amount"
 msgstr "Ursprungligt rabatterat pris"
 
 #: dashboard/models.py:51
-msgid "Oiriginal sale commission"
-msgstr ""
+#, fuzzy
+msgid "Original sale commission"
+msgstr "Ursprungligt rabatterat pris"
 
 #: dashboard/models.py:52
 #, fuzzy
@@ -2022,18 +2023,18 @@ msgstr "Så funkar det"
 
 #: templates/dashboard/partner.html:48
 #, python-format
-msgid "Your commission %(total_sales)skr"
-msgstr "Din provision %(total_sales)skr"
+msgid "Your commission: %(total_sales)skr"
+msgstr "Din provision: %(total_sales)skr"
 
 #: templates/dashboard/partner.html:49
 #, python-format
-msgid "Confirmed commission %(total_confirmed)skr"
-msgstr "Godkänd provision %(total_confirmed)skr"
+msgid "Confirmed commission: %(total_confirmed)skr"
+msgstr "Godkänd provision: %(total_confirmed)skr"
 
 #: templates/dashboard/partner.html:50
 #, python-format
-msgid "Pending payment %(pending_payment)skr"
-msgstr "Kommande utbetalning %(pending_payment)skr"
+msgid "Pending payment: %(pending_payment)skr"
+msgstr "Kommande utbetalning: %(pending_payment)skr"
 
 #: templates/dashboard/partner.html:51
 msgid "More info"

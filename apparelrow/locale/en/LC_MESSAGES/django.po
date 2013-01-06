@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-06 03:05+0100\n"
+"POT-Creation-Date: 2013-01-06 20:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -481,7 +481,7 @@ msgid "Original sale amount"
 msgstr ""
 
 #: dashboard/models.py:51
-msgid "Oiriginal sale commission"
+msgid "Original sale commission"
 msgstr ""
 
 #: dashboard/models.py:52
@@ -1929,17 +1929,17 @@ msgstr ""
 
 #: templates/dashboard/partner.html:48
 #, python-format
-msgid "Your commission %(total_sales)skr"
+msgid "Your commission: %(total_sales)skr"
 msgstr ""
 
 #: templates/dashboard/partner.html:49
 #, python-format
-msgid "Confirmed commission %(total_confirmed)skr"
+msgid "Confirmed commission: %(total_confirmed)skr"
 msgstr ""
 
 #: templates/dashboard/partner.html:50
 #, python-format
-msgid "Pending payment %(pending_payment)skr"
+msgid "Pending payment: %(pending_payment)skr"
 msgstr ""
 
 #: templates/dashboard/partner.html:51
