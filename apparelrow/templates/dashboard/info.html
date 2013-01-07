@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n cache %}
+{% load static from staticfiles %}
 
 {% block extra-title %}{% trans "Partner" %} | {% endblock %}
 
 {% block body-header %}
     {% include 'dashboard/body_header.html' %}
 {% endblock body-header %}
-{% block body-classes %}one-column dashboard dashboard-info{% endblock body-classes %}
+{% block body-classes %}two-columns dashboard dashboard-info{% endblock body-classes %}
 {% block body %}
 <div class="sidebar">
     <h2>Snabblänkar</h2>
@@ -21,65 +22,72 @@
 <div id="content" class="content">
     <h2>{% trans "How does it work" %}</h2>
     <div class="dashboard-content">
-        <p>Som modebloggare kan du ansöka till vårt partnerprogram. Det innebär att du kan tjäna
-        pengar när du länkar till produkter via Apprl. Om någon köper en produkt som du har länkat
-        till så tjänar du upp till 10% av ordervärdet. Som partnerbloggare kommer du även kunna få
-        fler bloggläsare och skapa snygga looks att dela på din blogg!</p>
+        <p>{% trans "As a fashion blogger you can now apply to our partner program. As a partner blogger you can make money when linking to Apprl products. If someone buys a product that you have linked to, you can make up to 10% of the order value. As a partner blogger you will grow your blog and create looks to share with your readers!" %}</p>
 
-        <p class="center">[ANSÖK TILL ATT BLI PARTNERBLOGGARE HÄR]</p>
-        <p class="center">Frågor? Maila <a href="mailto:partner@apprl.com">partner@apprl.com</a></p>
+        <p class="center"><a class="btn btn-upper btn-positive" href="{% url dashboard %}">{% trans "APPLY TO BECOME A PARTNER BLOGGER HERE" %}</a></p>
+        <p class="center">{% trans "Questions? Let us know on" %} <a href="mailto:partner@apprl.com">partner@apprl.com</a></p>
 
-        <p>Du kan få fler bloggläsare och tjäna pengar som Apprl partnerbloggare på en mängd olika sätt:</p>
+        <p>{% trans "As a partner blogger you can grow your blog and make money in a number of different ways:" %}</p>
 
-        <h4 id="blog">Öka trafiken till din blogg</h4>
-        <p>Varje gång du “gillar” en produkt på Apprl.com så visar vi att produkten är utvald av dig med
-        en länk till din blogg.</p>
+        <h4 id="blog">{% trans "Grow your blog" %}</h4>
+        <p>{% trans "Every time you “like” a product on Apprl.com, we show that the product is selected by you with a link back to your blog." %}</p>
+        <img src="{% static "images/dashboard_traffic_"|add:LANGUAGE_CODE|add:".png" %}">
 
-        BILD1
+        <p>{% trans "By getting followers on Apprl, more people will discover your blog. You can promote your Apprl profile by putting one of these badges on your blog and linking them to your profile:" %}</p>
+        <img src="{% static "images/follow_me_on_apprl_small_"|add:LANGUAGE_CODE|add:".png" %}">
+        <img src="{% static "images/follow_me_on_apprl_large_"|add:LANGUAGE_CODE|add:".png" %}">
 
-        <p>Genom att skaffa dig följare på Apprl.com kommer fler att upptäcka din blogg. Det kan du
-        göra genom att länka till din profilsida med någon av de här follow-knapparna:</p>
-
-        BILD2 och BILD3
-        (Klickar man på en knapp borde man väl komma till den bildens URL?)
-
-        <h4 id="product">Tjäna pengar med produktlänkar</h4>
-        <p>Det enklaste sättet att börja tjäna pengar är att länka till våra produkter. Så här gör du:</p>
+        <h4 id="product">{% trans "Make money on product links" %}</h4>
+        <p>{% trans "The easiest way to start making money is to simply link to our products:" %}</p>
         <ol>
-            <li>Logga in på Apprl.com</li>
-            <li>Gå till en produkt du gillar på Apprl.com.</li>
-            <li>Klicka på knappen “Hämta produktlänk” och kopiera länken.</li>
-            <li>Sprid länken på din blogg, din Facebooksida eller var som helst.</li>
-            <li>Alla klick på länken som leder till köp tjänar du pengar på.</li>
+            <li>{% trans "Log in to Apprl.com" %}</li>
+            <li>{% trans "Go to the product you want to link to" %}</li>
+            <li>{% trans "Click the button “Get product link” and copy the link." %}</li>
+            <li>{% trans "Share the link on your blog, Facebook profile or anywhere else." %}</li>
+            <li>{% trans "Every time someone clicks on the link and buys a product – you make money." %}</li>
+        </ol>
+        <img src="{% static "images/dashboard_product_link_"|add:LANGUAGE_CODE|add:".png" %}">
+
+        <h4 id="profile">{% trans "Make money from your profile" %}</h4>
+        <p>{% trans "All products that you “like” on Apprl.com ends up on your profile page. Every time someone clicks and buys a product – you make money." %}</p>
+        <img src="{% static "images/dashboard_profile_"|add:LANGUAGE_CODE|add:".png" %}">
+
+        <h4 id="looks">{% trans "Make money on looks" %}</h4>
+        <ol>
+            <li>{% trans "Log into Apprl.com" %}</li>
+            <li>
+                {% trans "Click “+ Create a look” under your profile picture in the header." %}
+                <img src="{% static "images/dashboard_look_create_"|add:LANGUAGE_CODE|add:".png" %}">
+            </li>
+            <li>
+                {% trans "Select whether you wish to create a collage or a tagged photo." %}
+                <img src="{% static "images/dashboard_look_type_"|add:LANGUAGE_CODE|add:".png" %}">
+            </li>
+            <li>
+                {% trans "Style your look and publish it." %}
+                <img src="{% static "images/dashboard_look_publicera_"|add:LANGUAGE_CODE|add:".png" %}">
+            </li>
+            <li>
+                {% trans "Copy the embed-code from your look, found in the text field on the left." %}
+                <img src="{% static "images/dashboard_look_embed_"|add:LANGUAGE_CODE|add:".png" %}">
+            </li>
+            <li>{% trans "Create a new blog post, switch to HTML-mode and paste the embed-code." %}</li>
+            <li>
+                {% trans "Publish the blog post and the look will show on your blog! For every person that clicks and buys a product from your look – you will make money." %}
+                <img src="{% static "images/dashboard_look_blog_"|add:LANGUAGE_CODE|add:".png" %}">
+            </li>
         </ol>
 
-        BILD4
+        <h4 id="brands">{% trans "Our stores & brands" %}</h4>
+        <p>{% trans "You’ll find all the products from leading international online retailers & brands at Apprl, for you to link to, create looks from and share." %} <a href="mailto:info@apprl.com?subject={% trans "I would like to suggest a store/brand..." %}">{% trans "If you’re missing a store let us know!" %}</a></p>
+        <img src="{% static "images/dashboard_stores.png" %}">
 
-        <h4 id="profile">Tjäna pengar från din profil</h4>
-        <p>Alla produkter du “gillar“ på Apprl.com läggs till din profilsida. Varje gång någon klickar och
-        köper en produkt från din profilsida tjänar du pengar!</p>
+        <h4>{% trans "Payments" %}</h4>
+        <p>{% trans "You will be able to follow how much you’re making day by day." %}</p>
+        <img src="{% static "images/dashboard_statistics.png" %}">
 
-        BILD5
-
-        <h4 id="looks">Tjäna pengar med looks</h4>
-        <p>Så här gör du:</p>
-        1. Logga in på Apprl.com.
-        2. Klicka på “+ Skapa look” under din profilbild högst upp på siten.
-        3. Välj om du vill skapa ett kollage eller tagga ett foto som du laddar upp.
-        4. Publicera din look.
-        5. Klipp ut “embed-koden” från din look, från textrutan till vänster.6. Skapa ett nytt blogginlägg, växla till HTML-läge och klistra in embed-koden.
-        7. När du publicerat blogginlägget så kommer looken synas på din blogg och alla klick
-        på produktlänkarna som leder till köp tjänar du pengar på.
-
-        <h4 id="brands">Våra butiker</h4>
-        <p>Hos Apprl hittar du produkter från webbens bästa onlinebutiker och varumärken som du kan
-        länka till och göra looks av. <a href="mailto:info@apprl.com?subject=Jag skulle vilja föreslå en butik/varumärke...">Föreslå gärna en butik eller ett varumärke som du saknar!</a></p>
-
-        <h4>Utbetalningar</h4>
-        <p>På din statistik kan du följa hur mycket du tjänar dag för dag.</p>
-
-        <p class="center">[ANSÖK TILL ATT BLI PARTNERBLOGGARE HÄR]</p>
-        <p class="center">Frågor? Maila <a href="mailto:partner@apprl.com">partner@apprl.com</a></p>
+        <p class="center"><a class="btn btn-upper btn-positive" href="{% url dashboard %}">{% trans "APPLY TO BECOME A PARTNER BLOGGER HERE" %}</a></p>
+        <p class="center">{% trans "Questions? Let us know on" %} <a href="mailto:partner@apprl.com">partner@apprl.com</a></p>
 
     </div>
 </div>

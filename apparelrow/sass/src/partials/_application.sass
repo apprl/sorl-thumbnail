@@ -2003,9 +2003,6 @@ ul.suggested-friends
 
 body.settings, body.about, body.dashboard-info
   .about-content, .content
-    a
-      color: $font_color
-      text-decoration: underline
     .dynamic-content
       h1,h2,h3,h4,h5
         margin: 0
@@ -2040,6 +2037,9 @@ body.settings, body.about, body.dashboard-info
         list-style-type: decimal
         li
           list-style-type: decimal
+      a
+        color: $font_color
+        text-decoration: underline
     .dashboard-content
       font-size: 1.1em
       h4
@@ -2055,8 +2055,19 @@ body.settings, body.about, body.dashboard-info
         li
           list-style-type: decimal
           padding-left: 1em
+          img
+            display: block
+      img
+        margin: 1em 0 2em 0
       .center
+        margin: 1em 0
         text-align: center
+      a
+        color: $font_color
+        text-decoration: underline
+      a.btn
+        color: white
+        text-decoration: none
 
   .settings-content
     form

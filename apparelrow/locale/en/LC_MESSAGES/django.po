@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-06 23:59+0100\n"
+"POT-Creation-Date: 2013-01-07 01:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1917,7 +1917,7 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: templates/dashboard/body_header.html:4 templates/dashboard/info.html:4
+#: templates/dashboard/body_header.html:4 templates/dashboard/info.html:5
 #: templates/dashboard/partner.html:4 templates/profile/base_settings.html:22
 #: templates/profile/settings_partner.html:21
 msgid "Partner"
@@ -1927,8 +1927,150 @@ msgstr ""
 msgid "Your dashboard"
 msgstr ""
 
-#: templates/dashboard/body_header.html:9 templates/dashboard/info.html:22
+#: templates/dashboard/body_header.html:9 templates/dashboard/info.html:23
 msgid "How does it work"
+msgstr ""
+
+#: templates/dashboard/info.html:25
+#, python-format
+msgid ""
+"As a fashion blogger you can now apply to our partner program. As a partner "
+"blogger you can make money when linking to Apprl products. If someone buys a "
+"product that you have linked to, you can make up to 10%% of the order value. "
+"As a partner blogger you will grow your blog and create looks to share with "
+"your readers!"
+msgstr ""
+
+#: templates/dashboard/info.html:27 templates/dashboard/info.html.py:89
+msgid "APPLY TO BECOME A PARTNER BLOGGER HERE"
+msgstr ""
+
+#: templates/dashboard/info.html:28 templates/dashboard/info.html.py:90
+msgid "Questions? Let us know on"
+msgstr ""
+
+#: templates/dashboard/info.html:30
+msgid ""
+"As a partner blogger you can grow your blog and make money in a number of "
+"different ways:"
+msgstr ""
+
+#: templates/dashboard/info.html:32
+msgid "Grow your blog"
+msgstr ""
+
+#: templates/dashboard/info.html:33
+msgid ""
+"Every time you “like” a product on Apprl.com, we show that the product is "
+"selected by you with a link back to your blog."
+msgstr ""
+
+#: templates/dashboard/info.html:36
+msgid ""
+"By getting followers on Apprl, more people will discover your blog. You can "
+"promote your Apprl profile by putting one of these badges on your blog and "
+"linking them to your profile:"
+msgstr ""
+
+#: templates/dashboard/info.html:40
+msgid "Make money on product links"
+msgstr ""
+
+#: templates/dashboard/info.html:41
+msgid ""
+"The easiest way to start making money is to simply link to our products:"
+msgstr ""
+
+#: templates/dashboard/info.html:43
+msgid "Log in to Apprl.com"
+msgstr ""
+
+#: templates/dashboard/info.html:44
+msgid "Go to the product you want to link to"
+msgstr ""
+
+#: templates/dashboard/info.html:45
+msgid "Click the button “Get product link” and copy the link."
+msgstr ""
+
+#: templates/dashboard/info.html:46
+msgid "Share the link on your blog, Facebook profile or anywhere else."
+msgstr ""
+
+#: templates/dashboard/info.html:47
+msgid ""
+"Every time someone clicks on the link and buys a product – you make money."
+msgstr ""
+
+#: templates/dashboard/info.html:51
+msgid "Make money from your profile"
+msgstr ""
+
+#: templates/dashboard/info.html:52
+msgid ""
+"All products that you “like” on Apprl.com ends up on your profile page. "
+"Every time someone clicks and buys a product – you make money."
+msgstr ""
+
+#: templates/dashboard/info.html:55
+msgid "Make money on looks"
+msgstr ""
+
+#: templates/dashboard/info.html:57
+msgid "Log into Apprl.com"
+msgstr ""
+
+#: templates/dashboard/info.html:59
+msgid "Click “+ Create a look” under your profile picture in the header."
+msgstr ""
+
+#: templates/dashboard/info.html:63
+msgid "Select whether you wish to create a collage or a tagged photo."
+msgstr ""
+
+#: templates/dashboard/info.html:67
+msgid "Style your look and publish it."
+msgstr ""
+
+#: templates/dashboard/info.html:71
+msgid ""
+"Copy the embed-code from your look, found in the text field on the left."
+msgstr ""
+
+#: templates/dashboard/info.html:74
+msgid "Create a new blog post, switch to HTML-mode and paste the embed-code."
+msgstr ""
+
+#: templates/dashboard/info.html:76
+msgid ""
+"Publish the blog post and the look will show on your blog! For every person "
+"that clicks and buys a product from your look – you will make money."
+msgstr ""
+
+#: templates/dashboard/info.html:81
+msgid "Our stores & brands"
+msgstr ""
+
+#: templates/dashboard/info.html:82
+msgid ""
+"You’ll find all the products from leading international online retailers & "
+"brands at Apprl, for you to link to, create looks from and share."
+msgstr ""
+
+#: templates/dashboard/info.html:82
+msgid "I would like to suggest a store/brand..."
+msgstr ""
+
+#: templates/dashboard/info.html:82
+msgid "If you’re missing a store let us know!"
+msgstr ""
+
+#: templates/dashboard/info.html:85
+msgid "Payments"
+msgstr ""
+
+#: templates/dashboard/info.html:86
+msgid "You will be able to follow how much you’re making day by day."
 msgstr ""
 
 #: templates/dashboard/partner.html:48
@@ -1960,8 +2102,8 @@ msgid "Your commission %(month_commission)skr"
 msgstr ""
 
 #: templates/dashboard/partner_complete.html:4
-#: templates/dashboard/partner_signup.html:4
-#: templates/dashboard/partner_signup.html:9
+#: templates/dashboard/partner_signup.html:5
+#: templates/dashboard/partner_signup.html:10
 msgid "Become a partner"
 msgstr ""
 
