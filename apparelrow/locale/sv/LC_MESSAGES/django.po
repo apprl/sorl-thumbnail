@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-07 01:29+0100\n"
+"POT-Creation-Date: 2013-01-07 01:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2034,9 +2034,9 @@ msgid ""
 msgstr ""
 "Som modebloggare kan du ansöka till vårt partnerprogram. Det innebär att du "
 "kan tjäna pengar när du länkar till produkter via Apprl. Om någon köper en "
-"produkt som du har länkat till så tjänar du upp till 10%% av ordervärdet. Som "
-"partnerbloggare kommer du även kunna få fler bloggläsare och skapa snygga "
-"looks att dela på din blogg!"
+"produkt som du har länkat till så tjänar du upp till 10%% av ordervärdet. "
+"Som partnerbloggare kommer du även kunna få fler bloggläsare och skapa "
+"snygga looks att dela på din blogg!"
 
 #: templates/dashboard/info.html:27 templates/dashboard/info.html.py:89
 msgid "APPLY TO BECOME A PARTNER BLOGGER HERE"
@@ -2187,30 +2187,81 @@ msgstr "Utbetalning"
 msgid "You will be able to follow how much you’re making day by day."
 msgstr "På din statistik kan du följa hur mycket du tjänar dag för dag."
 
-#: templates/dashboard/partner.html:48
+#: templates/dashboard/more_info.html:4
+msgid "How payments work"
+msgstr "Hur utbetalningar fungerar"
+
+#: templates/dashboard/more_info.html:6
+msgid ""
+"As soon as a sale that you have generated has been carried through, your "
+"commission is added to “Your commission”. Before the amount can be payed to "
+"you, the store needs to confirm the sale. This is normally done within 30 "
+"days to account for any returned items."
+msgstr ""
+"Direkt när ett köp har skett så ser du det under “Din provision”. För att "
+"detta köp ska kunna betalas ut till dig, så behöver butiken godkänna köpet. "
+"Detta görs normalt efter ca 30 dagar för att kunna vara säker på att inga av "
+"varorna returneras och att det verkligen blir ett köp."
+
+#: templates/dashboard/more_info.html:7
+msgid ""
+"Once a sale has been confirmed it becomes “Confirmed commission” - this is "
+"what is being paid to you each month. The last day of every month a payment "
+"will be made to you with all the confirmed commissions that you have made "
+"the month before."
+msgstr ""
+"När ett köp har godkänts så blir det “Godkänd provision” och det är detta "
+"som betalas ut till dig varje månad. Den sista dagen i varje månad utbetalas "
+"den godkända provision du har tjänat under föregående månad, vilket betyder "
+"att du får betalt den 1:a eller den 2:a."
+
+#: templates/dashboard/more_info.html:8
+msgid ""
+"The minimum payment amount is 500 SEK. If your confirmed commission is less "
+"than that, the amount will be transferred to the next month. “Pending "
+"payment” is the amount of your next payment."
+msgstr ""
+"Minimumbelopp för utbetalningar är 500kr. Om din Godkända provision är "
+"mindre än det så överförs det till efterkommande månad. Under “Kommande "
+"utbetalning” ser du hur mycket som kommer att betalas ut till dig aktuell "
+"månad."
+
+#: templates/dashboard/more_info.html:9
+msgid ""
+"For a payment to be made, you have to enter your account details under your "
+"settings."
+msgstr ""
+"För att en utbetalning ska kunna göras så måste du ha angett kontouppgifter "
+"under dina inställningar."
+
+#: templates/dashboard/more_info.html:10
+msgid "Let us know any questions on"
+msgstr "Vid frågor kontakta oss på"
+
+#: templates/dashboard/partner.html:52
 #, python-format
 msgid "Your commission: %(total_sales)skr"
 msgstr "Din provision: %(total_sales)skr"
 
-#: templates/dashboard/partner.html:49
+#: templates/dashboard/partner.html:53
 #, python-format
 msgid "Confirmed commission: %(total_confirmed)skr"
 msgstr "Godkänd provision: %(total_confirmed)skr"
 
-#: templates/dashboard/partner.html:50
+#: templates/dashboard/partner.html:54
 #, python-format
 msgid "Pending payment: %(pending_payment)skr"
 msgstr "Kommande utbetalning: %(pending_payment)skr"
 
-#: templates/dashboard/partner.html:51
+#: templates/dashboard/partner.html:55
 msgid "More info"
 msgstr "Mer info"
 
-#: templates/dashboard/partner.html:55
+#: templates/dashboard/partner.html:59
 msgid "Show: "
 msgstr "Visa: "
 
-#: templates/dashboard/partner.html:62
+#: templates/dashboard/partner.html:66
 #, python-format
 msgid "Your commission %(month_commission)skr"
 msgstr "Din provision %(month_commission)skr"

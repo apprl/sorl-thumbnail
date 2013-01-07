@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-07 01:29+0100\n"
+"POT-Creation-Date: 2013-01-07 01:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2073,30 +2073,67 @@ msgstr ""
 msgid "You will be able to follow how much you’re making day by day."
 msgstr ""
 
-#: templates/dashboard/partner.html:48
+#: templates/dashboard/more_info.html:4
+msgid "How payments work"
+msgstr ""
+
+#: templates/dashboard/more_info.html:6
+msgid ""
+"As soon as a sale that you have generated has been carried through, your "
+"commission is added to “Your commission”. Before the amount can be payed to "
+"you, the store needs to confirm the sale. This is normally done within 30 "
+"days to account for any returned items."
+msgstr ""
+
+#: templates/dashboard/more_info.html:7
+msgid ""
+"Once a sale has been confirmed it becomes “Confirmed commission” - this is "
+"what is being paid to you each month. The last day of every month a payment "
+"will be made to you with all the confirmed commissions that you have made "
+"the month before."
+msgstr ""
+
+#: templates/dashboard/more_info.html:8
+msgid ""
+"The minimum payment amount is 500 SEK. If your confirmed commission is less "
+"than that, the amount will be transferred to the next month. “Pending "
+"payment” is the amount of your next payment."
+msgstr ""
+
+#: templates/dashboard/more_info.html:9
+msgid ""
+"For a payment to be made, you have to enter your account details under your "
+"settings."
+msgstr ""
+
+#: templates/dashboard/more_info.html:10
+msgid "Let us know any questions on"
+msgstr ""
+
+#: templates/dashboard/partner.html:52
 #, python-format
 msgid "Your commission: %(total_sales)skr"
 msgstr ""
 
-#: templates/dashboard/partner.html:49
+#: templates/dashboard/partner.html:53
 #, python-format
 msgid "Confirmed commission: %(total_confirmed)skr"
 msgstr ""
 
-#: templates/dashboard/partner.html:50
+#: templates/dashboard/partner.html:54
 #, python-format
 msgid "Pending payment: %(pending_payment)skr"
 msgstr ""
 
-#: templates/dashboard/partner.html:51
+#: templates/dashboard/partner.html:55
 msgid "More info"
 msgstr ""
 
-#: templates/dashboard/partner.html:55
+#: templates/dashboard/partner.html:59
 msgid "Show: "
 msgstr ""
 
-#: templates/dashboard/partner.html:62
+#: templates/dashboard/partner.html:66
 #, python-format
 msgid "Your commission %(month_commission)skr"
 msgstr ""
