@@ -110,7 +110,7 @@
 {% block body-header %}
 <div id="body-header">
     <div class="column_one">
-        <h1>{{ object.title }}</h1>
+        <h1>{{ object.title }}{% if not object.published %} ({% trans "Draft" %}){% endif %}</h1>
         <h2>{% trans "by" %} <a href="{{ object.user.get_profile.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></h2>
     </div>
     <a class="btn btn-positive btn-upper btn-create-look" href="{% url look-create %}">{% trans "+ Create look" %}</a>
