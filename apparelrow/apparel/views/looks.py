@@ -35,6 +35,8 @@ def editor(request, component=None, slug=None):
 
         look = get_object_or_404(get_model('apparel', 'Look'), slug=slug, user=request.user)
         component = {'P': 'photo', 'C': 'collage'}[look.component]
+
+    if request.user.is_authenticated():
         has_liked = request.user.product_likes.exists()
 
     if component is None:
