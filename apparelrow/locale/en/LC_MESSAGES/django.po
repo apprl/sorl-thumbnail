@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-09 14:09+0100\n"
+"POT-Creation-Date: 2013-01-09 14:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -496,6 +496,18 @@ msgstr ""
 msgid "Between 1 and 0"
 msgstr ""
 
+#: dashboard/models.py:103 profile/forms.py:88
+msgid "Your name"
+msgstr ""
+
+#: dashboard/models.py:104
+msgid "E-mail"
+msgstr ""
+
+#: dashboard/models.py:105
+msgid "Blog URL"
+msgstr ""
+
 #: importer/models.py:18
 msgid "a-z, 0-9 and _"
 msgstr ""
@@ -610,10 +622,6 @@ msgstr ""
 
 #: profile/forms.py:80
 msgid "When you create a look"
-msgstr ""
-
-#: profile/forms.py:88
-msgid "Your name"
 msgstr ""
 
 #: profile/forms.py:98
@@ -2147,6 +2155,54 @@ msgstr ""
 #: templates/dashboard/partner_signup.html:5
 #: templates/dashboard/partner_signup.html:10
 msgid "Become a partner"
+msgstr ""
+
+#: templates/dashboard/partner_complete.html:9
+msgid "Thanks for your application!"
+msgstr ""
+
+#: templates/dashboard/partner_complete.html:10
+msgid "We will soon get in touch with you."
+msgstr ""
+
+#: templates/dashboard/partner_signup.html:11
+msgid ""
+"Apply to become a partner blogger to grow your blog, make money in a number "
+"of ways and spread your content."
+msgstr ""
+
+#: templates/dashboard/partner_signup.html:15
+msgid "GROW YOUR BLOG"
+msgstr ""
+
+#: templates/dashboard/partner_signup.html:16
+msgid ""
+"For every product you ♥ on Apprl you will bet a link back to your blog - and "
+"by sharing your content on Apprl you'll get new blog readers."
+msgstr ""
+
+#: templates/dashboard/partner_signup.html:21
+msgid "MAKE MONEY"
+msgstr ""
+
+#: templates/dashboard/partner_signup.html:22
+msgid ""
+"When someone buys a product that you have linked to, you make money. You can "
+"link from Apprl, your blog, your Facebook profile or anywhere else."
+msgstr ""
+
+#: templates/dashboard/partner_signup.html:26
+msgid "CREATE LOOKS"
+msgstr ""
+
+#: templates/dashboard/partner_signup.html:27
+msgid ""
+"Share your content through looks and make money when someone buys items in "
+"them."
+msgstr ""
+
+#: templates/dashboard/partner_signup.html:34
+msgid "Apply to become a partner"
 msgstr ""
 
 #: templates/email/base.html:5

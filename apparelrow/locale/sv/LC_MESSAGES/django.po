@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-09 14:09+0100\n"
+"POT-Creation-Date: 2013-01-09 14:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -508,6 +508,18 @@ msgstr "Sågs senast"
 msgid "Between 1 and 0"
 msgstr ""
 
+#: dashboard/models.py:103 profile/forms.py:88
+msgid "Your name"
+msgstr "Ditt namn"
+
+#: dashboard/models.py:104
+msgid "E-mail"
+msgstr "E-postadress"
+
+#: dashboard/models.py:105
+msgid "Blog URL"
+msgstr "Blogg-URL"
+
 #: importer/models.py:18
 msgid "a-z, 0-9 and _"
 msgstr ""
@@ -624,10 +636,6 @@ msgstr "När du följer någon"
 #: profile/forms.py:80
 msgid "When you create a look"
 msgstr "När du skapar en look"
-
-#: profile/forms.py:88
-msgid "Your name"
-msgstr "Ditt namn"
 
 #: profile/forms.py:98
 msgid "Your blog http://"
@@ -2276,6 +2284,62 @@ msgstr "Din provision %(month_commission)skr"
 #: templates/dashboard/partner_signup.html:10
 msgid "Become a partner"
 msgstr "Bli partnerbloggare"
+
+#: templates/dashboard/partner_complete.html:9
+msgid "Thanks for your application!"
+msgstr "Tack för din ansökan!"
+
+#: templates/dashboard/partner_complete.html:10
+msgid "We will soon get in touch with you."
+msgstr "Vi hör av oss till dig inom kort."
+
+#: templates/dashboard/partner_signup.html:11
+msgid ""
+"Apply to become a partner blogger to grow your blog, make money in a number "
+"of ways and spread your content."
+msgstr ""
+"Ansök om att bli partnerbloggare för att öka trafiken till din blogg, tjäna "
+"pengar på en mängd olika sätt och skapa looks för att sprida ditt innehåll."
+
+#: templates/dashboard/partner_signup.html:15
+msgid "GROW YOUR BLOG"
+msgstr "ÖKA TRAFIKEN TILL DIN BLOGG"
+
+#: templates/dashboard/partner_signup.html:16
+msgid ""
+"For every product you ♥ on Apprl you will bet a link back to your blog - and "
+"by sharing your content on Apprl you'll get new blog readers."
+msgstr ""
+"För varje produkt du ♥ på Apprl får du en länk tillbaka till din blogg - och "
+"genom att sprida ditt innehåll till Apprl får du nya bloggläsare."
+
+#: templates/dashboard/partner_signup.html:21
+msgid "MAKE MONEY"
+msgstr "TJÄNA PENGAR"
+
+#: templates/dashboard/partner_signup.html:22
+msgid ""
+"When someone buys a product that you have linked to, you make money. You can "
+"link from Apprl, your blog, your Facebook profile or anywhere else."
+msgstr ""
+"När någon köper en produkt du har länkat till tjänar du pengar. Du kan länka "
+"från Apprl, din blogg, Facebooksida eller annat!"
+
+#: templates/dashboard/partner_signup.html:26
+msgid "CREATE LOOKS"
+msgstr "SKAPA SNYGGA LOOKS"
+
+#: templates/dashboard/partner_signup.html:27
+msgid ""
+"Share your content through looks and make money when someone buys items in "
+"them."
+msgstr ""
+"Skapa looks för att sprida ditt innehåll och tjäna pengar när någon köper "
+"produkter från dina looks."
+
+#: templates/dashboard/partner_signup.html:34
+msgid "Apply to become a partner"
+msgstr "Ansök om att bli partnerbloggare"
 
 #: templates/email/base.html:5
 msgid ""

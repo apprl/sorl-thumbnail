@@ -8,30 +8,30 @@
 {% block body %}
 <div id="content">
     <h1>{% trans "Become a partner" %}</h1>
-    <h2>Ansök om att bli partnerbloggare för att öka trafiken till din blogg, tjäna pengar på en mängd olika sätt och skapa looks för att sprida ditt innehåll.</h2>
+    <h2>{% trans "Apply to become a partner blogger to grow your blog, make money in a number of ways and spread your content." %}</h2>
     <div class="hero group">
         <div class="left">
             <img src="{% static "images/dashboard_signup1.png" %}">
-            <h3>ÖKA TRAFIKEN TILL DIN BLOGG</h3>
-            <p>För varje produkt du ♥ på Apprl får du en länk tillbaka till din blogg - och genom att sprida ditt innehåll till Apprl får du nya bloggläsare.</p>
+            <h3>{% trans "GROW YOUR BLOG" %}</h3>
+            <p>{% trans "For every product you ♥ on Apprl you will bet a link back to your blog - and by sharing your content on Apprl you'll get new blog readers." %}</p>
         </div>
         <div class="middle">
             <img src="{% static "images/dashboard_signup2.png" %}">
             <img>
-            <h3>TJÄNA PENGAR</h3>
-            <p>När någon köper en produkt du har länkat till tjänar du pengar. Du kan länka från Apprl, din blogg, Facebooksida eller annat!</p>
+            <h3>{% trans "MAKE MONEY" %}</h3>
+            <p>{% trans "When someone buys a product that you have linked to, you make money. You can link from Apprl, your blog, your Facebook profile or anywhere else." %}</p>
         </div>
         <div class="right">
             <img src="{% static "images/dashboard_signup3.png" %}">
-            <h3>SKAPA SNYGGA LOOKS</h3>
-            <p>Skapa looks för att sprida ditt innehåll och tjäna pengar när någon köper produkter från dina looks.</p>
+            <h3>{% trans "CREATE LOOKS" %}</h3>
+            <p>{% trans "Share your content through looks and make money when someone buys items in them." %}</p>
         </div>
     </div>
     <form action="" method="post">{% csrf_token %}
         <div class="form-content group">
             {{ form.as_p }}
         </div>
-        <button class="btn btn-block btn-upper btn-positive">Ansök om att bli partner här</button>
+        <button class="btn btn-block btn-upper btn-positive">{% trans "Apply to become a partner" %}</button>
     </form>
 </div>
 {% endblock %}

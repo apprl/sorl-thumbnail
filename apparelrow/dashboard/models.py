@@ -100,9 +100,9 @@ class Cut(models.Model):
 
 
 class Signup(models.Model):
-    name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
-    blog = models.CharField(max_length=255)
+    name = models.CharField(_('Your name'), max_length=255)
+    email = models.CharField(_('E-mail'), max_length=255)
+    blog = models.CharField(_('Blog URL'), max_length=255)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
 
     def __unicode__(self):
