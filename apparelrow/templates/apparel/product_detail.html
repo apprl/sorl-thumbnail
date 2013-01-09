@@ -142,7 +142,7 @@
                   {% for like in partner_likes %}
                     <li>
                     {% with like.user.get_profile as profile %}
-                      <a class="profile-link" href="http://{{ profile.blog_url }}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>{{ profile.display_name }}</a><br>{% include 'apparel/fragments/follow.html' with request=request profile=profile only %}
+                      <a class="profile-link" href="{{ profile.get_absolute_url }}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>{{ profile.display_name }}</a><br><a href="http://{{ profile.blog_url }}">{{ profile.blog_url }}</a><br>{% include 'apparel/fragments/follow.html' with request=request profile=profile only %}
                     {% endwith %}
                     </li>
                   {% endfor %}
