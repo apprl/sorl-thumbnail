@@ -136,6 +136,18 @@
             {% get_comment_count for object as comment_count %}
             {% include 'apparel/fragments/product_detail.html' %}
             <div class="sidebar last">
+                {% if partner_likes %}
+                <h2>{% trans "Selected by" %}</h2>
+                <ul id="partner-likes" class="suggested-friends group">
+                  {% for like in partner_likes %}
+                    <li>
+                    {% with like.user.get_profile as profile %}
+                      <a class="profile-link" href="{{ profile.blog_url }}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>{{ profile.display_name }}</a><br>{% include 'apparel/fragments/follow.html' with request=request profile=profile only %}
+                    {% endwith %}
+                    </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
                 <h2>{% trans "Likes" %}</h2>
                 {% if not likes %}
                 <p class="likes-text">{% trans "Be the first one to like this product!" %}</p>

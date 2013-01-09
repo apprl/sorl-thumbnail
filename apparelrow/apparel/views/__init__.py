@@ -217,6 +217,8 @@ def product_detail(request, slug):
 
     # Likes
     likes = product.likes.filter(active=True).order_by('-modified').select_related('user', 'user__profile')
+    regular_likes = likes.filter(user__profile__blog_url=None)
+    partner_likes = likes.exclude(user__profile__blog_url=None)
 
     # Full image url
     try:
@@ -258,7 +260,8 @@ def product_detail(request, slug):
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
                 'product_full_image': product_full_image,
                 'product_brand_full_url': product_brand_full_url,
-                'likes': likes,
+                'likes': regular_likes,
+                'partner_likes': partner_likes,
                 'product_short_link': product_short_link,
             }, context_instance=RequestContext(request),
         )
