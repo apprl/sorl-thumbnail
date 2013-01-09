@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-07 01:50+0100\n"
+"POT-Creation-Date: 2013-01-09 14:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1399,6 +1399,11 @@ msgstr "Fler looks av"
 #: templates/apparel/product_detail.html:170
 msgid "See all looks"
 msgstr "Visa alla looks"
+
+#: templates/apparel/look_editor.html:27
+#: templates/apparel/fragments/looks_large.html:37
+msgid "Draft"
+msgstr "Utkast"
 
 #: templates/apparel/look_editor.html:30
 msgid "Delete look"

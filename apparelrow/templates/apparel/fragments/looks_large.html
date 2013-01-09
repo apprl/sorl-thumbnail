@@ -34,7 +34,7 @@
             </div>
             <div class="look-footer">
                 <h3>
-                  <a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.title }}</a>
+                  <a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.title }}{% if not object.published %} ({% trans "Draft" %}){% endif %}</a>
                 </h3>
                 <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>
                 <div class="stats">
