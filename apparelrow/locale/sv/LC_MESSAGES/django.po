@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 14:06+0100\n"
+"POT-Creation-Date: 2013-01-14 14:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2063,7 +2063,6 @@ msgid "Our stores & brands"
 msgstr "Våra butiker"
 
 #: templates/dashboard/info.html:20
-#, fuzzy
 msgid "Got any questions?"
 msgstr "Har du några frågor?"
 
@@ -2347,6 +2346,10 @@ msgstr ""
 #: templates/dashboard/partner_signup.html:34
 msgid "Apply to become a partner"
 msgstr "Ansök om att bli partnerbloggare"
+
+#: templates/dashboard/partner_signup.html:35
+msgid "Read more about becoming a partner"
+msgstr "Läs mer om att bli partnerbloggare"
 
 #: templates/email/base.html:5
 msgid ""
