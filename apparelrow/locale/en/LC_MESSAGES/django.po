@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 14:20+0100\n"
+"POT-Creation-Date: 2013-01-14 14:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2184,8 +2184,8 @@ msgstr ""
 
 #: templates/dashboard/partner_signup.html:16
 msgid ""
-"For every product you ♥ on Apprl you will bet a link back to your blog - and "
-"by sharing your content on Apprl you'll get new blog readers."
+"For every product you ♥ on Apprl you will get a link back to your blog - and "
+"more people will find your blog from your Apprl profile."
 msgstr ""
 
 #: templates/dashboard/partner_signup.html:21
@@ -2203,9 +2203,7 @@ msgid "CREATE LOOKS"
 msgstr ""
 
 #: templates/dashboard/partner_signup.html:27
-msgid ""
-"Share your content through looks and make money when someone buys items in "
-"them."
+msgid "Share your looks and make money when someone buys items in them."
 msgstr ""
 
 #: templates/dashboard/partner_signup.html:34

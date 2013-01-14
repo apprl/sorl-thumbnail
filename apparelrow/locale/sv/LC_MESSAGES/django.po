@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 14:20+0100\n"
+"POT-Creation-Date: 2013-01-14 14:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2313,11 +2313,11 @@ msgstr "ÖKA TRAFIKEN TILL DIN BLOGG"
 
 #: templates/dashboard/partner_signup.html:16
 msgid ""
-"For every product you ♥ on Apprl you will bet a link back to your blog - and "
-"by sharing your content on Apprl you'll get new blog readers."
+"For every product you ♥ on Apprl you will get a link back to your blog - and "
+"more people will find your blog from your Apprl profile."
 msgstr ""
 "För varje produkt du ♥ på Apprl får du en länk tillbaka till din blogg - och "
-"genom att sprida ditt innehåll till Apprl får du nya bloggläsare."
+"fler kommer upptäcka din blogg från din Apprl-profil."
 
 #: templates/dashboard/partner_signup.html:21
 msgid "MAKE MONEY"
@@ -2336,12 +2336,8 @@ msgid "CREATE LOOKS"
 msgstr "SKAPA SNYGGA LOOKS"
 
 #: templates/dashboard/partner_signup.html:27
-msgid ""
-"Share your content through looks and make money when someone buys items in "
-"them."
-msgstr ""
-"Skapa looks för att sprida ditt innehåll och tjäna pengar när någon köper "
-"produkter från dina looks."
+msgid "Share your looks and make money when someone buys items in them."
+msgstr "Skapa looks och tjäna pengar när någon köper produkter från dem."
 
 #: templates/dashboard/partner_signup.html:34
 msgid "Apply to become a partner"
