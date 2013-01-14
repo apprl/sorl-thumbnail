@@ -27,7 +27,7 @@
           <h1>{% if object %}{{ object.title }} {% if not object.published %}({% trans "Draft" %}) {% endif %}<span>{% trans "by" %} {{ object.user.get_profile.display_name }}</span>{% else %}{% if component == 'photo' %}{% trans "Create a tagged photo" %}{% else %}{% trans "Create a collage" %}{% endif %}{% endif %}</h1>
             <div class="button-container">
                 {% if object and object.slug %}
-                <button class="btn btn-upper btn-delete" name="look_delete">{% trans "Delete look" %}</button>
+                <button class="btn btn-upper btn-delete btn-negative" name="look_delete">{% trans "Delete look" %}</button>
                 {% else %}
                 <button class="btn btn-upper btn-reset" name="look_reset">{% trans "Reset look" %}</button>
                 {% endif %}
