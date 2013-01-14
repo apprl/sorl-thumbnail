@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 14:37+0100\n"
+"POT-Creation-Date: 2013-01-14 14:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2037,6 +2037,13 @@ msgstr "Partner"
 msgid "Your dashboard"
 msgstr "Din statistik"
 
+#: templates/dashboard/body_header.html:8
+#: templates/dashboard/partner_complete.html:4
+#: templates/dashboard/partner_signup.html:5
+#: templates/dashboard/partner_signup.html:10
+msgid "Become a partner"
+msgstr "Bli partnerbloggare"
+
 #: templates/dashboard/body_header.html:9
 #, fuzzy
 msgid "How does it work"
@@ -2081,8 +2088,8 @@ msgstr ""
 "Som modebloggare kan du ansöka till vårt partnerprogram. Det innebär att du "
 "kan tjäna pengar när du länkar till produkter via Apprl. Om någon köper en "
 "produkt som du har länkat till så tjänar du upp till 10&#37; av ordervärdet. "
-"Som partnerbloggare kommer du även kunna få fler bloggläsare och skapa snygga "
-"looks att dela på din blogg!"
+"Som partnerbloggare kommer du även kunna få fler bloggläsare och skapa "
+"snygga looks att dela på din blogg!"
 
 #: templates/dashboard/info.html:29 templates/dashboard/info.html.py:93
 msgid "APPLY TO BECOME A PARTNER BLOGGER HERE"
@@ -2283,12 +2290,6 @@ msgstr "Visa: "
 #, python-format
 msgid "Your commission %(month_commission)skr"
 msgstr "Din provision %(month_commission)skr"
-
-#: templates/dashboard/partner_complete.html:4
-#: templates/dashboard/partner_signup.html:5
-#: templates/dashboard/partner_signup.html:10
-msgid "Become a partner"
-msgstr "Bli partnerbloggare"
 
 #: templates/dashboard/partner_complete.html:9
 msgid "Thanks for your application!"
