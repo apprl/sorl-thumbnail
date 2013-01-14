@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 14:42+0100\n"
+"POT-Creation-Date: 2013-01-14 15:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2044,10 +2044,13 @@ msgstr "Din statistik"
 msgid "Become a partner"
 msgstr "Bli partnerbloggare"
 
-#: templates/dashboard/body_header.html:9
-#, fuzzy
-msgid "How does it work"
+#: templates/dashboard/body_header.html:9 templates/dashboard/info.html:24
+msgid "How it works"
 msgstr "Så funkar det"
+
+#: templates/dashboard/info.html:13
+msgid "Sections"
+msgstr "Snabblänkar"
 
 #: templates/dashboard/info.html:15 templates/dashboard/info.html.py:33
 msgid "Grow your blog"
@@ -2073,10 +2076,6 @@ msgstr "Våra butiker"
 msgid "Got any questions?"
 msgstr "Har du några frågor?"
 
-#: templates/dashboard/info.html:24
-msgid "How it works"
-msgstr "Så funkar det"
-
 #: templates/dashboard/info.html:26
 msgid ""
 "As a fashion blogger you can now apply to our partner program. As a partner "
@@ -2096,6 +2095,7 @@ msgid "APPLY TO BECOME A PARTNER BLOGGER HERE"
 msgstr "ANSÖK TILL ATT BLI PARTNERBLOGGARE HÄR"
 
 #: templates/dashboard/info.html:30 templates/dashboard/info.html.py:96
+#: templates/dashboard/partner_signup.html:37
 msgid "Questions? Let us know on"
 msgstr "Frågor? Maila"
 
@@ -3091,6 +3091,10 @@ msgstr "Logga in med ditt Facebook ID"
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
+
+#, fuzzy
+#~ msgid "How does it work"
+#~ msgstr "Så funkar det"
 
 #~ msgid ""
 #~ "As a partner blogger you can grow your blog and make money in a number of "
