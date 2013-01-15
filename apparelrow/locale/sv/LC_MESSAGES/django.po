@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 15:01+0100\n"
+"POT-Creation-Date: 2013-01-15 13:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2073,8 +2073,8 @@ msgid "Our stores & brands"
 msgstr "Våra butiker"
 
 #: templates/dashboard/info.html:20
-msgid "Got any questions?"
-msgstr "Har du några frågor?"
+msgid "Questions?"
+msgstr "Frågor?"
 
 #: templates/dashboard/info.html:26
 msgid ""
@@ -2336,8 +2336,12 @@ msgid "CREATE LOOKS"
 msgstr "SKAPA SNYGGA LOOKS"
 
 #: templates/dashboard/partner_signup.html:27
-msgid "Share your looks and make money when someone buys items in them."
-msgstr "Skapa looks och tjäna pengar när någon köper produkter från dem."
+msgid ""
+"Share your looks and make money when someone buys items in them &mdash; Both "
+"from Apprl and your blog!"
+msgstr ""
+"Skapa looks och tjäna pengar när någon köper produkter från dem &mdash; Både "
+"från Apprl och från din blogg!"
 
 #: templates/dashboard/partner_signup.html:34
 msgid "Apply to become a partner"
@@ -3091,6 +3095,9 @@ msgstr "Logga in med ditt Facebook ID"
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
+
+#~ msgid "Got any questions?"
+#~ msgstr "Har du några frågor?"
 
 #, fuzzy
 #~ msgid "How does it work"
