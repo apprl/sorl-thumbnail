@@ -180,8 +180,8 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     manufacturers = []
     for i, value in enumerate(facet['manufacturer']):
         if i % 2 == 0:
-            split = value.rsplit('|', 1)
-            manufacturers.append((int(split[1]), split[0]))
+            split = value.split('|')
+            manufacturers.append((int(split[-1]), split[-2]))
 
     # Calculate colors
     colors = [int(value) for i, value in enumerate(facet['color']) if i % 2 == 0]
