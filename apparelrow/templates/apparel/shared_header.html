@@ -27,7 +27,7 @@
         <ul class="subnav" id="subnav-profile">
             <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Your profile" %}</a></li>
             {% if request.user.get_profile.is_partner %}
-            <li><a href="{% url dashboard %}">{% trans "Your statistics" %}</a></li>
+            <li><a href="{% url dashboard %}">{% trans "Your dashboard" %}</a></li>
             {% endif %}
             <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
             <li><a href="{% url look-create %}">{% trans "+ Create look" %}</a>

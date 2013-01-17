@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-15 13:02+0100\n"
+"POT-Creation-Date: 2013-01-17 15:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1561,7 +1561,8 @@ msgid "Your profile"
 msgstr ""
 
 #: templates/apparel/shared_header.html:30
-msgid "Your statistics"
+#: templates/dashboard/body_header.html:8
+msgid "Your dashboard"
 msgstr ""
 
 #: templates/apparel/shared_header.html:34
@@ -1939,10 +1940,6 @@ msgstr ""
 #: templates/dashboard/partner.html:4 templates/profile/base_settings.html:22
 #: templates/profile/settings_partner.html:21
 msgid "Partner"
-msgstr ""
-
-#: templates/dashboard/body_header.html:8
-msgid "Your dashboard"
 msgstr ""
 
 #: templates/dashboard/body_header.html:8

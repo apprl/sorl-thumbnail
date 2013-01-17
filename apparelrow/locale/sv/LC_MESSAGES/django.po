@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-15 13:02+0100\n"
+"POT-Creation-Date: 2013-01-17 15:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1611,7 +1611,8 @@ msgid "Your profile"
 msgstr "Din profil"
 
 #: templates/apparel/shared_header.html:30
-msgid "Your statistics"
+#: templates/dashboard/body_header.html:8
+msgid "Your dashboard"
 msgstr "Din statistik"
 
 #: templates/apparel/shared_header.html:34
@@ -2032,10 +2033,6 @@ msgstr "Kommentera"
 #: templates/profile/settings_partner.html:21
 msgid "Partner"
 msgstr "Partner"
-
-#: templates/dashboard/body_header.html:8
-msgid "Your dashboard"
-msgstr "Din statistik"
 
 #: templates/dashboard/body_header.html:8
 #: templates/dashboard/partner_complete.html:4
@@ -3095,6 +3092,9 @@ msgstr "Logga in med ditt Facebook ID"
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
+
+#~ msgid "Your statistics"
+#~ msgstr "Din statistik"
 
 #~ msgid "Got any questions?"
 #~ msgstr "Har du några frågor?"
