@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-18 14:56+0100\n"
+"POT-Creation-Date: 2013-01-18 18:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -932,7 +932,7 @@ msgstr ""
 msgid "Privacy & Terms"
 msgstr ""
 
-#: templates/base.html:280 templates/flatpages/default.html:23
+#: templates/base.html:280 templates/flatpages/default.html:26
 msgid "Cookies"
 msgstr ""
 
@@ -2283,19 +2283,23 @@ msgstr ""
 msgid "Terms of Use"
 msgstr ""
 
-#: templates/flatpages/default.html:19
-msgid "Privacy Policy"
-msgstr ""
-
 #: templates/flatpages/default.html:20
-msgid "Acceptable Use Policy"
-msgstr ""
-
-#: templates/flatpages/default.html:21
-msgid "Copyright Policy"
+msgid "Partner terms"
 msgstr ""
 
 #: templates/flatpages/default.html:22
+msgid "Privacy Policy"
+msgstr ""
+
+#: templates/flatpages/default.html:23
+msgid "Acceptable Use Policy"
+msgstr ""
+
+#: templates/flatpages/default.html:24
+msgid "Copyright Policy"
+msgstr ""
+
+#: templates/flatpages/default.html:25
 msgid "Trademark Policy"
 msgstr ""
 
