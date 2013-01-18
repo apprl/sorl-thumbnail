@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-18 18:41+0100\n"
+"POT-Creation-Date: 2013-01-18 18:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -624,19 +624,19 @@ msgstr ""
 msgid "When you create a look"
 msgstr ""
 
-#: profile/forms.py:89
+#: profile/forms.py:90
 msgid "Personal/organization number"
 msgstr ""
 
-#: profile/forms.py:90
+#: profile/forms.py:91
 msgid "Bank clearing number"
 msgstr ""
 
-#: profile/forms.py:91
+#: profile/forms.py:92
 msgid "Bank account number"
 msgstr ""
 
-#: profile/forms.py:101
+#: profile/forms.py:102
 msgid "http://"
 msgstr ""
 
