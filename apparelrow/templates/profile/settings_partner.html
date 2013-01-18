@@ -4,14 +4,21 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
 $(document).ready(function() {
-    if($('#id_company_0').is(':checked')) {
-        $('#id_clearingnr, #id_banknr').parent().hide();
+    var company = $('input[name="company"]');
+    var person_fields = $('#id_clearingnr, #id_banknr, #id_address, #id_postal_code, #id_city');
+
+    function updateForm(isCompany) {
+        if(isCompany === 'True') {
+            person_fields.parent().hide();
+        } else {
+            person_fields.parent().show();
+        }
     }
-    $('#id_company_0').change(function() {
-        $('#id_clearingnr, #id_banknr').parent().hide();
-    });
-    $('#id_company_1').change(function() {
-        $('#id_clearingnr, #id_banknr').parent().show();
+
+    updateForm(company.filter(':checked').val());
+
+    company.change(function(e) {
+        updateForm(e.currentTarget.value);
     });
 });
 </script>
@@ -19,15 +26,17 @@ $(document).ready(function() {
 
 {% block content %}
         <h2 id="events">{% trans "Partner" %}</h2>
-        <form action="{% url profile.views.settings_partner %}" method="post">{% csrf_token %}
-            <div style="clear: both; padding: 0 0 1em 0;">
+        <form id="partner-form" action="{% url profile.views.settings_partner %}" method="post">{% csrf_token %}
+            <h3>{% trans "Your blog" %}</h3>
+            <div class="group" style="clear: both; padding: 0 0 1em 0;">
                 {% for field in form %}
-                <p>{{ field.label }} {{ field }}</p>
+                <p><label>{{ field.label }} {{ field }}</label></p>
                 {% endfor %}
             </div>
+            <h3>{% trans "Your payment settings" %}</h3>
             <div class="group">
                 {% for field in details_form %}
-                <p>{{ field.label }} {{ field }}</p>
+                <p><label>{{ field.label }} {{ field }}</label></p>
                 {% endfor %}
             </div>
             <div>

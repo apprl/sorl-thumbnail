@@ -85,17 +85,20 @@ class FacebookSettingsForm(ModelForm):
 
 
 class PartnerPaymentDetailForm(ModelForm):
-    name = CharField(label=_('Your name'))
+    name = CharField(label=_('Name'))
+    orgnr = CharField(label=_('Personal/organization number'))
+    clearingnr = CharField(label=_('Bank clearing number'))
+    banknr = CharField(label=_('Bank account number'))
 
     class Meta:
         model = PaymentDetail
-        fields = ('company', 'name', 'orgnr', 'clearingnr', 'banknr')
+        fields = ('company', 'name', 'orgnr', 'clearingnr', 'banknr', 'address', 'postal_code', 'city')
         widgets = {
             'company': RadioSelect
         }
 
 class PartnerSettingsForm(ModelForm):
-    blog_url = CharField(label=_('Your blog http://'))
+    blog_url = CharField(label=_('http://'))
 
     class Meta:
         model = ApparelProfile

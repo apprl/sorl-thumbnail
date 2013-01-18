@@ -272,10 +272,14 @@ class ApparelProfile(models.Model):
 class PaymentDetail(models.Model):
     user = models.ForeignKey('auth.User')
     name = models.CharField(max_length=128)
-    company = models.BooleanField(default=False, null=False, blank=False, choices=((True, 'Yes'), (False, 'No')))
+    company = models.BooleanField(default=False, null=False, blank=False, choices=((True, 'Receive payments as a company'), (False, 'Receive payments as a private person')))
     orgnr = models.CharField(max_length=32, null=True, blank=True)
     banknr = models.CharField(max_length=32, null=True, blank=True)
     clearingnr = models.CharField(max_length=32, null=True, blank=True)
+    address = models.CharField(_('Address'), max_length=64, null=True, blank=True)
+    postal_code = models.CharField(_('Postal code'), max_length=8, null=True, blank=True)
+    city = models.CharField(_('City'), max_length=64, null=True, blank=True)
+
 
     def __unicode__(self):
         return '%s - %s' % (self.user, self.name)

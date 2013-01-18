@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-17 15:15+0100\n"
+"POT-Creation-Date: 2013-01-18 14:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,14 +38,14 @@ msgstr ""
 #: apparel/models.py:374 apparel/models.py:700 apparel/models.py:919
 #: apparel/models.py:1044 beta/models.py:7 beta/models.py:15
 #: dashboard/models.py:55 dashboard/models.py:72 dashboard/models.py:106
-#: profile/models.py:351 statistics/models.py:49
+#: profile/models.py:355 statistics/models.py:49
 msgid "Time created"
 msgstr "Tid tillagd"
 
 #: activity_feed/models.py:72 apparel/models.py:228 apparel/models.py:375
 #: apparel/models.py:442 apparel/models.py:498 apparel/models.py:701
 #: apparel/models.py:920 dashboard/models.py:56 dashboard/models.py:73
-#: profile/models.py:352
+#: profile/models.py:356
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -227,7 +227,7 @@ msgid "Product image"
 msgstr "Produktbild"
 
 #: apparel/models.py:233 apparel/models.py:704 profile/models.py:59
-#: profile/models.py:390
+#: profile/models.py:394
 msgid "Gender"
 msgstr "Kön"
 
@@ -243,7 +243,7 @@ msgstr "I lager"
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:438
+#: apparel/models.py:438 profile/forms.py:88
 msgid "Name"
 msgstr "Namn"
 
@@ -508,7 +508,7 @@ msgstr "Sågs senast"
 msgid "Between 1 and 0"
 msgstr ""
 
-#: dashboard/models.py:103 profile/forms.py:88
+#: dashboard/models.py:103
 msgid "Your name"
 msgstr "Ditt namn"
 
@@ -637,9 +637,21 @@ msgstr "När du följer någon"
 msgid "When you create a look"
 msgstr "När du skapar en look"
 
-#: profile/forms.py:98
-msgid "Your blog http://"
-msgstr "Din blogg http://"
+#: profile/forms.py:89
+msgid "Personal/organization number"
+msgstr "Person- eller organisationsnummer"
+
+#: profile/forms.py:90
+msgid "Bank clearing number"
+msgstr "Bankens clearingnummer"
+
+#: profile/forms.py:91
+msgid "Bank account number"
+msgstr "Bankkontonummer"
+
+#: profile/forms.py:101
+msgid "http://"
+msgstr "http://"
 
 #: profile/models.py:30 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
@@ -719,7 +731,19 @@ msgstr "När en Facebookvän blivit medlem på Apprl"
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:312
+#: profile/models.py:279
+msgid "Address"
+msgstr "Adress"
+
+#: profile/models.py:280
+msgid "Postal code"
+msgstr "Postkod"
+
+#: profile/models.py:281
+msgid "City"
+msgstr "Postadress"
+
+#: profile/models.py:316
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr "Välkommen till Apprl %(username)s"
@@ -2030,7 +2054,7 @@ msgstr "Kommentera"
 
 #: templates/dashboard/body_header.html:4 templates/dashboard/info.html:5
 #: templates/dashboard/partner.html:4 templates/profile/base_settings.html:22
-#: templates/profile/settings_partner.html:21
+#: templates/profile/settings_partner.html:28
 msgid "Partner"
 msgstr "Partner"
 
@@ -2744,7 +2768,7 @@ msgstr ""
 
 #: templates/profile/settings_facebook.html:14
 #: templates/profile/settings_notification.html:22
-#: templates/profile/settings_partner.html:34
+#: templates/profile/settings_partner.html:43
 msgid "Save changes"
 msgstr "Spara ändringar"
 
@@ -2761,6 +2785,14 @@ msgstr "Vem?"
 #: templates/profile/settings_notification.html:10
 msgid "Notifications"
 msgstr ""
+
+#: templates/profile/settings_partner.html:30
+msgid "Your blog"
+msgstr "Din blogg"
+
+#: templates/profile/settings_partner.html:36
+msgid "Your payment settings"
+msgstr "Dina utbetalningsuppgifter"
 
 #: templates/profile/fragments/follow_profile.html:8
 msgid "Following you"
@@ -3093,8 +3125,8 @@ msgstr "Logga in med ditt Facebook ID"
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
 
-#~ msgid "Your statistics"
-#~ msgstr "Din statistik"
+#~ msgid "Your blog http://"
+#~ msgstr "Din blogg http://"
 
 #~ msgid "Got any questions?"
 #~ msgstr "Har du några frågor?"
