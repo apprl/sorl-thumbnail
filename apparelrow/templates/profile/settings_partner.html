@@ -36,7 +36,11 @@ $(document).ready(function() {
             <h3>{% trans "Your payment settings" %}</h3>
             <div class="group">
                 {% for field in details_form %}
+                {% if field.label == "Company" %}
+                <p>{{ field }}</p>
+                {% else %}
                 <p><label>{{ field.label }} {{ field }}</label></p>
+                {% endif %}
                 {% endfor %}
             </div>
             <div>
