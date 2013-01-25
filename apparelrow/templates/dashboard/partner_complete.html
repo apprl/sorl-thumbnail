@@ -9,4 +9,8 @@
   <h1>{% trans "Thanks for your application!" %}</h1>
   <p class="complete">{% trans "We will soon get in touch with you." %}</p>
 </div>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_trackEvent', 'Partner', 'Signup', '{{ request.session.partner_info }}']);
+</script>
 {% endblock %}

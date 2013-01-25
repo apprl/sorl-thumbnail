@@ -85,6 +85,8 @@ def dashboard(request, year=None, month=None):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
+            # Save name and blog URL on session, for Google Analytics
+            request.session['partner_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
             form.save()
 
         return HttpResponseRedirect(reverse('dashboard-complete'))
