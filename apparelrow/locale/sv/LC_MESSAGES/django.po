@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-18 18:46+0100\n"
+"POT-Creation-Date: 2013-01-25 16:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -637,19 +637,19 @@ msgstr "När du följer någon"
 msgid "When you create a look"
 msgstr "När du skapar en look"
 
-#: profile/forms.py:90
+#: profile/forms.py:89
 msgid "Personal/organization number"
 msgstr "Person- eller organisationsnummer"
 
-#: profile/forms.py:91
+#: profile/forms.py:90
 msgid "Bank clearing number"
 msgstr "Bankens clearingnummer"
 
-#: profile/forms.py:92
+#: profile/forms.py:91
 msgid "Bank account number"
 msgstr "Bankkontonummer"
 
-#: profile/forms.py:102
+#: profile/forms.py:101
 msgid "http://"
 msgstr "http://"
 
@@ -2252,22 +2252,21 @@ msgid ""
 "you, the store needs to confirm the sale. This is normally done within 30 "
 "days to account for any returned items."
 msgstr ""
-"Direkt när ett köp har skett så ser du det under “Din provision”. För att "
-"detta köp ska kunna betalas ut till dig, så behöver butiken godkänna köpet. "
-"Detta görs normalt efter ca 30 dagar för att kunna vara säker på att inga av "
-"varorna returneras och att det verkligen blir ett köp."
+"Direkt när ett köp har skett så ser du det under “Din provision”. För att "
+"detta köp ska kunna betalas ut till dig, så behöver butiken godkänna köpet. "
+"Detta görs normalt efter ca 30 dagar för att kunna vara säker på att inga av "
+"varorna returneras och att det verkligen blir ett köp."
 
 #: templates/dashboard/more_info.html:7
 msgid ""
 "Once a sale has been confirmed it becomes “Confirmed commission” - this is "
-"what is being paid to you each month. The last day of every month a payment "
-"will be made to you with all the confirmed commissions that you have made "
-"the month before."
+"what is being paid to you each month. The last day of each month a payment "
+"will be made to you with all the confirmed commission that you have earned "
+"the previous month."
 msgstr ""
-"När ett köp har godkänts så blir det “Godkänd provision” och det är detta "
-"som betalas ut till dig varje månad. Den sista dagen i varje månad utbetalas "
-"den godkända provision du har tjänat under föregående månad, vilket betyder "
-"att du får betalt den 1:a eller den 2:a."
+"När ett köp har godkänts så blir det “Godkänd provision” och det är detta "
+"som betalas ut till dig den sista dagen varje månad under förutsättning att "
+"den Godkända provisionen har nått minimibeloppet 500kr."
 
 #: templates/dashboard/more_info.html:8
 msgid ""
@@ -2275,10 +2274,10 @@ msgid ""
 "than that, the amount will be transferred to the next month. “Pending "
 "payment” is the amount of your next payment."
 msgstr ""
-"Minimumbelopp för utbetalningar är 500kr. Om din Godkända provision är "
-"mindre än det så överförs det till efterkommande månad. Under “Kommande "
-"utbetalning” ser du hur mycket som kommer att betalas ut till dig aktuell "
-"månad."
+"Om din Godkända provision är mindre än det så överförs den till "
+"efterkommande månad. Under “Kommande utbetalning” ser du hur mycket som "
+"kommer att betalas ut till dig aktuell månad. Det tar en till två dagar "
+"innan du har pengarna på kontot."
 
 #: templates/dashboard/more_info.html:9
 msgid ""
@@ -2780,7 +2779,7 @@ msgstr ""
 
 #: templates/profile/settings_facebook.html:14
 #: templates/profile/settings_notification.html:22
-#: templates/profile/settings_partner.html:43
+#: templates/profile/settings_partner.html:47
 msgid "Save changes"
 msgstr "Spara ändringar"
 

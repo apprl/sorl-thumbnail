@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-18 18:46+0100\n"
+"POT-Creation-Date: 2013-01-25 16:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -624,19 +624,19 @@ msgstr ""
 msgid "When you create a look"
 msgstr ""
 
-#: profile/forms.py:90
+#: profile/forms.py:89
 msgid "Personal/organization number"
 msgstr ""
 
-#: profile/forms.py:91
+#: profile/forms.py:90
 msgid "Bank clearing number"
 msgstr ""
 
-#: profile/forms.py:92
+#: profile/forms.py:91
 msgid "Bank account number"
 msgstr ""
 
-#: profile/forms.py:102
+#: profile/forms.py:101
 msgid "http://"
 msgstr ""
 
@@ -2144,9 +2144,9 @@ msgstr ""
 #: templates/dashboard/more_info.html:7
 msgid ""
 "Once a sale has been confirmed it becomes “Confirmed commission” - this is "
-"what is being paid to you each month. The last day of every month a payment "
-"will be made to you with all the confirmed commissions that you have made "
-"the month before."
+"what is being paid to you each month. The last day of each month a payment "
+"will be made to you with all the confirmed commission that you have earned "
+"the previous month."
 msgstr ""
 
 #: templates/dashboard/more_info.html:8
@@ -2608,7 +2608,7 @@ msgstr ""
 
 #: templates/profile/settings_facebook.html:14
 #: templates/profile/settings_notification.html:22
-#: templates/profile/settings_partner.html:43
+#: templates/profile/settings_partner.html:47
 msgid "Save changes"
 msgstr ""
 
