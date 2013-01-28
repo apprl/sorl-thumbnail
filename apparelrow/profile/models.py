@@ -128,7 +128,7 @@ class ApparelProfile(models.Model):
     @cached_property
     def looks(self):
         """Number of looks"""
-        return self.user.look.count()
+        return self.user.look.filter(published=True).count()
 
     @cached_property
     def likes(self):
