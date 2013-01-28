@@ -53,3 +53,5 @@ class Command(BaseCommand):
             print 'Reindexed %s products' % (product_count,)
             look_count = rebuild_look_index()
             print 'Reindexed %s looks' % (look_count,)
+            profile_count = rebuild_profile_index()
+            print 'Reindexed %s profiles' % (profile_count,)
