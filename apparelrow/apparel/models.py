@@ -793,9 +793,9 @@ class Look(models.Model):
         genders_len = float(len(genders))
 
         if genders_len:
-            if ((genders.count('M')) / genders_len) > 0.5:
+            if (genders.count('M') / genders_len) > 0.5:
                 return 'M'
-            elif ((genders.count('W')) / genders_len) > 0.5:
+            elif (genders.count('W') / genders_len) > 0.5:
                 return 'W'
 
         return 'U'

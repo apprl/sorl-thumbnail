@@ -258,7 +258,6 @@ class LookView(View):
         look = get_model('apparel', 'Look')(**json_data)
         look.save()
 
-        # TODO: Handle components creation
         for component in components:
             component['product_id'] = component['product']['id']
             del component['product']
@@ -272,6 +271,10 @@ class LookView(View):
             look_component = get_model('apparel', 'LookComponent')(**component)
             look_component.save()
             look.components.add(look_component)
+
+        # Save again to make sure our custom save method have access to all
+        # components
+        look.save()
 
         response = JSONResponse(look_instance_to_dict(look), status=201)
         response['Location'] = reverse('apparel.views.look_detail', args=[look.slug])
