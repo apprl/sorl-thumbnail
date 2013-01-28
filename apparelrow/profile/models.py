@@ -108,6 +108,13 @@ class ApparelProfile(models.Model):
 
     followers_count = models.IntegerField(default=0, blank=False, null=False)
 
+    @cached_property
+    def blog_url_external(self):
+        if not self.blog_url.startswith('http'):
+            return 'http://%s' % (self.blog_url,)
+
+        return self.blog_url
+
     @models.permalink
     def get_looks_url(self):
         return ('looks_by_user', [str(self.user.username)])
