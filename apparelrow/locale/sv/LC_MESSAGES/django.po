@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-25 16:20+0100\n"
+"POT-Creation-Date: 2013-01-29 12:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,14 +38,14 @@ msgstr ""
 #: apparel/models.py:374 apparel/models.py:700 apparel/models.py:919
 #: apparel/models.py:1044 beta/models.py:7 beta/models.py:15
 #: dashboard/models.py:55 dashboard/models.py:72 dashboard/models.py:106
-#: profile/models.py:355 statistics/models.py:49
+#: profile/models.py:362 statistics/models.py:49
 msgid "Time created"
 msgstr "Tid tillagd"
 
 #: activity_feed/models.py:72 apparel/models.py:228 apparel/models.py:375
 #: apparel/models.py:442 apparel/models.py:498 apparel/models.py:701
 #: apparel/models.py:920 dashboard/models.py:56 dashboard/models.py:73
-#: profile/models.py:356
+#: profile/models.py:363
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -227,7 +227,7 @@ msgid "Product image"
 msgstr "Produktbild"
 
 #: apparel/models.py:233 apparel/models.py:704 profile/models.py:59
-#: profile/models.py:394
+#: profile/models.py:401
 msgid "Gender"
 msgstr "Kön"
 
@@ -731,27 +731,27 @@ msgstr "När en Facebookvän blivit medlem på Apprl"
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:275
+#: profile/models.py:282
 msgid "Receive payments as a company"
 msgstr "Jag vill ha utbetalning som företag"
 
-#: profile/models.py:275
+#: profile/models.py:282
 msgid "Receive payments as a private person"
 msgstr "Jag vill ha utbetalning som privatperson"
 
-#: profile/models.py:279
+#: profile/models.py:286
 msgid "Address"
 msgstr "Adress"
 
-#: profile/models.py:280
+#: profile/models.py:287
 msgid "Postal code"
 msgstr "Postkod"
 
-#: profile/models.py:281
+#: profile/models.py:288
 msgid "City"
 msgstr "Postadress"
 
-#: profile/models.py:316
+#: profile/models.py:323
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr "Välkommen till Apprl %(username)s"
@@ -2290,6 +2290,10 @@ msgstr ""
 #: templates/dashboard/more_info.html:10
 msgid "Let us know any questions on"
 msgstr "Vid frågor kontakta oss på"
+
+#: templates/dashboard/partner.html:14
+msgid "Commission (SEK)"
+msgstr "Provision (SEK)"
 
 #: templates/dashboard/partner.html:52
 #, python-format

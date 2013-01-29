@@ -11,7 +11,7 @@
       function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Date');
-        data.addColumn('number', 'Commission (SEK)');
+        data.addColumn('number', '{% trans "Commission (SEK)" %}');
         data.addRows([
           {% for sale_date, commission in sales.items %}
           [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission|unlocalize }}],
