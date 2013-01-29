@@ -426,7 +426,7 @@ def login_flow_featured(request, profile):
     profile.save()
 
     if profile.gender not in ['M', 'W']:
-        featured_profiles = [x.profile for x in FeaturedProfile.objects.order_by('-rank')[:21]]
+        featured_profiles = [x.profile for x in FeaturedProfile.objects.filter(gender='W').order_by('-rank')[:21]]
     else:
         featured_profiles = [x.profile for x in FeaturedProfile.objects.filter(gender=profile.gender).order_by('-rank')[:21]]
 
