@@ -8,7 +8,7 @@ from profile.models import PaymentDetail
 
 
 class ApparelProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'brand', 'slug', 'is_brand', 'language', 'followers_count',)
+    list_display = ('user', 'name', 'brand', 'slug', 'is_brand', 'language', 'followers_count', 'popularity')
     list_filter = ('is_brand',)
     search_fields = ('name',)
     raw_id_fields = ('user', 'brand')

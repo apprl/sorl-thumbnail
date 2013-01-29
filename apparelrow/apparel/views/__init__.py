@@ -608,7 +608,7 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
         queryset = queryset.filter(gender__in=view_gender)
 
     if popular:
-        queryset = queryset.order_by('-followers_count', 'user__first_name', 'user__last_name', 'user__username')
+        queryset = queryset.order_by('-popularity', 'user__first_name', 'user__last_name', 'user__username')
     else:
         queryset = queryset.order_by('user__first_name', 'user__last_name', 'user__username')
 

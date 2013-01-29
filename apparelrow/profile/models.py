@@ -108,6 +108,8 @@ class ApparelProfile(models.Model):
 
     followers_count = models.IntegerField(default=0, blank=False, null=False)
 
+    popularity    = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
+
     @cached_property
     def blog_url_external(self):
         if not self.blog_url.startswith('http'):

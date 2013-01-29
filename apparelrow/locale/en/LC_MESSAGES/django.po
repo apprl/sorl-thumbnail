@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-29 14:41+0100\n"
+"POT-Creation-Date: 2013-01-29 15:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,14 +37,14 @@ msgstr ""
 #: apparel/models.py:374 apparel/models.py:700 apparel/models.py:919
 #: apparel/models.py:1044 beta/models.py:7 beta/models.py:15
 #: dashboard/models.py:55 dashboard/models.py:72 dashboard/models.py:106
-#: profile/models.py:362 statistics/models.py:49
+#: profile/models.py:364 statistics/models.py:49
 msgid "Time created"
 msgstr ""
 
 #: activity_feed/models.py:72 apparel/models.py:228 apparel/models.py:375
 #: apparel/models.py:442 apparel/models.py:498 apparel/models.py:701
 #: apparel/models.py:920 dashboard/models.py:56 dashboard/models.py:73
-#: profile/models.py:363
+#: profile/models.py:365
 msgid "Time modified"
 msgstr ""
 
@@ -226,7 +226,7 @@ msgid "Product image"
 msgstr ""
 
 #: apparel/models.py:233 apparel/models.py:704 profile/models.py:59
-#: profile/models.py:401
+#: profile/models.py:403
 msgid "Gender"
 msgstr ""
 
@@ -718,27 +718,27 @@ msgstr ""
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:282
+#: profile/models.py:284
 msgid "Receive payments as a company"
 msgstr ""
 
-#: profile/models.py:282
+#: profile/models.py:284
 msgid "Receive payments as a private person"
 msgstr ""
 
-#: profile/models.py:286
+#: profile/models.py:288
 msgid "Address"
 msgstr ""
 
-#: profile/models.py:287
+#: profile/models.py:289
 msgid "Postal code"
 msgstr ""
 
-#: profile/models.py:288
+#: profile/models.py:290
 msgid "City"
 msgstr ""
 
-#: profile/models.py:323
+#: profile/models.py:325
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr ""
@@ -1256,7 +1256,7 @@ msgstr ""
 msgid "Brands Women"
 msgstr ""
 
-#: templates/apparel/brand_list.html:18 templates/apparel/user_list.html:14
+#: templates/apparel/brand_list.html:18
 msgid "Most followed"
 msgstr ""
 
@@ -1608,6 +1608,10 @@ msgstr ""
 #: templates/apparel/shared_header.html:35
 #: templates/registration/logout.html:7
 msgid "Log out"
+msgstr ""
+
+#: templates/apparel/user_list.html:14
+msgid "Popular"
 msgstr ""
 
 #: templates/apparel/user_list.html:15

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-29 14:41+0100\n"
+"POT-Creation-Date: 2013-01-29 15:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,14 +38,14 @@ msgstr ""
 #: apparel/models.py:374 apparel/models.py:700 apparel/models.py:919
 #: apparel/models.py:1044 beta/models.py:7 beta/models.py:15
 #: dashboard/models.py:55 dashboard/models.py:72 dashboard/models.py:106
-#: profile/models.py:362 statistics/models.py:49
+#: profile/models.py:364 statistics/models.py:49
 msgid "Time created"
 msgstr "Tid tillagd"
 
 #: activity_feed/models.py:72 apparel/models.py:228 apparel/models.py:375
 #: apparel/models.py:442 apparel/models.py:498 apparel/models.py:701
 #: apparel/models.py:920 dashboard/models.py:56 dashboard/models.py:73
-#: profile/models.py:363
+#: profile/models.py:365
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -227,7 +227,7 @@ msgid "Product image"
 msgstr "Produktbild"
 
 #: apparel/models.py:233 apparel/models.py:704 profile/models.py:59
-#: profile/models.py:401
+#: profile/models.py:403
 msgid "Gender"
 msgstr "Kön"
 
@@ -731,27 +731,27 @@ msgstr "När en Facebookvän blivit medlem på Apprl"
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:282
+#: profile/models.py:284
 msgid "Receive payments as a company"
 msgstr "Jag vill ha utbetalning som företag"
 
-#: profile/models.py:282
+#: profile/models.py:284
 msgid "Receive payments as a private person"
 msgstr "Jag vill ha utbetalning som privatperson"
 
-#: profile/models.py:286
+#: profile/models.py:288
 msgid "Address"
 msgstr "Adress"
 
-#: profile/models.py:287
+#: profile/models.py:289
 msgid "Postal code"
 msgstr "Postkod"
 
-#: profile/models.py:288
+#: profile/models.py:290
 msgid "City"
 msgstr "Postadress"
 
-#: profile/models.py:323
+#: profile/models.py:325
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr "Välkommen till Apprl %(username)s"
@@ -1300,7 +1300,7 @@ msgstr "Varumärken Herr"
 msgid "Brands Women"
 msgstr "Varumärken Dam"
 
-#: templates/apparel/brand_list.html:18 templates/apparel/user_list.html:14
+#: templates/apparel/brand_list.html:18
 msgid "Most followed"
 msgstr "Mest följda"
 
@@ -1659,6 +1659,10 @@ msgstr "Inställningar"
 #: templates/registration/logout.html:7
 msgid "Log out"
 msgstr "Logga ut"
+
+#: templates/apparel/user_list.html:14
+msgid "Popular"
+msgstr "Populära"
 
 #: templates/apparel/user_list.html:15
 msgid "In alphabetical order"
@@ -3459,9 +3463,6 @@ msgstr "... Eller skapa ett nytt konto"
 
 #~ msgid "All looks"
 #~ msgstr "Alla looks"
-
-#~ msgid "Popular"
-#~ msgstr "Populära"
 
 #~ msgid "Blog"
 #~ msgstr "Blogg"
