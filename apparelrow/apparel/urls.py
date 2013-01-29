@@ -9,8 +9,6 @@ from apparel.views.looks import LookView
 urlpatterns = patterns('',
     # Feed
     url(r'^$', 'activity_feed.views.user_feed', name='user_feed'),
-    url(r'^men/$', 'activity_feed.views.user_feed', {'gender': 'M'}, name='user_feed-men'),
-    url(r'^women/$', 'activity_feed.views.user_feed', {'gender': 'W'}, name='user_feed-women'),
     url(r'^all/$', 'activity_feed.views.public_feed', name='public_feed'),
     url(r'^all/men/$', 'activity_feed.views.public_feed', {'gender': 'M'}, name='public_feed-men'),
     url(r'^all/women/$', 'activity_feed.views.public_feed', {'gender': 'W'}, name='public_feed-women'),

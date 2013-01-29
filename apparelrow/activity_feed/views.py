@@ -167,9 +167,11 @@ def user_feed(request, gender=None):
     if not gender:
         gender_cookie = get_gender_from_cookie(request)
         if gender_cookie == 'W':
-            return HttpResponseRedirect(reverse('user_feed-women'))
+            gender = 'W'
         elif gender_cookie == 'M':
-            return HttpResponseRedirect(reverse('user_feed-men'))
+            gender = 'M'
+        else:
+            gender = 'W'
 
     profile = request.user.get_profile()
     htmlset = ActivityFeedRender(request, gender, profile)

@@ -205,10 +205,9 @@
 
         {% url public_feed-men as public_feed_m %}
         {% url public_feed-women as public_feed_w %}
-        {% url user_feed-men as user_feed_m %}
-        {% url user_feed-women as user_feed_w %}
+        {% url user_feed as user_feed %}
         {% if not user.is_authenticated and not request.COOKIES.ar_welcome %}
-        {% if request.path == public_feed_m or request.path == public_feed_w or request.path == user_feed_m or request.path == user_feed_w %}
+        {% if request.path == public_feed_m or request.path == public_feed_w or request.path == user_feed %}
         <div id="panel">
             <div id="panelwrap">
                 <span class="row-span">
