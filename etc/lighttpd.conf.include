@@ -20,11 +20,16 @@ alias.url = (
     "/media"           => var.deploy-base + "/shared",
 )
 
+url.redirect = (
+    "^(/(?:wo)?men.*)"         => "http://%%0/shop$1"
+)
+
 url.rewrite-once = (
     "^/robots\.txt$"           => "/static/robots.%(hostname)s.txt",              # Robots.txt
     "^/favicon\.ico$"          => "/static/images/favicon.ico",                   # Favicon, redirect to static folder
     "^(/media.*)$"             => "$1",                                           # Static files
     "^/channel\.html$"         => "/static/channel.html",                         # For facebook channelUrl
+    "^/(?:wo)?men.*"           => "$0",                                           # So the redirect to shop works
     "^(/admin(?:\/.*|$))"      => "/" + var.project-name + "-admin.fcgi$1",       # FCGI Admin site configuration
     "^(/.*)$"                  => "/" + var.project-name + ".fcgi$1",             # FCGI configuration
 )
