@@ -25,11 +25,19 @@
 
 {% block activity_content %}
     {% if total_objects == 1 %}
+        {% if users|length == 1 and users.0.is_partner %}
+        {% include 'apparel/fragments/product_feed_452.html' with object=objects.0 width="452" sid=users.0.user.pk %}
+        {% else %}
         {% include 'apparel/fragments/product_feed_452.html' with object=objects.0 width="452" %}
+        {% endif %}
     {% else %}
         <ul class="group">
             {% for object in objects %}
+                {% if users|length == 1 and users.0.is_partner %}
+                <li>{% include 'apparel/fragments/product_feed_226.html' with object=object width="226" sid=users.0.user.id %}</li>
+                {% else %}
                 <li>{% include 'apparel/fragments/product_feed_226.html' with object=object width="226" %}</li>
+                {% endif %}
             {% endfor %}
         </ul>
         {% if total_objects > 4 %}
