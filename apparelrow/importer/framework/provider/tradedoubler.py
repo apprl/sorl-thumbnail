@@ -12,7 +12,7 @@ class TradeDoublerMapper(DataMapper):
     re_split = re.compile(r'(?<!http):')
     
     def preprocess(self):
-        self.record.update([self.re_split.split(v) for v in self.record.get('fields', '').split(';')])
+        self.record.update([self.re_split.split(v) for v in self.record.get('fields', '').split(';') if v])
  
     def get_variations(self):
         colors = self.map_colors(self.record.get('color', ''))
