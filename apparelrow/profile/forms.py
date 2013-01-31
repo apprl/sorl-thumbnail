@@ -98,7 +98,7 @@ class PartnerPaymentDetailForm(ModelForm):
         }
 
 class PartnerSettingsForm(ModelForm):
-    blog_url = CharField(label=_('http://'))
+    blog_url = CharField(label=_('http://'), required=False)
 
     class Meta:
         model = ApparelProfile

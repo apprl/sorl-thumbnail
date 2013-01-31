@@ -217,8 +217,8 @@ def product_detail(request, slug):
 
     # Likes
     likes = product.likes.filter(active=True).order_by('-modified').select_related('user', 'user__profile')
-    regular_likes = likes.filter(user__profile__blog_url=None)
-    partner_likes = likes.exclude(user__profile__blog_url=None)
+    regular_likes = likes.filter(Q(user__profile__blog_url__isnull=True) | Q(user__profile__blog_url__exact=''))
+    partner_likes = likes.exclude(Q(user__profile__blog_url__isnull=True) | Q(user__profile__blog_url__exact=''))
 
     # Full image url
     try:
