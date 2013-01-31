@@ -10,9 +10,12 @@ from django.db.models import Q
 from django.db.models.loading import get_model
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
+from django.utils.http import urlquote
 
 from apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
 from apparel.utils import JSONResponse, set_query_parameter, get_gender_from_cookie, currency_exchange
+from apparel.utils import vendor_buy_url
 
 
 #
@@ -158,11 +161,14 @@ class ProductList(View):
         except ValueError:
             return HttpResponseBadRequest('bad limit argument')
 
-        clamped_limit = min(30, max(limit, 10))
+        clamped_limit = min(30, max(limit, 1))
 
         query_arguments = {'rows': clamped_limit, 'start': 0}
         query_arguments = self.set_query_arguments(query_arguments, request, facet_fields, gender=gender, currency=currency)
-        query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
+        if gender == 'A':
+            query_arguments['fq'].append('gender:(U OR W OR M)')
+        else:
+            query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
         # Price facet query (default in SEK from solr config)
         if 'price' in facet_fields:
@@ -192,6 +198,11 @@ class ProductList(View):
                                  'image_medium',
                                  'discount',
                                  'availability']
+
+        # Brand name filter
+        if 'brand' in request.GET:
+            brand_name = request.GET.get('brand')
+            query_arguments['fq'].append('manufacturer_auto:"%s"' % (brand_name,))
 
         # Query string
         query_string = request.GET.get('q')
@@ -318,6 +329,20 @@ class ProductList(View):
             prev_page = set_query_parameter(prev_page, 'page', paged_result.previous_page_number())
             result.update(prev_page=prev_page)
 
+        # SID
+        sid = None
+        product_urls = {}
+        if 'sid' in request.REQUEST:
+            product_ids = []
+            try:
+                sid = int(request.REQUEST['sid'])
+                product_ids = [product.id for product in paged_result.object_list]
+            except (TypeError, ValueError, AttributeError):
+                pass
+
+            products = get_model('apparel', 'Product').objects.filter(pk__in=product_ids)
+            for product in products:
+                product_urls[str(product.pk)] = request.build_absolute_uri('%s?i=%s&u=%s&s=%s&p=%s' % (reverse('product-click-count'), product.pk, urlquote(vendor_buy_url(product.pk, product.default_vendor, sid, 'Ext-Site')), sid, 'Ext-Site'))
 
         # Language currency
         language_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)
@@ -339,6 +364,9 @@ class ProductList(View):
             product.discount_price = discount_price.quantize(decimal.Decimal('1'),
                                                              rounding=decimal.ROUND_HALF_UP)
             product.currency = language_currency
+
+            if product.id in product_urls:
+                product.url = product_urls[product.id]
 
             result['products'].append(product.__dict__)
 
