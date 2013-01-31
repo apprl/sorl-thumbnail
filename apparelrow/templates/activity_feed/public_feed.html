@@ -56,3 +56,7 @@ FB.api('/me/friends', function(response) {
     jQuery('.facebook-friends').load('/home/friends/', {'fids': fids.join(',')});
 });
 {% endblock %}
+
+{% block body-scripts %}
+{% include 'mouseflow.html' %}
+{% endblock body-scripts %}
