@@ -349,8 +349,9 @@ def search_index_profile_save(instance, **kwargs):
     else:
         connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
 
-    document, boost = get_profile_document(instance)
-    connection.add([document], commit=False, boost=boost, commitWithin=False)
+    if not instance.is_brand:
+        document, boost = get_profile_document(instance)
+        connection.add([document], commit=False, boost=boost, commitWithin=False)
 
 @receiver(post_delete, sender=get_model('profile', 'ApparelProfile'), dispatch_uid='search_index_profile_delete')
 def search_index_profile_delete(instance, **kwargs):
