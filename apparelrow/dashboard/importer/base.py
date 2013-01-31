@@ -51,6 +51,13 @@ class BaseImporter:
         except (TypeError, decimal.InvalidOperation) as e:
             return False
 
+        # XXX: Make sure dates are not timezone aware. Date might be a bit off
+        # and should be fixed in the future for affected importers
+        if 'sale_date' in data:
+            data['sale_date'] = data['sale_date'].replace(tzinfo=None)
+        if 'adjusted_date' in data:
+            data['adjusted_date'] = data['adjusted_date'].replace(tzinfo=None)
+
         if instance is None:
             try:
                 instance = Sale.objects.get(original_sale_id=data['original_sale_id'])
@@ -83,7 +90,7 @@ class BaseImporter:
             return data
 
         exchange_rate = currency_exchange('SEK', data['original_currency'])
-        exchange_rate_modifier = decimal.Decimal(0.95)
+        exchange_rate_modifier = decimal.Decimal('0.95')
 
         data['commission'] = exchange_rate * exchange_rate_modifier * data['original_commission']
         data['amount'] = exchange_rate * exchange_rate_modifier * data['original_amount']
@@ -96,7 +103,7 @@ class BaseImporter:
         if score > 50:
             return closest_match, self.vendor_map[closest_match]
 
-        return None
+        return None, None
 
     def map_placement_and_user(self, sid):
         if sid:
