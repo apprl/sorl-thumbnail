@@ -38,7 +38,7 @@ jQuery(document).ready(function() {
 {% block login-flow-content %}
     {% if profiles %}
     <form class="friends" action="{% url login-flow-friends %}" method="post">
-    <h2>{% trans "Step 2: Follow your friends to see what they like" %}</h2>
+        <h2>{% trans "Step 2: Follow your friends to see what they like" %}</h2>
         {% csrf_token %}
         <ul class="profile-list group">
         {% for profile in profiles %}

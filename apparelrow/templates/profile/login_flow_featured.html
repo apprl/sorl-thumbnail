@@ -1,6 +1,31 @@
 {% extends "profile/base_login_flow.html" %}
 {% load i18n apparel_extras %}
 
+{% block 'extra-scripts' %}
+<script>
+jQuery(document).ready(function() {
+    jQuery('.profile-list li .btn').on('click', function() {
+        var element = jQuery(this);
+        if(element.hasClass('btn-follow')) {
+            element.removeClass('btn-follow').addClass('btn-unfollow').text(element.data('unfollow-text')).removeClass('btn-positive');
+        } else {
+            element.removeClass('btn-unfollow').addClass('btn-follow').text(element.data('follow-text')).removeClass('btn-negative').addClass('btn-positive');
+        }
+
+        var input = jQuery(this).closest('li').find('input');
+        input.attr('checked', !input.attr('checked'));
+
+        return false;
+    }).on('mouseenter', '.btn-unfollow', function(event) {
+        jQuery(this).text(jQuery(this).data('unfollow-hover')).addClass('btn-negative');
+    }).on('mouseleave', '.btn-unfollow', function(event) {
+        jQuery(this).text(jQuery(this).data('unfollow-text')).removeClass('btn-negative');
+    });
+});
+</script>
+{% endblock 'extra-scripts' %}
+
+
 {% block login-flow-nav %}
 <ul class="steps-nav group">
     <li><a class="{% selected_reverse request "login-flow-bio" %}" href="{% url login-flow-bio %}"><span class="btn-step">1</span> {% trans "Your info" %}</a></li>
@@ -12,12 +37,22 @@
 {% endblock %}
 
 {% block login-flow-content %}
-    <h2>{% trans "Step 3: Follow featured members & bloggers" %}</h2>
-    <ul class="suggested-friends profiles group">
-    {% for profile in profiles %}
-        <li class="{% cycle 'column-1' 'column-2' 'column-3' %}">
-        {% include 'profile/fragments/avatar.html' %}
-        </li>
-    {% endfor %}
-    </ul>
+    <form class="friends" action="{% url login-flow-featured %}" method="post">
+        {% csrf_token %}
+        <h2>{% trans "Step 3: Follow featured members & bloggers" %}</h2>
+        <ul class="profile-list suggested-friends profiles group">
+        {% for profile in profiles %}
+            <li class="{% cycle 'column-1' 'column-2' 'column-3' %}">
+                <span class="profile-link"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>{{ profile.display_name }}</span><br>
+                <a class="btn btn-small btn-unfollow" href="#" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Following" %}</a>
+                <input style="display: none;" type="checkbox" name="profile_ids" value="{{ profile.pk }}" checked="checked">
+            </li>
+        {% endfor %}
+        </ul>
+        <div class="content-footer">
+            <button type="submit" href="{{ next_url }}" class="btn btn-block btn-large btn-upper">{% trans "Next step" %}</button>
+        </div>
+    </form>
 {% endblock %}
+
+{% block login-flow-footer %}{% endblock %}

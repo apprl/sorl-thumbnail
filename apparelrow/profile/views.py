@@ -425,13 +425,22 @@ def login_flow_featured(request, profile):
     profile.login_flow = 'featured'
     profile.save()
 
+    if request.method == 'POST':
+        for friend in ApparelProfile.objects.filter(id__in=request.POST.getlist('profile_ids', [])):
+            follow, created = Follow.objects.get_or_create(user=profile, user_follow=friend)
+            if not created and follow.active == False:
+                follow.active = True
+                follow.save()
+
+        return HttpResponseRedirect(reverse('login-flow-brands'))
+
     profiles = ApparelProfile.objects.filter(is_brand=False, gender=profile.gender).order_by('-popularity', '-followers_count')
     facebook_user = get_facebook_user(request)
     if request.user.is_authenticated() and facebook_user:
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
         profiles = profiles.exclude(user__username__in=friends_uids)
-        follow_ids = Follow.objects.filter(user=profile).values_list('user_follow', flat=True)
+        follow_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
         profiles = profiles.exclude(pk__in=follow_ids)
         profiles = profiles.exclude(pk=profile.pk)
 
