@@ -191,9 +191,15 @@ def user_feed(request, gender=None):
         })
 
     popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')
+    popular_members = ApparelProfile.objects.filter(user__is_active=True,
+                                                    is_brand=False,
+                                                    gender=gender) \
+                                            .order_by('-popularity', '-followers_count')
+
     if request.user and request.user.is_authenticated():
         follow_ids = Follow.objects.filter(user=request.user.get_profile()).values_list('user_follow', flat=True)
         popular_brands = popular_brands.exclude(id__in=follow_ids)
+        popular_members = popular_members.exclude(id=request.user.get_profile().id).exclude(id__in=follow_ids)
 
     response = render(request, 'activity_feed/user_feed.html', {
             'current_page': paged_result,
@@ -201,6 +207,7 @@ def user_feed(request, gender=None):
             'popular_products': get_top_products_in_network(profile, 4),
             'popular_looks': get_top_looks_in_network(profile, 3),
             'popular_brands': popular_brands[:5],
+            'popular_members': popular_members[:5],
         })
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
 
