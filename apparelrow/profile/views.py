@@ -20,7 +20,7 @@ from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONRespo
 from apparel.tasks import facebook_push_graph
 from profile.utils import get_facebook_user
 from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm
-from profile.models import EmailChange, ApparelProfile, Follow, FeaturedProfile, PaymentDetail
+from profile.models import EmailChange, ApparelProfile, Follow, PaymentDetail
 from profile.tasks import send_email_confirm_task
 from profile.decorators import avatar_change, login_flow
 from activity_feed.views import ActivityFeedRender
@@ -425,31 +425,20 @@ def login_flow_featured(request, profile):
     profile.login_flow = 'featured'
     profile.save()
 
-    if profile.gender not in ['M', 'W']:
-        featured_profiles = [x.profile for x in FeaturedProfile.objects.filter(gender='W').order_by('-rank')[:21]]
-    else:
-        featured_profiles = [x.profile for x in FeaturedProfile.objects.filter(gender=profile.gender).order_by('-rank')[:21]]
-
-    follow_ids = Follow.objects.filter(user=profile).values_list('user_follow', flat=True)
-    featured_profiles = [p for p in featured_profiles if p.pk not in follow_ids]
-
-    profiles = ApparelProfile.objects.filter(is_brand=False, gender=profile.gender).order_by('-followers_count')
+    profiles = ApparelProfile.objects.filter(is_brand=False, gender=profile.gender).order_by('-popularity', '-followers_count')
     facebook_user = get_facebook_user(request)
     if request.user.is_authenticated() and facebook_user:
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
         profiles = profiles.exclude(user__username__in=friends_uids)
-        profiles = profiles.exclude(pk__in=[x.profile_id for x in FeaturedProfile.objects.filter(gender=profile.gender)])
+        follow_ids = Follow.objects.filter(user=profile).values_list('user_follow', flat=True)
         profiles = profiles.exclude(pk__in=follow_ids)
         profiles = profiles.exclude(pk=profile.pk)
-
-    missing_profile_count = max(21 - len(featured_profiles), 0)
-    profiles = itertools.chain(featured_profiles, profiles[:missing_profile_count])
 
     context = {
         'login_flow_step': 'step-members',
         'next_url': reverse('profile.views.login_flow_brands'),
-        'profiles': profiles,
+        'profiles': profiles[:21],
     }
     return render(request, 'profile/login_flow_featured.html', context)
 

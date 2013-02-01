@@ -3,7 +3,6 @@ from django.contrib import admin
 from profile.models import ApparelProfile
 from profile.models import Follow
 from profile.models import NotificationCache
-from profile.models import FeaturedProfile
 from profile.models import PaymentDetail
 
 
@@ -26,18 +25,6 @@ class FollowAdmin(admin.ModelAdmin):
     list_filter = ('active',)
 
 admin.site.register(Follow, FollowAdmin)
-
-
-class FeaturedProfileAdmin(admin.ModelAdmin):
-    list_display = ('profile', 'gender', 'rank')
-    list_filter = ('rank',)
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(FeaturedProfileAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['profile'].queryset = ApparelProfile.objects.filter(is_brand=False)
-        return form
-
-admin.site.register(FeaturedProfile, FeaturedProfileAdmin)
 
 
 class PaymentDetailAdmin(admin.ModelAdmin):
