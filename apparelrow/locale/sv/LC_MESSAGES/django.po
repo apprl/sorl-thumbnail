@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 14:57+0100\n"
+"POT-Creation-Date: 2013-02-02 15:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2719,10 +2719,8 @@ msgid "+ Invite friends!"
 msgstr "+ Bjud in vänner"
 
 #: templates/profile/login_flow_like.html:5
-msgid "Like us on Facebook for news, inspiration, offers & sales"
-msgstr ""
-"Gilla oss på Facebook för nyheter, inspiration, erbjudanden och "
-"utförsäljningar"
+msgid "Follow us on Facebook for inspiration & great offers"
+msgstr "Följ oss på Facebook för inspiration & erbjudanden"
 
 #: templates/profile/login_flow_like.html:10
 msgid "You're done!"
