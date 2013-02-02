@@ -438,8 +438,8 @@ def login_flow_featured(request, profile):
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
         profiles = profiles.exclude(user__username__in=friends_uids)
-        follow_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
-        profiles = profiles.exclude(pk__in=follow_ids)
+        #follow_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
+        #profiles = profiles.exclude(pk__in=follow_ids)
         profiles = profiles.exclude(pk=profile.pk)
 
     context = {
