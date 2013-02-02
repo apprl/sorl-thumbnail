@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-01 11:55+0100\n"
+"POT-Creation-Date: 2013-02-02 14:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgstr "Tid ändrad"
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:239 templates/base.html:345
+#: apparel/admin.py:239 templates/base.html:351
 #: templates/apparel/look_editor.html:95
 #: templates/apparel/look_editor.html:101
 #: templates/apparel/look_editor.html:107
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Yes"
 msgstr "Ja"
 
-#: apparel/admin.py:240 templates/base.html:344
+#: apparel/admin.py:240 templates/base.html:350
 #: templates/apparel/look_editor.html:94
 #: templates/apparel/look_editor.html:100
 #: templates/apparel/look_editor.html:106
@@ -895,7 +895,7 @@ msgstr "Looks"
 #: templates/profile/base_login_flow.html:25
 #: templates/profile/login_flow_bio.html:9
 #: templates/profile/login_flow_brands.html:9
-#: templates/profile/login_flow_featured.html:9
+#: templates/profile/login_flow_featured.html:34
 #: templates/profile/login_flow_friends.html:33
 msgid "Brands"
 msgstr "Varumärken"
@@ -922,7 +922,7 @@ msgstr "+ Skapa look"
 #: templates/base.html:269 templates/profile/base_login_flow.html:26
 #: templates/profile/login_flow_bio.html:10
 #: templates/profile/login_flow_brands.html:10
-#: templates/profile/login_flow_featured.html:10
+#: templates/profile/login_flow_featured.html:35
 #: templates/profile/login_flow_friends.html:34
 msgid "Follow us"
 msgstr "Följ oss"
@@ -953,7 +953,15 @@ msgstr "Användarvillkor"
 msgid "Cookies"
 msgstr "Cookies"
 
-#: templates/base.html:285
+#: templates/base.html:279
+msgid "Bloggers"
+msgstr "Bloggare"
+
+#: templates/base.html:284
+msgid "Become a partner blogger"
+msgstr "Bli partnerbloggare"
+
+#: templates/base.html:291
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr "Hej Apprl! Jag har en fråga / idé / klagomål / beröm"
 
@@ -1178,6 +1186,7 @@ msgstr "följer nu"
 #: templates/apparel/fragments/follow.html:14
 #: templates/profile/base_profile.html:46
 #: templates/profile/base_profile.html:98
+#: templates/profile/login_flow_featured.html:47
 #: templates/profile/login_flow_friends.html:47
 msgid "Following"
 msgstr "Följer"
@@ -1186,6 +1195,7 @@ msgstr "Följer"
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
+#: templates/profile/login_flow_featured.html:47
 #: templates/profile/login_flow_friends.html:47
 msgid "Stop following"
 msgstr "Sluta följa"
@@ -1195,6 +1205,7 @@ msgstr "Sluta följa"
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
+#: templates/profile/login_flow_featured.html:47
 #: templates/profile/login_flow_friends.html:47
 #: templates/profile/notifications/email_follow_user.html:3
 msgid "Follow"
@@ -2461,7 +2472,7 @@ msgstr "Hej %(username)s!"
 #: templates/profile/base_login_flow.html:22
 #: templates/profile/login_flow_bio.html:6
 #: templates/profile/login_flow_brands.html:6
-#: templates/profile/login_flow_featured.html:6
+#: templates/profile/login_flow_featured.html:31
 #: templates/profile/login_flow_friends.html:30
 msgid "Your info"
 msgstr "Din info"
@@ -2469,7 +2480,7 @@ msgstr "Din info"
 #: templates/profile/base_login_flow.html:23
 #: templates/profile/login_flow_bio.html:7
 #: templates/profile/login_flow_brands.html:7
-#: templates/profile/login_flow_featured.html:7
+#: templates/profile/login_flow_featured.html:32
 #: templates/profile/login_flow_friends.html:31
 msgid "Friends"
 msgstr "Vänner"
@@ -2477,13 +2488,14 @@ msgstr "Vänner"
 #: templates/profile/base_login_flow.html:24
 #: templates/profile/login_flow_bio.html:8
 #: templates/profile/login_flow_brands.html:8
-#: templates/profile/login_flow_featured.html:8
+#: templates/profile/login_flow_featured.html:33
 #: templates/profile/login_flow_friends.html:32
 msgid "Featured"
 msgstr "Medlemmar"
 
 #: templates/profile/base_login_flow.html:36
 #: templates/profile/login_flow_bio.html:20
+#: templates/profile/login_flow_featured.html:53
 #: templates/profile/login_flow_friends.html:59
 #: templates/profile/login_flow_friends.html:67
 msgid "Next step"
@@ -2682,7 +2694,7 @@ msgstr "Steg 1: Uppgifter om dig"
 msgid "Step 4: Follow your favourite brands"
 msgstr "Steg 4: Följ varumärken du gillar"
 
-#: templates/profile/login_flow_featured.html:15
+#: templates/profile/login_flow_featured.html:42
 msgid "Step 3: Follow featured members & bloggers"
 msgstr "Steg 3: Följ andra medlemmar & bloggare"
 
@@ -3464,9 +3476,6 @@ msgstr "... Eller skapa ett nytt konto"
 
 #~ msgid "All looks"
 #~ msgstr "Alla looks"
-
-#~ msgid "Blog"
-#~ msgstr "Blogg"
 
 #~ msgid "Sort by"
 #~ msgstr "Sortera efter"

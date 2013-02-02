@@ -442,7 +442,7 @@ button
           background-image: image_url(unquote("close-large-hover.png"))
 
 #footer
-  height: 124px
+  height: 130px
   .profile-login-flow &
     display: none
   #inner-footer
@@ -450,17 +450,19 @@ button
     margin-left: 38px
     position: relative
     overflow: visible
-    a
+    ul li a
       color: $easy_color
       &:hover, &:active
         text-decoration: underline
-    ul, div
+    > ul, > div
       margin-top: 16px
       margin-right: 36px
       +float-left
-      &.footer-like
+      &.footer-last
         margin-top: 19px
         margin-right: 0
+      .btn-footer-partner
+        margin-top: 16px
     ul
       margin-right: 42px
       h3

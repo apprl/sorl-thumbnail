@@ -276,8 +276,14 @@
                 <li><a href="mailto:info@apprl.com">{% trans "Contact" %}</a></li>
                 <li><a href="{% url django.contrib.flatpages.views.flatpage url='about/terms-of-use/' %}">{% trans "Privacy & Terms" %}</a></li>
                 <li><a href="{% url django.contrib.flatpages.views.flatpage url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
+                <li><a href="{% url dashboard %}">{% trans "Bloggers" %}</a></li>
             </ul>
-            <div class="fb-like footer-like" data-href="https://facebook.com/apprl/" data-send="false" data-width="240" data-show-faces="false"></div>
+            <div class="footer-last">
+                <div class="fb-like footer-like" data-href="https://facebook.com/apprl/" data-send="false" data-width="240" data-show-faces="false"></div>
+                {% if not request.user.get_profile.is_partner %}
+                <a href="{% url dashboard %}" class="btn btn-block btn-upper btn-footer-partner">{% trans "Become a partner blogger" %}</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
