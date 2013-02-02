@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 14:36+0100\n"
+"POT-Creation-Date: 2013-02-02 14:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1949,7 +1949,6 @@ msgstr "Nice look!"
 #: templates/apparel/notifications/follow_member.html:3
 #: templates/apparel/notifications/like_look.html:3
 #: templates/apparel/notifications/like_product.html:3
-#: templates/profile/login_flow_friends.html:54
 msgid "Share on facebook"
 msgstr "Dela på facebook"
 
@@ -2496,8 +2495,8 @@ msgstr "Medlemmar"
 #: templates/profile/base_login_flow.html:36
 #: templates/profile/login_flow_bio.html:20
 #: templates/profile/login_flow_featured.html:53
-#: templates/profile/login_flow_friends.html:59
-#: templates/profile/login_flow_friends.html:67
+#: templates/profile/login_flow_friends.html:55
+#: templates/profile/login_flow_friends.html:63
 msgid "Next step"
 msgstr "Gå vidare"
 
@@ -2687,42 +2686,42 @@ msgid "does not like any products so far."
 msgstr "gillar inte några produkter än."
 
 #: templates/profile/login_flow_bio.html:15
-msgid "Step 1: Information about you"
-msgstr "Steg 1: Uppgifter om dig"
+msgid "Information about you"
+msgstr "Uppgifter om dig"
 
 #: templates/profile/login_flow_brands.html:15
-msgid "Step 4: Follow your favourite brands"
-msgstr "Steg 4: Följ varumärken du gillar"
+msgid "Follow your favourite brands"
+msgstr "Följ varumärken du gillar"
 
 #: templates/profile/login_flow_featured.html:42
-msgid "Step 3: Follow featured members & bloggers"
-msgstr "Steg 3: Följ andra medlemmar & bloggare"
+msgid "Follow featured members & bloggers"
+msgstr "Följ andra medlemmar & bloggare"
 
 #: templates/profile/login_flow_friends.html:41
-msgid "Step 2: Follow your friends to see what they like"
-msgstr "Steg 2: Följ dina vänner för att se vad de gillar"
+msgid "Follow your friends to see what they like"
+msgstr "Följ dina vänner för att se vad de gillar"
 
-#: templates/profile/login_flow_friends.html:56
-#: templates/profile/login_flow_friends.html:64
+#: templates/profile/login_flow_friends.html:52
+#: templates/profile/login_flow_friends.html:60
 msgid "APPRL is more fun together with your friends!"
 msgstr "APPRL är roligare tillsammans med dina vänner!"
 
-#: templates/profile/login_flow_friends.html:57
+#: templates/profile/login_flow_friends.html:53
 msgid "+ Invite more friends!"
 msgstr "+ Bjud in fler vänner!"
 
-#: templates/profile/login_flow_friends.html:63
-msgid "Step 2: Invite your friends"
-msgstr "Steg 2: Bjud in dina vänner"
+#: templates/profile/login_flow_friends.html:59
+msgid "Invite your friends"
+msgstr "Bjud in dina vänner"
 
-#: templates/profile/login_flow_friends.html:65
+#: templates/profile/login_flow_friends.html:61
 msgid "+ Invite friends!"
 msgstr "+ Bjud in vänner"
 
 #: templates/profile/login_flow_like.html:5
-msgid "Step 5: Like us on Facebook for news, inspiration, offers & sales"
+msgid "Like us on Facebook for news, inspiration, offers & sales"
 msgstr ""
-"Steg 5: Gilla oss på Facebook för nyheter, inspiration, erbjudanden och "
+"Gilla oss på Facebook för nyheter, inspiration, erbjudanden och "
 "utförsäljningar"
 
 #: templates/profile/login_flow_like.html:10
@@ -3144,6 +3143,9 @@ msgstr "Logga in med ditt Facebook ID"
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
+
+#~ msgid "Step 2: Invite your friends"
+#~ msgstr "Steg 2: Bjud in dina vänner"
 
 #~ msgid ""
 #~ "You will always control what is being shared to your Facebook profile."

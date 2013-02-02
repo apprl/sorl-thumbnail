@@ -39,7 +39,7 @@ jQuery(document).ready(function() {
 {% block login-flow-content %}
     <form class="friends" action="{% url login-flow-featured %}" method="post">
         {% csrf_token %}
-        <h2>{% trans "Step 3: Follow featured members & bloggers" %}</h2>
+        <h2>{% trans "Follow featured members & bloggers" %}</h2>
         <ul class="profile-list suggested-friends profiles group">
         {% for profile in profiles %}
             <li class="{% cycle 'column-1' 'column-2' 'column-3' %}">

@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block login-flow-content %}
-    <h2>{% trans "Step 1: Information about you" %}</h2>
+    <h2>{% trans "Information about you" %}</h2>
     <form class="bio" action="{% url login-flow-bio %}" method="post">
         {% csrf_token %}
         {{ email_form.as_p }}
