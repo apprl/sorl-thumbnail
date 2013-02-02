@@ -394,12 +394,10 @@ def login_flow_friends(request, profile):
     profile.save()
 
     if request.method == 'POST':
-        facebook_share = request.POST.get('facebook_share', False)
         for friend in ApparelProfile.objects.filter(id__in=request.POST.getlist('profile_ids', [])):
-            if facebook_share:
-                facebook_user = get_facebook_user(request)
-                if facebook_user:
-                    facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
+                #facebook_user = get_facebook_user(request)
+                #if facebook_user:
+                    #facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
             follow, created = Follow.objects.get_or_create(user=profile, user_follow=friend)
             if not created and follow.active == False:
                 follow.active = True
