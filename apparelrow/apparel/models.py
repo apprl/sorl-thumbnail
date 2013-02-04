@@ -870,6 +870,10 @@ class Look(models.Model):
     def category_and_brand(self):
         return [c.product.category_and_brand for c in self.display_components]
 
+    @cached_property
+    def category_and_brand_with_product(self):
+        return [(c.product.category_and_brand, c.product) for c in self.display_components]
+
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user.get_profile().display_name)
 

@@ -142,8 +142,8 @@
         <p class="description">{{ object.description }}</p>
         {% endif %}
         <ul class="brands">
-        {% for category_and_brand in object.category_and_brand %}
-            <li>{{ category_and_brand }}</li>
+        {% for text, product in object.category_and_brand_with_product %}
+            <li><a href="{% internal_referral_url product.get_absolute_url object.user.pk %}">{{ text }}</a></li>
         {% endfor %}
         </ul>
         {% include 'apparel/fragments/total_price.html' %}
