@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 15:14+0100\n"
+"POT-Creation-Date: 2013-02-04 17:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1606,7 +1606,7 @@ msgid "Your dashboard"
 msgstr ""
 
 #: templates/apparel/shared_header.html:34
-#: templates/dashboard/body_header.html:10
+#: templates/dashboard/body_header.html:11
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:9
 #: templates/profile/base_settings.html:16
@@ -1982,7 +1982,6 @@ msgstr ""
 #: templates/dashboard/body_header.html:8
 #: templates/dashboard/partner_complete.html:4
 #: templates/dashboard/partner_signup.html:5
-#: templates/dashboard/partner_signup.html:10
 msgid "Become a partner"
 msgstr ""
 
@@ -2211,10 +2210,14 @@ msgstr ""
 msgid "We will soon get in touch with you."
 msgstr ""
 
+#: templates/dashboard/partner_signup.html:10
+msgid "Apply for a blogger partnership"
+msgstr ""
+
 #: templates/dashboard/partner_signup.html:11
 msgid ""
-"Apply to become a partner blogger to grow your blog, make money in a number "
-"of ways and spread your content."
+"As a blogger you can make money and grow your blog by inspiring your readers "
+"with products & looks from APPRL - Apply below."
 msgstr ""
 
 #: templates/dashboard/partner_signup.html:15

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 15:14+0100\n"
+"POT-Creation-Date: 2013-02-04 17:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1656,7 +1656,7 @@ msgid "Your dashboard"
 msgstr "Din statistik"
 
 #: templates/apparel/shared_header.html:34
-#: templates/dashboard/body_header.html:10
+#: templates/dashboard/body_header.html:11
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:9
 #: templates/profile/base_settings.html:16
@@ -2072,7 +2072,6 @@ msgstr "Partner"
 #: templates/dashboard/body_header.html:8
 #: templates/dashboard/partner_complete.html:4
 #: templates/dashboard/partner_signup.html:5
-#: templates/dashboard/partner_signup.html:10
 msgid "Become a partner"
 msgstr "Bli partnerbloggare"
 
@@ -2334,13 +2333,17 @@ msgstr "Tack för din ansökan!"
 msgid "We will soon get in touch with you."
 msgstr "Vi hör av oss till dig inom kort."
 
+#: templates/dashboard/partner_signup.html:10
+msgid "Apply for a blogger partnership"
+msgstr "Ansök om att bli partnerbloggare"
+
 #: templates/dashboard/partner_signup.html:11
 msgid ""
-"Apply to become a partner blogger to grow your blog, make money in a number "
-"of ways and spread your content."
+"As a blogger you can make money and grow your blog by inspiring your readers "
+"with products & looks from APPRL - Apply below."
 msgstr ""
-"Ansök om att bli partnerbloggare för att öka trafiken till din blogg, tjäna "
-"pengar på en mängd olika sätt och skapa looks för att sprida ditt innehåll."
+"Du som bloggare kan tjäna pengar och få fler bloggläsare genom att inspirera "
+"dina läsare med produkter & looks från APPRL - Ansök nedan."
 
 #: templates/dashboard/partner_signup.html:15
 msgid "GROW YOUR BLOG"
@@ -3141,6 +3144,14 @@ msgstr "Logga in med ditt Facebook ID"
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
+
+#~ msgid ""
+#~ "Apply to become a partner blogger to grow your blog, make money in a "
+#~ "number of ways and spread your content."
+#~ msgstr ""
+#~ "Ansök om att bli partnerbloggare för att öka trafiken till din blogg, "
+#~ "tjäna pengar på en mängd olika sätt och skapa looks för att sprida ditt "
+#~ "innehåll."
 
 #~ msgid "Step 2: Invite your friends"
 #~ msgstr "Steg 2: Bjud in dina vänner"
