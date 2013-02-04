@@ -36,7 +36,7 @@
         {% if object.default_vendor.availability == 0 %}
         <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
         {% else %}
-        <a target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor '0' 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
+        <a target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
         {% endif %}
       {% endif %}
     </p>
@@ -65,7 +65,7 @@
                 {% if vendorproduct.availability == 0 %}
                 <span class="btn btn-upper btn-disabled btn-sold-out">{% trans "Sold out" %}</span>
                 {% else %}
-                <a href="{% buy_url object.id vendorproduct '0' 'Product' %}" target="_blank" class="btn btn-upper btn-positive btn-buy" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+                <a href="{% buy_url object.id vendorproduct referral_sid 'Product' %}" target="_blank" class="btn btn-upper btn-positive btn-buy" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
                 {% endif %}
             {% endif %}
         {% empty %}

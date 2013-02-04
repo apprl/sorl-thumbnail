@@ -405,3 +405,14 @@ def urlize_target_blank(value, limit=None, autoescape=None):
 urlize_target_blank.is_safe = True
 urlize_target_blank.needs_autoescape = True
 urlize_target_blank = stringfilter(urlize_target_blank)
+
+
+@register.simple_tag
+def internal_referral_url(url, sid):
+    """
+    Reverse named_url with correct gender.
+    """
+    if sid:
+        return '%s?sid=%s' % (url, sid)
+
+    return url

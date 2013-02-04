@@ -1,1 +1,2 @@
-<a href="{{ component.product.get_absolute_url }}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style }}"></a>
+{% load apparel_extras %}
+<a href="{% internal_referral_url component.product.get_absolute_url object.user.pk %}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style }}"></a>

@@ -245,6 +245,13 @@ def product_detail(request, slug):
     # More like this body
     mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors), ', '.join([x.name for x in product.categories]))
 
+    # Referral SID
+    referral_sid = request.GET.get('sid', 0)
+    try:
+        sid = int(referral_sid)
+    except (TypeError, ValueError, AttributeError):
+        sid = 0
+
     return render_to_response(
             'apparel/product_detail.html',
             {
@@ -263,6 +270,7 @@ def product_detail(request, slug):
                 'likes': regular_likes,
                 'partner_likes': partner_likes,
                 'product_short_link': product_short_link,
+                'referral_sid': referral_sid,
             }, context_instance=RequestContext(request),
         )
 
