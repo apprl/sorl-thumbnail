@@ -130,11 +130,13 @@ jQuery(document).ready(function() {
     function trackEvent(category, action) {
         return function() {
             var el = $(this),
+                sid = el.attr('data-sid'),
                 slug = el.attr('data-slug'),
                 vendor = el.attr('data-vendor'),
                 price = parseInt(el.attr('data-price'), 10);
 
             _gaq.push(['_trackEvent', category, action, vendor + ' - ' + slug, price]);
+            _kmq.push(['record', action, {'category': category, 'item': vendor + ' - ' + slug, 'price': price, 'sid': sid}]);
 
             return true;
         }
