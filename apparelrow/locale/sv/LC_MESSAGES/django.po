@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-04 17:20+0100\n"
+"POT-Creation-Date: 2013-02-06 10:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,8 +35,8 @@ msgid "Swe (SEK)"
 msgstr ""
 
 #: activity_feed/models.py:71 activity_feed/models.py:120
-#: apparel/models.py:374 apparel/models.py:700 apparel/models.py:919
-#: apparel/models.py:1044 beta/models.py:7 beta/models.py:15
+#: apparel/models.py:374 apparel/models.py:700 apparel/models.py:923
+#: apparel/models.py:1048 beta/models.py:7 beta/models.py:15
 #: dashboard/models.py:55 dashboard/models.py:72 dashboard/models.py:106
 #: profile/models.py:364 statistics/models.py:49
 msgid "Time created"
@@ -44,7 +44,7 @@ msgstr "Tid tillagd"
 
 #: activity_feed/models.py:72 apparel/models.py:228 apparel/models.py:375
 #: apparel/models.py:442 apparel/models.py:498 apparel/models.py:701
-#: apparel/models.py:920 dashboard/models.py:56 dashboard/models.py:73
+#: apparel/models.py:924 dashboard/models.py:56 dashboard/models.py:73
 #: profile/models.py:365
 msgid "Time modified"
 msgstr "Tid ändrad"
@@ -339,39 +339,39 @@ msgstr "Beskrivning"
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:964
+#: apparel/models.py:968
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:965
+#: apparel/models.py:969
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:966
+#: apparel/models.py:970
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:967
+#: apparel/models.py:971
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:968
+#: apparel/models.py:972
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:969
+#: apparel/models.py:973
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1064
+#: apparel/models.py:1068
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1098
+#: apparel/models.py:1102
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1098
+#: apparel/models.py:1102
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -2064,6 +2064,7 @@ msgid "Comment"
 msgstr "Kommentera"
 
 #: templates/dashboard/body_header.html:4 templates/dashboard/info.html:5
+#: templates/dashboard/info_unauthenticated.html:5
 #: templates/dashboard/partner.html:4 templates/profile/base_settings.html:22
 #: templates/profile/settings_partner.html:28
 msgid "Partner"
@@ -2076,38 +2077,52 @@ msgid "Become a partner"
 msgstr "Bli partnerbloggare"
 
 #: templates/dashboard/body_header.html:9 templates/dashboard/info.html:24
+#: templates/dashboard/info_unauthenticated.html:25
 msgid "How it works"
 msgstr "Så funkar det"
 
 #: templates/dashboard/info.html:13
+#: templates/dashboard/info_unauthenticated.html:13
 msgid "Sections"
 msgstr "Snabblänkar"
 
 #: templates/dashboard/info.html:15 templates/dashboard/info.html.py:33
+#: templates/dashboard/info_unauthenticated.html:15
+#: templates/dashboard/info_unauthenticated.html:32
 msgid "Grow your blog"
 msgstr "Öka trafiken till din blogg"
 
 #: templates/dashboard/info.html:16 templates/dashboard/info.html.py:43
+#: templates/dashboard/info_unauthenticated.html:16
+#: templates/dashboard/info_unauthenticated.html:36
 msgid "Make money on product links"
 msgstr "Tjäna pengar med produktlänkar"
 
 #: templates/dashboard/info.html:17 templates/dashboard/info.html.py:54
+#: templates/dashboard/info_unauthenticated.html:17
+#: templates/dashboard/info_unauthenticated.html:40
 msgid "Make money from your profile"
 msgstr "Tjäna pengar från din profil"
 
 #: templates/dashboard/info.html:18 templates/dashboard/info.html.py:58
+#: templates/dashboard/info_unauthenticated.html:18
+#: templates/dashboard/info_unauthenticated.html:49
 msgid "Make money on looks"
 msgstr "Tjäna pengar med looks"
 
 #: templates/dashboard/info.html:19 templates/dashboard/info.html.py:84
+#: templates/dashboard/info_unauthenticated.html:19
+#: templates/dashboard/info_unauthenticated.html:57
 msgid "Our stores & brands"
 msgstr "Våra butiker"
 
 #: templates/dashboard/info.html:20
+#: templates/dashboard/info_unauthenticated.html:21
 msgid "Questions?"
 msgstr "Frågor?"
 
 #: templates/dashboard/info.html:26
+#: templates/dashboard/info_unauthenticated.html:30
 msgid ""
 "As a fashion blogger you can now apply to our partner program. As a partner "
 "blogger you can make money when linking to Apprl products. If someone buys a "
@@ -2122,15 +2137,20 @@ msgstr ""
 "snygga looks att dela på din blogg!"
 
 #: templates/dashboard/info.html:29 templates/dashboard/info.html.py:93
+#: templates/dashboard/info_unauthenticated.html:27
+#: templates/dashboard/info_unauthenticated.html:65
 msgid "APPLY TO BECOME A PARTNER BLOGGER HERE"
 msgstr "ANSÖK TILL ATT BLI PARTNERBLOGGARE HÄR"
 
 #: templates/dashboard/info.html:30 templates/dashboard/info.html.py:96
+#: templates/dashboard/info_unauthenticated.html:28
+#: templates/dashboard/info_unauthenticated.html:66
 #: templates/dashboard/partner_signup.html:37
 msgid "Questions? Let us know on"
 msgstr "Frågor? Maila"
 
 #: templates/dashboard/info.html:34
+#: templates/dashboard/info_unauthenticated.html:33
 msgid ""
 "Every time you “like” a product on Apprl.com, we show that the product is "
 "selected by you with a link back to your blog."
@@ -2139,6 +2159,7 @@ msgstr ""
 "utvald av dig med en länk till din blogg."
 
 #: templates/dashboard/info.html:37
+#: templates/dashboard/info_unauthenticated.html:43
 msgid ""
 "By getting followers on Apprl, more people will discover your blog. You can "
 "promote your Apprl profile by putting one of these badges on your blog and "
@@ -2177,6 +2198,7 @@ msgid ""
 msgstr "Alla klick på länken som leder till köp tjänar du pengar på."
 
 #: templates/dashboard/info.html:55
+#: templates/dashboard/info_unauthenticated.html:41
 msgid ""
 "All products that you “like” on Apprl.com ends up on your profile page. "
 "Every time someone clicks and buys a product – you make money."
@@ -2220,6 +2242,7 @@ msgstr ""
 "klick på produktlänkarna som leder till köp tjänar du pengar på."
 
 #: templates/dashboard/info.html:85
+#: templates/dashboard/info_unauthenticated.html:58
 msgid ""
 "You’ll find all the products from leading international online retailers & "
 "brands at Apprl, for you to link to, create looks from and share."
@@ -2228,10 +2251,12 @@ msgstr ""
 "varumärken som du kan länka till och göra looks av."
 
 #: templates/dashboard/info.html:85
+#: templates/dashboard/info_unauthenticated.html:58
 msgid "I would like to suggest a store/brand..."
 msgstr "Jag skulle vilja föreslå en butik/varumärke..."
 
 #: templates/dashboard/info.html:85
+#: templates/dashboard/info_unauthenticated.html:58
 msgid "If you’re missing a store let us know!"
 msgstr "Föreslå gärna en butik eller ett varumärke som du saknar!"
 
@@ -2240,8 +2265,44 @@ msgid "Payments"
 msgstr "Utbetalning"
 
 #: templates/dashboard/info.html:89
+#: templates/dashboard/info_unauthenticated.html:62
 msgid "You will be able to follow how much you’re making day by day."
 msgstr "På din statistik kan du följa hur mycket du tjänar dag för dag."
+
+#: templates/dashboard/info_unauthenticated.html:20
+#: templates/dashboard/info_unauthenticated.html:61
+msgid "Your statistics"
+msgstr "Utbetalningar"
+
+#: templates/dashboard/info_unauthenticated.html:37
+msgid ""
+"The easiest way to start making money is to simply link to our products. As "
+"a partner blogger just click the “Get product link”-button and share the "
+"link on your blog, Facebook page or elsewhere."
+msgstr ""
+"Det enklaste sättet att börja tjäna pengar är att länka till våra produkter. "
+"Du plockar enkelt ut produktlänkar från produktsidor som du sen kan sprida "
+"på din blogg, Facebooksida eller var som helst!"
+
+#: templates/dashboard/info_unauthenticated.html:50
+msgid "On Apprl you can create two types of looks: Tagged photos & collages."
+msgstr "Du kan skapa två sorters looks på Apprl: Taggat foto och kollage."
+
+#: templates/dashboard/info_unauthenticated.html:52
+msgid ""
+"To put a look on your blog, just copy the embed-code and paste into a new "
+"blog post."
+msgstr ""
+"För att lägga en look på din blogg, kopiera helt enkelt embed-koden och "
+"klistra in i ett nytt inlägg."
+
+#: templates/dashboard/info_unauthenticated.html:55
+msgid ""
+"As a partner blogger you will now make money on every person that clicks and "
+"buys a product from your look."
+msgstr ""
+"Som partnerbloggare kommer du nu att tjäna pengar på alla klick på produkter "
+"i din look som leder till köp."
 
 #: templates/dashboard/more_info.html:4
 msgid "How payments work"

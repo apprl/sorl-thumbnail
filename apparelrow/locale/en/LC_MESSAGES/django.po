@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-04 17:20+0100\n"
+"POT-Creation-Date: 2013-02-06 10:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,8 +34,8 @@ msgid "Swe (SEK)"
 msgstr ""
 
 #: activity_feed/models.py:71 activity_feed/models.py:120
-#: apparel/models.py:374 apparel/models.py:700 apparel/models.py:919
-#: apparel/models.py:1044 beta/models.py:7 beta/models.py:15
+#: apparel/models.py:374 apparel/models.py:700 apparel/models.py:923
+#: apparel/models.py:1048 beta/models.py:7 beta/models.py:15
 #: dashboard/models.py:55 dashboard/models.py:72 dashboard/models.py:106
 #: profile/models.py:364 statistics/models.py:49
 msgid "Time created"
@@ -43,7 +43,7 @@ msgstr ""
 
 #: activity_feed/models.py:72 apparel/models.py:228 apparel/models.py:375
 #: apparel/models.py:442 apparel/models.py:498 apparel/models.py:701
-#: apparel/models.py:920 dashboard/models.py:56 dashboard/models.py:73
+#: apparel/models.py:924 dashboard/models.py:56 dashboard/models.py:73
 #: profile/models.py:365
 msgid "Time modified"
 msgstr ""
@@ -338,39 +338,39 @@ msgstr ""
 msgid "What compontent to show"
 msgstr ""
 
-#: apparel/models.py:964
+#: apparel/models.py:968
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:965
+#: apparel/models.py:969
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:966
+#: apparel/models.py:970
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:967
+#: apparel/models.py:971
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:968
+#: apparel/models.py:972
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:969
+#: apparel/models.py:973
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1064
+#: apparel/models.py:1068
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1098
+#: apparel/models.py:1102
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1098
+#: apparel/models.py:1102
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -1974,6 +1974,7 @@ msgid "Comment"
 msgstr ""
 
 #: templates/dashboard/body_header.html:4 templates/dashboard/info.html:5
+#: templates/dashboard/info_unauthenticated.html:5
 #: templates/dashboard/partner.html:4 templates/profile/base_settings.html:22
 #: templates/profile/settings_partner.html:28
 msgid "Partner"
@@ -1986,38 +1987,52 @@ msgid "Become a partner"
 msgstr ""
 
 #: templates/dashboard/body_header.html:9 templates/dashboard/info.html:24
+#: templates/dashboard/info_unauthenticated.html:25
 msgid "How it works"
 msgstr ""
 
 #: templates/dashboard/info.html:13
+#: templates/dashboard/info_unauthenticated.html:13
 msgid "Sections"
 msgstr ""
 
 #: templates/dashboard/info.html:15 templates/dashboard/info.html.py:33
+#: templates/dashboard/info_unauthenticated.html:15
+#: templates/dashboard/info_unauthenticated.html:32
 msgid "Grow your blog"
 msgstr ""
 
 #: templates/dashboard/info.html:16 templates/dashboard/info.html.py:43
+#: templates/dashboard/info_unauthenticated.html:16
+#: templates/dashboard/info_unauthenticated.html:36
 msgid "Make money on product links"
 msgstr ""
 
 #: templates/dashboard/info.html:17 templates/dashboard/info.html.py:54
+#: templates/dashboard/info_unauthenticated.html:17
+#: templates/dashboard/info_unauthenticated.html:40
 msgid "Make money from your profile"
 msgstr ""
 
 #: templates/dashboard/info.html:18 templates/dashboard/info.html.py:58
+#: templates/dashboard/info_unauthenticated.html:18
+#: templates/dashboard/info_unauthenticated.html:49
 msgid "Make money on looks"
 msgstr ""
 
 #: templates/dashboard/info.html:19 templates/dashboard/info.html.py:84
+#: templates/dashboard/info_unauthenticated.html:19
+#: templates/dashboard/info_unauthenticated.html:57
 msgid "Our stores & brands"
 msgstr ""
 
 #: templates/dashboard/info.html:20
+#: templates/dashboard/info_unauthenticated.html:21
 msgid "Questions?"
 msgstr ""
 
 #: templates/dashboard/info.html:26
+#: templates/dashboard/info_unauthenticated.html:30
 msgid ""
 "As a fashion blogger you can now apply to our partner program. As a partner "
 "blogger you can make money when linking to Apprl products. If someone buys a "
@@ -2027,21 +2042,27 @@ msgid ""
 msgstr ""
 
 #: templates/dashboard/info.html:29 templates/dashboard/info.html.py:93
+#: templates/dashboard/info_unauthenticated.html:27
+#: templates/dashboard/info_unauthenticated.html:65
 msgid "APPLY TO BECOME A PARTNER BLOGGER HERE"
 msgstr ""
 
 #: templates/dashboard/info.html:30 templates/dashboard/info.html.py:96
+#: templates/dashboard/info_unauthenticated.html:28
+#: templates/dashboard/info_unauthenticated.html:66
 #: templates/dashboard/partner_signup.html:37
 msgid "Questions? Let us know on"
 msgstr ""
 
 #: templates/dashboard/info.html:34
+#: templates/dashboard/info_unauthenticated.html:33
 msgid ""
 "Every time you “like” a product on Apprl.com, we show that the product is "
 "selected by you with a link back to your blog."
 msgstr ""
 
 #: templates/dashboard/info.html:37
+#: templates/dashboard/info_unauthenticated.html:43
 msgid ""
 "By getting followers on Apprl, more people will discover your blog. You can "
 "promote your Apprl profile by putting one of these badges on your blog and "
@@ -2075,6 +2096,7 @@ msgid ""
 msgstr ""
 
 #: templates/dashboard/info.html:55
+#: templates/dashboard/info_unauthenticated.html:41
 msgid ""
 "All products that you “like” on Apprl.com ends up on your profile page. "
 "Every time someone clicks and buys a product – you make money."
@@ -2112,16 +2134,19 @@ msgid ""
 msgstr ""
 
 #: templates/dashboard/info.html:85
+#: templates/dashboard/info_unauthenticated.html:58
 msgid ""
 "You’ll find all the products from leading international online retailers & "
 "brands at Apprl, for you to link to, create looks from and share."
 msgstr ""
 
 #: templates/dashboard/info.html:85
+#: templates/dashboard/info_unauthenticated.html:58
 msgid "I would like to suggest a store/brand..."
 msgstr ""
 
 #: templates/dashboard/info.html:85
+#: templates/dashboard/info_unauthenticated.html:58
 msgid "If you’re missing a store let us know!"
 msgstr ""
 
@@ -2130,7 +2155,36 @@ msgid "Payments"
 msgstr ""
 
 #: templates/dashboard/info.html:89
+#: templates/dashboard/info_unauthenticated.html:62
 msgid "You will be able to follow how much you’re making day by day."
+msgstr ""
+
+#: templates/dashboard/info_unauthenticated.html:20
+#: templates/dashboard/info_unauthenticated.html:61
+msgid "Your statistics"
+msgstr ""
+
+#: templates/dashboard/info_unauthenticated.html:37
+msgid ""
+"The easiest way to start making money is to simply link to our products. As "
+"a partner blogger just click the “Get product link”-button and share the "
+"link on your blog, Facebook page or elsewhere."
+msgstr ""
+
+#: templates/dashboard/info_unauthenticated.html:50
+msgid "On Apprl you can create two types of looks: Tagged photos & collages."
+msgstr ""
+
+#: templates/dashboard/info_unauthenticated.html:52
+msgid ""
+"To put a look on your blog, just copy the embed-code and paste into a new "
+"blog post."
+msgstr ""
+
+#: templates/dashboard/info_unauthenticated.html:55
+msgid ""
+"As a partner blogger you will now make money on every person that clicks and "
+"buys a product from your look."
 msgstr ""
 
 #: templates/dashboard/more_info.html:4
