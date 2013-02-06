@@ -1,12 +1,11 @@
 import logging
 import datetime
-import pprint
 import optparse
 
 from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand, CommandError
 
-logger = logging.getLogger('dashboard_import')
+logger = logging.getLogger('dashboard.import')
 
 
 class Command(BaseCommand):
@@ -46,8 +45,12 @@ class Command(BaseCommand):
                 module = __import__('dashboard.importer.%s' % argument, fromlist = ['Importer'])
                 instance = module.Importer()
                 logger.info('Importing %s' % (instance.name,))
-                for row in instance.get_data(start_date, end_date):
-                    logger.debug('Updating row: %s' % (row,))
-                    instance = self.update(row)
-
-                    pprint.pprint(row)
+                try:
+                    for row in instance.get_data(start_date, end_date):
+                        logger.debug('Updating row: %s' % (row,))
+                        instance = self.update(row)
+                except Exception as e:
+                    logger.error('Failed to import %s for interval %s-%s: %s' % (instance.name,
+                                                                                 start_date,
+                                                                                 end_date,
+                                                                                 e))

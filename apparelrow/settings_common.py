@@ -478,7 +478,15 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
-        }
+        },
+        'dashboard': {
+            'level': 'NOTSET',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': '../../../var/logs/dashboard.log',
+            'maxBytes': 3000000,
+            'backupCount': 8,
+        },
     },
     'loggers': {
         '': {
@@ -505,6 +513,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
             'handlers': ['importer', 'console'],
+        },
+        'dashboard': {
+            'level': 'DEBUG',
+            'propgate': False,
+            'handlers': ['dashboard'],
         },
     }
 }

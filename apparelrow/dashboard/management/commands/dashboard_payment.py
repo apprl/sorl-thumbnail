@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand, CommandError
 from dashboard.models import Payment, Sale
 
 
-logger = logging.getLogger('dashboard_payment')
+logger = logging.getLogger('dashboard.payment')
 
 
 class Command(BaseCommand):
