@@ -1,4 +1,4 @@
-{% load i18n follow_tags humanize %}
+{% load i18n follow_tags humanize apparel_extras %}
 
 <a href="{{ profile.get_absolute_url }}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/></a>
 <div class="profile-info">
@@ -7,7 +7,7 @@
     {% if user.is_authenticated %}
         {% if profile|is_following_profile:request.user.get_profile %}<span class="btn btn-small btn-disabled btn-follow-you">{% trans "Following you" %}</span>{% endif %}
     {% endif %}
-    {% if profile.about %}<p class="about">{{ profile.about|urlize|linebreaksbr }}</p>{% endif %}
+    {% if profile.about %}<p class="about">{{ profile.about|urlize_target_blank|linebreaksbr }}</p>{% endif %}
     <p>
       {% if profile.product_likes_count %}
       <span class="likes_count">{% blocktrans count profile.product_likes_count as likes_count %}Likes {{likes_count}} product{% plural %}Likes {{likes_count}} products{% endblocktrans %}</span>
