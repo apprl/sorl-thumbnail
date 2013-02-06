@@ -202,6 +202,10 @@ class LookView(View):
         # TODO: handle errors
         look.save()
 
+        # Build static image and calculate gender
+        get_model('apparel', 'Look').build_static_image(look.pk)
+        get_model('apparel', 'Look').calculate_gender(look.pk)
+
         return JSONResponse(status=204)
 
 
@@ -269,12 +273,12 @@ class LookView(View):
 
             # TODO: error handling
             look_component = get_model('apparel', 'LookComponent')(**component)
+            look_component.look = look
             look_component.save()
-            look.components.add(look_component)
 
-        # Save again to make sure our custom save method have access to all
-        # components
-        look.save()
+        # Build static image and calculate gender
+        get_model('apparel', 'Look').build_static_image(look.pk)
+        get_model('apparel', 'Look').calculate_gender(look.pk)
 
         response = JSONResponse(look_instance_to_dict(look), status=201)
         response['Location'] = reverse('apparel.views.look_detail', args=[look.slug])

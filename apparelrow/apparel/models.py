@@ -710,29 +710,20 @@ class Look(models.Model):
     objects = models.Manager()
     published_objects = LookManager()
 
-    def save(self, *args, **kwargs):
-        """
-        Save the model in the database. Currently we issue two save calls. This
-        is needed because the build function for the static image requires that
-        the photo image is stored on disk.
-        """
-        self.gender = self.calculate_gender()
-        super(Look, self).save(*args, **kwargs)
-
-        self._build_static_image()
-        super(Look, self).save(*args, **kwargs)
-
-    def _build_static_image(self):
+    @staticmethod
+    def build_static_image(look_id):
         """
         Build a static image of the look. Used for thumbnails and mails.
         """
+        look = Look.objects.get(pk=look_id)
+
         image = Image.new('RGBA', settings.APPAREL_LOOK_SIZE, (255, 255, 255, 255))
         offset_left = 0
         offset_top = 0
 
-        if self.display_with_component == 'P' and self.image:
+        if look.display_with_component == 'P' and look.image:
             # Reuse photo image
-            thumbnail = get_thumbnail(self.image, '694x524')
+            thumbnail = get_thumbnail(look.image, '694x524')
             # TODO: better solution?
             if thumbnail.url.startswith('http'):
                 background = Image.open(StringIO(requests.get(thumbnail.url).content))
@@ -740,14 +731,14 @@ class Look(models.Model):
                 background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
             offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
             image.paste(background, (offset_left, offset_top))
-            self.width = thumbnail.width
-            self.height = thumbnail.height
+            look.width = thumbnail.width
+            look.height = thumbnail.height
         else:
-            self.width = 694
-            self.height = 524
+            look.width = 694
+            look.height = 524
 
-        for component in self.display_components.order_by('z_index').all():
-            if self.display_with_component == 'P':
+        for component in look.display_components.order_by('z_index').all():
+            if look.display_with_component == 'P':
                 component_image = Image.open(finders.find('images/look-hotspot.png'))
             else:
                 if not component.product.product_image:
@@ -772,33 +763,40 @@ class Look(models.Model):
         image.save(temp_handle, 'JPEG', quality=99)
         temp_handle.seek(0)
 
-        if self.static_image:
-            sorl_delete(self.static_image)
+        if look.static_image:
+            sorl_delete(look.static_image)
 
-        filename = '%s/static__%s.jpg' % (settings.APPAREL_LOOK_IMAGE_ROOT, self.slug)
+        filename = '%s/static__%s.jpg' % (settings.APPAREL_LOOK_IMAGE_ROOT, look.slug)
         storage.default_storage.save(filename, ContentFile(temp_handle.read()))
-        self.static_image = filename
+        look.static_image = filename
 
         # refresh thumbnail in mails
-        get_thumbnail(self.static_image, '278', crop='noop')
+        get_thumbnail(look.static_image, '278', crop='noop')
 
-    def calculate_gender(self):
+        look.save()
+
+    @staticmethod
+    def calculate_gender(look_id):
         """
         Calculate looks gender based on displayed products.
 
         If ratio of either male or female products is larger than 0.5 select
         gender, else it is unisex.
         """
-        genders = list(self.display_components.values_list('product__gender', flat=True))
+        look = Look.objects.get(pk=look_id)
+
+        genders = list(look.display_components.values_list('product__gender', flat=True))
         genders_len = float(len(genders))
 
+        gender = 'U'
         if genders_len:
             if (genders.count('M') / genders_len) > 0.5:
-                return 'M'
+                gender = 'M'
             elif (genders.count('W') / genders_len) > 0.5:
-                return 'W'
+                gender = 'W'
 
-        return 'U'
+        look.gender = gender
+        look.save()
 
     @cached_property
     def score(self):
