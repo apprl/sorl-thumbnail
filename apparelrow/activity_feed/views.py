@@ -137,7 +137,7 @@ def public_feed(request, gender=None):
     popular_members = ApparelProfile.objects.filter(user__is_active=True,
                                                     is_brand=False,
                                                     gender=gender) \
-                                            .order_by('-followers_count')
+                                            .order_by('-popularity', '-followers_count')
     if request.user and request.user.is_authenticated():
         follow_ids = Follow.objects.filter(user=request.user.get_profile()).values_list('user_follow', flat=True)
         popular_brands = popular_brands.exclude(id__in=follow_ids)
