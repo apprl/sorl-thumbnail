@@ -673,8 +673,12 @@ body.look
     p.created, p.total-price
       line-height: 1
       margin: 10px 0
-    p.created, p.total-price, ul.brands a, ul.brands a:visited
+    p.created, p.total-price
       color: $easier_color
+    ul.brands a, ul.brands a:visited
+      color: $easier_color
+      &:hover
+        text-decoration: underline
   .spread
     margin: 20px 0
     div.last
