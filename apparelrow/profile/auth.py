@@ -1,11 +1,11 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
 from django.db.models.loading import get_model
-from django.template.defaultfilters import slugify
 import facebook
 
 from profile.notifications import process_facebook_friends
 from profile.signals import user_created_with_email
+from profile.utils import slugify_unique
 
 FB_GENDER_MAP = { 'male': 'M', 'female': 'W' }
 
@@ -19,7 +19,6 @@ class FacebookProfileBackend(ModelBackend):
         """
         If we receive a facebook uid then the cookie has already been
         validated.
-
         """
         if fb_uid and fb_graphtoken:
             user, created = User.objects.get_or_create(username=fb_uid)
@@ -37,14 +36,14 @@ class FacebookProfileBackend(ModelBackend):
                         user.email = me['email']
                     user.save()
 
-                    process_facebook_friends.delay(user, fb_graphtoken)
-                    user_created_with_email.send(sender=User, user=user)
-
                     profile = user.get_profile()
                     if me.get('name'):
                         profile.name = me.get('name')
-                    profile.slug = slugify(profile.display_name)
+                    profile.slug = slugify_unique(profile.display_name_live, profile.__class__)
                     profile.save()
+
+                    process_facebook_friends.delay(user, fb_graphtoken)
+                    user_created_with_email.send(sender=User, user=user)
 
             profile = user.get_profile()
             if profile.gender is None:

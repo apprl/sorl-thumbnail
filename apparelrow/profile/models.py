@@ -14,7 +14,6 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
 from django.contrib.auth.signals import user_logged_in
-from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.functional import cached_property
@@ -25,6 +24,7 @@ from django_extensions.db.fields import AutoSlugField
 from activity_feed.tasks import update_activity_feed
 from profile.tasks import send_email_confirm_task
 from profile.signals import user_created_with_email
+from profile.utils import slugify_unique
 
 EVENT_CHOICES = (
     ('A', _('All')),
@@ -51,7 +51,7 @@ class ApparelProfile(models.Model):
     """Every user is mapped against an ApparelProfile"""
     user = models.OneToOneField(User, related_name='profile')
 
-    name                = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    name                = models.CharField(max_length=100, unique=False, blank=True, null=True)
     slug                = models.CharField(max_length=100, unique=True, null=True)
     image               = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True)
     about               = models.TextField(_('About'), null=True, blank=True)
@@ -147,13 +147,17 @@ class ApparelProfile(models.Model):
 
     @cached_property
     def display_name(self):
+        return self.display_name_live
+
+    @property
+    def display_name_live(self):
         if self.name is not None:
             return self.name
 
         if self.user.first_name:
             return u'%s %s' % (self.user.first_name, self.user.last_name)
 
-        return u'%s' % self.user
+        return u'%s' % (self.user,)
 
     @cached_property
     def avatar_small(self):
@@ -313,7 +317,7 @@ def create_profile(signal, instance, **kwargs):
     """
     if kwargs['created']:
         profile, created = ApparelProfile.objects.get_or_create(user=instance)
-        profile.slug = slugify(profile.display_name)
+        profile.slug = slugify_unique(profile.display_name_live, profile.__class__)
         profile.save()
 
 @receiver(user_created_with_email, sender=User, dispatch_uid='send_welcome_mail')
