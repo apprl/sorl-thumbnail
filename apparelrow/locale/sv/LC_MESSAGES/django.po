@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-07 09:57+0100\n"
+"POT-Creation-Date: 2013-02-07 18:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,14 +38,14 @@ msgstr ""
 #: apparel/models.py:374 apparel/models.py:700 apparel/models.py:921
 #: apparel/models.py:1046 beta/models.py:7 beta/models.py:15
 #: dashboard/models.py:55 dashboard/models.py:72 dashboard/models.py:106
-#: profile/models.py:364 statistics/models.py:49
+#: profile/models.py:368 statistics/models.py:49
 msgid "Time created"
 msgstr "Tid tillagd"
 
 #: activity_feed/models.py:72 apparel/models.py:228 apparel/models.py:375
 #: apparel/models.py:442 apparel/models.py:498 apparel/models.py:701
 #: apparel/models.py:922 dashboard/models.py:56 dashboard/models.py:73
-#: profile/models.py:365
+#: profile/models.py:369
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -730,27 +730,27 @@ msgstr "När en Facebookvän blivit medlem på Apprl"
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:284
+#: profile/models.py:288
 msgid "Receive payments as a company"
 msgstr "Jag vill ha utbetalning som företag"
 
-#: profile/models.py:284
+#: profile/models.py:288
 msgid "Receive payments as a private person"
 msgstr "Jag vill ha utbetalning som privatperson"
 
-#: profile/models.py:288
+#: profile/models.py:292
 msgid "Address"
 msgstr "Adress"
 
-#: profile/models.py:289
+#: profile/models.py:293
 msgid "Postal code"
 msgstr "Postkod"
 
-#: profile/models.py:290
+#: profile/models.py:294
 msgid "City"
 msgstr "Postadress"
 
-#: profile/models.py:325
+#: profile/models.py:329
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr "Välkommen till Apprl %(username)s"
@@ -2089,8 +2089,9 @@ msgstr "Snabblänkar"
 #: templates/dashboard/info.html:15 templates/dashboard/info.html.py:33
 #: templates/dashboard/info_unauthenticated.html:15
 #: templates/dashboard/info_unauthenticated.html:32
+#: templates/dashboard/partner_signup.html:15
 msgid "Grow your blog"
-msgstr "Öka trafiken till din blogg"
+msgstr "Få fler bloggläsare"
 
 #: templates/dashboard/info.html:16 templates/dashboard/info.html.py:43
 #: templates/dashboard/info_unauthenticated.html:16
@@ -2401,14 +2402,10 @@ msgstr "Ansök om att bli partnerbloggare"
 #: templates/dashboard/partner_signup.html:11
 msgid ""
 "As a blogger you can make money and grow your blog by<br>inspiring your "
-"readers with products & looks from APPRL"
+"readers with products & looks from Apprl"
 msgstr ""
-"Du som bloggare kan tjäna pengar och få fler bloggläsare genom "
-"att<br>inspirera dina läsare med produkter & looks från Apprl"
-
-#: templates/dashboard/partner_signup.html:15
-msgid "GROW YOUR BLOG"
-msgstr "ÖKA TRAFIKEN TILL DIN BLOGG"
+"Du som bloggare kan tjäna pengar och få fler besökare genom att<br>inspirera "
+"dina läsare med produkter & looks från Apprl"
 
 #: templates/dashboard/partner_signup.html:16
 msgid ""
@@ -3205,6 +3202,9 @@ msgstr "Logga in med ditt Facebook ID"
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
+
+#~ msgid "GROW YOUR BLOG"
+#~ msgstr "FÅ FLER BLOGGLÄSARE"
 
 #~ msgid ""
 #~ "Apply to become a partner blogger to grow your blog, make money in a "
