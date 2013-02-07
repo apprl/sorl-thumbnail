@@ -27,7 +27,7 @@ def get_feed_key(profile, gender, private=False):
 
 
 def get_score(activity):
-    return time.mktime(activity.modified.timetuple())
+    return time.mktime(activity.created.timetuple())
 
 
 def trim_feed(r, feed_key):
@@ -229,7 +229,7 @@ def update_activity_feed(profile, followee, add=True):
     if add:
         since = datetime.datetime.now() - datetime.timedelta(days=30)
         for activity in Activity.objects.filter(user=followee,
-                                                modified__gte=since,
+                                                created__gte=since,
                                                 active=True):
             aggregate(r, profile, 'M', activity)
             aggregate(r, profile, 'W', activity)

@@ -20,7 +20,7 @@ class Command(BaseCommand):
                               port=settings.CELERY_REDIS_PORT,
                               db=settings.FEED_REDIS_DB)
         since = datetime.datetime.now() - datetime.timedelta(days=90)
-        for activity in get_model('activity_feed', 'activity').objects.filter(modified__gte=since, active=True).order_by('modified'):
+        for activity in get_model('activity_feed', 'activity').objects.filter(created__gte=since, active=True).order_by('created'):
             aggregate(r, None, 'M', activity)
             aggregate(r, None, 'W', activity)
             aggregate(r, activity.user, 'M', activity)

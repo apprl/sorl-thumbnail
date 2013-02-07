@@ -65,7 +65,7 @@ class ActivityFeedRender:
             activity_ids = result.get('a', [])[::-1]
             activities = Activity.objects.filter(pk__in=activity_ids[:4]) \
                                          .prefetch_related('activity_object') \
-                                         .order_by('-modified')
+                                         .order_by('-created')
 
             if not activities:
                 continue
@@ -73,7 +73,7 @@ class ActivityFeedRender:
             context['created'] = False
             for activity in activities:
                 if context['created'] == False:
-                    context['created'] = activity.modified
+                    context['created'] = activity.created
                 if activity.activity_object:
                     context['objects'].append(activity.activity_object)
 
