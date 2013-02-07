@@ -84,8 +84,8 @@ def remove_aggregate(r, user, gender, activity):
                     pipe.execute()
 
             elif len(item['u']) == 1 and len(item['a']) == 1:
-                r.zrem(get_feed_key(user, gender), item_json)
-                continue
+                if item['u'][0] == activity.user.pk and item['a'][0] == activity.pk:
+                    r.zrem(get_feed_key(user, gender), item_json)
 
 
 def aggregate(r, user, gender, activity):
