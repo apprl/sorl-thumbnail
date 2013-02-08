@@ -31,6 +31,7 @@
     </ul>
     -->
     <p class="bodycopy description">{{ object.description }}</p>
+{% endcache %}
     <p class="bodycopy vendors">
       {% if object.default_vendor %}
         {% if object.default_vendor.availability == 0 %}
@@ -83,7 +84,6 @@
     </div>
     {% endif %}
 
-{% endcache %}
     {% include 'apparel/fragments/share.html' %}
     {% if request.user.get_profile.is_partner and object.default_vendor and object.default_vendor.availability != 0 %}
     <div class="short-link-container">
