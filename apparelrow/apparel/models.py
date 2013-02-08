@@ -776,7 +776,7 @@ class Look(models.Model):
         look.save()
 
     @staticmethod
-    def calculate_gender(look_id):
+    def calculate_gender(look_id, update=True):
         """
         Calculate looks gender based on displayed products.
 
@@ -795,8 +795,9 @@ class Look(models.Model):
             elif (genders.count('W') / genders_len) > 0.5:
                 gender = 'W'
 
-        look.gender = gender
-        look.save()
+        if update:
+            look.gender = gender
+            look.save()
 
         return gender
 
@@ -897,7 +898,7 @@ def look_post_save(sender, instance, created, **kwargs):
         return
 
     if instance.published == True:
-        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'create', instance, instance.calculate_gender(instance.pk))
+        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'create', instance, instance.calculate_gender(instance.pk, update=False))
     else:
         get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'create', instance)
 
