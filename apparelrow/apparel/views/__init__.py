@@ -28,7 +28,6 @@ from sorl.thumbnail import get_thumbnail
 from profile.models import ApparelProfile, Follow
 from profile.utils import get_facebook_user
 from apparel.decorators import seamless_request_handling
-from apparel.decorators import get_current_user
 from apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
 from apparel.models import Look, LookLike, LookComponent, ShortProductLink
 from apparel.forms import LookForm, LookComponentForm

@@ -14,11 +14,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from apparel.decorators import get_current_user
 from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
 from apparel.tasks import facebook_push_graph
-from profile.utils import get_facebook_user
+from profile.utils import get_facebook_user, get_current_user
 from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm
 from profile.models import EmailChange, ApparelProfile, Follow, PaymentDetail
 from profile.tasks import send_email_confirm_task

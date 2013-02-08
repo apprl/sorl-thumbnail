@@ -1,9 +1,13 @@
+import time
+import datetime
+
 from django.conf import settings
 from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse, resolve
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
+
 import facebook
-import time
-import datetime
 
 
 FB_USER_SESSION_KEY = '_fb_user'
@@ -57,3 +61,31 @@ def slugify_unique(value, model, slugfield="slug"):
             if not model.objects.filter(**{slugfield: potential}).count():
                 return potential
             suffix += 1
+
+
+def get_current_user(view_func):
+    """
+    """
+    def _decorator(request, slug=None, *args, **kwargs):
+        if not slug:
+            if not request.user.is_authenticated():
+                return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+
+            profile = request.user.get_profile()
+        else:
+            try:
+                profile = get_model('profile', 'ApparelProfile').objects.get(slug=slug)
+            except get_model('profile', 'ApparelProfile').DoesNotExist:
+                profile = get_model('profile', 'ApparelProfile').objects.get(user__username=slug)
+                if profile.slug:
+                    url_result = resolve(request.path)
+
+                    return HttpResponsePermanentRedirect(reverse(url_result.url_name, args=[profile.slug]))
+
+        return view_func(request, profile, *args, **kwargs)
+
+    _decorator.__name__ = view_func.__name__
+    _decorator.__dict__ = view_func.__dict__
+    _decorator.__doc__  = view_func.__doc__
+
+    return _decorator

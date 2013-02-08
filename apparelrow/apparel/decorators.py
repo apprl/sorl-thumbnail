@@ -87,32 +87,3 @@ def seamless_request_handling(view_func):
     _decorator.__doc__  = view_func.__doc__
     
     return _decorator
-
-
-
-def get_current_user(view_func):
-    """
-    Fetches a User object from the username argument, or grabs the authenticated
-    User, and passes its profile.models.ApparelProfile to the decorated function. 
-    The decorated funciton is expected to add the profile to the context used
-    to render the template.
-    """
-    def _decorator(request, slug=None, *args, **kwargs):
-        if not slug:
-            if not request.user.is_authenticated():
-                return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-            
-            profile = request.user.get_profile()
-        else:
-            try:
-                profile = get_object_or_404(get_model('profile', 'ApparelProfile'), slug=slug)
-            except get_model('profile', 'ApparelProfile').DoesNotExist:
-                return HttpResponseNotFound
-        
-        return view_func(request, profile, *args, **kwargs)
-            
-    _decorator.__name__ = view_func.__name__
-    _decorator.__dict__ = view_func.__dict__
-    _decorator.__doc__  = view_func.__doc__
-    
-    return _decorator
