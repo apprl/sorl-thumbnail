@@ -798,6 +798,8 @@ class Look(models.Model):
         look.gender = gender
         look.save()
 
+        return gender
+
     @cached_property
     def score(self):
         return self.likes.filter(active=True).count()
@@ -895,7 +897,7 @@ def look_post_save(sender, instance, created, **kwargs):
         return
 
     if instance.published == True:
-        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'create', instance, instance.gender)
+        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'create', instance, instance.calculate_gender(instance.pk))
     else:
         get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'create', instance)
 
