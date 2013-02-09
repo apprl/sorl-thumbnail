@@ -699,7 +699,7 @@ ApparelSearch = {
             model: 'manufacturer',
             query: {
                 'q': s,
-                'limit': 8
+                'limit': 20
             },
             selector: '#search-result-manufacturers',
             text: {
@@ -714,7 +714,7 @@ ApparelSearch = {
             model: 'apparelprofile',
             query: {
                 'q': s,
-                'limit': 8
+                'limit': 10
             },
             selector: '#search-result-profiles',
             text: {
