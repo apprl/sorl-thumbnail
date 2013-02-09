@@ -17,6 +17,7 @@ from django.contrib.auth.signals import user_logged_in
 from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.functional import cached_property
+from django.core.exceptions import ValidationError
 
 from sorl.thumbnail import get_thumbnail
 from django_extensions.db.fields import AutoSlugField
@@ -277,6 +278,13 @@ class ApparelProfile(models.Model):
             return ('brand-likes', [str(self.slug)])
 
         return ('profile-likes', [str(self.slug)])
+
+    def clean(self):
+        """
+        Validate custom constraints
+        """
+        if self.is_partner and self.partner_group is None:
+            raise ValidationError(_(u'Partner group must be set to be able to set partner status'))
 
     def __unicode__(self):
         return self.display_name
