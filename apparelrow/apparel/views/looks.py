@@ -13,6 +13,7 @@ from django.db.models.loading import get_model
 
 from sorl.thumbnail import get_thumbnail
 
+from apparel.signals import look_saved
 from apparel.utils import JSONResponse, set_query_parameter
 
 
@@ -202,9 +203,8 @@ class LookView(View):
         # TODO: handle errors
         look.save()
 
-        # Build static image and calculate gender
-        get_model('apparel', 'Look').build_static_image(look.pk)
-        get_model('apparel', 'Look').calculate_gender(look.pk)
+        # Send look saved signal
+        look_saved.send(sender=get_model('apparel', 'Look'), look=look)
 
         return JSONResponse(status=204)
 
@@ -276,9 +276,8 @@ class LookView(View):
             look_component.look = look
             look_component.save()
 
-        # Build static image and calculate gender
-        get_model('apparel', 'Look').build_static_image(look.pk)
-        get_model('apparel', 'Look').calculate_gender(look.pk)
+        # Send look saved signal
+        look_saved.send(sender=get_model('apparel', 'Look'), look=look)
 
         response = JSONResponse(look_instance_to_dict(look), status=201)
         response['Location'] = reverse('apparel.views.look_detail', args=[look.slug])

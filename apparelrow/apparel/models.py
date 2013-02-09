@@ -24,6 +24,7 @@ from django.contrib.staticfiles import finders
 from django.utils import timezone
 from django.utils.functional import cached_property
 
+from apparel.signals import look_saved
 from apparel.manager import ProductManager, LookManager
 from apparel.cache import invalidate_model_handler
 from apparel.utils import currency_exchange
@@ -891,16 +892,23 @@ class Look(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=Look)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Look)
 
-@receiver(post_save, sender=Look, dispatch_uid='look_post_save')
-def look_post_save(sender, instance, created, **kwargs):
-    if not hasattr(instance, 'user'):
-        logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % instance)
+@receiver(look_saved, sender=Look, dispatch_uid='look_saved')
+def look_saved_handler(sender, look, **kwargs):
+    if not hasattr(look, 'user'):
+        logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % look)
         return
 
-    if instance.published == True:
-        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'create', instance, instance.calculate_gender(instance.pk, update=False))
+    # Build static image
+    get_model('apparel', 'Look').build_static_image(look.pk)
+
+    # Calculate gender and add it to the current look object
+    look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
+
+    if look.published == True:
+        print 'gender in look created: ', look.gender
+        get_model('activity_feed', 'activity').objects.push_activity(look.user.get_profile(), 'create', look, look.gender)
     else:
-        get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'create', instance)
+        get_model('activity_feed', 'activity').objects.pull_activity(look.user.get_profile(), 'create', look)
 
 @receiver(pre_delete, sender=Look, dispatch_uid='look_pre_delete')
 def look_pre_delete(sender, instance, **kwargs):
