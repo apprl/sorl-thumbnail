@@ -149,6 +149,7 @@ MIDDLEWARE_CLASSES = (
     'trackback.middleware.PingbackUrlInjectionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'profile.middleware.ImpersonateMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
