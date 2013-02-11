@@ -62,6 +62,8 @@ class Sale(models.Model):
     def __unicode__(self):
         return u'%s - %s: %s %s %s' % (self.affiliate, self.vendor.name, self.commission, self.currency, self.status)
 
+    class Meta:
+        ordering = ['-sale_date']
 
 class Payment(models.Model):
     user = models.ForeignKey('auth.User', null=False, blank=False, on_delete=models.CASCADE)
