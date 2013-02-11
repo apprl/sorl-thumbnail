@@ -649,7 +649,7 @@ $ruler_width: 202px
         line-height: 1em
         a.filtered
           cursor: default
-  #product-manufacturers
+  #product-manufacturers, #product-stores
     input
       +text_input
       +border-radius(0)
@@ -659,16 +659,16 @@ $ruler_width: 202px
       padding: 12px 8px
       margin: 0 0 10px 0
     &.active
-      #selected-manufacturers
+      #selected-manufacturers, #selected-stores
         padding: 10px 0 0 0
-    #selected-manufacturers
+    #selected-manufacturers, #selected-stores
       li
         a
           margin-left: 4px
           padding-left: 14px
           background-image: image_url(unquote("list-item-check-selected.png"))
           background-repeat: no-repeat
-    #available-manufacturers
+    #available-manufacturers, #available-stores
       +border(all)
       height: 205px
       overflow-y: auto

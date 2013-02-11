@@ -51,6 +51,9 @@ jQuery(document).ready(function() {
         // Initiate individual reset for brands filter
         jQuery('#product-manufacturers').prev().find('.reset').click();
 
+        // Initiate individual reset for stores filter
+        jQuery('#product-stores').prev().find('.reset').click();
+
         // Select both genders
         jQuery('#product-gender li:first > a').addClass('selected');
 
@@ -87,6 +90,10 @@ jQuery(document).ready(function() {
             case 'product-manufacturers':
                 jQuery('input[name=brand]').val('').blur();
                 jQuery('#selected-manufacturers > li').remove();
+                break;
+
+            case 'product-stores':
+                jQuery('#selected-stores > li').remove();
                 break;
 
             default:
@@ -127,6 +134,25 @@ jQuery(document).ready(function() {
         return false;
     });
 
+    // Click handler for stores
+    $(document).on('click', '#available-stores a', function(e) {
+        var element = $(this);
+        var selected_stores = $('#selected-stores');
+        var id = 'store-' + getElementId(element);
+
+        if(element.hasClass('selected')) {
+            $('#' + id, selected_stores).click(); // selected class is removed in this click handler
+        } else {
+            element.addClass('selected');
+            element.clone().attr('id', id).appendTo(
+                $('<li>').prependTo(selected_stores)
+            );
+            filter(getQuery());
+        }
+
+        return false;
+    });
+
     // Click handler for manufacturer search results element
     jQuery('#search-result-manufacturers a').live('click', function(e) {
         // Cancel search and reset browse filters
@@ -151,6 +177,15 @@ jQuery(document).ready(function() {
     jQuery('#selected-manufacturers a').live('click', function(e) {
         jQuery('#available-manufacturer-' + getElementId(this)).removeClass('selected');
         jQuery(this).closest('li').remove();
+        filter(getQuery());
+
+        return false;
+    });
+
+    // Click handler for list of selected stores
+    $(document).on('click', '#selected-stores a', function(e) {
+        $('#available-store-' + getElementId(this)).removeClass('selected');
+        $(this).closest('li').remove();
         filter(getQuery());
 
         return false;
@@ -282,6 +317,14 @@ function getQuery(query, reset) {
         jQuery('#product-manufacturers').addClass('active').prev().addClass('active');
     } else {
         jQuery('#product-manufacturers').removeClass('active').prev().removeClass('active');
+    }
+
+    store_list = getElementIds(jQuery('#selected-stores li > a'));
+    if(store_list.length > 0) {
+        query['store'] = store_list.join(',');
+        jQuery('#product-stores').addClass('active').prev().addClass('active');
+    } else {
+        jQuery('#product-stores').removeClass('active').prev().removeClass('active');
     }
 
     gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
@@ -416,6 +459,23 @@ function filterCriteria(criteria_filter) {
         });
     }
 
+    if('stores' in criteria_filter && !$('#product-stores').prev().hasClass('active')) {
+        $('#available-stores').html('');
+        $.each(criteria_filter['stores'], function(i, store) {
+            var $a = $('<a>')
+                .attr('href', browse_url + '?store=' + store[0])
+                .attr('id', 'available-store-' + store[0])
+                .text(store[1]);
+
+            if($('#store-' + store[0]).length > 0)
+                $a.addClass('selected');
+
+            $('<li>')
+                .append($a)
+                .appendTo($('#available-stores'));
+        });
+    }
+
     if('categories' in criteria_filter) {
         jQuery('#product-category li > a').each(function(index) {
             var this_element = jQuery(this);
@@ -520,6 +580,18 @@ function updateSelected(products) {
             ).prependTo('#selected-manufacturers');
         });
         jQuery('#product-manufacturers').addClass('active').prev().addClass('active');
+    }
+
+    // Select store
+    if(products.selected_stores && products.selected_stores.length > 0) {
+        jQuery.each(products.selected_stores, function(i, id) {
+            var data = products.selected_stores_data[id];
+            jQuery('#available-store-' + id).addClass('selected');
+            jQuery('<li>').append(
+                jQuery('<a>').attr({id: 'store-' + id, href: data['href']}).text(data['name'])
+            ).prependTo('#selected-stores');
+        });
+        jQuery('#product-stores').addClass('active').prev().addClass('active');
     }
 
     // Select sort

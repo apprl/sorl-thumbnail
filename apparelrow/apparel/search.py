@@ -285,6 +285,10 @@ def get_product_document(instance):
         # Users
         document['user_likes'] = user_likes
 
+        # Store
+        document['store_id'] = instance.default_vendor.vendor_id
+        document['store'] = '%s|%s' % (instance.default_vendor.vendor.name, instance.default_vendor.vendor_id)
+
         # Brand
         document['manufacturer_auto'] = instance.manufacturer.name
         manufacturer_lower = REGEX_STRIP.sub('', instance.manufacturer.name.lower())

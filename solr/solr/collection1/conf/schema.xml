@@ -132,6 +132,10 @@
     <field name="manufacturer" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="manufacturer_auto" type="ngram" indexed="true" stored="true" multiValued="false"/>
 
+    <!-- Search and facet store -->
+    <field name="store_id" type="string" indexed="true" stored="true" multiValued="false"/>
+    <field name="store" type="string" indexed="true" stored="true" multiValued="false"/>
+
     <!-- Used in product search -->
     <field name="product_name" type="text_general" indexed="true" stored="false" multiValued="false" termVectors="true"/>
     <field name="manufacturer_name" type="text_general" indexed="true" stored="true" multiValued="false" termVectors="true"/>

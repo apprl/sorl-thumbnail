@@ -77,5 +77,20 @@
         </form>
         <ul id="selected-manufacturers" class="level-1"></ul>
     </li>
+    <li class="header">
+        <span>{% trans "Store" %}</span>
+        <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>
+        <div class="arrow"></div>
+    </li>
+    <li class="last content" id="product-stores">
+        <form action="{% gender_url APPAREL_GENDER 'shop' %}">
+            <ul id="available-stores">
+            {% for store in stores %}
+                <li><a id="available-store-{{ store.0 }}" href="{% gender_url APPAREL_GENDER 'shop' %}?store={{ store.0 }}">{{ store.1 }}</a></li>
+            {% endfor %}
+            </ul>
+        </form>
+        <ul id="selected-stores" class="level-1"></ul>
+    </li>
 </ul>
 {% endblock %}

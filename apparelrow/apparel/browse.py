@@ -25,6 +25,7 @@ from apparel.models import Product
 from apparel.models import Brand
 from apparel.models import Option
 from apparel.models import Category
+from apparel.models import Vendor
 from apparel.utils import get_pagination_page
 
 from profile.models import Follow
@@ -66,7 +67,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     query_arguments['facet.mincount'] = 1
     query_arguments['facet.field'] = []
 
-    for field in ['category', 'manufacturer', 'color']:
+    for field in ['category', 'manufacturer', 'color', 'store']:
         if facet_fields and field in facet_fields:
             query_arguments['facet.field'].append('{!ex=%s}%s' % (field, field))
 
@@ -110,6 +111,10 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
     if 'manufacturer' in request.GET:
         query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer', 'manufacturer_id', ' OR '.join([x for x in request.GET['manufacturer'].split(',')])))
 
+    # Store
+    if 'store' in request.GET:
+        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('store', 'store_id', ' OR '.join([x for x in request.GET['store'].split(',')])))
+
     # Color and pattern
     color_pattern_list = request.GET.get('color', '').split(',')
     color_pattern_list.extend(request.GET.get('pattern', '').split(','))
@@ -125,7 +130,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     if language in settings.LANGUAGE_TO_CURRENCY:
         currency = settings.LANGUAGE_TO_CURRENCY.get(language)
 
-    facet_fields = ['category', 'price', 'color', 'manufacturer']
+    facet_fields = ['category', 'price', 'color', 'manufacturer', 'store']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, currency=currency)
 
@@ -183,6 +188,14 @@ def browse_products(request, template='apparel/browse.html', gender=None):
             split = value.split('|')
             manufacturers.append((int(split[-1]), split[-2]))
 
+    # Calculate store
+    stores = []
+    for i, value in enumerate(facet['store']):
+        if i % 2 == 0:
+            print value
+            split = value.split('|')
+            stores.append((int(split[1]), split[0]))
+
     # Calculate colors
     colors = [int(value) for i, value in enumerate(facet['color']) if i % 2 == 0]
 
@@ -199,6 +212,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     result.update(pagination=pagination,
                   pricerange=pricerange,
                   manufacturers=manufacturers,
+                  stores=stores,
                   colors=colors,
                   categories=categories)
 
@@ -235,12 +249,20 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         brand['href'] = '%s?manufacturer=%s' % (reverse('apparel.browse.browse_products'), brand['id'])
         selected_brands_data[brand['id']] = brand
 
+    selected_stores = filter(None, map(_to_int, request.GET.get('store', '').split(',')))
+    selected_stores_data = {}
+    for store in Vendor.objects.values('id', 'name').filter(pk__in=selected_stores):
+        store['href'] = '%s?store=%s' % (reverse('apparel.browse.browse_products'), store['id'])
+        selected_stores_data[store['id']] = store
+
     result.update(
         selected_categories  = filter(None, map(_to_int, request.GET.get('category', '').split(','))),
         selected_colors      = selected_colors,
         selected_patterns    = selected_patterns,
         selected_brands      = selected_brands,
         selected_brands_data = selected_brands_data,
+        selected_stores      = selected_stores,
+        selected_stores_data = selected_stores_data,
         selected_price       = selected_price,
         selected_gender      = request.GET.get('gender', None),
         selected_discount    = bool(request.GET.get('discount', None)),
