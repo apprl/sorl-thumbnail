@@ -66,6 +66,10 @@ App.Views.FilterProductCategory = Backbone.View.extend({
         return $(this.make('li', {'data-id': id})).append(text_element);
     },
 
+    update_height: function(height) {
+        this.$el.find('ul').css('max-height', height);
+    },
+
     render: function() {
         this.$el.find('ul').remove();
         var $ul = $(this.make('ul'));

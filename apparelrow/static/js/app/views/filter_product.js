@@ -156,6 +156,10 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.product_list.$product_list_empty.height(new_height);
         this.product_list.$product_list_unauthenticated.height(new_height);
 
+        // Update product filters
+        this.filter_category.update_height(new_height);
+        this.filter_subcategory.update_height(new_height);
+
         // If overlay is active update height
         if(this.$overlay) {
             this.$overlay.css('height', this.$el.outerHeight(true));

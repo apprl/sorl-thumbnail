@@ -63,6 +63,10 @@ App.Views.FilterProductSubCategory = Backbone.View.extend({
         return $(this.make('li', {'data-id': id})).append(this.make('a', attrs, text));
     },
 
+    update_height: function(height) {
+        this.$el.find('ul').css('max-height', height);
+    },
+
     render: function() {
         if(this.parent_category_id > 0) {
             var subcategories = this.collection.where({parent: this.parent_category_id});
