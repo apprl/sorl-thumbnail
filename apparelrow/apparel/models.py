@@ -905,7 +905,6 @@ def look_saved_handler(sender, look, **kwargs):
     look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
 
     if look.published == True:
-        print 'gender in look created: ', look.gender
         get_model('activity_feed', 'activity').objects.push_activity(look.user.get_profile(), 'create', look, look.gender)
     else:
         get_model('activity_feed', 'activity').objects.pull_activity(look.user.get_profile(), 'create', look)
