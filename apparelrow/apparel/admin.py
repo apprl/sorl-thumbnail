@@ -5,6 +5,7 @@ from django.forms import Form, CharField, MultipleHiddenInput, ModelChoiceField,
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
+from django.db.models.loading import get_model
 
 from apparel.models import *
 from modeltranslation.admin import TranslationAdmin
@@ -119,9 +120,20 @@ admin.site.register(ShortProductLink, ShortProductLinkAdmin)
 # LOOK
 #
 
+def rebuild_static_image(modeladmin, request, queryset):
+    for look in queryset:
+        get_model('apparel', 'Look').build_static_image(look.pk)
+rebuild_static_image.short_description = 'Rebuild static images for marked looks'
+
+def recalculate_gender(modeladmin, request, queryset):
+    for look in queryset:
+        get_model('apparel', 'Look').calculate_gender(look.pk)
+recalculate_gender.short_description = 'Recalculate gender for marked looks'
+
 class LookAdmin(admin.ModelAdmin):
     list_display = ('title', 'user', 'component', 'gender')
     list_filter = ['gender']
+    actions = [rebuild_static_image, recalculate_gender]
 
 admin.site.register(Look, LookAdmin)
 
