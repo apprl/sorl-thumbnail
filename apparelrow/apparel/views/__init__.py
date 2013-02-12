@@ -523,6 +523,11 @@ def look_detail(request, slug):
 
     looks_by_user = Look.published_objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:8]
 
+    look_created = False
+    if 'look_created' in request.session:
+        look_created = request.session['look_created']
+        del request.session['look_created']
+
     look_saved = False
     if 'look_saved' in request.session:
         if request.user.get_profile().fb_share_create_look:
@@ -550,6 +555,7 @@ def look_detail(request, slug):
                 'object_url': request.build_absolute_uri(look.get_absolute_url()),
                 'look_full_image': request.build_absolute_uri(look.static_image.url),
                 'look_saved': look_saved,
+                'look_created': look_created,
                 'likes': likes,
                 'base_url': base_url
             },

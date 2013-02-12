@@ -255,6 +255,8 @@ class LookView(View):
         if json_data['published']:
             request.session['look_saved'] = True
 
+        request.session['look_created'] = True
+
         # Exclude components, handle later
         components = json_data['components']
         del json_data['components']

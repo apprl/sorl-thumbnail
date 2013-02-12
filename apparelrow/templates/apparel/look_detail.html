@@ -93,6 +93,12 @@
                 return false;
             });
 
+        {% if look_created %}
+        try {
+            _gaq.push(['_trackEvent', 'Look', 'Create', '{{ object.title }}']);
+        } catch(err){}
+        {% endif %}
+
         {% if look_saved %}
         ApparelActivity.notification('create', 'look', {{ object.id }});
         {% endif %}
