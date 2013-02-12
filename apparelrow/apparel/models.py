@@ -449,11 +449,6 @@ class VendorCategory(models.Model):
             for product in queryset:
                 product.category = self.category
                 product.save()
-        else:
-            queryset = Product.objects.filter(vendorproduct__vendor_category=self, category__isnull=False)
-            for product in queryset:
-                product.category = None
-                product.save()
 
         if self.default_gender:
             queryset = Product.objects.filter(vendorproduct__vendor_category=self, gender__isnull=True)

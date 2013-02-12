@@ -166,8 +166,14 @@ class API(object):
         else:
             # Update product
             for f in fields:
+                # If category is set on product and imported category is None
+                # we will not try to override it.
+                if f == 'category':
+                    if self.product.category and not fields.get(f):
+                        continue
+
                 setattr(self.product, f, fields.get(f))
-        
+
         self.__vendor_options()
         self.__product_options()
 
