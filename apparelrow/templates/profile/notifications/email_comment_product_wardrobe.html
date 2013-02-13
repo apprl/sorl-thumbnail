@@ -1,4 +1,4 @@
 {% extends "profile/notifications/email_base.html" %}{% load i18n %}{% block content %}
-<p><a href="{{ sender_link }}">{{ sender_first_name }} {{ sender_last_name }}</a>{% trans " have commented on " %}<a href="{{ object_link }}">{{ object_title }}</a>{% trans " which you have liked:" %}</p>
+<p><a href="{{ sender_link }}?utm_source=notification&utm_medium=email&utm_campaign=comment_product_like">{{ sender_first_name }} {{ sender_last_name }}</a>{% trans " have commented on " %}<a href="{{ object_link }}?utm_source=notification&utm_medium=email&utm_campaign=comment_product_like">{{ object_title }}</a>{% trans " which you have liked:" %}</p>
 <p>"{{ comment|linebreaksbr }}"</p>
 {% endblock %}
