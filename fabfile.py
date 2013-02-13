@@ -259,8 +259,8 @@ def copy_config():
     sudo('update-rc.d celeryd defaults', pty=True)
     upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
     # dashboard crons
-    upload_template('etc/dashboard_import.cron', '/etc/cron.daily/dashboard_import', context=env, use_sudo=True)
-    sudo('chmod a+x /etc/cron.daily/dashboard_import', pty=True)
+    upload_template('etc/dashboard_import.cron', '/etc/cron.daily/aa_dashboard_import', context=env, use_sudo=True)
+    sudo('chmod a+x /etc/cron.daily/aa_dashboard_import', pty=True)
     upload_template('etc/dashboard_payment.cron', '/etc/cron.monthly/dashboard_payment', context=env, use_sudo=True)
     sudo('chmod a+x /etc/cron.monthly/dashboard_payment', pty=True)
 
