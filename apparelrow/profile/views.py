@@ -272,7 +272,7 @@ def settings_email(request):
                     'link': 'http://%s%s' % (Site.objects.get_current().domain, reverse('profile.views.confirm_email')),
                     'token': token,
                 })
-            send_email_confirm_task.delay(subject, body, request.user.get_profile().email)
+            send_email_confirm_task.delay(subject, body, request.user.email)
 
         return HttpResponseRedirect(reverse('profile.views.settings_email'))
 
