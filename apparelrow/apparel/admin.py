@@ -19,7 +19,7 @@ from mptt.admin import MPTTModelAdmin
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('image', 'product_name', 'category', 'gender', 'manufacturer', 'sku', 'published',)
-    list_filter = ['category', 'gender', 'manufacturer', 'vendors', 'published']
+    list_filter = ['category', 'gender', 'vendors', 'published']
     list_editable = ['category', 'gender', 'published']
     list_display_links = ['product_name']
     actions = ['publish', 'hide', 'change_category', 'change_options']
@@ -28,8 +28,8 @@ class ProductAdmin(admin.ModelAdmin):
 
     def image(self, obj):
         try:
-            thumbnail = get_thumbnail(obj.product_image, '50x50', crop='noop', quality=99)
-            return u'<a href="%s"><img src="%s" /></a>' % (obj.product_image.url, thumbnail.url,)
+            thumbnail = get_thumbnail(obj.product_image, '112x145', crop=False, format='PNG', transparent=True)
+            return u'<a href="%s"><img style="width: 50px; height: 50px;" src="%s" /></a>' % (obj.product_image.url, thumbnail.url,)
         except IOError:
             return u'<a href="%s">no image</a>' % (obj.product_image.url,)
 
@@ -151,7 +151,7 @@ admin.site.register(LookComponent, LookComponentAdmin)
 #
 
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ('name', 'followers_count')
+    list_display = ('name', 'id', 'followers_count')
     readonly_fields = ('old_name',)
     search_fields = ('name',)
 
