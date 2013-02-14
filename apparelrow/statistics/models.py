@@ -52,3 +52,12 @@ class ProductStats(models.Model):
 
     class Meta:
         ordering = ['-created']
+
+
+class NotificationEmailStats(models.Model):
+    notification_name = models.CharField(max_length=50)
+    notification_count = models.IntegerField()
+    created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False)
+
+    class Meta:
+        ordering = ['notification_name']

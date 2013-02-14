@@ -71,6 +71,8 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     current_language = get_language()
 
+    notification_count = 0
+
     for user in users:
         if user and user.email and user.is_active:
             if hasattr(user, 'get_profile'):
@@ -93,6 +95,14 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
             msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, recipients)
             msg.attach_alternative(html_body, 'text/html')
             msg.send()
+
+            notification_count = notification_count + 1
+
+    stats, created = get_model('statistics', 'NotificationEmailStats').objects.get_or_create(notification_name=notification_name,
+                                                                                             defaults={'notification_count': notification_count})
+    if not created:
+        stats.notification_count = stats.notification_count + notification_count
+        stats.save()
 
     activate(current_language)
 
