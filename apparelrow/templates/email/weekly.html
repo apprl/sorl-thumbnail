@@ -156,8 +156,8 @@
             .product-text .discount{color:#c95050}
             .product-text .original{text-decoration:line-through;}
 
-            .look-image{width:278px;}
-            .look-image img{width:278px;}
+            .look-image{width:576px;}
+            .look-image img{width:576px;}
             .collage{border:1px solid #dddddd;}
             .look-name{padding:10px 0;text-align:center;}
             .look-name a, .look-name a:link, .look-name a:visited{font-size:14px;color:#202020;text-decoration:none;font-weight:bold;}
@@ -431,9 +431,8 @@
                                                             <h3 mc:edit="look_header">The Looks!</h3>
 														</td>
                                                     </tr>
+                                                    {% for look in looks %}
                                                     <tr>
-                                                        {% for look in looks %}
-                                                        {% cycle '' '' '</tr><tr>' '' %}
                                                         <td width="50%">
                                                             <table border="0" cellpadding="0" cellspacing="0" width="100%" class="look-element">
                                                                 <tr>
@@ -451,8 +450,8 @@
                                                                 </tr>
                                                             </table>
                                                         </td>
-                                                        {% endfor %}
                                                     </tr>
+                                                    {% endfor %}
                                                 </table>
 
                                             </td>

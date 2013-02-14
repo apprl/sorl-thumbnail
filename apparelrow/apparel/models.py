@@ -767,7 +767,7 @@ class Look(models.Model):
         look.static_image = filename
 
         # refresh thumbnail in mails
-        get_thumbnail(look.static_image, '278', crop='noop')
+        get_thumbnail(look.static_image, '576', crop='noop')
 
         look.save()
 

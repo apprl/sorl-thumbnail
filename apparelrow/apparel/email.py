@@ -156,7 +156,7 @@ def get_weekly_mail_content(gender, timeframe):
             looks.append({
                 'class': look_class,
                 'url': ''.join(['http://', Site.objects.get_current().domain, look.get_absolute_url()]),
-                'image': get_thumbnail(look.static_image, '278', crop='noop').url,
+                'image': get_thumbnail(look.static_image, '576', crop='noop').url,
                 'name': look.title,
                 'user_url': ''.join(['http://', Site.objects.get_current().domain, look.user.get_absolute_url()]),
                 'user_name': look.user.get_profile().display_name,
