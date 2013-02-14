@@ -335,7 +335,7 @@ def send_welcome_mail(sender, user, **kwargs):
     """
     if user.email:
         subject = _(u'Welcome to Apprl %(username)s') % {'username': user.first_name}
-        body = render_to_string('profile/email_welcome.html')
+        body = render_to_string('profile/email_welcome.html', {'first_name': user.first_name})
         send_email_confirm_task.delay(subject, body, user.email)
 
 @receiver(user_logged_in, sender=User, dispatch_uid='update_language_on_login')
