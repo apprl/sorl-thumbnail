@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-14 11:48+0100\n"
+"POT-Creation-Date: 2013-02-14 12:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2753,23 +2753,22 @@ msgid " which you have liked:"
 msgstr ""
 
 #: templates/profile/notifications/email_facebook_friends.html:2
+msgid "Your Facebook friend "
+msgstr ""
+
+#: templates/profile/notifications/email_facebook_friends.html:2
+msgid "has just joined Apprl"
+msgstr ""
+
+#: templates/profile/notifications/email_facebook_friends.html:2
 #, python-format
-msgid ""
-"Your Facebook friend <a href=\"%(sender_link)s?"
-"utm_source=notification&utm_medium=email&utm_campaign=facebook_friend\">"
-"%(sender_first_name)s %(sender_last_name)s</a> has just joined Apprl - <a "
-"href=\"%(sender_link)s?"
-"utm_source=notification&utm_medium=email&utm_campaign=facebook_friend"
-"\">Follow %(sender_first_name)s here</a>!"
+msgid "Follow %(sender_first_name)s here"
 msgstr ""
 
 #: templates/profile/notifications/email_first_sale_alert.html:2
 #, python-format
 msgid ""
-"<a href=\"%(object_link)s?"
-"utm_source=notification&utm_medium=email&utm_campaign=first_sale_alert\">"
-"%(brand_name)s %(product_name)s</a> that you have ♥ is reduced from "
-"%(original_price)s to %(discount_price)s."
+"that you have ♥ is reduced from %(original_price)s to %(discount_price)s."
 msgstr ""
 
 #: templates/profile/notifications/email_follow_user.html:2
@@ -2802,10 +2801,7 @@ msgstr ""
 #: templates/profile/notifications/email_second_sale_alert.html:2
 #, python-format
 msgid ""
-"<a href=\"%(object_link)s?"
-"utm_source=notification&utm_medium=email&utm_campaign=second_sale_alert\">"
-"%(brand_name)s %(product_name)s</a> that you have ♥ is now reduced from "
-"%(original_price)s to %(discount_price)s."
+"that you have ♥ is now reduced from %(original_price)s to %(discount_price)s."
 msgstr ""
 
 #: templates/profile/notifications/subject_comment_look_comment.html:1

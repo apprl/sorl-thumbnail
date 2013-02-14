@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-14 11:48+0100\n"
+"POT-Creation-Date: 2013-02-14 12:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -484,28 +484,24 @@ msgid "Sale commission"
 msgstr ""
 
 #: dashboard/models.py:50
-#, fuzzy
 msgid "Original sale amount"
-msgstr "Ursprungligt rabatterat pris"
+msgstr "Ursprungligt säljpris"
 
 #: dashboard/models.py:51
-#, fuzzy
 msgid "Original sale commission"
-msgstr "Ursprungligt rabatterat pris"
+msgstr "Ursprungligt provision"
 
 #: dashboard/models.py:52
-#, fuzzy
 msgid "Original currency as three-letter ISO code"
 msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 
 #: dashboard/models.py:54
-#, fuzzy
 msgid "Time of sale"
-msgstr "Sågs senast"
+msgstr "Tid för köp"
 
 #: dashboard/models.py:98
 msgid "Between 1 and 0"
-msgstr ""
+msgstr "Mellan 1 och 0"
 
 #: dashboard/models.py:105
 msgid "Your name"
@@ -2931,29 +2927,24 @@ msgid " which you have liked:"
 msgstr " som du har gillat:"
 
 #: templates/profile/notifications/email_facebook_friends.html:2
-#, fuzzy, python-format
-msgid ""
-"Your Facebook friend <a href=\"%(sender_link)s?"
-"utm_source=notification&utm_medium=email&utm_campaign=facebook_friend\">"
-"%(sender_first_name)s %(sender_last_name)s</a> has just joined Apprl - <a "
-"href=\"%(sender_link)s?"
-"utm_source=notification&utm_medium=email&utm_campaign=facebook_friend"
-"\">Follow %(sender_first_name)s here</a>!"
-msgstr ""
-"<a href=\"%(sender_link)s\">%(sender_first_name)s %(sender_last_name)s</a> "
-"finns nu på Apprl - <a href=\"%(sender_link)s\">Följ %(sender_first_name)s "
-"här</a>!"
+msgid "Your Facebook friend "
+msgstr "Din Facebookvän "
+
+#: templates/profile/notifications/email_facebook_friends.html:2
+msgid "has just joined Apprl"
+msgstr "finns nu på Apprl"
+
+#: templates/profile/notifications/email_facebook_friends.html:2
+#, python-format
+msgid "Follow %(sender_first_name)s here"
+msgstr "Följ %(sender_first_name)s här"
 
 #: templates/profile/notifications/email_first_sale_alert.html:2
-#, fuzzy, python-format
+#, python-format
 msgid ""
-"<a href=\"%(object_link)s?"
-"utm_source=notification&utm_medium=email&utm_campaign=first_sale_alert\">"
-"%(brand_name)s %(product_name)s</a> that you have ♥ is reduced from "
-"%(original_price)s to %(discount_price)s."
+"that you have ♥ is reduced from %(original_price)s to %(discount_price)s."
 msgstr ""
-"<a href=\"%(object_link)s\">%(brand_name)s %(product_name)s</a> som du har ♥ "
-"har prissänkts från %(original_price)s till %(discount_price)s."
+"som du har ♥ har prissänkts från %(original_price)s till %(discount_price)s."
 
 #: templates/profile/notifications/email_follow_user.html:2
 #: templates/profile/notifications/email_follow_user_following.html:2
@@ -2983,15 +2974,10 @@ msgid " likes your look "
 msgstr " gillar din look "
 
 #: templates/profile/notifications/email_second_sale_alert.html:2
-#, fuzzy, python-format
+#, python-format
 msgid ""
-"<a href=\"%(object_link)s?"
-"utm_source=notification&utm_medium=email&utm_campaign=second_sale_alert\">"
-"%(brand_name)s %(product_name)s</a> that you have ♥ is now reduced from "
-"%(original_price)s to %(discount_price)s."
-msgstr ""
-"<a href=\"%(object_link)s\">%(brand_name)s %(product_name)s</a> är nu sänkt "
-"från %(original_price)s till %(discount_price)s."
+"that you have ♥ is now reduced from %(original_price)s to %(discount_price)s."
+msgstr "är nu sänkt från %(original_price)s till %(discount_price)s."
 
 #: templates/profile/notifications/subject_comment_look_comment.html:1
 #, python-format
@@ -3106,9 +3092,8 @@ msgid ""
 msgstr ""
 
 #: templates/registration/activation_email_subject.txt:2
-#, fuzzy
 msgid "Activate your Apprl account"
-msgstr "Aktivera konto"
+msgstr "Aktivera ditt Apprl-konto"
 
 #: templates/registration/login.html:8
 msgid "Login"
@@ -3217,600 +3202,3 @@ msgstr "Logga in med ditt Facebook ID"
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
-
-#~ msgid ""
-#~ "By ♥-ing products and following other members & brands you'll make the "
-#~ "site smarter and more personalized. For example:"
-#~ msgstr ""
-#~ "Genom att ♥ produkter och följa andra medlemmar & varumärken kan du göra "
-#~ "siten smartare och mer personligt anpassad."
-
-#~ msgid ""
-#~ "Products that you ♥ will be placed under your <a href=\"http://apprl.com/"
-#~ "profile/\">profile</a>. You can create <a href=\"http://apprl.com/looks/"
-#~ "\">looks</a> from these to share on Apprl, Facebook or your blog."
-#~ msgstr ""
-#~ "Produkter du ♥-ar samlas under din <a href=\"http://apprl.com/profile/"
-#~ "\">profil</a>. Av dessa kan du sedan skapa <a href=\"http://apprl.com/"
-#~ "looks/\">looks</a> att dela på Apprl, Facebook eller på din blogg."
-
-#~ msgid ""
-#~ "You find all the products that you friends ♥ under <a href=\"http://apprl."
-#~ "com/#f=1\">Friends' Favourites</a>."
-#~ msgstr ""
-#~ "Du hittar alla produkter som dina vänner ♥-ar under <a href=\"http://"
-#~ "apprl.com/#f=1\">Vänners favoriter</a>."
-
-#~ msgid ""
-#~ "Keep yourself updated when your friends ♥, comment and create looks under "
-#~ "<a href=\"http://apprl.com/home/\">Friends' Updates</a>"
-#~ msgstr ""
-#~ "Du kan hålla dig uppdaterad när dina vänner ♥-ar, kommenterar och skapar "
-#~ "looks under <a href=\"http://apprl.com/home/\">Vänners uppdateringar</a>."
-
-#~ msgid ""
-#~ "If you have questions, feedback or just want to get in touch let us know "
-#~ "on <a href=\"mailto:info@apprl.com\">info@apprl.com</a>!"
-#~ msgstr ""
-#~ "Har du frågor eller feedback tar vi gärna emot det på <a href=\"mailto:"
-#~ "info@apprl.com\">info@apprl.com</a>!"
-
-#~ msgid "GROW YOUR BLOG"
-#~ msgstr "FÅ FLER BLOGGLÄSARE"
-
-#~ msgid ""
-#~ "Apply to become a partner blogger to grow your blog, make money in a "
-#~ "number of ways and spread your content."
-#~ msgstr ""
-#~ "Ansök om att bli partnerbloggare för att öka trafiken till din blogg, "
-#~ "tjäna pengar på en mängd olika sätt och skapa looks för att sprida ditt "
-#~ "innehåll."
-
-#~ msgid "Step 2: Invite your friends"
-#~ msgstr "Steg 2: Bjud in dina vänner"
-
-#~ msgid ""
-#~ "You will always control what is being shared to your Facebook profile."
-#~ msgstr ""
-#~ "Du kommer alltid ha kontroll över vad som delas till din Facebooksida."
-
-#~ msgid ""
-#~ "We will never share anything to your Facebook timeline without you "
-#~ "actively deciding to do so."
-#~ msgstr ""
-#~ "Vi kommer aldrig dela någonting till din Facebooksida, utan att du aktivt "
-#~ "väljer att göra det."
-
-#~ msgid "Search for products"
-#~ msgstr "Sök efter produkter"
-
-#~ msgid "Your blog http://"
-#~ msgstr "Din blogg http://"
-
-#~ msgid "Got any questions?"
-#~ msgstr "Har du några frågor?"
-
-#, fuzzy
-#~ msgid "How does it work"
-#~ msgstr "Så funkar det"
-
-#~ msgid ""
-#~ "As a partner blogger you can grow your blog and make money in a number of "
-#~ "different ways:"
-#~ msgstr ""
-#~ "Du kan få fler bloggläsare och tjäna pengar som Apprl partnerbloggare på "
-#~ "en mängd olika sätt:"
-
-#~ msgid "Hide"
-#~ msgstr "Göm"
-
-#~ msgid "Description (optional):"
-#~ msgstr "Beskrivning (valfritt)"
-
-#~ msgid "To create a look, you need to have liked at least one product."
-#~ msgstr "För att skapa en look behöver du först gilla minst en produkt."
-
-#~ msgid "Find products!"
-#~ msgstr "Hitta produkter!"
-
-#~ msgid "Drag products here to start building a collage"
-#~ msgstr "Dra produkter hit för att börja skapa ditt kollage"
-
-#~ msgid "Upload a photo to create a tagged image"
-#~ msgstr "Börja med att ladda upp ett foto"
-
-#~ msgid "Your likes"
-#~ msgstr "Gillade produkter"
-
-#~ msgid "Products"
-#~ msgstr "Produkter"
-
-#~ msgid "First, you need to ♥ the products you wish to place in your look."
-#~ msgstr "Börja med att ♥ de produkter du vill ha i din look."
-
-#~ msgid "Then select a name for your look (you may change that name later):"
-#~ msgstr ""
-#~ "Välj sedan ett namn till din look (du kan ändra namnet i efterhand):"
-
-#~ msgid "You can then choose to create a tagged photo or a collage: "
-#~ msgstr "Välj sedan om du vill skapa en taggad bild eller ett kollage: "
-
-#~ msgid "Tagged photo"
-#~ msgstr "Taggad bild"
-
-#~ msgid "Collage"
-#~ msgstr "Kollage"
-
-#~ msgid "Edit look"
-#~ msgstr "Ändra look"
-
-#~ msgid "Create new look"
-#~ msgstr "Skapa ny look"
-
-#~ msgid "Search"
-#~ msgstr "Sök"
-
-#~ msgid "Time last checked"
-#~ msgstr "Senast kollad"
-
-#~ msgid "E-mail successfully sent"
-#~ msgstr "Mejl skickat"
-
-#~ msgid "Why e-mail was not sent"
-#~ msgstr "Varför mejlet inte skickades"
-
-#~ msgid "Unliked!"
-#~ msgstr "Ogillade!"
-
-#~ msgid "Liked!"
-#~ msgstr "Gillade!"
-
-#~ msgid "Like"
-#~ msgstr "Gilla"
-
-#~ msgid "Unlike"
-#~ msgstr "Ogilla"
-
-#~ msgid "<span class=\"count\">%(counter)s</span> like"
-#~ msgid_plural "<span class=\"count\">%(counter)s</span> likes"
-#~ msgstr[0] "<span class=\"count\">%(counter)s</span> som gillar"
-#~ msgstr[1] "<span class=\"count\">%(counter)s</span> som gillar"
-
-#~ msgid "No one has liked this produkt yet, do it!"
-#~ msgstr "Bli den första att gilla den här produkten!"
-
-#~ msgid "Complete all steps to personalise Apprl for you."
-#~ msgstr "Gå igenom alla stegen för att anpassa Apprl efter dig."
-
-#~ msgid "Membership"
-#~ msgstr "Medlemskap"
-
-#~ msgid "Proceed"
-#~ msgstr "Gå vidare"
-
-#~ msgid ""
-#~ "Follow your friends and other members to keep up when they like products, "
-#~ "create looks, comments and more."
-#~ msgstr ""
-#~ "Följ dina vänner och andra medlemmar för att hålla dig uppdaterad när de "
-#~ "gillar produkter, skapar looks, kommenterar och annat."
-
-#~ msgid "All products that you ♥ are placed here."
-#~ msgstr "Här hamnar alla produkter som du ♥-ar på siten."
-
-#~ msgid "Follow popular members"
-#~ msgstr "Följ andra medlemmar"
-
-#~ msgid "Follow brands"
-#~ msgstr "Följ varumärken"
-
-#~ msgid "Create a look!"
-#~ msgstr "Skapa en look!"
-
-#~ msgid "Your friends are here!"
-#~ msgstr "Dina vänner är här!"
-
-#~ msgid "Connect your Facebook account to:"
-#~ msgstr "Logga in med ditt Facebookkonto för att:"
-
-#~ msgid "Collect products you like under your profile"
-#~ msgstr "Samla alla produkter du gillar under din profil"
-
-#~ msgid "See what clothes & looks your friends like"
-#~ msgstr "Se vad dina vänner gillar för kläder & looks"
-
-#~ msgid "likes %(count)s looks"
-#~ msgstr "gillar %(count)s looks"
-
-#~ msgid "likes %(count)s products"
-#~ msgstr "gillar %(count)s produkter"
-
-#~ msgid "Your friend's latest updates"
-#~ msgstr "Senaste händelser"
-
-#~ msgid "Most followed brands"
-#~ msgstr "Mest följda varumärken"
-
-#~ msgid "Member since"
-#~ msgstr "Medlem sedan"
-
-#~ msgid ""
-#~ "\n"
-#~ "                    %(looks)s look\n"
-#~ "                "
-#~ msgid_plural ""
-#~ "\n"
-#~ "                    %(looks)s looks\n"
-#~ "                "
-#~ msgstr[0] ""
-#~ "\n"
-#~ "                %(looks)s look\n"
-#~ "            "
-#~ msgstr[1] ""
-#~ "\n"
-#~ "                %(looks)s looks\n"
-#~ "            "
-
-#~ msgid "Go to shop"
-#~ msgstr "Gå till shop"
-
-#~ msgid "Popular products in your network"
-#~ msgstr "Populära produkter bland vänner"
-
-#~ msgid "Welcome to"
-#~ msgstr "Välkommen till"
-
-#~ msgid "Shop Woman"
-#~ msgstr "Shop Dam"
-
-#~ msgid "Shop Man"
-#~ msgstr "Shop Herr"
-
-#~ msgid "Follow other members"
-#~ msgstr "Följ andra medlemmar"
-
-#~ msgid "Most followed members"
-#~ msgstr "Mest följda medlemmar"
-
-#~ msgid "Profile"
-#~ msgstr "Profil"
-
-#~ msgid "Similar looks"
-#~ msgstr "Liknande looks"
-
-#~ msgid "Adding..."
-#~ msgstr "Lägger till..."
-
-#~ msgid "Added to <span class=\"count\">%(counter)s</span> look"
-#~ msgid_plural "Added to <span class=\"count\">%(counter)s</span> looks"
-#~ msgstr[0] "Tillagd i <span class=\"count\">%(counter)s</span> look"
-#~ msgstr[1] "Tillagd i <span class=\"count\">%(counter)s</span> looks"
-
-#~ msgid "Browse articles"
-#~ msgstr "Hitta produkter"
-
-#~ msgid ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> added <a href=\"%(object_url)s\">"
-#~ "%(object)s</a> to the look <a href=\"%(target_url)s\">%(target)s</a>"
-#~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> lade till <a href=\"%(object_url)s"
-#~ "\">%(object)s</a> i looken <a href=\"%(target_url)s\">%(target)s</a>"
-
-#~ msgid ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> commented on <a href=\"%(object_url)"
-#~ "s\">%(object)s</a>"
-#~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> kommenterade på <a href="
-#~ "\"%(object_url)s\">%(object)s</a>"
-
-#~ msgid ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> commented on the look <a href="
-#~ "\"%(object_url)s\">%(object)s</a> by <a href=\"%(object_user_url)s\">"
-#~ "%(object_user)s</a>"
-#~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> kommenterade på looken <a href="
-#~ "\"%(object_url)s\">%(object)s</a> av <a href=\"%(object_user_url)s\">"
-#~ "%(object_user)s</a>"
-
-#~ msgid ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> created the look <a href="
-#~ "\"%(object_url)s\">%(object)s</a>"
-#~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> skapade looken <a href="
-#~ "\"%(object_url)s\">%(object)s</a>"
-
-#~ msgid ""
-#~ "\n"
-#~ "<a href=\"%(user_url)s\">%(user)s</a> <span class=\"likes\">likes</span> "
-#~ "the look <a href=\"%(object_url)s\">%(object)s</a> by <a href="
-#~ "\"%(object_user_url)s\">%(object_user)s</a>\n"
-#~ msgstr ""
-#~ "\n"
-#~ "<a href=\"%(user_url)s\">%(user)s</a> <span class=\"likes\">gillar</span> "
-#~ "looken <a href=\"%(object_url)s\">%(object)s</a> av <a href="
-#~ "\"%(object_user_url)s\">%(object_user)s</a>\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "<a href=\"%(user_url)s\">%(user)s</a> <span class=\"likes\">likes</span> "
-#~ "<a href=\"%(object_url)s\">%(object)s</a>\n"
-#~ msgstr ""
-#~ "\n"
-#~ "<a href=\"%(user_url)s\">%(user)s</a> <span class=\"likes\">gillar</span> "
-#~ "<a href=\"%(object_url)s\">%(object)s</a>\n"
-
-#~ msgid ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> now follows <a href="
-#~ "\"%(other_user_url)s\">%(other_user)s</a>"
-#~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> följer nu <a href="
-#~ "\"%(other_user_url)s\">%(other_user)s</a>"
-
-#~ msgid "The look will be shown on the front page"
-#~ msgstr "Kategorin visas på förstasidan"
-
-#~ msgid "Short description"
-#~ msgstr "Kort Beskrivning"
-
-#~ msgid "URL"
-#~ msgstr "URL"
-
-#~ msgid "Friends' updates"
-#~ msgstr "Vänners uppdateringar"
-
-#~ msgid "Friends' Favorites"
-#~ msgstr "Vänners favoriter"
-
-#~ msgid "Logout"
-#~ msgstr "Logga ut"
-
-#~ msgid "Comments"
-#~ msgstr "Kommentarer"
-
-#~ msgid "+ follow me"
-#~ msgstr "+ följ mig"
-
-#~ msgid "View this look & create your own on Apprl"
-#~ msgstr "Se den här looken & skapa din egen på Apprl"
-
-#~ msgid "Do you really want to delete product"
-#~ msgstr "Vill du verkligen ta bort produkten"
-
-#~ msgid "Friend’s Updates"
-#~ msgstr "Vänners uppdateringar"
-
-#~ msgid ""
-#~ "To see popular brands in your network you need to connect with your "
-#~ "Facebook account."
-#~ msgstr ""
-#~ "För att se vilka varumärken som är populära bland dina vänner behöver du "
-#~ "logga in med ditt Facebookkonto."
-
-#~ msgid "Popular brands in your network"
-#~ msgstr "Populära bland dina vänner"
-
-#~ msgid "Likes this look"
-#~ msgstr "Gillar looken"
-
-#~ msgid "Likes this product"
-#~ msgstr "Gillar produkten"
-
-#~ msgid "Member since %(date_joined)s"
-#~ msgstr "Medlem sedan %(date_joined)s"
-
-#~ msgid "All looks"
-#~ msgstr "Alla looks"
-
-#~ msgid "Sort by"
-#~ msgstr "Sortera efter"
-
-#~ msgid "%(name)s's looks"
-#~ msgstr "%(name)ss looks"
-
-#~ msgid "You are not currently following "
-#~ msgstr "Du följer just nu inte "
-
-#~ msgid "Tags"
-#~ msgstr "Taggar"
-
-#~ msgid "Tags:"
-#~ msgstr "Taggar (valfritt)"
-
-#~ msgid "Share"
-#~ msgstr "Dela"
-
-#~ msgid "Check out"
-#~ msgstr "Kolla in"
-
-#, fuzzy
-#~ msgid "Why facebook?"
-#~ msgstr "Dela på facebook"
-
-#~ msgid "Get inspired"
-#~ msgstr "Inspireras av andra"
-
-#~ msgid ""
-#~ "You can make Apprl even smarter and more personal by connecting to your "
-#~ "Facebook account. For example you can see what clothes your friends like "
-#~ "and see what brands are the most popular in your network."
-#~ msgstr ""
-#~ "Du kan göra Apprl ännu smartare och mer personligt genom att logga in med "
-#~ "ditt Facebookkonto. Exempelvis kan du se vad dina vänner gillar för "
-#~ "kläder och vilka varumärken som är mest populära i ditt nätverk."
-
-#, fuzzy
-#~ msgid "Share product likes on facebook"
-#~ msgstr "Dela på facebook"
-
-#, fuzzy
-#~ msgid "Share look likes on facebook"
-#~ msgstr "Dela på facebook"
-
-#, fuzzy
-#~ msgid "Share look creations on facebook"
-#~ msgstr "Dela alltid dina skapelse på facebook"
-
-#, fuzzy
-#~ msgid "Share follows on facebook"
-#~ msgstr "Dela på facebook"
-
-#~ msgid "Always share your creations on facebook"
-#~ msgstr "Dela alltid dina skapelse på facebook"
-
-#, fuzzy
-#~ msgid "Here you can set which facebook actions you want to share automatic:"
-#~ msgstr ""
-#~ "Här kan du ställa in vilka händelser du vill bli meddelad om via e-mail:"
-
-#~ msgid "Invite friends (%(invites)s)"
-#~ msgstr "Bjud in vänner (%(invites)s)"
-
-#~ msgid "You do not like any products right now."
-#~ msgstr "Du gillar inte några produkter än."
-
-#~ msgid "You have not created any looks yet."
-#~ msgstr "Du har inte skapat några looks än."
-
-#~ msgid ""
-#~ "You have not done anything yet. Why don't you start off by following some "
-#~ "people whose style you like?"
-#~ msgstr ""
-#~ "Du har inte gjort något än. Börja till exempel med att följa andra "
-#~ "medlemmar som verkar ha bra stil."
-
-#~ msgid "See all women's products"
-#~ msgstr "Visa alla damprodukter"
-
-#~ msgid "See all men's products"
-#~ msgstr "Visa alla herrprodukter"
-
-#~ msgid "By %(username)s"
-#~ msgstr "Av %(username)s!"
-
-#~ msgid "%(name)s's popular looks"
-#~ msgstr "%(name)ss populära looks"
-
-#~ msgid "Latest looks"
-#~ msgstr "Senaste looks"
-
-#~ msgid "Friends with most looks"
-#~ msgstr "Vänner med flest looks"
-
-#~ msgid ""
-#~ "You currently don't follow anyone who has created any looks, find friends "
-#~ "to follow among our members."
-#~ msgstr ""
-#~ "Du följer just nu ingen som har skapat någon looks, hitta vänner att "
-#~ "följa bland våra medlemmar."
-
-#~ msgid "See all %(looks)s looks"
-#~ msgstr "Se alla %(looks)s looks"
-
-#~ msgid ""
-#~ "To see which of your friends have created the most looks, connect with "
-#~ "your Facebook account."
-#~ msgstr ""
-#~ "För att se vilka av dina vänner som har skapat flest looks här behöver du "
-#~ "logga in med ditt Facebookkonto."
-
-#~ msgid "Expensive"
-#~ msgstr "Dyrast"
-
-#~ msgid "Cheap"
-#~ msgstr "Billigast"
-
-#~ msgid "See you!"
-#~ msgstr "Vi ses!"
-
-#~ msgid "/ Apparelrow"
-#~ msgstr "/ Apparelrow"
-
-#~ msgid "Shop %(APPAREL_GENDER_TEXT)s"
-#~ msgstr "Shop "
-
-#~ msgid "About the beta"
-#~ msgstr "Om betaversionen"
-
-#~ msgid "Show popular products in your network"
-#~ msgstr "Visa populära produkter bland dina vänner"
-
-#~ msgid "Events"
-#~ msgstr "Händelser"
-
-#~ msgid "Event"
-#~ msgstr "Händelse"
-
-#~ msgid "does not have any products in the wardrobe right now."
-#~ msgstr "har inga produkter i garderoben just nu."
-
-#~ msgid "Participate in our weekly newsletter"
-#~ msgstr "Delta i vårt veckobrev"
-
-#~ msgid "Welcome %(first_name)s"
-#~ msgstr "Välkommen %(first_name)s!"
-
-#~ msgid ""
-#~ "The first thing you should do now is to follow members here on the site, "
-#~ "to keep you updated when they create looks, see which products they like "
-#~ "and what which products they have in their closet."
-#~ msgstr ""
-#~ "Det första du borde göra nu är att följa andra medlemmar här på siten, "
-#~ "för att hålla dig uppdaterad när de skapar looks, se vad de gillar för "
-#~ "produkter och vad de har i garderoben."
-
-#~ msgid "Find your friends below, or among all our other members."
-#~ msgstr "Hitta dina vänner nedan eller bland alla våra andra medlemmar."
-
-#~ msgid "Most popular to follow"
-#~ msgstr "Mest populära att följa"
-
-#~ msgid "Unlike product"
-#~ msgstr "Ogilla en produkt"
-
-#~ msgid "WELCOME!"
-#~ msgstr "HEJ OCH VÄLKOMMEN!"
-
-#~ msgid ""
-#~ "We look forward to making Apparelrow better together with you. We "
-#~ "appreciate all questions, suggestions and problems from you, the more the "
-#~ "better. Click the link \"Tyck Till\" on the right hand side to share your "
-#~ "thoughts. Or send us an email on <a href=\"mailto:info@apparelrow.com"
-#~ "\">info@apparelrow.com</a>. Have fun!"
-#~ msgstr ""
-#~ "Vi ser fram emot att göra Apparelrow bättre tillsammans med dig. Vi "
-#~ "uppskattar alla frågor, förslag och problem vi kan få från er, ju mer "
-#~ "desto bättre. Klicka på länken 'Tyck Till' i högerkanten på siten och "
-#~ "dela med dig av dina tankar. Eller maila oss på <a href=\"mailto:"
-#~ "info@apparelrow.com\">info@apparelrow.com</a>. så blir vi också glada. "
-#~ "Have fun!"
-
-#~ msgid "Showing popular products in your network"
-#~ msgstr "Visar populära produkter bland dina vänner"
-
-#~ msgid "Search now"
-#~ msgstr "Sök nu"
-
-#~ msgid "Delete selected"
-#~ msgstr "Ta bort valda"
-
-#~ msgid ""
-#~ "\n"
-#~ "            You can subscribe in a particular search by...\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "            Du kan prenumerera på en särskiljd sökning genom...\n"
-#~ "        "
-
-#~ msgid "Log in with your Facebook account to find your friends"
-#~ msgstr "Logga in med Facebook för att hitta dina vänner!"
-
-#~ msgid "Articles in this look"
-#~ msgstr "Artiklar i denna look"
-
-#~ msgid ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> added <a href=\"%(object_url)s\">"
-#~ "%(object)s</a> to the <a href=\"%(wardrobe_url)s\">wardrobe</a>"
-#~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> lade till <a href=\"%(object_url)s"
-#~ "\">%(object)s</a> i sin <a href=\"%(wardrobe_url)s\">garderob</a>"
