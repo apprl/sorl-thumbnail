@@ -151,8 +151,7 @@ admin.site.register(LookComponent, LookComponentAdmin)
 #
 
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id', 'followers_count', 'featured')
-    list_filter = ('featured',)
+    list_display = ('name', 'id', 'followers_count')
     readonly_fields = ('old_name',)
     search_fields = ('name',)
 
