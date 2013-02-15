@@ -163,9 +163,23 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         if not sort_get or sort_get == '':
             query_arguments['sort'] = 'score desc'
 
+    brand_search = request.GET.get('brand_search', None)
+    if brand_search:
+        query_arguments['f.manufacturer.facet.prefix'] = brand_search
+
     search = ApparelSearch(query_string, **query_arguments)
 
     facet = search.get_facet()['facet_fields']
+
+    # Calculate manufacturer
+    manufacturers = []
+    for i, value in enumerate(facet['manufacturer']):
+        if i % 2 == 0:
+            split = value.split('|')
+            manufacturers.append((int(split[-1]), split[-2]))
+
+    if brand_search:
+        return HttpResponse(json.encode({'manufacturers': manufacturers}), mimetype='application/json')
 
     # Calculate price range
     pricerange = {'min': 0, 'max': 10000}
@@ -180,13 +194,6 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     else:
         pricerange['selected_min'] = pricerange['min']
         pricerange['selected_max'] = pricerange['max']
-
-    # Calculate manufacturer
-    manufacturers = []
-    for i, value in enumerate(facet['manufacturer']):
-        if i % 2 == 0:
-            split = value.split('|')
-            manufacturers.append((int(split[-1]), split[-2]))
 
     # Calculate store
     stores = []

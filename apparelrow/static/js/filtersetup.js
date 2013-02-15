@@ -148,13 +148,7 @@ var ManufacturerBrowser = {
     },
 
     reset: function(hard) {
-        if(hard === true) {
-            this.$availableList.html('');
-        } else {
-            this.$availableList.find('li').each(function(index, element) {
-                jQuery(element).show();
-            });
-        }
+        this.$availableList.html('');
     },
 
     renderItem: function(item, $list) {
@@ -167,23 +161,25 @@ var ManufacturerBrowser = {
         if(jQuery('#manufacturer-' + item[0]).length > 0)
             $a.addClass('selected');
 
+        if(!$list) {
+            $list = this.$availableList;
+        }
+
         jQuery('<li>')
             .append($a)
-            .appendTo(this.$availableList);
+            .appendTo($list);
     },
 
     filterByName: function(name) {
         this.reset();
         this.brandName = name;
-        this.$availableList.find('li').each(function(index, element) {
-            element = jQuery(element);
-            var current_name = element.find('a').text().toLowerCase();
-            if(current_name.indexOf(name.toLowerCase()) == -1) {
-                element.hide();
-            }
+
+        var data = getQuery();
+        data['brand_search'] = name;
+        jQuery.get(browse_url, data, function(response) {
+            jQuery.each(response.manufacturers, function(i, item) {
+                ManufacturerBrowser.renderItem(item, ManufacturerBrowser.$availableList);
+            });
         });
     }
 };
-
-
-

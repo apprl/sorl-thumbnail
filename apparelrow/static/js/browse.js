@@ -297,7 +297,7 @@ jQuery(document).ready(function() {
  * Create a query object and populate it with selected filters. Also make sure
  * that if there are selected filters, mark that filter category as active.
  */
-function getQuery(query, reset) {
+window.getQuery = function(query, reset) {
     query = query || {}
     reset = typeof(reset) != 'undefined' ? reset : false;
 
@@ -452,7 +452,7 @@ function renderPage(products) {
  */
 function filterCriteria(criteria_filter) {
     if('manufacturers' in criteria_filter && !jQuery('#product-manufacturers').prev().hasClass('active')) {
-        ManufacturerBrowser.reset(true);
+        ManufacturerBrowser.reset();
 
         jQuery.each(criteria_filter['manufacturers'], function(i, manufacturer) {
             ManufacturerBrowser.renderItem(manufacturer);
