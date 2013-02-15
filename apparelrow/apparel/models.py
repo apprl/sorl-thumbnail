@@ -74,6 +74,7 @@ class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
     old_name = models.CharField(max_length=100, null=True, blank=True)
     last_update = models.DateTimeField(_("Last update"), null=True, blank=True)
+    featured = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s' % self.name
