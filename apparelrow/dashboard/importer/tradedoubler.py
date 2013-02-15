@@ -36,8 +36,14 @@ class Importer(BaseImporter):
         response = requests.get(url)
         data = xmltodict.parse(response.text.encode('utf-8'))
 
-        if int(data['report']['matrix']['@rowcount']) > 1:
-            for row in data['report']['matrix']['rows']['row']:
+        row_count = int(data['report']['matrix']['@rowcount'])
+        if row_count > 1:
+            if row_count == 2:
+                row_data = [data['report']['matrix']['rows']['row']]
+            else:
+                row_data = data['report']['matrix']['rows']['row']
+
+            for row in row_data:
                 data_row = {}
                 data_row['original_sale_id'] = row['orderNR']
                 data_row['affiliate'] = self.name
