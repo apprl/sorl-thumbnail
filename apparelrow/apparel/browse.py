@@ -163,9 +163,16 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         if not sort_get or sort_get == '':
             query_arguments['sort'] = 'score desc'
 
+    query_arguments['f.manufacturer.facet.limit'] = 40
+    query_arguments['f.manufacturer.facet.sort'] = 'index'
+
     brand_search = request.GET.get('brand_search', None)
     if brand_search:
         query_arguments['f.manufacturer.facet.prefix'] = brand_search
+
+    brand_search_page = int(request.GET.get('brand_search_page', 0))
+    if brand_search_page:
+        query_arguments['f.manufacturer.facet.offset'] = brand_search_page * query_arguments['f.manufacturer.facet.limit']
 
     search = ApparelSearch(query_string, **query_arguments)
 
@@ -178,7 +185,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
             split = value.split('|')
             manufacturers.append((int(split[-1]), split[-2]))
 
-    if brand_search:
+    if brand_search or brand_search_page:
         return HttpResponse(json.encode({'manufacturers': manufacturers}), mimetype='application/json')
 
     # Calculate price range
