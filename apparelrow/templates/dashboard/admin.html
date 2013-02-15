@@ -10,10 +10,11 @@
       function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Date');
-        data.addColumn('number', '{% trans "Commission (SEK)" %}');
+        data.addColumn('number', 'Total commission (SEK)');
+        data.addColumn('number', 'Partner commission (SEK)');
         data.addRows([
           {% for sale_date, commission in sales.items %}
-          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission|unlocalize }}],
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission.0|unlocalize }}, {{ commission.1|unlocalize }}],
           {% endfor %}
         ]);
         data.sort(0);
@@ -31,7 +32,7 @@
                 var year = $selected.data('year');
                 var month = $selected.data('month');
 
-                window.location.href = '/partner/' + year + '/' + month + '/';
+                window.location.href = '/partner/admin/' + year + '/' + month + '/';
             });
             $('#more-info').click(function(event) {
                 create_html_dialog(jQuery(this).attr('href'));
@@ -42,17 +43,15 @@
 {% endblock %}
 
 {% block body-header %}
-    {% include 'dashboard/body_header.html' %}
+<div id="body-header">
+    <div class="column_one">
+        <h1 class="max-width">{% trans "Partner admin" %}</h1>
+    </div>
+</div>
 {% endblock body-header %}
 {% block body-classes %}one-column dashboard{% endblock body-classes %}
 {% block body %}
 <div id="content">
-    <div class="light-block group">
-        <h3 class="commission">{% blocktrans %}Your commission: {{ total_sales }}kr{% endblocktrans %}</h3>
-        <h3 class="commission">{% blocktrans %}Confirmed commission: {{ total_confirmed }}kr{% endblocktrans %}</h3>
-        <h3 class="commission">{% blocktrans %}Pending payment: {{ pending_payment }}kr{% endblocktrans %}</h3>
-        <h3 class="link"><a id="more-info" class="open-dialog" href="{% url dashboard-more-info %}">{% trans "More info" %}</a></h3>
-    </div>
     <div class="content-chart group">
         <div class="chart-menu">
             <label>{% trans "Show: " %}
@@ -62,7 +61,9 @@
                     {% endfor %}
                 </select>
             </label>
-            <p>{% blocktrans %}Your commission {{ month_commission }}kr{% endblocktrans %}</p>
+            <p>{% blocktrans %}Total commission {{ month_commission }}kr{% endblocktrans %}</p>
+            <p>{% blocktrans %}Partner commission {{ partner }}kr{% endblocktrans %}</p>
+            <p>{% blocktrans %}Apprl commission {{ apprl }}kr{% endblocktrans %}</p>
         </div>
         <div id="chart_div" style="width: 740px; height: 300px"></div>
     </div>

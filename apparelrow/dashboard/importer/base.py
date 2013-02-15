@@ -2,6 +2,7 @@ import datetime
 import math
 import decimal
 import dateutil.parser
+import logging
 
 from django.conf import settings
 from django.db.models.loading import get_model
@@ -9,6 +10,10 @@ from fuzzywuzzy import process
 
 from dashboard.models import Sale
 from apparel.utils import currency_exchange
+
+
+logger = logging.getLogger('dashboard.import')
+
 
 class BaseImporter:
 
@@ -65,7 +70,11 @@ class BaseImporter:
                 pass
 
         data = self.exchange_commission(data, instance)
+        data = self.calculate_cut(data)
 
+        return data
+
+    def calculate_cut(self, data):
         if 'user_id' in data and data['user_id']:
             cut = settings.APPAREL_DASHBOARD_CUT_DEFAULT
             profile = get_model('profile', 'ApparelProfile').objects.filter(user=data['user_id'])
@@ -75,25 +84,29 @@ class BaseImporter:
                     instance = profile.partner_group.cuts.filter(vendor=data['vendor'])
                     if instance:
                         cut = instance[0].cut
+                        logger.debug('Using custom cut for profile %s: %s' % (profile, cut))
 
-            data['commission'] = decimal.Decimal(cut) * decimal.Decimal(data['commission'])
+            data['commission'] = decimal.Decimal('0.95') * decimal.Decimal(cut) * decimal.Decimal(data['commission'])
 
         return data
 
+
     def exchange_commission(self, data, instance):
-        # Do not update commission if status is CONFIRMED or higher and the
-        # original commission value is unchanged.
-        if instance is not None and \
-           instance.status != data['status'] and \
-           data['status'] >= Sale.CONFIRMED and \
-           data['original_commission'] == instance.original_commission:
+        # Do not update if the original commission value is unchanged.
+        if instance is not None and data['original_commission'] == instance.original_commission:
             return data
 
-        exchange_rate = currency_exchange('SEK', data['original_currency'])
-        exchange_rate_modifier = decimal.Decimal('0.95')
+        # Use saved exchange rate if we need to update
+        if instance and instance.exchange_rate:
+            exchange_rate = instance.exchange_rate
+        else:
+            exchange_rate = currency_exchange('SEK', data['original_currency'])
 
-        data['commission'] = exchange_rate * exchange_rate_modifier * data['original_commission']
-        data['amount'] = exchange_rate * exchange_rate_modifier * data['original_amount']
+        data['exchange_rate'] = exchange_rate
+        data['converted_commission'] = exchange_rate * data['original_commission']
+        data['converted_amount'] = exchange_rate * data['original_amount']
+        data['commission'] = exchange_rate * data['original_commission']
+        data['amount'] = exchange_rate * data['original_amount']
         data['currency'] = 'SEK'
 
         return data
