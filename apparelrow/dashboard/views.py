@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.db.models import Sum
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse
+from django.db.models import get_model
 
 from dashboard.models import Sale, Payment, Signup
 
@@ -31,11 +32,14 @@ def dashboard_admin(request, year=None, month=None):
         end_date = start_date
         end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
 
-        # Commission per month
+        # Per month
         data_per_month = {}
+        clicks_per_month = {}
         for day in range(1, (end_date - start_date).days + 2):
-            data_per_month[start_date.replace(day=day)] = [0, 0, 0]
+            data_per_month[start_date.replace(day=day)] = [0, 0]
+            clicks_per_month[start_date.replace(day=day)] = [0, 0]
 
+        # Commission per month
         month_commission = decimal.Decimal('0.0')
         partner_commission = decimal.Decimal('0.0')
         result = Sale.objects.filter(status__gte=Sale.PENDING, status__lte=Sale.CONFIRMED) \
@@ -51,6 +55,18 @@ def dashboard_admin(request, year=None, month=None):
 
         apprl_commission = month_commission - partner_commission
 
+        # Clicks per month
+        clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date, created__lte=end_date) \
+                                                               .order_by('created')
+        for click in clicks:
+            clicks_per_month[click.created.date()][0] += 1
+            if click.user_id:
+                clicks_per_month[click.created.date()][1] += 1
+
+        click_total = sum([x[0] for x in clicks_per_month.values()])
+        click_partner = sum([x[1] for x in clicks_per_month.values()])
+        click_apprl = click_total - click_partner
+
         # Enumerate months
         dt1 = datetime.date(2012, 1, 1)
         dt2 = datetime.date.today()
@@ -61,12 +77,16 @@ def dashboard_admin(request, year=None, month=None):
         )]
 
         return render(request, 'dashboard/admin.html', {'sales': data_per_month,
-                                                          'month_commission': month_commission,
-                                                          'partner': partner_commission,
-                                                          'apprl': apprl_commission,
-                                                          'dates': dates,
-                                                          'year': year,
-                                                          'month': month})
+                                                        'clicks': clicks_per_month,
+                                                        'month_commission': month_commission,
+                                                        'partner': partner_commission,
+                                                        'apprl': apprl_commission,
+                                                        'click_total': click_total,
+                                                        'click_partner': click_partner,
+                                                        'click_apprl': click_apprl,
+                                                        'dates': dates,
+                                                        'year': year,
+                                                        'month': month})
 
     return HttpResponseNotFound()
 
@@ -86,17 +106,24 @@ def dashboard(request, year=None, month=None):
 
         # Commission per month
         data_per_month = {}
+        clicks_per_month = {}
         for day in range(1, (end_date - start_date).days + 2):
             data_per_month[start_date.replace(day=day)] = 0
+            clicks_per_month[start_date.replace(day=day)] = 0
 
-        month_commission = decimal.Decimal('0.0')
         for sale in Sale.objects.filter(status__gte=Sale.PENDING, status__lte=Sale.CONFIRMED) \
                                 .filter(sale_date__gte=start_date, sale_date__lte=end_date) \
                                 .filter(user_id=request.user.pk) \
                                 .order_by('sale_date') \
                                 .values('sale_date', 'commission'):
             data_per_month[sale['sale_date'].date()] += sale['commission']
-            month_commission += sale['commission']
+
+        # Clicks
+        clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date, created__lte=end_date) \
+                                                               .filter(user_id=request.user.pk) \
+                                                               .order_by('created')
+        for click in clicks:
+            clicks_per_month[click.created.date()] += 1
 
         # Enumerate months
         dt1 = request.user.date_joined.date()
@@ -127,10 +154,12 @@ def dashboard(request, year=None, month=None):
             pending_payment = payments[0].amount
 
         return render(request, 'dashboard/partner.html', {'sales': data_per_month,
+                                                          'clicks': clicks_per_month,
                                                           'total_sales': sales_total,
                                                           'total_confirmed': sales_confirmed,
                                                           'pending_payment': pending_payment,
-                                                          'month_commission': month_commission,
+                                                          'month_commission': sum(data_per_month.values()),
+                                                          'month_click': sum(clicks_per_month.values()),
                                                           'dates': dates,
                                                           'year': year,
                                                           'month': month})

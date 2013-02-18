@@ -25,6 +25,20 @@
             }
         };
         chart.draw(data, options);
+
+        // Click chart
+        var clicksData = new google.visualization.DataTable();
+        clicksData.addColumn('date', 'Date');
+        clicksData.addColumn('number', 'Total clicks');
+        clicksData.addColumn('number', 'Partner clicks');
+        clicksData.addRows([
+          {% for sale_date, data in clicks.items %}
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0 }}, {{ data.1 }}],
+          {% endfor %}
+        ]);
+        clicksData.sort(0);
+        var clicksChart = new google.visualization.LineChart(document.getElementById('clicks_chart'));
+        clicksChart.draw(clicksData, {legend: {position: 'none'}});
       }
         $(document).ready(function() {
             $('.chart-menu select').change(function() {
@@ -64,8 +78,15 @@
             <p>{% blocktrans %}Total commission {{ month_commission }}kr{% endblocktrans %}</p>
             <p>{% blocktrans %}Partner commission {{ partner }}kr{% endblocktrans %}</p>
             <p>{% blocktrans %}Apprl commission {{ apprl }}kr{% endblocktrans %}</p>
+            <br><br>
+            <p>{% blocktrans %}Total click {{ click_total }}{% endblocktrans %}</p>
+            <p>{% blocktrans %}Partner click {{ click_partner }}{% endblocktrans %}</p>
+            <p>{% blocktrans %}Apprl click {{ click_apprl }}{% endblocktrans %}</p>
         </div>
-        <div id="chart_div" style="width: 740px; height: 300px"></div>
+        <div id="charts">
+            <div id="chart_div" style="width: 740px; height: 300px"></div>
+            <div id="clicks_chart" style="width: 740px; height: 300px;"></div>
+        </div>
     </div>
 </div>
 {% endblock body %}

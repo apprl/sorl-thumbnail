@@ -24,6 +24,19 @@
             }
         };
         chart.draw(data, options);
+
+        // Click chart
+        var clicksData = new google.visualization.DataTable();
+        clicksData.addColumn('date', 'Date');
+        clicksData.addColumn('number', '{% trans "Clicks" %}');
+        clicksData.addRows([
+          {% for sale_date, data in clicks.items %}
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data }}],
+          {% endfor %}
+        ]);
+        clicksData.sort(0);
+        var clicksChart = new google.visualization.LineChart(document.getElementById('clicks_chart'));
+        clicksChart.draw(clicksData, {legend: {position: 'none'}});
       }
         $(document).ready(function() {
             $('.chart-menu select').change(function() {
@@ -63,8 +76,12 @@
                 </select>
             </label>
             <p>{% blocktrans %}Your commission {{ month_commission }}kr{% endblocktrans %}</p>
+            <p>{% blocktrans %}Your clicks {{month_click}} st{% endblocktrans %}</p>
         </div>
-        <div id="chart_div" style="width: 740px; height: 300px"></div>
+        <div id="charts">
+            <div id="chart_div" style="width: 740px; height: 300px"></div>
+            <div id="clicks_chart" style="width: 740px; height: 300px;"></div>
+        </div>
     </div>
 </div>
 {% endblock body %}
