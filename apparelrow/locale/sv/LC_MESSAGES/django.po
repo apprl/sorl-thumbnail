@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 18:25+0100\n"
+"POT-Creation-Date: 2013-02-18 19:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -972,6 +972,11 @@ msgstr "Stäng"
 #: templates/homepage.html:5
 msgid "Welcome"
 msgstr "Välkommen"
+
+#: templates/redirect.html:31
+#, python-format
+msgid "Redirecting you to %(store)s"
+msgstr "Du skickas nu till %(store)s"
 
 #: templates/account/base.html:10
 msgid "E-Mail Addresses"

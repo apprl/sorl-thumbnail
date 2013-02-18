@@ -1,4 +1,4 @@
-{% load i18n l10n apparel_extras compressed %}
+{% load i18n %}
 {% load static from staticfiles %}
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
@@ -6,7 +6,7 @@
     <title>Apprl - Social Shopping</title>
     <meta charset="utf-8"/>
     <meta name="robots" content="noindex"/>
-    <!--<meta content="5;url={{ redirect_url }}" http-equiv="refresh"/>-->
+    <meta content="5;url={{ redirect_url|safe }}" http-equiv="refresh"/>
     <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
@@ -21,14 +21,14 @@
         })();
     </script>
     <style>
-        a { color: #000000; }
+        a { color: #000000;text-decoration:none; }
     </style>
 </head>
 <body>
-    <div style="position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;height:140px;margin-top:-70px;text-align:center;font-family:'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;">
-        <h1 style="width:100%;background-color:#000000;margin:0;height:40px;"><img src="{% static "images/small_logo.png" %}" alt="Apprl"></h1>
+    <div style="position:fixed;top:42%;left:50%;width:400px;margin-left:-200px;height:140px;margin-top:-70px;text-align:center;font-family:'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;">
+        <div style="width:100%;background-color:#000000;margin:0;height:40px;line-height:40px;"><img style="vertical-align:middle;" src="{% static "images/small_logo.png" %}" alt="Apprl"></div>
         <div style="width:100%;border:1px solid #eee;height:100px;line-height:100px;box-sizing:border-box;font-weight:bold;">
-            Redirecting you to <a style="color:#00000;" href="{{ redirect_url }}">{{ store }}</a> <img style="padding-left:10px;" src="{% static "images/loading_white.gif" %}">
+            <a href="{{ redirect_url }}">{% blocktrans %}Redirecting you to {{store}}{% endblocktrans %}</a> <img style="padding-left:10px;" src="{% static "images/loading_white.gif" %}">
         </div>
     </div>
     <script type="text/javascript">
@@ -44,8 +44,7 @@
             setTimeout(redirect, 1000);
         }
         function redirect() {
-            console.log('redirect', '{{ redirect_url }}');
-            //window.location.replace('{{ redirect_url }}');
+            window.location.replace('{{ redirect_url|safe }}');
         }
         window.onload = track;
     </script>
