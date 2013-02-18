@@ -10,6 +10,12 @@ def buy_url(product_id, vendor, target_user_id=0, page='Default'):
     """
     Append custom SID to every buy URL.
     """
+    if target_user_id == '':
+        target_user_id = 0
+
+    if page == '':
+        page = 'Default'
+
     return reverse('product-redirect', args=(product_id, page, target_user_id))
 
 

@@ -70,6 +70,7 @@ def likes(request, profile, form, page=0, gender=None):
 
     if request.is_ajax():
         return render(request, 'profile/fragments/likes.html', {
+                'profile': profile,
                 'pagination': pagination,
                 'current_page': paged_result,
         })
