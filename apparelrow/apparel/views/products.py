@@ -342,7 +342,7 @@ class ProductList(View):
 
             products = get_model('apparel', 'Product').objects.filter(pk__in=product_ids)
             for product in products:
-                product_urls[str(product.pk)] = request.build_absolute_uri('%s?i=%s&u=%s&s=%s&p=%s' % (reverse('product-click-count'), product.pk, urlquote(vendor_buy_url(product.pk, product.default_vendor, sid, 'Ext-Site')), sid, 'Ext-Site'))
+                product_urls[str(product.pk)] = request.build_absolute_uri(reverse('product-redirect', args=(product.pk, 'Ext-Site', sid)))
 
         # Language currency
         language_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)

@@ -13,6 +13,7 @@ from django.db import IntegrityError
 from django.db.models import Q, Max, Min, Count, Sum, connection, signals, get_model
 from django.template import RequestContext, loader
 from django.template.loader import get_template
+from django.template.defaultfilters import floatformat
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -20,6 +21,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
 from django.contrib.sites.models import Site
 from django.views.i18n import set_language
+from django.views.decorators.http import require_POST
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from hanssonlarsson.django.exporter import json as special_json
@@ -38,7 +40,7 @@ from profile.notifications import process_like_look_created
 from apparel.tasks import facebook_push_graph, facebook_pull_graph
 
 from statistics.tasks import product_buy_click
-from statistics.utils import get_client_referer, get_client_ip
+from statistics.utils import get_client_referer, get_client_ip, get_user_agent
 
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 6
@@ -47,7 +49,7 @@ LOOK_PAGE_SIZE = 6
 # Redirects
 #
 
-def product_redirect(request, pk):
+def product_redirect_by_id(request, pk):
     """
     Makes it
     """
@@ -298,12 +300,35 @@ def product_short_link(request, short_link):
     except ShortProductLink.DoesNotExist:
         raise Http404
 
-    product_buy_click.delay(short_product.product.pk, get_client_referer(request), get_client_ip(request), short_product.user_id, 'Ext-Link')
+    return HttpResponsePermanentRedirect(reverse('product-redirect', args=(short_product.product_id, 'Ext-Link', short_product.user_id)))
 
-    return HttpResponseRedirect(vendor_buy_url(short_product.product.pk,
-                                               short_product.product.default_vendor,
-                                               short_product.user_id,
-                                               'Ext-Link'))
+
+def product_redirect(request, pk, page='Default', sid=0):
+    """
+    Display a html redirect page for product pk and page/sid combo.
+    """
+    product = get_object_or_404(Product, pk=pk, published=True)
+
+    url = vendor_buy_url(pk, product.default_vendor, sid, page)
+    data = {'id': product.pk,
+            'redirect_url': url,
+            'store': product.default_vendor.vendor.name,
+            'price': floatformat(product.default_vendor.lowest_price_in_sek, 0),
+            'slug': product.slug,
+            'page': page,
+            'sid': sid}
+
+    return render(request, 'redirect.html', data)
+
+
+@require_POST
+def product_track(request, pk, page='Default', sid=0):
+    """
+    Fires a product_buy_click task when called.
+    """
+    product_buy_click.delay(pk, '%s\n%s' % (request.POST.get('referer', ''), get_client_referer(request)), get_client_ip(request), get_user_agent(request), sid, page)
+
+    return HttpResponse()
 
 
 def product_popup(request):

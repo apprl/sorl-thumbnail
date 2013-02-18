@@ -8,6 +8,7 @@
 {% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
 
 {% block extra-styles %}
+    {% if request.GET %}<link rel="canonical" href="{{ product_full_url }}">{% endif %}
     {% cache CACHE_TIMEOUT product_detail_metaextra object.id LANGUAGE_CODE %}
     <link rel="pingback" href="{% get_pingback_url %}" />
     {% get_trackback_rdf_for object %}

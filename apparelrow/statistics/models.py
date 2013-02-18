@@ -39,15 +39,16 @@ class ProductClick(models.Model):
         ordering = ['-click_count']
 
 
-class ProductStats(models.Model):
+class ProductStat(models.Model):
     action = models.CharField(max_length=50)
     product = models.CharField(max_length=100)
     vendor = models.CharField(max_length=100)
     price = models.IntegerField()
-    user_id = models.IntegerField(default=0)
-    page = models.CharField(max_length=50)
+    user_id = models.IntegerField(default=0, null=True, blank=True)
+    page = models.CharField(max_length=50, null=True, blank=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False)
     referer = models.TextField(null=True, blank=True)
+    user_agent = models.TextField(null=True, blank=True)
     ip = models.GenericIPAddressField()
 
     class Meta:

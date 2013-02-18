@@ -413,7 +413,6 @@ CELERY_DEFAULT_EXCHANGE_TYPE = 'direct'
 CELERY_DEFAULT_ROUTING_KEY = 'standard'
 CELERY_CREATE_MISSING_QUEUES = True
 CELERY_QUEUES = {
-    'clicks': {'exchange': 'clicks', 'exchange_type': 'direct', 'routing_key': 'increment_click'},
     'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
 }
 CELERY_ROUTES = ({
@@ -431,7 +430,6 @@ CELERY_ROUTES = ({
     'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
     'apparel.facebook_push_graph': {'queue': 'standard'},
     'apparel.facebook_pull_graph': {'queue': 'standard'},
-    'statistics.tasks.increment_click': {'queue': 'standard'},
     'apparel.tasks.generate_brand_list_template': {'queue': 'standard'},
 },)
 

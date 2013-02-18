@@ -47,13 +47,18 @@ urlpatterns = patterns('',
 
     # Products
     url(r'^products/$', ProductList.as_view(), name='product_list'),
-    (r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect'),
+    url(r'^products/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect_by_id', name='product-redirect-by-id'),
     url(r'^products/(?P<pk>[\wd]+)/popup/$', 'apparel.views.products.product_detail_popup', name='product-detail-popup'),
     url(r'^products/(?P<pk>[\d]+)/(?P<action>like|unlike)/?$', 'apparel.views.product_action', name='product-action'),
     (r'^products/(?P<slug>[\w-]+)/$', 'apparel.views.product_detail'),
     url(r'^products/(?P<slug>[\w-]+)/short/$', 'apparel.views.product_generate_short_link', name='product-generate-short-link'),
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparel.views.look_list', name='product-look-list'),
     (r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparel.views.product_like'),
+
+    # Track product
+    url(r'^redirect/(?P<pk>[\d]+)/$', 'apparel.views.product_redirect', name='product-redirect'),
+    url(r'^redirect/(?P<pk>[\d]+)/(?P<page>[\w-]+)/(?P<sid>[\d]+)/$', 'apparel.views.product_redirect', name='product-redirect'),
+    url(r'^track/(?P<pk>[\d]+)/(?P<page>[\w-]+)/(?P<sid>[\d]+)/$', 'apparel.views.product_track', name='product-track'),
 
     # Short product link
     url(r'^p/(?P<short_link>[\w]+)/$', 'apparel.views.product_short_link', name='product-short-link'),

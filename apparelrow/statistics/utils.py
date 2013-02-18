@@ -13,3 +13,6 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
 
     return ip
+
+def get_user_agent(request):
+    return request.META.get('HTTP_USER_AGENT', '')
