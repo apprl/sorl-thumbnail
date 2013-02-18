@@ -36,7 +36,7 @@
             {% endif %}
             <div class="vendor_button">
                 {% if product.default_vendor and product.default_vendor.availability != 0 %}
-                <a{% if external %} target="_blank"{% endif %} class="btn btn-upper btn-block btn-look-tooltip {% if external %}btn-buy-external{% else %}btn-positive btn-buy{% endif %}" href="{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}" data-sid="{% get_sid owner.pk 'Ext-Look' %}" data-slug="{{ product.slug }}" data-vendor="{{ product.default_vendor.vendor }}" data-price="{{ product.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+                <a{% if external %} target="_blank"{% endif %} class="btn btn-upper btn-block btn-look-tooltip {% if external %}btn-buy-external{% else %}btn-positive btn-buy{% endif %}" href="{% if external %}{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}{% else %}{% buy_url product.id product.default_vendor owner.pk 'Look' %}{% endif %}" data-sid="{% get_sid owner.pk 'Ext-Look' %}" data-slug="{{ product.slug }}" data-vendor="{{ product.default_vendor.vendor }}" data-price="{{ product.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
                 {% else %}
                 <a{% if external %} target="_blank"{% endif %} href="{% internal_referral_url product.get_absolute_url owner.pk %}" class="btn btn-upper btn-block btn-look-tooltip">{% trans "Sold out" %}</a>
                 {% endif %}
