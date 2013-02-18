@@ -36,7 +36,7 @@
         ]);
         clicksData.sort(0);
         var clicksChart = new google.visualization.LineChart(document.getElementById('clicks_chart'));
-        clicksChart.draw(clicksData, {legend: {position: 'none'}});
+        clicksChart.draw(clicksData, {legend: {position: 'none'}, colors: ['#c63310']});
       }
         $(document).ready(function() {
             $('.chart-menu select').change(function() {
