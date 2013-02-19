@@ -215,6 +215,7 @@ STATICSITEMAPS_ROOT_SITEMAP = 'apparelrow.sitemaps.sitemaps'
 STATICSITEMAPS_ROOT_DIR = os.path.join(PROJECT_ROOT, 'sitemaps')
 STATICSITEMAPS_USE_GZIP = False
 STATICSITEMAPS_PING_GOOGLE = False
+STATICSITEMAPS_REFRESH_AFTER = 60 * 8 # 8 hours
 
 # - PIPELINE SETTINGS -
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
@@ -427,6 +428,7 @@ CELERY_QUEUES = {
 CELERY_ROUTES = ({
     'apparel.tasks.ProcessPopularityTask': {'queue': 'importer'},
     'apparel.tasks.ProcessLookPopularity': {'queue': 'importer'},
+    'static_sitemaps.tasks.GenerateSitemap': {'queue': 'importer'},
     'beta.tasks.send_email_task': {'queue': 'standard'},
     'profile.notifications.process_comment_look_comment': {'queue': 'standard'},
     'profile.notifications.process_comment_look_created': {'queue': 'standard'},
