@@ -829,12 +829,22 @@ body.look-list
     border: 0
 
 .look-footer
+  &.look-footer-large
+    width: 694px
+  &.look-footer-medium
+    width: 450px
   > h3, p
     text-align: center
   > h3
     margin-top: 6px
     font-weight: bold
     font-size: 1.273em
+    a
+      width: 100%
+      overflow: hidden
+      display: inline-block
+      text-overflow: ellipsis
+      white-space: nowrap
   > p
     margin-top: 3px
     font-size: 1.182em

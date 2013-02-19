@@ -28,7 +28,7 @@
             <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url dialog-like-look %}" data-like-url="{% url apparel.views.look_like object.slug 'like' %}" data-unlike-url="{% url apparel.views.look_like object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
         {% endif %}
     </div>
-    <div class="look-footer">
+    <div class="look-footer look-footer-medium">
         <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
         <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>
         <div class="stats">
