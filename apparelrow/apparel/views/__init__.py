@@ -471,7 +471,7 @@ def look_like(request, slug, action):
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
-def brand_list(request, gender=None, popular=False):
+def brand_list(request, gender=None):
     """
     List all brands.
     """
@@ -490,7 +490,6 @@ def brand_list(request, gender=None, popular=False):
     response = render_to_response('apparel/brand_list.html', {
                 'popular_brands': popular_brands,
                 'popular_products': popular_products,
-                'popular': popular,
                 'next': request.get_full_path(),
                 'APPAREL_GENDER': gender
             }, context_instance=RequestContext(request))

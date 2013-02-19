@@ -12,9 +12,9 @@ class ViewSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        return ['brand-list-men', 'brand-list-women', 'brand-list-popular-men', 'brand-list-popular-women',
-                'look-list-men', 'look-list-women', 'popular-look-list', 'shop-men', 'shop-women',
-                'user-list-men', 'user-list-women', 'user-list-popular-men', 'user-list-popular-women']
+        return ['brand-list-men', 'brand-list-women', 'look-list-men', 'look-list-women',
+                'popular-look-list', 'shop-men', 'shop-women', 'user-list-men',
+                'user-list-women', 'user-list-popular-men', 'user-list-popular-women']
 
     def location(self, item):
         return reverse(item)
