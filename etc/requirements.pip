@@ -39,3 +39,4 @@ xmltodict==0.4.1
 suds==0.4
 fuzzywuzzy==0.1
 python-dateutil==2.1
+django-static-sitemaps==1.5.1
