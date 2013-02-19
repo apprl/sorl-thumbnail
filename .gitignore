@@ -11,6 +11,9 @@ settings_local.py
 /apparelrow/media/styles/widget.css
 /apparelrow/media/styles/beta.css
 
+# generated sitemap
+/apparelrow/sitemaps/sitemap*
+
 # django-static
 /apparelrow/media/js/apparel.*.js
 /apparelrow/media/js/browse.*.js

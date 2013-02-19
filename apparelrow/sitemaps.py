@@ -1,8 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.contrib.sitemaps import Sitemap, FlatPageSitemap, GenericSitemap
-
-from apparel.models import Product, Look
-from profile.models import ApparelProfile
+from django.db.models import get_model
 
 class LimitGenericSitemap(GenericSitemap):
     limit = 500
@@ -19,27 +17,9 @@ class ViewSitemap(Sitemap):
     def location(self, item):
         return reverse(item)
 
-class UserSitemap(Sitemap):
-    changefreq = 'daily'
-    priority = 0.5
-
-    def items(self):
-        return ApparelProfile.objects.filter(user__is_active=True)
-
-    def location(self, item):
-        return reverse('profile-likes', args=[item.slug])
-        #return [
-            #reverse('profile-likes', args=[item.slug]),
-            #reverse('profile-updates', args=[item.slug]),
-            #reverse('profile-looks', args=[item.slug]),
-            #reverse('profile-followers', args=[item.slug]),
-            #reverse('profile-following', args=[item.slug]),
-        #]
-
-
-product_info = {'queryset': Product.published_objects.order_by('-modified'), 'date_field': 'modified'}
-look_info = {'queryset': Look.published_objects.order_by('-modified'), 'date_field': 'modified'}
-profile_info = {'queryset': ApparelProfile.objects.filter(user__is_active=True)}
+product_info = {'queryset': get_model('apparel', 'Product').published_objects.order_by('-modified'), 'date_field': 'modified'}
+look_info = {'queryset': get_model('apparel', 'Look').published_objects.order_by('-modified'), 'date_field': 'modified'}
+profile_info = {'queryset': get_model('profile', 'ApparelProfile').objects.filter(user__is_active=True)}
 
 sitemaps = {
     'flatpages': FlatPageSitemap,
