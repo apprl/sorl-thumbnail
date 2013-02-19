@@ -87,6 +87,7 @@ STATIC_URL = 'http://s.apprl.com/'
 # Additional directories which hold static files
 STATICFILES_DIRS = (
     ('', os.path.join(PROJECT_ROOT, 'static')),
+    ('', os.path.join(PROJECT_ROOT, 'sitemaps')),
 )
 
 # List of finder classes that know how to find static files in
@@ -189,6 +190,7 @@ INSTALLED_APPS = (
     'jsmin',
     'pipeline',
     'storages',
+    'static_sitemaps',
 
     # Internal
     'apparel',              # Internal: Product display module
@@ -206,6 +208,13 @@ INSTALLED_APPS = (
 )
 
 COMMENTS_APP = 'apparel_comments'
+
+# - STATIC SITEMAP -
+STATICSITEMAPS_DOMAIN = 'apprl.com'
+STATICSITEMAPS_ROOT_SITEMAP = 'apparelrow.sitemaps.sitemaps'
+STATICSITEMAPS_ROOT_DIR = os.path.join(PROJECT_ROOT, 'sitemaps')
+STATICSITEMAPS_USE_GZIP = False
+STATICSITEMAPS_PING_GOOGLE = False
 
 # - PIPELINE SETTINGS -
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'

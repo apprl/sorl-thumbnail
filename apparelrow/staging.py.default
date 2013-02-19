@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Django settings for production server 
+# Django settings for production server
 
 import os.path
 import logging
@@ -26,6 +26,8 @@ APPAREL_DECOMPRESS_UTILS = {
     'gzip': '/bin/gunzip',
     'zip':  '/bin/zip',
 }
+
+STATICSITEMAPS_DOMAIN = 'staging1.apprl.com'
 
 CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_MIDDLEWARE_KEY_PREFIX = 'ar'
@@ -56,6 +58,6 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 import djcelery
 djcelery.setup_loader()
 
-# --- Application wide init code goes here. 
+# --- Application wide init code goes here.
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated

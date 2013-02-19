@@ -3,6 +3,7 @@ import logging
 import re
 import json
 import datetime
+import os.path
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
@@ -44,6 +45,18 @@ from statistics.utils import get_client_referer, get_client_ip, get_user_agent
 
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 6
+
+
+def test(request, section):
+    path = os.path.join(settings.PROJECT_ROOT, 'sitemaps', 'sitemap-%s.xml' % (section,))
+    if not os.path.exists(path):
+        raise Http404()
+
+    f = open(path)
+    content = f.readlines()
+    f.close()
+    return HttpResponse(content, mimetype='application/xml')
+
 
 #
 # Redirects

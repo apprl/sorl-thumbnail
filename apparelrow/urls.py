@@ -38,13 +38,15 @@ urlpatterns = patterns('',
     (r'^s/', include('statistics.urls')),
     url(r'^facebook/login', 'profile.views.login', name='facebook_login'),
     (r'^tinymce/', include('tinymce.urls')),
+    url(r'^sitemap\.xml', include('static_sitemaps.urls')),
+    url(r'^sitemap-(?P<section>.+)\.xml$', 'apparel.views.test'),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += patterns('django.contrib.flatpages.views',
     url(r'^(?P<url>about/.*)$', 'flatpage', name='about'),
 )
 
-urlpatterns += patterns('django.contrib.sitemaps.views',
-    (r'^sitemap\.xml$', 'index', {'sitemaps': sitemaps}),
-    (r'^sitemap-(?P<section>.+)\.xml$', 'sitemap', {'sitemaps': sitemaps}),
-)
+#urlpatterns += patterns('django.contrib.sitemaps.views',
+    #(r'^sitemap\.xml$', 'index', {'sitemaps': sitemaps}),
+    #(r'^sitemap-(?P<section>.+)\.xml$', 'sitemap', {'sitemaps': sitemaps}),
+#)
