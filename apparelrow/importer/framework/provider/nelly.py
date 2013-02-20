@@ -6,7 +6,7 @@ class NellyMapper(TradeDoublerMapper):
         image = self.record.get('extraImageProductLarge', '') or self.record.get('imageUrl', '')
         large_image = image.replace('productLarge', 'productPress')
 
-        return [(large_image, self.IMAGE_LARGE), (image, self.IMAGE_SMALL)] 
+        return [(large_image, self.IMAGE_LARGE), (image, self.IMAGE_SMALL)]
 
 class Provider(TradeDoublerProvider):
     def __init__(self, *args, **kwargs):
