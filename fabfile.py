@@ -161,6 +161,7 @@ def deploy(param='', snapshot='master'):
     build_styles_and_scripts()
     migrate(param)
     build_brand_list()
+    copy_sitemap()
     symlink_current_release()
     restart_celeryd()
     restart_django()
@@ -291,6 +292,16 @@ def symlink_current_release():
     with cd(env.path):
         run('rm releases/previous; mv releases/current releases/previous;', pty=True)
         run('ln -s %(release)s releases/current' % env, pty=True)
+
+def copy_sitemap():
+    """Copy sitemap from previous release to current"""
+    require('release', provided_by=[deploy, setup])
+    with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
+        sudo('chown -R %(run_user)s:%(run_group)s ./sitemaps' % env, pty=True)
+
+    # Copy sitemap files from current before it is symlinked
+    with cd('%(path)s/releases/' % env):
+        sudo('cp ./current/%(project_name)s/sitemaps/* ./%(release)s/%(project_name)s/sitemaps/' % env, pty=True)
 
 def migrate(param=''):
     "Update the database"
