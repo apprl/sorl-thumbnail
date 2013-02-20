@@ -12,6 +12,7 @@ from django.utils.encoding import smart_str
 from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def set_query_parameter(url, param_name, param_value):
@@ -47,11 +48,15 @@ def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
     """
     sid = generate_sid(target_user_id, page)
 
-    if not vendor:
+    if not vendor or not vendor.buy_url:
         return ''
 
-    vendor_feed = vendor.vendor.vendor_feed
     url = smart_str(vendor.buy_url)
+
+    try:
+        vendor_feed = vendor.vendor.vendor_feed
+    except ObjectDoesNotExist:
+        return url
 
     # Tradedoubler
     if vendor_feed.provider_class == 'tradedoubler':
