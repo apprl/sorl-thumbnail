@@ -189,17 +189,26 @@ def aggregate(r, user, gender, activity):
 
 
 @task(name='activity_feed.tasks.push_activity_feed', max_retries=5, ignore_result=True)
-def push_activity_feed(activity):
+def push_activity_feed(activity, pull_first=False):
     r = redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
                           port=settings.CELERY_REDIS_PORT,
                           db=settings.FEED_REDIS_DB)
     for followers in get_model('profile', 'follow').objects.followers(activity.user):
+        if pull_first:
+            remove_aggregate(r, followers, 'M', activity)
+            remove_aggregate(r, followers, 'W', activity)
         aggregate(r, followers, 'M', activity)
         aggregate(r, followers, 'W', activity)
 
+    if pull_first:
+        remove_aggregate(r, None, 'M', activity)
+        remove_aggregate(r, None, 'W', activity)
     aggregate(r, None, 'M', activity)
     aggregate(r, None, 'W', activity)
 
+    if pull_first:
+        remove_aggregate(r, activity.user, 'M', activity)
+        remove_aggregate(r, activity.user, 'W', activity)
     aggregate(r, activity.user, 'M', activity)
     aggregate(r, activity.user, 'W', activity)
 

@@ -31,11 +31,12 @@ class ActivityManager(models.Manager):
                                                object_id=activity_object.pk,
                                                defaults={'active': True, 'gender': gender})
         if not created:
+            activity.gender = gender
             activity.active = True
             activity.save()
 
         # Start task, add to all feeds
-        push_activity_feed.delay(activity)
+        push_activity_feed.delay(activity, pull_first=True)
 
     def pull_activity(self, profile, verb, activity_object):
         content_type = ContentType.objects.get_for_model(activity_object)
