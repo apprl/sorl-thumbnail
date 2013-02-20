@@ -51,7 +51,7 @@ LOOK_PAGE_SIZE = 6
 #
 
 def sitemap_view(request, section):
-    path = os.path.join(settings.PROJECT_ROOT, 'sitemaps', 'sitemap-%s.xml' % (section,))
+    path = os.path.join(settings.PROJECT_ROOT, 'sitemaps', 'sitemap-%s.xml.gz' % (section,))
     if not os.path.exists(path):
         raise Http404()
 

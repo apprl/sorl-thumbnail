@@ -300,7 +300,7 @@ def copy_sitemap():
         sudo('chown -R %(run_user)s:%(run_group)s ./sitemaps' % env, pty=True)
 
     # Copy sitemap files from current before it is symlinked
-    with cd('%(path)s/releases/' % env):
+    with cd('%(path)s/releases/' % env), settings(warn_only=True):
         sudo('cp ./current/%(project_name)s/sitemaps/* ./%(release)s/%(project_name)s/sitemaps/' % env, pty=True)
 
 def migrate(param=''):

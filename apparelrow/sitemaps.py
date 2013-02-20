@@ -3,7 +3,7 @@ from django.contrib.sitemaps import Sitemap, FlatPageSitemap, GenericSitemap
 from django.db.models import get_model
 
 class LimitGenericSitemap(GenericSitemap):
-    limit = 500
+    limit = 5000
 
 class ViewSitemap(Sitemap):
     changefreq = 'daily'
