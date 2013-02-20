@@ -46,8 +46,11 @@ from statistics.utils import get_client_referer, get_client_ip, get_user_agent
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 6
 
+#
+# Sitemap
+#
 
-def test(request, section):
+def sitemap_view(request, section):
     path = os.path.join(settings.PROJECT_ROOT, 'sitemaps', 'sitemap-%s.xml' % (section,))
     if not os.path.exists(path):
         raise Http404()
