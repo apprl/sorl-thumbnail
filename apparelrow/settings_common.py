@@ -87,7 +87,6 @@ STATIC_URL = 'http://s.apprl.com/'
 # Additional directories which hold static files
 STATICFILES_DIRS = (
     ('', os.path.join(PROJECT_ROOT, 'static')),
-    ('', os.path.join(PROJECT_ROOT, 'sitemaps')),
 )
 
 # List of finder classes that know how to find static files in
