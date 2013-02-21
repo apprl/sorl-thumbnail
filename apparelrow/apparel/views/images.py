@@ -13,7 +13,6 @@ class TemporaryImageView(View):
         return JSONResponse([])
 
     def post(self, request, *args, **kwargs):
-        print 'here'
         f = self.request.FILES.get('image_file')
         if not f:
             return HttpResponse('')

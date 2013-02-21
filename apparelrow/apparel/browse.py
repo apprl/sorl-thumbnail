@@ -206,7 +206,6 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     stores = []
     for i, value in enumerate(facet['store']):
         if i % 2 == 0:
-            print value
             split = value.split('|')
             stores.append((int(split[1]), split[0]))
 
