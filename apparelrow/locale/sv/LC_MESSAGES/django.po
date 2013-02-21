@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 19:03+0100\n"
+"POT-Creation-Date: 2013-02-21 09:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr ""
 msgid "Swe (SEK)"
 msgstr ""
 
-#: activity_feed/models.py:71 activity_feed/models.py:120
+#: activity_feed/models.py:72 activity_feed/models.py:121
 #: apparel/models.py:375 apparel/models.py:696 apparel/models.py:926
 #: apparel/models.py:1051 beta/models.py:7 beta/models.py:15
 #: dashboard/models.py:58 dashboard/models.py:77 dashboard/models.py:111
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: activity_feed/models.py:72 apparel/models.py:229 apparel/models.py:376
+#: activity_feed/models.py:73 apparel/models.py:229 apparel/models.py:376
 #: apparel/models.py:443 apparel/models.py:494 apparel/models.py:697
 #: apparel/models.py:927 dashboard/models.py:59 dashboard/models.py:78
 #: profile/models.py:377
@@ -381,11 +381,11 @@ msgstr ""
 msgid "ago"
 msgstr "sedan"
 
-#: apparel/views/__init__.py:141
+#: apparel/views/__init__.py:157
 msgid "Check your browser settings."
 msgstr ""
 
-#: apparel/views/__init__.py:148
+#: apparel/views/__init__.py:164
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
@@ -1620,6 +1620,10 @@ msgstr "Tillbaka"
 #: templates/apparel/product_detail.html:141
 msgid "Selected by"
 msgstr "Utvald av"
+
+#: templates/apparel/product_detail.html:146
+msgid "Go to blog »"
+msgstr "Till bloggen »"
 
 #: templates/apparel/product_detail.html:154
 msgid "Be the first one to like this product!"
