@@ -66,10 +66,11 @@
 
             FB.login(function(response) {
                 if(response.authResponse) {
-                    data = {uid: response.authResponse.userID,
-                            access_token: response.authResponse.accessToken};
+                    data = {uid: response.authResponse.userID, access_token: response.authResponse.accessToken};
                     $.post('/facebook/login', data, function(response) {
-                        callback();
+                        if(response) {
+                            callback(response.next);
+                        }
                     });
                 }
             }, {scope: facebook_scope});
@@ -123,7 +124,13 @@
             });
 
             jQuery('#nav-user .btn-facebook').on('click', function() {
-                login_function(function() { window.location.reload(false); });
+                login_function(function(next) {
+                    if(next) {
+                        window.location.replace(next);
+                    } else {
+                        window.location.reload(false);
+                    }
+                });
                 return false;
             });
         });
