@@ -286,6 +286,7 @@
             <ul>
                 <li><h3>{% trans "Follow us" %}</h3></li>
                 <li><a target="_blank" href="http://www.facebook.com/apprl">{% trans "Facebook" %}</a></li>
+                <li><a target="_blank" href="http://pinterest.com/apprl/">{% trans "Pinterest" %}</a></li>
                 <li><a target="_blank" href="{% url newsletter-redirect %}">{% trans "E-mail newsletter" %}</a></li>
             </ul>
             <ul>
@@ -297,7 +298,14 @@
                 <li><a href="{% url dashboard %}">{% trans "Bloggers" %}</a></li>
             </ul>
             <div class="footer-last">
-                <div class="fb-like footer-like" data-href="https://facebook.com/apprl/" data-send="false" data-width="240" data-show-faces="false"></div>
+                <div class="footer-social">
+                    <div>
+                        <div class="fb-like" data-href="https://facebook.com/apprl/" data-layout="button_count" data-send="false" data-width="100" data-show-faces="false"></div>
+                    </div>
+                    <div class="last">
+                        <a data-pin-do="buttonFollow" href="http://pinterest.com/apprl/">APPRL</a>
+                    </div>
+                </div>
                 {% if not request.user.get_profile.is_partner %}
                 <a href="{% url dashboard %}" class="btn btn-block btn-upper btn-footer-partner">{% trans "Become a partner blogger" %}</a>
                 {% endif %}
@@ -374,6 +382,8 @@
 {% include 'mouseflow.html' %}
 
 {% block body-scripts %}{% endblock body-scripts %}
+
+<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
 
 </body>
 </html>
