@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-23 15:39+0100\n"
+"POT-Creation-Date: 2013-02-21 15:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,76 +17,76 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: static/js/apparel.js:396
+#: static/js/apparel.js:398
 msgid "Like products to save it to your profile and get sale alerts"
 msgstr ""
 "Gilla en produkt för att spara den till din profil och få ett meddelande när "
 "priset sänks"
 
-#: static/js/apparel.js:434
+#: static/js/apparel.js:436
 msgid "Buy"
 msgstr "Köp"
 
-#: static/js/apparel.js:815
+#: static/js/apparel.js:817
 msgid "Found %(count)s product"
 msgid_plural "Found %(count)s products"
 msgstr[0] "%(count)s träff bland produkter"
 msgstr[1] "%(count)s träffar bland produkter"
 
-#: static/js/apparel.js:816
+#: static/js/apparel.js:818
 msgid "Found %(count)s look"
 msgid_plural "Found %(count)s looks"
 msgstr[0] "%(count)s träff bland looks"
 msgstr[1] "%(count)s träffar bland looks"
 
-#: static/js/apparel.js:817
+#: static/js/apparel.js:819
 msgid "Found %(count)s matching brand"
 msgid_plural "Found %(count)s matching brands"
 msgstr[0] "%(count)s träff bland varumärken"
 msgstr[1] "%(count)s träffar bland varumärken"
 
-#: static/js/apparel.js:818
-msgid "Found %(count)s matching profile"
-msgid_plural "Found %(count)s matching profiles"
-msgstr[0] "%(count)s träff bland profiler"
-msgstr[1] "%(count)s träffar bland profiler"
+#: static/js/apparel.js:820
+msgid "Found %(count)s matching member"
+msgid_plural "Found %(count)s matching members"
+msgstr[0] "%(count)s träff bland medlemmar"
+msgstr[1] "%(count)s träffar bland medlemmar"
 
-#: static/js/apparel.js:819
+#: static/js/apparel.js:821
 msgid "Show %(count)s product"
 msgid_plural "Show all %(count)s products"
 msgstr[0] "Visa %(count)s produkter"
 msgstr[1] "Visa alla %(count)s produkter"
 
-#: static/js/apparel.js:820
+#: static/js/apparel.js:822
 msgid "Show %(count)s look"
 msgid_plural "Show all %(count)s looks"
 msgstr[0] "Visa %(count)s look"
 msgstr[1] "Visa alla %(count)s looks"
 
-#: static/js/apparel.js:821
+#: static/js/apparel.js:823
 msgid "Show %(count)s matching brand"
 msgid_plural "Show all %(count)s matching brands"
 msgstr[0] "Visa %(count)s varumärke"
 msgstr[1] "Visa alla %(count)s varumärken"
 
-#: static/js/apparel.js:822
-msgid "Show %(count)s matching profile"
-msgid_plural "Show all %(count)s matching profiles"
-msgstr[0] "Visa %(count)s profil"
-msgstr[1] "Visa alla %(count)s profiler"
+#: static/js/apparel.js:824
+msgid "Show %(count)s matching member"
+msgid_plural "Show all %(count)s matching members"
+msgstr[0] "Visa %(count)s medlem"
+msgstr[1] "Visa alla %(count)s medlemmar"
 
-#: static/js/apparel.js:823 static/js/browse.js:556
+#: static/js/apparel.js:825 static/js/browse.js:628
 #, c-format
 msgid "%s product"
 msgid_plural "%s products"
 msgstr[0] "%s produkt"
 msgstr[1] "%s produkter"
 
-#: static/js/browse.js:540
+#: static/js/browse.js:612
 msgid "SOLD OUT"
 msgstr "SLUT"
 
-#: static/js/browse.js:548
+#: static/js/browse.js:620
 #, c-format
 msgid "%s product on sale"
 msgid_plural "%s products on sale"
@@ -125,10 +125,10 @@ msgstr "Avbryt look publicering?"
 msgid "Save draft"
 msgstr "Spara utkast"
 
-#: static/js/app/views/filter_product_category.js:72
+#: static/js/app/views/filter_product_category.js:76
 #: static/js/app/views/filter_product_color.js:78
 #: static/js/app/views/filter_product_price.js:68
-#: static/js/app/views/filter_product_subcategory.js:72
+#: static/js/app/views/filter_product_subcategory.js:76
 msgid "Reset"
 msgstr "Återställ"
 
@@ -136,10 +136,20 @@ msgstr "Återställ"
 msgid "Publish look"
 msgstr "Publicera look"
 
-#: static/js/app/views/look_edit_popup.js:82
+#: static/js/app/views/look_edit_popup.js:85
 msgid "Product info"
 msgstr "Produkt info"
 
-#: static/js/app/views/look_edit_popup.js:101
+#: static/js/app/views/look_edit_popup.js:104
 msgid "Add product"
 msgstr "Lägg till produkt"
+
+#~ msgid "Found %(count)s matching profile"
+#~ msgid_plural "Found %(count)s matching profiles"
+#~ msgstr[0] "%(count)s träff bland profiler"
+#~ msgstr[1] "%(count)s träffar bland profiler"
+
+#~ msgid "Show %(count)s matching profile"
+#~ msgid_plural "Show all %(count)s matching profiles"
+#~ msgstr[0] "Visa %(count)s profil"
+#~ msgstr[1] "Visa alla %(count)s profiler"

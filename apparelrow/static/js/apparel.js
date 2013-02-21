@@ -718,10 +718,10 @@ ApparelSearch = {
             },
             selector: '#search-result-profiles',
             text: {
-                header_plural: 'Found %(count)s matching profiles',
-                header_singular: 'Found %(count)s matching profile',
-                button_plural: 'Show all %(count)s matching profiles',
-                button_singular: 'Show %(count)s matching profile'
+                header_plural: 'Found %(count)s matching members',
+                header_singular: 'Found %(count)s matching member',
+                button_plural: 'Show all %(count)s matching members',
+                button_singular: 'Show %(count)s matching member'
             }
         });
 
@@ -817,11 +817,11 @@ ApparelSearch = {
         ngettext('Found %(count)s product', 'Found %(count)s products', 0);
         ngettext('Found %(count)s look', 'Found %(count)s looks', 0);
         ngettext('Found %(count)s matching brand', 'Found %(count)s matching brands', 0);
-        ngettext('Found %(count)s matching profile', 'Found %(count)s matching profiles', 0);
+        ngettext('Found %(count)s matching member', 'Found %(count)s matching members', 0);
         ngettext('Show %(count)s product', 'Show all %(count)s products', 0);
         ngettext('Show %(count)s look', 'Show all %(count)s looks', 0);
         ngettext('Show %(count)s matching brand', 'Show all %(count)s matching brands', 0);
-        ngettext('Show %(count)s matching profile', 'Show all %(count)s matching profiles', 0);
+        ngettext('Show %(count)s matching member', 'Show all %(count)s matching members', 0);
         ngettext('%s product', '%s products', 0);
     },
 

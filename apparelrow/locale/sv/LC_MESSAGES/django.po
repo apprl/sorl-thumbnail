@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-21 09:12+0100\n"
+"POT-Creation-Date: 2013-02-21 11:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -842,8 +842,8 @@ msgid "Show all manufacturers"
 msgstr "Visa alla varumärken"
 
 #: templates/base.html:214
-msgid "Matching profiles"
-msgstr "Träffar bland profiler"
+msgid "Matching members"
+msgstr "Träffar bland medlemmar"
 
 #: templates/base.html:232
 msgid "Welcome to Social Shopping!"
@@ -3264,3 +3264,6 @@ msgstr "Logga in med ditt Facebook ID"
 #: templates/registration/registration_form.html:14
 msgid "... Or create a new account"
 msgstr "... Eller skapa ett nytt konto"
+
+#~ msgid "Matching profiles"
+#~ msgstr "Träffar bland profiler"
