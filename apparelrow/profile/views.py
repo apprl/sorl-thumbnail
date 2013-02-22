@@ -11,6 +11,7 @@ from django.contrib import auth
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -213,6 +214,19 @@ def following(request, profile, form, page=0):
 #
 # Settings
 #
+
+@login_required
+def settings_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+
+        return HttpResponseRedirect(reverse('profile.views.settings_password'))
+
+    form = PasswordChangeForm(request.user)
+
+    return render(request, 'profile/settings_password.html', {'form': form})
 
 @login_required
 def settings_notification(request):

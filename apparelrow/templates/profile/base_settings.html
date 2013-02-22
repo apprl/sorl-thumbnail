@@ -23,6 +23,7 @@
             {% else %}
             <li class="last"><a href="{% url 'profile.views.settings_facebook' %}">{% trans "Facebook" %}</a></li>
             {% endif %}
+            <li class="last"><a href="{% url profile.views.settings_password %}">{% trans "Password" %}</a></li>
         </ul>
     </div>
     <div id="content" class="settings-content">
