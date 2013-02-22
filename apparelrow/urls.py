@@ -20,10 +20,11 @@ urlpatterns = patterns('',
 #    url(r'^account/signup/$', signup_view, name="acct_signup"),
 
     (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', { 'domain': 'djangojs', 'packages': ('apparelrow',),}),
-    # FIXME: Is it possible to include this in some other way? All I want to do
-    # is to pass the next_page attribute (and not do it via query)
+
     url(r'^accounts/login/$', auth_views.login, {'template_name': 'registration/login.html'}, name='auth_login'),
     url(r'^accounts/logout/$', auth_views.logout, {'template_name': 'registration/logout.html'}, name='auth_logout'),
+    url(r'^accounts/register/$', 'profile.views.register', name='auth_register'),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
 
     (r'^profile/', include('profile.urls')),
 

@@ -1,16 +1,18 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n apparel_extras %}
 
-{% block body-classes %}one-column{% endblock body-classes %}
+{% block body-classes %}one-column accounts{% endblock body-classes %}
 {% block body %}
 
 <div id="content">
-    <h2>{% trans "Login" %}</h2>
-    {% if form.errors %}
-        <p class="errorlist">{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
-    {% endif %}
+    <h1>{% trans "Login" %}</h1>
+    {% facebook_button %}
+    <p>{% trans "Or:" %}</p>
     {% with "Login" as submit_text %}
         {% include "registration/fragments/login_form.html" %}
     {% endwith %}
+    {% if form.errors %}
+        <p class="errorlist">{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
+    {% endif %}
 </div>
 {% endblock %}

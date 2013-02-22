@@ -495,6 +495,13 @@ def login_flow_complete(request, profile):
 
 
 #
+# Register view
+#
+
+def register(request):
+    return render(request, 'registration/registration_form.html')
+
+#
 # Login view
 #
 
