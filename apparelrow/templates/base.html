@@ -115,12 +115,42 @@
                 }
             });
 
+            var panel = $('#panel');
+            var panel_offset_top = 0;
+            if(panel.length > 0) {
+                panel_offset_top = panel.offset().top + panel.height();
+            }
+            var sticky_offset_top = $('#sticky-login-bar').offset().top;
+
             jQuery('.ar_welcome').click(function() {
                 jQuery('#panel').slideToggle('slow');
                 $(this).toggleClass("active");
                 var date = new Date();
                 date.setTime(date.getTime()+(10000*24*60*60*1000));
                 document.cookie = "ar_welcome=1; expires="+date.toUTCString()+"; path=/";
+                panel_offset_top = 0;
+                sticky_offset_top = $('#sticky-login-bar').offset().top;
+            });
+
+            var sticky_calculate = function() {
+                var scroll_top = $(window).scrollTop();
+                if(scroll_top > sticky_offset_top) {
+                    $('#sticky-login-bar').css({'position': 'fixed', 'top': 0, 'left': 0});
+                } else {
+                    $('#sticky-login-bar').css({'position': 'relative'});
+                }
+
+                {% if request.path == '/' or request.path == '/all/men/' or request.path == '/all/women/' %}
+                if(scroll_top > panel_offset_top || panel_offset_top == 0) {
+                    $('#sticky-login-bar').show();
+                } else {
+                    $('#sticky-login-bar').hide();
+                }
+                {% endif %}
+            };
+            sticky_calculate();
+            $(window).scroll(function() {
+                 sticky_calculate();
             });
         });
     </script>
@@ -217,10 +247,11 @@
 
     <div id="container">
 
-        {% url 'public_feed-men' as public_feed_m %}
-        {% url 'public_feed-women' as public_feed_w %}
-        {% url 'user_feed' as user_feed %}
-        {% if not user.is_authenticated and not request.COOKIES.ar_welcome %}
+        {% url public_feed-men as public_feed_m %}
+        {% url public_feed-women as public_feed_w %}
+        {% url user_feed as user_feed %}
+        {% if not user.is_authenticated %}
+        {% if not request.COOKIES.ar_welcome %}
         {% if request.path == public_feed_m or request.path == public_feed_w or request.path == user_feed %}
         <div id="panel">
             <div id="panelwrap">
@@ -232,12 +263,12 @@
                         <li>{% trans "Follow your friends, bloggers & brands" %}</li>
                         <li>{% trans "Create & share looks on your blog" %}</li>
                     </ul>
+                    <p><a href="#">{% trans "Are you a blogger?" %}</a></p>
                 </span>
                 <a class="btn-slide ar_welcome" href="#"></a>
                 <div id="login-fb">
-                    <p class="lifc">{% blocktrans %}Life is <em>more fun</em> connected{% endblocktrans %}</p>
-                    {% apparel_facebook_button "facebook-hide.png" %}
-                    <a href="{% url 'dialog-why-facebook' %}" class="open-dialog dialog-why-facebook">{% trans "Why Facebook?" %}</a>
+                    <p class="lifc">{% trans "Follow our stylemakers, brands & bloggers" %}</p>
+                    <a class="btn btn-upper btn-large btn-positive btn-signup" href="{% url auth_register %}">{% trans "Sign up" %}</a>
                 </div>
                 <div id="ar-facepile" class="bild">
                     <div class="fb-facepile" data-max-rows="2" data-width="281" data-app-id="{{ FACEBOOK_APP_ID }}"></div>
@@ -245,6 +276,16 @@
             </div>
         </div>
         {% endif %}
+        {% endif %}
+        <div id="sticky-login-bar">
+            <div id="sticky-inner-login-bar">
+                <p>{% trans "Discover fashion from the world’s best online stores, selected by our stylemakers & blogggers." %}</p>
+                <ul>
+                    <li class="first"><a href="{% url auth_login %}">{% trans "Log in" %}</a></li>
+                    <li class="last"><a class="btn btn-upper btn-small btn-positive" href="{% url auth_register %}">{% trans "Sign up" %}</a></li>
+                </ul>
+            </div>
+        </div>
         {% endif %}
 
         <div id="inner-container">

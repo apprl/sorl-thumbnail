@@ -105,7 +105,6 @@ urlpatterns = patterns('',
     url(r'^dialog/like-product/$', 'apparel.views.dialog_like_product', name='dialog-like-product'),
     url(r'^dialog/like-look/$', 'apparel.views.dialog_like_look', name='dialog-like-look'),
     url(r'^dialog/follow-user/$', 'apparel.views.dialog_follow_user', name='dialog-follow-user'),
-    url(r'^dialog/why-facebook$', TemplateView.as_view(template_name='apparel/fragments/dialog_why_facebook.html'), name='dialog-why-facebook'),
     url(r'^dialog/user-feed/$', 'activity_feed.views.dialog_user_feed', name='dialog-user-feed'),
 
     # Embed

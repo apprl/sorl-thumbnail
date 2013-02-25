@@ -118,6 +118,39 @@ button
 
 #container
   background: $white_color
+  #sticky-login-bar
+    position: relative
+    width: 100%
+    background-color: #f6f6f6
+    z-index: 999998
+    border-bottom: 1px solid $easiest_color
+    #sticky-inner-login-bar
+      overflow: hidden
+      padding: 10px 20px
+      width: 940px
+      @media screen and (min-width: 1212px)
+        width: 940px + 232
+      @media screen and (min-width: 1444px)
+        width: 940px + 464
+      @media screen and (min-width: 1676px)
+        width: 940px + 696
+      ul, p
+        font-size: 1.2em
+      ul
+        float: right
+        li
+          display: inline
+          list-style-type: none
+          padding-right: 20px
+          &.first a
+            display: inline-block
+            line-height: 23px
+            &:hover
+              text-decoration: underline
+      p
+        display: inline-block
+        float: left
+        line-height: 23px
   #inner-container
     min-width: 940px
     width: auto
@@ -2248,6 +2281,8 @@ body.settings, body.about, body.dashboard-info
       float: left
       width: 385px
       margin: 35px 0 43px 37px
+      p
+        margin: 1em 0
     .p-row
       margin: 20px 0 0
       font-size: 1.3em
@@ -2261,22 +2296,18 @@ body.settings, body.about, body.dashboard-info
       line-height: 1em
       width: 375px
       text-transform: none
-    p
+    .lifc
       text-align: center
-#login-fb
-  background: image_url(unquote("fb-bg.png")) no-repeat top center
-  float: left
-  width: 361px
-  height: 126px
-  margin: 35px 0 0 28px
-  position: relative
-  .dialog-why-facebook
-    display: inline-block
-    position: absolute
-    right: 42px
-    bottom: 15px
-    &:hover
-      text-decoration: underline
+    .btn-signup
+      margin: 10px 15px
+      width: 331px
+    #login-fb
+      background: image_url(unquote("fb-bg.png")) no-repeat top center
+      float: left
+      width: 361px
+      height: 126px
+      margin: 35px 0 0 28px
+      position: relative
 
 .profile-login-flow
   background-color: #fff
