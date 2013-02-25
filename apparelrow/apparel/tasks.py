@@ -119,7 +119,7 @@ def update_vendor_data():
                 product.category = None
                 product.save()
 
-@periodic_task(name='apparel.tasks.generate_brand_list_template', run_every=crontab(minute='4,19,34,49'), max_retries=1, ignore_result=True)
+@periodic_task(name='apparel.tasks.generate_brand_list_template', run_every=crontab(minute='34'), max_retries=1, ignore_result=True)
 def generate_brand_list_template():
     for gender in ['M', 'W']:
         alphabet = [u'0-9'] + list(unicode(string.ascii_lowercase))
