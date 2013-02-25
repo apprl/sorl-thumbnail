@@ -22,15 +22,14 @@ from apparel.models import ProductLike, LookLike
 register = Library()
 
 @register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)
-def facebook_button(context, text=None):
+def facebook_button(context, text=None, next=None):
     """
     Facebook button templatetag.
 
     Make sure that the translation for a custom text is picked up correctly.
     """
     facebook_icon = staticfiles_storage.url('images/facebook-icon.png')
-    next = None
-    if 'next' in context:
+    if 'next' in context and next is None:
         next = context['next']
 
     if text is None:

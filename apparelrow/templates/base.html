@@ -122,17 +122,6 @@
                 date.setTime(date.getTime()+(10000*24*60*60*1000));
                 document.cookie = "ar_welcome=1; expires="+date.toUTCString()+"; path=/";
             });
-
-            jQuery('#nav-user .btn-facebook').on('click', function() {
-                login_function(function(next) {
-                    if(next) {
-                        window.location.replace(next);
-                    } else {
-                        window.location.reload(false);
-                    }
-                });
-                return false;
-            });
         });
     </script>
     {% block 'extra-scripts' %}
@@ -282,7 +271,7 @@
             <ul>
                 <li><h3>{% trans "Social" %}</h3></li>
                 {% if not user.is_authenticated %}
-                <li class="facebook">{% apparel_facebook_button "facebook-footer.png" %}</li>
+                <li><a href="{% url auth_register %}">{% trans "Sign up" %}</a></li>
                 {% endif %}
                 <li><a href="{% url 'user-list' %}">{% trans "Members" %}</a></li>
                 {% if user.is_authenticated %}

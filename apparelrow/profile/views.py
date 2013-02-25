@@ -19,7 +19,7 @@ from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
 from apparel.tasks import facebook_push_graph
 from profile.utils import get_facebook_user, get_current_user
-from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm
+from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm
 from profile.models import EmailChange, Follow, PaymentDetail
 from profile.tasks import send_email_confirm_task
 from profile.decorators import avatar_change, login_flow
@@ -513,7 +513,16 @@ def login_flow_complete(request, profile):
 #
 
 def register(request):
-    return render(request, 'registration/registration_form.html')
+    if request.method == 'POST':
+        form = RegisterForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect(reverse('profile.views.login_flow_bio'))
+    else:
+        form = RegisterForm()
+
+    return render(request, 'registration/registration_form.html', {'form': form})
 
 #
 # Login view
