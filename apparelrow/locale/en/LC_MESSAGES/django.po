@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-05 10:37+0100\n"
+"POT-Creation-Date: 2013-03-05 12:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -377,7 +377,11 @@ msgid ""
 "\"#\"."
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:291
+#: apparel/templatetags/apparel_extras.py:37
+msgid "Connect with Facebook"
+msgstr ""
+
+#: apparel/templatetags/apparel_extras.py:299
 msgid "ago"
 msgstr ""
 
@@ -963,7 +967,7 @@ msgstr ""
 
 #: templates/activity_feed/feed.html:12 templates/apparel/brand_list.html:33
 #: templates/apparel/browse.html:51
-#: templates/apparel/fragments/looks_large.html:62
+#: templates/apparel/fragments/looks_large.html:65
 #: templates/apparel/fragments/looks_medium.html:12
 #: templates/apparel/fragments/user_list.html:12
 #: templates/profile/likes.html:14
@@ -1254,11 +1258,11 @@ msgstr ""
 msgid "Do you really want to delete look"
 msgstr ""
 
-#: templates/apparel/look_detail.html:54
+#: templates/apparel/look_detail.html:54 templates/profile/looks.html:36
 msgid "Publish look"
 msgstr ""
 
-#: templates/apparel/look_detail.html:55
+#: templates/apparel/look_detail.html:55 templates/profile/looks.html:37
 msgid "Do you want to publish this look?"
 msgstr ""
 
@@ -1291,12 +1295,14 @@ msgstr ""
 #: templates/apparel/look_detail.html:136
 #: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
 #: templates/apparel/look_editor.html:135
+#: templates/apparel/fragments/looks_large.html:53
 msgid "Publish"
 msgstr ""
 
 #: templates/apparel/look_detail.html:134
 #: templates/apparel/look_detail.html:136
 #: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
+#: templates/apparel/fragments/looks_large.html:53
 msgid "Unpublish"
 msgstr ""
 
@@ -2351,6 +2357,11 @@ msgstr ""
 msgid "E-mail Address"
 msgstr ""
 
+#: templates/profile/base_settings.html:26
+#: templates/profile/settings_password.html:6
+msgid "Password"
+msgstr ""
+
 #: templates/profile/confirm_email.html:5
 #, python-format
 msgid "Hi %(username)s,"
@@ -2496,15 +2507,15 @@ msgstr ""
 msgid "You're done!"
 msgstr ""
 
-#: templates/profile/looks.html:42
+#: templates/profile/looks.html:67
 msgid "All looks that you create end up here."
 msgstr ""
 
-#: templates/profile/looks.html:43
+#: templates/profile/looks.html:68
 msgid "+ Create look!"
 msgstr ""
 
-#: templates/profile/looks.html:46
+#: templates/profile/looks.html:71
 #, python-format
 msgid "%(display_name)s has not created any looks yet."
 msgstr ""
@@ -2571,6 +2582,10 @@ msgstr ""
 
 #: templates/profile/settings_partner.html:36
 msgid "Your payment settings"
+msgstr ""
+
+#: templates/profile/settings_password.html:7
+msgid "Change your password"
 msgstr ""
 
 #: templates/profile/fragments/follow_profile.html:8
@@ -2778,6 +2793,11 @@ msgid "Login"
 msgstr ""
 
 #: templates/registration/login.html:10
+#: templates/registration/registration_form.html:10
+msgid "Or:"
+msgstr ""
+
+#: templates/registration/login.html:15
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
@@ -2818,7 +2838,6 @@ msgid "Please request a new password reset."
 msgstr ""
 
 #: templates/registration/password_reset_done.html:8
-#: templates/registration/password_reset_form.html:7
 msgid "Password reset"
 msgstr ""
 
@@ -2845,10 +2864,14 @@ msgstr ""
 msgid "Your username, in case you've forgotten:"
 msgstr ""
 
-#: templates/registration/password_reset_form.html:9
+#: templates/registration/password_reset_form.html:7
+msgid "Forgotten your password?"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:8
 msgid ""
-"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
-"instructions for setting a new one."
+"Enter your e-mail address below, and we'll e-mail instructions for setting a "
+"new one."
 msgstr ""
 
 #: templates/registration/registration_complete.html:8
@@ -2863,12 +2886,8 @@ msgid ""
 "    "
 msgstr ""
 
-#: templates/registration/registration_form.html:9
-msgid "Sign up using your Facebook ID"
-msgstr ""
-
-#: templates/registration/registration_form.html:14
-msgid "... Or create a new account"
+#: templates/registration/registration_form.html:8
+msgid "Become a member"
 msgstr ""
 
 #~ msgid "Swe"

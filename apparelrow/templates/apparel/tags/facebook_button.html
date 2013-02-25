@@ -1,9 +1,11 @@
-<form class="connect-button" name="login" method="post" action="{% url 'facebook_login' %}">
-{% csrf_token %}
-<input type="hidden" name="access_token" value="" />
-<input type="hidden" name="uid" value="" />
-{% if next %}
-    <input type="hidden" name="next" value="{{ next }}" />
-{% endif %}
-<input type="image" onclick="facebookConnect(jQuery(this.form));return false;" src="{% if button %}{{ button }}{% else %}http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_large_long.gif{% endif %}" />
+{% load i18n %}
+<form class="connect-button" name="login" method="post" action="{% url facebook_login %}">
+    {% csrf_token %}
+    <input type="hidden" name="access_token" value="" />
+    <input type="hidden" name="uid" value="" />
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+    <a class="btn btn-upper btn-facebook" href="#" onclick="facebookConnect(jQuery(this).parents('form:first'));return false;">
+        <i class="btn-facebook-icon"></i>
+        {{ text }}
+    </a>
 </form>

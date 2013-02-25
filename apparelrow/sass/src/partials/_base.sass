@@ -156,6 +156,20 @@ $font_family: "Helvetica Neue", "Helvetica", "Arial", sans-serif
     &.btn-unfollow
       background-color: #bfbfbf
 
+    // Facebook
+    &.btn-facebook
+      background-color: #3b5999
+      //line-height: 15px
+      .btn-facebook-icon
+        display: inline-block
+        width: 16px
+        height: 15px
+        line-height: 15px
+        margin-top: -1px
+        vertical-align: text-top
+        background-image: image_url("facebook-icon.png")
+        background-repeat: no-repeat
+
 
 =highlight_button($height: $button_height, $border_radius: unquote("3px"))
   +button(none, $height, $border_radius)
@@ -498,6 +512,8 @@ $color_column_offset: 1px
     margin-top: 0
   p
     padding: 5px 10px
+  .btn
+    margin: 10px
   .dialog-footer
     height: 32px
     padding: 10px

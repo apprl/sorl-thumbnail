@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-05 10:37+0100\n"
+"POT-Creation-Date: 2013-03-05 12:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -378,7 +378,11 @@ msgid ""
 "\"#\"."
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:291
+#: apparel/templatetags/apparel_extras.py:37
+msgid "Connect with Facebook"
+msgstr "Logga in med Facebook"
+
+#: apparel/templatetags/apparel_extras.py:299
 msgid "ago"
 msgstr "sedan"
 
@@ -965,7 +969,7 @@ msgstr "Inga händelser"
 
 #: templates/activity_feed/feed.html:12 templates/apparel/brand_list.html:33
 #: templates/apparel/browse.html:51
-#: templates/apparel/fragments/looks_large.html:62
+#: templates/apparel/fragments/looks_large.html:65
 #: templates/apparel/fragments/looks_medium.html:12
 #: templates/apparel/fragments/user_list.html:12
 #: templates/profile/likes.html:14
@@ -1280,11 +1284,11 @@ msgstr "Är du säker?"
 msgid "Do you really want to delete look"
 msgstr "Vill du verkligen ta bort looken"
 
-#: templates/apparel/look_detail.html:54
+#: templates/apparel/look_detail.html:54 templates/profile/looks.html:36
 msgid "Publish look"
 msgstr "Publicera look"
 
-#: templates/apparel/look_detail.html:55
+#: templates/apparel/look_detail.html:55 templates/profile/looks.html:37
 msgid "Do you want to publish this look?"
 msgstr "Är du säker på att du vill publicera denna look?"
 
@@ -1317,12 +1321,14 @@ msgstr "Ta bort"
 #: templates/apparel/look_detail.html:136
 #: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
 #: templates/apparel/look_editor.html:135
+#: templates/apparel/fragments/looks_large.html:53
 msgid "Publish"
 msgstr "Publicera"
 
 #: templates/apparel/look_detail.html:134
 #: templates/apparel/look_detail.html:136
 #: templates/apparel/look_editor.html:36 templates/apparel/look_editor.html:38
+#: templates/apparel/fragments/looks_large.html:53
 msgid "Unpublish"
 msgstr "Avpublicera"
 
@@ -2345,7 +2351,7 @@ msgstr "Endast Facebook"
 
 #: templates/facebook/setup.html:34
 msgid "Connect with facebook only"
-msgstr "Logga in med endat Facebook"
+msgstr "Logga in med endast Facebook"
 
 #: templates/flatpages/default.html:4 templates/flatpages/default.html.py:9
 #: templates/flatpages/default.html:16
@@ -2478,6 +2484,11 @@ msgstr "E-postutskick & händelser"
 #: templates/profile/settings_email.html:5
 msgid "E-mail Address"
 msgstr "E-postadress"
+
+#: templates/profile/base_settings.html:26
+#: templates/profile/settings_password.html:6
+msgid "Password"
+msgstr "Lösenord"
 
 #: templates/profile/confirm_email.html:5
 #, python-format
@@ -2642,15 +2653,15 @@ msgstr "Följ oss på Facebook för inspiration & erbjudanden"
 msgid "You're done!"
 msgstr "Gå vidare"
 
-#: templates/profile/looks.html:42
+#: templates/profile/looks.html:67
 msgid "All looks that you create end up here."
 msgstr "Här visas alla looks du skapar."
 
-#: templates/profile/looks.html:43
+#: templates/profile/looks.html:68
 msgid "+ Create look!"
 msgstr "+ Skapa look!"
 
-#: templates/profile/looks.html:46
+#: templates/profile/looks.html:71
 #, python-format
 msgid "%(display_name)s has not created any looks yet."
 msgstr "%(display_name)s har inte skapat några looks än."
@@ -2726,6 +2737,10 @@ msgstr "Din blogg"
 #: templates/profile/settings_partner.html:36
 msgid "Your payment settings"
 msgstr "Dina utbetalningsuppgifter"
+
+#: templates/profile/settings_password.html:7
+msgid "Change your password"
+msgstr "Ändra ditt lösenord"
 
 #: templates/profile/fragments/follow_profile.html:8
 msgid "Following you"
@@ -2951,6 +2966,11 @@ msgid "Login"
 msgstr "Logga in"
 
 #: templates/registration/login.html:10
+#: templates/registration/registration_form.html:10
+msgid "Or:"
+msgstr ""
+
+#: templates/registration/login.html:15
 msgid "Your username and password did not match. Please try again."
 msgstr "Fel användarnamn eller lösenord. Försök igen."
 
@@ -2993,7 +3013,6 @@ msgid "Please request a new password reset."
 msgstr "Begär en ny länk för att återställa lösenordet."
 
 #: templates/registration/password_reset_done.html:8
-#: templates/registration/password_reset_form.html:7
 msgid "Password reset"
 msgstr "Återställ lösenord"
 
@@ -3022,10 +3041,14 @@ msgstr "Gå till denna sida och välj ett nytt lösenord:"
 msgid "Your username, in case you've forgotten:"
 msgstr "Ditt användarnamn, om du har glömt det:"
 
-#: templates/registration/password_reset_form.html:9
+#: templates/registration/password_reset_form.html:7
+msgid "Forgotten your password?"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:8
 msgid ""
-"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
-"instructions for setting a new one."
+"Enter your e-mail address below, and we'll e-mail instructions for setting a "
+"new one."
 msgstr ""
 "Glömt ditt lösenord? Ange ditt lösenord här och vi skickar instruktioner för "
 "att ange ett nytt!"
@@ -3046,13 +3069,15 @@ msgstr ""
 "en aktiveringsnyckel. När du följt länken i mejlet kan du logga in.\n"
 "    "
 
-#: templates/registration/registration_form.html:9
-msgid "Sign up using your Facebook ID"
-msgstr "Logga in med ditt Facebook ID"
+#: templates/registration/registration_form.html:8
+msgid "Become a member"
+msgstr "Bli medlem "
 
-#: templates/registration/registration_form.html:14
-msgid "... Or create a new account"
-msgstr "... Eller skapa ett nytt konto"
+#~ msgid "Sign up using your Facebook ID"
+#~ msgstr "Logga in med ditt Facebook ID"
+
+#~ msgid "... Or create a new account"
+#~ msgstr "... Eller skapa ett nytt konto"
 
 #~ msgid "beta code"
 #~ msgstr "inbjudningskod"

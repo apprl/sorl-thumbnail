@@ -21,6 +21,26 @@ from apparel.models import ProductLike, LookLike
 
 register = Library()
 
+@register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)
+def facebook_button(context, text=None):
+    """
+    Facebook button templatetag.
+
+    Make sure that the translation for a custom text is picked up correctly.
+    """
+    facebook_icon = staticfiles_storage.url('images/facebook-icon.png')
+    next = None
+    if 'next' in context:
+        next = context['next']
+
+    if text is None:
+        text = _('Connect with Facebook')
+    else:
+        text = _(text)
+
+    return dict(next=next, text=text, facebook_icon=facebook_icon, request=context['request'])
+
+
 @register.inclusion_tag('apparel/tags/apparel_facebook_button.html', takes_context=True)
 def apparel_facebook_button(context, image=None):
     if not 'request' in context:
@@ -36,18 +56,6 @@ def apparel_facebook_button(context, image=None):
         button = staticfiles_storage.url('images/fblogo.png')
     return dict(next=next, logged_in=logged_in, button=button, request=context['request'])
 
-@register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)
-def facebook_button(context, button=None):
-    if not 'request' in context:
-        raise AttributeError, 'Please add the ``django.core.context_processors.request`` context processors to your settings.TEMPLATE_CONTEXT_PROCESSORS set'
-    logged_in = context['request'].user.is_authenticated()
-    if 'next' in context:
-        next = context['next']
-    else:
-        next = None
-    if button is None:
-        button = staticfiles_storage.url('images/facebook-%s.png' % (context['request'].LANGUAGE_CODE,))
-    return dict(next=next, logged_in=logged_in, button=button, request=context['request'])
 
 @register.filter
 def category_descendants_id(category, include_self=True):
