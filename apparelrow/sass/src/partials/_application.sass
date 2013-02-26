@@ -128,12 +128,13 @@ button
       overflow: hidden
       padding: 10px 20px
       width: 940px
-      @media screen and (min-width: 1212px)
-        width: 940px + 232
-      @media screen and (min-width: 1444px)
-        width: 940px + 464
-      @media screen and (min-width: 1676px)
-        width: 940px + 696
+      .page-shop &, .profile-likes &
+        @media screen and (min-width: 1212px)
+          width: 940px + 232
+        @media screen and (min-width: 1444px)
+          width: 940px + 464
+        @media screen and (min-width: 1676px)
+          width: 940px + 696
       ul, p
         font-size: 1.2em
       ul
@@ -141,7 +142,7 @@ button
         li
           display: inline
           list-style-type: none
-          padding-right: 20px
+          padding-left: 20px
           &.first a
             display: inline-block
             line-height: 23px
@@ -174,15 +175,15 @@ button
       background: image_url("body-header-icon.png") no-repeat scroll left 30px transparent
       min-height: 40px
       padding: 30px 0 25px 25px
-      width: 940px
+      width: 915px
       margin-bottom: 15px
       .page-shop &, .profile-likes &
         @media screen and (min-width: 1212px)
-          width: 940px + 232
+          width: 915px + 232
         @media screen and (min-width: 1444px)
-          width: 940px + 464
+          width: 915px + 464
         @media screen and (min-width: 1676px)
-          width: 940px + 696
+          width: 915px + 696
       .column_one, .column_two
         position: absolute
         bottom: 25px - 3px
@@ -236,7 +237,7 @@ button
             text-decoration: none
       .btn-create-look, .facebook-invite
         position: absolute
-        right: 20px
+        right: 0px
         bottom: 27px
 
 #header
