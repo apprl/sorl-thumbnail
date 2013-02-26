@@ -5,6 +5,7 @@ import string
 from django.forms import ModelForm, EmailField, BooleanField, CharField, ValidationError
 from django.forms.widgets import RadioSelect, FileInput, Textarea
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 
 from profile.models import PaymentDetail
@@ -109,31 +110,19 @@ class PartnerSettingsForm(ModelForm):
         fields = ('blog_url',)
 
 
-class RegisterForm(ModelForm):
-    error_messages = {
-        'duplicate_username': _('A user with that username already exists.'),
-    }
-    username = EmailField(label=_('E-mail address'))
-
-    def clean_username(self):
-        # Since User.username is unique, this check is redundant,
-        # but it sets a nicer error message than the ORM. See #13147.
-        username = self.cleaned_data['username']
-        try:
-            User._default_manager.get(username=username)
-        except User.DoesNotExist:
-            return username
-        raise ValidationError(self.error_messages['duplicate_username'])
-
-    def save(self, commit=True):
-        user = super(RegisterForm, self).save(commit=False)
-        user.set_password(''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(10)))
-        user.email = self.cleaned_data['username']
-        if commit:
-            user.save()
-
-        return user
+class RegisterForm(UserCreationForm):
+    email = EmailField(label=_('E-mail address'))
 
     class Meta:
-        model = User
-        fields = ('username',)
+        model = get_user_model()
+        fields = ('username', 'email')
+
+    def clean_username(self):
+        # Since get_user_model().username is unique, this check is redundant,
+        # but it sets a nicer error message than the ORM. See #13147.
+        username = self.cleaned_data["username"]
+        try:
+            get_user_model()._default_manager.get(username=username)
+        except get_user_model().DoesNotExist:
+            return username
+        raise forms.ValidationError(self.error_messages['duplicate_username'])
