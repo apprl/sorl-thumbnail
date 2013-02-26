@@ -8,8 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-05 12:48+0100\n"
-"POT-Creation-Date: 2013-02-26 11:20+0100\n"
+"POT-Creation-Date: 2013-02-26 17:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2844,6 +2843,13 @@ msgstr ""
 
 #: templates/registration/registration_form.html:8
 msgid "Become a member"
+msgstr ""
+
+#: templates/registration/registration_form.html:15
+#, python-format
+msgid ""
+"By signing up you are agreeing to our <a href=\"%(tou)s\">Privacy Policy & "
+"Terms of use</a>."
 msgstr ""
 
 #~ msgid "Swe"

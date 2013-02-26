@@ -9,6 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-05 12:47+0100\n"
+"POT-Creation-Date: 2013-02-26 17:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -824,8 +825,7 @@ msgstr "Välkommen till social shopping!"
 
 #: templates/base.html:260
 msgid "Discover fashion from the world's best online stores"
-msgstr ""
-"Upptäck mode från världens bästa onlinebutiker"
+msgstr "Upptäck mode från världens bästa onlinebutiker"
 
 #: templates/base.html:261
 msgid "Get sale alerts on your favourite items"
@@ -3012,6 +3012,15 @@ msgstr ""
 #: templates/registration/registration_form.html:8
 msgid "Become a member"
 msgstr "Bli medlem "
+
+#: templates/registration/registration_form.html:15
+#, python-format
+msgid ""
+"By signing up you are agreeing to our <a href=\"%(tou)s\">Privacy Policy & "
+"Terms of use</a>."
+msgstr ""
+"Genom att skapa ditt konto godkänner du våra <a href=\"%(tou)s"
+"\">Användarvillkor</a>."
 
 #~ msgid "Become a member to:"
 #~ msgstr "Bli medlem för att:"
