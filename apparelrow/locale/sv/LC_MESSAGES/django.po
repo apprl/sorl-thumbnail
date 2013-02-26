@@ -855,8 +855,10 @@ msgstr "Bli medlem"
 #: templates/base.html:281
 msgid ""
 "Discover fashion from the world’s best online stores, selected by our "
-"stylemakers & blogggers."
-msgstr "Upptäck mode från världens bästa onlinebutiker utvalt av våra medlemmar & bloggare."
+"stylemakers & bloggers."
+msgstr ""
+"Upptäck mode från världens bästa onlinebutiker utvalt av våra medlemmar & "
+"bloggare."
 
 #: templates/base.html:283
 #: templates/registration/password_reset_complete.html:9
@@ -1178,7 +1180,6 @@ msgstr ""
 "    "
 
 #: templates/apparel/about.html:8
-#: templates/apparel/fragments/dialog_about_apparelrow.html:4
 msgid "About Apprl"
 msgstr "Om Apprl"
 
@@ -1621,51 +1622,6 @@ msgstr ""
 #: templates/apparel/fragments/comment_count.html:2
 msgid "comments"
 msgstr "kommentarer"
-
-#: templates/apparel/fragments/dialog_about_apparelrow.html:6
-msgid ""
-"Apprl is currently available to a limited number of people. We look forward "
-"to making the site better together with you. We appreciate all questions, "
-"suggestions and problems from you, the more the better. Click the link 'Tyck "
-"Till' on the right hand side to share your thoughts. Or send us an email on "
-"info@apprl.com. Have fun!"
-msgstr ""
-"Apprl är just nu bara tillgänglig för ett begränsat antal personer. Vi ser "
-"fram emot att göra siten bättre tillsammans med dig. Vi uppskattar alla "
-"frågor, förslag och problem vi kan få från dig, ju mer desto bättre. Klicka "
-"på länken 'Tyck Till' i högerkanten på siten och dela med dig av dina "
-"tankar. Eller maila oss på info@apprl.com. så blir vi också glada. Have fun!"
-
-#: templates/apparel/fragments/dialog_about_cookies.html:4
-msgid "About cookies"
-msgstr "Om cookies"
-
-#: templates/apparel/fragments/dialog_about_cookies.html:6
-msgid ""
-"Apprl uses cookies to make it easier for users to use the site. A cookie is "
-"an unharmful, small text file that is stored on your computer, which makes "
-"it possible to recognize your web browser when you visit the site. The "
-"information that we store in cookies is anonymous and cannot be used to "
-"identify personal information about users. If you want, you may disable the "
-"use of cookies in your browser settings, but Apprl (and a lot of other "
-"sites) will not work as well."
-msgstr ""
-"Apprl använder cookies för att göra tjänsten enklare och smartare för "
-"användaren. En cookie är en liten ofarlig textfil som lagras på din dator, "
-"som gör det möjligt att känna igen din webbläsare när du besöker oss igen. "
-"Informationen vi sparar i cookies är helt anonym och den kan inte användas "
-"för att identifiera personlig information om användare. Om du vill kan du "
-"stänga av cookies i din webbläsare, men Apprl (och många andra siter) kommer "
-"att fungera sämre då."
-
-#: templates/apparel/fragments/dialog_create_look.html:5
-msgid "Create a look"
-msgstr "Skapa en look"
-
-#: templates/apparel/fragments/dialog_create_look.html:7
-msgid "To create a look you need to connect with your Facebook account:"
-msgstr ""
-"För att kunna skapa en look behöver du logga in med ditt Facebookkonto:"
 
 #: templates/apparel/fragments/dialog_follow_user.html:7
 msgid "Follow a brand"
@@ -3060,6 +3016,47 @@ msgstr ""
 #: templates/registration/registration_form.html:8
 msgid "Become a member"
 msgstr "Bli medlem "
+
+#~ msgid ""
+#~ "Apprl is currently available to a limited number of people. We look "
+#~ "forward to making the site better together with you. We appreciate all "
+#~ "questions, suggestions and problems from you, the more the better. Click "
+#~ "the link 'Tyck Till' on the right hand side to share your thoughts. Or "
+#~ "send us an email on info@apprl.com. Have fun!"
+#~ msgstr ""
+#~ "Apprl är just nu bara tillgänglig för ett begränsat antal personer. Vi "
+#~ "ser fram emot att göra siten bättre tillsammans med dig. Vi uppskattar "
+#~ "alla frågor, förslag och problem vi kan få från dig, ju mer desto bättre. "
+#~ "Klicka på länken 'Tyck Till' i högerkanten på siten och dela med dig av "
+#~ "dina tankar. Eller maila oss på info@apprl.com. så blir vi också glada. "
+#~ "Have fun!"
+
+#~ msgid "About cookies"
+#~ msgstr "Om cookies"
+
+#~ msgid ""
+#~ "Apprl uses cookies to make it easier for users to use the site. A cookie "
+#~ "is an unharmful, small text file that is stored on your computer, which "
+#~ "makes it possible to recognize your web browser when you visit the site. "
+#~ "The information that we store in cookies is anonymous and cannot be used "
+#~ "to identify personal information about users. If you want, you may "
+#~ "disable the use of cookies in your browser settings, but Apprl (and a lot "
+#~ "of other sites) will not work as well."
+#~ msgstr ""
+#~ "Apprl använder cookies för att göra tjänsten enklare och smartare för "
+#~ "användaren. En cookie är en liten ofarlig textfil som lagras på din "
+#~ "dator, som gör det möjligt att känna igen din webbläsare när du besöker "
+#~ "oss igen. Informationen vi sparar i cookies är helt anonym och den kan "
+#~ "inte användas för att identifiera personlig information om användare. Om "
+#~ "du vill kan du stänga av cookies i din webbläsare, men Apprl (och många "
+#~ "andra siter) kommer att fungera sämre då."
+
+#~ msgid "Create a look"
+#~ msgstr "Skapa en look"
+
+#~ msgid "To create a look you need to connect with your Facebook account:"
+#~ msgstr ""
+#~ "För att kunna skapa en look behöver du logga in med ditt Facebookkonto:"
 
 #~ msgid "Why Facebook?"
 #~ msgstr "Varför Facebook?"

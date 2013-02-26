@@ -853,7 +853,7 @@ msgstr ""
 #: templates/base.html:281
 msgid ""
 "Discover fashion from the world’s best online stores, selected by our "
-"stylemakers & blogggers."
+"stylemakers & bloggers."
 msgstr ""
 
 #: templates/base.html:283
@@ -1157,7 +1157,6 @@ msgid ""
 msgstr ""
 
 #: templates/apparel/about.html:8
-#: templates/apparel/fragments/dialog_about_apparelrow.html:4
 msgid "About Apprl"
 msgstr ""
 
@@ -1585,38 +1584,6 @@ msgstr ""
 
 #: templates/apparel/fragments/comment_count.html:2
 msgid "comments"
-msgstr ""
-
-#: templates/apparel/fragments/dialog_about_apparelrow.html:6
-msgid ""
-"Apprl is currently available to a limited number of people. We look forward "
-"to making the site better together with you. We appreciate all questions, "
-"suggestions and problems from you, the more the better. Click the link 'Tyck "
-"Till' on the right hand side to share your thoughts. Or send us an email on "
-"info@apprl.com. Have fun!"
-msgstr ""
-
-#: templates/apparel/fragments/dialog_about_cookies.html:4
-msgid "About cookies"
-msgstr ""
-
-#: templates/apparel/fragments/dialog_about_cookies.html:6
-msgid ""
-"Apprl uses cookies to make it easier for users to use the site. A cookie is "
-"an unharmful, small text file that is stored on your computer, which makes "
-"it possible to recognize your web browser when you visit the site. The "
-"information that we store in cookies is anonymous and cannot be used to "
-"identify personal information about users. If you want, you may disable the "
-"use of cookies in your browser settings, but Apprl (and a lot of other "
-"sites) will not work as well."
-msgstr ""
-
-#: templates/apparel/fragments/dialog_create_look.html:5
-msgid "Create a look"
-msgstr ""
-
-#: templates/apparel/fragments/dialog_create_look.html:7
-msgid "To create a look you need to connect with your Facebook account:"
 msgstr ""
 
 #: templates/apparel/fragments/dialog_follow_user.html:7

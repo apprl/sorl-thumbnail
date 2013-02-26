@@ -263,7 +263,7 @@
                         <li>{% trans "Follow your friends, bloggers & brands" %}</li>
                         <li>{% trans "Create & share looks on your blog" %}</li>
                     </ul>
-                    <p><a href="#">{% trans "Are you a blogger?" %}</a></p>
+                    <p><a href="{% url dashboard %}">{% trans "Are you a blogger?" %}</a></p>
                 </span>
                 <a class="btn-slide ar_welcome" href="#"></a>
                 <div id="login-fb">
@@ -279,7 +279,7 @@
         {% endif %}
         <div id="sticky-login-bar">
             <div id="sticky-inner-login-bar">
-                <p>{% trans "Discover fashion from the world’s best online stores, selected by our stylemakers & blogggers." %}</p>
+                <p>{% trans "Discover fashion from the world’s best online stores, selected by our stylemakers & bloggers." %}</p>
                 <ul>
                     <li class="first"><a href="{% url auth_login %}">{% trans "Log in" %}</a></li>
                     <li class="last"><a class="btn btn-upper btn-small btn-positive" href="{% url auth_register %}">{% trans "Sign up" %}</a></li>
