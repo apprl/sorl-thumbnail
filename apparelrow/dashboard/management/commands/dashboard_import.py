@@ -53,4 +53,4 @@ class Command(BaseCommand):
                     logger.error('Failed to import %s for interval %s-%s: %s' % (instance.name,
                                                                                  start_date,
                                                                                  end_date,
-                                                                                 e))
+                                                                                 str(e)))

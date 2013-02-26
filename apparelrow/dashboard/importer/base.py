@@ -69,8 +69,9 @@ class BaseImporter:
             except Sale.DoesNotExist:
                 pass
 
-        data = self.exchange_commission(data, instance)
-        data = self.calculate_cut(data)
+        update, data = self.exchange_commission(data, instance)
+        if update:
+            data = self.calculate_cut(data)
 
         return data
 
@@ -94,7 +95,7 @@ class BaseImporter:
     def exchange_commission(self, data, instance):
         # Do not update if the original commission value is unchanged.
         if instance is not None and data['original_commission'] == instance.original_commission:
-            return data
+            return False, data
 
         # Use saved exchange rate if we need to update
         if instance and instance.exchange_rate:
@@ -109,7 +110,7 @@ class BaseImporter:
         data['amount'] = exchange_rate * data['original_amount']
         data['currency'] = 'SEK'
 
-        return data
+        return True, data
 
     def map_vendor(self, vendor_string):
         closest_match, score = process.extractOne(vendor_string, self.vendor_map.keys())
