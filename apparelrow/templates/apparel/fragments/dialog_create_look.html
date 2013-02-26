@@ -1,9 +1,0 @@
-{% extends 'dialog_base.html' %}
-{% load apparel_extras %}
-{% load i18n %}
-
-{% block title %}{% trans "Create a look" %}{% endblock %}
-{% block content %}
-<p>{% trans "To create a look you need to connect with your Facebook account:" %}</p>
-{% facebook_button %}
-{% endblock %}
