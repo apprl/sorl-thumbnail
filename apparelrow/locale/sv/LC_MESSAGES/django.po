@@ -847,7 +847,8 @@ msgid "Follow our stylemakers, brands & bloggers"
 msgstr "Följ dina vänner, varumärken & bloggare"
 
 #: templates/base.html:270 templates/base.html.py:284 templates/base.html:314
-#: templates/apparel/shared_header.html:22
+#: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
+#: templates/apparel/shared_header.html:22 templates/apparel/user_list.html:53
 #: templates/registration/registration_complete.html:8
 msgid "Sign up"
 msgstr "Bli medlem"
@@ -1244,8 +1245,8 @@ msgid "Your friends like"
 msgstr "Dina vänner gillar"
 
 #: templates/apparel/brand_list.html:38
-msgid "Connect your Facebook account to see what your friends like."
-msgstr "Logga in med ditt Facebookkonto för att se vad dina vänner gillar."
+msgid "Sign up to see what your friends like."
+msgstr "Bli medlem för att se vad dina vänner gillar."
 
 #: templates/apparel/browse.html:5 templates/apparel/browse.html.py:27
 msgid "Shop Men"
@@ -1508,12 +1509,9 @@ msgstr[0] "%(counter)s look"
 msgstr[1] "%(counter)s looks"
 
 #: templates/apparel/look_list.html:38
-msgid ""
-"To see popular looks in your network you need to connect with your Facebook "
-"account."
+msgid "To see popular looks in your network you need to sign up."
 msgstr ""
-"För att se vilka looks som är populära bland dina vänner behöver du logga in "
-"med ditt Facebookkonto."
+"För att se vilka looks som är populära bland dina vänner behöver du bli medlem."
 
 #: templates/apparel/look_list.html:44
 msgid ""
@@ -1608,8 +1606,8 @@ msgid "Males"
 msgstr "Killar"
 
 #: templates/apparel/user_list.html:52
-msgid "Connect with your Facebook account to find your friends."
-msgstr "Logga in med ditt Facebookkonto för att hitta dina vänner."
+msgid "Sign up to find your friends."
+msgstr "Bli medlem för att hitta dina vänner."
 
 #: templates/apparel/fragments/browse_follow_user.html:4
 msgid ""
@@ -3016,6 +3014,9 @@ msgstr ""
 #: templates/registration/registration_form.html:8
 msgid "Become a member"
 msgstr "Bli medlem "
+
+#~ msgid "Connect with your Facebook account to find your friends."
+#~ msgstr "Logga in med ditt Facebookkonto för att hitta dina vänner."
 
 #~ msgid ""
 #~ "Apprl is currently available to a limited number of people. We look "

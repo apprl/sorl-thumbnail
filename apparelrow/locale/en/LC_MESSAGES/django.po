@@ -845,7 +845,8 @@ msgid "Follow our stylemakers, brands & bloggers"
 msgstr ""
 
 #: templates/base.html:270 templates/base.html.py:284 templates/base.html:314
-#: templates/apparel/shared_header.html:22
+#: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
+#: templates/apparel/shared_header.html:22 templates/apparel/user_list.html:53
 #: templates/registration/registration_complete.html:8
 msgid "Sign up"
 msgstr ""
@@ -1215,7 +1216,7 @@ msgid "Your friends like"
 msgstr ""
 
 #: templates/apparel/brand_list.html:38
-msgid "Connect your Facebook account to see what your friends like."
+msgid "Sign up to see what your friends like."
 msgstr ""
 
 #: templates/apparel/browse.html:5 templates/apparel/browse.html.py:27
@@ -1477,9 +1478,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/apparel/look_list.html:38
-msgid ""
-"To see popular looks in your network you need to connect with your Facebook "
-"account."
+msgid "To see popular looks in your network you need to sign up."
 msgstr ""
 
 #: templates/apparel/look_list.html:44
@@ -1573,7 +1572,7 @@ msgid "Males"
 msgstr ""
 
 #: templates/apparel/user_list.html:52
-msgid "Connect with your Facebook account to find your friends."
+msgid "Sign up to find your friends."
 msgstr ""
 
 #: templates/apparel/fragments/browse_follow_user.html:4
