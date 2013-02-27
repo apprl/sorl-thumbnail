@@ -301,7 +301,7 @@ def copy_sitemap():
 
     # Copy sitemap files from current before it is symlinked
     with cd('%(path)s/releases/' % env), settings(warn_only=True):
-        sudo('cp ./current/%(project_name)s/sitemaps/* ./%(release)s/%(project_name)s/sitemaps/' % env, pty=True)
+        sudo('cp -p ./current/%(project_name)s/sitemaps/* ./%(release)s/%(project_name)s/sitemaps/' % env, pty=True)
 
 def migrate(param=''):
     "Update the database"
