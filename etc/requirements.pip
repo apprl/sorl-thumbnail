@@ -10,7 +10,6 @@ django-debug-toolbar==0.9.4
 python-memcached==1.48
 -e git+http://github.com/pythonforfacebook/facebook-sdk.git#egg=facebook-sdk
 django-mptt==0.5.2
--e svn+http://code.hanssonlarsson.se/svn_public/hanssonlarsson_utils-svn/tags/hanssonlarsson-django-exporter-0.2.5/#egg=hanssonlarsson-django-exporter
 -e svn+http://code.hanssonlarsson.se/svn_public/hanssonlarsson_utils-svn/tags/django-jsmin-0.0.2/#egg=django-jsmin
 django-tagging==0.3.1
 django-pagination==1.0.5

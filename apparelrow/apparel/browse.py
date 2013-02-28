@@ -2,6 +2,7 @@ import re
 import math
 import os.path
 import decimal
+import json
 
 from django.http import HttpResponse
 from django.conf import settings
@@ -16,8 +17,6 @@ from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
 from django.core.urlresolvers import reverse
 from django.utils.translation import get_language, ugettext_lazy as _
-
-from hanssonlarsson.django.exporter import json
 
 from apparel.search import PRODUCT_SEARCH_FIELDS
 from apparel.search import ApparelSearch
@@ -186,7 +185,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
             manufacturers.append((int(split[-1]), split[-2]))
 
     if brand_search or brand_search_page:
-        return HttpResponse(json.encode({'manufacturers': manufacturers}), mimetype='application/json')
+        return HttpResponse(json.dumps({'manufacturers': manufacturers}), mimetype='application/json')
 
     # Calculate price range
     pricerange = {'min': 0, 'max': 10000}
@@ -294,7 +293,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
                 context_instance=RequestContext(request)
             ),
         )
-        return HttpResponse(json.encode(result), mimetype='application/json')
+        return HttpResponse(json.dumps(result), mimetype='application/json')
 
     # Default colors
     default_colors = Option.objects.filter(option_type__name='color').exclude(value__exact='').all()

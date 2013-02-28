@@ -1,7 +1,7 @@
 import logging
+import json
 from pprint import pformat
 
-from hanssonlarsson.django.exporter import json
 from django.template import Library, Variable, TemplateSyntaxError, Node, VariableDoesNotExist
 from django import template
 from django.template.defaultfilters import linebreaksbr
@@ -102,12 +102,12 @@ def do_ifinlist(parser, token):
     >>> t = Template("{% load apparel_extras %}{% ifinlist a_value a_list %}True{% endifinlist %}")
     >>> t.render(c)
     u'True'
-    
+
     >>> # Constant declared with quotes exists in list
     >>> t = Template("{% load apparel_extras %}{% ifinlist 'one' a_list %}True{% endifinlist %}")
     >>> t.render(c)
     u'True'
-    
+
     >>> # Constant declared with double quotes exists in list
     >>> t = Template('{% load apparel_extras %}{% ifinlist "two" a_list %}True{% endifinlist %}')
     >>> t.render(c)
@@ -117,62 +117,62 @@ def do_ifinlist(parser, token):
     >>> t = Template('{% load apparel_extras %}{% ifinlist "nineteen" a_list %}True{% endifinlist %}')
     >>> t.render(c)
     u''
-    
+
     >>> # Variable doesn't exist in list
     >>> t = Template('{% load apparel_extras %}{% ifinlist another_value a_list %}True{% endifinlist %}')
     >>> t.render(c)
     u''
-    
+
     >>> # List is None
     >>> t = Template('{% load apparel_extras %}{% ifinlist "two" none_list %}True{% endifinlist %}')
     >>> t.render(c)
     u''
-    
+
     >>> # Wrong number of arguments (one)
     >>> t = Template('{% load apparel_extras %}{% ifinlist a_list %}True{% endifinlist %}')
     Traceback (most recent call last):
         ...
     TemplateSyntaxError: u'ifinlist' tag takes two arguments
-    
+
     >>> # Wrong number of arguments (three)
     >>> t = Template('{% load apparel_extras %}{% ifinlist "one" "three" a_list %}True{% endifinlist %}')
     Traceback (most recent call last):
         ...
     TemplateSyntaxError: u'ifinlist' tag takes two arguments
-    
+
     >>> # Variable doesn't exist
     >>> t = Template('{% load apparel_extras %}{% ifinlist "one" what_list %}True{% endifinlist %}')
     >>> t.render(c)
     u''
-    
+
     >>> # Negation
     >>> t = Template('{% load apparel_extras %}{% ifnotinlist "nine" a_list %}True{% endifnotinlist %}')
     >>> t.render(c)
     u'True'
-    
+
     >>> t = Template('{% load apparel_extras %}{% ifnotinlist "two" a_list %}True{% endifnotinlist %}')
     >>> t.render(c)
     u''
     """
-    
+
     try:
         tag_name, the_value, the_list = token.split_contents()
     except ValueError, e:
         raise TemplateSyntaxError, '%r tag takes two arguments' % token.split_contents()[0]
-    
+
     nodelist = parser.parse(('end%s' % tag_name,))
     parser.delete_first_token()
-    
+
     if the_value[0] == the_value[-1] and the_value[0] in ('"', "'"):
         is_constant = True
         the_value = the_value[1:-1]
     else:
         is_constant = False
-    
+
     return IfInListNode(
-        nodes       = nodelist, 
-        the_list    = the_list, 
-        the_value   = the_value, 
+        nodes       = nodelist,
+        the_list    = the_list,
+        the_value   = the_value,
         is_constant = is_constant,
         negate      = True if tag_name == 'ifnotinlist' else False,
     )
@@ -184,23 +184,23 @@ class IfInListNode(Node):
         self.a_value = kwargs['the_value'] if kwargs['is_constant'] else Variable(kwargs['the_value'])
         self.nodes   = kwargs['nodes']
         self.negate  = kwargs['negate']
-        
-    
+
+
     def render(self, context):
-        
+
         try:
             the_list  = self.a_list.resolve(context)
-            the_value = self.a_value.resolve(context) if isinstance(self.a_value, Variable) else self.a_value 
+            the_value = self.a_value.resolve(context) if isinstance(self.a_value, Variable) else self.a_value
         except VariableDoesNotExist, e:
             logging.debug(e)
             return ''
-        
+
         if not the_list:
             return ''
-        
+
         if the_value in the_list:
             return '' if self.negate else self.nodes.render(context)
-        
+
         return self.nodes.render(context) if self.negate else ''
 
 @register.tag(name='calc_half')
@@ -213,7 +213,7 @@ def do_calc_half(parser, token):
     except ValueError, e:
         logging.exception(e)
         raise template.TemplateSyntaxError, "%r tag requires a list as single argument" % token.contents.split()[0]
-    
+
     return CalcHalfNode(var1, var2)
 
 class CalcHalfNode(Node):
@@ -224,12 +224,12 @@ class CalcHalfNode(Node):
     def render(self, context):
         l = [int(self.a.resolve(context)), int(self.b.resolve(context))]
         return int((max(*l) - min(*l)) / 2)
-        
+
 
 
 @register.filter('as_list')
 def as_list(o):
-    """ Returns the object as a list, if it isn't already one. Tuples are converted 
+    """ Returns the object as a list, if it isn't already one. Tuples are converted
     to lists
     >>> from django.template.loader import Template, Context
     >>> from apparel.models import Product
@@ -238,21 +238,21 @@ def as_list(o):
     >>> t = Template('{% load apparel_extras %}{{ v1|as_list }}')
     >>> t.render(c)
     u'[&#39;b&#39;, &#39;c&#39;]'
-    
+
     >>> t = Template('{% load apparel_extras %}{{ v2|as_list }}')
     >>> t.render(c)
     u'[&#39;hello&#39;]'
-    
+
     >>> t = Template('{% load apparel_extras %}{{ v3|as_list }}')
     >>> t.render(c)
     u'[1, 2, 3]'
-    
+
     """
     if isinstance(o, tuple):
         return list(o)
     if isinstance(o, list):
         return o
-    
+
     return [o]
 
 @register.filter('class_name')
@@ -265,11 +265,11 @@ def class_name(o):
     >>> t = Template('{% load apparel_extras %}{{ p|class_name }}')
     >>> t.render(c)
     u'Product'
-    
+
     >>> t = Template('{% load apparel_extras %}{{ o|class_name }}')
     >>> t.render(c)
     u'str'
-    
+
     """
     try:
         return mark_safe(o.__class__.__name__)
@@ -299,14 +299,14 @@ def export_as_json(o):
     >>> t.render(c)
     u'{"gunnar": true}'
     """
-    
+
     try:
-        return mark_safe(json.encode(o))
+        return mark_safe(json.dumps(o))
     except Exception, e:
         logging.error('Error while exporting object to JSON in template')
         logging.debug('Object: ', pformat(o))
         logging.exception(e)
-        
+
         return ''
 
 register.filter('export_as_json', export_as_json)
@@ -315,7 +315,7 @@ register.filter('export_as_json', export_as_json)
 #
 # This is taken from http://www.djangosnippets.org/snippets/743/ and should
 # probably not be included in a live release
-#    
+#
 
 def rawdump(x):
     if hasattr(x, '__dict__'):

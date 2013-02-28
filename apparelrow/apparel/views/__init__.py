@@ -25,7 +25,6 @@ from django.views.i18n import set_language
 from django.views.decorators.http import require_POST
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
-from hanssonlarsson.django.exporter import json as special_json
 from sorl.thumbnail import get_thumbnail
 
 from profile.models import ApparelProfile, Follow
@@ -633,7 +632,7 @@ def widget(request, object_id, template_name, model):
         success  = False
         html     = 'Not found'
 
-    return HttpResponse('%s(%s)' % (request.GET['callback'], special_json.encode({
+    return HttpResponse('%s(%s)' % (request.GET['callback'], json.dumps({
         'success': success,
         'html':  html,
     })), mimetype='application/json')
