@@ -39,11 +39,14 @@ def dashboard_admin(request, year=None, month=None):
             data_per_month[start_date.replace(day=day)] = [0, 0]
             clicks_per_month[start_date.replace(day=day)] = [0, 0]
 
+        start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
+        end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+
         # Commission per month
         month_commission = decimal.Decimal('0.0')
         partner_commission = decimal.Decimal('0.0')
         result = Sale.objects.filter(status__gte=Sale.PENDING, status__lte=Sale.CONFIRMED) \
-                             .filter(sale_date__gte=start_date, sale_date__lte=end_date) \
+                             .filter(sale_date__gte=start_date_query, sale_date__lte=end_date_query) \
                              .order_by('sale_date') \
                              .values('sale_date', 'converted_commission', 'commission', 'user_id')
         for sale in result:
@@ -111,8 +114,11 @@ def dashboard(request, year=None, month=None):
             data_per_month[start_date.replace(day=day)] = 0
             clicks_per_month[start_date.replace(day=day)] = 0
 
+        start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
+        end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+
         for sale in Sale.objects.filter(status__gte=Sale.PENDING, status__lte=Sale.CONFIRMED) \
-                                .filter(sale_date__gte=start_date, sale_date__lte=end_date) \
+                                .filter(sale_date__gte=start_date_query, sale_date__lte=end_date_query) \
                                 .filter(user_id=request.user.pk) \
                                 .order_by('sale_date') \
                                 .values('sale_date', 'commission'):
