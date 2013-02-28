@@ -66,7 +66,7 @@ ACTION_TRANSLATION = {'like': 'og.likes', 'follow': 'og.follows', 'create': '%s:
 def facebook_push_graph(user_id, access_token, action, object_type, object_url):
     url = 'https://graph.facebook.com/me/%s' % (ACTION_TRANSLATION[action],)
     response = requests.post(url, data={object_type: object_url, 'access_token': access_token})
-    data = response.json
+    data = response.json()
 
     logger.info(data)
 
@@ -82,7 +82,7 @@ def facebook_pull_graph(user_id, access_token, action, object_type, object_url):
         facebook_action.delete()
         url = 'https://graph.facebook.com/%s' % (facebook_action.action_id,)
         response = requests.delete(url, data={'access_token': access_token})
-        logger.info(response.json)
+        logger.info(response.json())
     except FacebookAction.DoesNotExist:
         logger.warning('No facebook action_id found for uid=%s action=%s type=%s' % (user_id, action, object_type))
 

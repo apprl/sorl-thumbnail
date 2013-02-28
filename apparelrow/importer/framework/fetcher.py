@@ -57,10 +57,10 @@ def fetch(url, localpath=None, username=None, password=None, decompress=None):
         local_fh.write(f.read())
     else:
         if username or password:
-            request_handler = requests.get(url, auth=(username, password))
+            request_handler = requests.get(url, auth=(username, password), stream=True)
             logging.debug('Added Basic Authentication header. Username %s' % username)
         else:
-            request_handler = requests.get(url)
+            request_handler = requests.get(url, stream=True)
 
         request_handler.raise_for_status()
     

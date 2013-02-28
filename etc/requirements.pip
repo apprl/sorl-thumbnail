@@ -21,13 +21,11 @@ libxml2-python==2.6.15
 django-activity-stream==0.4.3
 -f http://django-modeltranslation.googlecode.com/files/django-modeltranslation-0.2.tar.gz
 django-modeltranslation==0.2
-#pysolr==2.0.15
--e git+https://github.com/jbohman/pysolr.git#egg=pysolr
-celery==3.0.11
+requests==1.1.0
+pysolr==3.0.5
+celery==3.0.15
 django-celery==3.0.11
-# require redis>=2.4.4
 celery-with-redis==3.0
-requests==0.13.2
 django-static==1.5.5
 mailsnake==1.3.3
 django-storages==1.1.5
