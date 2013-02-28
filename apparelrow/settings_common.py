@@ -145,8 +145,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
-    'pagination.middleware.PaginationMiddleware',
-    'trackback.middleware.PingbackUrlInjectionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'profile.middleware.ImpersonateMiddleware',
@@ -175,15 +173,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     # External
-    'pagination',
     'mptt',                 # External: Category tree
     'sorl.thumbnail',       # External: Thumbnail module
     'djcelery',
     'tagging',
-    'pagination',
-    'ajaxcomments',
     'django_extensions',    # External: Used for auto-slug field
-    'trackback',
     'south',                # External: Database migration
     'modeltranslation',     # External: Used for category translation
     'jsmin',

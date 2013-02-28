@@ -221,7 +221,8 @@ jQuery(document).ready(function() {
             success: function(response, statusText, req) {
                 form.find('textarea').val('');
                 form.find('button').hide();
-                jQuery(response.html).hide().appendTo(form.siblings('.comments-list')).slideDown('fast');
+                var newComment = jQuery(response).find('.comments-list li').last()
+                newComment.appendTo(form.siblings('.comments-list')).slideDown('fast');
                 increase_counts(jQuery('a.comments > span.count'));
             }
         };
