@@ -1,17 +1,17 @@
 {% load i18n apparel_extras %}
 {% load static from staticfiles %}
-<a class="page-logo" href="{% if request.user.is_authenticated %}{% url user_feed %}{% else %}{% url public_feed %}{% endif %}">
+<a class="page-logo" href="{% if request.user.is_authenticated %}{% url 'user_feed' %}{% else %}{% url 'public_feed' %}{% endif %}">
     <img src="{% static "images/logo.png" %}" alt="Apprl">
 </a>
 
 <ul id="nav-main">
-    <li><a class="{% selected_url request "/" "/all" %}" href="{% if request.user.is_authenticated %}{% url user_feed %}{% else %}{% url public_feed %}{% endif %}">{% trans "Newsfeed" %}</a></li>
+    <li><a class="{% selected_url request "/" "/all" %}" href="{% if request.user.is_authenticated %}{% url 'user_feed' %}{% else %}{% url 'public_feed' %}{% endif %}">{% trans "Newsfeed" %}</a></li>
     <li><a class="{% selected_url request "/shop" "/products" %}" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
     <li><a class="{% selected_url request "/looks" %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
     <li class="subnav-handle">
-        <a class="{% selected_url request "/users" "/brand" "/profile" %}" href="{% url user-list-popular %}">{% trans "Follow" %}</a>
+        <a class="{% selected_url request "/users" "/brand" "/profile" %}" href="{% url 'user-list-popular' %}">{% trans "Follow" %}</a>
         <ul class="subnav" id="subnav-follow">
-            <li><a href="{% url user-list-popular %}">{% trans "Members" %}</a></li>
+            <li><a href="{% url 'user-list-popular' %}">{% trans "Members" %}</a></li>
             <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
         </ul>
     </li>
@@ -27,12 +27,12 @@
         <ul class="subnav" id="subnav-profile">
             <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Your profile" %}</a></li>
             {% if request.user.get_profile.is_partner %}
-            <li><a href="{% url dashboard %}">{% trans "Your dashboard" %}</a></li>
+            <li><a href="{% url 'dashboard' %}">{% trans "Your dashboard" %}</a></li>
             {% endif %}
             <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
-            <li><a href="{% url look-create %}">{% trans "+ Create look" %}</a>
-            <li><a href="{% url profile.views.settings_notification %}">{% trans "Settings" %}</a></li>
-            <li><a href="{% url auth_logout %}">{% trans "Log out" %}</a></li>
+            <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
+            <li><a href="{% url 'profile.views.settings_notification' %}">{% trans "Settings" %}</a></li>
+            <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
         </ul>
     </li>
     {% endif %}

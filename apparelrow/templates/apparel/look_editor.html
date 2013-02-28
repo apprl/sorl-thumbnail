@@ -174,7 +174,7 @@
         <div class="loading" style="display:none;">
             <span>{% trans "Uploading image" %}</span> <img src="{% static "images/loading_white.gif" %}">
         </div>
-        <form enctype="multipart/form-data" action="{% url temporary-image %}" method="POST" id="temporaryimage">
+        <form enctype="multipart/form-data" action="{% url 'temporary-image' %}" method="POST" id="temporaryimage">
             {% csrf_token %}
             <div class="look-empty">
                 <p>{% trans "Start by uploading a photo" %}</p>

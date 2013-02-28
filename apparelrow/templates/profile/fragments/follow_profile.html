@@ -17,7 +17,7 @@
           <span class="looks_count">{% blocktrans count profile.looks as look_count %}Created {{look_count}} look{% plural %}Created {{look_count}} looks{% endblocktrans %}</span>
       {% endif %}
       <span class="follower_count">
-          <a href="{% url profile-followers profile.slug %}">{% blocktrans with profile.followers_count as follower_count %}Followed by {{ follower_count }}{% endblocktrans %}</a>
+          <a href="{% url 'profile-followers' profile.slug %}">{% blocktrans with profile.followers_count as follower_count %}Followed by {{ follower_count }}{% endblocktrans %}</a>
       </span>
       <span class="following_count"></span>
     </p>

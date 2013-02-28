@@ -27,17 +27,17 @@ jQuery(document).ready(function() {
 
 {% block login-flow-nav %}
 <ul class="steps-nav group">
-    <li><a class="{% selected_reverse request "login-flow-bio" %}" href="{% url login-flow-bio %}"><span class="btn-step">1</span> {% trans "Your info" %}</a></li>
-    <li><a class="{% selected_reverse request "login-flow-friends" %}"href="{% url login-flow-friends %}"><span class="btn-step">2</span> {% trans "Friends" %}</a></li>
-    <li><span class="{% selected_reverse request "login-flow-featured" %}"href="{% url login-flow-featured %}"><span class="btn-step">3</span> {% trans "Featured" %}</span></li>
-    <li><span class="{% selected_reverse request "login-flow-brands" %}"href="{% url login-flow-brands %}"><span class="btn-step">4</span> {% trans "Brands" %}</span></li>
-    <li><span class="{% selected_reverse request "login-flow-like" %}"href="{% url login-flow-like %}"><span class="btn-step">5</span> {% trans "Follow us" %}</span></li>
+    <li><a class="{% selected_reverse request "login-flow-bio" %}" href="{% url 'login-flow-bio' %}"><span class="btn-step">1</span> {% trans "Your info" %}</a></li>
+    <li><a class="{% selected_reverse request "login-flow-friends" %}" href="{% url 'login-flow-friends' %}"><span class="btn-step">2</span> {% trans "Friends" %}</a></li>
+    <li><span class="{% selected_reverse request "login-flow-featured" %}" href="{% url 'login-flow-featured' %}"><span class="btn-step">3</span> {% trans "Featured" %}</span></li>
+    <li><span class="{% selected_reverse request "login-flow-brands" %}" href="{% url 'login-flow-brands' %}"><span class="btn-step">4</span> {% trans "Brands" %}</span></li>
+    <li><span class="{% selected_reverse request "login-flow-like" %}" href="{% url 'login-flow-like' %}"><span class="btn-step">5</span> {% trans "Follow us" %}</span></li>
 </ul>
 {% endblock %}
 
 {% block login-flow-content %}
     {% if profiles %}
-    <form class="friends" action="{% url login-flow-friends %}" method="post">
+    <form class="friends" action="{% url 'login-flow-friends' %}" method="post">
         <h2>{% trans "Follow your friends to see what they like" %}</h2>
         {% csrf_token %}
         <ul class="profile-list group">

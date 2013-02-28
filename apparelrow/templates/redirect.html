@@ -40,7 +40,7 @@
                         referer: '{{ request.META.HTTP_REFERER }}',
                         sid: '{{ sid }}',
                         page: '{{ page }}'};
-            jQuery.post('{% url product-track id page sid %}', data);
+            jQuery.post('{% url "product-track" id page sid %}', data);
             setTimeout(redirect, 1000);
         }
         function redirect() {

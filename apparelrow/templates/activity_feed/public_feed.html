@@ -20,7 +20,7 @@
             <li>{% include 'apparel/fragments/look_sidebar.html' %}</li>
         {% endfor %}
         </ul>
-        <a class="btn btn-block btn-upper btn-rarrow" href="{% url look-list %}">{% trans "Show all looks" %}</a>
+        <a class="btn btn-block btn-upper btn-rarrow" href="{% url 'look-list' %}">{% trans "Show all looks" %}</a>
     </div>
     <div id="content">
         <h2>{% trans "Latest updates" %}</h2>
@@ -35,7 +35,7 @@
             </li>
         {% endfor %}
         </ul>
-        <a class="btn btn-block btn-upper btn-rarrow" href="{% url user-list-popular %}">{% trans "Show all members" %}</a>
+        <a class="btn btn-block btn-upper btn-rarrow" href="{% url 'user-list-popular' %}">{% trans "Show all members" %}</a>
 
         <h2>{% trans "Popular brands" %}</h2>
         <ul class="suggested-friends group">

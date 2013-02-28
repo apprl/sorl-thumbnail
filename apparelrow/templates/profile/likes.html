@@ -15,7 +15,7 @@
     <div class="clear"></div>
     {% else %}
     <div class="empty">
-        {% url profile-likes request.user.get_profile.slug as profile_likes_url %}
+        {% url 'profile-likes' request.user.get_profile.slug as profile_likes_url %}
         {% if request.path == profile_likes_url and not user.get_profile.is_brand %}
             <div class="message warning">
                 <p>{% trans "Welcome to your Apprl profile!" %}</p>

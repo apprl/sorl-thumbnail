@@ -28,7 +28,7 @@ $(document).ready(function() {
 </script>
 <p>{% trans "Right now you can only create an Apprl account by connecting your Facebook account. In the future we'll offer more ways to create an account." %}</p>
 <p>{% trans "If you want to keep yourself posted about alternative login ways and other news from Apparelrow, submit your e-mail address:" %}</p>
-<form method="post" action="{% url newsletter-add %}" id="dialog-newsletter-add">
+<form method="post" action="{% url 'newsletter-add' %}" id="dialog-newsletter-add">
     <p><input type="text" name="email"> <input type="submit" name="submit" value="Submit"></p>
 </form>
 <p class="success-message" style="display: none;">{% trans "Thank you!" %}</p>

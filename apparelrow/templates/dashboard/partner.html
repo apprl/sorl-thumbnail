@@ -64,7 +64,7 @@
         <h3 class="commission">{% blocktrans %}Your commission: {{ total_sales }}kr{% endblocktrans %}</h3>
         <h3 class="commission">{% blocktrans %}Confirmed commission: {{ total_confirmed }}kr{% endblocktrans %}</h3>
         <h3 class="commission">{% blocktrans %}Pending payment: {{ pending_payment }}kr{% endblocktrans %}</h3>
-        <h3 class="link"><a id="more-info" class="open-dialog" href="{% url dashboard-more-info %}">{% trans "More info" %}</a></h3>
+        <h3 class="link"><a id="more-info" class="open-dialog" href="{% url 'dashboard-more-info' %}">{% trans "More info" %}</a></h3>
     </div>
     <div class="content-chart group">
         <div class="chart-menu">

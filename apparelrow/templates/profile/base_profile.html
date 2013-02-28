@@ -26,8 +26,8 @@
         <ul>
             <li>
             {% if profile and profile.is_brand %}
-                {% url brand-likes-men profile.slug as likes_url_men %}
-                {% url brand-likes-women profile.slug as likes_url_women %}
+                {% url 'brand-likes-men' profile.slug as likes_url_men %}
+                {% url 'brand-likes-women' profile.slug as likes_url_women %}
                 <a class="{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %}selected{% else %}first{% endif %}" href="{{ likes_url }}">{% trans "Shop" %}</a>
             {% else %}
                 <a class="{% if request.path == likes_url %}selected{% else %}first{% endif %}" href="{{ likes_url }}">{% trans "Likes" %}</a>
@@ -48,7 +48,7 @@
         </ul>
     </div>
     {% if request.path == looks_url %}
-    <a class="btn btn-positive btn-upper btn-create-look" href="{% url look-create %}">{% trans "+ Create look" %}</a>
+    <a class="btn btn-positive btn-upper btn-create-look" href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
     {% endif %}
 </div>
 {% endwith %}

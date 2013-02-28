@@ -10,20 +10,20 @@
     </div>
     <div class="column_two">
         <ul>
-            {% url popular-look-list as popular_look_list_url %}
+            {% url 'popular-look-list' as popular_look_list_url %}
             <li><a class="first latest{% if 'popular' not in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Popular looks" %}</a></li>
             <li><a class="last popular{% if 'popular' in request.path %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
         </ul>
     </div>
-    <a class="btn btn-positive btn-upper btn-create-look" href="{% url look-create %}">{% trans "+ Create look" %}</a>
+    <a class="btn btn-positive btn-upper btn-create-look" href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
 </div>
 {% endblock body-header %}
 {% block body-classes %}one-column look-list{% endblock body-classes %}
 {% block body %}
     <div id="content">
-        {% url look-list-men as look_list_men %}
-        {% url look-list-women as look_list_women %}
-        {% url popular-look-list as popular_look_list_url %}
+        {% url 'look-list-men' as look_list_men %}
+        {% url 'look-list-women' as look_list_women %}
+        {% url 'popular-look-list' as popular_look_list_url %}
         {% if request.path == look_list_women or request.path == look_list_men or request.path == popular_look_list_url %}
         {% else %}
             {% if 'products/' in request.path %}
@@ -42,7 +42,7 @@
             {% if not current_page.object_list and request.path == popular_look_list_url %}
             <div class="empty-content">
                 <p>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</p>
-                <a class="btn btn-upper" href="{% url user-list-popular %}">{% trans "See all members" %}</a>
+                <a class="btn btn-upper" href="{% url 'user-list-popular' %}">{% trans "See all members" %}</a>
             </div>
             {% else %}
                 {% include 'apparel/fragments/looks_medium.html' %}

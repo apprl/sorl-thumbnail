@@ -4,7 +4,7 @@
         {% trans "Invite friends" %}
         <a class="close" href="#">{% trans "Close" %}</a>
     </h1>
-    <form method="post" action="{% url beta.views.invite %}">
+    <form method="post" action="{% url 'beta.views.invite' %}">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}" />
     <div class="content">

@@ -90,7 +90,7 @@
         {% if product_short_link %}
         {% include 'apparel/fragments/product_short_link.html' with product_short_link=product_short_link only %}
         {% else %}
-        <a href="{% url product-generate-short-link object.slug %}" class="btn btn-upper btn-short-link">{% trans "Get product link" %}</a>
+        <a href="{% url 'product-generate-short-link' object.slug %}" class="btn btn-upper btn-short-link">{% trans "Get product link" %}</a>
         {% endif %}
     </div>
     {% endif %}
