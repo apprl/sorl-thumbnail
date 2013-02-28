@@ -20,7 +20,9 @@ django-modeltranslation==0.2
 requests==1.1.0
 pysolr==3.0.5
 celery==3.0.15
-django-celery==3.0.11
+#django-celery==3.0.11
+# Until django 1.5 support is released
+git+git://github.com/celery/django-celery.git@c6dd80bc979a316859c763289fa01026a2954fb5
 celery-with-redis==3.0
 django-static==1.5.5
 mailsnake==1.3.3
