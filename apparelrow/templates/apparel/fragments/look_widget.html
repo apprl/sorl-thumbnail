@@ -1,4 +1,3 @@
-{% load jsminify %}
 {% spaceless %}
 <div style="width: {{ object.width|add:2 }}px; margin: 0px auto;">
   <iframe src="http://{{ request.get_host }}{% url 'apparel.views.look_embed' object.slug %}" width="{{ object.width|add:2 }}" height="{{ object.height|add:2 }}" frameborder="0" scrolling="no"></iframe>
