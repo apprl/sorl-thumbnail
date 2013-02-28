@@ -494,8 +494,9 @@ def search_view(request, model_name):
     return HttpResponse(
         json.dumps({
             'object_list': object_list,
-            'previous_page_number': paged_result.previous_page_number(),
-            'next_page_number': paged_result.next_page_number(),
+            # XXX: not in use anymore
+            #'previous_page_number': paged_result.previous_page_number(),
+            #'next_page_number': paged_result.next_page_number(),
             'number': paged_result.number,
             'paginator': {
                 'num_pages': paged_result.paginator.num_pages,

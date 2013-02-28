@@ -320,9 +320,19 @@ def get_pagination_as_dict(paged_result):
     # FIXME: This exists because the JSON exporter is unable to serialise
     # Page and Pagination objects. Perhaps this code could be moved to the
     # exporter module instead?
+    try:
+        previous_page_number = paged_result.previous_page_number()
+    except EmptyPage:
+        previous_page_number = None
+
+    try:
+        next_page_number = paged_result.next_page_number()
+    except EmptyPage:
+        next_page_number = None
+
     return {
-        'previous_page_number': paged_result.previous_page_number(),
-        'next_page_number': paged_result.next_page_number(),
+        'previous_page_number': previous_page_number,
+        'next_page_number': next_page_number,
         'number': paged_result.number,
         'paginator': {
             'num_pages': paged_result.paginator.num_pages,
