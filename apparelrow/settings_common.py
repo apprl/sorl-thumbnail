@@ -197,9 +197,6 @@ INSTALLED_APPS = (
     'dashboard',
 
     'activity_feed',
-    'actstream',            # External: Actions and follows
-                            # This app must be included last because it depends
-                            # on a populated app cache for get_model
 )
 
 COMMENTS_APP = 'apparel_comments'
@@ -344,10 +341,6 @@ CACHES = {
 APPAREL_DOMAIN = '.apprl.com' # FIXME: We should probably get this from the Sites framework
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-21990268-1'
 GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
-
-# ACTSTREAM
-ACTSTREAM_MANAGER = 'actstream.managers.ActionManager'
-ACTSTREAM_ACTION_MODELS = ['auth.user', 'apparel.Look', 'apparel.Product', 'comments.comment']
 
 # SOLR COMMON
 SOLR_RELOAD_URL = 'http://localhost:8983/solr/admin/cores?action=RELOAD&core=collection1'
