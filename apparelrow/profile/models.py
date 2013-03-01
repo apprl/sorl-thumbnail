@@ -51,9 +51,241 @@ LOGIN_FLOW = (
 
 
 class User(AbstractUser):
+    name = models.CharField(max_length=100, unique=False, blank=True, null=True)
+    slug = models.CharField(max_length=100, unique=True, null=True)
+    image = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True)
+    about = models.TextField(_('About'), null=True, blank=True)
+    language = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
+    gender = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
+    blog_url = models.CharField(max_length=255, null=True, blank=True)
+
+    # brand profile
+    is_brand = models.BooleanField(default=False)
+    brand = models.OneToOneField('apparel.Brand', default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='user')
+
+    # profile login flow
+    login_flow = models.CharField(_('Login flow'), max_length=20, choices=LOGIN_FLOW, null=False, blank=False, default='bio')
+
+    # newsletter settings
+    newsletter = models.BooleanField(default=True, blank=False, null=False, help_text=_('Participating in newsletter'))
+
+    # discount notification setting
+    discount_notification = models.BooleanField(default=True, blank=False, null=False, help_text=_('Receiving sale alerts'))
+
+    # share settings
+    fb_share_like_product = models.BooleanField(default=True, blank=False, null=False)
+    fb_share_like_look = models.BooleanField(default=True, blank=False, null=False)
+    fb_share_follow_profile = models.BooleanField(default=True, blank=False, null=False)
+    fb_share_create_look = models.BooleanField(default=True, blank=False, null=False)
+
+    # facebook
+    # TODO: replace current facebook_uid with this
+    #facebook_uid = models.CharField(max_length=30, default=None, null=True, blank=True)
+    facebook_access_token = models.CharField(max_length=255, null=True, blank=True)
+    facebook_access_token_expire = models.DateTimeField(null=True, blank=True)
+
+    # partner
+    is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
+    partner_group = models.ForeignKey('dashboard.Group', null=True, blank=True)
+
+    # notification settings
+    comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
+            help_text=_('When someone commented on a product that I have liked'))
+    comment_product_comment = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
+            help_text=_('When someone commented on a product that I have commented on'))
+    comment_look_created = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
+            help_text=_('When someone commented on a look that I have created'))
+    comment_look_comment = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
+            help_text=_('When someone commented on a look that I have commented on'))
+    like_look_created = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
+            help_text=_('When someone likes a look that I have created'))
+    follow_user = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
+            help_text=_('When someone starts to follow me'))
+    facebook_friends = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
+            help_text=_('When a Facebook friend has joined Apprl'))
+
+    followers_count = models.IntegerField(default=0, blank=False, null=False)
+    popularity = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
 
     class Meta:
         db_table = 'profile_user'
+
+    @cached_property
+    def blog_url_external(self):
+        if not self.blog_url.startswith('http'):
+            return 'http://%s' % (self.blog_url,)
+
+        return self.blog_url
+
+    @cached_property
+    def has_liked(self):
+        """User has liked"""
+        return self.product_likes.exists()
+
+    @cached_property
+    def looks(self):
+        """Number of looks"""
+        return self.look.filter(published=True).count()
+
+    @cached_property
+    def likes(self):
+        """Number of likes on products and looks combined"""
+        return self.product_likes_count + self.look_likes_count
+
+    @cached_property
+    def product_likes_count(self):
+        return self.product_likes.filter(active=True).count()
+
+    @cached_property
+    def look_likes_count(self):
+        return self.look_likes.filter(active=True).count()
+
+    @cached_property
+    def display_name(self):
+        return self.display_name_live
+
+    @property
+    def display_name_live(self):
+        if self.name is not None:
+            return self.name
+
+        if self.first_name:
+            return u'%s %s' % (self.first_name, self.last_name)
+
+        return self.username
+
+    @cached_property
+    def avatar_small(self):
+        if self.image:
+            return get_thumbnail(self.image, '32x32', crop='center').url
+
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_uid
+
+        if self.is_brand:
+            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
+
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
+
+    @cached_property
+    def avatar(self):
+        if self.image:
+            return get_thumbnail(self.image, '50x50', crop='center').url
+
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_uid
+
+        if self.is_brand:
+            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
+
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
+
+    @cached_property
+    def avatar_medium(self):
+        if self.image:
+            return get_thumbnail(self.image, '125').url
+
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_uid
+
+        if self.is_brand:
+            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM)
+
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
+
+    @cached_property
+    def avatar_large(self):
+        if self.image:
+            return get_thumbnail(self.image, '208').url
+
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_uid
+
+        if self.is_brand:
+            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR_LARGE)
+
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+
+    def avatar_large_absolute_uri(self, request):
+        if self.image:
+            return request.build_absolute_uri(get_thumbnail(self.image, '208').url)
+
+        if self.facebook_uid:
+            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_uid
+
+        if self.is_brand:
+            return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
+
+        return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
+
+
+    @cached_property
+    def facebook_uid(self):
+        """
+        Try to convert username to int, if possible it is safe to assume that
+        the user is a facebook-user and not an admin created user.
+        """
+        if not self.is_brand:
+            try:
+                return int(self.username)
+            except ValueError:
+                pass
+
+        return None
+
+
+    @cached_property
+    def url_likes(self):
+        if self.is_brand:
+            return reverse('brand-likes', args=[self.slug])
+
+        return reverse('profile-likes', args=[self.slug])
+
+    @cached_property
+    def url_updates(self):
+        if self.is_brand:
+            return reverse('brand-updates', args=[self.slug])
+
+        return reverse('profile-updates', args=[self.slug])
+
+    @cached_property
+    def url_looks(self):
+        if self.is_brand:
+            return reverse('brand-looks', args=[self.slug])
+
+        return reverse('profile-looks', args=[self.slug])
+    @cached_property
+    def url_followers(self):
+        if self.is_brand:
+            return reverse('brand-followers', args=[self.slug])
+
+        return reverse('profile-followers', args=[self.slug])
+    @cached_property
+    def url_following(self):
+        if self.is_brand:
+            return reverse('brand-following', args=[self.slug])
+
+        return reverse('profile-following', args=[self.slug])
+
+    @models.permalink
+    def get_absolute_url(self):
+        # TODO: might need to check brand field for null values
+        if self.is_brand:
+            return ('brand-likes', [str(self.slug)])
+
+        return ('profile-likes', [str(self.slug)])
+
+    def clean(self):
+        """
+        Validate custom constraints
+        """
+        if self.is_partner and self.partner_group is None:
+            raise ValidationError(_(u'Partner group must be set to be able to set partner status'))
+
+    def __unicode__(self):
+        return self.display_name
+
+
 
 
 class ApparelProfile(models.Model):
