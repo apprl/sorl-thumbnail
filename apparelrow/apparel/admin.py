@@ -207,7 +207,11 @@ class VendorCategoryAdmin(admin.ModelAdmin):
     list_per_page = 50
 
     def category_ancestors(self, vendor_category):
-        return ' > '.join([c.name for c in vendor_category.category.get_ancestors()])
+        result = []
+        if vendor_category.category:
+            result = [c.name for c in vendor_category.category.get_ancestors()]
+
+        return ' > '.join(result)
 
     def queryset(self, request):
         qs = super(VendorCategoryAdmin, self).queryset(request)
