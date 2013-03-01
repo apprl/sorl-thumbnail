@@ -417,7 +417,6 @@ CELERY_ROUTES = ({
     'apparel.tasks.ProcessPopularityTask': {'queue': 'importer'},
     'apparel.tasks.ProcessLookPopularity': {'queue': 'importer'},
     'static_sitemaps.tasks.GenerateSitemap': {'queue': 'importer'},
-    'beta.tasks.send_email_task': {'queue': 'standard'},
     'profile.notifications.process_comment_look_comment': {'queue': 'standard'},
     'profile.notifications.process_comment_look_created': {'queue': 'standard'},
     'profile.notifications.process_comment_product_comment': {'queue': 'standard'},
