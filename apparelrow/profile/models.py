@@ -8,7 +8,7 @@ from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.template.loader import render_to_string
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -26,6 +26,7 @@ from activity_feed.tasks import update_activity_feed
 from profile.tasks import send_email_confirm_task
 from profile.signals import user_created_with_email
 from profile.utils import slugify_unique
+
 
 EVENT_CHOICES = (
     ('A', _('All')),
@@ -48,9 +49,16 @@ LOGIN_FLOW = (
     ('complete', 'Complete'),
 )
 
+
+class User(AbstractUser):
+
+    class Meta:
+        db_table = 'profile_user'
+
+
 class ApparelProfile(models.Model):
     """Every user is mapped against an ApparelProfile"""
-    user = models.OneToOneField(User, related_name='profile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile')
 
     name                = models.CharField(max_length=100, unique=False, blank=True, null=True)
     slug                = models.CharField(max_length=100, unique=True, null=True)
@@ -291,7 +299,7 @@ class ApparelProfile(models.Model):
 
 
 class PaymentDetail(models.Model):
-    user = models.ForeignKey('auth.User')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=128)
     company = models.BooleanField(default=False, null=False, blank=False, choices=((True, _('Receive payments as a company')), (False, _('Receive payments as a private person'))))
     orgnr = models.CharField(max_length=32, null=True, blank=True)
@@ -307,7 +315,7 @@ class PaymentDetail(models.Model):
 
 
 class EmailChange(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     token = models.CharField(max_length=42)
     email = models.CharField(max_length=256)
 
@@ -345,13 +353,6 @@ def update_profile_language(sender, user, request, **kwargs):
         profile = user.get_profile()
         profile.language = language
         profile.save()
-
-#def delete_user_comments(signal, instance, **kwargs):
-    #"""
-    #This signal attemps to delete any comments which is written by the user.
-    #"""
-    #Comment.objects.filter(user=instance).delete()
-#post_delete.connect(delete_user_comments, sender=User)
 
 
 #

@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect, HttpResponseNotFound
 from django.contrib import auth
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -47,7 +47,7 @@ def get_profile_sidebar_info(request, profile):
     else:
         info['products'] = Product.published_objects.filter(likes__user=profile.user, likes__active=True).count()
 
-    content_type = ContentType.objects.get_for_model(User)
+    content_type = ContentType.objects.get_for_model(get_user_model())
     info['following'] = Follow.objects.filter(user=profile, active=True).count()
 
     return info
@@ -157,7 +157,7 @@ def looks(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def followers(request, profile, form, page=0):
-    content_type = ContentType.objects.get_for_model(User)
+    content_type = ContentType.objects.get_for_model(get_user_model())
     queryset = Follow.objects.filter(user_follow=profile, active=True)
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
@@ -185,7 +185,7 @@ def followers(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def following(request, profile, form, page=0):
-    content_type = ContentType.objects.get_for_model(User)
+    content_type = ContentType.objects.get_for_model(get_user_model())
     queryset = Follow.objects.filter(user=profile, active=True)
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,

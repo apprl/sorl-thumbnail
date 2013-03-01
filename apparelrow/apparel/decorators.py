@@ -5,8 +5,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
-from django.db.models.loading import get_model
 
 
 def seamless_request_handling(view_func):

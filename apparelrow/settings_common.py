@@ -299,6 +299,7 @@ LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 
 AUTH_PROFILE_MODULE = 'profile.ApparelProfile'
+AUTH_USER_MODEL = 'profile.User'
 
 # django-modeltranslation
 TRANSLATION_REGISTRY = 'apparel.translation'

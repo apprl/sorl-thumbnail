@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
+from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.http import Http404
@@ -351,7 +352,7 @@ def get_look_document(instance):
 # Profile index (brands not counted)
 #
 
-@receiver(post_save, sender=get_model('auth', 'User'), dispatch_uid='search_index_user_save')
+@receiver(post_save, sender=get_user_model(), dispatch_uid='search_index_user_save')
 def search_index_user_save(instance, **kwargs):
     search_index_profile_save(instance.get_profile(), **kwargs)
 

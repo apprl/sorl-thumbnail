@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.db.models.loading import get_model
 import facebook
@@ -21,7 +21,7 @@ class FacebookProfileBackend(ModelBackend):
         validated.
         """
         if fb_uid and fb_graphtoken:
-            user, created = User.objects.get_or_create(username=fb_uid)
+            user, created = get_user_model().objects.get_or_create(username=fb_uid)
             graph = facebook.GraphAPI(fb_graphtoken)
             me = graph.get_object('me')
 
@@ -43,7 +43,7 @@ class FacebookProfileBackend(ModelBackend):
                     profile.save()
 
                     process_facebook_friends.delay(user, fb_graphtoken)
-                    user_created_with_email.send(sender=User, user=user)
+                    user_created_with_email.send(sender=get_user_model(), user=user)
 
             profile = user.get_profile()
             if profile.gender is None:

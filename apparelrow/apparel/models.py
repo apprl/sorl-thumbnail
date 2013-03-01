@@ -7,7 +7,6 @@ import datetime
 from django.db import models
 from django.db.models import Sum, Min
 from django.db.models.loading import get_model
-from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
@@ -18,6 +17,7 @@ from django.core.files import storage
 from django.core.files.base import ContentFile
 from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
 from django.dispatch import receiver
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles import finders
@@ -89,7 +89,7 @@ class Brand(models.Model):
 @receiver(post_save, sender=Brand, dispatch_uid='brand_create_user')
 def brand_create_user(sender, instance, **kwargs):
     if 'created' in kwargs and kwargs['created']:
-        user, created = User.objects.get_or_create(username=u'brand-%s' % (instance.id,))
+        user, created = get_user_model().objects.get_or_create(username=u'brand-%s' % (instance.id,))
         if created:
             profile = user.get_profile()
             profile.name = instance.name
@@ -371,7 +371,7 @@ class ProductLike(models.Model):
     Keep track of likes on products
     """
     product = models.ForeignKey(Product, related_name='likes', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='product_likes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='product_likes')
     created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
     active = models.BooleanField(default=True)
@@ -418,7 +418,7 @@ class ShortProductLinkManager(models.Manager):
 
 class ShortProductLink(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='short_product_links')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='short_product_links')
     created = models.DateTimeField(default=timezone.now)
 
     objects = ShortProductLinkManager()
@@ -690,7 +690,7 @@ class Look(models.Model):
     slug  = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
                 help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     description = models.TextField(_('Look description'), null=True, blank=True)
-    user        = models.ForeignKey(User, related_name='look')
+    user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='look')
     image       = ImageField(upload_to=look_image_path, max_length=255, blank=True)
     static_image = ImageField(upload_to=static_image_path, max_length=255, null=True, blank=True)
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
@@ -922,7 +922,7 @@ class LookLike(models.Model):
     Keep track of likes on looks
     """
     look = models.ForeignKey(Look, related_name='likes', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='look_likes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='look_likes')
     created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
     active = models.BooleanField(default=True)
@@ -1080,7 +1080,7 @@ class BackgroundImage(models.Model):
 #
 
 class FacebookAction(models.Model):
-    user = models.ForeignKey(User, related_name='facebook_actions')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='facebook_actions')
     action = models.CharField(max_length=30)
     action_id = models.CharField(max_length=30)
     object_type = models.CharField(max_length=30)

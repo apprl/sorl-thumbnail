@@ -1,10 +1,54 @@
 from django.contrib import admin
+from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.models import Group
 
 from profile.models import ApparelProfile
 from profile.models import Follow
 from profile.models import NotificationCache
 from profile.models import PaymentDetail
 
+
+#
+# Custom User Model Admin
+#
+
+class CustomUserChangeForm(UserChangeForm):
+    """
+    Extend UserChangeForm to use our custom user model.
+    """
+    class Meta:
+        model = get_user_model()
+
+
+class CustomUserCreationForm(UserCreationForm):
+    """
+    Extend UserCreationForm to use our custom user model.
+    """
+    class Meta:
+        model = get_user_model()
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        try:
+            get_user_model().objects.get(username=username)
+        except get_user_model().DoesNotExist:
+            return username
+        raise forms.ValidationError(self.error_messages['duplicate_username'])
+
+
+class CustomUserAdmin(UserAdmin):
+    form = CustomUserChangeForm
+    add_form = CustomUserCreationForm
+
+admin.site.register(get_user_model(), CustomUserAdmin)
+admin.site.unregister(Group)
+
+
+#
+# Rest
+#
 
 class ApparelProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'name', 'brand', 'slug', 'is_brand', 'language', 'followers_count', 'popularity')

@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand, CommandError
-#from django.contrib.auth.models import User
 
 from profile.models import ApparelProfile
 from profile.models import Follow

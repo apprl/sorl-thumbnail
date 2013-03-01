@@ -1,6 +1,6 @@
 import logging
 
-from django.db.models.loading import get_model
+from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 
 logger = logging.getLogger('profile.middleware')
@@ -9,7 +9,7 @@ class ImpersonateMiddleware(object):
     def process_request(self, request):
         try:
             if request.user.is_superuser and '__imitera' in request.GET:
-                request.user = get_model('auth', 'User').objects.get(id=int(request.GET['__imitera']))
+                request.user = get_user_model().objects.get(id=int(request.GET['__imitera']))
         except Exception as e:
             logger.error('ImpersonateMiddleware request: %s' % (str(e),))
 

@@ -16,7 +16,7 @@ from django.dispatch import receiver
 from django.template import RequestContext, loader
 from django.utils.translation import activate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
@@ -35,11 +35,11 @@ def get_newsletter_users():
     """
     Get an iterator of all users eligible for our (weekly) newsletter.
     """
-    return User.objects.filter(profile__newsletter=True) \
-                       .exclude(Q(email__isnull=True) | Q(email__exact='')) \
-                       .exclude(Q(first_name__isnull=True) | Q(first_name__exact='')) \
-                       .exclude(Q(last_name__isnull=True) | Q(last_name__exact='')) \
-                       .iterator()
+    return get_user_model().objects.filter(profile__newsletter=True) \
+                                   .exclude(Q(email__isnull=True) | Q(email__exact='')) \
+                                   .exclude(Q(first_name__isnull=True) | Q(first_name__exact='')) \
+                                   .exclude(Q(last_name__isnull=True) | Q(last_name__exact='')) \
+                                   .iterator()
 
 @receiver(pre_save, sender=ApparelProfile, dispatch_uid='pre_save_profile_newsletter')
 def pre_save_profile_newsletter(sender, instance, **kwargs):
