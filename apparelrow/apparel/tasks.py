@@ -136,9 +136,8 @@ def generate_brand_list_template():
                            'group': 'true',
                            'group.field': 'manufacturer_id'}
         brand_ids = []
-        for brand in ApparelSearch('*:*', **query_arguments).get_docs():
-            if hasattr(brand, 'manufacturer_id'):
-                brand_ids.append(brand.manufacturer_id)
+        for brand in ApparelSearch('*:*', **query_arguments).get_grouped().get('manufacturer_id', {}).get('groups', []):
+            brand_ids.append(int(brand.get('groupValue', 0)))
 
         for item in ApparelProfile.objects.filter(brand__id__in=brand_ids).order_by('brand__name'):
             normalized_name = unicodedata.normalize('NFKD', smart_unicode(item.brand.name)).lower()
