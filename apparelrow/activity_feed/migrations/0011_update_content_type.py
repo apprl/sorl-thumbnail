@@ -3,6 +3,7 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
 
 class Migration(DataMigration):
 
@@ -10,7 +11,7 @@ class Migration(DataMigration):
         cur_ctype_id = orm['contenttypes.contenttype'].objects.get(app_label='profile', model='apparelprofile')
         cur_ctype_id = cur_ctype_id.pk
 
-        new_ctype_id = orm['contenttypes.contenttype'].objects.get(app_label='profile', model='user')
+        new_ctype_id = ContentType.objects.get_for_model(orm['profile.user'])
         new_ctype_id = new_ctype_id.pk
 
         mapper = {}
