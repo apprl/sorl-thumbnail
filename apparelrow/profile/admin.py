@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import Group
+from django.utils.translation import ugettext_lazy as _
 
 from profile.models import ApparelProfile
 from profile.models import Follow
@@ -41,6 +42,33 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
+
+    raw_id_fields = ('brand',)
+    fieldsets = (
+        (None, {'fields': [('username', 'password'),]}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'name',
+                                         'email', 'image', 'about', 'gender',
+                                         'language', 'blog_url')}),
+        (_('Facebook'), {'fields': ('facebook_access_token',
+                                    'facebook_access_token_expire')}),
+        (_('Brand'), {'fields': ('is_brand', 'brand')}),
+        (_('Partner'), {'fields': ('is_partner', 'partner_group')}),
+        (_('Extra'), {'fields': ('login_flow', 'popularity', 'followers_count')}),
+        (_('Settings'), {'fields': ('newsletter', 'discount_notification',
+                                    'fb_share_like_product', 'fb_share_like_look',
+                                    'fb_share_follow_profile', 'fb_share_create_look',
+                                    'comment_product_wardrobe',
+                                    'comment_product_comment',
+                                    'comment_look_created',
+                                    'comment_look_comment',
+                                    'like_look_created',
+                                    'follow_user',
+                                    'facebook_friends')}),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+                                   'groups', 'user_permissions'),
+                            'classes': ('collapse',)}),
+    )
 
 admin.site.register(get_user_model(), CustomUserAdmin)
 admin.site.unregister(Group)
