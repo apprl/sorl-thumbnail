@@ -6,7 +6,7 @@ class BubbleroomMapper(TradeDoublerMapper):
         image = super(BubbleroomMapper, self).get_image_url()
         large_image = image[0][0].replace('300', '600')
 
-        return [(large_image, self.IMAGE_LARGE), (image, self.IMAGE_SMALL)]
+        return [(large_image, self.IMAGE_LARGE)]
 
     def get_gender(self):
         return self.map_gender(self.record.get('merchantCategoryName', ''))
