@@ -59,7 +59,7 @@ def dashboard_admin(request, year=None, month=None):
         apprl_commission = month_commission - partner_commission
 
         # Clicks per month
-        clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date, created__lte=end_date) \
+        clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_query) \
                                                                .order_by('created')
         for click in clicks:
             clicks_per_month[click.created.date()][0] += 1
@@ -125,7 +125,7 @@ def dashboard(request, year=None, month=None):
             data_per_month[sale['sale_date'].date()] += sale['commission']
 
         # Clicks
-        clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date, created__lte=end_date) \
+        clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_query) \
                                                                .filter(user_id=request.user.pk) \
                                                                .order_by('created')
         for click in clicks:
