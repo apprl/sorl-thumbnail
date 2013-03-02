@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.contrib.auth import get_user_model
 from django.contrib.sitemaps import Sitemap, FlatPageSitemap, GenericSitemap
 from django.db.models import get_model
 
@@ -19,7 +20,7 @@ class ViewSitemap(Sitemap):
 
 product_info = {'queryset': get_model('apparel', 'Product').published_objects.order_by('-modified'), 'date_field': 'modified'}
 look_info = {'queryset': get_model('apparel', 'Look').published_objects.order_by('-modified'), 'date_field': 'modified'}
-profile_info = {'queryset': get_model('profile', 'ApparelProfile').objects.filter(user__is_active=True)}
+profile_info = {'queryset': get_user_model().objects.filter(is_active=True)}
 
 sitemaps = {
     'flatpages': FlatPageSitemap,

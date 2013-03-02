@@ -9,7 +9,7 @@
         {% include 'profile/fragments/following.html' %}
     {% else %}
         <div class="empty">
-        {% if profile == request.user.get_profile %}
+        {% if profile == request.user %}
             <div class="message warning">
                 <p>{% trans "You currently don't follow anyone." %}</p>
                 <a class="btn btn-upper btn-block btn-positive" href="{% url 'user-list-popular' %}">{% trans "Find members to follow!" %}</a>

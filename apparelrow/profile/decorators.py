@@ -27,7 +27,7 @@ def avatar_change(view_func):
     """
     def _decorator(request, profile, *args, **kwargs):
         if request.method == 'POST':
-            if profile.user != request.user:
+            if profile != request.user:
                 return HttpResponseForbidden()
 
             success = False

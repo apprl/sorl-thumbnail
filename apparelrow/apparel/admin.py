@@ -156,8 +156,8 @@ class BrandAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
     def followers_count(self, brand):
-        if brand.profile and brand.profile.followers_count:
-            return brand.profile.followers_count
+        if brand.user and brand.user.followers_count:
+            return brand.user.followers_count
 
         return 0
 

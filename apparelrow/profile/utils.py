@@ -2,6 +2,7 @@ import time
 import datetime
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse, resolve
@@ -44,7 +45,7 @@ def get_facebook_user(request):
             request.session[FB_USER_SESSION_KEY] = fb_user
             request.session[FB_USER_EXPIRES_SESSION_KEY] = expires
 
-            get_model('profile', 'ApparelProfile').objects.filter(user__username=fb_user['uid']).update(
+            get_user_model().objects.filter(username=fb_user['uid']).update(
                 facebook_access_token=fb_user['access_token'],
                 facebook_access_token_expire=datetime.datetime.fromtimestamp(expires)
             )
@@ -71,18 +72,18 @@ def get_current_user(view_func):
             if not request.user.is_authenticated():
                 return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
 
-            profile = request.user.get_profile()
+            user = request.user
         else:
             try:
-                profile = get_model('profile', 'ApparelProfile').objects.get(slug=slug)
-            except get_model('profile', 'ApparelProfile').DoesNotExist:
-                profile = get_model('profile', 'ApparelProfile').objects.get(user__username=slug)
-                if profile.slug:
+                user = get_user_model().objects.get(slug=slug)
+            except get_user_model().DoesNotExist:
+                user = get_user_model().objects.get(username=slug)
+                if user.slug:
                     url_result = resolve(request.path)
 
-                    return HttpResponsePermanentRedirect(reverse(url_result.url_name, args=[profile.slug]))
+                    return HttpResponsePermanentRedirect(reverse(url_result.url_name, args=[user.slug]))
 
-        return view_func(request, profile, *args, **kwargs)
+        return view_func(request, user, *args, **kwargs)
 
     _decorator.__name__ = view_func.__name__
     _decorator.__dict__ = view_func.__dict__

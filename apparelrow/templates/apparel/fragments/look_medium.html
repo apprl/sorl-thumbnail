@@ -30,7 +30,7 @@
     </div>
     <div class="look-footer look-footer-medium">
         <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
-        <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>
+        <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></p>
         <div class="stats">
             <div class="likes">{{ object.score }}</div>
             {% if object.comment_count > 0 %}

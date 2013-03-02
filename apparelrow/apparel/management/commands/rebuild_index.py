@@ -3,7 +3,7 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-from apparel.search import clean_index, rebuild_product_index, rebuild_look_index, rebuild_profile_index
+from apparel.search import clean_index, rebuild_product_index, rebuild_look_index, rebuild_user_index
 
 class Command(BaseCommand):
     args = ''
@@ -27,13 +27,13 @@ class Command(BaseCommand):
         rebuild_map = {
             'look': rebuild_look_index,
             'product': rebuild_product_index,
-            'apparelprofile': rebuild_profile_index,
+            'user': rebuild_user_index,
         }
 
         app_label_map = {
             'look': 'apparel',
             'product': 'apparel',
-            'apparelprofile': 'profile',
+            'user': 'profile',
         }
 
         if options['model']:
@@ -53,5 +53,5 @@ class Command(BaseCommand):
             print 'Reindexed %s products' % (product_count,)
             look_count = rebuild_look_index()
             print 'Reindexed %s looks' % (look_count,)
-            profile_count = rebuild_profile_index()
-            print 'Reindexed %s profiles' % (profile_count,)
+            user_count = rebuild_user_index()
+            print 'Reindexed %s users' % (user_count,)

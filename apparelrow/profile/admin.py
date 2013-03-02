@@ -5,7 +5,6 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 
-from profile.models import ApparelProfile
 from profile.models import Follow
 from profile.models import NotificationCache
 from profile.models import PaymentDetail
@@ -53,7 +52,7 @@ class CustomUserAdmin(UserAdmin):
                                     'facebook_access_token_expire')}),
         (_('Brand'), {'fields': ('is_brand', 'brand')}),
         (_('Partner'), {'fields': ('is_partner', 'partner_group')}),
-        (_('Extra'), {'fields': ('login_flow', 'popularity', 'followers_count')}),
+        (_('Extra'), {'fields': ('slug', 'login_flow', 'popularity', 'followers_count')}),
         (_('Settings'), {'fields': ('newsletter', 'discount_notification',
                                     'fb_share_like_product', 'fb_share_like_look',
                                     'fb_share_follow_profile', 'fb_share_create_look',
@@ -78,15 +77,6 @@ admin.site.unregister(Group)
 # Rest
 #
 
-class ApparelProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'brand', 'slug', 'is_brand', 'language', 'followers_count', 'popularity')
-    list_filter = ('is_brand', 'is_partner')
-    search_fields = ('name',)
-    raw_id_fields = ('user', 'brand')
-
-admin.site.register(ApparelProfile, ApparelProfileAdmin)
-
-
 admin.site.register(NotificationCache)
 
 
@@ -104,6 +94,6 @@ class PaymentDetailAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
 
     def custom_user(self, obj):
-        return u'%s' % (obj.user.get_profile().display_name,)
+        return u'%s' % (obj.user.display_name,)
 
 admin.site.register(PaymentDetail, PaymentDetailAdmin)

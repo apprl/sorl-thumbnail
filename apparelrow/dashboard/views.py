@@ -95,7 +95,7 @@ def dashboard_admin(request, year=None, month=None):
 
 
 def dashboard(request, year=None, month=None):
-    if request.user.is_authenticated() and request.user.get_profile().is_partner:
+    if request.user.is_authenticated() and request.user.is_partner:
         if year is not None and month is not None:
             start_date = datetime.date(int(year), int(month), 1)
         else:

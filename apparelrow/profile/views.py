@@ -19,7 +19,7 @@ from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONRespo
 from apparel.tasks import facebook_push_graph
 from profile.utils import get_facebook_user, get_current_user
 from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm
-from profile.models import EmailChange, ApparelProfile, Follow, PaymentDetail
+from profile.models import EmailChange, Follow, PaymentDetail
 from profile.tasks import send_email_confirm_task
 from profile.decorators import avatar_change, login_flow
 from activity_feed.views import ActivityFeedRender
@@ -31,7 +31,7 @@ def get_facebook_friends(request):
     if request.user.is_authenticated() and facebook_user:
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
-        return ApparelProfile.objects.filter(user__username__in=friends_uids)
+        return get_user_model().objects.filter(username__in=friends_uids)
 
 def get_profile_sidebar_info(request, profile):
     """
@@ -45,7 +45,7 @@ def get_profile_sidebar_info(request, profile):
         gender = get_gender_from_cookie(request)
         info['products'] = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added').count()
     else:
-        info['products'] = Product.published_objects.filter(likes__user=profile.user, likes__active=True).count()
+        info['products'] = Product.published_objects.filter(likes__user=profile, likes__active=True).count()
 
     content_type = ContentType.objects.get_for_model(get_user_model())
     info['following'] = Follow.objects.filter(user=profile, active=True).count()
@@ -64,7 +64,7 @@ def likes(request, profile, form, page=0, gender=None):
     if profile.is_brand:
         queryset = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added')
     else:
-        queryset = Product.published_objects.filter(likes__user=profile.user, likes__active=True).order_by('-availability', '-likes__modified')
+        queryset = Product.published_objects.filter(likes__user=profile, likes__active=True).order_by('-availability', '-likes__modified')
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
 
@@ -118,7 +118,7 @@ def profile(request, profile, form, page=0):
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.user.look.filter(published=True).order_by('-modified')[:10]
+        'recent_looks': profile.look.filter(published=True).order_by('-modified')[:10]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
@@ -128,10 +128,10 @@ def profile(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def looks(request, profile, form, page=0):
-    if profile.user == request.user:
-        queryset = profile.user.look.order_by('-created')
+    if profile == request.user:
+        queryset = profile.look.order_by('-created')
     else:
-        queryset = profile.user.look.filter(published=True).order_by('-created')
+        queryset = profile.look.filter(published=True).order_by('-created')
 
     paged_result, pagination = get_pagination_page(queryset, 6,
             request.GET.get('page', 1), 1, 2)
@@ -175,7 +175,7 @@ def followers(request, profile, form, page=0):
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.user.look.filter(published=True).order_by('-modified')[:4]
+        'recent_looks': profile.look.filter(published=True).order_by('-modified')[:4]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
@@ -203,7 +203,7 @@ def following(request, profile, form, page=0):
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.user.look.filter(published=True).order_by('-modified')[:4]
+        'recent_looks': profile.look.filter(published=True).order_by('-modified')[:4]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
@@ -220,18 +220,18 @@ def settings_notification(request):
     Handles the notification settings form
     """
     if request.method == 'POST':
-        form = NotificationForm(request.POST, request.FILES, instance=request.user.get_profile())
+        form = NotificationForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
 
-        newsletter_form = NewsletterForm(request.POST, request.FILES, instance=request.user.get_profile())
+        newsletter_form = NewsletterForm(request.POST, request.FILES, instance=request.user)
         if newsletter_form.is_valid():
             newsletter_form.save()
 
         return HttpResponseRedirect(reverse('profile.views.settings_notification'))
 
-    form = NotificationForm(instance=request.user.get_profile())
-    newsletter_form = NewsletterForm(instance=request.user.get_profile())
+    form = NotificationForm(instance=request.user)
+    newsletter_form = NewsletterForm(instance=request.user)
 
     return render(request, 'profile/settings_notification.html', {'notification_form': form, 'newsletter_form': newsletter_form})
 
@@ -269,7 +269,7 @@ def settings_email(request):
 
             subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
             body = render_to_string('profile/confirm_email.html', {
-                    'username': request.user.get_profile().display_name,
+                    'username': request.user.display_name,
                     'link': 'http://%s%s' % (Site.objects.get_current().domain, reverse('profile.views.confirm_email')),
                     'token': token,
                 })
@@ -294,13 +294,13 @@ def settings_facebook(request):
     Handles the facebook settings form.
     """
     if request.method == 'POST':
-        form = FacebookSettingsForm(request.POST, request.FILES, instance=request.user.get_profile())
+        form = FacebookSettingsForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
 
         return HttpResponseRedirect(reverse('profile.views.settings_facebook'))
 
-    form = FacebookSettingsForm(instance=request.user.get_profile())
+    form = FacebookSettingsForm(instance=request.user)
 
     return render(request, 'profile/settings_facebook.html', {'facebook_settings_form': form})
 
@@ -316,7 +316,7 @@ def settings_partner(request):
         instance = None
 
     if request.method == 'POST':
-        form = PartnerSettingsForm(request.POST, request.FILES, instance=request.user.get_profile())
+        form = PartnerSettingsForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
 
@@ -328,7 +328,7 @@ def settings_partner(request):
 
         return HttpResponseRedirect(reverse('profile.views.settings_partner'))
 
-    form = PartnerSettingsForm(instance=request.user.get_profile())
+    form = PartnerSettingsForm(instance=request.user)
     details_form = PartnerPaymentDetailForm(instance=instance)
 
     return render(request, 'profile/settings_partner.html', {'form': form, 'details_form': details_form})
@@ -356,19 +356,19 @@ def login_flow_bio(request, profile):
 
                 token = uuid.uuid4().hex
                 email = form.cleaned_data['email']
-                old_email = profile.user.email
+                old_email = profile.email
                 email_change = EmailChange.objects.create(user=request.user, email=email, token=token)
 
                 subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
                 body = render_to_string('profile/confirm_email.html', {
-                        'username': request.user.get_profile().display_name,
+                        'username': request.user.display_name,
                         'link': 'http://%s%s' % (Site.objects.get_current().domain, reverse('profile.views.confirm_email')),
                         'token': token,
                     })
                 send_email_confirm_task.delay(subject, body, old_email)
 
                 form.changed_data.remove('email')
-                form.cleaned_data['email'] = profile.user.email
+                form.cleaned_data['email'] = profile.email
 
             form.save()
 
@@ -394,7 +394,7 @@ def login_flow_friends(request, profile):
     profile.save()
 
     if request.method == 'POST':
-        for friend in ApparelProfile.objects.filter(id__in=request.POST.getlist('profile_ids', [])):
+        for friend in get_user_model().objects.filter(id__in=request.POST.getlist('profile_ids', [])):
                 #facebook_user = get_facebook_user(request)
                 #if facebook_user:
                     #facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
@@ -424,7 +424,7 @@ def login_flow_featured(request, profile):
     profile.save()
 
     if request.method == 'POST':
-        for friend in ApparelProfile.objects.filter(id__in=request.POST.getlist('profile_ids', [])):
+        for friend in get_user_model().objects.filter(id__in=request.POST.getlist('profile_ids', [])):
             follow, created = Follow.objects.get_or_create(user=profile, user_follow=friend)
             if not created and follow.active == False:
                 follow.active = True
@@ -432,14 +432,12 @@ def login_flow_featured(request, profile):
 
         return HttpResponseRedirect(reverse('login-flow-brands'))
 
-    profiles = ApparelProfile.objects.filter(is_brand=False, gender=profile.gender).order_by('-popularity', '-followers_count')
+    profiles = get_user_model().objects.filter(is_brand=False, gender=profile.gender).order_by('-popularity', '-followers_count')
     facebook_user = get_facebook_user(request)
     if request.user.is_authenticated() and facebook_user:
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
-        profiles = profiles.exclude(user__username__in=friends_uids)
-        #follow_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
-        #profiles = profiles.exclude(pk__in=follow_ids)
+        profiles = profiles.exclude(username__in=friends_uids)
         profiles = profiles.exclude(pk=profile.pk)
 
     context = {
@@ -463,7 +461,7 @@ def login_flow_brands(request, profile):
     context = {
         'login_flow_step': 'step-brands',
         'next_url': reverse('profile.views.login_flow_like'),
-        'profiles': ApparelProfile.objects.filter(is_brand=True).order_by('-followers_count')[:21]
+        'profiles': get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:21]
     }
     return render(request, 'profile/login_flow_brands.html', context)
 
@@ -527,9 +525,9 @@ def login(request):
             if request.is_ajax():
                 return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
 
-            if user.get_profile().login_flow != 'complete':
-                response = HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (user.get_profile().login_flow)))
-                response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.get_profile().gender, max_age=365 * 24 * 60 * 60)
+            if user.login_flow != 'complete':
+                response = HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (user.login_flow)))
+                response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
                 return response
 
             return HttpResponseRedirect(_get_next(request))

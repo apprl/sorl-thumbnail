@@ -136,7 +136,7 @@ def browse_products(request, template='apparel/browse.html', gender=None):
     # Follower products
     user_ids = []
     if 'f' in request.GET and request.user:
-        user_ids = list(Follow.objects.filter(user=request.user.get_profile()).values_list('user_follow__user_id', flat=True))
+        user_ids = list(Follow.objects.filter(user=request.user).values_list('user_follow_id', flat=True))
         user_ids_or = ' OR '.join(str(x) for x in (user_ids + [0]))
         query_arguments['fq'].append('user_likes:({0})'.format(user_ids_or))
         query_arguments['fq'].append('availability:true')

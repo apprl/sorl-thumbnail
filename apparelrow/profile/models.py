@@ -11,7 +11,6 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
 from django.contrib.auth.signals import user_logged_in
 from django.core.urlresolvers import reverse
@@ -563,10 +562,9 @@ def create_profile(signal, instance, **kwargs):
     """
     Create a profile and send welcome email if a new user was created.
     """
-    if kwargs['created']:
-        profile, created = ApparelProfile.objects.get_or_create(user=instance)
-        profile.slug = slugify_unique(profile.display_name_live, profile.__class__)
-        profile.save()
+    if kwargs['created'] and not instance.slug:
+        instance.slug = slugify_unique(instance.display_name_live, instance.__class__)
+        instance.save()
 
 @receiver(user_created_with_email, sender=User, dispatch_uid='send_welcome_mail')
 def send_welcome_mail(sender, user, **kwargs):
@@ -582,9 +580,8 @@ def send_welcome_mail(sender, user, **kwargs):
 def update_profile_language(sender, user, request, **kwargs):
     language = get_language()
     if user.is_authenticated() and language is not None:
-        profile = user.get_profile()
-        profile.language = language
-        profile.save()
+        user.language = language
+        user.save()
 
 
 #
@@ -604,8 +601,8 @@ class Follow(models.Model):
     """
     Follow model lets a user follow another user.
     """
-    user = models.ForeignKey(ApparelProfile, related_name='following', on_delete=models.CASCADE)
-    user_follow = models.ForeignKey(ApparelProfile, related_name='followers', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE)
+    user_follow = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='followers', on_delete=models.CASCADE)
     created = models.DateTimeField(_('Time created'), auto_now_add=True, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), auto_now=True, null=True, blank=True)
     active = models.BooleanField(default=True, db_index=True)

@@ -2,9 +2,11 @@ import datetime
 import json
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models.loading import get_model
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.middleware import csrf
@@ -14,7 +16,6 @@ from django.core.urlresolvers import reverse
 import redis
 
 from apparel.models import Product, Look
-from profile.models import Follow, ApparelProfile
 from apparel.views import get_top_looks_in_network, get_top_products_in_network
 from activity_feed.models import Activity, ActivityFeed
 from apparel.utils import get_gender_from_cookie
@@ -77,8 +78,7 @@ class ActivityFeedRender:
                 if activity.activity_object:
                     context['objects'].append(activity.activity_object)
 
-            context['users'] = ApparelProfile.objects.filter(pk__in=result.get('u', [])) \
-                                                     .select_related('user')
+            context['users'] = get_user_model().objects.filter(pk__in=result.get('u', []))
             context['total_objects'] = len(activity_ids)
             context['remaining_objects'] = len(activity_ids) - len(activity_ids[:4])
 
@@ -92,8 +92,7 @@ class ActivityFeedRender:
                                                              is_public=True,
                                                              is_removed=False)
                 context['comment_count'] = context['comments'].count()
-                context['comments'] = context['comments'].order_by('-submit_date') \
-                                                         .select_related('user', 'user__profile')[:2]
+                context['comments'] = context['comments'].order_by('-submit_date').select_related('user')[:2]
                 context['enable_comments'] = False
                 if result['v'] in ['like_product', 'like_look', 'create']:
                     context['enable_comments'] = True
@@ -132,16 +131,14 @@ def public_feed(request, gender=None):
                                             .order_by('-popularity')
     popular_looks = Look.published_objects.filter(gender__in=[gender, 'U']) \
                                           .order_by('-popularity', '-created')
-    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True) \
-                                           .order_by('-followers_count')
-    popular_members = ApparelProfile.objects.filter(user__is_active=True,
-                                                    is_brand=False,
-                                                    gender=gender) \
-                                            .order_by('-popularity', '-followers_count')
+    popular_brands = get_user_model().objects.filter(is_active=True, is_brand=True) \
+                                             .order_by('-followers_count')
+    popular_members = get_user_model().objects.filter(is_active=True, is_brand=False, gender=gender) \
+                                              .order_by('-popularity', '-followers_count')
     if request.user and request.user.is_authenticated():
-        follow_ids = Follow.objects.filter(user=request.user.get_profile()).values_list('user_follow', flat=True)
+        follow_ids = get_model('profile', 'follow').objects.filter(user=request.user).values_list('user_follow', flat=True)
         popular_brands = popular_brands.exclude(id__in=follow_ids)
-        popular_members = popular_members.exclude(id=request.user.get_profile().id).exclude(id__in=follow_ids)
+        popular_members = popular_members.exclude(id=request.user.pk).exclude(id__in=follow_ids)
 
     response = render(request, 'activity_feed/public_feed.html', {
             'current_page': paged_result,
@@ -173,8 +170,7 @@ def user_feed(request, gender=None):
         else:
             gender = 'W'
 
-    profile = request.user.get_profile()
-    htmlset = ActivityFeedRender(request, gender, profile)
+    htmlset = ActivityFeedRender(request, gender, request.user)
     paginator = Paginator(htmlset, 5)
 
     page = request.GET.get('page')
@@ -190,22 +186,20 @@ def user_feed(request, gender=None):
             'current_page': paged_result
         })
 
-    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')
-    popular_members = ApparelProfile.objects.filter(user__is_active=True,
-                                                    is_brand=False,
-                                                    gender=gender) \
-                                            .order_by('-popularity', '-followers_count')
+    popular_brands = get_user_model().objects.filter(is_active=True, is_brand=True).order_by('-followers_count')
+    popular_members = get_user_model().objects.filter(is_active=True, is_brand=False, gender=gender) \
+                                              .order_by('-popularity', '-followers_count')
 
     if request.user and request.user.is_authenticated():
-        follow_ids = Follow.objects.filter(user=request.user.get_profile()).values_list('user_follow', flat=True)
+        follow_ids = get_model('profile', 'follow').objects.filter(user=request.user).values_list('user_follow', flat=True)
         popular_brands = popular_brands.exclude(id__in=follow_ids)
-        popular_members = popular_members.exclude(id=request.user.get_profile().id).exclude(id__in=follow_ids)
+        popular_members = popular_members.exclude(id=request.user.pk).exclude(id__in=follow_ids)
 
     response = render(request, 'activity_feed/user_feed.html', {
             'current_page': paged_result,
             'next': request.get_full_path(),
-            'popular_products': get_top_products_in_network(profile, 4),
-            'popular_looks': get_top_looks_in_network(profile, 3),
+            'popular_products': get_top_products_in_network(request.user, 4),
+            'popular_looks': get_top_looks_in_network(request.user, 3),
             'popular_brands': popular_brands[:5],
             'popular_members': popular_members[:5],
         })

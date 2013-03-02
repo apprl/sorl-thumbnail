@@ -31,17 +31,17 @@
       {% endif %}
     </script>
     <script type="text/javascript">
-        var hasLiked = {% if user.is_authenticated and user.get_profile.has_liked %}true{% else %}false{% endif %};
+        var hasLiked = {% if user.is_authenticated and user.has_liked %}true{% else %}false{% endif %};
         var dialog_like_product = '{% url "dialog-like-product" %}';
         var dialog_like_look = '{% url "dialog-like-look" %}';
         var product_popup_url = '{% url "product-popup" %}';
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         var share_settings = {
-            'like_product': {% if user.is_authenticated and user.get_profile.fb_share_like_product %}true{% else %}false{% endif %},
-            'like_look': {% if user.is_authenticated and user.get_profile.fb_share_like_look %}true{% else %}false{% endif %},
-            'follow_profile': {% if user.is_authenticated and user.get_profile.fb_share_follow_profile %}true{% else %}false{% endif %},
-            'create_look': {% if user.is_authenticated and user.get_profile.fb_share_create_look %}true{% else %}false{% endif %}
+            'like_product': {% if user.is_authenticated and user.fb_share_like_product %}true{% else %}false{% endif %},
+            'like_look': {% if user.is_authenticated and user.fb_share_like_look %}true{% else %}false{% endif %},
+            'follow_profile': {% if user.is_authenticated and user.fb_share_follow_profile %}true{% else %}false{% endif %},
+            'create_look': {% if user.is_authenticated and user.fb_share_create_look %}true{% else %}false{% endif %}
         };
         var selected_gender = '{{ APPAREL_GENDER }}';
         var facebook_scope = '{{ FACEBOOK_SCOPE }}';
@@ -313,7 +313,7 @@
                         <a data-pin-do="buttonFollow" href="http://pinterest.com/apprl/">APPRL</a>
                     </div>
                 </div>
-                {% if not request.user.get_profile.is_partner %}
+                {% if not request.user.is_partner %}
                 <a href="{% url 'dashboard' %}" class="btn btn-block btn-upper btn-footer-partner">{% trans "Become a partner blogger" %}</a>
                 {% endif %}
             </div>

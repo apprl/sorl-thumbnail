@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
   <head>
-    <title>{{ object.title }} by {{ object.user.get_profile.display_name }} | Apprl - Social Shopping</title>
+    <title>{{ object.title }} by {{ object.user.display_name }} | Apprl - Social Shopping</title>
     <link rel="stylesheet" href="{% static 'styles/widget.css' %}">
     <link rel="canonical" href="{% url 'apparel.views.look_detail' object.slug %}">
     <script type="text/javascript">

@@ -27,7 +27,7 @@ from mailsnake.exceptions import MailSnakeException
 
 from apparel.tasks import mailchimp_subscribe, mailchimp_unsubscribe
 from apparel.models import Product, Look
-from profile.models import ApparelProfile, Follow
+from profile.models import Follow
 
 logger = logging.getLogger('apparel.email')
 
@@ -41,7 +41,7 @@ def get_newsletter_users():
                                    .exclude(Q(last_name__isnull=True) | Q(last_name__exact='')) \
                                    .iterator()
 
-@receiver(pre_save, sender=ApparelProfile, dispatch_uid='pre_save_profile_newsletter')
+@receiver(pre_save, sender=get_user_model(), dispatch_uid='pre_save_profile_newsletter')
 def pre_save_profile_newsletter(sender, instance, **kwargs):
     """
     Update mailchimp list on profile update.
@@ -49,21 +49,21 @@ def pre_save_profile_newsletter(sender, instance, **kwargs):
     if not instance.pk:
         return
 
-    old_data = ApparelProfile.objects.get(pk=instance.pk)
+    old_data = get_user_model().objects.get(pk=instance.pk)
     if old_data.newsletter == instance.newsletter:
         return
 
     if instance.newsletter:
-        mailchimp_subscribe.delay(instance.user)
+        mailchimp_subscribe.delay(instance)
     else:
-        mailchimp_unsubscribe.delay(instance.user)
+        mailchimp_unsubscribe.delay(instance)
 
-@receiver(pre_delete, sender=ApparelProfile, dispatch_uid='pre_delete_profile_newsletter')
+@receiver(pre_delete, sender=get_user_model(), dispatch_uid='pre_delete_profile_newsletter')
 def pre_delete_profile_newsletter(sender, instance, **kwargs):
     """
     Update mailchimp list on profile delete.
     """
-    mailchimp_unsubscribe.delay(instance.user, delete=True)
+    mailchimp_unsubscribe.delay(instance, delete=True)
 
 @csrf_exempt
 def mailchimp_webhook(request):
@@ -71,10 +71,10 @@ def mailchimp_webhook(request):
         webhook_type = request.POST.get('type', None)
         webhook_email = request.POST.get('data[email]', '')
         if webhook_type == 'subscribe':
-            ApparelProfile.objects.filter(user__email=webhook_email).update(newsletter=True)
+            get_user_model().objects.filter(email=webhook_email).update(newsletter=True)
             logger.info('Mailchimp webhook: subscribe %s' % (webhook_email,))
         elif webhook_type == 'unsubscribe':
-            ApparelProfile.objects.filter(user__email=webhook_email).update(newsletter=False)
+            get_user_model().objects.filter(email=webhook_email).update(newsletter=False)
             logger.info('Mailchimp webhook: unsubscribe %s' % (webhook_email,))
 
     return HttpResponse('')
@@ -159,7 +159,7 @@ def get_weekly_mail_content(gender, timeframe):
                 'image': get_thumbnail(look.static_image, '576', crop='noop').url,
                 'name': look.title,
                 'user_url': ''.join(['http://', Site.objects.get_current().domain, look.user.get_absolute_url()]),
-                'user_name': look.user.get_profile().display_name,
+                'user_name': look.user.display_name,
             })
 
             count_looks = count_looks + 1
@@ -170,16 +170,16 @@ def get_weekly_mail_content(gender, timeframe):
 
     # Members
     members = []
-    base_members = list(ApparelProfile.objects.filter(gender=gender).order_by('-followers_count').values_list('user', flat=True)[:4])
+    base_members = list(get_user_model().objects.filter(gender=gender).order_by('-followers_count').values_list('id', flat=True)[:4])
     temp_week_members = list(Follow.objects.filter(modified__gt=timeframe)
-                                           .values_list('user_follow__user', flat=True)
-                                           .annotate(count=Count('user_follow__user'))
+                                           .values_list('user_follow', flat=True)
+                                           .annotate(count=Count('user_follow'))
                                            .order_by('-count'))
 
     week_members = []
     count_week_members = 0
     for user_id in temp_week_members:
-        profile = ApparelProfile.objects.get(user__id=user_id)
+        profile = get_user_model().objects.get(pk=user_id)
         if profile.gender == gender:
             week_members.append(user_id)
             count_week_members = count_week_members + 1
@@ -191,7 +191,7 @@ def get_weekly_mail_content(gender, timeframe):
     count_members = 0
     for member_id in week_members + base_members:
         if member_id not in used_members:
-            profile = ApparelProfile.objects.get(user__id=member_id)
+            profile = get_user_model().objects.get(pk=member_id)
 
             avatar = profile.avatar_medium
             if not avatar.startswith('http://') and not avatar.startswith('https://'):
@@ -225,7 +225,7 @@ def generate_weekly_mail(request):
             batch.append({'EMAIL': user.email,
                           'FNAME': user.first_name,
                           'LNAME': user.last_name,
-                          'GENDER': user.get_profile().gender})
+                          'GENDER': user.gender})
 
         try:
             mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_MEMBER_LIST, double_optin=False, update_existing=True, batch=batch)

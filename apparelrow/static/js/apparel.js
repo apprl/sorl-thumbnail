@@ -712,7 +712,7 @@ ApparelSearch = {
         });
 
         ApparelSearch._doSearch({
-            model: 'apparelprofile',
+            model: 'user',
             query: {
                 'q': s,
                 'limit': 10

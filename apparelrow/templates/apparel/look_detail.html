@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n humanize comments cache apparel_extras %}
 
-{% block extra-title %}{{ object.title }} {% trans "by" %} {{ object.user.get_profile.display_name }} | {% trans "Looks" %} | {% endblock %}
+{% block extra-title %}{{ object.title }} {% trans "by" %} {{ object.user.display_name }} | {% trans "Looks" %} | {% endblock %}
 
 {% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
 
@@ -115,7 +115,7 @@
 <div id="body-header">
     <div class="column_one">
         <h1>{{ object.title }}{% if not object.published %} ({% trans "Draft" %}){% endif %}</h1>
-        <h2>{% trans "by" %} <a href="{{ object.user.get_profile.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></h2>
+        <h2>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></h2>
     </div>
     <a class="btn btn-positive btn-upper btn-create-look" href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
 </div>
@@ -123,10 +123,10 @@
 {% block body-classes %}look two-columns{% endblock body-classes %}
 {% block body %}
 <div id="look-header">
-    <a href="{{ object.user.get_profile.get_absolute_url }}"><img src="{{ object.user.get_profile.avatar }}" class="profile-image" /></a>
+    <a href="{{ object.user.get_absolute_url }}"><img src="{{ object.user.avatar }}" class="profile-image" /></a>
     <div class="look-header-content">
         {% if object.user != request.user %}
-            {% include 'apparel/fragments/follow.html' with profile=object.user.get_profile %}
+            {% include 'apparel/fragments/follow.html' with profile=object.user %}
         {% else %}
             <a class="btn btn-small btn-positive btn-edit" href="{% url 'look-editor' object.slug %}">{% trans "Edit" %}</a>
             <a class="btn btn-small btn-negative btn-delete" title="{{ object.title }}" href="{% url 'apparel.views.look_delete' object.slug %}">{% trans "Delete" %}</a>
@@ -157,10 +157,10 @@
     <h2>{% trans "Likes" %}</h2>
     <ul id="likes" class="group">
     {% for like in likes %}
-        {% if like.user and like.user.get_profile %}
+        {% if like.user and like.user %}
         <li{% if forloop.counter|divisibleby:6 %} class="last-column"{% endif %}>
-            <a href="{{ like.user.get_absolute_url }}" title="{{ like.user.get_profile.display_name }}">
-                <img alt="{{ like.user.get_profile.display_name }}" title="{{ like.user.get_profile.display_name }}" src="{{ like.user.get_profile.avatar }}">
+            <a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}">
+                <img alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}">
             </a>
         </li>
         {% endif %}
@@ -189,7 +189,7 @@
         </div>
     </div>
     {% if looks_by_user %}
-    <h2>{% trans "More looks by" %} {{ object.user.get_profile.display_name }}</h2>
+    <h2>{% trans "More looks by" %} {{ object.user.display_name }}</h2>
     {% with looks_by_user as looks %}
     {% include 'apparel/fragments/looks.html' %}
     {% endwith %}

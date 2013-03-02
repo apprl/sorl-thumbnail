@@ -5,6 +5,7 @@ import dateutil.parser
 import logging
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from fuzzywuzzy import process
 
@@ -78,7 +79,7 @@ class BaseImporter:
     def calculate_cut(self, data):
         if 'user_id' in data and data['user_id']:
             cut = settings.APPAREL_DASHBOARD_CUT_DEFAULT
-            profile = get_model('profile', 'ApparelProfile').objects.filter(user=data['user_id'])
+            profile = get_user_model().objects.filter(pk=data['user_id'])
             if profile:
                 profile = profile[0]
                 if profile.partner_group:

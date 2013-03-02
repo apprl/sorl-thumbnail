@@ -21,12 +21,12 @@
     {% if not request.user.is_authenticated %}
     <li class="user facebook"><a class="btn-facebook facebook-btn" href="#login">{% trans "Log in" %} <i class="icon-facebook"></i></a></li>
     {% else %}
-    <li class="avatar"><a href="{{ request.user.get_profile.url_likes }}"><img src="{{ request.user.get_profile.avatar_small }}" width="32" height="32"></a></li>
+    <li class="avatar"><a href="{{ request.user.url_likes }}"><img src="{{ request.user.avatar_small }}" width="32" height="32"></a></li>
     <li class="user subnav-handle">
-        <a class="{% selected_url request "/profile/settings" "/profile/"|add:request.user.get_profile.slug %}" href="{{ request.user.get_profile.url_likes }}">{{ request.user.get_profile.display_name }}</a>
+        <a class="{% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}" href="{{ request.user.url_likes }}">{{ request.user.display_name }}</a>
         <ul class="subnav" id="subnav-profile">
-            <li><a href="{{ request.user.get_profile.url_likes }}">{% trans "Your profile" %}</a></li>
-            {% if request.user.get_profile.is_partner %}
+            <li><a href="{{ request.user.url_likes }}">{% trans "Your profile" %}</a></li>
+            {% if request.user.is_partner %}
             <li><a href="{% url 'dashboard' %}">{% trans "Your dashboard" %}</a></li>
             {% endif %}
             <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>

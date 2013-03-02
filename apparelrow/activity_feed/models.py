@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
@@ -63,7 +64,7 @@ class Activity(models.Model):
     """
     Original activity on format USER VERB OBJECT.
     """
-    user = models.ForeignKey('profile.ApparelProfile', related_name='activities', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='activities', on_delete=models.CASCADE)
     verb = models.CharField(max_length=16)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -111,8 +112,8 @@ class ActivityFeed(models.Model):
     An actitivty feed per user. Duplicates data from activity model for every
     connected user.
     """
-    owner = models.ForeignKey('profile.ApparelProfile', related_name='activity_feeds', on_delete=models.CASCADE)
-    user = models.ForeignKey('profile.ApparelProfile', related_name='+', on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='activity_feeds', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', on_delete=models.CASCADE)
     verb = models.CharField(max_length=16)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()

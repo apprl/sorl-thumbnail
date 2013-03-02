@@ -357,7 +357,7 @@ def selected_url(request, *args):
         elif pattern == '/profile':
             slug = '--------------------------------------'
             if request.user.is_authenticated():
-                slug = request.user.get_profile().slug
+                slug = request.user.slug
             if not request.path.startswith('/profile/%s' % (slug,)) and not request.path.startswith('/profile/settings') and request.path.startswith(pattern):
                 return 'selected'
         else:

@@ -17,7 +17,7 @@
         <ul class="settings-list">
             <li class="first"><a href="{% url 'profile.views.settings_notification' %}">{% trans "E-mail Notifications & Newsletters" %}</a></li>
             <li><a href="{% url 'profile.views.settings_email' %}">{% trans "E-mail Address" %}</a></li>
-            {% if request.user.is_authenticated and request.user.get_profile.is_partner %}
+            {% if request.user.is_authenticated and request.user.is_partner %}
             <li><a href="{% url 'profile.views.settings_facebook' %}">{% trans "Facebook" %}</a></li>
             <li class="last"><a href="{% url 'profile.views.settings_partner' %}">{% trans "Partner" %}</a></li>
             {% else %}

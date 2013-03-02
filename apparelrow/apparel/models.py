@@ -18,7 +18,6 @@ from django.core.files.base import ContentFile
 from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles import finders
 from django.utils import timezone
@@ -91,12 +90,11 @@ def brand_create_user(sender, instance, **kwargs):
     if 'created' in kwargs and kwargs['created']:
         user, created = get_user_model().objects.get_or_create(username=u'brand-%s' % (instance.id,))
         if created:
-            profile = user.get_profile()
-            profile.name = instance.name
-            profile.slug = slugify(profile.name)
-            profile.brand = instance
-            profile.is_brand = True
-            profile.save()
+            user.name = instance.name
+            user.slug = slugify(user.name)
+            user.brand = instance
+            user.is_brand = True
+            user.save()
 
 
 #
@@ -392,9 +390,9 @@ def product_like_post_save(sender, instance, **kwargs):
         return
 
     if instance.active == True:
-        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'like_product', instance.product, instance.product.gender)
+        get_model('activity_feed', 'activity').objects.push_activity(instance.user, 'like_product', instance.product, instance.product.gender)
     else:
-        get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_product', instance.product)
+        get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
@@ -402,7 +400,7 @@ def product_like_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
         return
 
-    get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_product', instance.product)
+    get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
 
 
 #
@@ -631,8 +629,8 @@ def vendor_product_pre_save(sender, instance, **kwargs):
         # Only process sale alerts if price and discount price is set and the
         # vendorproduct has a product. The product should be available,
         # published and an manufacturer should be attached with a profile.
-        if price and discount_price and instance.product and instance.product.manufacturer and instance.product.manufacturer.profile and instance.product.availability == True and instance.product.published == True:
-            process_sale_alert.delay(instance.product.manufacturer.profile,
+        if price and discount_price and instance.product and instance.product.manufacturer and instance.product.manufacturer.user and instance.product.availability == True and instance.product.published == True:
+            process_sale_alert.delay(instance.product.manufacturer.user,
                                      instance.product,
                                      instance.original_currency,
                                      price,
@@ -872,7 +870,7 @@ class Look(models.Model):
         return [(c.product.category_and_brand, c.product) for c in self.display_components]
 
     def __unicode__(self):
-        return u"%s by %s" % (self.title, self.user.get_profile().display_name)
+        return u"%s by %s" % (self.title, self.user.display_name)
 
     @models.permalink
     def get_absolute_url(self):
@@ -900,9 +898,9 @@ def look_saved_handler(sender, look, **kwargs):
     look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
 
     if look.published == True:
-        get_model('activity_feed', 'activity').objects.push_activity(look.user.get_profile(), 'create', look, look.gender)
+        get_model('activity_feed', 'activity').objects.push_activity(look.user, 'create', look, look.gender)
     else:
-        get_model('activity_feed', 'activity').objects.pull_activity(look.user.get_profile(), 'create', look)
+        get_model('activity_feed', 'activity').objects.pull_activity(look.user, 'create', look)
 
 @receiver(pre_delete, sender=Look, dispatch_uid='look_pre_delete')
 def look_pre_delete(sender, instance, **kwargs):
@@ -910,7 +908,7 @@ def look_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity on pre_delete, but %s has not user attribute' % instance)
         return
 
-    get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'create', instance)
+    get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'create', instance)
 
 
 #
@@ -943,9 +941,9 @@ def look_like_post_save(sender, instance, **kwargs):
         return
 
     if instance.active == True and instance.look.published == True:
-        get_model('activity_feed', 'activity').objects.push_activity(instance.user.get_profile(), 'like_look', instance.look, instance.look.gender)
+        get_model('activity_feed', 'activity').objects.push_activity(instance.user, 'like_look', instance.look, instance.look.gender)
     else:
-        get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_look', instance.look)
+        get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_look', instance.look)
 
 @receiver(pre_delete, sender=LookLike, dispatch_uid='look_like_pre_delete')
 def look_like_pre_delete(sender, instance, **kwargs):
@@ -953,7 +951,7 @@ def look_like_pre_delete(sender, instance, **kwargs):
         logging.warning('Trying to remove an activity, but %s has not user attribute' % instance)
         return
 
-    get_model('activity_feed', 'activity').objects.pull_activity(instance.user.get_profile(), 'like_look', instance.look)
+    get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_look', instance.look)
 
 
 #

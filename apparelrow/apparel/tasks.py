@@ -7,6 +7,7 @@ import string
 
 from django.core.management import call_command
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_unicode
@@ -18,7 +19,6 @@ import requests
 
 from apparel.search import ApparelSearch
 from apparel.models import Product, VendorBrand, VendorCategory, FacebookAction
-from profile.models import ApparelProfile
 
 logger = logging.getLogger('apparel.tasks')
 
@@ -28,13 +28,13 @@ def mailchimp_subscribe(user):
         mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
         mailchimp.listSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST,
                                 email_address=user.email,
-                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.get_profile().gender},
+                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.gender},
                                 double_optin=False,
                                 update_existing=True,
                                 send_welcome=False)
         mailchimp.listSubscribe(id=settings.MAILCHIMP_MEMBER_LIST,
                                 email_address=user.email,
-                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.get_profile().gender},
+                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.gender},
                                 double_optin=False,
                                 update_existing=True,
                                 send_welcome=False)
@@ -139,7 +139,7 @@ def generate_brand_list_template():
         for brand in ApparelSearch('*:*', **query_arguments).get_grouped().get('manufacturer_id', {}).get('groups', []):
             brand_ids.append(int(brand.get('groupValue', 0)))
 
-        for item in ApparelProfile.objects.filter(brand__id__in=brand_ids).order_by('brand__name'):
+        for item in get_user_model().objects.filter(brand__id__in=brand_ids).order_by('brand__name'):
             normalized_name = unicodedata.normalize('NFKD', smart_unicode(item.brand.name)).lower()
             for index, char in enumerate(normalized_name):
                 if char in alphabet:

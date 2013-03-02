@@ -80,7 +80,7 @@ def look_instance_to_dict(look):
     look_dict = {
         'id': look.id,
         'title': look.title,
-        'user': look.user.get_profile().display_name,
+        'user': look.user.display_name,
         'url': look.get_absolute_url(),
         'slug': look.slug,
         'component': look.component,

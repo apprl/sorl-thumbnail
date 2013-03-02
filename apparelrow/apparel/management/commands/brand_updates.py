@@ -32,12 +32,12 @@ class Command(BaseCommand):
                 last_update = datetime.datetime.now() - datetime.timedelta(days=30)
 
             for product in Product.valid_objects.filter(date_added__gt=last_update, manufacturer=brand).order_by('-modified').iterator():
-                #get_model('activity_feed', 'activity').objects.push_activity(brand.profile, 'add_product', product, product.gender)
+                #get_model('activity_feed', 'activity').objects.push_activity(brand.user, 'add_product', product, product.gender)
                 # Code below is taken from activity_feed.models and
                 # activity_feed.task because we do not want to use a new redis
                 # connection for every product
                 activity, created = get_model('activity_feed', 'activity') \
-                        .objects.get_or_create(user=brand.profile,
+                        .objects.get_or_create(user=brand.user,
                                                verb='add_product',
                                                content_type=content_type,
                                                object_id=product.pk,

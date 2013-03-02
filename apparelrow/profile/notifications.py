@@ -5,6 +5,7 @@ import HTMLParser
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.cache import cache
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
 from django.contrib.sites.models import Site
@@ -22,10 +23,7 @@ from celery.task import task
 from apparel.utils import currency_exchange
 
 def is_following(user_one, user_two):
-    profile_one = user_one.get_profile()
-    profile_two = user_two.get_profile()
-
-    return get_model('profile', 'Follow').objects.filter(user=profile_one, user_follow=profile_two, active=True).exists()
+    return get_model('profile', 'Follow').objects.filter(user=user_one, user_follow=user_two, active=True).exists()
 
 def get_key(name, recipient, sender, obj):
     recipient_pk = sender_pk = obj_pk = ''
@@ -60,9 +58,8 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     extra_context['domain'] = Site.objects.get_current().domain
     extra_context['sender_first_name'] = sender.first_name
     extra_context['sender_last_name'] = sender.last_name
-    profile = sender.get_profile()
-    extra_context['sender_link'] = 'http://%s%s' % (extra_context['domain'], profile.get_absolute_url())
-    extra_context['sender_updates_link'] = 'http://%s%s' % (extra_context['domain'], reverse('profile-updates', args=[profile.slug]))
+    extra_context['sender_link'] = 'http://%s%s' % (extra_context['domain'], sender.get_absolute_url())
+    extra_context['sender_updates_link'] = 'http://%s%s' % (extra_context['domain'], reverse('profile-updates', args=[sender.slug]))
     if 'object_link' in extra_context:
         extra_context['object_link'] = 'http://%s%s' % (extra_context['domain'], extra_context['object_link'])
 
@@ -75,8 +72,8 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     for user in users:
         if user and user.email and user.is_active:
-            if hasattr(user, 'get_profile'):
-                activate(user.get_profile().language)
+            if user.language:
+                activate(user.language)
             else:
                 activate(settings.LANGUAGE_CODE)
 
@@ -124,9 +121,9 @@ def process_comment_look_created(recipient, sender, comment, **kwargs):
         return 'same user'
 
     notify_user = None
-    if recipient.get_profile().comment_look_created == 'A':
+    if recipient.comment_look_created == 'A':
         notify_user = recipient
-    elif recipient.get_profile().comment_look_created == 'F':
+    elif recipient.comment_look_created == 'F':
         if is_following(user, sender):
             notify_user = recipient
 
@@ -167,7 +164,7 @@ def process_comment_product_comment(recipient, sender, comment, **kwargs):
     comments = Comment.objects.filter(content_type=content_object_content_type, object_pk=content_object.pk).select_related('apparel_profile')
     for comment_obj in comments:
         if comment_obj.user != sender and comment_obj.user not in notify_users:
-            notification_setting = getattr(comment_obj.user.get_profile(), 'comment_product_comment')
+            notification_setting = getattr(comment_obj.user, 'comment_product_comment')
             if notification_setting == 'A':
                 notify_users.add(comment_obj.user)
             elif notification_setting == 'F':
@@ -212,7 +209,7 @@ def process_comment_look_comment(recipient, sender, comment, **kwargs):
     comments = Comment.objects.filter(content_type=content_object_content_type, object_pk=content_object.pk).select_related('apparel_profile')
     for comment_obj in comments:
         if comment_obj.user != sender and comment_obj.user not in notify_users:
-            notification_setting = getattr(comment_obj.user.get_profile(), 'comment_look_comment')
+            notification_setting = getattr(comment_obj.user, 'comment_look_comment')
             if notification_setting == 'A':
                 notify_users.add(comment_obj.user)
             elif notification_setting == 'F':
@@ -255,9 +252,9 @@ def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
     notify_users = set()
     for product_like in content_object.likes.iterator():
         if product_like.user != sender and product_like.user not in notify_users:
-            if product_like.user.get_profile().comment_product_wardrobe == 'A':
+            if product_like.user.comment_product_wardrobe == 'A':
                 notify_users.add(product_like.user)
-            elif product_like.user.get_profile().comment_product_wardrobe == 'F':
+            elif product_like.user.comment_product_wardrobe == 'F':
                 if is_following(product_like.user, sender):
                     notify_users.add(product_like.user)
 
@@ -294,9 +291,9 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         return 'sender is recipient, no notification'
 
     notify_user = None
-    if recipient.get_profile().comment_look_created == 'A':
+    if recipient.comment_look_created == 'A':
         notify_user = recipient
-    elif recipient.get_profile().comment_look_created == 'F':
+    elif recipient.comment_look_created == 'F':
         if is_following(recipient, sender):
             notify_user = recipient
 
@@ -330,7 +327,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
 
     notify_user = None
     template_name = 'follow_user'
-    if recipient.get_profile().follow_user == 'A':
+    if recipient.follow_user == 'A':
         notify_user = recipient
         if is_following(recipient, sender):
             template_name = 'follow_user_following'
@@ -360,13 +357,14 @@ def process_facebook_friends(sender, graph_token, **kwargs):
     logger = process_facebook_friends.get_logger(**kwargs)
     graph = facebook.GraphAPI(graph_token)
     fids = [f['id'] for f in graph.get_connections('me', 'friends').get('data', [])]
-    for recipient in get_model('profile', 'ApparelProfile').objects.filter(user__username__in=fids).select_related('user'):
-        if is_duplicate('facebook_friends', recipient.user, sender, None):
-            logger.info('duplicate %s' % (recipient.user,))
+    # TODO: facebook login move
+    for recipient in get_user_model().objects.filter(username__in=fids):
+        if is_duplicate('facebook_friends', recipient, sender, None):
+            logger.info('duplicate %s' % (recipient,))
             continue
 
         if recipient.facebook_friends == 'A' and sender:
-            notify_by_mail([recipient.user], 'facebook_friends', sender)
+            notify_by_mail([recipient], 'facebook_friends', sender)
 
 
 #
@@ -382,7 +380,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
 
     template_name = 'first_sale_alert' if first else 'second_sale_alert'
     for likes in product.likes.filter(user__profile__discount_notification=True, active=True).select_related('user', 'user__profile'):
-        if likes.user.get_profile() and likes.user.get_profile().discount_notification:
+        if likes.user and likes.user.discount_notification:
             # If we already sent a notification for this product and user it
             # must mean that the price has increased and then decreased.
             if is_duplicate('sale_alert', likes.user, sender.user, product):
@@ -390,8 +388,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
 
             # Use the exchange rate from the user language
             language = settings.LANGUAGE_CODE
-            if likes.user.get_profile().language:
-                language = likes.user.get_profile().language
+            if likes.user.language:
+                language = likes.user.language
 
             currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
             rate = currency_exchange(currency, original_currency)

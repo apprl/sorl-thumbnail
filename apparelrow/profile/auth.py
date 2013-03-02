@@ -34,23 +34,21 @@ class FacebookProfileBackend(ModelBackend):
                         user.last_name = me['last_name']
                     if me.get('email'):
                         user.email = me['email']
-                    user.save()
-
-                    profile = user.get_profile()
                     if me.get('name'):
-                        profile.name = me.get('name')
-                    profile.slug = slugify_unique(profile.display_name_live, profile.__class__)
-                    profile.save()
+                        user.name = me['name']
+
+                    # TODO: think about slug during dual sign up
+                    user.slug = slugify_unique(user.display_name_live, user.__class__)
+                    user.save()
 
                     process_facebook_friends.delay(user, fb_graphtoken)
                     user_created_with_email.send(sender=get_user_model(), user=user)
 
-            profile = user.get_profile()
-            if profile.gender is None:
+            if user.gender is None:
                 if me.get('gender'):
                     if me['gender'] in FB_GENDER_MAP:
-                        profile.gender = FB_GENDER_MAP[me['gender']]
-                        profile.save()
+                        user.gender = FB_GENDER_MAP[me['gender']]
+                        user.save()
 
             return user
 

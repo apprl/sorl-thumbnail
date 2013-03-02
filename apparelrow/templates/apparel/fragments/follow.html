@@ -1,8 +1,8 @@
 {% load i18n follow_tags %}
 
-{% if request.user.is_authenticated and request.user.get_profile != profile %}
+{% if request.user.is_authenticated and request.user != profile %}
 
-    {% if request.user.get_profile|is_following_profile:profile %}
+    {% if request.user|is_following_profile:profile %}
     <a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} btn-unfollow" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Following" %}</a>
     {% else %}
     <a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} btn-positive btn-follow" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Follow" %}</a>
@@ -10,7 +10,7 @@
 
 {% else %}
 
-    {% if request.user.get_profile != profile %}
+    {% if request.user != profile %}
     <a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} btn-positive btn-follow open-dialog" href="{% url 'dialog-follow-user' %}?brand={% if profile.is_brand %}1{% else %}0{% endif %}&next={{ request.get_full_path }}" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Follow" %}</a>
     {% endif %}
 

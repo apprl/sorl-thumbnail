@@ -59,7 +59,7 @@
     <div class="sidebar">
         <div id="profile-image">
             <a href="{{ profile.get_absolute_url }}" class="profile-link"><img src="{{ profile.avatar_large }}" class="avatar large"></a>
-            {% if user.is_authenticated and user == profile.user %}
+            {% if request.user.is_authenticated and request.user == profile %}
                 <a href="#edit" class="btn btn-small btn-block btn-positive btn-edit">{% trans "Change picture" %}</a>
                 <a href="#cancel" class="btn btn-small btn-block btn-negative btn-cancel">{% trans "Cancel" %}</a>
                 {% with "multipart/form-data" as form_enctype %}
@@ -74,13 +74,13 @@
         <div id="profile-about">
             {% if profile.about %}
             <p class="description">{{ profile.about|urlize_target_blank|linebreaksbr }}</p>
-                {% if user.is_authenticated and user == profile.user %}
+                {% if request.user.is_authenticated and request.user == profile %}
                     <a href="#edit" class="btn btn-small btn-block btn-positive btn-edit">{% trans "Edit bio" %}</a>
                     <a href="#cancel" class="btn btn-small btn-block btn-negative btn-cancel">{% trans "Cancel" %}</a>
                     {% include 'profile/fragments/change_about_form.html' %}
                 {% endif %}
             {% else %}
-                {% if user.is_authenticated and user == profile.user %}
+                {% if request.user.is_authenticated and request.user == profile %}
                 <a href="#add" class="btn btn-small btn-block btn-positive btn-add">{% trans "Add bio" %}</a>
                 {% include 'profile/fragments/change_about_form.html' %}
                 {% endif %}

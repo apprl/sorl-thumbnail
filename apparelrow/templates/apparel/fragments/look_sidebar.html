@@ -7,6 +7,6 @@
     {% endthumbnail %}
     </a>
     <h5><a title="{{ object.title }}" href="{{ object.get_absolute_url }}">{{ object.title }}</a></h5>
-    <p><a title="{{ object.user.get_profile.display_name }}" href="{{ object.user.get_absolute_url }}">{{ object.user.get_profile.display_name }}</a></p>
+    <p><a title="{{ object.user.display_name }}" href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></p>
 </div>
 {% endcache %}

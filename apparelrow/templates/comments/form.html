@@ -1,7 +1,7 @@
 {% load comments i18n %}
 <div class="comment-avatar comment-poster-avatar">
-    <a href="{{ user.get_absolute_url }}" title="{{ user.get_profile.display_name }}">
-        <img alt="{{ user.get_profile.display_name }}" title="{{ user.get_profile.display_name }}" src="{{ user.get_profile.avatar }}">
+    <a href="{{ user.get_absolute_url }}" title="{{ user.display_name }}">
+        <img alt="{{ user.display_name }}" title="{{ user.display_name }}" src="{{ user.avatar }}">
     </a>
 </div>
 <form action="{% comment_form_target %}" method="post">

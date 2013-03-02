@@ -16,6 +16,7 @@ from django.template import RequestContext, loader
 from django.template.loader import get_template
 from django.template.defaultfilters import floatformat
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.comments.models import Comment
@@ -26,7 +27,7 @@ from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
 
-from profile.models import ApparelProfile, Follow
+from profile.models import Follow
 from profile.utils import get_facebook_user
 from apparel.decorators import seamless_request_handling
 from apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
@@ -75,7 +76,7 @@ def brand_redirect(request, pk):
     Redirect from a brand id to brand profile page.
     """
     brand = get_object_or_404(Brand, pk=pk)
-    return HttpResponsePermanentRedirect(brand.profile.get_absolute_url())
+    return HttpResponsePermanentRedirect(brand.user.get_absolute_url())
 
 #
 # Notifications
@@ -117,7 +118,7 @@ def notification_follow_member(request):
     except (ValueError, TypeError):
         return HttpResponseNotFound()
 
-    profile = get_object_or_404(get_model('profile', 'ApparelProfile'), pk=profile_id)
+    profile = get_object_or_404(get_user_model(), pk=profile_id)
     url = request.build_absolute_uri(profile.get_absolute_url())
     return render(request, 'apparel/notifications/follow_member.html', {'object': profile, 'url': url})
 
@@ -127,7 +128,7 @@ def notification_follow_brand(request):
     except (ValueError, TypeError):
         return HttpResponseNotFound()
 
-    profile = get_object_or_404(get_model('profile', 'ApparelProfile'), pk=profile_id)
+    profile = get_object_or_404(get_user_model(), pk=profile_id)
     url = request.build_absolute_uri(profile.get_absolute_url())
     return render(request, 'apparel/notifications/follow_brand.html', {'object': profile, 'url': url})
 
@@ -146,9 +147,8 @@ def facebook_share(request, activity):
     if auto_share:
         share_settings = ['like_product', 'like_look', 'create_look', 'follow_profile']
         if auto_share in share_settings:
-            profile = request.user.get_profile()
-            setattr(profile, 'fb_share_%s' % (auto_share,), True)
-            profile.save()
+            setattr(request.user, 'fb_share_%s' % (auto_share,), True)
+            request.user.save()
 
     facebook_user = get_facebook_user(request)
     if not facebook_user:
@@ -170,25 +170,25 @@ def follow_unfollow(request, profile_id, do_follow=True):
     """
     Either follows or unfollows a profile.
     """
-    profile = ApparelProfile.objects.get(pk=profile_id)
+    profile = get_user_model().objects.get(pk=profile_id)
 
-    if request.user.get_profile() == profile:
+    if request.user == profile:
         return HttpResponse(status=403)
 
     if do_follow:
-        if request.user.get_profile().fb_share_follow_profile:
+        if request.user.fb_share_follow_profile:
             facebook_user = get_facebook_user(request)
             if facebook_user:
                 facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
 
-        follow, _ = Follow.objects.get_or_create(user=request.user.get_profile(), user_follow=profile)
+        follow, _ = Follow.objects.get_or_create(user=request.user, user_follow=profile)
         if not follow.active:
             follow.active = True
             follow.save()
 
         return HttpResponse(status=201)
 
-    follow, _ = Follow.objects.get_or_create(user=request.user.get_profile(), user_follow=profile)
+    follow, _ = Follow.objects.get_or_create(user=request.user, user_follow=profile)
     if follow.active:
         follow.active = False
         follow.save()
@@ -244,12 +244,12 @@ def product_detail(request, slug):
 
     # Full brand url
     product_brand_full_url = ''
-    if product.manufacturer and product.manufacturer.profile:
-        product_brand_full_url = request.build_absolute_uri(product.manufacturer.profile.get_absolute_url())
+    if product.manufacturer and product.manufacturer.user:
+        product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
 
     # Partner user
     product_short_link = None
-    if request.user.is_authenticated() and request.user.get_profile().is_partner:
+    if request.user.is_authenticated() and request.user.is_partner:
         try:
             partner_short = ShortProductLink.objects.get(product=product, user=request.user)
             product_short_link = reverse('product-short-link', args=[partner_short.link()])
@@ -294,7 +294,7 @@ def product_generate_short_link(request, slug):
     """
     Generate a short product link and return it in a JSON response.
     """
-    if not request.user.is_authenticated() or not request.user.get_profile().is_partner:
+    if not request.user.is_authenticated() or not request.user.is_partner:
         raise Http404
 
     product = get_object_or_404(Product, slug=slug, published=True)
@@ -361,18 +361,7 @@ def product_popup(request):
             product_result['liked'] = ProductLike.objects.filter(product=product, active=True, user=request.user).exists()
         product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
         product_result['comments'] = Comment.objects.filter(content_type=content_type, object_pk=product, is_removed=False, is_public=True).count()
-        #product_result['users'] = []
 
-        #product_like_qs = ProductLike.objects.filter(product=product, active=True).order_by('-created')[:4]
-        #comments_qs = Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_removed=False, is_public=True).order_by('-submit_date')[:4]
-        #combined_result = product_like_qs + comments_qs
-
-        #for product_like in product_like_qs:
-            #product_result['users'].append({
-                #'id': product_like.user.pk,
-                #'name': product_like.user.get_profile().display_name,
-                #'url': product_like.user.get_profile().get_absolute_url(),
-                #'image': product_like.user.get_profile().avatar})
         result.append(product_result)
 
     return HttpResponse(json.dumps(result), mimetype='application/json')
@@ -417,7 +406,7 @@ def product_like(request, slug, action):
 
 def _product_like(request, product, action):
     if action == 'like':
-        if request.user.get_profile().fb_share_like_product:
+        if request.user.fb_share_like_product:
             facebook_user = get_facebook_user(request)
             if facebook_user:
                 facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(product.get_absolute_url()))
@@ -452,7 +441,7 @@ def look_like(request, slug, action):
         return HttpResponse(json.dumps(dict(success=False, error_message='No look found')), mimetype='application/json')
 
     if action == 'like':
-        if request.user.get_profile().fb_share_like_look:
+        if request.user.fb_share_like_look:
             facebook_user = get_facebook_user(request)
             if facebook_user:
                 facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(look.get_absolute_url()))
@@ -480,12 +469,12 @@ def brand_list(request, gender=None):
         gender = get_gender_from_cookie(request)
 
     # Most popular brand pages
-    popular_brands = ApparelProfile.objects.filter(user__is_active=True, is_brand=True).order_by('-followers_count')[:10]
+    popular_brands = get_user_model().objects.filter(is_active=True, is_brand=True).order_by('-followers_count')[:10]
 
     # Most popular products
     user_ids = []
     if request.user and request.user.is_authenticated():
-        user_ids.extend(Follow.objects.filter(user=request.user.get_profile(), active=True).values_list('user_follow__user_id', flat=True))
+        user_ids.extend(Follow.objects.filter(user=request.user, active=True).values_list('user_follow_id', flat=True))
     popular_products = Product.valid_objects.distinct().filter(likes__user__in=user_ids).order_by('-popularity')[:10]
 
     response = render_to_response('apparel/brand_list.html', {
@@ -512,7 +501,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
 
     if popular:
         if request.user.is_authenticated():
-            queryset = get_top_looks_in_network(request.user.get_profile())
+            queryset = get_top_looks_in_network(request.user)
         else:
             queryset = Look.objects.none()
     elif search:
@@ -568,7 +557,7 @@ def look_detail(request, slug):
 
     look_saved = False
     if 'look_saved' in request.session:
-        if request.user.get_profile().fb_share_create_look:
+        if request.user.fb_share_create_look:
             if look.display_components.count() > 0:
                 facebook_user = get_facebook_user(request)
                 if facebook_user:
@@ -618,9 +607,9 @@ def look_delete(request, slug):
             facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', request.build_absolute_uri(look.get_absolute_url()))
 
         look.delete()
-        return (True, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.get_profile().slug,))))
+        return (True, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.slug,))))
     else:
-        return (False, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.get_profile().slug,))))
+        return (False, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.slug,))))
 
 def widget(request, object_id, template_name, model):
     try:
@@ -653,21 +642,21 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    queryset = ApparelProfile.objects.select_related('user').filter(user__is_active=True, is_brand=False)
+    queryset = get_user_model().objects.filter(is_active=True, is_brand=False)
 
     if view_gender and set(view_gender).issubset(set(['W', 'M'])):
         queryset = queryset.filter(gender__in=view_gender)
 
     if popular:
-        queryset = queryset.order_by('-popularity', '-followers_count', 'user__first_name', 'user__last_name', 'user__username')
+        queryset = queryset.order_by('-popularity', '-followers_count', 'first_name', 'last_name', 'username')
     else:
-        queryset = queryset.order_by('user__first_name', 'user__last_name', 'user__username')
+        queryset = queryset.order_by('first_name', 'last_name', 'username')
 
     paged_result, pagination = get_pagination_page(queryset,
             10, request.GET.get('page', 1), 1, 2)
 
     # Latest active members
-    latest_members = ApparelProfile.objects.select_related('user').filter(user__is_active=True, is_brand=False).order_by('-user__date_joined')[:13]
+    latest_members = get_user_model().objects.filter(is_active=True, is_brand=False).order_by('-date_joined')[:13]
 
     if request.is_ajax():
         response = render_to_response('apparel/fragments/user_list.html', {
@@ -754,9 +743,8 @@ def jobs(request):
 def apparel_set_language(request):
     language = request.POST.get('language', translation.get_language())
     if request.user.is_authenticated():
-        profile = request.user.get_profile()
-        profile.language = language
-        profile.save()
+        request.user.language = language
+        request.user.save()
 
     return set_language(request)
 
@@ -817,7 +805,7 @@ def facebook_friends_widget(request):
     if not fids:
         return HttpResponse('')
 
-    friends = ApparelProfile.objects.filter(user__username__in=fids)
+    friends = get_user_model().objects.filter(username__in=fids)
 
     return render_to_response('apparel/fragments/facebook_friends.html', {
             'facebook_friends': friends,
@@ -828,7 +816,7 @@ def facebook_friends_widget(request):
 #
 
 def get_top_looks_in_network(profile, limit=None):
-    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow__user', flat=True)
+    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
     # TODO: add active/published flag here later
     looks = Look.published_objects.distinct().filter(user__in=user_ids).order_by('-popularity', '-created')
 
@@ -838,7 +826,7 @@ def get_top_looks_in_network(profile, limit=None):
     return looks
 
 def get_top_products_in_network(profile, limit=None):
-    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow__user', flat=True)
+    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
     products = Product.valid_objects.distinct().filter(likes__active=True, likes__user__in=user_ids).order_by('-popularity')
 
     if limit:

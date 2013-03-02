@@ -36,7 +36,7 @@ class PaymentAdmin(admin.ModelAdmin):
     mark_as_paid.short_description = 'Mark payment as paid'
 
     def custom_user(self, obj):
-        return u'%s' % (obj.user.get_profile().display_name,)
+        return u'%s' % (obj.user.display_name,)
 
 admin.site.register(Payment, PaymentAdmin)
 

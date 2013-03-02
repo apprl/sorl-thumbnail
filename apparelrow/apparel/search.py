@@ -98,6 +98,8 @@ class ApparelSearch(object):
             if self.connection is None:
                 self.connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
             self._result = self.connection.search(self.query_string, **self.data)
+            print self._result.hits
+            print self._result.docs
             self._result.docs = [ResultContainer(**element) for element in self._result.docs]
 
 
@@ -354,10 +356,6 @@ def get_look_document(instance):
 
 @receiver(post_save, sender=get_user_model(), dispatch_uid='search_index_user_save')
 def search_index_user_save(instance, **kwargs):
-    search_index_profile_save(instance.get_profile(), **kwargs)
-
-@receiver(post_save, sender=get_model('profile', 'ApparelProfile'), dispatch_uid='search_index_profile_save')
-def search_index_profile_save(instance, **kwargs):
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
@@ -367,19 +365,19 @@ def search_index_profile_save(instance, **kwargs):
         document, boost = get_profile_document(instance)
         connection.add([document], commit=False, boost=boost, commitWithin=False)
 
-@receiver(post_delete, sender=get_model('profile', 'ApparelProfile'), dispatch_uid='search_index_profile_delete')
-def search_index_profile_delete(instance, **kwargs):
+@receiver(post_delete, sender=get_user_model(), dispatch_uid='search_index_user_delete')
+def search_index_user_delete(instance, **kwargs):
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
-def rebuild_profile_index():
+def rebuild_user_index():
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
-    profile_count = 0
-    for profile in get_model('profile', 'ApparelProfile').objects.filter(is_brand=False).iterator():
-        search_index_profile_save(profile, solr=connection)
-        profile_count = profile_count + 1
+    user_count = 0
+    for user in get_user_model().objects.filter(is_brand=False).iterator():
+        search_index_user_save(user, solr=connection)
+        user_count = user_count + 1
 
-    return profile_count
+    return user_count
 
 def get_profile_document(instance):
     boost = {}
@@ -427,7 +425,7 @@ def search_view(request, model_name):
         gender_field = 'gender:(U OR %s)' % (gender,)
 
     app_label = 'apparel'
-    if model_name == 'apparelprofile':
+    if model_name == 'user':
         app_label = 'profile'
 
     # Base arguments
@@ -447,7 +445,7 @@ def search_view(request, model_name):
         arguments['qf'] = ['text']
         arguments['fq'].append(gender_field)
         arguments['fq'].append('published:true')
-    elif model_name == 'apparelprofile':
+    elif model_name == 'user':
         arguments['qf'] = ['text']
     elif model_name == 'manufacturer':
         # override fq cause we do not have a separate manufacturer index
@@ -487,7 +485,7 @@ def search_view(request, model_name):
         object_list = [o.template for o in paged_result.object_list if o]
     elif model_name == 'look':
         object_list = [o.template for o in paged_result.object_list if o]
-    elif model_name == 'apparelprofile':
+    elif model_name == 'user':
         object_list = [o.template for o in paged_result.object_list if o]
     elif model_name == 'manufacturer':
         object_list = [render_to_string('apparel/fragments/manufacturer_search.html', {'object': obj, 'gender': gender}) for obj in paged_result.object_list]
@@ -495,9 +493,6 @@ def search_view(request, model_name):
     return HttpResponse(
         json.dumps({
             'object_list': object_list,
-            # XXX: not in use anymore
-            #'previous_page_number': paged_result.previous_page_number(),
-            #'next_page_number': paged_result.next_page_number(),
             'number': paged_result.number,
             'paginator': {
                 'num_pages': paged_result.paginator.num_pages,

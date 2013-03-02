@@ -285,10 +285,6 @@ PIPELINE_JS = {
 
 CSRF_FAILURE_VIEW = 'apparel.views.csrf_failure'
 
-ABSOLUTE_URL_OVERRIDES = {
-    "auth.user": lambda o: "/profile/%s/" % o.get_profile().slug,
-}
-
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
 CONTACT_EMAIL = "support@hanssonlarsson.se"
@@ -298,7 +294,6 @@ LOGIN_REDIRECT_URLNAME = "what_next"
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 
-AUTH_PROFILE_MODULE = 'profile.ApparelProfile'
 AUTH_USER_MODEL = 'profile.User'
 
 # django-modeltranslation
