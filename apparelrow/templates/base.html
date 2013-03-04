@@ -247,9 +247,9 @@
 
     <div id="container">
 
-        {% url public_feed-men as public_feed_m %}
-        {% url public_feed-women as public_feed_w %}
-        {% url user_feed as user_feed %}
+        {% url 'public_feed-men' as public_feed_m %}
+        {% url 'public_feed-women' as public_feed_w %}
+        {% url 'user_feed' as user_feed %}
         {% if not user.is_authenticated %}
         {% if not request.COOKIES.ar_welcome %}
         {% if request.path == public_feed_m or request.path == public_feed_w or request.path == user_feed %}
@@ -262,12 +262,12 @@
                         <li>{% trans "Get sale alerts on your favourite items" %}</li>
                         <li>{% trans "Create and share looks on your blog" %}</li>
                     </ul>
-                    <p><a href="{% url dashboard %}">{% trans "Are you a blogger?" %}</a></p>
+                    <p><a href="{% url 'dashboard' %}">{% trans "Are you a blogger?" %}</a></p>
                 </span>
                 <a class="btn-slide ar_welcome" href="#"></a>
                 <div id="login-fb">
                     <p class="lifc">{% trans "Follow our stylemakers, brands & bloggers" %}</p>
-                    <a class="btn btn-upper btn-large btn-positive btn-signup" href="{% url auth_register %}">{% trans "Sign up" %}</a>
+                    <a class="btn btn-upper btn-large btn-positive btn-signup" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
                 </div>
                 <div id="ar-facepile" class="bild">
                     <div class="fb-facepile" data-max-rows="2" data-width="281" data-app-id="{{ FACEBOOK_APP_ID }}"></div>
@@ -280,8 +280,8 @@
             <div id="sticky-inner-login-bar">
                 <p>{% trans "Discover fashion from the world’s best online stores, selected by our stylemakers & bloggers." %}</p>
                 <ul>
-                    <li class="first"><a href="{% url auth_login %}">{% trans "Log in" %}</a></li>
-                    <li class="last"><a class="btn btn-upper btn-small btn-positive" href="{% url auth_register %}">{% trans "Sign up" %}</a></li>
+                    <li class="first"><a href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
+                    <li class="last"><a class="btn btn-upper btn-small btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
                 </ul>
             </div>
         </div>
@@ -311,7 +311,7 @@
             <ul>
                 <li><h3>{% trans "Social" %}</h3></li>
                 {% if not user.is_authenticated %}
-                <li><a href="{% url auth_register %}">{% trans "Sign up" %}</a></li>
+                <li><a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
                 {% endif %}
                 <li><a href="{% url 'user-list' %}">{% trans "Members" %}</a></li>
                 {% if user.is_authenticated %}

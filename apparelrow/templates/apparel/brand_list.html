@@ -36,7 +36,7 @@
         <h2>{% trans "Your friends like" %}</h2>
         {% if not user.is_authenticated %}
             <div>{% trans "Sign up to see what your friends like." %}</div>
-            <a class="btn btn-upper btn-positive btn-signup" href="{% url auth_register %}">{% trans "Sign up" %}</a>
+            <a class="btn btn-upper btn-positive btn-signup" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
         {% else %}
             {% include 'apparel/fragments/products_sidebar.html' with products=popular_products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
         {% endif %}

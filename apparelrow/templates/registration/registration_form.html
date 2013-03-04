@@ -11,7 +11,7 @@
     {% with "Sign up" as submit_text %}
         {% include "fragments/form.html" %}
     {% endwith %}
-    {% url django.contrib.flatpages.views.flatpage url='about/terms-of-use/' as tou %}
+    {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
     <p>{% blocktrans with tou=tou %}By signing up you are agreeing to our <a href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
 </div>
 

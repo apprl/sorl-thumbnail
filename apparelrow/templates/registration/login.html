@@ -6,7 +6,7 @@
 
 <div id="content">
     <h1>{% trans "Login" %}</h1>
-    {% url profile-likes as profile_likes %}
+    {% url 'profile-likes' as profile_likes %}
     {% facebook_button next=profile_likes %}
     <p>{% trans "Or:" %}</p>
     {% with "Login" as submit_text %}
