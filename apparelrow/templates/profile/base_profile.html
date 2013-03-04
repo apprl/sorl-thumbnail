@@ -11,8 +11,8 @@
     <meta property="og:description" content="{% if profile.about %}{{ profile.about }}{% else %}{% endif %}"/>
     <meta property="og:site_name" content="{{ CURRENT_NAME }}"/>
     <meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}"/>
-    {% if profile.facebook_uid %}
-    <meta property="fb:profile_id" content="{{ profile.facebook_uid }}"/>
+    {% if profile.facebook_user_id %}
+    <meta property="fb:profile_id" content="{{ profile.facebook_user_id }}"/>
     {% endif %}
 {% endblock extra-styles %}
 

@@ -65,8 +65,9 @@ def pre_delete_follow_handler(sender, instance, **kwargs):
     Pre delete handler for follow objects. Updates followers count on user
     profile.
     """
-    apparel_profile = instance.user_follow
-    apparel_profile.followers_count = apparel_profile.followers_count - 1
-    apparel_profile.save()
+    if instance.user_follow:
+        instance.user_follow.followers_count = instance.user_follow.followers_count - 1
+        instance.user_follow.save()
 
-    Activity.objects.pull_activity(instance.user, 'follow', instance.user_follow)
+    if instance.user and instance.user_follow:
+        Activity.objects.pull_activity(instance.user, 'follow', instance.user_follow)

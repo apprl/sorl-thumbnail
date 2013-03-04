@@ -78,8 +78,7 @@ class User(AbstractUser):
     fb_share_create_look = models.BooleanField(default=True, blank=False, null=False)
 
     # facebook
-    # TODO: replace current facebook_uid with this
-    #facebook_uid = models.CharField(max_length=30, default=None, null=True, blank=True)
+    facebook_user_id = models.CharField(max_length=30, default=None, null=True, blank=True)
     facebook_access_token = models.CharField(max_length=255, null=True, blank=True)
     facebook_access_token_expire = models.DateTimeField(null=True, blank=True)
 
@@ -158,8 +157,8 @@ class User(AbstractUser):
         if self.image:
             return get_thumbnail(self.image, '32x32', crop='center').url
 
-        if self.facebook_uid:
-            return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_uid
+        if self.facebook_user_id:
+            return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
 
         if self.is_brand:
             return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
@@ -171,8 +170,8 @@ class User(AbstractUser):
         if self.image:
             return get_thumbnail(self.image, '50x50', crop='center').url
 
-        if self.facebook_uid:
-            return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_uid
+        if self.facebook_user_id:
+            return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_user_id
 
         if self.is_brand:
             return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
@@ -184,8 +183,8 @@ class User(AbstractUser):
         if self.image:
             return get_thumbnail(self.image, '125').url
 
-        if self.facebook_uid:
-            return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_uid
+        if self.facebook_user_id:
+            return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
 
         if self.is_brand:
             return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM)
@@ -197,8 +196,8 @@ class User(AbstractUser):
         if self.image:
             return get_thumbnail(self.image, '208').url
 
-        if self.facebook_uid:
-            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_uid
+        if self.facebook_user_id:
+            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
         if self.is_brand:
             return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR_LARGE)
@@ -209,29 +208,13 @@ class User(AbstractUser):
         if self.image:
             return request.build_absolute_uri(get_thumbnail(self.image, '208').url)
 
-        if self.facebook_uid:
-            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_uid
+        if self.facebook_user_id:
+            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
         if self.is_brand:
             return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
 
         return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
-
-
-    @cached_property
-    def facebook_uid(self):
-        """
-        Try to convert username to int, if possible it is safe to assume that
-        the user is a facebook-user and not an admin created user.
-        """
-        if not self.is_brand:
-            try:
-                return int(self.username)
-            except ValueError:
-                pass
-
-        return None
-
 
     @cached_property
     def url_likes(self):

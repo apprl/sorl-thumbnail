@@ -21,9 +21,14 @@ class FacebookProfileBackend(ModelBackend):
         validated.
         """
         if fb_uid and fb_graphtoken:
-            user, created = get_user_model().objects.get_or_create(username=fb_uid)
             graph = facebook.GraphAPI(fb_graphtoken)
             me = graph.get_object('me')
+
+            username = fb_uid
+            if me and me.get('username'):
+                username = me['username']
+
+            user, created = get_user_model().objects.get_or_create(facebook_user_id=fb_uid, defaults={'username': username})
 
             if created:
                 # It would be nice to replace this with an asynchronous request
