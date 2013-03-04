@@ -4,7 +4,6 @@ class ZalandoMapper(ZanoxMapper):
 
     def get_image_url(self):
         image = self.record.get('ImageLargeURL', '') or self.record.get('ImageMediumURL', '')
-        print image
         large_image = image.replace('detail', 'large')
 
         return [(large_image, self.IMAGE_LARGE), (image, self.IMAGE_SMALL)]

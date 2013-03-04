@@ -98,8 +98,6 @@ class ApparelSearch(object):
             if self.connection is None:
                 self.connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
             self._result = self.connection.search(self.query_string, **self.data)
-            print self._result.hits
-            print self._result.docs
             self._result.docs = [ResultContainer(**element) for element in self._result.docs]
 
 
