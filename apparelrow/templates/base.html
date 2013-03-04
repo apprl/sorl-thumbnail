@@ -115,6 +115,7 @@
                 }
             });
 
+            {% if not request.user.is_authenticated %}
             var panel = $('#panel');
             var panel_offset_top = 0;
             if(panel.length > 0) {
@@ -152,6 +153,7 @@
             $(window).scroll(function() {
                  sticky_calculate();
             });
+            {% endif %}
         });
     </script>
     {% block 'extra-scripts' %}
