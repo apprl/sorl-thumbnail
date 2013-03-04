@@ -12,10 +12,12 @@ class Migration(SchemaMigration):
         db.execute(sql)
         sql = db.foreign_key_sql('profile_follow', 'user_follow_id', 'profile_user', 'id')
         db.execute(sql)
+        db.create_unique('profile_follow', ['user_id', 'user_follow_id'])
 
     def backwards(self, orm):
         db.delete_foreign_key('profile_follow', 'user_id')
         db.delete_foreign_key('profile_follow', 'user_follow_id')
+        db.delete_unique('profile_follow', ['user_id', 'user_follow_id'])
 
     models = {
         u'apparel.brand': {
