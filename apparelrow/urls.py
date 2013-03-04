@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', { 'domain': 'djangojs', 'packages': ('apparelrow',),}),
 
     url(r'^accounts/login/$', auth_views.login, {'template_name': 'registration/login.html'}, name='auth_login'),
-    url(r'^accounts/logout/$', auth_views.logout, {'template_name': 'registration/logout.html'}, name='auth_logout'),
+    url(r'^accounts/logout/$', auth_views.logout, {'next_page': '/accounts/register/'}, name='auth_logout'),
     url(r'^accounts/register/$', 'profile.views.register', name='auth_register'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
 
