@@ -4,6 +4,6 @@
 
 {% block title %}{% trans "My Follows" %}{% endblock %}
 {% block content %}
-<p>{% trans "Connect your Facebook account to see what your friends are doing on Apprl." %}</p>
-{% facebook_button %}
+<p>{% trans "Sign up to see what your friends are doing on Apprl." %}</p>
+<a class="btn btn-upper btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
 {% endblock %}

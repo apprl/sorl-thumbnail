@@ -3,6 +3,6 @@
 
 {% block title %}{% trans "Like a product" %}{% endblock %}
 {% block content %}
-<p>{% trans "To 'like' a product on the site, you need to login with your Facebook account. (Please note that this will not show up on your Facebook wall by default.)" %}</p>
-{% facebook_button %}
+<p>{% trans "To 'like' a product on the site, you need to sign up first." %}</p>
+<a class="btn btn-upper btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
 {% endblock %}

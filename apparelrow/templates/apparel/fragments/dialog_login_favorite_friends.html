@@ -4,6 +4,6 @@
 
 {% block title %}{% trans "See your friends' favorite products" %}{% endblock %}
 {% block content %}
-<p>{% trans "Log in using your Facebook account to see which products are popular among your friends." %}</p>
-{% facebook_button %}
+<p>{% trans "Sign up to see which products are popular among your friends." %}</p>
+<a class="btn btn-upper btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
 {% endblock %}

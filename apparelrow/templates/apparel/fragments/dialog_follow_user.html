@@ -10,6 +10,6 @@
     {% endif %}
 {% endblock %}
 {% block content %}
-<p>{% trans "To follow someone on the site, you need to connect with your Facebook account:" %}</p>
-{% facebook_button %}
+<p>{% trans "To follow someone on the site, you need to sign up." %}</p>
+<a class="btn btn-upper btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
 {% endblock %}

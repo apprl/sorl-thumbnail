@@ -8,8 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-05 12:47+0100\n"
-"POT-Creation-Date: 2013-02-26 17:01+0100\n"
+"POT-Creation-Date: 2013-03-04 18:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +37,7 @@ msgstr ""
 #: activity_feed/models.py:73 activity_feed/models.py:122
 #: apparel/models.py:373 apparel/models.py:694 apparel/models.py:924
 #: apparel/models.py:1049 dashboard/models.py:59 dashboard/models.py:78
-#: dashboard/models.py:112 profile/models.py:606 statistics/models.py:49
+#: dashboard/models.py:112 profile/models.py:589 statistics/models.py:49
 #: statistics/models.py:61
 msgid "Time created"
 msgstr "Tid tillagd"
@@ -46,7 +45,7 @@ msgstr "Tid tillagd"
 #: activity_feed/models.py:74 apparel/models.py:227 apparel/models.py:374
 #: apparel/models.py:441 apparel/models.py:492 apparel/models.py:695
 #: apparel/models.py:925 dashboard/models.py:60 dashboard/models.py:79
-#: profile/models.py:607
+#: profile/models.py:590
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -54,7 +53,7 @@ msgstr "Tid ändrad"
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:255 templates/base.html:384
+#: apparel/admin.py:255 templates/base.html:415
 #: templates/apparel/look_editor.html:95
 #: templates/apparel/look_editor.html:101
 #: templates/apparel/look_editor.html:107
@@ -62,7 +61,7 @@ msgstr ""
 msgid "Yes"
 msgstr "Ja"
 
-#: apparel/admin.py:256 templates/base.html:383
+#: apparel/admin.py:256 templates/base.html:414
 #: templates/apparel/look_editor.html:94
 #: templates/apparel/look_editor.html:100
 #: templates/apparel/look_editor.html:106
@@ -228,7 +227,7 @@ msgid "Product image"
 msgstr "Produktbild"
 
 #: apparel/models.py:232 apparel/models.py:698 profile/models.py:58
-#: profile/models.py:299
+#: profile/models.py:282
 msgid "Gender"
 msgstr "Kön"
 
@@ -244,7 +243,7 @@ msgstr "I lager"
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:437 profile/forms.py:88
+#: apparel/models.py:437 profile/forms.py:92
 msgid "Name"
 msgstr "Namn"
 
@@ -395,10 +394,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
-#: apparel_comments/__init__.py:6 beta/models.py:30
-#: beta/templates/beta/beta.html:58 beta/templates/beta/beta.html.py:69
-#: profile/forms.py:116 templates/beta/dialog_invite_user.html:16
-#: templates/beta/dialog_invite_user.html:29
+#: apparel_comments/__init__.py:6 profile/forms.py:114
 msgid "E-mail address"
 msgstr "E-postadress"
 
@@ -575,60 +571,56 @@ msgstr ""
 msgid "Your e-mail address"
 msgstr "Din e-postadress"
 
-#: profile/forms.py:29
+#: profile/forms.py:30
 msgid "Write something about yourself, include links to your blog or website"
 msgstr ""
 "Skriv något om dig själv, inkludera länkar till din blogg eller website"
 
-#: profile/forms.py:48
+#: profile/forms.py:49
 msgid "New e-mail address"
 msgstr "Ny e-postadress"
 
-#: profile/forms.py:71
+#: profile/forms.py:72
 msgid ""
 "I'd like to receive e-mails with trending products, looks and other "
 "inspiration."
 msgstr "Jag vill ha e-post med populära produkter och annan inspiration."
 
-#: profile/forms.py:72
+#: profile/forms.py:73
 msgid "I want to receive sale alerts on items that I ♥."
 msgstr "Jag vill bli meddelad när en produkt jag ♥ prissänks."
 
-#: profile/forms.py:80
+#: profile/forms.py:81
 msgid "When you ♥ a product"
 msgstr "När du ♥ en produkt"
 
-#: profile/forms.py:81
+#: profile/forms.py:82
 msgid "When you ♥ a look"
 msgstr "När du ♥ en look"
 
-#: profile/forms.py:82
+#: profile/forms.py:83
 msgid "When you follow someone"
 msgstr "När du följer någon"
 
-#: profile/forms.py:83
+#: profile/forms.py:84
 msgid "When you create a look"
 msgstr "När du skapar en look"
 
-#: profile/forms.py:92
+#: profile/forms.py:93
 msgid "Personal/organization number"
 msgstr "Person- eller organisationsnummer"
 
-#: profile/forms.py:93
+#: profile/forms.py:94
 msgid "Bank clearing number"
 msgstr "Bankens clearingnummer"
 
-#: profile/forms.py:94
+#: profile/forms.py:95
 msgid "Bank account number"
 msgstr "Bankkontonummer"
 
-#: profile/forms.py:105
+#: profile/forms.py:106
 msgid "http://"
 msgstr "http://"
-
-#: profile/forms.py:114
-msgid "A user with that username already exists."
-msgstr ""
 
 #: profile/models.py:31 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
@@ -644,95 +636,95 @@ msgstr "De jag följer"
 msgid "No one"
 msgstr "Inga"
 
-#: profile/models.py:55 profile/models.py:296
+#: profile/models.py:55 profile/models.py:279
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:56 profile/models.py:297 templates/base.html:301
+#: profile/models.py:56 profile/models.py:280 templates/base.html:332
 msgid "About"
 msgstr "Om"
 
-#: profile/models.py:57 profile/models.py:298
+#: profile/models.py:57 profile/models.py:281
 msgid "Language"
 msgstr "Språk"
 
-#: profile/models.py:66 profile/models.py:307
+#: profile/models.py:66 profile/models.py:290
 msgid "Login flow"
 msgstr "Inloggingsflöde"
 
-#: profile/models.py:69 profile/models.py:310
+#: profile/models.py:69 profile/models.py:293
 msgid "Participating in newsletter"
 msgstr ""
 
-#: profile/models.py:72 profile/models.py:313
+#: profile/models.py:72 profile/models.py:296
 msgid "Receiving sale alerts"
 msgstr ""
 
-#: profile/models.py:87 profile/models.py:326
+#: profile/models.py:86 profile/models.py:309
 msgid "Partner user"
 msgstr ""
 
-#: profile/models.py:92 profile/models.py:332
+#: profile/models.py:91 profile/models.py:315
 msgid "When someone commented on a product that I have liked"
 msgstr "När någon kommenterat en produkt som jag har gillat"
 
-#: profile/models.py:94 profile/models.py:334
+#: profile/models.py:93 profile/models.py:317
 msgid "When someone commented on a product that I have commented on"
 msgstr "När någon kommenterat en produkt som jag kommenterat på"
 
-#: profile/models.py:96 profile/models.py:336
+#: profile/models.py:95 profile/models.py:319
 msgid "When someone commented on a look that I have created"
 msgstr "När någon kommenterat en look som jag har gjort"
 
-#: profile/models.py:98 profile/models.py:338
+#: profile/models.py:97 profile/models.py:321
 msgid "When someone commented on a look that I have commented on"
 msgstr "När någon kommenterat en look som jag har kommenterat på"
 
-#: profile/models.py:100 profile/models.py:340
+#: profile/models.py:99 profile/models.py:323
 msgid "When someone likes a look that I have created"
 msgstr "När någon gillar en look som jag har gjort"
 
-#: profile/models.py:102 profile/models.py:342
+#: profile/models.py:101 profile/models.py:325
 msgid "When someone starts to follow me"
 msgstr "När någon börjat följa mig"
 
-#: profile/models.py:104 profile/models.py:344
+#: profile/models.py:103 profile/models.py:327
 msgid "When a Facebook friend has joined Apprl"
 msgstr "När en Facebookvän blivit medlem på Apprl"
 
-#: profile/models.py:282 profile/models.py:526
+#: profile/models.py:265 profile/models.py:509
 msgid "Partner group must be set to be able to set partner status"
 msgstr ""
 
-#: profile/models.py:300
+#: profile/models.py:283
 msgid "Last visit home"
 msgstr ""
 
-#: profile/models.py:347
+#: profile/models.py:330
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:535
+#: profile/models.py:518
 msgid "Receive payments as a company"
 msgstr "Jag vill ha utbetalning som företag"
 
-#: profile/models.py:535
+#: profile/models.py:518
 msgid "Receive payments as a private person"
 msgstr "Jag vill ha utbetalning som privatperson"
 
-#: profile/models.py:539
+#: profile/models.py:522
 msgid "Address"
 msgstr "Adress"
 
-#: profile/models.py:540
+#: profile/models.py:523
 msgid "Postal code"
 msgstr "Postkod"
 
-#: profile/models.py:541
+#: profile/models.py:524
 msgid "City"
 msgstr "Postadress"
 
-#: profile/models.py:575
+#: profile/models.py:558
 #, python-format
 msgid "Welcome to Apprl %(username)s"
 msgstr "Välkommen till Apprl %(username)s"
@@ -765,11 +757,11 @@ msgstr "500-fel"
 msgid "An error occurred"
 msgstr "Ett fel uppstod"
 
-#: templates/base.html:183
+#: templates/base.html:185
 msgid "I'm looking for..."
 msgstr "Jag letar efter..."
 
-#: templates/base.html:184 templates/apparel/look_editor.html:93
+#: templates/base.html:186 templates/apparel/look_editor.html:93
 #: templates/apparel/look_editor.html:123
 #: templates/apparel/look_editor.html:134
 #: templates/profile/base_profile.html:64
@@ -777,80 +769,85 @@ msgstr "Jag letar efter..."
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:189 templates/base.html.py:194 templates/base.html:306
+#: templates/base.html:191 templates/base.html.py:196 templates/base.html:309
 #: templates/apparel/look_editor.html:56
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:189 templates/base.html.py:193 templates/base.html:305
+#: templates/base.html:191 templates/base.html.py:195 templates/base.html:308
 #: templates/apparel/look_editor.html:55
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:226
+#: templates/base.html:228
 msgid "Matching products"
 msgstr "Träffar bland produkter"
 
-#: templates/base.html:228 templates/activity_feed/public_feed.html:15
+#: templates/base.html:230 templates/activity_feed/public_feed.html:15
 #: templates/activity_feed/user_feed.html:15
 msgid "Show all products"
 msgstr "Visa alla produkter"
 
-#: templates/base.html:231
+#: templates/base.html:233
 msgid "Matching looks"
 msgstr "Träffar bland looks"
 
-#: templates/base.html:233 templates/activity_feed/public_feed.html:23
+#: templates/base.html:235 templates/activity_feed/public_feed.html:23
 #: templates/activity_feed/user_feed.html:23
 msgid "Show all looks"
 msgstr "Visa alla looks"
 
-#: templates/base.html:236
+#: templates/base.html:238
 msgid "Matching brands"
 msgstr "Träffar bland varumärken"
 
-#: templates/base.html:238
+#: templates/base.html:240
 msgid "Show all manufacturers"
 msgstr "Visa alla varumärken"
 
-#: templates/base.html:240
+#: templates/base.html:242
 msgid "Matching members"
 msgstr "Träffar bland medlemmar"
 
-#: templates/base.html:258
+#: templates/base.html:261
 msgid "Welcome to Social Shopping!"
 msgstr "Välkommen till social shopping!"
 
-#: templates/base.html:260
+#: templates/base.html:263
 msgid "Discover fashion from the world's best online stores"
 msgstr "Upptäck mode från världens bästa onlinebutiker"
 
-#: templates/base.html:261
+#: templates/base.html:264
 msgid "Get sale alerts on your favourite items"
 msgstr "Bli meddelad när dina favoritprodukter prissänks"
 
-#: templates/base.html:262
+#: templates/base.html:265
 msgid "Create and share looks on your blog"
 msgstr "Skapa och dela looks till din blogg"
 
-#: templates/base.html:264
+#: templates/base.html:267
 msgid "Are you a blogger?"
 msgstr "Är du bloggare?"
 
-#: templates/base.html:268
+#: templates/base.html:271
 msgid "Follow our stylemakers, brands & bloggers"
 msgstr "Följ dina vänner, varumärken & bloggare"
 
-#: templates/base.html:269 templates/base.html.py:283 templates/base.html:313
+#: templates/base.html:272 templates/base.html.py:286 templates/base.html:316
+#: templates/activity_feed/dialog_user_feed.html:8
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
 #: templates/apparel/shared_header.html:22 templates/apparel/user_list.html:53
+#: templates/apparel/fragments/dialog_follow_user.html:14
+#: templates/apparel/fragments/dialog_like_look.html:8
+#: templates/apparel/fragments/dialog_like_product.html:7
+#: templates/apparel/fragments/dialog_login_favorite_friends.html:8
 #: templates/registration/registration_complete.html:8
 msgid "Sign up"
 msgstr "Bli medlem"
 
-#: templates/base.html:280
+#: templates/base.html:283
 msgid ""
 "Discover fashion from the world’s best online stores, selected by our "
 "stylemakers & bloggers."
@@ -858,28 +855,28 @@ msgstr ""
 "Upptäck mode från världens bästa onlinebutiker utvalt av våra medlemmar & "
 "bloggare."
 
-#: templates/base.html:282
+#: templates/base.html:285
 #: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr "Logga in"
 
-#: templates/base.html:301
+#: templates/base.html:304
 msgid "Sweden"
 msgstr "Sverige"
 
-#: templates/base.html:304 templates/apparel/shared_header.html:9
+#: templates/base.html:307 templates/apparel/shared_header.html:9
 #: templates/profile/base_profile.html:31
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:307 templates/apparel/look_detail.html:4
+#: templates/base.html:310 templates/apparel/look_detail.html:4
 #: templates/apparel/look_editor.html:5
 #: templates/apparel/shared_header.html:10
 #: templates/profile/base_profile.html:40 templates/profile/looks.html:4
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/base.html:308 templates/apparel/brand_list.html:11
+#: templates/base.html:311 templates/apparel/brand_list.html:11
 #: templates/apparel/shared_header.html:15
 #: templates/profile/base_login_flow.html:25
 #: templates/profile/login_flow_bio.html:9
@@ -889,16 +886,16 @@ msgstr "Looks"
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:311
+#: templates/base.html:314
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:315 templates/apparel/shared_header.html:14
+#: templates/base.html:318 templates/apparel/shared_header.html:14
 #: templates/apparel/user_list.html:5 templates/apparel/user_list.html:10
 msgid "Members"
 msgstr "Medlemmar"
 
-#: templates/base.html:317 templates/apparel/shared_header.html:32
+#: templates/base.html:320 templates/apparel/shared_header.html:32
 msgid "+ Invite friends"
 msgstr "+ Bjud in vänner"
 
@@ -908,7 +905,7 @@ msgstr "+ Bjud in vänner"
 msgid "+ Create look"
 msgstr "+ Skapa look"
 
-#: templates/base.html:322 templates/profile/base_login_flow.html:26
+#: templates/base.html:325 templates/profile/base_login_flow.html:26
 #: templates/profile/login_flow_bio.html:10
 #: templates/profile/login_flow_brands.html:10
 #: templates/profile/login_flow_featured.html:35
@@ -920,35 +917,35 @@ msgstr "Följ oss"
 msgid "Pinterest"
 msgstr ""
 
-#: templates/base.html:325
+#: templates/base.html:328
 msgid "E-mail newsletter"
 msgstr "E-post"
 
-#: templates/base.html:328
+#: templates/base.html:331
 msgid "Apprl"
 msgstr "Apprl"
 
-#: templates/base.html:330
+#: templates/base.html:333
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:331
+#: templates/base.html:334
 msgid "Privacy & Terms"
 msgstr "Användarvillkor"
 
-#: templates/base.html:332 templates/flatpages/default.html:26
+#: templates/base.html:335 templates/flatpages/default.html:26
 msgid "Cookies"
 msgstr "Cookies"
 
-#: templates/base.html:333
+#: templates/base.html:336
 msgid "Bloggers"
 msgstr "Bloggare"
 
-#: templates/base.html:345
+#: templates/base.html:348
 msgid "Become a partner blogger"
 msgstr "Bli partnerbloggare"
 
-#: templates/base.html:352
+#: templates/base.html:355
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr "Hej Apprl! Jag har en fråga / idé / klagomål / beröm"
 
@@ -981,10 +978,8 @@ msgid "My Follows"
 msgstr "Mina vänner"
 
 #: templates/activity_feed/dialog_user_feed.html:7
-msgid ""
-"Connect your Facebook account to see what your friends are doing on Apprl."
-msgstr ""
-"Logga in med ditt Facebookkonto för att se vad dina vänner gör på Apprl."
+msgid "Sign up to see what your friends are doing on Apprl."
+msgstr "Bli medlem för att se vad dina vänner gör på Apprl."
 
 #: templates/activity_feed/feed.html:6
 msgid "No updates"
@@ -1306,11 +1301,11 @@ msgstr "Är du säker?"
 msgid "Do you really want to delete look"
 msgstr "Vill du verkligen ta bort looken"
 
-#: templates/apparel/look_detail.html:54 templates/profile/looks.html:36
+#: templates/apparel/look_detail.html:54
 msgid "Publish look"
 msgstr "Publicera look"
 
-#: templates/apparel/look_detail.html:55 templates/profile/looks.html:37
+#: templates/apparel/look_detail.html:55
 msgid "Do you want to publish this look?"
 msgstr "Är du säker på att du vill publicera denna look?"
 
@@ -1628,51 +1623,32 @@ msgid "Follow a member"
 msgstr "Följ en medlem"
 
 #: templates/apparel/fragments/dialog_follow_user.html:13
-msgid ""
-"To follow someone on the site, you need to connect with your Facebook "
-"account:"
-msgstr ""
-"För att kunna följa någon här på siten behöver du logga in med ditt "
-"facebookkonto:"
+msgid "To follow someone on the site, you need to sign up."
+msgstr "För att kunna följa någon här på siten behöver du bli medlem."
 
 #: templates/apparel/fragments/dialog_like_look.html:5
 msgid "Like a look"
 msgstr "Gilla en look"
 
 #: templates/apparel/fragments/dialog_like_look.html:7
-msgid ""
-"To 'like' a look on the site, you need to login with your Facebook account. "
-"(Please note that this will not show up on your Facebook wall by default.)"
-msgstr ""
-"För att kunna 'gilla' en look här på siten behöver du logga in med ditt "
-"Facebookkonto. (Bara så du vet, det kommer inte automatiskt att synas på "
-"Facebook att du har gillat en look här.)"
+msgid "To 'like' a look on the site, you need to sign up first."
+msgstr "För att gilla en look på siten behöver du först bli medlem."
 
 #: templates/apparel/fragments/dialog_like_product.html:4
 msgid "Like a product"
 msgstr "Gilla en produkt"
 
 #: templates/apparel/fragments/dialog_like_product.html:6
-msgid ""
-"To 'like' a product on the site, you need to login with your Facebook "
-"account. (Please note that this will not show up on your Facebook wall by "
-"default.)"
-msgstr ""
-"För att kunna 'gilla' en produkt här på siten behöver du logga in med ditt "
-"Facebookkonto. (Bara så du vet, det kommer inte automatiskt att synas på din "
-"Facebooksida att du har gillat en produkt här)"
+msgid "To 'like' a product on the site, you need to sign up first."
+msgstr "För att gilla en produkt på siten behöver du först bli medlem."
 
 #: templates/apparel/fragments/dialog_login_favorite_friends.html:5
 msgid "See your friends' favorite products"
 msgstr "Se dina vänners favoritprodukter"
 
 #: templates/apparel/fragments/dialog_login_favorite_friends.html:7
-msgid ""
-"Log in using your Facebook account to see which products are popular among "
-"your friends."
-msgstr ""
-"Logga in med ditt Facebook-konto för att se vilka produkter som är populära "
-"bland dina vänner."
+msgid "Sign up to see which products are popular among your friends."
+msgstr "Bli medlem att se vilka produkter som är populära bland dina vänner."
 
 #: templates/apparel/fragments/look_medium.html:33
 #: templates/apparel/fragments/looks_large.html:39
@@ -2914,7 +2890,11 @@ msgstr "Logga in"
 msgid "Or:"
 msgstr ""
 
-#: templates/registration/login.html:16
+#: templates/registration/login.html:15
+msgid "Forgot password?"
+msgstr "Glömt lösenord?"
+
+#: templates/registration/login.html:17
 msgid "Your username and password did not match. Please try again."
 msgstr "Fel användarnamn eller lösenord. Försök igen."
 
@@ -3021,249 +3001,3 @@ msgid ""
 msgstr ""
 "Genom att skapa ditt konto godkänner du våra <a href=\"%(tou)s"
 "\">Användarvillkor</a>."
-
-#~ msgid "Become a member to:"
-#~ msgstr "Bli medlem för att:"
-
-#~ msgid "Follow your friends, bloggers & brands"
-#~ msgstr "Följa dina vänner, bloggare & favoritmärken"
-
-#~ msgid "Connect with your Facebook account to find your friends."
-#~ msgstr "Logga in med ditt Facebookkonto för att hitta dina vänner."
-
-#~ msgid ""
-#~ "Apprl is currently available to a limited number of people. We look "
-#~ "forward to making the site better together with you. We appreciate all "
-#~ "questions, suggestions and problems from you, the more the better. Click "
-#~ "the link 'Tyck Till' on the right hand side to share your thoughts. Or "
-#~ "send us an email on info@apprl.com. Have fun!"
-#~ msgstr ""
-#~ "Apprl är just nu bara tillgänglig för ett begränsat antal personer. Vi "
-#~ "ser fram emot att göra siten bättre tillsammans med dig. Vi uppskattar "
-#~ "alla frågor, förslag och problem vi kan få från dig, ju mer desto bättre. "
-#~ "Klicka på länken 'Tyck Till' i högerkanten på siten och dela med dig av "
-#~ "dina tankar. Eller maila oss på info@apprl.com. så blir vi också glada. "
-#~ "Have fun!"
-
-#~ msgid "About cookies"
-#~ msgstr "Om cookies"
-
-#~ msgid ""
-#~ "Apprl uses cookies to make it easier for users to use the site. A cookie "
-#~ "is an unharmful, small text file that is stored on your computer, which "
-#~ "makes it possible to recognize your web browser when you visit the site. "
-#~ "The information that we store in cookies is anonymous and cannot be used "
-#~ "to identify personal information about users. If you want, you may "
-#~ "disable the use of cookies in your browser settings, but Apprl (and a lot "
-#~ "of other sites) will not work as well."
-#~ msgstr ""
-#~ "Apprl använder cookies för att göra tjänsten enklare och smartare för "
-#~ "användaren. En cookie är en liten ofarlig textfil som lagras på din "
-#~ "dator, som gör det möjligt att känna igen din webbläsare när du besöker "
-#~ "oss igen. Informationen vi sparar i cookies är helt anonym och den kan "
-#~ "inte användas för att identifiera personlig information om användare. Om "
-#~ "du vill kan du stänga av cookies i din webbläsare, men Apprl (och många "
-#~ "andra siter) kommer att fungera sämre då."
-
-#~ msgid "Create a look"
-#~ msgstr "Skapa en look"
-
-#~ msgid "To create a look you need to connect with your Facebook account:"
-#~ msgstr ""
-#~ "För att kunna skapa en look behöver du logga in med ditt Facebookkonto:"
-
-#~ msgid "Why Facebook?"
-#~ msgstr "Varför Facebook?"
-
-#~ msgid ""
-#~ "Right now you can only create an Apprl account by connecting your "
-#~ "Facebook account. In the future we'll offer more ways to create an "
-#~ "account."
-#~ msgstr ""
-#~ "Just nu så kan man enbart skapa ett konto på Apprl genom att logga in med "
-#~ "sitt Facebook-konto. I framtiden kommer vi att erbjuda fler sätt att "
-#~ "registrera sig."
-
-#~ msgid ""
-#~ "If you want to keep yourself posted about alternative login ways and "
-#~ "other news from Apparelrow, submit your e-mail address:"
-#~ msgstr ""
-#~ "Om du vill hålla dig uppdaterad om alternativa inloggningssätt och andra "
-#~ "nyheter från Apparelrow, skriv in din e-mailadress här:"
-
-#~ msgid "Thank you!"
-#~ msgstr "Tack!"
-
-#~ msgid "Not a valid email address"
-#~ msgstr "Ogiltig e-postadress"
-
-#~ msgid "Sign up using your Facebook ID"
-#~ msgstr "Logga in med ditt Facebook ID"
-
-#~ msgid "... Or create a new account"
-#~ msgstr "... Eller skapa ett nytt konto"
-
-#~ msgid "beta code"
-#~ msgstr "inbjudningskod"
-
-#~ msgid "e-mail address"
-#~ msgstr "e-postadress"
-
-#~ msgid "Time seen"
-#~ msgstr "Sågs senast"
-
-#~ msgid "Welcome to our beta!"
-#~ msgstr "Välkommen till vår beta!"
-
-#~ msgid "Welcome to the Apparelrow beta!"
-#~ msgstr "Välkommen till Apparelrow beta!"
-
-#~ msgid ""
-#~ "Apparelrow is currently available to a limited number of people. Submit "
-#~ "your e-mail address below if you want us to send you an invite when we "
-#~ "are able to handle more users - or send us a message on <a href=\"mailto:"
-#~ "info@apparelrow.com\">info@apparelrow.com</a> instead! "
-#~ msgstr ""
-#~ "Apparelrow är just nu bara tillgänglig för ett begränsat antal personer. "
-#~ "Ge oss din e-mailadress om du vill att vi skickar dig ett login när vi "
-#~ "har möjlighet att ta in fler användare - eller skicka ett e-mail till <a "
-#~ "href=\"mailto:info@apparelrow.com\">info@apparelrow.com</a>!"
-
-#~ msgid "Request invite"
-#~ msgstr "Skicka"
-
-#~ msgid ""
-#~ "There was an error processing your request. Please double-check your e-"
-#~ "mail address above."
-#~ msgstr ""
-#~ "Din begäran kunde inte hanteras. Vänligen dubbelkolla din e-postadress "
-#~ "ovan."
-
-#~ msgid "If you already have an invite:"
-#~ msgstr "Om du redan har en inbjudan logga in här:"
-
-#~ msgid "Invite code"
-#~ msgstr "Din kod"
-
-#~ msgid "Unlock beta"
-#~ msgstr "Lås upp beta"
-
-#~ msgid ""
-#~ "Thanks! When we're able to handle more users we'll send you an invite."
-#~ msgstr "Tack! När vi är redo att ta emot fler användare så hör vi av oss."
-
-#~ msgid ""
-#~ "If you have forgotten your password, drop us an e-mail on <a href="
-#~ "\"mailto:info@apparelrow.com\">info@apparelrow.com</a>."
-#~ msgstr ""
-#~ "Om du glömt ditt lösenord, maila <a href=\"mailto:info@apparelrow.com"
-#~ "\">info@apparelrow.com</a>."
-
-#~ msgid "E-Mail Addresses"
-#~ msgstr "Epostadresser"
-
-#~ msgid "OpenID Associations"
-#~ msgstr "OpenID"
-
-#~ msgid "Change Password"
-#~ msgstr "Ändra lösenord"
-
-#~ msgid "Set Password"
-#~ msgstr "Ange lösenord"
-
-#~ msgid "Delete Password"
-#~ msgstr "Ta bort lösenord"
-
-#~ msgid "Timezone"
-#~ msgstr "Tidzon"
-
-#~ msgid ""
-#~ "\n"
-#~ "        We sent an e-mail to %(email)s with instructions on how to reset "
-#~ "your password.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Vi har skickat ett e-post till %(email)s med instruktioner för "
-#~ "hur du återställer ditt lösenord.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "        Your password has been changed.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Ditt lösenord har ändrats.\n"
-#~ "    "
-
-#~ msgid "New password"
-#~ msgstr "Nytt lösenord"
-
-#~ msgid "New password (again)"
-#~ msgstr "Nytt lösenord (bekräfta)"
-
-#~ msgid "Update password"
-#~ msgstr "Ändra lösenord"
-
-#~ msgid "Published"
-#~ msgstr "Publicerad"
-
-#~ msgid "Invite friends"
-#~ msgstr "Bjud in vänner"
-
-#~ msgid "Right now a limited number of people have access to Apprl."
-#~ msgstr "Just nu har ett begränsat antal personer tillgång till Apprl."
-
-#~ msgid "You can invite 1 friend:"
-#~ msgid_plural "You can invite %(counter)s friends:"
-#~ msgstr[0] "Du kan bjuda in 1 vän:"
-#~ msgstr[1] "Du kan bjuda in %(counter)s vänner:"
-
-#~ msgid "Add more e-mail addresses"
-#~ msgstr "Lägg till fler e-postadresser"
-
-#~ msgid "Follow me on Apprl"
-#~ msgstr "Följ mig på Apprl"
-
-#~ msgid "Send"
-#~ msgstr "Skicka"
-
-#~ msgid "Hi!"
-#~ msgstr "Hej!"
-
-#~ msgid ""
-#~ "Apprl is a service that makes it more easy and fun to find clothes and be "
-#~ "inspired by your friends."
-#~ msgstr ""
-#~ "Apprl är en tjänst som gör det enklare och roligare att hitta kläder och "
-#~ "inspireras av dina vänner."
-
-#~ msgid "says"
-#~ msgstr "säger"
-
-#~ msgid ""
-#~ "To enter the site, go to <a href=\"%(domain)s\">%(domain)s</a> and log in "
-#~ "with:"
-#~ msgstr ""
-#~ "För att komma till siten, gå till <a href=\"%(domain)s\">%(domain)s</a> "
-#~ "och logga in med:"
-
-#~ msgid "E-mail: %(email)s"
-#~ msgstr "E-mail: %(email)s"
-
-#~ msgid "Invite code: %(password)s"
-#~ msgstr "Invite code: %(password)s"
-
-#~ msgid ""
-#~ "Then log in with your Facebook account on the site to find your friends."
-#~ msgstr "Logga sedan in med ditt Facebook-konto för att hitta dina vänner."
-
-#~ msgid "Welcome!"
-#~ msgstr "Välkommen!"
-
-#~ msgid "%(name)s has invited you to Apprl"
-#~ msgstr "%(name)s har bjudit in dig till Apprl."
-
-#~ msgid "Matching profiles"
-#~ msgstr "Träffar bland profiler"
