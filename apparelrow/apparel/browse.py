@@ -16,7 +16,7 @@ from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
 from django.core.urlresolvers import reverse
-from django.utils.translation import get_language, ugettext_lazy as _
+from django.utils.translation import get_language, ugettext as _
 
 from apparel.search import PRODUCT_SEARCH_FIELDS
 from apparel.search import ApparelSearch
