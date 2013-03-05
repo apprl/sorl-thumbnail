@@ -32,9 +32,9 @@
         <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
         <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></p>
         <div class="stats">
-            <div class="likes">{{ object.score }}</div>
+            <div class="likes"><a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.score }}</a></div>
             {% if object.comment_count > 0 %}
-            <div class="comments">{{ object.comment_count }}</div>
+            <div class="comments"><a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.comment_count }}</a></div>
             {% endif %}
         </div>
     </div>
