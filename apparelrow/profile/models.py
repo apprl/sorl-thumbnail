@@ -189,7 +189,7 @@ class User(AbstractUser):
         if self.is_brand:
             return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM)
 
-        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_MEDIUM)
 
     @cached_property
     def avatar_large(self):
