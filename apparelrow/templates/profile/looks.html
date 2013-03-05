@@ -5,7 +5,7 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery('.large-looks .btn-delete').click(function(event) {
+        jQuery(document).on('click', '.large-looks .btn-delete', function(event) {
             var title = jQuery(this).prev('a').attr('title');
             var href = jQuery(this).attr('href');
             var li = jQuery(this).closest('li');
@@ -27,6 +27,31 @@
             );
             event.preventDefault();
         });
+
+        jQuery(document).on('click', '.btn-publish', function(e) {
+            var $this = $(this);
+            var href = $this.attr('href');
+            var $a = $this.parents('.look-container').find('h3 a');
+            create_modal_dialog(
+                '{% trans "Publish look" %}',
+                ['{% trans "Do you want to publish this look?" %}'],
+                function (modal_dialog) {
+                    $.ajax({url: href,
+                            success: function(data) {
+                                $this.remove();
+                                var text = $a.text();
+                                if(text.indexOf('(') > -1) {
+                                    $a.text(text.substring(0, text.lastIndexOf('(') - 1));
+                                }
+                            },
+                            complete: function() { modal_dialog.close(); }
+                        });
+                },
+                function (modal_dialog) { modal_dialog.close(); }
+            );
+            return false;
+        });
+
     });
 </script>
 {% endblock 'extra-scripts' %}

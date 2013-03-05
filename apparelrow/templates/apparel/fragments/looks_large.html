@@ -49,6 +49,9 @@
             <div class="look-control">
                 <a href="{% url 'look-editor' object.slug %}" title="{% trans "Edit" %}" class="btn btn-small btn-positive btn-edit">{% trans "Edit" %}</a>
                 <a href="{% url 'apparel.views.look_delete' object.slug %}" title="{% trans "Delete" %}" class="btn btn-small btn-negative btn-delete">{% trans "Delete" %}</a>
+                {% if not object.published %}
+                <a class="btn btn-small btn-positive btn-publish" data-href="{% url 'look-unpublish' object.slug %}" data-text="{% trans "Unpublish" %}" title="{{ object.title }}" href="{% url 'look-publish' object.slug %}">{% trans "Publish" %}</a>
+                {% endif %}
             </div>
             {% endif %}
         </div>
