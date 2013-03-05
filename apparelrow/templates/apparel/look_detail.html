@@ -74,8 +74,8 @@
                 var new_text = $this.data('text');
                 var new_href = $this.data('href');
                 create_modal_dialog(
-                    '{% trans "Unpublish look" %}',
-                    ['{% trans "Are you sure you want to unpublish your look?" %}'],
+                    '{% trans "Unpublish look?" %}',
+                    ['{% trans "Are you sure you want to unpublish this look so that no one can see it?" %}'],
                     function (modal_dialog) {
                         $.ajax({url: href,
                             success: function(data) {
@@ -131,9 +131,9 @@
             <a class="btn btn-small btn-positive btn-edit" href="{% url 'look-editor' object.slug %}">{% trans "Edit" %}</a>
             <a class="btn btn-small btn-negative btn-delete" title="{{ object.title }}" href="{% url 'apparel.views.look_delete' object.slug %}">{% trans "Delete" %}</a>
             {% if object.published %}
-            <a class="btn btn-small btn-positive btn-unpublish" data-href="{% url 'look-publish' object.slug %}" data-text="{% trans "Publish" %}" title="{{ object.title }}" href="{% url 'look-unpublish' object.slug %}">{% trans "Published" %}</a>
+            <a class="btn btn-small btn-positive btn-unpublish" data-href="{% url 'look-publish' object.slug %}" data-text="{% trans "Publish" %}" title="{{ object.title }}" href="{% url 'look-unpublish' object.slug %}">{% trans "Unpublish" %}</a>
             {% else %}
-            <a class="btn btn-small btn-positive btn-publish" data-href="{% url 'look-unpublish' object.slug %}" data-text="{% trans "Published" %}" title="{{ object.title }}" href="{% url 'look-publish' object.slug %}">{% trans "Publish" %}</a>
+            <a class="btn btn-small btn-positive btn-publish" data-href="{% url 'look-unpublish' object.slug %}" data-text="{% trans "Unpublish" %}" title="{{ object.title }}" href="{% url 'look-publish' object.slug %}">{% trans "Publish" %}</a>
             {% endif %}
         {% endif %}
     </div>
