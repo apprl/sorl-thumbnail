@@ -42,6 +42,7 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
 
+    list_filter = ('is_brand', 'is_partner', 'is_active', 'is_staff', 'is_superuser')
     raw_id_fields = ('brand',)
     fieldsets = (
         (None, {'fields': [('username', 'password'),]}),
