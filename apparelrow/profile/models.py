@@ -78,7 +78,7 @@ class User(AbstractUser):
     fb_share_create_look = models.BooleanField(default=True, blank=False, null=False)
 
     # facebook
-    facebook_user_id = models.CharField(max_length=30, default=None, null=True, blank=True)
+    facebook_user_id = models.CharField(max_length=30, default=None, unique=True, null=True, blank=True)
     facebook_access_token = models.CharField(max_length=255, null=True, blank=True)
     facebook_access_token_expire = models.DateTimeField(null=True, blank=True)
 

@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     (r'^partner/', include('dashboard.urls')),
     (r'^s/', include('statistics.urls')),
     url(r'^facebook/login', 'profile.views.login', name='facebook_login'),
+    url(r'^facebook/connect', 'profile.views.facebook_connect', name='facebook_connect'),
     url(r'^sitemap\.xml', include('static_sitemaps.urls')),
     url(r'^sitemap-(?P<section>.+)\.xml\.gz$', 'apparel.views.sitemap_view'),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

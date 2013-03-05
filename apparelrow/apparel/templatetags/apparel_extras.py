@@ -22,7 +22,7 @@ from apparel.models import ProductLike, LookLike
 register = Library()
 
 @register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)
-def facebook_button(context, text=None, next=None):
+def facebook_button(context, text=None, next=None, connect=False):
     """
     Facebook button templatetag.
 
@@ -37,8 +37,7 @@ def facebook_button(context, text=None, next=None):
     else:
         text = _(text)
 
-    return dict(next=next, text=text, facebook_icon=facebook_icon, request=context['request'])
-
+    return dict(next=next, text=text, facebook_icon=facebook_icon, connect=connect, request=context['request'])
 
 @register.filter
 def category_descendants_id(category, include_self=True):

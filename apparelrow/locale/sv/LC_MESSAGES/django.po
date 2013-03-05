@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-04 18:37+0100\n"
+"POT-Creation-Date: 2013-03-05 15:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -382,7 +382,7 @@ msgstr ""
 msgid "Connect with Facebook"
 msgstr "Logga in med Facebook"
 
-#: apparel/templatetags/apparel_extras.py:282
+#: apparel/templatetags/apparel_extras.py:281
 msgid "ago"
 msgstr "sedan"
 
@@ -528,18 +528,18 @@ msgstr ""
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:52 templates/base.html:295
+#: profile/admin.py:52 templates/base.html:326
 #: templates/profile/base_settings.html:21
 #: templates/profile/base_settings.html:24
 #: templates/profile/settings_facebook.html:5
 msgid "Facebook"
 msgstr "Facebook"
 
-#: profile/admin.py:54 templates/apparel/fragments/product_menu_browse.html:65
+#: profile/admin.py:55 templates/apparel/fragments/product_menu_browse.html:65
 msgid "Brand"
 msgstr "Varumärke"
 
-#: profile/admin.py:55 templates/dashboard/admin.html:4
+#: profile/admin.py:56 templates/dashboard/admin.html:4
 #: templates/dashboard/body_header.html:4 templates/dashboard/info.html:5
 #: templates/dashboard/info_unauthenticated.html:5
 #: templates/dashboard/partner.html:4 templates/profile/base_settings.html:22
@@ -547,11 +547,11 @@ msgstr "Varumärke"
 msgid "Partner"
 msgstr "Partner"
 
-#: profile/admin.py:56
+#: profile/admin.py:57
 msgid "Extra"
 msgstr ""
 
-#: profile/admin.py:57 templates/apparel/shared_header.html:34
+#: profile/admin.py:58 templates/apparel/shared_header.html:34
 #: templates/dashboard/body_header.html:11
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:9
@@ -559,15 +559,15 @@ msgstr ""
 msgid "Settings"
 msgstr "Inställningar"
 
-#: profile/admin.py:67
+#: profile/admin.py:68
 msgid "Important dates"
 msgstr ""
 
-#: profile/admin.py:68
+#: profile/admin.py:69
 msgid "Permissions"
 msgstr ""
 
-#: profile/forms.py:25
+#: profile/forms.py:29
 msgid "Your e-mail address"
 msgstr "Din e-postadress"
 
@@ -899,7 +899,7 @@ msgstr "Medlemmar"
 msgid "+ Invite friends"
 msgstr "+ Bjud in vänner"
 
-#: templates/base.html:291 templates/apparel/look_detail.html:120
+#: templates/base.html:322 templates/apparel/look_detail.html:120
 #: templates/apparel/look_list.html:18 templates/apparel/shared_header.html:33
 #: templates/profile/base_profile.html:51
 msgid "+ Create look"
@@ -913,7 +913,7 @@ msgstr "+ Skapa look"
 msgid "Follow us"
 msgstr "Följ oss"
 
-#: templates/base.html:324
+#: templates/base.html:327
 msgid "Pinterest"
 msgstr ""
 
@@ -1301,11 +1301,11 @@ msgstr "Är du säker?"
 msgid "Do you really want to delete look"
 msgstr "Vill du verkligen ta bort looken"
 
-#: templates/apparel/look_detail.html:54
+#: templates/apparel/look_detail.html:54 templates/profile/looks.html:36
 msgid "Publish look"
 msgstr "Publicera look"
 
-#: templates/apparel/look_detail.html:55
+#: templates/apparel/look_detail.html:55 templates/profile/looks.html:37
 msgid "Do you want to publish this look?"
 msgstr "Är du säker på att du vill publicera denna look?"
 
@@ -2622,7 +2622,19 @@ msgstr "Nuvarande e-postadress:"
 msgid "Update"
 msgstr "Uppdatera"
 
-#: templates/profile/settings_facebook.html:6
+#: templates/profile/settings_facebook.html:7
+msgid ""
+"Connect your Facebook account to find your friends and easier share to your "
+"timeline."
+msgstr ""
+"Anslut ditt Facebookkonto för att hitta dina vänner och enklare dela till "
+"din tidslinje."
+
+#: templates/profile/settings_facebook.html:10
+msgid "It is not possible to connect this account with Facebook."
+msgstr "Det är inte möjligt att ansluta det här kontot med Facebook."
+
+#: templates/profile/settings_facebook.html:13
 msgid ""
 "Here you can set which actions you want to be automatically shared to your "
 "Facebook timeline:"
@@ -2630,7 +2642,7 @@ msgstr ""
 "Här kan du ställa in vad som ska delas automatiskt till din Facebook-"
 "tidslinje:"
 
-#: templates/profile/settings_facebook.html:14
+#: templates/profile/settings_facebook.html:21
 #: templates/profile/settings_notification.html:22
 #: templates/profile/settings_partner.html:47
 msgid "Save changes"
@@ -3001,3 +3013,6 @@ msgid ""
 msgstr ""
 "Genom att skapa ditt konto godkänner du våra <a href=\"%(tou)s"
 "\">Användarvillkor</a>."
+
+#~ msgid "You can connect your account with Facebook."
+#~ msgstr "Du kan ansluta ditt konto med Facebook."

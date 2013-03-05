@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-04 18:37+0100\n"
+"POT-Creation-Date: 2013-03-05 15:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr ""
 #: activity_feed/models.py:73 activity_feed/models.py:122
 #: apparel/models.py:373 apparel/models.py:694 apparel/models.py:924
 #: apparel/models.py:1049 dashboard/models.py:59 dashboard/models.py:78
-#: dashboard/models.py:112 profile/models.py:606 statistics/models.py:49
+#: dashboard/models.py:112 profile/models.py:589 statistics/models.py:49
 #: statistics/models.py:61
 msgid "Time created"
 msgstr ""
@@ -381,7 +381,7 @@ msgstr ""
 msgid "Connect with Facebook"
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:282
+#: apparel/templatetags/apparel_extras.py:281
 msgid "ago"
 msgstr ""
 
@@ -523,22 +523,22 @@ msgid ""
 "example: \"svart,night,coal\""
 msgstr ""
 
-#: profile/admin.py:48
+#: profile/admin.py:49
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:51 templates/base.html:326
+#: profile/admin.py:52 templates/base.html:326
 #: templates/profile/base_settings.html:21
 #: templates/profile/base_settings.html:24
 #: templates/profile/settings_facebook.html:5
 msgid "Facebook"
 msgstr ""
 
-#: profile/admin.py:54 templates/apparel/fragments/product_menu_browse.html:65
+#: profile/admin.py:55 templates/apparel/fragments/product_menu_browse.html:65
 msgid "Brand"
 msgstr ""
 
-#: profile/admin.py:55 templates/dashboard/admin.html:4
+#: profile/admin.py:56 templates/dashboard/admin.html:4
 #: templates/dashboard/body_header.html:4 templates/dashboard/info.html:5
 #: templates/dashboard/info_unauthenticated.html:5
 #: templates/dashboard/partner.html:4 templates/profile/base_settings.html:22
@@ -546,11 +546,11 @@ msgstr ""
 msgid "Partner"
 msgstr ""
 
-#: profile/admin.py:56
+#: profile/admin.py:57
 msgid "Extra"
 msgstr ""
 
-#: profile/admin.py:57 templates/apparel/shared_header.html:34
+#: profile/admin.py:58 templates/apparel/shared_header.html:34
 #: templates/dashboard/body_header.html:11
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:9
@@ -558,11 +558,11 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: profile/admin.py:67
+#: profile/admin.py:68
 msgid "Important dates"
 msgstr ""
 
-#: profile/admin.py:68
+#: profile/admin.py:69
 msgid "Permissions"
 msgstr ""
 
@@ -634,7 +634,7 @@ msgstr ""
 msgid "No one"
 msgstr ""
 
-#: profile/models.py:55 profile/models.py:296
+#: profile/models.py:55 profile/models.py:279
 msgid "User profile image"
 msgstr ""
 
@@ -2498,13 +2498,23 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: templates/profile/settings_facebook.html:6
+#: templates/profile/settings_facebook.html:7
+msgid ""
+"Connect your Facebook account to find your friends and easier share to your "
+"timeline."
+msgstr ""
+
+#: templates/profile/settings_facebook.html:10
+msgid "It is not possible to connect this account with Facebook."
+msgstr ""
+
+#: templates/profile/settings_facebook.html:13
 msgid ""
 "Here you can set which actions you want to be automatically shared to your "
 "Facebook timeline:"
 msgstr ""
 
-#: templates/profile/settings_facebook.html:14
+#: templates/profile/settings_facebook.html:21
 #: templates/profile/settings_notification.html:22
 #: templates/profile/settings_partner.html:47
 msgid "Save changes"

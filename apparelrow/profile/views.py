@@ -563,3 +563,27 @@ def login(request):
             return HttpResponseRedirect(_get_next(request))
 
     return HttpResponseRedirect('/')
+
+@login_required
+def facebook_connect(request):
+    """
+    Connect existing account with Facebook.
+    """
+    if request.POST:
+        access_token = request.POST.get('access_token', '')
+        user_id = request.POST.get('uid', '')
+
+        try:
+            get_user_model().objects.get(facebook_user_id=user_id)
+        except get_user_model().DoesNotExist:
+            request.user.facebook_user_id = user_id
+            request.user.save()
+
+            if request.is_ajax():
+                return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
+
+            return HttpResponseRedirect(_get_next(request))
+
+        return HttpResponseRedirect('%s?error=1' % (_get_next(request),))
+
+    return HttpResponseRedirect(_get_next(request))

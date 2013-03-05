@@ -1,5 +1,5 @@
 {% load i18n %}
-<form class="connect-button" name="login" method="post" action="{% url 'facebook_login' %}">
+<form class="connect-button" name="login" method="post" action="{% if connect %}{% url 'facebook_connect' %}{% else %}{% url 'facebook_login' %}{% endif %}">
     {% csrf_token %}
     <input type="hidden" name="access_token" value="" />
     <input type="hidden" name="uid" value="" />
