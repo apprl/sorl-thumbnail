@@ -57,8 +57,16 @@ jQuery(document).ready(function() {
     </form>
     {% else %}
         <h2>{% trans "Invite your friends" %}</h2>
-        <p class="friends">{% trans "APPRL is more fun together with your friends!" %}</p>
-        <a class="btn btn-upper btn-positive facebook-invite" href="#invite">{% trans "+ Invite friends!" %}</a>
+        {% if not request.user.facebook_user_id %}
+            <p>{% trans "Connect your Facebook account to find your friends." %}</p>
+            <br>{% facebook_button connect='yes' %}<br>
+            {% if request.GET.error %}
+                <p class="error">{% trans "It is not possible to connect this account with Facebook." %}</p>
+            {% endif %}
+        {% else %}
+            <p class="friends">{% trans "APPRL is more fun together with your friends!" %}</p>
+            <a class="btn btn-upper btn-positive facebook-invite" href="#invite">{% trans "+ Invite friends!" %}</a>
+        {% endif %}
         <div class="content-footer">
             <a href="{{ next_url }}" class="btn btn-block btn-large btn-upper">{% trans "Next step" %}</a>
         </div>

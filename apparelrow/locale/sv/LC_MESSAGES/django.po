@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-06 20:42+0100\n"
+"POT-Creation-Date: 2013-03-06 21:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1611,10 +1611,12 @@ msgid "Sign up to find your friends."
 msgstr "Bli medlem för att hitta dina vänner."
 
 #: templates/apparel/user_list.html:57
+#: templates/profile/login_flow_friends.html:61
 msgid "Connect your Facebook account to find your friends."
 msgstr "Koppla ditt Facebook-konto för att hitta dina vänner."
 
 #: templates/apparel/user_list.html:60
+#: templates/profile/login_flow_friends.html:64
 #: templates/profile/settings_facebook.html:10
 msgid "It is not possible to connect this account with Facebook."
 msgstr "Det är inte möjligt att ansluta det här kontot med Facebook."
@@ -2358,7 +2360,7 @@ msgstr "Medlemmar"
 #: templates/profile/login_flow_bio.html:20
 #: templates/profile/login_flow_featured.html:53
 #: templates/profile/login_flow_friends.html:55
-#: templates/profile/login_flow_friends.html:63
+#: templates/profile/login_flow_friends.html:71
 msgid "Next step"
 msgstr "Gå vidare"
 
@@ -2454,8 +2456,8 @@ msgid ""
 "At Apprl we have collected clothes, shoes and accessories from all the "
 "leading international brands and retailers."
 msgstr ""
-"På Apprl har vi samlat kläder, skor och accessoarer från "
-"världens bästa onlinebutiker."
+"På Apprl har vi samlat kläder, skor och accessoarer från världens bästa "
+"onlinebutiker."
 
 #: templates/profile/email_welcome.html:7
 msgid ""
@@ -2566,7 +2568,7 @@ msgid "Follow your friends to see what they like"
 msgstr "Följ dina vänner för att se vad de gillar"
 
 #: templates/profile/login_flow_friends.html:52
-#: templates/profile/login_flow_friends.html:60
+#: templates/profile/login_flow_friends.html:67
 msgid "APPRL is more fun together with your friends!"
 msgstr "APPRL är roligare tillsammans med dina vänner!"
 
@@ -2578,7 +2580,7 @@ msgstr "+ Bjud in fler vänner!"
 msgid "Invite your friends"
 msgstr "Bjud in dina vänner"
 
-#: templates/profile/login_flow_friends.html:61
+#: templates/profile/login_flow_friends.html:68
 msgid "+ Invite friends!"
 msgstr "+ Bjud in vänner"
 
