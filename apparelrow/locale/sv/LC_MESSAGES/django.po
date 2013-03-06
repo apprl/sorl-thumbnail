@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-06 09:23+0100\n"
+"POT-Creation-Date: 2013-03-06 14:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -772,8 +772,9 @@ msgstr "Jag letar efter..."
 #: templates/base.html:186 templates/apparel/look_editor.html:93
 #: templates/apparel/look_editor.html:123
 #: templates/apparel/look_editor.html:134
+#: templates/profile/base_login_flow.html:15
 #: templates/profile/base_profile.html:64
-#: templates/profile/base_profile.html:79
+#: templates/profile/base_profile.html:77
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -886,7 +887,7 @@ msgstr "Looks"
 
 #: templates/base.html:311 templates/apparel/brand_list.html:11
 #: templates/apparel/shared_header.html:15
-#: templates/profile/base_login_flow.html:25
+#: templates/profile/base_login_flow.html:28
 #: templates/profile/login_flow_bio.html:9
 #: templates/profile/login_flow_brands.html:9
 #: templates/profile/login_flow_featured.html:34
@@ -913,7 +914,7 @@ msgstr "+ Bjud in vänner"
 msgid "+ Create look"
 msgstr "+ Skapa look"
 
-#: templates/base.html:325 templates/profile/base_login_flow.html:26
+#: templates/base.html:325 templates/profile/base_login_flow.html:29
 #: templates/profile/login_flow_bio.html:10
 #: templates/profile/login_flow_brands.html:10
 #: templates/profile/login_flow_featured.html:35
@@ -1114,7 +1115,7 @@ msgstr "följer nu"
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
 #: templates/profile/base_profile.html:46
-#: templates/profile/base_profile.html:98
+#: templates/profile/base_profile.html:96
 #: templates/profile/login_flow_featured.html:47
 #: templates/profile/login_flow_friends.html:47
 msgid "Following"
@@ -1609,6 +1610,15 @@ msgstr "Killar"
 #: templates/apparel/user_list.html:52
 msgid "Sign up to find your friends."
 msgstr "Bli medlem för att hitta dina vänner."
+
+#: templates/apparel/user_list.html:57
+msgid "Connect your Facebook account to find your friends."
+msgstr "Koppla ditt Facebook-konto för att hitta dina vänner."
+
+#: templates/apparel/user_list.html:60
+#: templates/profile/settings_facebook.html:10
+msgid "It is not possible to connect this account with Facebook."
+msgstr "Det är inte möjligt att ansluta det här kontot med Facebook."
 
 #: templates/apparel/fragments/browse_follow_user.html:4
 msgid ""
@@ -2310,12 +2320,18 @@ msgstr ""
 msgid "Trademark Policy"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:15
+#: templates/profile/base_login_flow.html:14
+#: templates/profile/base_profile.html:63
+#: templates/profile/fragments/change_image_form.html:14
+msgid "Change picture"
+msgstr "Ändra bild"
+
+#: templates/profile/base_login_flow.html:18
 #, python-format
 msgid "Hi %(username)s!"
 msgstr "Hej %(username)s!"
 
-#: templates/profile/base_login_flow.html:22
+#: templates/profile/base_login_flow.html:25
 #: templates/profile/login_flow_bio.html:6
 #: templates/profile/login_flow_brands.html:6
 #: templates/profile/login_flow_featured.html:31
@@ -2323,7 +2339,7 @@ msgstr "Hej %(username)s!"
 msgid "Your info"
 msgstr "Din info"
 
-#: templates/profile/base_login_flow.html:23
+#: templates/profile/base_login_flow.html:26
 #: templates/profile/login_flow_bio.html:7
 #: templates/profile/login_flow_brands.html:7
 #: templates/profile/login_flow_featured.html:32
@@ -2331,7 +2347,7 @@ msgstr "Din info"
 msgid "Friends"
 msgstr "Vänner"
 
-#: templates/profile/base_login_flow.html:24
+#: templates/profile/base_login_flow.html:27
 #: templates/profile/login_flow_bio.html:8
 #: templates/profile/login_flow_brands.html:8
 #: templates/profile/login_flow_featured.html:33
@@ -2339,7 +2355,7 @@ msgstr "Vänner"
 msgid "Featured"
 msgstr "Medlemmar"
 
-#: templates/profile/base_login_flow.html:36
+#: templates/profile/base_login_flow.html:39
 #: templates/profile/login_flow_bio.html:20
 #: templates/profile/login_flow_featured.html:53
 #: templates/profile/login_flow_friends.html:55
@@ -2355,38 +2371,33 @@ msgstr "Uppdateringar"
 msgid "Followers"
 msgstr "Följs av"
 
-#: templates/profile/base_profile.html:63
-#: templates/profile/fragments/change_image_form.html:13
-msgid "Change picture"
-msgstr "Ändra bild"
-
-#: templates/profile/base_profile.html:72
+#: templates/profile/base_profile.html:70
 msgid "Filter products"
 msgstr "Filtrera produkter"
 
-#: templates/profile/base_profile.html:78
+#: templates/profile/base_profile.html:76
 msgid "Edit bio"
 msgstr "Ändra beskrivning"
 
-#: templates/profile/base_profile.html:84
+#: templates/profile/base_profile.html:82
 msgid "Add bio"
 msgstr "Lägg till beskrivning"
 
-#: templates/profile/base_profile.html:92
+#: templates/profile/base_profile.html:90
 #, python-format
 msgid "%(prod)s product"
 msgid_plural "%(prod)s products"
 msgstr[0] "%(prod)s produkt"
 msgstr[1] "%(prod)s produkter"
 
-#: templates/profile/base_profile.html:94
+#: templates/profile/base_profile.html:92
 #, python-format
 msgid "Likes %(prod)s product"
 msgid_plural "Likes %(prod)s products"
 msgstr[0] "Gillar %(prod)s produkt"
 msgstr[1] "Gillar %(prod)s produkter"
 
-#: templates/profile/base_profile.html:96
+#: templates/profile/base_profile.html:94
 #: templates/profile/fragments/follow_profile.html:17
 #, python-format
 msgid "Created %(look_count)s look"
@@ -2394,11 +2405,11 @@ msgid_plural "Created %(look_count)s looks"
 msgstr[0] "Skapat %(look_count)s look"
 msgstr[1] "Skapat %(look_count)s looks"
 
-#: templates/profile/base_profile.html:97
+#: templates/profile/base_profile.html:95
 msgid "Followed by"
 msgstr "Följs av"
 
-#: templates/profile/base_profile.html:111
+#: templates/profile/base_profile.html:109
 #, python-format
 msgid "%(name)s's latest looks"
 msgstr "%(name)ss senaste looks"
@@ -2626,7 +2637,7 @@ msgid "Current e-mail address:"
 msgstr "Nuvarande e-postadress:"
 
 #: templates/profile/settings_email.html:13
-#: templates/profile/fragments/change_about_form.html:13
+#: templates/profile/fragments/change_about_form.html:14
 msgid "Update"
 msgstr "Uppdatera"
 
@@ -2637,10 +2648,6 @@ msgid ""
 msgstr ""
 "Anslut ditt Facebookkonto för att hitta dina vänner och enklare dela till "
 "din tidslinje."
-
-#: templates/profile/settings_facebook.html:10
-msgid "It is not possible to connect this account with Facebook."
-msgstr "Det är inte möjligt att ansluta det här kontot med Facebook."
 
 #: templates/profile/settings_facebook.html:13
 msgid ""

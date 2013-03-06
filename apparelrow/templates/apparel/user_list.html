@@ -48,20 +48,30 @@
     </div>
     <div class="sidebar last">
         <h2>{% trans "Follow your friends!" %}</h2>
-        {% if not user.is_authenticated %}
+        {% if not request.user.is_authenticated %}
         <div>{% trans "Sign up to find your friends." %}</div>
         <a class="btn btn-upper btn-positive btn-signup" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
         {% else %}
-        <div class="facebook-friends"></div>
+        <div class="facebook-friends">
+            {% if not request.user.facebook_user_id %}
+                <p>{% trans "Connect your Facebook account to find your friends." %}</p>
+                {% facebook_button connect='yes' %}<br>
+                {% if request.GET.error %}
+                    <p class="error">{% trans "It is not possible to connect this account with Facebook." %}</p>
+                {% endif %}
+            {% endif %}
+        </div>
         {% endif %}
     </div>
 {% endblock body %}
 
 {% block facebook_code %}
+{% if request.user.is_authenticated and request.user.facebook_user_id %}
 FB.api('/me/friends', function(response) {
     var fids = jQuery.map(response.data, function(value) {
         return value['id'];
     });
     jQuery('.facebook-friends').load('/home/friends/', {'fids': fids.join(',')});
 });
+{% endif %}
 {% endblock %}
