@@ -11,6 +11,9 @@
     <div class="sidebar">
         <div id="profile-image">
             <img src="{{ user.avatar_large }}" class="avatar large">
+            <a href="#edit" class="btn btn-small btn-block btn-positive btn-edit">{% trans "Change picture" %}</a>
+            <a href="#cancel" class="btn btn-small btn-block btn-negative btn-cancel">{% trans "Cancel" %}</a>
+            {% include 'profile/fragments/change_image_form.html' with form_enctype='multipart/form-data' %}
         </div>
         <h1 class="sidebar-profile-name">{% blocktrans with user.display_name as username %}Hi {{ username }}!{% endblocktrans %}</h1>
     </div>

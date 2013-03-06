@@ -1,6 +1,7 @@
 {% load i18n %}
 <form action="{{ request.path }}" method="post"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %}>
     {% csrf_token %}
+    <input type="hidden" name="change_image_form" value="yes">
     {% block extra_fields %}{% endblock %}
     <ul>
     {% for field in change_image_form %}

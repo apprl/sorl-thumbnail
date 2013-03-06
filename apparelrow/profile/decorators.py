@@ -21,38 +21,42 @@ def login_flow(view_func):
 
     return _decorator
 
-
 def avatar_change(view_func):
     """
+    Handle profile image/about form.
+
+    Must be decorated after @get_current_user
     """
     def _decorator(request, profile, *args, **kwargs):
         if request.method == 'POST':
             if profile != request.user:
                 return HttpResponseForbidden()
 
-            success = False
+            if request.POST.get('change_image_form') or request.POST.get('change_about_form.html'):
+                success = False
 
-            image_form = ProfileImageForm(request.POST, request.FILES, instance=profile)
-            if image_form.is_valid():
-                image_form.save()
-                success = True
+                image_form = ProfileImageForm(request.POST, request.FILES, instance=profile)
+                if image_form.is_valid():
+                    image_form.save()
+                    success = True
 
-            about_form = ProfileAboutForm(request.POST, request.FILES, instance=profile)
-            if about_form.is_valid():
-                about_form.save()
-                success = True
+                about_form = ProfileAboutForm(request.POST, request.FILES, instance=profile)
+                if about_form.is_valid():
+                    about_form.save()
+                    success = True
 
-            if success:
-                return HttpResponseRedirect(profile.get_absolute_url())
+                if success:
+                    return HttpResponseRedirect(request.get_full_path())
+            else:
+                image_form = ProfileImageForm(instance=profile)
+                about_form = ProfileAboutForm(instance=profile)
 
         else:
             image_form = ProfileImageForm(instance=profile)
             about_form = ProfileAboutForm(instance=profile)
 
-        forms = [
-            ('change_image_form', image_form),
-            ('change_about_form', about_form),
-        ]
+        forms = [('change_image_form', image_form),
+                 ('change_about_form', about_form)]
 
         return view_func(request, profile, forms, *args, **kwargs)
 

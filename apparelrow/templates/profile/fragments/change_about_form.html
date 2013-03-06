@@ -1,6 +1,7 @@
 {% load i18n %}
 <form action="{{ request.path }}" method="post">
     {% csrf_token %}
+    <input type="hidden" name="change_about_form" value="yes">
     {% block extra_fields %}{% endblock %}
     <ul>
     {% for field in change_about_form %}

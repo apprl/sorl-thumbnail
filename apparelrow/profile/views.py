@@ -353,11 +353,11 @@ def settings_partner(request):
 
 @get_current_user
 @login_flow
-def login_flow_bio(request, profile):
+@avatar_change
+def login_flow_bio(request, profile, forms):
     """
     Step 1: Bio
     """
-    profile.first_visit = False
     profile.login_flow = 'bio'
     profile.save()
 
@@ -394,16 +394,17 @@ def login_flow_bio(request, profile):
         'next_url': reverse('profile.views.login_flow_friends'),
         'email_form': form,
     }
+    context.update(forms)
     return render(request, 'profile/login_flow_bio.html', context)
 
 
 @get_current_user
 @login_flow
-def login_flow_friends(request, profile):
+@avatar_change
+def login_flow_friends(request, profile, forms):
     """
     Step 2: Friends
     """
-    profile.first_visit = False
     profile.login_flow = 'friends'
     profile.save()
 
@@ -424,16 +425,17 @@ def login_flow_friends(request, profile):
         'next_url': reverse('profile.views.login_flow_featured'),
         'profiles': get_facebook_friends(request)
     }
+    context.update(forms)
     return render(request, 'profile/login_flow_friends.html', context)
 
 
 @get_current_user
 @login_flow
-def login_flow_featured(request, profile):
+@avatar_change
+def login_flow_featured(request, profile, forms):
     """
     Step 3: Featured members
     """
-    profile.first_visit = False
     profile.login_flow = 'featured'
     profile.save()
 
@@ -459,16 +461,17 @@ def login_flow_featured(request, profile):
         'next_url': reverse('profile.views.login_flow_brands'),
         'profiles': profiles[:21],
     }
+    context.update(forms)
     return render(request, 'profile/login_flow_featured.html', context)
 
 
 @get_current_user
 @login_flow
-def login_flow_brands(request, profile):
+@avatar_change
+def login_flow_brands(request, profile, forms):
     """
     Step 4: Brands
     """
-    profile.first_visit = False
     profile.login_flow = 'brands'
     profile.save()
 
@@ -477,22 +480,24 @@ def login_flow_brands(request, profile):
         'next_url': reverse('profile.views.login_flow_like'),
         'profiles': get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:21]
     }
+    context.update(forms)
     return render(request, 'profile/login_flow_brands.html', context)
 
 
 @get_current_user
 @login_flow
-def login_flow_like(request, profile):
+@avatar_change
+def login_flow_like(request, profile, form):
     """
     Step 5: Like us on facebook
     """
-    profile.first_visit = False
     profile.login_flow = 'like'
     profile.save()
 
     context = {
         'next_url': reverse('profile.views.login_flow_complete'),
     }
+    context.update(form)
     return render(request, 'profile/login_flow_like.html', context)
 
 @get_current_user
@@ -501,7 +506,6 @@ def login_flow_complete(request, profile):
     """
     Step 6: Login flow is complete
     """
-    profile.first_visit = False
     profile.login_flow = 'complete'
     profile.save()
 
