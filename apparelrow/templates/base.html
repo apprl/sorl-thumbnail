@@ -115,7 +115,7 @@
                 }
             });
 
-            {% if not request.user.is_authenticated %}
+            {% if not request.user.is_authenticated and not request.path == '/accounts/register/' %}
             var panel = $('#panel');
             var panel_offset_top = 0;
             if(panel.length > 0) {
@@ -278,6 +278,7 @@
         </div>
         {% endif %}
         {% endif %}
+        {% if not request.path == '/accounts/register/' %}
         <div id="sticky-login-bar">
             <div id="sticky-inner-login-bar">
                 <p>{% trans "Discover fashion from the world’s best online stores, selected by our stylemakers & bloggers." %}</p>
@@ -287,6 +288,7 @@
                 </ul>
             </div>
         </div>
+        {% endif %}
         {% endif %}
 
         <div id="inner-container">
