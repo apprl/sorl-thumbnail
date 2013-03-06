@@ -1,6 +1,8 @@
 import logging
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse, resolve
 from django.http import HttpResponseRedirect
 
 logger = logging.getLogger('profile.middleware')
@@ -28,3 +30,19 @@ class ImpersonateMiddleware(object):
             logger.error('ImpersonateMiddleware response: %s' % (str(e),))
 
         return response
+
+
+class LoginFlowMiddleware:
+    def process_request(self, request):
+        try:
+            if request.user.is_authenticated and request.user.login_flow != 'complete':
+                if not request.path.startswith('/media') and \
+                   not request.path.startswith('/static') and \
+                   not request.path.startswith('/jsi18n') and \
+                   not resolve(request.path).url_name.startswith('login-flow'):
+                    response = HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (request.user.login_flow)))
+                    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=request.user.gender, max_age=365 * 24 * 60 * 60)
+                    return response
+
+        except Exception as e:
+            logger.error('LoginFlowMiddleware response: %s' % (str(e),))
