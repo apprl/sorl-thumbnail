@@ -133,4 +133,4 @@ class RegisterForm(UserCreationForm):
             get_user_model()._default_manager.get(username=username)
         except get_user_model().DoesNotExist:
             return username
-        raise forms.ValidationError(self.error_messages['duplicate_username'])
+        raise ValidationError(self.error_messages['duplicate_username'])
