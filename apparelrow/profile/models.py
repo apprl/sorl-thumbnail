@@ -23,7 +23,6 @@ from django_extensions.db.fields import AutoSlugField
 
 from activity_feed.tasks import update_activity_feed
 from profile.tasks import send_email_confirm_task
-from profile.signals import user_created_with_email
 from profile.utils import slugify_unique
 
 
@@ -537,27 +536,24 @@ class EmailChange(models.Model):
         return '%s - %s' % (self.user, self.email)
 
 #
-# Create profile when a new user is created
+# Update slug and send welcome email when a new user is created
 #
 
-@receiver(post_save, sender=User, dispatch_uid='post_save_create_profile')
-def create_profile(signal, instance, **kwargs):
+@receiver(post_save, sender=User, dispatch_uid='post_save_user_create')
+def post_save_user_create(signal, instance, **kwargs):
     """
-    Create a profile and send welcome email if a new user was created.
+    Update slug and send welcome email if a new user was created.
     """
-    if kwargs['created'] and not instance.slug:
-        instance.slug = slugify_unique(instance.display_name_live, instance.__class__)
-        instance.save()
+    if kwargs['created']:
+        if instance.email:
+            subject = _(u'Welcome to Apprl')
+            body = render_to_string('profile/email_welcome.html')
+            send_email_confirm_task.delay(subject, body, instance.email)
 
-@receiver(user_created_with_email, sender=User, dispatch_uid='send_welcome_mail')
-def send_welcome_mail(sender, user, **kwargs):
-    """
-    Send welcome email on user created with email signal.
-    """
-    if user.email:
-        subject = _(u'Welcome to Apprl %(username)s') % {'username': user.first_name}
-        body = render_to_string('profile/email_welcome.html', {'first_name': user.first_name})
-        send_email_confirm_task.delay(subject, body, user.email)
+        if not instance.slug:
+            instance.slug = slugify_unique(instance.display_name_live, instance.__class__)
+            instance.save()
+
 
 @receiver(user_logged_in, sender=User, dispatch_uid='update_language_on_login')
 def update_profile_language(sender, user, request, **kwargs):

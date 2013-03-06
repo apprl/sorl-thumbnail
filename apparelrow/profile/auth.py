@@ -4,7 +4,6 @@ from django.db.models.loading import get_model
 import facebook
 
 from profile.notifications import process_facebook_friends
-from profile.signals import user_created_with_email
 from profile.utils import slugify_unique
 
 FB_GENDER_MAP = { 'male': 'M', 'female': 'W' }
@@ -24,30 +23,22 @@ class FacebookProfileBackend(ModelBackend):
             graph = facebook.GraphAPI(fb_graphtoken)
             me = graph.get_object('me')
 
-            username = fb_uid
-            if me and me.get('username'):
-                username = me['username']
+            defaults = {'username': fb_uid}
+            if me:
+                if me.get('username'):
+                    defaults['username'] = me['username']
+                if me.get('first_name'):
+                    defaults['first_name'] = me['first_name']
+                if me.get('last_name'):
+                    defaults['last_name'] = me['last_name']
+                if me.get('email'):
+                    defaults['email'] = me['email']
+                if me.get('name'):
+                    defaults['name'] = me['name']
 
-            user, created = get_user_model().objects.get_or_create(facebook_user_id=fb_uid, defaults={'username': username})
-
+            user, created = get_user_model().objects.get_or_create(facebook_user_id=fb_uid, defaults=defaults)
             if created:
-                # It would be nice to replace this with an asynchronous request
-                if me:
-                    if me.get('first_name'):
-                        user.first_name = me['first_name']
-                    if me.get('last_name'):
-                        user.last_name = me['last_name']
-                    if me.get('email'):
-                        user.email = me['email']
-                    if me.get('name'):
-                        user.name = me['name']
-
-                    # TODO: think about slug during dual sign up
-                    user.slug = slugify_unique(user.display_name_live, user.__class__)
-                    user.save()
-
-                    process_facebook_friends.delay(user, fb_graphtoken)
-                    user_created_with_email.send(sender=get_user_model(), user=user)
+                process_facebook_friends.delay(user, fb_graphtoken)
 
             if user.gender is None:
                 if me.get('gender'):
