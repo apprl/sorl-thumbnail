@@ -527,6 +527,12 @@ def register(request):
         if form.is_valid():
             form.save()
 
+            # Log in direct
+            user = auth.authenticate(username=form.cleaned_data['username'],
+                                     password=form.cleaned_data['password1'])
+            if user and user.is_active:
+                auth.login(request, user)
+
             return HttpResponseRedirect(reverse('profile.views.login_flow_bio'))
     else:
         form = RegisterForm()
@@ -559,7 +565,7 @@ def login(request):
         uid = request.POST.get('uid', '')
 
         user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token)
-        if user is not None and user.is_active:
+        if user and user.is_active:
             auth.login(request, user)
             if request.is_ajax():
                 return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
