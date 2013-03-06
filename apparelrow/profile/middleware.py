@@ -36,10 +36,12 @@ class LoginFlowMiddleware:
     def process_request(self, request):
         try:
             if request.user.is_authenticated and request.user.login_flow != 'complete':
+                resolved_url = resolve(request.path)
                 if not request.path.startswith('/media') and \
                    not request.path.startswith('/static') and \
                    not request.path.startswith('/jsi18n') and \
-                   not resolve(request.path).url_name.startswith('login-flow'):
+                   not resolved_url.url_name.startswith('auth') and \
+                   not resolved_url.url_name.startswith('login-flow'):
                     response = HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (request.user.login_flow)))
                     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=request.user.gender, max_age=365 * 24 * 60 * 60)
                     return response
