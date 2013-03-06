@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-05 15:50+0100\n"
+"POT-Creation-Date: 2013-03-06 09:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,8 +226,8 @@ msgstr "Produktbeskrivning"
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:232 apparel/models.py:698 profile/models.py:58
-#: profile/models.py:282
+#: apparel/models.py:232 apparel/models.py:698 profile/forms.py:30
+#: profile/models.py:58 profile/models.py:282
 msgid "Gender"
 msgstr "Kön"
 
@@ -243,7 +243,7 @@ msgstr "I lager"
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:437 profile/forms.py:92
+#: apparel/models.py:437 profile/forms.py:100
 msgid "Name"
 msgstr "Namn"
 
@@ -394,7 +394,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
-#: apparel_comments/__init__.py:6 profile/forms.py:114
+#: apparel_comments/__init__.py:6 profile/forms.py:122
 msgid "E-mail address"
 msgstr "E-postadress"
 
@@ -434,7 +434,7 @@ msgstr "Tid för köp"
 msgid "Between 1 and 0"
 msgstr "Mellan 1 och 0"
 
-#: dashboard/models.py:109
+#: dashboard/models.py:109 profile/forms.py:29
 msgid "Your name"
 msgstr "Ditt namn"
 
@@ -567,58 +567,66 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: profile/forms.py:29
+#: profile/forms.py:30
+msgid "Man"
+msgstr "Man"
+
+#: profile/forms.py:30
+msgid "Woman"
+msgstr "Kvinna"
+
+#: profile/forms.py:31
 msgid "Your e-mail address"
 msgstr "Din e-postadress"
 
-#: profile/forms.py:30
+#: profile/forms.py:32
 msgid "Write something about yourself, include links to your blog or website"
 msgstr ""
 "Skriv något om dig själv, inkludera länkar till din blogg eller website"
 
-#: profile/forms.py:49
+#: profile/forms.py:57
 msgid "New e-mail address"
 msgstr "Ny e-postadress"
 
-#: profile/forms.py:72
+#: profile/forms.py:80
 msgid ""
 "I'd like to receive e-mails with trending products, looks and other "
 "inspiration."
 msgstr "Jag vill ha e-post med populära produkter och annan inspiration."
 
-#: profile/forms.py:73
+#: profile/forms.py:81
 msgid "I want to receive sale alerts on items that I ♥."
 msgstr "Jag vill bli meddelad när en produkt jag ♥ prissänks."
 
-#: profile/forms.py:81
+#: profile/forms.py:89
 msgid "When you ♥ a product"
 msgstr "När du ♥ en produkt"
 
-#: profile/forms.py:82
+#: profile/forms.py:90
 msgid "When you ♥ a look"
 msgstr "När du ♥ en look"
 
-#: profile/forms.py:83
+#: profile/forms.py:91
 msgid "When you follow someone"
 msgstr "När du följer någon"
 
-#: profile/forms.py:84
+#: profile/forms.py:92
 msgid "When you create a look"
 msgstr "När du skapar en look"
 
-#: profile/forms.py:93
+#: profile/forms.py:101
 msgid "Personal/organization number"
 msgstr "Person- eller organisationsnummer"
 
-#: profile/forms.py:94
+#: profile/forms.py:102
 msgid "Bank clearing number"
 msgstr "Bankens clearingnummer"
 
-#: profile/forms.py:95
+#: profile/forms.py:103
 msgid "Bank account number"
 msgstr "Bankkontonummer"
 
-#: profile/forms.py:106
+#: profile/forms.py:114
 msgid "http://"
 msgstr "http://"
 

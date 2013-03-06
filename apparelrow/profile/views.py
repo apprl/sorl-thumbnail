@@ -386,9 +386,9 @@ def login_flow_bio(request, profile):
 
             form.save()
 
-        return HttpResponseRedirect(reverse('profile.views.login_flow_friends'))
-
-    form = BioForm(instance=profile)
+            return HttpResponseRedirect(reverse('profile.views.login_flow_friends'))
+    else:
+        form = BioForm(instance=profile)
 
     context = {
         'next_url': reverse('profile.views.login_flow_friends'),

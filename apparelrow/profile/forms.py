@@ -2,7 +2,7 @@
 import random
 import string
 
-from django.forms import ModelForm, EmailField, BooleanField, CharField, ValidationError
+from django.forms import ModelForm, EmailField, BooleanField, CharField, ChoiceField, ValidationError
 from django.forms.widgets import RadioSelect, FileInput, Textarea
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
@@ -26,13 +26,21 @@ class ProfileAboutForm(ModelForm):
 
 
 class BioForm(ModelForm):
-    email = EmailField(label=_('Your e-mail address'))
-    about = CharField(widget=Textarea, label=_('Write something about yourself, include links to your blog or website'))
+    name = CharField(required=True, label=_('Your name'))
+    gender = ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=RadioSelect, label=_('Gender'))
+    email = EmailField(required=True, label=_('Your e-mail address'))
+    about = CharField(required=False, widget=Textarea, label=_('Write something about yourself, include links to your blog or website'))
 
     def __init__(self, *args, **kwargs):
         super(BioForm, self).__init__(*args, **kwargs)
 
         self.fields['email'].initial = self.instance.email
+
+        if self.instance.facebook_user_id and self.instance.gender:
+            self.fields['gender'].widget = self.fields['gender'].hidden_widget()
+
+        if self.instance.email:
+            self.fields['email'].widget = self.fields['email'].hidden_widget()
 
     def save(self, *args, **kwargs):
         super(BioForm, self).save(*args, **kwargs)
@@ -42,7 +50,7 @@ class BioForm(ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'about')
+        fields = ('name', 'gender', 'email', 'about')
 
 
 class EmailForm(ModelForm):
