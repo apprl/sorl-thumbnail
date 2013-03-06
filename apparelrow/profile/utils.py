@@ -1,5 +1,6 @@
 import time
 import datetime
+import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -37,15 +38,15 @@ def get_facebook_user(request):
             try:
                 extended_user = facebook.GraphAPI(fb_user['access_token']).extend_access_token(settings.FACEBOOK_APP_ID, settings.FACEBOOK_SECRET_KEY)
                 fb_user.update(extended_user)
-            except facebook.GraphAPIError:
-                pass
+            except facebook.GraphAPIError as e:
+                logging.warning('Facebook GraphAPIError during extended access token attempt: %s' % (str(e),))
 
             expires = time.time() + int(fb_user['expires'])
 
             request.session[FB_USER_SESSION_KEY] = fb_user
             request.session[FB_USER_EXPIRES_SESSION_KEY] = expires
 
-            get_user_model().objects.filter(username=fb_user['uid']).update(
+            get_user_model().objects.filter(facebook_user_id=fb_user['uid']).update(
                 facebook_access_token=fb_user['access_token'],
                 facebook_access_token_expire=datetime.datetime.fromtimestamp(expires)
             )
