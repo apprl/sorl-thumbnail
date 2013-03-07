@@ -549,7 +549,7 @@ class API(object):
 
             image_logger.debug(u'Image data [R: %s] [L: %s] [T: %s]' % (request_handler.status_code, content_length, content_type))
 
-            storage.default_storage.save(product_image, ContentFile(request_handler.raw.read()))
+            storage.default_storage.save(product_image, ContentFile(request_handler.content))
 
         return True
 
