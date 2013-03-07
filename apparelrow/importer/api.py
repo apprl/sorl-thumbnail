@@ -533,7 +533,7 @@ class API(object):
 
         Check for valid content_length and content_type.
         """
-        if not storage.default_storage.exists(product_image):
+        if not (storage.default_storage.exists(product_image) and storage.default_storage.size(product_image) > min_content_length):
             try:
                 request_handler = requests.get(url, timeout=10)
                 request_handler.raise_for_status()
