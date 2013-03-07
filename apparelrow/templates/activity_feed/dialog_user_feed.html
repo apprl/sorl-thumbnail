@@ -5,5 +5,5 @@
 {% block title %}{% trans "My Follows" %}{% endblock %}
 {% block content %}
 <p>{% trans "Sign up to see what your friends are doing on Apprl." %}</p>
-<a class="btn btn-upper btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
+{% include 'registration/fragments/registration_form.html' %}
 {% endblock %}

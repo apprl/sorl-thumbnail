@@ -1,11 +1,8 @@
 {% load i18n %}
-<div class="dialog-container {% block dialog_class %}{% endblock %}">
-    <h1>
-        {% block title %}{% endblock %}
-        {% block close %}<a class="close" href="#">{% trans "Close" %}</a>{% endblock %}
-    </h1>
-    <div class="bodycopy content">
-        {% block content %}{% endblock %}
-    </div>
-    {% block footer %}{% endblock %}
+<div class="header group">
+    <h5 class="title">{% block title %}{% endblock %}</h5>
+    <a href="#" class="close"></a>
+</div>
+<div class="content-container">
+    <div class="content">{% block content %}{% endblock %}</div>
 </div>

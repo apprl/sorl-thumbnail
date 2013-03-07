@@ -4,5 +4,5 @@
 {% block title %}{% trans "Like a product" %}{% endblock %}
 {% block content %}
 <p>{% trans "To 'like' a product on the site, you need to sign up first." %}</p>
-<a class="btn btn-upper btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
+{% include 'registration/fragments/registration_form.html' %}
 {% endblock %}

@@ -749,14 +749,6 @@ def apparel_set_language(request):
     return set_language(request)
 
 
-def dialog_login_favorite_friends(request):
-    """
-    Display a dialog tailored for the browse page with information about
-    facebook login. On successful login redirect to browse page with f=1.
-    """
-    return render_to_response('apparel/fragments/dialog_login_favorite_friends.html',
-            {'next': reverse('apparel.browse.browse_products') + '#f=1'}, context_instance=RequestContext(request))
-
 def dialog_like_product(request):
     """
     Display a dialog tailored for the product detail page with information

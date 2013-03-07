@@ -50,17 +50,10 @@ window.create_modal_dialog = function(header, messages, yes_action, no_action) {
 /**
  * Creates a dialog from html loaded through ajax, only alternativ is close
  */
-function create_html_dialog(url_to_html, large_dialog, close_callback, width) {
-    var dialog = jQuery('<div class="dialog"></div>');
+function create_html_dialog(url_to_html, close_callback) {
+    var dialog = jQuery('<div id="popup-slim" class="dialog"></div>');
 
-    if(large_dialog) {
-        dialog.addClass('large-dialog');
-    }
-
-    if(width) {
-        dialog.css('width', width + 'px');
-    }
-
+    // TODO: replace overlay with something better... look editor popup dispatcher but global...
     dialog.load(url_to_html).appendTo('body').overlay({
         mask: {
             color: '#000000',
@@ -70,7 +63,7 @@ function create_html_dialog(url_to_html, large_dialog, close_callback, width) {
         load: true,
         closeOnClick: true,
         close: '.close',
-        top: 100,
+        top: 150,
         onClose: function(e) {
             if(close_callback !== undefined && close_callback) {
                 close_callback();
@@ -175,18 +168,7 @@ jQuery(document).ready(function() {
 
     // All elements with class open-dialog should open a dialog and load html from href-url
     jQuery('.open-dialog').live('click', function(event) {
-        // TODO: replace attr with data when we change to new jquery version
-        var width = jQuery(this).attr('data-dialog-width');
-        if (width) {
-            create_html_dialog(jQuery(this).attr('href'), false, false, width);
-        } else {
-            create_html_dialog(jQuery(this).attr('href'));
-        }
-        event.preventDefault();
-    });
-
-    jQuery('.open-dialog-large').live('click', function(event) {
-        create_html_dialog(jQuery(this).attr('href'), true);
+        create_html_dialog(jQuery(this).attr('href'));
         event.preventDefault();
     });
 

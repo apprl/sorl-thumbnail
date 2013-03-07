@@ -1,9 +1,0 @@
-{% extends 'dialog_base.html' %}
-{% load apparel_extras %}
-{% load i18n %}
-
-{% block title %}{% trans "See your friends' favorite products" %}{% endblock %}
-{% block content %}
-<p>{% trans "Sign up to see which products are popular among your friends." %}</p>
-<a class="btn btn-upper btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
-{% endblock %}

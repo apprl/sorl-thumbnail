@@ -104,17 +104,6 @@
         };
 
         jQuery(document).ready(function() {
-            // FIXME: quick solution to not have to send the form to validate
-            jQuery('.create-look-dialog form').live('submit', function(e) {
-                if(!jQuery(this).find('#id_title').val()) {
-                    if(!jQuery(this).find('.errorlist').length) {
-                        var error_list = jQuery('<ul class="errorlist">').append(jQuery('<li>').text('{% trans "You have to name your look before your create it." %}'));
-                        jQuery(this).find('#id_title').after(error_list);
-                    }
-                    return false;
-                }
-            });
-
             {% if not request.user.is_authenticated and not request.path == '/accounts/register/' %}
             var panel = $('#panel');
             var panel_offset_top = 0;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-06 21:58+0100\n"
+"POT-Creation-Date: 2013-03-07 17:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgstr "Tid ändrad"
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:255 templates/base.html:415
+#: apparel/admin.py:255 templates/base.html:406
 #: templates/apparel/look_editor.html:95
 #: templates/apparel/look_editor.html:101
 #: templates/apparel/look_editor.html:107
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Yes"
 msgstr "Ja"
 
-#: apparel/admin.py:256 templates/base.html:414
+#: apparel/admin.py:256 templates/base.html:405
 #: templates/apparel/look_editor.html:94
 #: templates/apparel/look_editor.html:100
 #: templates/apparel/look_editor.html:106
@@ -78,7 +78,7 @@ msgstr "Visar"
 msgid "Showing your friends' favorites"
 msgstr "Visar dina vänners favoriter"
 
-#: apparel/forms.py:7 templates/base.html:111
+#: apparel/forms.py:7
 msgid "You have to name your look before your create it."
 msgstr "Du måste ange ett namn på din look."
 
@@ -395,6 +395,7 @@ msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
 #: apparel_comments/__init__.py:6 profile/forms.py:122
+#: templates/registration/fragments/registration_form.html:12
 msgid "E-mail address"
 msgstr "E-postadress"
 
@@ -528,7 +529,7 @@ msgstr ""
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:52 templates/base.html:326
+#: profile/admin.py:52 templates/base.html:317
 #: templates/profile/base_settings.html:21
 #: templates/profile/base_settings.html:24
 #: templates/profile/settings_facebook.html:5
@@ -648,7 +649,7 @@ msgstr "Inga"
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:55 profile/models.py:279 templates/base.html:332
+#: profile/models.py:55 profile/models.py:279 templates/base.html:323
 msgid "About"
 msgstr "Om"
 
@@ -764,11 +765,11 @@ msgstr "500-fel"
 msgid "An error occurred"
 msgstr "Ett fel uppstod"
 
-#: templates/base.html:185
+#: templates/base.html:174
 msgid "I'm looking for..."
 msgstr "Jag letar efter..."
 
-#: templates/base.html:186 templates/apparel/look_editor.html:93
+#: templates/base.html:175 templates/apparel/look_editor.html:93
 #: templates/apparel/look_editor.html:123
 #: templates/apparel/look_editor.html:134
 #: templates/profile/base_login_flow.html:15
@@ -777,85 +778,81 @@ msgstr "Jag letar efter..."
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:191 templates/base.html.py:196 templates/base.html:309
+#: templates/base.html:180 templates/base.html.py:185 templates/base.html:300
 #: templates/apparel/look_editor.html:56
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:191 templates/base.html.py:195 templates/base.html:308
+#: templates/base.html:180 templates/base.html.py:184 templates/base.html:299
 #: templates/apparel/look_editor.html:55
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:228
+#: templates/base.html:217
 msgid "Matching products"
 msgstr "Träffar bland produkter"
 
-#: templates/base.html:230 templates/activity_feed/public_feed.html:15
+#: templates/base.html:219 templates/activity_feed/public_feed.html:15
 #: templates/activity_feed/user_feed.html:15
 msgid "Show all products"
 msgstr "Visa alla produkter"
 
-#: templates/base.html:233
+#: templates/base.html:222
 msgid "Matching looks"
 msgstr "Träffar bland looks"
 
-#: templates/base.html:235 templates/activity_feed/public_feed.html:23
+#: templates/base.html:224 templates/activity_feed/public_feed.html:23
 #: templates/activity_feed/user_feed.html:23
 msgid "Show all looks"
 msgstr "Visa alla looks"
 
-#: templates/base.html:238
+#: templates/base.html:227
 msgid "Matching brands"
 msgstr "Träffar bland varumärken"
 
-#: templates/base.html:240
+#: templates/base.html:229
 msgid "Show all manufacturers"
 msgstr "Visa alla varumärken"
 
-#: templates/base.html:242
+#: templates/base.html:231
 msgid "Matching members"
 msgstr "Träffar bland medlemmar"
 
-#: templates/base.html:261
+#: templates/base.html:250
 msgid "Welcome to Social Shopping!"
 msgstr "Välkommen till social shopping!"
 
-#: templates/base.html:263
+#: templates/base.html:252
 msgid "Discover fashion from the world's best online stores"
 msgstr "Upptäck mode från världens bästa onlinebutiker"
 
-#: templates/base.html:264
+#: templates/base.html:253
 msgid "Get sale alerts on your favourite items"
 msgstr "Bli meddelad när dina favoritprodukter prissänks"
 
-#: templates/base.html:265
+#: templates/base.html:254
 msgid "Create and share looks on your blog"
 msgstr "Skapa och dela looks till din blogg"
 
-#: templates/base.html:267
+#: templates/base.html:256
 msgid "Are you a blogger?"
 msgstr "Är du bloggare?"
 
-#: templates/base.html:271
+#: templates/base.html:260
 msgid "Follow our stylemakers, brands & bloggers"
 msgstr "Följ dina vänner, varumärken & bloggare"
 
-#: templates/base.html:272 templates/base.html.py:286 templates/base.html:316
-#: templates/activity_feed/dialog_user_feed.html:8
+#: templates/base.html:261 templates/base.html.py:276 templates/base.html:307
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
 #: templates/apparel/shared_header.html:22 templates/apparel/user_list.html:53
-#: templates/apparel/fragments/dialog_follow_user.html:14
-#: templates/apparel/fragments/dialog_like_look.html:8
-#: templates/apparel/fragments/dialog_like_product.html:7
-#: templates/apparel/fragments/dialog_login_favorite_friends.html:8
 #: templates/registration/registration_complete.html:8
+#: templates/registration/fragments/registration_form.html:24
 msgid "Sign up"
 msgstr "Bli medlem"
 
-#: templates/base.html:283
+#: templates/base.html:273
 msgid ""
 "Discover fashion from the world’s best online stores, selected by our "
 "stylemakers & bloggers."
@@ -863,28 +860,28 @@ msgstr ""
 "Upptäck mode från världens bästa onlinebutiker utvalt av våra medlemmar & "
 "bloggare."
 
-#: templates/base.html:285
+#: templates/base.html:275
 #: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr "Logga in"
 
-#: templates/base.html:304
+#: templates/base.html:295
 msgid "Sweden"
 msgstr "Sverige"
 
-#: templates/base.html:307 templates/apparel/shared_header.html:9
+#: templates/base.html:298 templates/apparel/shared_header.html:9
 #: templates/profile/base_profile.html:31
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:310 templates/apparel/look_detail.html:4
+#: templates/base.html:301 templates/apparel/look_detail.html:4
 #: templates/apparel/look_editor.html:5
 #: templates/apparel/shared_header.html:10
 #: templates/profile/base_profile.html:40 templates/profile/looks.html:4
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/base.html:311 templates/apparel/brand_list.html:11
+#: templates/base.html:302 templates/apparel/brand_list.html:11
 #: templates/apparel/shared_header.html:15
 #: templates/profile/base_login_flow.html:28
 #: templates/profile/login_flow_bio.html:9
@@ -894,26 +891,26 @@ msgstr "Looks"
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:314
+#: templates/base.html:305
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:318 templates/apparel/shared_header.html:14
+#: templates/base.html:309 templates/apparel/shared_header.html:14
 #: templates/apparel/user_list.html:5 templates/apparel/user_list.html:10
 msgid "Members"
 msgstr "Medlemmar"
 
-#: templates/base.html:320 templates/apparel/shared_header.html:32
+#: templates/base.html:311 templates/apparel/shared_header.html:32
 msgid "+ Invite friends"
 msgstr "+ Bjud in vänner"
 
-#: templates/base.html:322 templates/apparel/look_detail.html:120
+#: templates/base.html:313 templates/apparel/look_detail.html:120
 #: templates/apparel/look_list.html:18 templates/apparel/shared_header.html:33
 #: templates/profile/base_profile.html:51
 msgid "+ Create look"
 msgstr "+ Skapa look"
 
-#: templates/base.html:325 templates/profile/base_login_flow.html:29
+#: templates/base.html:316 templates/profile/base_login_flow.html:29
 #: templates/profile/login_flow_bio.html:10
 #: templates/profile/login_flow_brands.html:10
 #: templates/profile/login_flow_featured.html:35
@@ -921,45 +918,41 @@ msgstr "+ Skapa look"
 msgid "Follow us"
 msgstr "Följ oss"
 
-#: templates/base.html:327
+#: templates/base.html:318
 msgid "Pinterest"
 msgstr ""
 
-#: templates/base.html:328
+#: templates/base.html:319
 msgid "E-mail newsletter"
 msgstr "E-post"
 
-#: templates/base.html:331
+#: templates/base.html:322
 msgid "Apprl"
 msgstr "Apprl"
 
-#: templates/base.html:333
+#: templates/base.html:324
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:334
+#: templates/base.html:325
 msgid "Privacy & Terms"
 msgstr "Användarvillkor"
 
-#: templates/base.html:335 templates/flatpages/default.html:26
+#: templates/base.html:326 templates/flatpages/default.html:26
 msgid "Cookies"
 msgstr "Cookies"
 
-#: templates/base.html:336
+#: templates/base.html:327
 msgid "Bloggers"
 msgstr "Bloggare"
 
-#: templates/base.html:348
+#: templates/base.html:339
 msgid "Become a partner blogger"
 msgstr "Bli partnerbloggare"
 
-#: templates/base.html:355
+#: templates/base.html:346
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr "Hej Apprl! Jag har en fråga / idé / klagomål / beröm"
-
-#: templates/dialog_base.html:5
-msgid "Close"
-msgstr "Stäng"
 
 #: templates/homepage.html:5
 msgid "Welcome"
@@ -2427,6 +2420,7 @@ msgstr "E-postadress"
 
 #: templates/profile/base_settings.html:26
 #: templates/profile/settings_password.html:6
+#: templates/registration/fragments/registration_form.html:16
 msgid "Password"
 msgstr "Lösenord"
 
@@ -2913,9 +2907,9 @@ msgid "Login"
 msgstr "Logga in"
 
 #: templates/registration/login.html:11
-#: templates/registration/registration_form.html:10
+#: templates/registration/fragments/registration_form.html:3
 msgid "Or:"
-msgstr ""
+msgstr "Eller:"
 
 #: templates/registration/login.html:15
 msgid "Forgot password?"
@@ -3020,7 +3014,15 @@ msgstr ""
 msgid "Become a member"
 msgstr "Bli medlem "
 
-#: templates/registration/registration_form.html:15
+#: templates/registration/fragments/registration_form.html:8
+msgid "Username"
+msgstr "Användarnamn"
+
+#: templates/registration/fragments/registration_form.html:20
+msgid "Password confirmation"
+msgstr "Lösenordsbekräftelse"
+
+#: templates/registration/fragments/registration_form.html:29
 #, python-format
 msgid ""
 "By signing up you are agreeing to our <a href=\"%(tou)s\">Privacy Policy & "
@@ -3028,6 +3030,3 @@ msgid ""
 msgstr ""
 "Genom att skapa ditt konto godkänner du våra <a href=\"%(tou)s"
 "\">Användarvillkor</a>."
-
-#~ msgid "You can connect your account with Facebook."
-#~ msgstr "Du kan ansluta ditt konto med Facebook."
