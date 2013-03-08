@@ -139,19 +139,22 @@ button
         font-size: 1.2em
       ul
         float: right
+        overflow: hidden
         li
-          display: inline
+          display: block
+          float: left
           list-style-type: none
           padding-left: 20px
           &.first a
             display: inline-block
-            line-height: 23px
+            line-height: 36px
+            font-style: italic
             &:hover
               text-decoration: underline
       p
         display: inline-block
         float: left
-        line-height: 23px
+        line-height: 36px
   #inner-container
     min-width: 940px
     width: auto
@@ -2252,6 +2255,8 @@ body.settings, body.about, body.dashboard-info
       p
         margin: 1em 0
         font-size: 1.2em
+        a
+          font-style: italic
     .p-row
       margin: 20px 0 0
       font-size: 1.3em
