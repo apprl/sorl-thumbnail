@@ -9,7 +9,7 @@
 
 {% block body %}
     <div class="sidebar">
-        <div id="profile-image">
+        <div id="profile-image" class="no-hover">
             <img src="{{ user.avatar_large }}" class="avatar large">
             <a href="#edit" class="btn btn-small btn-block btn-positive btn-edit">{% trans "Change picture" %}</a>
             <a href="#cancel" class="btn btn-small btn-block btn-negative btn-cancel">{% trans "Cancel" %}</a>

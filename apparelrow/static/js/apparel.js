@@ -303,12 +303,16 @@ jQuery(document).ready(function() {
     });
 
     // Profile image and about inline form
+    var $profileImage = jQuery('#profile-image');
+    if(!$profileImage.hasClass('no-hover')) {
     var hover_edit_button = true;
-    var hover_about_edit = true;
-    jQuery('#profile-image').hover(
-        function() { if (hover_edit_button) $('.btn-edit', this).show() },
-        function() { if (hover_edit_button) $('.btn-edit', this).hide() }
-    );
+        $profileImage.hover(
+            function() { if (hover_edit_button) $('.btn-edit', this).show() },
+            function() { if (hover_edit_button) $('.btn-edit', this).hide() }
+        );
+    } else {
+        $profileImage.find('.btn-edit').show();
+    }
     jQuery('#profile-image .btn-edit').click(function() {
         jQuery('#profile-about form, #profile-about .btn-cancel').hide();
         jQuery('#profile-about .description').show();
@@ -325,6 +329,7 @@ jQuery(document).ready(function() {
         return false;
     });
 
+    var hover_about_edit = true;
     jQuery('#profile-about textarea').autosize();
     jQuery('#profile-about').hover(
         function() { if (hover_about_edit) $('.btn-edit', this).show() },
