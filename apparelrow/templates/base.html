@@ -303,14 +303,18 @@
             </ul>
             <ul>
                 <li><h3>{% trans "Social" %}</h3></li>
-                {% if not user.is_authenticated %}
+                {% if not request.user.is_authenticated %}
                 <li><a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
                 {% endif %}
                 <li><a href="{% url 'user-list' %}">{% trans "Members" %}</a></li>
-                {% if user.is_authenticated %}
+                {% if request.user.is_authenticated and request.user.facebook_user_id %}
                 <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
                 {% endif %}
+                {% if request.user.is_authenticated %}
                 <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
+                {% else %}
+                <li><a class="open-dialog" href="{% url 'dialog-create-look' %}">{% trans "+ Create look" %}</a>
+                {% endif %}
             </ul>
             <ul>
                 <li><h3>{% trans "Follow us" %}</h3></li>

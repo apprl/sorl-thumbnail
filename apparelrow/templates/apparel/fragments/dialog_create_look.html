@@ -1,0 +1,9 @@
+{% extends 'dialog_base.html' %}
+{% load apparel_extras %}
+{% load i18n %}
+
+{% block title %}{% trans "Create a look" %}{% endblock %}
+{% block content %}
+<p>{% trans "To create a look on the site, you need to sign up first." %}</p>
+{% include 'registration/fragments/registration_form.html' %}
+{% endblock %}

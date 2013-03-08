@@ -117,7 +117,7 @@
         <h1>{{ object.title }}{% if not object.published %} ({% trans "Draft" %}){% endif %}</h1>
         <h2>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></h2>
     </div>
-    <a class="btn btn-positive btn-upper btn-create-look" href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
+    {% include 'apparel/fragments/create_look_button.html' with request=request only %}
 </div>
 {% endblock body-header %}
 {% block body-classes %}look two-columns{% endblock body-classes %}

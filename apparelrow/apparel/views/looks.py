@@ -6,7 +6,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404
+from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404, HttpResponseRedirect
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
@@ -21,6 +21,9 @@ def create(request):
     """
     Look create page, select between collage and photo.
     """
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
+
     return render(request, 'apparel/look_create.html')
 
 
@@ -28,6 +31,9 @@ def editor(request, component=None, slug=None):
     """
     Look editor
     """
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
+
     look = None
     has_liked = False
     if slug is not None:

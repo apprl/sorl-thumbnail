@@ -15,7 +15,7 @@
             <li><a class="last popular{% if 'popular' in request.path %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
         </ul>
     </div>
-    <a class="btn btn-positive btn-upper btn-create-look" href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
+    {% include 'apparel/fragments/create_look_button.html' with request=request only %}
 </div>
 {% endblock body-header %}
 {% block body-classes %}one-column look-list{% endblock body-classes %}

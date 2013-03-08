@@ -103,6 +103,7 @@ urlpatterns = patterns('',
     # Dialogs
     url(r'^dialog/like-product/$', 'apparel.views.dialog_like_product', name='dialog-like-product'),
     url(r'^dialog/like-look/$', 'apparel.views.dialog_like_look', name='dialog-like-look'),
+    url(r'^dialog/create-look/$', 'apparel.views.dialog_create_look', name='dialog-create-look'),
     url(r'^dialog/follow-user/$', 'apparel.views.dialog_follow_user', name='dialog-follow-user'),
     url(r'^dialog/user-feed/$', 'activity_feed.views.dialog_user_feed', name='dialog-user-feed'),
 

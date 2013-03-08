@@ -765,6 +765,13 @@ def dialog_like_look(request):
     return render_to_response('apparel/fragments/dialog_like_look.html',
             {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
 
+def dialog_create_look(request):
+    """
+    Dialog create look for unauthenticated users.
+    """
+    return render_to_response('apparel/fragments/dialog_create_look.html',
+            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+
 def dialog_follow_user(request):
     """
     Display a dialog tailored for the look detail page with information about

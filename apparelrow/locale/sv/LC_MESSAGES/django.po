@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-08 19:50+0100\n"
+"POT-Creation-Date: 2013-03-08 21:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgstr "Tid ändrad"
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:255 templates/base.html:406
+#: apparel/admin.py:255 templates/base.html:410
 #: templates/apparel/look_editor.html:95
 #: templates/apparel/look_editor.html:101
 #: templates/apparel/look_editor.html:107
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Yes"
 msgstr "Ja"
 
-#: apparel/admin.py:256 templates/base.html:405
+#: apparel/admin.py:256 templates/base.html:409
 #: templates/apparel/look_editor.html:94
 #: templates/apparel/look_editor.html:100
 #: templates/apparel/look_editor.html:106
@@ -529,7 +529,7 @@ msgstr ""
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:52 templates/base.html:317
+#: profile/admin.py:52 templates/base.html:321
 #: templates/profile/base_settings.html:21
 #: templates/profile/base_settings.html:24
 #: templates/profile/settings_facebook.html:5
@@ -650,7 +650,7 @@ msgstr "Inga"
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:55 profile/models.py:279 templates/base.html:323
+#: profile/models.py:55 profile/models.py:279 templates/base.html:327
 msgid "About"
 msgstr "Om"
 
@@ -905,13 +905,14 @@ msgstr "Medlemmar"
 msgid "+ Invite friends"
 msgstr "+ Bjud in vänner"
 
-#: templates/base.html:313 templates/apparel/look_detail.html:120
-#: templates/apparel/look_list.html:18 templates/apparel/shared_header.html:33
-#: templates/profile/base_profile.html:51
+#: templates/base.html:314 templates/base.html.py:316
+#: templates/apparel/shared_header.html:33
+#: templates/apparel/fragments/create_look_button.html:3
+#: templates/apparel/fragments/create_look_button.html:5
 msgid "+ Create look"
 msgstr "+ Skapa look"
 
-#: templates/base.html:316 templates/profile/base_login_flow.html:29
+#: templates/base.html:320 templates/profile/base_login_flow.html:29
 #: templates/profile/login_flow_bio.html:10
 #: templates/profile/login_flow_brands.html:10
 #: templates/profile/login_flow_featured.html:35
@@ -919,39 +920,39 @@ msgstr "+ Skapa look"
 msgid "Follow us"
 msgstr "Följ oss"
 
-#: templates/base.html:318
+#: templates/base.html:322
 msgid "Pinterest"
 msgstr ""
 
-#: templates/base.html:319
+#: templates/base.html:323
 msgid "E-mail newsletter"
 msgstr "E-post"
 
-#: templates/base.html:322
+#: templates/base.html:326
 msgid "Apprl"
 msgstr "Apprl"
 
-#: templates/base.html:324
+#: templates/base.html:328
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:325
+#: templates/base.html:329
 msgid "Privacy & Terms"
 msgstr "Användarvillkor"
 
-#: templates/base.html:326 templates/flatpages/default.html:26
+#: templates/base.html:330 templates/flatpages/default.html:26
 msgid "Cookies"
 msgstr "Cookies"
 
-#: templates/base.html:327
+#: templates/base.html:331
 msgid "Bloggers"
 msgstr "Bloggare"
 
-#: templates/base.html:339
+#: templates/base.html:343
 msgid "Become a partner blogger"
 msgstr "Bli partnerbloggare"
 
-#: templates/base.html:346
+#: templates/base.html:350
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr "Hej Apprl! Jag har en fråga / idé / klagomål / beröm"
 
@@ -1626,6 +1627,14 @@ msgstr ""
 #: templates/apparel/fragments/comment_count.html:2
 msgid "comments"
 msgstr "kommentarer"
+
+#: templates/apparel/fragments/dialog_create_look.html:5
+msgid "Create a look"
+msgstr "Skapa en look"
+
+#: templates/apparel/fragments/dialog_create_look.html:7
+msgid "To create a look on the site, you need to sign up first."
+msgstr "För att skapa en look på siten behöver du först bli medlem."
 
 #: templates/apparel/fragments/dialog_follow_user.html:7
 msgid "Follow a brand"

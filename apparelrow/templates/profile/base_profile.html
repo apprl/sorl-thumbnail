@@ -48,7 +48,7 @@
         </ul>
     </div>
     {% if request.path == looks_url %}
-    <a class="btn btn-positive btn-upper btn-create-look" href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
+    {% include 'apparel/fragments/create_look_button.html' with request=request only %}
     {% endif %}
 </div>
 {% endwith %}
