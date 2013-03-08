@@ -27,7 +27,7 @@ class ProfileAboutForm(ModelForm):
 
 class BioForm(ModelForm):
     name = CharField(required=True, label=_('Your name'))
-    gender = ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=RadioSelect, label=_('Gender'))
+    gender = ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=RadioSelect, label='')
     email = EmailField(required=True, label=_('Your e-mail address'))
     about = CharField(required=False, widget=Textarea, label=_('Write something about yourself, include links to your blog or website'))
 
