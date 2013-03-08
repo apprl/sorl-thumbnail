@@ -143,7 +143,7 @@ class User(AbstractUser):
 
     @property
     def display_name_live(self):
-        if self.name is not None:
+        if self.name:
             return self.name
 
         if self.first_name:

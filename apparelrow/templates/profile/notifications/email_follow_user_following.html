@@ -1,4 +1,4 @@
 {% extends "profile/notifications/email_base.html" %}{% load i18n %}{% block content %}
-<p><a href="{{ sender_link }}?utm_source=notification&utm_medium=email&utm_campaign=follow_user">{{ sender_first_name }} {{ sender_last_name }}</a>{% trans " now follow your updates on Apprl." %}</p>
-<p>{% trans "You are currently following " %}<a href="{{ sender_link }}?utm_source=notification&utm_medium=email&utm_campaign=follow_user">{{ sender_first_name }}</a>.</p>
+<p><a href="{{ sender_link }}?utm_source=notification&utm_medium=email&utm_campaign=follow_user">{{ sender_name }}</a>{% trans " now follow your updates on Apprl." %}</p>
+<p>{% trans "You are currently following " %}<a href="{{ sender_link }}?utm_source=notification&utm_medium=email&utm_campaign=follow_user">{{ sender_name }}</a>.</p>
 {% endblock %}

@@ -56,8 +56,7 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
         extra_context = {}
 
     extra_context['domain'] = Site.objects.get_current().domain
-    extra_context['sender_first_name'] = sender.first_name
-    extra_context['sender_last_name'] = sender.last_name
+    extra_context['sender_name'] = sender.display_name
     extra_context['sender_link'] = 'http://%s%s' % (extra_context['domain'], sender.get_absolute_url())
     extra_context['sender_updates_link'] = 'http://%s%s' % (extra_context['domain'], reverse('profile-updates', args=[sender.slug]))
     if 'object_link' in extra_context:
@@ -77,8 +76,7 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
             else:
                 activate(settings.LANGUAGE_CODE)
 
-            extra_context['recipient_first_name'] = user.first_name
-            extra_context['recipient_last_name'] = user.last_name
+            extra_context['recipient_name'] = user.display_name
 
             subject = ''.join(render_to_string(subject_template_name, extra_context).splitlines())
             # XXX: undocumented feature in HTMLParser, look here if python is

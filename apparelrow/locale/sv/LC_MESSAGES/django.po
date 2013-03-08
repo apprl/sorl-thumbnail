@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-08 12:42+0100\n"
+"POT-Creation-Date: 2013-03-08 19:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,8 +226,8 @@ msgstr "Produktbeskrivning"
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:232 apparel/models.py:698 profile/forms.py:30
-#: profile/models.py:57 profile/models.py:281
+#: apparel/models.py:232 apparel/models.py:698 profile/models.py:57
+#: profile/models.py:281
 msgid "Gender"
 msgstr "Kön"
 
@@ -2694,8 +2694,8 @@ msgstr "Följs av %(follower_count)s"
 
 #: templates/profile/notifications/email_base.html:5
 #, python-format
-msgid "Hi %(recipient_first_name)s!"
-msgstr "Hej %(recipient_first_name)s!"
+msgid "Hi %(recipient_name)s!"
+msgstr "Hej %(recipient_name)s!"
 
 #: templates/profile/notifications/email_base.html:9
 #, python-format
@@ -2736,8 +2736,8 @@ msgstr "finns nu på Apprl"
 
 #: templates/profile/notifications/email_facebook_friends.html:2
 #, python-format
-msgid "Follow %(sender_first_name)s here"
-msgstr "Följ %(sender_first_name)s här"
+msgid "Follow %(sender_name)s here"
+msgstr "Följ %(sender_name)s här"
 
 #: templates/profile/notifications/email_first_sale_alert.html:2
 #, python-format
@@ -2753,13 +2753,13 @@ msgstr " följer nu dina uppdateringar på Apprl."
 
 #: templates/profile/notifications/email_follow_user.html:3
 #, python-format
-msgid "%(sender_first_name)s'"
-msgstr "%(sender_first_name)s"
+msgid "%(sender_name)s'"
+msgstr "%(sender_name)s"
 
 #: templates/profile/notifications/email_follow_user.html:3
 #, python-format
-msgid "%(sender_first_name)s's"
-msgstr "%(sender_first_name)ss"
+msgid "%(sender_name)s's"
+msgstr "%(sender_name)ss"
 
 #: templates/profile/notifications/email_follow_user.html:3
 msgid "updates here!"
@@ -2781,44 +2781,28 @@ msgstr "är nu sänkt från %(original_price)s till %(discount_price)s."
 
 #: templates/profile/notifications/subject_comment_look_comment.html:1
 #, python-format
-msgid ""
-"%(sender_first_name)s %(sender_last_name)s have also commented on the look "
-"%(object_title)s"
-msgstr ""
-"%(sender_first_name)s %(sender_last_name)s har också kommenterat looken "
-"%(object_title)s"
+msgid "%(sender_name)s have also commented on the look %(object_title)s"
+msgstr "%(sender_name)s har också kommenterat looken %(object_title)s"
 
 #: templates/profile/notifications/subject_comment_look_created.html:1
 #, python-format
-msgid ""
-"%(sender_first_name)s %(sender_last_name)s have commented on your look "
-"%(object_title)s"
-msgstr ""
-"%(sender_first_name)s %(sender_last_name)s har kommenterat på din look "
-"%(object_title)s"
+msgid "%(sender_name)s have commented on your look %(object_title)s"
+msgstr "%(sender_name)s har kommenterat på din look %(object_title)s"
 
 #: templates/profile/notifications/subject_comment_product_comment.html:1
 #, python-format
-msgid ""
-"%(sender_first_name)s %(sender_last_name)s have also commented on the "
-"product %(object_title)s"
-msgstr ""
-"%(sender_first_name)s %(sender_last_name)s har också kommenterat "
-"%(object_title)s"
+msgid "%(sender_name)s have also commented on the product %(object_title)s"
+msgstr "%(sender_name)s har också kommenterat %(object_title)s"
 
 #: templates/profile/notifications/subject_comment_product_wardrobe.html:1
 #, python-format
-msgid ""
-"%(sender_first_name)s %(sender_last_name)s have commented on a product you "
-"have liked"
-msgstr ""
-"%(sender_first_name)s %(sender_last_name)s har kommenterat en produkt som du "
-"gillat"
+msgid "%(sender_name)s have commented on a product you have liked"
+msgstr "%(sender_name)s har kommenterat en produkt som du gillat"
 
 #: templates/profile/notifications/subject_facebook_friends.html:1
 #, python-format
-msgid "%(sender_first_name)s %(sender_last_name)s is now on Apprl!"
-msgstr "%(sender_first_name)s %(sender_last_name)s finns nu på Apprl!"
+msgid "%(sender_name)s is now on Apprl!"
+msgstr "%(sender_name)s finns nu på Apprl!"
 
 #: templates/profile/notifications/subject_first_sale_alert.html:1
 #, python-format
@@ -2828,15 +2812,13 @@ msgstr "En produkt från %(brand_name)s som du ♥ har prissänkts"
 #: templates/profile/notifications/subject_follow_user.html:1
 #: templates/profile/notifications/subject_follow_user_following.html:1
 #, python-format
-msgid "%(sender_first_name)s %(sender_last_name)s now follows you on Apprl"
-msgstr "%(sender_first_name)s %(sender_last_name)s följer dig nu på Apprl"
+msgid "%(sender_name)s now follows you on Apprl"
+msgstr "%(sender_name)s följer dig nu på Apprl"
 
 #: templates/profile/notifications/subject_like_look_created.html:1
 #, python-format
-msgid ""
-"%(sender_first_name)s %(sender_last_name)s likes your look %(object_title)s"
-msgstr ""
-"%(sender_first_name)s %(sender_last_name)s gillar din look %(object_title)s"
+msgid "%(sender_name)s likes your look %(object_title)s"
+msgstr "%(sender_name)s gillar din look %(object_title)s"
 
 #: templates/profile/notifications/subject_second_sale_alert.html:1
 #, python-format
@@ -3021,11 +3003,11 @@ msgstr "Lösenordsbekräftelse"
 #: templates/registration/fragments/registration_form.html:33
 #, python-format
 msgid ""
-"By signing up you are agreeing to our <a href=\"%(tou)s\">Privacy Policy & "
-"Terms of use</a>."
+"By signing up you are agreeing to our <a class=\"underline\" target=\"_blank"
+"\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
 msgstr ""
-"Genom att skapa ditt konto godkänner du våra <a href=\"%(tou)s"
-"\">Användarvillkor</a>."
+"Genom att skapa ditt konto godkänner du våra <a class=\"underline\" target="
+"\"_blank\" href=\"%(tou)s\">Användarvillkor</a>."
 
 #~ msgid "See your friends' favorite products"
 #~ msgstr "Se dina vänners favoritprodukter"
