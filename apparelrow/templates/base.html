@@ -105,12 +105,14 @@
 
         jQuery(document).ready(function() {
             {% if not request.user.is_authenticated and not request.path == '/accounts/register/' %}
+            var $stickyLoginBar = $('#sticky-login-bar');
             var panel = $('#panel');
-            var panel_offset_top = 0;
+            var panel_offset_bottom = 0;
             if(panel.length > 0) {
-                panel_offset_top = panel.offset().top + panel.height();
+                panel_offset_bottom = panel.offset().top + panel.height();
             }
-            var sticky_offset_top = $('#sticky-login-bar').offset().top;
+            var sticky_offset_top = $stickyLoginBar.offset().top;
+
 
             jQuery('.ar_welcome').click(function() {
                 jQuery('#panel').slideToggle('slow');
@@ -118,23 +120,25 @@
                 var date = new Date();
                 date.setTime(date.getTime()+(10000*24*60*60*1000));
                 document.cookie = "ar_welcome=1; expires="+date.toUTCString()+"; path=/";
-                panel_offset_top = 0;
-                sticky_offset_top = $('#sticky-login-bar').offset().top;
+                panel_offset_bottom = 0;
+                sticky_offset_top = $stickyLoginBar.offset().top;
             });
 
             var sticky_calculate = function() {
                 var scroll_top = $(window).scrollTop();
                 if(scroll_top > sticky_offset_top) {
-                    $('#sticky-login-bar').css({'position': 'fixed', 'top': 0, 'left': 0});
+                    $('#sticky-login-placeholder').height($stickyLoginBar.height()).show();
+                    $stickyLoginBar.css({position: 'fixed', top: 0, left: 0});
                 } else {
-                    $('#sticky-login-bar').css({'position': 'relative'});
+                    $('#sticky-login-placeholder').hide();
+                    $stickyLoginBar.css({position: 'relative'});
                 }
 
                 {% if request.path == '/' or request.path == '/all/men/' or request.path == '/all/women/' %}
-                if(scroll_top > panel_offset_top || panel_offset_top == 0) {
-                    $('#sticky-login-bar').show();
+                if(scroll_top > panel_offset_bottom) {
+                    $stickyLoginBar.fadeIn(200);
                 } else {
-                    $('#sticky-login-bar').hide();
+                    $stickyLoginBar.fadeOut(200);
                 }
                 {% endif %}
             };
@@ -268,6 +272,7 @@
         {% endif %}
         {% endif %}
         {% if not request.path == '/accounts/register/' %}
+        <div id="sticky-login-placeholder" style="display:none;"></div>
         <div id="sticky-login-bar">
             <div id="sticky-inner-login-bar">
                 <p>{% trans "Discover fashion from the world’s best online stores, selected by our stylemakers & bloggers." %}</p>
