@@ -13,6 +13,7 @@
         {% include "registration/fragments/login_form.html" %}
     {% endwith %}
     <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
+    <a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
     {% if form.errors %}
         <p class="errorlist">{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
     {% endif %}
