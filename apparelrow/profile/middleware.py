@@ -35,7 +35,7 @@ class ImpersonateMiddleware(object):
 class LoginFlowMiddleware:
     def process_request(self, request):
         try:
-            if request.user.is_authenticated and request.user.login_flow != 'complete':
+            if request.user.is_authenticated() and request.user.login_flow != 'complete':
                 resolved_url = resolve(request.path)
                 if not request.path.startswith('/media') and \
                    not request.path.startswith('/static') and \
