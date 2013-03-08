@@ -9,7 +9,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import get_language, ugettext_lazy as _
+from django.utils.translation import get_language, ugettext_lazy as _, ugettext
 from django.conf import settings
 from django.contrib.comments.models import Comment
 from django.contrib.auth.signals import user_logged_in
@@ -546,7 +546,7 @@ def post_save_user_create(signal, instance, **kwargs):
     """
     if kwargs['created']:
         if instance.email:
-            subject = _(u'Welcome to Apprl')
+            subject = ugettext('Welcome to Apprl')
             body = render_to_string('profile/email_welcome.html')
             send_email_confirm_task.delay(subject, body, instance.email)
 

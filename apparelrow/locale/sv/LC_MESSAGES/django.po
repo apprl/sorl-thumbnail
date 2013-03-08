@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-07 17:16+0100\n"
+"POT-Creation-Date: 2013-03-08 12:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -395,7 +395,7 @@ msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
 #: apparel_comments/__init__.py:6 profile/forms.py:122
-#: templates/registration/fragments/registration_form.html:12
+#: templates/registration/fragments/registration_form.html:13
 msgid "E-mail address"
 msgstr "E-postadress"
 
@@ -583,7 +583,8 @@ msgstr "Din e-postadress"
 #: profile/forms.py:32
 msgid "Write something about yourself, include links to your blog or website"
 msgstr ""
-"Skriv något om dig själv, inkludera länkar till din blogg eller website"
+"Skriv något om dig själv, inkludera gärna länkar till din blogg eller annan "
+"webbsida"
 
 #: profile/forms.py:57
 msgid "New e-mail address"
@@ -846,9 +847,9 @@ msgstr "Följ dina vänner, varumärken & bloggare"
 
 #: templates/base.html:261 templates/base.html.py:276 templates/base.html:307
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
-#: templates/apparel/shared_header.html:22 templates/apparel/user_list.html:53
+#: templates/apparel/user_list.html:53 templates/registration/login.html:16
 #: templates/registration/registration_complete.html:8
-#: templates/registration/fragments/registration_form.html:24
+#: templates/registration/fragments/registration_form.html:28
 msgid "Sign up"
 msgstr "Bli medlem"
 
@@ -860,7 +861,7 @@ msgstr ""
 "Upptäck mode från världens bästa onlinebutiker utvalt av våra medlemmar & "
 "bloggare."
 
-#: templates/base.html:275
+#: templates/base.html:275 templates/apparel/shared_header.html:22
 #: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr "Logga in"
@@ -1654,14 +1655,6 @@ msgstr "Gilla en produkt"
 msgid "To 'like' a product on the site, you need to sign up first."
 msgstr "För att gilla en produkt på siten behöver du först bli medlem."
 
-#: templates/apparel/fragments/dialog_login_favorite_friends.html:5
-msgid "See your friends' favorite products"
-msgstr "Se dina vänners favoritprodukter"
-
-#: templates/apparel/fragments/dialog_login_favorite_friends.html:7
-msgid "Sign up to see which products are popular among your friends."
-msgstr "Bli medlem att se vilka produkter som är populära bland dina vänner."
-
 #: templates/apparel/fragments/look_medium.html:33
 #: templates/apparel/fragments/looks_large.html:39
 msgid "By"
@@ -2420,7 +2413,7 @@ msgstr "E-postadress"
 
 #: templates/profile/base_settings.html:26
 #: templates/profile/settings_password.html:6
-#: templates/registration/fragments/registration_form.html:16
+#: templates/registration/fragments/registration_form.html:18
 msgid "Password"
 msgstr "Lösenord"
 
@@ -2907,7 +2900,6 @@ msgid "Login"
 msgstr "Logga in"
 
 #: templates/registration/login.html:11
-#: templates/registration/fragments/registration_form.html:3
 msgid "Or:"
 msgstr "Eller:"
 
@@ -2915,7 +2907,7 @@ msgstr "Eller:"
 msgid "Forgot password?"
 msgstr "Glömt lösenord?"
 
-#: templates/registration/login.html:17
+#: templates/registration/login.html:18
 msgid "Your username and password did not match. Please try again."
 msgstr "Fel användarnamn eller lösenord. Försök igen."
 
@@ -3014,15 +3006,19 @@ msgstr ""
 msgid "Become a member"
 msgstr "Bli medlem "
 
+#: templates/registration/fragments/registration_form.html:3
+msgid "Or sign up with e-mail:"
+msgstr "Eller skapa ett konto med din e-postadress:"
+
 #: templates/registration/fragments/registration_form.html:8
 msgid "Username"
 msgstr "Användarnamn"
 
-#: templates/registration/fragments/registration_form.html:20
+#: templates/registration/fragments/registration_form.html:23
 msgid "Password confirmation"
 msgstr "Lösenordsbekräftelse"
 
-#: templates/registration/fragments/registration_form.html:29
+#: templates/registration/fragments/registration_form.html:33
 #, python-format
 msgid ""
 "By signing up you are agreeing to our <a href=\"%(tou)s\">Privacy Policy & "
@@ -3030,3 +3026,10 @@ msgid ""
 msgstr ""
 "Genom att skapa ditt konto godkänner du våra <a href=\"%(tou)s"
 "\">Användarvillkor</a>."
+
+#~ msgid "See your friends' favorite products"
+#~ msgstr "Se dina vänners favoritprodukter"
+
+#~ msgid "Sign up to see which products are popular among your friends."
+#~ msgstr ""
+#~ "Bli medlem att se vilka produkter som är populära bland dina vänner."

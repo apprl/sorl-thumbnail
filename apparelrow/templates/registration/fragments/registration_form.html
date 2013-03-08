@@ -1,6 +1,6 @@
 {% load i18n apparel_extras %}
 {% facebook_button %}
-<p>{% trans "Or:" %}</p>
+<p>{% trans "Or sign up with e-mail:" %}</p>
 <form action="{% url 'auth_register' %}" method="post" class="standard-form">
     {% csrf_token %}
     <ul>

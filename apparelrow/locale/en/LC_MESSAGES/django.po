@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-07 17:16+0100\n"
+"POT-Creation-Date: 2013-03-08 12:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -394,7 +394,7 @@ msgid "Shared to your Facebook timeline!"
 msgstr ""
 
 #: apparel_comments/__init__.py:6 profile/forms.py:122
-#: templates/registration/fragments/registration_form.html:12
+#: templates/registration/fragments/registration_form.html:13
 msgid "E-mail address"
 msgstr ""
 
@@ -844,9 +844,9 @@ msgstr ""
 
 #: templates/base.html:261 templates/base.html.py:276 templates/base.html:307
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
-#: templates/apparel/shared_header.html:22 templates/apparel/user_list.html:53
+#: templates/apparel/user_list.html:53 templates/registration/login.html:16
 #: templates/registration/registration_complete.html:8
-#: templates/registration/fragments/registration_form.html:24
+#: templates/registration/fragments/registration_form.html:28
 msgid "Sign up"
 msgstr ""
 
@@ -856,7 +856,7 @@ msgid ""
 "stylemakers & bloggers."
 msgstr ""
 
-#: templates/base.html:275
+#: templates/base.html:275 templates/apparel/shared_header.html:22
 #: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr ""
@@ -1619,14 +1619,6 @@ msgstr ""
 msgid "To 'like' a product on the site, you need to sign up first."
 msgstr ""
 
-#: templates/apparel/fragments/dialog_login_favorite_friends.html:5
-msgid "See your friends' favorite products"
-msgstr ""
-
-#: templates/apparel/fragments/dialog_login_favorite_friends.html:7
-msgid "Sign up to see which products are popular among your friends."
-msgstr ""
-
 #: templates/apparel/fragments/look_medium.html:33
 #: templates/apparel/fragments/looks_large.html:39
 msgid "By"
@@ -2319,7 +2311,7 @@ msgstr ""
 
 #: templates/profile/base_settings.html:26
 #: templates/profile/settings_password.html:6
-#: templates/registration/fragments/registration_form.html:16
+#: templates/registration/fragments/registration_form.html:18
 msgid "Password"
 msgstr ""
 
@@ -2759,7 +2751,6 @@ msgid "Login"
 msgstr ""
 
 #: templates/registration/login.html:11
-#: templates/registration/fragments/registration_form.html:3
 msgid "Or:"
 msgstr ""
 
@@ -2767,7 +2758,7 @@ msgstr ""
 msgid "Forgot password?"
 msgstr ""
 
-#: templates/registration/login.html:17
+#: templates/registration/login.html:18
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
@@ -2856,15 +2847,19 @@ msgstr ""
 msgid "Become a member"
 msgstr ""
 
+#: templates/registration/fragments/registration_form.html:3
+msgid "Or sign up with e-mail:"
+msgstr ""
+
 #: templates/registration/fragments/registration_form.html:8
 msgid "Username"
 msgstr ""
 
-#: templates/registration/fragments/registration_form.html:20
+#: templates/registration/fragments/registration_form.html:23
 msgid "Password confirmation"
 msgstr ""
 
-#: templates/registration/fragments/registration_form.html:29
+#: templates/registration/fragments/registration_form.html:33
 #, python-format
 msgid ""
 "By signing up you are agreeing to our <a href=\"%(tou)s\">Privacy Policy & "
