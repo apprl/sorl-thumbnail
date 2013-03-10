@@ -119,7 +119,7 @@ class PartnerSettingsForm(ModelForm):
 
 
 class RegisterForm(UserCreationForm):
-    email = EmailField(label=_('E-mail address'))
+    email = EmailField(label=_('E-mail address'), required=True)
 
     class Meta:
         model = get_user_model()
@@ -128,9 +128,17 @@ class RegisterForm(UserCreationForm):
     def clean_username(self):
         # Since get_user_model().username is unique, this check is redundant,
         # but it sets a nicer error message than the ORM. See #13147.
-        username = self.cleaned_data["username"]
+        username = self.cleaned_data['username']
         try:
             get_user_model()._default_manager.get(username=username)
         except get_user_model().DoesNotExist:
             return username
         raise ValidationError(self.error_messages['duplicate_username'])
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            get_user_model()._default_manager.get(email=email)
+        except get_user_model().DoesNotExist:
+            return email
+        raise ValidationError(_('A user with that email already exists.'))
