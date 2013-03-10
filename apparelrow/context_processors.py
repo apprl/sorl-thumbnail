@@ -5,7 +5,7 @@ from django.core.cache import cache
 from django.db.models import get_model
 from django.utils.translation import get_language
 
-from apparel.utils import get_gender_from_cookie
+from apparelrow.apparel.utils import get_gender_from_cookie
 
 def exposed_settings(request):
     current_site = Site.objects.get_current()

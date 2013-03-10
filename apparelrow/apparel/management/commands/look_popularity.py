@@ -3,7 +3,7 @@ import decimal
 
 from django.core.management.base import BaseCommand, CommandError
 
-from apparel.models import Look, LookLike
+from apparelrow.apparel.models import Look, LookLike
 
 class Command(BaseCommand):
     args = ''

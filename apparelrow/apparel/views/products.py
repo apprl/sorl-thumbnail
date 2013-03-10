@@ -13,9 +13,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.utils.http import urlquote
 
-from apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
-from apparel.utils import JSONResponse, set_query_parameter, get_gender_from_cookie, currency_exchange
-from apparel.utils import vendor_buy_url
+from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
+from apparelrow.apparel.utils import JSONResponse, set_query_parameter, get_gender_from_cookie, currency_exchange
+from apparelrow.apparel.utils import vendor_buy_url
 
 
 #

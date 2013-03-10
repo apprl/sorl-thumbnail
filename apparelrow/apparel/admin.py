@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.loading import get_model
 
-from apparel.models import *
+from apparelrow.apparel.models import *
 from modeltranslation.admin import TranslationAdmin
 from sorl.thumbnail import get_thumbnail
 from mptt.forms import TreeNodeChoiceField

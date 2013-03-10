@@ -12,8 +12,8 @@ import requests
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from importer.fxrates import *
-from apparel.models import VendorProduct
+from apparelrow.importer.fxrates import *
+from apparelrow.apparel.models import VendorProduct
 
 class Command(BaseCommand):
     args = "<name>"

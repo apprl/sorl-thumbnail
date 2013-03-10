@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.core import urlresolvers
 
-from dashboard.models import Sale, Payment, Cut, Group, Signup
+from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup
 
 class SaleAdmin(admin.ModelAdmin):
     list_display = ('affiliate', 'vendor', 'status', 'user_id', 'placement', 'commission', 'currency', 'sale_date', 'adjusted', 'paid')

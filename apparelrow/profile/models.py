@@ -20,8 +20,8 @@ from django.core.exceptions import ValidationError
 from sorl.thumbnail import get_thumbnail
 from django_extensions.db.fields import AutoSlugField
 
-from activity_feed.tasks import update_activity_feed
-from profile.utils import slugify_unique, send_welcome_mail
+from apparelrow.activity_feed.tasks import update_activity_feed
+from apparelrow.profile.utils import slugify_unique, send_welcome_mail
 
 
 EVENT_CHOICES = (
@@ -619,4 +619,4 @@ class NotificationCache(models.Model):
 
 
 
-import profile.activity
+import apparelrow.profile.activity

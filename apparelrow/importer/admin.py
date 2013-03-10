@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.forms.models import BaseInlineFormSet
 
-from importer.models import VendorFeed, ImportLog, ImportLogMessage, Mapping
+from apparelrow.importer.models import VendorFeed, ImportLog, ImportLogMessage, Mapping
 
 
 # FIXME: 

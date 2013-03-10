@@ -27,20 +27,21 @@ from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
 
-from profile.models import Follow
-from profile.utils import get_facebook_user
-from apparel.decorators import seamless_request_handling
-from apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
-from apparel.models import Look, LookLike, LookComponent, ShortProductLink
-from apparel.forms import LookForm, LookComponentForm
-from apparel.search import ApparelSearch
-from apparel.search import more_like_this_product
-from apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url
-from profile.notifications import process_like_look_created
-from apparel.tasks import facebook_push_graph, facebook_pull_graph
+from apparelrow.profile.models import Follow
+from apparelrow.profile.utils import get_facebook_user
+from apparelrow.profile.notifications import process_like_look_created
 
-from statistics.tasks import product_buy_click
-from statistics.utils import get_client_referer, get_client_ip, get_user_agent
+from apparelrow.apparel.decorators import seamless_request_handling
+from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
+from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
+from apparelrow.apparel.forms import LookForm, LookComponentForm
+from apparelrow.apparel.search import ApparelSearch
+from apparelrow.apparel.search import more_like_this_product
+from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url
+from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
+
+from apparelrow.statistics.tasks import product_buy_click
+from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
 
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 6

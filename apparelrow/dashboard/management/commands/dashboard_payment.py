@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand, CommandError
 
-from dashboard.models import Payment, Sale
+from apparelrow.dashboard.models import Payment, Sale
 
 
 logger = logging.getLogger('dashboard.payment')

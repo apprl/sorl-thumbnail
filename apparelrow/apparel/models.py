@@ -23,13 +23,13 @@ from django.contrib.staticfiles import finders
 from django.utils import timezone
 from django.utils.functional import cached_property
 
-from apparel.signals import look_saved
-from apparel.manager import ProductManager, LookManager
-from apparel.cache import invalidate_model_handler
-from apparel.utils import currency_exchange
-from apparel.base_62_converter import saturate, dehydrate
+from apparelrow.apparel.signals import look_saved
+from apparelrow.apparel.manager import ProductManager, LookManager
+from apparelrow.apparel.cache import invalidate_model_handler
+from apparelrow.apparel.utils import currency_exchange
+from apparelrow.apparel.base_62_converter import saturate, dehydrate
 
-from profile.notifications import process_sale_alert
+from apparelrow.profile.notifications import process_sale_alert
 
 import requests
 
@@ -1141,4 +1141,4 @@ django.contrib.comments.signals.comment_was_posted.connect(invalidate_model_hand
 # Search
 #
 
-import apparel.search
+import apparelrow.apparel.search

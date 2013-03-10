@@ -9,8 +9,8 @@ from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from fuzzywuzzy import process
 
-from dashboard.models import Sale
-from apparel.utils import currency_exchange
+from apparelrow.dashboard.models import Sale
+from apparelrow.apparel.utils import currency_exchange
 
 
 logger = logging.getLogger('dashboard.import')

@@ -13,8 +13,8 @@ from django.db.models.loading import get_model
 
 from sorl.thumbnail import get_thumbnail
 
-from apparel.signals import look_saved
-from apparel.utils import JSONResponse, set_query_parameter
+from apparelrow.apparel.signals import look_saved
+from apparelrow.apparel.utils import JSONResponse, set_query_parameter
 
 
 def create(request):

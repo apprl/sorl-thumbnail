@@ -8,7 +8,7 @@ from django.db.utils import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 import redis
 
-from activity_feed.tasks import aggregate, trim_feed, get_feed_key
+from apparelrow.activity_feed.tasks import aggregate, trim_feed, get_feed_key
 
 class Migration(DataMigration):
 

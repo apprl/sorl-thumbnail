@@ -4,9 +4,9 @@ from django.test import TestCase, TransactionTestCase
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-from apparel.models import *
-from importer.models import ImportLog, VendorFeed, FXRate
-from importer.api import API, IncompleteDataSet, ImporterError, SkipProduct
+from apparelrow.apparel.models import *
+from apparelrow.importer.models import ImportLog, VendorFeed, FXRate
+from apparelrow.importer.api import API, IncompleteDataSet, ImporterError, SkipProduct
 
 
 sample_dict = {

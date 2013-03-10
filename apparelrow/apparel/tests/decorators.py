@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 
-from apparel.decorators import *
+from apparelrow.apparel.decorators import *
 
 import json
 

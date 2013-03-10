@@ -15,8 +15,8 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.db.models.loading import get_model
 
-from apparel.models import Product, ProductLike, Look
-from apparel.utils import get_gender_from_cookie
+from apparelrow.apparel.models import Product, ProductLike, Look
+from apparelrow.apparel.utils import get_gender_from_cookie
 
 from sorl.thumbnail import get_thumbnail
 

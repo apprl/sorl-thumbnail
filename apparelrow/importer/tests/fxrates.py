@@ -4,9 +4,9 @@ from decimal import Decimal
 from django.test import TestCase, TransactionTestCase
 from django.conf import settings
 
-from importer.fxrates import FXRateImporter
-from importer.models import FXRate
-from apparel.models import VendorProduct
+from apparelrow.importer.fxrates import FXRateImporter
+from apparelrow.importer.models import FXRate
+from apparelrow.apparel.models import VendorProduct
 
 class FXRateImporterTest(TestCase):
     def setUp(self):

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand
 
-from activity_feed.tasks import aggregate
+from apparelrow.activity_feed.tasks import aggregate
 
 class Command(BaseCommand):
     args = ''

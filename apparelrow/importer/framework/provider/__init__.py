@@ -12,8 +12,8 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.loading import get_model
 
-from importer.framework import fetcher, parser
-from importer.api import API, SkipProduct, ImporterError, IncompleteDataSet
+from apparelrow.importer.framework import fetcher, parser
+from apparelrow.importer.api import API, SkipProduct, ImporterError, IncompleteDataSet
 
 logger = logging.getLogger('apparel.importer.provider')
 

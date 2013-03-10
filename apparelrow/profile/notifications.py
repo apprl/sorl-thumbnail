@@ -20,7 +20,7 @@ import facebook
 
 from celery.task import task
 
-from apparel.utils import currency_exchange
+from apparelrow.apparel.utils import currency_exchange
 
 def is_following(user_one, user_two):
     return get_model('profile', 'Follow').objects.filter(user=user_one, user_follow=user_two, active=True).exists()

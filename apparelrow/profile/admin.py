@@ -5,9 +5,9 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 
-from profile.models import Follow
-from profile.models import NotificationCache
-from profile.models import PaymentDetail
+from apparelrow.profile.models import Follow
+from apparelrow.profile.models import NotificationCache
+from apparelrow.profile.models import PaymentDetail
 
 
 #

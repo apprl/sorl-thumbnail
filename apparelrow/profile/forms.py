@@ -3,11 +3,10 @@ import random
 import string
 
 from django import forms
+from django.db.models.loading import get_model
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
-
-from profile.models import PaymentDetail
 
 
 class ProfileImageForm(forms.ModelForm):
@@ -102,7 +101,7 @@ class PartnerPaymentDetailForm(forms.ModelForm):
     banknr = forms.CharField(label=_('Bank account number'))
 
     class Meta:
-        model = PaymentDetail
+        model = get_model('profile', 'PaymentDetail')
         fields = ('company', 'name', 'orgnr', 'clearingnr', 'banknr', 'address', 'postal_code', 'city')
         widgets = {
             'company': forms.RadioSelect

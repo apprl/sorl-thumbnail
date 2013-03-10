@@ -7,7 +7,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.db.models.loading import get_model
 
-from importer.framework.provider import load_provider
+from apparelrow.importer.framework.provider import load_provider
 
 logger = logging.getLogger('apparel.importer.models')
 

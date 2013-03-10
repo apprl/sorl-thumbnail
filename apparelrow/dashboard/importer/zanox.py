@@ -7,8 +7,8 @@ import requests
 import dateutil.parser
 import time
 
-from dashboard.models import Sale
-from dashboard.importer.base import BaseImporter
+from apparelrow.dashboard.models import Sale
+from apparelrow.dashboard.importer.base import BaseImporter
 
 
 class GMT(datetime.tzinfo):

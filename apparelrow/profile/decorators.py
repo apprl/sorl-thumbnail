@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 
-from profile.forms import ProfileImageForm, ProfileAboutForm
+from apparelrow.profile.forms import ProfileImageForm, ProfileAboutForm
 
 
 def login_flow(view_func):

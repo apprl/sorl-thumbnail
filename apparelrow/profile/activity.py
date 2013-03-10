@@ -6,15 +6,15 @@ from django.contrib.comments.signals import comment_was_posted
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 
-from activity_feed.models import Activity
+from apparelrow.activity_feed.models import Activity
 
-from profile.models import Follow
+from apparelrow.profile.models import Follow
 
-from profile.notifications import process_comment_look_created
-from profile.notifications import process_comment_look_comment
-from profile.notifications import process_comment_product_wardrobe
-from profile.notifications import process_comment_product_comment
-from profile.notifications import process_follow_user
+from apparelrow.profile.notifications import process_comment_look_created
+from apparelrow.profile.notifications import process_comment_look_comment
+from apparelrow.profile.notifications import process_comment_product_wardrobe
+from apparelrow.profile.notifications import process_comment_product_comment
+from apparelrow.profile.notifications import process_follow_user
 
 
 #

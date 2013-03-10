@@ -3,8 +3,8 @@ from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from apparel.models import TemporaryImage
-from apparel.utils import JSONResponse
+from apparelrow.apparel.models import TemporaryImage
+from apparelrow.apparel.utils import JSONResponse
 
 
 class TemporaryImageView(View):

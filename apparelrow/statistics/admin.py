@@ -1,7 +1,7 @@
 from django.core import urlresolvers
 from django.contrib import admin
 
-from statistics.models import ProductClick, ProductStat, NotificationEmailStats, ActiveUser
+from apparelrow.statistics.models import ProductClick, ProductStat, NotificationEmailStats, ActiveUser
 
 
 class ActiveUserAdmin(admin.ModelAdmin):

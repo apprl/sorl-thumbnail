@@ -1,7 +1,7 @@
 from django import forms
 from django.http import HttpResponse
 
-from newsletter.models import Newsletter
+from apparelrow.newsletter.models import Newsletter
 
 #
 # Add to newsletter

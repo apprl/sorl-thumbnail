@@ -6,6 +6,7 @@ import posixpath
 gettext = lambda s: s
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+WSGI_APPLICATION = 'apparelrow.wsgi.application'
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -135,10 +136,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
-    "context_processors.exposed_settings",
-    "context_processors.next_redirects",
-    "context_processors.gender",
-    "context_processors.currency",
+    "apparelrow.context_processors.exposed_settings",
+    "apparelrow.context_processors.next_redirects",
+    "apparelrow.context_processors.gender",
+    "apparelrow.context_processors.currency",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -150,12 +151,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'profile.middleware.ImpersonateMiddleware',
-    'statistics.middleware.ActiveUsersMiddleware',
+    'apparelrow.profile.middleware.ImpersonateMiddleware',
+    'apparelrow.statistics.middleware.ActiveUsersMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
-    'profile.auth.FacebookProfileBackend',
+    'apparelrow.profile.auth.FacebookProfileBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -190,18 +191,14 @@ INSTALLED_APPS = (
     'static_sitemaps',
 
     # Internal
-    'apparel',              # Internal: Product display module
-    'profile',              # Internal: User related module
-    'importer',             # Internal: Product importer module
-    'apparel_comments',
-    'statistics',           # Internal: Click statistics module
-    'newsletter',
-    'dashboard',
-
-    'activity_feed',
+    'apparelrow.apparel',              # Internal: Product display module
+    'apparelrow.profile',              # Internal: User related module
+    'apparelrow.importer',             # Internal: Product importer module
+    'apparelrow.statistics',           # Internal: Click statistics module
+    'apparelrow.newsletter',
+    'apparelrow.dashboard',
+    'apparelrow.activity_feed',
 )
-
-COMMENTS_APP = 'apparel_comments'
 
 # - STATIC SITEMAP -
 STATICSITEMAPS_DOMAIN = 'apprl.com'
@@ -285,7 +282,7 @@ PIPELINE_JS = {
     },
 }
 
-CSRF_FAILURE_VIEW = 'apparel.views.csrf_failure'
+CSRF_FAILURE_VIEW = 'apparelrow.apparel.views.csrf_failure'
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
@@ -299,7 +296,7 @@ LOGIN_REDIRECT_URL = "/"
 AUTH_USER_MODEL = 'profile.User'
 
 # django-modeltranslation
-TRANSLATION_REGISTRY = 'apparel.translation'
+TRANSLATION_REGISTRY = 'apparelrow.apparel.translation'
 
 # django-tinymce
 TINYMCE_DEFAULT_CONFIG = {
@@ -397,8 +394,8 @@ APPAREL_DECOMPRESS_SUFFIX = {
 }
 
 # THUMBNAIL CONFIGURATION
-THUMBNAIL_ENGINE = 'apparel.sorl_extension.Engine'
-THUMBNAIL_BACKEND = 'apparel.sorl_extension.NamedThumbnailBackend'
+THUMBNAIL_ENGINE = 'apparelrow.apparel.sorl_extension.Engine'
+THUMBNAIL_BACKEND = 'apparelrow.apparel.sorl_extension.NamedThumbnailBackend'
 THUMBNAIL_PREFIX = 'cache/'
 
 # FEED

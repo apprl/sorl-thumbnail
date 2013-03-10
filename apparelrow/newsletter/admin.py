@@ -1,4 +1,4 @@
 from django.contrib import admin
-from newsletter.models import Newsletter
+from apparelrow.newsletter.models import Newsletter
 
 admin.site.register(Newsletter)

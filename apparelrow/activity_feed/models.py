@@ -9,8 +9,8 @@ from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
-from activity_feed.tasks import push_activity_feed
-from activity_feed.tasks import pull_activity_feed
+from apparelrow.activity_feed.tasks import push_activity_feed
+from apparelrow.activity_feed.tasks import pull_activity_feed
 
 logger = logging.getLogger('activity_feed.models')
 

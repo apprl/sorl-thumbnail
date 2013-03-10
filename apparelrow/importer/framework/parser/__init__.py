@@ -1,5 +1,5 @@
 import cStringIO, sys, re, csv
-from importer.framework.parser.utils import UTF8Recoder
+from apparelrow.importer.framework.parser.utils import UTF8Recoder
 
 class CSVParser():
     """

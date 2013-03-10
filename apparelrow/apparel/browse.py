@@ -18,16 +18,16 @@ from django.core.paginator import EmptyPage
 from django.core.urlresolvers import reverse
 from django.utils.translation import get_language, ugettext as _
 
-from apparel.search import PRODUCT_SEARCH_FIELDS
-from apparel.search import ApparelSearch
-from apparel.models import Product
-from apparel.models import Brand
-from apparel.models import Option
-from apparel.models import Category
-from apparel.models import Vendor
-from apparel.utils import get_pagination_page
+from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS
+from apparelrow.apparel.search import ApparelSearch
+from apparelrow.apparel.models import Product
+from apparelrow.apparel.models import Brand
+from apparelrow.apparel.models import Option
+from apparelrow.apparel.models import Category
+from apparelrow.apparel.models import Vendor
+from apparelrow.apparel.utils import get_pagination_page
 
-from profile.models import Follow
+from apparelrow.profile.models import Follow
 
 BROWSE_PAGE_SIZE = 30
 

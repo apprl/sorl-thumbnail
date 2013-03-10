@@ -19,7 +19,7 @@ from django.conf import settings
 from django.db.models.loading import get_model
 from django.utils.encoding import smart_str
 
-from importer.framework.fetcher import fetch
+from apparelrow.importer.framework.fetcher import fetch
 
 try:
     from MySQLdb import MySQLError as DBError

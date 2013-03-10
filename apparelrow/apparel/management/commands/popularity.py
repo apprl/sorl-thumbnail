@@ -4,8 +4,8 @@ import logging
 
 from django.core.management.base import BaseCommand, CommandError
 
-from apparel.models import Product, ProductLike
-from statistics.models import ProductClick
+from apparelrow.apparel.models import Product, ProductLike
+from apparelrow.statistics.models import ProductClick
 
 logger = logging.getLogger('apparel.management')
 

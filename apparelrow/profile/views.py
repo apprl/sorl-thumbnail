@@ -17,15 +17,15 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.translation import ugettext_lazy as _, ugettext
 
-from apparel.models import Product
-from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
-from apparel.tasks import facebook_push_graph
-from profile.utils import get_facebook_user, get_current_user, send_welcome_mail
-from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
-from profile.models import EmailChange, Follow, PaymentDetail
-from profile.tasks import send_email_confirm_task
-from profile.decorators import avatar_change, login_flow
-from activity_feed.views import ActivityFeedRender
+from apparelrow.apparel.models import Product
+from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
+from apparelrow.apparel.tasks import facebook_push_graph
+from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail
+from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
+from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
+from apparelrow.profile.tasks import send_email_confirm_task
+from apparelrow.profile.decorators import avatar_change, login_flow
+from apparelrow.activity_feed.views import ActivityFeedRender
 
 PROFILE_PAGE_SIZE = 30
 

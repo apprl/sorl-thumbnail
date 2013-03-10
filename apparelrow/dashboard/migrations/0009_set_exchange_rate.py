@@ -4,8 +4,8 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 
-from dashboard.importer.base import BaseImporter
-from apparel.utils import currency_exchange
+from apparelrow.dashboard.importer.base import BaseImporter
+from apparelrow.apparel.utils import currency_exchange
 
 class Migration(DataMigration):
 

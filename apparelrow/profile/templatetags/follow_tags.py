@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.template import Library, Variable, TemplateSyntaxError, Node
 
-from profile.models import Follow
+from apparelrow.profile.models import Follow
 
 register = Library()
 

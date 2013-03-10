@@ -5,6 +5,7 @@ from pprint import pformat
 from django.template import Library, Variable, TemplateSyntaxError, Node, VariableDoesNotExist
 from django import template
 from django.template.defaultfilters import linebreaksbr
+from django.db.models.loading import get_model
 from django.utils.html import escape
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext as _
@@ -16,8 +17,6 @@ from django.template.defaultfilters import stringfilter
 from django.utils.html import urlize
 from django.utils.safestring import mark_safe
 from django.contrib.staticfiles.storage import staticfiles_storage
-
-from apparel.models import ProductLike, LookLike
 
 register = Library()
 
@@ -54,7 +53,7 @@ def likes_product(user, product):
     """
     if user and user.is_authenticated():
         try:
-            return ProductLike.objects.get(user=user, product=product, active=True)
+            return get_model('apparel', 'ProductLike').objects.get(user=user, product=product, active=True)
         except ObjectDoesNotExist, MultipleObjectsReturned:
             pass
 
@@ -67,7 +66,7 @@ def likes_look(user, look):
     """
     if user and user.is_authenticated():
         try:
-            return LookLike.objects.get(user=user, look=look, active=True)
+            return get_model('apparel', 'LookLike').objects.get(user=user, look=look, active=True)
         except ObjectDoesNotExist, MultipleObjectsReturned:
             pass
 
@@ -86,7 +85,7 @@ def likes_look(user, look):
 def do_ifinlist(parser, token):
     """
     >>> from django.template.loader import Template, Context
-    >>> from apparel.templatetags import apparel_extras
+    >>> from apparelrow.apparel.templatetags import apparel_extras
     >>> c = Context({ 'a_list': ['one', 'two', 'three', 'four'], 'a_value': 'one', 'another_value': 'six', 'none_list': None})
     >>> # Variable in context exists in list
     >>> t = Template("{% load apparel_extras %}{% ifinlist a_value a_list %}True{% endifinlist %}")
@@ -222,8 +221,8 @@ def as_list(o):
     """ Returns the object as a list, if it isn't already one. Tuples are converted
     to lists
     >>> from django.template.loader import Template, Context
-    >>> from apparel.models import Product
-    >>> from apparel.templatetags import apparel_extras
+    >>> from apparelrow.apparel.models import Product
+    >>> from apparelrow.apparel.templatetags import apparel_extras
     >>> c = Context({'v1': ('b', 'c',), 'v2': "hello", 'v3': [1, 2, 3]})
     >>> t = Template('{% load apparel_extras %}{{ v1|as_list }}')
     >>> t.render(c)
@@ -249,8 +248,8 @@ def as_list(o):
 def class_name(o):
     """ Outputs class name of given object (if it is one)
     >>> from django.template.loader import Template, Context
-    >>> from apparel.models import Product
-    >>> from apparel.templatetags import apparel_extras
+    >>> from apparelrow.apparel.models import Product
+    >>> from apparelrow.apparel.templatetags import apparel_extras
     >>> c = Context({'p': Product(), 's': "hello"})
     >>> t = Template('{% load apparel_extras %}{{ p|class_name }}')
     >>> t.render(c)

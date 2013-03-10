@@ -1,7 +1,7 @@
 from django.template import Library
 from django.core.urlresolvers import reverse
 
-from apparel.utils import generate_sid
+from apparelrow.apparel.utils import generate_sid
 
 register = Library()
 

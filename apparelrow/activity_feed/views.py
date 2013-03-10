@@ -15,12 +15,11 @@ from django.core.urlresolvers import reverse
 
 import redis
 
-from apparel.models import Product, Look
-from apparel.views import get_top_looks_in_network, get_top_products_in_network
-from activity_feed.models import Activity, ActivityFeed
-from apparel.utils import get_gender_from_cookie
-
-from activity_feed.tasks import get_feed_key
+from apparelrow.apparel.models import Product, Look
+from apparelrow.apparel.views import get_top_looks_in_network, get_top_products_in_network
+from apparelrow.apparel.utils import get_gender_from_cookie
+from apparelrow.activity_feed.models import Activity, ActivityFeed
+from apparelrow.activity_feed.tasks import get_feed_key
 
 class ActivityFeedRender:
     """

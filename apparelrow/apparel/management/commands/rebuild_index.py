@@ -3,7 +3,7 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-from apparel.search import clean_index, rebuild_product_index, rebuild_look_index, rebuild_user_index
+from apparelrow.apparel.search import clean_index, rebuild_product_index, rebuild_look_index, rebuild_user_index
 
 class Command(BaseCommand):
     args = ''

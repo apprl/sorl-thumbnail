@@ -1,7 +1,7 @@
 from django.forms import ModelForm, CharField, Textarea
 from django.utils.translation import ugettext_lazy as _
 
-from apparel.models import Look, LookComponent
+from apparelrow.apparel.models import Look, LookComponent
 
 class LookForm(ModelForm):
     title = CharField(error_messages={'required': _('You have to name your look before your create it.')})

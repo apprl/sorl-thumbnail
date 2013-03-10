@@ -12,6 +12,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models import Q, Count
 from django.db.models.signals import pre_save, pre_delete
+from django.db.models.loading import get_model
 from django.dispatch import receiver
 from django.template import RequestContext, loader
 from django.utils.translation import activate
@@ -25,9 +26,7 @@ from sorl.thumbnail import get_thumbnail
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
 
-from apparel.tasks import mailchimp_subscribe, mailchimp_unsubscribe
-from apparel.models import Product, Look
-from profile.models import Follow
+from apparelrow.apparel.tasks import mailchimp_subscribe, mailchimp_unsubscribe
 
 logger = logging.getLogger('apparel.email')
 
@@ -109,12 +108,12 @@ def get_weekly_mail_content(gender, timeframe):
     # Products
     product_names = []
     products = []
-    base_products = list(Product.valid_objects.filter(gender__in=[gender, 'U'])
-                                              .order_by('-popularity')[:9])
-    week_products = list(Product.valid_objects.filter(gender__in=[gender, 'U'])
-                                              .filter(likes__active=True, likes__modified__gt=timeframe)
-                                              .annotate(num_likes=Count('likes'))
-                                              .order_by('-num_likes')[:9])
+    base_products = list(get_model('apparel', 'Product').valid_objects.filter(gender__in=[gender, 'U'])
+                                                                      .order_by('-popularity')[:9])
+    week_products = list(get_model('apparel', 'Product').valid_objects.filter(gender__in=[gender, 'U'])
+                                                                      .filter(likes__active=True, likes__modified__gt=timeframe)
+                                                                      .annotate(num_likes=Count('likes'))
+                                                                      .order_by('-num_likes')[:9])
 
     used_products = []
     count_products = 0
@@ -145,8 +144,8 @@ def get_weekly_mail_content(gender, timeframe):
 
     # Looks
     looks = []
-    base_looks = list(Look.published_objects.filter(gender__in=[gender, 'U'], likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
-    week_looks = list(Look.published_objects.filter(gender__in=[gender, 'U'], likes__active=True, likes__modified__gt=timeframe).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
+    base_looks = list(get_model('apparel', 'Look').published_objects.filter(gender__in=[gender, 'U'], likes__active=True).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
+    week_looks = list(get_model('apparel', 'Look').published_objects.filter(gender__in=[gender, 'U'], likes__active=True, likes__modified__gt=timeframe).annotate(num_likes=Count('likes')).order_by('-num_likes', '-modified')[:4])
 
     used_looks = []
     count_looks = 0
@@ -171,10 +170,10 @@ def get_weekly_mail_content(gender, timeframe):
     # Members
     members = []
     base_members = list(get_user_model().objects.filter(gender=gender).order_by('-followers_count').values_list('id', flat=True)[:4])
-    temp_week_members = list(Follow.objects.filter(modified__gt=timeframe)
-                                           .values_list('user_follow', flat=True)
-                                           .annotate(count=Count('user_follow'))
-                                           .order_by('-count'))
+    temp_week_members = list(get_model('profile', 'Follow').objects.filter(modified__gt=timeframe)
+                                                                   .values_list('user_follow', flat=True)
+                                                                   .annotate(count=Count('user_follow'))
+                                                                   .order_by('-count'))
 
     week_members = []
     count_week_members = 0

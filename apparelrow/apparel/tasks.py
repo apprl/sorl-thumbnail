@@ -17,8 +17,8 @@ from celery.task import task, periodic_task, PeriodicTask
 from celery.schedules import crontab
 import requests
 
-from apparel.search import ApparelSearch
-from apparel.models import Product, VendorBrand, VendorCategory, FacebookAction
+from apparelrow.apparel.search import ApparelSearch
+from apparelrow.apparel.models import Product, VendorBrand, VendorCategory, FacebookAction
 
 logger = logging.getLogger('apparel.tasks')
 

@@ -6,8 +6,8 @@ from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand
 from django.contrib.contenttypes.models import ContentType
 
-from apparel.models import Brand, Product
-from activity_feed.tasks import aggregate
+from apparelrow.apparel.models import Brand, Product
+from apparelrow.activity_feed.tasks import aggregate
 
 class Command(BaseCommand):
     args = ''

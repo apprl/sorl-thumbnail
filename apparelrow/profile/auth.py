@@ -3,8 +3,8 @@ from django.contrib.auth.backends import ModelBackend
 from django.db.models.loading import get_model
 import facebook
 
-from profile.notifications import process_facebook_friends
-from profile.utils import slugify_unique
+from apparelrow.profile.notifications import process_facebook_friends
+from apparelrow.profile.utils import slugify_unique
 
 FB_GENDER_MAP = { 'male': 'M', 'female': 'W' }
 

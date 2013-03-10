@@ -9,7 +9,7 @@ from django.forms import ModelForm
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 
-from dashboard.models import Sale, Payment, Signup
+from apparelrow.dashboard.models import Sale, Payment, Signup
 
 
 class SignupForm(ModelForm):
