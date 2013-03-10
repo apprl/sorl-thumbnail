@@ -91,7 +91,7 @@
             var panel = $('#panel');
             var panel_offset_bottom = 0;
             if(panel.length > 0) {
-                panel_offset_bottom = panel.offset().top + panel.height();
+                panel_offset_bottom = panel.offset().top + panel.outerHeight();
             }
             var sticky_offset_top = $stickyLoginBar.offset().top;
 
@@ -103,13 +103,14 @@
                 date.setTime(date.getTime()+(10000*24*60*60*1000));
                 document.cookie = "ar_welcome=1; expires="+date.toUTCString()+"; path=/";
                 panel_offset_bottom = 0;
-                sticky_offset_top = $stickyLoginBar.offset().top;
+                sticky_offset_top = panel.offset().top;
+                $stickyLoginBar.fadeIn(200);
             });
 
             var sticky_calculate = function() {
                 var scroll_top = $(window).scrollTop();
                 if(scroll_top > sticky_offset_top) {
-                    $('#sticky-login-placeholder').height($stickyLoginBar.height()).show();
+                    $('#sticky-login-placeholder').height($stickyLoginBar.outerHeight()).show();
                     $stickyLoginBar.css({position: 'fixed', top: 0, left: 0});
                 } else {
                     $('#sticky-login-placeholder').hide();
@@ -117,10 +118,12 @@
                 }
 
                 {% if request.path == '/' or request.path == '/all/men/' or request.path == '/all/women/' %}
-                if(scroll_top > panel_offset_bottom) {
-                    $stickyLoginBar.fadeIn(200);
-                } else {
-                    $stickyLoginBar.fadeOut(200);
+                if(panel_offset_bottom > 0) {
+                    if(scroll_top > panel_offset_bottom) {
+                        $stickyLoginBar.fadeIn(200);
+                    } else {
+                        $stickyLoginBar.fadeOut(200);
+                    }
                 }
                 {% endif %}
             };
