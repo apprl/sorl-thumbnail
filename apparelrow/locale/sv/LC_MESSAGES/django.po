@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-08 21:28+0100\n"
+"POT-Creation-Date: 2013-03-10 18:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 #: activity_feed/models.py:73 activity_feed/models.py:122
 #: apparel/models.py:373 apparel/models.py:694 apparel/models.py:924
 #: apparel/models.py:1049 dashboard/models.py:59 dashboard/models.py:78
-#: dashboard/models.py:112 profile/models.py:585 statistics/models.py:49
+#: dashboard/models.py:112 profile/models.py:587 statistics/models.py:49
 #: statistics/models.py:61
 msgid "Time created"
 msgstr "Tid tillagd"
@@ -45,7 +45,7 @@ msgstr "Tid tillagd"
 #: activity_feed/models.py:74 apparel/models.py:227 apparel/models.py:374
 #: apparel/models.py:441 apparel/models.py:492 apparel/models.py:695
 #: apparel/models.py:925 dashboard/models.py:60 dashboard/models.py:79
-#: profile/models.py:586
+#: profile/models.py:588
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -53,7 +53,7 @@ msgstr "Tid ändrad"
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:255 templates/base.html:410
+#: apparel/admin.py:255 templates/base.html:400
 #: templates/apparel/look_editor.html:95
 #: templates/apparel/look_editor.html:101
 #: templates/apparel/look_editor.html:107
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Yes"
 msgstr "Ja"
 
-#: apparel/admin.py:256 templates/base.html:409
+#: apparel/admin.py:256 templates/base.html:399
 #: templates/apparel/look_editor.html:94
 #: templates/apparel/look_editor.html:100
 #: templates/apparel/look_editor.html:106
@@ -227,7 +227,7 @@ msgid "Product image"
 msgstr "Produktbild"
 
 #: apparel/models.py:232 apparel/models.py:698 profile/models.py:57
-#: profile/models.py:281
+#: profile/models.py:282
 msgid "Gender"
 msgstr "Kön"
 
@@ -529,7 +529,7 @@ msgstr ""
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:52 templates/base.html:321
+#: profile/admin.py:52 templates/base.html:311
 #: templates/profile/base_settings.html:21
 #: templates/profile/base_settings.html:24
 #: templates/profile/settings_facebook.html:5
@@ -632,6 +632,10 @@ msgstr "Bankkontonummer"
 msgid "http://"
 msgstr "http://"
 
+#: profile/forms.py:144
+msgid "A user with that email already exists."
+msgstr ""
+
 #: profile/models.py:30 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
 #: templates/apparel/fragments/product_menu_browse.html:12
@@ -646,97 +650,101 @@ msgstr "De jag följer"
 msgid "No one"
 msgstr "Inga"
 
-#: profile/models.py:54 profile/models.py:278
+#: profile/models.py:54 profile/models.py:279
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:55 profile/models.py:279 templates/base.html:327
+#: profile/models.py:55 profile/models.py:280 templates/base.html:317
 msgid "About"
 msgstr "Om"
 
-#: profile/models.py:56 profile/models.py:280
+#: profile/models.py:56 profile/models.py:281
 msgid "Language"
 msgstr "Språk"
 
-#: profile/models.py:65 profile/models.py:289
+#: profile/models.py:66 profile/models.py:290
 msgid "Login flow"
 msgstr "Inloggingsflöde"
 
-#: profile/models.py:68 profile/models.py:292
+#: profile/models.py:69 profile/models.py:293
 msgid "Participating in newsletter"
 msgstr ""
 
-#: profile/models.py:71 profile/models.py:295
+#: profile/models.py:72 profile/models.py:296
 msgid "Receiving sale alerts"
 msgstr ""
 
-#: profile/models.py:85 profile/models.py:308
+#: profile/models.py:86 profile/models.py:309
 msgid "Partner user"
 msgstr ""
 
-#: profile/models.py:90 profile/models.py:314
+#: profile/models.py:91 profile/models.py:315
 msgid "When someone commented on a product that I have liked"
 msgstr "När någon kommenterat en produkt som jag har gillat"
 
-#: profile/models.py:92 profile/models.py:316
+#: profile/models.py:93 profile/models.py:317
 msgid "When someone commented on a product that I have commented on"
 msgstr "När någon kommenterat en produkt som jag kommenterat på"
 
-#: profile/models.py:94 profile/models.py:318
+#: profile/models.py:95 profile/models.py:319
 msgid "When someone commented on a look that I have created"
 msgstr "När någon kommenterat en look som jag har gjort"
 
-#: profile/models.py:96 profile/models.py:320
+#: profile/models.py:97 profile/models.py:321
 msgid "When someone commented on a look that I have commented on"
 msgstr "När någon kommenterat en look som jag har kommenterat på"
 
-#: profile/models.py:98 profile/models.py:322
+#: profile/models.py:99 profile/models.py:323
 msgid "When someone likes a look that I have created"
 msgstr "När någon gillar en look som jag har gjort"
 
-#: profile/models.py:100 profile/models.py:324
+#: profile/models.py:101 profile/models.py:325
 msgid "When someone starts to follow me"
 msgstr "När någon börjat följa mig"
 
-#: profile/models.py:102 profile/models.py:326
+#: profile/models.py:103 profile/models.py:327
 msgid "When a Facebook friend has joined Apprl"
 msgstr "När en Facebookvän blivit medlem på Apprl"
 
-#: profile/models.py:264 profile/models.py:508
+#: profile/models.py:265 profile/models.py:509
 msgid "Partner group must be set to be able to set partner status"
 msgstr ""
 
-#: profile/models.py:282
+#: profile/models.py:283
 msgid "Last visit home"
 msgstr ""
 
-#: profile/models.py:329
+#: profile/models.py:330
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:517
+#: profile/models.py:518
 msgid "Receive payments as a company"
 msgstr "Jag vill ha utbetalning som företag"
 
-#: profile/models.py:517
+#: profile/models.py:518
 msgid "Receive payments as a private person"
 msgstr "Jag vill ha utbetalning som privatperson"
 
-#: profile/models.py:521
+#: profile/models.py:522
 msgid "Address"
 msgstr "Adress"
 
-#: profile/models.py:522
+#: profile/models.py:523
 msgid "Postal code"
 msgstr "Postkod"
 
-#: profile/models.py:523
+#: profile/models.py:524
 msgid "City"
 msgstr "Postadress"
 
-#: profile/models.py:549
+#: profile/models.py:551 profile/views.py:561
 msgid "Welcome to Apprl"
 msgstr "Välkommen till Apprl"
+
+#: profile/views.py:535
+msgid "Activate your Apprl account"
+msgstr "Aktivera ditt Apprl-konto"
 
 #: statistics/models.py:37 statistics/models.py:38
 msgid "Product clicks"
@@ -766,11 +774,11 @@ msgstr "500-fel"
 msgid "An error occurred"
 msgstr "Ett fel uppstod"
 
-#: templates/base.html:174
+#: templates/base.html:163
 msgid "I'm looking for..."
 msgstr "Jag letar efter..."
 
-#: templates/base.html:175 templates/apparel/look_editor.html:93
+#: templates/base.html:164 templates/apparel/look_editor.html:93
 #: templates/apparel/look_editor.html:123
 #: templates/apparel/look_editor.html:134
 #: templates/profile/base_login_flow.html:15
@@ -779,81 +787,80 @@ msgstr "Jag letar efter..."
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: templates/base.html:180 templates/base.html.py:185 templates/base.html:300
+#: templates/base.html:169 templates/base.html.py:174 templates/base.html:290
 #: templates/apparel/look_editor.html:56
 #: templates/apparel/fragments/product_menu_browse.html:14
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:180 templates/base.html.py:184 templates/base.html:299
+#: templates/base.html:169 templates/base.html.py:173 templates/base.html:289
 #: templates/apparel/look_editor.html:55
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:217
+#: templates/base.html:206
 msgid "Matching products"
 msgstr "Träffar bland produkter"
 
-#: templates/base.html:219 templates/activity_feed/public_feed.html:15
+#: templates/base.html:208 templates/activity_feed/public_feed.html:15
 #: templates/activity_feed/user_feed.html:15
 msgid "Show all products"
 msgstr "Visa alla produkter"
 
-#: templates/base.html:222
+#: templates/base.html:211
 msgid "Matching looks"
 msgstr "Träffar bland looks"
 
-#: templates/base.html:224 templates/activity_feed/public_feed.html:23
+#: templates/base.html:213 templates/activity_feed/public_feed.html:23
 #: templates/activity_feed/user_feed.html:23
 msgid "Show all looks"
 msgstr "Visa alla looks"
 
-#: templates/base.html:227
+#: templates/base.html:216
 msgid "Matching brands"
 msgstr "Träffar bland varumärken"
 
-#: templates/base.html:229
+#: templates/base.html:218
 msgid "Show all manufacturers"
 msgstr "Visa alla varumärken"
 
-#: templates/base.html:231
+#: templates/base.html:220
 msgid "Matching members"
 msgstr "Träffar bland medlemmar"
 
-#: templates/base.html:250
+#: templates/base.html:239
 msgid "Welcome to Social Shopping!"
 msgstr "Välkommen till social shopping!"
 
-#: templates/base.html:252
+#: templates/base.html:241
 msgid "Discover fashion from the world's best online stores"
 msgstr "Upptäck mode från världens bästa onlinebutiker"
 
-#: templates/base.html:253
+#: templates/base.html:242
 msgid "Get sale alerts on your favourite items"
 msgstr "Bli meddelad när dina favoritprodukter prissänks"
 
-#: templates/base.html:254
+#: templates/base.html:243
 msgid "Create and share looks on your blog"
 msgstr "Skapa och dela looks till din blogg"
 
-#: templates/base.html:256
+#: templates/base.html:245
 msgid "Are you a blogger?"
 msgstr "Är du bloggare?"
 
-#: templates/base.html:260
+#: templates/base.html:249
 msgid "Follow our stylemakers, brands & bloggers"
 msgstr "Följ dina vänner, varumärken & bloggare"
 
-#: templates/base.html:261 templates/base.html.py:276 templates/base.html:307
+#: templates/base.html:250 templates/base.html.py:266 templates/base.html:297
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
 #: templates/apparel/user_list.html:53 templates/registration/login.html:16
-#: templates/registration/registration_complete.html:8
 #: templates/registration/fragments/registration_form.html:28
 msgid "Sign up"
 msgstr "Bli medlem"
 
-#: templates/base.html:273
+#: templates/base.html:263
 msgid ""
 "Discover fashion from the world’s best online stores, selected by our "
 "stylemakers & bloggers."
@@ -861,28 +868,28 @@ msgstr ""
 "Upptäck mode från världens bästa onlinebutiker utvalt av våra medlemmar & "
 "bloggare."
 
-#: templates/base.html:275 templates/apparel/shared_header.html:22
+#: templates/base.html:265 templates/apparel/shared_header.html:22
 #: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr "Logga in"
 
-#: templates/base.html:295
+#: templates/base.html:285
 msgid "Sweden"
 msgstr "Sverige"
 
-#: templates/base.html:298 templates/apparel/shared_header.html:9
+#: templates/base.html:288 templates/apparel/shared_header.html:9
 #: templates/profile/base_profile.html:31
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:301 templates/apparel/look_detail.html:4
+#: templates/base.html:291 templates/apparel/look_detail.html:4
 #: templates/apparel/look_editor.html:5
 #: templates/apparel/shared_header.html:10
 #: templates/profile/base_profile.html:40 templates/profile/looks.html:4
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/base.html:302 templates/apparel/brand_list.html:11
+#: templates/base.html:292 templates/apparel/brand_list.html:11
 #: templates/apparel/shared_header.html:15
 #: templates/profile/base_login_flow.html:28
 #: templates/profile/login_flow_bio.html:9
@@ -892,27 +899,27 @@ msgstr "Looks"
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:305
+#: templates/base.html:295
 msgid "Social"
 msgstr ""
 
-#: templates/base.html:309 templates/apparel/shared_header.html:14
+#: templates/base.html:299 templates/apparel/shared_header.html:14
 #: templates/apparel/user_list.html:5 templates/apparel/user_list.html:10
 msgid "Members"
 msgstr "Medlemmar"
 
-#: templates/base.html:311 templates/apparel/shared_header.html:32
+#: templates/base.html:301 templates/apparel/shared_header.html:32
 msgid "+ Invite friends"
 msgstr "+ Bjud in vänner"
 
-#: templates/base.html:314 templates/base.html.py:316
+#: templates/base.html:304 templates/base.html.py:306
 #: templates/apparel/shared_header.html:33
 #: templates/apparel/fragments/create_look_button.html:3
 #: templates/apparel/fragments/create_look_button.html:5
 msgid "+ Create look"
 msgstr "+ Skapa look"
 
-#: templates/base.html:320 templates/profile/base_login_flow.html:29
+#: templates/base.html:310 templates/profile/base_login_flow.html:29
 #: templates/profile/login_flow_bio.html:10
 #: templates/profile/login_flow_brands.html:10
 #: templates/profile/login_flow_featured.html:35
@@ -920,39 +927,39 @@ msgstr "+ Skapa look"
 msgid "Follow us"
 msgstr "Följ oss"
 
-#: templates/base.html:322
+#: templates/base.html:312
 msgid "Pinterest"
 msgstr ""
 
-#: templates/base.html:323
+#: templates/base.html:313
 msgid "E-mail newsletter"
 msgstr "E-post"
 
-#: templates/base.html:326
+#: templates/base.html:316
 msgid "Apprl"
 msgstr "Apprl"
 
-#: templates/base.html:328
+#: templates/base.html:318
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:329
+#: templates/base.html:319
 msgid "Privacy & Terms"
 msgstr "Användarvillkor"
 
-#: templates/base.html:330 templates/flatpages/default.html:26
+#: templates/base.html:320 templates/flatpages/default.html:26
 msgid "Cookies"
 msgstr "Cookies"
 
-#: templates/base.html:331
+#: templates/base.html:321
 msgid "Bloggers"
 msgstr "Bloggare"
 
-#: templates/base.html:343
+#: templates/base.html:333
 msgid "Become a partner blogger"
 msgstr "Bli partnerbloggare"
 
-#: templates/base.html:350
+#: templates/base.html:340
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr "Hej Apprl! Jag har en fråga / idé / klagomål / beröm"
 
@@ -2440,6 +2447,7 @@ msgstr ""
 "ändringen klicka på länken nedan:"
 
 #: templates/profile/confirm_email.html:8
+#: templates/registration/registration_activation_email.html:8
 msgid "/The Apprl team"
 msgstr "/The Apprl team"
 
@@ -2834,58 +2842,6 @@ msgstr "%(sender_name)s gillar din look %(object_title)s"
 msgid "%(brand_name)s %(product_name)s has been further reduced"
 msgstr "Priset på %(brand_name)s %(product_name)s har sänkts ytterligare"
 
-#: templates/registration/activate.html:8
-#: templates/registration/activation_complete.html:8
-msgid "Activate account"
-msgstr "Aktivera konto"
-
-#: templates/registration/activate.html:9
-#, python-format
-msgid ""
-"\n"
-"        The activation key %(activation_key)s is invalid or expired. Please "
-"sign up again.\n"
-"    "
-msgstr ""
-"\n"
-"        Aktiveringsnyckeln %(activation_key)s är felaktig eller har gått ut. "
-"Du måste registrera dig igen.\n"
-"    "
-
-#: templates/registration/activation_complete.html:9
-msgid ""
-"\n"
-"        Done! Your account at Apprl is now active.\n"
-"    "
-msgstr ""
-"\n"
-"        Klar! Ditt konto på Apprl är nu aktiverat.\n"
-"    "
-
-#: templates/registration/activation_complete.html:13
-msgid "Click <a href=\"/accounts/login/?next=/home/\">here to login</a>."
-msgstr "Klicka <a href=\"/accounts/login/\">här för att logga in</a>."
-
-#: templates/registration/activation_email.txt:9
-#, python-format
-msgid ""
-"Hi %(username)s,\n"
-"\n"
-"You have signed up for an account at Apprl. Please follow the link below to "
-"activate your account\n"
-"\n"
-"http://%(site)s/accounts/activate/%(activation_key)s\n"
-"\n"
-"Kind Regards,\n"
-"\n"
-"Apprl Support Team\n"
-"support@apprl.com\n"
-msgstr ""
-
-#: templates/registration/activation_email_subject.txt:2
-msgid "Activate your Apprl account"
-msgstr "Aktivera ditt Apprl-konto"
-
 #: templates/registration/login.html:8
 msgid "Login"
 msgstr "Logga in"
@@ -2914,29 +2870,29 @@ msgstr "Lösenordet är återställt"
 msgid "Your password has been set.  You may go ahead and log in now."
 msgstr "Ditt lösenord har sparats. Nu kan du logga in med ditt nya lösenord"
 
-#: templates/registration/password_reset_confirm.html:9
+#: templates/registration/password_reset_confirm.html:8
 msgid "Enter new password"
 msgstr "Ange nytt lösenord"
 
-#: templates/registration/password_reset_confirm.html:10
+#: templates/registration/password_reset_confirm.html:9
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
 msgstr ""
 "Ange ditt nya lösenord två gånger så att vi kan verifiera att det är korrekt."
 
-#: templates/registration/password_reset_confirm.html:18
+#: templates/registration/password_reset_confirm.html:14
 msgid "Password reset unsuccessful"
 msgstr "Kunde inte återställa lösenordet"
 
-#: templates/registration/password_reset_confirm.html:19
+#: templates/registration/password_reset_confirm.html:15
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used."
 msgstr ""
 "Återställningslänken är inte giltig, förmodligen har den redan använts."
 
-#: templates/registration/password_reset_confirm.html:19
+#: templates/registration/password_reset_confirm.html:15
 msgid "Please request a new password reset."
 msgstr "Begär en ny länk för att återställa lösenordet."
 
@@ -2981,21 +2937,40 @@ msgstr ""
 "Glömt ditt lösenord? Ange ditt lösenord här och vi skickar instruktioner för "
 "att ange ett nytt!"
 
-#: templates/registration/registration_complete.html:10
+#: templates/registration/registration_activation_email.html:5
+#, python-format
+msgid "Hi %(name)s,"
+msgstr "Hej %(name)s,"
+
+#: templates/registration/registration_activation_email.html:6
 msgid ""
-"\n"
-"        Thank you for signing up. An e-mail has been sent to you with an "
-"activation key. Once you've followed the link it contains, you may log in.\n"
-"    "
+"You have signed up for an account at Apprl. Please follow the link below to "
+"activate your account"
+msgstr "Du har registrerat ett konto hos Apprl. Var vänlig följ länken nedan för att aktivera det."
+
+#: templates/registration/registration_complete.html:8
+msgid "Thank you"
+msgstr "Tack"
+
+#: templates/registration/registration_complete.html:9
+msgid ""
+"Thank you for signing up. An e-mail has been sent to you with an activation "
+"key. Once you've followed the link it contains, you may log in."
 msgstr ""
-"\n"
-"        Tack för att du registrerat dig! Ett mejl har skickats till dig med "
-"en aktiveringsnyckel. När du följt länken i mejlet kan du logga in.\n"
-"    "
+"Tack för att du registrerat dig! Ett mejl har skickats till dig med "
+"en aktiveringsnyckel. När du följt länken i mejlet kan du logga in."
 
 #: templates/registration/registration_form.html:8
 msgid "Become a member"
 msgstr "Bli medlem "
+
+#: templates/registration/registration_invalid_activation.html:8
+msgid "Invalid activation key"
+msgstr "Ogiltig aktiveringsnyckel"
+
+#: templates/registration/registration_invalid_activation.html:9
+msgid "Could not activate account, the activation key is invalid."
+msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 
 #: templates/registration/fragments/registration_form.html:3
 msgid "Or sign up with e-mail:"
@@ -3017,6 +2992,32 @@ msgid ""
 msgstr ""
 "Genom att skapa ditt konto godkänner du våra <a class=\"underline\" target="
 "\"_blank\" href=\"%(tou)s\">Användarvillkor</a>."
+
+#~ msgid "Activate account"
+#~ msgstr "Aktivera konto"
+
+#~ msgid ""
+#~ "\n"
+#~ "        The activation key %(activation_key)s is invalid or expired. "
+#~ "Please sign up again.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Aktiveringsnyckeln %(activation_key)s är felaktig eller har gått "
+#~ "ut. Du måste registrera dig igen.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Done! Your account at Apprl is now active.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Klar! Ditt konto på Apprl är nu aktiverat.\n"
+#~ "    "
+
+#~ msgid "Click <a href=\"/accounts/login/?next=/home/\">here to login</a>."
+#~ msgstr "Klicka <a href=\"/accounts/login/\">här för att logga in</a>."
 
 #~ msgid "See your friends' favorite products"
 #~ msgstr "Se dina vänners favoritprodukter"
