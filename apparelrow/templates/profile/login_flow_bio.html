@@ -23,3 +23,14 @@
 {% endblock %}
 
 {% block login-flow-footer %}{% endblock %}
+
+{% block 'extra-scripts' %}
+<script type="text/javascript">
+    {% if request.user.facebook_user_id %}
+    _gaq.push(['_trackEvent', 'Membership', 'AccountCreated', 'Facebook']);
+    {% else %}
+    _gaq.push(['_trackEvent', 'Membership', 'AccountCreated', 'E-mail']);
+    {% endif %}
+</script>
+
+{% endblock %}

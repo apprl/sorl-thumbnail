@@ -62,8 +62,6 @@
     {% compressed_js 'apparel' %}
     <script type="text/javascript">
         window.login_function = function(callback) {
-            _gaq.push(['_trackEvent', 'Membership', 'Signup', 'Header']);
-
             FB.login(function(response) {
                 if(response.authResponse) {
                     data = {uid: response.authResponse.userID, access_token: response.authResponse.accessToken};
@@ -77,22 +75,6 @@
         };
 
         function facebookConnect(form){
-            var label = '';
-            if(form.parents('#footer').length) {
-                label = 'Footer';
-            } else if(form.parents('#header').length) {
-                label = 'Header';
-            } else if(form.parents('#panel').length) {
-                label = 'Socialize';
-            } else if(form.parents('.dialog').length) {
-                label = 'Dialog';
-            } else {
-                label = form.parent().attr('class') || 'Unknown';
-            }
-
-            // Track facebook connect clicks to GA
-            _gaq.push(['_trackEvent', 'Membership', 'Signup', label]);
-
             function handleResponse(response){
                 if (response.authResponse) {
                     jQuery('input[name="access_token"]', form).val(response.authResponse.accessToken);
