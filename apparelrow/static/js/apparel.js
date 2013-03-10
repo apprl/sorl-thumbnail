@@ -51,7 +51,7 @@ window.create_modal_dialog = function(header, messages, yes_action, no_action) {
  * Creates a dialog from html loaded through ajax, only alternativ is close
  */
 function create_html_dialog(url_to_html, close_callback) {
-    var dialog = jQuery('<div id="popup-slim" class="dialog"></div>');
+    var dialog = jQuery('<div id="popup-slim" class="dialog center"></div>');
 
     // TODO: replace overlay with something better... look editor popup dispatcher but global...
     dialog.load(url_to_html).appendTo('body').overlay({
