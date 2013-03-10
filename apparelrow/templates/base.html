@@ -271,7 +271,7 @@
         </div>
         {% endif %}
         {% endif %}
-        {% if not request.path == '/accounts/register/' %}
+        {% if not request.path|slice:"19" == '/accounts/register/' %}
         <div id="sticky-login-placeholder" style="display:none;"></div>
         <div id="sticky-login-bar">
             <div id="sticky-inner-login-bar">

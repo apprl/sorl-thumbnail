@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils.translation import ugettext_lazy as _, ugettext
 
 from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
@@ -525,19 +526,46 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            instance.is_active = False
+            instance.confirmation_key = uuid.uuid4().hex
+            instance.save()
 
-            # Log in direct
-            user = auth.authenticate(username=form.cleaned_data['username'],
-                                     password=form.cleaned_data['password1'])
-            if user and user.is_active:
-                auth.login(request, user)
+            # Send confirmation email
+            subject = _('Activate your Apprl account')
+            body = render_to_string('registration/registration_activation_email.html', {
+                    'name': instance.display_name,
+                    'link': request.build_absolute_uri(reverse('auth_register_activate', args=[instance.confirmation_key])),
+                })
+            send_email_confirm_task.delay(subject, body, instance.email)
 
-            return HttpResponseRedirect(reverse('profile.views.login_flow_bio'))
+            return HttpResponseRedirect(reverse('auth_register_complete'))
     else:
         form = RegisterForm()
 
     return render(request, 'registration/registration_form.html', {'form': form})
+
+
+def register_complete(request):
+    return render(request, 'registration/registration_complete.html')
+
+
+def register_activate(request, key):
+    try:
+        user = get_user_model().objects.get(confirmation_key=key)
+        user.is_active = True
+        user.confirmation_key = None
+        user.save()
+
+        # Send welcome email
+        subject = ugettext('Welcome to Apprl')
+        body = render_to_string('profile/email_welcome.html')
+        send_email_confirm_task.delay(subject, body, user.email)
+
+        return HttpResponseRedirect(reverse('auth_login'))
+    except get_user_model().DoesNotExist:
+        return render(request, 'registration/registration_invalid_activation.html')
+
 
 #
 # Login view

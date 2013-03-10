@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body-classes %}one-column accounts{% endblock body-classes %}
+{% block body %}
+
+<div id="content">
+    <h1>{% trans "Invalid activation key" %}</h1>
+    <p>{% trans "Could not activate account, the activation key is invalid." %}</p>
+</div>
+{% endblock %}

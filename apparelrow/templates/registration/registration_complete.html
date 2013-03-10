@@ -1,15 +1,11 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block body-classes %}one-column{% endblock body-classes %}
+{% block body-classes %}one-column accounts{% endblock body-classes %}
 {% block body %}
 
 <div id="content">
-    <h2>{% trans "Sign up" %}</h2>
-    <p>
-    {% blocktrans %}
-        Thank you for signing up. An e-mail has been sent to you with an activation key. Once you've followed the link it contains, you may log in.
-    {% endblocktrans %}
-    </p>
+    <h1>{% trans "Thank you" %}</h1>
+    <p>{% blocktrans %}Thank you for signing up. An e-mail has been sent to you with an activation key. Once you've followed the link it contains, you may log in.{% endblocktrans %}</p>
 </div>
 {% endblock %}

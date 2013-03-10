@@ -1,0 +1,10 @@
+{% load i18n %}
+<html>
+    <head></head>
+    <body>
+        <p>{% blocktrans %}Hi {{ name }},{% endblocktrans %}</p>
+        <p>{% trans "You have signed up for an account at Apprl. Please follow the link below to activate your account" %}</p>
+        <p><a href="{{ link }}">{{ link }}</a></p>
+        <p>{% trans "/The Apprl team" %}</p>
+    </body>
+</html>

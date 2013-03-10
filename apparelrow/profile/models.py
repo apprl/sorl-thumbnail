@@ -62,6 +62,7 @@ class User(AbstractUser):
     brand = models.OneToOneField('apparel.Brand', default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='user')
 
     # profile login flow
+    confirmation_key = models.CharField(max_length=32, null=True, blank=True, default=None)
     login_flow = models.CharField(_('Login flow'), max_length=20, choices=LOGIN_FLOW, null=False, blank=False, default='bio')
 
     # newsletter settings
@@ -545,7 +546,8 @@ def post_save_user_create(signal, instance, **kwargs):
     Update slug and send welcome email if a new user was created.
     """
     if kwargs['created']:
-        if instance.email:
+        # Send welcome email if facebook user and has email
+        if instance.email and instance.facebook_user_id:
             subject = ugettext('Welcome to Apprl')
             body = render_to_string('profile/email_welcome.html')
             send_email_confirm_task.delay(subject, body, instance.email)
