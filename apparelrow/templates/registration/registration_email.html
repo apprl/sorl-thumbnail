@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n apparel_extras %}
+
+{% block body-classes %}one-column accounts{% endblock body-classes %}
+{% block body %}
+
+<div id="content">
+    <h1>{% trans "Become a member" %}</h1>
+    <form action="{% url 'auth_register_email' %}" method="post" class="standard-form">
+        {% csrf_token %}
+        <ul>
+            <li>
+                {{ form.name.label_tag }}
+                {{ form.name }}
+                {{ form.name.errors }}
+            </li>
+            <li>
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {{ form.username.errors }}
+            </li>
+            <li>
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {{ form.email.errors }}
+            </li>
+            <li>
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+                {{ form.password1.errors }}
+            </li>
+            <li>
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                {{ form.password2.errors }}
+            </li>
+            <li class="gender">
+                {{ form.gender.label_tag }}
+                {{ form.gender }}
+                {{ form.gender.errors }}
+            </li>
+            <li>
+                <button class="btn btn-upper" type="submit">{% trans "Sign up" %}</button>
+            </li>
+        </ul>
+    </form>
+    {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
+    <p>{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
+</div>
+
+{% endblock %}

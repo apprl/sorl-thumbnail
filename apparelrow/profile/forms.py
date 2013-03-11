@@ -119,11 +119,13 @@ class PartnerSettingsForm(ModelForm):
 
 
 class RegisterForm(UserCreationForm):
+    name = CharField(label=_('Name'), required=True)
     email = EmailField(label=_('E-mail address'), required=True)
+    gender = ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=RadioSelect, label='Gender')
 
     class Meta:
         model = get_user_model()
-        fields = ('username', 'email')
+        fields = ('name', 'username', 'email', 'gender')
 
     def clean_username(self):
         # Since get_user_model().username is unique, this check is redundant,

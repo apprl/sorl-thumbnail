@@ -523,6 +523,9 @@ def login_flow_complete(request, profile):
 #
 
 def register(request):
+    return render(request, 'registration/registration.html')
+
+def register_email(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
@@ -543,7 +546,7 @@ def register(request):
     else:
         form = RegisterForm()
 
-    return render(request, 'registration/registration_form.html', {'form': form})
+    return render(request, 'registration/registration_email.html', {'form': form})
 
 
 def register_complete(request):
