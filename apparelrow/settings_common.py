@@ -150,7 +150,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'profile.middleware.ImpersonateMiddleware',
-    'profile.middleware.LoginFlowMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
