@@ -526,7 +526,12 @@ def register_activate(request, key):
         body = render_to_string('profile/email_welcome.html')
         send_email_confirm_task.delay(subject, body, user.email)
 
-        return HttpResponseRedirect(reverse('auth_login'))
+        auth.login(user)
+
+        response = HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (user.login_flow)))
+        response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
+        return response
+
     except get_user_model().DoesNotExist:
         return render(request, 'registration/registration_invalid_activation.html')
 
