@@ -2,7 +2,7 @@
 import random
 import string
 
-from django.forms import ModelForm, EmailField, BooleanField, CharField, ChoiceField, ValidationError
+from django.forms import Form, ModelForm, EmailField, BooleanField, CharField, ChoiceField, ValidationError
 from django.forms.widgets import RadioSelect, FileInput, Textarea
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
@@ -141,4 +141,16 @@ class RegisterForm(UserCreationForm):
             get_user_model()._default_manager.get(email=email)
         except get_user_model().DoesNotExist:
             return email
-        raise ValidationError(_('A user with that email already exists.'))
+        raise ValidationError(_('A user with that e-mail already exists.'))
+
+class RegisterCompleteForm(Form):
+    email = EmailField(label=_('E-mail address'), required=True)
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            get_user_model()._default_manager.get(email=email, is_active=False)
+        except get_user_model().DoesNotExist:
+            raise ValidationError(_('E-mail does not exist or account is already confirmed.'))
+
+        return email

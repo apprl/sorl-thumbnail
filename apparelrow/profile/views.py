@@ -20,7 +20,7 @@ from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
 from apparel.tasks import facebook_push_graph
 from profile.utils import get_facebook_user, get_current_user
-from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm
+from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
 from profile.models import EmailChange, Follow, PaymentDetail
 from profile.tasks import send_email_confirm_task
 from profile.decorators import avatar_change, login_flow
@@ -547,7 +547,32 @@ def register(request):
 
 
 def register_complete(request):
-    return render(request, 'registration/registration_complete.html')
+    if request.method == 'POST':
+        form = RegisterCompleteForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                instance = get_user_model()._default_manager.get(email=email, is_active=False)
+                instance.confirmation_key = uuid.uuid4().hex
+                instance.save()
+
+                # Send confirmation email
+                subject = _('Activate your Apprl account')
+                body = render_to_string('registration/registration_activation_email.html', {
+                        'name': instance.display_name,
+                        'link': request.build_absolute_uri(reverse('auth_register_activate', args=[instance.confirmation_key])),
+                })
+                send_email_confirm_task.delay(subject, body, instance.email)
+
+                return HttpResponseRedirect('%s?sent=1' % (reverse('auth_register_complete'),))
+
+            except get_user_model().DoesNotExist:
+                pass
+
+    else:
+        form = RegisterCompleteForm()
+
+    return render(request, 'registration/registration_complete.html', {'form': form})
 
 
 def register_activate(request, key):

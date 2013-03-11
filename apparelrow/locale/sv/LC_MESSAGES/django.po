@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-10 18:01+0100\n"
+"POT-Creation-Date: 2013-03-11 11:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -394,8 +394,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
-#: apparel_comments/__init__.py:6 profile/forms.py:122
-#: templates/registration/fragments/registration_form.html:13
+#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:147
 msgid "E-mail address"
 msgstr "E-postadress"
 
@@ -633,8 +632,12 @@ msgid "http://"
 msgstr "http://"
 
 #: profile/forms.py:144
-msgid "A user with that email already exists."
-msgstr ""
+msgid "A user with that e-mail already exists."
+msgstr "En användare med den e-postadressen existerar redan."
+
+#: profile/forms.py:154
+msgid "E-mail does not exist or account is already confirmed."
+msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 
 #: profile/models.py:30 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
@@ -738,11 +741,11 @@ msgstr "Postkod"
 msgid "City"
 msgstr "Postadress"
 
-#: profile/models.py:551 profile/views.py:561
+#: profile/models.py:551 profile/views.py:586
 msgid "Welcome to Apprl"
 msgstr "Välkommen till Apprl"
 
-#: profile/views.py:535
+#: profile/views.py:535 profile/views.py:560
 msgid "Activate your Apprl account"
 msgstr "Aktivera ditt Apprl-konto"
 
@@ -855,7 +858,7 @@ msgstr "Följ dina vänner, varumärken & bloggare"
 
 #: templates/base.html:250 templates/base.html.py:266 templates/base.html:297
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
-#: templates/apparel/user_list.html:53 templates/registration/login.html:16
+#: templates/apparel/user_list.html:53 templates/registration/login.html:35
 #: templates/registration/fragments/registration_form.html:28
 msgid "Sign up"
 msgstr "Bli medlem"
@@ -2429,7 +2432,6 @@ msgstr "E-postadress"
 
 #: templates/profile/base_settings.html:26
 #: templates/profile/settings_password.html:6
-#: templates/registration/fragments/registration_form.html:18
 msgid "Password"
 msgstr "Lösenord"
 
@@ -2842,7 +2844,7 @@ msgstr "%(sender_name)s gillar din look %(object_title)s"
 msgid "%(brand_name)s %(product_name)s has been further reduced"
 msgstr "Priset på %(brand_name)s %(product_name)s har sänkts ytterligare"
 
-#: templates/registration/login.html:8
+#: templates/registration/login.html:8 templates/registration/login.html:30
 msgid "Login"
 msgstr "Logga in"
 
@@ -2850,13 +2852,13 @@ msgstr "Logga in"
 msgid "Or:"
 msgstr "Eller:"
 
-#: templates/registration/login.html:15
-msgid "Forgot password?"
-msgstr "Glömt lösenord?"
-
-#: templates/registration/login.html:18
+#: templates/registration/login.html:26
 msgid "Your username and password did not match. Please try again."
 msgstr "Fel användarnamn eller lösenord. Försök igen."
+
+#: templates/registration/login.html:34
+msgid "Forgot password?"
+msgstr "Glömt lösenord?"
 
 #: templates/registration/logout.html:9
 msgid "You have logged out"
@@ -2946,19 +2948,39 @@ msgstr "Hej %(name)s,"
 msgid ""
 "You have signed up for an account at Apprl. Please follow the link below to "
 "activate your account"
-msgstr "Du har registrerat ett konto hos Apprl. Var vänlig följ länken nedan för att aktivera det."
+msgstr ""
+"Du har registrerat ett konto hos Apprl. Var vänlig följ länken nedan för att "
+"aktivera det."
 
 #: templates/registration/registration_complete.html:8
-msgid "Thank you"
-msgstr "Tack"
+msgid "Check your e-mail!"
+msgstr "Kolla din e-mail!"
 
 #: templates/registration/registration_complete.html:9
 msgid ""
-"Thank you for signing up. An e-mail has been sent to you with an activation "
-"key. Once you've followed the link it contains, you may log in."
-msgstr ""
-"Tack för att du registrerat dig! Ett mejl har skickats till dig med "
-"en aktiveringsnyckel. När du följt länken i mejlet kan du logga in."
+"We have sent an e-mail to you. To complete your signup, open that e-mail and "
+"click the link."
+msgstr "Vi har skickat ett e-mail till dig, öppna mailet och klicka på länken."
+
+#: templates/registration/registration_complete.html:10
+msgid "If you can't find the confirmation e-mail:"
+msgstr "Om du inte hittar något e-mail:"
+
+#: templates/registration/registration_complete.html:12
+msgid "Check your spam/junk mail folder."
+msgstr "Kolla din spam/skräp-mapp."
+
+#: templates/registration/registration_complete.html:13
+msgid "Send e-mail again:"
+msgstr "Skicka ut ett nytt e-mail:"
+
+#: templates/registration/registration_complete.html:19
+msgid "Send e-mail again"
+msgstr "Skicka e-mail igen"
+
+#: templates/registration/registration_complete.html:23
+msgid "E-mail sent."
+msgstr "E-postmeddelande skickat."
 
 #: templates/registration/registration_form.html:8
 msgid "Become a member"
@@ -2976,14 +2998,6 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 msgid "Or sign up with e-mail:"
 msgstr "Eller skapa ett konto med din e-postadress:"
 
-#: templates/registration/fragments/registration_form.html:8
-msgid "Username"
-msgstr "Användarnamn"
-
-#: templates/registration/fragments/registration_form.html:23
-msgid "Password confirmation"
-msgstr "Lösenordsbekräftelse"
-
 #: templates/registration/fragments/registration_form.html:33
 #, python-format
 msgid ""
@@ -2992,6 +3006,22 @@ msgid ""
 msgstr ""
 "Genom att skapa ditt konto godkänner du våra <a class=\"underline\" target="
 "\"_blank\" href=\"%(tou)s\">Användarvillkor</a>."
+
+#~ msgid "Thank you"
+#~ msgstr "Tack"
+
+#~ msgid ""
+#~ "Thank you for signing up. An e-mail has been sent to you with an "
+#~ "activation key. Once you've followed the link it contains, you may log in."
+#~ msgstr ""
+#~ "Tack för att du registrerat dig! Ett mejl har skickats till dig med en "
+#~ "aktiveringsnyckel. När du följt länken i mejlet kan du logga in."
+
+#~ msgid "Username"
+#~ msgstr "Användarnamn"
+
+#~ msgid "Password confirmation"
+#~ msgstr "Lösenordsbekräftelse"
 
 #~ msgid "Activate account"
 #~ msgstr "Aktivera konto"

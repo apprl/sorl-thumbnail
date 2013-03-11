@@ -5,7 +5,22 @@
 {% block body %}
 
 <div id="content">
-    <h1>{% trans "Thank you" %}</h1>
-    <p>{% blocktrans %}Thank you for signing up. An e-mail has been sent to you with an activation key. Once you've followed the link it contains, you may log in.{% endblocktrans %}</p>
+    <h1>{% trans "Check your e-mail!" %}</h1>
+    <p>{% trans "We have sent an e-mail to you. To complete your signup, open that e-mail and click the link." %}</p>
+    <p>{% trans "If you can't find the confirmation e-mail:" %}</p>
+    <ol>
+        <li>{% trans "Check your spam/junk mail folder." %}</li>
+        <li>{% trans "Send e-mail again:" %}</li>
+    </ol>
+    <form action="{% url 'auth_register_complete' %}" method="post" class="standard-form">
+        {% csrf_token %}
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        <button class="btn btn-upper btn-small" type="submit">{% trans "Send e-mail again" %}</button>
+        {{ form.email.errors }}
+    </form>
+    {% if request.GET.sent %}
+    <p class="success">{% trans "E-mail sent." %}</p>
+    {% endif %}
 </div>
 {% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-10 18:01+0100\n"
+"POT-Creation-Date: 2013-03-11 11:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -393,8 +393,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr ""
 
-#: apparel_comments/__init__.py:6 profile/forms.py:122
-#: templates/registration/fragments/registration_form.html:13
+#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:147
 msgid "E-mail address"
 msgstr ""
 
@@ -630,7 +629,11 @@ msgid "http://"
 msgstr ""
 
 #: profile/forms.py:144
-msgid "A user with that email already exists."
+msgid "A user with that e-mail already exists."
+msgstr ""
+
+#: profile/forms.py:154
+msgid "E-mail does not exist or account is already confirmed."
 msgstr ""
 
 #: profile/models.py:30 templates/apparel/user_list.html:38
@@ -735,11 +738,11 @@ msgstr ""
 msgid "City"
 msgstr ""
 
-#: profile/models.py:551 profile/views.py:561
+#: profile/models.py:551 profile/views.py:586
 msgid "Welcome to Apprl"
 msgstr ""
 
-#: profile/views.py:535
+#: profile/views.py:535 profile/views.py:560
 msgid "Activate your Apprl account"
 msgstr ""
 
@@ -852,7 +855,7 @@ msgstr ""
 
 #: templates/base.html:250 templates/base.html.py:266 templates/base.html:297
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
-#: templates/apparel/user_list.html:53 templates/registration/login.html:16
+#: templates/apparel/user_list.html:53 templates/registration/login.html:35
 #: templates/registration/fragments/registration_form.html:28
 msgid "Sign up"
 msgstr ""
@@ -2327,7 +2330,6 @@ msgstr ""
 
 #: templates/profile/base_settings.html:26
 #: templates/profile/settings_password.html:6
-#: templates/registration/fragments/registration_form.html:18
 msgid "Password"
 msgstr ""
 
@@ -2709,7 +2711,7 @@ msgstr ""
 msgid "%(brand_name)s %(product_name)s has been further reduced"
 msgstr ""
 
-#: templates/registration/login.html:8
+#: templates/registration/login.html:8 templates/registration/login.html:30
 msgid "Login"
 msgstr ""
 
@@ -2717,12 +2719,12 @@ msgstr ""
 msgid "Or:"
 msgstr ""
 
-#: templates/registration/login.html:15
-msgid "Forgot password?"
+#: templates/registration/login.html:26
+msgid "Your username and password did not match. Please try again."
 msgstr ""
 
-#: templates/registration/login.html:18
-msgid "Your username and password did not match. Please try again."
+#: templates/registration/login.html:34
+msgid "Forgot password?"
 msgstr ""
 
 #: templates/registration/logout.html:9
@@ -2810,13 +2812,33 @@ msgid ""
 msgstr ""
 
 #: templates/registration/registration_complete.html:8
-msgid "Thank you"
+msgid "Check your e-mail!"
 msgstr ""
 
 #: templates/registration/registration_complete.html:9
 msgid ""
-"Thank you for signing up. An e-mail has been sent to you with an activation "
-"key. Once you've followed the link it contains, you may log in."
+"We have sent an e-mail to you. To complete your signup, open that e-mail and "
+"click the link."
+msgstr ""
+
+#: templates/registration/registration_complete.html:10
+msgid "If you can't find the confirmation e-mail:"
+msgstr ""
+
+#: templates/registration/registration_complete.html:12
+msgid "Check your spam/junk mail folder."
+msgstr ""
+
+#: templates/registration/registration_complete.html:13
+msgid "Send e-mail again:"
+msgstr ""
+
+#: templates/registration/registration_complete.html:19
+msgid "Send e-mail again"
+msgstr ""
+
+#: templates/registration/registration_complete.html:23
+msgid "E-mail sent."
 msgstr ""
 
 #: templates/registration/registration_form.html:8
@@ -2833,14 +2855,6 @@ msgstr ""
 
 #: templates/registration/fragments/registration_form.html:3
 msgid "Or sign up with e-mail:"
-msgstr ""
-
-#: templates/registration/fragments/registration_form.html:8
-msgid "Username"
-msgstr ""
-
-#: templates/registration/fragments/registration_form.html:23
-msgid "Password confirmation"
 msgstr ""
 
 #: templates/registration/fragments/registration_form.html:33
