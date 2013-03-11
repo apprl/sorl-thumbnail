@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-11 13:27+0100\n"
+"POT-Creation-Date: 2013-03-11 17:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -738,11 +738,19 @@ msgstr ""
 msgid "City"
 msgstr ""
 
-#: profile/models.py:549 profile/views.py:525
+#: profile/models.py:549 profile/views.py:533
 msgid "Welcome to Apprl"
 msgstr ""
 
-#: profile/views.py:463
+#: profile/views.py:230
+msgid "Password was updated"
+msgstr ""
+
+#: profile/views.py:232
+msgid "Password was added"
+msgstr ""
+
+#: profile/views.py:471
 msgid "Nearly created your membership..."
 msgstr ""
 
@@ -2534,7 +2542,15 @@ msgid "Your payment settings"
 msgstr ""
 
 #: templates/profile/settings_password.html:7
-msgid "Change your password"
+msgid "Your username: "
+msgstr ""
+
+#: templates/profile/settings_password.html:9
+msgid "Change your password:"
+msgstr ""
+
+#: templates/profile/settings_password.html:11
+msgid "Add a password to your account:"
 msgstr ""
 
 #: templates/profile/fragments/follow_profile.html:8
