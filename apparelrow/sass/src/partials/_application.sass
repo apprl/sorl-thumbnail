@@ -1496,20 +1496,44 @@ a h2
 // Account related templates
 //
 body.accounts
-  h1
-    font-size: 2em
-    margin: 1em 0
   #content
+    width: 660px
+    padding: 0 140px
+    text-align: center
+    form
+      padding-bottom: 1em
+      ul li label
+        text-align: left
+        display: inline-block
+        float: none
+        width: 150px
+      .gender
+        ul
+          display: inline-block
+          width: 123px
+          text-align: left
+          padding-left: 5px
+          li
+            display: inline-block
+            label
+              width: auto
+    h1
+      font-size: 2em
+      margin: 1em 0
+      padding-bottom: 1em
+      border-bottom: 3px solid black
     p
       font-size: 1.1em
-      margin-bottom: 10px
+      padding-bottom: 1em
     ol
       list-style: decimal
+      list-style-position: inside
       font-size: 1.1em
       margin-left: 20px
       margin-bottom: 10px
       li
         list-style: decimal
+        list-style-position: inside
     .errorlist
       color: $error_color
     .success
