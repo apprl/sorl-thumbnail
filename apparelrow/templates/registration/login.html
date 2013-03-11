@@ -14,13 +14,13 @@
         <input type="hidden" name="next" value="{% url 'profile-likes' %}">
         <ul>
             <li>
-                <label for="id_username">{% trans "Username" %}</label>
-                <input id="id_username" name="username" type="text" />
+                {{ form.username.label_tag }}
+                {{ form.username }}
                 {{ form.username.errors }}
             </li>
             <li>
-                <label for="id_password">{% trans "Password" %}</label>
-                <input id="id_password" name="password" type="password" />
+                {{ form.password.label_tag }}
+                {{ form.password }}
                 {{ form.password.errors }}
                 {% if form.errors %}
                 <ul class="errorlist"><li>{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</li></ul>
