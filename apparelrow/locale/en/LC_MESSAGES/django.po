@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-11 11:10+0100\n"
+"POT-Creation-Date: 2013-03-11 12:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -242,7 +242,7 @@ msgstr ""
 msgid "category"
 msgstr ""
 
-#: apparel/models.py:437 profile/forms.py:100
+#: apparel/models.py:437 profile/forms.py:100 profile/forms.py:122
 msgid "Name"
 msgstr ""
 
@@ -393,7 +393,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr ""
 
-#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:147
+#: apparel_comments/__init__.py:6 profile/forms.py:123 profile/forms.py:149
 msgid "E-mail address"
 msgstr ""
 
@@ -566,11 +566,11 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: profile/forms.py:30
+#: profile/forms.py:30 profile/forms.py:124
 msgid "Man"
 msgstr ""
 
-#: profile/forms.py:30
+#: profile/forms.py:30 profile/forms.py:124
 msgid "Woman"
 msgstr ""
 
@@ -628,11 +628,11 @@ msgstr ""
 msgid "http://"
 msgstr ""
 
-#: profile/forms.py:144
+#: profile/forms.py:146
 msgid "A user with that e-mail already exists."
 msgstr ""
 
-#: profile/forms.py:154
+#: profile/forms.py:156
 msgid "E-mail does not exist or account is already confirmed."
 msgstr ""
 
@@ -738,12 +738,12 @@ msgstr ""
 msgid "City"
 msgstr ""
 
-#: profile/models.py:551 profile/views.py:586
+#: profile/models.py:551 profile/views.py:588
 msgid "Welcome to Apprl"
 msgstr ""
 
-#: profile/views.py:535 profile/views.py:560
-msgid "Activate your Apprl account"
+#: profile/views.py:526
+msgid "Nearly created your membership..."
 msgstr ""
 
 #: statistics/models.py:37 statistics/models.py:38
@@ -856,7 +856,7 @@ msgstr ""
 #: templates/base.html:250 templates/base.html.py:266 templates/base.html:297
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
 #: templates/apparel/user_list.html:53 templates/registration/login.html:35
-#: templates/registration/fragments/registration_form.html:28
+#: templates/registration/registration_email.html:43
 msgid "Sign up"
 msgstr ""
 
@@ -2800,15 +2800,14 @@ msgid ""
 "new one."
 msgstr ""
 
-#: templates/registration/registration_activation_email.html:5
-#, python-format
-msgid "Hi %(name)s,"
+#: templates/registration/registration.html:8
+#: templates/registration/registration_email.html:8
+msgid "Become a member"
 msgstr ""
 
 #: templates/registration/registration_activation_email.html:6
 msgid ""
-"You have signed up for an account at Apprl. Please follow the link below to "
-"activate your account"
+"Just click this link to verify your e-mail address and start using Apprl: "
 msgstr ""
 
 #: templates/registration/registration_complete.html:8
@@ -2841,8 +2840,12 @@ msgstr ""
 msgid "E-mail sent."
 msgstr ""
 
-#: templates/registration/registration_form.html:8
-msgid "Become a member"
+#: templates/registration/registration_email.html:48
+#: templates/registration/fragments/registration.html:5
+#, python-format
+msgid ""
+"By signing up you are agreeing to our <a class=\"underline\" target=\"_blank"
+"\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
 msgstr ""
 
 #: templates/registration/registration_invalid_activation.html:8
@@ -2853,15 +2856,12 @@ msgstr ""
 msgid "Could not activate account, the activation key is invalid."
 msgstr ""
 
-#: templates/registration/fragments/registration_form.html:3
-msgid "Or sign up with e-mail:"
+#: templates/registration/fragments/registration.html:3
+msgid "Or sign up with "
 msgstr ""
 
-#: templates/registration/fragments/registration_form.html:33
-#, python-format
-msgid ""
-"By signing up you are agreeing to our <a class=\"underline\" target=\"_blank"
-"\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
+#: templates/registration/fragments/registration.html:3
+msgid "e-mail"
 msgstr ""
 
 #~ msgid "Swe"

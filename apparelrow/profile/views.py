@@ -522,6 +522,15 @@ def login_flow_complete(request, profile):
 # Register view
 #
 
+def send_confirmation_email(instance):
+    subject = _('Nearly created your membership...')
+    body = render_to_string('registration/registration_activation_email.html', {
+            'name': instance.display_name,
+            'link': request.build_absolute_uri(reverse('auth_register_activate', args=[instance.confirmation_key])),
+        })
+    send_email_confirm_task.delay(subject, body, instance.email)
+
+
 def register(request):
     return render(request, 'registration/registration.html')
 
@@ -535,12 +544,7 @@ def register_email(request):
             instance.save()
 
             # Send confirmation email
-            subject = _('Activate your Apprl account')
-            body = render_to_string('registration/registration_activation_email.html', {
-                    'name': instance.display_name,
-                    'link': request.build_absolute_uri(reverse('auth_register_activate', args=[instance.confirmation_key])),
-                })
-            send_email_confirm_task.delay(subject, body, instance.email)
+            send_confirmation_email(instance)
 
             return HttpResponseRedirect(reverse('auth_register_complete'))
     else:
@@ -560,12 +564,7 @@ def register_complete(request):
                 instance.save()
 
                 # Send confirmation email
-                subject = _('Activate your Apprl account')
-                body = render_to_string('registration/registration_activation_email.html', {
-                        'name': instance.display_name,
-                        'link': request.build_absolute_uri(reverse('auth_register_activate', args=[instance.confirmation_key])),
-                })
-                send_email_confirm_task.delay(subject, body, instance.email)
+                send_confirmation_email(instance)
 
                 return HttpResponseRedirect('%s?sent=1' % (reverse('auth_register_complete'),))
 

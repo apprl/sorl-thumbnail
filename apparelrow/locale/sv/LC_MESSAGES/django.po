@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-11 11:10+0100\n"
+"POT-Creation-Date: 2013-03-11 12:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -243,7 +243,7 @@ msgstr "I lager"
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:437 profile/forms.py:100
+#: apparel/models.py:437 profile/forms.py:100 profile/forms.py:122
 msgid "Name"
 msgstr "Namn"
 
@@ -394,7 +394,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
-#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:147
+#: apparel_comments/__init__.py:6 profile/forms.py:123 profile/forms.py:149
 msgid "E-mail address"
 msgstr "E-postadress"
 
@@ -567,11 +567,11 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: profile/forms.py:30
+#: profile/forms.py:30 profile/forms.py:124
 msgid "Man"
 msgstr "Man"
 
-#: profile/forms.py:30
+#: profile/forms.py:30 profile/forms.py:124
 msgid "Woman"
 msgstr "Kvinna"
 
@@ -631,11 +631,11 @@ msgstr "Bankkontonummer"
 msgid "http://"
 msgstr "http://"
 
-#: profile/forms.py:144
+#: profile/forms.py:146
 msgid "A user with that e-mail already exists."
 msgstr "En användare med den e-postadressen existerar redan."
 
-#: profile/forms.py:154
+#: profile/forms.py:156
 msgid "E-mail does not exist or account is already confirmed."
 msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 
@@ -741,13 +741,13 @@ msgstr "Postkod"
 msgid "City"
 msgstr "Postadress"
 
-#: profile/models.py:551 profile/views.py:586
+#: profile/models.py:551 profile/views.py:588
 msgid "Welcome to Apprl"
 msgstr "Välkommen till Apprl"
 
-#: profile/views.py:535 profile/views.py:560
-msgid "Activate your Apprl account"
-msgstr "Aktivera ditt Apprl-konto"
+#: profile/views.py:526
+msgid "Nearly created your membership..."
+msgstr "Ditt medlemskap är nästan klart..."
 
 #: statistics/models.py:37 statistics/models.py:38
 msgid "Product clicks"
@@ -859,7 +859,7 @@ msgstr "Följ dina vänner, varumärken & bloggare"
 #: templates/base.html:250 templates/base.html.py:266 templates/base.html:297
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
 #: templates/apparel/user_list.html:53 templates/registration/login.html:35
-#: templates/registration/fragments/registration_form.html:28
+#: templates/registration/registration_email.html:43
 msgid "Sign up"
 msgstr "Bli medlem"
 
@@ -2939,18 +2939,15 @@ msgstr ""
 "Glömt ditt lösenord? Ange ditt lösenord här och vi skickar instruktioner för "
 "att ange ett nytt!"
 
-#: templates/registration/registration_activation_email.html:5
-#, python-format
-msgid "Hi %(name)s,"
-msgstr "Hej %(name)s,"
+#: templates/registration/registration.html:8
+#: templates/registration/registration_email.html:8
+msgid "Become a member"
+msgstr "Bli medlem "
 
 #: templates/registration/registration_activation_email.html:6
 msgid ""
-"You have signed up for an account at Apprl. Please follow the link below to "
-"activate your account"
-msgstr ""
-"Du har registrerat ett konto hos Apprl. Var vänlig följ länken nedan för att "
-"aktivera det."
+"Just click this link to verify your e-mail address and start using Apprl: "
+msgstr "Klicka på den här länken för att verifiera din e-postadress:"
 
 #: templates/registration/registration_complete.html:8
 msgid "Check your e-mail!"
@@ -2982,9 +2979,15 @@ msgstr "Skicka e-mail igen"
 msgid "E-mail sent."
 msgstr "E-postmeddelande skickat."
 
-#: templates/registration/registration_form.html:8
-msgid "Become a member"
-msgstr "Bli medlem "
+#: templates/registration/registration_email.html:48
+#: templates/registration/fragments/registration.html:5
+#, python-format
+msgid ""
+"By signing up you are agreeing to our <a class=\"underline\" target=\"_blank"
+"\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
+msgstr ""
+"Genom att skapa ditt konto godkänner du våra <a class=\"underline\" target="
+"\"_blank\" href=\"%(tou)s\">Användarvillkor</a>."
 
 #: templates/registration/registration_invalid_activation.html:8
 msgid "Invalid activation key"
@@ -2994,18 +2997,26 @@ msgstr "Ogiltig aktiveringsnyckel"
 msgid "Could not activate account, the activation key is invalid."
 msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 
-#: templates/registration/fragments/registration_form.html:3
-msgid "Or sign up with e-mail:"
-msgstr "Eller skapa ett konto med din e-postadress:"
+#: templates/registration/fragments/registration.html:3
+msgid "Or sign up with "
+msgstr "Eller skapa ett konto med "
 
-#: templates/registration/fragments/registration_form.html:33
-#, python-format
-msgid ""
-"By signing up you are agreeing to our <a class=\"underline\" target=\"_blank"
-"\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
-msgstr ""
-"Genom att skapa ditt konto godkänner du våra <a class=\"underline\" target="
-"\"_blank\" href=\"%(tou)s\">Användarvillkor</a>."
+#: templates/registration/fragments/registration.html:3
+msgid "e-mail"
+msgstr "din e-postadress"
+
+#~ msgid "Activate your Apprl account"
+#~ msgstr "Aktivera ditt Apprl-konto"
+
+#~ msgid "Hi %(name)s,"
+#~ msgstr "Hej %(name)s,"
+
+#~ msgid ""
+#~ "You have signed up for an account at Apprl. Please follow the link below "
+#~ "to activate your account"
+#~ msgstr ""
+#~ "Du har registrerat ett konto hos Apprl. Var vänlig följ länken nedan för "
+#~ "att aktivera det."
 
 #~ msgid "Thank you"
 #~ msgstr "Tack"
