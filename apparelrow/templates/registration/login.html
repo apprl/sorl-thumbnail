@@ -11,7 +11,7 @@
     <p>{% trans "Or:" %}</p>
     <form action="{% url 'auth_login' %}" method="post" class="standard-form">
         {% csrf_token %}
-        <input type="hidden" name="next" value="{% url 'profile-likes' %}">
+        <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}">
         <ul>
             <li>
                 {{ form.username.label_tag }}

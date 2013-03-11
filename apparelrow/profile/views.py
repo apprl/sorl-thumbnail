@@ -556,7 +556,19 @@ def _get_next(request):
         return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
 
-def login(request):
+def flow(request):
+    if request.user.login_flow != 'complete':
+        url = reverse('profile.views.login_flow_%s' % (request.user.login_flow))
+        response = HttpResponseRedirect(url)
+        response.set_cookie(settings.APPAREL_GENDER_COOKIE,
+                            value=request.user.gender,
+                            max_age=365 * 24 * 60 * 60)
+        return response
+
+    return HttpResponseRedirect(reverse('profile-likes'))
+
+
+def facebook_login(request):
     if request.POST:
         access_token = request.POST.get('access_token', '')
         uid = request.POST.get('uid', '')

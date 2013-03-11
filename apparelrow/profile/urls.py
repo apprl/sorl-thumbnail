@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
+    url(r'^flow/$', 'profile.views.flow', name='login-flow-redirect'),
     (r'^settings/$', 'profile.views.settings_notification'),
     (r'^settings/notification/$', 'profile.views.settings_notification'),
     (r'^settings/email/$', 'profile.views.settings_email'),
