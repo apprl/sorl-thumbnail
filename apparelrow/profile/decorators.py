@@ -32,7 +32,7 @@ def avatar_change(view_func):
             if profile != request.user:
                 return HttpResponseForbidden()
 
-            if request.POST.get('change_image_form') or request.POST.get('change_about_form.html'):
+            if request.POST.get('change_image_form') or request.POST.get('change_about_form'):
                 success = False
 
                 image_form = ProfileImageForm(request.POST, request.FILES, instance=profile)
