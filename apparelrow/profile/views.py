@@ -459,7 +459,7 @@ def login_flow_complete(request, profile):
 # Register view
 #
 
-def send_confirmation_email(instance):
+def send_confirmation_email(request, instance):
     subject = _('Nearly created your membership...')
     body = render_to_string('registration/registration_activation_email.html', {
             'name': instance.display_name,
@@ -481,7 +481,7 @@ def register_email(request):
             instance.save()
 
             # Send confirmation email
-            send_confirmation_email(instance)
+            send_confirmation_email(request, instance)
 
             return HttpResponseRedirect(reverse('auth_register_complete'))
     else:
@@ -501,7 +501,7 @@ def register_complete(request):
                 instance.save()
 
                 # Send confirmation email
-                send_confirmation_email(instance)
+                send_confirmation_email(request, instance)
 
                 return HttpResponseRedirect('%s?sent=1' % (reverse('auth_register_complete'),))
 
