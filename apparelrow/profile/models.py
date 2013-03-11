@@ -39,11 +39,9 @@ GENDERS = ( ('M', 'Men'),
             ('W', 'Women'))
 
 LOGIN_FLOW = (
-    ('bio', 'Bio'),
     ('friends', 'Friends'),
     ('featured', 'Featured'),
     ('brands', 'Brands'),
-    ('like', 'Like'),
     ('complete', 'Complete'),
 )
 
@@ -63,7 +61,7 @@ class User(AbstractUser):
 
     # profile login flow
     confirmation_key = models.CharField(max_length=32, null=True, blank=True, default=None)
-    login_flow = models.CharField(_('Login flow'), max_length=20, choices=LOGIN_FLOW, null=False, blank=False, default='bio')
+    login_flow = models.CharField(_('Login flow'), max_length=20, choices=LOGIN_FLOW, null=False, blank=False, default='friends')
 
     # newsletter settings
     newsletter = models.BooleanField(default=True, blank=False, null=False, help_text=_('Participating in newsletter'))

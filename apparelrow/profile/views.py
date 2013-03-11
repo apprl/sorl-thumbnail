@@ -355,56 +355,9 @@ def settings_partner(request):
 @get_current_user
 @login_flow
 @avatar_change
-def login_flow_bio(request, profile, forms):
-    """
-    Step 1: Bio
-    """
-    profile.login_flow = 'bio'
-    profile.save()
-
-    if request.method == 'POST':
-        form = BioForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            if 'email' in form.changed_data:
-                # Remove old email change confirmations
-                EmailChange.objects.filter(user=request.user).delete()
-
-                token = uuid.uuid4().hex
-                email = form.cleaned_data['email']
-                old_email = profile.email
-                email_change = EmailChange.objects.create(user=request.user, email=email, token=token)
-
-                subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
-                body = render_to_string('profile/confirm_email.html', {
-                        'username': request.user.display_name,
-                        'link': 'http://%s%s' % (Site.objects.get_current().domain, reverse('profile.views.confirm_email')),
-                        'token': token,
-                    })
-                send_email_confirm_task.delay(subject, body, old_email)
-
-                form.changed_data.remove('email')
-                form.cleaned_data['email'] = profile.email
-
-            form.save()
-
-            return HttpResponseRedirect(reverse('profile.views.login_flow_friends'))
-    else:
-        form = BioForm(instance=profile)
-
-    context = {
-        'next_url': reverse('profile.views.login_flow_friends'),
-        'email_form': form,
-    }
-    context.update(forms)
-    return render(request, 'profile/login_flow_bio.html', context)
-
-
-@get_current_user
-@login_flow
-@avatar_change
 def login_flow_friends(request, profile, forms):
     """
-    Step 2: Friends
+    Step 1: Friends
     """
     profile.login_flow = 'friends'
     profile.save()
@@ -436,7 +389,7 @@ def login_flow_friends(request, profile, forms):
 @avatar_change
 def login_flow_featured(request, profile, forms):
     """
-    Step 3: Featured members
+    Step 2: Featured members
     """
     profile.login_flow = 'featured'
     profile.save()
@@ -476,14 +429,14 @@ def login_flow_featured(request, profile, forms):
 @avatar_change
 def login_flow_brands(request, profile, forms):
     """
-    Step 4: Brands
+    Step 3: Brands
     """
     profile.login_flow = 'brands'
     profile.save()
 
     context = {
         'login_flow_step': 'step-brands',
-        'next_url': reverse('profile.views.login_flow_like'),
+        'next_url': reverse('profile.views.login_flow_complete'),
         'profiles': get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:21]
     }
     context.update(forms)
@@ -492,25 +445,9 @@ def login_flow_brands(request, profile, forms):
 
 @get_current_user
 @login_flow
-@avatar_change
-def login_flow_like(request, profile, form):
-    """
-    Step 5: Like us on facebook
-    """
-    profile.login_flow = 'like'
-    profile.save()
-
-    context = {
-        'next_url': reverse('profile.views.login_flow_complete'),
-    }
-    context.update(form)
-    return render(request, 'profile/login_flow_like.html', context)
-
-@get_current_user
-@login_flow
 def login_flow_complete(request, profile):
     """
-    Step 6: Login flow is complete
+    Step 4: Login flow is complete
     """
     profile.login_flow = 'complete'
     profile.save()
