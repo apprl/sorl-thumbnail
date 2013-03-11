@@ -9,13 +9,30 @@
     {% url 'profile-likes' as profile_likes %}
     {% facebook_button next=profile_likes %}
     <p>{% trans "Or:" %}</p>
-    {% with "Login" as submit_text %}
-        {% include "registration/fragments/login_form.html" %}
-    {% endwith %}
-    <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
-    <a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
-    {% if form.errors %}
-        <p class="errorlist">{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
-    {% endif %}
+    <form action="{% url 'auth_login' %}" method="post" class="standard-form">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'profile-likes' %}">
+        <ul>
+            <li>
+                <label for="id_username">{% trans "Username" %}</label>
+                <input id="id_username" name="username" type="text" />
+                {{ form.username.errors }}
+            </li>
+            <li>
+                <label for="id_password">{% trans "Password" %}</label>
+                <input id="id_password" name="password" type="password" />
+                {{ form.password.errors }}
+                {% if form.errors %}
+                <ul class="errorlist"><li>{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</li></ul>
+                {% endif %}
+            </li>
+            <li>
+                <button class="btn btn-upper" type="submit">{% trans "Login" %}</button>
+            </li>
+        </ul>
+    </form>
+    <a class="underline" href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
+    <a class="underline" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
+
 </div>
 {% endblock %}
