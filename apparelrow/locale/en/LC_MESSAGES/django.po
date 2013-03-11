@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-11 12:44+0100\n"
+"POT-Creation-Date: 2013-03-11 13:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr ""
 #: activity_feed/models.py:73 activity_feed/models.py:122
 #: apparel/models.py:373 apparel/models.py:694 apparel/models.py:924
 #: apparel/models.py:1049 dashboard/models.py:59 dashboard/models.py:78
-#: dashboard/models.py:112 profile/models.py:587 statistics/models.py:49
+#: dashboard/models.py:112 profile/models.py:585 statistics/models.py:49
 #: statistics/models.py:61
 msgid "Time created"
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 #: activity_feed/models.py:74 apparel/models.py:227 apparel/models.py:374
 #: apparel/models.py:441 apparel/models.py:492 apparel/models.py:695
 #: apparel/models.py:925 dashboard/models.py:60 dashboard/models.py:79
-#: profile/models.py:588
+#: profile/models.py:586
 msgid "Time modified"
 msgstr ""
 
@@ -225,8 +225,8 @@ msgstr ""
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:232 apparel/models.py:698 profile/models.py:57
-#: profile/models.py:282
+#: apparel/models.py:232 apparel/models.py:698 profile/models.py:55
+#: profile/models.py:280
 msgid "Gender"
 msgstr ""
 
@@ -650,99 +650,99 @@ msgstr ""
 msgid "No one"
 msgstr ""
 
-#: profile/models.py:54 profile/models.py:279
+#: profile/models.py:52 profile/models.py:277
 msgid "User profile image"
 msgstr ""
 
-#: profile/models.py:55 profile/models.py:280 templates/base.html:317
+#: profile/models.py:53 profile/models.py:278 templates/base.html:317
 msgid "About"
 msgstr ""
 
-#: profile/models.py:56 profile/models.py:281
+#: profile/models.py:54 profile/models.py:279
 msgid "Language"
 msgstr ""
 
-#: profile/models.py:66 profile/models.py:290
+#: profile/models.py:64 profile/models.py:288
 msgid "Login flow"
 msgstr ""
 
-#: profile/models.py:69 profile/models.py:293
+#: profile/models.py:67 profile/models.py:291
 msgid "Participating in newsletter"
 msgstr ""
 
-#: profile/models.py:72 profile/models.py:296
+#: profile/models.py:70 profile/models.py:294
 msgid "Receiving sale alerts"
 msgstr ""
 
-#: profile/models.py:86 profile/models.py:309
+#: profile/models.py:84 profile/models.py:307
 msgid "Partner user"
 msgstr ""
 
-#: profile/models.py:91 profile/models.py:315
+#: profile/models.py:89 profile/models.py:313
 msgid "When someone commented on a product that I have liked"
 msgstr ""
 
-#: profile/models.py:93 profile/models.py:317
+#: profile/models.py:91 profile/models.py:315
 msgid "When someone commented on a product that I have commented on"
 msgstr ""
 
-#: profile/models.py:95 profile/models.py:319
+#: profile/models.py:93 profile/models.py:317
 msgid "When someone commented on a look that I have created"
 msgstr ""
 
-#: profile/models.py:97 profile/models.py:321
+#: profile/models.py:95 profile/models.py:319
 msgid "When someone commented on a look that I have commented on"
 msgstr ""
 
-#: profile/models.py:99 profile/models.py:323
+#: profile/models.py:97 profile/models.py:321
 msgid "When someone likes a look that I have created"
 msgstr ""
 
-#: profile/models.py:101 profile/models.py:325
+#: profile/models.py:99 profile/models.py:323
 msgid "When someone starts to follow me"
 msgstr ""
 
-#: profile/models.py:103 profile/models.py:327
+#: profile/models.py:101 profile/models.py:325
 msgid "When a Facebook friend has joined Apprl"
 msgstr ""
 
-#: profile/models.py:265 profile/models.py:509
+#: profile/models.py:263 profile/models.py:507
 msgid "Partner group must be set to be able to set partner status"
 msgstr ""
 
-#: profile/models.py:283
+#: profile/models.py:281
 msgid "Last visit home"
 msgstr ""
 
-#: profile/models.py:330
+#: profile/models.py:328
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:518
+#: profile/models.py:516
 msgid "Receive payments as a company"
 msgstr ""
 
-#: profile/models.py:518
+#: profile/models.py:516
 msgid "Receive payments as a private person"
 msgstr ""
 
-#: profile/models.py:522
+#: profile/models.py:520
 msgid "Address"
 msgstr ""
 
-#: profile/models.py:523
+#: profile/models.py:521
 msgid "Postal code"
 msgstr ""
 
-#: profile/models.py:524
+#: profile/models.py:522
 msgid "City"
 msgstr ""
 
-#: profile/models.py:551 profile/views.py:588
+#: profile/models.py:549 profile/views.py:525
 msgid "Welcome to Apprl"
 msgstr ""
 
-#: profile/views.py:526
+#: profile/views.py:463
 msgid "Nearly created your membership..."
 msgstr ""
 
@@ -890,11 +890,10 @@ msgstr ""
 
 #: templates/base.html:292 templates/apparel/brand_list.html:11
 #: templates/apparel/shared_header.html:15
-#: templates/profile/base_login_flow.html:28
-#: templates/profile/login_flow_bio.html:9
-#: templates/profile/login_flow_brands.html:9
-#: templates/profile/login_flow_featured.html:34
-#: templates/profile/login_flow_friends.html:33
+#: templates/profile/base_login_flow.html:27
+#: templates/profile/login_flow_brands.html:8
+#: templates/profile/login_flow_featured.html:33
+#: templates/profile/login_flow_friends.html:32
 msgid "Brands"
 msgstr ""
 
@@ -918,11 +917,7 @@ msgstr ""
 msgid "+ Create look"
 msgstr ""
 
-#: templates/base.html:310 templates/profile/base_login_flow.html:29
-#: templates/profile/login_flow_bio.html:10
-#: templates/profile/login_flow_brands.html:10
-#: templates/profile/login_flow_featured.html:35
-#: templates/profile/login_flow_friends.html:34
+#: templates/base.html:310
 msgid "Follow us"
 msgstr ""
 
@@ -1108,8 +1103,8 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:14
 #: templates/profile/base_profile.html:46
 #: templates/profile/base_profile.html:96
-#: templates/profile/login_flow_featured.html:47
-#: templates/profile/login_flow_friends.html:47
+#: templates/profile/login_flow_featured.html:45
+#: templates/profile/login_flow_friends.html:45
 msgid "Following"
 msgstr ""
 
@@ -1117,8 +1112,8 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
-#: templates/profile/login_flow_featured.html:47
-#: templates/profile/login_flow_friends.html:47
+#: templates/profile/login_flow_featured.html:45
+#: templates/profile/login_flow_friends.html:45
 msgid "Stop following"
 msgstr ""
 
@@ -1127,8 +1122,8 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
-#: templates/profile/login_flow_featured.html:47
-#: templates/profile/login_flow_friends.html:47
+#: templates/profile/login_flow_featured.html:45
+#: templates/profile/login_flow_friends.html:45
 #: templates/profile/notifications/email_follow_user.html:3
 msgid "Follow"
 msgstr ""
@@ -1582,12 +1577,12 @@ msgid "Sign up to find your friends."
 msgstr ""
 
 #: templates/apparel/user_list.html:57
-#: templates/profile/login_flow_friends.html:61
+#: templates/profile/login_flow_friends.html:59
 msgid "Connect your Facebook account to find your friends."
 msgstr ""
 
 #: templates/apparel/user_list.html:60
-#: templates/profile/login_flow_friends.html:64
+#: templates/profile/login_flow_friends.html:62
 #: templates/profile/settings_facebook.html:10
 msgid "It is not possible to connect this account with Facebook."
 msgstr ""
@@ -2159,10 +2154,8 @@ msgstr ""
 msgid "Read more about becoming a partner"
 msgstr ""
 
-#: templates/email/base.html:5
-msgid ""
-"\n"
-"The Apprl Team\n"
+#: templates/email/base.html:4
+msgid "With ♥ from Apprl "
 msgstr ""
 
 #: templates/facebook/setup.html:11
@@ -2236,34 +2229,23 @@ msgid "Hi %(username)s!"
 msgstr ""
 
 #: templates/profile/base_login_flow.html:25
-#: templates/profile/login_flow_bio.html:6
 #: templates/profile/login_flow_brands.html:6
 #: templates/profile/login_flow_featured.html:31
 #: templates/profile/login_flow_friends.html:30
-msgid "Your info"
-msgstr ""
-
-#: templates/profile/base_login_flow.html:26
-#: templates/profile/login_flow_bio.html:7
-#: templates/profile/login_flow_brands.html:7
-#: templates/profile/login_flow_featured.html:32
-#: templates/profile/login_flow_friends.html:31
 msgid "Friends"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:27
-#: templates/profile/login_flow_bio.html:8
-#: templates/profile/login_flow_brands.html:8
-#: templates/profile/login_flow_featured.html:33
-#: templates/profile/login_flow_friends.html:32
+#: templates/profile/base_login_flow.html:26
+#: templates/profile/login_flow_brands.html:7
+#: templates/profile/login_flow_featured.html:32
+#: templates/profile/login_flow_friends.html:31
 msgid "Featured"
 msgstr ""
 
-#: templates/profile/base_login_flow.html:39
-#: templates/profile/login_flow_bio.html:20
-#: templates/profile/login_flow_featured.html:53
-#: templates/profile/login_flow_friends.html:55
-#: templates/profile/login_flow_friends.html:71
+#: templates/profile/base_login_flow.html:37
+#: templates/profile/login_flow_featured.html:51
+#: templates/profile/login_flow_friends.html:53
+#: templates/profile/login_flow_friends.html:69
 msgid "Next step"
 msgstr ""
 
@@ -2345,8 +2327,10 @@ msgid ""
 msgstr ""
 
 #: templates/profile/confirm_email.html:8
+#: templates/profile/email_welcome.html:13
+#: templates/profile/notifications/email_base.html:7
 #: templates/registration/registration_activation_email.html:8
-msgid "/The Apprl team"
+msgid "With ♥ from Apprl"
 msgstr ""
 
 #: templates/profile/confirm_email_subject.html:1
@@ -2437,45 +2421,33 @@ msgstr ""
 msgid "does not like any products so far."
 msgstr ""
 
-#: templates/profile/login_flow_bio.html:15
-msgid "Information about you"
-msgstr ""
-
-#: templates/profile/login_flow_brands.html:15
+#: templates/profile/login_flow_brands.html:13
 msgid "Follow your favourite brands"
 msgstr ""
 
-#: templates/profile/login_flow_featured.html:42
+#: templates/profile/login_flow_featured.html:40
 msgid "Follow featured members & bloggers"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:41
+#: templates/profile/login_flow_friends.html:39
 msgid "Follow your friends to see what they like"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:52
-#: templates/profile/login_flow_friends.html:67
+#: templates/profile/login_flow_friends.html:50
+#: templates/profile/login_flow_friends.html:65
 msgid "APPRL is more fun together with your friends!"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:53
+#: templates/profile/login_flow_friends.html:51
 msgid "+ Invite more friends!"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:59
+#: templates/profile/login_flow_friends.html:57
 msgid "Invite your friends"
 msgstr ""
 
-#: templates/profile/login_flow_friends.html:68
+#: templates/profile/login_flow_friends.html:66
 msgid "+ Invite friends!"
-msgstr ""
-
-#: templates/profile/login_flow_like.html:5
-msgid "Follow us on Facebook for inspiration & great offers"
-msgstr ""
-
-#: templates/profile/login_flow_like.html:10
-msgid "You're done!"
 msgstr ""
 
 #: templates/profile/looks.html:67

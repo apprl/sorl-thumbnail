@@ -4,7 +4,7 @@
 <body>
 <p>{% blocktrans %}Hi {{recipient_name}}!{% endblocktrans %}</p>
 {% block content %}{% endblock %}
-<p>/The Apprl team</p>
+<p>{% trans "With ♥ from Apprl" %}</p>
 <p>------------------------------------------------------------------<br>
 {% blocktrans %}If you wish to change your e-mail preferences go to <a href="http://{{ domain }}/profile/settings/">your settings</a>.{% endblocktrans %}</p>
 </body>
