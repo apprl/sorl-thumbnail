@@ -7,5 +7,5 @@ from celery.task import task
 def send_email_confirm_task(subject, body, recipient, **kwargs):
     text_body = strip_tags(body)
     msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, [recipient])
-    msg.attach_alternative(body, 'text/html')
+    #msg.attach_alternative(body, 'text/html')
     msg.send()

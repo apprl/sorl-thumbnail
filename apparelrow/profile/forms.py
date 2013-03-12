@@ -2,8 +2,7 @@
 import random
 import string
 
-from django.forms import Form, ModelForm, EmailField, BooleanField, CharField, ChoiceField, ValidationError
-from django.forms.widgets import RadioSelect, FileInput, Textarea
+from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
@@ -11,25 +10,25 @@ from django.utils.translation import ugettext_lazy as _
 from profile.models import PaymentDetail
 
 
-class ProfileImageForm(ModelForm):
+class ProfileImageForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('image',)
-        widgets = {'image': FileInput}
+        widgets = {'image': forms.FileInput}
 
 
-class ProfileAboutForm(ModelForm):
+class ProfileAboutForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('about',)
-        widgets = {'about': Textarea}
+        widgets = {'about': forms.Textarea}
 
 
-class BioForm(ModelForm):
-    name = CharField(required=True, label=_('Your name'))
-    gender = ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=RadioSelect, label='')
-    email = EmailField(required=True, label=_('Your e-mail address'))
-    about = CharField(required=False, widget=Textarea, label=_('Write something about yourself, include links to your blog or website'))
+class BioForm(forms.ModelForm):
+    name = forms.CharField(required=True, label=_('Your name'))
+    gender = forms.ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=forms.RadioSelect, label='')
+    email = forms.EmailField(required=True, label=_('Your e-mail address'))
+    about = forms.CharField(required=False, widget=forms.Textarea, label=_('Write something about yourself, include links to your blog or website'))
 
     def __init__(self, *args, **kwargs):
         super(BioForm, self).__init__(*args, **kwargs)
@@ -53,65 +52,65 @@ class BioForm(ModelForm):
         fields = ('name', 'gender', 'email', 'about')
 
 
-class EmailForm(ModelForm):
-    email = EmailField(label=_('New e-mail address'))
+class EmailForm(forms.ModelForm):
+    email = forms.EmailField(label=_('New e-mail address'))
 
     class Meta:
         model = get_user_model()
         fields = ('email',)
 
 
-class NotificationForm(ModelForm):
+class NotificationForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user', 'facebook_friends')
         widgets = {
-            'comment_product_wardrobe': RadioSelect,
-            'comment_product_comment': RadioSelect,
-            'comment_look_created': RadioSelect,
-            'comment_look_comment': RadioSelect,
-            'like_look_created': RadioSelect,
-            'follow_user': RadioSelect,
-            'facebook_friends': RadioSelect,
+            'comment_product_wardrobe': forms.RadioSelect,
+            'comment_product_comment': forms.RadioSelect,
+            'comment_look_created': forms.RadioSelect,
+            'comment_look_comment': forms.RadioSelect,
+            'like_look_created': forms.RadioSelect,
+            'follow_user': forms.RadioSelect,
+            'facebook_friends': forms.RadioSelect,
         }
 
 
-class NewsletterForm(ModelForm):
-    newsletter = BooleanField(required=False, help_text=_(u'I\'d like to receive e-mails with trending products, looks and other inspiration.'))
-    discount_notification = BooleanField(required=False, help_text=_(u'I want to receive sale alerts on items that I ♥.'))
+class NewsletterForm(forms.ModelForm):
+    newsletter = forms.BooleanField(required=False, help_text=_(u'I\'d like to receive e-mails with trending products, looks and other inspiration.'))
+    discount_notification = forms.BooleanField(required=False, help_text=_(u'I want to receive sale alerts on items that I ♥.'))
 
     class Meta:
         model = get_user_model()
         fields = ('discount_notification', 'newsletter')
 
 
-class FacebookSettingsForm(ModelForm):
-    fb_share_like_product = BooleanField(required=False, help_text=_(u'When you ♥ a product'))
-    fb_share_like_look = BooleanField(required=False, help_text=_(u'When you ♥ a look'))
-    fb_share_create_look = BooleanField(required=False, help_text=_(u'When you follow someone'))
-    fb_share_follow_profile = BooleanField(required=False, help_text=_(u'When you create a look'))
+class FacebookSettingsForm(forms.ModelForm):
+    fb_share_like_product = forms.BooleanField(required=False, help_text=_(u'When you ♥ a product'))
+    fb_share_like_look = forms.BooleanField(required=False, help_text=_(u'When you ♥ a look'))
+    fb_share_create_look = forms.BooleanField(required=False, help_text=_(u'When you follow someone'))
+    fb_share_follow_profile = forms.BooleanField(required=False, help_text=_(u'When you create a look'))
 
     class Meta:
         model = get_user_model()
         fields = ('fb_share_like_product', 'fb_share_like_look', 'fb_share_follow_profile', 'fb_share_create_look')
 
 
-class PartnerPaymentDetailForm(ModelForm):
-    name = CharField(label=_('Name'))
-    orgnr = CharField(label=_('Personal/organization number'))
-    clearingnr = CharField(label=_('Bank clearing number'))
-    banknr = CharField(label=_('Bank account number'))
+class PartnerPaymentDetailForm(forms.ModelForm):
+    name = forms.CharField(label=_('Name'))
+    orgnr = forms.CharField(label=_('Personal/organization number'))
+    clearingnr = forms.CharField(label=_('Bank clearing number'))
+    banknr = forms.CharField(label=_('Bank account number'))
 
     class Meta:
         model = PaymentDetail
         fields = ('company', 'name', 'orgnr', 'clearingnr', 'banknr', 'address', 'postal_code', 'city')
         widgets = {
-            'company': RadioSelect
+            'company': forms.RadioSelect
         }
 
 
-class PartnerSettingsForm(ModelForm):
-    blog_url = CharField(label=_('http://'), required=False)
+class PartnerSettingsForm(forms.ModelForm):
+    blog_url = forms.CharField(label=_('http://'), required=False)
 
     class Meta:
         model = get_user_model()
@@ -119,9 +118,14 @@ class PartnerSettingsForm(ModelForm):
 
 
 class RegisterForm(UserCreationForm):
-    name = CharField(label=_('Name'), required=True)
-    email = EmailField(label=_('E-mail address'), required=True)
-    gender = ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=RadioSelect, label='Gender')
+    name = forms.CharField(label=_('Name'), required=True)
+    email = forms.EmailField(label=_('E-mail address'), required=True, error_messages={'invalid': _('Please enter a valid email address.')})
+    gender = forms.ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=forms.RadioSelect, label=_('Gender'))
+    password1 = forms.CharField(label=_('Password'),
+        widget=forms.PasswordInput)
+    password2 = forms.CharField(label=_('Password confirmation'),
+        widget=forms.PasswordInput,
+        help_text=_('Enter the same password as above, for verification.'))
 
     class Meta:
         model = get_user_model()
@@ -145,8 +149,8 @@ class RegisterForm(UserCreationForm):
             return email
         raise ValidationError(_('A user with that e-mail already exists.'))
 
-class RegisterCompleteForm(Form):
-    email = EmailField(label=_('E-mail address'), required=True)
+class RegisterCompleteForm(forms.Form):
+    email = forms.EmailField(label=_('E-mail address'), required=True)
 
     def clean_email(self):
         email = self.cleaned_data['email']

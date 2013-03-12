@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-11 17:11+0100\n"
+"POT-Creation-Date: 2013-03-12 09:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,8 +225,8 @@ msgstr ""
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:232 apparel/models.py:698 profile/models.py:55
-#: profile/models.py:280
+#: apparel/models.py:232 apparel/models.py:698 profile/forms.py:123
+#: profile/models.py:55 profile/models.py:280
 msgid "Gender"
 msgstr ""
 
@@ -242,7 +242,7 @@ msgstr ""
 msgid "category"
 msgstr ""
 
-#: apparel/models.py:437 profile/forms.py:100 profile/forms.py:122
+#: apparel/models.py:437 profile/forms.py:99 profile/forms.py:121
 msgid "Name"
 msgstr ""
 
@@ -393,7 +393,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr ""
 
-#: apparel_comments/__init__.py:6 profile/forms.py:123 profile/forms.py:149
+#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:153
 msgid "E-mail address"
 msgstr ""
 
@@ -433,7 +433,7 @@ msgstr ""
 msgid "Between 1 and 0"
 msgstr ""
 
-#: dashboard/models.py:109 profile/forms.py:29
+#: dashboard/models.py:109 profile/forms.py:28
 msgid "Your name"
 msgstr ""
 
@@ -566,73 +566,90 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: profile/forms.py:30 profile/forms.py:124
+#: profile/forms.py:29 profile/forms.py:123
 msgid "Man"
 msgstr ""
 
-#: profile/forms.py:30 profile/forms.py:124
+#: profile/forms.py:29 profile/forms.py:123
 msgid "Woman"
 msgstr ""
 
-#: profile/forms.py:31
+#: profile/forms.py:30
 msgid "Your e-mail address"
 msgstr ""
 
-#: profile/forms.py:32
+#: profile/forms.py:31
 msgid "Write something about yourself, include links to your blog or website"
 msgstr ""
 
-#: profile/forms.py:57
+#: profile/forms.py:56
 msgid "New e-mail address"
 msgstr ""
 
-#: profile/forms.py:80
+#: profile/forms.py:79
 msgid ""
 "I'd like to receive e-mails with trending products, looks and other "
 "inspiration."
 msgstr ""
 
-#: profile/forms.py:81
+#: profile/forms.py:80
 msgid "I want to receive sale alerts on items that I ♥."
 msgstr ""
 
-#: profile/forms.py:89
+#: profile/forms.py:88
 msgid "When you ♥ a product"
 msgstr ""
 
-#: profile/forms.py:90
+#: profile/forms.py:89
 msgid "When you ♥ a look"
 msgstr ""
 
-#: profile/forms.py:91
+#: profile/forms.py:90
 msgid "When you follow someone"
 msgstr ""
 
-#: profile/forms.py:92
+#: profile/forms.py:91
 msgid "When you create a look"
 msgstr ""
 
-#: profile/forms.py:101
+#: profile/forms.py:100
 msgid "Personal/organization number"
 msgstr ""
 
-#: profile/forms.py:102
+#: profile/forms.py:101
 msgid "Bank clearing number"
 msgstr ""
 
-#: profile/forms.py:103
+#: profile/forms.py:102
 msgid "Bank account number"
 msgstr ""
 
-#: profile/forms.py:114
+#: profile/forms.py:113
 msgid "http://"
 msgstr ""
 
-#: profile/forms.py:146
+#: profile/forms.py:122
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: profile/forms.py:124 templates/profile/base_settings.html:26
+#: templates/profile/settings_password.html:6
+msgid "Password"
+msgstr ""
+
+#: profile/forms.py:126
+msgid "Password confirmation"
+msgstr ""
+
+#: profile/forms.py:128
+msgid "Enter the same password as above, for verification."
+msgstr ""
+
+#: profile/forms.py:150
 msgid "A user with that e-mail already exists."
 msgstr ""
 
-#: profile/forms.py:156
+#: profile/forms.py:160
 msgid "E-mail does not exist or account is already confirmed."
 msgstr ""
 
@@ -1610,7 +1627,7 @@ msgid "Create a look"
 msgstr ""
 
 #: templates/apparel/fragments/dialog_create_look.html:7
-msgid "To create a look on the site, you need to sign up first."
+msgid "You need to become a member to create a look."
 msgstr ""
 
 #: templates/apparel/fragments/dialog_follow_user.html:7
@@ -1622,7 +1639,7 @@ msgid "Follow a member"
 msgstr ""
 
 #: templates/apparel/fragments/dialog_follow_user.html:13
-msgid "To follow someone on the site, you need to sign up."
+msgid "You need to become a member to follow someone."
 msgstr ""
 
 #: templates/apparel/fragments/dialog_like_look.html:5
@@ -1630,7 +1647,7 @@ msgid "Like a look"
 msgstr ""
 
 #: templates/apparel/fragments/dialog_like_look.html:7
-msgid "To 'like' a look on the site, you need to sign up first."
+msgid "You need to become a member to ♥ a look."
 msgstr ""
 
 #: templates/apparel/fragments/dialog_like_product.html:4
@@ -1638,7 +1655,7 @@ msgid "Like a product"
 msgstr ""
 
 #: templates/apparel/fragments/dialog_like_product.html:6
-msgid "To 'like' a product on the site, you need to sign up first."
+msgid "You need to become a member to ♥ a product."
 msgstr ""
 
 #: templates/apparel/fragments/look_medium.html:33
@@ -2318,11 +2335,6 @@ msgstr ""
 msgid "E-mail Address"
 msgstr ""
 
-#: templates/profile/base_settings.html:26
-#: templates/profile/settings_password.html:6
-msgid "Password"
-msgstr ""
-
 #: templates/profile/confirm_email.html:5
 #, python-format
 msgid "Hi %(username)s,"
@@ -2704,7 +2716,7 @@ msgid "Login"
 msgstr ""
 
 #: templates/registration/login.html:11
-msgid "Or:"
+msgid "or:"
 msgstr ""
 
 #: templates/registration/login.html:26
@@ -2845,11 +2857,7 @@ msgid "Could not activate account, the activation key is invalid."
 msgstr ""
 
 #: templates/registration/fragments/registration.html:3
-msgid "Or sign up with "
-msgstr ""
-
-#: templates/registration/fragments/registration.html:3
-msgid "e-mail"
+msgid "or sign up with e-mail"
 msgstr ""
 
 #~ msgid "Swe"

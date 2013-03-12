@@ -1,5 +1,5 @@
 {% load i18n apparel_extras %}
 {% facebook_button %}
-<p>{% trans "Or sign up with " %}<a class="underline" href="{% url 'auth_register_email' %}">{% trans "e-mail" %}</a>.</p>
+<p><a class="underline" href="{% url 'auth_register_email' %}">{% trans "or sign up with e-mail" %}</a>.</p>
 {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
-<p>{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
+<p class="privacy">{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}

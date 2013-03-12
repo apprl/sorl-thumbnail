@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-11 17:11+0100\n"
+"POT-Creation-Date: 2013-03-12 09:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,8 +226,8 @@ msgstr "Produktbeskrivning"
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:232 apparel/models.py:698 profile/models.py:55
-#: profile/models.py:280
+#: apparel/models.py:232 apparel/models.py:698 profile/forms.py:123
+#: profile/models.py:55 profile/models.py:280
 msgid "Gender"
 msgstr "Kön"
 
@@ -243,7 +243,7 @@ msgstr "I lager"
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:437 profile/forms.py:100 profile/forms.py:122
+#: apparel/models.py:437 profile/forms.py:99 profile/forms.py:121
 msgid "Name"
 msgstr "Namn"
 
@@ -394,7 +394,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
-#: apparel_comments/__init__.py:6 profile/forms.py:123 profile/forms.py:149
+#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:153
 msgid "E-mail address"
 msgstr "E-postadress"
 
@@ -434,7 +434,7 @@ msgstr "Tid för köp"
 msgid "Between 1 and 0"
 msgstr "Mellan 1 och 0"
 
-#: dashboard/models.py:109 profile/forms.py:29
+#: dashboard/models.py:109 profile/forms.py:28
 msgid "Your name"
 msgstr "Ditt namn"
 
@@ -567,75 +567,92 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: profile/forms.py:30 profile/forms.py:124
+#: profile/forms.py:29 profile/forms.py:123
 msgid "Man"
 msgstr "Man"
 
-#: profile/forms.py:30 profile/forms.py:124
+#: profile/forms.py:29 profile/forms.py:123
 msgid "Woman"
 msgstr "Kvinna"
 
-#: profile/forms.py:31
+#: profile/forms.py:30
 msgid "Your e-mail address"
 msgstr "Din e-postadress"
 
-#: profile/forms.py:32
+#: profile/forms.py:31
 msgid "Write something about yourself, include links to your blog or website"
 msgstr ""
 "Skriv något om dig själv, inkludera gärna länkar till din blogg eller annan "
 "webbsida"
 
-#: profile/forms.py:57
+#: profile/forms.py:56
 msgid "New e-mail address"
 msgstr "Ny e-postadress"
 
-#: profile/forms.py:80
+#: profile/forms.py:79
 msgid ""
 "I'd like to receive e-mails with trending products, looks and other "
 "inspiration."
 msgstr "Jag vill ha e-post med populära produkter och annan inspiration."
 
-#: profile/forms.py:81
+#: profile/forms.py:80
 msgid "I want to receive sale alerts on items that I ♥."
 msgstr "Jag vill bli meddelad när en produkt jag ♥ prissänks."
 
-#: profile/forms.py:89
+#: profile/forms.py:88
 msgid "When you ♥ a product"
 msgstr "När du ♥ en produkt"
 
-#: profile/forms.py:90
+#: profile/forms.py:89
 msgid "When you ♥ a look"
 msgstr "När du ♥ en look"
 
-#: profile/forms.py:91
+#: profile/forms.py:90
 msgid "When you follow someone"
 msgstr "När du följer någon"
 
-#: profile/forms.py:92
+#: profile/forms.py:91
 msgid "When you create a look"
 msgstr "När du skapar en look"
 
-#: profile/forms.py:101
+#: profile/forms.py:100
 msgid "Personal/organization number"
 msgstr "Person- eller organisationsnummer"
 
-#: profile/forms.py:102
+#: profile/forms.py:101
 msgid "Bank clearing number"
 msgstr "Bankens clearingnummer"
 
-#: profile/forms.py:103
+#: profile/forms.py:102
 msgid "Bank account number"
 msgstr "Bankkontonummer"
 
-#: profile/forms.py:114
+#: profile/forms.py:113
 msgid "http://"
 msgstr "http://"
 
-#: profile/forms.py:146
+#: profile/forms.py:122
+msgid "Please enter a valid email address."
+msgstr "Fyll i en giltig e-postadress."
+
+#: profile/forms.py:124 templates/profile/base_settings.html:26
+#: templates/profile/settings_password.html:6
+msgid "Password"
+msgstr "Lösenord"
+
+#: profile/forms.py:126
+msgid "Password confirmation"
+msgstr "Lösenord igen"
+
+#: profile/forms.py:128
+msgid "Enter the same password as above, for verification."
+msgstr "Fyll i samma lösenord som ovan för verifiering."
+
+#: profile/forms.py:150
 msgid "A user with that e-mail already exists."
 msgstr "En användare med den e-postadressen existerar redan."
 
-#: profile/forms.py:156
+#: profile/forms.py:160
 msgid "E-mail does not exist or account is already confirmed."
 msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 
@@ -1646,8 +1663,8 @@ msgid "Create a look"
 msgstr "Skapa en look"
 
 #: templates/apparel/fragments/dialog_create_look.html:7
-msgid "To create a look on the site, you need to sign up first."
-msgstr "För att skapa en look på siten behöver du först bli medlem."
+msgid "You need to become a member to create a look."
+msgstr "Du behöver bli medlem för att kunna skapa looks."
 
 #: templates/apparel/fragments/dialog_follow_user.html:7
 msgid "Follow a brand"
@@ -1658,24 +1675,24 @@ msgid "Follow a member"
 msgstr "Följ en medlem"
 
 #: templates/apparel/fragments/dialog_follow_user.html:13
-msgid "To follow someone on the site, you need to sign up."
-msgstr "För att kunna följa någon här på siten behöver du bli medlem."
+msgid "You need to become a member to follow someone."
+msgstr "Du behöver bli medlem för att kunna följa någon."
 
 #: templates/apparel/fragments/dialog_like_look.html:5
 msgid "Like a look"
 msgstr "Gilla en look"
 
 #: templates/apparel/fragments/dialog_like_look.html:7
-msgid "To 'like' a look on the site, you need to sign up first."
-msgstr "För att gilla en look på siten behöver du först bli medlem."
+msgid "You need to become a member to ♥ a look."
+msgstr "Du behöver bli medlem för att kunna ♥ looks."
 
 #: templates/apparel/fragments/dialog_like_product.html:4
 msgid "Like a product"
 msgstr "Gilla en produkt"
 
 #: templates/apparel/fragments/dialog_like_product.html:6
-msgid "To 'like' a product on the site, you need to sign up first."
-msgstr "För att gilla en produkt på siten behöver du först bli medlem."
+msgid "You need to become a member to ♥ a product."
+msgstr "Du behöver bli medlem för att kunna ♥ produkter."
 
 #: templates/apparel/fragments/look_medium.html:33
 #: templates/apparel/fragments/looks_large.html:39
@@ -2418,11 +2435,6 @@ msgstr "E-postutskick & händelser"
 msgid "E-mail Address"
 msgstr "E-postadress"
 
-#: templates/profile/base_settings.html:26
-#: templates/profile/settings_password.html:6
-msgid "Password"
-msgstr "Lösenord"
-
 #: templates/profile/confirm_email.html:5
 #, python-format
 msgid "Hi %(username)s,"
@@ -2835,8 +2847,8 @@ msgid "Login"
 msgstr "Logga in"
 
 #: templates/registration/login.html:11
-msgid "Or:"
-msgstr "Eller:"
+msgid "or:"
+msgstr "eller:"
 
 #: templates/registration/login.html:26
 msgid "Your username and password did not match. Please try again."
@@ -2984,12 +2996,23 @@ msgid "Could not activate account, the activation key is invalid."
 msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 
 #: templates/registration/fragments/registration.html:3
-msgid "Or sign up with "
-msgstr "Eller skapa ett konto med "
+msgid "or sign up with e-mail"
+msgstr "eller skapa ett konto med din e-postadress"
 
-#: templates/registration/fragments/registration.html:3
-msgid "e-mail"
-msgstr "din e-postadress"
+#~ msgid "e-mail"
+#~ msgstr "din e-postadress"
+
+#~ msgid "To create a look on the site, you need to sign up first."
+#~ msgstr "För att skapa en look på siten behöver du först bli medlem."
+
+#~ msgid "To follow someone on the site, you need to sign up."
+#~ msgstr "För att kunna följa någon här på siten behöver du bli medlem."
+
+#~ msgid "To 'like' a look on the site, you need to sign up first."
+#~ msgstr "För att gilla en look på siten behöver du först bli medlem."
+
+#~ msgid "To 'like' a product on the site, you need to sign up first."
+#~ msgstr "För att gilla en produkt på siten behöver du först bli medlem."
 
 #~ msgid ""
 #~ "\n"
@@ -3038,9 +3061,6 @@ msgstr "din e-postadress"
 
 #~ msgid "Username"
 #~ msgstr "Användarnamn"
-
-#~ msgid "Password confirmation"
-#~ msgstr "Lösenordsbekräftelse"
 
 #~ msgid "Activate account"
 #~ msgstr "Aktivera konto"
