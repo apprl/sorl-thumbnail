@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-12 09:58+0100\n"
+"POT-Creation-Date: 2013-03-13 13:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2816,27 +2816,21 @@ msgstr ""
 
 #: templates/registration/registration_complete.html:9
 msgid ""
-"We have sent an e-mail to you. To complete your signup, open that e-mail and "
-"click the link."
+"We have sent an e-mail to you.<br>To complete your signup, open that e-mail "
+"and click the link."
 msgstr ""
 
-#: templates/registration/registration_complete.html:10
-msgid "If you can't find the confirmation e-mail:"
+#: templates/registration/registration_complete.html:11
+msgid ""
+"If you can't find the confirmation e-mail,<br>check your spam folder or send "
+"the e-mail again:"
 msgstr ""
 
-#: templates/registration/registration_complete.html:12
-msgid "Check your spam/junk mail folder."
-msgstr ""
-
-#: templates/registration/registration_complete.html:13
-msgid "Send e-mail again:"
-msgstr ""
-
-#: templates/registration/registration_complete.html:19
+#: templates/registration/registration_complete.html:16
 msgid "Send e-mail again"
 msgstr ""
 
-#: templates/registration/registration_complete.html:23
+#: templates/registration/registration_complete.html:20
 msgid "E-mail sent."
 msgstr ""
 
