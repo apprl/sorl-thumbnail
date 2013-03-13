@@ -104,6 +104,13 @@ class User(AbstractUser):
     class Meta:
         db_table = 'profile_user'
 
+    def save(self, *args, **kwargs):
+        for field in ['first_name', 'last_name', 'name']:
+            value = getattr(self, field)
+            setattr(self, field, value.title())
+
+        super(User, self).save(*args, **kwargs)
+
     @cached_property
     def blog_url_external(self):
         if not self.blog_url.startswith('http'):
