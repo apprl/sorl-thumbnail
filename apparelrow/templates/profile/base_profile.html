@@ -79,7 +79,7 @@
                 {% endif %}
             {% else %}
                 {% if request.user.is_authenticated and request.user == profile %}
-                <a href="#add" class="btn btn-block btn-positive btn-add">{% trans "Add bio" %}</a>
+                <a href="#add" class="btn btn-block btn-positive btn-add">{% trans "Add a text about you" %}</a>
                 {% include 'profile/fragments/change_about_form.html' %}
                 {% endif %}
             {% endif %}

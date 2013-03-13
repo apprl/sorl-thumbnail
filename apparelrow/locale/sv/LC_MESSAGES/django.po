@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-13 13:25+0100\n"
+"POT-Creation-Date: 2013-03-13 16:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2391,8 +2391,8 @@ msgid "Edit bio"
 msgstr "Ändra beskrivning"
 
 #: templates/profile/base_profile.html:82
-msgid "Add bio"
-msgstr "Lägg till beskrivning"
+msgid "Add a text about you"
+msgstr "Lägg till en text om dig"
 
 #: templates/profile/base_profile.html:90
 #, python-format
@@ -2961,7 +2961,9 @@ msgstr "Vi har skickat ett e-mail till dig, öppna mailet och klicka på länken
 msgid ""
 "If you can't find the confirmation e-mail,<br>check your spam folder or send "
 "the e-mail again:"
-msgstr "Om du inte hittar något e-mail,<br>kolla din spam/skräp-mapp eller skicka ut ett nytt e-mail:"
+msgstr ""
+"Om du inte hittar något e-mail,<br>kolla din spam/skräp-mapp eller skicka ut "
+"ett nytt e-mail:"
 
 #: templates/registration/registration_complete.html:16
 msgid "Send e-mail again"
@@ -2992,6 +2994,9 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:3
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
+
+#~ msgid "Add bio"
+#~ msgstr "Lägg till beskrivning"
 
 #~ msgid "Check your spam/junk mail folder."
 #~ msgstr "Kolla din spam/skräp-mapp."
