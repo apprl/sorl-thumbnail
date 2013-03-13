@@ -6,40 +6,41 @@ from django.db import models
 from django.db.models.signals import post_save
 
 #from apparelrow.tasks import search_index_update_task
-from actstream.models import Action
+#from actstream.models import Action
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for wardrobe in orm.Wardrobe.objects.all():
-            for wp in wardrobe.wardrobeproduct_set.all():
-                if wp.product and wp.product.published == True:
-                    product_like, created = orm.ProductLike.objects.get_or_create(user=wardrobe.user, product=wp.product)
-                    if created:
-                        product_like.created = wp.created
-                    product_like.active = True
-                    product_like.save()
+        pass
+        #for wardrobe in orm.Wardrobe.objects.all():
+            #for wp in wardrobe.wardrobeproduct_set.all():
+                #if wp.product and wp.product.published == True:
+                    #product_like, created = orm.ProductLike.objects.get_or_create(user=wardrobe.user, product=wp.product)
+                    #if created:
+                        #product_like.created = wp.created
+                    #product_like.active = True
+                    #product_like.save()
 
-                    #search_index_update_task(wp.product._meta.app_label, wp.product._meta.module_name, wp.product._get_pk_val())
+                    ##search_index_update_task(wp.product._meta.app_label, wp.product._meta.module_name, wp.product._get_pk_val())
 
-                    product_content_type = orm['contenttypes.ContentType'].objects.get(model='product')
-                    user_content_type = orm['contenttypes.ContentType'].objects.get(model='user')
-                    wardrobe_content_type = orm['contenttypes.ContentType'].objects.get(model='wardrobe')
+                    #product_content_type = orm['contenttypes.ContentType'].objects.get(model='product')
+                    #user_content_type = orm['contenttypes.ContentType'].objects.get(model='user')
+                    #wardrobe_content_type = orm['contenttypes.ContentType'].objects.get(model='wardrobe')
 
-                    try:
-                        action_object = Action.objects.get(actor_content_type=user_content_type,
-                                                           actor_object_id=wardrobe.user.pk,
-                                                           target_content_type=wardrobe_content_type,
-                                                           target_object_id=wardrobe.pk,
-                                                           action_object_content_type=product_content_type,
-                                                           action_object_object_id=wp.product.pk,
-                                                           verb='added')
-                        action_object.verb = 'liked_product'
-                        action_object.target_content_type = None
-                        action_object.target_object_id = None
-                        action_object.save()
-                    except Action.DoesNotExist:
-                        pass
+                    #try:
+                        #action_object = Action.objects.get(actor_content_type=user_content_type,
+                                                           #actor_object_id=wardrobe.user.pk,
+                                                           #target_content_type=wardrobe_content_type,
+                                                           #target_object_id=wardrobe.pk,
+                                                           #action_object_content_type=product_content_type,
+                                                           #action_object_object_id=wp.product.pk,
+                                                           #verb='added')
+                        #action_object.verb = 'liked_product'
+                        #action_object.target_content_type = None
+                        #action_object.target_object_id = None
+                        #action_object.save()
+                    #except Action.DoesNotExist:
+                        #pass
 
     def backwards(self, orm):
         pass
