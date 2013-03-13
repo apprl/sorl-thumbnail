@@ -107,7 +107,8 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         for field in ['first_name', 'last_name', 'name']:
             value = getattr(self, field)
-            setattr(self, field, value.title())
+            if value:
+                setattr(self, field, value.title())
 
         super(User, self).save(*args, **kwargs)
 
