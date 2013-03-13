@@ -228,12 +228,12 @@ def product_detail(request, slug):
 
     # Comments
     content_type = ContentType.objects.get_for_model(Product)
-    comments =  Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_public=True, is_removed=False).select_related('user', 'user__profile')
+    comments =  Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_public=True, is_removed=False).select_related('user')
 
     # Likes
-    likes = product.likes.filter(active=True).order_by('-modified').select_related('user', 'user__profile')
-    regular_likes = likes.filter(Q(user__profile__blog_url__isnull=True) | Q(user__profile__blog_url__exact=''))
-    partner_likes = likes.exclude(Q(user__profile__blog_url__isnull=True) | Q(user__profile__blog_url__exact=''))
+    likes = product.likes.filter(active=True).order_by('-modified').select_related('user')
+    regular_likes = likes.filter(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
+    partner_likes = likes.exclude(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
 
     # Full image url
     try:
@@ -568,7 +568,7 @@ def look_detail(request, slug):
         del request.session['look_saved']
 
     # Likes
-    likes = look.likes.filter(active=True).order_by('-modified').select_related('user', 'user__profile')
+    likes = look.likes.filter(active=True).order_by('-modified').select_related('user')
 
     # Base url
     base_url = request.build_absolute_uri('/')[:-1]

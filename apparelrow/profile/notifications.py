@@ -379,7 +379,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
     logger = process_sale_alert.get_logger(**kwargs)
 
     template_name = 'first_sale_alert' if first else 'second_sale_alert'
-    for likes in product.likes.filter(user__profile__discount_notification=True, active=True).select_related('user', 'user__profile'):
+    for likes in product.likes.filter(user__discount_notification=True, active=True).select_related('user'):
         if likes.user and likes.user.discount_notification:
             # If we already sent a notification for this product and user it
             # must mean that the price has increased and then decreased.
