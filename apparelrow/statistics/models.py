@@ -4,6 +4,21 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
+
+PERIOD_TYPES = (
+    ('D', 'Daily'),
+    ('W', 'Weekly'),
+    ('M', 'Monthly'),
+)
+
+class ActiveUser(models.Model):
+    period_type = models.CharField(max_length=1, choices=PERIOD_TYPES, null=False, blank=False, default='D')
+    period_key = models.CharField(max_length=24)
+    period_value = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['-period_key']
+
 class ProductClickManager(models.Manager):
 
     def increment_clicks(self, product_id, increment_by=1):

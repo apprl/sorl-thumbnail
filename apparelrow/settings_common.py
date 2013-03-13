@@ -151,6 +151,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'profile.middleware.ImpersonateMiddleware',
+    'statistics.middleware.ActiveUsersMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -427,6 +428,7 @@ CELERY_ROUTES = ({
     'apparel.facebook_push_graph': {'queue': 'standard'},
     'apparel.facebook_pull_graph': {'queue': 'standard'},
     'apparel.tasks.generate_brand_list_template': {'queue': 'standard'},
+    'statistics.tasks.active_users': {'queue': 'standard'},
 },)
 
 # LOGGING CONFIGURATION
