@@ -139,7 +139,7 @@ class RegisterForm(UserCreationForm):
             get_user_model()._default_manager.get(username=username)
         except get_user_model().DoesNotExist:
             return username
-        raise ValidationError(self.error_messages['duplicate_username'])
+        raise forms.ValidationError(self.error_messages['duplicate_username'])
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -147,7 +147,7 @@ class RegisterForm(UserCreationForm):
             get_user_model()._default_manager.get(email=email)
         except get_user_model().DoesNotExist:
             return email
-        raise ValidationError(_('A user with that e-mail already exists.'))
+        raise forms.ValidationError(_('A user with that e-mail already exists.'))
 
 class RegisterCompleteForm(forms.Form):
     email = forms.EmailField(label=_('E-mail address'), required=True)
@@ -157,6 +157,6 @@ class RegisterCompleteForm(forms.Form):
         try:
             get_user_model()._default_manager.get(email=email, is_active=False)
         except get_user_model().DoesNotExist:
-            raise ValidationError(_('E-mail does not exist or account is already confirmed.'))
+            raise forms.ValidationError(_('E-mail does not exist or account is already confirmed.'))
 
         return email
