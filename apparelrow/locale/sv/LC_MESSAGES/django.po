@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-13 16:16+0100\n"
+"POT-Creation-Date: 2013-03-13 16:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 #: activity_feed/models.py:73 activity_feed/models.py:122
 #: apparel/models.py:373 apparel/models.py:694 apparel/models.py:924
 #: apparel/models.py:1049 dashboard/models.py:59 dashboard/models.py:78
-#: dashboard/models.py:112 profile/models.py:585 statistics/models.py:49
+#: dashboard/models.py:112 profile/models.py:582 statistics/models.py:49
 #: statistics/models.py:61
 msgid "Time created"
 msgstr "Tid tillagd"
@@ -45,7 +45,7 @@ msgstr "Tid tillagd"
 #: activity_feed/models.py:74 apparel/models.py:227 apparel/models.py:374
 #: apparel/models.py:441 apparel/models.py:492 apparel/models.py:695
 #: apparel/models.py:925 dashboard/models.py:60 dashboard/models.py:79
-#: profile/models.py:586
+#: profile/models.py:583
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -227,7 +227,7 @@ msgid "Product image"
 msgstr "Produktbild"
 
 #: apparel/models.py:232 apparel/models.py:698 profile/forms.py:123
-#: profile/models.py:55 profile/models.py:280
+#: profile/models.py:54 profile/models.py:279
 msgid "Gender"
 msgstr "Kön"
 
@@ -656,111 +656,112 @@ msgstr "En användare med den e-postadressen existerar redan."
 msgid "E-mail does not exist or account is already confirmed."
 msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 
-#: profile/models.py:30 templates/apparel/user_list.html:38
+#: profile/models.py:29 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
 #: templates/apparel/fragments/product_menu_browse.html:12
 msgid "All"
 msgstr "Alla"
 
-#: profile/models.py:31
+#: profile/models.py:30
 msgid "Those I follow"
 msgstr "De jag följer"
 
-#: profile/models.py:32
+#: profile/models.py:31
 msgid "No one"
 msgstr "Inga"
 
-#: profile/models.py:52 profile/models.py:277
+#: profile/models.py:51 profile/models.py:276
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:53 profile/models.py:278 templates/base.html:317
+#: profile/models.py:52 profile/models.py:277 templates/base.html:317
 msgid "About"
 msgstr "Om"
 
-#: profile/models.py:54 profile/models.py:279
+#: profile/models.py:53 profile/models.py:278
 msgid "Language"
 msgstr "Språk"
 
-#: profile/models.py:64 profile/models.py:288
+#: profile/models.py:63 profile/models.py:287
 msgid "Login flow"
 msgstr "Inloggingsflöde"
 
-#: profile/models.py:67 profile/models.py:291
+#: profile/models.py:66 profile/models.py:290
 msgid "Participating in newsletter"
 msgstr ""
 
-#: profile/models.py:70 profile/models.py:294
+#: profile/models.py:69 profile/models.py:293
 msgid "Receiving sale alerts"
 msgstr ""
 
-#: profile/models.py:84 profile/models.py:307
+#: profile/models.py:83 profile/models.py:306
 msgid "Partner user"
 msgstr ""
 
-#: profile/models.py:89 profile/models.py:313
+#: profile/models.py:88 profile/models.py:312
 msgid "When someone commented on a product that I have liked"
 msgstr "När någon kommenterat en produkt som jag har gillat"
 
-#: profile/models.py:91 profile/models.py:315
+#: profile/models.py:90 profile/models.py:314
 msgid "When someone commented on a product that I have commented on"
 msgstr "När någon kommenterat en produkt som jag kommenterat på"
 
-#: profile/models.py:93 profile/models.py:317
+#: profile/models.py:92 profile/models.py:316
 msgid "When someone commented on a look that I have created"
 msgstr "När någon kommenterat en look som jag har gjort"
 
-#: profile/models.py:95 profile/models.py:319
+#: profile/models.py:94 profile/models.py:318
 msgid "When someone commented on a look that I have commented on"
 msgstr "När någon kommenterat en look som jag har kommenterat på"
 
-#: profile/models.py:97 profile/models.py:321
+#: profile/models.py:96 profile/models.py:320
 msgid "When someone likes a look that I have created"
 msgstr "När någon gillar en look som jag har gjort"
 
-#: profile/models.py:99 profile/models.py:323
+#: profile/models.py:98 profile/models.py:322
 msgid "When someone starts to follow me"
 msgstr "När någon börjat följa mig"
 
-#: profile/models.py:101 profile/models.py:325
+#: profile/models.py:100 profile/models.py:324
 msgid "When a Facebook friend has joined Apprl"
 msgstr "När en Facebookvän blivit medlem på Apprl"
 
-#: profile/models.py:263 profile/models.py:507
+#: profile/models.py:262 profile/models.py:506
 msgid "Partner group must be set to be able to set partner status"
 msgstr ""
 
-#: profile/models.py:281
+#: profile/models.py:280
 msgid "Last visit home"
 msgstr ""
 
-#: profile/models.py:328
+#: profile/models.py:327
 msgid "Is this the first visit?"
 msgstr ""
 
-#: profile/models.py:516
+#: profile/models.py:515
 msgid "Receive payments as a company"
 msgstr "Jag vill ha utbetalning som företag"
 
-#: profile/models.py:516
+#: profile/models.py:515
 msgid "Receive payments as a private person"
 msgstr "Jag vill ha utbetalning som privatperson"
 
-#: profile/models.py:520
+#: profile/models.py:519
 msgid "Address"
 msgstr "Adress"
 
-#: profile/models.py:521
+#: profile/models.py:520
 msgid "Postal code"
 msgstr "Postkod"
 
-#: profile/models.py:522
+#: profile/models.py:521
 msgid "City"
 msgstr "Postadress"
 
-#: profile/models.py:549 profile/views.py:533
-msgid "Welcome to Apprl"
-msgstr "Välkommen till Apprl"
+#: profile/utils.py:100
+#, python-format
+msgid "Welcome to Apprl %(name)s"
+msgstr "Välkommen till Apprl %(name)s"
 
 #: profile/views.py:230
 msgid "Password was updated"
@@ -2453,7 +2454,7 @@ msgstr ""
 #: templates/profile/notifications/email_base.html:7
 #: templates/registration/registration_activation_email.html:8
 msgid "With ♥ from Apprl"
-msgstr ""
+msgstr "Med ♥ från Apprl"
 
 #: templates/profile/confirm_email_subject.html:1
 msgid "Confirm e-mail address change"
@@ -2461,10 +2462,10 @@ msgstr "Bekräfta byte av e-postadress"
 
 #: templates/profile/email_welcome.html:5
 msgid ""
-"At Apprl we have collected clothes, shoes and accessories from all the "
+"at Apprl we have collected clothes, shoes and accessories from all the "
 "leading international brands and retailers."
 msgstr ""
-"På Apprl har vi samlat kläder, skor och accessoarer från världens bästa "
+"på Apprl har vi samlat kläder, skor och accessoarer från världens bästa "
 "onlinebutiker."
 
 #: templates/profile/email_welcome.html:7

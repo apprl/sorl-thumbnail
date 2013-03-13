@@ -8,8 +8,12 @@ from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse, resolve
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.template.loader import render_to_string
+from django.utils.translation import ugettext
 
 import facebook
+
+from profile.tasks import send_email_confirm_task
 
 
 FB_USER_SESSION_KEY = '_fb_user'
@@ -91,3 +95,9 @@ def get_current_user(view_func):
     _decorator.__doc__  = view_func.__doc__
 
     return _decorator
+
+
+def send_welcome_mail(user):
+    subject = ugettext(u'Welcome to Apprl %(name)s') % {'name': user.display_name}
+    body = render_to_string('profile/email_welcome.html', {'name': user.display_name})
+    send_email_confirm_task.delay(subject, body, user.email)

@@ -7,7 +7,6 @@ import datetime
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from django.template.loader import render_to_string
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import get_language, ugettext_lazy as _, ugettext
 from django.conf import settings
@@ -22,8 +21,7 @@ from sorl.thumbnail import get_thumbnail
 from django_extensions.db.fields import AutoSlugField
 
 from activity_feed.tasks import update_activity_feed
-from profile.tasks import send_email_confirm_task
-from profile.utils import slugify_unique
+from profile.utils import slugify_unique, send_welcome_mail
 
 
 EVENT_CHOICES = (
@@ -546,9 +544,7 @@ def post_save_user_create(signal, instance, **kwargs):
     if kwargs['created']:
         # Send welcome email if facebook user and has email
         if instance.email and instance.facebook_user_id:
-            subject = ugettext('Welcome to Apprl')
-            body = render_to_string('profile/email_welcome.html')
-            send_email_confirm_task.delay(subject, body, instance.email)
+            send_welcome_mail(instance)
 
         if not instance.slug:
             instance.slug = slugify_unique(instance.display_name_live, instance.__class__)

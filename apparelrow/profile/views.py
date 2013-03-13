@@ -20,7 +20,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from apparel.models import Product
 from apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
 from apparel.tasks import facebook_push_graph
-from profile.utils import get_facebook_user, get_current_user
+from profile.utils import get_facebook_user, get_current_user, send_welcome_mail
 from profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
 from profile.models import EmailChange, Follow, PaymentDetail
 from profile.tasks import send_email_confirm_task
@@ -530,9 +530,7 @@ def register_activate(request, key):
         user.save()
 
         # Send welcome email
-        subject = ugettext('Welcome to Apprl')
-        body = render_to_string('profile/email_welcome.html')
-        send_email_confirm_task.delay(subject, body, user.email)
+        send_welcome_mail(user)
 
         # XXX: Bypass authenticate step by settings backend on user
         user.backend = 'django.contrib.auth.backends.ModelBackend'
