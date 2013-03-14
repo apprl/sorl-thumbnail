@@ -1,0 +1,31 @@
+server {
+    listen 8899;
+	server_name apprl.com %(hostname)s.apprl.com;
+
+    include sites-available/%(project_name)s.include.conf;
+}
+
+server {
+    listen 8899;
+    server_name www.apprl.com
+
+    return 301 $scheme://apprl.com$request_uri;
+}
+
+server {
+    listen 8899;
+    server_name *.apprl.se
+
+    return 301 $scheme://apprl.com$request_uri;
+}
+
+server {
+    listen 8899;
+    server_name *.apparelrow.com *.apparelrow.se
+
+    set $project_name %(project_name)s;
+    set $deploy_base %(path)s;
+    set $deploy_dir $deploy_base/releases/current;
+
+    root $deploy_dir/www/root/apprltransition;
+}

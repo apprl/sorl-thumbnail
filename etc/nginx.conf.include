@@ -1,0 +1,32 @@
+set $project_name %(project_name)s;
+set $deploy_base %(path)s;
+set $deploy_dir $deploy_base/releases/current;
+
+root $deploy_dir/$project_name;
+index index.html index.htm;
+
+location /robots.txt { alias $deploy_dir/$project_name/static/robots.%(hostname)s.txt; }
+location /favicon.ico { alias $deploy_dir/$project_name/static/images/favicon.ico; }
+location /channel.html { alias $deploy_dir/$project_name/static/channel.html; }
+location /media { alias $deploy_base/shared; }
+
+# TODO: Not sure about this one
+location ~ ^/(?:wo)?men.*$ {
+    rewrite ^/(?:wo)?men.*$ /shop/$1 permanent;
+}
+
+# Proxy /admin requests to our WSGI server for admin page
+location /admin {
+    proxy_pass http://127.0.0.1:80/admin;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+
+# Proxy all other requests to our WSGI server
+location / {
+    proxy_pass http://127.0.0.1:80;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}

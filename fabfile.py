@@ -124,6 +124,8 @@ def setup(snapshot='master'):
         sudo('apt-get install -y python-psycopg2')
     if env.webserver=='lighttpd':
         sudo('apt-get install -y lighttpd')
+    elif env.webserver=='nginx':
+        sudo('apt-get install -y nginx')
 
     # disable default site
     with settings(warn_only=True):
@@ -155,6 +157,7 @@ def deploy(param='', snapshot='master'):
     upload_tar_from_git(snapshot)
     install_requirements()
     install_site()
+    install_nginx()
     copy_bin()
     copy_config()
     copy_solr()
@@ -216,6 +219,14 @@ def install_site():
     upload_template('etc/%(webserver)s.conf.include' % env, '/etc/%(webserver)s/conf-available/%(project_name)s.include.conf' % env, context=env, use_sudo=True)
     with settings(warn_only=True):
         sudo('cd /etc/%(webserver)s/conf-enabled/; ln -sf ../conf-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
+
+def install_nginx():
+    require('release', provided_by=[deploy, setup])
+    upload_template('etc/nginx.conf.%(hostname)s' % env, '/etc/nginx/sites-available/%(project_name)s.conf' % env, context=env, use_sudo=True)
+    upload_template('etc/nginx.conf.include' % env, '/etc/nginx/sites-available/%(project_name)s.include.conf' % env, context=env, use_sudo=True)
+    with settings(warn_only=True):
+        sudo('cd /etc/nginx/sites-enabled/; ln -sf ../sites-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
+
 
 def install_requirements():
     "Install the required packages from the requirements file using pip"
@@ -358,6 +369,8 @@ def restart_webserver():
     require('webserver')
     with settings(warn_only=True):
         sudo('/etc/init.d/%(webserver)s reload' % env, pty=False)
+        # Temp:
+        sudo('/etc/init.d/nginx reload' % env, pty=False)
 
 def build_brand_list():
     """Build static brand list"""
