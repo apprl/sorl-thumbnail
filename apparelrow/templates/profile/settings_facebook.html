@@ -11,7 +11,7 @@
         {% endif %}
     {% else %}
         <p>{% trans "Here you can set which actions you want to be automatically shared to your Facebook timeline:" %}</p>
-        <form action="{% url 'profile.views.settings_facebook' %}" method="post">{% csrf_token %}
+        <form action="{% url 'settings-facebook' %}" method="post">{% csrf_token %}
             <div style="clear: both; padding: 1em 0;">
                 {% for field in facebook_settings_form %}
                     <p>{{ field }} {{ field.help_text }}</p>

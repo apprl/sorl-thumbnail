@@ -5,7 +5,7 @@
   <head>
     <title>{{ object.title }} by {{ object.user.display_name }} | Apprl - Social Shopping</title>
     <link rel="stylesheet" href="{% static 'styles/widget.css' %}">
-    <link rel="canonical" href="{% url 'apparel.views.look_detail' object.slug %}">
+    <link rel="canonical" href="{% url 'look-detail' object.slug %}">
     <script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);

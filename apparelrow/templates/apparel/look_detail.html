@@ -129,7 +129,7 @@
             {% include 'apparel/fragments/follow.html' with profile=object.user %}
         {% else %}
             <a class="btn btn-small btn-positive btn-edit" href="{% url 'look-editor' object.slug %}">{% trans "Edit" %}</a>
-            <a class="btn btn-small btn-negative btn-delete" title="{{ object.title }}" href="{% url 'apparel.views.look_delete' object.slug %}">{% trans "Delete" %}</a>
+            <a class="btn btn-small btn-negative btn-delete" title="{{ object.title }}" href="{% url 'look-delete' object.slug %}">{% trans "Delete" %}</a>
             {% if object.published %}
             <a class="btn btn-small btn-positive btn-unpublish" data-href="{% url 'look-publish' object.slug %}" data-text="{% trans "Publish" %}" title="{{ object.title }}" href="{% url 'look-unpublish' object.slug %}">{% trans "Unpublish" %}</a>
             {% else %}
@@ -204,14 +204,14 @@
             {% cache CACHE_TIMEOUT look_detail3 object.id LANGUAGE_CODE %}
             {% include 'apparel/fragments/look_collage.html' %}
             {% endcache %}
-            <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'apparel.views.look_like' object.slug 'like' %}" data-unlike-url="{% url 'apparel.views.look_like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
+            <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
         </div>
     {% else %}
         <div class="look-large photo">
             {% cache CACHE_TIMEOUT look_detail3 object.id LANGUAGE_CODE %}
             {% include 'apparel/fragments/look_photo.html' %}
             {% endcache %}
-            <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'apparel.views.look_like' object.slug 'like' %}" data-unlike-url="{% url 'apparel.views.look_like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
+            <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
         </div>
     {% endif %}
     {% include 'apparel/fragments/comments.html' %}

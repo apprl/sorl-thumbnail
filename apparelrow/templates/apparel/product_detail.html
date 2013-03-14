@@ -100,7 +100,6 @@
 {% block body-classes %}product two-columns right{% endblock %}
 {% block body %}
 {% if object %}
-{% url 'apparel.views.product_user_like_list' object.slug as likes_url %}
         <div class="product-left">
             <div class="product-image">
                 {% thumbnail object.product_image "328" upscale=False crop="noop" as im %}

@@ -18,7 +18,7 @@
                         <a href="{% internal_referral_url component.product.get_absolute_url object.user.pk %}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style }}display:none;"></a>
                         {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
                     {% endfor %}
-                    <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'apparel.views.look_like' object.slug 'like' %}" data-unlike-url="{% url 'apparel.views.look_like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
+                    <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
                     </div>
                 {% else %}
                     {% for component in object.collage_components.all %}
@@ -29,7 +29,7 @@
                         {% endthumbnail %}
                         {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
                     {% endfor %}
-                    <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'apparel.views.look_like' object.slug 'like' %}" data-unlike-url="{% url 'apparel.views.look_like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
+                    <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
                 {% endif %}
             </div>
             <div class="look-footer look-footer-large">
@@ -48,7 +48,7 @@
             {% if request.user and request.user.is_authenticated and request.user == object.user %}
             <div class="look-control">
                 <a href="{% url 'look-editor' object.slug %}" title="{% trans "Edit" %}" class="btn btn-small btn-positive btn-edit">{% trans "Edit" %}</a>
-                <a href="{% url 'apparel.views.look_delete' object.slug %}" title="{% trans "Delete" %}" class="btn btn-small btn-negative btn-delete">{% trans "Delete" %}</a>
+                <a href="{% url 'look-delete' object.slug %}" title="{% trans "Delete" %}" class="btn btn-small btn-negative btn-delete">{% trans "Delete" %}</a>
                 {% if not object.published %}
                 <a class="btn btn-small btn-positive btn-publish" data-href="{% url 'look-unpublish' object.slug %}" data-text="{% trans "Unpublish" %}" title="{{ object.title }}" href="{% url 'look-publish' object.slug %}">{% trans "Publish" %}</a>
                 {% endif %}

@@ -96,9 +96,9 @@ urlpatterns = patterns('',
     url(r'^looks/search/$', 'apparelrow.apparel.views.look_list', {'search': True}, name='search-look-list'),
     url(r'^looks/(?P<slug>[\w-]+)/publish/$', 'apparelrow.apparel.views.looks.publish', name='look-publish'),
     url(r'^looks/(?P<slug>[\w-]+)/unpublish/$', 'apparelrow.apparel.views.looks.unpublish', name='look-unpublish'),
-    (r'^looks/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_detail'),
-    (r'^looks/(?P<slug>[\w-]+?)/delete/$', 'apparelrow.apparel.views.look_delete'),
-    (r'^looks/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.look_like'),
+    url(r'^looks/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_detail', name='look-detail'),
+    url(r'^looks/(?P<slug>[\w-]+?)/delete/$', 'apparelrow.apparel.views.look_delete', name='look-delete'),
+    url(r'^looks/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.look_like', name='look-like'),
 
     # Dialogs
     url(r'^dialog/like-product/$', 'apparelrow.apparel.views.dialog_like_product', name='dialog-like-product'),
@@ -108,7 +108,7 @@ urlpatterns = patterns('',
     url(r'^dialog/user-feed/$', 'apparelrow.activity_feed.views.dialog_user_feed', name='dialog-user-feed'),
 
     # Embed
-    url(r'^embed/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_embed'),
+    url(r'^embed/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_embed', name='look-embed'),
 
     # Widget
     url(r'^widget/look/(?P<object_id>\d+)/collage/$', 'apparelrow.apparel.views.widget', {

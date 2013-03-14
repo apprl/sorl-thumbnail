@@ -181,7 +181,7 @@
                     <a class="current language" href="{% url 'django.views.i18n.set_language' %}">{% trans language.1 %}</a>
                     {% endif %}
                     {% endfor %}
-                    <form action="{% url 'apparel.views.apparel_set_language' %}" method="post" class="select-language">
+                    <form action="{% url 'apparelrow.apparel.views.apparel_set_language' %}" method="post" class="select-language">
                         {% csrf_token %}
                         <ul class="subnav-gray" id="subnav-language">
                         {% for language in LANGUAGES %}
