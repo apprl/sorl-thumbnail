@@ -456,7 +456,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': '../../../var/logs/app_logger.log',
+            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'app_logger.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -464,7 +464,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': '../../../var/logs/importer.log',
+            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'importer.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -477,7 +477,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': '../../../var/logs/dashboard.log',
+            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'dashboard.log'),
             'maxBytes': 3000000,
             'backupCount': 8,
         },
