@@ -608,9 +608,9 @@ def look_delete(request, slug):
             facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', request.build_absolute_uri(look.get_absolute_url()))
 
         look.delete()
-        return (True, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.slug,))))
+        return (True, HttpResponseRedirect(reverse('profile-looks', args=(request.user.slug,))))
     else:
-        return (False, HttpResponseRedirect(reverse('profile.views.looks', args=(request.user.slug,))))
+        return (False, HttpResponseRedirect(reverse('profile-looks', args=(request.user.slug,))))
 
 def widget(request, object_id, template_name, model):
     try:

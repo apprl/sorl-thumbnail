@@ -277,7 +277,7 @@ class Product(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('apparel.views.product_detail', [str(self.slug)])
+        return ('product-detail', [str(self.slug)])
 
     @cached_property
     def categories_all_languages(self):
@@ -874,7 +874,7 @@ class Look(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('apparel.views.look_detail', [str(self.slug)])
+        return ('look-detail', [str(self.slug)])
 
     class Meta:
         ordering = ['user', 'title']

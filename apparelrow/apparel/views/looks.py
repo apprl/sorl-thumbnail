@@ -293,7 +293,7 @@ class LookView(View):
         look_saved.send(sender=get_model('apparel', 'Look'), look=look)
 
         response = JSONResponse(look_instance_to_dict(look), status=201)
-        response['Location'] = reverse('apparel.views.look_detail', args=[look.slug])
+        response['Location'] = reverse('look-detail', args=[look.slug])
 
         return response
 

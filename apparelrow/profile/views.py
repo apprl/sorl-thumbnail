@@ -231,7 +231,7 @@ def settings_password(request):
             else:
                 messages.success(request, _('Password was added'))
 
-            return HttpResponseRedirect(reverse('profile.views.settings_password'))
+            return HttpResponseRedirect(reverse('settings-password'))
     else:
         form = FormClass(request.user)
 
@@ -251,7 +251,7 @@ def settings_notification(request):
         if newsletter_form.is_valid():
             newsletter_form.save()
 
-        return HttpResponseRedirect(reverse('profile.views.settings_notification'))
+        return HttpResponseRedirect(reverse('settings-notification'))
 
     form = NotificationForm(instance=request.user)
     newsletter_form = NewsletterForm(instance=request.user)
@@ -273,7 +273,7 @@ def confirm_email(request):
         request.user.save()
         email_change.delete()
 
-    return HttpResponseRedirect(reverse('profile.views.settings_email'))
+    return HttpResponseRedirect(reverse('settings-email'))
 
 @login_required
 def settings_email(request):
@@ -293,12 +293,12 @@ def settings_email(request):
             subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
             body = render_to_string('profile/confirm_email.html', {
                     'username': request.user.display_name,
-                    'link': 'http://%s%s' % (Site.objects.get_current().domain, reverse('profile.views.confirm_email')),
+                    'link': 'http://%s%s' % (Site.objects.get_current().domain, reverse('user-confirm-email')),
                     'token': token,
                 })
             send_email_confirm_task.delay(subject, body, request.user.email)
 
-        return HttpResponseRedirect(reverse('profile.views.settings_email'))
+        return HttpResponseRedirect(reverse('settings-email'))
 
     form = EmailForm()
     try:
@@ -321,7 +321,7 @@ def settings_facebook(request):
         if form.is_valid():
             form.save()
 
-        return HttpResponseRedirect(reverse('profile.views.settings_facebook'))
+        return HttpResponseRedirect(reverse('settings-facebook'))
 
     form = FacebookSettingsForm(instance=request.user)
 
@@ -349,7 +349,7 @@ def settings_partner(request):
             instance.user = request.user
             instance.save()
 
-        return HttpResponseRedirect(reverse('profile.views.settings_partner'))
+        return HttpResponseRedirect(reverse('settings-partner'))
 
     form = PartnerSettingsForm(instance=request.user)
     details_form = PartnerPaymentDetailForm(instance=instance)
@@ -385,7 +385,7 @@ def login_flow_friends(request, profile, forms):
 
     context = {
         'login_flow_step': 'step-initial',
-        'next_url': reverse('profile.views.login_flow_featured'),
+        'next_url': reverse('login-flow-featured'),
         'profiles': get_facebook_friends(request)
     }
     context.update(forms)
@@ -430,7 +430,7 @@ def login_flow_featured(request, profile, forms):
 
     context = {
         'login_flow_step': 'step-members',
-        'next_url': reverse('profile.views.login_flow_brands'),
+        'next_url': reverse('login-flow-brands'),
         'profiles': profiles[:21],
     }
     context.update(forms)
@@ -449,7 +449,7 @@ def login_flow_brands(request, profile, forms):
 
     context = {
         'login_flow_step': 'step-brands',
-        'next_url': reverse('profile.views.login_flow_complete'),
+        'next_url': reverse('login-flow-complete'),
         'profiles': get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:21]
     }
     context.update(forms)
@@ -541,7 +541,7 @@ def register_activate(request, key):
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         auth.login(request, user)
 
-        response = HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (user.login_flow)))
+        response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
         response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
         return response
 
@@ -571,7 +571,7 @@ def _get_next(request):
 
 def flow(request):
     if request.user.login_flow != 'complete':
-        url = reverse('profile.views.login_flow_%s' % (request.user.login_flow))
+        url = reverse('login-flow-%s' % (request.user.login_flow))
         response = HttpResponseRedirect(url)
         response.set_cookie(settings.APPAREL_GENDER_COOKIE,
                             value=request.user.gender,
@@ -593,7 +593,7 @@ def facebook_login(request):
                 return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
 
             if user.login_flow != 'complete':
-                response = HttpResponseRedirect(reverse('profile.views.login_flow_%s' % (user.login_flow)))
+                response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
                 response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
                 return response
 

@@ -50,10 +50,10 @@ urlpatterns = patterns('',
     url(r'^products/(?P<pk>[\d]+)/$', 'apparelrow.apparel.views.product_redirect_by_id', name='product-redirect-by-id'),
     url(r'^products/(?P<pk>[\wd]+)/popup/$', 'apparelrow.apparel.views.products.product_detail_popup', name='product-detail-popup'),
     url(r'^products/(?P<pk>[\d]+)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.product_action', name='product-action'),
-    (r'^products/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.product_detail'),
+    url(r'^products/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.product_detail', name='product-detail'),
     url(r'^products/(?P<slug>[\w-]+)/short/$', 'apparelrow.apparel.views.product_generate_short_link', name='product-generate-short-link'),
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparelrow.apparel.views.look_list', name='product-look-list'),
-    (r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.product_like'),
+    url(r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.product_like', name='product-like'),
 
     # Track product
     url(r'^redirect/(?P<pk>[\d]+)/$', 'apparelrow.apparel.views.product_redirect', name='product-redirect'),
