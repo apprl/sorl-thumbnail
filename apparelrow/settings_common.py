@@ -113,7 +113,7 @@ AWS_QUERYSTRING_AUTH = False
 AWS_S3_SECURE_URLS = False
 # TODO: use if django-storages is upgraded
 #AWS_PRELOAD_METADATA = True
-STATICFILES_STORAGE = 'storage.CachedStaticS3BotoStorage'
+STATICFILES_STORAGE = 'apparelrow.storage.CachedStaticS3BotoStorage'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'zb*p6d^l!by6hhugm+^f34m@-yex9c90yz)c_71t=+lxo%mn(3'
