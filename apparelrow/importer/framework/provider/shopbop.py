@@ -1,6 +1,6 @@
 import re
 
-from importer.framework.provider.cj import CJMapper, Provider as CJProvider
+from apparelrow.importer.framework.provider.cj import CJMapper, Provider as CJProvider
 
 class ShopbopMapper(CJMapper): 
 

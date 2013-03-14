@@ -1,5 +1,5 @@
-from importer.framework.provider.zanox import ZanoxMapper, Provider as ZanoxProvider
-from importer.framework.parser import utils
+from apparelrow.importer.framework.provider.zanox import ZanoxMapper, Provider as ZanoxProvider
+from apparelrow.importer.framework.parser import utils
 
 class MyWardrobeMapper(ZanoxMapper):
 

@@ -1,4 +1,4 @@
-from importer.framework.provider.affiliatewindow import AffiliateWindowMapper, Provider as AffiliateWindowProvider
+from apparelrow.importer.framework.provider.affiliatewindow import AffiliateWindowMapper, Provider as AffiliateWindowProvider
 
 class AllSaintsMapper(AffiliateWindowMapper):
 

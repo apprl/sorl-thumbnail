@@ -13,7 +13,7 @@ from django.utils.translation import ugettext
 
 import facebook
 
-from profile.tasks import send_email_confirm_task
+from apparelrow.profile.tasks import send_email_confirm_task
 
 
 FB_USER_SESSION_KEY = '_fb_user'

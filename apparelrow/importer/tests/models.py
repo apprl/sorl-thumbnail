@@ -3,8 +3,8 @@ from datetime import datetime
 
 from django.test import TestCase, TransactionTestCase
 
-from importer.models import *
-from apparel import models as apparel
+from apparelrow.importer.models import *
+from apparelrow.apparel import models as apparel
 
 
 class ImportLogTest(TestCase):

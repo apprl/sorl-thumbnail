@@ -2,8 +2,8 @@ import libxml2, logging, re, os
 from decimal import Decimal
 from xml.sax.saxutils import unescape
 
-from importer.framework import fetcher
-from importer.models import FXRate
+from apparelrow.importer.framework import fetcher
+from apparelrow.importer.models import FXRate
 
 
 logger = logging.getLogger('apparel.importer.fxrates')

@@ -1,4 +1,4 @@
-from importer.framework.provider.tradedoubler import TradeDoublerMapper, Provider as TradeDoublerProvider
+from apparelrow.importer.framework.provider.tradedoubler import TradeDoublerMapper, Provider as TradeDoublerProvider
 
 class BubbleroomMapper(TradeDoublerMapper):
 

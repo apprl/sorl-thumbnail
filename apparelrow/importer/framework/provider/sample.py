@@ -1,4 +1,4 @@
-from importer.framework.provider import Provider as ProviderBase
+from apparelrow.importer.framework.provider import Provider as ProviderBase
 
 
 class Provider(ProviderBase):

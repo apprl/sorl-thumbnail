@@ -1,8 +1,8 @@
 import re
 
-from importer.framework.provider import CSVProvider
-from importer.framework.parser import utils
-from importer.framework.mapper import DataMapper
+from apparelrow.importer.framework.provider import CSVProvider
+from apparelrow.importer.framework.parser import utils
+from apparelrow.importer.framework.mapper import DataMapper
     
 class GrandpaMapper(DataMapper):
     def get_description(self):

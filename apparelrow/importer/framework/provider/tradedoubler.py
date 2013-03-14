@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import re
 
-from importer.api import SkipProduct
-from importer.framework.provider import CSVProvider
-from importer.framework.parser import utils
-from importer.framework.mapper import DataMapper
+from apparelrow.importer.api import SkipProduct
+from apparelrow.importer.framework.provider import CSVProvider
+from apparelrow.importer.framework.parser import utils
+from apparelrow.importer.framework.mapper import DataMapper
 
 AVAILABILITY_MATRIX = {'n': False, 'no': False, 'not in stock': False}
 

@@ -1,6 +1,6 @@
 import re
 
-from importer.framework.provider.linkshare import LinkshareMapper, Provider as LinkshareProvider
+from apparelrow.importer.framework.provider.linkshare import LinkshareMapper, Provider as LinkshareProvider
 
 class Mapper(LinkshareMapper):
 

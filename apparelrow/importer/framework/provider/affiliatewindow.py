@@ -3,10 +3,10 @@ import itertools
 import re
 import decimal
 
-from importer.framework.provider import CSVProvider
-from importer.framework.parser import utils
-from importer.framework.mapper import DataMapper
-from importer.framework.mapper import expand_entities
+from apparelrow.importer.framework.provider import CSVProvider
+from apparelrow.importer.framework.parser import utils
+from apparelrow.importer.framework.mapper import DataMapper
+from apparelrow.importer.framework.mapper import expand_entities
 
 REGEX_SIZE = re.compile('^[Ss]ize: .+\. ')
 REGEX_DECIMAL = re.compile(r'[^\d\.]')

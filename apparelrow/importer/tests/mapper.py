@@ -5,10 +5,10 @@ from mock import Mock
 
 from django.test import TestCase, TransactionTestCase
 
-from importer.framework.mapper import DataMapper, SkipField
-from importer.framework.provider import Provider
-from importer.models import VendorFeed
-from apparel import models as apparel
+from apparelrow.importer.framework.mapper import DataMapper, SkipField
+from apparelrow.importer.framework.provider import Provider
+from apparelrow.importer.models import VendorFeed
+from apparelrow.apparel import models as apparel
 
 
 

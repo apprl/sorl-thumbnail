@@ -579,11 +579,9 @@ class API(object):
         return self._product_image
 
     def fxrates(self):
-        from importer.models import FXRate
-
         if not API._fxrates:
             if hasattr(settings, 'APPAREL_BASE_CURRENCY'):
-                API._fxrates = dict([(c.currency, c) for c in FXRate.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY)])
+                API._fxrates = dict([(c.currency, c) for c in get_model('importer', 'FXRate').objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY)])
             else:
                 logger.warning('Missing APPAREL_BASE_CURRENCY setting, prices will not be converted')
                 API._fxrates = {}

@@ -3,10 +3,10 @@ import os, datetime
 from django.test import TestCase, TransactionTestCase
 from django.conf import settings
 
-from importer.framework.provider import Provider, load_provider, CSVProvider
-from importer.framework.mapper   import DataMapper
-from importer.models import VendorFeed
-from apparel import models as apparel
+from apparelrow.importer.framework.provider import Provider, load_provider, CSVProvider
+from apparelrow.importer.framework.mapper   import DataMapper
+from apparelrow.importer.models import VendorFeed
+from apparelrow.apparel import models as apparel
 
 
 

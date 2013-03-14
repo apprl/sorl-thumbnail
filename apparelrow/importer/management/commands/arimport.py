@@ -5,7 +5,7 @@ from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from importer.models import VendorFeed, ImportLog
+from apparelrow.importer.models import VendorFeed, ImportLog
 
 class Command(BaseCommand):
     args = "<name>"

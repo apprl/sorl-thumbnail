@@ -1,5 +1,5 @@
-from importer.framework.mapper import expand_entities
-from importer.framework.provider.affiliatewindow import AffiliateWindowMapper, Provider as AffiliateWindowProvider
+from apparelrow.importer.framework.mapper import expand_entities
+from apparelrow.importer.framework.provider.affiliatewindow import AffiliateWindowMapper, Provider as AffiliateWindowProvider
 
 class TedBakerMapper(AffiliateWindowMapper): 
 

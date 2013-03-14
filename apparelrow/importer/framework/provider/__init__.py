@@ -19,7 +19,7 @@ logger = logging.getLogger('apparel.importer.provider')
 
 
 def load_provider(name, feed):
-    module = __import__('importer.framework.provider.%s' % name, fromlist = ['Provider'])   
+    module = __import__('apparelrow.importer.framework.provider.%s' % name, fromlist = ['Provider'])   
     
     return module.Provider(feed)
 
@@ -237,7 +237,7 @@ class CSVProvider(Provider):
     A provider that parses CSV files. 
     Example usage:
     
-        from importer.framework.parser import utils
+        from apparelrow.importer.framework.parser import utils
         
         class MyProvider(ProviderCSV):
             def __init__(self, *args, **kwargs):

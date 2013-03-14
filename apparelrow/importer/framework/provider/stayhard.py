@@ -1,5 +1,5 @@
-from importer.framework.mapper import expand_entities
-from importer.framework.provider.cj import CJMapper, Provider as CJProvider
+from apparelrow.importer.framework.mapper import expand_entities
+from apparelrow.importer.framework.provider.cj import CJMapper, Provider as CJProvider
 
 # See cj.py
 

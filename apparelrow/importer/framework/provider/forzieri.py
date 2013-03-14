@@ -1,6 +1,6 @@
 import os.path
 
-from importer.framework.provider.linkshare import LinkshareMapper, Provider as LinkshareProvider
+from apparelrow.importer.framework.provider.linkshare import LinkshareMapper, Provider as LinkshareProvider
 
 # See linkshare.py
 

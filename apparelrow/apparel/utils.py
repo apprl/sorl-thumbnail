@@ -135,7 +135,7 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
     numbers being displayed in the pagination.
 
     >>> from django.core.paginator import Paginator
-    >>> from apparel import views
+    >>> from apparelrow.apparel import views
     >>> p = Paginator(range(22), 2)
     >>> views.get_pagination(p, 3)
     (None, [1, 2, 3, 4, 5, 6], [10, 11])

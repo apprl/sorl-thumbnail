@@ -9,8 +9,8 @@ import decimal
 from django.conf import settings
 from django.utils.encoding import smart_unicode
 
-from importer.api import API, SkipProduct
-from importer.models import Mapping
+from apparelrow.importer.api import API, SkipProduct
+from apparelrow.importer.models import Mapping
 
 logger = logging.getLogger('apparel.importer.mapper')
 

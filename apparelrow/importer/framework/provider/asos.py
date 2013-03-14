@@ -1,4 +1,4 @@
-from importer.framework.provider.zanox import ZanoxMapper, Provider as ZanoxProvider
+from apparelrow.importer.framework.provider.zanox import ZanoxMapper, Provider as ZanoxProvider
 
 class AsosMapper(ZanoxMapper):
 

@@ -1,8 +1,8 @@
 import libxml2, logging
 from xml.sax.saxutils import unescape
 
-from importer.framework.provider import Provider as BaseProvider
-from importer.framework.mapper import DataMapper
+from apparelrow.importer.framework.provider import Provider as BaseProvider
+from apparelrow.importer.framework.mapper import DataMapper
 
 logger = logging.getLogger('apparel.importer')
 
