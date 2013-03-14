@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse, resolve
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext
 
@@ -82,11 +82,14 @@ def get_current_user(view_func):
             try:
                 user = get_user_model().objects.get(slug=slug)
             except get_user_model().DoesNotExist:
-                user = get_user_model().objects.get(username=slug)
-                if user.slug:
-                    url_result = resolve(request.path)
+                try:
+                    user = get_user_model().objects.get(username=slug)
+                    if user.slug:
+                        url_result = resolve(request.path)
 
-                    return HttpResponsePermanentRedirect(reverse(url_result.url_name, args=[user.slug]))
+                        return HttpResponsePermanentRedirect(reverse(url_result.url_name, args=[user.slug]))
+                except get_user_model().DoesNotExist:
+                    raise Http404()
 
         return view_func(request, user, *args, **kwargs)
 
