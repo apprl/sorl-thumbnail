@@ -5,7 +5,7 @@ CELERYD_NODES="c1 c2"
 VIRTUALENV="%(path)s"
 
 # Where to chdir at start.
-CELERYD_CHDIR="%(path)s/releases/current/apparelrow"
+CELERYD_CHDIR="%(path)s/releases/current"
 
 # Python interpreter from environment.
 ENV_PYTHON="%(path)s/bin/python"

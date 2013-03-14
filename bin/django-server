@@ -20,7 +20,7 @@ fi
 
 # FIXME: Check that this path exists
 . $HL_APP_ROOT/bin/activate
-cd $HL_APP_ROOT/releases/current/$HL_APP_NAME
+cd $HL_APP_ROOT/releases/current
 
 if ([[ "$1" == "restart" ]] || [[ "$1" == "stop" ]]); then
     for pfile in "$PIDFILE" "$PIDFILE-admin"
@@ -30,14 +30,14 @@ if ([[ "$1" == "restart" ]] || [[ "$1" == "stop" ]]); then
        else
             pname="FCGI process"
        fi
-    
+
        if [[ -f $pfile ]]; then
             echo "Stopping $pname"
             kill `cat -- $pfile`
             rm -f -- $pfile
         elif [[ "$1" == "stop" ]]; then
             echo "No $pname running"
-        fi    
+        fi
     done
 fi
 
@@ -47,7 +47,7 @@ if [[ "$1" == "restart" ]] || [[ "$1" == "start" ]]; then
     echo "Starting FCGI process"
     ./manage.py runfcgi method=threaded socket=$SOCKET pidfile=$PIDFILE \
         maxspare=4 workdir=$HL_APP_ROOT
-        
+
     echo "Starting FCGI process (admin)"
     ./manage.py runfcgi method=threaded socket=$SOCKET-admin pidfile=$PIDFILE-admin \
         maxspare=1 maxchildren=1 workdir=$HL_APP_ROOT

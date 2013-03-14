@@ -197,7 +197,7 @@ def rollback():
 def load_fixtures():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
-        sudo('%(path)s/bin/python manage.py loaddata importer/fixtures/color_mapping.yaml importer/fixtures/feedvendors.yaml apparel/fixtures/*' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python ../manage.py loaddata importer/fixtures/color_mapping.yaml importer/fixtures/feedvendors.yaml apparel/fixtures/*' % env, pty=True, user=env.run_user)
 
 def upload_tar_from_git(snapshot='master'):
     "Create an archive from the current Git master branch and upload it"
@@ -237,7 +237,7 @@ def copy_solr():
 
     # Make sure currency.xml is created for solr
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
-        sudo('%(path)s/bin/python manage.py arfxrates --no_update --solr' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python ../manage.py arfxrates --no_update --solr' % env, pty=True, user=env.run_user)
 
 def copy_config():
     require('release', provided_by=[deploy, setup])
@@ -273,7 +273,7 @@ def build_styles_and_scripts():
         run('mkdir media', pty=True)
         sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
-        sudo('%(path)s/bin/python manage.py collectstatic --noinput' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python ../manage.py collectstatic --noinput' % env, pty=True, user=env.run_user)
 
 def migrate_s3():
     """
@@ -282,9 +282,9 @@ def migrate_s3():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         # XXX: running thumbnail clear/cleanup requires lots of ram
-        #sudo('%(path)s/bin/python manage.py thumbnail clear' % env, pty=True, user=env.run_user)
-        #sudo('%(path)s/bin/python manage.py thumbnail cleanup' % env, pty=True, user=env.run_user)
-        sudo('%(path)s/bin/python manage.py sync_media_s3 -d %(path)s/shared/static -p static' % env, pty=True, user=env.run_user)
+        #sudo('%(path)s/bin/python ../manage.py thumbnail clear' % env, pty=True, user=env.run_user)
+        #sudo('%(path)s/bin/python ../manage.py thumbnail cleanup' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python ../manage.py sync_media_s3 -d %(path)s/shared/static -p static' % env, pty=True, user=env.run_user)
 
 def symlink_current_release():
     "Symlink our current release"
@@ -309,11 +309,11 @@ def migrate(param=''):
     require('path')
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         if param=='first':
-            sudo('%(path)s/bin/python manage.py syncdb' % env, pty=True, user=env.run_user)
+            sudo('%(path)s/bin/python ../manage.py syncdb' % env, pty=True, user=env.run_user)
             # Migrate in specific order
-            sudo('%(path)s/bin/python manage.py migrate apparel' % env, pty=True, user=env.run_user)
-            sudo('%(path)s/bin/python manage.py migrate profile' % env, pty=True, user=env.run_user)
-        sudo('%(path)s/bin/python manage.py migrate' % env, pty=True, user=env.run_user)
+            sudo('%(path)s/bin/python ../manage.py migrate apparel' % env, pty=True, user=env.run_user)
+            sudo('%(path)s/bin/python ../manage.py migrate profile' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python ../manage.py migrate' % env, pty=True, user=env.run_user)
 
 def install_redis():
     run('mkdir -p /tmp/redis', pty=True)
@@ -364,9 +364,9 @@ def build_brand_list():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         sudo('chown -R %(run_user)s:%(run_group)s ./templates/apparel/generated/' % env, pty=True)
-        sudo('%(path)s/bin/python manage.py build_brand_list' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python ../manage.py build_brand_list' % env, pty=True, user=env.run_user)
 
 def manage_py(command):
     env.manage_py_command = command
     with cd('%(path)s/releases/current/%(project_name)s' % env):
-        sudo('%(path)s/bin/python manage.py %(manage_py_command)s' % env, pty=True, user=env.run_user)
+        sudo('%(path)s/bin/python ../manage.py %(manage_py_command)s' % env, pty=True, user=env.run_user)

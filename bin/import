@@ -21,7 +21,7 @@ if [[ -e $PROJDIR/bin/activate ]]; then
     . $PROJDIR/bin/activate
 fi
 
-cd "$PROJDIR/releases/current/apparelrow"
+cd "$PROJDIR/releases/current"
 
 # Refresh fx rates
 $PROJDIR/bin/python manage.py arfxrates --refresh --no_update --solr
