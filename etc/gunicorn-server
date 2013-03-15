@@ -1,10 +1,14 @@
 #!/bin/sh
 
 APP_ROOT=$(pwd)
-PIDFILE=$APP_ROOT/var/gunicorn.pid
-ADDRESS=127.0.0.1:8090
 LOGFILE=$APP_ROOT/var/logs/gunicorn.log
+
+PIDFILE=$APP_ROOT/var/gunicorn.pid
+PIDFILE_ADMIN=$APP_ROOT/var/gunicorn-admin.pid
+ADDRESS=127.0.0.1:8090
+ADDRESS_ADMIN=127.0.0.1:8095
 NUM_WORKERS=%(gunicorn_processes)s
+NUM_WORKERS_ADMIN=$(expr %(gunicorn_processes)s - 1)
 
 case "$1" in
     "stop" )
@@ -12,27 +16,37 @@ case "$1" in
             kill `cat -- $PIDFILE`
             rm -f -- $PIDFILE
         fi
+        if [ -f $PIDFILE_ADMIN ]; then
+            kill `cat -- $PIDFILE_ADMIN`
+            rm -f -- $PIDFILE_ADMIN
+        fi
     ;;
-    "" | "fg" )
+    "" | "start" )
         if [ -f $PIDFILE ]; then
             kill `cat -- $PIDFILE`
             rm -f -- $PIDFILE
+        fi
+        if [ -f $PIDFILE_ADMIN ]; then
+            kill `cat -- $PIDFILE_ADMIN`
+            rm -f -- $PIDFILE_ADMIN
         fi
 
         . $APP_ROOT/bin/activate
         cd $APP_ROOT/releases/current
 
-        if [ "$1" = "fg" ]; then
-            ../../bin/gunicorn apparelrow.wsgi:application --bind=$ADDRESS \
-                --workers=$NUM_WORKERS --log-level=debug \
-                --user=%(run_user)s --group=%(run_group)s \
-                --log-file=$LOGFILE 2>>$LOGFILE
-        else
-            ../../bin/gunicorn apparelrow.wsgi:application --bind=$ADDRESS \
-                --pid=$PIDFILE --workers=$NUM_WORKERS \
-                --user=%(run_user)s --group=%(run_group)s \
-                --log-level=debug --log-file=$LOGFILE \
-                --daemon \
-                2>>$LOGFILE
-        fi
+        # /admin
+        $APP_ROOT/bin/gunicorn apparelrow.wsgi:application --bind=$ADDRESS_ADMIN \
+            --pid=$PIDFILE_ADMIN --workers=$NUM_WORKERS_ADMIN \
+            --user=%(run_user)s --group=%(run_group)s \
+            --log-level=debug --log-file=$LOGFILE \
+            --daemon \
+            2>>$LOGFILE
+
+        # /
+        $APP_ROOT/bin/gunicorn apparelrow.wsgi:application --bind=$ADDRESS \
+            --pid=$PIDFILE --workers=$NUM_WORKERS \
+            --user=%(run_user)s --group=%(run_group)s \
+            --log-level=debug --log-file=$LOGFILE \
+            --daemon \
+            2>>$LOGFILE
 esac
