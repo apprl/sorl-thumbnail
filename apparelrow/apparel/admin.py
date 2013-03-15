@@ -131,7 +131,7 @@ def recalculate_gender(modeladmin, request, queryset):
 recalculate_gender.short_description = 'Recalculate gender for marked looks'
 
 class LookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'component', 'gender')
+    list_display = ('title', 'user', 'component', 'gender', 'created')
     list_filter = ['gender']
     actions = [rebuild_static_image, recalculate_gender]
 
