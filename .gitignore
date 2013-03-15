@@ -38,6 +38,7 @@ settings_local.py
 /bin/*
 !/bin/import
 !/bin/django-server
+!/bin/gunicorn-server
 /pip-log.txt
 /src
 /var

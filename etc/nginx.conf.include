@@ -2,7 +2,7 @@ set $project_name %(project_name)s;
 set $deploy_base %(path)s;
 set $deploy_dir $deploy_base/releases/current;
 
-root $deploy_dir/$project_name;
+root $deploy_dir/$project_name/static;
 index index.html index.htm;
 
 location /robots.txt { alias $deploy_dir/$project_name/static/robots.%(hostname)s.txt; }
@@ -17,7 +17,7 @@ location ~ ^/(?:wo)?men.*$ {
 
 # Proxy /admin requests to our WSGI server for admin page
 location /admin {
-    proxy_pass http://127.0.0.1:80/admin;
+    proxy_pass http://127.0.0.1:8090/admin;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -25,7 +25,7 @@ location /admin {
 
 # Proxy all other requests to our WSGI server
 location / {
-    proxy_pass http://127.0.0.1:80;
+    proxy_pass http://gunicorn;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

@@ -1,0 +1,38 @@
+#!/bin/sh
+
+APP_ROOT=$(pwd)
+PIDFILE=$APP_ROOT/var/gunicorn.pid
+ADDRESS=127.0.0.1:8090
+LOGFILE=$APP_ROOT/var/logs/gunicorn.log
+NUM_WORKERS=%(gunicorn_processes)s
+
+case "$1" in
+    "stop" )
+        if [ -f $PIDFILE ]; then
+            kill `cat -- $PIDFILE`
+            rm -f -- $PIDFILE
+        fi
+    ;;
+    "" | "fg" )
+        if [ -f $PIDFILE ]; then
+            kill `cat -- $PIDFILE`
+            rm -f -- $PIDFILE
+        fi
+
+        . $APP_ROOT/bin/activate
+        cd $APP_ROOT/releases/current
+
+        if [ "$1" = "fg" ]; then
+            ../../bin/gunicorn apparelrow.wsgi:application --bind=$ADDRESS \
+                --workers=$NUM_WORKERS --log-level=debug \
+                --user=%(run_user)s --group=%(run_group)s \
+                --log-file=$LOGFILE 2>>$LOGFILE
+        else
+            ../../bin/gunicorn apparelrow.wsgi:application --bind=$ADDRESS \
+                --pid=$PIDFILE --workers=$NUM_WORKERS \
+                --user=%(run_user)s --group=%(run_group)s \
+                --log-level=debug --log-file=$LOGFILE \
+                --daemon \
+                2>>$LOGFILE
+        fi
+esac

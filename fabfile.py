@@ -7,7 +7,7 @@ from os import environ
 
 # globals
 env.project_name = 'apparelrow' # no spaces!
-env.webserver = 'lighttpd' # nginx or apache2 (directory name below /etc!)
+env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'mysql' # mysql or postgresql
 
 # environments
@@ -39,6 +39,7 @@ def prod():
     env.settings = 'production'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
     env.celery_processes='6,3'
+    env.gunicorn_processes='3'
 
 def prod_db():
     "Use our EC2 server"
@@ -61,6 +62,7 @@ def staging():
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
     env.celery_processes='2,1'
+    env.gunicorn_processes='2'
 
 # tasks
 
@@ -130,6 +132,7 @@ def setup(snapshot='master'):
     # disable default site
     with settings(warn_only=True):
         sudo('cd /etc/%(webserver)s/conf-enabled/; rm -f default;' % env, pty=True)
+        sudo('cd /etc/%(webserver)s/sites-enabled/; rm -f default;' % env, pty=True)
 
     # new project setup
     sudo('mkdir -p %(path)s; chown %(user)s:%(group)s %(path)s;' % env, pty=True)
@@ -156,8 +159,8 @@ def deploy(param='', snapshot='master'):
     env.release = '%s-%s' % (time.strftime('%Y%m%d%H%M%S'), snapshot)
     upload_tar_from_git(snapshot)
     install_requirements()
-    install_site()
-    install_nginx()
+    install_webserver()
+    install_gunicorn()
     copy_bin()
     copy_config()
     copy_solr()
@@ -167,7 +170,7 @@ def deploy(param='', snapshot='master'):
     copy_sitemap()
     symlink_current_release()
     restart_celeryd()
-    restart_django()
+    restart_gunicorn()
     restart_memcached()
     restart_webserver()
 
@@ -212,21 +215,30 @@ def upload_tar_from_git(snapshot='master'):
     run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz' % env, pty=True)
     local('rm %(release)s.tar.gz' % env)
 
-def install_site():
-    "Add the virtualhost config file to the webserver's config, activate logrotate"
+def install_webserver():
     require('release', provided_by=[deploy, setup])
+    if env.webserver == 'lighttpd':
+        install_lighttpd()
+    elif env.webserver == 'nginx':
+        install_nginx()
+
+def install_lighttpd():
     upload_template('etc/%(webserver)s.conf.%(hostname)s' % env, '/etc/%(webserver)s/conf-available/%(project_name)s.conf' % env, context=env, use_sudo=True)
     upload_template('etc/%(webserver)s.conf.include' % env, '/etc/%(webserver)s/conf-available/%(project_name)s.include.conf' % env, context=env, use_sudo=True)
     with settings(warn_only=True):
         sudo('cd /etc/%(webserver)s/conf-enabled/; ln -sf ../conf-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
 
 def install_nginx():
-    require('release', provided_by=[deploy, setup])
     upload_template('etc/nginx.conf.%(hostname)s' % env, '/etc/nginx/sites-available/%(project_name)s.conf' % env, context=env, use_sudo=True)
     upload_template('etc/nginx.conf.include' % env, '/etc/nginx/sites-available/%(project_name)s.include.conf' % env, context=env, use_sudo=True)
     with settings(warn_only=True):
         sudo('cd /etc/nginx/sites-enabled/; ln -sf ../sites-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
 
+def install_gunicorn():
+    require('path', 'gunicorn_processes')
+    with cd(env.path):
+        upload_template('etc/gunicorn-server' % env, '%(path)s/bin' % env, context=env, use_sudo=True)
+        sudo('chmod a+x %(path)s/bin/gunicorn-server' % env, pty=True)
 
 def install_requirements():
     "Install the required packages from the requirements file using pip"
@@ -354,6 +366,11 @@ def restart_django():
     with cd(env.path):
         sudo('./bin/django-server restart', pty=False, user=env.run_user)
 
+def restart_gunicorn():
+    require('path')
+    with cd(env.path):
+        sudo('./bin/gunicorn-server', pty=False, user=env.run_user)
+
 def restart_solr():
     with settings(warn_only=True):
         sudo('restart solr', pty=False)
@@ -369,8 +386,6 @@ def restart_webserver():
     require('webserver')
     with settings(warn_only=True):
         sudo('/etc/init.d/%(webserver)s reload' % env, pty=False)
-        # Temp:
-        sudo('/etc/init.d/nginx reload' % env, pty=False)
 
 def build_brand_list():
     """Build static brand list"""
