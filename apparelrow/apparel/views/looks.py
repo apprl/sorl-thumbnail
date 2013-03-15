@@ -63,7 +63,9 @@ def publish(request, slug):
 
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug, user=request.user)
     look.published = True
-    look.save()
+    look.save(update_fields=['published'])
+
+    look_saved.send(sender=get_model('apparel', 'Look'), look=look, update=False)
 
     return JSONResponse(dict(success=True))
 
@@ -77,7 +79,9 @@ def unpublish(request, slug):
 
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug, user=request.user)
     look.published = False
-    look.save()
+    look.save(update_fields=['published'])
+
+    look_saved.send(sender=get_model('apparel', 'Look'), look=look, update=False)
 
     return JSONResponse(dict(success=True))
 

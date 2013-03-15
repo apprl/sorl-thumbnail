@@ -891,11 +891,12 @@ def look_saved_handler(sender, look, **kwargs):
         logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % look)
         return
 
-    # Build static image
-    get_model('apparel', 'Look').build_static_image(look.pk)
+    if kwargs.get('update', True):
+        # Build static image
+        get_model('apparel', 'Look').build_static_image(look.pk)
 
-    # Calculate gender and add it to the current look object
-    look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
+        # Calculate gender and add it to the current look object
+        look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
 
     if look.published == True:
         get_model('activity_feed', 'activity').objects.push_activity(look.user, 'create', look, look.gender)
