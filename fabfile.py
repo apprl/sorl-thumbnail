@@ -385,6 +385,10 @@ def restart_webserver():
     "Restart the web server"
     require('webserver')
     with settings(warn_only=True):
+        # Temporary to migrate from lighttpd to nginx
+        if env.webserver == 'nginx':
+            sudo('/etc/init.d/lighttpd stop' % env, pty=False)
+            sudo('/etc/init.d/nginx start' % env, pty=False)
         sudo('/etc/init.d/%(webserver)s reload' % env, pty=False)
 
 def build_brand_list():

@@ -3,7 +3,6 @@ upstream gunicorn {
 }
 
 server {
-    #listen 8899;
 	server_name apprl.com %(hostname)s.apprl.com;
 
     include sites-available/%(project_name)s.include.conf;
@@ -13,21 +12,18 @@ server {
 }
 
 server {
-    #listen 8899;
     server_name www.apprl.com;
 
     return 301 $scheme://apprl.com$request_uri;
 }
 
 server {
-    #listen 8899;
     server_name *.apprl.se;
 
     return 301 $scheme://apprl.com$request_uri;
 }
 
 server {
-    #listen 8899;
     server_name *.apparelrow.com *.apparelrow.se;
 
     root %(path)s/releases/current/www/root/apprltransition;
