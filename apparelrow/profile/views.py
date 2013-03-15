@@ -415,7 +415,12 @@ def login_flow_featured(request, profile, forms):
 
         return HttpResponseRedirect(reverse('login-flow-brands'))
 
-    profiles = get_user_model().objects.filter(is_brand=False).order_by('-popularity', '-followers_count')
+    profiles = get_user_model().objects.filter(is_brand=False)
+    if profile.gender == 'M':
+        profiles = profiles.order_by('-popularity_men', '-followers_count')
+    else:
+        profiles = profiles.order_by('-popularity', '-followers_count')
+
     facebook_user = get_facebook_user(request)
     if request.user.is_authenticated() and facebook_user:
         friends = facebook_user.graph.get_connections('me', 'friends')

@@ -100,6 +100,7 @@ class User(AbstractUser):
 
     followers_count = models.IntegerField(default=0, blank=False, null=False)
     popularity = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
+    popularity_men = models.DecimalField(default=0, max_digits=20, decimal_places=8)
 
     class Meta:
         db_table = 'profile_user'

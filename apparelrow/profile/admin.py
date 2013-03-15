@@ -54,7 +54,7 @@ class CustomUserAdmin(UserAdmin):
                                     'facebook_access_token_expire')}),
         (_('Brand'), {'fields': ('is_brand', 'brand')}),
         (_('Partner'), {'fields': ('is_partner', 'partner_group')}),
-        (_('Extra'), {'fields': ('slug', 'login_flow', 'popularity', 'followers_count')}),
+        (_('Extra'), {'fields': ('slug', 'login_flow', 'popularity', 'popularity_men', 'followers_count')}),
         (_('Settings'), {'fields': ('newsletter', 'discount_notification',
                                     'fb_share_like_product', 'fb_share_like_look',
                                     'fb_share_follow_profile', 'fb_share_create_look',
