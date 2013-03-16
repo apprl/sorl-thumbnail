@@ -1,0 +1,1 @@
+from apparelrow.profile.auth import FacebookProfileBackend
