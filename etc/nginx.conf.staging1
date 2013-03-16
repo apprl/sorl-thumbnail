@@ -7,15 +7,6 @@ upstream gunicorn_admin {
 }
 
 server {
-	server_name apprl.com %(hostname)s.apprl.com;
-
-    include sites-available/%(project_name)s.include.conf;
-
-    auth_basic "Apprl Staging";
-    auth_basic_user_file $deploy_dir/etc/htpasswd;
-}
-
-server {
     server_name www.apprl.com;
 
     return 301 $scheme://apprl.com$request_uri;
@@ -28,7 +19,17 @@ server {
 }
 
 server {
-    server_name *.apparelrow.com *.apparelrow.se;
+    server_name .apparelrow.com .apparelrow.se;
 
     root %(path)s/releases/current/www/root/apprltransition;
+    index index.html index.htm;
+}
+
+server {
+	server_name apprl.com %(hostname)s.apprl.com;
+
+    include sites-available/%(project_name)s.include.conf;
+
+    auth_basic "Apprl Staging";
+    auth_basic_user_file $deploy_dir/etc/htpasswd;
 }
