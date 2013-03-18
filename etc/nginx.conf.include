@@ -16,7 +16,7 @@ location ~ ^/(?:wo)?men.*$ {
 }
 
 location /embed {
-    default_type text/html;
+    default_type "text/html; charset=utf-8";
     set $memcached_key $uri;
     memcached_pass 127.0.0.1:11211;
     error_page 404 502 @fallback_embed;
