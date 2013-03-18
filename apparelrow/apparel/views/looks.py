@@ -11,6 +11,7 @@ from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404, 
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
+from django.utils import translation
 
 from sorl.thumbnail import get_thumbnail
 
@@ -24,7 +25,12 @@ def embed(request, slug):
     """
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
 
+    # Force english language because we cannot cache for language in
+    # nginx+memcache layer.
+    translation.activate('en')
     response = render(request, 'apparel/look_embed.html', {'object': look})
+    translation.deactivate()
+
     get_cache('nginx').set(reverse('look-embed', args=[look.slug]), response.content, 60*60*24*20)
 
     return response
