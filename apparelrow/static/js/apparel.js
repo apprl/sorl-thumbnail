@@ -129,7 +129,6 @@ jQuery(document).ready(function() {
                 price = parseInt(el.attr('data-price'), 10);
 
             _gaq.push(['_trackEvent', category, action, vendor + ' - ' + slug, price]);
-            _kmq.push(['record', action, {'category': category, 'item': vendor + ' - ' + slug, 'price': price, 'sid': sid}]);
 
             return true;
         }

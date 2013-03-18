@@ -14,23 +14,6 @@
     {% endblock extra-styles %}
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script type="text/javascript">
-      var _kmq = _kmq || [];
-      var _kmk = _kmk || '7ed676e6e1b308ea7a15d609af434c6c23038d21';
-      function _kms(u){
-        setTimeout(function(){
-          var d = document, f = d.getElementsByTagName('script')[0],
-          s = d.createElement('script');
-          s.type = 'text/javascript'; s.async = true; s.src = u;
-          f.parentNode.insertBefore(s, f);
-        }, 1);
-      }
-      _kms('//i.kissmetrics.com/i.js');
-      _kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
-      {% if request.user.is_authenticated %}
-      _kmq.push(['identify', '{{ request.user.username }}']);
-      {% endif %}
-    </script>
-    <script type="text/javascript">
         var hasLiked = {% if user.is_authenticated and user.has_liked %}true{% else %}false{% endif %};
         var dialog_like_product = '{% url "dialog-like-product" %}';
         var dialog_like_look = '{% url "dialog-like-look" %}';
