@@ -12,9 +12,10 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
-from django.core.cache import cache
+from django.core.cache import get_cache
 from django.core.files import storage
 from django.core.files.base import ContentFile
+from django.core.urlresolvers import reverse
 from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
@@ -895,8 +896,11 @@ def look_saved_handler(sender, look, **kwargs):
         # Build static image
         get_model('apparel', 'Look').build_static_image(look.pk)
 
-        # Calculate gender and add it to the current look object
-        look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
+        # Empty look embedded cache
+        get_cache('nginx').delete(reverse('look-embed', args=[look.slug]))
+
+    # Calculate gender and add it to the current look object
+    look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
 
     if look.published == True:
         get_model('activity_feed', 'activity').objects.push_activity(look.user, 'create', look, look.gender)

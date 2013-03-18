@@ -9,7 +9,7 @@ from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.core.urlresolvers import reverse
-from django.core.cache import cache
+from django.core.cache import get_cache
 from django.db import IntegrityError
 from django.db.models import Q, Max, Min, Count, Sum, connection, signals, get_model
 from django.template import RequestContext, loader
@@ -591,10 +591,15 @@ def look_detail(request, slug):
         )
 
 def look_embed(request, slug):
+    """
+    Display look for use in embedded iframe.
+    """
     look = get_object_or_404(Look, slug=slug)
-    base_url = request.build_absolute_uri('/')[:-1]
 
-    return render(request, 'apparel/look_embed.html', {'object': look, 'base_url': base_url})
+    response = render(request, 'apparel/look_embed.html', {'object': look})
+    get_cache('nginx').set(reverse('look-embed', args=[look.slug]), response.content, 60*60*24*20)
+
+    return response
 
 
 @login_required

@@ -329,7 +329,13 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
         'TIMEOUT': 60 * 60 * 12,
-    }
+    },
+    'nginx': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT': 60 * 60 * 24 * 20,
+        'KEY_FUNCTION': lambda key, x, y: key,
+    },
 }
 
 # GOOGLE ANALYTICS CONFIGURATION
