@@ -3,6 +3,7 @@ import base64
 import uuid
 
 from django.conf import settings
+from django.core.cache import get_cache
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -15,6 +16,18 @@ from sorl.thumbnail import get_thumbnail
 
 from apparelrow.apparel.signals import look_saved
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter
+
+
+def embed(request, slug):
+    """
+    Display look for use in embedded iframe.
+    """
+    look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
+
+    response = render(request, 'apparel/look_embed.html', {'object': look})
+    get_cache('nginx').set(reverse('look-embed', args=[look.slug]), response.content, 60*60*24*20)
+
+    return response
 
 
 def create(request):

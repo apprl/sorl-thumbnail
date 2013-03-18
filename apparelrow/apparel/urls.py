@@ -108,7 +108,7 @@ urlpatterns = patterns('',
     url(r'^dialog/user-feed/$', 'apparelrow.activity_feed.views.dialog_user_feed', name='dialog-user-feed'),
 
     # Embed
-    url(r'^embed/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_embed', name='look-embed'),
+    url(r'^embed/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.embed', name='look-embed'),
 
     # Widget
     url(r'^widget/look/(?P<object_id>\d+)/collage/$', 'apparelrow.apparel.views.widget', {
