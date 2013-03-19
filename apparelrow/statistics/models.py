@@ -4,6 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
+from apparelrow.apparel.tasks import product_popularity
+
 
 PERIOD_TYPES = (
     ('D', 'Daily'),
@@ -33,6 +35,8 @@ class ProductClickManager(models.Manager):
                 if not created:
                     click.click_count += increment_by
                     click.save()
+
+                product_popularity.delay(product)
 
                 return click.click_count
             except ObjectDoesNotExist:

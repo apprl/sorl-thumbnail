@@ -4,13 +4,16 @@ import unicodedata
 import os
 import os.path
 import string
+import decimal
 
 from django.core.management import call_command
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.db.models.loading import get_model
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_unicode
+
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
 from celery.task import task, periodic_task, PeriodicTask
@@ -21,6 +24,58 @@ from apparelrow.apparel.search import ApparelSearch
 from apparelrow.apparel.models import Product, VendorBrand, VendorCategory, FacebookAction
 
 logger = logging.getLogger('apparel.tasks')
+
+@task(name='apparelrow.apparel.tasks.look_popularity', max_retries=5, ignore_result=True)
+def look_popularity(look):
+    LookLike = get_model('apparel', 'LookLike')
+
+    like_count = LookLike.objects.filter(look=look, active=True).count()
+    popularity = decimal.Decimal(like_count / 100000000.0)
+
+    two_week_interval = datetime.datetime.now() - datetime.timedelta(weeks=2)
+    like_count = LookLike.objects.filter(look=look,
+                                         active=True,
+                                         created__gte=two_week_interval).count()
+
+    timedelta = datetime.datetime.now() - look.created
+    item_half_hour_age =  (timedelta.days * 86400 + timedelta.seconds) / 7200
+    if item_half_hour_age > 0:
+        popularity += decimal.Decimal(like_count / float(pow(item_half_hour_age, 1.53)))
+
+    look.save(update_fields=['popularity'])
+
+
+@task(name='apparelrow.apparel.tasks.product_popularity', max_retries=5, ignore_result=True)
+def product_popularity(product):
+    ProductClick = get_model('statistics', 'ProductClick')
+    ProductLike = get_model('apparel', 'ProductLike')
+
+    click_count = 0
+    try:
+        click_count = ProductClick.objects.get(product=product).click_count
+    except ProductClick.MultipleObjectsReturned:
+        click_count = ProductClick.objects.filter(product=product)[:1][0].click_count
+        logger.warning('Duplicate item found in ProductClick: %s:%s' % (product.pk,
+                                                                        product.slug))
+    except ProductClick.DoesNotExist:
+        pass
+
+    two_week_interval = datetime.datetime.now() - datetime.timedelta(weeks=2)
+    like_count = ProductLike.objects.filter(product=product,
+                                            active=True,
+                                            created__gte=two_week_interval).count()
+
+    total_count = like_count + 1 * click_count
+
+    timedelta = datetime.datetime.now() - product.date_added
+    item_half_hour_age =  (timedelta.days * 86400 + timedelta.seconds) / 7200
+    if item_half_hour_age > 0:
+        product.popularity = decimal.Decimal(str(total_count / pow(item_half_hour_age, 1.53)))
+        product.save(update_fields=['popularity'])
+    elif product.popularity > decimal.Decimal(0):
+        product.popularity = decimal.Decimal(0)
+        product.save(update_fields=['popularity'])
+
 
 @task(name='apparel.email.mailchimp_subscribe', max_retries=5, ignore_result=True)
 def mailchimp_subscribe(user):
@@ -161,21 +216,3 @@ def generate_brand_list_template():
         filename = os.path.join(settings.PROJECT_ROOT, 'templates', 'apparel', 'generated', template_name)
         open(temp_filename, 'w').write(template_string.encode('utf-8'))
         os.rename(temp_filename, filename)
-
-class ProcessPopularityTask(PeriodicTask):
-    run_every = crontab(hour=4, minute=15)
-    ignore_result = True
-
-    def run(self, **kwargs):
-        logger = self.get_logger(**kwargs)
-        logger.info('update popularity for products')
-        call_command('popularity')
-
-class ProcessLookPopularity(PeriodicTask):
-    run_every = crontab(minute='*/30')
-    ignore_result = True
-
-    def run(self, **kwargs):
-        logger = self.get_logger(**kwargs)
-        logger.info('update popularity for looks')
-        call_command('look_popularity')

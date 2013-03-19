@@ -37,7 +37,7 @@ from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch
 from apparelrow.apparel.search import more_like_this_product
 from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url
-from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
+from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, product_popularity, look_popularity
 
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
@@ -421,6 +421,8 @@ def _product_like(request, product, action):
         product_like.active = default_active
         product_like.save()
 
+    product_popularity.delay(product)
+
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
 @login_required
@@ -458,6 +460,8 @@ def look_like(request, slug, action):
 
     if action == 'like':
         process_like_look_created.delay(look.user, request.user, look_like)
+
+    look_popularity.delay(look)
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 

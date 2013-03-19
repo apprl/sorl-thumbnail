@@ -416,8 +416,6 @@ CELERY_QUEUES = {
     'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
 }
 CELERY_ROUTES = ({
-    'apparel.tasks.ProcessPopularityTask': {'queue': 'importer'},
-    'apparel.tasks.ProcessLookPopularity': {'queue': 'importer'},
     'static_sitemaps.tasks.GenerateSitemap': {'queue': 'importer'},
     'profile.notifications.process_comment_look_comment': {'queue': 'standard'},
     'profile.notifications.process_comment_look_created': {'queue': 'standard'},
@@ -431,6 +429,8 @@ CELERY_ROUTES = ({
     'apparel.facebook_push_graph': {'queue': 'standard'},
     'apparel.facebook_pull_graph': {'queue': 'standard'},
     'apparel.tasks.generate_brand_list_template': {'queue': 'standard'},
+    'apparelrow.apparel.tasks.look_popularity': {'queue': 'standard'},
+    'apparelrow.apparel.tasks.product_popularity': {'queue': 'standard'},
     'statistics.tasks.active_users': {'queue': 'standard'},
 },)
 

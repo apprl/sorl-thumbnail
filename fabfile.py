@@ -38,7 +38,7 @@ def prod():
     env.path = '/home/%(user)s/%(project_name)s' % env
     env.settings = 'production'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
-    env.celery_processes='6,3'
+    env.celery_processes='8,4'
     env.gunicorn_processes='3'
 
 def prod_db():
