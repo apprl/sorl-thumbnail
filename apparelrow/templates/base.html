@@ -1,4 +1,4 @@
-{% load i18n l10n apparel_extras compressed %}
+{% load i18n l10n apparel_extras compressed login_bar %}
 {% load static from staticfiles %}
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE }}">
@@ -239,18 +239,7 @@
         </div>
         {% endif %}
         {% endif %}
-        {% if not request.path|slice:"10" == '/accounts/' and not request.path|slice:"9" == '/partner/' %}
-        <div id="sticky-login-placeholder" style="display:none;"></div>
-        <div id="sticky-login-bar">
-            <div id="sticky-inner-login-bar">
-                <p>{% trans "Follow our stylemakers, bloggers & brands to discover fashion from the world's best online stores." %}</p>
-                <ul>
-                    <li class="first"><a href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
-                    <li class="last"><a class="btn btn-upper btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
-                </ul>
-            </div>
-        </div>
-        {% endif %}
+        {% login_bar request.path %}
         {% endif %}
 
         <div id="inner-container">
