@@ -20,10 +20,9 @@ from celery.task import task, periodic_task, PeriodicTask
 from celery.schedules import crontab
 import requests
 
-from apparelrow.apparel.search import ApparelSearch
-from apparelrow.apparel.models import Product, VendorBrand, VendorCategory, FacebookAction
 
 logger = logging.getLogger('apparel.tasks')
+
 
 @task(name='apparelrow.apparel.tasks.look_popularity', max_retries=5, ignore_result=True)
 def look_popularity(look):
@@ -126,19 +125,19 @@ def facebook_push_graph(user_id, access_token, action, object_type, object_url):
     logger.info(data)
 
     if 'id' in data:
-        FacebookAction.objects.get_or_create(user_id=user_id, action=action, action_id=data['id'], object_type=object_type, object_url=object_url)
+        get_model('apparel', 'FacebookAction').objects.get_or_create(user_id=user_id, action=action, action_id=data['id'], object_type=object_type, object_url=object_url)
     elif 'error' in data and data['error']['code'] == 2:
         facebook_push_graph.retry(countdown=15)
 
 @task(name='apparel.facebook_pull_graph', max_retries=1, ignore_result=True)
 def facebook_pull_graph(user_id, access_token, action, object_type, object_url):
     try:
-        facebook_action = FacebookAction.objects.get(user_id=user_id, action=action, object_type=object_type, object_url=object_url)
+        facebook_action = get_model('apparel', 'FacebookAction').objects.get(user_id=user_id, action=action, object_type=object_type, object_url=object_url)
         facebook_action.delete()
         url = 'https://graph.facebook.com/%s' % (facebook_action.action_id,)
         response = requests.delete(url, data={'access_token': access_token})
         logger.info(response.json())
-    except FacebookAction.DoesNotExist:
+    except get_model('apparel', 'FacebookAction').DoesNotExist:
         logger.warning('No facebook action_id found for uid=%s action=%s type=%s' % (user_id, action, object_type))
 
 
@@ -149,27 +148,27 @@ def update_vendor_data():
     Updates vendor data every half hour.
     """
     timestamp = datetime.datetime.now() - datetime.timedelta(minutes=20)
-    for vendor_brand in VendorBrand.objects.filter(modified__gt=timestamp).iterator():
+    for vendor_brand in get_model('apparel', 'VendorBrand').objects.filter(modified__gt=timestamp).iterator():
         if vendor_brand.brand:
-            for product in Product.objects.filter(vendorproduct__vendor_brand_id=vendor_brand.id).iterator():
+            for product in get_model('apparel', 'Product').objects.filter(vendorproduct__vendor_brand_id=vendor_brand.id).iterator():
                 if product.manufacturer_id != vendor_brand.brand_id:
                     product.manufacturer_id = vendor_brand.brand_id
                     product.save()
         else:
-            queryset = Product.objects.filter(vendorproduct__vendor_brand_id=vendor_brand.id, manufacturer__isnull=False)
+            queryset = get_model('apparel', 'Product').objects.filter(vendorproduct__vendor_brand_id=vendor_brand.id, manufacturer__isnull=False)
             for product in queryset:
                 product.manufacturer_id = None
                 product.save()
 
-    for vendor_category in VendorCategory.objects.filter(modified__gt=timestamp).iterator():
+    for vendor_category in get_model('apparel', 'VendorCategory').objects.filter(modified__gt=timestamp).iterator():
         if vendor_category.category:
-            queryset = Product.objects.filter(vendorproduct__vendor_category=vendor_category)
+            queryset = get_model('apparel', 'Product').objects.filter(vendorproduct__vendor_category=vendor_category)
             for product in queryset:
                 product.category = self.category
                 product.published = True
                 product.save()
         else:
-            queryset = Product.objects.filter(vendorproduct__vendor_category=vendor_category, category__isnull=False)
+            queryset = get_model('apparel', 'Product').objects.filter(vendorproduct__vendor_category=vendor_category, category__isnull=False)
             for product in queryset:
                 product.category = None
                 product.save()
@@ -191,6 +190,7 @@ def generate_brand_list_template():
                            'group': 'true',
                            'group.field': 'manufacturer_id'}
         brand_ids = []
+        from apparelrow.apparel.search import ApparelSearch
         for brand in ApparelSearch('*:*', **query_arguments).get_grouped().get('manufacturer_id', {}).get('groups', []):
             brand_ids.append(int(brand.get('groupValue', 0)))
 

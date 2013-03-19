@@ -182,11 +182,11 @@ def rebuild_product_index():
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
     product_count = 0
 
-    for product in Product.objects.filter(likes__isnull=False):
+    for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False):
         product_save(product, solr=connection)
         product_count = product_count + 1
 
-    for product in Product.valid_objects.iterator():
+    for product in get_model('apparel', 'Product').valid_objects.iterator():
         product_save(product, solr=connection)
         product_count = product_count + 1
 
@@ -233,7 +233,7 @@ def get_product_document(instance):
         category_ids, category_en_names, category_sv_names = zip(*category_data)
         category_names = ' '.join(category_en_names + category_sv_names)
 
-        user_likes = list(ProductLike.objects.filter(product=instance, active=True).values_list('user__id', flat=True))
+        user_likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', flat=True))
 
         template_browse = render_to_string('apparel/fragments/product_shop.html', {'object': instance})
         template_mlt = render_to_string('apparel/fragments/product_small_no_price.html', {'object': instance})
@@ -322,7 +322,7 @@ def look_delete(instance, **kwargs):
 def rebuild_look_index():
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
     look_count = 0
-    for look in Look.objects.iterator():
+    for look in get_model('apparel', 'Look').objects.iterator():
         look_save(look, solr=connection)
         look_count = look_count + 1
 
