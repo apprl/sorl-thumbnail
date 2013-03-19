@@ -21,6 +21,12 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = get_user_model()
 
+    def clean_facebook_user_id(self):
+        """
+        Return None instead of empty string.
+        """
+        return self.cleaned_data.get('facebook_user_id') or None
+
 
 class CustomUserCreationForm(UserCreationForm):
     """
