@@ -1,0 +1,79 @@
+{% load static from staticfiles %}
+{% load thumbnail cache compressed buy_extras i18n l10n %}
+{% spaceless %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+    <head>
+        <title>Shop | Apprl - Social Shopping</title>
+        <link rel="stylesheet" href="{% static 'styles/screen.css' %}">
+        <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+        <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+        <script type="text/javascript">
+          var pricerange = {
+            min: {{ pricerange.min }},
+            max: {{ pricerange.max }}
+          };
+        </script>
+        {% compressed_js 'jquery' %}
+        {% compressed_js 'apparel' %}
+        {% compressed_js 'shop' %}
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
+            _gaq.push(['_setDomainName', '{{ GOOGLE_ANALYTICS_DOMAIN }}']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+        <script type="text/javascript" src="{% static "js/money.min.js" %}"></script>
+        <script type="text/javascript">
+          fx.base = 'SEK';
+          fx.rates = {
+            {% for currency, rate in currency_rates.items %}
+            '{{ currency }}': {{ rate|unlocalize }},
+            {% endfor %}
+            'SEK': 1
+          };
+          var current_currency = '{{ CURRENCY }}';
+          function formatNumber(num) {
+            var array = parseInt(num, 10).toFixed().split('');
+            var index = -3;
+            while (array.length + index > 0) {
+              array.splice(index, 0, ' ');
+              index -= 4;
+            }
+            return array.join('');
+          };
+          function currencyConversion(elements) {
+            elements.each(function(index, element) {
+              var $element = jQuery(element);
+              var data = $element.data();
+              var converted_price = Math.round(fx.convert(data.price, {from: data.currency, to: current_currency}));
+              $element.text(formatNumber(converted_price) + ' ' + current_currency);
+          });
+        }
+        </script>
+    </head>
+    <body class="look-embed">
+        <div class="container">
+            <div class="sidebar">
+                {% include 'apparel/fragments/product_menu_browse.html' %}
+            </div>
+            <div id="content">
+                <h2 id="product-count">
+                    <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
+                </h2>
+                <div id="product-list" class="product-list">
+                    {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination only %}
+                </div>
+                <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
+            </div>
+        </div>
+      </body>
+</html>
+{% endspaceless %}

@@ -237,6 +237,13 @@ PIPELINE_JS = {
                              'js/jquery/jquery.apprl-tooltip.js'),
         'output_filename': 'js/compiled/jquery.js',
     },
+    'shop': {
+        'source_filenames': ('js/filtersetup.js',
+                             'js/browse.js',
+                             'js/jquery/jquery.ui.touch-punch.min.js',
+                             'js/jquery/jquery.history.js'),
+        'output_filename': 'js/compiled/shop.js',
+    },
     'look_editor': {
         'source_filenames': ('js/vendor/underscore.js',
                              'js/vendor/json2.js',

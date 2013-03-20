@@ -339,3 +339,7 @@ def get_pagination_as_dict(paged_result):
             'count': paged_result.paginator.count,
         },
     }
+
+
+def shop_embed(request):
+    return browse_products(request, template='apparel/shop_embed.html', gender=request.GET.get('gender', 'W'))
