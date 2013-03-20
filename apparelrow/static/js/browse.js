@@ -116,7 +116,7 @@ jQuery(document).ready(function() {
     });
 
     // Click handler for manufacturer option-popup
-    jQuery('#available-manufacturers a').live('click', function(e) {
+    jQuery(document).on('click', '#available-manufacturers a', function(e) {
         var element = jQuery(this);
         var selected_manufacturers = jQuery('#selected-manufacturers');
         var id = 'manufacturer-' + getElementId(element);
@@ -154,7 +154,7 @@ jQuery(document).ready(function() {
     });
 
     // Click handler for manufacturer search results element
-    jQuery('#search-result-manufacturers a').live('click', function(e) {
+    jQuery(document).on('click', '#search-result-manufacturers a', function(e) {
         // Cancel search and reset browse filters
         ApparelSearch.cancel();
         jQuery('#reset').click();
@@ -174,7 +174,7 @@ jQuery(document).ready(function() {
     });
 
     // Click handler for list of selected manufacturers
-    jQuery('#selected-manufacturers a').live('click', function(e) {
+    jQuery(document).on('click', '#selected-manufacturers a', function(e) {
         jQuery('#available-manufacturer-' + getElementId(this)).removeClass('selected');
         jQuery(this).closest('li').remove();
         filter(getQuery());
@@ -267,7 +267,7 @@ jQuery(document).ready(function() {
         }
     });
 
-    jQuery('.pagination a').live('click', function(e) {
+    jQuery(document).on('click', '.pagination a', function(e) {
         var $this = jQuery(this);
         $this.addClass('btn-disabled hover').find('span').text($this.data('loading-text'));
         var page = parsePage($this);
