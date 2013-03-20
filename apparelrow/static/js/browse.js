@@ -411,7 +411,7 @@ function doFilter(query, callback) {
     if(!query.hasOwnProperty('page')) {
         jQuery('#product-list').css('opacity', 0.3);
     }
-    jQuery.getJSON(browse_url, query, callback || renderProducts);
+    jQuery.getJSON(window.location.pathname, query, callback || renderProducts);
 }
 function renderPage(products) {
     var $html = $(products.html);
@@ -463,7 +463,7 @@ function filterCriteria(criteria_filter) {
         $('#available-stores').html('');
         $.each(criteria_filter['stores'], function(i, store) {
             var $a = $('<a>')
-                .attr('href', browse_url + '?store=' + store[0])
+                .attr('href', window.location.pathname + '?store=' + store[0])
                 .attr('id', 'available-store-' + store[0])
                 .text(store[1]);
 

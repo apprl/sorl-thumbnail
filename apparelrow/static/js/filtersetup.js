@@ -165,7 +165,7 @@ var ManufacturerBrowser = {
     renderItem: function(item, $list) {
         // FIXME: When we render template on server, drop this method all together
         var $a = jQuery('<a>')
-            .attr('href', browse_url + '?manufacturer=' + item[0])
+            .attr('href', window.location.pathname + '?manufacturer=' + item[0])
             .attr('id', 'available-manufacturer-' + item[0])
             .text(item[1]);
 
@@ -200,7 +200,7 @@ var ManufacturerBrowser = {
         var data = getQuery();
         data['brand_search'] = this.name;
         data['brand_search_page'] = this.page
-        jQuery.get(browse_url, data, function(response) {
+        jQuery.get(window.location.pathname, data, function(response) {
             if(response.manufacturers.length > 0) {
                 jQuery.each(response.manufacturers, function(i, item) {
                     self.renderItem(item, self.$availableList);
