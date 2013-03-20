@@ -381,7 +381,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
         if likes.user and likes.user.discount_notification:
             # If we already sent a notification for this product and user it
             # must mean that the price has increased and then decreased.
-            if is_duplicate('sale_alert', likes.user, sender.user, product):
+            if is_duplicate('sale_alert', likes.user, sender, product):
                 template_name = 'second_sale_alert'
 
             # Use the exchange rate from the user language
@@ -396,7 +396,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             locale_original_price = (original_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
             locale_discount_price = (discount_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
 
-            notify_by_mail([likes.user], template_name, sender.user, {
+            notify_by_mail([likes.user], template_name, sender, {
                 'brand_name': sender.display_name,
                 'product_name': product.product_name,
                 'object_link': product.get_absolute_url(),
