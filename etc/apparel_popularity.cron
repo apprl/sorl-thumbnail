@@ -1,0 +1,4 @@
+#!/bin/sh
+
+su -s /bin/sh -c ". %(path)s/bin/activate && cd %(path)s/releases/current && ./manage.py popularity" %(run_user)s
+su -s /bin/sh -c ". %(path)s/bin/activate && cd %(path)s/releases/current && ./manage.py look_popularity" %(run_user)s
