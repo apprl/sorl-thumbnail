@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-19 12:36+0100\n"
+"POT-Creation-Date: 2013-03-20 08:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,8 +36,8 @@ msgstr ""
 #: activity_feed/models.py:73 activity_feed/models.py:122
 #: apparel/models.py:374 apparel/models.py:695 apparel/models.py:929
 #: apparel/models.py:1054 dashboard/models.py:59 dashboard/models.py:78
-#: dashboard/models.py:112 profile/models.py:590 statistics/models.py:64
-#: statistics/models.py:76
+#: dashboard/models.py:112 profile/models.py:590 statistics/models.py:68
+#: statistics/models.py:80
 msgid "Time created"
 msgstr ""
 
@@ -392,7 +392,7 @@ msgid ""
 msgstr ""
 
 #: apparel/templatetags/login_bar.py:12
-msgid "Sign up to get sale alerts when the price on products you like."
+msgid "Sign up to get sale alerts when the price drops on products you like!"
 msgstr ""
 
 #: apparel/views/__init__.py:155
@@ -782,7 +782,7 @@ msgstr ""
 msgid "Nearly created your membership..."
 msgstr ""
 
-#: statistics/models.py:52 statistics/models.py:53
+#: statistics/models.py:56 statistics/models.py:57
 msgid "Product clicks"
 msgstr ""
 
