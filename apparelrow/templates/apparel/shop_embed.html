@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="{% static 'styles/screen.css' %}">
         <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
         <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
         <script type="text/javascript">
           var pricerange = {
@@ -16,8 +16,6 @@
             max: {{ pricerange.max }}
           };
         </script>
-        {% compressed_js 'jquery' %}
-        {% compressed_js 'apparel' %}
         {% compressed_js 'shop' %}
         <script type="text/javascript">
             var _gaq = _gaq || [];
