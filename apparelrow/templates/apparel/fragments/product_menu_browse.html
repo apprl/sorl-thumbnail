@@ -4,25 +4,25 @@
 {% block product_menu_title %}
 <h2>
     {% trans "Choose category" %}
-    <a id="reset" class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}"{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Show all" %}</a>
+    <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Show all" %}</a>
 </h2>
 {% endblock %}
 {% block product_genders %}
 <ul id="product-gender"{% if not likes_page %} style="display: none;"{% endif %}>
-    <li class="first"><a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "All" %}</a></li>
-    <li class="women"><a id="option-W"{% if selected_gender == "W" %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'shop' %}?gender=W">{% trans "Women" %}</a></li>
-    <li class="last men"><a id="option-M"{% if selected_gender == "M" %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'shop' %}?gender=M">{% trans "Men" %}</a></li>
+    <li class="first"><a href="">{% trans "All" %}</a></li>
+    <li class="women"><a id="option-W"{% if selected_gender == "W" %} class="selected"{% endif %} href="?gender=W">{% trans "Women" %}</a></li>
+    <li class="last men"><a id="option-M"{% if selected_gender == "M" %} class="selected"{% endif %} href="?gender=M">{% trans "Men" %}</a></li>
 </ul>
 {% endblock %}
 {% block product_options %}
 <ul id="product-options">
     <li class="first header">
         <span>{% trans "Price" %}</span>
-        <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>
+        <a class="reset" href="">{% trans "Reset" %}</a>
         <div class="arrow"></div>
     </li>
     <li class="content" id="product-price">
-        <form action="{% gender_url APPAREL_GENDER 'shop' %}">
+        <form>
             <div id="price-min">{% trans "Min" %} <span>{{ pricerange.min }}</span> {% trans CURRENCY %}</div>
             {% if pricerange.selected_max >= pricerange.max %}
             <div id="price-max">{% trans "Max" %} <span>{{ pricerange.selected_max }}+</span> {% trans CURRENCY %}</div>
@@ -42,36 +42,36 @@
             <input type="hidden" name="pricerange_min" value="{{ pricerange.selected_min }}" class="price-range">
             <input type="hidden" name="price" value="{{ pricerange.selected }}">
 
-            <a id="discount-price" href="{% gender_url APPAREL_GENDER 'shop' %}?discount=1">{% trans "Only show products on sale" %}</a>
+            <a id="discount-price" href="?discount=1">{% trans "Only show products on sale" %}</a>
         </form>
     </li>
     <li class="header">
         <span>{% trans "Color" %}</span>
-        <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>
+        <a class="reset" href="">{% trans "Reset" %}</a>
         <div class="arrow"></div>
     </li>
     <li class="content" id="product-color">
         <ul>
         {% for color in default_colors %}
-            <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?color={{ color.pk }}" class="color {{ color.value }}{% if color.pk not in colors %} filtered{% endif %}{% if selected_colors and color.value in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}" title="{{ color.value }}">{{ color.value }}</a></li>
+            <li><a href="?color={{ color.pk }}" class="color {{ color.value }}{% if color.pk not in colors %} filtered{% endif %}{% if selected_colors and color.value in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}" title="{{ color.value }}">{{ color.value }}</a></li>
         {% endfor %}
         {% for pattern in default_patterns %}
-            <li><a href="{% gender_url APPAREL_GENDER 'shop' %}?pattern={{ pattern.pk }}" class="pattern {{ pattern.value }}{% if pattern.pk not in colors %} filtered{% endif %}{% if selected_patterns and pattern.value in selected_patterns %} selected{% endif %}" id="option-{{ pattern.pk }}" title="{{ pattern.value }}">{{ pattern.value }}</a></li>
+            <li><a href="?pattern={{ pattern.pk }}" class="pattern {{ pattern.value }}{% if pattern.pk not in colors %} filtered{% endif %}{% if selected_patterns and pattern.value in selected_patterns %} selected{% endif %}" id="option-{{ pattern.pk }}" title="{{ pattern.value }}">{{ pattern.value }}</a></li>
         {% endfor %}
-            <li><a href="{% gender_url APPAREL_GENDER 'shop' %}" class="div-one filtered">div-one</a></li>
+            <li><a href="" class="div-one filtered">div-one</a></li>
         </ul>
     </li>
     <li class="header">
         <span>{% trans "Brand" %}</span>
-        <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>
+        <a class="reset" href="">{% trans "Reset" %}</a>
         <div class="arrow"></div>
     </li>
     <li class="last content" id="product-manufacturers">
-        <form action="{% gender_url APPAREL_GENDER 'shop' %}">
+        <form>
             <input type="text" name="brand" value="{% trans "Search brands" %}" class="default" />
             <ul id="available-manufacturers">
             {% for manufacturer in manufacturers %}
-                <li><a id="available-manufacturer-{{ manufacturer.0 }}" href="{% gender_url APPAREL_GENDER 'shop' %}?manufacturer={{ manufacturer.0 }}">{{ manufacturer.1 }}</a></li>
+                <li><a id="available-manufacturer-{{ manufacturer.0 }}" href="?manufacturer={{ manufacturer.0 }}">{{ manufacturer.1 }}</a></li>
             {% endfor %}
             </ul>
         </form>
@@ -79,17 +79,15 @@
     </li>
     <li class="header">
         <span>{% trans "Store" %}</span>
-        <a class="reset" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Reset" %}</a>
+        <a class="reset" href="">{% trans "Reset" %}</a>
         <div class="arrow"></div>
     </li>
     <li class="last content" id="product-stores">
-        <form action="{% gender_url APPAREL_GENDER 'shop' %}">
-            <ul id="available-stores">
-            {% for store in stores %}
-                <li><a id="available-store-{{ store.0 }}" href="{% gender_url APPAREL_GENDER 'shop' %}?store={{ store.0 }}">{{ store.1 }}</a></li>
-            {% endfor %}
-            </ul>
-        </form>
+        <ul id="available-stores">
+        {% for store in stores %}
+            <li><a id="available-store-{{ store.0 }}" href="?store={{ store.0 }}">{{ store.1 }}</a></li>
+        {% endfor %}
+        </ul>
         <ul id="selected-stores" class="level-1"></ul>
     </li>
 </ul>
