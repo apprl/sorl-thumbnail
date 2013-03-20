@@ -212,7 +212,8 @@ STATICSITEMAPS_REFRESH_AFTER = 60 * 8 # 8 hours in minutes
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
 PIPELINE_JS = {
     'apparel': {
-        'source_filenames': ('js/apparel.js',),
+        'source_filenames': ('js/apparel.js',
+                             'js/jquery/jquery.infinitescroll.js',),
         'output_filename': 'js/compiled/apparel.js',
     },
     'widget': {
@@ -241,7 +242,8 @@ PIPELINE_JS = {
         'source_filenames': ('js/filtersetup.js',
                              'js/browse.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
-                             'js/jquery/jquery.history.js'),
+                             'js/jquery/jquery.history.js',
+                             'js/jquery/jquery.infinitescroll.js',),
         'output_filename': 'js/compiled/shop.js',
     },
     'look_editor': {
