@@ -1,5 +1,5 @@
 # Name of nodes to start, here we have a single node
-CELERYD_NODES="c1 c2"
+CELERYD_NODES="c1"
 
 # Where to find the virtual env.
 VIRTUALENV="%(path)s"
@@ -17,11 +17,7 @@ CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi"
 CELERYCTL="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl"
 
 # Extra arguments to celeryd
-CELERYD_OPTS="--autoscale=%(celery_processes)s -Q:c1 standard -Q:c2 importer -B:c1"
-
-# Name of the celery config module.
-# FIXME: is this needed?
-CELERY_CONFIG_MODULE="celeryconfig"
+CELERYD_OPTS="-c %(celery_processes)s -Q:c1 standard -B:c1"
 
 # %%n will be replaced with the nodename.
 CELERYD_LOG_FILE="%(path)s/var/logs/celery/%%n.log"

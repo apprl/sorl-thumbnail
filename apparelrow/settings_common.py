@@ -416,7 +416,7 @@ CELERY_QUEUES = {
     'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
 }
 CELERY_ROUTES = ({
-    'static_sitemaps.tasks.GenerateSitemap': {'queue': 'importer'},
+    'static_sitemaps.tasks.GenerateSitemap': {'queue': 'standard'},
     'profile.notifications.process_comment_look_comment': {'queue': 'standard'},
     'profile.notifications.process_comment_look_created': {'queue': 'standard'},
     'profile.notifications.process_comment_product_comment': {'queue': 'standard'},
