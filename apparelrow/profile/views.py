@@ -490,6 +490,7 @@ def register_email(request):
         if form.is_valid():
             instance = form.save(commit=False)
             instance.is_active = False
+            instance.name = ('%s %s' % (instance.first_name, instance.last_name)).strip()
             instance.confirmation_key = uuid.uuid4().hex
             instance.save()
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-20 08:52+0100\n"
+"POT-Creation-Date: 2013-03-20 09:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,7 +225,7 @@ msgstr ""
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:233 apparel/models.py:699 profile/forms.py:122
+#: apparel/models.py:233 apparel/models.py:699 profile/forms.py:123
 #: profile/models.py:53 profile/models.py:287
 msgid "Gender"
 msgstr ""
@@ -242,7 +242,7 @@ msgstr ""
 msgid "category"
 msgstr ""
 
-#: apparel/models.py:438 profile/forms.py:98 profile/forms.py:120
+#: apparel/models.py:438 profile/forms.py:98
 msgid "Name"
 msgstr ""
 
@@ -403,7 +403,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr ""
 
-#: apparel_comments/__init__.py:6 profile/forms.py:121 profile/forms.py:152
+#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:153
 msgid "E-mail address"
 msgstr ""
 
@@ -576,11 +576,11 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: profile/forms.py:28 profile/forms.py:122
+#: profile/forms.py:28 profile/forms.py:123
 msgid "Man"
 msgstr ""
 
-#: profile/forms.py:28 profile/forms.py:122
+#: profile/forms.py:28 profile/forms.py:123
 msgid "Woman"
 msgstr ""
 
@@ -638,28 +638,36 @@ msgstr ""
 msgid "http://"
 msgstr ""
 
+#: profile/forms.py:120
+msgid "First name"
+msgstr ""
+
 #: profile/forms.py:121
+msgid "Last name"
+msgstr ""
+
+#: profile/forms.py:122
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: profile/forms.py:123 templates/profile/base_settings.html:26
+#: profile/forms.py:124 templates/profile/base_settings.html:26
 #: templates/profile/settings_password.html:6
 msgid "Password"
 msgstr ""
 
-#: profile/forms.py:125
+#: profile/forms.py:126
 msgid "Password confirmation"
 msgstr ""
 
-#: profile/forms.py:127
+#: profile/forms.py:128
 msgid "Enter the same password as above, for verification."
 msgstr ""
 
-#: profile/forms.py:149
+#: profile/forms.py:150
 msgid "A user with that e-mail already exists."
 msgstr ""
 
-#: profile/forms.py:159
+#: profile/forms.py:160
 msgid "E-mail does not exist or account is already confirmed."
 msgstr ""
 
@@ -893,7 +901,7 @@ msgstr ""
 #: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
 #: templates/apparel/user_list.html:53 templates/apparel/tags/login_bar.html:9
 #: templates/registration/login.html:35
-#: templates/registration/registration_email.html:43
+#: templates/registration/registration_email.html:48
 msgid "Sign up"
 msgstr ""
 
@@ -2841,7 +2849,7 @@ msgstr ""
 msgid "E-mail sent."
 msgstr ""
 
-#: templates/registration/registration_email.html:48
+#: templates/registration/registration_email.html:53
 #: templates/registration/fragments/registration.html:5
 #, python-format
 msgid ""

@@ -117,7 +117,8 @@ class PartnerSettingsForm(forms.ModelForm):
 
 
 class RegisterForm(UserCreationForm):
-    name = forms.CharField(label=_('Name'), required=True)
+    first_name = forms.CharField(label=_('First name'), required=True)
+    last_name = forms.CharField(label=_('Last name'), required=False)
     email = forms.EmailField(label=_('E-mail address'), required=True, error_messages={'invalid': _('Please enter a valid email address.')})
     gender = forms.ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=forms.RadioSelect, label=_('Gender'))
     password1 = forms.CharField(label=_('Password'),
@@ -128,7 +129,7 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ('name', 'username', 'email', 'gender')
+        fields = ('first_name', 'last_name', 'username', 'email', 'gender')
 
     def clean_username(self):
         # Since get_user_model().username is unique, this check is redundant,
