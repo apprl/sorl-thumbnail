@@ -1,0 +1,25 @@
+@import compass/reset
+@import compass/css3
+@import compass/utilities
+
+@import partials/base.sass
+@import partials/widget.sass
+@import partials/shop.sass
+
+body
+  +font
+  +typography
+  +btn_helper
+  background-color: #ffffff
+  margin: 1em
+
+.container
+  display: table
+  .sidebar
+    display: table-cell
+    width: $aside_width
+    padding-right: $gutter_width
+  #content
+    display: table-cell
+    #product-list
+      width: 100%

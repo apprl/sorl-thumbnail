@@ -1,0 +1,372 @@
+// SHOP / PRODUCT
+
+//
+// Product
+//
+
+.heart
+  position: absolute
+  top: 0
+  left: 0
+  display: block
+  margin: 10px 0 0 10px
+  float: left
+  width: 34px
+  height: 35px
+  background: image_url("heartbg.jpg") top
+  &:hover, &.liked
+    background: image_url("heartbg.jpg") bottom
+
+.product-heart-tooltip
+  position: relative
+  background: #eaeaea
+  display: inline-block
+  text-decoration: none
+  color: #222
+  outline: none
+  span
+    visibility: visible
+    position: absolute
+    text-align: center
+    bottom: 8px
+    left: 50%
+    z-index: 999
+    width: 156px
+    margin-left: -94px
+    padding: 15px
+    border: 1px solid #ccc
+    opacity: .9
+    background: #f8f8f8 /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y4ZjhmOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2ZjZmNmYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmOGY4ZjgiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+)
+    background: -moz-linear-gradient(top, #f8f8f8 0%, #fcfcfc 50%, #f8f8f8 100%) /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(50%,#fcfcfc), color-stop(100%,#f8f8f8)) /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* IE10+ */
+    background: linear-gradient(top, #f8f8f8 0%,#fcfcfc 50%,#f8f8f8 100%) /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#f8f8f8',GradientType=0 ) /* IE6-8 */
+    +single-box-shadow(rgba(50, 50, 50, 0.27), 0, 0, 2px)
+    text-shadow: 0 1px 0 rgba(255,255,255,.4)
+    -webkit-transition: all 1s ease-in-out
+    -moz-transition: all 1s ease-in-out
+    -o-transition: all 1s ease-in-out
+    -ms-transition: all 1s ease-in-out
+    transition: all 1s ease-in-out
+    &:before, &:after
+      content: ""
+      position: absolute
+      z-index: 1000
+      bottom: -7px
+      left: 50%
+      margin-left: -8px
+      border-top: 8px solid #f8f8f8
+      border-left: 8px solid transparent
+      border-right: 8px solid transparent
+      border-bottom: 0
+    &:before
+      border-top-color: #ccc
+      bottom: -8px
+  &:hover
+    border: 0 /* IE6 fix */
+  &:hover
+    span
+      visibility: hidden
+
+div#product-list, .product-list
+  position: relative
+  ul.list
+    li
+      float: left
+      +product_list_item
+
+//
+// Product feed and shop
+//
+.product-feed, .product-medium
+  position: relative
+  margin: 0 auto
+  .product-footer
+    height: 46px
+    h4
+      height: 1.5em
+      overflow: hidden
+      font-family: $font_family
+      font-size: 1.1em
+      font-weight: bold
+      padding-top: 10px
+      a
+        display: block
+  .hover
+    display: none
+    .likes, .comments
+      float: right
+    .likes
+      +large_likes
+      margin-right: 5px
+      display: none
+    .comments
+      +large_comments
+      display: none
+  .hover-top-right
+    position: absolute
+    top: 20px
+    right: 10px
+  .hover-footer
+    position: absolute
+    bottom: 10px
+    width: 100%
+    +box-sizing(border-box)
+    padding: 0 10px
+    .btn
+      float: left
+      width: 50%
+      font-size: 13px
+
+//
+// Product in feed
+//
+.product-feed
+  width: 452px
+  text-align: center
+  position: relative
+  .product-image
+    border: none
+    display: block
+    img
+      max-width: 452px
+
+//
+// Product medium - shop
+//
+.product-medium
+  width: 224px
+  margin: 0 8px 20px 0
+  text-align: center
+  .product-image
+    border: none
+    display: block
+    // The height is defined in the template product_small_content
+    // XXX: testing to remove this
+    //height: 291px
+    img
+      max-width: 224px
+      max-height: 291px
+  .hover-footer
+    bottom: 58px
+
+
+//
+// Product list
+//
+
+#product-count
+  font-weight: bold
+  a
+    float: right
+    background: transparent image_url("arrow-bg.png") scroll no-repeat right center
+    clear: both
+    &:hover
+      background-image: image_url("arrow-bg-hover.png")
+    padding-right: 15px
+    padding-bottom: 1px
+
+div#product-list
+  +border-bottom-radius(unquote("3px"))
+  width: $large_width
+  @media screen and (min-width: 1212px)
+    width: $large_width + 232px
+  @media screen and (min-width: 1444px)
+    width: $large_width + 464px
+  @media screen and (min-width: 1676px)
+    width: $large_width * 2
+  div#product-infotext
+    position: relative
+    width: $large_width
+    height: 404px
+    div#product-infotext-inner
+      position: absolute
+      top: 50%
+      width: 100%
+      height: 100px
+      margin-top: -50px
+      text-align: center
+
+
+//
+// Shop and shop filters
+//
+
+.reset
+  background: transparent image_url(unquote("logout.png")) no-repeat scroll right center
+  padding-right: 15px
+  float: right
+  font-size: 0.9em
+  font-weight: normal
+
+$ruler_width: 202px
+#product-options
+  +no-bullets
+  position: relative
+  margin-bottom: 10px
+  li.header
+    position: relative
+    font-family: $font_family
+    font-size: 1.1em
+    font-weight: 500
+    color: $black_color
+    border-bottom: 3px solid $black_color
+    line-height: $button_height
+    overflow: hidden
+    white-space: nowrap
+    overflow: visible
+    margin: 20px 0 10px 0
+    .reset
+      display: none
+      line-height: 29px
+    &.active
+      .reset
+        display: block
+  li.filtered
+    display: none
+  #product-price
+    #discount-price
+      margin-top: 5px
+      font-size: 1.1em
+      color: $like_color
+      display: inline-block
+      padding-left: 15px
+      background: transparent image_url(unquote("list-item-check.png")) no-repeat scroll left center
+      &.selected
+        background-image: image_url(unquote("list-item-check-selected.png"))
+    #price-min, #price-max
+      font-size: 1em
+      padding-bottom: 5px
+      span
+        font-weight: bold
+    #price-min
+      float: left
+    #price-max
+      float: right
+    #price-ruler
+      margin-top: 6px
+      margin-left: 2px
+      margin-right: 3px
+      background: transparent image_url(unquote("slider-ruler-bg.png")) repeat-x scroll unquote("2px") top
+      +clearfix
+      .point
+        width: $ruler_width / 3
+        line-height: 2em
+        font-size: 0.85em
+        color: $easiest_color
+        &.min
+          float: left
+        &.max
+          float: left
+          text-align: right
+        &.mid
+          float: left
+          text-align: center
+    #price-slider
+      clear: both
+      +border-radius(unquote("6px"))
+      border-color: $border_color
+      margin: 0 3px 0 3px
+      .ui-slider-handle
+        background: transparent image_url(unquote("slider-handle.png")) no-repeat scroll center center
+        width: 9px
+        height: 22px
+        border: none
+        margin-left: -4px
+        +border-radius(unquote("0px"))
+      .ui-widget-header
+        border: none
+        background-image: image_url(unquote("slider-range-bg.png"))
+    .price-range
+      +text_input
+      padding: 0
+      height: 20px
+      width: 36px
+      text-align: center
+      float: left
+  #product-color
+    ul
+      +colors
+      li
+        line-height: 1em
+        a.filtered
+          cursor: default
+  #product-manufacturers, #product-stores
+    input
+      +text_input
+      +border-radius(0)
+      background-color: $white_color
+      width: 100%
+      +box-sizing(border-box)
+      padding: 12px 8px
+      margin: 0 0 10px 0
+    &.active
+      #selected-manufacturers, #selected-stores
+        padding: 10px 0 0 0
+    #selected-manufacturers, #selected-stores
+      li
+        a
+          margin-left: 4px
+          padding-left: 14px
+          background-image: image_url(unquote("list-item-check-selected.png"))
+          background-repeat: no-repeat
+    #available-manufacturers, #available-stores
+      +border(all)
+      height: 205px
+      overflow-y: auto
+      background-color: $button_color
+      li
+        overflow: hidden
+        line-height: 20px
+        height: 20px
+        +border(bottom)
+        a
+          margin-left: 4px
+          padding-left: 14px
+          background-image: image_url(unquote("list-item-check.png"))
+          background-repeat: no-repeat
+          &.selected
+            background-image: image_url(unquote("list-item-check-selected.png"))
+
+#product-gender
+  display: none
+
+#product-category
+  li.filtered
+    display: none
+  li > a
+    font-size: 12px
+    display: inline-block
+    padding: 5px 5px 5px 5px
+    overflow: hidden
+    margin-bottom: 5px
+    &:before
+      margin-right: 5px
+      display: inline-block
+      content: ''
+      width: 14px
+      height: 15px
+      vertical-align: middle
+      background: transparent image_url(unquote("circle-dot.png")) no-repeat 0px 0px
+    &.selected:before
+      background-position: -14px 0px
+  li ul
+    overflow-y: auto
+    li
+      border: none
+    &.level-1
+      li
+        padding-left: 10px
+    &.level-2
+      margin-left: -10px
+      li
+        padding-left: 20px
+    &.level-3
+      margin-left: -20px
+      li
+        padding-left: 30px

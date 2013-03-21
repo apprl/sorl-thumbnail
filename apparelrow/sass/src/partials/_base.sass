@@ -53,6 +53,16 @@ $default_box_shadow_blur: 10px !default
 
 $font_family: "Helvetica Neue", "Helvetica", "Arial", sans-serif
 
+/* CLEAR FIX */
+.group
+  &:before, &:after
+    content: ""
+    display: table
+  &:after
+    clear: both
+  zoom: 1 /* For IE 6/7 (trigger hasLayout) */
+
+
 =text_input
   font:
     family: $font_family
@@ -173,6 +183,19 @@ $font_family: "Helvetica Neue", "Helvetica", "Arial", sans-serif
         background-repeat: no-repeat
     &.btn-signup
       margin: 10px 0
+
+    // Pagination
+    &.btn-pagination
+      &.btn-disabled, &.btn-disabled:hover, &.btn-disabled:active
+        background-color: #000000
+      span, img
+        vertical-align: middle
+      img
+        margin-left: 20px
+        display: none
+      &.hover
+        img
+          display: inline
 
 
 =highlight_button($height: $button_height, $border_radius: unquote("3px"))
