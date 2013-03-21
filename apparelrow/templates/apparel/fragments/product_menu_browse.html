@@ -15,6 +15,9 @@
 </ul>
 {% endblock %}
 {% block product_options %}
+{% if request.GET.user_id %}
+<div id="product-user" data-userid="{{ request.GET.user_id }}">abc</div>
+{% endif %}
 <ul id="product-options">
     <li class="first header">
         <span>{% trans "Price" %}</span>

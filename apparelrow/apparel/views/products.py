@@ -100,7 +100,7 @@ def product_detail_popup(request, pk):
 
 class ProductList(View):
 
-    def set_query_arguments(self, query_arguments, request, facet_fields=None, gender=None, currency=None):
+    def set_query_arguments(self, query_arguments, request, facet_fields=None, currency=None):
         """
         Set query arguments that are common for every browse page access.
         """
@@ -164,7 +164,7 @@ class ProductList(View):
         clamped_limit = min(30, max(limit, 1))
 
         query_arguments = {'rows': clamped_limit, 'start': 0}
-        query_arguments = self.set_query_arguments(query_arguments, request, facet_fields, gender=gender, currency=currency)
+        query_arguments = self.set_query_arguments(query_arguments, request, facet_fields, currency=currency)
         if gender == 'A':
             query_arguments['fq'].append('gender:(U OR W OR M)')
         else:

@@ -55,7 +55,7 @@ def generate_gender_field(params):
 
     return gender_field
 
-def set_query_arguments(query_arguments, request, facet_fields=None, gender=None, currency=None):
+def set_query_arguments(query_arguments, request, facet_fields=None, currency=None):
     """
     Set query arguments that are common for every browse page access.
     """
@@ -123,7 +123,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, gender=None
 
     return query_arguments
 
-def browse_products(request, template='apparel/browse.html', gender=None):
+def browse_products(request, template='apparel/browse.html', gender=None, user_id=None):
     language = get_language()
     currency = settings.APPAREL_BASE_CURRENCY
     if language in settings.LANGUAGE_TO_CURRENCY:
@@ -131,11 +131,11 @@ def browse_products(request, template='apparel/browse.html', gender=None):
 
     facet_fields = ['category', 'price', 'color', 'manufacturer', 'store']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
-    query_arguments = set_query_arguments(query_arguments, request, facet_fields, gender=gender, currency=currency)
+    query_arguments = set_query_arguments(query_arguments, request, facet_fields, currency=currency)
 
     # Follower products
     user_ids = []
-    if 'f' in request.GET and request.user:
+    if 'f' in request.GET and request.user and not user_id:
         user_ids = list(Follow.objects.filter(user=request.user).values_list('user_follow_id', flat=True))
         user_ids_or = ' OR '.join(str(x) for x in (user_ids + [0]))
         query_arguments['fq'].append('user_likes:({0})'.format(user_ids_or))
@@ -143,7 +143,13 @@ def browse_products(request, template='apparel/browse.html', gender=None):
         query_arguments['fq'].append(generate_gender_field(request.GET))
     else:
         query_arguments['fq'].append('availability:true')
-        query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
+
+        # User wardrobe
+        if user_id:
+            query_arguments['fq'].append('user_likes:%s' % (user_id,))
+            query_arguments['fq'].append(generate_gender_field(request.GET))
+        else:
+            query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
     # Sort
     query_arguments['sort'] = DEFAULT_SORT_ARGUMENTS.get(request.GET.get('sort'), DEFAULT_SORT_ARGUMENTS['pop'])
@@ -342,4 +348,7 @@ def get_pagination_as_dict(paged_result):
 
 
 def shop_embed(request):
-    return browse_products(request, template='apparel/shop_embed.html', gender=request.GET.get('gender', 'W'))
+    return browse_products(request,
+                           template='apparel/shop_embed.html',
+                           gender=request.GET.get('gender'),
+                           user_id=request.GET.get('user_id'))
