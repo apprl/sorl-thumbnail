@@ -1058,7 +1058,7 @@ a h2
 //
 // Account related templates
 //
-body.accounts
+body.accounts, body.profile-embed-shop
   #content
     width: 400px
     padding: 0 270px
@@ -1142,6 +1142,40 @@ form .upload-field
     width: 228px
     left: 0px
     z-index: 2
+
+form.horizontal-form
+  .control-group
+    clear: both
+    &:after
+      clear: both
+    &:before, &:after
+      display: table
+      line-height: 0
+      content: ""
+    label
+      font-weight: normal
+      line-height: 20px
+      float: left
+      display: block
+      width: 120px
+      text-align: right
+      padding-top: 5px
+      margin-bottom: 5px
+    .controls
+      line-height: 20px
+      margin-left: 140px
+      text-align: left
+    input, select, button
+      width: 140px
+      height: 20px
+      line-height: 20px
+      padding: 4px 6px
+      margin-bottom: 0
+      vertical-align: middle
+      display: inline-block
+    select
+      height: 30px
+      line-height: 30px
 
 form.standard-form
   li

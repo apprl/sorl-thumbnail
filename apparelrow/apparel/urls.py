@@ -18,7 +18,8 @@ urlpatterns = patterns('',
     url(r'^shop/men/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
     url(r'^shop/women/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
 
-    url(r'^embed/shop/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
+    # Shop embed - wardrobe
+    url(r'^embed/shop/(?P<user_id>\d+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
 
     # About
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),

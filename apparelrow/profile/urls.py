@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
     url(r'^flow/$', 'apparelrow.profile.views.flow', name='login-flow-redirect'),
+    url(r'^embed/shop/$', 'apparelrow.profile.views.embed_shop', name='profile-embed-shop'),
     url(r'^settings/$', 'apparelrow.profile.views.settings_notification', name='settings'),
     url(r'^settings/notification/$', 'apparelrow.profile.views.settings_notification', name='settings-notification'),
     url(r'^settings/email/$', 'apparelrow.profile.views.settings_email', name='settings-email'),

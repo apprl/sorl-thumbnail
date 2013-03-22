@@ -347,8 +347,8 @@ def get_pagination_as_dict(paged_result):
     }
 
 
-def shop_embed(request):
+def shop_embed(request, user_id):
     return browse_products(request,
                            template='apparel/shop_embed.html',
                            gender=request.GET.get('gender'),
-                           user_id=request.GET.get('user_id'))
+                           user_id=user_id)

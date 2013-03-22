@@ -213,6 +213,16 @@ def following(request, profile, form, page=0):
 
     return render(request, 'profile/following.html', content)
 
+
+#
+# Shop embed
+#
+
+@login_required
+def embed_shop(request):
+    return render(request, 'profile/embed_shop.html')
+
+
 #
 # Settings
 #
