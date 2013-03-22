@@ -307,6 +307,10 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_i
     # Default patterns
     default_patterns = Option.objects.filter(option_type__name='pattern').exclude(value__exact='').all()
 
+    # User id
+    if user_id:
+        result.update(user_id=user_id)
+
     # Serve non ajax request
     result.update(
         default_patterns = default_patterns,

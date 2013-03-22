@@ -24,3 +24,14 @@ body
       width: 100%
   #product-stores, #product-stores-header
     display: none
+
+// Duplicate from application.sass
+span, a
+  &.likes
+    +apparel_likes
+  &.discount-price
+    +apparel_discount_price
+  &.price
+    +apparel_price
+  &.currency
+    +apparel_currency

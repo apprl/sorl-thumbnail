@@ -425,6 +425,15 @@ function renderPage(products) {
 
     currencyConversion($list.find('.price, .discount-price'));
 
+    if(embed_shop_user_id) {
+        $list.find('.product-container').each(function(i, element) {
+            var buy_url = $(element).find('.btn-buy').attr('href');
+            buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
+            $('.product-image, .product-footer a', element).attr('href', buy_url);
+            $('.hover', element).remove();
+        });
+    }
+
     jQuery('#product-list > ul.list').append($list.html());
     jQuery('.pagination').html($pagination.html());
 
