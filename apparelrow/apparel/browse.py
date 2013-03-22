@@ -16,6 +16,7 @@ from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
 from django.core.urlresolvers import reverse
+from django.utils import translation
 from django.utils.translation import get_language, ugettext as _
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS
@@ -123,8 +124,11 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
 
     return query_arguments
 
-def browse_products(request, template='apparel/browse.html', gender=None, user_id=None):
-    language = get_language()
+def browse_products(request, template='apparel/browse.html', gender=None, user_id=None, language=None):
+    if not language:
+        language = get_language()
+    translation.activate(language)
+
     currency = settings.APPAREL_BASE_CURRENCY
     if language in settings.LANGUAGE_TO_CURRENCY:
         currency = settings.LANGUAGE_TO_CURRENCY.get(language)
@@ -324,6 +328,9 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_i
 
     response = render_to_response(template, result, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+
+    translation.deactivate()
+
     return response
 
 def get_pagination_as_dict(paged_result):
@@ -355,4 +362,5 @@ def shop_embed(request, user_id):
     return browse_products(request,
                            template='apparel/shop_embed.html',
                            gender=request.GET.get('gender'),
+                           language=request.GET.get('language'),
                            user_id=user_id)

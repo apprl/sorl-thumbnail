@@ -64,10 +64,12 @@ SHORT_LANGUAGES = (
 LANGUAGE_TO_CURRENCY = {
     'en': 'EUR',
     'sv': 'SEK',
+    'da': 'DKK',
 }
 MAX_MIN_CURRENCY = {
     'en': 1000,
     'sv': 10000,
+    'da': 10000,
     }
 
 
