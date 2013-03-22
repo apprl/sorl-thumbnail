@@ -19,7 +19,8 @@ urlpatterns = patterns('',
     url(r'^shop/women/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
 
     # Shop embed - wardrobe
-    url(r'^embed/shop/(?P<user_id>\d+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
+    url(r'^embed/shop/(?P<user_id>\d+)/(?P<language>\w+)/(?P<gender>\w+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
+    url(r'^widget/shop/$', 'apparelrow.apparel.browse.shop_widget', name='shop-widget'),
 
     # About
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),

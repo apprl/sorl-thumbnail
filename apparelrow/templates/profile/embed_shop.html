@@ -18,23 +18,21 @@
             .mouseup(function(e) { e.preventDefault() });
 
         jQuery('#embed_shop_form').on('submit', function() {
-            var width = jQuery('#id_width').val();
-            var height = jQuery('#id_height').val();
-            var language = jQuery('#id_language').val();
-            var gender = jQuery('input[name=gender]:checked').val();
+            var data = {
+                width: jQuery('#id_width').val(),
+                height: jQuery('#id_height').val(),
+                language: jQuery('#id_language').val(),
+                gender: jQuery('input[name=gender]:checked').val()
+            };
 
-            if(!height) {
-                height = '600';
-                jQuery('#id_height').val(height);
+            if(!data['height']) {
+                data['height'] = '600';
+                jQuery('#id_height').val(data['height']);
             }
 
-            var embed_code = $(jQuery('#shop_widget_template').html().replace(/WIDTH/g, width).replace('HEIGHT', height));
-            var url = embed_code.find('iframe').attr('src');
-            url = updateQueryStringParameter(url, 'language', language);
-            url = updateQueryStringParameter(url, 'gender', gender) + '#!';
-            embed_code.find('iframe').attr('src', url);
-
-            jQuery('#id_embed_code').val(embed_code.get(0).outerHTML);
+            jQuery.post("{% url 'shop-widget' %}", data, function(response) {
+                $('#id_embed_code').val(response);
+            });
 
             return false;
         });
@@ -94,5 +92,4 @@
         </div>
     </form>
 </div>
-<script type="text/html" id="shop_widget_template">{% include 'apparel/fragments/shop_widget.html' %}</script>
 {% endblock %}

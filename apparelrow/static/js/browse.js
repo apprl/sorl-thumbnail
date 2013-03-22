@@ -327,11 +327,6 @@ window.getQuery = function(query, reset) {
         jQuery('#product-stores').removeClass('active').prev().removeClass('active');
     }
 
-    user_id = jQuery('#product-user');
-    if(user_id.length > 0) {
-        query['user_id'] = user_id.data('userid');
-    }
-
     gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
     if(gender_list.length > 0 && gender_list[0]) {
         query['gender'] = gender_list[0];

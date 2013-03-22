@@ -5,8 +5,10 @@ import decimal
 import json
 
 from django.http import HttpResponse
+from django.http import HttpResponseNotAllowed
 from django.conf import settings
 from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.db.models import Max
 from django.db.models import Min
 from django.db.models.loading import get_model
@@ -18,6 +20,7 @@ from django.core.paginator import EmptyPage
 from django.core.urlresolvers import reverse
 from django.utils import translation
 from django.utils.translation import get_language, ugettext as _
+from django.contrib.auth.decorators import login_required
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS
 from apparelrow.apparel.search import ApparelSearch
@@ -151,7 +154,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_i
         # User wardrobe
         if user_id:
             query_arguments['fq'].append('user_likes:%s' % (user_id,))
-            query_arguments['fq'].append(generate_gender_field(request.GET))
+            query_arguments['fq'].append(generate_gender_field(dict(gender=gender)))
         else:
             query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
@@ -358,9 +361,23 @@ def get_pagination_as_dict(paged_result):
     }
 
 
-def shop_embed(request, user_id):
+def shop_embed(request, user_id, language, gender):
     return browse_products(request,
                            template='apparel/shop_embed.html',
-                           gender=request.GET.get('gender'),
-                           language=request.GET.get('language'),
+                           gender=gender,
+                           language=language,
                            user_id=user_id)
+
+
+@login_required
+def shop_widget(request):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed()
+
+    content = {}
+    content['language'] = request.POST.get('language', 'sv')
+    content['gender'] = request.POST.get('gender', 'A')
+    content['width'] = request.POST.get('width', '720')
+    content['height'] = request.POST.get('height', '600')
+
+    return render(request, 'apparel/fragments/shop_widget.html', content)
