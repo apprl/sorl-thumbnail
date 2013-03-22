@@ -3,6 +3,15 @@
 
 {% block 'extra-scripts' %}
 <script type="text/javascript">
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        } else {
+            return uri + separator + key + "=" + value;
+        }
+    }
     jQuery(document).ready(function() {
         jQuery('#id_embed_code')
             .focus(function(e) { this.select(); })
@@ -11,13 +20,21 @@
         jQuery('#embed_shop_form').on('submit', function() {
             var width = jQuery('#id_width').val();
             var height = jQuery('#id_height').val();
+            var language = jQuery('#id_language').val();
+            var gender = jQuery('input[name=gender]:checked').val();
 
             if(!height) {
                 height = '600';
                 jQuery('#id_height').val(height);
             }
 
-            jQuery('#id_embed_code').val(jQuery('#shop_widget_template').html().replace(/WIDTH/g, width).replace('HEIGHT', height));
+            var embed_code = $(jQuery('#shop_widget_template').html().replace(/WIDTH/g, width).replace('HEIGHT', height));
+            var url = embed_code.find('iframe').attr('src');
+            url = updateQueryStringParameter(url, 'language', language);
+            url = updateQueryStringParameter(url, 'gender', gender) + '#!';
+            embed_code.find('iframe').attr('src', url);
+
+            jQuery('#id_embed_code').val(embed_code.get(0).outerHTML);
 
             return false;
         });

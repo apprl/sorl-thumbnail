@@ -96,6 +96,9 @@
             <li class="right"><a href="{{ following_url }}">{% trans "Following" %} {{ following }}</a></li>
             {% endwith %}
         </ul>
+        {% if request.user.is_authenticated and request.user.is_partner and request.user == profile %}
+        <a href="{% url 'profile-embed-shop' %}" class="btn btn-upper btn-block">{% trans "Create a shop on your site" %}</a>
+        {% endif %}
     </div>
     {% block extended_content %}
     <div id="content">
