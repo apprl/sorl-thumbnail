@@ -1143,7 +1143,7 @@ form .upload-field
     left: 0px
     z-index: 2
 
-form.horizontal-form
+form.form-horizontal
   .control-group
     clear: both
     &:after
@@ -1152,7 +1152,7 @@ form.horizontal-form
       display: table
       line-height: 0
       content: ""
-    label
+    > label
       font-weight: normal
       line-height: 20px
       float: left
@@ -1165,17 +1165,34 @@ form.horizontal-form
       line-height: 20px
       margin-left: 140px
       text-align: left
-    input, select, button
-      width: 140px
-      height: 20px
-      line-height: 20px
-      padding: 4px 6px
-      margin-bottom: 0
       vertical-align: middle
-      display: inline-block
-    select
-      height: 30px
-      line-height: 30px
+      .inline
+        display: inline-block
+        padding-top: 5px
+        margin-bottom: 0
+        vertical-align: middle
+        margin-right: 3px
+      > input, > select, > textarea
+        width: 160px
+        height: 20px
+        line-height: 20px
+        padding: 1px 2px
+        margin-bottom: 0
+        vertical-align: middle
+        display: inline-block
+      button
+        margin-top: 5px
+        width: 160px
+        margin-bottom: 30px
+      > input
+        width: 152px
+      select
+        margin: 5px 0 3px 0
+        height: 30px
+        line-height: 30px
+      textarea
+        height: 60px
+        width: 154px
 
 form.standard-form
   li
