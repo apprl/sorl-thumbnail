@@ -56,8 +56,20 @@ LANGUAGE_CODE = 'sv'
 LANGUAGES = (
     ('en', gettext(u'English (€)')),
     ('sv', gettext(u'Swedish (SEK)')),
+    ('da', gettext(u'Danish (DKK)')),
+    ('no', gettext(u'Norwegian (NOK)')),
+)
+LANGUAGES_DISPLAY = (
+    ('en', gettext(u'English (€)')),
+    ('sv', gettext(u'Swedish (SEK)')),
 )
 SHORT_LANGUAGES = (
+    ('en', gettext(u'Eng (€)')),
+    ('sv', gettext(u'Swe (SEK)')),
+    ('da', gettext(u'Dnk (DKK)')),
+    ('no', gettext(u'Nor (NOK)')),
+)
+SHORT_LANGUAGES_DISPLAY = (
     ('en', gettext(u'Eng (€)')),
     ('sv', gettext(u'Swe (SEK)')),
 )
@@ -65,12 +77,14 @@ LANGUAGE_TO_CURRENCY = {
     'en': 'EUR',
     'sv': 'SEK',
     'da': 'DKK',
+    'no': 'NOK',
 }
 MAX_MIN_CURRENCY = {
     'en': 1000,
     'sv': 10000,
     'da': 10000,
-    }
+    'no': 10000,
+}
 
 
 # Absolute path to the directory that holds media.

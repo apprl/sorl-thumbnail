@@ -65,9 +65,9 @@
             <label class="control-label" for="id_language">{% trans "Language" %}</label>
             <div class="controls">
                 <select id="id_language" name="language">
-                    <option value="sv">{% trans "Swedish" %}</option>
-                    <option value="en">{% trans "English" %}</option>
-                    <option value="da">{% trans "Danish" %}</option>
+                    {% for language in LANGUAGES %}
+                    <option value="{{ language.0 }}">{{ language.1 }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
