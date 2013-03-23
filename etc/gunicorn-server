@@ -39,6 +39,7 @@ case "$1" in
             --pid=$PIDFILE_ADMIN --workers=$NUM_WORKERS_ADMIN \
             --user=%(run_user)s --group=%(run_group)s \
             --log-level=debug --log-file=$LOGFILE \
+            --timeout 1800 \
             --daemon \
             2>>$LOGFILE
 
