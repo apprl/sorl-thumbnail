@@ -420,7 +420,7 @@ function renderPage(products) {
 
     currencyConversion($list.find('.price, .discount-price'));
 
-    if(typeof embed_shop_user_id === 'undefined') {
+    if(typeof embed_shop_user_id !== 'undefined') {
         $list.find('.product-container').each(function(i, element) {
             var buy_url = $(element).find('.btn-buy').attr('href');
             buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
