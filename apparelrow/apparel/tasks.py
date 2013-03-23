@@ -284,6 +284,9 @@ def build_static_look_image(look_id):
     storage.default_storage.save(filename, ContentFile(temp_handle.read()))
     look.static_image = filename
 
+    # Reset look thumbnails
+    sorl_delete(look.static_image)
+
     # refresh thumbnail in mails
     get_thumbnail(look.static_image, '576', crop='noop')
 
