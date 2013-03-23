@@ -5,6 +5,7 @@ import os
 import os.path
 import string
 import decimal
+import time
 
 from django.core.management import call_command
 from django.core.files import storage
@@ -280,12 +281,10 @@ def build_static_look_image(look_id):
     if look.static_image:
         sorl_delete(look.static_image)
 
-    filename = '%s/static__%s.jpg' % (settings.APPAREL_LOOK_IMAGE_ROOT, look.slug)
+    unique_tag = time.mktime(look.modified.timetuple())
+    filename = '%s/static__%s_%d.jpg' % (settings.APPAREL_LOOK_IMAGE_ROOT, look.slug, unique_tag)
     storage.default_storage.save(filename, ContentFile(temp_handle.read()))
     look.static_image = filename
-
-    # Reset look thumbnails
-    sorl_delete(look.static_image)
 
     # refresh thumbnail in mails
     get_thumbnail(look.static_image, '576', crop='noop')
