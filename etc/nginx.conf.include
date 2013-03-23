@@ -15,7 +15,7 @@ location ~ ^/(?:wo)?men.*$ {
     rewrite ^/(?:wo)?men.*$ /shop/$1 permanent;
 }
 
-location /embed {
+location /embed/look {
     default_type "text/html; charset=utf-8";
     set $memcached_key $uri;
     memcached_pass 127.0.0.1:11211;
