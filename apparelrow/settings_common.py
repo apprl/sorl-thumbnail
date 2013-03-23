@@ -442,6 +442,7 @@ CELERY_ROUTES = ({
     'apparel.tasks.generate_brand_list_template': {'queue': 'standard'},
     'apparelrow.apparel.tasks.look_popularity': {'queue': 'standard'},
     'apparelrow.apparel.tasks.product_popularity': {'queue': 'standard'},
+    'apparelrow.apparel.tasks.build_static_look_image': {'queue': 'standard'},
     'statistics.tasks.active_users': {'queue': 'standard'},
 },)
 

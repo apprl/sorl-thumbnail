@@ -13,14 +13,10 @@ from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
 from django.core.cache import get_cache
-from django.core.files import storage
-from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.contrib.staticfiles import finders
 from django.utils import timezone
 from django.utils.functional import cached_property
 
@@ -29,16 +25,14 @@ from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
-from apparelrow.apparel.tasks import product_popularity
+from apparelrow.apparel.tasks import product_popularity, build_static_look_image
 
 from apparelrow.profile.notifications import process_sale_alert
 
 import requests
 
-from cStringIO import StringIO
-from PIL import Image
 from tagging.fields import TagField
-from sorl.thumbnail import ImageField, get_thumbnail, delete as sorl_delete
+from sorl.thumbnail import ImageField, get_thumbnail
 from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
@@ -718,63 +712,12 @@ class Look(models.Model):
         """
         look = Look.objects.get(pk=look_id)
 
-        image = Image.new('RGBA', settings.APPAREL_LOOK_SIZE, (255, 255, 255, 255))
-        offset_left = 0
-        offset_top = 0
-
-        if look.display_with_component == 'P' and look.image:
-            # Reuse photo image
-            thumbnail = get_thumbnail(look.image, '694x524')
-            # TODO: better solution?
-            if thumbnail.url.startswith('http'):
-                background = Image.open(StringIO(requests.get(thumbnail.url).content))
-            else:
-                background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
-            offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
-            image.paste(background, (offset_left, offset_top))
-            look.width = thumbnail.width
-            look.height = thumbnail.height
-        else:
-            look.width = 694
-            look.height = 524
-
-        for component in look.display_components.order_by('z_index').all():
-            if look.display_with_component == 'P':
-                component_image = Image.open(finders.find('images/look-hotspot.png'))
-            else:
-                if not component.product.product_image:
-                    continue
-
-                # Reuse transparent thumbnail image
-                thumbnail = get_thumbnail(component.product.product_image, '%s' % (settings.APPAREL_LOOK_MAX_SIZE,), format='PNG', transparent=True)
-                # TODO: better solution?
-                if thumbnail.url.startswith('http'):
-                    component_image = Image.open(StringIO(requests.get(thumbnail.url).content))
-                else:
-                    component_image = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
-                component_image = component_image.resize((component.width, component.height), Image.ANTIALIAS).convert('RGBA')
-                if component.rotation:
-                    rotation = component_image.rotate(-component.rotation, Image.BICUBIC, 1)
-                    blank = Image.new('RGBA', rotation.size, (255, 255, 255, 0))
-                    component_image = Image.composite(rotation, blank, rotation)
-
-            image.paste(component_image, (offset_left + component.left, offset_top + component.top), component_image)
-
-        temp_handle = StringIO()
-        image.save(temp_handle, 'JPEG', quality=99)
-        temp_handle.seek(0)
-
-        if look.static_image:
-            sorl_delete(look.static_image)
-
-        filename = '%s/static__%s.jpg' % (settings.APPAREL_LOOK_IMAGE_ROOT, look.slug)
-        storage.default_storage.save(filename, ContentFile(temp_handle.read()))
-        look.static_image = filename
-
-        # refresh thumbnail in mails
-        get_thumbnail(look.static_image, '576', crop='noop')
-
+        # Build temporary static look image
+        look.static_image = 'static/images/white.png'
         look.save()
+
+        # Build static look image in background
+        build_static_look_image.delay(look.pk)
 
     @staticmethod
     def calculate_gender(look_id, update=True):

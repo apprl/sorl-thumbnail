@@ -7,12 +7,21 @@ import string
 import decimal
 
 from django.core.management import call_command
+from django.core.files import storage
+from django.core.files.base import ContentFile
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
+from django.contrib.staticfiles import finders
 from django.conf import settings
 from django.db.models.loading import get_model
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_unicode
+
+from cStringIO import StringIO
+
+from PIL import Image
+
+from sorl.thumbnail import get_thumbnail, delete as sorl_delete
 
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
@@ -216,3 +225,66 @@ def generate_brand_list_template():
         filename = os.path.join(settings.PROJECT_ROOT, 'templates', 'apparel', 'generated', template_name)
         open(temp_filename, 'w').write(template_string.encode('utf-8'))
         os.rename(temp_filename, filename)
+
+
+@task(name='apparelrow.apparel.tasks.build_static_look_image', max_retries=5, ignore_result=True)
+def build_static_look_image(look_id):
+    look = get_model('apparel', 'Look').objects.get(pk=look_id)
+
+    image = Image.new('RGBA', settings.APPAREL_LOOK_SIZE, (255, 255, 255, 255))
+    offset_left = 0
+    offset_top = 0
+
+    if look.display_with_component == 'P' and look.image:
+        # Reuse photo image
+        thumbnail = get_thumbnail(look.image, '694x524')
+        # TODO: better solution?
+        if thumbnail.url.startswith('http'):
+            background = Image.open(StringIO(requests.get(thumbnail.url).content))
+        else:
+            background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
+        offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
+        image.paste(background, (offset_left, offset_top))
+        look.width = thumbnail.width
+        look.height = thumbnail.height
+    else:
+        look.width = 694
+        look.height = 524
+
+    for component in look.display_components.order_by('z_index').all():
+        if look.display_with_component == 'P':
+            component_image = Image.open(finders.find('images/look-hotspot.png'))
+        else:
+            if not component.product.product_image:
+                continue
+
+            # Reuse transparent thumbnail image
+            thumbnail = get_thumbnail(component.product.product_image, '%s' % (settings.APPAREL_LOOK_MAX_SIZE,), format='PNG', transparent=True)
+            # TODO: better solution?
+            if thumbnail.url.startswith('http'):
+                component_image = Image.open(StringIO(requests.get(thumbnail.url).content))
+            else:
+                component_image = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
+            component_image = component_image.resize((component.width, component.height), Image.ANTIALIAS).convert('RGBA')
+            if component.rotation:
+                rotation = component_image.rotate(-component.rotation, Image.BICUBIC, 1)
+                blank = Image.new('RGBA', rotation.size, (255, 255, 255, 0))
+                component_image = Image.composite(rotation, blank, rotation)
+
+        image.paste(component_image, (offset_left + component.left, offset_top + component.top), component_image)
+
+    temp_handle = StringIO()
+    image.save(temp_handle, 'JPEG', quality=99)
+    temp_handle.seek(0)
+
+    if look.static_image:
+        sorl_delete(look.static_image)
+
+    filename = '%s/static__%s.jpg' % (settings.APPAREL_LOOK_IMAGE_ROOT, look.slug)
+    storage.default_storage.save(filename, ContentFile(temp_handle.read()))
+    look.static_image = filename
+
+    # refresh thumbnail in mails
+    get_thumbnail(look.static_image, '576', crop='noop')
+
+    look.save()
