@@ -38,7 +38,8 @@ def prod():
     env.path = '/home/%(user)s/%(project_name)s' % env
     env.settings = 'production'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
-    env.celery_processes='6'
+    env.celery_processes='4'
+    env.celery_processes_background='3'
     env.gunicorn_processes='3'
 
 def prod_db():
@@ -62,6 +63,7 @@ def staging():
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
     env.celery_processes='2'
+    env.celery_processes_background='2'
     env.gunicorn_processes='2'
 
 # tasks

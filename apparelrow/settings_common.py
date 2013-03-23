@@ -425,6 +425,7 @@ CELERY_DEFAULT_ROUTING_KEY = 'standard'
 CELERY_CREATE_MISSING_QUEUES = True
 CELERY_QUEUES = {
     'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
+    'background': {'exchange': 'background', 'exchange_type': 'direct', 'routing_key': 'background'},
 }
 CELERY_ROUTES = ({
     'static_sitemaps.tasks.GenerateSitemap': {'queue': 'standard'},
@@ -440,8 +441,8 @@ CELERY_ROUTES = ({
     'apparel.facebook_push_graph': {'queue': 'standard'},
     'apparel.facebook_pull_graph': {'queue': 'standard'},
     'apparel.tasks.generate_brand_list_template': {'queue': 'standard'},
-    'apparelrow.apparel.tasks.look_popularity': {'queue': 'standard'},
-    'apparelrow.apparel.tasks.product_popularity': {'queue': 'standard'},
+    'apparelrow.apparel.tasks.look_popularity': {'queue': 'background'},
+    'apparelrow.apparel.tasks.product_popularity': {'queue': 'background'},
     'apparelrow.apparel.tasks.build_static_look_image': {'queue': 'standard'},
     'statistics.tasks.active_users': {'queue': 'standard'},
 },)

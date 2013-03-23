@@ -1,5 +1,5 @@
 # Name of nodes to start, here we have a single node
-CELERYD_NODES="c1"
+CELERYD_NODES="c1 c2"
 
 # Where to find the virtual env.
 VIRTUALENV="%(path)s"
@@ -17,7 +17,7 @@ CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi"
 CELERYCTL="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl"
 
 # Extra arguments to celeryd
-CELERYD_OPTS="-c %(celery_processes)s -Q:c1 standard -B:c1"
+CELERYD_OPTS="-c:c1 %(celery_processes)s -c:c2 %(celery_processes_background)s -Q:c1 standard -Q:c2 background -B:c1"
 
 # %%n will be replaced with the nodename.
 CELERYD_LOG_FILE="%(path)s/var/logs/celery/%%n.log"
