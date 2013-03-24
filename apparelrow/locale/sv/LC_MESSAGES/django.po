@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-23 21:39+0100\n"
+"POT-Creation-Date: 2013-03-24 13:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -242,7 +242,6 @@ msgstr "Produktbild"
 
 #: apparel/models.py:228 apparel/models.py:699 profile/forms.py:123
 #: profile/models.py:53 profile/models.py:287
-#: templates/profile/embed_shop.html:75
 msgid "Gender"
 msgstr "Kön"
 
@@ -694,6 +693,7 @@ msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 #: profile/models.py:28 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
 #: templates/apparel/fragments/product_menu_browse.html:12
+#: templates/profile/embed_shop.html:78
 msgid "All"
 msgstr "Alla"
 
@@ -714,7 +714,7 @@ msgid "About"
 msgstr "Om"
 
 #: profile/models.py:52 profile/models.py:286
-#: templates/profile/embed_shop.html:65
+#: templates/profile/embed_shop.html:66
 msgid "Language"
 msgstr "Språk"
 
@@ -855,14 +855,12 @@ msgstr "Avbryt"
 #: templates/base.html:152 templates/base.html.py:157 templates/base.html:262
 #: templates/apparel/look_editor.html:52
 #: templates/apparel/fragments/product_menu_browse.html:14
-#: templates/profile/embed_shop.html:79
 msgid "Men"
 msgstr "Herr"
 
 #: templates/base.html:152 templates/base.html.py:156 templates/base.html:261
 #: templates/apparel/look_editor.html:51
 #: templates/apparel/fragments/product_menu_browse.html:13
-#: templates/profile/embed_shop.html:78
 msgid "Women"
 msgstr "Dam"
 
@@ -2544,23 +2542,57 @@ msgstr ""
 msgid "Create a shop for your site"
 msgstr "Skapa en shop för din sida"
 
-#: templates/profile/embed_shop.html:49
+#: templates/profile/embed_shop.html:47
+msgid ""
+"It's simple to create a shop for your site that includes all the products "
+"that you have liked on Apprl. Enter your preferred format below and paste "
+"the embed-code into your site."
+msgstr ""
+"Du kan enkelt skapa en shop till din site med alla produkter du har gillat "
+"på Apprl. Ställ in vilket format du vill ha på din shop och klistra sen in "
+"embed-koden på din site."
+
+#: templates/profile/embed_shop.html:50
 msgid "Width"
 msgstr "Bredd"
 
-#: templates/profile/embed_shop.html:59
+#: templates/profile/embed_shop.html:53
+msgid "720 pixels"
+msgstr "720 pixlar"
+
+#: templates/profile/embed_shop.html:54
+msgid "960 pixels"
+msgstr "960 pixlar"
+
+#: templates/profile/embed_shop.html:55
+msgid "1200 pixels"
+msgstr "1200 pixlar"
+
+#: templates/profile/embed_shop.html:60
 msgid "Height"
 msgstr "Höjd"
 
-#: templates/profile/embed_shop.html:77
-msgid "Both"
-msgstr "Båda"
+#: templates/profile/embed_shop.html:62
+msgid "pixels"
+msgstr "pixlar"
 
-#: templates/profile/embed_shop.html:84
+#: templates/profile/embed_shop.html:76
+msgid "Show"
+msgstr "Visa"
+
+#: templates/profile/embed_shop.html:79
+msgid "Women's"
+msgstr "Dam"
+
+#: templates/profile/embed_shop.html:80
+msgid "Men's"
+msgstr "Herr"
+
+#: templates/profile/embed_shop.html:85
 msgid "Get embed code"
 msgstr "Hämta embed-kod"
 
-#: templates/profile/embed_shop.html:88
+#: templates/profile/embed_shop.html:89
 msgid "Embed code"
 msgstr "Embed-kod"
 
@@ -3051,124 +3083,3 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:3
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
-
-#~ msgid "Swedish"
-#~ msgstr "Svenska"
-
-#~ msgid "English"
-#~ msgstr "Engelska"
-
-#~ msgid "Welcome"
-#~ msgstr "Välkommen"
-
-#~ msgid ""
-#~ "Discover fashion from the world’s best online stores, selected by our "
-#~ "stylemakers & bloggers."
-#~ msgstr ""
-#~ "Upptäck mode från världens bästa onlinebutiker utvalt av våra medlemmar & "
-#~ "bloggare."
-
-#~ msgid "Add bio"
-#~ msgstr "Lägg till beskrivning"
-
-#~ msgid "Check your spam/junk mail folder."
-#~ msgstr "Kolla din spam/skräp-mapp."
-
-#~ msgid "Send e-mail again:"
-#~ msgstr "Skicka ut ett nytt e-mail:"
-
-#~ msgid "e-mail"
-#~ msgstr "din e-postadress"
-
-#~ msgid "To create a look on the site, you need to sign up first."
-#~ msgstr "För att skapa en look på siten behöver du först bli medlem."
-
-#~ msgid "To follow someone on the site, you need to sign up."
-#~ msgstr "För att kunna följa någon här på siten behöver du bli medlem."
-
-#~ msgid "To 'like' a look on the site, you need to sign up first."
-#~ msgstr "För att gilla en look på siten behöver du först bli medlem."
-
-#~ msgid "To 'like' a product on the site, you need to sign up first."
-#~ msgstr "För att gilla en produkt på siten behöver du först bli medlem."
-
-#~ msgid ""
-#~ "\n"
-#~ "The Apprl Team\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Apprl-teamet\n"
-
-#~ msgid "Your info"
-#~ msgstr "Din info"
-
-#~ msgid "/The Apprl team"
-#~ msgstr "/The Apprl team"
-
-#~ msgid "Information about you"
-#~ msgstr "Uppgifter om dig"
-
-#~ msgid "Follow us on Facebook for inspiration & great offers"
-#~ msgstr "Följ oss på Facebook för inspiration & erbjudanden"
-
-#~ msgid "You're done!"
-#~ msgstr "Gå vidare"
-
-#~ msgid "Activate your Apprl account"
-#~ msgstr "Aktivera ditt Apprl-konto"
-
-#~ msgid "Hi %(name)s,"
-#~ msgstr "Hej %(name)s,"
-
-#~ msgid ""
-#~ "You have signed up for an account at Apprl. Please follow the link below "
-#~ "to activate your account"
-#~ msgstr ""
-#~ "Du har registrerat ett konto hos Apprl. Var vänlig följ länken nedan för "
-#~ "att aktivera det."
-
-#~ msgid "Thank you"
-#~ msgstr "Tack"
-
-#~ msgid ""
-#~ "Thank you for signing up. An e-mail has been sent to you with an "
-#~ "activation key. Once you've followed the link it contains, you may log in."
-#~ msgstr ""
-#~ "Tack för att du registrerat dig! Ett mejl har skickats till dig med en "
-#~ "aktiveringsnyckel. När du följt länken i mejlet kan du logga in."
-
-#~ msgid "Username"
-#~ msgstr "Användarnamn"
-
-#~ msgid "Activate account"
-#~ msgstr "Aktivera konto"
-
-#~ msgid ""
-#~ "\n"
-#~ "        The activation key %(activation_key)s is invalid or expired. "
-#~ "Please sign up again.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Aktiveringsnyckeln %(activation_key)s är felaktig eller har gått "
-#~ "ut. Du måste registrera dig igen.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "        Done! Your account at Apprl is now active.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Klar! Ditt konto på Apprl är nu aktiverat.\n"
-#~ "    "
-
-#~ msgid "Click <a href=\"/accounts/login/?next=/home/\">here to login</a>."
-#~ msgstr "Klicka <a href=\"/accounts/login/\">här för att logga in</a>."
-
-#~ msgid "See your friends' favorite products"
-#~ msgstr "Se dina vänners favoritprodukter"
-
-#~ msgid "Sign up to see which products are popular among your friends."
-#~ msgstr ""
-#~ "Bli medlem att se vilka produkter som är populära bland dina vänner."

@@ -143,13 +143,3 @@ msgstr "Produkt info"
 #: static/js/app/views/look_edit_popup.js:104
 msgid "Add product"
 msgstr "Lägg till produkt"
-
-#~ msgid "Found %(count)s matching profile"
-#~ msgid_plural "Found %(count)s matching profiles"
-#~ msgstr[0] "%(count)s träff bland profiler"
-#~ msgstr[1] "%(count)s träffar bland profiler"
-
-#~ msgid "Show %(count)s matching profile"
-#~ msgid_plural "Show all %(count)s matching profiles"
-#~ msgstr[0] "Visa %(count)s profil"
-#~ msgstr[1] "Visa alla %(count)s profiler"

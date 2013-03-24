@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-23 21:39+0100\n"
+"POT-Creation-Date: 2013-03-24 13:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -241,7 +241,6 @@ msgstr ""
 
 #: apparel/models.py:228 apparel/models.py:699 profile/forms.py:123
 #: profile/models.py:53 profile/models.py:287
-#: templates/profile/embed_shop.html:75
 msgid "Gender"
 msgstr ""
 
@@ -689,6 +688,7 @@ msgstr ""
 #: profile/models.py:28 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
 #: templates/apparel/fragments/product_menu_browse.html:12
+#: templates/profile/embed_shop.html:78
 msgid "All"
 msgstr ""
 
@@ -709,7 +709,7 @@ msgid "About"
 msgstr ""
 
 #: profile/models.py:52 profile/models.py:286
-#: templates/profile/embed_shop.html:65
+#: templates/profile/embed_shop.html:66
 msgid "Language"
 msgstr ""
 
@@ -850,14 +850,12 @@ msgstr ""
 #: templates/base.html:152 templates/base.html.py:157 templates/base.html:262
 #: templates/apparel/look_editor.html:52
 #: templates/apparel/fragments/product_menu_browse.html:14
-#: templates/profile/embed_shop.html:79
 msgid "Men"
 msgstr ""
 
 #: templates/base.html:152 templates/base.html.py:156 templates/base.html:261
 #: templates/apparel/look_editor.html:51
 #: templates/apparel/fragments/product_menu_browse.html:13
-#: templates/profile/embed_shop.html:78
 msgid "Women"
 msgstr ""
 
@@ -2428,23 +2426,54 @@ msgstr ""
 msgid "Create a shop for your site"
 msgstr ""
 
-#: templates/profile/embed_shop.html:49
+#: templates/profile/embed_shop.html:47
+msgid ""
+"It's simple to create a shop for your site that includes all the products "
+"that you have liked on Apprl. Enter your preferred format below and paste "
+"the embed-code into your site."
+msgstr ""
+
+#: templates/profile/embed_shop.html:50
 msgid "Width"
 msgstr ""
 
-#: templates/profile/embed_shop.html:59
+#: templates/profile/embed_shop.html:53
+msgid "720 pixels"
+msgstr ""
+
+#: templates/profile/embed_shop.html:54
+msgid "960 pixels"
+msgstr ""
+
+#: templates/profile/embed_shop.html:55
+msgid "1200 pixels"
+msgstr ""
+
+#: templates/profile/embed_shop.html:60
 msgid "Height"
 msgstr ""
 
-#: templates/profile/embed_shop.html:77
-msgid "Both"
+#: templates/profile/embed_shop.html:62
+msgid "pixels"
 msgstr ""
 
-#: templates/profile/embed_shop.html:84
+#: templates/profile/embed_shop.html:76
+msgid "Show"
+msgstr ""
+
+#: templates/profile/embed_shop.html:79
+msgid "Women's"
+msgstr ""
+
+#: templates/profile/embed_shop.html:80
+msgid "Men's"
+msgstr ""
+
+#: templates/profile/embed_shop.html:85
 msgid "Get embed code"
 msgstr ""
 
-#: templates/profile/embed_shop.html:88
+#: templates/profile/embed_shop.html:89
 msgid "Embed code"
 msgstr ""
 
@@ -2910,10 +2939,3 @@ msgstr ""
 #: templates/registration/fragments/registration.html:3
 msgid "or sign up with e-mail"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Swedish"
-#~ msgstr "Svenska (SEK)"
-
-#~ msgid "Swe"
-#~ msgstr "Sve"
