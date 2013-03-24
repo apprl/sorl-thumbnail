@@ -173,7 +173,9 @@ def deploy(param='', snapshot='master'):
     symlink_current_release()
     restart_celeryd()
     restart_gunicorn()
-    restart_memcached()
+    # No need to restart memcache on every deploy, better to do it manually if
+    # needed with fab server restart_memcached
+    #restart_memcached()
     restart_webserver()
 
 def deploy_version(version):
