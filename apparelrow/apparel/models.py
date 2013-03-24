@@ -340,9 +340,9 @@ class Product(models.Model):
         if not self.date_published and self.published == True:
             self.date_published = datetime.datetime.now()
 
-        # Only update popularity if this is a complete save (stops circular
-        # popularity updates).
-        if 'update_fields' not in kwargs:
+        # Only update popularity if this is a complete save and the product is
+        # published (stops circular popularity updates).
+        if 'update_fields' not in kwargs and self.published:
             product_popularity.delay(self)
 
         super(Product, self).save(*args, **kwargs)
