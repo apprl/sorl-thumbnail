@@ -16,6 +16,22 @@
             max: {{ pricerange.max }}
           };
           var embed_shop_user_id = {{ user_id }};
+            $(function () {
+                $("#back-top").hide();
+                $(window).scroll(function () {
+                    if ($(this).scrollTop() > 1500) {
+                        $('#back-top').fadeIn();
+                    } else {
+                        $('#back-top').fadeOut();
+                    }
+                });
+                $('#back-top a').click(function () {
+                    $('body,html').animate({
+                        scrollTop: 0
+                    }, 400);
+                    return false;
+                });
+            });
         </script>
         {% compressed_js 'shop' %}
         <script type="text/javascript">
@@ -73,6 +89,7 @@
                         {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
                     </div>
                 </div>
+                <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
             </div>
         </div>
       </body>
