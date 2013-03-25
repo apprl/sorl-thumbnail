@@ -32,6 +32,7 @@
 
             jQuery.post("{% url 'shop-widget' %}", data, function(response) {
                 $('#id_embed_code').val(response);
+                $('#id_embed_code').parents('.control-group').show();
             });
 
             return false;
@@ -44,7 +45,7 @@
 {% block body %}
 <div id="content">
     <h1>{% trans "Create a shop for your site" %}</h1>
-    <p>{% trans "It's easy to create a shop for your site that includes all the products that you have liked on Apprl. Enter your preferred format below and paste the embed-code into your site." %}
+    <p>{% trans "It's easy to create a shop for your site that includes all the products that you like on Apprl. Enter your preferred format below and paste the embed-code into your site." %}
     <form id="embed_shop_form" class="form-horizontal">
         <div class="control-group">
             <label class="control-label" for="id_width">{% trans "Width" %}</label>
@@ -75,9 +76,9 @@
         <div class="control-group">
             <label class="control-label" for="id_gender_0">{% trans "Show" %}</label>
             <div class="controls">
-                <label class="inline" for="id_gender_0"><input id="id_gender_0" type="radio" name="gender" value="A" checked="checked">{% trans "All" %}</label>
-                <label class="inline" for="id_gender_1"><input id="id_gender_1" type="radio" name="gender" value="W">{% trans "Women's" %}</label>
-                <label class="inline" for="id_gender_2"><input id="id_gender_2" type="radio" name="gender" value="M">{% trans "Men's" %}</label>
+                <label class="block" for="id_gender_0"><input id="id_gender_0" type="radio" name="gender" value="A" checked="checked">{% trans "All products" %}</label>
+                <label class="block" for="id_gender_1"><input id="id_gender_1" type="radio" name="gender" value="W">{% trans "Only women's" %}</label>
+                <label class="block" for="id_gender_2"><input id="id_gender_2" type="radio" name="gender" value="M">{% trans "Only men's" %}</label>
             </div>
         </div>
         <div class="control-group">
@@ -85,7 +86,7 @@
                 <button class="btn btn-upper btn-block">{% trans "Get embed code" %}</button>
             </div>
         </div>
-        <div class="control-group">
+        <div class="control-group" style="display:none;">
             <label class="control-label" for="id_embed_code">{% trans "Embed code" %}</label>
             <div class="controls">
                 <textarea id="id_embed_code" name="embed_code"></textarea>

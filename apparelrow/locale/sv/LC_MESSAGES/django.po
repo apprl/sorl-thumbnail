@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-24 14:00+0100\n"
+"POT-Creation-Date: 2013-03-25 08:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -693,7 +693,6 @@ msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 #: profile/models.py:28 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
 #: templates/apparel/fragments/product_menu_browse.html:12
-#: templates/profile/embed_shop.html:78
 msgid "All"
 msgstr "Alla"
 
@@ -1452,7 +1451,7 @@ msgstr "Spara utkast"
 msgid "Your ♥"
 msgstr "Dina ♥"
 
-#: templates/apparel/look_editor.html:44
+#: templates/apparel/look_editor.html:44 templates/profile/embed_shop.html:78
 msgid "All products"
 msgstr "Alla produkter"
 
@@ -2449,7 +2448,7 @@ msgstr "Följs av"
 
 #: templates/profile/base_profile.html:100
 msgid "Create a shop on your site"
-msgstr "Skapa en shop på din sida"
+msgstr "Skapa en shop till din site"
 
 #: templates/profile/base_profile.html:112
 #, python-format
@@ -2540,15 +2539,15 @@ msgstr ""
 
 #: templates/profile/embed_shop.html:46
 msgid "Create a shop for your site"
-msgstr "Skapa en shop för din sida"
+msgstr "Skapa en shop till din site"
 
 #: templates/profile/embed_shop.html:47
 msgid ""
 "It's easy to create a shop for your site that includes all the products that "
-"you have liked on Apprl. Enter your preferred format below and paste the "
-"embed-code into your site."
+"you like on Apprl. Enter your preferred format below and paste the embed-"
+"code into your site."
 msgstr ""
-"Du kan enkelt skapa en shop till din site med alla produkter du har gillat "
+"Du kan enkelt skapa en shop till din site med alla produkter du gillar "
 "på Apprl. Ställ in vilket format du vill ha på din shop och klistra sen in "
 "embed-koden på din site."
 
@@ -2581,12 +2580,12 @@ msgid "Show"
 msgstr "Visa"
 
 #: templates/profile/embed_shop.html:79
-msgid "Women's"
-msgstr "Dam"
+msgid "Only women's"
+msgstr "Bara dam"
 
 #: templates/profile/embed_shop.html:80
-msgid "Men's"
-msgstr "Herr"
+msgid "Only men's"
+msgstr "Bara herr"
 
 #: templates/profile/embed_shop.html:85
 msgid "Get embed code"
@@ -3083,3 +3082,6 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:3
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
+
+#~ msgid "Men's"
+#~ msgstr "Herr"

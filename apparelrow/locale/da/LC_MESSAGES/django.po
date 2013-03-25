@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-24 14:00+0100\n"
+"POT-Creation-Date: 2013-03-25 08:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -689,7 +689,6 @@ msgstr ""
 #: profile/models.py:28 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
 #: templates/apparel/fragments/product_menu_browse.html:12
-#: templates/profile/embed_shop.html:78
 msgid "All"
 msgstr ""
 
@@ -1424,7 +1423,7 @@ msgstr ""
 msgid "Your ♥"
 msgstr ""
 
-#: templates/apparel/look_editor.html:44
+#: templates/apparel/look_editor.html:44 templates/profile/embed_shop.html:78
 msgid "All products"
 msgstr ""
 
@@ -2429,8 +2428,8 @@ msgstr ""
 #: templates/profile/embed_shop.html:47
 msgid ""
 "It's easy to create a shop for your site that includes all the products that "
-"you have liked on Apprl. Enter your preferred format below and paste the "
-"embed-code into your site."
+"you like on Apprl. Enter your preferred format below and paste the embed-"
+"code into your site."
 msgstr ""
 
 #: templates/profile/embed_shop.html:50
@@ -2462,11 +2461,11 @@ msgid "Show"
 msgstr ""
 
 #: templates/profile/embed_shop.html:79
-msgid "Women's"
+msgid "Only women's"
 msgstr ""
 
 #: templates/profile/embed_shop.html:80
-msgid "Men's"
+msgid "Only men's"
 msgstr ""
 
 #: templates/profile/embed_shop.html:85
