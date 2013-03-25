@@ -127,7 +127,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
 
     return query_arguments
 
-def browse_products(request, template='apparel/browse.html', gender=None, user_id=None, language=None):
+def browse_products(request, template='apparel/browse.html', gender=None, user_gender=None, user_id=None, language=None):
     if not language:
         language = get_language()
     translation.activate(language)
@@ -154,7 +154,10 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_i
         # User wardrobe
         if user_id:
             query_arguments['fq'].append('user_likes:%s' % (user_id,))
-            query_arguments['fq'].append(generate_gender_field(dict(gender=gender)))
+            if user_gender == 'A':
+                query_arguments['fq'].append(generate_gender_field(request.GET))
+            else:
+                query_arguments['fq'].append(generate_gender_field(dict(gender=user_gender)))
         else:
             query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
@@ -292,7 +295,6 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_i
         selected_gender      = request.GET.get('gender', None),
         selected_discount    = bool(request.GET.get('discount', None)),
         selected_sort        = request.GET.get('sort', None),
-        gender = gender,
     )
 
     # Serve ajax request
@@ -317,6 +319,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_i
 
     # User id
     if user_id:
+        result.update(user_gender=user_gender)
         result.update(user_id=user_id)
 
     # Serve non ajax request
@@ -365,7 +368,7 @@ def get_pagination_as_dict(paged_result):
 def shop_embed(request, user_id, language, gender):
     return browse_products(request,
                            template='apparel/shop_embed.html',
-                           gender=gender,
+                           user_gender=gender,
                            language=language,
                            user_id=user_id)
 
