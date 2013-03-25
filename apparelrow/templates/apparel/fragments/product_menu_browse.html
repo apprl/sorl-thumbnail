@@ -8,11 +8,16 @@
 </h2>
 {% endblock %}
 {% block product_genders %}
-<ul id="product-gender"{% if not likes_page %} style="display: none;"{% endif %}>
+{% if user_id and gender == 'A' %}
+<h2 class="product-gender">
+    {% trans "Choose gender" %}
+</h2>
+<ul id="product-gender">
     <li class="first"><a href="">{% trans "All" %}</a></li>
     <li class="women"><a id="option-W"{% if selected_gender == "W" %} class="selected"{% endif %} href="?gender=W">{% trans "Women" %}</a></li>
     <li class="last men"><a id="option-M"{% if selected_gender == "M" %} class="selected"{% endif %} href="?gender=M">{% trans "Men" %}</a></li>
 </ul>
+{% endif %}
 {% endblock %}
 {% block product_options %}
 <ul id="product-options">

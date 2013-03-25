@@ -4,7 +4,6 @@
 <h2>{% trans "Choose category" %}</h2>
 {% endblock %}
 
-{% block product_genders %}{% endblock %}
 {% for category, structure in categories_all|tree_info %}
     {% if structure.new_level %}
         <ul{% if forloop.first %} id="product-category"{% endif %} class="level-{{ category.get_level }}">
@@ -15,5 +14,7 @@
         <a data-order="{{ category.name_order }}" id="category-{{ category.id }}"{% if category.id in selected_categories %} class="selected"{% endif %} href="?category={{ category.id }}">{{ category.name }} <span class="category-count">({{ categories|getdictattribute:category.id }})</span></a>
     {% for level in structure.closed_levels %}</li></ul>{% endfor %}
 {% endfor %}
+
+{% block product_genders %}{% endblock %}
 
 {% block product_options %}{% endblock %}

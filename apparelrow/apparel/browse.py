@@ -292,6 +292,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_i
         selected_gender      = request.GET.get('gender', None),
         selected_discount    = bool(request.GET.get('discount', None)),
         selected_sort        = request.GET.get('sort', None),
+        gender = gender,
     )
 
     # Serve ajax request

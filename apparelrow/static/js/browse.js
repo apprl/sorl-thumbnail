@@ -424,7 +424,7 @@ function renderPage(products) {
         $list.find('.product-container').each(function(i, element) {
             var buy_url = $(element).find('.btn-buy').attr('href');
             buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
-            $('.product-image, .product-footer a', element).attr('href', buy_url);
+            $('.product-image, .product-footer a', element).attr('href', buy_url).attr('target', '_blank');
             $('.hover', element).remove();
         });
     }
@@ -442,7 +442,7 @@ function renderPage(products) {
         jQuery('#product-count a').show();
         // Special case, only hide gender if we are not on the wardrobe page
         // TODO / FIXME: better solution?
-        if(window.location.pathname.indexOf('likes') == -1) {
+        if(window.location.pathname.indexOf('likes') == -1 && window.location.pathname.indexOf('embed') == -1) {
             jQuery('#product-gender').hide();
         }
     }
