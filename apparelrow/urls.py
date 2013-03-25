@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^accounts/activate/(?P<key>[\w-]+)/$', 'apparelrow.profile.views.register_activate', name='auth_register_activate'),
     url(r'^accounts/reset/$', 'django.contrib.auth.views.password_reset', name='auth_password_reset'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
-
+    url(r'^affiliate/', include('affiliate.urls')),
     (r'^profile/', include('apparelrow.profile.urls')),
 
     (r'^comments/', include('django.contrib.comments.urls')),
@@ -36,4 +36,5 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('django.contrib.flatpages.views',
     url(r'^(?P<url>about/.*)$', 'flatpage', name='about'),
+
 )
