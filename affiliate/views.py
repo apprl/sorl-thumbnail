@@ -4,6 +4,9 @@ from django.conf import settings
 from django.db.models import get_model
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
+from django.utils import timezone
+
+import dateutil.parser
 
 from apparelrow.statistics.utils import get_client_ip
 
@@ -15,30 +18,43 @@ def pixel(request):
     """
     Affiliate pixel
     """
-    company_id = request.GET.get('company_id')
+    store_id = request.GET.get('store_id')
     order_id = request.GET.get('order_id')
     order_value = request.GET.get('order_value')
     currency = request.GET.get('currency')
 
-    if not company_id or not order_id or not order_value or not currency:
-        # TODO: incomplete, return http error or store it but as incomplete
-        # data and notify admin which can contact company if company_id is set
-        pass
+    Transaction = get_model('affiliate', 'Transaction')
+
+    if not store_id or not order_id or not order_value or not currency:
+        # TODO: incomplete pixel request, notify admin for further communication with store
+        return HttpResponseBadRequest()
 
     # Cookie data
+    status = Transaction.INVALID
+    cookie_datetime = user_id = page = None
     cookie_data = request.get_signed_cookie(AFFILIATE_COOKIE_NAME)
-    if not cookie_data:
-        status = get_model('affiliate', 'Transaction').INVALID
+    if cookie_data:
+        status = Transaction.TOO_OLD
+        cookie_datetime, user_id, page = cookie_data.split('|')
+        cookie_datetime = dateutil.parser.parse(cookie_datetime)
 
-    print cookie_data
-    print get_client_ip(request)
+        # TODO: verify that cookie_datetime is at most X days old based on store_id settings
+        if cookie_datetime + datetime.timedelta(days=30) >= timezone.now():
+            status = Transaction.PENDING
 
-    # TODO: insert data in transaction model
+    # TODO: insert cookie data such as user_id and page
+    transaction = Transaction.objects.create(store_id=store_id,
+                                             order_id=order_id,
+                                             order_value=order_value,
+                                             currency=currency,
+                                             ip_address=get_client_ip(request),
+                                             status=status,
+                                             cookie_date=cookie_datetime)
 
     # TODO: insert optional product data
-    product_sku = request.GET.get('sku')
-    product_quantity = request.GET.get('quantity')
-    product_price = request.GET.get('price')
+    #product_sku = request.GET.get('sku')
+    #product_quantity = request.GET.get('quantity')
+    #product_price = request.GET.get('price')
 
     # Return 1x1 transparent pixel
     content = b'GIF89a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;'
@@ -59,7 +75,7 @@ def link(request):
     if not url:
         return HttpResponseBadRequest('Missing url parameter.')
 
-    current_datetime = datetime.datetime.utcnow()
+    current_datetime = timezone.now()
     expires_datetime = current_datetime + datetime.timedelta(days=60)
 
     # TODO: datetime, unique_id, extra: (user_id, page position)
