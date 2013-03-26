@@ -188,7 +188,7 @@
     {% with looks_by_user as looks %}
     {% include 'apparel/fragments/looks.html' %}
     {% endwith %}
-    <a class="btn btn-block btn-upper" href="{{ looks_url }}">{% trans "See all looks" %}</a>
+    <a class="btn btn-block btn-upper" href="{% url 'profile-looks' object.user.slug %}">{% trans "See all looks" %}</a>
     {% endif %}
 </div>
 {% endcache %}
