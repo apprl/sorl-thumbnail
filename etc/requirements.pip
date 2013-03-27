@@ -35,3 +35,4 @@ suds==0.4
 fuzzywuzzy==0.1
 python-dateutil==1.5
 django-static-sitemaps==1.5.1
+djrill==0.4.0

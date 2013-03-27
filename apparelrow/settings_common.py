@@ -205,6 +205,7 @@ INSTALLED_APPS = (
     'pipeline',
     'storages',
     'static_sitemaps',
+    'djrill',
 
     # Internal
     'apparelrow.apparel',              # Internal: Product display module
@@ -336,12 +337,14 @@ FACEBOOK_SCOPE = 'email,publish_actions'
 FACEBOOK_OG_TYPE = 'apprlcom'
 
 # EMAIL CONFIGURATION
+MANDRILL_API_KEY = '7dDF82r91MHKJ68Q0t6egQ'
+EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
 DEFAULT_FROM_EMAIL = 'Apprl <no-reply@apprl.com>'
-EMAIL_HOST          = 'smtp.gmail.com'
-EMAIL_PORT          = 587
-EMAIL_HOST_USER     = 'postman@apparelrow.com'
-EMAIL_HOST_PASSWORD = 'apprl2010'
-EMAIL_USE_TLS       = True
+#EMAIL_HOST          = 'smtp.gmail.com'
+#EMAIL_PORT          = 587
+#EMAIL_HOST_USER     = 'postman@apparelrow.com'
+#EMAIL_HOST_PASSWORD = 'apprl2010'
+#EMAIL_USE_TLS       = True
 
 MAILCHIMP_API_KEY = '320bdd6a4c1815a8f093f1c29e1fc08f-us4'
 MAILCHIMP_API_URL = 'http://us4.api.mailchimp.com/1.3/'
