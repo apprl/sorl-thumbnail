@@ -231,7 +231,7 @@ def product_detail(request, slug):
     comments =  Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_public=True, is_removed=False).select_related('user')
 
     # Likes
-    likes = product.likes.filter(active=True).order_by('-modified').select_related('user')
+    likes = product.likes.filter(active=True).order_by('modified').select_related('user')
     regular_likes = likes.filter(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
     partner_likes = likes.exclude(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
 
