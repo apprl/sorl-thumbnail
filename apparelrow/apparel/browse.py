@@ -295,6 +295,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         selected_gender      = request.GET.get('gender', None),
         selected_discount    = bool(request.GET.get('discount', None)),
         selected_sort        = request.GET.get('sort', None),
+        gender               = gender,
     )
 
     # Serve ajax request
@@ -330,11 +331,12 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         current_page = paged_result,
     )
 
+    # Do not update overall gender on shop
     # Set APPAREL_GENDER
-    result.update(APPAREL_GENDER=gender)
+    #result.update(APPAREL_GENDER=gender)
 
     response = render_to_response(template, result, context_instance=RequestContext(request))
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+    #response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
 
     translation.deactivate()
 

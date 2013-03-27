@@ -43,7 +43,7 @@ jQuery(document).ready(function() {
         jQuery('#inner-container .selected, .container .selected').removeClass('selected');
 
         // Every active element is deactivated
-        jQuery('#inner-container .active, .container .selected').removeClass('active');
+        jQuery('#inner-container .active, .container .active').removeClass('active');
 
         // Hide level 1 and 2 categories
         jQuery('#product-category .level-1, #product-category .level-2').hide();
@@ -72,6 +72,17 @@ jQuery(document).ready(function() {
     });
 
     // Individual reset button
+    jQuery('#product-category-header .reset').click(function(e) {
+        jQuery('#product-category .selected, #product-category-header .selected').removeClass('selected');
+        jQuery('#product-category .active, #product-category-header .active').removeClass('active');
+
+        // Hide level 1 and 2 categories
+        jQuery('#product-category .level-1, #product-category .level-2').hide();
+
+        filter(getQuery());
+
+        return false;
+    });
     jQuery('#product-options .header .reset').click(function(e) {
         var link = jQuery(this);
         link.closest('li').next().find('.selected').removeClass('selected');
@@ -199,29 +210,16 @@ jQuery(document).ready(function() {
         return false;
     });
 
-    // Set selected and clear selected from related element and then call filter
-    function resetGender(element) {
-        if(!element.hasClass('.selected')) {
-            // XXX: might want to create a reset function
-            jQuery('#reset').click();
-            // Reset call above will select all genders, deselect all genders
-            // and only select men or women.
-            jQuery('#product-gender li:first > a').removeClass('selected');
-            element.addClass('selected');
-            filter(getQuery());
-        }
-    }
-
     // Product gender filter
-    jQuery('#product-gender li > a').click(function() {
-        var element = jQuery(this);
-        if(!element.hasClass('.selected')) {
-            element.addClass('selected');
-            element.parent().siblings().find('a').removeClass('selected');
-            filter(getQuery());
-        }
-        return false;
-    });
+    //jQuery('#product-gender li > a').click(function() {
+        //var element = jQuery(this);
+        //if(!element.hasClass('.selected')) {
+            //element.addClass('selected');
+            //element.parent().siblings().find('a').removeClass('selected');
+            //filter(getQuery());
+        //}
+        //return false;
+    //});
 
     // Product color filter
     jQuery('#product-color li > a').click(function() {
@@ -309,6 +307,9 @@ window.getQuery = function(query, reset) {
     category_list = getElementIds(jQuery('#product-category li > a.selected'));
     if(category_list.length > 0) {
         query['category'] = category_list.join(',');
+        jQuery('#product-category-header').addClass('active');
+    } else {
+        jQuery('#product-category-header').removeClass('active');
     }
 
     manufacturer_list = getElementIds(jQuery('#selected-manufacturers li > a'));
@@ -327,10 +328,10 @@ window.getQuery = function(query, reset) {
         jQuery('#product-stores').removeClass('active').prev().removeClass('active');
     }
 
-    gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
-    if(gender_list.length > 0 && gender_list[0]) {
-        query['gender'] = gender_list[0];
-    }
+    //gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
+    //if(gender_list.length > 0 && gender_list[0]) {
+        //query['gender'] = gender_list[0];
+    //}
 
     color_list = getElementIds(jQuery('#product-color a.color.selected'));
     if(color_list.length > 0) {
@@ -449,14 +450,8 @@ function renderPage(products) {
     query = getQuery();
     if('f' in query) {
         jQuery('#product-count a').hide();
-        //jQuery('#product-gender').show();
     } else {
         jQuery('#product-count a').show();
-        // Special case, only hide gender if we are not on the wardrobe page
-        // TODO / FIXME: better solution?
-        if(window.location.pathname.indexOf('likes') == -1 && window.location.pathname.indexOf('embed') == -1) {
-            jQuery('#product-gender').hide();
-        }
     }
 
     if(window.location.hash && window.location.hash != '#!') {
@@ -553,6 +548,7 @@ function updateSelected(products) {
             category.siblings('ul').show();
             category.parents('ul').show();
         });
+        jQuery('#product-category-header').addClass('active');
     }
 
     // Select gender
