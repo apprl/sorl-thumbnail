@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-26 22:28+0100\n"
+"POT-Creation-Date: 2013-03-27 18:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1779,9 +1779,8 @@ msgid "Show all"
 msgstr "Visa alla"
 
 #: templates/apparel/fragments/product_menu_browse.html:13
-#, fuzzy
 msgid "Choose gender"
-msgstr "Välj typ"
+msgstr "Välj kön"
 
 #: templates/apparel/fragments/product_menu_browse.html:26
 #: templates/apparel/fragments/product_menu_browse.html:55
@@ -2490,6 +2489,18 @@ msgstr "Med ♥ från Apprl"
 #: templates/profile/confirm_email_subject.html:1
 msgid "Confirm e-mail address change"
 msgstr "Bekräfta byte av e-postadress"
+
+#: templates/profile/confirm_email_used_token.html:8
+msgid "Link is already used"
+msgstr "Länken är redan använd"
+
+#: templates/profile/confirm_email_used_token.html:10
+#, python-format
+msgid ""
+"This link is already used. To change you e-mail address address go to <a "
+"href=\"%(settings_url)s\">your settings</a>."
+msgstr ""
+"Den här länken är redan använd. För att byta mailadress gå till <a href=\"%(settings_url)s\">dina inställningar</a>."
 
 #: templates/profile/email_welcome.html:5
 msgid ""

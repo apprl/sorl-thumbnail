@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.contrib import auth
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
@@ -278,7 +278,7 @@ def confirm_email(request):
         try:
             email_change = EmailChange.objects.get(token=token, user=request.user)
         except EmailChange.DoesNotExist:
-            return HttpResponseNotFound()
+            return render(request, 'profile/confirm_email_used_token.html')
         request.user.email = email_change.email
         request.user.save()
         email_change.delete()
