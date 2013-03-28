@@ -210,16 +210,18 @@ jQuery(document).ready(function() {
         return false;
     });
 
-    // Product gender filter
-    //jQuery('#product-gender li > a').click(function() {
-        //var element = jQuery(this);
-        //if(!element.hasClass('.selected')) {
-            //element.addClass('selected');
-            //element.parent().siblings().find('a').removeClass('selected');
-            //filter(getQuery());
-        //}
-        //return false;
-    //});
+    // Product gender filter (only embed...)
+    if(typeof embed_shop_user_id !== 'undefined') {
+        jQuery('#product-gender li > a').click(function() {
+            var element = jQuery(this);
+            if(!element.hasClass('selected')) {
+                element.addClass('selected');
+                element.parent().siblings().find('a').removeClass('selected');
+                filter(getQuery());
+            }
+            return false;
+        });
+    }
 
     // Product color filter
     jQuery('#product-color li > a').click(function() {
@@ -328,10 +330,12 @@ window.getQuery = function(query, reset) {
         jQuery('#product-stores').removeClass('active').prev().removeClass('active');
     }
 
-    //gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
-    //if(gender_list.length > 0 && gender_list[0]) {
-        //query['gender'] = gender_list[0];
-    //}
+    if(typeof embed_shop_user_id !== 'undefined') {
+        gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
+        if(gender_list.length > 0 && gender_list[0]) {
+            query['gender'] = gender_list[0];
+        }
+    }
 
     color_list = getElementIds(jQuery('#product-color a.color.selected'));
     if(color_list.length > 0) {
@@ -557,7 +561,9 @@ function updateSelected(products) {
             jQuery('#option-' + id).addClass('selected');
         });
     } else {
-        jQuery('#product-gender li:first > a').addClass('selected');
+        if(!jQuery('#product-gender li > a').hasClass('selected')) {
+            jQuery('#product-gender li:first > a').addClass('selected');
+        }
     }
 
     // Select price

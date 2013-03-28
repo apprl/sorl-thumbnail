@@ -1,20 +1,35 @@
 {% load i18n apparel_extras mptt_tags %}
 
+{% if user_id and user_gender != 'A' %}
+
+{% elif user_id and user_gender == 'A' %}
 <h2>
     {% trans "Choose gender" %}
     <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Show all" %}</a>
 </h2>
 <ul id="product-gender">
-    {% if user_id and user_gender == 'A' %}
     <li class="first"><a href="">{% trans "All" %}</a></li>
-    {% endif %}
-    <li class="women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} href="/shop/women/">{% trans "Women" %}</a></li>
+    <li class="women"><a id="option-W" href="?gender=W">{% trans "Women" %}</a></li>
+    <li class="men"><a id="option-M" href="?gender=M">{% trans "Men" %}</a></li>
+</ul>
+{% else %}
+<h2>
+    {% trans "Choose gender" %}
+    <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Show all" %}</a>
+</h2>
+<ul id="product-gender">
+    <li class="first women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} href="/shop/women/">{% trans "Women" %}</a></li>
     <li class="last men"><a id="option-M"{% if gender == "M" %} class="selected"{% endif %} href="/shop/men/">{% trans "Men" %}</a></li>
 </ul>
+{% endif %}
 
 <h2 id="product-category-header">
     {% trans "Choose category" %}
+    {% if user_id and user_gender != 'A' %}
+    <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Show all" %}</a>
+    {% else %}
     <a class="reset" href="">{% trans "Reset" %}</a>
+    {% endif %}
 </h2>
 {% for category, structure in categories_all|tree_info %}
     {% if structure.new_level %}
