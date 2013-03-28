@@ -809,7 +809,6 @@ ApparelSearch = {
         ngettext('Show %(count)s look', 'Show all %(count)s looks', 0);
         ngettext('Show %(count)s matching brand', 'Show all %(count)s matching brands', 0);
         ngettext('Show %(count)s matching member', 'Show all %(count)s matching members', 0);
-        ngettext('%s product', '%s products', 0);
     },
 
     format_query: function(query) {

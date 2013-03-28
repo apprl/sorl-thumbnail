@@ -19,7 +19,7 @@ from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
 from django.core.urlresolvers import reverse
 from django.utils import translation
-from django.utils.translation import get_language, ugettext as _
+from django.utils.translation import get_language, ugettext as _, ungettext
 from django.contrib.auth.decorators import login_required
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS
@@ -244,12 +244,28 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
                   colors=colors,
                   categories=categories)
 
+    selected_discount = bool(request.GET.get('discount', None))
+    if selected_discount:
+        browse_text = ungettext('%(count)s product on sale',
+                                '%(count)s products on sale',
+                                paged_result.paginator.count) % {
+                                    'count': paged_result.paginator.count
+                                }
+    else:
+        browse_text = ungettext('%(count)s product',
+                                '%(count)s products',
+                                paged_result.paginator.count) % {
+                                    'count': paged_result.paginator.count
+                                }
+
     if request.GET.get('q', None):
-        result.update(help_text=_('Showing') + ' \'' + request.GET.get('q') + '\'')
+        browse_text = '%s \'%s\', %s' % (_('Showing'), request.GET.get('q'), browse_text)
     if request.GET.get('f', None):
-        result.update(help_text=_('Showing your friends\' favorites'))
+        browse_text = '%s, %s' % (_('Showing your friends\' favorites'), browse_text)
         if not user_ids:
             result.update(follow_html=loader.render_to_string('apparel/fragments/browse_follow_user.html', {}, context_instance=RequestContext(request)))
+
+    result.update(browse_text=browse_text)
 
     paged_result.html = [o.template for o in paged_result.object_list if o]
     paged_result.object_list = []
@@ -293,7 +309,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         selected_stores_data = selected_stores_data,
         selected_price       = selected_price,
         selected_gender      = request.GET.get('gender', None),
-        selected_discount    = bool(request.GET.get('discount', None)),
+        selected_discount    = selected_discount,
         selected_sort        = request.GET.get('sort', None),
         gender               = gender,
     )

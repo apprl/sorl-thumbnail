@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-27 18:08+0100\n"
+"POT-Creation-Date: 2013-03-28 13:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,12 +83,26 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nej"
 
-#: apparel/browse.py:248 templates/apparel/look_list.html:30
+#: apparel/browse.py:249
+#, python-format
+msgid "%(count)s product on sale"
+msgid_plural "%(count)s products on sale"
+msgstr[0] "%(count)s prissänkt produkt"
+msgstr[1] "%(count)s prissänkta produkter"
+
+#: apparel/browse.py:255
+#, python-format
+msgid "%(count)s product"
+msgid_plural "%(count)s products"
+msgstr[0] "%(count)s produkt"
+msgstr[1] "%(count)s produkter"
+
+#: apparel/browse.py:264 templates/apparel/look_list.html:30
 #: templates/apparel/look_list.html:32
 msgid "Showing"
 msgstr "Visar"
 
-#: apparel/browse.py:250
+#: apparel/browse.py:266
 msgid "Showing your friends' favorites"
 msgstr "Visar dina vänners favoriter"
 
@@ -274,7 +288,7 @@ msgid "Buy URL"
 msgstr "URL till köpsida"
 
 #: apparel/models.py:528 templates/apparel/look_editor.html:67
-#: templates/apparel/fragments/product_menu_browse.html:25
+#: templates/apparel/fragments/product_menu_browse.html:7
 msgid "Price"
 msgstr "Pris"
 
@@ -561,7 +575,7 @@ msgstr ""
 msgid "Facebook"
 msgstr "Facebook"
 
-#: profile/admin.py:61 templates/apparel/fragments/product_menu_browse.html:70
+#: profile/admin.py:61 templates/apparel/fragments/product_menu_browse.html:52
 msgid "Brand"
 msgstr "Varumärke"
 
@@ -692,7 +706,7 @@ msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 
 #: profile/models.py:28 templates/apparel/user_list.html:38
 #: templates/apparel/user_list.html:42
-#: templates/apparel/fragments/product_menu_browse.html:16
+#: templates/apparel/fragments/product_menu.html:11
 msgid "All"
 msgstr "Alla"
 
@@ -853,13 +867,15 @@ msgstr "Avbryt"
 
 #: templates/base.html:152 templates/base.html.py:157 templates/base.html:262
 #: templates/apparel/look_editor.html:52
-#: templates/apparel/fragments/product_menu_browse.html:18
+#: templates/apparel/fragments/product_menu.html:13
+#: templates/apparel/fragments/product_menu.html:22
 msgid "Men"
 msgstr "Herr"
 
 #: templates/base.html:152 templates/base.html.py:156 templates/base.html:261
 #: templates/apparel/look_editor.html:51
-#: templates/apparel/fragments/product_menu_browse.html:17
+#: templates/apparel/fragments/product_menu.html:12
+#: templates/apparel/fragments/product_menu.html:21
 msgid "Women"
 msgstr "Dam"
 
@@ -1460,8 +1476,7 @@ msgid "Search for your product here..."
 msgstr "Sök efter dina produkter här..."
 
 #: templates/apparel/look_editor.html:58
-#: templates/apparel/fragments/product_menu.html:4
-#: templates/apparel/fragments/product_menu_browse.html:6
+#: templates/apparel/fragments/product_menu.html:27
 msgid "Choose category"
 msgstr "Välj kategori"
 
@@ -1470,7 +1485,7 @@ msgid "Subcategory"
 msgstr "Underkategori"
 
 #: templates/apparel/look_editor.html:64
-#: templates/apparel/fragments/product_menu_browse.html:54
+#: templates/apparel/fragments/product_menu_browse.html:36
 msgid "Color"
 msgstr "Färg"
 
@@ -1774,40 +1789,44 @@ msgstr ""
 msgid "Get product link"
 msgstr "Hämta produktlänk"
 
-#: templates/apparel/fragments/product_menu_browse.html:7
-msgid "Show all"
-msgstr "Visa alla"
-
-#: templates/apparel/fragments/product_menu_browse.html:13
+#: templates/apparel/fragments/product_menu.html:7
+#: templates/apparel/fragments/product_menu.html:17
 msgid "Choose gender"
 msgstr "Välj kön"
 
-#: templates/apparel/fragments/product_menu_browse.html:26
-#: templates/apparel/fragments/product_menu_browse.html:55
-#: templates/apparel/fragments/product_menu_browse.html:71
-#: templates/apparel/fragments/product_menu_browse.html:87
+#: templates/apparel/fragments/product_menu.html:8
+#: templates/apparel/fragments/product_menu.html:18
+#: templates/apparel/fragments/product_menu.html:29
+msgid "Show all"
+msgstr "Visa alla"
+
+#: templates/apparel/fragments/product_menu.html:31
+#: templates/apparel/fragments/product_menu_browse.html:8
+#: templates/apparel/fragments/product_menu_browse.html:37
+#: templates/apparel/fragments/product_menu_browse.html:53
+#: templates/apparel/fragments/product_menu_browse.html:69
 #: templates/apparel/fragments/shop_empty.html:5
 msgid "Reset"
 msgstr "Återställ"
 
-#: templates/apparel/fragments/product_menu_browse.html:31
+#: templates/apparel/fragments/product_menu_browse.html:13
 msgid "Min"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:33
-#: templates/apparel/fragments/product_menu_browse.html:35
+#: templates/apparel/fragments/product_menu_browse.html:15
+#: templates/apparel/fragments/product_menu_browse.html:17
 msgid "Max"
 msgstr ""
 
-#: templates/apparel/fragments/product_menu_browse.html:50
+#: templates/apparel/fragments/product_menu_browse.html:32
 msgid "Only show products on sale"
 msgstr "Visa endast prissänkta varor"
 
-#: templates/apparel/fragments/product_menu_browse.html:76
+#: templates/apparel/fragments/product_menu_browse.html:58
 msgid "Search brands"
 msgstr "Sök bland varumärken"
 
-#: templates/apparel/fragments/product_menu_browse.html:86
+#: templates/apparel/fragments/product_menu_browse.html:68
 msgid "Store"
 msgstr ""
 
@@ -2500,7 +2519,8 @@ msgid ""
 "This link is already used. To change you e-mail address address go to <a "
 "href=\"%(settings_url)s\">your settings</a>."
 msgstr ""
-"Den här länken är redan använd. För att byta mailadress gå till <a href=\"%(settings_url)s\">dina inställningar</a>."
+"Den här länken är redan använd. För att byta mailadress gå till <a href="
+"\"%(settings_url)s\">dina inställningar</a>."
 
 #: templates/profile/email_welcome.html:5
 msgid ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-25 17:33+0100\n"
+"POT-Creation-Date: 2013-03-28 13:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,23 +74,9 @@ msgid_plural "Show all %(count)s matching members"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:812 static/js/browse.js:637
-#, c-format
-msgid "%s product"
-msgid_plural "%s products"
-msgstr[0] ""
-msgstr[1] ""
-
-#: static/js/browse.js:621
+#: static/js/browse.js:635
 msgid "SOLD OUT"
 msgstr ""
-
-#: static/js/browse.js:629
-#, c-format
-msgid "%s product on sale"
-msgid_plural "%s products on sale"
-msgstr[0] ""
-msgstr[1] ""
 
 #: static/js/app/models/look.js:33
 msgid ""
