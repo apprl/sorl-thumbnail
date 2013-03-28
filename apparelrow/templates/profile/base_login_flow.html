@@ -6,6 +6,11 @@
 {% block head-data %}{% endblock head-data %}
 {% block extra-styles %}{% endblock extra-styles %}
 {% block body-header %}{% endblock body-header %}
+{% block body-scripts %}
+<script type="text/javascript">
+    $(function() { $('.page-logo').attr('href', ''); });
+</script>
+{% endblock body-scripts %}
 
 {% block body %}
     <div class="sidebar">
