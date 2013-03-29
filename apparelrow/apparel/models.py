@@ -25,7 +25,7 @@ from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
-from apparelrow.apparel.tasks import product_popularity, build_static_look_image
+from apparelrow.apparel.tasks import build_static_look_image
 
 from apparelrow.profile.notifications import process_sale_alert
 
@@ -339,11 +339,6 @@ class Product(models.Model):
         # If no published date and published is true we mark this date as the published date
         if not self.date_published and self.published == True:
             self.date_published = datetime.datetime.now()
-
-        # Only update popularity if this is a complete save and the product is
-        # published (stops circular popularity updates).
-        if 'update_fields' not in kwargs and self.published:
-            product_popularity.delay(self)
 
         super(Product, self).save(*args, **kwargs)
 

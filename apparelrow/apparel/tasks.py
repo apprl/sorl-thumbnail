@@ -85,6 +85,8 @@ def product_popularity(product):
         product.popularity = decimal.Decimal(0)
         product.save(update_fields=['popularity'])
 
+    return product.popularity
+
 
 @task(name='apparel.email.mailchimp_subscribe', max_retries=5, ignore_result=True)
 def mailchimp_subscribe(user):

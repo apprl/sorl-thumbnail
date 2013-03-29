@@ -17,6 +17,7 @@ from django.db.models.loading import get_model
 
 from apparelrow.apparel.models import Product, ProductLike, Look
 from apparelrow.apparel.utils import get_gender_from_cookie
+from apparelrow.apparel.tasks import product_popularity
 
 from sorl.thumbnail import get_thumbnail
 
@@ -148,14 +149,15 @@ def product_save(instance, **kwargs):
     if not hasattr(instance, 'id'):
         return
 
+    # If this post save signal is from a product popularity update we do not
+    # need to update the product in our search index.
+    if kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'popularity' in kwargs['update_fields']:
+        return
+
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
         connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
-
-    #if instance.published == False or not instance.category or not instance.manufacturer or not instance.gender:
-        #connection.delete('%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk), commit=True)
-        #return
 
     document, boost = get_product_document(instance)
 
@@ -258,7 +260,7 @@ def get_product_document(instance):
 
         # Filters
         document['gender'] = instance.gender
-        document['popularity'] = instance.popularity
+        document['popularity'] = product_popularity(instance)
         document['availability'] = availability
         document['discount'] = discount
         document['published'] = instance.published
