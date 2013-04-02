@@ -72,44 +72,6 @@ class Migration(SchemaMigration):
         ))
         db.create_unique('profile_user_user_permissions', ['user_id', 'permission_id'])
 
-        # Adding model 'ApparelProfile'
-        db.create_table(u'profile_apparelprofile', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='profile', unique=True, to=orm['profile.User'])),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('slug', self.gf('django.db.models.fields.CharField')(max_length=100, unique=True, null=True)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True)),
-            ('about', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('language', self.gf('django.db.models.fields.CharField')(default='sv', max_length=10)),
-            ('gender', self.gf('django.db.models.fields.CharField')(default=None, max_length=1, null=True, blank=True)),
-            ('updates_last_visit', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('is_brand', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('brand', self.gf('django.db.models.fields.related.OneToOneField')(related_name='profile', unique=True, on_delete=models.SET_NULL, default=None, to=orm['apparel.Brand'], blank=True, null=True)),
-            ('login_flow', self.gf('django.db.models.fields.CharField')(default='bio', max_length=20)),
-            ('newsletter', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('discount_notification', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('fb_share_like_product', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('fb_share_like_look', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('fb_share_follow_profile', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('fb_share_create_look', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('facebook_access_token', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('facebook_access_token_expire', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('is_partner', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('partner_group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dashboard.Group'], null=True, blank=True)),
-            ('blog_url', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('comment_product_wardrobe', self.gf('django.db.models.fields.CharField')(default='A', max_length=1)),
-            ('comment_product_comment', self.gf('django.db.models.fields.CharField')(default='A', max_length=1)),
-            ('comment_look_created', self.gf('django.db.models.fields.CharField')(default='A', max_length=1)),
-            ('comment_look_comment', self.gf('django.db.models.fields.CharField')(default='A', max_length=1)),
-            ('like_look_created', self.gf('django.db.models.fields.CharField')(default='A', max_length=1)),
-            ('follow_user', self.gf('django.db.models.fields.CharField')(default='A', max_length=1)),
-            ('facebook_friends', self.gf('django.db.models.fields.CharField')(default='A', max_length=1)),
-            ('first_visit', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('followers_count', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('popularity', self.gf('django.db.models.fields.DecimalField')(default=0, max_digits=20, decimal_places=8, db_index=True)),
-        ))
-        db.send_create_signal(u'profile', ['ApparelProfile'])
-
         # Adding model 'PaymentDetail'
         db.create_table(u'profile_paymentdetail', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -169,9 +131,6 @@ class Migration(SchemaMigration):
         # Removing M2M table for field user_permissions on 'User'
         db.delete_table('profile_user_user_permissions')
 
-        # Deleting model 'ApparelProfile'
-        db.delete_table(u'profile_apparelprofile')
-
         # Deleting model 'PaymentDetail'
         db.delete_table(u'profile_paymentdetail')
 
@@ -217,42 +176,6 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '30'})
-        },
-        u'profile.apparelprofile': {
-            'Meta': {'object_name': 'ApparelProfile'},
-            'about': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'blog_url': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'brand': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': u"orm['apparel.Brand']", 'blank': 'True', 'null': 'True'}),
-            'comment_look_comment': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
-            'comment_look_created': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
-            'comment_product_comment': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
-            'comment_product_wardrobe': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
-            'discount_notification': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'facebook_access_token': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'facebook_access_token_expire': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'facebook_friends': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
-            'fb_share_create_look': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'fb_share_follow_profile': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'fb_share_like_look': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'fb_share_like_product': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'first_visit': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'follow_user': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
-            'followers_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'gender': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '1', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'is_brand': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_partner': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'language': ('django.db.models.fields.CharField', [], {'default': "'sv'", 'max_length': '10'}),
-            'like_look_created': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
-            'login_flow': ('django.db.models.fields.CharField', [], {'default': "'bio'", 'max_length': '20'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'newsletter': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'partner_group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Group']", 'null': 'True', 'blank': 'True'}),
-            'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),
-            'slug': ('django.db.models.fields.CharField', [], {'max_length': '100', 'unique': 'True', 'null': 'True'}),
-            'updates_last_visit': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'to': u"orm['profile.User']"})
         },
         u'profile.emailchange': {
             'Meta': {'object_name': 'EmailChange'},
