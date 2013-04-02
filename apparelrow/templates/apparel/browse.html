@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load apparel_extras %}
 
-{% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Shop Men" %}{% else %}{% trans "Shop Women" %}{% endif %} | {% endblock %}
+{% block extra-title %}{% if gender == 'M' %}{% trans "Shop Men" %}{% else %}{% trans "Shop Women" %}{% endif %} | {% endblock %}
 
 {% block extra-styles %}
     <style type="text/css">
@@ -24,7 +24,7 @@
 {% block body-header %}
 <div id="body-header">
     <div class="column_one">
-        <h1>{% if APPAREL_GENDER == 'M' %}{% trans "Shop Men" %}{% else %}{% trans "Shop Women" %}{% endif %}</h1>
+        <h1>{% if gender == 'M' %}{% trans "Shop Men" %}{% else %}{% trans "Shop Women" %}{% endif %}</h1>
     </div>
     <div class="column_two">
         <ul class="browse-sort">
