@@ -2,7 +2,13 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.core import urlresolvers
 
-from affiliate.models import Transaction
+from affiliate.models import Store, Transaction
+
+
+class StoreAdmin(admin.ModelAdmin):
+    list_display = ('identifier', 'user')
+
+admin.site.register(Store, StoreAdmin)
 
 
 class TransactionAdmin(admin.ModelAdmin):

@@ -1,6 +1,13 @@
 from django.db import models
+from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+
+
+class Store(models.Model):
+    identifier = models.CharField(max_length=128, null=False, blank=False)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='affiliate_store')
+    balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
 
 
 class Transaction(models.Model):
@@ -10,14 +17,14 @@ class Transaction(models.Model):
     INVALID = 'I'
     TOO_OLD = 'T'
     STATUS_CHOICES = (
-        (ACCEPTED, 'Accepted'),
-        (REJECTED, 'Rejected'),
-        (PENDING, 'Pending'),
-        (INVALID, 'Invalid'),
-        (TOO_OLD, 'Too old'),
+        (ACCEPTED, _('Accepted')),
+        (REJECTED, _('Rejected')),
+        (PENDING, _('Pending')),
+        (INVALID, _('Invalid')),
+        (TOO_OLD, _('Too old')),
     )
 
-    store_id = models.CharField(max_length=128, null=False, blank=False)
+    store_id = models.CharField(max_length=128, null=False, blank=False, db_index=True)
     order_id = models.CharField(max_length=128, null=False, blank=False)
     order_value = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     currency = models.CharField(null=False, blank=False, default='SEK', max_length=3, help_text=_('Currency as three-letter ISO code'))
@@ -32,7 +39,7 @@ class Transaction(models.Model):
     # Status: pending, accepted, rejected
     status = models.CharField(max_length=1, default=PENDING,
             choices=STATUS_CHOICES, null=False, blank=False)
-    status_message = models.TextField(default='')
+    status_message = models.TextField(default='', null=True, blank=True)
 
     class Meta:
         ordering = ['-created']

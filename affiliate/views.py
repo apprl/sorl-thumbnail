@@ -1,9 +1,10 @@
 import datetime
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.db.models import get_model
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import redirect
+from django.http import HttpResponse, HttpResponseBadRequest, Http404
+from django.shortcuts import redirect, render
 from django.utils import timezone
 
 import dateutil.parser
@@ -90,3 +91,21 @@ def link(request):
             expires=expires_datetime, httponly=True)
 
     return response
+
+
+@login_required
+def store_admin(request):
+    """
+    Administration panel for a store.
+    """
+    try:
+        if not request.user.affiliate_store:
+            raise Http404()
+    except get_model('affiliate', 'Store').DoesNotExist:
+        raise Http404()
+
+    Transaction = get_model('affiliate', 'Transaction')
+    transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
+                                      .filter(store_id=request.user.affiliate_store.identifier)
+
+    return render(request, 'affiliate/store_admin.html', {'transactions': transactions})
