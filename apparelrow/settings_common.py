@@ -208,8 +208,8 @@ INSTALLED_APPS = (
     'djrill',
 
     # Internal
-    'apparelrow.apparel',              # Internal: Product display module
     'apparelrow.profile',              # Internal: User related module
+    'apparelrow.apparel',              # Internal: Product display module
     'apparelrow.importer',             # Internal: Product importer module
     'apparelrow.statistics',           # Internal: Click statistics module
     'apparelrow.newsletter',
