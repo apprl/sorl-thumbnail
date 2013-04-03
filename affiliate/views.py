@@ -24,16 +24,16 @@ def pixel(request):
     order_value = request.GET.get('order_value')
     currency = request.GET.get('currency')
 
-    Transaction = get_model('affiliate', 'Transaction')
-
     if not store_id or not order_id or not order_value or not currency:
         # TODO: incomplete pixel request, notify admin for further communication with store
         return HttpResponseBadRequest()
 
+    Transaction = get_model('affiliate', 'Transaction')
+
     # Cookie data
     status = Transaction.INVALID
     cookie_datetime = user_id = page = None
-    cookie_data = request.get_signed_cookie(AFFILIATE_COOKIE_NAME)
+    cookie_data = request.get_signed_cookie(AFFILIATE_COOKIE_NAME, default=False)
     if cookie_data:
         status = Transaction.TOO_OLD
         cookie_datetime, user_id, page = cookie_data.split('|')
@@ -99,13 +99,12 @@ def store_admin(request):
     Administration panel for a store.
     """
     try:
-        if not request.user.affiliate_store:
-            raise Http404()
+        store = request.user.affiliate_store
     except get_model('affiliate', 'Store').DoesNotExist:
         raise Http404()
 
     Transaction = get_model('affiliate', 'Transaction')
     transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
-                                      .filter(store_id=request.user.affiliate_store.identifier)
+                                      .filter(store_id=store.identifier)
 
     return render(request, 'affiliate/store_admin.html', {'transactions': transactions})
