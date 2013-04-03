@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('profile', '0002_auto__add_field_user_brand__add_field_user_partner_group'),
+    )
+
     def forwards(self, orm):
         # Adding model 'Transaction'
         db.create_table(u'affiliate_transaction', (
