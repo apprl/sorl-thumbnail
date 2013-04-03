@@ -39,15 +39,21 @@
                     <th>{% trans "Order Detail" %}</th>
                     <th>{% trans "Checkout" %}</th>
                     <th>{% trans "Cookie date" %}</th>
+                    <th>{% trans "Status" %}</th>
                 </tr>
                 {% for transaction in transactions %}
                 <tr>
                     <td>{{ transaction.order_id }}</td>
                     <td>{{ transaction.order_value }} {{ transaction.currency }}</td>
                     <td>{{ transaction.get_status_display }}</td>
-                    <td>TODO</td>
+                    <td>
+                        {% for product in transaction.products.all %}
+                            {{ product.sku }}, {{ product.price }}, {{ product.quantity }}<br>
+                        {% endfor %}
+                    </td>
                     <td>{{ transaction.created }}</td>
                     <td>{{ transaction.cookie_date }}</td>
+                    <td>{% if transaction.status == 'P' %}Accept / Reject{% else %}{{ transaction.status }}{% endif %}</td>
                 </tr>
                 {% endfor %}
             </table>

@@ -17,6 +17,16 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'affiliate', ['Store'])
 
+        # Adding model 'Product'
+        db.create_table(u'affiliate_product', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('transaction', self.gf('django.db.models.fields.related.ForeignKey')(related_name='products', to=orm['affiliate.Transaction'])),
+            ('sku', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('price', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=12, decimal_places=2)),
+            ('quantity', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+        ))
+        db.send_create_signal(u'affiliate', ['Product'])
+
 
         # Changing field 'Transaction.status_message'
         db.alter_column(u'affiliate_transaction', 'status_message', self.gf('django.db.models.fields.TextField')(null=True))
@@ -31,11 +41,22 @@ class Migration(SchemaMigration):
         # Deleting model 'Store'
         db.delete_table(u'affiliate_store')
 
+        # Deleting model 'Product'
+        db.delete_table(u'affiliate_product')
+
 
         # Changing field 'Transaction.status_message'
         db.alter_column(u'affiliate_transaction', 'status_message', self.gf('django.db.models.fields.TextField')())
 
     models = {
+        u'affiliate.product': {
+            'Meta': {'object_name': 'Product'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'price': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
+            'quantity': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'sku': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'transaction': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'products'", 'to': u"orm['affiliate.Transaction']"})
+        },
         u'affiliate.store': {
             'Meta': {'object_name': 'Store'},
             'balance': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),

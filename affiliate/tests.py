@@ -58,8 +58,71 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(transaction.currency, 'SEK')
 
     def test_order_detail(self):
-        pass
+        self._visit_link()
 
+        response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
+                                             '?store_id=mystore&order_id=A1EF1&order_value=599&currency=SEK&sku=ProductXYZ&quantity=1&price=599'))
+        self.assertEqual(response.status_code, 200)
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
+        self.assertEqual(transaction.status, Transaction.PENDING)
+        self.assertEqual(transaction.order_value, 599)
+        self.assertEqual(transaction.currency, 'SEK')
+
+        products = transaction.products.all()
+        self.assertEqual(len(products), 1)
+        self.assertEqual(products[0].sku, 'ProductXYZ')
+        self.assertEqual(products[0].quantity, 1)
+        self.assertEqual(products[0].price, 599)
+
+    def test_multiple_order_details(self):
+        self._visit_link()
+
+        response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
+                                             '?store_id=mystore&order_id=A1EF1&order_value=699&currency=SEK&sku=ProductXYZ^ProductABC&quantity=1^1&price=599^100'))
+        self.assertEqual(response.status_code, 200)
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
+        self.assertEqual(transaction.status, Transaction.PENDING)
+        self.assertEqual(transaction.order_value, 699)
+        self.assertEqual(transaction.currency, 'SEK')
+
+        products = transaction.products.all()
+        self.assertEqual(len(products), 2)
+
+    def test_unbalanced_order_details(self):
+        self._visit_link()
+
+        response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
+                                             '?store_id=mystore&order_id=A1EF1&order_value=699&currency=SEK&sku=ProductXYZ^ProductABC&quantity=1&price=599^100'))
+        self.assertEqual(response.status_code, 200)
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
+        self.assertEqual(transaction.status, Transaction.PENDING)
+        self.assertEqual(transaction.order_value, 699)
+        self.assertEqual(transaction.currency, 'SEK')
+
+        products = transaction.products.all()
+        self.assertEqual(len(products), 1)
+
+        # TODO: test if we send out an email to admins
+
+    def test_missing_order_detail_parameter(self):
+        self._visit_link()
+
+        response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
+                                             '?store_id=mystore&order_id=A1EF1&order_value=599&currency=SEK&sku=ProductXYZ&quantity=1'))
+        self.assertEqual(response.status_code, 200)
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
+        self.assertEqual(transaction.status, Transaction.PENDING)
+        self.assertEqual(transaction.order_value, 599)
+        self.assertEqual(transaction.currency, 'SEK')
+
+        products = transaction.products.all()
+        self.assertEqual(len(products), 0)
+
+        # TODO: test if we send out an email to admins
 
 class AffiliateLinkTest(TestCase):
 

@@ -29,6 +29,7 @@ def pixel(request):
         return HttpResponseBadRequest()
 
     Transaction = get_model('affiliate', 'Transaction')
+    Product = get_model('affiliate', 'Product')
 
     # Cookie data
     status = Transaction.INVALID
@@ -52,10 +53,29 @@ def pixel(request):
                                              status=status,
                                              cookie_date=cookie_datetime)
 
-    # TODO: insert optional product data
-    #product_sku = request.GET.get('sku')
-    #product_quantity = request.GET.get('quantity')
-    #product_price = request.GET.get('price')
+    # Insert optional product data
+    product_sku = request.GET.get('sku')
+    product_quantity = request.GET.get('quantity')
+    product_price = request.GET.get('price')
+    product_list = [product_sku, product_quantity, product_price]
+
+    if all(product_list):
+        skus = product_sku.split('^')
+        quantities = product_quantity.split('^')
+        price = product_price.split('^')
+        if not (len(skus) == len(quantities) == len(price)):
+            # TODO: notify admin, missing either sku, quantity or price
+            pass
+
+        for sku, quantity, price in zip(skus, quantities, price):
+            Product.objects.create(transaction=transaction,
+                                   sku=sku,
+                                   quantity=quantity,
+                                   price=price)
+
+    elif any(product_list) and not all(product_list):
+        # TODO: notify admin, all product variables are required or none
+        pass
 
     # Return 1x1 transparent pixel
     content = b'GIF89a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;'

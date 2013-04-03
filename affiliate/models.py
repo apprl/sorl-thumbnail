@@ -10,6 +10,16 @@ class Store(models.Model):
     balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
 
 
+class Product(models.Model):
+    transaction = models.ForeignKey('affiliate.Transaction', null=False, blank=False, on_delete=models.CASCADE, related_name='products')
+    sku = models.CharField(max_length=255, null=False, blank=False)
+    price = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
+    quantity = models.PositiveIntegerField(null=False, blank=False, default=0)
+
+    def __unicode__(self):
+        return u'Product(%s, %s, %s)' % (self.sku, self.price, self.quantity)
+
+
 class Transaction(models.Model):
     ACCEPTED = 'A'
     REJECTED = 'R'
@@ -46,6 +56,7 @@ class Transaction(models.Model):
 
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
+        self.currency = self.currency.upper()
         super(Transaction, self).save(*args, **kwargs)
 
     def __unicode__(self):
