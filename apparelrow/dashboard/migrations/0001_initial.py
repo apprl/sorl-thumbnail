@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('apparel', '0001_initial'),
+    )
+
     def forwards(self, orm):
         # Adding model 'Sale'
         db.create_table(u'dashboard_sale', (
