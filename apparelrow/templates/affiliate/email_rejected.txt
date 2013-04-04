@@ -1,0 +1,6 @@
+Transaction {{ transaction_id }} rejected with message:
+
+{{ message }}
+
+Store ID: {{ store_id }}
+Order ID: {{ order_id }}

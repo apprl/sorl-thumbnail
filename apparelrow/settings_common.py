@@ -463,6 +463,7 @@ CELERY_ROUTES = ({
     'apparelrow.apparel.tasks.product_popularity': {'queue': 'background'},
     'apparelrow.apparel.tasks.build_static_look_image': {'queue': 'standard'},
     'statistics.tasks.active_users': {'queue': 'standard'},
+    'affiliate.tasks.send_text_email_task': {'queue': 'standard'},
 },)
 
 # LOGGING CONFIGURATION

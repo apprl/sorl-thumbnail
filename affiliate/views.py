@@ -2,15 +2,19 @@ import datetime
 import decimal
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import get_model
 from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.template.loader import render_to_string
+
 
 import dateutil.parser
 
 from apparelrow.statistics.utils import get_client_ip
+from affiliate.tasks import send_text_email_task
 
 
 AFFILIATE_COOKIE_NAME = 'aan_click'
@@ -180,6 +184,12 @@ def store_admin_reject(request, transaction_id):
         transaction.status = get_model('affiliate', 'Transaction').REJECTED
         transaction.save()
 
-        # TODO: mail superusers with transaction and message
+        email_body = render_to_string('affiliate/email_rejected.txt', {'transaction_id': transaction.pk,
+                                                                       'message': message,
+                                                                       'store_id': transaction.store_id,
+                                                                       'order_id': transaction.order_id})
+        for user in get_user_model().objects.filter(is_superuser=True, email__isnull=False):
+            if user.email:
+                send_text_email_task.delay('Transaction rejected', email_body, [user.email])
 
     return render(request, 'affiliate/dialog_reject.html', {'transaction': transaction})
