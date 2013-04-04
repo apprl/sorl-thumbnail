@@ -1,4 +1,5 @@
 import datetime
+import decimal
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -26,23 +27,43 @@ def pixel(request):
 
     if not store_id or not order_id or not order_value or not currency:
         # TODO: incomplete pixel request, notify admin for further communication with store
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest('Missing required parameters.')
+
+    # Verify that order_value is a decimal value
+    try:
+        order_value = decimal.Decimal(order_value)
+    except Exception as e:
+        return HttpResponseBadRequest('Order value must be a number.')
+
+    # TODO: do we need to verify domain?
 
     Transaction = get_model('affiliate', 'Transaction')
     Product = get_model('affiliate', 'Product')
+    Store = get_model('affiliate', 'Store')
+
+    # Retrieve store object
+    store = None
+    try:
+        store = Store.objects.get(identifier=store_id)
+    except Store.DoesNotExist:
+        pass
 
     # Cookie data
     status = Transaction.INVALID
     cookie_datetime = user_id = page = None
     cookie_data = request.get_signed_cookie(AFFILIATE_COOKIE_NAME, default=False)
-    if cookie_data:
+    if cookie_data and store:
         status = Transaction.TOO_OLD
         cookie_datetime, user_id, page = cookie_data.split('|')
         cookie_datetime = dateutil.parser.parse(cookie_datetime)
 
-        # TODO: verify that cookie_datetime is at most X days old based on store_id settings
-        if cookie_datetime + datetime.timedelta(days=30) >= timezone.now():
+        if cookie_datetime + datetime.timedelta(days=store.cookie_days) >= timezone.now():
             status = Transaction.PENDING
+
+    # Calculate commission
+    commission = 0
+    if store:
+        commission = store.commission_percentage * order_value
 
     # TODO: insert cookie data such as user_id and page
     transaction = Transaction.objects.create(store_id=store_id,
@@ -51,7 +72,8 @@ def pixel(request):
                                              currency=currency,
                                              ip_address=get_client_ip(request),
                                              status=status,
-                                             cookie_date=cookie_datetime)
+                                             cookie_date=cookie_datetime,
+                                             commission=commission)
 
     # Insert optional product data
     product_sku = request.GET.get('sku')

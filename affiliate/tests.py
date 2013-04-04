@@ -4,6 +4,7 @@ when you run "manage.py test".
 
 Replace this with more appropriate tests for your application.
 """
+import decimal
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
@@ -16,25 +17,42 @@ from affiliate.models import Transaction
 
 class AffiliateConversionPixelTest(TransactionTestCase):
 
+    def setUp(self):
+        """
+        Initialize two users. One user has a store assigned the other does not.
+        """
+        self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
+        self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
+        self.store = get_model('affiliate', 'Store').objects.create(identifier='mystore',
+                                                                    user=self.user1,
+                                                                    commission_percentage='0.2')
+
     def _visit_link(self):
         url = 'http://www.mystore.com/myproduct/'
         response = self.client.get('%s?url=%s' % (reverse('affiliate-link'), url))
 
-    def setUp(self):
-        pass
+    def test_invalid_order_value(self):
+        """
+        Test invalid order value.
+        """
+        response = self.client.get('%s%s' % (reverse('affiliate-pixel'), '?store_id=mystore&order_id=1234&order_value=1234f&currency=SEK'))
+        self.assertContains(response, 'Order value must be a number.', count=1, status_code=400)
 
     def test_missing_required_parameters(self):
         """
         Test missing required parameters for affiliate conversion pixel.
         """
         response = self.client.get(reverse('affiliate-pixel'))
-        self.assertEqual(response.status_code, 400)
+        self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
 
         response = self.client.get('%s?store_id=mystore' % (reverse('affiliate-pixel'),))
-        self.assertEqual(response.status_code, 400)
+        self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
 
         response = self.client.get('%s?store_id=mystore&order_id=1234' % (reverse('affiliate-pixel'),))
-        self.assertEqual(response.status_code, 400)
+        self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
+
+        response = self.client.get('%s?store_id=mystore&order_id=1234&order_value=1234' % (reverse('affiliate-pixel'),))
+        self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
 
         with self.assertRaises(Transaction.DoesNotExist):
             Transaction.objects.get(store_id='mystore', order_id=1234)
@@ -45,6 +63,9 @@ class AffiliateConversionPixelTest(TransactionTestCase):
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
         self.assertEqual(transaction.status, Transaction.INVALID)
+        self.assertEqual(transaction.order_value, 1234)
+        self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
 
     def test_cookie_data(self):
         self._visit_link()
@@ -56,6 +77,7 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(transaction.status, Transaction.PENDING)
         self.assertEqual(transaction.order_value, 1234)
         self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
 
     def test_order_detail(self):
         self._visit_link()
@@ -68,6 +90,7 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(transaction.status, Transaction.PENDING)
         self.assertEqual(transaction.order_value, 599)
         self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.commission, decimal.Decimal('119.8'))
 
         products = transaction.products.all()
         self.assertEqual(len(products), 1)
@@ -86,6 +109,7 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(transaction.status, Transaction.PENDING)
         self.assertEqual(transaction.order_value, 699)
         self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.commission, decimal.Decimal('139.8'))
 
         products = transaction.products.all()
         self.assertEqual(len(products), 2)
@@ -101,6 +125,7 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(transaction.status, Transaction.PENDING)
         self.assertEqual(transaction.order_value, 699)
         self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.commission, decimal.Decimal('139.8'))
 
         products = transaction.products.all()
         self.assertEqual(len(products), 1)
@@ -118,11 +143,23 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(transaction.status, Transaction.PENDING)
         self.assertEqual(transaction.order_value, 599)
         self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.commission, decimal.Decimal('119.8'))
 
         products = transaction.products.all()
         self.assertEqual(len(products), 0)
 
         # TODO: test if we send out an email to admins
+
+    def test_no_store_id_in_database(self):
+        response = self.client.get('%s%s' % (reverse('affiliate-pixel'), '?store_id=invalid_id&order_id=1234&order_value=1234&currency=SEK'))
+        self.assertEqual(response.status_code, 200)
+
+        transaction = Transaction.objects.get(store_id='invalid_id', order_id='1234')
+        self.assertEqual(transaction.status, Transaction.INVALID)
+        self.assertEqual(transaction.order_value, 1234)
+        self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.commission, decimal.Decimal('0'))
+
 
 class AffiliateLinkTest(TestCase):
 
@@ -144,6 +181,7 @@ class AffiliateLinkTest(TestCase):
         self.assertIn(AFFILIATE_COOKIE_NAME, response.cookies)
 
     # TODO: how to test cookie date, 30 days?
+
 
 
 class AffiliateFlowTest(TestCase):
