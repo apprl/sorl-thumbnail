@@ -1,0 +1,18 @@
+{% extends 'dialog_base.html' %}
+{% load apparel_extras %}
+{% load i18n %}
+
+{% block title %}{% trans "Accept transaction?" %}{% endblock %}
+{% block content %}
+<p>
+    <a class="btn btn-upper btn-positive btn-yes" href="#">{% trans "Yes" %}</a>
+    <a class="btn btn-upper close" href="#">{% trans "Cancel" %}</a>
+</p>
+<script type="text/javascript">
+    $(function() {
+        $('.btn-yes').on('click', function() {
+            $.post('{% url 'affiliate-admin-accept' transaction.id %}', function() { window.location.reload(); });
+        });
+    });
+</script>
+{% endblock %}

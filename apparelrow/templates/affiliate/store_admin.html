@@ -35,17 +35,15 @@
                 <tr>
                     <th>{% trans "Order ID" %}</th>
                     <th>{% trans "Order Value" %}</th>
-                    <th>{% trans "Order Status" %}</th>
                     <th>{% trans "Order Detail" %}</th>
                     <th>{% trans "Checkout" %}</th>
                     <th>{% trans "Cookie date" %}</th>
-                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Order Status" %}</th>
                 </tr>
                 {% for transaction in transactions %}
                 <tr>
                     <td>{{ transaction.order_id }}</td>
                     <td>{{ transaction.order_value }} {{ transaction.currency }}</td>
-                    <td>{{ transaction.get_status_display }}</td>
                     <td>
                         {% for product in transaction.products.all %}
                             {{ product.sku }}, {{ product.price }}, {{ product.quantity }}<br>
@@ -53,7 +51,15 @@
                     </td>
                     <td>{{ transaction.created }}</td>
                     <td>{{ transaction.cookie_date }}</td>
-                    <td>{% if transaction.status == 'P' %}Accept / Reject{% else %}{{ transaction.status }}{% endif %}</td>
+                    <td>
+                        {% if transaction.status == 'P' %}
+                        <a class="open-dialog btn btn-upper btn-positive" href="{% url 'affiliate-admin-accept' transaction.id %}">{% trans "Accept" %}</a>
+                        <a class="open-dialog btn btn-upper btn-negative" href="{% url 'affiliate-admin-reject' transaction.id %}">{% trans "Reject" %}</a>
+                        {% else %}
+                        {{ transaction.get_status_display }}<br>
+                        {{ transaction.status_date }}
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </table>

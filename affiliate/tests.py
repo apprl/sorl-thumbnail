@@ -5,6 +5,7 @@ when you run "manage.py test".
 Replace this with more appropriate tests for your application.
 """
 import decimal
+import urllib
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
@@ -14,8 +15,26 @@ from django.db.models.loading import get_model
 from affiliate.views import AFFILIATE_COOKIE_NAME
 from affiliate.models import Transaction
 
+class AffiliateMixin:
 
-class AffiliateConversionPixelTest(TransactionTestCase):
+    def visit_link(self, url=None):
+        if url is None:
+            url = 'http://www.mystore.com/myproduct/'
+
+        response = self.client.get('%s?url=%s' % (reverse('affiliate-link'), url))
+        self.assertEqual(response.status_code, 302)
+
+        return response
+
+    def checkout(self, *args, **kwargs):
+        response = self.client.get('%s?%s' % (reverse('affiliate-pixel'),
+                                              urllib.urlencode(kwargs)))
+        self.assertEqual(response.status_code, 200)
+
+        return response
+
+
+class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
 
     def setUp(self):
         """
@@ -26,10 +45,6 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.store = get_model('affiliate', 'Store').objects.create(identifier='mystore',
                                                                     user=self.user1,
                                                                     commission_percentage='0.2')
-
-    def _visit_link(self):
-        url = 'http://www.mystore.com/myproduct/'
-        response = self.client.get('%s?url=%s' % (reverse('affiliate-link'), url))
 
     def test_invalid_order_value(self):
         """
@@ -68,7 +83,7 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
 
     def test_cookie_data(self):
-        self._visit_link()
+        self.visit_link()
 
         response = self.client.get('%s%s' % (reverse('affiliate-pixel'), '?store_id=mystore&order_id=1234&order_value=1234&currency=SEK'))
         self.assertEqual(response.status_code, 200)
@@ -80,7 +95,7 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
 
     def test_order_detail(self):
-        self._visit_link()
+        self.visit_link()
 
         response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
                                              '?store_id=mystore&order_id=A1EF1&order_value=599&currency=SEK&sku=ProductXYZ&quantity=1&price=599'))
@@ -99,7 +114,7 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(products[0].price, 599)
 
     def test_multiple_order_details(self):
-        self._visit_link()
+        self.visit_link()
 
         response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
                                              '?store_id=mystore&order_id=A1EF1&order_value=699&currency=SEK&sku=ProductXYZ^ProductABC&quantity=1^1&price=599^100'))
@@ -115,7 +130,7 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         self.assertEqual(len(products), 2)
 
     def test_unbalanced_order_details(self):
-        self._visit_link()
+        self.visit_link()
 
         response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
                                              '?store_id=mystore&order_id=A1EF1&order_value=699&currency=SEK&sku=ProductXYZ^ProductABC&quantity=1&price=599^100'))
@@ -133,7 +148,7 @@ class AffiliateConversionPixelTest(TransactionTestCase):
         # TODO: test if we send out an email to admins
 
     def test_missing_order_detail_parameter(self):
-        self._visit_link()
+        self.visit_link()
 
         response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
                                              '?store_id=mystore&order_id=A1EF1&order_value=599&currency=SEK&sku=ProductXYZ&quantity=1'))
@@ -184,7 +199,7 @@ class AffiliateLinkTest(TestCase):
 
 
 
-class AffiliateFlowTest(TestCase):
+class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
 
     def setUp(self):
         """
@@ -192,7 +207,10 @@ class AffiliateFlowTest(TestCase):
         """
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
-        self.store = get_model('affiliate', 'Store').objects.create(identifier='mystore', user=self.user1)
+        self.store = get_model('affiliate', 'Store').objects.create(identifier='mystore',
+                                                                    user=self.user1,
+                                                                    commission_percentage='0.2')
+
 
     def test_affiliate_flow(self):
         """
@@ -202,22 +220,14 @@ class AffiliateFlowTest(TestCase):
         checkout page both with a valid and invalid store id.  Then login as the store
         owner and make sure that one converion has been noted.
         """
-        url = 'http://www.mystore.com/myproduct/'
-
         # Visit redirect URL and get a cookie
-        response = self.client.get('/a/link/?url=%s' % (url,))
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], url)
-        self.assertIn(AFFILIATE_COOKIE_NAME, response.cookies)
+        self.visit_link()
 
         # Visit checkout page with conversion pixel
-        response = self.client.get('/a/conversion/?store_id=mystore&order_id=1234&order_value=1234&currency=SEK')
-        self.assertEqual(response.status_code, 200)
+        self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK')
 
         # Visit checkout page with conversion pixel with wrong store id
-        response = self.client.get('/a/conversion/?store_id=mystore_fail&order_id=1234&order_value=1234&currency=SEK')
-        self.assertEqual(response.status_code, 200)
-
+        self.checkout(store_id='mystore_fail', order_id='1234', order_value='1234', currency='SEK')
         # Login
         self.client.login(username='user1', password='user1')
 
@@ -240,3 +250,63 @@ class AffiliateFlowTest(TestCase):
         """
         response = self.client.get(reverse('affiliate-store-admin'))
         self.assertEqual(response.status_code, 302)
+
+    def test_non_existent_transaction(self):
+        self.client.login(username='user1', password='user1')
+
+        response = self.client.get(reverse('affiliate-admin-accept', args=[1000]))
+        self.assertEqual(response.status_code, 404)
+
+        response = self.client.post(reverse('affiliate-admin-accept', args=[1000]))
+        self.assertEqual(response.status_code, 404)
+
+        response = self.client.get(reverse('affiliate-admin-reject', args=[1000]))
+        self.assertEqual(response.status_code, 404)
+
+        response = self.client.post(reverse('affiliate-admin-reject', args=[1000]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_accept_transaction(self):
+        self.visit_link()
+        self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK')
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
+        self.assertEqual(transaction.status, Transaction.PENDING)
+        self.assertEqual(transaction.order_value, 1234)
+        self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
+
+        self.client.login(username='user1', password='user1')
+
+        response = self.client.get(reverse('affiliate-admin-accept', args=[transaction.pk]))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(reverse('affiliate-admin-accept', args=[transaction.pk]))
+        self.assertEqual(response.status_code, 200)
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
+        self.assertEqual(transaction.status, Transaction.ACCEPTED)
+        self.assertTrue(transaction.status_date)
+
+    def test_reject_transaction(self):
+        self.visit_link()
+        self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK')
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
+        self.assertEqual(transaction.status, Transaction.PENDING)
+        self.assertEqual(transaction.order_value, 1234)
+        self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
+
+        self.client.login(username='user1', password='user1')
+
+        response = self.client.get(reverse('affiliate-admin-reject', args=[transaction.pk]))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(reverse('affiliate-admin-reject', args=[transaction.pk]), {'message': 'wrong price'})
+        self.assertEqual(response.status_code, 200)
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
+        self.assertEqual(transaction.status, Transaction.REJECTED)
+        self.assertEqual(transaction.status_message, 'wrong price')
+        self.assertTrue(transaction.status_date)

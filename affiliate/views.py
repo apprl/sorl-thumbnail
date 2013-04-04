@@ -150,3 +150,36 @@ def store_admin(request):
                                       .filter(store_id=store.identifier)
 
     return render(request, 'affiliate/store_admin.html', {'transactions': transactions})
+
+
+@login_required
+def store_admin_accept(request, transaction_id):
+    try:
+        transaction = get_model('affiliate', 'Transaction').objects.get(pk=transaction_id)
+    except get_model('affiliate', 'Transaction').DoesNotExist:
+        raise Http404
+
+    if request.method == 'POST':
+        transaction.status = get_model('affiliate', 'Transaction').ACCEPTED
+        transaction.save()
+
+    return render(request, 'affiliate/dialog_accept.html', {'transaction': transaction})
+
+
+@login_required
+def store_admin_reject(request, transaction_id):
+    try:
+        transaction = get_model('affiliate', 'Transaction').objects.get(pk=transaction_id)
+    except get_model('affiliate', 'Transaction').DoesNotExist:
+        raise Http404
+
+    if request.method == 'POST':
+        message = request.POST.get('message')
+
+        transaction.status_message = message
+        transaction.status = get_model('affiliate', 'Transaction').REJECTED
+        transaction.save()
+
+        # TODO: mail superusers with transaction and message
+
+    return render(request, 'affiliate/dialog_reject.html', {'transaction': transaction})

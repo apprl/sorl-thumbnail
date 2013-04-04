@@ -1,0 +1,24 @@
+{% extends 'dialog_base.html' %}
+{% load apparel_extras %}
+{% load i18n %}
+
+{% block title %}{% trans "Reject transaction?" %}{% endblock %}
+{% block content %}
+<p>{% trans "Describe your reason to reject the transaction and we will contact you." %}</p>
+<p>
+    <label for="status_message">{% trans "Reason" %}</label><br>
+    <textarea name="status_message" id="status_message"></textarea>
+</p>
+<p>
+    <a class="btn btn-upper btn-positive btn-yes close" href="#">{% trans "Yes" %}</a>
+    <a class="btn btn-upper close" href="#">{% trans "Cancel" %}</a>
+</p>
+<script type="text/javascript">
+    $(function() {
+        $('.btn-yes').on('click', function() {
+            var message = $('#status_message').val();
+            $.post('{% url 'affiliate-admin-reject' transaction.id %}', {message: message}, function() { window.location.reload(); });
+        });
+    });
+</script>
+{% endblock %}

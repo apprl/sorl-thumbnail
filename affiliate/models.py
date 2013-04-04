@@ -62,7 +62,7 @@ class Transaction(models.Model):
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
         self.currency = self.currency.upper()
-        if self.status == Transaction.ACCEPTED or self.status == Transaction.REJECTED:
+        if not self.status_date and (self.status == Transaction.ACCEPTED or self.status == Transaction.REJECTED):
             self.status_date = timezone.now()
 
         super(Transaction, self).save(*args, **kwargs)
