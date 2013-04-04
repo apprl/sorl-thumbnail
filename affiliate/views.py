@@ -140,7 +140,7 @@ def link(request):
 
 
 @login_required
-def store_admin(request):
+def store_admin(request, year=None, month=None):
     """
     Administration panel for a store.
     """
