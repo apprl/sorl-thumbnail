@@ -5,9 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Store(models.Model):
-    identifier = models.CharField(max_length=128, null=False, blank=False)
+    identifier = models.CharField(max_length=128, null=False, blank=False, unique=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='affiliate_store')
     balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
+    commission_percentage = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
+    cookie_days = models.PositiveIntegerField(null=False, blank=False, default=30)
 
 
 class Product(models.Model):
@@ -39,6 +41,8 @@ class Transaction(models.Model):
     order_value = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     currency = models.CharField(null=False, blank=False, default='SEK', max_length=3, help_text=_('Currency as three-letter ISO code'))
 
+    commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
+
     cookie_date = models.DateTimeField(default=None, null=True, blank=True)
     created = models.DateTimeField(default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(default=timezone.now, null=True, blank=True)
@@ -50,6 +54,7 @@ class Transaction(models.Model):
     status = models.CharField(max_length=1, default=PENDING,
             choices=STATUS_CHOICES, null=False, blank=False)
     status_message = models.TextField(default='', null=True, blank=True)
+    status_date = models.DateTimeField(default=None, null=True, blank=True)
 
     class Meta:
         ordering = ['-created']
@@ -57,6 +62,9 @@ class Transaction(models.Model):
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
         self.currency = self.currency.upper()
+        if self.status == Transaction.ACCEPTED or self.status == Transaction.REJECTED:
+            self.status_date = timezone.now()
+
         super(Transaction, self).save(*args, **kwargs)
 
     def __unicode__(self):
