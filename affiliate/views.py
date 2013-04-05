@@ -54,11 +54,11 @@ def pixel(request):
 
     # Cookie data
     status = Transaction.INVALID
-    cookie_datetime = user_id = page = None
+    cookie_datetime = user_id = placement = None
     cookie_data = request.get_signed_cookie(AFFILIATE_COOKIE_NAME, default=False)
     if cookie_data and store:
         status = Transaction.TOO_OLD
-        cookie_datetime, user_id, page = cookie_data.split('|')
+        cookie_datetime, user_id, placement = cookie_data.split('|')
         cookie_datetime = dateutil.parser.parse(cookie_datetime)
 
         if cookie_datetime + datetime.timedelta(days=store.cookie_days) >= timezone.now():
@@ -69,7 +69,6 @@ def pixel(request):
     if store:
         commission = store.commission_percentage * order_value
 
-    # TODO: insert cookie data such as user_id and page
     transaction = Transaction.objects.create(store_id=store_id,
                                              order_id=order_id,
                                              order_value=order_value,
@@ -77,7 +76,9 @@ def pixel(request):
                                              ip_address=get_client_ip(request),
                                              status=status,
                                              cookie_date=cookie_datetime,
-                                             commission=commission)
+                                             commission=commission,
+                                             user_id=user_id,
+                                             placement=placement)
 
     # Insert optional product data
     product_sku = request.GET.get('sku')

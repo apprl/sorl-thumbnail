@@ -44,6 +44,8 @@ class Migration(SchemaMigration):
             ('cookie_date', self.gf('django.db.models.fields.DateTimeField')(default=None, null=True, blank=True)),
             ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
             ('modified', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
+            ('user_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
+            ('placement', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
             ('ip_address', self.gf('django.db.models.fields.GenericIPAddressField')(max_length=39)),
             ('status', self.gf('django.db.models.fields.CharField')(default='P', max_length=1)),
             ('status_message', self.gf('django.db.models.fields.TextField')(default='', null=True, blank=True)),
@@ -92,10 +94,12 @@ class Migration(SchemaMigration):
             'modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'order_id': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'order_value': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
+            'placement': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'P'", 'max_length': '1'}),
             'status_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'status_message': ('django.db.models.fields.TextField', [], {'default': "''", 'null': 'True', 'blank': 'True'}),
-            'store_id': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'})
+            'store_id': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'}),
+            'user_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         u'apparel.brand': {
             'Meta': {'ordering': "['name']", 'object_name': 'Brand'},

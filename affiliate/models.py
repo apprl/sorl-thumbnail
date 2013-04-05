@@ -47,6 +47,10 @@ class Transaction(models.Model):
     created = models.DateTimeField(default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(default=timezone.now, null=True, blank=True)
 
+    # Extra data
+    user_id = models.PositiveIntegerField(null=True, blank=True)
+    placement = models.CharField(max_length=32, null=True, blank=True)
+
     # User ip address
     ip_address = models.GenericIPAddressField()
 
