@@ -151,7 +151,7 @@ def product_save(instance, **kwargs):
 
     # If this post save signal is from a product popularity update we do not
     # need to update the product in our search index.
-    if kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'popularity' in kwargs['update_fields']:
+    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'popularity' in kwargs['update_fields']:
         return
 
     if 'solr' in kwargs and kwargs['solr']:
