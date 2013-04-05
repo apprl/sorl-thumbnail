@@ -483,7 +483,7 @@ def login_flow_complete(request, profile):
 #
 
 def send_confirmation_email(request, instance):
-    subject = _('Nearly created your membership...')
+    subject = ugettext('Nearly created your membership...')
     body = render_to_string('registration/registration_activation_email.html', {
             'name': instance.display_name,
             'link': request.build_absolute_uri(reverse('auth_register_activate', args=[instance.confirmation_key])),
