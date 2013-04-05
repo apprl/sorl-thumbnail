@@ -1,0 +1,12 @@
+Store ID: {{ store_id }}
+Order ID: {{ order_id }}
+Order Value: {{ order_value }}
+Currency: {{ currency }}
+Transaction ID: {{ transaction_id }}
+
+From (HTTP HOST): {{ request.META.HTTP_HOST }}
+
+Product data
+Sku: {{ sku }}
+Quantity: {{ quantity }}
+Price: {{ price }}

@@ -8,8 +8,8 @@ from django.db.models import get_model
 from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.template import RequestContext
 from django.template.loader import render_to_string
-
 
 import dateutil.parser
 
@@ -18,6 +18,12 @@ from affiliate.tasks import send_text_email_task
 
 
 AFFILIATE_COOKIE_NAME = 'aan_click'
+
+
+def mail_superusers(subject, body):
+    for user in get_user_model().objects.filter(is_superuser=True, email__isnull=False):
+        if user.email:
+            send_text_email_task.delay(subject, body, [user.email])
 
 
 def pixel(request):
@@ -30,7 +36,13 @@ def pixel(request):
     currency = request.GET.get('currency')
 
     if not store_id or not order_id or not order_value or not currency:
-        # TODO: incomplete pixel request, notify admin for further communication with store
+        email_body = render_to_string('affiliate/email_default_error.txt', {'store_id': store_id,
+                                                                            'order_id': order_id,
+                                                                            'order_value': order_value,
+                                                                            'currency': currency},
+                                                                            context_instance=RequestContext(request))
+        mail_superusers('Affiliate Pixel: missing required parameters', email_body)
+
         return HttpResponseBadRequest('Missing required parameters.')
 
     # Verify that order_value is a decimal value
@@ -91,8 +103,16 @@ def pixel(request):
         quantities = product_quantity.split('^')
         price = product_price.split('^')
         if not (len(skus) == len(quantities) == len(price)):
-            # TODO: notify admin, missing either sku, quantity or price
-            pass
+            email_body = render_to_string('affiliate/email_default_error.txt',
+                    {'store_id': store_id,
+                     'order_id': order_id,
+                     'order_value': order_value,
+                     'currency': currency,
+                     'transaction_id': transaction.pk,
+                     'sku': product_sku,
+                     'quantity': product_quantity,
+                     'price': product_price}, context_instance=RequestContext(request))
+            mail_superusers('Affiliate Pixel: length of every product parameter is not consistent', email_body)
 
         for sku, quantity, price in zip(skus, quantities, price):
             Product.objects.create(transaction=transaction,
@@ -101,8 +121,16 @@ def pixel(request):
                                    price=price)
 
     elif any(product_list) and not all(product_list):
-        # TODO: notify admin, all product variables are required or none
-        pass
+        email_body = render_to_string('affiliate/email_default_error.txt',
+                {'store_id': store_id,
+                 'order_id': order_id,
+                 'order_value': order_value,
+                 'currency': currency,
+                 'transaction_id': transaction.pk,
+                 'sku': product_sku,
+                 'quantity': product_quantity,
+                 'price': product_price}, context_instance=RequestContext(request))
+        mail_superusers('Affiliate Pixel: missing one or more product parameters', email_body)
 
     # Return 1x1 transparent pixel
     content = b'GIF89a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;'
@@ -189,8 +217,6 @@ def store_admin_reject(request, transaction_id):
                                                                        'message': message,
                                                                        'store_id': transaction.store_id,
                                                                        'order_id': transaction.order_id})
-        for user in get_user_model().objects.filter(is_superuser=True, email__isnull=False):
-            if user.email:
-                send_text_email_task.delay('Transaction rejected', email_body, [user.email])
+        mail_superusers('Transaction rejected', email_body)
 
     return render(request, 'affiliate/dialog_reject.html', {'transaction': transaction})
