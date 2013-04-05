@@ -42,7 +42,7 @@ class Command(BaseCommand):
 
         for argument in args:
             if argument in self.affiliates:
-                module = __import__('dashboard.importer.%s' % argument, fromlist = ['Importer'])
+                module = __import__('apparelrow.dashboard.importer.%s' % argument, fromlist = ['Importer'])
                 instance = module.Importer()
                 logger.info('Importing %s' % (instance.name,))
                 try:
