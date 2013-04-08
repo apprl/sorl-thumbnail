@@ -70,6 +70,8 @@ msgid "brand mapped"
 msgstr ""
 
 #: apparel/admin.py:255 templates/base.html:372
+#: templates/affiliate/dialog_accept.html:8
+#: templates/affiliate/dialog_reject.html:12
 #: templates/apparel/look_editor.html:91 templates/apparel/look_editor.html:97
 #: templates/apparel/look_editor.html:103
 #: templates/apparel/look_editor.html:109
@@ -847,7 +849,9 @@ msgstr "Ett fel uppstod"
 msgid "I'm looking for..."
 msgstr "Jag letar efter..."
 
-#: templates/base.html:147 templates/apparel/look_editor.html:89
+#: templates/base.html:147 templates/affiliate/dialog_accept.html:9
+#: templates/affiliate/dialog_reject.html:13
+#: templates/apparel/look_editor.html:89
 #: templates/apparel/look_editor.html:119
 #: templates/apparel/look_editor.html:130
 #: templates/profile/base_login_flow.html:20
@@ -1231,6 +1235,55 @@ msgstr ""
 "    <span class=\"likes-text\">gillar</span> <a href=\"%(object_url)s\">"
 "%(title)s</a>\n"
 "    "
+
+#: templates/affiliate/dialog_accept.html:5
+msgid "Accept transaction?"
+msgstr "Godkänn transaktion?"
+
+#: templates/affiliate/dialog_reject.html:5
+msgid "Reject transaction?"
+msgstr "Varför ej godkänna transaktionen?"
+
+#: templates/affiliate/dialog_reject.html:8
+msgid "Describe your reason to reject the transaction."
+msgstr "Beskriv varför du ej vill godkänna transaktionen."
+
+#: templates/affiliate/store_admin.html:4
+#: templates/affiliate/store_admin.html:9
+msgid "Your store"
+msgstr "Din butik"
+
+#: templates/affiliate/store_admin.html:20
+msgid "Order ID"
+msgstr ""
+
+#: templates/affiliate/store_admin.html:21
+msgid "Order Value"
+msgstr "Order Värde"
+
+#: templates/affiliate/store_admin.html:22
+msgid "Commission"
+msgstr "Provision"
+
+#: templates/affiliate/store_admin.html:23
+msgid "Order Detail"
+msgstr "Order Detaljer"
+
+#: templates/affiliate/store_admin.html:24
+msgid "Time"
+msgstr "Tid"
+
+#: templates/affiliate/store_admin.html:25
+msgid "Order Status"
+msgstr "Order Status"
+
+#: templates/affiliate/store_admin.html:40
+msgid "Accept"
+msgstr "Godkänn"
+
+#: templates/affiliate/store_admin.html:41
+msgid "Reject"
+msgstr "Neka"
 
 #: templates/apparel/about.html:8
 msgid "About Apprl"
