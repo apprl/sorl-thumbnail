@@ -1,7 +1,21 @@
 {% extends 'base.html' %}
-{% load i18n l10n cache %}
+{% load i18n l10n cache humanize %}
 
 {% block extra-title %}{% trans "Your store" %} | {% endblock %}
+
+{% block 'extra-scripts' %}
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $('#content select').change(function() {
+                var $selected = $(this).find(':selected');
+                var year = $selected.data('year');
+                var month = $selected.data('month');
+
+                window.location.href = '/a/admin/' + year + '/' + month + '/';
+            });
+        });
+    </script>
+{% endblock %}
 
 {% block body-header %}
 <div id="body-header">
@@ -13,6 +27,22 @@
 {% block body-classes %}one-column affiliate{% endblock body-classes %}
 {% block body %}
 <div id="content">
+    <ul class="total-stats group">
+        <li class="first">{% trans "Balance:" %} {{ store.balance }} SEK</li>
+        <li class="last">{% trans "Total accepted commission:" %} {{ total_accepted_commission|floatformat:2|intcomma }} SEK</li>
+    </ul>
+    <ul class="monthly-stats group">
+        <li class="first">
+            <label>{% trans "Show: " %}
+                <select>
+                    {% for date in dates %}
+                    <option data-year="{{ date.year }}" data-month="{{ date.month }}"{% if date.year == year and date.month == month %} selected{%endif %}>{{ date|date:"F Y" }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </li>
+        <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatformat:2|intcomma }} SEK</li>
+    </ul>
     <div class="transaction-table group">
         <div class="transaction-table-content">
             <table>
@@ -44,6 +74,10 @@
                         {{ transaction.status_date }}
                         {% endif %}
                     </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">{% trans "No transactions" %}</td>
                 </tr>
                 {% endfor %}
             </table>

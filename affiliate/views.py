@@ -1,10 +1,11 @@
 import datetime
 import decimal
+import calendar
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import get_model
+from django.db.models import get_model, Sum
 from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -174,11 +175,56 @@ def store_admin(request, year=None, month=None):
     except get_model('affiliate', 'Store').DoesNotExist:
         raise Http404()
 
+    # Start date and end date + current month and year
+    if year is not None and month is not None:
+        start_date = datetime.date(int(year), int(month), 1)
+    else:
+        start_date = datetime.date.today().replace(day=1)
+
+    end_date = start_date
+    end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+
+    year = start_date.year
+    month = start_date.month
+
+    start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
+    end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+
     Transaction = get_model('affiliate', 'Transaction')
     transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
-                                      .filter(store_id=store.identifier)
+                                      .filter(created__gte=start_date_query, created__lte=end_date_query) \
+                                      .filter(store_id=store.identifier) \
+                                      .prefetch_related('products')
 
-    return render(request, 'affiliate/store_admin.html', {'transactions': transactions})
+    accepted_commission = decimal.Decimal(0.00)
+    accepted_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier) \
+                                        .filter(created__gte=start_date_query, created__lte=end_date_query) \
+                                        .aggregate(Sum('commission'))
+    if accepted_query['commission__sum']:
+        accepted_commission = accepted_query['commission__sum']
+
+    total_accepted_commission = decimal.Decimal(0.00)
+    total_accepted_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier) \
+                                              .aggregate(Sum('commission'))
+    if total_accepted_query['commission__sum']:
+        total_accepted_commission = total_accepted_query['commission__sum']
+
+    dt1 = request.user.date_joined.date()
+    dt2 = datetime.date.today()
+    start_month = dt1.month
+    end_months = (dt2.year - dt1.year) * 12 + dt2.month + 1
+    dates = [datetime.datetime(year=yr, month=mn, day=1) for (yr, mn) in (
+        ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
+    )]
+
+    return render(request, 'affiliate/store_admin.html', {'transactions': transactions,
+                                                          'store': request.user.affiliate_store,
+                                                          'dates': dates,
+                                                          'selected_date': 'abc',
+                                                          'year': year,
+                                                          'month': month,
+                                                          'accepted_commission': accepted_commission,
+                                                          'total_accepted_commission': total_accepted_commission})
 
 
 @login_required

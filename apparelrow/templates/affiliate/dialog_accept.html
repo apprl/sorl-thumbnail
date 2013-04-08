@@ -12,6 +12,8 @@
     $(function() {
         $('.btn-yes').on('click', function() {
             $.post('{% url 'affiliate-admin-accept' transaction.id %}', function() { window.location.reload(); });
+
+            return false;
         });
     });
 </script>
