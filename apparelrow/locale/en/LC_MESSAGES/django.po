@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-10 13:24+0200\n"
+"POT-Creation-Date: 2013-04-08 13:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -590,7 +590,7 @@ msgstr ""
 msgid "Extra"
 msgstr ""
 
-#: profile/admin.py:64 templates/apparel/shared_header.html:34
+#: profile/admin.py:64 templates/apparel/shared_header.html:37
 #: templates/dashboard/body_header.html:11
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:9
@@ -966,12 +966,12 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
-#: templates/base.html:273 templates/apparel/shared_header.html:32
+#: templates/base.html:273 templates/apparel/shared_header.html:35
 msgid "+ Invite friends"
 msgstr ""
 
 #: templates/base.html:276 templates/base.html.py:278
-#: templates/apparel/shared_header.html:33
+#: templates/apparel/shared_header.html:36
 #: templates/apparel/fragments/create_look_button.html:3
 #: templates/apparel/fragments/create_look_button.html:5
 msgid "+ Create look"
@@ -1227,40 +1227,62 @@ msgid "Describe your reason to reject the transaction."
 msgstr ""
 
 #: templates/affiliate/store_admin.html:4
-#: templates/affiliate/store_admin.html:9
+#: templates/affiliate/store_admin.html:23
+#: templates/apparel/shared_header.html:33
 msgid "Your store"
 msgstr ""
 
-#: templates/affiliate/store_admin.html:20
+#: templates/affiliate/store_admin.html:31
+msgid "Balance:"
+msgstr ""
+
+#: templates/affiliate/store_admin.html:32
+msgid "Total accepted commission:"
+msgstr ""
+
+#: templates/affiliate/store_admin.html:36 templates/dashboard/admin.html:71
+#: templates/dashboard/partner.html:71
+msgid "Show: "
+msgstr ""
+
+#: templates/affiliate/store_admin.html:44
+msgid "Accepted commission this month:"
+msgstr ""
+
+#: templates/affiliate/store_admin.html:50
 msgid "Order ID"
 msgstr ""
 
-#: templates/affiliate/store_admin.html:21
+#: templates/affiliate/store_admin.html:51
 msgid "Order Value"
 msgstr ""
 
-#: templates/affiliate/store_admin.html:22
+#: templates/affiliate/store_admin.html:52
 msgid "Commission"
 msgstr ""
 
-#: templates/affiliate/store_admin.html:23
+#: templates/affiliate/store_admin.html:53
 msgid "Order Detail"
 msgstr ""
 
-#: templates/affiliate/store_admin.html:24
+#: templates/affiliate/store_admin.html:54
 msgid "Time"
 msgstr ""
 
-#: templates/affiliate/store_admin.html:25
+#: templates/affiliate/store_admin.html:55
 msgid "Order Status"
 msgstr ""
 
-#: templates/affiliate/store_admin.html:40
+#: templates/affiliate/store_admin.html:70
 msgid "Accept"
 msgstr ""
 
-#: templates/affiliate/store_admin.html:41
+#: templates/affiliate/store_admin.html:71
 msgid "Reject"
+msgstr ""
+
+#: templates/affiliate/store_admin.html:80
+msgid "No transactions"
 msgstr ""
 
 #: templates/apparel/about.html:8
@@ -1658,7 +1680,7 @@ msgstr ""
 msgid "Your dashboard"
 msgstr ""
 
-#: templates/apparel/shared_header.html:35
+#: templates/apparel/shared_header.html:38
 #: templates/registration/logout.html:7
 msgid "Log out"
 msgstr ""
@@ -1904,10 +1926,6 @@ msgstr ""
 
 #: templates/dashboard/admin.html:62
 msgid "Partner admin"
-msgstr ""
-
-#: templates/dashboard/admin.html:71 templates/dashboard/partner.html:71
-msgid "Show: "
 msgstr ""
 
 #: templates/dashboard/admin.html:78
