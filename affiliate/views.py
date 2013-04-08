@@ -8,7 +8,6 @@ from django.db.models import get_model
 from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
-from django.template import RequestContext
 from django.template.loader import render_to_string
 
 import dateutil.parser
@@ -36,12 +35,8 @@ def pixel(request):
     currency = request.GET.get('currency')
 
     if not store_id or not order_id or not order_value or not currency:
-        email_body = render_to_string('affiliate/email_default_error.txt', {'store_id': store_id,
-                                                                            'order_id': order_id,
-                                                                            'order_value': order_value,
-                                                                            'currency': currency},
-                                                                            context_instance=RequestContext(request))
-        mail_superusers('Affiliate Pixel: missing required parameters', email_body)
+        email_body = render_to_string('affiliate/email_default_error.txt', locals())
+        mail_superusers('Advertiser Pixel Error: missing required parameters', email_body)
 
         return HttpResponseBadRequest('Missing required parameters.')
 
@@ -49,6 +44,9 @@ def pixel(request):
     try:
         order_value = decimal.Decimal(order_value)
     except Exception as e:
+        email_body = render_to_string('affiliate/email_default_error.txt', locals())
+        mail_superusers('Advertiser Pixel Error: order value must be a number', email_body)
+
         return HttpResponseBadRequest('Order value must be a number.')
 
     # TODO: do we need to verify domain?
@@ -101,36 +99,34 @@ def pixel(request):
     if all(product_list):
         skus = product_sku.split('^')
         quantities = product_quantity.split('^')
-        price = product_price.split('^')
-        if not (len(skus) == len(quantities) == len(price)):
-            email_body = render_to_string('affiliate/email_default_error.txt',
-                    {'store_id': store_id,
-                     'order_id': order_id,
-                     'order_value': order_value,
-                     'currency': currency,
-                     'transaction_id': transaction.pk,
-                     'sku': product_sku,
-                     'quantity': product_quantity,
-                     'price': product_price}, context_instance=RequestContext(request))
-            mail_superusers('Affiliate Pixel: length of every product parameter is not consistent', email_body)
+        prices = product_price.split('^')
+        if not (len(skus) == len(quantities) == len(prices)):
+            email_body = render_to_string('affiliate/email_default_error.txt', locals())
+            mail_superusers('Advertiser Pixel Warning: length of every product parameter is not consistent', email_body)
 
-        for sku, quantity, price in zip(skus, quantities, price):
-            Product.objects.create(transaction=transaction,
-                                   sku=sku,
-                                   quantity=quantity,
-                                   price=price)
+        try:
+            prices = [decimal.Decimal(x) for x in prices]
+            quantities = [int(x) for x in quantities]
+        except Exception as e:
+            email_body = render_to_string('affiliate/email_default_error.txt', locals())
+            mail_superusers('Advertiser Pixel Error: could not convert price or quantity', email_body)
+        else:
+            calculated_order_value = decimal.Decimal(sum([x*y for x, y in zip(quantities, prices)]))
+            calculated_order_value = calculated_order_value.quantize(decimal.Decimal('0.01'))
+
+            if calculated_order_value != order_value:
+                email_body = render_to_string('affiliate/email_default_error.txt', locals())
+                mail_superusers('Advertiser Pixel Warning: order value and individual products value is not equal', email_body)
+
+            for sku, quantity, price in zip(skus, quantities, prices):
+                Product.objects.create(transaction=transaction,
+                                       sku=sku,
+                                       quantity=quantity,
+                                       price=price)
 
     elif any(product_list) and not all(product_list):
-        email_body = render_to_string('affiliate/email_default_error.txt',
-                {'store_id': store_id,
-                 'order_id': order_id,
-                 'order_value': order_value,
-                 'currency': currency,
-                 'transaction_id': transaction.pk,
-                 'sku': product_sku,
-                 'quantity': product_quantity,
-                 'price': product_price}, context_instance=RequestContext(request))
-        mail_superusers('Affiliate Pixel: missing one or more product parameters', email_body)
+        email_body = render_to_string('affiliate/email_default_error.txt', locals())
+        mail_superusers('Advertiser Pixel Error: missing one or more product parameters', email_body)
 
     # Return 1x1 transparent pixel
     content = b'GIF89a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;'

@@ -2,11 +2,11 @@ Store ID: {{ store_id }}
 Order ID: {{ order_id }}
 Order Value: {{ order_value }}
 Currency: {{ currency }}
-Transaction ID: {{ transaction_id }}
+Transaction ID: {{ transaction.id }}
 
 From (HTTP HOST): {{ request.META.HTTP_HOST }}
 
 Product data
-Sku: {{ sku }}
-Quantity: {{ quantity }}
-Price: {{ price }}
+Sku: {{ product_sku }}
+Quantity: {{ product_quantity }}
+Price: {{ product_price }}

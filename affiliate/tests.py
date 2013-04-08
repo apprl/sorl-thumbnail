@@ -7,8 +7,10 @@ Replace this with more appropriate tests for your application.
 import decimal
 import urllib
 
+from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
+from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 
@@ -34,12 +36,14 @@ class AffiliateMixin:
         return response
 
 
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
 
     def setUp(self):
         """
         Initialize two users. One user has a store assigned the other does not.
         """
+        self.admin = get_user_model().objects.create_superuser('admin', 'admin@xvid.se', 'admin')
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
         self.store = get_model('affiliate', 'Store').objects.create(identifier='mystore',
@@ -52,6 +56,7 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
         """
         response = self.client.get('%s%s' % (reverse('affiliate-pixel'), '?store_id=mystore&order_id=1234&order_value=1234f&currency=SEK'))
         self.assertContains(response, 'Order value must be a number.', count=1, status_code=400)
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_missing_required_parameters(self):
         """
@@ -69,12 +74,13 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
         response = self.client.get('%s?store_id=mystore&order_id=1234&order_value=1234' % (reverse('affiliate-pixel'),))
         self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
 
+        self.assertEqual(len(mail.outbox), 4)
+
         with self.assertRaises(Transaction.DoesNotExist):
             Transaction.objects.get(store_id='mystore', order_id=1234)
 
     def test_required_parameters(self):
-        response = self.client.get('%s%s' % (reverse('affiliate-pixel'), '?store_id=mystore&order_id=1234&order_value=1234&currency=SEK'))
-        self.assertEqual(response.status_code, 200)
+        self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK')
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
         self.assertEqual(transaction.status, Transaction.INVALID)
@@ -84,9 +90,7 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
 
     def test_cookie_data(self):
         self.visit_link()
-
-        response = self.client.get('%s%s' % (reverse('affiliate-pixel'), '?store_id=mystore&order_id=1234&order_value=1234&currency=SEK'))
-        self.assertEqual(response.status_code, 200)
+        self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK')
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
         self.assertEqual(transaction.status, Transaction.PENDING)
@@ -96,10 +100,7 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
 
     def test_order_detail(self):
         self.visit_link()
-
-        response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
-                                             '?store_id=mystore&order_id=A1EF1&order_value=599&currency=SEK&sku=ProductXYZ&quantity=1&price=599'))
-        self.assertEqual(response.status_code, 200)
+        self.checkout(store_id='mystore', order_id='A1EF1', order_value='599', currency='SEK', sku='ProductXYZ', quantity='1', price='599')
 
         transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
         self.assertEqual(transaction.status, Transaction.PENDING)
@@ -115,10 +116,7 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
 
     def test_multiple_order_details(self):
         self.visit_link()
-
-        response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
-                                             '?store_id=mystore&order_id=A1EF1&order_value=699&currency=SEK&sku=ProductXYZ^ProductABC&quantity=1^1&price=599^100'))
-        self.assertEqual(response.status_code, 200)
+        self.checkout(store_id='mystore', order_id='A1EF1', order_value='699', currency='SEK', sku='ProductXZY^ProductABC', quantity='1^1', price='599^100')
 
         transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
         self.assertEqual(transaction.status, Transaction.PENDING)
@@ -131,10 +129,7 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
 
     def test_unbalanced_order_details(self):
         self.visit_link()
-
-        response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
-                                             '?store_id=mystore&order_id=A1EF1&order_value=699&currency=SEK&sku=ProductXYZ^ProductABC&quantity=1&price=599^100'))
-        self.assertEqual(response.status_code, 200)
+        self.checkout(store_id='mystore', order_id='A1EF1', order_value='699', currency='SEK', sku='ProductXYZ^ProductABC', quantity='1', price='599^100')
 
         transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
         self.assertEqual(transaction.status, Transaction.PENDING)
@@ -145,14 +140,13 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
         products = transaction.products.all()
         self.assertEqual(len(products), 1)
 
-        # TODO: test if we send out an email to admins
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[0].subject, 'Advertiser Pixel Warning: length of every product parameter is not consistent')
+        self.assertEqual(mail.outbox[1].subject, 'Advertiser Pixel Warning: order value and individual products value is not equal')
 
     def test_missing_order_detail_parameter(self):
         self.visit_link()
-
-        response = self.client.get('%s%s' % (reverse('affiliate-pixel'),
-                                             '?store_id=mystore&order_id=A1EF1&order_value=599&currency=SEK&sku=ProductXYZ&quantity=1'))
-        self.assertEqual(response.status_code, 200)
+        self.checkout(store_id='mystore', order_id='A1EF1', order_value='599', currency='SEK', sku='ProductXYZ', quantity='1')
 
         transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
         self.assertEqual(transaction.status, Transaction.PENDING)
@@ -163,11 +157,11 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
         products = transaction.products.all()
         self.assertEqual(len(products), 0)
 
-        # TODO: test if we send out an email to admins
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Advertiser Pixel Error: missing one or more product parameters')
 
     def test_no_store_id_in_database(self):
-        response = self.client.get('%s%s' % (reverse('affiliate-pixel'), '?store_id=invalid_id&order_id=1234&order_value=1234&currency=SEK'))
-        self.assertEqual(response.status_code, 200)
+        self.checkout(store_id='invalid_id', order_id='1234', order_value='1234', currency='SEK')
 
         transaction = Transaction.objects.get(store_id='invalid_id', order_id='1234')
         self.assertEqual(transaction.status, Transaction.INVALID)
@@ -175,7 +169,17 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
         self.assertEqual(transaction.currency, 'SEK')
         self.assertEqual(transaction.commission, decimal.Decimal('0'))
 
+    def test_invalid_product_data(self):
+        self.visit_link()
+        self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK', sku='BLABLA', quantity='A', price='1234')
+        self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK', sku='BLABLA', quantity='1', price='1234ffff')
 
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[0].subject, 'Advertiser Pixel Error: could not convert price or quantity')
+        self.assertEqual(mail.outbox[1].subject, 'Advertiser Pixel Error: could not convert price or quantity')
+
+
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class AffiliateLinkTest(TestCase):
 
     def test_no_url_parameter(self):
@@ -198,7 +202,7 @@ class AffiliateLinkTest(TestCase):
     # TODO: how to test cookie date, 30 days?
 
 
-
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
 
     def setUp(self):
