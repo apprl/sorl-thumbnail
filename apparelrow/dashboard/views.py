@@ -79,7 +79,16 @@ def dashboard_admin(request, year=None, month=None):
             ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
         )]
 
+        sales_count = result.count()
+        conversion_rate = 0
+        if click_total > 0:
+            conversion_rate = decimal.Decimal(sales_count) / decimal.Decimal(click_total)
+            conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.01')) * 100)
+
+        print conversion_rate
+
         return render(request, 'dashboard/admin.html', {'sales': data_per_month,
+                                                        'sales_count': sales_count,
                                                         'clicks': clicks_per_month,
                                                         'month_commission': month_commission,
                                                         'partner': partner_commission,
@@ -89,7 +98,8 @@ def dashboard_admin(request, year=None, month=None):
                                                         'click_apprl': click_apprl,
                                                         'dates': dates,
                                                         'year': year,
-                                                        'month': month})
+                                                        'month': month,
+                                                        'conversion_rate': conversion_rate})
 
     return HttpResponseNotFound()
 
