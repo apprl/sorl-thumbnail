@@ -2,6 +2,8 @@ set $project_name %(project_name)s;
 set $deploy_base %(path)s;
 set $deploy_dir $deploy_base/releases/current;
 
+client_max_body_size 5M;
+
 root $deploy_dir/$project_name/static;
 index index.html index.htm;
 

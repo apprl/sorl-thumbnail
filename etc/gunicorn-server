@@ -48,6 +48,7 @@ case "$1" in
             --pid=$PIDFILE --workers=$NUM_WORKERS \
             --user=%(run_user)s --group=%(run_group)s \
             --log-level=debug --log-file=$LOGFILE \
+            --timeout 45 \
             --daemon \
             2>>$LOGFILE
 esac
