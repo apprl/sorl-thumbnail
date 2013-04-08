@@ -83,7 +83,7 @@ def dashboard_admin(request, year=None, month=None):
         conversion_rate = 0
         if click_total > 0:
             conversion_rate = decimal.Decimal(sales_count) / decimal.Decimal(click_total)
-            conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.01')) * 100)
+            conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
 
         print conversion_rate
 
