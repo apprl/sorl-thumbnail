@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load i18n l10n cache %}
 
-{% block extra-title %}{% trans "Affiliate" %} | {% endblock %}
+{% block extra-title %}{% trans "Your store" %} | {% endblock %}
 
 {% block body-header %}
 <div id="body-header">
     <div class="column_one">
-        <h1 class="max-width">{% trans "Affiliate" %}</h1>
+        <h1 class="max-width">{% trans "Your store" %}</h1>
     </div>
 </div>
 {% endblock body-header %}
@@ -21,8 +21,7 @@
                     <th>{% trans "Order Value" %}</th>
                     <th>{% trans "Commission" %}</th>
                     <th>{% trans "Order Detail" %}</th>
-                    <th>{% trans "Checkout" %}</th>
-                    <th>{% trans "Cookie date" %}</th>
+                    <th>{% trans "Time" %}</th>
                     <th>{% trans "Order Status" %}</th>
                 </tr>
                 {% for transaction in transactions %}
@@ -32,11 +31,10 @@
                     <td>{{ transaction.commission }} {{ transaction.currency }}</td>
                     <td>
                         {% for product in transaction.products.all %}
-                            {{ product.sku }}, {{ product.price }}, {{ product.quantity }}<br>
+                            {{ product.quantity }} {{ product.sku }} {{ product.price }} {{ transaction.currency }}<br>
                         {% endfor %}
                     </td>
                     <td>{{ transaction.created }}</td>
-                    <td>{{ transaction.cookie_date }}</td>
                     <td>
                         {% if transaction.status == 'P' %}
                         <a class="open-dialog btn btn-upper btn-positive" href="{% url 'affiliate-admin-accept' transaction.id %}">{% trans "Accept" %}</a>
