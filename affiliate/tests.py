@@ -15,7 +15,7 @@ from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 
 from affiliate.views import AFFILIATE_COOKIE_NAME
-from affiliate.models import Transaction
+from affiliate.models import Transaction, Store, StoreHistory
 
 class AffiliateMixin:
 
@@ -280,6 +280,9 @@ class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
         self.assertEqual(transaction.currency, 'SEK')
         self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
 
+        store = Store.objects.get(user=self.user1)
+        self.assertEqual(store.balance, 0)
+
         self.client.login(username='user1', password='user1')
 
         response = self.client.get(reverse('affiliate-admin-accept', args=[transaction.pk]))
@@ -291,6 +294,23 @@ class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
         self.assertEqual(transaction.status, Transaction.ACCEPTED)
         self.assertTrue(transaction.status_date)
+
+        store = Store.objects.get(user=self.user1)
+        self.assertEqual(store.balance, decimal.Decimal('246.8'))
+
+        store_history = StoreHistory.objects.filter(store=store)
+        self.assertEqual(store_history.count(), 2)
+
+        # Accept another transaction
+        self.checkout(store_id='mystore', order_id='12345', order_value='100', currency='SEK')
+        transaction = Transaction.objects.get(store_id='mystore', order_id=12345)
+        response = self.client.post(reverse('affiliate-admin-accept', args=[transaction.pk]))
+
+        store = Store.objects.get(user=self.user1)
+        self.assertEqual(store.balance, decimal.Decimal('266.8'))
+
+        store_history = StoreHistory.objects.filter(store=store)
+        self.assertEqual(store_history.count(), 3)
 
     def test_reject_transaction(self):
         self.visit_link()

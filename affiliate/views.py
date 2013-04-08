@@ -184,6 +184,11 @@ def store_admin(request, year=None, month=None):
 @login_required
 def store_admin_accept(request, transaction_id):
     try:
+        store = request.user.affiliate_store
+    except get_model('affiliate', 'Store').DoesNotExist:
+        raise Http404()
+
+    try:
         transaction = get_model('affiliate', 'Transaction').objects.get(pk=transaction_id)
     except get_model('affiliate', 'Transaction').DoesNotExist:
         raise Http404
@@ -192,11 +197,19 @@ def store_admin_accept(request, transaction_id):
         transaction.status = get_model('affiliate', 'Transaction').ACCEPTED
         transaction.save()
 
+        request.user.affiliate_store.balance += transaction.commission
+        request.user.affiliate_store.save()
+
     return render(request, 'affiliate/dialog_accept.html', {'transaction': transaction})
 
 
 @login_required
 def store_admin_reject(request, transaction_id):
+    try:
+        store = request.user.affiliate_store
+    except get_model('affiliate', 'Store').DoesNotExist:
+        raise Http404()
+
     try:
         transaction = get_model('affiliate', 'Transaction').objects.get(pk=transaction_id)
     except get_model('affiliate', 'Transaction').DoesNotExist:

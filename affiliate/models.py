@@ -1,8 +1,9 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-
 
 class Store(models.Model):
     identifier = models.CharField(max_length=128, null=False, blank=False, unique=True)
@@ -10,6 +11,22 @@ class Store(models.Model):
     balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     commission_percentage = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     cookie_days = models.PositiveIntegerField(null=False, blank=False, default=30)
+
+@receiver(post_save, sender=Store, dispatch_uid='store_post_save')
+def store_post_save(sender, instance, **kwargs):
+    StoreHistory.objects.create(store=instance, balance=instance.balance)
+
+
+class StoreHistory(models.Model):
+    store = models.ForeignKey('affiliate.Store', null=False, blank=False, on_delete=models.CASCADE, related_name='history')
+    balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
+    created = models.DateTimeField(default=timezone.now, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created']
+
+    def __unicode__(self):
+        return u'StoreHistory(%s, %s)' % (self.balance, self.created)
 
 
 class Product(models.Model):
