@@ -11,6 +11,7 @@ class Store(models.Model):
     balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     commission_percentage = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     cookie_days = models.PositiveIntegerField(null=False, blank=False, default=30)
+    vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False)
 
 @receiver(post_save, sender=Store, dispatch_uid='store_post_save')
 def store_post_save(sender, instance, **kwargs):

@@ -50,9 +50,11 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
         self.admin = get_user_model().objects.create_superuser('admin', 'admin@xvid.se', 'admin')
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
+        self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
         self.store = get_model('affiliate', 'Store').objects.create(identifier='mystore',
                                                                     user=self.user1,
-                                                                    commission_percentage='0.2')
+                                                                    commission_percentage='0.2',
+                                                                    vendor=self.vendor)
 
     def test_invalid_order_value(self):
         """
@@ -190,14 +192,18 @@ class AffiliateLinkTest(TransactionTestCase, AffiliateMixin):
         """
         Initialize two users. One user has a store assigned the other does not.
         """
+        self.vendor1 = get_model('apparel', 'Vendor').objects.create(name='store1')
+        self.vendor2 = get_model('apparel', 'Vendor').objects.create(name='store2')
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
         self.store1 = get_model('affiliate', 'Store').objects.create(identifier='store1',
                                                                     user=self.user1,
-                                                                    commission_percentage='0.2')
+                                                                    commission_percentage='0.2',
+                                                                    vendor=self.vendor1)
         self.store2 = get_model('affiliate', 'Store').objects.create(identifier='store2',
                                                                      user=self.user2,
-                                                                     commission_percentage='0.5')
+                                                                     commission_percentage='0.5',
+                                                                     vendor=self.vendor2)
 
     def test_no_url_parameter(self):
         response = self.client.get(reverse('affiliate-link'))
@@ -266,9 +272,11 @@ class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
         """
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
+        self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
         self.store = get_model('affiliate', 'Store').objects.create(identifier='mystore',
                                                                     user=self.user1,
-                                                                    commission_percentage='0.2')
+                                                                    commission_percentage='0.2',
+                                                                    vendor=self.vendor)
 
 
     def test_affiliate_flow(self):

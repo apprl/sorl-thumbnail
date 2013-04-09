@@ -20,7 +20,7 @@ class Command(BaseCommand):
         ),
     )
 
-    affiliates = ['affiliatewindow', 'cj', 'linkshare', 'tradedoubler', 'zanox']
+    affiliates = ['affiliatewindow', 'cj', 'linkshare', 'tradedoubler', 'zanox', 'aan']
 
     def update(self, row):
         instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
@@ -50,7 +50,4 @@ class Command(BaseCommand):
                         logger.debug('Updating row: %s' % (row,))
                         instance = self.update(row)
                 except Exception as e:
-                    logger.error('Failed to import %s for interval %s-%s: %s' % (instance.name,
-                                                                                 start_date,
-                                                                                 end_date,
-                                                                                 str(e)))
+                    logger.exception('Failed to import %s for interval %s-%s' % (instance.name, start_date, end_date))

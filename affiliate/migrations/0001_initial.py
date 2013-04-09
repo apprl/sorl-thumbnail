@@ -15,13 +15,23 @@ class Migration(SchemaMigration):
         # Adding model 'Store'
         db.create_table(u'affiliate_store', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('identifier', self.gf('django.db.models.fields.CharField')(unique=True, max_length=128)),
+            ('identifier', self.gf('django.db.models.fields.CharField')(unique=True, max_length=64)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='affiliate_store', unique=True, on_delete=models.SET_NULL, default=None, to=orm['profile.User'], blank=True, null=True)),
             ('balance', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=12, decimal_places=2)),
             ('commission_percentage', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=12, decimal_places=2)),
             ('cookie_days', self.gf('django.db.models.fields.PositiveIntegerField')(default=30)),
+            ('vendor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Vendor'])),
         ))
         db.send_create_signal(u'affiliate', ['Store'])
+
+        # Adding model 'StoreHistory'
+        db.create_table(u'affiliate_storehistory', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('store', self.gf('django.db.models.fields.related.ForeignKey')(related_name='history', to=orm['affiliate.Store'])),
+            ('balance', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=12, decimal_places=2)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
+        ))
+        db.send_create_signal(u'affiliate', ['StoreHistory'])
 
         # Adding model 'Product'
         db.create_table(u'affiliate_product', (
@@ -36,7 +46,7 @@ class Migration(SchemaMigration):
         # Adding model 'Transaction'
         db.create_table(u'affiliate_transaction', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('store_id', self.gf('django.db.models.fields.CharField')(max_length=128, db_index=True)),
+            ('store_id', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
             ('order_id', self.gf('django.db.models.fields.CharField')(max_length=128)),
             ('order_value', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=12, decimal_places=2)),
             ('currency', self.gf('django.db.models.fields.CharField')(default='SEK', max_length=3)),
@@ -44,8 +54,7 @@ class Migration(SchemaMigration):
             ('cookie_date', self.gf('django.db.models.fields.DateTimeField')(default=None, null=True, blank=True)),
             ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
             ('modified', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
-            ('user_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
-            ('placement', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
+            ('custom', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
             ('ip_address', self.gf('django.db.models.fields.GenericIPAddressField')(max_length=39)),
             ('status', self.gf('django.db.models.fields.CharField')(default='P', max_length=1)),
             ('status_message', self.gf('django.db.models.fields.TextField')(default='', null=True, blank=True)),
@@ -53,10 +62,24 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'affiliate', ['Transaction'])
 
+        # Adding model 'Cookie'
+        db.create_table(u'affiliate_cookie', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('cookie_id', self.gf('django.db.models.fields.CharField')(max_length=32, db_index=True)),
+            ('store_id', self.gf('django.db.models.fields.CharField')(max_length=128, db_index=True)),
+            ('old_cookie_id', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
+            ('custom', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
+        ))
+        db.send_create_signal(u'affiliate', ['Cookie'])
+
 
     def backwards(self, orm):
         # Deleting model 'Store'
         db.delete_table(u'affiliate_store')
+
+        # Deleting model 'StoreHistory'
+        db.delete_table(u'affiliate_storehistory')
 
         # Deleting model 'Product'
         db.delete_table(u'affiliate_product')
@@ -64,8 +87,20 @@ class Migration(SchemaMigration):
         # Deleting model 'Transaction'
         db.delete_table(u'affiliate_transaction')
 
+        # Deleting model 'Cookie'
+        db.delete_table(u'affiliate_cookie')
+
 
     models = {
+        u'affiliate.cookie': {
+            'Meta': {'ordering': "['-created']", 'object_name': 'Cookie'},
+            'cookie_id': ('django.db.models.fields.CharField', [], {'max_length': '32', 'db_index': 'True'}),
+            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'custom': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'old_cookie_id': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
+            'store_id': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'})
+        },
         u'affiliate.product': {
             'Meta': {'object_name': 'Product'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -80,8 +115,16 @@ class Migration(SchemaMigration):
             'commission_percentage': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
             'cookie_days': ('django.db.models.fields.PositiveIntegerField', [], {'default': '30'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'identifier': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'affiliate_store'", 'unique': 'True', 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': u"orm['profile.User']", 'blank': 'True', 'null': 'True'})
+            'identifier': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '64'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'affiliate_store'", 'unique': 'True', 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': u"orm['profile.User']", 'blank': 'True', 'null': 'True'}),
+            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
+        },
+        u'affiliate.storehistory': {
+            'Meta': {'ordering': "['-created']", 'object_name': 'StoreHistory'},
+            'balance': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
+            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'store': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'history'", 'to': u"orm['affiliate.Store']"})
         },
         u'affiliate.transaction': {
             'Meta': {'ordering': "['-created']", 'object_name': 'Transaction'},
@@ -89,17 +132,16 @@ class Migration(SchemaMigration):
             'cookie_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'currency': ('django.db.models.fields.CharField', [], {'default': "'SEK'", 'max_length': '3'}),
+            'custom': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ip_address': ('django.db.models.fields.GenericIPAddressField', [], {'max_length': '39'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'order_id': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'order_value': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
-            'placement': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'P'", 'max_length': '1'}),
             'status_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'status_message': ('django.db.models.fields.TextField', [], {'default': "''", 'null': 'True', 'blank': 'True'}),
-            'store_id': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'}),
-            'user_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'})
+            'store_id': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         },
         u'apparel.brand': {
             'Meta': {'ordering': "['name']", 'object_name': 'Brand'},
@@ -107,6 +149,13 @@ class Migration(SchemaMigration):
             'last_update': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'old_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
+        },
+        u'apparel.vendor': {
+            'Meta': {'ordering': "['name']", 'object_name': 'Vendor'},
+            'homepage': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'logotype': ('django.db.models.fields.files.ImageField', [], {'max_length': '127', 'null': 'True', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_index': 'True'})
         },
         u'auth.group': {
             'Meta': {'object_name': 'Group'},
