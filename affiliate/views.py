@@ -247,6 +247,20 @@ def store_admin(request, year=None, month=None):
         ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
     )]
 
+    # Chart data (transactions and clicks)
+    data_per_month = {}
+    for day in range(1, (end_date - start_date).days + 2):
+        data_per_month[start_date.replace(day=day)] = [0, 0]
+
+    for transaction in transactions:
+        data_per_month[transaction.created.date()][0] += 1
+
+    clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_query) \
+                                                           .filter(vendor=store.vendor) \
+                                                           .order_by('created')
+    for click in clicks:
+        data_per_month[click.created.date()][1] += 1
+
     return render(request, 'affiliate/store_admin.html', {'transactions': transactions,
                                                           'store': request.user.affiliate_store,
                                                           'dates': dates,
@@ -254,7 +268,8 @@ def store_admin(request, year=None, month=None):
                                                           'year': year,
                                                           'month': month,
                                                           'accepted_commission': accepted_commission,
-                                                          'total_accepted_commission': total_accepted_commission})
+                                                          'total_accepted_commission': total_accepted_commission,
+                                                          'data_per_month': data_per_month})
 
 
 @login_required
