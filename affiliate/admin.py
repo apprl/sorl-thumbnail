@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.core import urlresolvers
 
-from affiliate.models import Store, StoreHistory, Product, Transaction
+from affiliate.models import Store, StoreHistory, Product, Transaction, Cookie
 
 class StoreHistoryInline(admin.TabularInline):
     model = StoreHistory
@@ -30,3 +30,10 @@ class TransactionAdmin(admin.ModelAdmin):
     inlines = (ProductInline,)
 
 admin.site.register(Transaction, TransactionAdmin)
+
+
+class CookieAdmin(admin.ModelAdmin):
+    list_display = ('cookie_id', 'store_id', 'old_cookie_id', 'custom', 'created')
+    list_filter = ('store_id',)
+
+admin.site.register(Cookie, CookieAdmin)

@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 class Store(models.Model):
-    identifier = models.CharField(max_length=128, null=False, blank=False, unique=True)
+    identifier = models.CharField(max_length=64, null=False, blank=False, unique=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='affiliate_store')
     balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     commission_percentage = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
@@ -53,7 +53,7 @@ class Transaction(models.Model):
         (TOO_OLD, _('Too old')),
     )
 
-    store_id = models.CharField(max_length=128, null=False, blank=False, db_index=True)
+    store_id = models.CharField(max_length=64, null=False, blank=False, db_index=True)
     order_id = models.CharField(max_length=128, null=False, blank=False)
     order_value = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     currency = models.CharField(null=False, blank=False, default='SEK', max_length=3, help_text=_('Currency as three-letter ISO code'))
@@ -64,9 +64,8 @@ class Transaction(models.Model):
     created = models.DateTimeField(default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(default=timezone.now, null=True, blank=True)
 
-    # Extra data
-    user_id = models.PositiveIntegerField(null=True, blank=True)
-    placement = models.CharField(max_length=32, null=True, blank=True)
+    # Custom user data
+    custom = models.CharField(max_length=32, null=True, blank=True)
 
     # User ip address
     ip_address = models.GenericIPAddressField()
@@ -90,3 +89,19 @@ class Transaction(models.Model):
 
     def __unicode__(self):
         return 'Transaction(store_id=%s, order_id=%s, order_value=%s, currency=%s)' % (self.store_id, self.order_id, self.order_value, self.currency)
+
+
+class Cookie(models.Model):
+    cookie_id = models.CharField(max_length=32, null=False, blank=False, db_index=True)
+    store_id = models.CharField(max_length=128, null=False, blank=False, db_index=True)
+
+    old_cookie_id = models.CharField(max_length=32, null=True, blank=True)
+
+    # User data
+    custom = models.CharField(max_length=32, null=True, blank=True)
+
+    # Date
+    created = models.DateTimeField(default=timezone.now, null=False, blank=False)
+
+    class Meta:
+        ordering = ['-created']

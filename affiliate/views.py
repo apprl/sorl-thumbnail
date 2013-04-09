@@ -1,6 +1,7 @@
 import datetime
 import decimal
 import calendar
+import uuid
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -17,7 +18,10 @@ from apparelrow.statistics.utils import get_client_ip
 from affiliate.tasks import send_text_email_task
 
 
-AFFILIATE_COOKIE_NAME = 'aan_click'
+AFFILIATE_COOKIE_NAME = 'aanclick'
+
+def get_cookie_name(store_id):
+    return '%s%s' % (AFFILIATE_COOKIE_NAME, store_id)
 
 
 def mail_superusers(subject, body):
@@ -52,9 +56,11 @@ def pixel(request):
 
     # TODO: do we need to verify domain?
 
+    # Load models
     Transaction = get_model('affiliate', 'Transaction')
     Product = get_model('affiliate', 'Product')
     Store = get_model('affiliate', 'Store')
+    Cookie = get_model('affiliate', 'Cookie')
 
     # Retrieve store object
     store = None
@@ -65,14 +71,16 @@ def pixel(request):
 
     # Cookie data
     status = Transaction.INVALID
-    cookie_datetime = user_id = placement = None
-    cookie_data = request.get_signed_cookie(AFFILIATE_COOKIE_NAME, default=False)
+    cookie_datetime = custom = None
+    cookie_data = request.get_signed_cookie(get_cookie_name(store_id), default=False)
     if cookie_data and store:
         status = Transaction.TOO_OLD
-        cookie_datetime, user_id, placement = cookie_data.split('|')
+        cookie_datetime, cookie_id = cookie_data.split('|')
         cookie_datetime = dateutil.parser.parse(cookie_datetime)
+        cookie_instance = Cookie.objects.get(cookie_id=cookie_id)
 
         if cookie_datetime + datetime.timedelta(days=store.cookie_days) >= timezone.now():
+            custom = cookie_instance.custom
             status = Transaction.PENDING
 
     # Calculate commission
@@ -88,8 +96,7 @@ def pixel(request):
                                              status=status,
                                              cookie_date=cookie_datetime,
                                              commission=commission,
-                                             user_id=user_id,
-                                             placement=placement)
+                                             custom=custom)
 
     # Insert optional product data
     product_sku = request.GET.get('sku')
@@ -148,18 +155,41 @@ def link(request):
     if not url:
         return HttpResponseBadRequest('Missing url parameter.')
 
+    store_id = request.GET.get('store_id')
+    if not store_id:
+        return HttpResponseBadRequest('Missing store_id parameter.')
+
+
+    # Old cookie ID
+    old_cookie_id = None
+    cookie_data = request.get_signed_cookie(get_cookie_name(store_id), default=False)
+    if cookie_data:
+        cookie_datetime, old_cookie_id = cookie_data.split('|')
+
+    # Custom tracking data
+    user_id = request.GET.get('user_id')
+    placement = request.GET.get('placement')
+    custom = request.GET.get('custom')
+    if user_id and placement:
+        custom = '%s-%s' % (user_id, placement)
+
+    # Cookie date
     current_datetime = timezone.now()
     expires_datetime = current_datetime + datetime.timedelta(days=60)
 
-    # TODO: datetime, unique_id, extra: (user_id, page position)
-    # TODO: might set it using an extra field like all the other networks
-    # TODO: store it in a database and only store a reference to the row in the cookie
-    cookie_data = '%s|%s|%s' % (current_datetime.isoformat(),
-                                request.GET.get('user_id', 0),
-                                request.GET.get('page', 'Default'))
+    # Insert into DB and set cookie
+    cookie_id = uuid.uuid4().hex
 
+    Cookie = get_model('affiliate', 'Cookie')
+    Cookie.objects.create(cookie_id=cookie_id,
+                          store_id=store_id,
+                          old_cookie_id=old_cookie_id,
+                          custom=custom,
+                          created=current_datetime)
+
+    cookie_data = '%s|%s' % (current_datetime.isoformat(), cookie_id)
     response = redirect(url)
-    response.set_signed_cookie(AFFILIATE_COOKIE_NAME, cookie_data,
+    response.set_signed_cookie(get_cookie_name(store_id), cookie_data,
             expires=expires_datetime, httponly=True)
 
     return response
