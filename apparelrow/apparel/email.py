@@ -34,7 +34,7 @@ def get_newsletter_users():
     """
     Get an iterator of all users eligible for our (weekly) newsletter.
     """
-    return get_user_model().objects.filter(profile__newsletter=True) \
+    return get_user_model().objects.filter(newsletter=True) \
                                    .exclude(Q(email__isnull=True) | Q(email__exact='')) \
                                    .exclude(Q(first_name__isnull=True) | Q(first_name__exact='')) \
                                    .exclude(Q(last_name__isnull=True) | Q(last_name__exact='')) \
