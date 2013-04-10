@@ -15,8 +15,11 @@ from django.utils import translation
 
 from sorl.thumbnail import get_thumbnail
 
+from apparelrow.profile.utils import get_facebook_user
+
 from apparelrow.apparel.signals import look_saved
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter
+from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
 
 
 def embed(request, slug):
@@ -83,6 +86,12 @@ def publish(request, slug):
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug, user=request.user)
     look.published = True
     look.save(update_fields=['published'])
+
+    if request.user.fb_share_create_look:
+        if look.display_components.count() > 0:
+            facebook_user = get_facebook_user(request)
+            if facebook_user:
+                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', request.build_absolute_uri(look.get_absolute_url()))
 
     look_saved.send(sender=get_model('apparel', 'Look'), look=look, update=False)
 

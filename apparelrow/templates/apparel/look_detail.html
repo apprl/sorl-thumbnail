@@ -54,6 +54,9 @@
                                     $this.data('text', text);
                                     $this.data('href', href);
                                     $this.text(new_text).attr('href', new_href).addClass('btn-unpublish').removeClass('btn-publish');
+                                    if(share_settings['create_look'] === false) {
+                                        ApparelActivity.notification('create', 'look', {{ object.id }});
+                                    }
                                 },
                                 complete: function() { modal_dialog.close(); }
                             });
