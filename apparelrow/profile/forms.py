@@ -86,8 +86,8 @@ class NewsletterForm(forms.ModelForm):
 class FacebookSettingsForm(forms.ModelForm):
     fb_share_like_product = forms.BooleanField(required=False, help_text=_(u'When you ♥ a product'))
     fb_share_like_look = forms.BooleanField(required=False, help_text=_(u'When you ♥ a look'))
-    fb_share_create_look = forms.BooleanField(required=False, help_text=_(u'When you follow someone'))
-    fb_share_follow_profile = forms.BooleanField(required=False, help_text=_(u'When you create a look'))
+    fb_share_create_look = forms.BooleanField(required=False, help_text=_(u'When you create a look'))
+    fb_share_follow_profile = forms.BooleanField(required=False, help_text=_(u'When you follow someone'))
 
     class Meta:
         model = get_user_model()
