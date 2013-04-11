@@ -1,6 +1,7 @@
 import json
 import base64
 import uuid
+import math
 
 from django.conf import settings
 from django.core.cache import get_cache
@@ -12,6 +13,7 @@ from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 from django.utils import translation
+from django.contrib.auth.decorators import login_required
 
 from sorl.thumbnail import get_thumbnail
 
@@ -22,21 +24,81 @@ from apparelrow.apparel.utils import JSONResponse, set_query_parameter
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
 
 
-def embed(request, slug):
+def embed(request, slug, language=None, width=None):
     """
     Display look for use in embedded iframe.
     """
+    # Generate nginx key
+    if width is None and language is None:
+        nginx_key = reverse('look-embed', args=[slug])
+    else:
+        nginx_key = reverse('look-embed-full', args=[language, width, slug])
+
+    # Retrieve look
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
 
-    # Force english language because we cannot cache for language in
-    # nginx+memcache layer.
-    translation.activate('en')
-    response = render(request, 'apparel/look_embed.html', {'object': look})
+    # Width
+    try:
+        width = int(width)
+    except (ValueError, TypeError) as e:
+        width = look.width
+
+    # Height
+    scale = width / float(look.width)
+    height = int(math.ceil(look.height * scale))
+
+    # Fix component styles
+    max_width = width
+    if look.display_with_component == 'C':
+        components = look.collage_components.select_related('product')
+    elif look.display_with_component == 'P':
+        components = look.photo_components.select_related('product')
+        if look.image:
+            thumbnail = get_thumbnail(look.image, str(width), upscale=False)
+            max_width = min(thumbnail.width, width)
+
+    for component in components:
+        component.style_embed = component._style(max_width / float(look.width))
+
+    # Fix language and render template
+    if not language:
+        language = 'en'
+
+    translation.activate(language)
+    response = render(request, 'apparel/look_embed.html', {'object': look,
+                                                           'components': components,
+                                                           'width': str(width),
+                                                           'height': str(height)})
     translation.deactivate()
 
-    get_cache('nginx').set(reverse('look-embed', args=[look.slug]), response.content, 60*60*24*20)
+    get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
 
     return response
+
+
+@login_required
+def dialog_embed(request, slug):
+    look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
+
+    return render(request, 'apparel/dialog_look_embed.html', {'look': look})
+
+
+@login_required
+def widget(request, slug):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed()
+
+    look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
+
+    content = {}
+    content['object'] = look
+    content['language'] = request.POST.get('language', 'sv')
+    content['width'] = request.POST.get('width', '720')
+
+    scale = int(content['width']) / float(look.width)
+    content['height'] = int(math.ceil(look.height * scale))
+
+    return render(request, 'apparel/fragments/look_widget.html', content)
 
 
 def create(request):

@@ -22,10 +22,10 @@
   <body class="look-embed">
     <div class="container">
       {% if object.display_with_component == 'C' %}
-        <div class="look collage" style="height: 524px">
-          {% for component in object.collage_components.all %}
+        <div class="look collage" style="height: {{ height }}px">
+          {% for component in components %}
             {% thumbnail component.product.product_image "694x524" crop="noop" format="PNG" transparent=True as im %}
-            <a target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style }}">
+            <a target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }}">
               <img src="{{ im.url }}" title="{{ component.product }}" />
             </a>
             {% endthumbnail %}
@@ -37,13 +37,13 @@
       {% else %}
         <div id="photo-background" class="look look-photo"
         {% if object.image %}
-          {% thumbnail object.image "694x524" as im %}
+          {% thumbnail object.image width upscale=False as im %}
           style="background-image: url('{{ im.url }}'); width: {{ im.width }}px; height: {{ im.height }}px"
           {% endthumbnail %}
         {% endif %}
         >
-        {% for component in object.photo_components.all %}
-          <a target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" class="hotspot product btn-buy-external" id="hotspot-{{ component.product.id }}" data-sid="{% get_sid object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style }}"></a>
+        {% for component in components %}
+          <a target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" class="hotspot product btn-buy-external" id="hotspot-{{ component.product.id }}" data-sid="{% get_sid object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }}"></a>
           {% cache CACHE_TIMEOUT look_product_tooltip component.product.id LANGUAGE_CODE %}
             {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product external="yes" only %}
           {% endcache %}

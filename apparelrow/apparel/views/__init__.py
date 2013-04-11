@@ -607,21 +607,6 @@ def look_delete(request, slug):
     else:
         return (False, HttpResponseRedirect(reverse('profile-looks', args=(request.user.slug,))))
 
-def widget(request, object_id, template_name, model):
-    try:
-        instance = model.objects.get(pk=object_id)
-        html     = get_template(template_name).render(RequestContext(request, {'object': instance}))
-        success  = True
-    except model.DoesNotExist:
-        success  = False
-        html     = 'Not found'
-
-    return HttpResponse('%s(%s)' % (request.GET['callback'], json.dumps({
-        'success': success,
-        'html':  html,
-    })), mimetype='application/json')
-
-
 
 def csrf_failure(request, reason=None):
     """

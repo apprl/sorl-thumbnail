@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 
-from apparelrow.apparel.models import Look
 from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
@@ -111,18 +110,11 @@ urlpatterns = patterns('',
     url(r'^dialog/follow-user/$', 'apparelrow.apparel.views.dialog_follow_user', name='dialog-follow-user'),
     url(r'^dialog/user-feed/$', 'apparelrow.activity_feed.views.dialog_user_feed', name='dialog-user-feed'),
 
-    # Embed
+    # Look embed + dialog + widget
     url(r'^embed/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.embed', name='look-embed'),
-
-    # Widget
-    url(r'^widget/look/(?P<object_id>\d+)/collage/$', 'apparelrow.apparel.views.widget', {
-        'model': Look,
-        'template_name': 'apparel/fragments/look_collage.html',
-     }),
-    url(r'^widget/look/(?P<object_id>\d+)/photo/$', 'apparelrow.apparel.views.widget', {
-        'model': Look,
-        'template_name': 'apparel/fragments/look_photo.html',
-     }),
+    url(r'^embed/look/(?P<language>\w+)/(?P<width>\d+)/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.embed', name='look-embed-full'),
+    url(r'^dialog/embed/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.dialog_embed', name='dialog-look-embed'),
+    url(r'^widget/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.widget', name='look-widget'),
 
     # Users
     url(r'^users/$', 'apparelrow.apparel.views.user_list', name='user-list'),

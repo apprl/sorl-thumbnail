@@ -22,7 +22,7 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery('#embed-code, #url-code')
+        jQuery('#url-code')
             .focus(function(e) { this.select(); })
             .mouseup(function(e) { e.preventDefault() });
 
@@ -178,9 +178,7 @@
             <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-500ff11c3e1dc781"></script>
         </div>
         <div class="first">
-            <label>{% trans "Embed this look on your blog or site" %}:
-                <input type="text" value="{% filter force_escape %}{% include 'apparel/fragments/look_widget.html' %}{% endfilter %}" id="embed-code">
-            </label>
+            <a class="btn btn-upper btn-block" href="{% url 'dialog-look-embed' object.slug %}">{% trans "Embed on your blog / site" %}</a>
         </div>
         <div class="last">
             <label>{% trans "Direct link to this page" %}:<input type="text" value="{% filter force_escape %}{{ object_url }}{% endfilter %}" id="url-code"></label>
