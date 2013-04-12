@@ -3,6 +3,7 @@ import uuid
 import os.path
 import decimal
 import datetime
+import itertools
 
 from django.db import models
 from django.db.models import Sum, Min
@@ -851,6 +852,8 @@ def look_saved_handler(sender, look, **kwargs):
 
         # Empty look embedded cache
         get_cache('nginx').delete(reverse('look-embed', args=[look.slug]))
+        for language, size in itertools.product(settings.LANGUAGES, ['720', '900', '1200']):
+            get_cache('nginx').delete(reverse('look-embed-full', args=[language[0], size, look.slug]))
 
     # Calculate gender and add it to the current look object
     look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
