@@ -22,6 +22,14 @@ from apparelrow.profile.utils import get_facebook_user
 from apparelrow.apparel.signals import look_saved
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
+from apparelrow.apparel.views import _product_like
+
+
+def look_like_products(request, look_id):
+    look = get_model('apparel', 'Look').objects.get(pk=look_id)
+
+    for component in look.display_components.select_related('product'):
+        _product_like(request, component.product, 'like')
 
 
 def embed(request, slug, language=None, width=None):
@@ -160,6 +168,9 @@ def publish(request, slug):
                 facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', request.build_absolute_uri(look.get_absolute_url()))
 
     look_saved.send(sender=get_model('apparel', 'Look'), look=look, update=False)
+
+    # Automatically like all products in the published look
+    look_like_products(request, look.pk)
 
     return JSONResponse(dict(success=True))
 
@@ -311,6 +322,10 @@ class LookView(View):
         # Send look saved signal
         look_saved.send(sender=get_model('apparel', 'Look'), look=look)
 
+        # Automatically like all products in the published look
+        if look.published:
+            look_like_products(request, look.pk)
+
         return JSONResponse(status=204)
 
 
@@ -385,6 +400,10 @@ class LookView(View):
 
         # Send look saved signal
         look_saved.send(sender=get_model('apparel', 'Look'), look=look)
+
+        # Automatically like all products in the published look
+        if look.published:
+            look_like_products(request, look.pk)
 
         response = JSONResponse(look_instance_to_dict(look), status=201)
         response['Location'] = reverse('look-detail', args=[look.slug])
