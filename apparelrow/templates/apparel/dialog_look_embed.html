@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static from staticfiles %}
 
 {% block 'extra-scripts' %}
 <script type="text/javascript">
@@ -20,19 +21,15 @@
         jQuery('#embed_shop_form').on('submit', function() {
             var data = {
                 width: jQuery('#id_width').val(),
-                height: jQuery('#id_height').val(),
                 language: jQuery('#id_language').val(),
-                gender: jQuery('input[name=gender]:checked').val()
             };
 
-            if(!data['height']) {
-                data['height'] = '600';
-                jQuery('#id_height').val(data['height']);
-            }
+
+            $('#id_embed_code').hide().parents('.control-group').show().find('.controls').append('<img style="margin-top:6px;" id="loading_image" src="{% static "images/loading_white.gif" %}">');
 
             jQuery.post("{% url 'look-widget' look.slug %}", data, function(response) {
-                $('#id_embed_code').val(response);
-                $('#id_embed_code').parents('.control-group').show();
+                $('#id_embed_code').val(response).show();
+                $('#loading_image').remove();
             });
 
             return false;

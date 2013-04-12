@@ -56,6 +56,7 @@ def embed(request, slug, language=None, width=None):
         if look.image:
             thumbnail = get_thumbnail(look.image, str(width), upscale=False)
             max_width = min(thumbnail.width, width)
+            height = min(thumbnail.height, height)
 
     for component in components:
         component.style_embed = component._style(max_width / float(look.width))
@@ -97,6 +98,9 @@ def widget(request, slug):
 
     scale = int(content['width']) / float(look.width)
     content['height'] = int(math.ceil(look.height * scale))
+    if look.display_with_component == 'P' and look.image:
+        thumbnail = get_thumbnail(look.image, str(content['width']), upscale=False)
+        content['height'] = min(thumbnail.height, content['height'])
 
     return render(request, 'apparel/fragments/look_widget.html', content)
 
