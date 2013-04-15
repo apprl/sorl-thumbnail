@@ -20,8 +20,8 @@ class Importer(BaseImporter):
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
-        Transaction = get_model('affiliate', 'Transaction')
-        Store = get_model('affiliate', 'Store')
+        Transaction = get_model('advertiser', 'Transaction')
+        Store = get_model('advertiser', 'Store')
         transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
                                           .filter(created__gte=start_date_query, created__lte=end_date_query)
         for transaction in transactions:

@@ -13,38 +13,38 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'Store'
-        db.create_table(u'affiliate_store', (
+        db.create_table(u'advertiser_store', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('identifier', self.gf('django.db.models.fields.CharField')(unique=True, max_length=64)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='affiliate_store', unique=True, on_delete=models.SET_NULL, default=None, to=orm['profile.User'], blank=True, null=True)),
+            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='advertiser_store', unique=True, on_delete=models.SET_NULL, default=None, to=orm['profile.User'], blank=True, null=True)),
             ('balance', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=12, decimal_places=2)),
             ('commission_percentage', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=12, decimal_places=2)),
             ('cookie_days', self.gf('django.db.models.fields.PositiveIntegerField')(default=30)),
             ('vendor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Vendor'])),
         ))
-        db.send_create_signal(u'affiliate', ['Store'])
+        db.send_create_signal(u'advertiser', ['Store'])
 
         # Adding model 'StoreHistory'
-        db.create_table(u'affiliate_storehistory', (
+        db.create_table(u'advertiser_storehistory', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('store', self.gf('django.db.models.fields.related.ForeignKey')(related_name='history', to=orm['affiliate.Store'])),
+            ('store', self.gf('django.db.models.fields.related.ForeignKey')(related_name='history', to=orm['advertiser.Store'])),
             ('balance', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=12, decimal_places=2)),
             ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
         ))
-        db.send_create_signal(u'affiliate', ['StoreHistory'])
+        db.send_create_signal(u'advertiser', ['StoreHistory'])
 
         # Adding model 'Product'
-        db.create_table(u'affiliate_product', (
+        db.create_table(u'advertiser_product', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('transaction', self.gf('django.db.models.fields.related.ForeignKey')(related_name='products', to=orm['affiliate.Transaction'])),
+            ('transaction', self.gf('django.db.models.fields.related.ForeignKey')(related_name='products', to=orm['advertiser.Transaction'])),
             ('sku', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('price', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=12, decimal_places=2)),
             ('quantity', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
         ))
-        db.send_create_signal(u'affiliate', ['Product'])
+        db.send_create_signal(u'advertiser', ['Product'])
 
         # Adding model 'Transaction'
-        db.create_table(u'affiliate_transaction', (
+        db.create_table(u'advertiser_transaction', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('store_id', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
             ('order_id', self.gf('django.db.models.fields.CharField')(max_length=128)),
@@ -60,10 +60,10 @@ class Migration(SchemaMigration):
             ('status_message', self.gf('django.db.models.fields.TextField')(default='', null=True, blank=True)),
             ('status_date', self.gf('django.db.models.fields.DateTimeField')(default=None, null=True, blank=True)),
         ))
-        db.send_create_signal(u'affiliate', ['Transaction'])
+        db.send_create_signal(u'advertiser', ['Transaction'])
 
         # Adding model 'Cookie'
-        db.create_table(u'affiliate_cookie', (
+        db.create_table(u'advertiser_cookie', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('cookie_id', self.gf('django.db.models.fields.CharField')(max_length=32, db_index=True)),
             ('store_id', self.gf('django.db.models.fields.CharField')(max_length=128, db_index=True)),
@@ -71,28 +71,28 @@ class Migration(SchemaMigration):
             ('custom', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
             ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
         ))
-        db.send_create_signal(u'affiliate', ['Cookie'])
+        db.send_create_signal(u'advertiser', ['Cookie'])
 
 
     def backwards(self, orm):
         # Deleting model 'Store'
-        db.delete_table(u'affiliate_store')
+        db.delete_table(u'advertiser_store')
 
         # Deleting model 'StoreHistory'
-        db.delete_table(u'affiliate_storehistory')
+        db.delete_table(u'advertiser_storehistory')
 
         # Deleting model 'Product'
-        db.delete_table(u'affiliate_product')
+        db.delete_table(u'advertiser_product')
 
         # Deleting model 'Transaction'
-        db.delete_table(u'affiliate_transaction')
+        db.delete_table(u'advertiser_transaction')
 
         # Deleting model 'Cookie'
-        db.delete_table(u'affiliate_cookie')
+        db.delete_table(u'advertiser_cookie')
 
 
     models = {
-        u'affiliate.cookie': {
+        u'advertiser.cookie': {
             'Meta': {'ordering': "['-created']", 'object_name': 'Cookie'},
             'cookie_id': ('django.db.models.fields.CharField', [], {'max_length': '32', 'db_index': 'True'}),
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
@@ -101,32 +101,32 @@ class Migration(SchemaMigration):
             'old_cookie_id': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
             'store_id': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'})
         },
-        u'affiliate.product': {
+        u'advertiser.product': {
             'Meta': {'object_name': 'Product'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'price': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
             'quantity': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'sku': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'transaction': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'products'", 'to': u"orm['affiliate.Transaction']"})
+            'transaction': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'products'", 'to': u"orm['advertiser.Transaction']"})
         },
-        u'affiliate.store': {
+        u'advertiser.store': {
             'Meta': {'object_name': 'Store'},
             'balance': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
             'commission_percentage': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
             'cookie_days': ('django.db.models.fields.PositiveIntegerField', [], {'default': '30'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'identifier': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '64'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'affiliate_store'", 'unique': 'True', 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': u"orm['profile.User']", 'blank': 'True', 'null': 'True'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'advertiser_store'", 'unique': 'True', 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': u"orm['profile.User']", 'blank': 'True', 'null': 'True'}),
             'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
         },
-        u'affiliate.storehistory': {
+        u'advertiser.storehistory': {
             'Meta': {'ordering': "['-created']", 'object_name': 'StoreHistory'},
             'balance': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'store': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'history'", 'to': u"orm['affiliate.Store']"})
+            'store': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'history'", 'to': u"orm['advertiser.Store']"})
         },
-        u'affiliate.transaction': {
+        u'advertiser.transaction': {
             'Meta': {'ordering': "['-created']", 'object_name': 'Transaction'},
             'commission': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '12', 'decimal_places': '2'}),
             'cookie_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
@@ -232,4 +232,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['affiliate']
+    complete_apps = ['advertiser']

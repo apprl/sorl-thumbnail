@@ -208,7 +208,7 @@ INSTALLED_APPS = (
     'djrill',
 
     # Internal
-    'affiliate',
+    'advertiser',
     'apparelrow.profile',              # Internal: User related module
     'apparelrow.apparel',              # Internal: Product display module
     'apparelrow.importer',             # Internal: Product importer module
@@ -463,7 +463,7 @@ CELERY_ROUTES = ({
     'apparelrow.apparel.tasks.product_popularity': {'queue': 'background'},
     'apparelrow.apparel.tasks.build_static_look_image': {'queue': 'standard'},
     'statistics.tasks.active_users': {'queue': 'standard'},
-    'affiliate.tasks.send_text_email_task': {'queue': 'standard'},
+    'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
 },)
 
 # LOGGING CONFIGURATION

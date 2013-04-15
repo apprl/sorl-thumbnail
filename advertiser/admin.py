@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.core import urlresolvers
 
-from affiliate.models import Store, StoreHistory, Product, Transaction, Cookie
+from advertiser.models import Store, StoreHistory, Product, Transaction, Cookie
 
 class StoreHistoryInline(admin.TabularInline):
     model = StoreHistory

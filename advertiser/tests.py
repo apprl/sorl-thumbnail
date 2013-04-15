@@ -14,26 +14,26 @@ from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 
-from affiliate.views import get_cookie_name
-from affiliate.models import Transaction, Store, StoreHistory, Cookie
+from advertiser.views import get_cookie_name
+from advertiser.models import Transaction, Store, StoreHistory, Cookie
 
-class AffiliateMixin:
+class AdvertiserMixin:
 
     def visit_link(self, store_id, url=None, custom=None):
         if url is None:
             url = 'http://www.mystore.com/myproduct/'
 
         if custom is None:
-            response = self.client.get('%s?store_id=%s&url=%s' % (reverse('affiliate-link'), store_id, url))
+            response = self.client.get('%s?store_id=%s&url=%s' % (reverse('advertiser-link'), store_id, url))
         else:
-            response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('affiliate-link'), store_id, url, custom))
+            response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
 
         self.assertEqual(response.status_code, 302)
 
         return response
 
     def checkout(self, *args, **kwargs):
-        response = self.client.get('%s?%s' % (reverse('affiliate-pixel'),
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'),
                                               urllib.urlencode(kwargs)))
         self.assertEqual(response.status_code, 200)
 
@@ -41,7 +41,7 @@ class AffiliateMixin:
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
-class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
+class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
 
     def setUp(self):
         """
@@ -51,7 +51,7 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
         self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
-        self.store = get_model('affiliate', 'Store').objects.create(identifier='mystore',
+        self.store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
                                                                     user=self.user1,
                                                                     commission_percentage='0.2',
                                                                     vendor=self.vendor)
@@ -60,24 +60,24 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
         """
         Test invalid order value.
         """
-        response = self.client.get('%s%s' % (reverse('affiliate-pixel'), '?store_id=mystore&order_id=1234&order_value=1234f&currency=SEK'))
+        response = self.client.get('%s%s' % (reverse('advertiser-pixel'), '?store_id=mystore&order_id=1234&order_value=1234f&currency=SEK'))
         self.assertContains(response, 'Order value must be a number.', count=1, status_code=400)
         self.assertEqual(len(mail.outbox), 1)
 
     def test_missing_required_parameters(self):
         """
-        Test missing required parameters for affiliate conversion pixel.
+        Test missing required parameters for advertiser conversion pixel.
         """
-        response = self.client.get(reverse('affiliate-pixel'))
+        response = self.client.get(reverse('advertiser-pixel'))
         self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
 
-        response = self.client.get('%s?store_id=mystore' % (reverse('affiliate-pixel'),))
+        response = self.client.get('%s?store_id=mystore' % (reverse('advertiser-pixel'),))
         self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
 
-        response = self.client.get('%s?store_id=mystore&order_id=1234' % (reverse('affiliate-pixel'),))
+        response = self.client.get('%s?store_id=mystore&order_id=1234' % (reverse('advertiser-pixel'),))
         self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
 
-        response = self.client.get('%s?store_id=mystore&order_id=1234&order_value=1234' % (reverse('affiliate-pixel'),))
+        response = self.client.get('%s?store_id=mystore&order_id=1234&order_value=1234' % (reverse('advertiser-pixel'),))
         self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
 
         self.assertEqual(len(mail.outbox), 4)
@@ -186,7 +186,7 @@ class AffiliateConversionPixelTest(TransactionTestCase, AffiliateMixin):
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
-class AffiliateLinkTest(TransactionTestCase, AffiliateMixin):
+class AdvertiserLinkTest(TransactionTestCase, AdvertiserMixin):
 
     def setUp(self):
         """
@@ -196,32 +196,32 @@ class AffiliateLinkTest(TransactionTestCase, AffiliateMixin):
         self.vendor2 = get_model('apparel', 'Vendor').objects.create(name='store2')
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
-        self.store1 = get_model('affiliate', 'Store').objects.create(identifier='store1',
+        self.store1 = get_model('advertiser', 'Store').objects.create(identifier='store1',
                                                                     user=self.user1,
                                                                     commission_percentage='0.2',
                                                                     vendor=self.vendor1)
-        self.store2 = get_model('affiliate', 'Store').objects.create(identifier='store2',
+        self.store2 = get_model('advertiser', 'Store').objects.create(identifier='store2',
                                                                      user=self.user2,
                                                                      commission_percentage='0.5',
                                                                      vendor=self.vendor2)
 
     def test_no_url_parameter(self):
-        response = self.client.get(reverse('affiliate-link'))
+        response = self.client.get(reverse('advertiser-link'))
         self.assertContains(response, 'Missing url parameter.', count=1, status_code=400)
 
     def test_no_store_id_parameter(self):
-        response = self.client.get('%s?url=%s' % (reverse('affiliate-link'), 'http://www.google.com/'))
+        response = self.client.get('%s?url=%s' % (reverse('advertiser-link'), 'http://www.google.com/'))
         self.assertContains(response, 'Missing store_id parameter.', count=1, status_code=400)
 
     def test_url_parameter(self):
         url = '/shop/women/'
 
-        response = self.client.get('%s?store_id=mystore&url=%s' % (reverse('affiliate-link'), url), follow=True)
+        response = self.client.get('%s?store_id=mystore&url=%s' % (reverse('advertiser-link'), url), follow=True)
         self.assertRedirects(response, url, status_code=302, target_status_code=200)
 
         url = 'http://www.google.com/'
 
-        response = self.client.get('%s?url=%s&store_id=mystore' % (reverse('affiliate-link'), url))
+        response = self.client.get('%s?url=%s&store_id=mystore' % (reverse('advertiser-link'), url))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], url)
         self.assertIn(get_cookie_name('mystore'), response.cookies)
@@ -264,7 +264,7 @@ class AffiliateLinkTest(TransactionTestCase, AffiliateMixin):
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
-class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
+class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
 
     def setUp(self):
         """
@@ -273,15 +273,15 @@ class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
         self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
-        self.store = get_model('affiliate', 'Store').objects.create(identifier='mystore',
+        self.store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
                                                                     user=self.user1,
                                                                     commission_percentage='0.2',
                                                                     vendor=self.vendor)
 
 
-    def test_affiliate_flow(self):
+    def test_advertiser_flow(self):
         """
-        Test affiliate flow.
+        Test advertiser flow.
 
         First visit a product redirect link which sets a cookie. Then visit the
         checkout page both with a valid and invalid store id.  Then login as the store
@@ -299,7 +299,7 @@ class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
         self.client.login(username='user1', password='user1')
 
         # Display list
-        response = self.client.get(reverse('affiliate-store-admin'))
+        response = self.client.get(reverse('advertiser-store-admin'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('transactions', response.context)
         self.assertEqual(len(response.context['transactions']), 1)
@@ -309,28 +309,28 @@ class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
         """
         self.client.login(username='user2', password='user2')
 
-        response = self.client.get(reverse('affiliate-store-admin'))
+        response = self.client.get(reverse('advertiser-store-admin'))
         self.assertEqual(response.status_code, 404)
 
     def test_admin_view_no_user(self):
         """
         """
-        response = self.client.get(reverse('affiliate-store-admin'))
+        response = self.client.get(reverse('advertiser-store-admin'))
         self.assertEqual(response.status_code, 302)
 
     def test_non_existent_transaction(self):
         self.client.login(username='user1', password='user1')
 
-        response = self.client.get(reverse('affiliate-admin-accept', args=[1000]))
+        response = self.client.get(reverse('advertiser-admin-accept', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.post(reverse('affiliate-admin-accept', args=[1000]))
+        response = self.client.post(reverse('advertiser-admin-accept', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.get(reverse('affiliate-admin-reject', args=[1000]))
+        response = self.client.get(reverse('advertiser-admin-reject', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.post(reverse('affiliate-admin-reject', args=[1000]))
+        response = self.client.post(reverse('advertiser-admin-reject', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
     def test_accept_transaction(self):
@@ -348,10 +348,10 @@ class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
 
         self.client.login(username='user1', password='user1')
 
-        response = self.client.get(reverse('affiliate-admin-accept', args=[transaction.pk]))
+        response = self.client.get(reverse('advertiser-admin-accept', args=[transaction.pk]))
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(reverse('affiliate-admin-accept', args=[transaction.pk]))
+        response = self.client.post(reverse('advertiser-admin-accept', args=[transaction.pk]))
         self.assertEqual(response.status_code, 200)
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
@@ -367,7 +367,7 @@ class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
         # Accept another transaction
         self.checkout(store_id='mystore', order_id='12345', order_value='100', currency='SEK')
         transaction = Transaction.objects.get(store_id='mystore', order_id=12345)
-        response = self.client.post(reverse('affiliate-admin-accept', args=[transaction.pk]))
+        response = self.client.post(reverse('advertiser-admin-accept', args=[transaction.pk]))
 
         store = Store.objects.get(user=self.user1)
         self.assertEqual(store.balance, decimal.Decimal('266.8'))
@@ -387,10 +387,10 @@ class AffiliateFlowTest(TransactionTestCase, AffiliateMixin):
 
         self.client.login(username='user1', password='user1')
 
-        response = self.client.get(reverse('affiliate-admin-reject', args=[transaction.pk]))
+        response = self.client.get(reverse('advertiser-admin-reject', args=[transaction.pk]))
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(reverse('affiliate-admin-reject', args=[transaction.pk]), {'message': 'wrong price'})
+        response = self.client.post(reverse('advertiser-admin-reject', args=[transaction.pk]), {'message': 'wrong price'})
         self.assertEqual(response.status_code, 200)
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)

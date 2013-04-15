@@ -29,8 +29,8 @@
             {% if request.user.is_partner %}
             <li><a href="{% url 'dashboard' %}">{% trans "Your dashboard" %}</a></li>
             {% endif %}
-            {% if request.user.affiliate_store %}
-            <li><a href="{% url 'affiliate-store-admin' %}">{% trans "Your store" %}</a></li>
+            {% if request.user.advertiser_store %}
+            <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
             {% endif %}
             <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
             <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>

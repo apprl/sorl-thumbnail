@@ -16,7 +16,7 @@
     $(function() {
         $('.btn-yes').on('click', function() {
             var message = $('#status_message').val();
-            $.post('{% url 'affiliate-admin-reject' transaction.id %}', {message: message}, function() { window.location.reload(); });
+            $.post('{% url 'advertiser-admin-reject' transaction.id %}', {message: message}, function() { window.location.reload(); });
 
             return false;
         });

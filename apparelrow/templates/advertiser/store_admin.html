@@ -42,7 +42,7 @@
     </div>
 </div>
 {% endblock body-header %}
-{% block body-classes %}one-column affiliate{% endblock body-classes %}
+{% block body-classes %}one-column advertiser{% endblock body-classes %}
 {% block body %}
 <div id="content">
     <ul class="total-stats group">
@@ -88,8 +88,8 @@
                     <td>{{ transaction.created }}</td>
                     <td>
                         {% if transaction.status == 'P' %}
-                        <a class="open-dialog btn btn-upper btn-positive" href="{% url 'affiliate-admin-accept' transaction.id %}">{% trans "Accept" %}</a>
-                        <a class="open-dialog btn btn-upper btn-negative" href="{% url 'affiliate-admin-reject' transaction.id %}">{% trans "Reject" %}</a>
+                        <a class="open-dialog btn btn-upper btn-positive" href="{% url 'advertiser-admin-accept' transaction.id %}">{% trans "Accept" %}</a>
+                        <a class="open-dialog btn btn-upper btn-negative" href="{% url 'advertiser-admin-reject' transaction.id %}">{% trans "Reject" %}</a>
                         {% else %}
                         {{ transaction.get_status_display }}<br>
                         {{ transaction.status_date }}

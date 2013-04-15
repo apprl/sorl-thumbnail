@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-08 13:23+0200\n"
+"POT-Creation-Date: 2013-04-15 15:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,8 +70,8 @@ msgid "brand mapped"
 msgstr ""
 
 #: apparel/admin.py:255 templates/base.html:372
-#: templates/affiliate/dialog_accept.html:8
-#: templates/affiliate/dialog_reject.html:12
+#: templates/advertiser/dialog_accept.html:8
+#: templates/advertiser/dialog_reject.html:12
 #: templates/apparel/look_editor.html:91 templates/apparel/look_editor.html:97
 #: templates/apparel/look_editor.html:103
 #: templates/apparel/look_editor.html:109
@@ -849,8 +849,8 @@ msgstr "Ett fel uppstod"
 msgid "I'm looking for..."
 msgstr "Jag letar efter..."
 
-#: templates/base.html:147 templates/affiliate/dialog_accept.html:9
-#: templates/affiliate/dialog_reject.html:13
+#: templates/base.html:147 templates/advertiser/dialog_accept.html:9
+#: templates/advertiser/dialog_reject.html:13
 #: templates/apparel/look_editor.html:89
 #: templates/apparel/look_editor.html:119
 #: templates/apparel/look_editor.html:130
@@ -878,8 +878,8 @@ msgstr "Dam"
 msgid "Matching products"
 msgstr "Träffar bland produkter"
 
-#: templates/base.html:191 templates/activity_feed/public_feed.html:15
-#: templates/activity_feed/user_feed.html:15
+#: templates/base.html:191 templates/activity_feed/public_feed.html:21
+#: templates/activity_feed/user_feed.html:21
 msgid "Show all products"
 msgstr "Visa alla produkter"
 
@@ -887,8 +887,8 @@ msgstr "Visa alla produkter"
 msgid "Matching looks"
 msgstr "Träffar bland looks"
 
-#: templates/base.html:196 templates/activity_feed/public_feed.html:23
-#: templates/activity_feed/user_feed.html:23
+#: templates/base.html:196 templates/activity_feed/public_feed.html:29
+#: templates/activity_feed/user_feed.html:29
 msgid "Show all looks"
 msgstr "Visa alla looks"
 
@@ -1050,7 +1050,7 @@ msgid "No updates"
 msgstr "Inga händelser"
 
 #: templates/activity_feed/feed.html:12 templates/apparel/brand_list.html:33
-#: templates/apparel/browse.html:51 templates/apparel/shop_embed.html:92
+#: templates/apparel/browse.html:54 templates/apparel/shop_embed.html:92
 #: templates/apparel/fragments/looks_large.html:65
 #: templates/apparel/fragments/looks_medium.html:12
 #: templates/apparel/fragments/user_list.html:12
@@ -1074,47 +1074,47 @@ msgstr ""
 "Följ dina favoritvarumärken, bloggare & vänner för att upptäcka mode du "
 "älskar."
 
-#: templates/activity_feed/public_feed.html:13
-#: templates/activity_feed/user_feed.html:13
+#: templates/activity_feed/public_feed.html:19
+#: templates/activity_feed/user_feed.html:19
 msgid "Trending products"
 msgstr "Populära produkter"
 
-#: templates/activity_feed/public_feed.html:17
-#: templates/activity_feed/user_feed.html:17
+#: templates/activity_feed/public_feed.html:23
+#: templates/activity_feed/user_feed.html:23
 msgid "Trending looks"
 msgstr "Populära looks"
 
-#: templates/activity_feed/public_feed.html:26
-#: templates/activity_feed/user_feed.html:26
+#: templates/activity_feed/public_feed.html:32
+#: templates/activity_feed/user_feed.html:32
 msgid "Latest updates"
 msgstr "Senaste händelser"
 
-#: templates/activity_feed/public_feed.html:30
-#: templates/activity_feed/user_feed.html:30
+#: templates/activity_feed/public_feed.html:36
+#: templates/activity_feed/user_feed.html:36
 msgid "Popular members"
 msgstr "Populära medlemmar"
 
-#: templates/activity_feed/public_feed.html:38
-#: templates/activity_feed/user_feed.html:38
+#: templates/activity_feed/public_feed.html:44
+#: templates/activity_feed/user_feed.html:44
 msgid "Show all members"
 msgstr "Visa alla medlemmar"
 
-#: templates/activity_feed/public_feed.html:40
-#: templates/activity_feed/user_feed.html:44
+#: templates/activity_feed/public_feed.html:46
+#: templates/activity_feed/user_feed.html:50
 msgid "Popular brands"
 msgstr "Populära varumärken"
 
-#: templates/activity_feed/public_feed.html:48
-#: templates/activity_feed/user_feed.html:52
+#: templates/activity_feed/public_feed.html:54
+#: templates/activity_feed/user_feed.html:58
 msgid "Show all brands"
 msgstr "Visa alla varumärken"
 
-#: templates/activity_feed/user_feed.html:40
+#: templates/activity_feed/user_feed.html:46
 #: templates/apparel/user_list.html:50
 msgid "Follow your friends!"
 msgstr "Följ dina vänner!"
 
-#: templates/activity_feed/user_feed.html:42
+#: templates/activity_feed/user_feed.html:48
 #: templates/apparel/user_list.html:19
 msgid "+ Invite your friends"
 msgstr "+ Bjud in vänner"
@@ -1236,74 +1236,84 @@ msgstr ""
 "%(title)s</a>\n"
 "    "
 
-#: templates/affiliate/dialog_accept.html:5
+#: templates/advertiser/dialog_accept.html:5
 msgid "Accept transaction?"
 msgstr "Godkänn transaktion?"
 
-#: templates/affiliate/dialog_reject.html:5
+#: templates/advertiser/dialog_reject.html:5
 msgid "Reject transaction?"
 msgstr "Varför ej godkänna transaktionen?"
 
-#: templates/affiliate/dialog_reject.html:8
+#: templates/advertiser/dialog_reject.html:8
 msgid "Describe your reason to reject the transaction."
 msgstr "Beskriv varför du ej vill godkänna transaktionen."
 
-#: templates/affiliate/store_admin.html:4
-#: templates/affiliate/store_admin.html:23
+#: templates/advertiser/store_admin.html:4
+#: templates/advertiser/store_admin.html:41
 #: templates/apparel/shared_header.html:33
 msgid "Your store"
 msgstr "Din butik"
 
-#: templates/affiliate/store_admin.html:31
+#: templates/advertiser/store_admin.html:14
+#, fuzzy
+msgid "Transactions"
+msgstr "Inga transaktioner"
+
+#: templates/advertiser/store_admin.html:15
+#: templates/dashboard/partner.html:31
+msgid "Clicks"
+msgstr ""
+
+#: templates/advertiser/store_admin.html:49
 msgid "Balance:"
 msgstr "Balans"
 
-#: templates/affiliate/store_admin.html:32
+#: templates/advertiser/store_admin.html:50
 msgid "Total accepted commission:"
 msgstr "Totalt godkänd provision:"
 
-#: templates/affiliate/store_admin.html:36 templates/dashboard/admin.html:71
+#: templates/advertiser/store_admin.html:54 templates/dashboard/admin.html:71
 #: templates/dashboard/partner.html:71
 msgid "Show: "
 msgstr "Visa: "
 
-#: templates/affiliate/store_admin.html:44
+#: templates/advertiser/store_admin.html:62
 msgid "Accepted commission this month:"
 msgstr "Godkänd provision denna månad:"
 
-#: templates/affiliate/store_admin.html:50
+#: templates/advertiser/store_admin.html:71
 msgid "Order ID"
 msgstr ""
 
-#: templates/affiliate/store_admin.html:51
+#: templates/advertiser/store_admin.html:72
 msgid "Order Value"
 msgstr "Order Värde"
 
-#: templates/affiliate/store_admin.html:52
+#: templates/advertiser/store_admin.html:73
 msgid "Commission"
 msgstr "Provision"
 
-#: templates/affiliate/store_admin.html:53
+#: templates/advertiser/store_admin.html:74
 msgid "Order Detail"
 msgstr "Order Detaljer"
 
-#: templates/affiliate/store_admin.html:54
+#: templates/advertiser/store_admin.html:75
 msgid "Time"
 msgstr "Tid"
 
-#: templates/affiliate/store_admin.html:55
+#: templates/advertiser/store_admin.html:76
 msgid "Order Status"
 msgstr "Order Status"
 
-#: templates/affiliate/store_admin.html:70
+#: templates/advertiser/store_admin.html:91
 msgid "Accept"
 msgstr "Godkänn"
 
-#: templates/affiliate/store_admin.html:71
+#: templates/advertiser/store_admin.html:92
 msgid "Reject"
 msgstr "Neka"
 
-#: templates/affiliate/store_admin.html:80
+#: templates/advertiser/store_admin.html:101
 msgid "No transactions"
 msgstr "Inga transaktioner"
 
@@ -1375,31 +1385,31 @@ msgstr "Dina vänner gillar"
 msgid "Sign up to see what your friends like."
 msgstr "Bli medlem för att se vad dina vänner gillar."
 
-#: templates/apparel/browse.html:5 templates/apparel/browse.html.py:27
+#: templates/apparel/browse.html:5 templates/apparel/browse.html.py:30
 msgid "Shop Men"
 msgstr "Shop Herr"
 
-#: templates/apparel/browse.html:5 templates/apparel/browse.html.py:27
+#: templates/apparel/browse.html:5 templates/apparel/browse.html.py:30
 msgid "Shop Women"
 msgstr "Shop Dam"
 
-#: templates/apparel/browse.html:31
+#: templates/apparel/browse.html:34
 msgid "Trending"
 msgstr "Popularitet"
 
-#: templates/apparel/browse.html:32
+#: templates/apparel/browse.html:35
 msgid "Latest"
 msgstr "Senaste"
 
-#: templates/apparel/browse.html:33
+#: templates/apparel/browse.html:36
 msgid "Low price"
 msgstr "Billigast"
 
-#: templates/apparel/browse.html:34
+#: templates/apparel/browse.html:37
 msgid "High price"
 msgstr "Dyrast"
 
-#: templates/apparel/browse.html:46 templates/apparel/shop_embed.html:84
+#: templates/apparel/browse.html:49 templates/apparel/shop_embed.html:84
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
@@ -2298,10 +2308,6 @@ msgstr "Vid frågor kontakta oss på"
 #: templates/dashboard/partner.html:13
 msgid "Commission (SEK)"
 msgstr "Provision (SEK)"
-
-#: templates/dashboard/partner.html:31
-msgid "Clicks"
-msgstr ""
 
 #: templates/dashboard/partner.html:64
 #, python-format

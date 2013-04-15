@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Store(models.Model):
     identifier = models.CharField(max_length=64, null=False, blank=False, unique=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='affiliate_store')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='advertiser_store')
     balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     commission_percentage = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     cookie_days = models.PositiveIntegerField(null=False, blank=False, default=30)
@@ -19,7 +19,7 @@ def store_post_save(sender, instance, **kwargs):
 
 
 class StoreHistory(models.Model):
-    store = models.ForeignKey('affiliate.Store', null=False, blank=False, on_delete=models.CASCADE, related_name='history')
+    store = models.ForeignKey('advertiser.Store', null=False, blank=False, on_delete=models.CASCADE, related_name='history')
     balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     created = models.DateTimeField(default=timezone.now, null=True, blank=True)
 
@@ -31,7 +31,7 @@ class StoreHistory(models.Model):
 
 
 class Product(models.Model):
-    transaction = models.ForeignKey('affiliate.Transaction', null=False, blank=False, on_delete=models.CASCADE, related_name='products')
+    transaction = models.ForeignKey('advertiser.Transaction', null=False, blank=False, on_delete=models.CASCADE, related_name='products')
     sku = models.CharField(max_length=255, null=False, blank=False)
     price = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     quantity = models.PositiveIntegerField(null=False, blank=False, default=0)
