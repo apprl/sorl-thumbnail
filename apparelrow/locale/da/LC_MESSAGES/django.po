@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-15 15:40+0200\n"
+"POT-Creation-Date: 2013-04-15 15:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1686,7 +1686,9 @@ msgstr ""
 
 #: templates/apparel/shared_header.html:30
 #: templates/dashboard/body_header.html:8
-msgid "Your dashboard"
+#: templates/dashboard/info_unauthenticated.html:20
+#: templates/dashboard/info_unauthenticated.html:61
+msgid "Your statistics"
 msgstr ""
 
 #: templates/apparel/shared_header.html:38
@@ -2155,11 +2157,6 @@ msgstr ""
 #: templates/dashboard/info.html:89
 #: templates/dashboard/info_unauthenticated.html:62
 msgid "You will be able to follow how much you’re making day by day."
-msgstr ""
-
-#: templates/dashboard/info_unauthenticated.html:20
-#: templates/dashboard/info_unauthenticated.html:61
-msgid "Your statistics"
 msgstr ""
 
 #: templates/dashboard/info_unauthenticated.html:37

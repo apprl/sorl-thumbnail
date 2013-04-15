@@ -27,7 +27,7 @@
         <ul class="subnav" id="subnav-profile">
             <li><a href="{{ request.user.url_likes }}">{% trans "Your profile" %}</a></li>
             {% if request.user.is_partner %}
-            <li><a href="{% url 'dashboard' %}">{% trans "Your dashboard" %}</a></li>
+            <li><a href="{% url 'dashboard' %}">{% trans "Your statistics" %}</a></li>
             {% endif %}
             {% if request.user.advertiser_store %}
             <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>

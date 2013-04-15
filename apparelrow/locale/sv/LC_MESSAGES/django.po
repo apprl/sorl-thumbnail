@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-15 15:40+0200\n"
+"POT-Creation-Date: 2013-04-15 15:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1721,7 +1721,9 @@ msgstr "Din profil"
 
 #: templates/apparel/shared_header.html:30
 #: templates/dashboard/body_header.html:8
-msgid "Your dashboard"
+#: templates/dashboard/info_unauthenticated.html:20
+#: templates/dashboard/info_unauthenticated.html:61
+msgid "Your statistics"
 msgstr "Din statistik"
 
 #: templates/apparel/shared_header.html:38
@@ -2219,11 +2221,6 @@ msgstr "Utbetalning"
 #: templates/dashboard/info_unauthenticated.html:62
 msgid "You will be able to follow how much you’re making day by day."
 msgstr "På din statistik kan du följa hur mycket du tjänar dag för dag."
-
-#: templates/dashboard/info_unauthenticated.html:20
-#: templates/dashboard/info_unauthenticated.html:61
-msgid "Your statistics"
-msgstr "Utbetalningar"
 
 #: templates/dashboard/info_unauthenticated.html:37
 msgid ""
@@ -3197,6 +3194,9 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:3
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
+
+#~ msgid "Your dashboard"
+#~ msgstr "Din statistik"
 
 #~ msgid "Show all"
 #~ msgstr "Visa alla"
