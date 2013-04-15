@@ -18,6 +18,9 @@
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
 {% endblock extra-styles %}
 {% block 'extra-scripts' %}
+    {% if not request.user.is_authenticated and gender == 'W' %}
+    <script src="//cdn.optimizely.com/js/180383028.js"></script>
+    {% endif %}
     {% include 'apparel/fragments/browse_scripts.html' %}
 {% endblock 'extra-scripts' %}
 

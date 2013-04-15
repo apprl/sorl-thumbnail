@@ -4,6 +4,12 @@
 {% block full-title %}Apprl - Social Shopping | {% trans "Apparel, shoes, bags & accessories from the best online stores" %}{% endblock %}
 {% block meta_description %}{% trans "Follow your favourite brands, bloggers & friends to discover fashion you love." %}{% endblock %}
 
+{% block 'extra-scripts' %}
+{% if not request.user.is_authenticated %}
+<script src="//cdn.optimizely.com/js/180383028.js"></script>
+{% endif %}
+{% endblock 'extra-scripts' %}
+
 {% block body-header %}
     {% include 'activity_feed/body_header.html' %}
 {% endblock body-header %}
