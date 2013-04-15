@@ -223,8 +223,8 @@ def product_detail(request, slug):
         user_looks = Look.published_objects.filter(user=request.user)
         is_in_wardrobe = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
 
-    looks_with_product = Look.published_objects.filter(components__product=product).order_by('-modified')[:2]
-    looks_with_product_count = Look.published_objects.filter(components__product=product).aggregate(Count('id')).get('id__count', 0)
+    looks_with_product = Look.published_objects.filter(components__product=product).distinct().order_by('-modified')[:2]
+    looks_with_product_count = Look.published_objects.filter(components__product=product).distinct().count()
 
     # Comments
     content_type = ContentType.objects.get_for_model(Product)
@@ -519,7 +519,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
         queryset = Look.published_objects.filter(id__in=[doc.django_id for doc in results.get_docs()])
     elif contains:
-        queryset = Look.published_objects.filter(id__in=LookComponent.objects.filter(product__slug=contains).values_list('look', flat=True))
+        queryset = Look.published_objects.filter(components__product__slug=contains).distinct()
     else:
         queryset = Look.published_objects.filter(gender__in=[gender, 'U']).order_by('-popularity')
 
