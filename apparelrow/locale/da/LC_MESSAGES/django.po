@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-15 15:47+0200\n"
+"POT-Creation-Date: 2013-04-16 08:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,6 @@ msgstr ""
 
 #: apparel/admin.py:255 templates/base.html:372
 #: templates/advertiser/dialog_accept.html:8
-#: templates/advertiser/dialog_reject.html:12
 #: templates/apparel/look_editor.html:91 templates/apparel/look_editor.html:97
 #: templates/apparel/look_editor.html:103
 #: templates/apparel/look_editor.html:109
@@ -1226,6 +1225,11 @@ msgstr ""
 msgid "Describe your reason to reject the transaction."
 msgstr ""
 
+#: templates/advertiser/dialog_reject.html:12
+#: templates/advertiser/store_admin.html:92
+msgid "Reject"
+msgstr ""
+
 #: templates/advertiser/store_admin.html:4
 #: templates/advertiser/store_admin.html:41
 #: templates/apparel/shared_header.html:33
@@ -1284,10 +1288,6 @@ msgstr ""
 
 #: templates/advertiser/store_admin.html:91
 msgid "Accept"
-msgstr ""
-
-#: templates/advertiser/store_admin.html:92
-msgid "Reject"
 msgstr ""
 
 #: templates/advertiser/store_admin.html:101

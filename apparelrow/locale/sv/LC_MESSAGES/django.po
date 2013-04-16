@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-15 15:47+0200\n"
+"POT-Creation-Date: 2013-04-16 08:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,6 @@ msgstr ""
 
 #: apparel/admin.py:255 templates/base.html:372
 #: templates/advertiser/dialog_accept.html:8
-#: templates/advertiser/dialog_reject.html:12
 #: templates/apparel/look_editor.html:91 templates/apparel/look_editor.html:97
 #: templates/apparel/look_editor.html:103
 #: templates/apparel/look_editor.html:109
@@ -1248,6 +1247,11 @@ msgstr "Varför ej godkänna transaktionen?"
 msgid "Describe your reason to reject the transaction."
 msgstr "Beskriv varför du ej vill godkänna transaktionen."
 
+#: templates/advertiser/dialog_reject.html:12
+#: templates/advertiser/store_admin.html:92
+msgid "Reject"
+msgstr "Godkänn ej"
+
 #: templates/advertiser/store_admin.html:4
 #: templates/advertiser/store_admin.html:41
 #: templates/apparel/shared_header.html:33
@@ -1255,14 +1259,13 @@ msgid "Your store"
 msgstr "Din butik"
 
 #: templates/advertiser/store_admin.html:14
-#, fuzzy
 msgid "Transactions"
-msgstr "Inga transaktioner"
+msgstr "Transaktioner"
 
 #: templates/advertiser/store_admin.html:15
 #: templates/dashboard/partner.html:31
 msgid "Clicks"
-msgstr ""
+msgstr "Klick"
 
 #: templates/advertiser/store_admin.html:49
 msgid "Balance:"
@@ -1308,10 +1311,6 @@ msgstr "Order Status"
 #: templates/advertiser/store_admin.html:91
 msgid "Accept"
 msgstr "Godkänn"
-
-#: templates/advertiser/store_admin.html:92
-msgid "Reject"
-msgstr "Neka"
 
 #: templates/advertiser/store_admin.html:101
 msgid "No transactions"
