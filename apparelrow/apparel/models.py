@@ -55,6 +55,9 @@ LOOK_COMPONENT_POSITIONED = (
 )
 
 
+logger = logging.getLogger('apparel.debug')
+
+
 #
 # Brand
 #
@@ -724,8 +727,13 @@ class Look(models.Model):
         """
         look = Look.objects.get(pk=look_id)
 
+        logger.debug('slug %s, look_id %s, published: %s' % (look.slug, look_id, look.published))
+
         genders = list(look.display_components.values_list('product__gender', flat=True))
         genders_len = float(len(genders))
+
+
+        logger.debug('genders %s and length %s' % (genders, genders_len))
 
         gender = 'U'
         if genders_len:
@@ -735,8 +743,9 @@ class Look(models.Model):
                 gender = 'W'
 
         if update:
+            logger.debug('update gender to %s' % (gender,))
             look.gender = gender
-            look.save()
+            look.save(update_fields=['gender'])
 
         return gender
 

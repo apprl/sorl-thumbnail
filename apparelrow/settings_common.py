@@ -498,6 +498,14 @@ LOGGING = {
             'maxBytes': 3000000,
             'backupCount': 8
         },
+        'apparel_debug': {
+            'level': 'NOTSET',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'apparel_debug.log'),
+            'maxBytes': 3000000,
+            'backupCount': 8
+        },
         'importer': {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -540,6 +548,11 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
             'handlers': ['mail_admins', 'app_core'],
+        },
+        'apparel.debug': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'handlers': ['apparel_debug'],
         },
         'advertiser': {
             'level': 'ERROR',
