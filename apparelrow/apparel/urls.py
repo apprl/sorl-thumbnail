@@ -112,7 +112,7 @@ urlpatterns = patterns('',
 
     # Look embed + dialog + widget
     url(r'^embed/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.embed', name='look-embed'),
-    url(r'^embed/look/(?P<language>\w+)/(?P<width>\d+)/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.embed', name='look-embed-full'),
+    url(r'^embed/look/(?P<identifier>\w+)/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.embed', name='look-embed-identifier'),
     url(r'^dialog/embed/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.dialog_embed', name='dialog-look-embed'),
     url(r'^widget/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.widget', name='look-widget'),
 

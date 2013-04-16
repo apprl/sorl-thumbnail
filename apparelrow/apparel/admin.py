@@ -138,6 +138,17 @@ class LookAdmin(admin.ModelAdmin):
 admin.site.register(Look, LookAdmin)
 
 #
+# LOOK EMBED
+#
+
+class LookEmbedAdmin(admin.ModelAdmin):
+    list_display = ('identifier', 'look', 'user', 'language', 'width', 'created')
+    list_filter = ('language',)
+
+admin.site.register(LookEmbed, LookEmbedAdmin)
+
+
+#
 # LOOK COMPONENT
 #
 

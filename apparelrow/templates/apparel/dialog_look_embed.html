@@ -28,6 +28,8 @@
             $('#id_embed_code').hide().parents('.control-group').show().find('.controls').append('<img style="margin-top:6px;" id="loading_image" src="{% static "images/loading_white.gif" %}">');
 
             jQuery.post("{% url 'look-widget' look.slug %}", data, function(response) {
+                var width = $(response).css('width').replace(/px/, '');
+                $('#id_width').val(width);
                 $('#id_embed_code').val(response).show();
                 $('#loading_image').remove();
             });
@@ -47,11 +49,7 @@
         <div class="control-group">
             <label class="control-label" for="id_width">{% trans "Width" %}</label>
             <div class="controls">
-                <select id="id_width" name="width">
-                    <option value="720">{% trans "720 pixels" %}</option>
-                    <option value="960">{% trans "960 pixels" %}</option>
-                    <option value="1200">{% trans "1200 pixels" %}</option>
-                </select>
+                <input type="text" id="id_width" name="width" value="{{ default_width }}"> {% trans "pixels" %}
             </div>
         </div>
         <div class="control-group">

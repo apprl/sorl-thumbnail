@@ -32,24 +32,21 @@ def look_like_products(request, look_id):
         _product_like(request, component.product, 'like')
 
 
-def embed(request, slug, language=None, width=None):
+def embed(request, slug, identifier=None):
     """
     Display look for use in embedded iframe.
     """
-    # Generate nginx key
-    if width is None and language is None:
-        nginx_key = reverse('look-embed', args=[slug])
-    else:
-        nginx_key = reverse('look-embed-full', args=[language, width, slug])
-
-    # Retrieve look
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
 
-    # Width
     try:
-        width = int(width)
-    except (ValueError, TypeError) as e:
+        look_embed = get_model('apparel', 'LookEmbed').objects.get(identifier=identifier)
+        width = look_embed.width
+        language = look_embed.language
+        nginx_key = reverse('look-embed-identifier', args=[identifier, slug])
+    except get_model('apparel', 'LookEmbed').DoesNotExist:
         width = look.width
+        language = 'en'
+        nginx_key = reverse('look-embed', args=[slug])
 
     # Height
     scale = width / float(look.width)
@@ -69,10 +66,6 @@ def embed(request, slug, language=None, width=None):
     for component in components:
         component.style_embed = component._style(max_width / float(look.width))
 
-    # Fix language and render template
-    if not language:
-        language = 'en'
-
     translation.activate(language)
     response = render(request, 'apparel/look_embed.html', {'object': look,
                                                            'components': components,
@@ -89,7 +82,8 @@ def embed(request, slug, language=None, width=None):
 def dialog_embed(request, slug):
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
 
-    return render(request, 'apparel/dialog_look_embed.html', {'look': look})
+    return render(request, 'apparel/dialog_look_embed.html', {'look': look,
+                                                              'default_width': look.width or 694})
 
 
 @login_required
@@ -102,13 +96,30 @@ def widget(request, slug):
     content = {}
     content['object'] = look
     content['language'] = request.POST.get('language', 'sv')
-    content['width'] = request.POST.get('width', '720')
 
-    scale = int(content['width']) / float(look.width)
+    # Width
+    content['width'] = int(request.POST.get('width', '720'))
+    if content['width'] < 600:
+        content['width'] = 600
+    elif content['width'] > 1200:
+        content['width'] = 1200
+
+    # Height
+    scale = content['width'] / float(look.width)
     content['height'] = int(math.ceil(look.height * scale))
     if look.display_with_component == 'P' and look.image:
         thumbnail = get_thumbnail(look.image, str(content['width']), upscale=False)
         content['height'] = min(thumbnail.height, content['height'])
+        content['width'] = min(thumbnail.width, content['width'])
+
+    LookEmbed = get_model('apparel', 'LookEmbed')
+    identifier = uuid.uuid4().hex
+    look_embed, created = LookEmbed.objects.get_or_create(look=look,
+                                                          user=request.user,
+                                                          language=content['language'],
+                                                          width=content['width'],
+                                                          defaults={'identifier': identifier})
+    content['identifier'] = look_embed.identifier
 
     return render(request, 'apparel/fragments/look_widget.html', content)
 

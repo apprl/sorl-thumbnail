@@ -852,8 +852,10 @@ def look_saved_handler(sender, look, **kwargs):
 
         # Empty look embedded cache
         get_cache('nginx').delete(reverse('look-embed', args=[look.slug]))
-        for language, size in itertools.product(settings.LANGUAGES, ['720', '900', '1200']):
-            get_cache('nginx').delete(reverse('look-embed-full', args=[language[0], size, look.slug]))
+
+        # Empty new look embedded cache
+        for look_embed in get_model('apparel', 'LookEmbed').objects.filter(look=look):
+            get_cache('nginx').delete(reverse('look-embed-identifier', args=[look_embed.identifier, look.slug]))
 
     # Calculate gender and add it to the current look object
     look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
@@ -871,6 +873,23 @@ def look_pre_delete(sender, instance, **kwargs):
 
     get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'create', instance)
 
+#
+# LookEmbed
+#
+
+class LookEmbed(models.Model):
+    """
+    Store a unique embed id for looks.
+    """
+    identifier = models.CharField(max_length=32, null=False, blank=False, unique=True)
+    look = models.ForeignKey(Look, related_name='embeds', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='look_embeds')
+    language = models.CharField(max_length=3, null=False, blank=False)
+    width = models.IntegerField(null=False, blank=False)
+    created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created']
 
 #
 # LookLike
