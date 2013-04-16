@@ -40,7 +40,7 @@ jQuery(document).ready(function() {
     // Full reset button
     jQuery(document).on('click', '#reset, .btn-reset', function() {
         // Every selected element is deselected
-        jQuery('#inner-container .selected, .container .selected').removeClass('selected');
+        jQuery('#inner-container .selected:not(#option-M, #option-W), .container .selected:not(#option-M, #option-W)').removeClass('selected');
 
         // Every active element is deactivated
         jQuery('#inner-container .active, .container .active').removeClass('active');
@@ -54,8 +54,11 @@ jQuery(document).ready(function() {
         // Initiate individual reset for stores filter
         jQuery('#product-stores').prev().find('.reset').click();
 
-        // Select both genders
-        jQuery('#product-gender li:first > a').addClass('selected');
+        // Select both genders (only embed)
+        if(typeof embed_shop_user_id !== 'undefined') {
+            jQuery('#product-gender li > a').removeClass('selected');
+            jQuery('#product-gender li:first > a').addClass('selected');
+        }
 
         // Sort by
         jQuery('.browse-sort li:first a').addClass('selected');
