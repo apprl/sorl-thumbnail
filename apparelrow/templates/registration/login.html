@@ -6,8 +6,8 @@
 
 <div id="content">
     <h1>{% trans "Login" %}</h1>
-    {% url 'profile-likes' as profile_likes %}
-    {% facebook_button next=profile_likes %}
+    {% url 'login-flow-redirect' as next_url %}
+    {% facebook_button next=next_url %}
     <p>{% trans "or:" %}</p>
     <form action="{% url 'auth_login' %}" method="post" class="standard-form">
         {% csrf_token %}

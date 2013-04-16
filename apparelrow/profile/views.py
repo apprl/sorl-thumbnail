@@ -589,7 +589,7 @@ def flow(request):
                             max_age=365 * 24 * 60 * 60)
         return response
 
-    return HttpResponseRedirect(reverse('profile-likes'))
+    return HttpResponseRedirect(reverse('user_feed'))
 
 
 def facebook_login(request):
