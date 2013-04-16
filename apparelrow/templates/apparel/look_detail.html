@@ -149,6 +149,9 @@
     </div>
 {% endcache %}
     <h2>{% trans "Likes" %}</h2>
+    {% if not likes %}
+    <p class="likes-text">{% trans "Be the first one to like this look!" %}</p>
+    {% else %}
     <ul id="likes" class="group">
     {% for like in likes %}
         {% if like.user and like.user %}
@@ -159,6 +162,7 @@
         </li>
         {% endif %}
     {% endfor %}
+    {% endif%}
     </ul>
 {% cache CACHE_TIMEOUT look_detail2 object.id LANGUAGE_CODE %}
     <div class="spread">
