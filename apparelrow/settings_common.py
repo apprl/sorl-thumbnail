@@ -541,6 +541,11 @@ LOGGING = {
             'propagate': False,
             'handlers': ['mail_admins', 'app_core'],
         },
+        'advertiser': {
+            'level': 'ERROR',
+            'propagate': False,
+            'handlers': ['app_core'],
+        },
         'apparel.importer': {
             'level': 'INFO',
             'propagate': False,

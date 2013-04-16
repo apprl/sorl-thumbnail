@@ -2,6 +2,7 @@ import datetime
 import decimal
 import calendar
 import uuid
+import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -16,6 +17,9 @@ import dateutil.parser
 
 from apparelrow.statistics.utils import get_client_ip
 from advertiser.tasks import send_text_email_task
+
+
+logger = logging.getLogger('advertiser')
 
 
 def get_cookie_name(store_id):
@@ -75,11 +79,16 @@ def pixel(request):
         status = Transaction.TOO_OLD
         cookie_datetime, cookie_id = cookie_data.split('|')
         cookie_datetime = dateutil.parser.parse(cookie_datetime)
-        cookie_instance = Cookie.objects.get(cookie_id=cookie_id)
+        try:
+            cookie_instance = Cookie.objects.get(cookie_id=cookie_id)
 
-        if cookie_datetime + datetime.timedelta(days=store.cookie_days) >= timezone.now():
-            custom = cookie_instance.custom
-            status = Transaction.PENDING
+            if cookie_datetime + datetime.timedelta(days=store.cookie_days) >= timezone.now():
+                custom = cookie_instance.custom
+                status = Transaction.PENDING
+        except Cookie.DoesNotExist as e:
+            email_body = render_to_string('advertiser/email_default_error.txt', locals())
+            mail_superusers('Advertiser Pixel Warning: could not find cookie in database', email_body)
+            logger.exception('Could not find cookie in database')
 
     # Calculate commission
     commission = 0
