@@ -959,9 +959,21 @@ class LookComponent(models.Model):
 
     def _style(self, scale=1):
         s = []
-        for attr in ('top', 'left', 'width', 'height'):
-            if(attr in self.__dict__.keys() and self.__dict__[attr] is not None):
-                s.append("%s: %spx;" % (attr.replace('_', '-'), self.__dict__[attr] * scale))
+
+        if self.component_of == 'P':
+            attrs = {}
+            for attr in ('top', 'left', 'width', 'height'):
+                if(attr in self.__dict__.keys() and self.__dict__[attr] is not None):
+                    attrs[attr] = self.__dict__[attr] * scale
+
+            s.append('width: %spx;' % (self.width,))
+            s.append('height: %spx;' % (self.height,))
+            s.append('top: %spx;' % (attrs['top'] + (attrs['height'] - self.height) / 2,))
+            s.append('left: %spx;' % (attrs['left'] + (attrs['width'] - self.width) / 2,))
+        else:
+            for attr in ('top', 'left', 'width', 'height'):
+                if(attr in self.__dict__.keys() and self.__dict__[attr] is not None):
+                    s.append("%s: %spx;" % (attr, self.__dict__[attr] * scale))
 
         if self.z_index:
             s.append('z-index: %s;' % (self.z_index,))
