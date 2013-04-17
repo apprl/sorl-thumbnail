@@ -1,32 +1,32 @@
 User-agent: googlebot
-Disallow:
+Disallow: /track/
 
 User-agent: msnbot
-Disallow:
+Disallow: /track/
 
 User-agent: yahoo-slurp
-Disallow:
+Disallow: /track/
 
 User-agent: teoma
-Disallow:
+Disallow: /track/
 
 User-agent: gigabot
-Disallow:
+Disallow: /track/
 
 User-agent: scrubby
-Disallow:
+Disallow: /track/
 
 User-agent: robozilla
-Disallow:
+Disallow: /track/
 
 User-agent: nutch
-Disallow:
+Disallow: /track/
 
 User-agent: ia_archiver
-Disallow:
+Disallow: /track/
 
 User-agent: baiduspider
-Disallow:
+Disallow: /track/
 
 User-agent: *
 Disallow: /
