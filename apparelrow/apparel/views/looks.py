@@ -82,8 +82,9 @@ def embed(request, slug, identifier=None):
 def dialog_embed(request, slug):
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
 
+    default_width = max(600, look.width or 694)
     return render(request, 'apparel/dialog_look_embed.html', {'look': look,
-                                                              'default_width': look.width or 694})
+                                                              'default_width': default_width})
 
 
 @login_required
