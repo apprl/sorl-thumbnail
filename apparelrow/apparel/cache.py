@@ -70,8 +70,10 @@ new_template_cache_map = {
         'look_detail3': ['id_language', lambda x: x.pk],
         'look_detail_metadesc': ['id_language', lambda x: x.pk],
         'look_detail_metaextra': ['id_language', lambda x: x.pk],
-        'look_list': ['id_language', lambda x: x.pk],
-        'look_list_profile': ['id_language', lambda x: x.pk],
+        'look_medium_content': ['id_language', lambda x: x.pk],
+        'look_medium_footer': ['id_language', lambda x: x.pk],
+        'look_large_content': ['id_language', lambda x: x.pk],
+        'look_large_footer': ['id_language', lambda x: x.pk],
         'look_sidebar': ['id_language', lambda x: x.pk],
     },
     'LookComponent': {
@@ -83,9 +85,11 @@ new_template_cache_map = {
         'look_detail3': ['id_language', lambda x: x.look_id],
         'look_detail_metadesc': ['id_language', lambda x: x.look_id],
         'look_detail_metaextra': ['id_language', lambda x: x.look_id],
-        'look_list': ['id_language', lambda x: x.look_id],
-        'look_list_profile': ['id_language', lambda x: x.look_id],
-        'look_sidebar': ['id_language', lambda x: x.pk],
+        'look_medium_content': ['id_language', lambda x: x.look_id],
+        'look_medium_footer': ['id_language', lambda x: x.look_id],
+        'look_large_content': ['id_language', lambda x: x.look_id],
+        'look_large_footer': ['id_language', lambda x: x.look_id],
+        'look_sidebar': ['id_language', lambda x: x.look_id],
 
     },
     'LookLike': {
@@ -97,13 +101,15 @@ new_template_cache_map = {
         'look_detail3': ['id_language', lambda x: x.look_id],
         'look_detail_metadesc': ['id_language', lambda x: x.look_id],
         'look_detail_metaextra': ['id_language', lambda x: x.look_id],
-        'look_list': ['id_language', lambda x: x.look_id],
-        'look_list_profile': ['id_language', lambda x: x.look_id],
-        'look_sidebar': ['id_language', lambda x: x.pk],
+        'look_medium_content': ['id_language', lambda x: x.look_id],
+        'look_medium_footer': ['id_language', lambda x: x.look_id],
+        'look_large_content': ['id_language', lambda x: x.look_id],
+        'look_large_footer': ['id_language', lambda x: x.look_id],
+        'look_sidebar': ['id_language', lambda x: x.look_id],
     },
     'Comment': {
-        'look_list': ['id_language', lambda x: x.object_pk],
-        'look_list_profile': ['id_language', lambda x: x.object_pk],
+        'look_medium_footer': ['id_language', lambda x: x.object_pk],
+        'look_large_footer': ['id_language', lambda x: x.object_pk],
     },
 }
 
