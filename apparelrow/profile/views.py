@@ -69,6 +69,8 @@ def likes(request, profile, form, page=0, gender=None):
     else:
         queryset = Product.published_objects.filter(likes__user=profile, likes__active=True).order_by('-availability', '-likes__modified')
 
+    queryset = queryset.select_related('manufacturer')
+
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
