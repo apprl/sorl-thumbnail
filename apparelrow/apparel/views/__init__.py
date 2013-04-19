@@ -543,8 +543,9 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 
+
 def look_detail(request, slug):
-    look = get_object_or_404(Look, slug=slug)
+    look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
 
     # Only show unpublished looks to creator
     if not look.published and look.user != request.user:
@@ -575,10 +576,20 @@ def look_detail(request, slug):
     # Base url
     base_url = request.build_absolute_uri('/')[:-1]
 
+    # Components
+    if look.display_with_component == 'C':
+        components = look.collage_components.select_related('product')
+    elif look.display_with_component == 'P':
+        components = look.photo_components.select_related('product')
+
+    for component in components:
+        component.style_embed = component._style(min(694, look.image_width) / float(look.width))
+
     return render_to_response(
             'apparel/look_detail.html',
             {
                 'object': look,
+                'components': components,
                 'looks_by_user': looks_by_user,
                 'tooltips': True,
                 'object_url': request.build_absolute_uri(look.get_absolute_url()),

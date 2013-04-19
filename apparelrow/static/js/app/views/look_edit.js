@@ -277,7 +277,14 @@ App.Views.LookEdit = Backbone.View.extend({
 
                 self.$el.find('.look-container').css({width: new_width, height: new_height});
                 self.$el.css({width: new_width});
-                self.model.set({width: new_width, height: new_height});
+
+                var image_width = this.width;
+                var image_height = this.height;
+                if(typeof this.naturalWidth !== 'undefined' && typeof this.naturalHeight !== 'undefined') {
+                    image_width = this.naturalWidth;
+                    image_height = this.naturalHeight;
+                }
+                self.model.set({width: new_width, height: new_height, image_width: image_width, image_height: image_height});
             }
             this.local_image.src = this.model.get('image');
         } else {

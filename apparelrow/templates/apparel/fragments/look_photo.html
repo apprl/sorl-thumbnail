@@ -1,14 +1,13 @@
-{% load thumbnail %}
-{% load i18n %}
+{% load thumbnail i18n apparel_extras %}
 <div id="photo-background" class="look-photo"
     {% if object.image %}
-    {% thumbnail object.image "694x524" as im %}
+    {% thumbnail object.image "694" upscale=False as im %}
     style="background-image: url('{{ im.url }}'); width: {{ im.width }}px; height: {{ im.height }}px"
     {% endthumbnail %}
     {% endif %}
 >
-    {% for component in object.photo_components.all %}
-        {% include "apparel/fragments/look_photo_product.html" %}
+    {% for component in components %}
+        <a href="{% internal_referral_url component.product.get_absolute_url object.user.pk %}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style_embed }}"></a>
         {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
     {% endfor %}
 </div>

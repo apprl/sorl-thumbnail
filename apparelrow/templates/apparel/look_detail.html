@@ -15,7 +15,7 @@
     <meta property="og:site_name" content="{{ CURRENT_NAME }}"/>
     <meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}"/>
     <meta property="{{ FACEBOOK_OG_TYPE }}:likes" content="{{ object.score }}"/>
-    <meta property="{{ FACEBOOK_OG_TYPE }}:products" content="{{ object.display_components.count }}"/>
+    <meta property="{{ FACEBOOK_OG_TYPE }}:products" content="{{ components|length }}"/>
     {% endcache %}
 {% endblock extra-styles %}
 
@@ -202,7 +202,7 @@
     {% else %}
         <div class="look-large photo">
             {% cache CACHE_TIMEOUT look_detail3 object.id LANGUAGE_CODE %}
-            {% include 'apparel/fragments/look_photo.html' %}
+            {% include 'apparel/fragments/look_photo.html' with object=object components=components only %}
             {% endcache %}
             <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
         </div>

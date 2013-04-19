@@ -701,6 +701,9 @@ class Look(models.Model):
     height      = models.IntegerField(blank=False, null=False, default=524)
     published   = models.BooleanField(default=False)
 
+    image_width = models.IntegerField(blank=False, null=False, default=694)
+    image_height = models.IntegerField(blank=False, null=False, default=524)
+
     objects = models.Manager()
     published_objects = LookManager()
 

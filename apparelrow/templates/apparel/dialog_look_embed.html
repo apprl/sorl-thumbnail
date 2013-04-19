@@ -28,8 +28,14 @@
             $('#id_embed_code').hide().parents('.control-group').show().find('.controls').append('<img style="margin-top:6px;" id="loading_image" src="{% static "images/loading_white.gif" %}">');
 
             jQuery.post("{% url 'look-widget' look.slug %}", data, function(response) {
-                var width = $(response).css('width').replace(/px/, '');
-                $('#id_width').val(width);
+                var actual_width = $(response).css('width').replace(/px/, '');
+                var width = $('#id_width').val();
+                if (actual_width != width) {
+                    $('.interval').addClass('error');
+                } else {
+                    $('.interval').removeClass('error');
+                }
+                $('#id_width').val(actual_width);
                 $('#id_embed_code').val(response).show();
                 $('#loading_image').remove();
             });
@@ -49,7 +55,7 @@
         <div class="control-group">
             <label class="control-label" for="id_width">{% trans "Width" %}</label>
             <div class="controls">
-                <input type="text" id="id_width" name="width" value="{{ default_width }}"> {% trans "pixels" %}<br>{% trans "(min. 600, max. 1200)" %}
+                <input type="text" id="id_width" name="width" value="{{ default_width }}"> {% trans "pixels" %}<br><span class="interval">(min. 600, max. {{ max_width }})</span>
             </div>
         </div>
         <div class="control-group">
