@@ -50,8 +50,6 @@
 {% block body %}
 <div id="content">
     <h1>{% trans "Embed look on your site / blog" %}</h1>
-    <a class="go-back" href="{% url 'look-detail' slug=look.slug %}">{% trans "<< Go back to your look" %}</a>
-    <br>
     <p>{% trans "It's easy to embed a look on your blog/site.  Enter your preferred format below and paste the embed-code (In HTML-mode) into your blog/site." %}</p>
     <form id="embed_shop_form" class="form-horizontal">
         <div class="control-group">
@@ -79,6 +77,11 @@
             <label class="control-label" for="id_embed_code">{% trans "Embed code" %}</label>
             <div class="controls">
                 <textarea id="id_embed_code" name="embed_code"></textarea>
+            </div>
+        </div>
+        <div class="control-group go-back">
+            <div class="controls">
+                <a class="go-back" href="{% url 'look-detail' slug=look.slug %}">{% trans "<< Go back to your look" %}</a>
             </div>
         </div>
     </form>

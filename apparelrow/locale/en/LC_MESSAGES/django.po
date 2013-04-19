@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-19 13:22+0200\n"
+"POT-Creation-Date: 2013-04-19 14:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -722,7 +722,7 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: profile/models.py:52 templates/apparel/dialog_look_embed.html:64
+#: profile/models.py:52 templates/apparel/dialog_look_embed.html:62
 #: templates/profile/embed_shop.html:67
 msgid "Language"
 msgstr ""
@@ -1393,33 +1393,33 @@ msgid "Embed look on your site / blog"
 msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:53
-msgid "<< Go back to your look"
-msgstr ""
-
-#: templates/apparel/dialog_look_embed.html:55
 msgid ""
 "It's easy to embed a look on your blog/site.  Enter your preferred format "
 "below and paste the embed-code (In HTML-mode) into your blog/site."
 msgstr ""
 
-#: templates/apparel/dialog_look_embed.html:58
+#: templates/apparel/dialog_look_embed.html:56
 #: templates/profile/embed_shop.html:51
 msgid "Width"
 msgstr ""
 
-#: templates/apparel/dialog_look_embed.html:60
+#: templates/apparel/dialog_look_embed.html:58
 #: templates/profile/embed_shop.html:63
 msgid "pixels"
 msgstr ""
 
-#: templates/apparel/dialog_look_embed.html:75
+#: templates/apparel/dialog_look_embed.html:73
 #: templates/profile/embed_shop.html:86
 msgid "Get embed code"
 msgstr ""
 
-#: templates/apparel/dialog_look_embed.html:79
+#: templates/apparel/dialog_look_embed.html:77
 #: templates/profile/embed_shop.html:90
 msgid "Embed code"
+msgstr ""
+
+#: templates/apparel/dialog_look_embed.html:83
+msgid "<< Go back to your look"
 msgstr ""
 
 #: templates/apparel/look_create.html:5 templates/apparel/look_create.html:13
@@ -1514,15 +1514,15 @@ msgstr ""
 msgid "Be the first one to like this look!"
 msgstr ""
 
-#: templates/apparel/look_detail.html:181
+#: templates/apparel/look_detail.html:182
 msgid "Embed on your blog / site"
 msgstr ""
 
-#: templates/apparel/look_detail.html:185
+#: templates/apparel/look_detail.html:187
 msgid "More looks by"
 msgstr ""
 
-#: templates/apparel/look_detail.html:189
+#: templates/apparel/look_detail.html:191
 #: templates/apparel/product_detail.html:173
 msgid "See all looks"
 msgstr ""
