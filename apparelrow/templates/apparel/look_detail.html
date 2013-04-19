@@ -177,9 +177,11 @@
             <script type="text/javascript">var addthis_config = {"data_track_addressbar":false};</script>
             <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-500ff11c3e1dc781"></script>
         </div>
+        {% if request.user == object.user %}
         <div class="last">
             <a class="btn btn-upper btn-block" href="{% url 'dialog-look-embed' object.slug %}">{% trans "Embed on your blog / site" %}</a>
         </div>
+        {% endif %}
     </div>
     {% if looks_by_user %}
     <h2>{% trans "More looks by" %} {{ object.user.display_name }}</h2>
