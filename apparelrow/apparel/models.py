@@ -707,6 +707,10 @@ class Look(models.Model):
     objects = models.Manager()
     published_objects = LookManager()
 
+    def save(self, *args, **kwargs):
+        logger.debug('save slug %s, look_id %s, published: %s, gender: %s' % (self.slug, self.pk, self.published, self.gender))
+        super(Look, self).save(*args, **kwargs)
+
     @staticmethod
     def build_static_image(look_id):
         """
