@@ -720,7 +720,7 @@ class Look(models.Model):
 
         # Build temporary static look image
         look.static_image = 'static/images/white.png'
-        look.save()
+        look.save(update_fields=['static_image', 'modified'])
 
         # Build static look image in background
         build_static_look_image.delay(look.pk)
@@ -753,7 +753,7 @@ class Look(models.Model):
         if update:
             logger.debug('update gender to %s' % (gender,))
             look.gender = gender
-            look.save(update_fields=['gender'])
+            look.save(update_fields=['gender', 'modified'])
 
         return gender
 

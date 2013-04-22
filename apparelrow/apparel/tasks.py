@@ -291,4 +291,4 @@ def build_static_look_image(look_id):
     # refresh thumbnail in mails
     get_thumbnail(look.static_image, '576', crop='noop')
 
-    look.save()
+    look.save(update_fields=['static_image', 'width', 'height', 'modified'])
