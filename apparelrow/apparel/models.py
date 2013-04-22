@@ -853,6 +853,9 @@ def look_saved_handler(sender, look, **kwargs):
         logging.warning('Trying to register an activity on post_save, but %s has not user attribute' % look)
         return
 
+    # Calculate gender and add it to the current look object
+    look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
+
     if kwargs.get('update', True):
         # Build static image
         get_model('apparel', 'Look').build_static_image(look.pk)
@@ -863,9 +866,6 @@ def look_saved_handler(sender, look, **kwargs):
         # Empty new look embedded cache
         for look_embed in get_model('apparel', 'LookEmbed').objects.filter(look=look):
             get_cache('nginx').delete(reverse('look-embed-identifier', args=[look_embed.identifier, look.slug]))
-
-    # Calculate gender and add it to the current look object
-    look.gender = get_model('apparel', 'Look').calculate_gender(look.pk)
 
     if look.published == True:
         get_model('activity_feed', 'activity').objects.push_activity(look.user, 'create', look, look.gender)
