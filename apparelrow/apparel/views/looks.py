@@ -2,6 +2,7 @@ import json
 import base64
 import uuid
 import math
+import decimal
 
 from django.conf import settings
 from django.core.cache import get_cache
@@ -20,10 +21,10 @@ from sorl.thumbnail import get_thumbnail
 from apparelrow.profile.utils import get_facebook_user
 
 from apparelrow.apparel.signals import look_saved
-from apparelrow.apparel.utils import JSONResponse, set_query_parameter
+from apparelrow.apparel.utils import JSONResponse, set_query_parameter, currency_exchange
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
 from apparelrow.apparel.views import _product_like
-
+from apparelrow.apparel.search import ApparelSearch
 
 def look_like_products(request, look_id):
     look = get_model('apparel', 'Look').objects.get(pk=look_id)
@@ -63,8 +64,36 @@ def embed(request, slug, identifier=None):
             max_width = min(thumbnail.width, width)
             height = min(thumbnail.height, height)
 
+
+    language_currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
+    query_arguments = {'rows': 1, 'start': 0,
+                       'fl': 'price,discount_price',
+                       'sort': 'price asc, popularity desc, created desc'}
     for component in components:
         component.style_embed = component._style(max_width / float(look.width))
+
+        if request.GET.get('alternative'):
+            colors_pk = list(map(str, component.product.options.filter(option_type__name='color').values_list('pk', flat=True)))
+            query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
+            query_arguments['fq'].append('gender:(%s OR U)' % (component.product.gender,))
+            query_arguments['fq'].append('category:%s' % (component.product.category_id))
+            if colors_pk:
+                query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
+            search = ApparelSearch('*:*', **query_arguments)
+            docs = search.get_docs()
+            if docs:
+                shop_reverse = 'shop-men' if component.product.gender == 'M' else 'shop-women'
+                shop_url = '%s#category=%s' % (reverse(shop_reverse),
+                                                        component.product.category_id)
+                if colors_pk:
+                    shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+
+                price, currency = docs[0].price.split(',')
+                rate = currency_exchange(language_currency, currency)
+                price = rate * decimal.Decimal(price)
+                price = price.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
+
+                component.alternative = (shop_url, price, language_currency)
 
     translation.activate(language)
     response = render(request, 'apparel/look_embed.html', {'object': look,

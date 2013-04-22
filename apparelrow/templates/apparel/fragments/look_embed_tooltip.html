@@ -1,0 +1,37 @@
+{% load i18n thumbnail thumbnail_extras apparel_extras buy_extras %}
+<div id="tooltip-{{ product.id }}" class="tooltip">
+    <div class="tooltip-container">
+        <a target="_blank" {% if product.default_vendor and product.default_vendor.availability != 0 %}href="{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}" class="product-image btn-buy-external" data-sid="{% get_sid owner.pk 'Ext-Look' %}" data-slug="{{ product.slug }}" data-vendor="{{ product.default_vendor.vendor }}" data-price="{{ product.default_vendor.lowest_price_in_sek|floatformat:0 }}"{% else %}href="{% internal_referral_url product.get_absolute_url owner.pk %}" class="product-image"{% endif %} title="{{ product }}">
+            {% thumbnail product.product_image "90x115" crop=False as im %}
+            <img src="{{ im.url }}" alt="{{ product.alt_text }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|positive_margin:'90x115' }}">
+            {% endthumbnail %}
+        </a>
+        <div class="product-meta">
+            <a target="_blank" {% if product.default_vendor and product.default_vendor.availability != 0 %}href="{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}" class="btn-buy-external" data-sid="{% get_sid owner.pk 'Ext-Look' %}" data-slug="{{ product.slug }}" data-vendor="{{ product.default_vendor.vendor }}" data-price="{{ product.default_vendor.lowest_price_in_sek|floatformat:0 }}"{% else %}href="{% internal_referral_url product.get_absolute_url owner.pk %}"{% endif %} title="{{ product }}">
+                <h2>{{ product.manufacturer.name }}</h2>
+            </a>
+            <p class="product_name">{{ product.product_name }}</p>
+            {% if product.default_vendor %}
+            <div class="vendor_price">
+                {% with product.default_vendor as vendor %}
+                {% if vendor.discount_price %}
+                <span class="discount-price price">{{ vendor.locale_discount_price|floatformat:0|apprl_intcomma }}&#160;</span>
+                {% endif %}
+                <span class="price"{% if vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ vendor.locale_price|floatformat:0|apprl_intcomma }}</span>&#160;<span class="currency">{{ vendor.locale_currency }}</span>
+                {% endwith %}
+            </div>
+            {% endif %}
+            <div class="vendor_button">
+                {% if product.default_vendor and product.default_vendor.availability != 0 %}
+                <a target="_blank" class="btn btn-upper btn-block btn-look-tooltip btn-buy-external" href="{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}" data-sid="{% get_sid owner.pk 'Ext-Look' %}" data-slug="{{ product.slug }}" data-vendor="{{ product.default_vendor.vendor }}" data-price="{{ product.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+                {% else %}
+                <a target="_blank" href="{% internal_referral_url product.get_absolute_url owner.pk %}" class="btn btn-upper btn-block btn-look-tooltip">{% trans "Sold out" %}</a>
+                {% endif %}
+                {% if get_alternative %}
+                <a href="{{ alternative.0 }}">{% trans "More alternatives from " %}{{ alternative.1 }} {{ alternative.2}}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="tooltip-arrow"></div>
+</div>

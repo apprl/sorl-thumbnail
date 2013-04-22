@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-19 14:13+0200\n"
+"POT-Creation-Date: 2013-04-22 15:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,8 +50,8 @@ msgid "Nor (NOK)"
 msgstr ""
 
 #: activity_feed/models.py:73 activity_feed/models.py:122
-#: apparel/models.py:373 apparel/models.py:694 apparel/models.py:892
-#: apparel/models.py:907 apparel/models.py:1044 dashboard/models.py:59
+#: apparel/models.py:373 apparel/models.py:694 apparel/models.py:896
+#: apparel/models.py:911 apparel/models.py:1048 dashboard/models.py:59
 #: dashboard/models.py:78 dashboard/models.py:112 profile/models.py:346
 #: statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
@@ -59,7 +59,7 @@ msgstr ""
 
 #: activity_feed/models.py:74 apparel/models.py:227 apparel/models.py:374
 #: apparel/models.py:441 apparel/models.py:492 apparel/models.py:695
-#: apparel/models.py:908 dashboard/models.py:60 dashboard/models.py:79
+#: apparel/models.py:912 dashboard/models.py:60 dashboard/models.py:79
 #: profile/models.py:347
 msgid "Time modified"
 msgstr ""
@@ -368,39 +368,39 @@ msgstr ""
 msgid "What compontent to show"
 msgstr ""
 
-#: apparel/models.py:952
+#: apparel/models.py:956
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:953
+#: apparel/models.py:957
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:954
+#: apparel/models.py:958
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:955
+#: apparel/models.py:959
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:956
+#: apparel/models.py:960
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:957
+#: apparel/models.py:961
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1064
+#: apparel/models.py:1068
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1098
+#: apparel/models.py:1102
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1098
+#: apparel/models.py:1102
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -1418,7 +1418,7 @@ msgstr ""
 msgid "Embed code"
 msgstr ""
 
-#: templates/apparel/dialog_look_embed.html:83
+#: templates/apparel/dialog_look_embed.html:84
 msgid "<< Go back to your look"
 msgstr ""
 
@@ -1812,11 +1812,7 @@ msgstr ""
 msgid "You need to become a member to ♥ a product."
 msgstr ""
 
-#: templates/apparel/fragments/look_medium.html:37
-#: templates/apparel/fragments/looks_large.html:42
-msgid "By"
-msgstr ""
-
+#: templates/apparel/fragments/look_embed_tooltip.html:26
 #: templates/apparel/fragments/look_product_tooltip.html:38
 #: templates/apparel/fragments/product_detail.html:69
 #: templates/apparel/fragments/product_feed_226.html:19
@@ -1826,6 +1822,7 @@ msgstr ""
 msgid "Buy"
 msgstr ""
 
+#: templates/apparel/fragments/look_embed_tooltip.html:28
 #: templates/apparel/fragments/look_product_tooltip.html:40
 #: templates/apparel/fragments/product_detail.html:67
 #: templates/apparel/fragments/product_detail.html:73
@@ -1833,6 +1830,15 @@ msgstr ""
 #: templates/apparel/fragments/product_feed_452.html:17
 #: templates/profile/fragments/product_likes.html:17
 msgid "Sold out"
+msgstr ""
+
+#: templates/apparel/fragments/look_embed_tooltip.html:30
+msgid "More alternatives from "
+msgstr ""
+
+#: templates/apparel/fragments/look_medium.html:37
+#: templates/apparel/fragments/looks_large.html:42
+msgid "By"
 msgstr ""
 
 #: templates/apparel/fragments/pagination.html:4
