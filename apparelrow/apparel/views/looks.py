@@ -83,7 +83,7 @@ def embed(request, slug, identifier=None):
             docs = search.get_docs()
             if docs:
                 shop_reverse = 'shop-men' if component.product.gender == 'M' else 'shop-women'
-                shop_url = '%s#category=%s' % (reverse(shop_reverse),
+                shop_url = '%s#sort=che&category=%s' % (reverse(shop_reverse),
                                                         component.product.category_id)
                 if colors_pk:
                     shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
