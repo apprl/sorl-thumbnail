@@ -138,6 +138,11 @@
         <a href="looks" class="btn btn-block btn-upper">{% trans "See all looks" %}</a>
         {% endif %}
     </div>
+    {% else %}
+    <div class="product-looks">
+        <h2 id="looks">{% trans "Looks with this product" %}</h2>
+        <a class="btn btn-upper" href="{% url 'look-create' %}">{% trans "Create a look" %}</a>
+    </div>
     {% endif %}
 
 </div>
