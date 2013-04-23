@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-22 15:58+0200\n"
+"POT-Creation-Date: 2013-04-23 14:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1553,7 +1553,7 @@ msgid "More looks by"
 msgstr "Fler looks av"
 
 #: templates/apparel/look_detail.html:191
-#: templates/apparel/product_detail.html:173
+#: templates/apparel/fragments/product_detail.html:120
 msgid "See all looks"
 msgstr "Visa alla looks"
 
@@ -1716,32 +1716,19 @@ msgstr "Till bloggen »"
 msgid "Be the first one to like this product!"
 msgstr "Bli den första att gilla den här produkten!"
 
-#: templates/apparel/product_detail.html:159
-msgid "Recently viewed"
-msgstr "Senast besökta"
-
-#: templates/apparel/product_detail.html:169
-#, python-format
-msgid "<span class=\"count\">%(counter)s</span> look with this product"
-msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
-msgstr[0] "<span class=\"count\">%(counter)s</span> look med denna produkt"
-msgstr[1] "<span class=\"count\">%(counter)s</span> looks med denna produkt"
-
-#: templates/apparel/product_detail.html:180
+#: templates/apparel/product_detail.html:161
 msgid "You may also like"
 msgstr "Se även"
 
-#: templates/apparel/product_detail.html:182
-#: templates/apparel/fragments/product_row.html:3
+#: templates/apparel/product_detail.html:163
 msgid "Previous"
 msgstr "Föregående"
 
-#: templates/apparel/product_detail.html:190
-#: templates/apparel/fragments/product_row.html:13
+#: templates/apparel/product_detail.html:171
 msgid "Next"
 msgstr "Nästa"
 
-#: templates/apparel/product_detail.html:197
+#: templates/apparel/product_detail.html:178
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
@@ -1810,11 +1797,8 @@ msgstr ""
 "För att se vilka produkter som är populära bland dina vänner behöver du "
 "först hitta vänner att följa bland våra medlemmar."
 
-#: templates/apparel/fragments/comment_count.html:2
-msgid "comments"
-msgstr "kommentarer"
-
 #: templates/apparel/fragments/dialog_create_look.html:5
+#: templates/apparel/fragments/product_detail.html:126
 msgid "Create a look"
 msgstr "Skapa en look"
 
@@ -1870,7 +1854,7 @@ msgstr "Köp"
 msgid "Sold out"
 msgstr "Slut"
 
-#: templates/apparel/fragments/look_embed_tooltip.html:30
+#: templates/apparel/fragments/look_embed_tooltip.html:31
 msgid "More alternatives from "
 msgstr "Fler alternativ från "
 
@@ -1908,6 +1892,17 @@ msgstr ""
 #: templates/apparel/fragments/product_detail.html:93
 msgid "Get product link"
 msgstr "Hämta produktlänk"
+
+#: templates/apparel/fragments/product_detail.html:101
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> look with this product"
+msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
+msgstr[0] "<span class=\"count\">%(counter)s</span> look med denna produkt"
+msgstr[1] "<span class=\"count\">%(counter)s</span> looks med denna produkt"
+
+#: templates/apparel/fragments/product_detail.html:125
+msgid "Looks with this product"
+msgstr ""
 
 #: templates/apparel/fragments/product_menu.html:7
 #: templates/apparel/fragments/product_menu.html:17
@@ -1953,6 +1948,10 @@ msgstr ""
 #: templates/apparel/fragments/product_popup.html:35
 msgid "Add to look"
 msgstr "Lägg i look"
+
+#: templates/apparel/fragments/product_shop.html:33
+msgid "See looks"
+msgstr "Se looks"
 
 #: templates/apparel/fragments/product_short_link.html:2
 msgid "Your product link"
@@ -3220,6 +3219,12 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:3
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
+
+#~ msgid "Recently viewed"
+#~ msgstr "Senast besökta"
+
+#~ msgid "comments"
+#~ msgstr "kommentarer"
 
 #~ msgid "Show all"
 #~ msgstr "Visa alla"

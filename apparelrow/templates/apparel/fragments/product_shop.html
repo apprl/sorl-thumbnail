@@ -29,6 +29,9 @@
             {% endif %}
         </p>
         {% endif %}
+        {% if has_looks %}
+        <p><a class="looks" href="{% url 'product-look-list' contains=object.slug %}">{% trans "See looks" %}</a></p>
+        {% endif %}
     </div>
 </div>
 </li>

@@ -237,7 +237,9 @@ def get_product_document(instance):
 
         user_likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', flat=True))
 
-        template_browse = render_to_string('apparel/fragments/product_shop.html', {'object': instance})
+        has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
+
+        template_browse = render_to_string('apparel/fragments/product_shop.html', {'object': instance, 'has_looks': has_looks})
         template_mlt = render_to_string('apparel/fragments/product_small_no_price.html', {'object': instance})
 
         document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
