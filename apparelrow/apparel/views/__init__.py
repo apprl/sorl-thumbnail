@@ -205,17 +205,6 @@ def follow_unfollow(request, profile_id, do_follow=True):
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, published=True, gender__isnull=False)
-    viewed_products = request.session.get('viewed_products', [])
-    try:
-        viewed_products.remove(product.id)
-    except ValueError:
-        pass
-
-    request.session['viewed_products'] = [product.id]
-    request.session['viewed_products'].extend(viewed_products)
-
-    for p in Product.objects.filter(pk__in=viewed_products):
-        viewed_products[viewed_products.index(p.id)] = p
 
     is_in_wardrobe = False
     user_looks = []
@@ -275,7 +264,6 @@ def product_detail(request, slug):
                 'is_in_wardrobe': is_in_wardrobe,
                 'looks_with_product': looks_with_product,
                 'looks_with_product_count': looks_with_product_count,
-                'viewed_products': viewed_products,
                 'object_url': request.build_absolute_uri(),
                 'more_like_this': more_like_this_product(mlt_body, product.gender, 20),
                 'comments': comments,

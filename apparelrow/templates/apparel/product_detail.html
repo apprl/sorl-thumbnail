@@ -156,14 +156,6 @@
                 {% endfor %}
                 </ul>
                 {% endif %}
-                {% if viewed_products %}
-                <h2>{% trans "Recently viewed" %}</h2>
-                <div id="recentlyviewed">
-                    {% with viewed_products as products %}
-                    {% include 'apparel/fragments/product_row.html' %}
-                    {% endwith %}
-                </div>
-                {% endif %}
             </div>
             <div class="product-similar">
                 {% if more_like_this %}
