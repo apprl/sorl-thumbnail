@@ -18,8 +18,8 @@ class ViewSitemap(Sitemap):
     def location(self, item):
         return reverse(item)
 
-product_info = {'queryset': get_model('apparel', 'Product').published_objects.order_by('-modified'), 'date_field': 'modified'}
-look_info = {'queryset': get_model('apparel', 'Look').published_objects.order_by('-modified'), 'date_field': 'modified'}
+product_info = {'queryset': get_model('apparel', 'Product').published_objects.order_by('pk'), 'date_field': 'modified'}
+look_info = {'queryset': get_model('apparel', 'Look').published_objects.order_by('pk'), 'date_field': 'modified'}
 profile_info = {'queryset': get_user_model().objects.filter(is_active=True)}
 
 sitemaps = {

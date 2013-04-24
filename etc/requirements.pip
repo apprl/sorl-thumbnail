@@ -34,5 +34,6 @@ xmltodict==0.4.1
 suds==0.4
 fuzzywuzzy==0.1
 python-dateutil==1.5
-django-static-sitemaps==1.5.1
+#django-static-sitemaps==1.5.1
+git+git://github.com/jbohman/django-static-sitemaps.git@e14a645478259e5866996adf7a6c0a4d76cdb7c7
 djrill==0.4.0
