@@ -7,6 +7,7 @@
 
 {% block extra-styles %}
     {% cache CACHE_TIMEOUT look_detail_metaextra object.id LANGUAGE_CODE %}
+    <link rel="canonical" href="{{ object_url }}">
     <meta property="og:title" content="{{ object.title }}"/>
     <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:look"/>
     <meta property="og:image" content="{{ look_full_image }}"/>
