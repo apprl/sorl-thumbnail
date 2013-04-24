@@ -1,32 +1,42 @@
 User-agent: googlebot
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: msnbot
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: yahoo-slurp
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: teoma
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: gigabot
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: scrubby
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: robozilla
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: nutch
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: ia_archiver
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: baiduspider
 Disallow: /track/
+Disallow: /dialog/
 
 User-agent: *
 Disallow: /
