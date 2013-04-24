@@ -335,7 +335,7 @@ class Product(models.Model):
             except:
                 pass
 
-        if self.category and self.manufacturer and self.gender:
+        if self.category and self.manufacturer and self.gender and self.product_image:
             self.published = True
         else:
             self.published = False
