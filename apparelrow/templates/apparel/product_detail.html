@@ -81,14 +81,15 @@
 {% if request.META.HTTP_REFERER and CURRENT_DOMAIN in request.META.HTTP_REFERER %}
 <a class="btn btn-learr btn-upper btn-product-back" href="{{ request.META.HTTP_REFERER }}" onClick="history.back(1);return false;">{% trans "Back" %}</a>
 {% endif %}
+<div itemscope itemtype="http://data-vocabulary.org/Product">
 <div id="body-header">
     <div class="column_one">
         {% if object.manufacturer.user %}
-        <h1><a href="{{ object.manufacturer.user.get_absolute_url }}">{{ object.manufacturer }}</a></h1>
+        <h1><a itemprop="brand" href="{{ object.manufacturer.user.get_absolute_url }}">{{ object.manufacturer }}</a></h1>
         {% else %}
-        <h1>{{ object.manufacturer }}</h1>
+        <h1 itemprop="brand">{{ object.manufacturer }}</h1>
         {% endif %}
-        {% if object.product_name %}<h2 class="lowercase">{{ object.product_name }}</h2>{% endif %}
+        {% if object.product_name %}<h2 class="lowercase" itemprop="name">{{ object.product_name }}</h2>{% endif %}
     </div>
 </div>
 {% endblock body-header %}
@@ -98,7 +99,7 @@
         <div class="product-left">
             <div class="product-image">
                 {% thumbnail object.product_image "328" upscale=False crop="noop" as im %}
-                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" />
+                <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" />
                 {% endthumbnail %}
                 <a class="product-like heart{% if user|likes_product:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-product' %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"></a>
             </div>
@@ -192,6 +193,7 @@
                 {% endif %}
             </div>
         </div>
+    </div>
 {% else %}
     <!-- FIXME: This needs some sort of layout -->
     <p>{% trans "No product found!" %}</p>

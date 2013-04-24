@@ -1,21 +1,37 @@
 {% load i18n comments apparel_extras buy_extras cache %}
 {% if object and object.product_image %}
 {% cache CACHE_TIMEOUT product_detail_fragment object.id LANGUAGE_CODE %}
-<div class="product-info">
+<div class="product-info" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
     <!-- {{ object.popularity }} -->
+
     <div class="breadcrumb">
-    <a href="{% gender_url object.gender 'shop' %}">{% trans object.get_gender_display %}</a> \
-    {% for category in object.categories %}
-    {% if forloop.first %}
-    <a href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">{{ category }}</a>
-    {% else %}
-    \ <a href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">{{ category }}</a>
-    {% endif %}
-    {% endfor %}
-    {% with object.categories|last as last_category %}
-    \ <a href="{% gender_url object.gender 'shop' %}#category={{ last_category.id }}&manufacturer={{ object.manufacturer.id }}">{{ object.manufacturer }}</a>
-    {% endwith %}
+        <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+            <a itemprop="url" href="{% gender_url object.gender 'shop' %}">
+                <span itemprop="title">{% trans object.get_gender_display %}</span>
+            </a> \
+        </span>
+        {% for category in object.categories %}
+            {% if forloop.first %}
+            <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a itemprop="url" href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">
+                    <span itemprop="title">{{ category }}</span>
+                </a>
+            </span>
+            {% else %}
+            \ <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a itemprop="url" href="{% gender_url object.gender 'shop' %}#category={{ category.id }}">
+                    <span itemprop="title">{{ category }}</span>
+                </a>
+            </span>
+            {% endif %}
+        {% endfor %}
+        \ <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+            <a itemprop="url" href="{% gender_url object.gender 'shop' %}#manufacturer={{ object.manufacturer.id }}">
+                <span itemprop="name">{{ object.manufacturer }}</span>
+            </a>
+        </span>
     </div>
+
     {% regroup object.options.all by option_type as option_list %}
     <!-- FIXME: Style this properly. See ticket #300
     <ul class="product-options">
@@ -30,20 +46,24 @@
     {% endfor %}
     </ul>
     -->
-    <p class="bodycopy description">{{ object.description }}</p>
+    <p class="bodycopy description" itemprop="description">{{ object.description }}</p>
 {% endcache %}
-    <p class="bodycopy vendors">
+    <p class="bodycopy vendors" itemprop="seller" itemscope itemtype="http://data-vocabulary.org/Organization">
       {% if object.default_vendor %}
         {% if object.default_vendor.availability == 0 %}
-        <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
+        <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
         {% else %}
-        <a target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}{{ object.default_vendor.vendor }} &raquo;</a>
+        <a target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
         {% endif %}
       {% endif %}
     </p>
     <div class="product-vendors group">
-        {% with object.vendorproduct.all|dictsort:'price' as vendorproducts %}
-        {% for vendorproduct in vendorproducts %}
+        {% with object.default_vendor as vendorproduct %}
+        {% if vendorproduct %}
+            <meta itemprop="condition" content="new" />
+            <meta itemprop="currency" content="{{ vendorproduct.locale_currency }}" />
+            <meta itemprop="price" content="{{ object.default_vendor_price|floatformat:0|apprl_intcomma }}" />
+
             <div class="product-vendor">
                 <div class="computed-price">
                     {% if vendorproduct.locale_discount_price %}
@@ -62,19 +82,17 @@
                 </div>
                 {% endif %}
             </div>
-            {% if forloop.first %}
-                {% if vendorproduct.availability == 0 %}
-                <span class="btn btn-upper btn-disabled btn-sold-out">{% trans "Sold out" %}</span>
-                {% else %}
-                <a href="{% buy_url object.id vendorproduct referral_sid 'Product' %}" target="_blank" class="btn btn-upper btn-positive btn-buy" data-sid="{% get_sid referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
-                {% endif %}
+            {% if vendorproduct.availability == 0 %}
+            <span itemprop="availability" content="out_of_stock" class="btn btn-upper btn-disabled btn-sold-out">{% trans "Sold out" %}</span>
+            {% else %}
+            <a itemprop="availability" content="in_stock" href="{% buy_url object.id vendorproduct referral_sid 'Product' %}" target="_blank" class="btn btn-upper btn-positive btn-buy" data-sid="{% get_sid referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ vendorproduct.vendor }}" data-price="{{ vendorproduct.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
             {% endif %}
-        {% empty %}
+        {% else %}
             <span class="btn btn-upper btn-disabled btn-sold-out">{% trans "Sold out" %}</span>
             <div class="product-vendor">
                 <span class="price"></span><span class="currency"></span>
             </div>
-        {% endfor %}
+        {% endif %}
         {% endwith %}
     </div>
 
