@@ -1072,6 +1072,16 @@ class BackgroundImage(models.Model):
     def __unicode__(self):
         return u'%s' % (self.image,)
 
+
+#
+# ProductUsedWeekly
+#
+
+class ProductUsedWeekly(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False)
+
+
 #
 # FacebookAction
 #

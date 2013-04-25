@@ -108,10 +108,13 @@ def get_weekly_mail_content(gender, timeframe):
     # Products
     product_names = []
     products = []
+    excludes = get_model('apparel', 'ProductUsedWeekly').objects.values_list('product_id', flat=True)
     base_products = list(get_model('apparel', 'Product').valid_objects.filter(gender__in=[gender, 'U'])
+                                                                      .exclude(pk__in=excludes)
                                                                       .order_by('-popularity')[:9])
     week_products = list(get_model('apparel', 'Product').valid_objects.filter(gender__in=[gender, 'U'])
                                                                       .filter(likes__active=True, likes__modified__gt=timeframe)
+                                                                      .exclude(pk__in=excludes)
                                                                       .annotate(num_likes=Count('likes'))
                                                                       .order_by('-num_likes')[:9])
 
@@ -127,6 +130,7 @@ def get_weekly_mail_content(gender, timeframe):
                 product_price = u'<span class="discount">%.0f %s</span> <span class="original">%.0f %s</span>' % (product.default_vendor.locale_discount_price, product.default_vendor.locale_currency, product.default_vendor.locale_price, product.default_vendor.locale_currency)
 
             products.append({
+                'pk': product.pk,
                 'url': ''.join(['http://', Site.objects.get_current().domain, product.get_absolute_url()]),
                 'image': product_image,
                 'name': product.manufacturer.name,
@@ -271,6 +275,11 @@ def generate_weekly_mail(request):
                 return HttpResponse('Error [%s]: could not create campaign: %s' % (gender, e))
 
             message.append(result)
+
+            # Mail campaign was created set products as used
+            for product in products:
+                get_model('apparel', 'ProductUsedWeekly').objects.create(product_id=product['pk'])
+
 
         return HttpResponse('Created two campaigns: %s' % (', '.join(message),))
 
