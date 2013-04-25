@@ -51,8 +51,8 @@ class Command(BaseCommand):
                     aggregate(r, followers, 'W', activity)
                 aggregate(r, None, 'M', activity)
                 aggregate(r, None, 'W', activity)
-                aggregate(r, brand.profile, 'M', activity)
-                aggregate(r, brand.profile, 'W', activity)
+                aggregate(r, brand.user, 'M', activity)
+                aggregate(r, brand.user, 'W', activity)
 
             brand.last_update = datetime.datetime.now()
             brand.save()
