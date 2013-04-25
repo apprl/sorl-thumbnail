@@ -99,9 +99,6 @@ App.Views.LookEdit = Backbone.View.extend({
         component.set('product', product.toJSON());
 
         this.model._dirty = true;
-
-        // Reset product selection
-        App.Events.trigger('product:reset');
     },
 
     pending_add_component: function(product) {

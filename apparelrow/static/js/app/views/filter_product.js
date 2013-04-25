@@ -7,6 +7,7 @@ App.Views.FilterProduct = Backbone.View.extend({
         'click input[name="q"]': 'filter',
         'keyup input[name="q"]': 'timed_filter',
         'click #product-gender a': 'filter_gender',
+        'click .btn-product-reset': 'product_reset',
     },
 
     initialize: function(options) {
@@ -129,6 +130,12 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.$el.find('#product-gender .selected').removeClass('selected');
         $target.addClass('selected');
         this.product_filter_model.set('gender', $target.data('value'));
+
+        e.preventDefault();
+    },
+
+    product_reset: function() {
+        App.Events.trigger('product:reset');
 
         e.preventDefault();
     },

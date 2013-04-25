@@ -47,6 +47,7 @@
                 <div id="product-filter" class="group">
                     <div class="middle-filters group">
                         <input id="product-search" type="search" name="q" placeholder="{% trans "Search for your product here..." %}">
+                        <a class="btn btn-upper btn-product-reset" href="#">{% trans "Reset" %}</a>
                         <ul id="product-gender">
                             <li><a href="#" data-value="W"{% if APPAREL_GENDER == 'W' %} class="selected"{% endif %}>{% trans "Women" %}</a></li>
                             <li><a href="#" data-value="M"{% if APPAREL_GENDER == 'M' %} class="selected"{% endif %}>{% trans "Men" %}</a></li>
