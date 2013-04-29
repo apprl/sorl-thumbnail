@@ -13,9 +13,9 @@ jQuery(document).ready(function() {
     // Hide hotspots and only show them on mouseenter if !mobile
     if (!is_mobile()) {
         jQuery('.hotspot').hide();
-        jQuery('.look-photo').live('mouseenter', function() {
+        jQuery(document).on('mouseenter', '.look-photo', function() {
             jQuery('.hotspot', this).stop(true, true).fadeIn(300);
-        }).live('mouseleave', function() {
+        }).on('mouseleave', '.look-photo', function() {
             jQuery('.hotspot', this).stop(true, true).fadeOut(300);
         });
     }
@@ -34,5 +34,5 @@ jQuery(document).ready(function() {
         }
     }
 
-    $('body.look-embed a.btn-buy-external').live('click', trackEvent('Ext-Look', 'BuyReferral'));
+    $(document).on('click', 'body.look-embed a.btn-buy-external', trackEvent('Ext-Look', 'BuyReferral'));
 });

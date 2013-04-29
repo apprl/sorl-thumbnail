@@ -12,7 +12,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato:400|IM+Fell+Great+Primer:400italic' rel='stylesheet' type='text/css'>
     {% block extra-styles %}
     {% endblock extra-styles %}
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
         var hasLiked = {% if user.is_authenticated and user.has_liked %}true{% else %}false{% endif %};
         var dialog_like_product = '{% url "dialog-like-product" %}';
@@ -361,11 +361,9 @@
 
 <script type="text/html" id="error_dialog_template">
     <div class="dialog-container {% block dialog_class %}{% endblock %}">
-        <h1>${ header }</h1>
+        <h1><%= header %></h1>
         <div class="bodycopy content">
-            {% templatetag openvariable %}each(i, message) messages{% templatetag closevariable %}
-            <p>${ message }</p>
-            {% templatetag openvariable %}/each{% templatetag closevariable %}
+            <% _.each(messages, function(message) { %><p><%= message %></p><% }); %>
         </div>
         <div class="dialog-footer">
             <button class="no">{% trans "No" %}</button>

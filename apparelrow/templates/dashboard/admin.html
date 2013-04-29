@@ -48,10 +48,6 @@
 
                 window.location.href = '/partner/admin/' + year + '/' + month + '/';
             });
-            $('#more-info').click(function(event) {
-                create_html_dialog(jQuery(this).attr('href'));
-                event.preventDefault();
-            });
         });
     </script>
 {% endblock %}

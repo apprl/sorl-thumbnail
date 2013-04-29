@@ -11,6 +11,38 @@ function is_mobile() {
       return false;
 }
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$.ajaxSetup({
+    crossDomain: false, // obviates need for sameOrigin test
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
 function increase_counts(counts, new_count) {
     // For each element, set to new_count if available, otherwise increase the current count with 1
     counts.each(function() {
@@ -27,10 +59,7 @@ function increase_counts(counts, new_count) {
  */
 window.create_modal_dialog = function(header, messages, yes_action, no_action) {
     var modal_dialog = jQuery('<div class="dialog"></div>').html(
-        jQuery('#error_dialog_template').render({
-            header: header,
-            messages: messages
-        })
+        _.template($('#error_dialog_template').html(), {header: header, messages: messages})
     ).appendTo('body').overlay({
         mask: {
             color: '#000',
@@ -144,44 +173,38 @@ jQuery(document).ready(function() {
 
     // Track buy clicks
 
-    $('#search-result a.btn-buy').live('click', trackEvent('Search', 'BuyReferral'));
-    $('body.product .product-info a.btn-buy').live('click', trackEvent('Product', 'BuyReferral'));
-    $('body.page-shop #content a.btn-buy').live('click', trackEvent('Shop', 'BuyReferral'));
-    $('body.profile #content a.btn-buy').live('click', trackEvent('Profile', 'BuyReferral'));
-    $('body.feed #content a.btn-buy').live('click', trackEvent('Feed', 'BuyReferral'));
-    $('.tooltip a.btn-buy').live('click', trackEvent('Look', 'BuyReferral'));
+    $(document).on('click', '#search-result a.btn-buy', trackEvent('Search', 'BuyReferral'))
+               .on('click', 'body.product .product-info a.btn-buy', trackEvent('Product', 'BuyReferral'))
+               .on('click', 'body.page-shop #content a.btn-buy', trackEvent('Shop', 'BuyReferral'))
+               .on('click', 'body.profile #content a.btn-buy', trackEvent('Profile', 'BuyReferral'))
+               .on('click', 'body.feed #content a.btn-buy', trackEvent('Feed', 'BuyReferral'))
+               .on('click', '.tooltip a.btn-buy', trackEvent('Look', 'BuyReferral'));
 
     // Track likes
 
-    $('body.product a.product-like').live('click', trackEvent('Product', 'ProductLike'));
-    $('body.page-shop a.product-like').live('click', trackEvent('Shop', 'ProductLike'));
-    $('body.profile a.product-like').live('click', trackEvent('Profile', 'ProductLike'));
+    $(document).on('click', 'body.product a.product-like', trackEvent('Product', 'ProductLike'))
+               .on('click', 'body.page-shop a.product-like', trackEvent('Shop', 'ProductLike'))
+               .on('click', 'body.profile a.product-like', trackEvent('Profile', 'ProductLike'));
 
     // Track invites
 
-    $('#nav-user .facebook-invite').live('click', trackInviteEvent('Menu'));
-    $('body.feed .sidebar .facebook-invite').live('click', trackInviteEvent('Profile'));
-    $('body.profiles #body-header .facebook-invite').live('click', trackInviteEvent('Members'));
-    $('body.profile-login-flow #content .facebook-invite').live('click', trackInviteEvent('Welcome'));
-    $('#footer .facebook-invite').live('click', trackInviteEvent('Footer'));
+    $(document).on('click', '#nav-user .facebook-invite', trackInviteEvent('Menu'))
+               .on('click', 'body.feed .sidebar .facebook-invite', trackInviteEvent('Profile'))
+               .on('click', 'body.profiles #body-header .facebook-invite', trackInviteEvent('Members'))
+               .on('click', 'body.profile-login-flow #content .facebook-invite', trackInviteEvent('Welcome'))
+               .on('click', '#footer .facebook-invite', trackInviteEvent('Footer'));
 
     // All elements with class open-dialog should open a dialog and load html from href-url
-    jQuery('.open-dialog').live('click', function(event) {
+    $(document).on('click', '.open-dialog', function(event) {
         create_html_dialog(jQuery(this).attr('href'));
         event.preventDefault();
     });
 
     // Make sure that a dialog can be closed by the element with class 'close'
-    jQuery('.dialog .close').live('click', function(event) {
+    $(document).on('click', '.dialog .close', function(event) {
         $('.dialog').overlay().close();
         event.preventDefault();
     });
-
-    // Adding comments to jquery-tmpl, syntax: {{#}}comment{{/#}} Note: the "" are important
-    jQuery.tmplcmd['#'] = {
-        prefix: '/*',
-        suffix: '*/'
-    }
 
     // Comments posting
     var comment_area = jQuery('.comment-box textarea');
@@ -360,10 +383,10 @@ jQuery(document).ready(function() {
             jQuery('.look-medium .look-like, .look-large .look-like, .look-medium .hotspot, .look-large .hotspot').hide();
         });
         // Look medium and large hover
-        jQuery('.look-medium, .look-large').live('mouseenter', function() {
+        jQuery(document).on('mouseenter', '.look-medium, .look-large', function() {
             jQuery('.look-like', this).show();
             jQuery('.hotspot', this).show();
-        }).live('mouseleave', function() {
+        }).on('mouseleave', '.look-medium, .look-large', function() {
             jQuery('.look-like').hide();
             jQuery('.hotspot').hide();
         });
@@ -378,7 +401,7 @@ jQuery(document).ready(function() {
     jQuery('.look-large .product, .look-medium .product').enableApprlTooltip();
 
     // Product like - show tooltip if no previously likes
-    jQuery('.product-like').live('mouseenter', function() {
+    jQuery(document).on('mousenter', '.product-like', function() {
         if(hasLiked == false) {
             var element = jQuery(this);
             if(element.children().length == 0) {
@@ -387,7 +410,7 @@ jQuery(document).ready(function() {
                 element.children().show();
             }
         }
-    }).live('mouseleave', function() {
+    }).on('mouseleave', '.product-like', function() {
         jQuery(this).children().hide();
     });
 
@@ -416,7 +439,7 @@ jQuery(document).ready(function() {
     });
 
     // Product hover, works with medium and feed
-    jQuery('.product-medium, .product-feed').live('mouseenter', function() {
+    jQuery(document).on('mouseenter', '.product-medium, .product-feed', function() {
         var element = jQuery(this);
         var product_id = getElementId(element);
         if(!element.data('load_data')) {
@@ -440,7 +463,7 @@ jQuery(document).ready(function() {
         element.data('load_data', true);
         element.find('.hover').show();
         element.find('.product-image').css({opacity: 0.3});
-    }).live('mouseleave', function() {
+    }).on('mouseleave', '.product-medium, .product-feed', function() {
         jQuery(this).css({opacity: 1}).find('.hover').hide();
         jQuery('.product-image').css({opacity: 1});
     });
@@ -910,17 +933,13 @@ jQuery(document).ready(function() {
         return false;
     });
 
-    jQuery('#search-result .search-result-products:not(.disabled)').live('click', function(e) {
-        return search_link_action('search-result-products');
-    });
-
-    jQuery('#search-result .search-result-looks:not(.disabled)').live('click', function(e) {
-        return search_link_action('search-result-looks');
-    });
-
-    jQuery('#search-result .search-result-manufacturers:not(.disabled)').live('click', function(e) {
-        return search_link_action('search-result-manufacturers');
-    });
+    $('#search-result').on('click', '.search-result-products:not(.disabled)', function(e) {
+            return search_link_action('search-result-products');
+        }).on('click', '.search-result-looks:not(.disabled)', function(e) {
+            return search_link_action('search-result-looks');
+        }).on('click', '.search-result-manufacturers:not(.disabled)', function(e) {
+            return search_link_action('search-result-manufacturers');
+        });
 
     function search_link_action(type) {
         var query = jQuery('#' + type).data('last-query');
@@ -970,7 +989,7 @@ jQuery(document).ready(function() {
             if(link.attr('href') != last_link) {
                 last_link = link.attr('href');
                 jQuery.get(last_link, function(data, statusText, xhr) {
-                    var $data = jQuery(data),
+                    var $data = $($.parseHTML(data)),
                         newPagination = $data.filter('.pagination'),
                         content = newPagination.prev();
 
@@ -985,7 +1004,7 @@ jQuery(document).ready(function() {
         }
 
         // Fetch via ajax on pagination clicks
-        $('a.next', $pagination).live('click', function() {
+        $pagination.on('click', 'a.next', function() {
             // Keep fetching automatically after the first click
             var $this = jQuery(this);
             $this.addClass('btn-disabled hover').find('span').text($this.data('loading-text'));

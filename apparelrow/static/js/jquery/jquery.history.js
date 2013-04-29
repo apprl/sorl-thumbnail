@@ -1,6 +1,6 @@
 /*
  * jQuery history plugin
- * 
+ *
  * sample page: http://www.serpere.info/jquery-history-plugin/samples/
  *
  * Copyright (c) 2006-2009 Taku Sano (Mikage Sawatari)
@@ -19,7 +19,12 @@
         },
         get: function(win) {
             var hash = ((win || window).location.hash).replace(/^#/, '');
-            return $.browser.fx ? hash : decodeURIComponent(hash);
+            try {
+                return $.browser.mozilla ? hash : decodeURIComponent(hash);
+            }
+            catch (error) {
+                return hash;
+            }
         }
     };
 
@@ -105,9 +110,6 @@
         }
     };
 
-    if($.browser.msie && ($.browser.version < 8 || document.documentMode < 8)) {
-        $.extend(_, IframeImpl);
-    } else {
-        $.extend(_, SimpleImpl);
-    }
+    $.extend(_, SimpleImpl);
+
 })(jQuery);

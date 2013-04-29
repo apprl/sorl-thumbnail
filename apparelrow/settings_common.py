@@ -235,7 +235,7 @@ PIPELINE_JS = {
         'output_filename': 'js/compiled/apparel.js',
     },
     'widget': {
-        'source_filenames': ('js/jquery/jquery-1.8.2.min.js',
+        'source_filenames': ('js/jquery/jquery-1.9.1.min.js',
                              'js/widget.js'),
         'output_filename': 'js/compiled/widget.js',
     },
@@ -245,9 +245,9 @@ PIPELINE_JS = {
         'output_filename': 'js/compiled/embed.js',
     },
     'jquery': {
-        'source_filenames': ('js/jquery/jquery.hypersubmit.js',
-                             'js/jquery/jquery.tools.min.js',
-                             'js/jquery/jquery.tmpl.js',
+        'source_filenames': ('js/vendor/underscore.js',
+                             'js/jquery/jquery.hypersubmit.js',
+                             'js/jquery/jquery.tools.overlay.js',
                              'js/jquery/jquery.history.js',
                              'js/jquery/jquery.html5-placeholder-shim.js',
                              'js/jquery/jquery.autosize-min.js',
