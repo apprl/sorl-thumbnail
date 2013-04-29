@@ -7,7 +7,6 @@ App.Views.FilterProduct = Backbone.View.extend({
         'click input[name="q"]': 'filter',
         'keyup input[name="q"]': 'timed_filter',
         'click #product-gender a': 'filter_gender',
-        'click .btn-product-reset': 'product_reset',
     },
 
     initialize: function(options) {
@@ -32,6 +31,9 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.filter_subcategory = new App.Views.FilterProductSubCategory({model: this.product_filter_model, collection: this.facets.category, el: '#product-filter-subcategory'});
         this.filter_color = new App.Views.FilterProductColor({model: this.product_filter_model, collection: this.facets.color, el: '#product-filter-color'});
         this.filter_price = new App.Views.FilterProductPrice({model: this.product_filter_model, collection: this.facets.price, el: '#product-filter-price'});
+
+        // Product reset button
+        this.filter_reset = new App.Views.FilterProductReset({model: this.product_filter_model});
 
         // Initial fetch of products and facets
         this.facets.fetch({data: this.product_filter_model.toJSON()});
@@ -130,12 +132,6 @@ App.Views.FilterProduct = Backbone.View.extend({
         this.$el.find('#product-gender .selected').removeClass('selected');
         $target.addClass('selected');
         this.product_filter_model.set('gender', $target.data('value'));
-
-        e.preventDefault();
-    },
-
-    product_reset: function() {
-        App.Events.trigger('product:reset');
 
         e.preventDefault();
     },

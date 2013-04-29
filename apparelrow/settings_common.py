@@ -295,6 +295,7 @@ PIPELINE_JS = {
                              'js/app/views/filter_product_color.js',
                              'js/app/views/filter_product_manufacturer.js',
                              'js/app/views/filter_product_price.js',
+                             'js/app/views/filter_product_reset.js',
                              'js/app/views/products.js',
                              'js/app/views/product.js',
                              'js/app/views/temporary_image_upload_form.js',
