@@ -78,8 +78,8 @@ class Importer(BaseImporter):
                        'Authorization': 'ZXWS %s:%s' % (self.connect_id, signature)}
             response = requests.get(url, headers=headers)
 
-            if 'saleItems' in response.json:
-                for row in response.json['saleItems']['saleItem']:
+            if 'saleItems' in response.json():
+                for row in response.json()['saleItems']['saleItem']:
                     data_row = {}
                     data_row['original_sale_id'] = row['@id']
                     data_row['affiliate'] = self.name
