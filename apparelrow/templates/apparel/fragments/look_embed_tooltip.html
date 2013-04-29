@@ -10,7 +10,6 @@
             <a target="_blank" {% if product.default_vendor and product.default_vendor.availability != 0 %}href="{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}" class="btn-buy-external" data-sid="{% get_sid owner.pk 'Ext-Look' %}" data-slug="{{ product.slug }}" data-vendor="{{ product.default_vendor.vendor }}" data-price="{{ product.default_vendor.lowest_price_in_sek|floatformat:0 }}"{% else %}href="{% internal_referral_url product.get_absolute_url owner.pk %}"{% endif %} title="{{ product }}">
                 <h2>{{ product.manufacturer.name }}</h2>
             </a>
-            <p class="product_name">{{ product.product_name }}</p>
             {% if product.default_vendor %}
             <div class="vendor_price">
                 {% with product.default_vendor as vendor %}
