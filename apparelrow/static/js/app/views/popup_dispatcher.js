@@ -14,8 +14,8 @@ App.Views.PopupDispatcher = Backbone.View.extend({
 
         // Hide popup on ESC keydown and click
         $(document).on('keydown', _.bind(function(e) { if(this.active && e.keyCode == 27) { this.hide() } }, this));
-        $(document).on('click', _.bind(function(e) {
-            if(this.active && $(e.target).closest('#popup-slim').length == 0) {
+        $(document).on('click', '.look-overlay-bg', _.bind(function(e) {
+            if(this.active) {
                 this.hide();
             }
         }, this));
@@ -24,7 +24,7 @@ App.Views.PopupDispatcher = Backbone.View.extend({
         App.Events.on('popup_dispatcher:hide', this.hide, this);
 
         this.$el.html(this.template());
-        this.$overlay = $(this.make('div')).css({position: 'absolute', top: 0, left: 0, width: '100%', height: $(document).height(), backgroundColor: '#000', opacity: 0.3, display: 'none', zIndex: 10089});
+        this.$overlay = $(this.make('div')).addClass('look-overlay-bg').css({position: 'absolute', top: 0, left: 0, width: '100%', height: $(document).height(), backgroundColor: '#000', opacity: 0.3, display: 'none', zIndex: 10089});
         $('body').append(this.$el, this.$overlay);
     },
 
