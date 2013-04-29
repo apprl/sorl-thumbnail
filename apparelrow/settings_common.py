@@ -453,6 +453,8 @@ CELERY_ROUTES = ({
     'profile.notifications.process_comment_product_wardrobe': {'queue': 'standard'},
     'profile.notifications.process_follow_user': {'queue': 'standard'},
     'profile.notifications.process_like_look_created': {'queue': 'standard'},
+    'profile.notifications.process_sale_alert': {'queue': 'standard'},
+    'profile.notifications.facebook_friends': {'queue': 'standard'},
     'profile.views.send_email_confirm_task': {'queue': 'standard'},
     'apparel.email.mailchimp_subscribe': {'queue': 'standard'},
     'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},

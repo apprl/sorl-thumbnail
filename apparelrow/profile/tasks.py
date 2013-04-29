@@ -9,3 +9,5 @@ def send_email_confirm_task(subject, body, recipient, **kwargs):
     msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, [recipient])
     msg.attach_alternative(body, 'text/html')
     msg.send()
+
+import apparelrow.profile.notifications
