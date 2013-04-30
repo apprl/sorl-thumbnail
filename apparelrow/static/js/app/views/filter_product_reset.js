@@ -22,6 +22,15 @@ App.Views.FilterProductReset = Backbone.View.extend({
     },
 
     show: function(model, value, options) {
+        if('unset' in options && options.unset) {
+            if(!('price' in this.model.attributes) &&
+               !('category' in this.model.attributes) &&
+               !('subcategory' in this.model.attributes) &&
+               !('color' in this.model.attributes) &&
+               !('q' in this.model.attributes)) {
+                this.$el.hide();
+            }
+        }
         if(value) {
             this.$el.show();
         }
