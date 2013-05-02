@@ -478,10 +478,13 @@ def brand_list(request, gender=None):
         popular_brands = get_user_model().objects.raw('SELECT *, false AS is_following FROM profile_user WHERE is_brand = true AND is_active = true ORDER BY followers_count DESC LIMIT 20')
 
     # Most popular products
-    user_ids = []
-    if request.user and request.user.is_authenticated():
-        user_ids.extend(Follow.objects.filter(user=request.user, active=True).values_list('user_follow_id', flat=True))
-    popular_products = Product.valid_objects.distinct().filter(likes__user__in=user_ids).order_by('-popularity')[:10]
+    popular_products = None
+    if request.user.is_authenticated():
+        follows = Follow.objects.filter(user=request.user, active=True).values('user_follow_id')
+        popular_products = Product.valid_objects.distinct() \
+                                                .filter(likes__user__in=follows) \
+                                                .order_by('-popularity') \
+                                                .select_related('manufacturer')[:10]
 
     response = render_to_response('apparel/brand_list.html', {
                 'popular_brands': popular_brands,
