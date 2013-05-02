@@ -471,7 +471,11 @@ def brand_list(request, gender=None):
         gender = get_gender_from_cookie(request)
 
     # Most popular brand pages
-    popular_brands = get_user_model().objects.filter(is_active=True, is_brand=True).order_by('-followers_count')[:10]
+    # Using a raw query to annotate the popular brand profile list with is_following
+    if request.user.is_authenticated():
+        popular_brands = get_user_model().objects.raw('SELECT pu.*, pf.id AS is_following FROM profile_user pu LEFT OUTER JOIN profile_follow pf ON pf.user_follow_id = pu.id AND pf.user_id = %s WHERE pu.is_brand = true AND pu.is_active = true ORDER BY pu.followers_count DESC LIMIT 20', [request.user.pk])
+    else:
+        popular_brands = get_user_model().objects.raw('SELECT *, false AS is_following FROM profile_user WHERE is_brand = true AND is_active = true ORDER BY followers_count DESC LIMIT 20')
 
     # Most popular products
     user_ids = []

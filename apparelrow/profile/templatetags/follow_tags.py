@@ -21,9 +21,9 @@ class DisplayActivityFollowUrl(Node):
     def render(self, context):
         actor_instance = self.actor.resolve(context)
         if self.follow:
-            return reverse('apprl-follow', kwargs={'profile_id': actor_instance.pk})
+            return reverse('follow', kwargs={'profile_id': actor_instance.pk})
 
-        return reverse('apprl-unfollow', kwargs={'profile_id': actor_instance.pk})
+        return reverse('unfollow', kwargs={'profile_id': actor_instance.pk})
 
 @register.tag
 def unfollow_tag(parser, token):

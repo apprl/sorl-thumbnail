@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load cache %}
-{% load apparel_extras %}
 
 {% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Brands Men" %}{% else %}{% trans "Brands Women" %}{% endif %} | {% endblock %}
 
@@ -17,9 +15,11 @@
     <div class="sidebar">
         <h2>{% trans "Most followed" %}</h2>
         <ul class="suggested-friends">
-        {% for profile in popular_brands %}
+            {% for brand in popular_brands %}
             <li>
-            {% include 'apparel/fragments/avatar_link_no_cache.html' %}
+                <a class="profile-link" href="{% url 'profile-likes' brand.slug %}"><img class="avatar" src="{{ brand.avatar }}" alt="{{ brand.display_name }}"/>{{ brand.display_name }}</a>
+                <br>
+                {% include 'apparel/fragments/follow_no_tags.html' with request=request profile=brand only %}
             </li>
         {% endfor %}
         </ul>

@@ -41,8 +41,8 @@ urlpatterns = patterns('',
     url(r'^facebook/share/(?P<activity>push|pull)/?$', 'apparelrow.apparel.views.facebook_share', name='facebook-share'),
 
     # Follow/Unfollow API
-    url(r'^follow/(?P<profile_id>\d+)/$', 'apparelrow.apparel.views.follow_unfollow', name='apprl-follow'),
-    url(r'^unfollow/(?P<profile_id>\d+)/$', 'apparelrow.apparel.views.follow_unfollow', {'do_follow': False}, name='apprl-unfollow'),
+    url(r'^follow/(?P<profile_id>\d+)/$', 'apparelrow.apparel.views.follow_unfollow', name='follow'),
+    url(r'^unfollow/(?P<profile_id>\d+)/$', 'apparelrow.apparel.views.follow_unfollow', {'do_follow': False}, name='unfollow'),
 
     # Temporary Images
     url(r'^images/temporary/$', TemporaryImageView.as_view(), name='temporary-image'),
