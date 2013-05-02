@@ -35,7 +35,26 @@
             var tooltip_w = tooltip.outerWidth();
             var tooltip_h = tooltip.outerHeight();
 
-            tooltip_top = component_p.top + Math.floor(component_h / 2);
+            // Find start of first non-transparent pixel by taking 1xH sample
+            // in the middle of the image
+            var start = 0;
+            var canvas = document.createElement('canvas');
+            canvas.width = component_w;
+            canvas.height = component_h;
+            if(!!(canvas.getContext && canvas.getContext('2d'))) {
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(component.find('img').get(0), 0, 0, component_w, component_h);
+                var image_data = ctx.getImageData(component_w/2, 0, 1, component_h);
+                var pixels = image_data.data;
+                for (var i = 0, n = pixels.length; i < n; i += 4) {
+                    if(!pixels[i+3] == 0) {
+                        start = i / 4;
+                        break;
+                    }
+                }
+            }
+
+            tooltip_top = component_p.top + start + Math.floor((component_h - start) / 3)
             tooltip_left = component_p.left + Math.floor(component_w / 2) - Math.floor(tooltip_w / 2);
 
             var tooltip_arrow = tooltip.find('.tooltip-arrow').css({left: 135});
