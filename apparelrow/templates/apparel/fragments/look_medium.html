@@ -22,7 +22,7 @@
             {% for component in object.collage_components.all %}
                 <a href="{% internal_referral_url component.product.get_absolute_url object.user.pk %}" id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_middle }}">
                     {% thumbnail component.product.product_image "450x334" crop="noop" format="PNG" transparent=True as im %}
-                    <img src="{{ im.url }}" title="{{ component.product }}" />
+                    <img src="{{ im.url }}" title="{{ component.product }}" crossorigin="anonymous" />
                     {% endthumbnail %}
                 </a>
                 {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
