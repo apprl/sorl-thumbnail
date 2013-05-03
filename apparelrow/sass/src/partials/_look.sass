@@ -284,30 +284,42 @@ body.look-editor
   min-height: 400px
   padding-left: 20px
   #product-tabs
+    border-bottom: 1px solid $easiest_color
+    list-style-type: none
     height: 50px
-    border: 1px solid $easiest_color
-    li
-      +box-sizing(border-box)
-      display: inline-block
+    > li
+      float: left
+      margin-bottom: -1px
       width: 50%
-      &.first
-        border-right: 1px solid $easiest_color
-      a
-        display: block
-        height: 50px
-        line-height: 50px
+      > a
         text-align: center
         font-size: 1.6em
         font-weight: bold
+        line-height: 14px
         text-transform: uppercase
+        display: inline-block
+        width: 100%
+        margin-top: 4px
+        padding-top: 16px
+        padding-bottom: 15px
+        border: 1px solid $easiest_color
         background-color: #f6f6f6
+        position: relative
+        z-index: 5
         &.selected
-          &.tab-likes
-            border-right-color: #fff
-          &.tab-all
-            border-left-color: #fff
-          border-bottom: 1px solid #fff
-          background-color: #fff
+          margin-top: 0
+          padding-top: 20px
+          border-bottom: 0
+          padding-bottom: 16px
+          cursor: default
+          background-color: #ffffff
+          z-index: 10
+        &.tab-likes
+          float: left
+          margin-right: 4px
+        &.tab-all
+          float: right
+          margin-left: 4px
 
   #product-filter
     padding-bottom: 10px
