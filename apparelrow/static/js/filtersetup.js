@@ -117,9 +117,7 @@ jQuery(document).ready(function() {
             }
         } else {
             // Deselect all top level categories and slide up subcategories when changing top level category
-            if($this.parent().parent().hasClass('level-0')) {
-                $this.parent().siblings().find('a').removeClass('selected').end().find('ul').slideUp();
-            }
+            $this.parent().siblings().find('a').removeClass('selected').end().find('ul').slideUp();
             // Deselect parent category
             $this.parent().parent().prev().removeClass('selected');
             // Hide too deep categories
