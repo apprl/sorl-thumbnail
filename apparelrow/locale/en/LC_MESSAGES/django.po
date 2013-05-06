@@ -83,27 +83,23 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: apparel/browse.py:249
+#: apparel/browse.py:263
 #, python-format
 msgid "%(count)s product on sale"
 msgid_plural "%(count)s products on sale"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apparel/browse.py:255
+#: apparel/browse.py:269
 #, python-format
 msgid "%(count)s product"
 msgid_plural "%(count)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apparel/browse.py:262 templates/apparel/look_list.html:30
+#: apparel/browse.py:276 templates/apparel/look_list.html:30
 #: templates/apparel/look_list.html:32
 msgid "Showing"
-msgstr ""
-
-#: apparel/browse.py:264
-msgid "Showing your friends' favorites"
 msgstr ""
 
 #: apparel/forms.py:7
@@ -1046,7 +1042,7 @@ msgid "No updates"
 msgstr ""
 
 #: templates/activity_feed/feed.html:12 templates/apparel/brand_list.html:33
-#: templates/apparel/browse.html:54 templates/apparel/shop_embed.html:107
+#: templates/apparel/browse.html:69 templates/apparel/shop_embed.html:92
 #: templates/apparel/fragments/looks_large.html:67
 #: templates/apparel/fragments/looks_medium.html:12
 #: templates/apparel/fragments/user_list.html:12
@@ -1375,22 +1371,38 @@ msgid "Shop Women"
 msgstr ""
 
 #: templates/apparel/browse.html:34
-msgid "Trending"
+msgid "Show all"
 msgstr ""
 
 #: templates/apparel/browse.html:35
-msgid "Latest"
+msgid "My friends"
 msgstr ""
 
 #: templates/apparel/browse.html:36
-msgid "Low price"
+msgid "My brands"
 msgstr ""
 
-#: templates/apparel/browse.html:37
-msgid "High price"
+#: templates/apparel/browse.html:49
+msgid "Sort by: "
 msgstr ""
 
-#: templates/apparel/browse.html:49 templates/apparel/shop_embed.html:99
+#: templates/apparel/browse.html:50
+msgid "trending"
+msgstr ""
+
+#: templates/apparel/browse.html:52
+msgid "latest"
+msgstr ""
+
+#: templates/apparel/browse.html:54
+msgid "low price"
+msgstr ""
+
+#: templates/apparel/browse.html:56
+msgid "high price"
+msgstr ""
+
+#: templates/apparel/browse.html:59 templates/apparel/shop_embed.html:84
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
@@ -1711,21 +1723,28 @@ msgstr ""
 msgid "See all »"
 msgstr ""
 
-#: templates/apparel/product_detail.html:168
-#: templates/apparel/product_detail.html:182
-msgid "Previous"
-msgstr ""
+#: templates/apparel/product_detail.html:170
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> look with this product"
+msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
+msgstr[0] ""
+msgstr[1] ""
 
-#: templates/apparel/product_detail.html:176
-#: templates/apparel/product_detail.html:190
-msgid "Next"
-msgstr ""
-
-#: templates/apparel/product_detail.html:180
+#: templates/apparel/product_detail.html:181
 msgid "You may also like"
 msgstr ""
 
-#: templates/apparel/product_detail.html:198
+#: templates/apparel/product_detail.html:183
+#: templates/apparel/fragments/product_row.html:3
+msgid "Previous"
+msgstr ""
+
+#: templates/apparel/product_detail.html:191
+#: templates/apparel/fragments/product_row.html:13
+msgid "Next"
+msgstr ""
+
+#: templates/apparel/product_detail.html:199
 msgid "No product found!"
 msgstr ""
 
@@ -1884,13 +1903,6 @@ msgstr ""
 #: templates/apparel/fragments/product_detail.html:111
 msgid "Get product link"
 msgstr ""
-
-#: templates/apparel/fragments/product_detail.html:118
-#, python-format
-msgid "<span class=\"count\">%(counter)s</span> look with this product"
-msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
-msgstr[0] ""
-msgstr[1] ""
 
 #: templates/apparel/fragments/product_detail.html:136
 msgid "Create your look with "
