@@ -61,7 +61,10 @@ jQuery(document).ready(function() {
         }
 
         // Sort by
-        jQuery('.browse-sort li:first a').addClass('selected');
+        $('.browse-sort li:nth-child(2) a').addClass('selected');
+
+        // Shop view
+        $('.shop-view li:nth-child(1) a').addClass('selected');
 
         // Call getQuery with empty query and force reset
         filter(getQuery({}, true));
@@ -213,6 +216,14 @@ jQuery(document).ready(function() {
         return false;
     });
 
+    // Shop view
+    $(document).on('click', '.shop-view li a', function() {
+        $('.shop-view li a').removeClass('selected');
+        $(this).addClass('selected');
+        filter(getQuery());
+        return false;
+    });
+
     // Product gender filter (only embed...)
     if(typeof embed_shop_user_id !== 'undefined') {
         jQuery('#product-gender li > a').click(function() {
@@ -304,9 +315,14 @@ window.getQuery = function(query, reset) {
     query = query || {}
     reset = typeof(reset) != 'undefined' ? reset : false;
 
-    sort_by = jQuery('.browse-sort li a.selected').attr('data-sort');
+    sort_by = $('.browse-sort li a.selected').data('sort');
     if(typeof sort_by !== 'undefined' && sort_by != 'pop') {
         query['sort'] = sort_by;
+    }
+
+    shop_view = $('.shop-view li a.selected').data('view');
+    if(typeof shop_view !== 'undefined' && shop_view != 'all') {
+        query['view'] = shop_view;
     }
 
     category_list = getElementIds(jQuery('#product-category li > a.selected'));
@@ -457,13 +473,6 @@ function renderPage(products) {
     jQuery('.pagination').html($pagination.html());
 
     jQuery('#product-list').trigger('post_browse_render');
-
-    query = getQuery();
-    if('f' in query) {
-        jQuery('#product-count a').hide();
-    } else {
-        jQuery('#product-count a').show();
-    }
 
     if(window.location.hash && window.location.hash != '#!') {
         jQuery('#reset').show()
@@ -626,15 +635,27 @@ function updateSelected(products) {
 
     // Select sort
     if(products.selected_sort) {
-        jQuery('.browse-sort li a').each(function(i, e) {
-            var elem = jQuery(e);
-            if(elem.attr('data-sort') == products.selected_sort) {
+        $('.browse-sort li a').each(function(i, e) {
+            var elem = $(e);
+            if(elem.data('sort') == products.selected_sort) {
                 elem.addClass('selected');
             } else {
                 elem.removeClass('selected');
             }
         });
     }
+
+    // Select view
+    if(products.selected_view) {
+        $('.shop-view li a').each(function(i, e) {
+            var elem = $(e);
+            if(elem.data('view') == products.selected_view) {
+                elem.addClass('selected');
+            } else {
+                elem.removeClass('selected');
+            }
+        });
+    };
 }
 
 // Run every time new products are loaded
@@ -651,9 +672,11 @@ function renderProducts(products) {
     renderPage(products);
 
     var product_list = jQuery('#product-list');
+    product_list.children().show();
     product_list.find('#product-infotext').remove();
-    if(products.follow_html) {
-        product_list.prepend(products.follow_html);
+    if(products.extra_html) {
+        product_list.children().hide();
+        product_list.prepend(products.extra_html);
     }
 
     filterCriteria(products);

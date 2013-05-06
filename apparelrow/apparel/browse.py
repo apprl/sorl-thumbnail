@@ -139,20 +139,35 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     facet_fields = ['category', 'price', 'color', 'manufacturer', 'store']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     query_arguments = set_query_arguments(query_arguments, request, facet_fields, currency=currency)
+    query_arguments['fq'].append('availability:true')
 
-    # Follower products
-    user_ids = []
-    if 'f' in request.GET and request.user and not user_id:
-        user_ids = list(Follow.objects.filter(user=request.user).values_list('user_follow_id', flat=True))
-        user_ids_or = ' OR '.join(str(x) for x in (user_ids + [0]))
-        query_arguments['fq'].append('user_likes:({0})'.format(user_ids_or))
-        query_arguments['fq'].append('availability:true')
-        query_arguments['fq'].append(generate_gender_field(request.GET))
+    result = {}
+
+    # Shop views
+    view = request.GET.get('view', 'all')
+    is_authenticated = request.user.is_authenticated()
+    if view == 'friends' or 'f' in request.GET:
+        user_ids = []
+        if is_authenticated:
+            user_ids = get_model('profile', 'Follow').objects.filter(user=request.user).values_list('user_follow_id', flat=True)
+        else:
+            result.update(extra_html=loader.render_to_string('apparel/fragments/browse_follow_user.html', {}, context_instance=RequestContext(request)))
+        user_ids_or = ' OR '.join(str(x) for x in (list(user_ids) + [0]))
+        query_arguments['fq'].append('user_likes:(%s)' % (user_ids_or,))
+        query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
+
+    elif view == 'brands':
+        brand_ids = []
+        if is_authenticated:
+            brand_ids = get_model('apparel', 'Brand').objects.filter(user__followers__user=request.user).values_list('id', flat=True)
+        else:
+            result.update(extra_html=loader.render_to_string('apparel/fragments/browse_follow_user.html', {}, context_instance=RequestContext(request)))
+        brand_ids_or = ' OR '.join(str(x) for x in (list(brand_ids) + [0]))
+        query_arguments['fq'].append('manufacturer_id:(%s)' % (brand_ids_or,))
+        query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
     else:
-        query_arguments['fq'].append('availability:true')
-
-        # User wardrobe
         if user_id:
+            # Embedded shop
             query_arguments['fq'].append('user_likes:%s' % (user_id,))
             if user_gender == 'A':
                 query_arguments['fq'].append(generate_gender_field(request.GET))
@@ -236,7 +251,6 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     paged_result, pagination = get_pagination_page(search, BROWSE_PAGE_SIZE,
             request.GET.get('page', 1))
 
-    result = {}
     result.update(pagination=pagination,
                   pricerange=pricerange,
                   manufacturers=manufacturers,
@@ -260,10 +274,6 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
 
     if request.GET.get('q', None):
         browse_text = '%s \'%s\', %s' % (_('Showing'), request.GET.get('q'), browse_text)
-    if request.GET.get('f', None):
-        browse_text = '%s, %s' % (_('Showing your friends\' favorites'), browse_text)
-        if not user_ids:
-            result.update(follow_html=loader.render_to_string('apparel/fragments/browse_follow_user.html', {}, context_instance=RequestContext(request)))
 
     result.update(browse_text=browse_text)
 
@@ -311,6 +321,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         selected_gender      = request.GET.get('gender', None),
         selected_discount    = selected_discount,
         selected_sort        = request.GET.get('sort', None),
+        selected_view        = request.GET.get('view', None),
         gender               = gender,
     )
 
