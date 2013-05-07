@@ -26,7 +26,7 @@
                 {% else %}
                 <a target="_blank" href="{% internal_referral_url product.get_absolute_url owner.pk %}" class="btn btn-upper btn-block btn-look-tooltip">{% trans "Sold out" %}</a>
                 {% endif %}
-                {% if alternative and get_alternative %}
+                {% if alternative %}
                 <a target="_blank" class="alternative" href="{{ alternative.0 }}">{% trans "More alternatives from " %}{{ alternative.1 }} {{ alternative.2}}</a>
                 {% endif %}
             </div>
