@@ -156,6 +156,9 @@
                 {% endfor %}
                 </ul>
                 {% endif %}
+                {% if looks_with_product_count == 0 %}
+                <a href="{% url 'look-create' %}" class="btn btn-block btn-upper">{% trans "Add your look" %}</a>
+                {% endif %}
             </div>
             <div class="product-similar">
                 {% if more_like_this %}
