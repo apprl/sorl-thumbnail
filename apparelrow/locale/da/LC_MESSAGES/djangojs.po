@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-07 21:20+0200\n"
+"POT-Creation-Date: 2013-05-07 08:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,49 +26,55 @@ msgstr ""
 msgid "Buy"
 msgstr ""
 
-#: static/js/apparel.js:804
+#: static/js/apparel.js:819
 msgid "Found %(count)s product"
 msgid_plural "Found %(count)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:805
+#: static/js/apparel.js:820
 msgid "Found %(count)s look"
 msgid_plural "Found %(count)s looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:806
+#: static/js/apparel.js:821
 msgid "Found %(count)s matching brand"
 msgid_plural "Found %(count)s matching brands"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:807
+#: static/js/apparel.js:822
 msgid "Found %(count)s matching member"
 msgid_plural "Found %(count)s matching members"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:808
+#: static/js/apparel.js:823
+msgid "Found %(count)s matching store"
+msgid_plural "Found %(count)s matching stores"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/js/apparel.js:824
 msgid "Show %(count)s product"
 msgid_plural "Show all %(count)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:809
+#: static/js/apparel.js:825
 msgid "Show %(count)s look"
 msgid_plural "Show all %(count)s looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:810
+#: static/js/apparel.js:826
 msgid "Show %(count)s matching brand"
 msgid_plural "Show all %(count)s matching brands"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:811
+#: static/js/apparel.js:827
 msgid "Show %(count)s matching member"
 msgid_plural "Show all %(count)s matching members"
 msgstr[0] ""
@@ -78,7 +84,13 @@ msgstr[1] ""
 msgid "See looks »"
 msgstr "Se looks »"
 
-#: static/js/browse.js:640
+#: static/js/apparel.js:828
+msgid "Show %(count)s matching store"
+msgid_plural "Show all %(count)s matching stores"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/js/browse.js:659
 msgid "SOLD OUT"
 msgstr ""
 

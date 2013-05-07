@@ -319,6 +319,7 @@ def get_product_document(instance):
         if instance.default_vendor:
             document['store_id'] = instance.default_vendor.vendor_id
             document['store'] = '%s|%s' % (instance.default_vendor.vendor.name, instance.default_vendor.vendor_id)
+            document['store_auto'] = instance.default_vendor.vendor.name
 
         # Brand
         document['manufacturer_auto'] = instance.manufacturer.name
@@ -424,6 +425,11 @@ def decode_manufacturer_facet(data):
 
     return int(ident), name, lower_name
 
+def decode_store_facet(data):
+    name, ident = data.rsplit('|', 1)
+
+    return int(ident), name
+
 
 #
 # Generic search
@@ -474,6 +480,14 @@ def search_view(request, model_name):
         arguments['fq'].append('published:true')
     elif model_name == 'user':
         arguments['qf'] = ['text']
+    elif model_name == 'store':
+        # override fq cause we do not have a separate store index
+        arguments['fq'] = ['django_ct:apparel.product', 'availability:true', gender_field, 'published:true']
+        arguments['qf'] = ['store_auto']
+        arguments['facet'] = 'on'
+        arguments['facet.limit'] = -1
+        arguments['facet.mincount'] = 1
+        arguments['facet.field'] = ['store']
     elif model_name == 'manufacturer':
         # override fq cause we do not have a separate manufacturer index
         arguments['fq'] = ['django_ct:apparel.product', 'availability:true', gender_field, 'published:true']
@@ -499,6 +513,14 @@ def search_view(request, model_name):
                 id, name, _ = decode_manufacturer_facet(value)
                 results.append({'id': int(id), 'name': name})
 
+    if model_name == 'store':
+        facet = results.get_facet()['facet_fields']
+        results = []
+        for i, value in enumerate(facet['store']):
+            if i % 2 == 0:
+                store_id, name = decode_store_facet(value)
+                results.append({'id': store_id, 'name': name})
+
     paginator = Paginator(results, limit)
     try:
         paged_result = paginator.page(int(request.GET.get('page', 1)))
@@ -516,6 +538,8 @@ def search_view(request, model_name):
         object_list = [o.template for o in paged_result.object_list if o]
     elif model_name == 'manufacturer':
         object_list = [render_to_string('apparel/fragments/manufacturer_search.html', {'object': obj, 'gender': gender}) for obj in paged_result.object_list]
+    elif model_name == 'store':
+        object_list = [render_to_string('apparel/fragments/store_search.html', {'object': obj, 'gender': gender}) for obj in paged_result.object_list]
 
     return HttpResponse(
         json.dumps({

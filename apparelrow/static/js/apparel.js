@@ -721,6 +721,21 @@ ApparelSearch = {
         });
 
         ApparelSearch._doSearch({
+            model: 'store',
+            query: {
+                'q': s,
+                'limit': 10
+            },
+            selector: '#search-result-stores',
+            text: {
+                header_plural: 'Found %(count)s matching stores',
+                header_singular: 'Found %(count)s matching store',
+                button_plural: 'Show all %(count)s matching stores',
+                button_singular: 'Show %(count)s matching store'
+            }
+        });
+
+        ApparelSearch._doSearch({
             model: 'user',
             query: {
                 'q': s,
@@ -828,10 +843,12 @@ ApparelSearch = {
         ngettext('Found %(count)s look', 'Found %(count)s looks', 0);
         ngettext('Found %(count)s matching brand', 'Found %(count)s matching brands', 0);
         ngettext('Found %(count)s matching member', 'Found %(count)s matching members', 0);
+        ngettext('Found %(count)s matching store', 'Found %(count)s matching stores', 0);
         ngettext('Show %(count)s product', 'Show all %(count)s products', 0);
         ngettext('Show %(count)s look', 'Show all %(count)s looks', 0);
         ngettext('Show %(count)s matching brand', 'Show all %(count)s matching brands', 0);
         ngettext('Show %(count)s matching member', 'Show all %(count)s matching members', 0);
+        ngettext('Show %(count)s matching store', 'Show all %(count)s matching stores', 0);
     },
 
     format_query: function(query) {
@@ -940,6 +957,12 @@ jQuery(document).ready(function() {
         }).on('click', '.search-result-manufacturers:not(.disabled)', function(e) {
             return search_link_action('search-result-manufacturers');
         });
+
+    $(document).on('click', '#search-result #search-result-stores li a', function(e) {
+        if(window.location.pathname.slice(0, 5) == '/shop') {
+            ApparelSearch.cancel();
+        }
+    });
 
     function search_link_action(type) {
         var query = jQuery('#' + type).data('last-query');
