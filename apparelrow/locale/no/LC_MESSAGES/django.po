@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-30 09:28+0200\n"
+"POT-Creation-Date: 2013-05-07 21:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -924,7 +924,7 @@ msgid "Follow our stylemakers, brands & bloggers"
 msgstr ""
 
 #: templates/base.html:233 templates/base.html.py:269
-#: templates/apparel/brand_list.html:39 templates/apparel/look_list.html:39
+#: templates/apparel/brand_list.html:41 templates/apparel/look_list.html:39
 #: templates/apparel/user_list.html:53 templates/apparel/tags/login_bar.html:9
 #: templates/registration/login.html:35
 #: templates/registration/registration_email.html:48
@@ -947,7 +947,7 @@ msgstr ""
 msgid "Looks"
 msgstr ""
 
-#: templates/base.html:264 templates/apparel/brand_list.html:11
+#: templates/base.html:264 templates/apparel/brand_list.html:9
 #: templates/apparel/shared_header.html:15
 #: templates/profile/base_login_flow.html:32
 #: templates/profile/login_flow_brands.html:8
@@ -1156,6 +1156,9 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
+#: templates/apparel/fragments/follow_no_tags.html:6
+#: templates/apparel/fragments/follow_no_tags.html:8
+#: templates/apparel/fragments/follow_no_tags.html:14
 #: templates/profile/base_profile.html:46
 #: templates/profile/base_profile.html:96
 #: templates/profile/login_flow_featured.html:45
@@ -1167,6 +1170,9 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
+#: templates/apparel/fragments/follow_no_tags.html:6
+#: templates/apparel/fragments/follow_no_tags.html:8
+#: templates/apparel/fragments/follow_no_tags.html:14
 #: templates/profile/login_flow_featured.html:45
 #: templates/profile/login_flow_friends.html:45
 msgid "Stop following"
@@ -1177,6 +1183,9 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
+#: templates/apparel/fragments/follow_no_tags.html:6
+#: templates/apparel/fragments/follow_no_tags.html:8
+#: templates/apparel/fragments/follow_no_tags.html:14
 #: templates/profile/login_flow_featured.html:45
 #: templates/profile/login_flow_friends.html:45
 #: templates/profile/notifications/email_follow_user.html:3
@@ -1336,15 +1345,15 @@ msgid ""
 "products or mix & match collages!"
 msgstr ""
 
-#: templates/apparel/brand_list.html:6
+#: templates/apparel/brand_list.html:4
 msgid "Brands Men"
 msgstr ""
 
-#: templates/apparel/brand_list.html:6
+#: templates/apparel/brand_list.html:4
 msgid "Brands Women"
 msgstr ""
 
-#: templates/apparel/brand_list.html:18
+#: templates/apparel/brand_list.html:16
 msgid "Most followed"
 msgstr ""
 
@@ -1352,7 +1361,7 @@ msgstr ""
 msgid "Your friends like"
 msgstr ""
 
-#: templates/apparel/brand_list.html:38
+#: templates/apparel/brand_list.html:40
 msgid "Sign up to see what your friends like."
 msgstr ""
 
@@ -1909,7 +1918,7 @@ msgid "Add to look"
 msgstr ""
 
 #: templates/apparel/fragments/product_shop.html:33
-msgid "See looks"
+msgid "See looks »"
 msgstr ""
 
 #: templates/apparel/fragments/product_short_link.html:2

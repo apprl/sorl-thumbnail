@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-23 14:30+0200\n"
+"POT-Creation-Date: 2013-05-07 21:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,8 +77,8 @@ msgstr[0] "Visa %(count)s medlem"
 msgstr[1] "Visa alla %(count)s medlemmar"
 
 #: static/js/browse.js:639
-msgid "See looks"
-msgstr "Se looks"
+msgid "See looks »"
+msgstr "Se looks »"
 
 #: static/js/browse.js:640
 msgid "SOLD OUT"

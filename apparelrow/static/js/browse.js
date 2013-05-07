@@ -636,7 +636,7 @@ function updateSelected(products) {
 // Run every time new products are loaded
 function calculateProductLayout() {
     var $productList = $('#product-list');
-    $productList.find('.looks').text(gettext('See looks'));
+    $productList.find('.looks').text(gettext('See looks »'));
     $productList.find('.sold-out').text(gettext('SOLD OUT'));
 }
 
