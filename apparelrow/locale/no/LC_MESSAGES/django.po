@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-07 21:20+0200\n"
+"POT-Creation-Date: 2013-05-08 10:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,7 +68,7 @@ msgstr ""
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:266 templates/base.html:372
+#: apparel/admin.py:266 templates/base.html:370
 #: templates/advertiser/dialog_accept.html:8
 #: templates/apparel/look_editor.html:92 templates/apparel/look_editor.html:98
 #: templates/apparel/look_editor.html:104
@@ -76,7 +76,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: apparel/admin.py:267 templates/base.html:371
+#: apparel/admin.py:267 templates/base.html:369
 #: templates/apparel/look_editor.html:91 templates/apparel/look_editor.html:97
 #: templates/apparel/look_editor.html:103
 #: templates/apparel/look_editor.html:109
@@ -1262,7 +1262,7 @@ msgstr ""
 msgid "Total accepted commission:"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:54 templates/dashboard/admin.html:71
+#: templates/advertiser/store_admin.html:54 templates/dashboard/admin.html:67
 #: templates/dashboard/partner.html:71
 msgid "Show: "
 msgstr ""
@@ -1698,19 +1698,23 @@ msgstr ""
 msgid "Be the first one to like this product!"
 msgstr ""
 
-#: templates/apparel/product_detail.html:162
+#: templates/apparel/product_detail.html:160
+msgid "Add your look"
+msgstr ""
+
+#: templates/apparel/product_detail.html:165
 msgid "You may also like"
 msgstr ""
 
-#: templates/apparel/product_detail.html:164
+#: templates/apparel/product_detail.html:167
 msgid "Previous"
 msgstr ""
 
-#: templates/apparel/product_detail.html:172
+#: templates/apparel/product_detail.html:175
 msgid "Next"
 msgstr ""
 
-#: templates/apparel/product_detail.html:180
+#: templates/apparel/product_detail.html:183
 msgid "No product found!"
 msgstr ""
 
@@ -1878,7 +1882,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/apparel/fragments/product_detail.html:136
-msgid "Add your look"
+msgid "Create your look with "
 msgstr ""
 
 #: templates/apparel/fragments/product_menu.html:7
@@ -1983,46 +1987,46 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: templates/dashboard/admin.html:62
+#: templates/dashboard/admin.html:58
 msgid "Partner admin"
 msgstr ""
 
-#: templates/dashboard/admin.html:78
+#: templates/dashboard/admin.html:74
 #, python-format
 msgid "Total commission %(month_commission)skr"
 msgstr ""
 
-#: templates/dashboard/admin.html:79
+#: templates/dashboard/admin.html:75
 #, python-format
 msgid "Partner commission %(partner)skr"
 msgstr ""
 
-#: templates/dashboard/admin.html:80
+#: templates/dashboard/admin.html:76
 #, python-format
 msgid "Apprl commission %(apprl)skr"
 msgstr ""
 
-#: templates/dashboard/admin.html:82
+#: templates/dashboard/admin.html:78
 #, python-format
 msgid "Sales %(sales_count)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:83
+#: templates/dashboard/admin.html:79
 #, python-format
 msgid "Conversion rate %(conversion_rate)s%%"
 msgstr ""
 
-#: templates/dashboard/admin.html:85
+#: templates/dashboard/admin.html:81
 #, python-format
 msgid "Total click %(click_total)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:86
+#: templates/dashboard/admin.html:82
 #, python-format
 msgid "Partner click %(click_partner)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:87
+#: templates/dashboard/admin.html:83
 #, python-format
 msgid "Apprl click %(click_apprl)s"
 msgstr ""

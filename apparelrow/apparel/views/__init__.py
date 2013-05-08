@@ -368,7 +368,7 @@ def product_action(request, pk, action):
 
     try:
         product = Product.objects.get(pk=pk)
-    except Product.MultipleObjectsReturned, Product.DoesNotExist:
+    except (Product.MultipleObjectsReturned, Product.DoesNotExist) as e:
         return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
 
     return _product_like(request, product, action)
@@ -387,7 +387,7 @@ def product_like(request, slug, action):
 
     try:
         product = Product.objects.get(slug=slug)
-    except Product.MultipleObjectsReturned, Product.DoesNotExist:
+    except (Product.MultipleObjectsReturned, Product.DoesNotExist) as e:
         return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
 
     return _product_like(request, product, action)
@@ -425,7 +425,7 @@ def look_like(request, slug, action):
 
     try:
         look = Look.objects.get(slug=slug)
-    except Look.MultipleObjectsReturned, Look.DoesNotExist:
+    except (Look.MultipleObjectsReturned, Look.DoesNotExist) as e:
         return HttpResponse(json.dumps(dict(success=False, error_message='No look found')), mimetype='application/json')
 
     if action == 'like':

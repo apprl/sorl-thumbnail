@@ -159,6 +159,25 @@ def widget(request, slug):
     return render(request, 'apparel/fragments/look_widget.html', content)
 
 
+def create_and_like(request, slug):
+    """
+    Like product and then display look create page.
+    """
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
+
+    Product = get_model('apparel', 'Product')
+
+    try:
+        product = Product.objects.get(slug=slug)
+    except (Product.MultipleObjectsReturned, Product.DoesNotExist) as e:
+        raise Http404()
+
+    _product_like(request, product, 'like')
+
+    return HttpResponseRedirect(reverse('look-create'))
+
+
 def create(request):
     """
     Look create page, select between collage and photo.
