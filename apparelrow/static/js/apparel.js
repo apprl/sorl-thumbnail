@@ -765,7 +765,7 @@ ApparelSearch = {
                     } else {
                         root = jQuery('<li/>').appendTo(list);
                     }
-                    var $object = jQuery(object);
+                    var $object = jQuery($.parseHTML(object));
                     currencyConversion($object.find('.price, .discount-price'));
                     root.append($object);
 
