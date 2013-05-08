@@ -72,28 +72,27 @@ def embed(request, slug, identifier=None):
     for component in components:
         component.style_embed = component._style(max_width / float(look.width))
 
-        if request.GET.get('alternative'):
-            colors_pk = list(map(str, component.product.options.filter(option_type__name='color').values_list('pk', flat=True)))
-            query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
-            query_arguments['fq'].append('gender:(%s OR U)' % (component.product.gender,))
-            query_arguments['fq'].append('category:%s' % (component.product.category_id))
+        colors_pk = list(map(str, component.product.options.filter(option_type__name='color').values_list('pk', flat=True)))
+        query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
+        query_arguments['fq'].append('gender:(%s OR U)' % (component.product.gender,))
+        query_arguments['fq'].append('category:%s' % (component.product.category_id))
+        if colors_pk:
+            query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
+        search = ApparelSearch('*:*', **query_arguments)
+        docs = search.get_docs()
+        if docs:
+            shop_reverse = 'shop-men' if component.product.gender == 'M' else 'shop-women'
+            shop_url = '%s#category=%s' % (reverse(shop_reverse),
+                                                    component.product.category_id)
             if colors_pk:
-                query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
-            search = ApparelSearch('*:*', **query_arguments)
-            docs = search.get_docs()
-            if docs:
-                shop_reverse = 'shop-men' if component.product.gender == 'M' else 'shop-women'
-                shop_url = '%s#category=%s' % (reverse(shop_reverse),
-                                                        component.product.category_id)
-                if colors_pk:
-                    shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+                shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
 
-                price, currency = docs[0].price.split(',')
-                rate = currency_exchange(language_currency, currency)
-                price = rate * decimal.Decimal(price)
-                price = price.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
+            price, currency = docs[0].price.split(',')
+            rate = currency_exchange(language_currency, currency)
+            price = rate * decimal.Decimal(price)
+            price = price.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
 
-                component.alternative = (shop_url, price, language_currency)
+            component.alternative = (shop_url, price, language_currency)
 
     translation.activate(language)
     response = render(request, 'apparel/look_embed.html', {'object': look,
