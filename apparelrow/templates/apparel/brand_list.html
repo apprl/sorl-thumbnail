@@ -17,7 +17,7 @@
         <ul class="suggested-friends">
             {% for brand in popular_brands %}
             <li>
-                <a class="profile-link" href="{% url 'profile-likes' brand.slug %}"><img class="avatar" src="{{ brand.avatar }}" alt="{{ brand.display_name }}"/>{{ brand.display_name }}</a>
+                <a class="profile-link" href="{% url 'brand-likes' brand.slug %}"><img class="avatar" src="{{ brand.avatar }}" alt="{{ brand.display_name }}"/>{{ brand.display_name }}</a>
                 <br>
                 {% include 'apparel/fragments/follow_no_tags.html' with request=request profile=brand only %}
             </li>
