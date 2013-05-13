@@ -169,6 +169,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'apparelrow.profile.middleware.ImpersonateMiddleware',
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
+    'apparelrow.apparel.middleware.InternalReferralMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (

@@ -316,6 +316,12 @@ def product_redirect(request, pk, page='Default', sid=0):
     """
     product = get_object_or_404(Product, pk=pk, published=True)
 
+    # TODO: read cookie here and let cookie win over sid parameter, no?
+    cookie_data = request.get_signed_cookie('amain_visit', default=False)
+    if cookie_data:
+        # TODO: which page? store it in cookie?
+        print cookie_data, sid
+
     url = vendor_buy_url(pk, product.default_vendor, sid, page)
     data = {'id': product.pk,
             'redirect_url': url,

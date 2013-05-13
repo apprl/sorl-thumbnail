@@ -346,6 +346,11 @@ class VendorProductAdmin(admin.ModelAdmin):
 admin.site.register(VendorProduct, VendorProductAdmin)
 
 
+class InternalReferralAdmin(admin.ModelAdmin):
+    list_display = ('cookie_id', 'old_cookie_id', 'created', 'expires', 'expired')
+
+admin.site.register(InternalReferral, InternalReferralAdmin)
+
 #
 # User data
 #

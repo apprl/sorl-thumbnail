@@ -1040,6 +1040,29 @@ models.signals.post_delete.connect(invalidate_model_handler, sender=LookComponen
 
 
 #
+# InternalReferral
+#
+
+class InternalReferral(models.Model):
+    cookie_id = models.CharField(max_length=32, null=False, blank=False, db_index=True)
+    old_cookie_id = models.CharField(max_length=32, null=True, blank=True)
+
+    sid = models.CharField(max_length=32, null=False, blank=False)
+    page = models.CharField(max_length=32, null=False, blank=False)
+    user_id = models.CharField(max_length=32, null=True, blank=True)
+    expired = models.BooleanField(default=False)
+
+    created = models.DateTimeField(null=False, blank=False)
+    expires = models.DateTimeField(null=False, blank=False)
+
+    class Meta:
+        ordering = ['-created']
+
+    def __unicode__(self):
+        return u'InternalReferral(%s)' % (self.cookie_id,)
+
+
+#
 # TemporaryImage
 #
 
