@@ -444,7 +444,8 @@ function renderPage(products) {
         $list.find('.product-container').each(function(i, element) {
             var buy_url = $(element).find('.btn-buy').attr('href');
             buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
-            $('.product-image, .product-footer a', element).attr('href', buy_url).attr('target', '_blank');
+            $('.product-image, .product-footer h4 a', element).attr('href', buy_url);
+            $('.product-image, .product-footer a', element).attr('target', '_blank');
             $('.hover', element).remove();
         });
     }

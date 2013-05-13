@@ -30,7 +30,7 @@
         </p>
         {% endif %}
         {% if has_looks %}
-        <p><a class="looks" href="{% url 'product-look-list' contains=object.slug %}">{% trans "See looks »" %}</a></p>
+        <p><a class="looks" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" href="{% url 'product-look-list' contains=object.slug %}">{% trans "See looks »" %}</a></p>
         {% endif %}
     </div>
 </div>

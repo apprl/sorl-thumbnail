@@ -11,11 +11,11 @@
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
         <script type="text/javascript">
-          var pricerange = {
-            min: {{ pricerange.min }},
-            max: {{ pricerange.max }}
-          };
-          var embed_shop_user_id = {{ user_id }};
+            var pricerange = {
+                min: {{ pricerange.min }},
+                max: {{ pricerange.max }}
+            };
+            var embed_shop_user_id = {{ user_id }};
             $(function () {
                 $("#back-top").hide();
                 $(window).scroll(function () {
@@ -30,6 +30,21 @@
                         scrollTop: 0
                     }, 400);
                     return false;
+                });
+                $(document).on('click', '.product-image, .product-footer a.looks', function() {
+                    var slug = $(this).data('slug');
+                    var vendor = $(this).data('vendor');
+                    var label = vendor + ' - ' + slug;
+                    slug = undefined;
+                    if(typeof slug === 'undefined') {
+                        var href_split = $(this).attr('href').split('/');
+                        if(href_split.length > 2) {
+                            label = href_split[2];
+                        } else {
+                            label = '';
+                        }
+                    }
+                    _gaq.push(['_trackEvent', 'Ext-Shop', 'SeeLooks', label]);
                 });
             });
         </script>
