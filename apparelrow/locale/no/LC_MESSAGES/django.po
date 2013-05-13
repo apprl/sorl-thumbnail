@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-08 10:56+0200\n"
+"POT-Creation-Date: 2013-05-13 08:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1427,7 +1427,7 @@ msgid "Embed code"
 msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:84
-msgid "<< Go back to your look"
+msgid "« Go back to your look"
 msgstr ""
 
 #: templates/apparel/look_create.html:5 templates/apparel/look_create.html:13
