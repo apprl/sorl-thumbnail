@@ -69,7 +69,7 @@ msgstr ""
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:266 templates/base.html:370
+#: apparel/admin.py:266 templates/base.html:373
 #: templates/advertiser/dialog_accept.html:8
 #: templates/apparel/look_editor.html:92 templates/apparel/look_editor.html:98
 #: templates/apparel/look_editor.html:104
@@ -77,10 +77,10 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: apparel/admin.py:267 templates/base.html:374
-#: templates/apparel/look_editor.html:90 templates/apparel/look_editor.html:96
-#: templates/apparel/look_editor.html:102
-#: templates/apparel/look_editor.html:108
+#: apparel/admin.py:267 templates/base.html:372
+#: templates/apparel/look_editor.html:91 templates/apparel/look_editor.html:97
+#: templates/apparel/look_editor.html:103
+#: templates/apparel/look_editor.html:109
 msgid "No"
 msgstr ""
 
@@ -1046,7 +1046,7 @@ msgid "No updates"
 msgstr ""
 
 #: templates/activity_feed/feed.html:12 templates/apparel/brand_list.html:33
-#: templates/apparel/browse.html:69 templates/apparel/shop_embed.html:92
+#: templates/apparel/browse.html:69 templates/apparel/shop_embed.html:107
 #: templates/apparel/fragments/looks_large.html:67
 #: templates/apparel/fragments/looks_medium.html:12
 #: templates/apparel/fragments/user_list.html:12
@@ -1406,7 +1406,7 @@ msgstr ""
 msgid "high price"
 msgstr ""
 
-#: templates/apparel/browse.html:59 templates/apparel/shop_embed.html:84
+#: templates/apparel/browse.html:59 templates/apparel/shop_embed.html:99
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
@@ -1738,17 +1738,15 @@ msgstr[1] ""
 msgid "You may also like"
 msgstr ""
 
-#: templates/apparel/product_detail.html:183
-#: templates/apparel/fragments/product_row.html:3
+#: templates/apparel/product_detail.html:167
 msgid "Previous"
 msgstr ""
 
-#: templates/apparel/product_detail.html:191
-#: templates/apparel/fragments/product_row.html:13
+#: templates/apparel/product_detail.html:175
 msgid "Next"
 msgstr ""
 
-#: templates/apparel/product_detail.html:199
+#: templates/apparel/product_detail.html:183
 msgid "No product found!"
 msgstr ""
 
@@ -1809,10 +1807,16 @@ msgstr ""
 msgid "It is not possible to connect this account with Facebook."
 msgstr ""
 
+#: templates/apparel/fragments/browse_follow_brand.html:4
+msgid "Create your personal shop based on the brands you follow."
+msgstr ""
+
+#: templates/apparel/fragments/browse_follow_brand.html:5
+msgid "See all brands"
+msgstr ""
+
 #: templates/apparel/fragments/browse_follow_user.html:4
-msgid ""
-"To see what products are popular in your network, first you need to start "
-"following friends among our members."
+msgid "Create your personal shop based on the people you follow."
 msgstr ""
 
 #: templates/apparel/fragments/dialog_create_look.html:5

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-07 08:26+0200\n"
+"POT-Creation-Date: 2013-05-14 09:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,7 @@ msgstr "Tid ändrad"
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:266 templates/base.html:375
+#: apparel/admin.py:266 templates/base.html:373
 #: templates/advertiser/dialog_accept.html:8
 #: templates/apparel/look_editor.html:92 templates/apparel/look_editor.html:98
 #: templates/apparel/look_editor.html:104
@@ -77,10 +77,10 @@ msgstr ""
 msgid "Yes"
 msgstr "Ja"
 
-#: apparel/admin.py:267 templates/base.html:374
-#: templates/apparel/look_editor.html:90 templates/apparel/look_editor.html:96
-#: templates/apparel/look_editor.html:102
-#: templates/apparel/look_editor.html:108
+#: apparel/admin.py:267 templates/base.html:372
+#: templates/apparel/look_editor.html:91 templates/apparel/look_editor.html:97
+#: templates/apparel/look_editor.html:103
+#: templates/apparel/look_editor.html:109
 msgid "No"
 msgstr "Nej"
 
@@ -1050,7 +1050,7 @@ msgid "No updates"
 msgstr "Inga händelser"
 
 #: templates/activity_feed/feed.html:12 templates/apparel/brand_list.html:33
-#: templates/apparel/browse.html:69 templates/apparel/shop_embed.html:92
+#: templates/apparel/browse.html:69 templates/apparel/shop_embed.html:107
 #: templates/apparel/fragments/looks_large.html:67
 #: templates/apparel/fragments/looks_medium.html:12
 #: templates/apparel/fragments/user_list.html:12
@@ -1434,7 +1434,7 @@ msgstr "billigast"
 msgid "high price"
 msgstr "dyrast"
 
-#: templates/apparel/browse.html:59 templates/apparel/shop_embed.html:84
+#: templates/apparel/browse.html:59 templates/apparel/shop_embed.html:99
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
@@ -1770,21 +1770,19 @@ msgid_plural "<span class=\"count\">%(counter)s</span> looks with this product"
 msgstr[0] "<span class=\"count\">%(counter)s</span> look med denna produkt"
 msgstr[1] "<span class=\"count\">%(counter)s</span> looks med denna produkt"
 
-#: templates/apparel/product_detail.html:181
+#: templates/apparel/product_detail.html:165
 msgid "You may also like"
 msgstr "Se även"
 
-#: templates/apparel/product_detail.html:183
-#: templates/apparel/fragments/product_row.html:3
+#: templates/apparel/product_detail.html:167
 msgid "Previous"
 msgstr "Föregående"
 
-#: templates/apparel/product_detail.html:191
-#: templates/apparel/fragments/product_row.html:13
+#: templates/apparel/product_detail.html:175
 msgid "Next"
 msgstr "Nästa"
 
-#: templates/apparel/product_detail.html:199
+#: templates/apparel/product_detail.html:183
 msgid "No product found!"
 msgstr "Ingen produkt hittad!"
 
@@ -1845,13 +1843,17 @@ msgstr "Koppla ditt Facebook-konto för att hitta dina vänner."
 msgid "It is not possible to connect this account with Facebook."
 msgstr "Det är inte möjligt att ansluta det här kontot med Facebook."
 
+#: templates/apparel/fragments/browse_follow_brand.html:4
+msgid "Create your personal shop based on the brands you follow."
+msgstr "Skapa din personliga shop genom att följa dina favoritvarumärken."
+
+#: templates/apparel/fragments/browse_follow_brand.html:5
+msgid "See all brands"
+msgstr "Visa alla varumärken"
+
 #: templates/apparel/fragments/browse_follow_user.html:4
-msgid ""
-"To see what products are popular in your network, first you need to start "
-"following friends among our members."
-msgstr ""
-"För att se vilka produkter som är populära bland dina vänner behöver du "
-"först hitta vänner att följa bland våra medlemmar."
+msgid "Create your personal shop based on the people you follow."
+msgstr "Skapa din personliga shop baserat på vad dina vänner gillar."
 
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"
@@ -3258,6 +3260,16 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:4
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
+
+#~ msgid "Recently viewed"
+#~ msgstr "Senast besökta"
+
+#~ msgid ""
+#~ "To see what products are popular in your network, first you need to start "
+#~ "following friends among our members."
+#~ msgstr ""
+#~ "För att se vilka produkter som är populära bland dina vänner behöver du "
+#~ "först hitta vänner att följa bland våra medlemmar."
 
 #~ msgid "Read more about becoming a partner"
 #~ msgstr "Läs mer om att bli partnerbloggare"
