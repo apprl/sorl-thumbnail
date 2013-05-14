@@ -342,6 +342,7 @@ FACEBOOK_OG_TYPE = 'apprlcom'
 MANDRILL_API_KEY = '7dDF82r91MHKJ68Q0t6egQ'
 EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
 DEFAULT_FROM_EMAIL = 'Apprl <no-reply@apprl.com>'
+SERVER_EMAIL = 'Apprl <no-reply@apprl.com>'
 #EMAIL_HOST          = 'smtp.gmail.com'
 #EMAIL_PORT          = 587
 #EMAIL_HOST_USER     = 'postman@apparelrow.com'
