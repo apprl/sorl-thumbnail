@@ -76,7 +76,7 @@ msgstr[1] ""
 
 #: static/js/browse.js:639
 msgid "See looks »"
-msgstr ""
+msgstr "Se looks »"
 
 #: static/js/browse.js:640
 msgid "SOLD OUT"
