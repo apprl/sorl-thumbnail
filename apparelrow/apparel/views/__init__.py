@@ -30,6 +30,7 @@ from apparelrow.profile.models import Follow
 from apparelrow.profile.utils import get_facebook_user
 from apparelrow.profile.notifications import process_like_look_created
 
+from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
 from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
@@ -316,11 +317,10 @@ def product_redirect(request, pk, page='Default', sid=0):
     """
     product = get_object_or_404(Product, pk=pk, published=True)
 
-    # TODO: read cookie here and let cookie win over sid parameter, no?
-    cookie_data = request.get_signed_cookie('amain_visit', default=False)
+    cookie_data = request.get_signed_cookie(REFERRAL_COOKIE_NAME, default=False)
     if cookie_data:
-        # TODO: which page? store it in cookie?
-        print cookie_data, sid
+        # Replaces sid and page with data from cookie
+        cookie_id, sid, page, _ = cookie_data.split('|')
 
     url = vendor_buy_url(pk, product.default_vendor, sid, page)
     data = {'id': product.pk,

@@ -347,9 +347,12 @@ admin.site.register(VendorProduct, VendorProductAdmin)
 
 
 class InternalReferralAdmin(admin.ModelAdmin):
-    list_display = ('cookie_id', 'old_cookie_id', 'created', 'expires', 'expired')
+    list_display = ('cookie_id', 'old_cookie_id', 'user_id', 'sid', 'page', 'created', 'expires', 'expired')
+    list_filter = ('expired',)
+    search_fields = ('cookie_id',)
 
 admin.site.register(InternalReferral, InternalReferralAdmin)
+
 
 #
 # User data

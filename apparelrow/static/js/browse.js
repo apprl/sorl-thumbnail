@@ -446,6 +446,9 @@ function renderPage(products) {
             buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
             $('.product-image, .product-footer h4 a', element).attr('href', buy_url);
             $('.product-image, .product-footer a', element).attr('target', '_blank');
+            var looks_elem = $('.product-footer a.looks', element);
+            var looks_href = looks_elem.attr('href');
+            looks_elem.attr('href', looks_href + '?acamp_id=' + embed_shop_user_id + '&acamp_page=Ext-Shop');
             $('.hover', element).remove();
         });
     }
