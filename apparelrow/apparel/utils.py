@@ -50,6 +50,24 @@ def get_product_alternative(product, default=None):
     return default
 
 
+def get_brand_and_category(look):
+    #XXX: this query might be slow on live
+    for c in look.display_components.select_related('product', 'product__category', 'product__category__parent', 'product__manufacturer'):
+        singular = None
+
+        if c.product.category.parent and c.product.category.parent.singular_name:
+            if c.product.category.parent.singular_name.strip():
+                singular = c.product.category.parent.singular_name
+        elif c.product.category.singular_name:
+            if c.product.category.singular_name.strip():
+                singular = c.product.category.singular_name
+
+        if singular:
+            yield (u'%s - %s' % (c.product.category, c.product.manufacturer), c.product)
+        else:
+            yield (u'%s' % (c.product.manufacturer.name,), c.product)
+
+
 def set_query_parameter(url, param_name, param_value):
     """
     Given a URL, set or replace a query parameter and return the modified

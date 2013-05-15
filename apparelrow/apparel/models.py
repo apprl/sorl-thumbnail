@@ -24,7 +24,7 @@ from django.utils.functional import cached_property
 from apparelrow.apparel.signals import look_saved
 from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
-from apparelrow.apparel.utils import currency_exchange
+from apparelrow.apparel.utils import currency_exchange, get_brand_and_category
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
 from apparelrow.apparel.tasks import build_static_look_image
 
@@ -178,7 +178,7 @@ class Vendor(models.Model):
 class Category(MPTTModel):
     name          = models.CharField(max_length=100, db_index=True)
     name_order    = models.CharField(max_length=100)
-    singular_name = models.CharField(max_length=100, default='')
+    singular_name = models.CharField(max_length=100, null=True, blank=True, default='')
     parent        = TreeForeignKey('self', null=True, blank=True, related_name='children')
     active        = models.BooleanField(default=False, help_text=_('Only active categories are visible and searchable on the website'), db_index=True)
     option_types  = models.ManyToManyField(OptionType, blank=True, verbose_name=_('Option types'))
@@ -306,10 +306,6 @@ class Product(models.Model):
     @cached_property
     def alt_text(self):
         return u'%s %s %s' % (self.manufacturer, self.product_name, (', '.join(self.color_list_locale)))
-
-    @cached_property
-    def category_and_brand(self):
-        return u'%s - %s' % (self.category.singular_name, self.manufacturer)
 
     @cached_property
     def categories(self):
@@ -824,12 +820,14 @@ class Look(models.Model):
         return set(self.product_manufacturers)
 
     @cached_property
-    def category_and_brand(self):
-        return [c.product.category_and_brand for c in self.display_components]
-
-    @cached_property
     def category_and_brand_with_product(self):
-        return [(c.product.category_and_brand, c.product) for c in self.display_components]
+        return list(get_brand_and_category(self))
+
+    def category_and_brand(self):
+        return [x[0] for x in self.category_and_brand_with_product]
+
+    def category_and_brand_count(self):
+        return len(self.category_and_brand_with_product)
 
     def __unicode__(self):
         return u"%s by %s" % (self.title, self.user.display_name)

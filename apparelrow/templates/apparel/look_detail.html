@@ -145,7 +145,14 @@
             <li><a href="{% internal_referral_url product.get_absolute_url object.user.pk %}">{{ text }}</a></li>
         {% endfor %}
         </ul>
-        {% include 'apparel/fragments/total_price.html' %}
+        <p class="total-price">
+            <span class="price">
+                {% blocktrans count object.category_and_brand_count as number %}{{ number }} article{% plural %}{{ number }} articles{% endblocktrans %}
+            </span>
+            {% if object.category_and_brand_count > 0 %}
+            <span class="sum"> - {{ object.total_price|floatformat:0|apprl_intcomma }} {{ CURRENCY }}</span>
+            {% endif %}
+        </p>
         <p class="created">{% trans "Created" %} {{ object.created|since }}</p>
     </div>
 {% endcache %}

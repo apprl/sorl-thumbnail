@@ -5,7 +5,7 @@
 <head{% block head-data %}{% endblock head-data %}>
     <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - Social Shopping{% endblock %}</title>
     <meta charset="utf-8" />
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
     <link rel="stylesheet" href="{% static "styles/screen.css" %}" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="{% static "styles/print.css" %}" type="text/css" media="print">
     <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
