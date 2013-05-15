@@ -36,7 +36,7 @@ from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProduc
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch
 from apparelrow.apparel.search import more_like_this_product
-from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url
+from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity
 
 from apparelrow.statistics.tasks import product_buy_click
@@ -249,6 +249,9 @@ def product_detail(request, slug):
     # More like this body
     mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors), ', '.join([x.name for x in product.categories]))
 
+    # More alternatives
+    alternative = get_product_alternative(product)
+
     # Referral SID
     referral_sid = request.GET.get('sid', 0)
     try:
@@ -274,6 +277,7 @@ def product_detail(request, slug):
                 'partner_likes': partner_likes,
                 'product_short_link': product_short_link,
                 'referral_sid': referral_sid,
+                'alternative': alternative,
             }, context_instance=RequestContext(request),
         )
 

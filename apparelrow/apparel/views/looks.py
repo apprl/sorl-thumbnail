@@ -64,7 +64,7 @@ def embed(request, slug, identifier=None):
             max_width = min(thumbnail.width, width)
             height = min(thumbnail.height, height)
 
-
+    # TODO: replace alternative code with get_product_alternative from apparel.utils
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
     query_arguments = {'rows': 1, 'start': 0,
                        'fl': 'price,discount_price',

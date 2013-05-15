@@ -8,11 +8,46 @@ from django.core.cache import cache
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db import connections, models
 from django.db.models.loading import get_model
+from django.utils import translation
 from django.utils.encoding import smart_str
 from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
+
+
+def get_product_alternative(product, default=None):
+    """
+    Return shop url to product alternatives based on color and category.
+    """
+    from apparelrow.apparel.search import ApparelSearch
+
+    colors_pk = list(map(str, product.options.filter(option_type__name='color').values_list('pk', flat=True)))
+    language_currency = settings.LANGUAGE_TO_CURRENCY.get(translation.get_language(), settings.APPAREL_BASE_CURRENCY)
+    query_arguments = {'rows': 1, 'start': 0,
+                       'fl': 'price,discount_price',
+                       'sort': 'price asc, popularity desc, created desc'}
+    query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
+    query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
+    query_arguments['fq'].append('category:%s' % (product.category_id))
+    if colors_pk:
+        query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
+    search = ApparelSearch('*:*', **query_arguments)
+    docs = search.get_docs()
+    if docs:
+        shop_reverse = 'shop-men' if product.gender == 'M' else 'shop-women'
+        shop_url = '%s#category=%s' % (reverse(shop_reverse), product.category_id)
+        if colors_pk:
+            shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+
+        price, currency = docs[0].price.split(',')
+        rate = currency_exchange(language_currency, currency)
+        price = rate * decimal.Decimal(price)
+        price = price.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
+
+        return (shop_url, price, language_currency)
+
+    return default
 
 
 def set_query_parameter(url, param_name, param_value):
