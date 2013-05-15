@@ -1593,7 +1593,7 @@ msgstr "Farve"
 #: templates/apparel/look_editor.html:76
 #: templates/apparel/fragments/shop_empty.html:4
 msgid "No matching items"
-msgstr "Ingen matchende emner"
+msgstr "Ingen matchende produkter"
 
 #: templates/apparel/look_editor.html:77
 msgid "Reset search"
@@ -1895,7 +1895,7 @@ msgstr "Vælge køn"
 #: templates/apparel/fragments/product_menu.html:18
 #: templates/apparel/fragments/product_menu.html:29
 msgid "Reset all"
-msgstr "Nulstille alle"
+msgstr "Nulstille alt"
 
 #: templates/apparel/fragments/product_menu_browse.html:13
 msgid "Min"
