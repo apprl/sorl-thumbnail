@@ -63,7 +63,7 @@ def get_brand_and_category(look):
                 singular = c.product.category.singular_name
 
         if singular:
-            yield (u'%s - %s' % (c.product.category, c.product.manufacturer), c.product)
+            yield (u'%s - %s' % (singular, c.product.manufacturer), c.product)
         else:
             yield (u'%s' % (c.product.manufacturer.name,), c.product)
 
