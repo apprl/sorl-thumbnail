@@ -464,7 +464,7 @@ function renderPage(products) {
             $('.product-image, .product-footer a', element).attr('target', '_blank');
             var looks_elem = $('.product-footer a.looks', element);
             var looks_href = looks_elem.attr('href');
-            looks_elem.attr('href', looks_href + '?acamp_id=' + embed_shop_user_id + '&acamp_page=Ext-Shop');
+            looks_elem.attr('href', looks_href + '?aid=' + embed_shop_user_id + '&alink=Ext-Shop');
             $('.hover', element).remove();
         });
     }

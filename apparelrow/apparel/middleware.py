@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from django.utils import timezone
 
 
-REFERRAL_COOKIE_NAME = 'acamp_cookie'
+REFERRAL_COOKIE_NAME = 'aid_cookie'
 REFERRAL_COOKIE_DAYS = 30
 
 logger = logging.getLogger('apparelrow.apparel.middleware')
@@ -18,8 +18,8 @@ logger = logging.getLogger('apparelrow.apparel.middleware')
 
 class InternalReferralMiddleware(object):
     def process_response(self, request, response):
-        sid = request.GET.get('acamp_id')
-        page = request.GET.get('acamp_page', 'Ext-Link')
+        sid = request.GET.get('aid')
+        page = request.GET.get('alink', 'Ext-Link')
         if sid and page:
             # Get previous cookie
             old_cookie = request.get_signed_cookie(REFERRAL_COOKIE_NAME, default=False)
