@@ -33,7 +33,7 @@
     </div>
     <script type="text/javascript">
         function track() {
-            {% if page == 'Ext-Link' %}
+            {% if page == 'Ext-Link' or page == 'Ext-Shop' %}
             _gaq.push(['_trackEvent', '{{ page }}', 'BuyReferral', '{{ store }} - {{ slug }}', {{ price }}]);
             {% endif %}
             var data = {csrfmiddlewaretoken: '{{ csrf_token }}',
