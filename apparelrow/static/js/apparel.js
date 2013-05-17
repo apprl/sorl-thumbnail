@@ -820,14 +820,10 @@ ApparelSearch = {
                         { count: response.paginator.count },
                         true
                     )
-                );
+                ).hide();
 
-                if(response.paginator.count == 0) {
-                    h2.addClass('disabled');
-                    abutton.addClass('btn-disabled').addClass('disabled');
-                } else {
-                    h2.removeClass('disabled');
-                    abutton.removeClass('btn-disabled').removeClass('disabled');
+                if(response.paginator.count > opts.query['limit']) {
+                    abutton.show();
                 }
 
                 list.data('last-query', opts.query);
