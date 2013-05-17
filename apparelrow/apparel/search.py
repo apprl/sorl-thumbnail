@@ -14,6 +14,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.db.models.loading import get_model
+from django.utils import translation
 
 from apparelrow.apparel.models import Product, ProductLike, Look
 from apparelrow.apparel.utils import get_gender_from_cookie
@@ -48,6 +49,24 @@ def more_like_this_product(body, gender, limit):
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
     result = connection.more_like_this('', mlt_fields, **kwargs)
     return result
+
+def more_alternatives(product, limit):
+    colors_pk = list(map(str, product.options.filter(option_type__name='color').values_list('pk', flat=True)))
+    language_currency = settings.LANGUAGE_TO_CURRENCY.get(translation.get_language(), settings.APPAREL_BASE_CURRENCY)
+    query_arguments = {'rows': limit, 'start': 0,
+                       'fl': 'template_mlt',
+                       'sort': 'price asc, popularity desc, created desc'}
+    query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
+    query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
+    query_arguments['fq'].append('category:%s' % (product.category_id))
+    if colors_pk:
+        query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
+    search = ApparelSearch('*:*', **query_arguments)
+    docs = search.get_docs()
+    if docs:
+        return docs
+
+    return None
 
 #def more_like_this_product(product_id, product_gender, limit):
     #kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (product_gender,)],

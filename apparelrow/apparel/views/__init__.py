@@ -34,8 +34,7 @@ from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
 from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
-from apparelrow.apparel.search import ApparelSearch
-from apparelrow.apparel.search import more_like_this_product
+from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity
 
@@ -250,7 +249,8 @@ def product_detail(request, slug):
     mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors), ', '.join([x.name for x in product.categories]))
 
     # More alternatives
-    alternative = get_product_alternative(product)
+    #alternative = get_product_alternative(product)
+    alternative = more_alternatives(product, 15)
 
     # Referral SID
     referral_sid = request.GET.get('sid', 0)

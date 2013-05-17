@@ -56,9 +56,7 @@
 
             // More like this scrollable
             jQuery('#more-like-this .row').simple_scrollable(532);
-
-            // Recently viewed scrollable
-            jQuery('#recentlyviewed .row').simple_scrollable();
+            jQuery('#more-alternatives .row').simple_scrollable(532);
 
             jQuery('.btn-short-link').click(function(event) {
                 jQuery(this).parent().load(jQuery(this).attr('href'), function() {
@@ -162,7 +160,18 @@
             </div>
             <div class="product-similar">
                 {% if alternative %}
-                <a class="underline alternative" href="{{ alternative.0 }}">{% trans "More alternatives from " %}{{ alternative.1 }} {{ alternative.2}}</a>
+                    <h2>{% trans "More alternatives" %}</h2>
+                    <div id="more-alternatives">
+                        <a class="prev">{% trans "Previous" %}</a>
+                        <div class="row">
+                            <ul>
+                            {% for product in alternative %}
+                                {{ product.template_mlt|safe }}
+                            {% endfor %}
+                            </ul>
+                        </div>
+                        <a class="next">{% trans "Next" %}</a>
+                    </div>
                 {% endif %}
                 {% if more_like_this %}
                     <h2>{% trans "You may also like" %}</h2>
