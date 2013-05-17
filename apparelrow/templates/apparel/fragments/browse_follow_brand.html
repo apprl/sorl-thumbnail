@@ -2,6 +2,6 @@
 <div id="product-infotext">
     <div id="product-infotext-inner">
         <p>{% trans "Create your personal shop based on the brands you follow." %}</p>
-        <div class="link"><a class="btn btn-upper" href="{% url 'brand-list' %}">{% trans "See all brands" %}</a></div>
+        {% include 'registration/fragments/registration.html' %}
     </div>
 </div>
