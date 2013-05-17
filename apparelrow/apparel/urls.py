@@ -138,6 +138,7 @@ urlpatterns = patterns('',
     url(r'^admin/csv/users/$', 'apparelrow.apparel.email.admin_user_list_csv'),
     url(r'^admin/mail/weekly/$', 'apparelrow.apparel.email.generate_weekly_mail'),
     url(r'^admin/mailchimp/webhook/$', 'apparelrow.apparel.email.mailchimp_webhook'),
+    url(r'^admin/mail/custom/$', 'apparelrow.apparel.views.custom_email.admin', name='custom-email-admin'),
 )
 
 

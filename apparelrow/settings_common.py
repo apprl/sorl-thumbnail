@@ -206,6 +206,7 @@ INSTALLED_APPS = (
     'storages',
     'static_sitemaps',
     'djrill',
+    'crispy_forms',
 
     # Internal
     'advertiser',

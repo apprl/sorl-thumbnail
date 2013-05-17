@@ -1,0 +1,589 @@
+{% load l10n thumbnail %}
+{% load static from staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta property="og:title" content="*|MC:SUBJECT|*" />
+        <title>*|MC:SUBJECT|*</title>
+		<style type="text/css">
+			/* Client-specific Styles */
+			#outlook a{padding:0;} /* Force Outlook to provide a "view in browser" button. */
+			body{width:100% !important;} /* Force Hotmail to display emails at full width */
+			body{-webkit-text-size-adjust:none;} /* Prevent Webkit platforms from changing default text sizes. */
+
+			/* Reset Styles */
+			body{margin:0; padding:0; font-family:"Helvetica Neue", "Helvetica", "Arial", sans-serif;}
+			img{border:none; font-size:14px; font-weight:bold; height:auto; line-height:100%; outline:none; text-decoration:none; text-transform:capitalize;}
+			#backgroundTable{height:100% !important; margin:0; padding:0; width:100% !important;}
+
+			/* Template Styles */
+			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: COMMON PAGE ELEMENTS /\/\/\/\/\/\/\/\/\/\ */
+			body, .backgroundTable{
+				background-color:#E6E6E6;
+			}
+
+			/**
+			* @tab Page
+			* @section heading 1
+			* @tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
+			* @theme heading1
+			*/
+			h1, .h1{
+				/*@editable*/ color:#333333;
+				display:block;
+				/*@editable*/ font-size:18px;
+				/*@editable*/ font-weight:bold;
+				/*@editable*/ line-height:100%;
+				margin-bottom:10px;
+				/*@editable*/ text-align:left;
+			}
+
+			/**
+			* @tab Page
+			* @section heading 2
+			* @tip Set the styling for all second-level headings in your emails.
+			* @theme heading2
+			*/
+			h2, .h2{
+				/*@editable*/ color:#333333;
+				display:block;
+				/*@editable*/ font-size:14px;
+				/*@editable*/ font-weight:bold;
+				/*@editable*/ line-height:100%;
+				margin-bottom:10px;
+				/*@editable*/ text-align:left;
+			}
+
+			/**
+			* @tab Page
+			* @section heading 3
+			* @tip Set the styling for all third-level headings in your emails.
+			* @theme heading3
+			*/
+			h3, .h3{
+				/*@editable*/ color:#202020;
+				display:block;
+				/*@editable*/ font-size:20px;
+				/*@editable*/ font-weight:bold;
+				/*@editable*/ line-height:100%;
+				margin:0;
+				/*@editable*/ text-align:left;
+			}
+
+			/**
+			* @tab Page
+			* @section heading 4
+			* @tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
+			* @theme heading4
+			*/
+			h4, .h4{
+				/*@editable*/ color:#202020;
+				display:block;
+				/*@editable*/ font-size:22px;
+				/*@editable*/ font-weight:bold;
+                /*@editable*/ line-height:100%;
+                margin:0;
+				/*@editable*/ text-align:left;
+			}
+
+			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: PREHEADER /\/\/\/\/\/\/\/\/\/\ */
+			.preheaderContent div{
+				color:#505050;
+				font-size:10px;
+				line-height:100%;
+				text-align:left;
+			}
+
+			.preheaderContent div a:link, .preheaderContent div a:visited{
+				color:#336699;
+				font-weight:normal;
+				text-decoration:underline;
+			}
+
+			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: HEADER /\/\/\/\/\/\/\/\/\/\ */
+			.headerContent{
+				color:#666666;
+				font-size:12px;
+				font-weight:bold;
+				line-height:100%;
+				padding:0;
+				text-align:center;
+                vertical-align:middle;
+                background-image:url({% static 'images/email-header.png' %});
+			}
+
+			.headerContent a:link, .headerContent a:visited{
+                color:#ffffff;
+                font-size:15px;
+				font-weight:bold;
+				text-decoration:none;
+            }
+            .headerContent a:hover{
+                color:#ffffff;
+                text-decoration:underline;
+            }
+            .headerContent .logo a{
+                padding:10px;
+            }
+
+			#headerImage{
+				height:auto;
+				max-width:600px !important;
+			}
+
+			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: MAIN BODY /\/\/\/\/\/\/\/\/\/\ */
+            #templateBody{
+                background-color:transparent;
+                background-image:url({% static 'images/email-bg-shadow.png' %});
+                background-repeat:repeat-y;
+                padding-left:7px;
+                padding-right:7px;
+            }
+
+            #templateBody .divider{
+                height:5px;
+                font-size:1px;
+                line-height:1px;
+                background-color:#202020;
+            }
+
+            .product-image{height: 228px;}
+            .product-image img{width:176px;}
+            .product-name{text-align:center;padding:10px 0 0 0;}
+            .product-name a, .product-name a:link, .product-name a:visited{font-size:14px;color:#202020;text-decoration:none;font-weight:bold;}
+            .product-text{font-size:12px;color:#666666;text-align:center;padding:5px 0 15px 0;}
+            .product-text .discount{color:#c95050}
+            .product-text .original{text-decoration:line-through;}
+
+            .look-image{width:576px;}
+            .look-image img{width:576px;}
+            .collage{border:1px solid #dddddd;}
+            .look-name{padding:10px 0;text-align:center;}
+            .look-name a, .look-name a:link, .look-name a:visited{font-size:14px;color:#202020;text-decoration:none;font-weight:bold;}
+            .look-profile-name{text-align:center;}
+            .look-profile-name a, .look-profile-name a:link, .look-profile-name a:visited{font-size:12px;color:#666666;text-decoration:none;}
+
+            .follow-image{height: 125px;}
+            .follow-image img{width: 125px;}
+            .follow-name{padding:0;text-align:center;}
+            .follow-name a, .follow-name a:link, .follow-name a:visited{font-size:14px;color:#202020;text-decoration:none;font-weight:bold;}
+            .follow-btn{line-height:36px;width:100%;height:36px;display:block;color:#ffffff;font-size:11px;font-weight:bold;text-transform:uppercase;text-decoration:none;}
+
+            .bodyHeader{padding:25px;}
+
+			/**
+			* @tab Body
+			* @section body text
+			* @tip Set the styling for your email's main content text. Choose a size and color that is easy to read.
+			* @theme main
+			*/
+			.bodyContent div{
+				/*@editable*/ color:#666666;
+				/*@editable*/ font-size:14px;
+				/*@editable*/ line-height:150%;
+                /*@editable*/ text-align:left;
+            }
+
+            /**
+			* @tab Body
+			* @section body link
+			* @tip Set the styling for your email's main content links. Choose a color that helps them stand out from your text.
+			*/
+			.bodyContent div a:link, .bodyContent div a:visited{
+				/*@editable*/ color:#666666;
+				/*@editable*/ font-weight:normal;
+				/*@editable*/ text-decoration:underline;
+            }
+
+            /**
+            * @tab Body
+            * @setion body hover link
+            * @tip Set the styling for your email's main content links hover effect.
+            */
+            .bodyContent div a:hover{
+				/*@editable*/ color:#666666;
+				/*@editable*/ font-weight:normal;
+				/*@editable*/ text-decoration:underline;
+            }
+
+			.bodyContent img{
+                display:inline;
+                max-width:600px;
+                border:0;
+            }
+            .bodyContent h3{text-align:center;}
+
+            .socialContent, .socialContent a:link, .socialContent a:visited{
+                color:#000000;
+                font-size:20px;
+                font-weight:bold;
+                text-decoration:none;
+            }
+            .socialContent a:hover{
+                color:#000000;
+                text-decoration:underline;
+            }
+
+			/* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: FOOTER /\/\/\/\/\/\/\/\/\/\ */
+            #templateFooter{
+                background-image:url({% static 'images/email-footer.png' %});
+			}
+
+            .footerContent{
+				color:#666666;
+				font-size:12px;
+				line-height:125%;
+				text-align:left;
+			}
+
+            .footerContent a:link, .footerContent a:visited{
+                color:#666666;
+				font-weight:normal;
+				text-decoration:none;
+            }
+
+            .footerContent a:hover{
+                text-decoration:underline;
+            }
+
+			.footerContent img{
+				display:inline;
+            }
+
+            .footerContent .header{
+                color:#333333;
+            }
+
+			#monkeyRewards img{
+				max-width:600px;
+            }
+
+            /* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: POSTFOOTER /\/\/\/\/\/\/\/\/\/\ */
+			#templatePostfooter{}
+
+			.postfooterContent div{
+				color:#505050;
+				font-size:11px;
+				line-height:100%;
+				text-align:center;
+			}
+
+			.postfooterContent div a:link, .postfooterContent div a:visited{
+		        color:#336699;
+			    font-weight:normal;
+			    text-decoration:underline;
+			}
+
+			.postfooterContent div img{
+				height:auto;
+				max-width:600px;
+			}
+		</style>
+	</head>
+    <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+    	<center>
+        	<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="backgroundTable">
+            	<tr>
+                	<td align="center" valign="top">
+                        <!-- // Begin Template Preheader \\ -->
+                        <table border="0" cellpadding="10" cellspacing="0" width="614" id="templatePreheader">
+                            <tr>
+                                <td valign="top" class="preheaderContent">
+                                	<!-- // Begin Module: Standard Preheader \\ -->
+                                    <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                    	<tr>
+                                        	<td valign="top">
+                                                <div mc:edit="std_preheader_content">{{ preview }}</div>
+                                            </td>
+                                            <td valign="top" width="180">
+                                                <div mc:edit="std_preheader_links">
+                                                    <!-- *|IFNOT:ARCHIVE_PAGE|* -->Is this email not displaying correctly?<br/><a href="*|ARCHIVE|*" target="_blank">View it in your browser</a>.<!-- *|END:IF|* -->
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                	<!-- // End Module: Standard Preheader \\ -->
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- // End Template Preheader \\ -->
+                    	<table border="0" cellpadding="0" cellspacing="0" width="614" id="templateContainer">
+                        	<tr>
+                            	<td align="center" valign="top">
+                                    <!-- // Begin Template Header \\ -->
+                                	<table border="0" cellpadding="0" cellspacing="0" width="614" height="110" id="templateHeader">
+                                        <tr>
+                                            <td class="headerContent">
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td valign="top" align="center" height="44" class="logo">
+                                                            <a href="http://apprl.com/" target="_blank">
+                                                                <img border="0" width="170" height="25" src="{% static 'images/logo.png' %}" alt="apprl.com">
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="top" align="center">
+                                                            <a href="http://apprl.com/" target="_blank">Newsfeed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <a href="http://apprl.com/shop/" target="_blank">Shop</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <a href="http://apprl.com/looks/" target="_blank">Looks</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <a href="http://apprl.com/brands/" target="_blank">Brands</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <a href="http://apprl.com/users/" target="_blank">Members</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!-- // End Template Header \\ -->
+                                </td>
+                            </tr>
+                        	<tr>
+                            	<td align="center" valign="top">
+                                    <!-- // Begin Template Body \\ -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="614" id="templateBody">
+                                        <tr>
+                                            <td><img mc:edit="mail_image" src="temp" style="width:100%;height:200px;" width="100%" height="200"></td>
+                                        </tr>
+                                        <tr>
+                                            {% if products %}
+                                            <td valign="top" align="center" class="bodyContent">
+
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td colspan="3" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
+                                                            <h3 mc:edit="product_header">{{ title_products }}</h3>
+														</td>
+                                                    </tr>
+                                                    {% for product_group in products %}
+                                                    <tr>
+                                                        {% for product in product_group %}
+                                                        <td align="center" width="33.333%" height="228px" class="product-image">
+                                                            {% thumbnail product.product_image "176" crop="noop" as im %}
+                                                            <a href="{{ base_url }}{{ product.get_absolute_url }}"><img src="{{ im.url }}" /></a>
+                                                            {% endthumbnail %}
+                                                        </td>
+                                                        {% endfor %}
+                                                    </tr>
+                                                    <tr>
+                                                        {% for product in product_group %}
+                                                        <td class="product-name">
+                                                            <a href="{{ base_url }}{{ product.get_absolute_url }}">{{ product.product_name }}</a>
+                                                        </td>
+                                                        {% endfor %}
+                                                    </tr>
+                                                    <tr>
+                                                        {% for product in product_group %}
+                                                        <td class="product-text">
+                                                            {% if product.default_vendor.locale_discount_price %}
+                                                                <span class="discount">{{ product.default_vendor.locale_discount_price|floatformat:0 }} {{ product.default_vendor.locale_currency }}</span> <span class="original">{{ product.default_vendor.locale_price|floatformat:0 }} {{ product.default_vendor.locale_currency }}</span>
+                                                            {% else %}
+                                                            {{ product.default_vendor.locale_price|floatformat:0 }} {{ product.default_vendor.locale_currency }}
+                                                            {% endif %}
+                                                        </td>
+                                                        {% endfor %}
+                                                    </tr>
+                                                    {% endfor %}
+                                                </table>
+
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if looks %}
+                                        <tr>
+                                            <td class="divider" height="5px">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td valign="top" class="bodyContent">
+
+                                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td colspan="2" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
+                                                            <h3 mc:edit="look_header">{{ title_looks }}</h3>
+														</td>
+                                                    </tr>
+                                                    {% for look in looks %}
+                                                    <tr>
+                                                        <td width="50%">
+                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="look-element">
+                                                                <tr>
+                                                                    <td class="look-image {{ look.class }}">
+                                                                        {% thumbnail look.static_image "576" crop="noop" as im %}
+                                                                        <a href="{{ base_url }}{{ look.get_absolute_url }}"><img src="{{ im.url }}" /></a>
+                                                                        {% endthumbnail %}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="look-name" align="center"><a href="{{ base_url }}{{ look.get_absolute_url }}">{{ look.title }}</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="look-profile-name" align="center">
+                                                                        <a href="{{ base_url }}{{ look.user.get_absolute_url }}">By {{ look.user.display_name }}</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </table>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if users %}
+                                        <tr>
+                                            <td class="divider" height="5px">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td valign="top" class="bodyContent">
+
+                                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td colspan="0" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
+                                                            <h3 mc:edit="user_header">{{ title_users }}</h3>
+														</td>
+                                                    </tr>
+                                                    {% for user in users %}
+                                                    <tr>
+                                                        <td>
+                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="follow-element">
+                                                                <tr>
+                                                                    <td colspan="3" valign="top" align="center" class="follow-name" style="padding-bottom:10px;">
+                                                                        <a href="{{ user.get_absolute_url }}">{{ user.display_name }}</a>
+                                                                        {% if user.blog_url %}
+                                                                        / <a href="{{ user.blog_url }}">{{ user.blog_url }}</a>
+                                                                        {% endif %}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="3" valign="middle" align="center" class="follow-image" height="125px" style="padding-bottom:15px;">
+                                                                        <a href="{{ user.get_absolute_url }}"><img src="{{ user.mail_image }}" /></a>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="30%"></td>
+                                                                    <td valign="top" align="center" style="background-color:#60d1ab;">
+                                                                        <a href="{{ user.get_absolute_url }}" class="follow-btn" style="vertical-align:middle;line-height:36px;width:100%;height:36px;display:block;">Follow me</a>
+                                                                    </td>
+                                                                    <td width="30%"></td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </table>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <td class="divider" height="5px">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td valign="top" class="bodyContent">
+
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td colspan="3" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
+                                                            <h3 mc:edit="follow_social_header">Follow us on</h3>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="socialContent">
+                                                        <td align="right">
+                                                            <a href="https://www.facebook.com/apprl">Facebook</a>
+                                                        </td>
+                                                        <td align="center" width="32">|</td>
+                                                        <td align="left">
+                                                            <a href="http://pinterest.com/apprl/">Pinterest</a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </table>
+                                    <!-- // End Template Body \\ -->
+                                </td>
+                            </tr>
+                        	<tr>
+                            	<td align="center" valign="top">
+                                    <!-- // Begin Template Footer \\ -->
+                                	<table border="0" cellpadding="17" cellspacing="0" width="614" height="131" id="templateFooter">
+                                    	<tr>
+                                        	<td valign="top" class="footerContent">
+
+                                                <!-- // Begin Module: Standard Footer \\ -->
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td valign="top" class="header" align="center">Apprl Fashion AB</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="top" align="center">
+                                                            <div mc:edit="std_footer">
+                                                                <br />
+                                                                Birger Jarlsgatan 18A
+                                                                <br />
+                                                                114 34 Stockholm, Sweden
+                                                                <br />
+                                                                <a target="_blank" href="mailto:info@apprl.com">info@apprl.com</a>
+                                                                <br />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <!-- // End Module: Standard Footer \\ -->
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!-- // End Template Footer \\ -->
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- // Begin Template Postfooter \\ -->
+                        <table border="0" cellpadding="10" cellspacing="0" width="614" id="templatePostfooter">
+                            <tr>
+                                <td valign="top" class="postfooterContent">
+                                	<!-- // Begin Module: Standard Postfooter \\ -->
+                                    <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                    	<tr>
+                                            <td valign="top" align="center">
+                                                <div mc:edit="std_utility">
+                                                    <br>
+                                                    This e-mail has been sent to *|EMAIL|*.
+                                                    <br><br>
+                                                    *|LIST:DESCRIPTION|*
+                                                    <br><br>
+                                                    Edit <a href="http://apprl.com/profile/settings/notification/">your e-mail settings</a> on Apprl.
+                                                    <br>If you have not yet become a member, <a href="*|UNSUB|*">click here</a> if you wish to unsubscribe.
+                                                    <br><br>
+                                                    *|LIST:ADDRESS|*
+                                                    <br><br><br><br><br><br><br><br>
+                                                    *|REWARDS|*
+                                                </div>
+                                                <br />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!-- // End Module: Standard Postfooter \\ -->
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- // End Template Postfooter \\ -->
+                        <br />
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </body>
+</html>

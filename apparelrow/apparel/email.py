@@ -30,6 +30,7 @@ from apparelrow.apparel.tasks import mailchimp_subscribe, mailchimp_unsubscribe
 
 logger = logging.getLogger('apparel.email')
 
+
 def get_newsletter_users():
     """
     Get an iterator of all users eligible for our (weekly) newsletter.
@@ -39,6 +40,19 @@ def get_newsletter_users():
                                    .exclude(Q(first_name__isnull=True) | Q(first_name__exact='')) \
                                    .exclude(Q(last_name__isnull=True) | Q(last_name__exact='')) \
                                    .iterator()
+
+
+def update_subscribers(mailchimp):
+    batch = []
+    for user in get_newsletter_users():
+        batch.append({'EMAIL': user.email,
+                      'FNAME': user.first_name,
+                      'LNAME': user.last_name,
+                      'GENDER': user.gender})
+
+    mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_MEMBER_LIST, double_optin=False, update_existing=True, batch=batch)
+    mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST, double_optin=False, update_existing=True, batch=batch)
+
 
 @receiver(pre_save, sender=get_user_model(), dispatch_uid='pre_save_profile_newsletter')
 def pre_save_profile_newsletter(sender, instance, **kwargs):
@@ -215,6 +229,7 @@ def get_weekly_mail_content(gender, timeframe):
 
     return (subject, products, looks, members)
 
+
 @login_required
 def generate_weekly_mail(request):
     if not request.user.is_superuser:
@@ -223,16 +238,8 @@ def generate_weekly_mail(request):
     if request.GET.get('create') == 'yes':
         mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
 
-        batch = []
-        for user in get_newsletter_users():
-            batch.append({'EMAIL': user.email,
-                          'FNAME': user.first_name,
-                          'LNAME': user.last_name,
-                          'GENDER': user.gender})
-
         try:
-            mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_MEMBER_LIST, double_optin=False, update_existing=True, batch=batch)
-            mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST, double_optin=False, update_existing=True, batch=batch)
+            update_subscribers(mailchimp)
         except MailSnakeException, e:
             return HttpResponse('Error: could not update subscribers list: %s' % (str(e),))
 
