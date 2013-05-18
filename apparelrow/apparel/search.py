@@ -72,7 +72,7 @@ def more_alternatives(product, limit):
 
         return docs, shop_url
 
-    return None
+    return None, None
 
 #def more_like_this_product(product_id, product_gender, limit):
     #kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (product_gender,)],
