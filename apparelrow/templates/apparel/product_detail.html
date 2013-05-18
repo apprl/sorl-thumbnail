@@ -160,7 +160,10 @@
             </div>
             <div class="product-similar">
                 {% if alternative %}
-                    <h2>{% trans "More alternatives" %}</h2>
+                    <div class="headline group">
+                        <h2>{% trans "Similar" %}</h2>
+                        <a href="{{ alternative_url }}">{% trans "See all »" %}</a>
+                    </div>
                     <div id="more-alternatives">
                         <a class="prev">{% trans "Previous" %}</a>
                         <div class="row">

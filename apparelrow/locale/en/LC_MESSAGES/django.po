@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-13 08:23+0200\n"
+"POT-Creation-Date: 2013-05-18 16:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -424,11 +424,11 @@ msgstr ""
 msgid "Sign up to get sale alerts when the price drops on products you like!"
 msgstr ""
 
-#: apparel/views/__init__.py:155
+#: apparel/views/__init__.py:154
 msgid "Check your browser settings."
 msgstr ""
 
-#: apparel/views/__init__.py:162
+#: apparel/views/__init__.py:161
 msgid "Shared to your Facebook timeline!"
 msgstr ""
 
@@ -1046,7 +1046,7 @@ msgid "No updates"
 msgstr ""
 
 #: templates/activity_feed/feed.html:12 templates/apparel/brand_list.html:33
-#: templates/apparel/browse.html:54 templates/apparel/shop_embed.html:92
+#: templates/apparel/browse.html:54 templates/apparel/shop_embed.html:107
 #: templates/apparel/fragments/looks_large.html:67
 #: templates/apparel/fragments/looks_medium.html:12
 #: templates/apparel/fragments/user_list.html:12
@@ -1390,7 +1390,7 @@ msgstr ""
 msgid "High price"
 msgstr ""
 
-#: templates/apparel/browse.html:49 templates/apparel/shop_embed.html:84
+#: templates/apparel/browse.html:49 templates/apparel/shop_embed.html:99
 #, python-format
 msgid "%(counter)s product"
 msgid_plural "%(counter)s products"
@@ -1514,7 +1514,7 @@ msgid "Created"
 msgstr ""
 
 #: templates/apparel/look_detail.html:152
-#: templates/apparel/product_detail.html:143
+#: templates/apparel/product_detail.html:141
 #: templates/profile/base_profile.html:33
 msgid "Likes"
 msgstr ""
@@ -1683,39 +1683,49 @@ msgstr ""
 msgid "See all members"
 msgstr ""
 
-#: templates/apparel/product_detail.html:82
+#: templates/apparel/product_detail.html:80
 msgid "Back"
 msgstr ""
 
-#: templates/apparel/product_detail.html:132
+#: templates/apparel/product_detail.html:130
 msgid "Selected by"
 msgstr ""
 
-#: templates/apparel/product_detail.html:137
+#: templates/apparel/product_detail.html:135
 msgid "Go to blog »"
 msgstr ""
 
-#: templates/apparel/product_detail.html:145
+#: templates/apparel/product_detail.html:143
 msgid "Be the first one to like this product!"
 msgstr ""
 
-#: templates/apparel/product_detail.html:160
+#: templates/apparel/product_detail.html:158
 msgid "Add your look"
 msgstr ""
 
-#: templates/apparel/product_detail.html:165
-msgid "You may also like"
+#: templates/apparel/product_detail.html:164
+msgid "Similar"
 msgstr ""
 
-#: templates/apparel/product_detail.html:167
+#: templates/apparel/product_detail.html:165
+msgid "See all »"
+msgstr ""
+
+#: templates/apparel/product_detail.html:168
+#: templates/apparel/product_detail.html:182
 msgid "Previous"
 msgstr ""
 
-#: templates/apparel/product_detail.html:175
+#: templates/apparel/product_detail.html:176
+#: templates/apparel/product_detail.html:190
 msgid "Next"
 msgstr ""
 
-#: templates/apparel/product_detail.html:183
+#: templates/apparel/product_detail.html:180
+msgid "You may also like"
+msgstr ""
+
+#: templates/apparel/product_detail.html:198
 msgid "No product found!"
 msgstr ""
 

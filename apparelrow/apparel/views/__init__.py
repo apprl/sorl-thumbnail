@@ -250,7 +250,7 @@ def product_detail(request, slug):
 
     # More alternatives
     #alternative = get_product_alternative(product)
-    alternative = more_alternatives(product, 15)
+    alternative, alternative_url = more_alternatives(product, 15)
 
     # Referral SID
     referral_sid = request.GET.get('sid', 0)
@@ -278,6 +278,7 @@ def product_detail(request, slug):
                 'product_short_link': product_short_link,
                 'referral_sid': referral_sid,
                 'alternative': alternative,
+                'alternative_url': alternative_url,
             }, context_instance=RequestContext(request),
         )
 

@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
+from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
@@ -64,7 +65,12 @@ def more_alternatives(product, limit):
     search = ApparelSearch('*:*', **query_arguments)
     docs = search.get_docs()
     if docs:
-        return docs
+        shop_reverse = 'shop-men' if product.gender == 'M' else 'shop-women'
+        shop_url = '%s#category=%s' % (reverse(shop_reverse), product.category_id)
+        if colors_pk:
+            shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+
+        return docs, shop_url
 
     return None
 
