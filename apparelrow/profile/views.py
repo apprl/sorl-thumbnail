@@ -578,8 +578,9 @@ def _get_next(request):
         return request.GET.get('next')
     elif 'next' in request.POST:
         return request.POST.get('next')
-    else:
-        return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
+
+    #return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
+    return reverse('user_feed')
 
 
 def flow(request):
@@ -591,7 +592,7 @@ def flow(request):
                             max_age=365 * 24 * 60 * 60)
         return response
 
-    return HttpResponseRedirect(reverse('user_feed'))
+    return HttpResponseRedirect(_get_next(request))
 
 
 def facebook_login(request):

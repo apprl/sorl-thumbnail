@@ -318,7 +318,6 @@ EMAIL_DEBUG = DEBUG
 CONTACT_EMAIL = "support@hanssonlarsson.se"
 
 # ACCOUNT/LOGIN AND OTHER STUFF
-LOGIN_REDIRECT_URLNAME = "what_next"
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 
