@@ -452,16 +452,16 @@
                                                         <td>
                                                             <table border="0" cellpadding="0" cellspacing="0" width="100%" class="follow-element">
                                                                 <tr>
+                                                                    <td colspan="3" valign="middle" align="center" class="follow-image" height="125px" style="padding-bottom:15px;">
+                                                                        <a href="{{ user.get_absolute_url }}"><img src="{{ user.mail_image }}" /></a>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
                                                                     <td colspan="3" valign="top" align="center" class="follow-name" style="padding-bottom:10px;">
                                                                         <a href="{{ user.get_absolute_url }}">{{ user.display_name }}</a>
                                                                         {% if user.blog_url %}
                                                                         / <a href="{{ user.blog_url }}">{{ user.blog_url }}</a>
                                                                         {% endif %}
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td colspan="3" valign="middle" align="center" class="follow-image" height="125px" style="padding-bottom:15px;">
-                                                                        <a href="{{ user.get_absolute_url }}"><img src="{{ user.mail_image }}" /></a>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
