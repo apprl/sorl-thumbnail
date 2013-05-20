@@ -70,6 +70,12 @@
             }).on('click', '.short-link-container input', function(e) {
                 jQuery(this).select();
             });
+
+            $(document).on('click', '#add-to-look-left', function() {
+                _gaq.push(['_trackEvent', 'Product', 'ClickLefttAddLookButton', '{{ object }}']);
+            }).on('click', '#add-to-look-right', function() {
+                _gaq.push(['_trackEvent', 'Product', 'ClickRightAddLookButton', '{{ object }}']);
+            });
         });
     </script>
 {% endblock 'extra-scripts' %}
@@ -155,7 +161,7 @@
                 </ul>
                 {% endif %}
                 {% if looks_with_product_count == 0 %}
-                <a href="{% url 'look-create' %}" class="btn btn-block btn-upper btn-add-look">{% trans "Add your look" %}</a>
+                <a id="add-to-look-right" href="{% url 'look-create-like' slug=object.slug %}" class="btn btn-block btn-upper btn-add-look">{% trans "Add your look" %}</a>
                 {% endif %}
             </div>
             <div class="product-similar">

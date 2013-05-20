@@ -133,7 +133,7 @@
             </li>
         {% endfor %}
         </ul>
-        <a class="underline" href="{% url 'look-create-like' slug=object.slug %}">{% trans "Create your look with " %}{{ object }} »</a>
+        <a id="add-to-look-left" class="underline" href="{% url 'look-create-like' slug=object.slug %}">{% trans "Create your look with " %}{{ object }} »</a>
         {% if looks_with_product_count > 2 %}
         <a href="{% url 'product-look-list' contains=object.slug %}" class="btn btn-block btn-upper">{% trans "See all looks" %}</a>
         {% endif %}
