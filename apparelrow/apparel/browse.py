@@ -144,6 +144,9 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
 
     result = {}
 
+    # Sort
+    query_arguments['sort'] = DEFAULT_SORT_ARGUMENTS.get(request.GET.get('sort'), DEFAULT_SORT_ARGUMENTS['pop'])
+
     # Shop views
     view = request.GET.get('view', 'all')
     is_authenticated = request.user.is_authenticated()
@@ -168,6 +171,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
     else:
         if user_id:
+            query_arguments['sort'] = '%s_uld desc, popularity desc, created desc' % (user_id,)
             # Embedded shop
             query_arguments['fq'].append('user_likes:%s' % (user_id,))
             if user_gender == 'A':
@@ -176,9 +180,6 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
                 query_arguments['fq'].append(generate_gender_field(dict(gender=user_gender)))
         else:
             query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
-
-    # Sort
-    query_arguments['sort'] = DEFAULT_SORT_ARGUMENTS.get(request.GET.get('sort'), DEFAULT_SORT_ARGUMENTS['pop'])
 
     # Query string
     query_string = request.GET.get('q')

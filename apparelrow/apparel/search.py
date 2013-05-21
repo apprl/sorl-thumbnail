@@ -262,6 +262,9 @@ def get_product_document(instance):
 
         user_likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', flat=True))
 
+        likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', 'modified'))
+        user_likes = [x[0] for x in likes]
+
         has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
 
         template_browse = render_to_string('apparel/fragments/product_shop.html', {'object': instance, 'has_looks': has_looks})
@@ -314,6 +317,8 @@ def get_product_document(instance):
 
         # Users
         document['user_likes'] = user_likes
+        for x in likes:
+            document['%s_uld' % (x[0],)] = x[1]
 
         # Store
         if instance.default_vendor:

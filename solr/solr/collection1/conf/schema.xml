@@ -112,6 +112,7 @@
 
     <!-- User related fields -->
     <field name="user_likes" type="string" indexed="true" stored="false" multiValued="true"/>
+    <dynamicField name="*_uld" type="date" indexed="true" stored="false" multiValued="false"/>
 
     <!-- Stored templates and fields -->
     <field name="template" type="string" indexed="false" stored="true" multiValued="false"/>
