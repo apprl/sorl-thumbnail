@@ -1870,7 +1870,7 @@ msgstr ""
 #: templates/apparel/fragments/product_shop.html:16
 #: templates/profile/fragments/product_likes.html:19
 msgid "Buy"
-msgstr ""
+msgstr "Køb"
 
 #: templates/apparel/fragments/look_embed_tooltip.html:27
 #: templates/apparel/fragments/look_product_tooltip.html:35
@@ -1880,7 +1880,7 @@ msgstr ""
 #: templates/apparel/fragments/product_feed_452.html:17
 #: templates/profile/fragments/product_likes.html:17
 msgid "Sold out"
-msgstr ""
+msgstr "Udsolgt"
 
 #: templates/apparel/fragments/look_embed_tooltip.html:30
 msgid "More alternatives from "
