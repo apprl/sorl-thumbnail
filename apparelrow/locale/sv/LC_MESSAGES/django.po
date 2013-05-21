@@ -1991,7 +1991,7 @@ msgstr "Sök bland varumärken"
 
 #: templates/apparel/fragments/product_menu_browse.html:68
 msgid "Store"
-msgstr ""
+msgstr "Butik"
 
 #: templates/apparel/fragments/product_popup.html:35
 msgid "Add to look"
