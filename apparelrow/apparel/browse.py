@@ -14,6 +14,7 @@ from django.db.models import Min
 from django.db.models.loading import get_model
 from django.template import RequestContext
 from django.template import loader
+from django.core.cache import get_cache
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
@@ -395,11 +396,16 @@ def get_pagination_as_dict(paged_result):
 
 
 def shop_embed(request, user_id, language, gender):
-    return browse_products(request,
-                           template='apparel/shop_embed.html',
-                           user_gender=gender,
-                           language=language,
-                           user_id=user_id)
+    response = browse_products(request,
+                               template='apparel/shop_embed.html',
+                               user_gender=gender,
+                               language=language,
+                               user_id=user_id)
+
+    nginx_key = reverse('shop-embed', args=[user_id, language, gender])
+    get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
+
+    return response
 
 
 @login_required
