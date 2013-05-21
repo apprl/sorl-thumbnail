@@ -402,8 +402,10 @@ def shop_embed(request, user_id, language, gender):
                                language=language,
                                user_id=user_id)
 
-    nginx_key = reverse('shop-embed', args=[user_id, language, gender])
-    get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
+    # Do not update cache key for requests involving a GET parameter
+    if not request.GET:
+        nginx_key = reverse('shop-embed', args=[user_id, language, gender])
+        get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
 
     return response
 

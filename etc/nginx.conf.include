@@ -17,7 +17,21 @@ location ~ ^/(?:wo)?men.*$ {
     rewrite ^/(?:wo)?men.*$ /shop/$1 permanent;
 }
 
-location /embed/ {
+location /embed/shop {
+    default_type "text/html; charset=utf-8";
+    if ($is_args = '') {
+        set $memcached_key $uri;
+        memcached_pass 127.0.0.1:11211;
+        error_page 404 502 @fallback_embed;
+        break;
+    }
+    proxy_pass http://gunicorn;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+
+location /embed/look {
     default_type "text/html; charset=utf-8";
     set $memcached_key $uri;
     memcached_pass 127.0.0.1:11211;
