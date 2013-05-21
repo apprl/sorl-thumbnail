@@ -99,7 +99,11 @@
                     <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
                 </h2>
                 <div id="product-list" class="product-list">
-                    <ul class="list group"></ul>
+                    <ul class="list group">
+                    {% for html in current_page.html %}
+                        {{ html|safe }}
+                    {% endfor %}
+                    </ul>
                     <div id="pagination-bottom" class="pagination">
                         {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
                     </div>
