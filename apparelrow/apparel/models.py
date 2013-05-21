@@ -385,6 +385,10 @@ def product_like_post_save(sender, instance, **kwargs):
         logging.warning('Trying to register an activity, but %s has not user attribute' % instance)
         return
 
+    # Empty shop embedded cache
+    for x in itertools.product((x[0] for x in settings.LANGUAGES), ['A', 'M', 'W']):
+        get_cache('nginx').delete(reverse('shop-embed', args=[instance.user.pk, x[0], x[1]]))
+
     if instance.active == True:
         get_model('activity_feed', 'activity').objects.push_activity(instance.user, 'like_product', instance.product, instance.product.gender)
     else:
