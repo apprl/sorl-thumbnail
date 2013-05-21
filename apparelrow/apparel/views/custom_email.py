@@ -33,6 +33,9 @@ from apparelrow.apparel.email import update_subscribers
 logger = logging.getLogger('apparelrow.apparel.views.custom_email')
 
 
+MAILCHIMP_TEMPLATE_NAME = 'Custom Campaign Template'
+
+
 class MultiURLField(forms.CharField):
     def to_python(self, value):
         if not value:
@@ -203,23 +206,46 @@ def admin(request):
                 product_names = product_names[:min(len(product_names), 5)]
                 subject = u'%s and more trending this week!' % (', '.join(product_names),)
 
+            # Templates
+            template_content = {}
+
+            # Product template
             if products:
                 args = [iter(products)] * 3
                 products = itertools.izip_longest(*args, fillvalue=None)
+                template_product = loader.render_to_string('email/custom/product.html', {
+                        'title': product_title,
+                        'products': products,
+                    })
+                template_content['html_product_content'] = template_product
 
-            template = loader.render_to_string('email/custom.html', {
+            # Look template
+            if looks:
+                template_look = loader.render_to_string('email/custom/look.html', {
+                        'title': look_title,
+                        'looks': looks,
+                    })
+                template_content['html_look_content'] = template_look
+
+            # User template
+            if users:
+                template_user = loader.render_to_string('email/custom/user.html', {
+                        'title': user_title,
+                        'users': users,
+                    })
+                template_content['html_user_content'] = template_user
+
+            # Text template
+            template_content['text'] = loader.render_to_string('email/custom.txt', {'preview': preview})
+
+            # Base template
+            template = loader.render_to_string('email/custom/template.html', {
                     'base_url': base_url,
-                    'gender': gender,
-                    'subject': subject,
                     'preview': preview,
-                    'title_products': product_title,
                     'products': products,
-                    'title_looks': look_title,
                     'looks': looks,
-                    'title_users': user_title,
-                    'users': users})
-
-            text_template = loader.render_to_string('email/custom.txt', {'preview': preview})
+                    'users': users,
+                })
 
             # If create is set, create mailchimp campaign
             if form.cleaned_data.get('create'):
@@ -230,9 +256,21 @@ def admin(request):
                 except MailSnakeException, e:
                     return HttpResponse('Error: could not update subscribers list: %s' % (str(e),))
 
+                # Upload template to Mailchimp
+                mailchimp_templates = mailchimp.templates()
+                template_lookup = dict((x['name'], x['id']) for x in mailchimp_templates['user'])
+                if MAILCHIMP_TEMPLATE_NAME in template_lookup:
+                    mailchimp.templateUpdate(id=template_lookup[MAILCHIMP_TEMPLATE_NAME],
+                                             values={'html': template})
+                else:
+                    template_id = mailchimp.templateAdd(name=MAILCHIMP_TEMPLATE_NAME, html=template)
+                    template_lookup[MAILCHIMP_TEMPLATE_NAME] = template_id
+
+                # Mailchimp campaign setting
                 campaign_name = 'Custom %s - %s' % (datetime.date.today(), gender)
                 options = {
                         'list_id': settings.MAILCHIMP_NEWSLETTER_LIST,
+                        'template_id': template_lookup[MAILCHIMP_TEMPLATE_NAME],
                         'subject': subject,
                         'from_email': 'postman@apprl.com',
                         'from_name': 'Apprl',
@@ -250,16 +288,23 @@ def admin(request):
                                                        'value': gender}]}
 
                 try:
-                    campaign_id = mailchimp.campaignCreate(type='regular', options=options, content={'html': template, 'text': text_template}, segment_opts=segment_options)
+                    campaign_id = mailchimp.campaignCreate(type='regular', options=options, content=template_content, segment_opts=segment_options)
                 except MailSnakeException, e:
                     return HttpResponse('Error [%s]: could not create campaign: %s' % (gender, e))
 
                 return HttpResponse('Created campaign %s with ID %s' % (campaign_name, campaign_id))
 
-            # Else display preview
-            return HttpResponse(template)
 
-
+            return render(request, 'email/custom/template.html', {
+                    'base_url': base_url,
+                    'preview': preview,
+                    'products': products,
+                    'looks': looks,
+                    'users': users,
+                    'product_content': template_content.get('html_product_content', ''),
+                    'look_content': template_content.get('html_look_content', ''),
+                    'user_content': template_content.get('html_user_content', ''),
+                })
     else:
         form = CustomEmailForm()
 

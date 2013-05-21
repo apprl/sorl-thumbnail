@@ -1,0 +1,37 @@
+{% load thumbnail %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td colspan="3" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
+            <h3>{{ title }}</h3>
+        </td>
+    </tr>
+    {% for product_group in products %}
+    <tr>
+        {% for product in product_group %}
+        <td align="center" width="33.333%" height="228px" class="product-image">
+            {% thumbnail product.product_image "176" crop="noop" as im %}
+            <a href="{{ base_url }}{{ product.get_absolute_url }}"><img src="{{ im.url }}" /></a>
+            {% endthumbnail %}
+        </td>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for product in product_group %}
+        <td class="product-name">
+            <a href="{{ base_url }}{{ product.get_absolute_url }}">{{ product.product_name }}</a>
+        </td>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for product in product_group %}
+        <td class="product-text">
+            {% if product.default_vendor.locale_discount_price %}
+                <span class="discount">{{ product.default_vendor.locale_discount_price|floatformat:0 }} {{ product.default_vendor.locale_currency }}</span> <span class="original">{{ product.default_vendor.locale_price|floatformat:0 }} {{ product.default_vendor.locale_currency }}</span>
+            {% else %}
+            {{ product.default_vendor.locale_price|floatformat:0 }} {{ product.default_vendor.locale_currency }}
+            {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>

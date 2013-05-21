@@ -1,0 +1,30 @@
+<table border="0" cellpadding="10" cellspacing="0" width="100%">
+    <tr>
+        <td colspan="2" valign="top" align="center" class="bodyHeader" style="padding-bottom:15px;">
+            <h3>{{ title }}</h3>
+        </td>
+    </tr>
+    {% for look in looks %}
+    <tr>
+        <td width="50%">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="look-element">
+                <tr>
+                    <td class="look-image {{ look.class }}">
+                        {% thumbnail look.static_image "576" crop="noop" as im %}
+                        <a href="{{ base_url }}{{ look.get_absolute_url }}"><img src="{{ im.url }}" /></a>
+                        {% endthumbnail %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="look-name" align="center"><a href="{{ base_url }}{{ look.get_absolute_url }}">{{ look.title }}</a></td>
+                </tr>
+                <tr>
+                    <td class="look-profile-name" align="center">
+                        <a href="{{ base_url }}{{ look.user.get_absolute_url }}">By {{ look.user.display_name }}</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
