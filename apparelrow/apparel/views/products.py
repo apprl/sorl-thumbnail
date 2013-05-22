@@ -181,7 +181,7 @@ class ProductList(View):
         user_id = request.GET.get('user_id', False)
         if user_id:
             query_arguments['fq'].append('user_likes:%s' % (user_id,))
-            query_arguments['sort'] = ', '.join(['availability desc', request.GET.get('sort', 'created desc')])
+            query_arguments['sort'] = ', '.join(['%s_uld desc' % (user_id,), 'availability desc', request.GET.get('sort', 'created desc')])
         else:
             query_arguments['fq'].append('availability:true')
 
