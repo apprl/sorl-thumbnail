@@ -209,7 +209,9 @@ def rebuild_product_index():
     connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
     product_count = 0
 
-    for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False):
+    for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False,
+                                                                  likes__active=True) \
+                                                          .order_by('-modified'):
         product_save(product, solr=connection)
         product_count = product_count + 1
 
