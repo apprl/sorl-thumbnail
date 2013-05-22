@@ -516,8 +516,8 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
             'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'importer.log'),
-            'maxBytes': 3000000,
-            'backupCount': 8
+            'maxBytes': 8000000,
+            'backupCount': 10
         },
         'mail_admins': {
             'level': 'ERROR',
