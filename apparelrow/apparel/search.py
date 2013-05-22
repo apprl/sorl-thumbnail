@@ -186,7 +186,7 @@ def product_save(instance, **kwargs):
 
     document, boost = get_product_document(instance)
 
-    if document is not None:
+    if document is not None and document['published']:
         if 'commit' in kwargs and kwargs['commit']:
             connection.add([document], commit=True, boost=boost)
         else:
