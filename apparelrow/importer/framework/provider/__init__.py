@@ -206,15 +206,16 @@ class Provider(object):
                 product.vendorproduct.update(availability=0)
                 product.save()
                 logger.info('Setting availability for product %s to sold out' % (product.product_name,))
-            except (ObjectDoesNotExist, MultipleObjectsReturned):
+            except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
                 pass
 
         except Exception as e:
-            # FIXME: No need to add anything here as the process will terminate
+            exc_info = sys.exc_info()
+
             self.feed.latest_import_log.messages.create(
                 status='error',
                 message=u"Aborting import due to unhandled error.\nProduct: %s\nError: %s\n\nStacktrace:\n%s" % (
-                    prod_id, unicode(e.__str__(), 'utf-8'), ''.join(traceback.format_tb(sys.exc_info()[2]))
+                    prod_id, unicode(e.__str__(), 'utf-8'), ''.join(traceback.format_tb(exc_info[2]))
                 )
             )
 
@@ -225,10 +226,10 @@ class Provider(object):
                 product.vendorproduct.update(availability=0)
                 product.save()
                 logger.info('Setting availability for product %s to sold out' % (product.product_name,))
-            except (ObjectDoesNotExist, MultipleObjectsReturned):
-                pass
+            except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
+                logger.warning(u'Failed to cleanup product during during unknown exception: %s' % (e))
 
-            raise
+            raise exc_info[0], exc_info[1], exc_info[2]
         else:
             self.count += 1
 
