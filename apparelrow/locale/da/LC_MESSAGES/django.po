@@ -1961,7 +1961,7 @@ msgstr ""
 
 #: templates/apparel/fragments/product_shop.html:33
 msgid "See looks »"
-msgstr ""
+msgstr "Se looks »"
 
 #: templates/apparel/fragments/product_short_link.html:2
 msgid "Your product link"

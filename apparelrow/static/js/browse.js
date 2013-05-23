@@ -1,4 +1,14 @@
 jQuery(document).ready(function() {
+
+    // Translate
+    updateTranslations();
+
+    // Currency conversion
+    currencyConversion(jQuery('#product-list').find('.price, .discount-price'));
+
+    // Embedded products
+    updateEmbeddedProducts($('#product-list ul.list'));
+
     // Initialize jquery history plugin with our filter
     var firstLoad = true;
     jQuery.history.init(function(hash) {
@@ -14,7 +24,6 @@ jQuery(document).ready(function() {
                     jQuery('#content').show();
                     renderProducts(response);
                     updateSelected(response);
-                    calculateProductLayout();
                 });
             } else {
                 // No hash, but we must selected all genders if no gender is selected
@@ -23,16 +32,12 @@ jQuery(document).ready(function() {
                 if(!jQuery('#product-gender li > a').hasClass('selected')) {
                     jQuery('#product-gender li:first > a').addClass('selected');
                 }
-                calculateProductLayout();
             }
         } else {
             doFilter(hash, this.filterCallback);
             this.filterCallback = null;
         }
     });
-
-    // Currency conversion
-    currencyConversion(jQuery('#product-list').find('.price, .discount-price'));
 
     // Initially hide level 1 and 2 categories
     jQuery('#product-category .level-1, #product-category .level-2').hide();
@@ -455,19 +460,7 @@ function renderPage(products) {
     }
 
     currencyConversion($list.find('.price, .discount-price'));
-
-    if(typeof embed_shop_user_id !== 'undefined') {
-        $list.find('.product-container').each(function(i, element) {
-            var buy_url = $(element).find('.btn-buy').attr('href');
-            buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
-            $('.product-image, .product-footer h4 a', element).attr('href', buy_url);
-            $('.product-image, .product-footer a', element).attr('target', '_blank');
-            var looks_elem = $('.product-footer a.looks', element);
-            var looks_href = looks_elem.attr('href');
-            looks_elem.attr('href', looks_href + '?aid=' + embed_shop_user_id + '&alink=Ext-Shop');
-            $('.hover', element).remove();
-        });
-    }
+    updateEmbeddedProducts($list);
 
     jQuery('#product-list > ul.list').append($list.html());
     jQuery('.pagination').html($pagination.html());
@@ -658,8 +651,22 @@ function updateSelected(products) {
     };
 }
 
-// Run every time new products are loaded
-function calculateProductLayout() {
+function updateEmbeddedProducts($list) {
+    if(typeof embed_shop_user_id !== 'undefined') {
+        $list.find('.product-container').each(function(i, element) {
+            var buy_url = $(element).find('.btn-buy').attr('href');
+            buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
+            $('.product-image, .product-footer h4 a', element).attr('href', buy_url);
+            $('.product-image, .product-footer a', element).attr('target', '_blank');
+            var looks_elem = $('.product-footer a.looks', element);
+            var looks_href = looks_elem.attr('href');
+            looks_elem.attr('href', looks_href + '?aid=' + embed_shop_user_id + '&alink=Ext-Shop');
+            $('.hover', element).remove();
+        });
+    }
+}
+
+function updateTranslations() {
     var $productList = $('#product-list');
     $productList.find('.looks').text(gettext('See looks »'));
     $productList.find('.sold-out').text(gettext('SOLD OUT'));
@@ -680,5 +687,5 @@ function renderProducts(products) {
     }
 
     filterCriteria(products);
-    calculateProductLayout();
+    updateTranslations();
 }
