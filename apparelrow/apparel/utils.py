@@ -55,12 +55,13 @@ def get_brand_and_category(look):
     for c in look.display_components.select_related('product', 'product__category', 'product__category__parent', 'product__manufacturer'):
         singular = None
 
-        if c.product.category.parent and c.product.category.parent.singular_name:
-            if c.product.category.parent.singular_name.strip():
-                singular = c.product.category.parent.singular_name
-        elif c.product.category.singular_name:
-            if c.product.category.singular_name.strip():
-                singular = c.product.category.singular_name
+        if c.product.category:
+            if c.product.category.parent and c.product.category.parent.singular_name:
+                if c.product.category.parent.singular_name.strip():
+                    singular = c.product.category.parent.singular_name
+            elif c.product.category.singular_name:
+                if c.product.category.singular_name.strip():
+                    singular = c.product.category.singular_name
 
         if singular:
             yield (u'%s - %s' % (singular, c.product.manufacturer), c.product)
