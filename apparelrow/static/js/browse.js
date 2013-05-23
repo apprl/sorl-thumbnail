@@ -84,6 +84,8 @@ jQuery(document).ready(function() {
 
     // Individual reset button
     jQuery('#product-category-header .reset').click(function(e) {
+        e.preventDefault();
+
         jQuery('#product-category .selected, #product-category-header .selected').removeClass('selected');
         jQuery('#product-category .active, #product-category-header .active').removeClass('active');
 
@@ -91,8 +93,6 @@ jQuery(document).ready(function() {
         jQuery('#product-category .level-1, #product-category .level-2').hide();
 
         filter(getQuery());
-
-        return false;
     });
     jQuery('#product-options .header .reset').click(function(e) {
         var link = jQuery(this);

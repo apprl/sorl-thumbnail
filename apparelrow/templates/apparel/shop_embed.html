@@ -91,24 +91,26 @@
     </head>
     <body class="shop-embed">
         <div class="container">
-            <div class="sidebar">
-                {% include 'apparel/fragments/product_menu_browse.html' %}
-            </div>
-            <div id="content">
-                <h2 id="product-count">
-                    <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
-                </h2>
-                <div id="product-list" class="product-list">
-                    <ul class="list group">
-                    {% for html in current_page.html %}
-                        {{ html|safe }}
-                    {% endfor %}
-                    </ul>
-                    <div id="pagination-bottom" class="pagination">
-                        {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
-                    </div>
+            <div id="inner-container">
+                <div class="sidebar">
+                    {% include 'apparel/fragments/product_menu_browse.html' %}
                 </div>
-                <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
+                <div id="content">
+                    <h2 id="product-count">
+                        <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
+                    </h2>
+                    <div id="product-list" class="product-list">
+                        <ul class="list group">
+                        {% for html in current_page.html %}
+                            {{ html|safe }}
+                        {% endfor %}
+                        </ul>
+                        <div id="pagination-bottom" class="pagination">
+                            {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
+                        </div>
+                    </div>
+                    <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
+                </div>
             </div>
             {% include 'apparel/fragments/shop_empty.html' %}
         </div>

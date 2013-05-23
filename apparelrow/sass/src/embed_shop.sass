@@ -13,18 +13,19 @@ body
   background-color: #ffffff
 
 .container
-  width: 100%
-  display: table
-  .sidebar
-    display: table-cell
-    width: $aside_width
-    padding-right: $gutter_width
-  #content
-    display: table-cell
-    #product-list
-      width: 100%
-  #product-stores, #product-stores-header
-    display: none
+  #inner-container
+    width: 100%
+    display: table
+    .sidebar
+      display: table-cell
+      width: $aside_width
+      padding-right: $gutter_width
+    #content
+      display: table-cell
+      #product-list
+        width: 100%
+    #product-stores, #product-stores-header
+      display: none
 
 // Duplicate from application.sass
 span, a
