@@ -6,14 +6,17 @@ import os.path
 import string
 import decimal
 import time
+import itertools
 
+from django.conf import settings
+from django.core.cache import get_cache
 from django.core.management import call_command
 from django.core.files import storage
 from django.core.files.base import ContentFile
+from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
-from django.conf import settings
 from django.db.models.loading import get_model
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_unicode
@@ -32,6 +35,18 @@ import requests
 
 
 logger = logging.getLogger('apparel.tasks')
+
+@task(name='apparelrow.apparel.tasks.empty_embed_shop_cache', max_retries=5, ignore_result=True)
+def empty_embed_shop_cache(embed_shop_id):
+    for x in itertools.product((x[0] for x in settings.LANGUAGES), ['A', 'M', 'W']):
+        get_cache('nginx').delete(reverse('shop-embed', args=[embed_shop_id, x[0], x[1]]))
+
+
+@task(name='apparelrow.apparel.tasks.empty_embed_look_cache', max_retries=5, ignore_result=True)
+def empty_embed_look_cache(look_slug):
+    get_cache('nginx').delete(reverse('look-embed', args=[look_slug]))
+    for look_embed in get_model('apparel', 'LookEmbed').objects.filter(look__slug=look_slug):
+        get_cache('nginx').delete(reverse('look-embed-identifier', args=[look_embed.identifier, look_slug]))
 
 
 @task(name='apparelrow.apparel.tasks.look_popularity', max_retries=5, ignore_result=True)

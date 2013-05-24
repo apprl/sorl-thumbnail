@@ -19,8 +19,7 @@ from django.utils import translation
 
 from apparelrow.apparel.models import Product, ProductLike, Look
 from apparelrow.apparel.utils import get_gender_from_cookie
-from apparelrow.apparel.tasks import product_popularity
-
+from apparelrow.apparel.tasks import product_popularity, empty_embed_shop_cache
 from sorl.thumbnail import get_thumbnail
 
 from pysolr import Solr
@@ -200,6 +199,7 @@ def product_delete(instance, **kwargs):
 @receiver(post_save, sender=ProductLike, dispatch_uid='product_like_save')
 def product_like_save(instance, **kwargs):
     product_save(instance.product)
+    empty_embed_shop_cache.apply_async(args=[instance.user.pk], countdown=1)
 
 @receiver(post_delete, sender=ProductLike, dispatch_uid='product_like_delete')
 def product_like_delete(instance, **kwargs):

@@ -3,7 +3,6 @@ import uuid
 import os.path
 import decimal
 import datetime
-import itertools
 
 from django.db import models
 from django.db.models import Sum, Min
@@ -13,8 +12,6 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
-from django.core.cache import get_cache
-from django.core.urlresolvers import reverse
 from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
@@ -26,7 +23,7 @@ from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
 from apparelrow.apparel.utils import currency_exchange, get_brand_and_category
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
-from apparelrow.apparel.tasks import build_static_look_image
+from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache
 
 from apparelrow.profile.notifications import process_sale_alert
 
@@ -384,10 +381,6 @@ def product_like_post_save(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
         logging.warning('Trying to register an activity, but %s has not user attribute' % instance)
         return
-
-    # Empty shop embedded cache
-    for x in itertools.product((x[0] for x in settings.LANGUAGES), ['A', 'M', 'W']):
-        get_cache('nginx').delete(reverse('shop-embed', args=[instance.user.pk, x[0], x[1]]))
 
     if instance.active == True:
         get_model('activity_feed', 'activity').objects.push_activity(instance.user, 'like_product', instance.product, instance.product.gender)
@@ -861,13 +854,7 @@ def look_saved_handler(sender, look, **kwargs):
     if kwargs.get('update', True):
         # Build static image
         get_model('apparel', 'Look').build_static_image(look.pk)
-
-        # Empty look embedded cache
-        get_cache('nginx').delete(reverse('look-embed', args=[look.slug]))
-
-        # Empty new look embedded cache
-        for look_embed in get_model('apparel', 'LookEmbed').objects.filter(look=look):
-            get_cache('nginx').delete(reverse('look-embed-identifier', args=[look_embed.identifier, look.slug]))
+        empty_embed_look_cache.apply_async(args=[look.slug], countdown=1)
 
     if look.published == True:
         get_model('activity_feed', 'activity').objects.push_activity(look.user, 'create', look, look.gender)
