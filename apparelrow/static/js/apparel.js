@@ -1000,7 +1000,7 @@ jQuery(document).ready(function() {
 
     // Set up infinite scroll on all pages with pagination except shop,
     // which has it's own pagination logic
-    if($pagination.length && !$body.hasClass('page-shop')) {
+    if($pagination.length && !$body.hasClass('page-shop') && !$body.hasClass('profile-likes')) {
         var $container = $pagination.prev();
 
         var last_link = null;

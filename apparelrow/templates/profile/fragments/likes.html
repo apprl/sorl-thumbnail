@@ -1,8 +1,0 @@
-<ul class="list">
-{% for object in current_page.object_list %}
-    {% include 'profile/fragments/product_likes.html' with owner=profile object=object only %}
-{% endfor %}
-</ul>
-<div class="pagination">
-    {% include 'apparel/fragments/pagination.html' %}
-</div>
