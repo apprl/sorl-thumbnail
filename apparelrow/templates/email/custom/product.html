@@ -10,7 +10,7 @@
         {% for product in product_group %}
         <td align="center" width="33.333%" height="228px" class="product-image">
             {% thumbnail product.product_image "176" crop="noop" as im %}
-            <a href="{{ base_url }}{{ product.get_absolute_url }}"><img src="{{ im.url }}" /></a>
+            <a href="{{ base_url }}{{ product.get_absolute_url }}{% if sid %}?sid={{ sid }}{% endif %}"><img src="{{ im.url }}" /></a>
             {% endthumbnail %}
         </td>
         {% endfor %}
@@ -18,7 +18,7 @@
     <tr>
         {% for product in product_group %}
         <td class="product-name">
-            <a href="{{ base_url }}{{ product.get_absolute_url }}">{{ product.manufacturer }}</a>
+            <a href="{{ base_url }}{{ product.get_absolute_url }}{% if sid %}?sid={{ sid }}{% endif %}">{{ product.manufacturer }}</a>
         </td>
         {% endfor %}
     </tr>

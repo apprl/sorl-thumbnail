@@ -101,6 +101,8 @@ class CustomEmailForm(forms.Form):
             required=False,
             help_text='Enter 1 profile URL per row')
 
+    tracking = forms.BooleanField(help_text='Product link will use ?sid=123 if a user is selected', required=False)
+
     create = forms.BooleanField(help_text='Create campaign and upload it to mailchimp', required=False)
 
     def __init__(self, *args, **kwargs):
@@ -211,11 +213,15 @@ def admin(request):
 
             # Product template
             if products:
+                sid = None
+                if users and form.cleaned_data['tracking']:
+                    sid = users[0].pk
                 args = [iter(products)] * 3
                 products = itertools.izip_longest(*args, fillvalue=None)
                 template_product = loader.render_to_string('email/custom/product.html', {
                         'title': product_title,
                         'products': products,
+                        'sid': sid,
                     })
                 template_content['html_product_content'] = template_product
 
