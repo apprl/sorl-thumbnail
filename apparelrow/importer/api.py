@@ -40,7 +40,7 @@ Synopsis
 
     api = API(some_data)
     api.import_dataset()
-    
+
 Required Data Structure
 
 {
@@ -77,7 +77,7 @@ Required Data Structure
     }
 }
 
- 
+
 """
 
 class API(object):
@@ -94,20 +94,20 @@ class API(object):
         self._manufacturer    = None
         self._vendor          = None
         self._product_image   = None
-            
+
     @transaction.commit_on_success
     def import_dataset(self, data=None):
         """
-        Imports the Product and related data specified in the data structure. 
+        Imports the Product and related data specified in the data structure.
         """
-        
+
         logger.debug('****** About to import dataset ******')
         p = None
-        
+
         try:
             if data:
                 self.dataset = data
-            
+
             self.validate()
 
             logger.debug('ID [%s]  Name [%s] Brand [%s]  ' % (
@@ -123,18 +123,18 @@ class API(object):
         except DBError, e:
             logger.debug(u'Cought exception from database driver: %s' % e)
             raise ImporterError('Could not insert product: %s' % e)
-        
+
         logger.info('Imported %s' % self.product)
-        
+
         return self.product
-    
-    
+
+
     def import_product(self):
         """
         Imports the product
         """
-        
-        # Download and store product image 
+
+        # Download and store product image
         fields = {
             'product_name': self.dataset['product']['product-name'],
             'description': self.dataset['product']['description'],
@@ -145,7 +145,7 @@ class API(object):
             'feed_gender': self.dataset['product']['gender'],
             'availability': False if self.dataset['product']['availability'] == 0 else True
         }
-        
+
         try:
             self.product = get_model('apparel', 'Product').objects.get(
                 static_brand=self.dataset['product']['manufacturer'],
@@ -159,7 +159,7 @@ class API(object):
                 **fields
             )
             logger.debug('Created new product: [id %s] %s' % (self.product.id, self.product))
-        
+
         except MultipleObjectsReturned:
             raise SkipProduct('Multiple products found with sku %s for unmapped (static) vendor brand %s' % (self.fields['sku'], self.fields['static_brand']))
 
@@ -180,7 +180,7 @@ class API(object):
         self.product.save()
 
         return self.product
-    
+
     def __product_options(self):
         """
         Private method that adds, update and maintain vendor product options
@@ -219,54 +219,54 @@ class API(object):
 
             if len(options) == 0:
                 continue
-            
+
             db_variation = None
-            
+
             # FIXME: Sanitise this, and move it out to separate routine
             for v in vp.variations.all():
                 # FIXME: Can we rely on this being cached, or is it more efficient
                 # to call this outside the loop?
-                
+
                 if set(options) - set(v.options.all()):
                     continue
-                
-                db_variation = v                
+
+                db_variation = v
                 break
-            
+
             else:
                 # Create variation
                 db_variation = get_model('apparel', 'VendorProductVariation').objects.create( vendor_product=vp )
                 # FIXME: Pass in when creating variant?
                 for o in options:
                     db_variation.options.add(o)
-            
+
                 logger.debug('Added availability for combination %s', db_variation)
 
             in_stock = variation.get('availability')
-            
+
             if in_stock is not None and isinstance(in_stock, bool):
                 in_stock = -1 if in_stock else 0
-            
+
             db_variation.in_stock = in_stock
             db_variation.save()
-        
-        
-    
+
+
+
     @property
     def vendorproduct(self):
         if not self._vendor_product:
             self._vendor_product, created = get_model('apparel', 'VendorProduct').objects.get_or_create(
-                product=self.product, 
+                product=self.product,
                 vendor=self.vendor,
             )
-            
+
             self._vendor_product.vendor_category = self.vendor_category
             self._vendor_product.vendor_brand = self.vendor_brand
             self._vendor_product.save()
             logger.debug('Added product data to vendor: %s', self._vendor_product)
 
         return self._vendor_product
-        
+
 
     def __vendor_options(self):
         """
@@ -335,7 +335,7 @@ class API(object):
 
         for f in fields:
             setattr(self.vendorproduct, f, fields[f])
-        
+
         self.vendorproduct.save()
 
     def validate(self):
@@ -352,10 +352,10 @@ class API(object):
                 'price', 'discount-price', 'currency', 'delivery-cost', 'delivery-time', 'availability',
                 'product-url', 'image-url', 'description', 'variations')
             ]
-        
+
         except KeyError, key:
             raise IncompleteDataSet(key)
-        
+
         # Check that we support this version
         if self.dataset['version'] != self.version:
             raise ImporterError('Incompatable version number "%s" (this is version %s)', self.dataset.get('version'), self.version)
@@ -388,24 +388,24 @@ class API(object):
         """
         if not self._dataset:
             raise IncompleteDataSet(None, 'No dataset')
-        
+
         return self._dataset
-    
+
     @dataset.setter
     def dataset(self, d):
         self._dataset = d
-    
-        
+
+
     @property
     def vendor_category(self):
         """
         Returns the VendorCategory instance that maps the extracted category
         to manually defined one Apparelrow.
         """
-        
+
         if not self._vendor_category:
             category_names = self.dataset['product']['category']
-                        
+
             # Force string
             if isinstance(category_names, list):
                 category_names = ' '.join(category_names)
@@ -488,20 +488,20 @@ class API(object):
         """
         Retrives, or creates, the vendor of this dataset
         """
-        
+
         if not self._vendor:
             try:
                 name = self.dataset['vendor']
             except KeyError, key:
                 raise IncompleteDataSet(key)
-            
+
             self._vendor, created = get_model('apparel', 'Vendor').objects.get_or_create(name=name)
-            
-            if created: 
+
+            if created:
                 logger.debug('Created new vendor [id: %s] %s' % (self._vendor.id, self._vendor))
             else:
                 logger.debug('Using vendor [id: %s] %s' % (self._vendor.id, self._vendor))
-        
+
         return self._vendor
 
     def _product_image_path(self, url):
@@ -556,7 +556,7 @@ class API(object):
     @property
     def product_image(self):
         """
-        Downloads the product image and stores it in the appropriate location. 
+        Downloads the product image and stores it in the appropriate location.
         Returns the relative path to the stored image.
         """
         if not self._product_image:
@@ -593,7 +593,7 @@ class ImporterError(Exception):
     """
     An exception base class that will prevent the current data to be imported
     and any change to be rolled back.
-    However, a client should continue its execution and attempt to import 
+    However, a client should continue its execution and attempt to import
     subsequent datasets.
     """
     def __unicode__(self):
@@ -608,17 +608,17 @@ class SkipProduct(ImporterError):
 
 class IncompleteDataSet(ImporterError):
     """
-    The product could not be imported because required data is missing or 
+    The product could not be imported because required data is missing or
     malformatted.
     """
     def __init__(self, field=None, msg=None):
         self.field = field
         self.msg   = msg
-        
+
         return super(IncompleteDataSet, self).__init__()
-    
+
     def __str__(self):
         if self.field:
             return 'Missing field %s (%s)' % (self.field, self.msg)
-    
+
         return '[No reason given]' if self.msg is None else self.msg
