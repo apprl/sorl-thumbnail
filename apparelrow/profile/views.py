@@ -75,12 +75,17 @@ def likes(request, profile, form, page=0, gender=None):
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
 
+    is_brand = False
+    if profile.is_brand:
+        is_brand = profile.brand_id
+
     response = browse_products(request,
                                template='profile/likes.html',
                                user_gender='A',
                                language=None,
                                user_id=profile.pk,
                                disable_availability=True,
+                               is_brand=is_brand,
                                **content)
 
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)

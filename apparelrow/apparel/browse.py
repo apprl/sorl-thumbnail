@@ -172,9 +172,12 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
     else:
         if user_id:
-            query_arguments['sort'] = 'availability desc, %s_uld desc, popularity desc, created desc' % (user_id,)
-            # Embedded shop
-            query_arguments['fq'].append('user_likes:%s' % (user_id,))
+            if 'is_brand' in kwargs and kwargs['is_brand']:
+                query_arguments['sort'] = 'availability desc, created desc, popularity desc'
+                query_arguments['fq'].append('user_likes:%s OR manufacturer_id:%s' % (user_id, kwargs['is_brand']))
+            else:
+                query_arguments['sort'] = 'availability desc, %s_uld desc, popularity desc, created desc' % (user_id,)
+                query_arguments['fq'].append('user_likes:%s' % (user_id,))
             if user_gender == 'A':
                 query_arguments['fq'].append(generate_gender_field(request.GET))
             else:
