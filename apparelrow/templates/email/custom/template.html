@@ -150,9 +150,9 @@
 
             .product-image{height: 228px;}
             .product-image img{width:176px;}
-            .product-name{text-align:center;padding:10px 0 0 0;}
+            .product-name{text-align:center;padding:10px 10px 0 10px;}
             .product-name a, .product-name a:link, .product-name a:visited{font-size:14px;color:#202020;text-decoration:none;font-weight:bold;}
-            .product-text{font-size:12px;color:#666666;text-align:center;padding:5px 0 15px 0;}
+            .product-text{font-size:12px;color:#666666;text-align:center;padding:5px 10px 15px 10px;}
             .product-text .discount{color:#c95050}
             .product-text .original{text-decoration:line-through;}
 
@@ -344,7 +344,7 @@
                                     <!-- // Begin Template Body \\ -->
                                     <table border="0" cellpadding="0" cellspacing="0" width="614" id="templateBody">
                                         <tr>
-                                            <td align="center"><img mc:edit="mail_image" mc:hideable style="max-width:614px;"></td>
+                                            <td align="center"><img mc:edit="mail_image" mc:hideable mc:allowdesigner mc:allowtext style="max-width:600px;"></td>
                                         </tr>
                                         {% if products %}
                                         <tr>
@@ -352,9 +352,11 @@
                                         </tr>
                                         {% endif %}
                                         {% if looks %}
+                                        {% if products %}
                                         <tr>
                                             <td class="divider" height="5px">&nbsp;</td>
                                         </tr>
+                                        {% endif %}
                                         <tr>
                                             <td valign="top" align="center" class="bodyContent" mc:edit="look_content">{{ look_content }}</td>
                                         </tr>
@@ -363,9 +365,11 @@
                                         </tr>
                                         {% endif %}
                                         {% if users %}
+                                        {% if products or looks %}
                                         <tr>
                                             <td class="divider" height="5px">&nbsp;</td>
                                         </tr>
+                                        {% endif %}
                                         <tr>
                                             <td valign="top" align="center" class="bodyContent" mc:edit="user_content">{{ user_content }}</td>
                                         </tr>
