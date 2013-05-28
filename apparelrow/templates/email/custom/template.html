@@ -346,32 +346,32 @@
                                         <tr>
                                             <td align="center"><img mc:edit="mail_image" mc:hideable mc:allowdesigner mc:allowtext style="max-width:600px;"></td>
                                         </tr>
+                                        {% if users %}
+                                        <tr>
+                                            <td valign="top" align="center" class="bodyContent" mc:edit="user_content">{{ user_content }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        {% endif %}
                                         {% if products %}
+                                        {% if users %}
+                                        <tr>
+                                            <td class="divider" height="5px">&nbsp;</td>
+                                        </tr>
+                                        {% endif %}
                                         <tr>
                                             <td valign="top" align="center" class="bodyContent" mc:edit="product_content">{{ product_content }}</td>
                                         </tr>
                                         {% endif %}
                                         {% if looks %}
-                                        {% if products %}
+                                        {% if users or products %}
                                         <tr>
                                             <td class="divider" height="5px">&nbsp;</td>
                                         </tr>
                                         {% endif %}
                                         <tr>
                                             <td valign="top" align="center" class="bodyContent" mc:edit="look_content">{{ look_content }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>&nbsp;</td>
-                                        </tr>
-                                        {% endif %}
-                                        {% if users %}
-                                        {% if products or looks %}
-                                        <tr>
-                                            <td class="divider" height="5px">&nbsp;</td>
-                                        </tr>
-                                        {% endif %}
-                                        <tr>
-                                            <td valign="top" align="center" class="bodyContent" mc:edit="user_content">{{ user_content }}</td>
                                         </tr>
                                         <tr>
                                             <td>&nbsp;</td>
