@@ -166,10 +166,17 @@ class API(object):
         else:
             # Update product
             for f in fields:
-                # If category is set on product and imported category is None
-                # we will not try to override it.
+                # If category, gender or manufactueer is set on product and the
+                # previous imported value is None we will not try to override
+                # it. Should fix problems with 404 products.
                 if f == 'category':
                     if self.product.category and not fields.get(f):
+                        continue
+                elif f == 'gender':
+                    if self.product.gender and not fields.get(f):
+                        continue
+                elif f == 'manufacturer':
+                    if self.product.manufacturer and not fields.get(f):
                         continue
 
                 setattr(self.product, f, fields.get(f))
