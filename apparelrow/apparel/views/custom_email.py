@@ -151,6 +151,7 @@ def validate_url(url):
     """
     Validate url and turn it into a model object.
     """
+    index = None
     url_parts = url.split('/')
     if 'products' in url_parts:
         index = url_parts.index('products') + 1
@@ -164,7 +165,7 @@ def validate_url(url):
 
     try:
         slug = url_parts[index]
-    except IndexError as e:
+    except (TypeError, IndexError) as e:
         return None
 
     try:
