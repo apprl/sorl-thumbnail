@@ -199,7 +199,7 @@ def admin(request):
             base_url = request.build_absolute_uri('/')[:-1]
 
             for user in users:
-                avatar = user.avatar_medium
+                avatar = user.avatar_large
                 if not avatar.startswith('http'):
                     avatar = ''.join([base_url, avatar])
                 user.mail_image = avatar

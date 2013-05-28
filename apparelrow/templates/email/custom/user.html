@@ -9,22 +9,20 @@
         <td>
             <table border="0" cellpadding="0" cellspacing="0" width="100%" class="follow-element">
                 <tr>
-                    <td colspan="3" valign="middle" align="center" class="follow-image" height="125px" style="padding-bottom:15px;">
+                    <td valign="middle" align="center" class="follow-image" width="208px" style="padding-bottom:15px;">
                         <a target="_blank" href="{{ user.get_absolute_url }}"><img src="{{ user.mail_image }}" /></a>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" valign="top" align="center" class="follow-name">
+                    <td valign="top" align="center" class="follow-name">
                         {% if user.blog_url %}<a target="_blank" href="{{ user.blog_url }}">{{ user.blog_url }}</a>{% endif %}
                         <br /><br />
                     </td>
                 </tr>
                 <tr>
-                    <td width="30%"></td>
-                    <td valign="top" align="center" style="background-color:#60d1ab;">
-                        <a target="_blank" href="{{ user.get_absolute_url }}" class="follow-btn" style="vertical-align:middle;line-height:36px;width:100%;height:36px;display:block;">FOLLOW</a>
+                    <td width="208px" valign="top" align="center" >
+                        <a target="_blank" href="{{ user.get_absolute_url }}" class="follow-btn" style="background-color:#60d1ab;vertical-align:middle;line-height:36px;width:208px;height:36px;display:block;">FOLLOW</a>
                     </td>
-                    <td width="30%"></td>
                 </tr>
             </table>
         </td>
