@@ -11,16 +11,16 @@
                 <tr>
                     <td class="look-image {{ look.class }}">
                         {% thumbnail look.static_image "576" crop="noop" as im %}
-                        <a href="{{ base_url }}{{ look.get_absolute_url }}"><img src="{{ im.url }}" /></a>
+                        <a target="_blank" href="{{ base_url }}{{ look.get_absolute_url }}"><img src="{{ im.url }}" /></a>
                         {% endthumbnail %}
                     </td>
                 </tr>
                 <tr>
-                    <td class="look-name" align="center"><a href="{{ base_url }}{{ look.get_absolute_url }}">{{ look.title }}</a></td>
+                    <td class="look-name" align="center"><a target="_blank" href="{{ base_url }}{{ look.get_absolute_url }}">{{ look.title }}</a></td>
                 </tr>
                 <tr>
                     <td class="look-profile-name" align="center">
-                        <a href="{{ base_url }}{{ look.user.get_absolute_url }}">By {{ look.user.display_name }}</a>
+                        <a target="_blank" href="{{ base_url }}{{ look.user.get_absolute_url }}">By {{ look.user.display_name }}</a>
                     </td>
                 </tr>
             </table>
