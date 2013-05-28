@@ -59,8 +59,8 @@ jQuery(document).ready(function() {
         // Initiate individual reset for stores filter
         jQuery('#product-stores').prev().find('.reset').click();
 
-        // Select both genders (only embed)
-        if(typeof embed_shop_user_id !== 'undefined') {
+        // Select both genders (only embed and profile)
+        if(typeof embed_shop_user_id !== 'undefined' || typeof profile_shop_user_id !== 'undefined') {
             jQuery('#product-gender li > a').removeClass('selected');
             jQuery('#product-gender li:first > a').addClass('selected');
         }
@@ -229,8 +229,8 @@ jQuery(document).ready(function() {
         return false;
     });
 
-    // Product gender filter (only embed...)
-    if(typeof embed_shop_user_id !== 'undefined') {
+    // Product gender filter (only embed and profile)
+    if(typeof embed_shop_user_id !== 'undefined' || typeof profile_shop_user_id !== 'undefined') {
         jQuery('#product-gender li > a').click(function() {
             var element = jQuery(this);
             if(!element.hasClass('selected')) {
@@ -321,12 +321,12 @@ window.getQuery = function(query, reset) {
     reset = typeof(reset) != 'undefined' ? reset : false;
 
     sort_by = $('.browse-sort li a.selected').data('sort');
-    if(typeof sort_by !== 'undefined' && sort_by != 'pop') {
+    if(typeof sort_by !== 'undefined' && sort_by !== null && sort_by != 'pop') {
         query['sort'] = sort_by;
     }
 
     shop_view = $('.shop-view li a.selected').data('view');
-    if(typeof shop_view !== 'undefined' && shop_view != 'all') {
+    if(typeof shop_view !== 'undefined' && shop_view !== null && shop_view != 'all') {
         query['view'] = shop_view;
     }
 
@@ -354,7 +354,8 @@ window.getQuery = function(query, reset) {
         jQuery('#product-stores').removeClass('active').prev().removeClass('active');
     }
 
-    if(typeof embed_shop_user_id !== 'undefined') {
+    // Only embed and profile
+    if(typeof embed_shop_user_id !== 'undefined' || typeof profile_shop_user_id !== 'undefined') {
         gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
         if(gender_list.length > 0 && gender_list[0]) {
             query['gender'] = gender_list[0];
@@ -566,6 +567,7 @@ function updateSelected(products) {
 
     // Select gender
     if(products.selected_gender && products.selected_gender.length > 0) {
+        products.selected_gender = products.selected_gender.split();
         jQuery.each(products.selected_gender, function(i, id) {
             jQuery('#option-' + id).addClass('selected');
         });
@@ -662,6 +664,12 @@ function updateEmbeddedProducts($list) {
             var looks_href = looks_elem.attr('href');
             looks_elem.attr('href', looks_href + '?aid=' + embed_shop_user_id + '&alink=Ext-Shop');
             $('.hover', element).remove();
+        });
+    } else if(typeof profile_shop_user_id !== 'undefined') {
+        $list.find('.product-container').each(function(i, element) {
+            var buy_url = $(element).find('.btn-buy').attr('href');
+            buy_url = buy_url.replace('Shop/0/', 'Profile/' + profile_shop_user_id + '/');
+            $('.hover-footer a.btn-buy', element).attr('href', buy_url);
         });
     }
 }

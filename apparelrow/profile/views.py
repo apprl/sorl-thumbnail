@@ -27,6 +27,8 @@ from apparelrow.profile.tasks import send_email_confirm_task
 from apparelrow.profile.decorators import avatar_change, login_flow
 from apparelrow.activity_feed.views import ActivityFeedRender
 
+from apparelrow.apparel.browse import browse_products
+
 PROFILE_PAGE_SIZE = 30
 
 def get_facebook_friends(request):
@@ -64,25 +66,7 @@ def likes(request, profile, form, page=0, gender=None):
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    if profile.is_brand:
-        queryset = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added')
-    else:
-        queryset = Product.published_objects.filter(likes__user=profile, likes__active=True).order_by('-availability', '-likes__modified')
-
-    queryset = queryset.select_related('manufacturer')
-
-    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', 1), 1, 2)
-
-    if request.is_ajax():
-        return render(request, 'profile/fragments/likes.html', {
-                'profile': profile,
-                'pagination': pagination,
-                'current_page': paged_result,
-        })
-
     content = {
-        'pagination': pagination,
-        'current_page': paged_result,
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
@@ -91,7 +75,19 @@ def likes(request, profile, form, page=0, gender=None):
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
 
-    response = render(request, 'profile/likes.html', content)
+    is_brand = False
+    if profile.is_brand:
+        is_brand = profile.brand_id
+
+    response = browse_products(request,
+                               template='profile/likes.html',
+                               user_gender='A',
+                               language=None,
+                               user_id=profile.pk,
+                               disable_availability=True,
+                               is_brand=is_brand,
+                               **content)
+
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 

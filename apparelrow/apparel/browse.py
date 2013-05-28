@@ -128,7 +128,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
 
     return query_arguments
 
-def browse_products(request, template='apparel/browse.html', gender=None, user_gender=None, user_id=None, language=None):
+def browse_products(request, template='apparel/browse.html', gender=None, user_gender=None, user_id=None, language=None, **kwargs):
     if not language:
         language = get_language()
     translation.activate(language)
@@ -140,7 +140,8 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     facet_fields = ['category', 'price', 'color', 'manufacturer', 'store']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     query_arguments = set_query_arguments(query_arguments, request, facet_fields, currency=currency)
-    query_arguments['fq'].append('availability:true')
+    if 'disable_availability' not in kwargs:
+        query_arguments['fq'].append('availability:true')
 
     result = {}
 
@@ -171,9 +172,12 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
     else:
         if user_id:
-            query_arguments['sort'] = '%s_uld desc, popularity desc, created desc' % (user_id,)
-            # Embedded shop
-            query_arguments['fq'].append('user_likes:%s' % (user_id,))
+            if 'is_brand' in kwargs and kwargs['is_brand']:
+                query_arguments['sort'] = 'availability desc, created desc, popularity desc'
+                query_arguments['fq'].append('user_likes:%s OR manufacturer_id:%s' % (user_id, kwargs['is_brand']))
+            else:
+                query_arguments['sort'] = 'availability desc, %s_uld desc, popularity desc, created desc' % (user_id,)
+                query_arguments['fq'].append('user_likes:%s' % (user_id,))
             if user_gender == 'A':
                 query_arguments['fq'].append(generate_gender_field(request.GET))
             else:
@@ -363,6 +367,9 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     # Do not update overall gender on shop
     # Set APPAREL_GENDER
     #result.update(APPAREL_GENDER=gender)
+
+    # Added remaining kwargs for rendering
+    result.update(kwargs)
 
     response = render_to_response(template, result, context_instance=RequestContext(request))
     #response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)

@@ -3,13 +3,30 @@
 
 {% block extra-title %}{{ profile.display_name }} | {% endblock %}
 
+{% block 'extra-scripts' %}
+    {% include 'apparel/fragments/browse_scripts.html' %}
+    <script type="text/javascript">
+        var profile_shop_user_id = {{ profile.pk }};
+    </script>
+{% endblock 'extra-scripts' %}
+
 {% block body-classes %}two-columns profile profile-likes{% endblock body-classes %}
 
 {% block extended_content %}
 <div id="content">
     {% if current_page.paginator.count != 0 %}
     <div id="product-list" class="product-list">
-        {% include 'profile/fragments/likes.html' %}
+        <div id="product-list" class="product-list">
+            <ul class="list group">
+            {% for html in current_page.html %}
+                {{ html|safe }}
+            {% endfor %}
+            </ul>
+            <div id="pagination-bottom" class="pagination">
+                {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
+            </div>
+        </div>
+        <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
     </div>
     <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
     <div class="clear"></div>
@@ -34,3 +51,7 @@
 </div>
 
 {% endblock extended_content %}
+
+{% block sidebar %}
+    {% include 'apparel/fragments/product_menu_browse.html' %}
+{% endblock %}

@@ -14,6 +14,7 @@
     {% if profile.facebook_user_id %}
     <meta property="fb:profile_id" content="{{ profile.facebook_user_id }}"/>
     {% endif %}
+    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
 {% endblock extra-styles %}
 
 {% block body-header %}
@@ -66,9 +67,6 @@
             {% endif %}
         </div>
         {% include 'apparel/fragments/follow.html' with classes="btn btn-upper btn-block" %}
-        {% if profile.is_brand %}
-        <a class="btn btn-upper btn-block" href="{% gender_url APPAREL_GENDER 'shop' %}#manufacturer={{ profile.brand.id }}">{% trans "Filter products" %}</a>
-        {% endif %}
         <div id="profile-about">
             {% if profile.about %}
             <p class="description">{{ profile.about|urlize_target_blank|linebreaksbr }}</p>
@@ -99,6 +97,7 @@
         {% if request.user.is_authenticated and request.user.is_partner and request.user == profile %}
         <a href="{% url 'profile-embed-shop' %}" class="btn btn-upper btn-block">{% trans "Create a shop on your site" %}</a>
         {% endif %}
+        {% block sidebar %}{% endblock %}
     </div>
     {% block extended_content %}
     <div id="content">
