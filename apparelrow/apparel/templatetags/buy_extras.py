@@ -20,5 +20,5 @@ def buy_url(product_id, vendor, target_user_id=0, page='Default'):
 
 
 @register.simple_tag
-def get_sid(target_user_id=0, page='Default'):
-    return generate_sid(target_user_id, page)
+def get_sid(product_id, target_user_id=0, page='Default'):
+    return generate_sid(product_id, target_user_id, page)

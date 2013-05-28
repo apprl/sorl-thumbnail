@@ -66,7 +66,7 @@ class Transaction(models.Model):
     modified = models.DateTimeField(default=timezone.now, null=True, blank=True)
 
     # Custom user data
-    custom = models.CharField(max_length=32, null=True, blank=True)
+    custom = models.CharField(max_length=128, null=True, blank=True)
 
     # User ip address
     ip_address = models.GenericIPAddressField()

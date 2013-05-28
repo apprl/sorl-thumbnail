@@ -87,20 +87,49 @@ def set_query_parameter(url, param_name, param_value):
     return urlunsplit((scheme, netloc, path, new_query_string, fragment))
 
 
-def generate_sid(target_user_id=0, page='Default'):
+def generate_sid(product_id, target_user_id=0, page='Default'):
     try:
-        sid = int(target_user_id)
+        target_user_id = int(target_user_id)
     except (TypeError, ValueError, AttributeError):
-        sid = 0
+        target_user_id = 0
 
-    return smart_str('%s-%s' % (sid, page))
+    try:
+        product_id = int(product_id)
+    except (TypeError, ValueError, AttributeError):
+        product_id = 0
+
+    return smart_str('%s-%s-%s' % (target_user_id, product_id, page))
+
+
+def parse_sid(sid):
+    if sid:
+        try:
+            target_user_id, rest = sid.split('-', 1)
+            try:
+                product_id, page = rest.split('-', 1)
+                return (int(target_user_id), int(product_id), page)
+            except ValueError:
+                try:
+                    return (int(target_user_id), int(rest), 'Unknown')
+                except ValueError:
+                    pass
+                return (int(target_user_id), 0, rest)
+        except ValueError:
+            pass
+
+        try:
+            return (int(sid), 0, 'Unknown')
+        except ValueError:
+            pass
+
+    return (0, 0, 'Unknown')
 
 
 def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
     """
     Append custom SID to every vendor buy URL.
     """
-    sid = generate_sid(target_user_id, page)
+    sid = generate_sid(product_id, target_user_id, page)
 
     if not vendor or not vendor.buy_url:
         return ''

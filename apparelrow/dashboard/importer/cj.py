@@ -36,7 +36,7 @@ class Importer(BaseImporter):
                     data_row['original_commission'] = row['commission-amount']
                     data_row['original_currency'] = 'EUR'
                     data_row['original_amount'] = row['sale-amount']
-                    data_row['user_id'], data_row['placement'] = self.map_placement_and_user(row['sid'])
+                    data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row['sid'])
                     if row['action-status'] == 'locked' or row['action-status'] == 'closed':
                         data_row['status'] = Sale.CONFIRMED
                     else:
