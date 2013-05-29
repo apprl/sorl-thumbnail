@@ -13,12 +13,14 @@
                         <a target="_blank" href="{{ base_url }}{{ user.get_absolute_url }}"><img src="{{ user.mail_image }}" /></a>
                     </td>
                 </tr>
+                {% if user.blog_url_external and is_blog_url %}
                 <tr>
                     <td valign="top" align="center" class="follow-name">
-                        {% if user.blog_url_external %}<a target="_blank" href="{{ user.blog_url_external }}">{{ user.blog_url_external }}</a>{% endif %}
+                        <a target="_blank" href="{{ user.blog_url_external }}">{{ user.blog_url_external }}</a>
                         <br /><br />
                     </td>
                 </tr>
+                {% endif %}
                 <tr>
                     <td width="208px" valign="top" align="center" >
                         <a target="_blank" href="{{ base_url }}{{ user.get_absolute_url }}" class="follow-btn" style="background-color:#60d1ab;vertical-align:middle;line-height:36px;width:208px;height:36px;display:block;">FOLLOW</a>

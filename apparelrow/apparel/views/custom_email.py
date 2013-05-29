@@ -66,7 +66,7 @@ class CustomEmailForm(forms.Form):
             widget=forms.TextInput(attrs={'class': 'input-xxlarge'}),
             max_length=160,
             required=True,
-            initial='See this week\'s trending items, looks, members & brands!')
+            initial='Like products on apprl.com to get sale alerts when the price drops.')
 
     product_title = forms.CharField(
             widget=forms.TextInput(attrs={'class': 'input-xxlarge'}),
@@ -100,6 +100,8 @@ class CustomEmailForm(forms.Form):
             widget=forms.Textarea(attrs={'class': 'input-xxlarge'}),
             required=False,
             help_text='Enter 1 profile URL per row')
+
+    blog_url = forms.BooleanField(help_text='Display blog url for user', required=False, initial=True)
 
     tracking = forms.BooleanField(help_text='Product link will use ?sid=123 if a user is selected', required=False)
 
@@ -239,6 +241,7 @@ def admin(request):
             # User template
             if users:
                 template_user = loader.render_to_string('email/custom/user.html', {
+                        'is_blog_url': form.cleaned_data['blog_url'],
                         'base_url': base_url,
                         'title': user_title,
                         'users': users,
