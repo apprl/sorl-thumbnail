@@ -10,7 +10,7 @@
             <table border="0" cellpadding="0" cellspacing="0" width="100%" class="follow-element">
                 <tr>
                     <td valign="middle" align="center" class="follow-image" width="208px" style="padding-bottom:15px;">
-                        <a target="_blank" href="{{ user.get_absolute_url }}"><img src="{{ user.mail_image }}" /></a>
+                        <a target="_blank" href="{{ base_url }}{{ user.get_absolute_url }}"><img src="{{ user.mail_image }}" /></a>
                     </td>
                 </tr>
                 <tr>
@@ -21,7 +21,7 @@
                 </tr>
                 <tr>
                     <td width="208px" valign="top" align="center" >
-                        <a target="_blank" href="{{ user.get_absolute_url }}" class="follow-btn" style="background-color:#60d1ab;vertical-align:middle;line-height:36px;width:208px;height:36px;display:block;">FOLLOW</a>
+                        <a target="_blank" href="{{ base_url }}{{ user.get_absolute_url }}" class="follow-btn" style="background-color:#60d1ab;vertical-align:middle;line-height:36px;width:208px;height:36px;display:block;">FOLLOW</a>
                     </td>
                 </tr>
             </table>

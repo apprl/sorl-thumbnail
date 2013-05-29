@@ -220,6 +220,7 @@ def admin(request):
                 args = [iter(products)] * 3
                 products = itertools.izip_longest(*args, fillvalue=None)
                 template_product = loader.render_to_string('email/custom/product.html', {
+                        'base_url': base_url,
                         'title': product_title,
                         'products': products,
                         'sid': sid,
@@ -229,6 +230,7 @@ def admin(request):
             # Look template
             if looks:
                 template_look = loader.render_to_string('email/custom/look.html', {
+                        'base_url': base_url,
                         'title': look_title,
                         'looks': looks,
                     })
@@ -237,6 +239,7 @@ def admin(request):
             # User template
             if users:
                 template_user = loader.render_to_string('email/custom/user.html', {
+                        'base_url': base_url,
                         'title': user_title,
                         'users': users,
                     })

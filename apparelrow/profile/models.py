@@ -115,7 +115,7 @@ class User(AbstractUser):
 
     @cached_property
     def blog_url_external(self):
-        if not self.blog_url.startswith('http://') or not self.blog_url.startswith('https://'):
+        if not self.blog_url.startswith('http://') and not self.blog_url.startswith('https://'):
             return 'http://%s' % (self.blog_url,)
 
         return self.blog_url
