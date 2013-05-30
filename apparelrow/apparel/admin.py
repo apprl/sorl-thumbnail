@@ -25,6 +25,7 @@ class ProductAdmin(admin.ModelAdmin):
     actions = ['publish', 'hide', 'change_category', 'change_options']
     search_fields = ['product_name']
     list_per_page = 25
+    raw_id_fields = ('manufacturer',)
 
     def image(self, obj):
         try:
