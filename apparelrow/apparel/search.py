@@ -51,7 +51,7 @@ def more_like_this_product(body, gender, limit):
     return result
 
 def more_alternatives(product, limit):
-    colors_pk = list(map(str, product.options.filter(option_type__name='color').values_list('pk', flat=True)))
+    colors_pk = list(map(str, product.colors_pk))
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(translation.get_language(), settings.APPAREL_BASE_CURRENCY)
     query_arguments = {'rows': limit, 'start': 0,
                        'fl': 'template_mlt',

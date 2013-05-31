@@ -31,21 +31,6 @@
             </a>
         </span>
     </div>
-
-    {% regroup object.options.all by option_type as option_list %}
-    <!-- FIXME: Style this properly. See ticket #300
-    <ul class="product-options">
-    {% for option in option_list %}
-        <li>{{ option.grouper }}
-        <ul class="option-{{ option.grouper|slugify }} clearfix">
-            {% for item in option.list %}
-            <li class="{{ item.value|slugify }}">{{ item.value }}</li>
-            {% endfor %}
-        </ul>
-        </li>
-    {% endfor %}
-    </ul>
-    -->
     <p class="bodycopy description" itemprop="description">{{ object.description }}</p>
 {% endcache %}
     <p class="bodycopy vendors" itemprop="seller" itemscope itemtype="http://data-vocabulary.org/Organization">

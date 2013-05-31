@@ -247,7 +247,7 @@ class Product(models.Model):
     @cached_property
     def default_vendor(self):
         try:
-            return self.vendorproduct.order_by('price')[0]
+            return self.vendorproduct.order_by('price').select_related('vendor')[0]
         except IndexError:
             pass
 
@@ -290,13 +290,21 @@ class Product(models.Model):
         return categories
 
     @cached_property
+    def _colors(self):
+        return self.options.filter(option_type__name='color').values_list('pk', 'value')
+
+    @cached_property
     def colors(self):
-        return self.options.filter(option_type__name='color').values_list('value', flat=True)
+        return zip(*self._colors)[1]
+
+    @cached_property
+    def colors_pk(self):
+        return zip(*self._colors)[0]
 
     @cached_property
     def color_list_locale(self):
         if not hasattr(self, '_color_list_locale'):
-            self._color_list_locale = [unicode(_(o.title())) for o in self.options.filter(option_type__name='color').values_list('value', flat=True)]
+            self._color_list_locale = [unicode(_(o.title())) for o in self.colors]
 
         return self._color_list_locale
 
