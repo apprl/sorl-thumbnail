@@ -48,12 +48,12 @@
             <li><a href="" class="div-one filtered">div-one</a></li>
         </ul>
     </li>
-    <li class="header">
+    <li class="header"{% if is_brand %} style="display:none;"{% endif %}>
         <span>{% trans "Brand" %}</span>
         <a class="reset" href="">{% trans "Reset" %}</a>
         <div class="arrow"></div>
     </li>
-    <li class="last content" id="product-manufacturers">
+    <li class="last content" id="product-manufacturers"{% if is_brand %} style="display:none;"{% endif %}>
         <form>
             <input type="text" name="brand" value="{% trans "Search brands" %}" class="default" />
             <ul id="available-manufacturers">
