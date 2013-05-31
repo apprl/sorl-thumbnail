@@ -140,7 +140,8 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     facet_fields = ['category', 'price', 'color', 'manufacturer', 'store']
     query_arguments = {'rows': BROWSE_PAGE_SIZE, 'start': 0}
     query_arguments = set_query_arguments(query_arguments, request, facet_fields, currency=currency)
-    if 'disable_availability' not in kwargs:
+    disable_availability = kwargs.get('disable_availability', False)
+    if not disable_availability:
         query_arguments['fq'].append('availability:true')
 
     result = {}

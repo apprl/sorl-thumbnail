@@ -85,7 +85,7 @@ def likes(request, profile, form, page=0, gender=None):
                                user_default_gender=gender,
                                language=None,
                                user_id=profile.pk,
-                               disable_availability=True,
+                               disable_availability=not is_brand,
                                is_brand=is_brand,
                                **content)
 
