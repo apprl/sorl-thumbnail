@@ -82,7 +82,6 @@ def likes(request, profile, form, page=0, gender=None):
     response = browse_products(request,
                                template='profile/likes.html',
                                user_gender='A',
-                               user_default_gender=gender,
                                language=None,
                                user_id=profile.pk,
                                disable_availability=not is_brand,
