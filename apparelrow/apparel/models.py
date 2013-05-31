@@ -295,11 +295,19 @@ class Product(models.Model):
 
     @cached_property
     def colors(self):
-        return zip(*self._colors)[1]
+        temp_colors = self._colors
+        if temp_colors:
+            return zip(*self._colors)[1]
+
+        return []
 
     @cached_property
     def colors_pk(self):
-        return zip(*self._colors)[0]
+        temp_colors = self._colors
+        if temp_colors:
+            return zip(*self._colors)[0]
+
+        return []
 
     @cached_property
     def color_list_locale(self):
