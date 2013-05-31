@@ -73,9 +73,7 @@ urlpatterns = patterns('',
     url(r'^brands/women/$', 'apparelrow.apparel.views.brand_list', {'gender': 'W'}, name='brand-list-women'),
 
     # Brand profile
-    url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.apparel.views.gender', {'view': 'brand-likes'}, name='brand-likes'),
-    url(r'^brand/(?:([^\/]+?)/)?men/$', 'apparelrow.profile.views.likes', {'gender': 'M'}, name='brand-likes-men'),
-    url(r'^brand/(?:([^\/]+?)/)?women/$', 'apparelrow.profile.views.likes', {'gender': 'W'}, name='brand-likes-women'),
+    url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.profile.views.likes', name='brand-likes'),
     url(r'^brand/(?:([^\/]+?)/)?updates/$', 'apparelrow.profile.views.profile', name='brand-updates'),
     url(r'^brand/(?:([^\/]+?)/)?looks/$', 'apparelrow.profile.views.looks', name='brand-looks'),
     url(r'^brand/(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='brand-followers'),

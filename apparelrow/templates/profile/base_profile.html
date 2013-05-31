@@ -27,9 +27,7 @@
         <ul>
             <li>
             {% if profile and profile.is_brand %}
-                {% url 'brand-likes-men' profile.slug as likes_url_men %}
-                {% url 'brand-likes-women' profile.slug as likes_url_women %}
-                <a class="{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %}selected{% else %}first{% endif %}" href="{{ likes_url }}">{% trans "Shop" %}</a>
+                <a class="{% if request.path == likes_url %}selected{% else %}first{% endif %}" href="{{ likes_url }}">{% trans "Shop" %}</a>
             {% else %}
                 <a class="{% if request.path == likes_url %}selected{% else %}first{% endif %}" href="{{ likes_url }}">{% trans "Likes" %}</a>
             {% endif %}

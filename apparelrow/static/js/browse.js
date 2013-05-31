@@ -59,10 +59,10 @@ jQuery(document).ready(function() {
         // Initiate individual reset for stores filter
         jQuery('#product-stores').prev().find('.reset').click();
 
-        // Select both genders (only embed and profile)
-        if(typeof embed_shop_user_id !== 'undefined' || typeof profile_shop_user_id !== 'undefined') {
-            jQuery('#product-gender li > a').removeClass('selected');
-            jQuery('#product-gender li:first > a').addClass('selected');
+        var default_gender = $('#product-gender').data('default');
+        if(typeof default_gender !== 'undefined') {
+            $('#product-gender li > a').removeClass('selected');
+            $('#product-gender li > #option-' + default_gender).addClass('selected');
         }
 
         // Sort by
@@ -356,9 +356,12 @@ window.getQuery = function(query, reset) {
 
     // Only embed and profile
     if(typeof embed_shop_user_id !== 'undefined' || typeof profile_shop_user_id !== 'undefined') {
+        gender_default = $('#product-gender').data('default');
         gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
         if(gender_list.length > 0 && gender_list[0]) {
-            query['gender'] = gender_list[0];
+            if(typeof gender_default !== 'undefined' && gender_default != gender_list[0]) {
+                query['gender'] = gender_list[0];
+            }
         }
     }
 

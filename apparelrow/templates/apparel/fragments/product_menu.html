@@ -7,10 +7,9 @@
     {% trans "Filter products" %}
     <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %}</a>
 </h2>
-<ul id="product-gender">
-    <li class="first"><a href="">{% trans "All" %}</a></li>
-    <li class="women"><a id="option-W" href="?gender=W">{% trans "Women" %}</a></li>
-    <li class="men"><a id="option-M" href="?gender=M">{% trans "Men" %}</a></li>
+<ul id="product-gender" data-default="{{ user_default_gender }}">
+    <li class="first women"><a id="option-W"{% if user_default_gender == "W" %} class="selected"{% endif %} href="?gender=W">{% trans "Women" %}</a></li>
+    <li class="last men"><a id="option-M" {% if user_default_gender == "M" %} class="selected"{% endif %}href="?gender=M">{% trans "Men" %}</a></li>
 </ul>
 {% else %}
 <h2>

@@ -49,11 +49,11 @@ def _to_int(s):
     except ValueError:
         return None
 
-def generate_gender_field(params):
+def generate_gender_field(params, default):
     """
     Generate a SOLR expression for the gender field based on params.
     """
-    gender_field = 'gender:(W OR M OR U)'
+    gender_field = 'gender:(%s OR U)' % (default,)
     if 'gender' in params:
         if params['gender'] == 'M' or params['gender'] == 'W':
             gender_field = 'gender:(%s OR U)' % (params['gender'],)
@@ -179,9 +179,10 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
                 query_arguments['sort'] = 'availability desc, %s_uld desc, popularity desc, created desc' % (user_id,)
                 query_arguments['fq'].append('user_likes:%s' % (user_id,))
             if user_gender == 'A':
-                query_arguments['fq'].append(generate_gender_field(request.GET))
+                user_default_gender = kwargs.get('user_default_gender', 'W')
+                query_arguments['fq'].append(generate_gender_field(request.GET, user_default_gender))
             else:
-                query_arguments['fq'].append(generate_gender_field(dict(gender=user_gender)))
+                query_arguments['fq'].append(generate_gender_field(dict(gender=user_gender), user_gender))
         else:
             query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
 
@@ -353,8 +354,10 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
 
     # User id
     if user_id:
-        result.update(user_gender=user_gender)
-        result.update(user_id=user_id)
+        result.update(is_brand=kwargs.get('is_brand', False),
+                      user_default_gender=kwargs.get('user_default_gender', 'W'),
+                      user_gender=user_gender,
+                      user_id=user_id)
 
     # Serve non ajax request
     result.update(
