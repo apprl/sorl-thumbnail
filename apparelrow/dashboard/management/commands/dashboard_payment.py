@@ -4,6 +4,8 @@ import datetime
 from django.conf import settings
 from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand, CommandError
+from django.core.mail import mail_managers
+from django.core.urlresolvers import reverse
 
 from apparelrow.dashboard.models import Payment, Sale
 
@@ -56,3 +58,6 @@ class Command(BaseCommand):
                 if not created:
                     payment.cancelled = False
                     payment.save()
+
+                url = reverse("admin:dashboard_payment_change", args=[payment.pk])
+                mail_managers('New dashboard payment', 'New dashboard payment available at %s' % (url,))

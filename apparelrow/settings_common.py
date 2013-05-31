@@ -18,7 +18,10 @@ ADMINS = (
     ('Joel Bohman', 'joelboh@gmail.com'),
 )
 
-MANAGERS = ADMINS
+MANAGERS = ADMINS + (
+    ('Martin', 'martin@apprl.com'),
+    ('Gustav', 'gustav@apprl.com'),
+)
 
 ALLOWED_HOSTS = ['.apprl.com']
 
