@@ -93,6 +93,7 @@
                     <tr>
                         <th>{% trans "Date" %}</th>
                         <th>{% trans "Product" %}</th>
+                        <th></th>
                         <th>{% trans "From" %}</th>
                         <th>{% trans "Clicks" %}</th>
                         <th>{% trans "Commission" %}</th>
@@ -101,15 +102,16 @@
                 <tbody>
                     {% for sale in sales_table %}
                     <tr>
-                        <td>{{ sale.sale_date }}</td>
+                        <td data-sort="{{ sale.sale_date|date:"U" }}">{{ sale.sale_date }}</td>
+                        <td><img src="{{ sale.product_image }}"></td>
                         <td>{{ sale.product }}</td>
                         <td>{{ sale.link }}</td>
                         <td>{{ sale.clicks }}</td>
-                        <td>{{ sale.commission }} {{ sale.currency }}</td>
+                        <td data-sort="{{ sale.commission }}">{{ sale.commission }} {{ sale.currency }}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5">{% trans "No sales yet." %}</td>
+                        <td colspan="6">{% trans "No sales yet." %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

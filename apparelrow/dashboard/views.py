@@ -9,6 +9,8 @@ from django.forms import ModelForm
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from sorl.thumbnail import get_thumbnail
+
 from apparelrow.dashboard.models import Sale, Payment, Signup
 
 
@@ -106,6 +108,7 @@ def dashboard_admin(request, year=None, month=None):
                        ds.commission,
                        ds.currency,
                        ds.placement,
+                       ap.slug,
                        ap.product_name,
                        ab.name AS brand_name,
                        COUNT(sp.id) AS clicks
@@ -117,18 +120,25 @@ def dashboard_admin(request, year=None, month=None):
                 WHERE
                     ds.status BETWEEN %s AND %s AND
                     ds.sale_date BETWEEN %s AND %s
-                GROUP BY ds.id, ap.product_name, ab.name
+                GROUP BY ds.id, ap.product_name, ap.slug, ab.name
                 ORDER BY ds.sale_date DESC
             """, [start_date_query, end_date_query, Sale.PENDING, Sale.CONFIRMED, start_date_query, end_date_query])
         new_sales_table = []
         for sale in sales_table:
-            new_sales_table.append({
+            temp = {
                 'link': map_placement(sale.placement),
                 'commission': sale.commission,
                 'currency': sale.currency,
                 'sale_date': sale.sale_date,
+                'product_image': '',
                 'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
-                'clicks': sale.clicks})
+                'clicks': sale.clicks}
+            try:
+                p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
+                temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
+            except get_model('apparel', 'Product').DoesNotExist:
+                pass
+            new_sales_table.append(temp)
 
         return render(request, 'dashboard/admin.html', {'sales': data_per_month,
                                                         'sales_count': sales_count,
@@ -220,6 +230,7 @@ def dashboard(request, year=None, month=None):
                        ds.commission,
                        ds.currency,
                        ds.placement,
+                       ap.slug,
                        ap.product_name,
                        ab.name AS brand_name,
                        COUNT(sp.id) AS clicks
@@ -232,18 +243,25 @@ def dashboard(request, year=None, month=None):
                     ds.user_id = %s AND
                     ds.status BETWEEN %s AND %s AND
                     ds.sale_date BETWEEN %s AND %s
-                GROUP BY ds.id, ap.product_name, ab.name
+                GROUP BY ds.id, ap.product_name, ap.slug, ab.name
                 ORDER BY ds.sale_date DESC
             """, [start_date_query, end_date_query, request.user.pk, Sale.PENDING, Sale.CONFIRMED, start_date_query, end_date_query])
         new_sales_table = []
         for sale in sales_table:
-            new_sales_table.append({
+            temp = {
                 'link': map_placement(sale.placement),
                 'commission': sale.commission,
                 'currency': sale.currency,
                 'sale_date': sale.sale_date,
+                'product_image': '',
                 'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
-                'clicks': sale.clicks})
+                'clicks': sale.clicks}
+            try:
+                p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
+                temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
+            except get_model('apparel', 'Product').DoesNotExist:
+                pass
+            new_sales_table.append(temp)
 
         is_after_june = True if (year >= 2013 and month >= 6) or request.GET.get('override') else False
 
