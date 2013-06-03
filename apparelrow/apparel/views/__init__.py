@@ -317,10 +317,11 @@ def product_redirect(request, pk, page='Default', sid=0):
     """
     product = get_object_or_404(Product, pk=pk, published=True)
 
-    cookie_data = request.get_signed_cookie(REFERRAL_COOKIE_NAME, default=False)
-    if cookie_data:
-        # Replaces sid and page with data from cookie
-        cookie_id, sid, page, _ = cookie_data.split('|')
+    if not page.startswith('Ext'):
+        cookie_data = request.get_signed_cookie(REFERRAL_COOKIE_NAME, default=False)
+        if cookie_data:
+            # Replaces sid and page with data from cookie
+            cookie_id, sid, page, _ = cookie_data.split('|')
 
     url = vendor_buy_url(pk, product.default_vendor, sid, page)
     data = {'id': product.pk,
