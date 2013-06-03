@@ -21,9 +21,13 @@ def map_placement(placement):
     elif placement == 'Ext-Look':
         link = _('Look on your site')
     elif placement == 'Ext-Link':
-        link = _('Product link')
+        link = _('Product link on your site')
     elif placement == 'Look':
         link = _('Look on Apprl.com')
+    elif placement == 'Shop':
+        link = _('Shop on Apprl.com')
+    elif placement == 'Feed':
+        link = _('Feed on Apprl.com')
 
     return link
 
