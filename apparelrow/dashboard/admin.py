@@ -5,9 +5,8 @@ from django.core import urlresolvers
 from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup
 
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'affiliate', 'vendor', 'status', 'user_id', 'placement', 'commission', 'currency', 'sale_date', 'adjusted', 'paid')
+    list_display = ('id', 'affiliate', 'vendor', 'status', 'user_id', 'product_id', 'placement', 'commission', 'currency', 'sale_date', 'adjusted', 'paid')
     list_filter = ('affiliate', 'vendor', 'status', 'placement')
-    raw_id_fields = ('product',)
     readonly_fields = ('original_sale_id', 'affiliate', 'paid', 'modified', 'created')
 
 admin.site.register(Sale, SaleAdmin)

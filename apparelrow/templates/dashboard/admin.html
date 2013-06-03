@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% load i18n l10n cache %}
+{% load static from staticfiles %}
 
 {% block extra-title %}{% trans "Partner" %} | {% endblock %}
 {% block 'extra-scripts' %}
+    <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
     <script type='text/javascript' src='http://www.google.com/jsapi'></script>
     <script type='text/javascript'>
       google.load('visualization', '1', {'packages':['LineChart']});
@@ -48,6 +50,7 @@
 
                 window.location.href = '/partner/admin/' + year + '/' + month + '/';
             });
+            new Tablesort($('table.sortable').get(0));
         });
     </script>
 {% endblock %}
@@ -85,6 +88,35 @@
         <div id="charts">
             <div id="chart_div" style="width: 740px; height: 300px"></div>
             <div id="clicks_chart" style="width: 740px; height: 300px;"></div>
+            <h1>{% trans "Your sales" %}</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Product" %}</th>
+                        <th></th>
+                        <th>{% trans "From" %}</th>
+                        <th>{% trans "Clicks" %}</th>
+                        <th>{% trans "Commission" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales_table %}
+                    <tr>
+                        <td data-sort="{{ sale.sale_date|date:"U" }}">{{ sale.sale_date }}</td>
+                        <td><img src="{{ sale.product_image }}"></td>
+                        <td>{{ sale.product }}</td>
+                        <td>{{ sale.link }}</td>
+                        <td>{{ sale.clicks }}</td>
+                        <td data-sort="{{ sale.commission }}">{{ sale.commission }} {{ sale.currency }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

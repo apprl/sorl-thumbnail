@@ -4,12 +4,32 @@ import decimal
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseNotFound
-from django.db.models import Sum
+from django.db.models import get_model, Sum, Count
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse
-from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
+
+from sorl.thumbnail import get_thumbnail
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
+
+
+def map_placement(placement):
+    link = _('Your profile on Apprl.com')
+    if placement == 'Ext-Shop':
+        link = _('Shop on your site')
+    elif placement == 'Ext-Look':
+        link = _('Look on your site')
+    elif placement == 'Ext-Link':
+        link = _('Product link on your site')
+    elif placement == 'Look':
+        link = _('Look on Apprl.com')
+    elif placement == 'Shop':
+        link = _('Shop on Apprl.com')
+    elif placement == 'Feed':
+        link = _('Feed on Apprl.com')
+
+    return link
 
 
 class SignupForm(ModelForm):
@@ -45,8 +65,8 @@ def dashboard_admin(request, year=None, month=None):
         # Commission per month
         month_commission = decimal.Decimal('0.0')
         partner_commission = decimal.Decimal('0.0')
-        result = Sale.objects.filter(status__gte=Sale.PENDING, status__lte=Sale.CONFIRMED) \
-                             .filter(sale_date__gte=start_date_query, sale_date__lte=end_date_query) \
+        result = Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
+                             .filter(sale_date__range=(start_date_query, end_date_query)) \
                              .order_by('sale_date') \
                              .values('sale_date', 'converted_commission', 'commission', 'user_id')
         for sale in result:
@@ -59,7 +79,7 @@ def dashboard_admin(request, year=None, month=None):
         apprl_commission = month_commission - partner_commission
 
         # Clicks per month
-        clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_query) \
+        clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
                                                                .order_by('created')
         for click in clicks:
             clicks_per_month[click.created.date()][0] += 1
@@ -85,7 +105,44 @@ def dashboard_admin(request, year=None, month=None):
             conversion_rate = decimal.Decimal(sales_count) / decimal.Decimal(click_total)
             conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
 
-        print conversion_rate
+        # Sales table
+        sales_table = Sale.objects.raw("""
+                SELECT ds.id,
+                       ds.sale_date,
+                       ds.commission,
+                       ds.currency,
+                       ds.placement,
+                       ap.slug,
+                       ap.product_name,
+                       ab.name AS brand_name,
+                       COUNT(sp.id) AS clicks
+                FROM dashboard_sale ds
+                LEFT OUTER JOIN apparel_product ap ON ds.product_id = ap.id
+                LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
+                LEFT OUTER JOIN statistics_productstat sp
+                    ON ds.user_id = sp.user_id AND ap.slug = sp.product AND sp.created BETWEEN %s AND %s
+                WHERE
+                    ds.status BETWEEN %s AND %s AND
+                    ds.sale_date BETWEEN %s AND %s
+                GROUP BY ds.id, ap.product_name, ap.slug, ab.name
+                ORDER BY ds.sale_date DESC
+            """, [start_date_query, end_date_query, Sale.PENDING, Sale.CONFIRMED, start_date_query, end_date_query])
+        new_sales_table = []
+        for sale in sales_table:
+            temp = {
+                'link': map_placement(sale.placement),
+                'commission': sale.commission,
+                'currency': sale.currency,
+                'sale_date': sale.sale_date,
+                'product_image': '',
+                'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
+                'clicks': sale.clicks}
+            try:
+                p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
+                temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
+            except get_model('apparel', 'Product').DoesNotExist:
+                pass
+            new_sales_table.append(temp)
 
         return render(request, 'dashboard/admin.html', {'sales': data_per_month,
                                                         'sales_count': sales_count,
@@ -99,7 +156,8 @@ def dashboard_admin(request, year=None, month=None):
                                                         'dates': dates,
                                                         'year': year,
                                                         'month': month,
-                                                        'conversion_rate': conversion_rate})
+                                                        'conversion_rate': conversion_rate,
+                                                        'sales_table': new_sales_table})
 
     return HttpResponseNotFound()
 
@@ -127,15 +185,15 @@ def dashboard(request, year=None, month=None):
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
-        for sale in Sale.objects.filter(status__gte=Sale.PENDING, status__lte=Sale.CONFIRMED) \
-                                .filter(sale_date__gte=start_date_query, sale_date__lte=end_date_query) \
+        for sale in Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
+                                .filter(sale_date__range=(start_date_query, end_date_query)) \
                                 .filter(user_id=request.user.pk) \
                                 .order_by('sale_date') \
                                 .values('sale_date', 'commission'):
             data_per_month[sale['sale_date'].date()] += sale['commission']
 
         # Clicks
-        clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_query) \
+        clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
                                                                .filter(user_id=request.user.pk) \
                                                                .order_by('created')
         for click in clicks:
@@ -169,6 +227,48 @@ def dashboard(request, year=None, month=None):
         if payments:
             pending_payment = payments[0].amount
 
+        # Sales table
+        sales_table = Sale.objects.raw("""
+                SELECT ds.id,
+                       ds.sale_date,
+                       ds.commission,
+                       ds.currency,
+                       ds.placement,
+                       ap.slug,
+                       ap.product_name,
+                       ab.name AS brand_name,
+                       COUNT(sp.id) AS clicks
+                FROM dashboard_sale ds
+                LEFT OUTER JOIN apparel_product ap ON ds.product_id = ap.id
+                LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
+                LEFT OUTER JOIN statistics_productstat sp
+                    ON ds.user_id = sp.user_id AND ap.slug = sp.product AND sp.created BETWEEN %s AND %s
+                WHERE
+                    ds.user_id = %s AND
+                    ds.status BETWEEN %s AND %s AND
+                    ds.sale_date BETWEEN %s AND %s
+                GROUP BY ds.id, ap.product_name, ap.slug, ab.name
+                ORDER BY ds.sale_date DESC
+            """, [start_date_query, end_date_query, request.user.pk, Sale.PENDING, Sale.CONFIRMED, start_date_query, end_date_query])
+        new_sales_table = []
+        for sale in sales_table:
+            temp = {
+                'link': map_placement(sale.placement),
+                'commission': sale.commission,
+                'currency': sale.currency,
+                'sale_date': sale.sale_date,
+                'product_image': '',
+                'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
+                'clicks': sale.clicks}
+            try:
+                p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
+                temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
+            except get_model('apparel', 'Product').DoesNotExist:
+                pass
+            new_sales_table.append(temp)
+
+        is_after_june = True if (year >= 2013 and month >= 6) or request.GET.get('override') else False
+
         return render(request, 'dashboard/partner.html', {'sales': data_per_month,
                                                           'clicks': clicks_per_month,
                                                           'total_sales': sales_total,
@@ -178,7 +278,9 @@ def dashboard(request, year=None, month=None):
                                                           'month_click': sum(clicks_per_month.values()),
                                                           'dates': dates,
                                                           'year': year,
-                                                          'month': month})
+                                                          'month': month,
+                                                          'sales_table': new_sales_table,
+                                                          'is_after_june': is_after_june})
 
     if request.method == 'POST':
         form = SignupForm(request.POST)

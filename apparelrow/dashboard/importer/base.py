@@ -10,7 +10,7 @@ from django.db.models.loading import get_model
 from fuzzywuzzy import process
 
 from apparelrow.dashboard.models import Sale
-from apparelrow.apparel.utils import currency_exchange
+from apparelrow.apparel.utils import currency_exchange, parse_sid
 
 
 logger = logging.getLogger('dashboard.import')
@@ -121,11 +121,4 @@ class BaseImporter:
         return None, None
 
     def map_placement_and_user(self, sid):
-        if sid:
-            sid_split = sid.split('-', 1)
-            if len(sid_split) != 2:
-                return (0, 'Unknown')
-
-            return int(sid_split[0]), sid_split[1]
-
-        return (0, 'Unknown')
+        return parse_sid(sid)

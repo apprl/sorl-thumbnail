@@ -34,10 +34,10 @@ class Sale(models.Model):
     original_sale_id = models.CharField(max_length=100)
     affiliate = models.CharField(max_length=100, null=False, blank=False)
     vendor = models.ForeignKey('apparel.Vendor', null=True, blank=True, on_delete=models.PROTECT)
-    product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(null=True, blank=True, default=None)
 
     user_id = models.PositiveIntegerField(null=True, blank=True)
+    product_id = models.PositiveIntegerField(null=True, blank=True)
     placement = models.CharField(max_length=32, null=True, blank=True)
 
     status = models.CharField(max_length=1, default=INCOMPLETE, choices=STATUS_CHOICES, null=False, blank=False, db_index=True)
