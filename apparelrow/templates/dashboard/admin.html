@@ -95,6 +95,7 @@
                         <th>{% trans "Date" %}</th>
                         <th>{% trans "Product" %}</th>
                         <th></th>
+                        <th>{% trans "User" %}</th>
                         <th>{% trans "From" %}</th>
                         <th>{% trans "Clicks" %}</th>
                         <th>{% trans "Commission" %}</th>
@@ -106,6 +107,7 @@
                         <td data-sort="{{ sale.sale_date|date:"U" }}">{{ sale.sale_date }}</td>
                         <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
                         <td><a href="{{ sale.product_link }}">{{ sale.product }}</a></td>
+                        <td>{{ sale.user }}</td>
                         <td>{{ sale.link }}</td>
                         <td>{{ sale.clicks }}</td>
                         <td data-sort="{{ sale.commission }}">{{ sale.commission }} {{ sale.currency }}</td>

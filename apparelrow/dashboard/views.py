@@ -112,6 +112,8 @@ def dashboard_admin(request, year=None, month=None):
                        ds.commission,
                        ds.currency,
                        ds.placement,
+                       ds.user_id,
+                       pu.name,
                        ap.slug,
                        ap.product_name,
                        ab.name AS brand_name,
@@ -119,12 +121,13 @@ def dashboard_admin(request, year=None, month=None):
                 FROM dashboard_sale ds
                 LEFT OUTER JOIN apparel_product ap ON ds.product_id = ap.id
                 LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
+                LEFT OUTER JOIN profile_user pu ON pu.id = ds.user_id
                 LEFT OUTER JOIN statistics_productstat sp
                     ON ds.user_id = sp.user_id AND ap.slug = sp.product AND sp.created BETWEEN %s AND %s
                 WHERE
                     ds.status BETWEEN %s AND %s AND
                     ds.sale_date BETWEEN %s AND %s
-                GROUP BY ds.id, ap.product_name, ap.slug, ab.name
+                GROUP BY ds.id, ap.product_name, ap.slug, ab.name, pu.name
                 ORDER BY ds.sale_date DESC
             """, [start_date_query, end_date_query, Sale.PENDING, Sale.CONFIRMED, start_date_query, end_date_query])
         new_sales_table = []
@@ -137,7 +140,8 @@ def dashboard_admin(request, year=None, month=None):
                 'product_image': '',
                 'product_link': reverse('product-detail', args=[sale.slug]),
                 'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
-                'clicks': sale.clicks}
+                'clicks': sale.clicks,
+                'user': sale.name if sale.name else '(%s)' % (sale.user_id,)}
             try:
                 p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
                 temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
