@@ -131,16 +131,21 @@
         <div class="product-right">
             {% include 'apparel/fragments/product_detail.html' %}
             <div class="sidebar last">
-                {% if partner_likes %}
+                {% if partner_likes or object.manufacturer.user %}
                 <h2>{% trans "Selected by" %}</h2>
                 <ul id="partner-likes" class="suggested-friends group">
-                  {% for like in partner_likes %}
+                    {% for like in partner_likes %}
                     <li>
-                    {% with like.user as profile %}
-                    <a class="profile-link" href="{{ profile.get_absolute_url }}"><img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>{{ profile.display_name }}</a><br><a class="partner-link" target="_blank" href="{{ profile.blog_url_external }}">{% trans "Go to blog »" %}</a><br>{% include 'apparel/fragments/follow.html' with request=request profile=profile only %}
-                    {% endwith %}
+                        {% with like.user as user %}
+                        <a class="profile-link" href="{{ user.get_absolute_url }}"><img class="avatar" src="{{ user.avatar }}" alt="{{ user.display_name }}"/>{{ user.display_name }}</a><br><a class="partner-link" target="_blank" href="{{ user.blog_url_external }}">{% trans "Go to blog »" %}</a><br>{% include 'apparel/fragments/follow.html' with request=request profile=user only %}
+                        {% endwith %}
                     </li>
-                  {% endfor %}
+                    {% endfor %}
+                    <li>
+                        {% with object.manufacturer.user as user %}
+                        <a class="profile-link" href="{{ user.get_absolute_url }}"><img class="avatar" src="{{ user.avatar }}" alt="{{ user.display_name }}"/>{{ user.display_name }}</a><br>{% include 'apparel/fragments/follow.html' with request=request profile=user only %}
+                        {% endwith %}
+                    </li>
                 </ul>
                 {% endif %}
                 <h2>{% trans "Likes" %}</h2>
