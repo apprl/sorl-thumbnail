@@ -15,17 +15,19 @@
             data.addColumn('number', '{% trans "Commission (SEK)" %}');
             data.addColumn('number', '{% trans "Clicks" %}');
             data.addRows([
-                {% for sale_date, data in sales.items %}
+            {% for sale_date, data in sales.items %}
+                {% if forloop.last %}
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1 }}]
+                {% else %}
                 [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1 }}],
-                {% endfor %}
+                {% endif %}
+            {% endfor %}
             ]);
             data.sort(0);
-
-            var left = data.getColumnRange(1);
-            var left_max = Math.pow(10, Math.ceil(Math.log(left.max + 1) / Math.LN10));
-            var right = data.getColumnRange(2);
-            var right_max = Math.pow(10, Math.ceil(Math.log(right.max + 1) / Math.LN10));
-
+            //var left = data.getColumnRange(1);
+            //var left_max = Math.pow(10, Math.ceil(Math.log(left.max + 1) / Math.LN10));
+            //var right = data.getColumnRange(2);
+            //var right_max = Math.pow(10, Math.ceil(Math.log(right.max + 1) / Math.LN10));
             var view = new google.visualization.DataView(data);
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
@@ -37,13 +39,17 @@
                     vAxes: {
                         0: {
                             minValue: 0,
-                            maxValue: left_max,
-                            title: '{% trans "Commission (SEK)" %}'
+                            //maxValue: left_max,
+                            title: '{% trans "Commission (SEK)" %}',
+                            textStyle: {color: '#3366cc'},
+                            titleTextStyle: {color: '#3366cc'}
                         },
                         1: {
                             minValue: 0,
-                            maxValue: right_max,
-                            title: '{% trans "Clicks" %}'
+                            //maxValue: right_max,
+                            title: '{% trans "Clicks" %}',
+                            textStyle: {color: '#dc3912'},
+                            titleTextStyle: {color: '#dc3912'}
                         }
                     },
                     series: {
