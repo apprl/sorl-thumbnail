@@ -1055,10 +1055,28 @@ body.dashboard, body.advertiser
       p
         margin-top: 0
     #charts
+      margin-bottom: 20px
+      font-size: 12px
       float: right
-      table
-        width: 740px
+      h2
+        font-size: 20px
+        margin-bottom: 10px
+        &.sales-header
+          margin-top: 20px
+      table.top
         margin-top: 30px
+        width: 740px
+        > tbody > tr > td
+          width: 50%
+          vertical-align: top
+        td.first
+          padding-right: 10px
+        td.last
+          padding-left: 10px
+      table.content
+        width: 100%
+        &.sales
+          width: 740px
         tbody tr
           border: 1px solid $easiest_color
           border-left: 0
@@ -1067,8 +1085,22 @@ body.dashboard, body.advertiser
           font-size: 14px
           font-weight: bold
           padding-right: 5px
+          padding-bottom: 10px
         td
           padding: 5px 5px 5px 0px
+        td, th
+          &.center
+            text-align: center
+          &.product-image
+            width: 64px
+      table.half
+        td, th
+          &.col1
+            width: 10%
+          &.col2
+            width: 80%
+          &.col3
+            width: 10%
 
 body.create-look
   #content

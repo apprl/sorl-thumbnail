@@ -89,7 +89,7 @@
             <div id="chart_div" style="width: 740px; height: 300px"></div>
             <div id="clicks_chart" style="width: 740px; height: 300px;"></div>
             <h1>{% trans "Your sales" %}</h1>
-            <table>
+            <table class="sortable sales content">
                 <thead>
                     <tr>
                         <th>{% trans "Date" %}</th>
@@ -97,7 +97,7 @@
                         <th></th>
                         <th>{% trans "User" %}</th>
                         <th>{% trans "From" %}</th>
-                        <th>{% trans "Clicks" %}</th>
+                        <th class="center">{% trans "Clicks" %}</th>
                         <th>{% trans "Our Comm" %}</th>
                         <th>{% trans "Partner Comm" %}</th>
                     </tr>
@@ -106,11 +106,11 @@
                     {% for sale in sales_table %}
                     <tr>
                         <td data-sort="{{ sale.sale_date|date:"U" }}">{{ sale.sale_date }}</td>
-                        <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
+                        <td class="product-image"><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
                         <td><a href="{{ sale.product_link }}">{{ sale.product }}</a></td>
                         <td>{{ sale.user }}</td>
                         <td>{{ sale.link }}</td>
-                        <td>{{ sale.clicks }}</td>
+                        <td class="center">{{ sale.clicks }}</td>
                         <td data-sort="{{ sale.partner_commission }}">{{ sale.partner_commission }} {{ sale.currency }}</td>
                         <td data-sort="{{ sale.commission }}">{{ sale.commission }} {{ sale.currency }}</td>
                     </tr>

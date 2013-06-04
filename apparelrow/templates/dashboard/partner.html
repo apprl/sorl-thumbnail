@@ -85,15 +85,69 @@
             <div id="chart_div" style="width: 740px; height: 300px"></div>
             <div id="clicks_chart" style="width: 740px; height: 300px;"></div>
             {% if is_after_june %}
-            <h2>{% trans "Your sales" %}</h2>
-            <table class="sortable">
+            <table class="top">
+                <tr>
+                    <td class="first">
+                        <h2>{% trans "Most clicked products" %}</h2>
+                        <table class="content half">
+                            <thead>
+                                <tr>
+                                    <th class="col1 product-image">{% trans "Product" %}</th>
+                                    <th class="col2"></th>
+                                    <th class="col3 center">{% trans "Clicks" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in most_clicked_products %}
+                                <tr>
+                                    <td class="col1 product-image"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
+                                    <td class="col2"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
+                                    <td class="col3 center">{{ product.clicks }}</td>
+                                </tr>
+                               {% empty %}
+                                <tr>
+                                    <td colspan="3">{% trans "No sales yet." %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="last">
+                        <h2>{% trans "Most sold products" %}</h2>
+                        <table class="content half">
+                            <thead>
+                                <tr>
+                                    <th class="col1 product-image">{% trans "Product" %}</th>
+                                    <th class="col2"></th>
+                                    <th class="col3 center">{% trans "Sales" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in most_sold_products %}
+                                <tr>
+                                    <td class="col1 product-image"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
+                                    <td class="col2"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
+                                    <td class="col3 center">{{ product.sales }}</td>
+                                </tr>
+                               {% empty %}
+                                <tr>
+                                    <td colspan="3">{% trans "No sales yet." %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <h2 class="sales-header">{% trans "Your sales" %}</h2>
+            <table class="sortable sales content">
                 <thead>
                     <tr>
                         <th>{% trans "Date" %}</th>
                         <th>{% trans "Product" %}</th>
                         <th></th>
                         <th>{% trans "From" %}</th>
-                        <th>{% trans "Clicks" %}</th>
+                        <th class="center">{% trans "Clicks" %}</th>
                         <th>{% trans "Commission" %}</th>
                     </tr>
                 </thead>
@@ -101,10 +155,10 @@
                     {% for sale in sales_table %}
                     <tr>
                         <td data-sort="{{ sale.sale_date|date:"U" }}">{{ sale.sale_date }}</td>
-                        <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
+                        <td class="product-image"><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
                         <td><a href="{{ sale.product_link }}">{{ sale.product }}</a></td>
                         <td>{{ sale.link }}</td>
-                        <td>{{ sale.clicks }}</td>
+                        <td class="center">{{ sale.clicks }}</td>
                         <td data-sort="{{ sale.commission }}">{{ sale.commission }} {{ sale.currency }}</td>
                     </tr>
                     {% empty %}

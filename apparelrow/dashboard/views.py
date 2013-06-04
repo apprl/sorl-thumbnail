@@ -258,6 +258,7 @@ def dashboard(request, year=None, month=None):
                 ORDER BY ds.sale_date DESC
             """, [start_date_query, end_date_query, request.user.pk, Sale.PENDING, Sale.CONFIRMED, start_date_query, end_date_query])
         new_sales_table = []
+        most_sold = {}
         for sale in sales_table:
             temp = {
                 'link': map_placement(sale.placement),
@@ -267,13 +268,24 @@ def dashboard(request, year=None, month=None):
                 'product_image': '',
                 'product_link': reverse('product-detail', args=[sale.slug]),
                 'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
-                'clicks': sale.clicks}
+                'clicks': sale.clicks,
+                'sales': 0}
             try:
                 p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
                 temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
             except get_model('apparel', 'Product').DoesNotExist:
                 pass
             new_sales_table.append(temp)
+
+            if sale.product_name:
+                if temp['product'] in most_sold:
+                    most_sold[temp['product']]['sales'] += 1
+                else:
+                    temp['sales'] = 1
+                    most_sold[temp['product']] = temp
+
+        most_sold_products = [x for x in sorted(most_sold.values(), key=lambda x: x['sales'], reverse=True)[:3] if x['sales'] > 0]
+        most_clicked_products = [x for x in sorted(most_sold.values(), key=lambda x: x['clicks'], reverse=True)[:3] if x['clicks'] > 0]
 
         is_after_june = True if (year >= 2013 and month >= 6) or request.GET.get('override') else False
 
@@ -288,7 +300,9 @@ def dashboard(request, year=None, month=None):
                                                           'year': year,
                                                           'month': month,
                                                           'sales_table': new_sales_table,
-                                                          'is_after_june': is_after_june})
+                                                          'is_after_june': is_after_june,
+                                                          'most_sold_products': most_sold_products,
+                                                          'most_clicked_products': most_clicked_products})
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
