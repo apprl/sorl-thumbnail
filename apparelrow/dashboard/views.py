@@ -280,7 +280,36 @@ def dashboard(request, year=None, month=None):
                     most_sold[temp['product']] = temp
 
         most_sold_products = [x for x in sorted(most_sold.values(), key=lambda x: x['sales'], reverse=True)[:3] if x['sales'] > 0]
-        most_clicked_products = [x for x in sorted(most_sold.values(), key=lambda x: x['clicks'], reverse=True)[:3] if x['clicks'] > 0]
+
+        # Most clicked products
+        clicks_table = get_model('apparel', 'Product').objects.raw("""
+                SELECT ap.id,
+                       ap.slug,
+                       ap.product_name,
+                       ab.name AS brand_name,
+                       COUNT(sp.id) AS clicks
+                FROM apparel_product ap
+                LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
+                LEFT OUTER JOIN statistics_productstat sp ON ap.slug = sp.product AND sp.created BETWEEN %s AND %s
+                WHERE
+                    sp.user_id = %s
+                GROUP BY ap.id, ab.name
+                ORDER BY clicks DESC
+                LIMIT 3
+            """, [start_date_query, end_date_query, request.user.pk])
+        most_clicked_products = []
+        for sale in clicks_table:
+            temp = {
+                'product_image': '',
+                'product_link': reverse('product-detail', args=[sale.slug]),
+                'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
+                'clicks': sale.clicks}
+            try:
+                p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
+                temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
+            except get_model('apparel', 'Product').DoesNotExist:
+                pass
+            most_clicked_products.append(temp)
 
         is_after_june = True if (year >= 2013 and month >= 6) or request.GET.get('override') else False
 
