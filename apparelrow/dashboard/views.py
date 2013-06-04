@@ -110,6 +110,7 @@ def dashboard_admin(request, year=None, month=None):
                 SELECT ds.id,
                        ds.sale_date,
                        ds.commission,
+                       ds.converted_commission,
                        ds.currency,
                        ds.placement,
                        ds.user_id,
@@ -135,6 +136,7 @@ def dashboard_admin(request, year=None, month=None):
             temp = {
                 'link': map_placement(sale.placement),
                 'commission': sale.commission,
+                'partner_commission': sale.converted_commission - sale.commission,
                 'currency': sale.currency,
                 'sale_date': sale.sale_date,
                 'product_image': '',
