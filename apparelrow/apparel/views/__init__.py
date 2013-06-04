@@ -641,7 +641,9 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    queryset = get_user_model().objects.filter(is_active=True, is_brand=False)
+    queryset = get_user_model().objects.filter(is_active=True,
+                                               is_brand=False,
+                                               advertiser_store__isnull=True)
 
     if view_gender and set(view_gender).issubset(set(['W', 'M'])):
         queryset = queryset.filter(gender__in=view_gender)
@@ -655,7 +657,10 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
             10, request.GET.get('page', 1), 1, 2)
 
     # Latest active members
-    latest_members = get_user_model().objects.filter(is_active=True, is_brand=False).order_by('-date_joined')[:13]
+    latest_members = get_user_model().objects.filter(is_active=True,
+                                                     is_brand=False,
+                                                     advertiser_store__isnull=True) \
+                                             .order_by('-date_joined')[:13]
 
     if request.is_ajax():
         response = render_to_response('apparel/fragments/user_list.html', {
