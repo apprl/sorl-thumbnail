@@ -135,6 +135,7 @@ def dashboard_admin(request, year=None, month=None):
                 'currency': sale.currency,
                 'sale_date': sale.sale_date,
                 'product_image': '',
+                'product_link': reverse('product-detail', args=[sale.slug]),
                 'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
                 'clicks': sale.clicks}
             try:
@@ -258,6 +259,7 @@ def dashboard(request, year=None, month=None):
                 'currency': sale.currency,
                 'sale_date': sale.sale_date,
                 'product_image': '',
+                'product_link': reverse('product-detail', args=[sale.slug]),
                 'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
                 'clicks': sale.clicks}
             try:
