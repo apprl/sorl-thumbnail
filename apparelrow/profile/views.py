@@ -580,7 +580,7 @@ def _get_next(request):
 
 
 def flow(request):
-    if request.user.login_flow != 'complete':
+    if request.user.login_flow != 'complete' and not request.user.is_brand:
         url = reverse('login-flow-%s' % (request.user.login_flow))
         response = HttpResponseRedirect(url)
         response.set_cookie(settings.APPAREL_GENDER_COOKIE,
