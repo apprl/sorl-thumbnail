@@ -7,39 +7,53 @@
     <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
     <script type='text/javascript' src='http://www.google.com/jsapi'></script>
     <script type='text/javascript'>
-      google.load('visualization', '1', {'packages':['LineChart']});
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('date', 'Date');
-        data.addColumn('number', '{% trans "Commission (SEK)" %}');
-        data.addRows([
-          {% for sale_date, commission in sales.items %}
-          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission|unlocalize }}],
-          {% endfor %}
-        ]);
-        data.sort(0);
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-        var options = {
-            legend: {
-                position: 'none'
-            }
-        };
-        chart.draw(data, options);
+        google.load('visualization', '1', {packages: ['corechart']});
+        google.setOnLoadCallback(drawChart);
+        function drawChart () {
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'X');
+            data.addColumn('number', '{% trans "Commission (SEK)" %}');
+            data.addColumn('number', '{% trans "Clicks" %}');
+            data.addRows([
+                {% for sale_date, data in sales.items %}
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1 }}],
+                {% endfor %}
+            ]);
+            data.sort(0);
 
-        // Click chart
-        var clicksData = new google.visualization.DataTable();
-        clicksData.addColumn('date', 'Date');
-        clicksData.addColumn('number', '{% trans "Clicks" %}');
-        clicksData.addRows([
-          {% for sale_date, data in clicks.items %}
-          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data }}],
-          {% endfor %}
-        ]);
-        clicksData.sort(0);
-        var clicksChart = new google.visualization.LineChart(document.getElementById('clicks_chart'));
-        clicksChart.draw(clicksData, {legend: {position: 'none'}, colors: ['#c63310']});
-      }
+            var left = data.getColumnRange(1);
+            var left_max = Math.pow(10, Math.ceil(Math.log(left.max + 1) / Math.LN10));
+            var right = data.getColumnRange(2);
+            var right_max = Math.pow(10, Math.ceil(Math.log(right.max + 1) / Math.LN10));
+
+            var view = new google.visualization.DataView(data);
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'LineChart',
+                containerId: 'graph',
+                dataTable: view,
+                options: {
+                    width: 960,
+                    height: 300,
+                    vAxes: {
+                        0: {
+                            minValue: 0,
+                            maxValue: left_max,
+                            title: '{% trans "Commission (SEK)" %}'
+                        },
+                        1: {
+                            minValue: 0,
+                            maxValue: right_max,
+                            title: '{% trans "Clicks" %}'
+                        }
+                    },
+                    series: {
+                        0: {targetAxisIndex: 0},
+                        1: {targetAxisIndex: 1}
+                    }
+                }
+            });
+            chart.draw();
+        }
         $(document).ready(function() {
             $('.chart-menu select').change(function() {
                 var $selected = $(this).find(':selected');
@@ -69,7 +83,7 @@
         <h3 class="commission">{% blocktrans %}Pending payment: {{ pending_payment }}kr{% endblocktrans %}</h3>
         <h3 class="link"><a id="more-info" class="open-dialog" href="{% url 'dashboard-more-info' %}">{% trans "More info" %}</a></h3>
     </div>
-    <div class="content-chart group">
+    <div class="content-chart">
         <div class="chart-menu">
             <label>{% trans "Show: " %}
                 <select>
@@ -82,8 +96,7 @@
             <p>{% blocktrans %}Your clicks {{month_click}} st{% endblocktrans %}</p>
         </div>
         <div id="charts">
-            <div id="chart_div" style="width: 740px; height: 300px"></div>
-            <div id="clicks_chart" style="width: 740px; height: 300px;"></div>
+            <div id="graph" style="width: 960px; height: 300px;"></div>
             {% if is_after_june %}
             <table class="top">
                 <tr>
