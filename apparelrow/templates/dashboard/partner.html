@@ -98,8 +98,10 @@
                     {% endfor %}
                 </select>
             </label>
-            <p>{% blocktrans %}Your commission {{ month_commission }}kr{% endblocktrans %}</p>
-            <p>{% blocktrans %}Your clicks {{month_click}} st{% endblocktrans %}</p>
+            <p>{% blocktrans %}Your commission: {{ month_commission }}kr{% endblocktrans %}</p>
+            <p>{% blocktrans %}Clicks: {{month_clicks}}{% endblocktrans %}</p>
+            <p>{% blocktrans %}Sales: {{month_sales}}{% endblocktrans %}</p>
+            <p>{% blocktrans with conversion_rate=conversion_rate|floatformat:2 %}Conversion rate: {{ conversion_rate }}%{% endblocktrans %}</p>
         </div>
         <div id="charts">
             <div id="graph" style="width: 960px; height: 300px;"></div>

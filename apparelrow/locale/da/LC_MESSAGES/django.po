@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-04 17:47+0200\n"
+"POT-Creation-Date: 2013-06-04 22:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -509,7 +509,7 @@ msgstr ""
 msgid "Feed on Apprl.com"
 msgstr ""
 
-#: dashboard/views.py:144 dashboard/views.py:270
+#: dashboard/views.py:142 dashboard/views.py:265 dashboard/views.py:305
 msgid "Unknown"
 msgstr ""
 
@@ -573,8 +573,8 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: importer/models.py:129 templates/dashboard/admin.html:95
-#: templates/dashboard/partner.html:146
+#: importer/models.py:129 templates/dashboard/admin.html:91
+#: templates/dashboard/partner.html:167
 msgid "Date"
 msgstr ""
 
@@ -1283,9 +1283,9 @@ msgstr ""
 msgid "Transactions"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:15 templates/dashboard/admin.html:100
-#: templates/dashboard/partner.html:33 templates/dashboard/partner.html:97
-#: templates/dashboard/partner.html:150
+#: templates/advertiser/store_admin.html:15 templates/dashboard/admin.html:96
+#: templates/dashboard/partner.html:16 templates/dashboard/partner.html:50
+#: templates/dashboard/partner.html:118 templates/dashboard/partner.html:171
 msgid "Clicks"
 msgstr ""
 
@@ -1297,8 +1297,8 @@ msgstr ""
 msgid "Total accepted commission:"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:54 templates/dashboard/admin.html:70
-#: templates/dashboard/partner.html:74
+#: templates/advertiser/store_admin.html:54 templates/dashboard/admin.html:66
+#: templates/dashboard/partner.html:94
 msgid "Show: "
 msgstr ""
 
@@ -1315,7 +1315,7 @@ msgid "Order Value"
 msgstr ""
 
 #: templates/advertiser/store_admin.html:73
-#: templates/dashboard/partner.html:151
+#: templates/dashboard/partner.html:172
 msgid "Commission"
 msgstr ""
 
@@ -2046,77 +2046,77 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: templates/dashboard/admin.html:61
+#: templates/dashboard/admin.html:57
 msgid "Partner admin"
 msgstr ""
 
-#: templates/dashboard/admin.html:77
+#: templates/dashboard/admin.html:73
 #, python-format
 msgid "Total commission %(month_commission)skr"
 msgstr ""
 
-#: templates/dashboard/admin.html:78
+#: templates/dashboard/admin.html:74
 #, python-format
 msgid "Partner commission %(partner)skr"
 msgstr ""
 
-#: templates/dashboard/admin.html:79
+#: templates/dashboard/admin.html:75
 #, python-format
 msgid "Apprl commission %(apprl)skr"
 msgstr ""
 
-#: templates/dashboard/admin.html:81
+#: templates/dashboard/admin.html:77
 #, python-format
 msgid "Sales %(sales_count)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:82
+#: templates/dashboard/admin.html:78
 #, python-format
 msgid "Conversion rate %(conversion_rate)s%%"
 msgstr ""
 
-#: templates/dashboard/admin.html:84
+#: templates/dashboard/admin.html:80
 #, python-format
 msgid "Total click %(click_total)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:85
+#: templates/dashboard/admin.html:81
 #, python-format
 msgid "Partner click %(click_partner)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:86
+#: templates/dashboard/admin.html:82
 #, python-format
 msgid "Apprl click %(click_apprl)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:91 templates/dashboard/partner.html:142
+#: templates/dashboard/admin.html:87 templates/dashboard/partner.html:163
 msgid "Your sales"
 msgstr ""
 
-#: templates/dashboard/admin.html:96 templates/dashboard/partner.html:95
-#: templates/dashboard/partner.html:120 templates/dashboard/partner.html:147
+#: templates/dashboard/admin.html:92 templates/dashboard/partner.html:116
+#: templates/dashboard/partner.html:141 templates/dashboard/partner.html:168
 msgid "Product"
 msgstr ""
 
-#: templates/dashboard/admin.html:98
+#: templates/dashboard/admin.html:94
 msgid "User"
 msgstr ""
 
-#: templates/dashboard/admin.html:99 templates/dashboard/partner.html:149
+#: templates/dashboard/admin.html:95 templates/dashboard/partner.html:170
 msgid "From"
 msgstr ""
 
-#: templates/dashboard/admin.html:101
+#: templates/dashboard/admin.html:97
 msgid "Our Comm"
 msgstr ""
 
-#: templates/dashboard/admin.html:102
+#: templates/dashboard/admin.html:98
 msgid "Partner Comm"
 msgstr ""
 
-#: templates/dashboard/admin.html:119 templates/dashboard/partner.html:109
-#: templates/dashboard/partner.html:134 templates/dashboard/partner.html:166
+#: templates/dashboard/admin.html:115 templates/dashboard/partner.html:130
+#: templates/dashboard/partner.html:155 templates/dashboard/partner.html:187
 msgid "No sales yet."
 msgstr ""
 
@@ -2360,49 +2360,59 @@ msgstr ""
 msgid "Let us know any questions on"
 msgstr ""
 
-#: templates/dashboard/partner.html:15
+#: templates/dashboard/partner.html:15 templates/dashboard/partner.html:43
 msgid "Commission (SEK)"
 msgstr ""
 
-#: templates/dashboard/partner.html:67
+#: templates/dashboard/partner.html:87
 #, python-format
 msgid "Your commission: %(total_sales)skr"
 msgstr ""
 
-#: templates/dashboard/partner.html:68
+#: templates/dashboard/partner.html:88
 #, python-format
 msgid "Confirmed commission: %(total_confirmed)skr"
 msgstr ""
 
-#: templates/dashboard/partner.html:69
+#: templates/dashboard/partner.html:89
 #, python-format
 msgid "Pending payment: %(pending_payment)skr"
 msgstr ""
 
-#: templates/dashboard/partner.html:70
+#: templates/dashboard/partner.html:90
 msgid "More info"
 msgstr ""
 
-#: templates/dashboard/partner.html:81
+#: templates/dashboard/partner.html:101
 #, python-format
-msgid "Your commission %(month_commission)skr"
+msgid "Your commission: %(month_commission)skr"
 msgstr ""
 
-#: templates/dashboard/partner.html:82
+#: templates/dashboard/partner.html:102
 #, python-format
-msgid "Your clicks %(month_click)s st"
+msgid "Clicks: %(month_clicks)s"
 msgstr ""
 
-#: templates/dashboard/partner.html:91
+#: templates/dashboard/partner.html:103
+#, python-format
+msgid "Sales: %(month_sales)s"
+msgstr ""
+
+#: templates/dashboard/partner.html:104
+#, python-format
+msgid "Conversion rate: %(conversion_rate)s%%"
+msgstr ""
+
+#: templates/dashboard/partner.html:112
 msgid "Most clicked products"
 msgstr ""
 
-#: templates/dashboard/partner.html:116
+#: templates/dashboard/partner.html:137
 #, fuzzy
 msgid "Most sold products"
 msgstr "%(count)s produkt"
 
-#: templates/dashboard/partner.html:122
+#: templates/dashboard/partner.html:143
 msgid "Sales"
 msgstr ""
 

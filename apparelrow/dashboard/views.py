@@ -311,6 +311,14 @@ def dashboard(request, year=None, month=None):
                 pass
             most_clicked_products.append(temp)
 
+        # Conversion rate
+        conversion_rate = 0
+        month_clicks = sum([x[1] for x in data_per_month.values()])
+        month_sales = len(new_sales_table)
+        if month_clicks > 0:
+            conversion_rate = decimal.Decimal(month_sales) / decimal.Decimal(month_clicks)
+            conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
+
         is_after_june = True if (year >= 2013 and month >= 6) or request.GET.get('override') else False
 
         return render(request, 'dashboard/partner.html', {'sales': data_per_month,
@@ -318,7 +326,9 @@ def dashboard(request, year=None, month=None):
                                                           'total_confirmed': sales_confirmed,
                                                           'pending_payment': pending_payment,
                                                           'month_commission': sum([x[0] for x in data_per_month.values()]),
-                                                          'month_click': sum([x[1] for x in data_per_month.values()]),
+                                                          'month_clicks': month_clicks,
+                                                          'month_sales': month_sales,
+                                                          'conversion_rate': conversion_rate,
                                                           'dates': dates,
                                                           'year': year,
                                                           'month': month,
