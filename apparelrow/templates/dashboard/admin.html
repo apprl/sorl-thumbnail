@@ -21,11 +21,7 @@
         ]);
         data.sort(0);
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-        var options = {
-            legend: {
-                position: 'none'
-            }
-        };
+        var options = {};
         chart.draw(data, options);
 
         // Click chart
@@ -34,13 +30,13 @@
         clicksData.addColumn('number', 'Total clicks');
         clicksData.addColumn('number', 'Partner clicks');
         clicksData.addRows([
-          {% for sale_date, data in clicks.items %}
-          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0 }}, {{ data.1 }}],
+          {% for sale_date, data in sales.items %}
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.2 }}, {{ data.3 }}],
           {% endfor %}
         ]);
         clicksData.sort(0);
         var clicksChart = new google.visualization.LineChart(document.getElementById('clicks_chart'));
-        clicksChart.draw(clicksData, {legend: {position: 'none'}});
+        clicksChart.draw(clicksData, {});
       }
         $(document).ready(function() {
             $('.chart-menu select').change(function() {
@@ -86,10 +82,10 @@
             <p>{% blocktrans %}Apprl click {{ click_apprl }}{% endblocktrans %}</p>
         </div>
         <div id="charts">
-            <div id="chart_div" style="width: 740px; height: 300px"></div>
-            <div id="clicks_chart" style="width: 740px; height: 300px;"></div>
+            <div id="chart_div" style="width: 960px; height: 300px"></div>
+            <div id="clicks_chart" style="width: 960px; height: 300px;"></div>
             <h1>{% trans "Your sales" %}</h1>
-            <table>
+            <table class="sortable sales content">
                 <thead>
                     <tr>
                         <th>{% trans "Date" %}</th>
@@ -97,7 +93,7 @@
                         <th></th>
                         <th>{% trans "User" %}</th>
                         <th>{% trans "From" %}</th>
-                        <th>{% trans "Clicks" %}</th>
+                        <th class="center">{% trans "Clicks" %}</th>
                         <th>{% trans "Our Comm" %}</th>
                         <th>{% trans "Partner Comm" %}</th>
                     </tr>
@@ -106,11 +102,11 @@
                     {% for sale in sales_table %}
                     <tr>
                         <td data-sort="{{ sale.sale_date|date:"U" }}">{{ sale.sale_date }}</td>
-                        <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
+                        <td class="product-image"><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
                         <td><a href="{{ sale.product_link }}">{{ sale.product }}</a></td>
                         <td>{{ sale.user }}</td>
                         <td>{{ sale.link }}</td>
-                        <td>{{ sale.clicks }}</td>
+                        <td class="center">{{ sale.clicks }}</td>
                         <td data-sort="{{ sale.partner_commission }}">{{ sale.partner_commission }} {{ sale.currency }}</td>
                         <td data-sort="{{ sale.commission }}">{{ sale.commission }} {{ sale.currency }}</td>
                     </tr>

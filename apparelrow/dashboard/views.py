@@ -54,10 +54,8 @@ def dashboard_admin(request, year=None, month=None):
 
         # Per month
         data_per_month = {}
-        clicks_per_month = {}
         for day in range(1, (end_date - start_date).days + 2):
-            data_per_month[start_date.replace(day=day)] = [0, 0]
-            clicks_per_month[start_date.replace(day=day)] = [0, 0]
+            data_per_month[start_date.replace(day=day)] = [0, 0, 0, 0]
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
@@ -82,12 +80,12 @@ def dashboard_admin(request, year=None, month=None):
         clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
                                                                .order_by('created')
         for click in clicks:
-            clicks_per_month[click.created.date()][0] += 1
+            data_per_month[click.created.date()][2] += 1
             if click.user_id:
-                clicks_per_month[click.created.date()][1] += 1
+                data_per_month[click.created.date()][3] += 1
 
-        click_total = sum([x[0] for x in clicks_per_month.values()])
-        click_partner = sum([x[1] for x in clicks_per_month.values()])
+        click_total = sum([x[2] for x in data_per_month.values()])
+        click_partner = sum([x[3] for x in data_per_month.values()])
         click_apprl = click_total - click_partner
 
         # Enumerate months
@@ -153,7 +151,6 @@ def dashboard_admin(request, year=None, month=None):
 
         return render(request, 'dashboard/admin.html', {'sales': data_per_month,
                                                         'sales_count': sales_count,
-                                                        'clicks': clicks_per_month,
                                                         'month_commission': month_commission,
                                                         'partner': partner_commission,
                                                         'apprl': apprl_commission,
@@ -184,10 +181,8 @@ def dashboard(request, year=None, month=None):
 
         # Commission per month
         data_per_month = {}
-        clicks_per_month = {}
         for day in range(1, (end_date - start_date).days + 2):
-            data_per_month[start_date.replace(day=day)] = 0
-            clicks_per_month[start_date.replace(day=day)] = 0
+            data_per_month[start_date.replace(day=day)] = [0, 0]
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
@@ -197,14 +192,14 @@ def dashboard(request, year=None, month=None):
                                 .filter(user_id=request.user.pk) \
                                 .order_by('sale_date') \
                                 .values('sale_date', 'commission'):
-            data_per_month[sale['sale_date'].date()] += sale['commission']
+            data_per_month[sale['sale_date'].date()][0] += sale['commission']
 
         # Clicks
         clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
                                                                .filter(user_id=request.user.pk) \
                                                                .order_by('created')
         for click in clicks:
-            clicks_per_month[click.created.date()] += 1
+            data_per_month[click.created.date()][1] += 1
 
         # Enumerate months
         dt1 = request.user.date_joined.date()
@@ -258,6 +253,7 @@ def dashboard(request, year=None, month=None):
                 ORDER BY ds.sale_date DESC
             """, [start_date_query, end_date_query, request.user.pk, Sale.PENDING, Sale.CONFIRMED, start_date_query, end_date_query])
         new_sales_table = []
+        most_sold = {}
         for sale in sales_table:
             temp = {
                 'link': map_placement(sale.placement),
@@ -267,7 +263,8 @@ def dashboard(request, year=None, month=None):
                 'product_image': '',
                 'product_link': reverse('product-detail', args=[sale.slug]),
                 'product': '%s %s' % (sale.product_name, sale.brand_name) if sale.product_name else _('Unknown'),
-                'clicks': sale.clicks}
+                'clicks': sale.clicks,
+                'sales': 0}
             try:
                 p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
                 temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
@@ -275,20 +272,31 @@ def dashboard(request, year=None, month=None):
                 pass
             new_sales_table.append(temp)
 
+            if sale.product_name:
+                if temp['product'] in most_sold:
+                    most_sold[temp['product']]['sales'] += 1
+                else:
+                    temp['sales'] = 1
+                    most_sold[temp['product']] = temp
+
+        most_sold_products = [x for x in sorted(most_sold.values(), key=lambda x: x['sales'], reverse=True)[:3] if x['sales'] > 0]
+        most_clicked_products = [x for x in sorted(most_sold.values(), key=lambda x: x['clicks'], reverse=True)[:3] if x['clicks'] > 0]
+
         is_after_june = True if (year >= 2013 and month >= 6) or request.GET.get('override') else False
 
         return render(request, 'dashboard/partner.html', {'sales': data_per_month,
-                                                          'clicks': clicks_per_month,
                                                           'total_sales': sales_total,
                                                           'total_confirmed': sales_confirmed,
                                                           'pending_payment': pending_payment,
-                                                          'month_commission': sum(data_per_month.values()),
-                                                          'month_click': sum(clicks_per_month.values()),
+                                                          'month_commission': sum([x[0] for x in data_per_month.values()]),
+                                                          'month_click': sum([x[1] for x in data_per_month.values()]),
                                                           'dates': dates,
                                                           'year': year,
                                                           'month': month,
                                                           'sales_table': new_sales_table,
-                                                          'is_after_june': is_after_june})
+                                                          'is_after_june': is_after_june,
+                                                          'most_sold_products': most_sold_products,
+                                                          'most_clicked_products': most_clicked_products})
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
