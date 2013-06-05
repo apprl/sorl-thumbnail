@@ -84,7 +84,61 @@
         <div id="charts">
             <div id="chart_div" style="width: 960px; height: 300px"></div>
             <div id="clicks_chart" style="width: 960px; height: 300px;"></div>
-            <h1>{% trans "Your sales" %}</h1>
+            <table class="top">
+                <tr>
+                    <td class="first">
+                        <h2>{% trans "Most clicked products" %}</h2>
+                        <table class="content half">
+                            <thead>
+                                <tr>
+                                    <th class="col1 product-image">{% trans "Product" %}</th>
+                                    <th class="col2"></th>
+                                    <th class="col3 center">{% trans "Clicks" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in most_clicked_products %}
+                                <tr>
+                                    <td class="col1 product-image"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
+                                    <td class="col2"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
+                                    <td class="col3 center">{{ product.clicks }}</td>
+                                </tr>
+                               {% empty %}
+                                <tr>
+                                    <td colspan="3">{% trans "No sales yet." %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="last">
+                        <h2>{% trans "Most sold products" %}</h2>
+                        <table class="content half">
+                            <thead>
+                                <tr>
+                                    <th class="col1 product-image">{% trans "Product" %}</th>
+                                    <th class="col2"></th>
+                                    <th class="col3 center">{% trans "Sales" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in most_sold_products %}
+                                <tr>
+                                    <td class="col1 product-image"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
+                                    <td class="col2"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
+                                    <td class="col3 center">{{ product.sales }}</td>
+                                </tr>
+                               {% empty %}
+                                <tr>
+                                    <td colspan="3">{% trans "No sales yet." %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <h2 class="sales-header">{% trans "Your sales" %}</h2>
             <table class="sortable sales content">
                 <thead>
                     <tr>

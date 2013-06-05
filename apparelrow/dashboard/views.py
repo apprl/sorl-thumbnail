@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from sorl.thumbnail import get_thumbnail
+from sorl.thumbnail.fields import ImageField
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
 
@@ -30,6 +31,92 @@ def map_placement(placement):
         link = _('Feed on Apprl.com')
 
     return link
+
+
+def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
+    user_criteria = ''
+    values = [start_date, end_date, limit]
+    if user_id:
+        user_criteria = 'WHERE sp.user_id = %s'
+        values = [start_date, end_date, user_id, limit]
+
+    product_table = get_model('apparel', 'Product').objects.raw("""
+            SELECT ap.id, ap.slug, ap.product_name, ap.product_image, ab.name AS brand_name, COUNT(sp.id) AS clicks
+            FROM apparel_product ap
+            LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
+            LEFT OUTER JOIN statistics_productstat sp ON ap.slug = sp.product AND sp.created BETWEEN %s AND %s
+            {0} GROUP BY ap.id, ab.name
+            ORDER BY clicks DESC
+            LIMIT %s
+        """.format(user_criteria), values)
+    most_clicked_products = []
+    for product in product_table:
+        product_image = ''
+        if product.product_image:
+            product_image = get_thumbnail(ImageField().to_python(product.product_image), '50', crop='noop').url
+        most_clicked_products.append({
+            'product_image': product_image,
+            'product_link': reverse('product-detail', args=[product.slug]),
+            'product': '%s %s' % (product.brand_name, product.product_name) if product.product_name else _('Unknown'),
+            'clicks': product.clicks
+        })
+
+    return most_clicked_products
+
+
+def get_sales(start_date, end_date, user_id=None, limit=5):
+    user_criteria = ''
+    values = [start_date, end_date, Sale.PENDING, Sale.CONFIRMED, start_date, end_date]
+    if user_id:
+        user_criteria = 'ds.user_id = %s AND'
+        values = [start_date, end_date, user_id, Sale.PENDING, Sale.CONFIRMED, start_date, end_date]
+
+    sale_table = Sale.objects.raw("""
+            SELECT ds.id, ds.sale_date, ds.commission, ds.currency, ds.placement,
+                   ap.slug, ap.product_name, ap.product_image, ab.name AS brand_name, COUNT(sp.id) AS clicks
+            FROM dashboard_sale ds
+            LEFT OUTER JOIN apparel_product ap ON ds.product_id = ap.id
+            LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
+            LEFT OUTER JOIN statistics_productstat sp
+                ON ds.user_id = sp.user_id AND ap.slug = sp.product AND sp.created BETWEEN %s AND %s
+            WHERE
+                {0}
+                ds.status BETWEEN %s AND %s AND
+                ds.sale_date BETWEEN %s AND %s
+            GROUP BY ds.id, ap.product_name, ap.product_image, ap.slug, ab.name
+            ORDER BY ds.sale_date DESC
+        """.format(user_criteria), values)
+    sales = []
+    most_sold = {}
+    for sale in sale_table:
+        product_image = ''
+        if sale.product_image:
+            product_image = get_thumbnail(ImageField().to_python(sale.product_image), '50', crop='noop').url
+
+        temp = {
+            'link': map_placement(sale.placement),
+            'commission': sale.commission,
+            'currency': sale.currency,
+            'sale_date': sale.sale_date,
+            'product_image': product_image,
+            'product_link': reverse('product-detail', args=[sale.slug]),
+            'product': '%s %s' % (sale.brand_name, sale.product_name) if sale.product_name else _('Unknown'),
+            'clicks': sale.clicks,
+            'sales': 0
+        }
+
+        if sale.product_name:
+            if temp['product'] in most_sold:
+                most_sold[temp['product']]['sales'] += 1
+            else:
+                temp['sales'] = 1
+                most_sold[temp['product']] = temp
+
+        sales.append(temp)
+
+    most_sold_products = [x for x in sorted(most_sold.values(), key=lambda x: x['sales'], reverse=True)[:limit] if x['sales'] > 0]
+
+    return sales, most_sold_products
 
 
 class SignupForm(ModelForm):
@@ -103,51 +190,11 @@ def dashboard_admin(request, year=None, month=None):
             conversion_rate = decimal.Decimal(sales_count) / decimal.Decimal(click_total)
             conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
 
-        # Sales table
-        sales_table = Sale.objects.raw("""
-                SELECT ds.id,
-                       ds.sale_date,
-                       ds.commission,
-                       ds.converted_commission,
-                       ds.currency,
-                       ds.placement,
-                       ds.user_id,
-                       pu.name,
-                       ap.slug,
-                       ap.product_name,
-                       ab.name AS brand_name,
-                       COUNT(sp.id) AS clicks
-                FROM dashboard_sale ds
-                LEFT OUTER JOIN apparel_product ap ON ds.product_id = ap.id
-                LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
-                LEFT OUTER JOIN profile_user pu ON pu.id = ds.user_id
-                LEFT OUTER JOIN statistics_productstat sp
-                    ON ds.user_id = sp.user_id AND ap.slug = sp.product AND sp.created BETWEEN %s AND %s
-                WHERE
-                    ds.status BETWEEN %s AND %s AND
-                    ds.sale_date BETWEEN %s AND %s
-                GROUP BY ds.id, ap.product_name, ap.slug, ab.name, pu.name
-                ORDER BY ds.sale_date DESC
-            """, [start_date_query, end_date_query, Sale.PENDING, Sale.CONFIRMED, start_date_query, end_date_query])
-        new_sales_table = []
-        for sale in sales_table:
-            temp = {
-                'link': map_placement(sale.placement),
-                'commission': sale.commission,
-                'partner_commission': sale.converted_commission - sale.commission,
-                'currency': sale.currency,
-                'sale_date': sale.sale_date,
-                'product_image': '',
-                'product_link': reverse('product-detail', args=[sale.slug]),
-                'product': '%s %s' % (sale.brand_name, sale.product_name) if sale.product_name else _('Unknown'),
-                'clicks': sale.clicks,
-                'user': sale.name if sale.name else '(%s)' % (sale.user_id,)}
-            try:
-                p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
-                temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
-            except get_model('apparel', 'Product').DoesNotExist:
-                pass
-            new_sales_table.append(temp)
+        # Sales and most sold products
+        sales, most_sold_products = get_sales(start_date_query, end_date_query)
+
+        # Most clicked products
+        most_clicked_products = get_most_clicked_products(start_date_query, end_date_query)
 
         return render(request, 'dashboard/admin.html', {'sales': data_per_month,
                                                         'sales_count': sales_count,
@@ -161,7 +208,9 @@ def dashboard_admin(request, year=None, month=None):
                                                         'year': year,
                                                         'month': month,
                                                         'conversion_rate': conversion_rate,
-                                                        'sales_table': new_sales_table})
+                                                        'sales_table': sales,
+                                                        'most_sold_products': most_sold_products,
+                                                        'most_clicked_products': most_clicked_products})
 
     return HttpResponseNotFound()
 
@@ -180,9 +229,9 @@ def dashboard(request, year=None, month=None):
         end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
 
         # Commission per month
-        data_per_month = {}
+        data_per_day = {}
         for day in range(1, (end_date - start_date).days + 2):
-            data_per_month[start_date.replace(day=day)] = [0, 0]
+            data_per_day[start_date.replace(day=day)] = [0, 0]
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
@@ -192,14 +241,14 @@ def dashboard(request, year=None, month=None):
                                 .filter(user_id=request.user.pk) \
                                 .order_by('sale_date') \
                                 .values('sale_date', 'commission'):
-            data_per_month[sale['sale_date'].date()][0] += sale['commission']
+            data_per_day[sale['sale_date'].date()][0] += sale['commission']
 
         # Clicks
         clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
                                                                .filter(user_id=request.user.pk) \
                                                                .order_by('created')
         for click in clicks:
-            data_per_month[click.created.date()][1] += 1
+            data_per_day[click.created.date()][1] += 1
 
         # Enumerate months
         dt1 = request.user.date_joined.date()
@@ -229,110 +278,35 @@ def dashboard(request, year=None, month=None):
         if payments:
             pending_payment = payments[0].amount
 
-        # Sales table
-        sales_table = Sale.objects.raw("""
-                SELECT ds.id,
-                       ds.sale_date,
-                       ds.commission,
-                       ds.currency,
-                       ds.placement,
-                       ap.slug,
-                       ap.product_name,
-                       ab.name AS brand_name,
-                       COUNT(sp.id) AS clicks
-                FROM dashboard_sale ds
-                LEFT OUTER JOIN apparel_product ap ON ds.product_id = ap.id
-                LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
-                LEFT OUTER JOIN statistics_productstat sp
-                    ON ds.user_id = sp.user_id AND ap.slug = sp.product AND sp.created BETWEEN %s AND %s
-                WHERE
-                    ds.user_id = %s AND
-                    ds.status BETWEEN %s AND %s AND
-                    ds.sale_date BETWEEN %s AND %s
-                GROUP BY ds.id, ap.product_name, ap.slug, ab.name
-                ORDER BY ds.sale_date DESC
-            """, [start_date_query, end_date_query, request.user.pk, Sale.PENDING, Sale.CONFIRMED, start_date_query, end_date_query])
-        new_sales_table = []
-        most_sold = {}
-        for sale in sales_table:
-            temp = {
-                'link': map_placement(sale.placement),
-                'commission': sale.commission,
-                'currency': sale.currency,
-                'sale_date': sale.sale_date,
-                'product_image': '',
-                'product_link': reverse('product-detail', args=[sale.slug]),
-                'product': '%s %s' % (sale.brand_name, sale.product_name) if sale.product_name else _('Unknown'),
-                'clicks': sale.clicks,
-                'sales': 0}
-            try:
-                p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
-                temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
-            except get_model('apparel', 'Product').DoesNotExist:
-                pass
-            new_sales_table.append(temp)
-
-            if sale.product_name:
-                if temp['product'] in most_sold:
-                    most_sold[temp['product']]['sales'] += 1
-                else:
-                    temp['sales'] = 1
-                    most_sold[temp['product']] = temp
-
-        most_sold_products = [x for x in sorted(most_sold.values(), key=lambda x: x['sales'], reverse=True)[:5] if x['sales'] > 0]
+        # Sales and most sold products
+        sales, most_sold_products = get_sales(start_date_query, end_date_query, user_id=request.user.pk)
 
         # Most clicked products
-        clicks_table = get_model('apparel', 'Product').objects.raw("""
-                SELECT ap.id,
-                       ap.slug,
-                       ap.product_name,
-                       ab.name AS brand_name,
-                       COUNT(sp.id) AS clicks
-                FROM apparel_product ap
-                LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
-                LEFT OUTER JOIN statistics_productstat sp ON ap.slug = sp.product AND sp.created BETWEEN %s AND %s
-                WHERE
-                    sp.user_id = %s
-                GROUP BY ap.id, ab.name
-                ORDER BY clicks DESC
-                LIMIT 5
-            """, [start_date_query, end_date_query, request.user.pk])
-        most_clicked_products = []
-        for sale in clicks_table:
-            temp = {
-                'product_image': '',
-                'product_link': reverse('product-detail', args=[sale.slug]),
-                'product': '%s %s' % (sale.brand_name, sale.product_name) if sale.product_name else _('Unknown'),
-                'clicks': sale.clicks}
-            try:
-                p = get_model('apparel', 'Product').objects.get(slug=sale.slug)
-                temp['product_image'] = get_thumbnail(p.product_image, '50', crop='noop').url
-            except get_model('apparel', 'Product').DoesNotExist:
-                pass
-            most_clicked_products.append(temp)
+        most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, user_id=request.user.pk)
 
         # Conversion rate
         conversion_rate = 0
-        month_clicks = sum([x[1] for x in data_per_month.values()])
-        month_sales = len(new_sales_table)
+        month_clicks = sum([x[1] for x in data_per_day.values()])
+        month_sales = len(sales)
         if month_clicks > 0:
             conversion_rate = decimal.Decimal(month_sales) / decimal.Decimal(month_clicks)
             conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
 
+        # Enable sales listing after 2013-06-01 00:00:00
         is_after_june = True if (year >= 2013 and month >= 6) or request.GET.get('override') else False
 
-        return render(request, 'dashboard/partner.html', {'sales': data_per_month,
+        return render(request, 'dashboard/partner.html', {'data_per_day': data_per_day,
                                                           'total_sales': sales_total,
                                                           'total_confirmed': sales_confirmed,
                                                           'pending_payment': pending_payment,
-                                                          'month_commission': sum([x[0] for x in data_per_month.values()]),
+                                                          'month_commission': sum([x[0] for x in data_per_day.values()]),
                                                           'month_clicks': month_clicks,
                                                           'month_sales': month_sales,
-                                                          'conversion_rate': conversion_rate,
+                                                          'month_conversion_rate': conversion_rate,
                                                           'dates': dates,
                                                           'year': year,
                                                           'month': month,
-                                                          'sales_table': new_sales_table,
+                                                          'sales': sales,
                                                           'is_after_june': is_after_june,
                                                           'most_sold_products': most_sold_products,
                                                           'most_clicked_products': most_clicked_products})
