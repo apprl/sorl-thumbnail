@@ -28,7 +28,7 @@ class NamedThumbnailBackend(ThumbnailBackend):
     def _get_thumbnail_filename(self, source, geometry_string, options):
         path, filename = os.path.split(source.name)
         paths = path.split('/')
-        if paths[1] != 'products' or len(paths) < 4:
+        if len(paths) < 4 or paths[1] != 'products':
             # No brand name in path should use old thumbnail_name algorithm
             return super(NamedThumbnailBackend, self)._get_thumbnail_filename(source, geometry_string, options)
 
