@@ -43,8 +43,8 @@ def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
     product_table = get_model('apparel', 'Product').objects.raw("""
             SELECT ap.id, ap.slug, ap.product_name, ap.product_image, ab.name AS brand_name, COUNT(sp.id) AS clicks
             FROM apparel_product ap
-            LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
-            LEFT OUTER JOIN statistics_productstat sp ON ap.slug = sp.product AND sp.created BETWEEN %s AND %s
+            INNER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
+            INNER JOIN statistics_productstat sp ON ap.slug = sp.product AND sp.created BETWEEN %s AND %s
             {0} GROUP BY ap.id, ab.name
             ORDER BY clicks DESC
             LIMIT %s
