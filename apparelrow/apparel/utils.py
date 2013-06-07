@@ -156,6 +156,9 @@ def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
     # Affiliate Window
     elif vendor_feed.provider_class == 'affiliatewindow':
         url = set_query_parameter(url, 'clickref', sid)
+    # Our network
+    elif vendor_feed.provider_class == 'aan':
+        url = set_query_parameter(url, 'custom', sid)
 
     return url
 
