@@ -72,9 +72,10 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
         values = [start_date, end_date, user_id, Sale.PENDING, Sale.CONFIRMED, start_date, end_date]
 
     sale_table = Sale.objects.raw("""
-            SELECT ds.id, ds.sale_date, ds.commission, ds.currency, ds.placement,
-                   ap.slug, ap.product_name, ap.product_image, ab.name AS brand_name, COUNT(sp.id) AS clicks
+            SELECT ds.id, ds.sale_date, ds.commission, ds.currency, ds.placement, ds.converted_commission, ds.user_id,
+                   ap.slug, ap.product_name, ap.product_image, ab.name AS brand_name, COUNT(sp.id) AS clicks, pu.name
             FROM dashboard_sale ds
+            LEFT OUTER JOIN profile_user pu ON pu.id = ds.user_id
             LEFT OUTER JOIN apparel_product ap ON ds.product_id = ap.id
             LEFT OUTER JOIN apparel_brand ab ON ab.id = ap.manufacturer_id
             LEFT OUTER JOIN statistics_productstat sp
@@ -83,7 +84,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
                 {0}
                 ds.status BETWEEN %s AND %s AND
                 ds.sale_date BETWEEN %s AND %s
-            GROUP BY ds.id, ap.product_name, ap.product_image, ap.slug, ab.name
+            GROUP BY ds.id, ap.product_name, ap.product_image, ap.slug, ab.name, pu.name
             ORDER BY ds.sale_date DESC
         """.format(user_criteria), values)
     sales = []
@@ -96,13 +97,15 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
         temp = {
             'link': map_placement(sale.placement),
             'commission': sale.commission,
+            'partner_commission': sale.converted_commission - sale.commission,
             'currency': sale.currency,
             'sale_date': sale.sale_date,
             'product_image': product_image,
             'product_link': reverse('product-detail', args=[sale.slug]),
             'product': '%s %s' % (sale.brand_name, sale.product_name) if sale.product_name else _('Unknown'),
             'clicks': sale.clicks,
-            'sales': 0
+            'sales': 0,
+            'user': sale.name if sale.name else '(%s)' % (sale.user_id,),
         }
 
         if sale.product_name:
