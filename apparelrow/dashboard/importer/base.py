@@ -88,7 +88,9 @@ class BaseImporter:
                         cut = instance[0].cut
                         logger.debug('Using custom cut for profile %s: %s' % (profile, cut))
 
-            data['commission'] = decimal.Decimal('0.95') * decimal.Decimal(cut) * decimal.Decimal(data['commission'])
+            data['commission'] = decimal.Decimal(cut) * decimal.Decimal(data['commission'])
+            if data['currency'] != data['original_currency']:
+                data['commission'] = data['commission'] * decimal.Decimal('0.95')
 
         return data
 
