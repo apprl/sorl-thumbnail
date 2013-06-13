@@ -16,7 +16,7 @@ from apparelrow.dashboard.models import Sale, Payment, Signup
 
 
 def map_placement(placement):
-    link = _('Your profile on Apprl.com')
+    link = _('Unknown')
     if placement == 'Ext-Shop':
         link = _('Shop on your site')
     elif placement == 'Ext-Look':
@@ -29,6 +29,10 @@ def map_placement(placement):
         link = _('Shop on Apprl.com')
     elif placement == 'Feed':
         link = _('Feed on Apprl.com')
+    elif placement == 'Profile':
+        link = _('Your profile on Apprl.com')
+    elif placement == 'Product':
+        link = _('Product page')
 
     return link
 
@@ -96,8 +100,8 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
 
         temp = {
             'link': map_placement(sale.placement),
-            'commission': sale.commission,
-            'partner_commission': sale.converted_commission - sale.commission,
+            'commission': 0 if sale.user_id == 0 else sale.commission,
+            'apprl_commission': sale.converted_commission if sale.user_id == 0 else sale.converted_commission - sale.commission,
             'currency': sale.currency,
             'sale_date': sale.sale_date,
             'product_image': product_image,
