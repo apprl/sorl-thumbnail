@@ -42,6 +42,8 @@ from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, l
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
 
+logger = logging.getLogger(__name__)
+
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 6
 
@@ -323,10 +325,15 @@ def product_redirect(request, pk, page='Default', sid=0):
             # Replaces sid and page with data from cookie
             cookie_id, sid, page, _ = cookie_data.split('|')
 
+    store = None
+    if product.default_vendor:
+        store = product.default_vendor.vendor.name
+    else:
+        logger.error('Could not find vendor for product id %s' % (pk,))
     url = vendor_buy_url(pk, product.default_vendor, sid, page)
     data = {'id': product.pk,
             'redirect_url': url,
-            'store': product.default_vendor.vendor.name,
+            'store': store,
             'price': floatformat(product.default_vendor.lowest_price_in_sek, 0),
             'slug': product.slug,
             'page': page,

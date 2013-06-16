@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-16 03:06+0200\n"
+"POT-Creation-Date: 2013-06-16 12:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -423,11 +423,11 @@ msgstr ""
 msgid "Sign up to get sale alerts when the price drops on products you like!"
 msgstr "Bli medlem för att bli meddelad när produkter du gillat prissänks!"
 
-#: apparel/views/__init__.py:155
+#: apparel/views/__init__.py:157
 msgid "Check your browser settings."
 msgstr ""
 
-#: apparel/views/__init__.py:162
+#: apparel/views/__init__.py:164
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
@@ -1058,10 +1058,14 @@ msgstr "Bli partnerbloggare"
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr "Hej Apprl! Jag har en fråga / idé / klagomål / beröm"
 
-#: templates/redirect.html:31
+#: templates/redirect.html:34
 #, python-format
 msgid "Redirecting you to %(store)s"
 msgstr "Du skickas nu till %(store)s"
+
+#: templates/redirect.html:36
+msgid "The product URL is no longer valid."
+msgstr "Produktlänken är inte längre giltig."
 
 #: templates/activity_feed/body_header.html:4
 #: templates/apparel/shared_header.html:8

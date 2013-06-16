@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-16 03:06+0200\n"
+"POT-Creation-Date: 2013-06-16 12:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -420,11 +420,11 @@ msgstr ""
 msgid "Sign up to get sale alerts when the price drops on products you like!"
 msgstr ""
 
-#: apparel/views/__init__.py:155
+#: apparel/views/__init__.py:157
 msgid "Check your browser settings."
 msgstr ""
 
-#: apparel/views/__init__.py:162
+#: apparel/views/__init__.py:164
 msgid "Shared to your Facebook timeline!"
 msgstr ""
 
@@ -1053,9 +1053,13 @@ msgstr ""
 msgid "Hi Apprl! I have a question / idea / complaint / complement"
 msgstr ""
 
-#: templates/redirect.html:31
+#: templates/redirect.html:34
 #, python-format
 msgid "Redirecting you to %(store)s"
+msgstr ""
+
+#: templates/redirect.html:36
+msgid "The product URL is no longer valid."
 msgstr ""
 
 #: templates/activity_feed/body_header.html:4
