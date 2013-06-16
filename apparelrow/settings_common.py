@@ -235,6 +235,7 @@ INSTALLED_APPS = (
     'localeurl',
 
     # Internal
+    'theimp',
     'advertiser',
     'apparelrow.profile',              # Internal: User related module
     'apparelrow.apparel',              # Internal: Product display module

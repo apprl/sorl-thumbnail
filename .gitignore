@@ -28,6 +28,7 @@ settings_local.py
 /apparelrow/media/static
 /apparelrow/media/cache
 /apparelrow/media/products
+/spiderpig/spiderpig/images
 /warehouse
 /eggs
 /develop-eggs
