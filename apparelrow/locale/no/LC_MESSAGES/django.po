@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-13 10:45+0200\n"
+"POT-Creation-Date: 2013-06-16 03:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2111,9 +2111,8 @@ msgid "No sales yet."
 msgstr ""
 
 #: templates/dashboard/admin.html:115 templates/dashboard/partner.html:135
-#, fuzzy
-msgid "Most sold products"
-msgstr "%(count)s produkt"
+msgid "Generated most sales"
+msgstr ""
 
 #: templates/dashboard/admin.html:121 templates/dashboard/partner.html:141
 msgid "Sales"
@@ -3197,6 +3196,10 @@ msgstr ""
 #: templates/registration/fragments/registration.html:4
 msgid "or sign up with e-mail"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Most sold products"
+#~ msgstr "%(count)s produkt"
 
 #~ msgid "Choose gender"
 #~ msgstr "Velge kjønn"
