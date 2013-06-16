@@ -2155,7 +2155,7 @@ msgstr "Genererat flest köp"
 
 #: templates/dashboard/admin.html:121 templates/dashboard/partner.html:141
 msgid "Sales"
-msgstr "Sålda"
+msgstr "Köp"
 
 #: templates/dashboard/admin.html:141 templates/dashboard/partner.html:161
 msgid "Your sales"
