@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-13 10:45+0200\n"
+"POT-Creation-Date: 2013-06-16 03:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2150,8 +2150,8 @@ msgid "No sales yet."
 msgstr "Inga försäljningar än."
 
 #: templates/dashboard/admin.html:115 templates/dashboard/partner.html:135
-msgid "Most sold products"
-msgstr "Mest sålda produkter"
+msgid "Generated most sales"
+msgstr "Genererat flest köp"
 
 #: templates/dashboard/admin.html:121 templates/dashboard/partner.html:141
 msgid "Sales"
@@ -2163,7 +2163,7 @@ msgstr "Dina försäljningar"
 
 #: templates/dashboard/admin.html:148
 msgid "User"
-msgstr ""
+msgstr "Anv"
 
 #: templates/dashboard/admin.html:149 templates/dashboard/partner.html:168
 msgid "From"
@@ -2171,12 +2171,11 @@ msgstr "Från"
 
 #: templates/dashboard/admin.html:151
 msgid "Our Comm"
-msgstr ""
+msgstr "Vår Comm"
 
 #: templates/dashboard/admin.html:152
-#, fuzzy
 msgid "Partner Comm"
-msgstr "Partner"
+msgstr "Partner Comm"
 
 #: templates/dashboard/body_header.html:8
 #: templates/dashboard/partner_complete.html:4

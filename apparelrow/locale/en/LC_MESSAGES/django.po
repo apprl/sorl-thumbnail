@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-13 10:45+0200\n"
+"POT-Creation-Date: 2013-06-16 03:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2112,7 +2112,7 @@ msgid "No sales yet."
 msgstr ""
 
 #: templates/dashboard/admin.html:115 templates/dashboard/partner.html:135
-msgid "Most sold products"
+msgid "Generated most sales"
 msgstr ""
 
 #: templates/dashboard/admin.html:121 templates/dashboard/partner.html:141
