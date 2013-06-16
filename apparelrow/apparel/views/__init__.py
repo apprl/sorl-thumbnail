@@ -326,15 +326,17 @@ def product_redirect(request, pk, page='Default', sid=0):
             cookie_id, sid, page, _ = cookie_data.split('|')
 
     store = None
+    price = None
     if product.default_vendor:
         store = product.default_vendor.vendor.name
+        price = floatformat(product.default_vendor.lowest_price_in_sek, 0)
     else:
         logger.error('Could not find vendor for product id %s' % (pk,))
     url = vendor_buy_url(pk, product.default_vendor, sid, page)
     data = {'id': product.pk,
             'redirect_url': url,
             'store': store,
-            'price': floatformat(product.default_vendor.lowest_price_in_sek, 0),
+            'price': price,
             'slug': product.slug,
             'page': page,
             'sid': sid}
