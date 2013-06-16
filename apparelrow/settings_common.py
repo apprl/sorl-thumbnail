@@ -544,6 +544,11 @@ LOGGING = {
             'propagate': True,
             'handlers': ['app_core'],
         },
+        'requests': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'handlers': ['null'],
+        },
         'pysolr': {
             'level': 'ERROR',
             'propagate': False,
