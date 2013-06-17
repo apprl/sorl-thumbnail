@@ -6,7 +6,7 @@ from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup
 
 class SaleAdmin(admin.ModelAdmin):
     list_display = ('id', 'affiliate', 'vendor', 'status', 'user_id', 'product_id', 'placement', 'commission', 'currency', 'sale_date', 'adjusted', 'paid')
-    list_filter = ('affiliate', 'vendor', 'status', 'placement')
+    list_filter = ('affiliate', 'vendor', 'status', 'placement', 'sale_date')
     readonly_fields = ('original_sale_id', 'affiliate', 'paid', 'modified', 'created')
 
 admin.site.register(Sale, SaleAdmin)
