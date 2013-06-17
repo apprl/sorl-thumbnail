@@ -39,6 +39,7 @@ class SunpocketSpider(CrawlSpider):
         l.add_value('affiliate', 'cj')
         l.add_value('vendor', SunpocketSpider.name)
         l.add_value('buy_url', generate_buy_url(SunpocketSpider.name, response.url))
+        l.add_value('brand', 'Sunpocket')
 
         base_url = get_base_url(response)
 
