@@ -1,0 +1,24 @@
+{% extends "importer_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Category Mapper" %}{% endblock %}
+
+{% block content %}
+    <h1>{% trans "Category Mapper" %}</h1>
+    <div class="row-fluid">
+        <div class="span6">
+            {% for mapping in mappings %}
+                {{ mapping }}
+            {% endfor %}
+
+            <ul class="pager">
+                <li class="previous{% if not mappings.has_previous %} disabled{% endif %}">
+                <a href="#">&larr; Previous</a>
+                </li>
+                <li class="next{% if not mappings.has_next %} disabled{% endif %}">
+                <a href="#">Next &rarr;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

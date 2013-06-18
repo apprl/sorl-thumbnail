@@ -30,7 +30,18 @@ class BrandMapping(BaseModel):
     brand = models.CharField(max_length=512)
     mapped_brand = models.CharField(max_length=512)
 
+    def __unicode__(self):
+        if self.mapped_brand:
+            return '"%s" mapped to "%s"' % (self.brand, self.mapped_brand)
+
+        return '"%s" is unmapped' % (self.brand,)
 
 class CategoryMapping(BaseModel):
     category = models.CharField(max_length=512)
     mapped_category = models.CharField(max_length=512)
+
+    def __unicode__(self):
+        if self.mapped_category:
+            return '"%s" mapped to "%s"' % (self.category, self.mapped_category)
+
+        return '"%s" is unmapped' % (self.category,)

@@ -27,6 +27,7 @@ urlpatterns = patterns('',
 
     url(r'^i/(?P<code>[\w-]+)/$', 'apparelrow.dashboard.views.referral_signup', name='dashboard-referral-signup'),
 
+    url(r'^importer/', include('theimp.urls')),
     (r'^profile/', include('apparelrow.profile.urls')),
 
     (r'^comments/', include('django.contrib.comments.urls')),
