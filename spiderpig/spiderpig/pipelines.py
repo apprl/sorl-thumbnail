@@ -2,7 +2,16 @@ import json
 
 from scrapy.exceptions import DropItem
 
-from theimp.models import Product
+from theimp.models import Product, Vendor
+
+
+class VendorRequiredPipeline:
+    def process_item(self, item, spider):
+        if not item.get('vendor', None):
+            raise DropItem('Missing field: %s' % ('vendor',))
+
+        return item
+
 
 class StockPipeline:
     def process_item(self, item, spider):
@@ -43,7 +52,8 @@ class PushJSONPipeline:
     def process_item(self, item, spider):
         json_string = json.dumps(dict(item))
 
-        product, created = Product.objects.get_or_create(key=item['identifier'], defaults={'json': json_string})
+        vendor, _ = Vendor.objects.get_or_create(name=item['vendor'])
+        product, created = Product.objects.get_or_create(key=item['identifier'], defaults={'json': json_string, 'vendor': vendor})
         if not created:
             product.json = json_string
             product.save()

@@ -21,6 +21,7 @@ NEWSPIDER_MODULE = 'spiderpig.spiders'
 
 ITEM_PIPELINES = [
     'scrapy.contrib.pipeline.images.ImagesPipeline',
+    'spiderpig.pipelines.VendorRequiredPipeline',
     'spiderpig.pipelines.StockPipeline',
     'spiderpig.pipelines.PricePipeline',
     'spiderpig.pipelines.PushJSONPipeline',
