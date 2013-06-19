@@ -18,6 +18,7 @@ class Product(BaseModel):
     key = models.CharField(max_length=512)
     json = models.TextField()
 
+    dropped = models.BooleanField(default=False, null=False, blank=False)
     is_auto_validated = models.NullBooleanField(default=None, null=True, blank=True)
     is_manual_validated = models.NullBooleanField(default=None, null=True, blank=True)
     merged = models.ForeignKey('theimp.Product', null=True, blank=True)

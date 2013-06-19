@@ -13,15 +13,32 @@ class AcneSpider(CrawlSpider):
     name = 'acne'
     allowed_domains = ['shop.acnestudios.com']
     start_urls = [
-        'http://shop.acnestudios.com/shop/women/dresses.html',
+        'http://shop.acnestudios.com/shop-women/',
+        'http://shop.acnestudios.com/shop-men/',
+        'http://shop.acnestudios.com/sale-women/',
+        'http://shop.acnestudios.com/sale-men/',
     ]
-    rules = [Rule(SgmlLinkExtractor(allow=['/shop/.+\.html']), 'parse_product')]
+    rules = [
+        Rule(SgmlLinkExtractor(allow=['/shop/.+\.html']), callback='parse_product', follow=True),
+    ]
+
+    def __init__(self, *args, **kwargs):
+        # TODO: load all urls as starters
+        self.start_urls = ['http://shop.acnestudios.com/shop/shirts.html'] + self.start_urls
+
+        super(AcneSpider, self).__init__(*args, **kwargs)
 
     def parse_product(self, response):
         hxs = HtmlXPathSelector(response).select('//body[contains(@class, "catalog-product-view")]')
         if not hxs:
-            return
+            item = Product()
+            item['key'] = response.url
+        else:
+            item = self._parse_product(response, hxs)
 
+        yield item
+
+    def _parse_product(self, response, hxs):
         l = ProductLoader(item=Product(), selector=hxs)
         l.add_xpath('name', '//h1/text()')
         l.add_xpath('description', '//div[contains(@class, "description")]/div/text()')
@@ -32,7 +49,7 @@ class AcneSpider(CrawlSpider):
         l.add_value('in_stock', 'in-stock')
         l.add_value('url', response.url)
         l.add_value('category', ' / '.join(response.url.split('/')[3:-1]))
-        l.add_value('identifier', response.url.split('/')[-1])
+        l.add_value('key', response.url)
         l.add_value('affiliate', 'cj')
         l.add_value('vendor', AcneSpider.name)
         l.add_value('brand', 'Acne')
@@ -46,4 +63,4 @@ class AcneSpider(CrawlSpider):
             for image in item.get('image_urls', [])
         ]
 
-        yield item
+        return item

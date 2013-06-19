@@ -35,7 +35,7 @@ class SunpocketSpider(CrawlSpider):
         l.add_xpath('image_urls', '//ul[contains(@class, "img360")]/li/a/img/@src')
         l.add_value('url', response.url)
         l.add_value('category', 'unisex sunglasses')
-        l.add_value('identifier', response.url.split('/')[-1])
+        l.add_value('key', response.url)
         l.add_value('affiliate', 'cj')
         l.add_value('vendor', SunpocketSpider.name)
         l.add_value('buy_url', generate_buy_url(SunpocketSpider.name, response.url))

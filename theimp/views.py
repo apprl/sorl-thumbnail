@@ -10,7 +10,7 @@ from django.shortcuts import render
 
 logger = logging.getLogger(__name__)
 
-PER_PAGE = 25
+PER_PAGE = 15
 
 
 @user_passes_test(lambda user: user.is_superuser)
@@ -36,6 +36,7 @@ def brand_mapper(request):
 
 @user_passes_test(lambda user: user.is_superuser)
 def category_mapper(request):
+    vendor_list = get_model('theimp', 'Vendor').objects.all()
     category_list = get_model('theimp', 'CategoryMapping').objects.all()
     paginator = Paginator(category_list, PER_PAGE)
 
@@ -47,7 +48,7 @@ def category_mapper(request):
     except EmptyPage:
         mappings = paginator.page(paginator.num_pages)
 
-    return render(request, 'category_mapper.html', {'mappings': mappings})
+    return render(request, 'category_mapper.html', {'mappings': mappings, 'vendors': vendor_list})
 
 
 @user_passes_test(lambda user: user.is_superuser)

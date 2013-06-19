@@ -1,23 +1,79 @@
 import json
 
+from scrapy import signals
 from scrapy.exceptions import DropItem
 
 from theimp.models import Product, Vendor
 
 
-class VendorRequiredPipeline:
-    def process_item(self, item, spider):
-        if not item.get('vendor', None):
-            raise DropItem('Missing field: %s' % ('vendor',))
+class DatabaseHandler:
+    """
+    Handles scraped and dropped product updates in database
+    """
+    @classmethod
+    def from_crawler(cls, crawler):
+        ext = cls()
+
+        crawler.signals.connect(ext.spider_opened, signal=signals.spider_opened)
+        crawler.signals.connect(ext.spider_closed, signal=signals.spider_closed)
+        crawler.signals.connect(ext.item_scraped, signal=signals.item_scraped)
+        crawler.signals.connect(ext.item_dropped, signal=signals.item_dropped)
+
+        return ext
+
+    def spider_opened(self, spider):
+        spider.log('Opened spider: %s' % spider.name)
+
+    def spider_closed(self, spider):
+        spider.log('Closed spider: %s' % spider.name)
+
+    def item_dropped(self, item, spider):
+        """
+        Updated database with dropped item.
+        """
+        key = item.get('key', None)
+        if key:
+            try:
+                product = Product.objects.get(key=key)
+                product.dropped = True
+                product.save()
+                spider.log('Dropped item with key: "%s"' % (key,))
+            except Product.DoesNotExist:
+                spider.log('Could not find dropped item in database with key: "%s"' % (key,))
+
+    def item_scraped(self, item, spider):
+        """
+        Updated database with scraped item.
+        """
+        data = {
+            'scraped': dict(item),
+            'parsed': {},
+            'final': {},
+        }
+        json_string = json.dumps(data)
+
+        vendor, _ = Vendor.objects.get_or_create(name=item['vendor'])
+        product, created = Product.objects.get_or_create(key=item['key'], defaults={'json': json_string, 'vendor': vendor})
+        if not created:
+            json_data = json.loads(product.json)
+            json_data['parsed'] = dict(item)
+            product.json = json.dumps(json_data)
+            product.dropped = False
+            product.save()
 
         return item
 
 
-class StockPipeline:
+class RequiredFieldsPipeline:
+    required_fields = ['key', 'name', 'vendor', 'brand', 'url', 'category', 'price']
+
     def process_item(self, item, spider):
-        item['in_stock'] = item.get('in_stock', False)
+        for field in self.required_fields:
+            if not item.get(field, None):
+                raise DropItem('Missing field: %s' % (field,))
 
         return item
+
 
 class PricePipeline:
 
@@ -57,15 +113,3 @@ class PricePipeline:
             return item
         else:
             raise DropItem('Missing price and no in_stock information in %s' % item)
-
-class PushJSONPipeline:
-    def process_item(self, item, spider):
-        json_string = json.dumps(dict(item))
-
-        vendor, _ = Vendor.objects.get_or_create(name=item['vendor'])
-        product, created = Product.objects.get_or_create(key=item['identifier'], defaults={'json': json_string, 'vendor': vendor})
-        if not created:
-            product.json = json_string
-            product.save()
-
-        print product

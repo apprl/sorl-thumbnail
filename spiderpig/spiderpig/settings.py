@@ -21,24 +21,27 @@ NEWSPIDER_MODULE = 'spiderpig.spiders'
 
 ITEM_PIPELINES = [
     'scrapy.contrib.pipeline.images.ImagesPipeline',
-    'spiderpig.pipelines.VendorRequiredPipeline',
-    'spiderpig.pipelines.StockPipeline',
+    'spiderpig.pipelines.RequiredFieldsPipeline',
     'spiderpig.pipelines.PricePipeline',
-    'spiderpig.pipelines.PushJSONPipeline',
 ]
+
+EXTENSIONS = {
+    'spiderpig.pipelines.DatabaseHandler': 500,
+}
 
 IMAGES_STORE = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'images')
 IMAGES_EXPIRES = 90
 
-#DOWNLOADER_MIDDLEWARES = {
+DOWNLOADER_MIDDLEWARES = {
+    'spiderpig.middlewares.RelCanonicalMiddleware': 1000,
     #'spiderpig.middlewares.RandomUserAgentMiddleware': 1000,
     #'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
-#}
+}
 
-#USER_AGENT_LIST = [
-    #'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0'
-    #'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0'
-#]
+USER_AGENT_LIST = [
+    'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0'
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0'
+]
 USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0'
 
 

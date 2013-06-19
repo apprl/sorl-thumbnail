@@ -12,7 +12,7 @@ class ProductLoader(XPathItemLoader):
 
 
 class Product(Item):
-    identifier = Field()
+    key = Field()
     name = Field()
     description = Field()
     brand = Field()

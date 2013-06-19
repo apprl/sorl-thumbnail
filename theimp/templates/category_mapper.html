@@ -7,16 +7,22 @@
     <h1>{% trans "Category Mapper" %}</h1>
     <div class="row-fluid">
         <div class="span6">
-            {% for mapping in mappings %}
-                {{ mapping }}
-            {% endfor %}
-
+            <select>
+                {% for vendor in vendors %}
+                <option>{{ vendor.name }}</option>
+                {% endfor %}
+            </select>
+            <ul>
+                {% for mapping in mappings %}
+                <li>{{ mapping }}</li>
+                {% endfor %}
+            </ul>
             <ul class="pager">
                 <li class="previous{% if not mappings.has_previous %} disabled{% endif %}">
-                <a href="#">&larr; Previous</a>
+                <a href="{% if mappings.has_previous %}?page={{ mappings.previous_page_number }}{% else %}#{% endif %}">&larr; Previous</a>
                 </li>
                 <li class="next{% if not mappings.has_next %} disabled{% endif %}">
-                <a href="#">Next &rarr;</a>
+                <a href="{% if mappings.has_next %}?page={{ mappings.next_page_number }}{% else %}#{% endif %}">Next &rarr;</a>
                 </li>
             </ul>
         </div>
