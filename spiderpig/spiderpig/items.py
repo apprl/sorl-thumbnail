@@ -1,4 +1,14 @@
+import string
+
+from scrapy.contrib.loader import XPathItemLoader
+from scrapy.contrib.loader.processor import TakeFirst, Identity, Compose, MapCompose
 from scrapy.item import Item, Field
+
+
+class ProductLoader(XPathItemLoader):
+    default_output_processor = Compose(MapCompose(string.strip), TakeFirst())
+
+    image_urls_out = Identity()
 
 
 class Product(Item):

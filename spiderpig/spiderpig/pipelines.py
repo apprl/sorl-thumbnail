@@ -21,8 +21,12 @@ class StockPipeline:
 
 class PricePipeline:
 
+    # TODO: not satisified with this pipeline, how could we differentiate
+    # between price and discount price in a generic way?
     def process_item(self, item, spider):
         price = item.get('price', None)
+        regular_price = item.get('regular_price', None)
+        discount_price = item.get('discount_price', None)
         currency = item.get('currency', None)
         in_stock = item.get('in_stock', None)
 
@@ -38,6 +42,12 @@ class PricePipeline:
 
             item['price'] = price_parts[0]
             item['currency'] = price_parts[1]
+
+            if regular_price:
+                item['regular_price'] = regular_price.rsplit(' ', 1)[0]
+
+            if discount_price:
+                item['discount_price'] = discount_price.rsplit(' ', 1)[0]
 
             return item
         elif in_stock == False:
