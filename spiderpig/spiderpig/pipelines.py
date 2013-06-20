@@ -1,4 +1,5 @@
 import json
+import urlparse
 
 from scrapy import signals
 from scrapy.exceptions import DropItem
@@ -21,7 +22,22 @@ class DatabaseHandler:
 
         return ext
 
+    def _is_valid_url(self, url):
+        parsed_url = urlparse.urlparse(url)
+
+        if parsed_url.netloc and \
+                (parsed_url.scheme == 'http' or parsed_url.scheme == 'https'):
+            return True
+
+        return False
+
     def spider_opened(self, spider):
+        self.vendor, created = Vendor.objects.get_or_create(name=spider.name)
+        query = 'SELECT id, key FROM theimp_product WHERE vendor_id = %s'
+        products = Product.objects.raw(query, [self.vendor.pk])
+        product_urls = [x.key for x in products if self._is_valid_url(x.key)]
+
+        spider.start_urls = product_urls + spider.start_urls
         spider.log('Opened spider: %s' % spider.name)
 
     def spider_closed(self, spider):

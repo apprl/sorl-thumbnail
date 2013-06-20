@@ -1,15 +1,16 @@
-from scrapy.spider import BaseSpider
+import itertools
+
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.utils.response import get_base_url
 from scrapy.utils.url import urljoin_rfc
 
+from spiderpig.spiders import BaseSpider
 from spiderpig.items import Product, ProductLoader
-from spiderpig.utils import generate_buy_url
 
 
-class AcneSpider(CrawlSpider):
+class AcneSpider(BaseSpider):
     name = 'acne'
     allowed_domains = ['shop.acnestudios.com']
     start_urls = [
@@ -21,12 +22,6 @@ class AcneSpider(CrawlSpider):
     rules = [
         Rule(SgmlLinkExtractor(allow=['/shop/.+\.html']), callback='parse_product', follow=True),
     ]
-
-    def __init__(self, *args, **kwargs):
-        # TODO: load all urls as starters
-        self.start_urls = ['http://shop.acnestudios.com/shop/shirts.html'] + self.start_urls
-
-        super(AcneSpider, self).__init__(*args, **kwargs)
 
     def parse_product(self, response):
         hxs = HtmlXPathSelector(response).select('//body[contains(@class, "catalog-product-view")]')

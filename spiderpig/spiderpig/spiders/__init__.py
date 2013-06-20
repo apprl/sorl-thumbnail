@@ -1,4 +1,9 @@
-# This package will contain the spiders of your Scrapy project
-#
-# Please refer to the documentation for information on how to create and manage
-# your spiders.
+import itertools
+
+from scrapy.contrib.spiders import CrawlSpider
+
+
+class BaseSpider(CrawlSpider):
+
+    def parse(self, response):
+        return itertools.chain(CrawlSpider.parse(self, response), self.parse_product(response))
