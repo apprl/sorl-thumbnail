@@ -589,6 +589,8 @@ def flow(request):
                             value=request.user.gender,
                             max_age=365 * 24 * 60 * 60)
         return response
+    elif request.user.advertiser_store:
+        return HttpResponseRedirect(reverse('advertiser-store-admin'))
 
     return HttpResponseRedirect(_get_next(request))
 
