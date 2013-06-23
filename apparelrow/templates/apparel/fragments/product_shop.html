@@ -12,8 +12,12 @@
         <span class="likes">0</span>
     </div>
     <div class="hover hover-footer group">
+        {% if object.default_vendor and object.default_vendor.availability != 0 and object.availability %}
         <a class="btn btn-large btn-block btn-upper" href="{{ object.get_absolute_url }}">{% trans "Info" %}</a>
         <a class="btn btn-large btn-positive btn-block btn-upper btn-buy" target="_blank" href="{% buy_url object.id object.default_vendor '0' 'Shop' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+        {% else %}
+        <a class="btn btn-large btn-block btn-upper btn-full" href="{{ object.get_absolute_url }}">{% trans "Info" %}</a>
+        {% endif %}
     </div>
     <div class="product-footer">
         <h4><a href="{{ object.get_absolute_url }}">{{ object.manufacturer }}</a></h4>

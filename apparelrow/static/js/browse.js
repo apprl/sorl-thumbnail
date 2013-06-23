@@ -668,8 +668,10 @@ function updateEmbeddedProducts($list) {
     } else if(typeof profile_shop_user_id !== 'undefined') {
         $list.find('.product-container').each(function(i, element) {
             var buy_url = $(element).find('.btn-buy').attr('href');
-            buy_url = buy_url.replace('Shop/0/', 'Profile/' + profile_shop_user_id + '/');
-            $('.hover-footer a.btn-buy', element).attr('href', buy_url);
+            if(typeof buy_url != 'undefined') {
+                buy_url = buy_url.replace('Shop/0/', 'Profile/' + profile_shop_user_id + '/');
+                $('.hover-footer a.btn-buy', element).attr('href', buy_url);
+            }
         });
     }
 }
