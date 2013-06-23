@@ -6,17 +6,32 @@
 {% block content %}
     <h1>{% trans "Category Mapper" %}</h1>
     <div class="row-fluid">
-        <div class="span6">
+        <div class="span11">
             <select>
                 {% for vendor in vendors %}
                 <option>{{ vendor.name }}</option>
                 {% endfor %}
             </select>
-            <ul>
-                {% for mapping in mappings %}
-                <li>{{ mapping }}</li>
-                {% endfor %}
-            </ul>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Vendor" %}</th>
+                        <th>{% trans "Scraped category" %}</th>
+                        <th>{% trans "Mapped category" %}</th>
+                        <th>{% trans "Last update" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mapping in mappings %}
+                    <tr>
+                        <td>{{ mapping.vendor }}</td>
+                        <td>{{ mapping.category }}</td>
+                        <td>{{ mapping.mapped_category }}</td>
+                        <td>{{ mapping.modified }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             <ul class="pager">
                 <li class="previous{% if not mappings.has_previous %} disabled{% endif %}">
                 <a href="{% if mappings.has_previous %}?page={{ mappings.previous_page_number }}{% else %}#{% endif %}">&larr; Previous</a>

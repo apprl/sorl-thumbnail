@@ -20,7 +20,7 @@ def index(request):
 
 @user_passes_test(lambda user: user.is_superuser)
 def brand_mapper(request):
-    brand_list = get_model('theimp', 'BrandMapping').objects.all()
+    brand_list = get_model('theimp', 'BrandMapping').objects.order_by('-modified').all()
     paginator = Paginator(brand_list, PER_PAGE)
 
     page = request.GET.get('page')
@@ -37,7 +37,7 @@ def brand_mapper(request):
 @user_passes_test(lambda user: user.is_superuser)
 def category_mapper(request):
     vendor_list = get_model('theimp', 'Vendor').objects.all()
-    category_list = get_model('theimp', 'CategoryMapping').objects.all()
+    category_list = get_model('theimp', 'CategoryMapping').objects.order_by('-modified').all()
     paginator = Paginator(category_list, PER_PAGE)
 
     page = request.GET.get('page')
