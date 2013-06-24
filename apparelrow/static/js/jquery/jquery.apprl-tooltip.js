@@ -112,8 +112,8 @@
         }
     }
 
-    $.fn.enableApprlTooltip = function() {
-        this.on({'mouseenter': open, 'mouseleave': timer});
+    $.fn.enableApprlTooltip = function(selector) {
+        jQuery(document).on({'mouseenter': open, 'mouseleave': timer}, selector);
         jQuery(document).on({'mouseenter': open, 'mouseleave': timer}, '.tooltip');
         jQuery(document).click(close);
         jQuery('.tooltip .product-image').hover(

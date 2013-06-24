@@ -398,7 +398,7 @@ jQuery(document).ready(function() {
     }
 
     // Enable tooltip for large and medium looks
-    jQuery('.look-large .product, .look-medium .product').enableApprlTooltip();
+    jQuery().enableApprlTooltip('.look-large .product, .look-medium .product');
 
     // Product like - show tooltip if no previously likes
     jQuery(document).on('mousenter', '.product-like', function() {

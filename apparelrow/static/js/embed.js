@@ -8,7 +8,7 @@ function is_mobile() {
 }
 
 jQuery(document).ready(function() {
-    jQuery('.product').enableApprlTooltip();
+    jQuery().enableApprlTooltip('.product');
 
     // Hide hotspots and only show them on mouseenter if !mobile
     if (!is_mobile()) {
