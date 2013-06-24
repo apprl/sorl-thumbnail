@@ -17,7 +17,7 @@ class Parser:
             #'theimp.parser.modules.build_buy_url.BuildBuyURL',
             'theimp.parser.modules.brand_mapper.BrandMapper',
             'theimp.parser.modules.category_mapper.CategoryMapper',
-            #'theimp.parser.modules.gender_mapper.GenderMapper',
+            'theimp.parser.modules.gender_mapper.GenderMapper',
         ]
         self.load_modules()
 
