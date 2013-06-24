@@ -16,6 +16,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.translation import ugettext_lazy as _, ugettext
+from django.core.exceptions import ObjectDoesNotExist
 
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
@@ -580,17 +581,19 @@ def _get_next(request):
 
 
 def flow(request):
-    if request.user.login_flow != 'complete' \
-            and not request.user.is_brand \
-            and not request.user.advertiser_store:
+    try:
+        if request.user.advertiser_store:
+            return HttpResponseRedirect(reverse('advertiser-store-admin'))
+    except ObjectDoesNotExist:
+        pass
+
+    if request.user.login_flow != 'complete' and not request.user.is_brand:
         url = reverse('login-flow-%s' % (request.user.login_flow))
         response = HttpResponseRedirect(url)
         response.set_cookie(settings.APPAREL_GENDER_COOKIE,
                             value=request.user.gender,
                             max_age=365 * 24 * 60 * 60)
         return response
-    elif request.user.advertiser_store:
-        return HttpResponseRedirect(reverse('advertiser-store-admin'))
 
     return HttpResponseRedirect(_get_next(request))
 
