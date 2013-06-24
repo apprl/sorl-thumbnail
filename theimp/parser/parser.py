@@ -1,5 +1,6 @@
-import json
 import logging
+import json
+import decimal
 
 from django.db.models.loading import get_model
 
@@ -8,7 +9,8 @@ logger = logging.getLogger(__name__)
 
 class Parser:
 
-    required_fields = ['name', 'description', 'brand', 'category', 'gender']
+    required_fields = ['name', 'description', 'brand', 'category', 'gender', 'images',
+                       'currency', 'price', 'buy_url']
     required_layers = ['scraped', 'parsed', 'final']
     gender_values = ['M', 'W', 'U']
 
@@ -22,6 +24,9 @@ class Parser:
         self.load_modules()
 
     def load_modules(self):
+        """
+        Load modules used by parser.
+        """
         self.loaded_modules = []
         for module in self.modules:
             module_path, module_name = module.rsplit('.', 1)
@@ -32,17 +37,24 @@ class Parser:
                 logger.exception('Could not load module')
 
     def run(self):
+        """
+        Run parser.
+        """
         # TODO: read from queue instead of database
         for product in get_model('theimp', 'Product').objects.iterator():
+            logger.info('Parse key %s' % (product.key,))
+
             try:
                 item = json.loads(product.json)
             except (ValueError, AttributeError) as e:
-                logger.exception('Could not load JSON for key: %s' % (product.key,))
+                logger.exception('Could not load JSON')
                 continue
 
             if not self.validate_layers(item):
-                logger.error('Invalid layer specification in JSON for key: %s' % (product.key,))
+                logger.error('Invalid layer specification')
                 continue
+
+            item = self.setup(item)
 
             scraped_item = item['scraped']
             parsed_item = item['parsed']
@@ -50,14 +62,19 @@ class Parser:
                 parsed_item = module(scraped_item, parsed_item, product.vendor_id)
             item['parsed'] = parsed_item
 
-            validated = self.validate(product.key, item)
+            validated = self.validate(item)
 
             product.is_auto_validated = validated
             product.json = json.dumps(item)
             product.save()
 
-            # TODO: move parsed to final (?)
-            # TODO: add to out-to-site queue
+            import pprint
+            pprint.pprint(item)
+
+            if validated:
+                logger.info('Successful validation moving to queue')
+                # TODO: move parsed to final (?)
+                # TODO: add to out-to-site queue
 
     def validate_layers(self, item):
         for layer in self.required_layers:
@@ -66,24 +83,50 @@ class Parser:
 
         return True
 
-    def validate(self, key, item):
+    def setup(self, item):
+        # TODO: might move this / parts of it to a module
+        item['parsed']['name'] = item['scraped']['name']
+        item['parsed']['description'] = item['scraped']['description']
+        item['parsed']['currency'] = item['scraped']['currency']
+        item['parsed']['price'] = item['scraped']['price']
+        item['parsed']['vendor'] = item['scraped']['vendor']
+        item['parsed']['affiliate'] = item['scraped']['affiliate']
+
+        return item
+
+    def validate(self, item):
         """
-        Required fields: name, description, brand, category, gender
+        Required fields:
+            name, description, brand, category, gender, images, currency, price, buy_url
         """
         for field in self.required_fields:
             if field not in item['parsed']:
-                logger.error('Missing required field %s for key: %s' % (field, key))
+                logger.warning('Missing required field %s' % (field,))
                 return False
 
             if not item['parsed'][field]:
                 return False
 
+        # Validate gender value
         if item['parsed']['gender'] not in self.gender_values:
-            logger.error('Invalid gender value for key: %s' % (key,))
+            logger.warning('Invalid gender value: %s' % (item['parsed']['gender'],))
             return False
 
-        # TODO: check that required fields are set, check that values seem correct
+        # Validate currency
+        if len(item['parsed']['currency']) != 3:
+            logger.warning('Invalid currency value: %s' % (item['parsed']['currency'],))
+            return False
+
+        # Validate price
+        # TODO: discounts?
+        try:
+            decimal.Decimal(item['parsed']['price'])
+        except (TypeError, decimal.InvalidOperation) as e:
+            logger.warning('Invalid price value: %s' % (item['parsed']['price'],))
+            return False
 
         # TODO: if a few interesting values changed we should mark is_manual_validated as invalid
+        # TODO: if parsed is different from manual_validated created checksum
+        # mark product as not manual_validated, auto validation still applies tho.
 
         return True

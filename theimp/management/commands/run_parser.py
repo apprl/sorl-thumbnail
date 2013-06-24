@@ -7,8 +7,6 @@ class Command(BaseCommand):
     help = 'Run a parser worker'
 
     def handle(self, *args, **options):
-        self.stdout.write('Initialize parser')
-
         # TODO: run as a daemon?
         parser = Parser()
         parser.run()

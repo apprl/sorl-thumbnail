@@ -6,17 +6,49 @@
 {% block content %}
     <h1>{% trans "Brand Mapper" %}</h1>
     <div class="row-fluid">
-        <div class="span6">
-            {% for mapping in mappings %}
-                {{ mapping }}
-            {% endfor %}
-
+        <div class="span12">
+            <select>
+                <option>{% trans "----" %}</option>
+                {% for vendor in vendors %}
+                <option value="{{ vendor.id }}"{% if vendor.id == current_vendor %} selected="selected"{% endif %}>{{ vendor.name }}</option>
+                {% endfor %}
+            </select>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Vendor" %}</th>
+                        <th>{% trans "Scraped brand" %}</th>
+                        <th>{% trans "Mapped brand" %}</th>
+                        <th>{% trans "Created" %}</th>
+                        <th>{% trans "Last update" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mapping in mappings %}
+                    <tr>
+                        <td>{{ mapping.vendor }}</td>
+                        <td>{{ mapping.brand }}</td>
+                        <td>
+                            <form class="form-inline">
+                                <input type="text" name="brand" value="{{ mapping.mapped_brand }}">
+                                <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+                            </form>
+                        </td>
+                        <td>{{ mapping.created }}</td>
+                        <td>{{ mapping.modified }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             <ul class="pager">
                 <li class="previous{% if not mappings.has_previous %} disabled{% endif %}">
-                <a href="#">&larr; Previous</a>
+                <a href="{% if mappings.has_previous %}?page={{ mappings.previous_page_number }}{% else %}#{% endif %}">&larr; Previous</a>
+                </li>
+                <li>
+                    Page {{ mappings.number }} of {{ mappings.paginator.num_pages }}
                 </li>
                 <li class="next{% if not mappings.has_next %} disabled{% endif %}">
-                <a href="#">Next &rarr;</a>
+                <a href="{% if mappings.has_next %}?page={{ mappings.next_page_number }}{% else %}#{% endif %}">Next &rarr;</a>
                 </li>
             </ul>
         </div>

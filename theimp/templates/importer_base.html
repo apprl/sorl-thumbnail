@@ -24,7 +24,7 @@
                         <li{% if request.path == brand_url %} class="active"{% endif %}><a href="{% url 'brand-mapper' %}">{% trans "Brand" %}</a></li>
                         <li{% if request.path == category_url %} class="active"{% endif %}><a href="{% url 'category-mapper' %}">{% trans "Category" %}</a></li>
                         <li{% if request.path == message_url %} class="active"{% endif %}>
-                            <a href="{{ message_url }}">Validation <span class="badge badge-important">34</span> <span class="badge badge-warning">398</span></a>
+                        <a href="{{ message_url }}">Validation <span class="badge badge-important">{{ invalidated }}</span> <span class="badge badge-warning">{{ unvalidated }}</span></a>
                         </li>
                     </ul>
                 </div>

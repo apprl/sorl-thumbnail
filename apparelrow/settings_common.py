@@ -622,6 +622,14 @@ LOGGING = {
             'maxBytes': 3000000,
             'backupCount': 8,
         },
+        'theimp': {
+            'level': 'NOTSET',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'theimp.log'),
+            'maxBytes': 3000000,
+            'backupCount': 8,
+        },
     },
     'loggers': {
         '': {
@@ -668,6 +676,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propgate': False,
             'handlers': ['dashboard'],
+        },
+        'theimp': {
+            'level': 'DEBUG',
+            'propgate': False,
+            'handlers': ['theimp'],
         },
     }
 }
