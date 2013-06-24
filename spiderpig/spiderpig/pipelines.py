@@ -57,6 +57,8 @@ class DatabaseHandler:
             except Product.DoesNotExist:
                 spider.log('Could not find dropped item in database with key: "%s"' % (key,))
 
+            # TODO: add to dropped queue
+
     def item_scraped(self, item, spider):
         """
         Updated database with scraped item.
@@ -76,6 +78,8 @@ class DatabaseHandler:
             product.json = json.dumps(json_data)
             product.dropped = False
             product.save()
+
+        # TODO: add to queue
 
         return item
 
