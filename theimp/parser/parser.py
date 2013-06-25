@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class Parser:
 
     required_fields = ['name', 'description', 'brand', 'category', 'gender', 'images',
-                       'currency', 'price', 'buy_url']
+                       'currency', 'regular_price', 'buy_url']
     required_layers = ['scraped', 'parsed', 'final']
     gender_values = ['M', 'W', 'U']
 
@@ -20,6 +20,7 @@ class Parser:
             'theimp.parser.modules.brand_mapper.BrandMapper',
             'theimp.parser.modules.category_mapper.CategoryMapper',
             'theimp.parser.modules.gender_mapper.GenderMapper',
+            'theimp.parser.modules.price.Price',
         ]
         self.load_modules()
 
@@ -87,10 +88,10 @@ class Parser:
         # TODO: might move this / parts of it to a module
         item['parsed']['name'] = item['scraped']['name']
         item['parsed']['description'] = item['scraped']['description']
-        item['parsed']['currency'] = item['scraped']['currency']
-        item['parsed']['price'] = item['scraped']['price']
         item['parsed']['vendor'] = item['scraped']['vendor']
         item['parsed']['affiliate'] = item['scraped']['affiliate']
+        # TODO: how should we handle images? we need to upload to s3 somehow
+        item['parsed']['images'] = item['scraped']['images']
 
         return item
 
@@ -115,14 +116,6 @@ class Parser:
         # Validate currency
         if len(item['parsed']['currency']) != 3:
             logger.warning('Invalid currency value: %s' % (item['parsed']['currency'],))
-            return False
-
-        # Validate price
-        # TODO: discounts?
-        try:
-            decimal.Decimal(item['parsed']['price'])
-        except (TypeError, decimal.InvalidOperation) as e:
-            logger.warning('Invalid price value: %s' % (item['parsed']['price'],))
             return False
 
         # TODO: if a few interesting values changed we should mark is_manual_validated as invalid
