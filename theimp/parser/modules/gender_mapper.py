@@ -28,6 +28,8 @@ class GenderMapper(BaseModule):
             mapped_gender = self.map_gender(scraped_item['gender'])
             if mapped_gender:
                 parsed_item['gender'] = mapped_gender
+            else:
+                self.delete_value(parsed_item, 'gender')
 
         else:
             mapped_gender = self.map_gender(scraped_item.get('url'))
@@ -36,5 +38,7 @@ class GenderMapper(BaseModule):
 
             if mapped_gender:
                 parsed_item['gender'] = mapped_gender
+            else:
+                self.delete_value(parsed_item, 'gender')
 
         return parsed_item

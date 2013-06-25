@@ -11,5 +11,7 @@ class CategoryMapper(BaseModule):
         category_mapping, _ = get_model('theimp', 'CategoryMapping').objects.get_or_create(category=scraped_item['category'], vendor_id=vendor_id)
         if category_mapping.mapped_category:
             parsed_item['category'] = category_mapping.mapped_category
+        else:
+            self.delete_value(parsed_item, 'category')
 
         return parsed_item

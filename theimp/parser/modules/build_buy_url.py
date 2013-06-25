@@ -30,5 +30,7 @@ class BuildBuyURL(BaseModule):
             elif vendor == 'oki-ni':
                 parsed_item['buy_url'] = 'http://www.awin1.com/pclick.php?p=%s&a=115076&m=%s' % (encoded_url, '2083')
 
+            else:
+                self.delete_value(parsed_item, 'buy_url')
 
         return parsed_item

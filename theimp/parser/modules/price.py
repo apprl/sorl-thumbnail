@@ -49,10 +49,11 @@ class Price(BaseModule):
             parsed_currency = currency
 
         # XXX: should we just switch the prices instead of returning empty?
+        failed = False
         if parsed_discount_price and parsed_discount_price > parsed_regular_price:
-            return parsed_item
+            failed = True
 
-        if parsed_currency and parsed_regular_price:
+        if parsed_currency and parsed_regular_price and not failed:
             parsed_item['currency'] = parsed_currency
             parsed_item['regular_price'] = str(parsed_regular_price)
 
@@ -61,5 +62,10 @@ class Price(BaseModule):
 
             if parsed_is_discount is not None:
                 parsed_item['is_discount'] = parsed_is_discount
+        else:
+            self.delete_value(parsed_item, 'regular_price')
+            self.delete_value(parsed_item, 'discount_price')
+            self.delete_value(parsed_item, 'currency')
+            self.delete_value(parsed_item, 'is_discount')
 
         return parsed_item
