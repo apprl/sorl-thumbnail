@@ -12,6 +12,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.template.loader import render_to_string
+from django.core.urlresolvers import reverse
 
 import dateutil.parser
 
@@ -328,3 +329,15 @@ def store_admin_reject(request, transaction_id):
         mail_superusers('Transaction rejected', email_body)
 
     return render(request, 'advertiser/dialog_reject.html', {'transaction': transaction})
+
+
+def test_link(request):
+    if not request.user.is_superuser:
+        raise Http404()
+
+    url = request.GET.get('url')
+    store_id = request.GET.get('store_id')
+
+    link = request.build_absolute_uri('%s?url=%s&store_id=%s' % (reverse('advertiser-link'), url, store_id))
+
+    return HttpResponse('<a href="%s">Click me: %s</a>' % (link, link))
