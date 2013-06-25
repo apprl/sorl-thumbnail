@@ -8,7 +8,6 @@ from scrapy.utils.response import get_base_url
 from scrapy.utils.url import urljoin_rfc
 
 from spiderpig.items import Product
-from spiderpig.utils import generate_buy_url
 
 
 class ProductLoader(XPathItemLoader):
@@ -38,7 +37,6 @@ class SunpocketSpider(CrawlSpider):
         l.add_value('key', response.url)
         l.add_value('affiliate', 'cj')
         l.add_value('vendor', SunpocketSpider.name)
-        l.add_value('buy_url', generate_buy_url(SunpocketSpider.name, response.url))
         l.add_value('brand', 'Sunpocket')
 
         base_url = get_base_url(response)

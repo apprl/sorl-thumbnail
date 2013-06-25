@@ -16,7 +16,7 @@ class Parser:
 
     def __init__(self):
         self.modules = [
-            #'theimp.parser.modules.build_buy_url.BuildBuyURL',
+            'theimp.parser.modules.build_buy_url.BuildBuyURL',
             'theimp.parser.modules.brand_mapper.BrandMapper',
             'theimp.parser.modules.category_mapper.CategoryMapper',
             'theimp.parser.modules.gender_mapper.GenderMapper',
