@@ -5,6 +5,7 @@ Currency: {{ currency }}
 Transaction ID: {{ transaction.id }}
 
 From (HTTP HOST): {{ request.META.HTTP_HOST }}
+Full path: {{ request.get_full_path }}
 
 Product data
 Sku: {{ product_sku }}
