@@ -294,11 +294,7 @@ def store_admin_accept(request, transaction_id):
         raise Http404
 
     if request.method == 'POST':
-        transaction.status = get_model('advertiser', 'Transaction').ACCEPTED
-        transaction.save()
-
-        request.user.advertiser_store.balance += transaction.commission
-        request.user.advertiser_store.save()
+        transaction.accept()
 
     return render(request, 'advertiser/dialog_accept.html', {'transaction': transaction})
 
