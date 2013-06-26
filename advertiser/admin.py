@@ -25,7 +25,7 @@ class ProductInline(admin.StackedInline):
 
 
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'store_id', 'order_value', 'cookie_date', 'created', 'modified', 'status')
+    list_display = ('pk', 'store_id', 'order_value', 'cookie_date', 'created', 'modified', 'status', 'automatic_accept')
     list_filter = ('status', 'store_id')
     inlines = (ProductInline,)
 

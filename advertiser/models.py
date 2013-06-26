@@ -77,6 +77,8 @@ class Transaction(models.Model):
     status_message = models.TextField(default='', null=True, blank=True)
     status_date = models.DateTimeField(default=None, null=True, blank=True)
 
+    automatic_accept = models.BooleanField(default=False)
+
     class Meta:
         ordering = ['-created']
 
@@ -87,6 +89,19 @@ class Transaction(models.Model):
             self.status_date = timezone.now()
 
         super(Transaction, self).save(*args, **kwargs)
+
+    def accept(self):
+        if self.store_id:
+            try:
+                store = Store.objects.get(identifier=self.store_id)
+            except Store.DoesNotExist:
+                return
+
+            self.status = Transaction.ACCEPTED
+            self.save()
+
+            store.balance += self.commission
+            store.save()
 
     def __unicode__(self):
         return 'Transaction(store_id=%s, order_id=%s, order_value=%s, currency=%s)' % (self.store_id, self.order_id, self.order_value, self.currency)
