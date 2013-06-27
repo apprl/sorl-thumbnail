@@ -1,7 +1,7 @@
 import decimal
 
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
 from django.utils import timezone
@@ -165,8 +165,8 @@ class Transaction(models.Model):
     def __unicode__(self):
         return 'Transaction(%s, %s, order="%s %s", commission="%s %s", status=%s)' % (self.store_id, self.order_id, self.order_value, self.currency, self.commission, self.currency, self.status)
 
-@receiver(post_save, sender=Transaction, dispatch_uid='transaction_post_save')
-def transaction_post_save(sender, instance, created, **kwargs):
+@receiver([post_delete, post_save], sender=Transaction, dispatch_uid='transaction_update')
+def transaction_update(sender, instance, **kwargs):
     calculate_balance(instance.store_id)
 
 
