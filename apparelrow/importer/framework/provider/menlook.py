@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import urllib
+
+from django.core.urlresolvers import reverse
+
 from apparelrow.importer.framework.provider import CSVProvider
 from apparelrow.importer.framework.parser import utils
 from apparelrow.importer.framework.mapper import DataMapper
@@ -32,8 +36,8 @@ class MenlookMapper(DataMapper):
         return 0
 
     def get_product_url(self):
-        # TODO: affiliate url
-        return self.record['link']
+        quoted_link = urllib.quote(self.record['link'], '')
+        return 'http://apprl.com%s?store_id=menlook&url=%s' % (reverse('advertiser-link'), quoted_link)
 
     def get_category(self):
         return '%s > %s' % (self.get_gender(), self.record.get('google product category'))
