@@ -18,6 +18,7 @@ import dateutil.parser
 
 from apparelrow.statistics.utils import get_client_ip
 from advertiser.tasks import send_text_email_task
+from apparelrow.apparel.utils import exchange_amount
 
 
 logger = logging.getLogger('advertiser')
@@ -96,14 +97,27 @@ def pixel(request):
     if store:
         commission = store.commission_percentage * order_value
 
+    # Currency conversion
+    original_commission = commission
+    original_order_value = order_value
+    original_currency = currency
+
+    currency = 'EUR'
+    commission, exchange_rate = exchange_amount(currency, original_currency, commission)
+    order_value, _ = exchange_amount(currency, original_currency, order_value, fixed_rate=exchange_rate)
+
     transaction = Transaction.objects.create(store_id=store_id,
                                              order_id=order_id,
-                                             order_value=order_value,
-                                             currency=currency,
                                              ip_address=get_client_ip(request),
                                              status=status,
                                              cookie_date=cookie_datetime,
+                                             currency=currency,
+                                             original_currency=original_currency,
+                                             exchange_rate=exchange_rate,
+                                             order_value=order_value,
                                              commission=commission,
+                                             original_order_value=original_order_value,
+                                             original_commission=original_commission,
                                              custom=custom)
 
     # Insert optional product data
@@ -130,7 +144,7 @@ def pixel(request):
             calculated_order_value = decimal.Decimal(sum([x*y for x, y in zip(quantities, prices)]))
             calculated_order_value = calculated_order_value.quantize(decimal.Decimal('0.01'))
 
-            if calculated_order_value != order_value:
+            if calculated_order_value != original_order_value:
                 email_body = render_to_string('advertiser/email_default_error.txt', locals())
                 mail_superusers('Advertiser Pixel Warning: order value and individual products value is not equal', email_body)
 

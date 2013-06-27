@@ -47,6 +47,12 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
         """
         Initialize two users. One user has a store assigned the other does not.
         """
+        FXRate = get_model('importer', 'FXRate')
+        FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
+        FXRate.objects.create(currency='EUR', base_currency='SEK', rate='0.118160')
+        FXRate.objects.create(currency='SEK', base_currency='EUR', rate='8.612600')
+        FXRate.objects.create(currency='EUR', base_currency='EUR', rate='1.00')
+
         self.admin = get_user_model().objects.create_superuser('admin', 'admin@xvid.se', 'admin')
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
@@ -90,9 +96,12 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
         self.assertEqual(transaction.status, Transaction.INVALID)
-        self.assertEqual(transaction.order_value, 1234)
-        self.assertEqual(transaction.currency, 'SEK')
-        self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
+        self.assertEqual(transaction.original_order_value, 1234)
+        self.assertEqual(transaction.order_value, decimal.Decimal('145.81'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.currency, 'EUR')
+        self.assertEqual(transaction.original_commission, decimal.Decimal('246.8'))
+        self.assertEqual(transaction.commission, decimal.Decimal('29.16'))
 
     def test_cookie_data(self):
         self.visit_link('mystore')
@@ -100,48 +109,54 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
         self.assertEqual(transaction.status, Transaction.PENDING)
-        self.assertEqual(transaction.order_value, 1234)
-        self.assertEqual(transaction.currency, 'SEK')
-        self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
+        self.assertEqual(transaction.original_order_value, 1234)
+        self.assertEqual(transaction.order_value, decimal.Decimal('145.81'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.currency, 'EUR')
+        self.assertEqual(transaction.original_commission, decimal.Decimal('246.8'))
+        self.assertEqual(transaction.commission, decimal.Decimal('29.16'))
 
     def test_order_detail(self):
         self.visit_link('mystore')
-        self.checkout(store_id='mystore', order_id='A1EF1', order_value='599', currency='SEK', sku='ProductXYZ', quantity='1', price='599')
+        self.checkout(store_id='mystore', order_id='A1EF1', order_value='1000', currency='EUR', sku='ProductXYZ', quantity='1', price='1000')
 
         transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
         self.assertEqual(transaction.status, Transaction.PENDING)
-        self.assertEqual(transaction.order_value, 599)
-        self.assertEqual(transaction.currency, 'SEK')
-        self.assertEqual(transaction.commission, decimal.Decimal('119.8'))
+        self.assertEqual(transaction.original_order_value, decimal.Decimal('1000'))
+        self.assertEqual(transaction.order_value, decimal.Decimal('1000'))
+        self.assertEqual(transaction.currency, 'EUR')
+        self.assertEqual(transaction.commission, decimal.Decimal('200'))
 
         products = transaction.products.all()
         self.assertEqual(len(products), 1)
         self.assertEqual(products[0].sku, 'ProductXYZ')
         self.assertEqual(products[0].quantity, 1)
-        self.assertEqual(products[0].price, 599)
+        self.assertEqual(products[0].price, 1000)
 
     def test_multiple_order_details(self):
         self.visit_link('mystore')
-        self.checkout(store_id='mystore', order_id='A1EF1', order_value='699', currency='SEK', sku='ProductXZY^ProductABC', quantity='1^1', price='599^100')
+        self.checkout(store_id='mystore', order_id='A1EF1', order_value='599', currency='SEK', sku='ProductXZY^ProductABC', quantity='1^1', price='599^100')
 
         transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
         self.assertEqual(transaction.status, Transaction.PENDING)
-        self.assertEqual(transaction.order_value, 699)
-        self.assertEqual(transaction.currency, 'SEK')
-        self.assertEqual(transaction.commission, decimal.Decimal('139.8'))
+        self.assertEqual(transaction.order_value, decimal.Decimal('70.78'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.currency, 'EUR')
+        self.assertEqual(transaction.commission, decimal.Decimal('14.16'))
 
         products = transaction.products.all()
         self.assertEqual(len(products), 2)
 
     def test_unbalanced_order_details(self):
         self.visit_link('mystore')
-        self.checkout(store_id='mystore', order_id='A1EF1', order_value='699', currency='SEK', sku='ProductXYZ^ProductABC', quantity='1', price='599^100')
+        self.checkout(store_id='mystore', order_id='A1EF1', order_value='599', currency='SEK', sku='ProductXYZ^ProductABC', quantity='1', price='499^100')
 
         transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
         self.assertEqual(transaction.status, Transaction.PENDING)
-        self.assertEqual(transaction.order_value, 699)
-        self.assertEqual(transaction.currency, 'SEK')
-        self.assertEqual(transaction.commission, decimal.Decimal('139.8'))
+        self.assertEqual(transaction.order_value, decimal.Decimal('70.78'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.currency, 'EUR')
+        self.assertEqual(transaction.commission, decimal.Decimal('14.16'))
 
         products = transaction.products.all()
         self.assertEqual(len(products), 1)
@@ -156,9 +171,10 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
 
         transaction = Transaction.objects.get(store_id='mystore', order_id='A1EF1')
         self.assertEqual(transaction.status, Transaction.PENDING)
-        self.assertEqual(transaction.order_value, 599)
-        self.assertEqual(transaction.currency, 'SEK')
-        self.assertEqual(transaction.commission, decimal.Decimal('119.8'))
+        self.assertEqual(transaction.order_value, decimal.Decimal('70.78'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.currency, 'EUR')
+        self.assertEqual(transaction.commission, decimal.Decimal('14.16'))
 
         products = transaction.products.all()
         self.assertEqual(len(products), 0)
@@ -171,8 +187,10 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
 
         transaction = Transaction.objects.get(store_id='invalid_id', order_id='1234')
         self.assertEqual(transaction.status, Transaction.INVALID)
-        self.assertEqual(transaction.order_value, 1234)
-        self.assertEqual(transaction.currency, 'SEK')
+        self.assertEqual(transaction.original_order_value, 1234)
+        self.assertEqual(transaction.order_value, decimal.Decimal('145.81'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.currency, 'EUR')
         self.assertEqual(transaction.commission, decimal.Decimal('0'))
 
     def test_invalid_product_data(self):
@@ -192,6 +210,12 @@ class AdvertiserLinkTest(TransactionTestCase, AdvertiserMixin):
         """
         Initialize two users. One user has a store assigned the other does not.
         """
+        FXRate = get_model('importer', 'FXRate')
+        FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
+        FXRate.objects.create(currency='EUR', base_currency='SEK', rate='0.118160')
+        FXRate.objects.create(currency='SEK', base_currency='EUR', rate='8.612600')
+        FXRate.objects.create(currency='EUR', base_currency='EUR', rate='1.00')
+
         self.vendor1 = get_model('apparel', 'Vendor').objects.create(name='store1')
         self.vendor2 = get_model('apparel', 'Vendor').objects.create(name='store2')
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
@@ -270,6 +294,12 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         """
         Initialize two users. One user has a store assigned the other does not.
         """
+        FXRate = get_model('importer', 'FXRate')
+        FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
+        FXRate.objects.create(currency='EUR', base_currency='SEK', rate='0.118160')
+        FXRate.objects.create(currency='SEK', base_currency='EUR', rate='8.612600')
+        FXRate.objects.create(currency='EUR', base_currency='EUR', rate='1.00')
+
         self.user1 = get_user_model().objects.create_user('user1', 'user1@xvid.se', 'user1')
         self.user2 = get_user_model().objects.create_user('user2', 'user2@xvid.se', 'user2')
         self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
@@ -339,9 +369,12 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
         self.assertEqual(transaction.status, Transaction.PENDING)
-        self.assertEqual(transaction.order_value, 1234)
-        self.assertEqual(transaction.currency, 'SEK')
-        self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
+        self.assertEqual(transaction.original_order_value, 1234)
+        self.assertEqual(transaction.order_value, decimal.Decimal('145.81'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.currency, 'EUR')
+        self.assertEqual(transaction.original_commission, decimal.Decimal('246.8'))
+        self.assertEqual(transaction.commission, decimal.Decimal('29.16'))
 
         store = Store.objects.get(user=self.user1)
         self.assertEqual(store.balance, 0)
@@ -359,18 +392,18 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         self.assertTrue(transaction.status_date)
 
         store = Store.objects.get(user=self.user1)
-        self.assertEqual(store.balance, decimal.Decimal('246.8'))
+        self.assertEqual(store.balance, decimal.Decimal('29.16'))
 
         store_history = StoreHistory.objects.filter(store=store)
         self.assertEqual(store_history.count(), 2)
 
         # Accept another transaction
-        self.checkout(store_id='mystore', order_id='12345', order_value='100', currency='SEK')
+        self.checkout(store_id='mystore', order_id='12345', order_value='10', currency='EUR')
         transaction = Transaction.objects.get(store_id='mystore', order_id=12345)
         response = self.client.post(reverse('advertiser-admin-accept', args=[transaction.pk]))
 
         store = Store.objects.get(user=self.user1)
-        self.assertEqual(store.balance, decimal.Decimal('266.8'))
+        self.assertEqual(store.balance, decimal.Decimal('31.16'))
 
         store_history = StoreHistory.objects.filter(store=store)
         self.assertEqual(store_history.count(), 3)
@@ -381,9 +414,12 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
         self.assertEqual(transaction.status, Transaction.PENDING)
-        self.assertEqual(transaction.order_value, 1234)
-        self.assertEqual(transaction.currency, 'SEK')
-        self.assertEqual(transaction.commission, decimal.Decimal('246.8'))
+        self.assertEqual(transaction.original_order_value, 1234)
+        self.assertEqual(transaction.order_value, decimal.Decimal('145.81'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.currency, 'EUR')
+        self.assertEqual(transaction.original_commission, decimal.Decimal('246.8'))
+        self.assertEqual(transaction.commission, decimal.Decimal('29.16'))
 
         self.client.login(username='user1', password='user1')
 

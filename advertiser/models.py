@@ -60,21 +60,9 @@ class StoreInvoice(models.Model):
         super(StoreInvoice, self).save(*args, **kwargs)
 
     def get_total(self, currency=None):
-        from apparelrow.apparel.utils import currency_exchange
-
-        if not currency:
-            currency = 'SEK'
-
-        total = decimal.Decimal(0)
-        for transaction in self.transactions.all():
-            if transaction.currency != currency:
-                rate = currency_exchange(currency, transaction.currency)
-                commission = rate * decimal.Decimal(transaction.commission)
-                commission = commission.quantize(decimal.Decimal('1.00'),
-                                                 rounding=decimal.ROUND_HALF_UP)
-                total += commission
-            else:
-                total += transaction.commission
+        total = self.transactions.aggregate(total=models.Sum('commission')).get('total', 0)
+        if not total:
+            return 0
 
         return total
 
@@ -114,10 +102,15 @@ class Transaction(models.Model):
                                 on_delete=models.SET_NULL, related_name='transactions')
     store_id = models.CharField(max_length=64, null=False, blank=False, db_index=True)
     order_id = models.CharField(max_length=128, null=False, blank=False)
-    order_value = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
-    currency = models.CharField(null=False, blank=False, default='SEK', max_length=3, help_text=_('Currency as three-letter ISO code'))
 
+    currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
+    exchange_rate = models.DecimalField(null=False, blank=False, default='1', max_digits=12, decimal_places=6)
+    order_value = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
+
+    original_currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Original currency as three-letter ISO code'))
+    original_order_value = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
+    original_commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
 
     cookie_date = models.DateTimeField(default=None, null=True, blank=True)
     created = models.DateTimeField(default=timezone.now, null=True, blank=True)
