@@ -189,6 +189,19 @@ def currency_exchange(to_currency, from_currency):
     return rate
 
 
+def exchange_amount(to_currency, from_currency, amount, precision=None, fixed_rate=None):
+    if not precision:
+        precision = decimal.Decimal('1.00')
+
+    if not fixed_rate:
+        fixed_rate = currency_exchange(to_currency, from_currency)
+
+    amount = fixed_rate * decimal.Decimal(amount)
+    amount = amount.quantize(precision, rounding=decimal.ROUND_HALF_UP)
+
+    return amount, fixed_rate
+
+
 def get_gender_from_cookie(request):
     """
     Get gender from cookie in a safe way.

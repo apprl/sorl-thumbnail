@@ -46,8 +46,8 @@
 {% block body %}
 <div id="content">
     <ul class="total-stats group">
-        <li class="first">{% trans "Balance:" %} {{ store.balance }} SEK</li>
-        <li class="last">{% trans "Total accepted commission:" %} {{ total_accepted_commission|floatformat:2|intcomma }} SEK</li>
+        <li class="first">{% trans "Balance:" %} {{ store.balance }} EUR</li>
+        <li class="last">{% trans "Total accepted commission:" %} {{ total_accepted_commission|floatformat:2|intcomma }} EUR</li>
     </ul>
     <ul class="monthly-stats group">
         <li class="first">
@@ -59,7 +59,7 @@
                 </select>
             </label>
         </li>
-        <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatformat:2|intcomma }} SEK</li>
+        <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatformat:2|intcomma }} EUR</li>
     </ul>
     <div class="transaction-charts group" style="margin: 10px 0;">
         <div id="transaction_chart" style="width: 100%; height: 240px;"></div>
