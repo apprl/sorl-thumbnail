@@ -67,6 +67,7 @@ class StoreInvoice(models.Model):
                 commission = rate * decimal.Decimal(transaction.commission)
                 commission = commission.quantize(decimal.Decimal('1.00'),
                                                  rounding=decimal.ROUND_HALF_UP)
+                total += commission
             else:
                 total += transaction.commission
 
