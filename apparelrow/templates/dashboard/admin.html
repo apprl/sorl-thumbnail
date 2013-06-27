@@ -155,7 +155,7 @@
                 <tbody>
                     {% for sale in sales_table %}
                     <tr>
-                        <td data-sort="{{ sale.sale_date|date:"U" }}">{{ sale.sale_date }}</td>
+                        <td data-sort="{{ sale.created|date:"U" }}">{{ sale.created }}</td>
                         <td class="product-image"><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
                         <td><a href="{{ sale.product_link }}">{{ sale.product }}</a></td>
                         <td>{{ sale.user }}</td>

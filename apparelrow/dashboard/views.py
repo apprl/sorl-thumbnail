@@ -76,7 +76,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
         values = [start_date, end_date, user_id, Sale.PENDING, Sale.CONFIRMED, start_date, end_date]
 
     sale_table = Sale.objects.raw("""
-            SELECT ds.id, ds.sale_date, ds.commission, ds.currency, ds.placement, ds.converted_commission, ds.user_id,
+            SELECT ds.id, ds.created, ds.commission, ds.currency, ds.placement, ds.converted_commission, ds.user_id,
                    ap.slug, ap.product_name, ap.product_image, ab.name AS brand_name, COUNT(sp.id) AS clicks, pu.name
             FROM dashboard_sale ds
             LEFT OUTER JOIN profile_user pu ON pu.id = ds.user_id
@@ -87,9 +87,9 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             WHERE
                 {0}
                 ds.status BETWEEN %s AND %s AND
-                ds.sale_date BETWEEN %s AND %s
+                ds.created BETWEEN %s AND %s
             GROUP BY ds.id, ap.product_name, ap.product_image, ap.slug, ab.name, pu.name
-            ORDER BY ds.sale_date DESC
+            ORDER BY ds.created DESC
         """.format(user_criteria), values)
     sales = []
     most_sold = {}
@@ -103,7 +103,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             'commission': 0 if sale.user_id == 0 else sale.commission,
             'apprl_commission': sale.converted_commission if sale.user_id == 0 else sale.converted_commission - sale.commission,
             'currency': sale.currency,
-            'sale_date': sale.sale_date,
+            'created': sale.created,
             'product_image': product_image,
             'product_link': reverse('product-detail', args=[sale.slug]),
             'product': '%s %s' % (sale.brand_name, sale.product_name) if sale.product_name else _('Unknown'),
@@ -158,13 +158,13 @@ def dashboard_admin(request, year=None, month=None):
         month_commission = decimal.Decimal('0.0')
         partner_commission = decimal.Decimal('0.0')
         result = Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
-                             .filter(sale_date__range=(start_date_query, end_date_query)) \
-                             .order_by('sale_date') \
-                             .values('sale_date', 'converted_commission', 'commission', 'user_id')
+                             .filter(created__range=(start_date_query, end_date_query)) \
+                             .order_by('created') \
+                             .values('created', 'converted_commission', 'commission', 'user_id')
         for sale in result:
-            data_per_month[sale['sale_date'].date()][0] += sale['converted_commission']
+            data_per_month[sale['created'].date()][0] += sale['converted_commission']
             if sale['user_id']:
-                data_per_month[sale['sale_date'].date()][1] += sale['commission']
+                data_per_month[sale['created'].date()][1] += sale['commission']
                 partner_commission += sale['commission']
             month_commission += sale['converted_commission']
 
@@ -244,11 +244,11 @@ def dashboard(request, year=None, month=None):
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
         for sale in Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
-                                .filter(sale_date__range=(start_date_query, end_date_query)) \
+                                .filter(created__range=(start_date_query, end_date_query)) \
                                 .filter(user_id=request.user.pk) \
-                                .order_by('sale_date') \
-                                .values('sale_date', 'commission'):
-            data_per_day[sale['sale_date'].date()][0] += sale['commission']
+                                .order_by('created') \
+                                .values('created', 'commission'):
+            data_per_day[sale['created'].date()][0] += sale['commission']
 
         # Clicks
         clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
