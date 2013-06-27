@@ -24,7 +24,12 @@ class Store(models.Model):
 
 @receiver(post_save, sender=Store, dispatch_uid='store_post_save')
 def store_post_save(sender, instance, **kwargs):
-    StoreHistory.objects.create(store=instance, balance=instance.balance)
+    try:
+        latest_history = StoreHistory.objects.latest('created')
+        if latest_history.balance != instance.balance:
+            StoreHistory.objects.create(store=instance, balance=instance.balance)
+    except StoreHistory.DoesNotExist as e:
+        StoreHistory.objects.create(store=instance, balance=instance.balance)
 
 
 class StoreHistory(models.Model):
