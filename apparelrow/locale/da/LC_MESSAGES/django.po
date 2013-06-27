@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-16 12:36+0200\n"
+"POT-Creation-Date: 2013-06-27 09:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -556,7 +556,8 @@ msgstr ""
 #: importer/models.py:121 templates/apparel/look_editor.html:192
 #: templates/apparel/fragments/product_feed_226.html:15
 #: templates/apparel/fragments/product_feed_452.html:15
-#: templates/apparel/fragments/product_shop.html:15
+#: templates/apparel/fragments/product_shop.html:16
+#: templates/apparel/fragments/product_shop.html:19
 #: templates/profile/fragments/product_likes.html:15
 msgid "Info"
 msgstr ""
@@ -596,22 +597,22 @@ msgid ""
 "example: \"svart,night,coal\""
 msgstr ""
 
-#: profile/admin.py:55
+#: profile/admin.py:57
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:58 templates/base.html:286
+#: profile/admin.py:60 templates/base.html:286
 #: templates/profile/base_settings.html:21
 #: templates/profile/base_settings.html:24
 #: templates/profile/settings_facebook.html:5
 msgid "Facebook"
 msgstr ""
 
-#: profile/admin.py:61 templates/apparel/fragments/product_menu_browse.html:52
+#: profile/admin.py:63 templates/apparel/fragments/product_menu_browse.html:52
 msgid "Brand"
 msgstr "Brand"
 
-#: profile/admin.py:62 templates/dashboard/admin.html:5
+#: profile/admin.py:64 templates/dashboard/admin.html:5
 #: templates/dashboard/body_header.html:4 templates/dashboard/info.html:5
 #: templates/dashboard/info_unauthenticated.html:5
 #: templates/dashboard/partner.html:5 templates/profile/base_settings.html:22
@@ -619,11 +620,11 @@ msgstr "Brand"
 msgid "Partner"
 msgstr ""
 
-#: profile/admin.py:63
+#: profile/admin.py:65
 msgid "Extra"
 msgstr ""
 
-#: profile/admin.py:64 templates/apparel/shared_header.html:37
+#: profile/admin.py:66 templates/apparel/shared_header.html:37
 #: templates/dashboard/body_header.html:11
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:9
@@ -631,11 +632,11 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: profile/admin.py:74
+#: profile/admin.py:76
 msgid "Important dates"
 msgstr ""
 
-#: profile/admin.py:75
+#: profile/admin.py:77
 msgid "Permissions"
 msgstr ""
 
@@ -834,15 +835,15 @@ msgstr ""
 msgid "Welcome to Apprl %(name)s"
 msgstr ""
 
-#: profile/views.py:238
+#: profile/views.py:239
 msgid "Password was updated"
 msgstr ""
 
-#: profile/views.py:240
+#: profile/views.py:241
 msgid "Password was added"
 msgstr ""
 
-#: profile/views.py:484
+#: profile/views.py:485
 msgid "Nearly created your membership..."
 msgstr ""
 
@@ -1901,7 +1902,7 @@ msgstr ""
 #: templates/apparel/fragments/product_detail.html:73
 #: templates/apparel/fragments/product_feed_226.html:19
 #: templates/apparel/fragments/product_feed_452.html:19
-#: templates/apparel/fragments/product_shop.html:16
+#: templates/apparel/fragments/product_shop.html:17
 #: templates/profile/fragments/product_likes.html:19
 msgid "Buy"
 msgstr "Køb"
@@ -2000,7 +2001,7 @@ msgstr "Butik"
 msgid "Add to look"
 msgstr ""
 
-#: templates/apparel/fragments/product_shop.html:33
+#: templates/apparel/fragments/product_shop.html:37
 msgid "See looks »"
 msgstr "Se looks »"
 
@@ -2061,17 +2062,17 @@ msgstr ""
 
 #: templates/dashboard/admin.html:73
 #, python-format
-msgid "Total commission %(month_commission)skr"
+msgid "Total commission %(month_commission)s SEK"
 msgstr ""
 
 #: templates/dashboard/admin.html:74
 #, python-format
-msgid "Partner commission %(partner)skr"
+msgid "Partner commission %(partner)s SEK"
 msgstr ""
 
 #: templates/dashboard/admin.html:75
 #, python-format
-msgid "Apprl commission %(apprl)skr"
+msgid "Apprl commission %(apprl)s SEK"
 msgstr ""
 
 #: templates/dashboard/admin.html:77
@@ -2389,17 +2390,17 @@ msgstr ""
 
 #: templates/dashboard/partner.html:85
 #, python-format
-msgid "Your commission: %(total_sales)skr"
+msgid "Your commission: %(total_sales)s SEK"
 msgstr ""
 
 #: templates/dashboard/partner.html:86
 #, python-format
-msgid "Confirmed commission: %(total_confirmed)skr"
+msgid "Confirmed commission: %(total_confirmed)s SEK"
 msgstr ""
 
 #: templates/dashboard/partner.html:87
 #, python-format
-msgid "Pending payment: %(pending_payment)skr"
+msgid "Pending payment: %(pending_payment)s SEK"
 msgstr ""
 
 #: templates/dashboard/partner.html:88
@@ -2408,7 +2409,7 @@ msgstr ""
 
 #: templates/dashboard/partner.html:99
 #, python-format
-msgid "Your commission: %(month_commission)skr"
+msgid "Your commission: %(month_commission)s SEK"
 msgstr ""
 
 #: templates/dashboard/partner.html:100

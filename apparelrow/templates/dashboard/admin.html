@@ -70,9 +70,9 @@
                     {% endfor %}
                 </select>
             </label>
-            <p>{% blocktrans %}Total commission {{ month_commission }}kr{% endblocktrans %}</p>
-            <p>{% blocktrans %}Partner commission {{ partner }}kr{% endblocktrans %}</p>
-            <p>{% blocktrans %}Apprl commission {{ apprl }}kr{% endblocktrans %}</p>
+            <p>{% blocktrans %}Total commission {{ month_commission }} SEK{% endblocktrans %}</p>
+            <p>{% blocktrans %}Partner commission {{ partner }} SEK{% endblocktrans %}</p>
+            <p>{% blocktrans %}Apprl commission {{ apprl }} SEK{% endblocktrans %}</p>
             <br><br>
             <p>{% blocktrans %}Sales {{ sales_count }}{% endblocktrans %}</p>
             <p>{% blocktrans with conversion_rate=conversion_rate|floatformat:2 %}Conversion rate {{ conversion_rate }}%{% endblocktrans %}</p>
