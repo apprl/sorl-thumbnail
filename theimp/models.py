@@ -44,7 +44,7 @@ class BrandMapping(BaseModel):
         if self.mapped_brand:
             return u'%s: "%s" mapped to "%s"' % (self.vendor_id, self.brand, self.mapped_brand)
 
-        return '%s: "%s" is unmapped' % (self.vendor_id, self.brand,)
+        return '%s: "%s" is unmapped' % (self.vendor_id, self.brand)
 
 
 class CategoryMapping(BaseModel):
@@ -56,7 +56,15 @@ class CategoryMapping(BaseModel):
         if self.mapped_category:
             return '%s: "%s" mapped to "%s"' % (self.vendor_id, self.category, self.mapped_category)
 
-        return '%s: "%s" is unmapped' % (self.vendor_id, self.category,)
+        return '%s: "%s" is unmapped' % (self.vendor_id, self.category)
+
+
+class AffiliateMapping(BaseModel):
+    vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
+    identifier = models.CharField(max_length=128)
+
+    def __unicode__(self):
+        return '%s: %s -> %s' % (self.vendor_id, self.affiliate, self.campaign_key)
 
 
 MAPPING_CHOICES = (
