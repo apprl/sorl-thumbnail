@@ -32,6 +32,10 @@ class GenderMapperTest(TestCase):
         parsed_item = self.module({'url': 'http://mystore.com/products/unisex/my-shirt.html'}, {}, 0)
         self.assertEqual(parsed_item.get('gender'), 'U')
 
+    def test_map_gender_url_2(self):
+        parsed_item = self.module({'url': 'http://shop.acnestudios.com/shop/men/bags/nico-black.html'}, {}, 0)
+        self.assertEqual(parsed_item.get('gender'), 'M')
+
     def test_map_gender_name(self):
         parsed_item = self.module({'name': 'Female shirt XYZ'}, {}, 0)
         self.assertEqual(parsed_item.get('gender'), 'W')
@@ -50,3 +54,7 @@ class GenderMapperTest(TestCase):
     def test_no_gender(self):
         parsed_item = self.module({'url': 'http://mystore.com/products/my-shirt.html', 'name': 'A product', 'descripton': 'short desc'}, {}, 0)
         self.assertEqual(parsed_item, {})
+
+    def test_fallback_if_invalid_gender(self):
+        parsed_item = self.module({'gender': 'Invalid...', 'url': 'http://mystore.com/products/men/my-shirt.html'}, {}, 0)
+        self.assertEqual(parsed_item.get('gender'), 'M')

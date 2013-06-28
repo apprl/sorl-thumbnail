@@ -30,23 +30,17 @@ class GenderMapper(BaseModule):
         return None
 
     def __call__(self, scraped_item, parsed_item, vendor_id):
-        if 'gender' in scraped_item:
-            mapped_gender = self.map_gender(scraped_item['gender'])
-            if mapped_gender:
-                parsed_item['gender'] = mapped_gender
-            else:
-                self.delete_value(parsed_item, 'gender')
-
-        else:
-            mapped_gender = self.map_gender(scraped_item.get('url'))
+        mapped_gender = self.map_gender(scraped_item.get('gender', ''))
+        if not mapped_gender:
+            mapped_gender = self.map_gender(scraped_item.get('url', ''))
             if not mapped_gender:
                 mapped_gender = self.map_gender(scraped_item.get('name', ''))
                 if not mapped_gender:
                     mapped_gender = self.map_gender(scraped_item.get('description', ''))
 
-            if mapped_gender:
-                parsed_item['gender'] = mapped_gender
-            else:
-                self.delete_value(parsed_item, 'gender')
+        if mapped_gender:
+            parsed_item['gender'] = mapped_gender
+        else:
+            self.delete_value(parsed_item, 'gender')
 
         return parsed_item
