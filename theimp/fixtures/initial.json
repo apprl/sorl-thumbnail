@@ -1,0 +1,29 @@
+[
+  {
+    "model": "theimp.Mapping",
+    "pk": 1,
+    "fields": {
+      "mapping_type": "gender",
+      "mapping_key": "U",
+      "mapping_aliases": "unisex"
+    }
+  },
+  {
+    "model": "theimp.Mapping",
+    "pk": 2,
+    "fields": {
+      "mapping_type": "gender",
+      "mapping_key": "M",
+      "mapping_aliases": "male,males,men,mens,mensware,herr,herrar,man,män,kille,killar"
+    }
+  },
+  {
+    "model": "theimp.Mapping",
+    "pk": 3,
+    "fields": {
+      "mapping_type": "gender",
+      "mapping_key": "W",
+      "mapping_aliases": "female,females,woman,women,womens,womenswear,dam,damer,kvinna,kvinnor,tjej,tjejer"
+    }
+  }
+]
