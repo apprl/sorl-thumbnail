@@ -76,6 +76,7 @@ SHORT_LANGUAGES_DISPLAY = (
     ('en', gettext(u'Eng (€)')),
     ('sv', gettext(u'Swe (SEK)')),
 )
+SHORT_LANGUAGES_LIST_DISPLAY = ('en', 'sv')
 LANGUAGE_TO_CURRENCY = {
     'en': 'EUR',
     'sv': 'SEK',

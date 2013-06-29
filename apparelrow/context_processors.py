@@ -15,6 +15,7 @@ def exposed_settings(request):
         'GOOGLE_ANALYTICS_DOMAIN': django_settings.GOOGLE_ANALYTICS_DOMAIN,
         'LANGUAGES_DISPLAY': django_settings.LANGUAGES_DISPLAY,
         'SHORT_LANGUAGES_DISPLAY': django_settings.SHORT_LANGUAGES_DISPLAY,
+        'SHORT_LANGUAGES_LIST_DISPLAY': django_settings.SHORT_LANGUAGES_LIST_DISPLAY,
         'CURRENT_DOMAIN': current_site.domain,
         'CURRENT_NAME': current_site.name,
         'FACEBOOK_APP_ID': django_settings.FACEBOOK_APP_ID,

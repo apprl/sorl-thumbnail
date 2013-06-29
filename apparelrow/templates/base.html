@@ -159,11 +159,15 @@
                     </form>
                 </li>
                 <li class="language subnav-gray-handle">
-                    {% for language in SHORT_LANGUAGES_DISPLAY %}
-                    {% if language.0 == LANGUAGE_CODE %}
-                    <a class="current language" href="{% url 'django.views.i18n.set_language' %}">{% trans language.1 %}</a>
+                    {% if LANGUAGE_CODE not in SHORT_LANGUAGES_LIST_DISPLAY %}
+                        <a class="current language" href="{% url 'django.views.i18n.set_language' %}">{% trans SHORT_LANGUAGES_DISPLAY.0.1 %}</a>
+                    {% else %}
+                        {% for language in SHORT_LANGUAGES_DISPLAY %}
+                        {% if language.0 == LANGUAGE_CODE %}
+                        <a class="current language" href="{% url 'django.views.i18n.set_language' %}">{% trans language.1 %}</a>
+                        {% endif %}
+                        {% endfor %}
                     {% endif %}
-                    {% endfor %}
                     <form action="{% url 'apparelrow.apparel.views.apparel_set_language' %}" method="post" class="select-language">
                         {% csrf_token %}
                         <ul class="subnav-gray" id="subnav-language">
