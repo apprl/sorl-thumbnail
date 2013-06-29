@@ -128,7 +128,10 @@ class ProductList(View):
         # Price
         if 'price' in request.GET:
             price_id = request.GET['price']
-            query_arguments['fq'].append(FACET_PRICE_MAP_ID[get_language()][int(price_id)])
+            language = get_language()
+            if language not in FACET_PRICE_MAP_ID:
+                language = 'en'
+            query_arguments['fq'].append(FACET_PRICE_MAP_ID[language][int(price_id)])
 
         # Only discount
         if 'discount' in request.GET:
@@ -150,9 +153,7 @@ class ProductList(View):
 
     def get(self, request, *args, **kwargs):
         language = get_language()
-        currency = settings.APPAREL_BASE_CURRENCY
-        if language in settings.LANGUAGE_TO_CURRENCY:
-            currency = settings.LANGUAGE_TO_CURRENCY.get(language)
+        currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
         gender = request.GET.get('gender', get_gender_from_cookie(request))
         facet_fields = request.GET.get('facet', '').split(',')
 
@@ -172,7 +173,10 @@ class ProductList(View):
 
         # Price facet query (default in SEK from solr config)
         if 'price' in facet_fields:
-            query_arguments['facet.query'] = [value for value in FACET_PRICE_MAP_ID[language].values()]
+            if language in FACET_PRICE_MAP_ID:
+                query_arguments['facet.query'] = [value for value in FACET_PRICE_MAP_ID[language].values()]
+            else:
+                query_arguments['facet.query'] = [value for value in FACET_PRICE_MAP_ID['en'].values()]
 
         # Sort
         query_arguments['sort'] = request.GET.get('sort', 'popularity desc, created desc')
@@ -242,11 +246,15 @@ class ProductList(View):
         # Calculate price range
         # TODO: price is not a real facet because solr does not support facet.range on currency field
         temp_facet_fields = request.GET.get('facet', '').split(',')
-        language = get_language()
 
         # Calculate price
         if 'price' in temp_facet_fields:
             queries = search.get_facet()['facet_queries']
+
+            language = get_language()
+            if language not in FACET_PRICE_TRANSLATION:
+                language = 'en'
+
             price_result = []
             for key, value in sorted(queries.iteritems()):
                 price_result.append({'id': key,
