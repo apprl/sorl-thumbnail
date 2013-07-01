@@ -30,6 +30,7 @@ class Product(BaseModel):
 
 class Vendor(BaseModel):
     name = models.CharField(max_length=128)
+    affiliate_identifier = models.CharField(max_length=128, null=True, blank=True)
 
     def __unicode__(self):
         return u'%s' % (self.name,)
@@ -57,14 +58,6 @@ class CategoryMapping(BaseModel):
             return '%s: "%s" mapped to "%s"' % (self.vendor_id, self.category, self.mapped_category)
 
         return '%s: "%s" is unmapped' % (self.vendor_id, self.category)
-
-
-class AffiliateMapping(BaseModel):
-    vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
-    identifier = models.CharField(max_length=128)
-
-    def __unicode__(self):
-        return '%s: %s -> %s' % (self.vendor_id, self.affiliate, self.campaign_key)
 
 
 MAPPING_CHOICES = (

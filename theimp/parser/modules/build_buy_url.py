@@ -1,4 +1,5 @@
 import urllib
+from urlparse import urlparse, urlunparse
 
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
@@ -20,22 +21,30 @@ class BuildBuyURL(BaseModule):
             'aan': self.get_apprl_url,
         }
 
-        self.mapping_model = get_model('theimp', 'AffiliateMapping')
+        self.vendor_model = get_model('theimp', 'Vendor')
 
     def get_commission_junction_url(self, campaign_id, url):
-        return 'http://www.anrdoezrs.net/click-%s-10916893?URL=%s' % (campaign_id, url)
+        return 'http://www.anrdoezrs.net/click-4125005-%s?URL=%s' % (campaign_id, url)
 
     def get_affiliate_window_url(self, campaign_id, url):
-        pass
+        return 'http://www.awin1.com/pclick.php?p=%s&a=115076&m=%s' % (url, campaign_id)
 
     def get_zanox_url(self, campaign_id, url):
-        pass
+        parsed_url = urlparse(url)
+        path_query = urlunparse(('', '', parsed_url.path, '', parsed_url.query, ''))
+
+        return 'http://ad.zanox.com/ppc/?%s&ulp=[[%s]]' % (campaign_id, path_query)
 
     def get_tradedoubler_url(self, campaign_id, url):
-        pass
+        try:
+            program_id, g_id = campaign_id.split('|')
+        except ValueError:
+            return None
+
+        return 'http://clk.tradedoubler.com/click?p=%s&a=1853028&g=%s&url=%s' % (program_id, g_id, url)
 
     def get_linkshare_url(self, campaign_id, url):
-        pass
+        return 'http://click.linksynergy.com/deeplink?id=oaQeNCJweO0&mid=%s&murl=%s' % (campaign_id, url)
 
     def get_apprl_url(self, store_id, url):
         return 'http://apprl.com%s?store_id=%s&url=%s' % (reverse('advertiser-link'), store_id, url)
@@ -51,29 +60,19 @@ class BuildBuyURL(BaseModule):
             if url_function:
                 encoded_url = urllib.quote(scraped_item.get('url', ''), '')
                 try:
-                    identifier = self.mapping_model.objects.get(vendor_id=vendor_id).identifier
-                except self.mapping_model.DoesNotExist:
+                    identifier = self.vendor_model.objects.get(pk=vendor_id).affiliate_identifier
+                except self.vendor_model.DoesNotExist:
                     identifier = None
 
                 if identifier:
-                    parsed_item['buy_url'] = url_function(identifier, encoded_url)
+                    buy_url = url_function(identifier, encoded_url)
+                    if buy_url:
+                        parsed_item['buy_url'] = buy_url
+                    else:
+                        self.delete_value(parsed_item, 'buy_url')
                 else:
                     self.delete_value(parsed_item, 'buy_url')
             else:
                 self.delete_value(parsed_item, 'buy_url')
-
-
-            #if scraped_item['vendor'] == 'sunpocket':
-                #parsed_item['buy_url'] = self.get_commission_junction_url('116587', encoded_url)
-
-            #elif scraped_item['vendor'] == 'acne':
-                ## TODO: get campaign key for acne
-                #parsed_item['buy_url'] = self.get_commission_junction_url('116587', encoded_url)
-
-            #elif vendor == 'oki-ni':
-                #parsed_item['buy_url'] = 'http://www.awin1.com/pclick.php?p=%s&a=115076&m=%s' % (encoded_url, '2083')
-
-            #else:
-                #self.delete_value(parsed_item, 'buy_url')
 
         return parsed_item

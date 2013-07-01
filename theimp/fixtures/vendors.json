@@ -1,0 +1,125 @@
+[
+    {
+        "model": "theimp.Vendor",
+        "pk": "1",
+        "fields": {
+            "name": "mr_porter",
+            "affiliate_identifier": "36586"
+        }
+    },
+    {
+        "model": "theimp.Vendor",
+        "pk": "2",
+        "fields": {
+            "name": "the_outnet",
+            "affiliate_identifier": "35290"
+        }
+    },
+    {
+        "model": "theimp.Vendor",
+        "pk": "3",
+        "fields": {
+            "name": "farfetch",
+            "affiliate_identifier": "35653"
+        }
+    },
+    {
+        "model": "theimp.Vendor",
+        "pk": "4",
+        "fields": {
+            "name": "matches",
+            "affiliate_identifier": "35725"
+        }
+    },
+    {
+        "model": "theimp.Vendor",
+        "pk": "5",
+        "fields": {
+            "name": "lacoste",
+            "affiliate_identifier": "36597"
+        }
+    },
+    {
+        "model": "theimp.Vendor",
+        "pk": "6",
+        "fields": {
+            "name": "net-a-porter",
+            "affiliate_identifier": "24448"
+        }
+    },
+    {
+        "model": "theimp.Vendor",
+        "pk": "7",
+        "fields": {
+            "name": "forzieri",
+            "affiliate_identifier": "24423"
+        }
+    },
+
+
+
+    {
+        "model": "theimp.Vendor",
+        "pk": "8",
+        "fields": {
+            "name": "ssense",
+            "affiliate_identifier": "11131141"
+        }
+    },
+    {
+        "model": "theimp.Vendor",
+        "pk": "9",
+        "fields": {
+            "name": "sneakersnstuff",
+            "affiliate_identifier": "11069203"
+        }
+    },
+    {
+        "model": "theimp.Vendor",
+        "pk": "10",
+        "fields": {
+            "name": "sunpocket",
+            "affiliate_identifier": "10904186"
+        }
+    },
+    {
+        "model": "theimp.Vendor",
+        "pk": "11",
+        "fields": {
+            "name": "acne",
+            "affiliate_identifier": "10650964"
+        }
+    },
+
+
+
+
+    {
+        "model": "theimp.Vendor",
+        "pk": "12",
+        "fields": {
+            "name": "oki_ni",
+            "affiliate_identifier": "2083"
+        }
+    },
+
+
+    {
+        "model": "theimp.Vendor",
+        "pk": "13",
+        "fields": {
+            "name": "nelly",
+            "affiliate_identifier": "17833|17114610"
+        }
+    },
+
+
+    {
+        "model": "theimp.Vendor",
+        "pk": "14",
+        "fields": {
+            "name": "asos",
+            "affiliate_identifier": "25086946C30669136"
+        }
+    }
+]
