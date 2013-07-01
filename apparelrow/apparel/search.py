@@ -308,10 +308,12 @@ def get_product_document(instance):
         # XXX: during popularity script: IOError: image file is truncated (23
         # bytes not processed)
         # This
+        # XXX: SyntaxError: not a TIFF IFD
         try:
             document['image_small'] = get_thumbnail(instance.product_image, '112x145', crop=False, format='PNG', transparent=True).url
             document['image_medium'] = get_thumbnail(instance.product_image, '224x291', crop=False, format='PNG', transparent=True).url
-        except IOError:
+        except (SyntaxError, IOError):
+            logger.exception('Thumbnail Error [PID: %s]' % (instance.pk,))
             return None, 0
 
         # Dates
