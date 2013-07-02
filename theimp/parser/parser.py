@@ -75,6 +75,8 @@ class Parser:
             item['parsed'] = parsed_item
 
             validated = self.validate(item)
+            if validated:
+                item['final'] = item['parsed']
 
             product.is_auto_validated = validated
             product.json = json.dumps(item)
@@ -85,8 +87,10 @@ class Parser:
 
             if validated:
                 logger.info('Successful validation moving to queue')
-                # TODO: move parsed to final (?)
                 # TODO: add to out-to-site queue
+            else:
+                logger.info('Unsuccessful validation, try to hide the product on site')
+                # TODO: add to "remove-availability" queue
 
     def validate_layers(self, item):
         for layer in self.required_layers:
