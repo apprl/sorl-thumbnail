@@ -76,6 +76,7 @@ class DatabaseHandler:
             json_data = json.loads(product.json)
             json_data['parsed'] = dict(item)
             product.json = json.dumps(json_data)
+            product.vendor = vendor
             product.dropped = False
             product.save()
 

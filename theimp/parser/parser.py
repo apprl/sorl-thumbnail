@@ -23,6 +23,7 @@ class Parser:
             'theimp.parser.modules.price.Price',
         ]
         self.load_modules()
+        self.load_vendors()
 
     def load_modules(self):
         """
@@ -36,6 +37,14 @@ class Parser:
                 self.loaded_modules.append(getattr(loaded_module, module_name)(self))
             except (ImportError, AttributeError):
                 logger.exception('Could not load module')
+
+    def load_vendors(self):
+        """
+        Load vendors.
+        """
+        self.vendors = {}
+        for vendor in get_model('theimp', 'Vendor').objects.iterator():
+            self.vendors[vendor.name] = vendor
 
     def run(self):
         """
@@ -54,6 +63,8 @@ class Parser:
             if not self.validate_layers(item):
                 logger.error('Invalid layer specification')
                 continue
+
+            vendor = self.validate_vendor(product, item)
 
             item = self.setup(item)
 
@@ -83,6 +94,21 @@ class Parser:
                 return False
 
         return True
+
+    def validate_vendor(self, product, item):
+        scraped_vendor = item['scraped']['vendor']
+
+        if scraped_vendor not in self.vendors:
+            vendor, _ = Vendor.objects.get_or_create(name=scraped_vendor)
+            self.vendors[scraped_vendor] = vendor
+            logger.warning('Created vendor %s during parse step.' % (scraped_vendor,))
+
+        if product.vendor_id != self.vendors[scraped_vendor].pk:
+            product.vendor_id = self.vendors[scraped_vendor].pk
+            product.save()
+            logger.warning('Update product vendor to %s' % (scraped_vendor,))
+
+        return self.vendors[scraped_vendor]
 
     def setup(self, item):
         # TODO: might move this / parts of it to a module
