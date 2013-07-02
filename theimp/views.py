@@ -7,6 +7,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.loading import get_model
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
+from django.forms.models import modelformset_factory
+
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +39,19 @@ def custom_render(request, template, data=None):
 @user_passes_test(lambda user: user.is_superuser)
 def index(request):
     return custom_render(request, 'index.html')
+
+
+@user_passes_test(lambda user: user.is_superuser)
+def vendor(request):
+    VendorFormSet = modelformset_factory(get_model('theimp', 'Vendor'))
+    if request.method == 'POST':
+        formset = VendorFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            formset.save()
+    else:
+        formset = VendorFormSet()
+
+    return custom_render(request, 'vendor.html', {'vendors': get_vendor_list(), 'formset': formset})
 
 
 @user_passes_test(lambda user: user.is_superuser)

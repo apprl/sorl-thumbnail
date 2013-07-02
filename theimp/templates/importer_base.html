@@ -14,6 +14,7 @@
         <div class="container-fluid">
             <div class="navbar">
                 {% url 'importer-index' as index_url %}
+                {% url 'vendor-list' as vendor_url %}
                 {% url 'brand-mapper' as brand_url %}
                 {% url 'category-mapper' as category_url %}
                 {% url 'importer-messages' as message_url %}
@@ -21,6 +22,7 @@
                     <a class="brand" href="{{ index_url }}">Importer Admin</a>
                     <ul class="nav">
                         <li{% if request.path == index_url %} class="active"{% endif %}><a href="{{ index_url }}">{% trans "Dashboard" %}</a></li>
+                        <li{% if request.path == vendor_url %} class="active"{% endif %}><a href="{{ vendor_url }}">{% trans "Vendor" %}</a></li>
                         <li{% if request.path == brand_url %} class="active"{% endif %}><a href="{% url 'brand-mapper' %}">{% trans "Brand" %}</a></li>
                         <li{% if request.path == category_url %} class="active"{% endif %}><a href="{% url 'category-mapper' %}">{% trans "Category" %}</a></li>
                         <li{% if request.path == message_url %} class="active"{% endif %}>
