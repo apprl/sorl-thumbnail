@@ -18,13 +18,13 @@ class CategoryMapperTest(TestCase):
         parsed_item = self.module({}, {}, 0)
         self.assertEqual(parsed_item, {})
 
-        parsed_item = self.module({'category': 'test-category'}, {}, self.vendor.pk)
+        parsed_item = self.module({'category': 'test-category'}, {}, self.vendor)
         self.assertEqual(parsed_item.get('category'), 'Test Category')
 
     def test_map_category_invalid_vendor(self):
-        parsed_item = self.module({'category': 'test-category'}, {}, -1)
+        parsed_item = self.module({'category': 'test-category'}, {}, None)
         self.assertEqual(parsed_item, {})
 
     def test_map_category_unmapped(self):
-        parsed_item = self.module({'category': 'unmapped-category'}, {}, self.vendor.pk)
+        parsed_item = self.module({'category': 'unmapped-category'}, {}, self.vendor)
         self.assertEqual(parsed_item, {})

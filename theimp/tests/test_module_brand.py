@@ -18,13 +18,13 @@ class BrandMapperTest(TestCase):
         parsed_item = self.module({}, {}, 0)
         self.assertEqual(parsed_item, {})
 
-        parsed_item = self.module({'brand': 'test-brand'}, {}, self.vendor.pk)
+        parsed_item = self.module({'brand': 'test-brand'}, {}, self.vendor)
         self.assertEqual(parsed_item.get('brand'), 'Test Brand')
 
     def test_map_brand_invalid_vendor(self):
-        parsed_item = self.module({'brand': 'test-brand'}, {}, -1)
+        parsed_item = self.module({'brand': 'test-brand'}, {}, None)
         self.assertEqual(parsed_item, {})
 
     def test_map_brand_unmapped(self):
-        parsed_item = self.module({'brand': 'unmapped-brand'}, {}, self.vendor.pk)
+        parsed_item = self.module({'brand': 'unmapped-brand'}, {}, self.vendor)
         self.assertEqual(parsed_item, {})

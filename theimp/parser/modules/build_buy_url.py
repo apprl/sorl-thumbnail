@@ -2,7 +2,6 @@ import urllib
 from urlparse import urlparse, urlunparse
 
 from django.core.urlresolvers import reverse
-from django.db.models.loading import get_model
 
 from theimp.parser.modules import BaseModule
 
@@ -20,8 +19,6 @@ class BuildBuyURL(BaseModule):
             'linkshare': self.get_linkshare_url,
             'aan': self.get_apprl_url,
         }
-
-        self.vendor_model = get_model('theimp', 'Vendor')
 
     def get_commission_junction_url(self, campaign_id, url):
         return 'http://www.anrdoezrs.net/click-4125005-%s?URL=%s' % (campaign_id, url)
@@ -49,7 +46,7 @@ class BuildBuyURL(BaseModule):
     def get_apprl_url(self, store_id, url):
         return 'http://apprl.com%s?store_id=%s&url=%s' % (reverse('advertiser-link'), store_id, url)
 
-    def __call__(self, scraped_item, parsed_item, vendor_id):
+    def __call__(self, scraped_item, parsed_item, vendor):
         if 'buy_url' in scraped_item:
             parsed_item['buy_url'] = scraped_item['buy_url']
 
@@ -59,13 +56,8 @@ class BuildBuyURL(BaseModule):
             url_function = self.affiliate_url.get(scraped_item.get('affiliate'), None)
             if url_function:
                 encoded_url = urllib.quote(scraped_item.get('url', ''), '')
-                try:
-                    identifier = self.vendor_model.objects.get(pk=vendor_id).affiliate_identifier
-                except self.vendor_model.DoesNotExist:
-                    identifier = None
-
-                if identifier:
-                    buy_url = url_function(identifier, encoded_url)
+                if vendor.affiliate_identifier:
+                    buy_url = url_function(vendor.affiliate_identifier, encoded_url)
                     if buy_url:
                         parsed_item['buy_url'] = buy_url
                     else:

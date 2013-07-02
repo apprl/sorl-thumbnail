@@ -71,7 +71,7 @@ class Parser:
             scraped_item = item['scraped']
             parsed_item = item['parsed']
             for module in self.loaded_modules:
-                parsed_item = module(scraped_item, parsed_item, product.vendor_id)
+                parsed_item = module(scraped_item, parsed_item, vendor)
             item['parsed'] = parsed_item
 
             validated = self.validate(item)

@@ -29,7 +29,7 @@ class GenderMapper(BaseModule):
 
         return None
 
-    def __call__(self, scraped_item, parsed_item, vendor_id):
+    def __call__(self, scraped_item, parsed_item, vendor):
         mapped_gender = self.map_gender(scraped_item.get('gender', ''))
         if not mapped_gender:
             mapped_gender = self.map_gender(scraped_item.get('url', ''))
