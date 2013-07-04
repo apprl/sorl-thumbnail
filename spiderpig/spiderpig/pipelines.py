@@ -6,6 +6,9 @@ import decimal
 from scrapy import signals
 from scrapy.exceptions import DropItem
 
+from hotqueue import HotQueue
+
+from apparelrow import settings
 from theimp.models import Product, Vendor
 
 
@@ -21,6 +24,11 @@ class DatabaseHandler:
         crawler.signals.connect(ext.spider_closed, signal=signals.spider_closed)
         crawler.signals.connect(ext.item_scraped, signal=signals.item_scraped)
         crawler.signals.connect(ext.item_dropped, signal=signals.item_dropped)
+
+        ext.parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
+                                   host=settings.THEIMP_REDIS_HOST,
+                                   port=settings.THEIMP_REDIS_PORT,
+                                   db=settings.THEIMP_REDIS_DB)
 
         return ext
 
@@ -51,6 +59,7 @@ class DatabaseHandler:
         """
         key = item.get('key', None)
         if key:
+            product = None
             try:
                 product = Product.objects.get(key=key)
                 product.dropped = True
@@ -59,7 +68,8 @@ class DatabaseHandler:
             except Product.DoesNotExist:
                 spider.log('Could not find dropped item in database with key: "%s"' % (key,))
 
-            # TODO: add to dropped queue
+            if product:
+                self.parse_queue.put(product.pk)
 
     def item_scraped(self, item, spider):
         """
@@ -82,13 +92,13 @@ class DatabaseHandler:
             product.dropped = False
             product.save()
 
-        # TODO: add to queue
+        self.parse_queue.put(product.pk)
 
         return item
 
 
 class RequiredFieldsPipeline:
-    required_fields = ['key', 'name', 'vendor', 'brand', 'url', 'category', 'regular_price']
+    required_fields = ['key', 'name', 'vendor', 'brand', 'url', 'category']
 
     def process_item(self, item, spider):
         for field in self.required_fields:

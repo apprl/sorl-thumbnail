@@ -2,12 +2,17 @@ import logging
 import json
 import decimal
 
+from django.conf import settings
 from django.db.models.loading import get_model
+
+from hotqueue import HotQueue
+
+
 
 logger = logging.getLogger(__name__)
 
 
-class Parser:
+class Parser(object):
 
     required_fields = ['name', 'description', 'brand', 'category', 'gender', 'images',
                        'currency', 'regular_price', 'buy_url']
@@ -24,6 +29,10 @@ class Parser:
         ]
         self.load_modules()
         self.load_vendors()
+        self.parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
+                                    host=settings.THEIMP_REDIS_HOST,
+                                    port=settings.THEIMP_REDIS_PORT,
+                                    db=settings.THEIMP_REDIS_DB)
 
     def load_modules(self):
         """
@@ -50,9 +59,14 @@ class Parser:
         """
         Run parser.
         """
-        # TODO: read from queue instead of database
-        for product in get_model('theimp', 'Product').objects.iterator():
-            logger.info('Parse key %s' % (product.key,))
+        for product_id in self.parse_queue.consume():
+        #for product in get_model('theimp', 'Product').objects.iterator():
+            try:
+                product = get_model('theimp', 'Product').objects.get(pk=product_id)
+            except get_model('theimp', 'Product').DoesNotExist as e:
+                logger.exception('Could not load product with id %s' % (product_id,))
+
+            logger.info('Begin parse for key: %s' % (product.key,))
 
             try:
                 item = json.loads(product.json)

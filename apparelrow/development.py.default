@@ -46,6 +46,10 @@ SOLR_CURRENCY_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'currency.xml')
 SOLR_SYNONYM_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'synonyms.txt')
 
 BROKER_URL = "redis://localhost:6380/0"
+
+THEIMP_REDIS_HOST = 'localhost'
+THEIMP_REDIS_PORT = 6380
+
 CELERY_RESULT_BACKEND = "redis"
 CELERY_REDIS_HOST = "localhost"
 CELERY_REDIS_PORT = 6380
