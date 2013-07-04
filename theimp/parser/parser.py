@@ -33,6 +33,12 @@ class Parser(object):
                                     host=settings.THEIMP_REDIS_HOST,
                                     port=settings.THEIMP_REDIS_PORT,
                                     db=settings.THEIMP_REDIS_DB)
+        self.site_queue = HotQueue(settings.THEIMP_QUEUE_SITE,
+                                   host=settings.THEIMP_REDIS_HOST,
+                                   port=settings.THEIMP_REDIS_PORT,
+                                   db=settings.THEIMP_REDIS_DB)
+
+
 
     def load_modules(self):
         """
@@ -60,7 +66,6 @@ class Parser(object):
         Run parser.
         """
         for product_id in self.parse_queue.consume():
-        #for product in get_model('theimp', 'Product').objects.iterator():
             try:
                 product = get_model('theimp', 'Product').objects.get(pk=product_id)
             except get_model('theimp', 'Product').DoesNotExist as e:
@@ -101,10 +106,10 @@ class Parser(object):
 
             if validated:
                 logger.info('Successful validation moving to queue')
-                # TODO: add to out-to-site queue
             else:
                 logger.info('Unsuccessful validation, try to hide the product on site')
-                # TODO: add to "remove-availability" queue
+
+            self.site_queue.put((product.pk, validated))
 
     def validate_layers(self, item):
         for layer in self.required_layers:
