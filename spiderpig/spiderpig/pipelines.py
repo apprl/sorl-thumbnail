@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 import json
 import urlparse
+import decimal
 
 from scrapy import signals
 from scrapy.exceptions import DropItem
@@ -86,7 +88,7 @@ class DatabaseHandler:
 
 
 class RequiredFieldsPipeline:
-    required_fields = ['key', 'name', 'vendor', 'brand', 'url', 'category', 'price']
+    required_fields = ['key', 'name', 'vendor', 'brand', 'url', 'category', 'regular_price']
 
     def process_item(self, item, spider):
         for field in self.required_fields:
@@ -98,39 +100,80 @@ class RequiredFieldsPipeline:
 
 class PricePipeline:
 
-    # TODO: not satisified with this pipeline, how could we differentiate
-    # between price and discount price in a generic way?
+    currency_map = {
+        'kr': 'SEK'
+    }
+
+    def parse_price(self, price_string):
+        """
+        Parse a price string to a decimal price and a possible three letter
+        currency.
+        """
+        if not price_string:
+            return (None, None)
+
+        if price_string.isalpha():
+            return (None, None)
+
+        if price_string.isdigit():
+            return (decimal.Decimal(price_string), None)
+
+        currency = []
+        price = []
+        for token in list(price_string):
+            if token.isalpha():
+                currency.append(token)
+            elif token.isdigit():
+                price.append(token)
+            elif token == '.':
+                price.append(token)
+            elif token == u'€':
+                del currency[:]
+                currency.append('EUR')
+            elif token == u'$':
+                del currency[:]
+                currency.append('USD')
+            elif token == u'£':
+                del currency[:]
+                currency.append('GBP')
+
+        try:
+            price = decimal.Decimal(''.join(price))
+        except decimal.InvalidOperation:
+            return (None, None)
+
+        currency = ''.join(currency)
+        if currency in self.currency_map:
+            currency = self.currency_map[currency]
+
+        if len(currency) != 3:
+            currency = None
+
+        return (price, currency)
+
     def process_item(self, item, spider):
-        price = item.get('price', None)
         regular_price = item.get('regular_price', None)
         discount_price = item.get('discount_price', None)
         currency = item.get('currency', None)
-        in_stock = item.get('in_stock', None)
 
-        if price:
-            price_parts = price.rsplit(' ', 1)
-            if len(price_parts) == 1 and not currency:
-                raise DropItem('Missing currency in %s' % item)
+        regular_price, regular_currency = self.parse_price(regular_price)
+        discount_price, discount_currency = self.parse_price(discount_price)
 
-            if len(price_parts[1]) != 3:
-                raise DropItem('Could not parse currency some price in %s' % item)
+        if not regular_price and not discount_price:
+            raise DropItem('Missing price')
 
-            # TODO: better handling of currency?
-
-            item['price'] = price_parts[0]
-            item['currency'] = price_parts[1]
-
-            if regular_price:
-                item['regular_price'] = regular_price.rsplit(' ', 1)[0]
-
-            if discount_price:
-                item['discount_price'] = discount_price.rsplit(' ', 1)[0]
-
-            return item
-        elif in_stock == False:
-            item['price'] = u''
-            item['currency'] = u''
-
-            return item
+        if discount_price and not regular_price:
+            item['regular_price'] = str(discount_price)
+            item['discount_price'] = None
         else:
-            raise DropItem('Missing price and no in_stock information in %s' % item)
+            item['regular_price'] = str(regular_price)
+            item['discount_price'] = str(discount_price)
+
+        currency_list = [currency, regular_currency, discount_currency]
+        currency = next((x for x in currency_list if x), None)
+        if not currency:
+            raise DropItem('Missing currency')
+
+        item['currency'] = currency
+
+        return item

@@ -37,11 +37,11 @@ class AcneSpider(BaseSpider):
         l = ProductLoader(item=Product(), selector=hxs)
         l.add_xpath('name', '//h1/text()')
         l.add_xpath('description', '//div[contains(@class, "description")]/div/text()')
-        l.add_xpath('price', '//p[contains(@class, "price")]/span/text()')
+        l.add_xpath('discount_price', '//p[contains(@class, "price")]/span/text()')
         l.add_xpath('regular_price', '//p[contains(@class, "price")]/span/span/text()')
         l.add_xpath('image_urls', '//div[contains(@class, "product-image")]//img/@src')
-        # TODO: for now it seems like all products found are in stock
-        l.add_value('in_stock', 'in-stock')
+        l.add_xpath('in_stock', '//select[contains(@id, "product-size-id")]/option[position()>1][not(contains(@class, "inactive"))]')
+
         l.add_value('url', response.url)
         l.add_value('category', ' / '.join(response.url.split('/')[3:-1]))
         l.add_value('key', response.url)
@@ -52,7 +52,7 @@ class AcneSpider(BaseSpider):
         base_url = get_base_url(response)
 
         item = l.load_item()
-        item['in_stock'] = bool(item['in_stock'])
+        item['in_stock'] = bool(item.get('in_stock'))
         item['image_urls'] = [
             urljoin_rfc(base_url, image)
             for image in item.get('image_urls', [])

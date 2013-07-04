@@ -26,8 +26,9 @@ class Product(Item):
 
     regular_price = Field()
     discount_price = Field()
-    price = Field()
     currency = Field()
+
+    colors = Field()
 
     in_stock = Field()
     stock = Field()
