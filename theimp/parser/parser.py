@@ -8,7 +8,6 @@ from django.db.models.loading import get_model
 from hotqueue import HotQueue
 
 
-
 logger = logging.getLogger(__name__)
 
 
