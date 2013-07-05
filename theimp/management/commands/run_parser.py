@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from theimp.parser.parser import Parser
+from theimp.parser import Parser
 
 
 class Command(BaseCommand):
