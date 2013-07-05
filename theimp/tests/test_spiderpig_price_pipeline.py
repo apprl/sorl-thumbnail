@@ -3,7 +3,10 @@ from decimal import Decimal
 
 from django.test import TestCase
 
-from spiderpig.pipelines import PricePipeline
+try:
+    from spiderpig.spiderpig.pipelines import PricePipeline
+except ImportError:
+    from spiderpig.pipelines import PricePipeline
 
 class SpiderpigPricePipelineTest(TestCase):
 
