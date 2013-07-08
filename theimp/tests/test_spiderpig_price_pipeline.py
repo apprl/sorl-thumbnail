@@ -66,3 +66,6 @@ class SpiderpigPricePipelineTest(TestCase):
     def test_extra_chars(self):
         self.assertEqual(self.pipeline.parse_price('(1299 SEK)'), (Decimal('1299'), 'SEK'))
         self.assertEqual(self.pipeline.parse_price('[ 1 299.99 SEK ]'), (Decimal('1299.99'), 'SEK'))
+
+    def test_oki_ni_price(self):
+        self.assertEqual(self.pipeline.parse_price(u'\xa3149.00'), (Decimal('149'), 'GBP'))
