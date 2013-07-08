@@ -69,6 +69,7 @@ class Parser(object):
                 product = get_model('theimp', 'Product').objects.get(pk=product_id)
             except get_model('theimp', 'Product').DoesNotExist as e:
                 logger.exception('Could not load product with id %s' % (product_id,))
+                continue
 
             logger.info('Begin parse for key: %s' % (product.key,))
 

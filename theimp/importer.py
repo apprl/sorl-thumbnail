@@ -21,6 +21,7 @@ class Importer(object):
                 product = get_model('theimp', 'Product').objects.get(pk=product_id)
             except get_model('theimp', 'Product').DoesNotExist as e:
                 logger.exception('Could not load product with id %s' % (product_id,))
+                continue
 
             if valid:
                 self.add_or_update(product)
