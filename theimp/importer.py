@@ -23,25 +23,34 @@ class Importer(object):
                 logger.exception('Could not load product with id %s' % (product_id,))
                 continue
 
-            if valid:
-                self.add_or_update(product)
+            try:
+                if valid:
+                    self.add_or_update(product)
+                else:
+                    self.hide_product(product)
+            except Exception as e:
+                logger.exeception('Could not update or hide product: %s' % (product,))
             else:
-                self.hide_product(product)
+                product.save()
 
     def add_or_update(self, product):
+        logger.debug('Add or update product called with argument: %s' % (product,))
+
         site_product = self.match(product)
         if not site_product:
             # TODO: add to database and solr
-            pass
+            logger.info('Add product to site: %s' % (product,))
         else:
             # TODO: update database and solr
-            pass
+            logger.info('Update site product %s with %s' % (site_product, product,))
 
     def hide_product(self, product):
+        logger.debug('Hide product called with argument: %s' % (product,))
+
         site_product = self.match(product)
         if site_product:
             # TODO: set availability to false and update solr
-            pass
+            logger.info('Hide site product: %s' % (site_product,))
 
     def match(self, product):
         # TODO: try to match theimp.Product to an apparel.Product

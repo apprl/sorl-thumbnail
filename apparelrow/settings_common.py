@@ -566,6 +566,7 @@ CELERY_ROUTES = ({
     'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
     'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},
     'apparelrow.activity_feed.tasks.featured_activity': {'queue': 'standard'},
+    'theimp.tasks.update_old': {'queue': 'background'},
 },)
 
 # LOGGING CONFIGURATION
