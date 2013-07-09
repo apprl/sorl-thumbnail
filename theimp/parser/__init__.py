@@ -15,6 +15,8 @@ class Parser(object):
 
     required_fields = ['name', 'description', 'brand', 'category', 'gender', 'images',
                        'currency', 'regular_price', 'buy_url']
+    required_field_values = ['name', 'brand', 'category', 'gender', 'images',
+                             'currency', 'regular_price', 'buy_url']
     required_layers = ['scraped', 'parsed', 'final']
     gender_values = ['M', 'W', 'U']
 
@@ -154,7 +156,9 @@ class Parser(object):
                 logger.warning('Missing required field %s' % (field,))
                 return False
 
+        for field in self.required_field_values:
             if not item['parsed'][field]:
+                logger.warning('Missing required field %s value' % (field,))
                 return False
 
         # Validate gender value
