@@ -86,7 +86,7 @@ class DatabaseHandler:
         product, created = Product.objects.get_or_create(key=item['key'], defaults={'json': json_string, 'vendor': vendor})
         if not created:
             json_data = json.loads(product.json)
-            json_data['parsed'] = dict(item)
+            json_data['scraped'] = dict(item)
             product.json = json.dumps(json_data)
             product.vendor = vendor
             product.dropped = False
