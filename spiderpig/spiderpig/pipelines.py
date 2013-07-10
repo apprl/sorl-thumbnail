@@ -2,14 +2,27 @@
 import json
 import urlparse
 import decimal
+import re
 
 from scrapy import signals
 from scrapy.exceptions import DropItem
+from scrapy.http import Request
+from scrapy.contrib.pipeline.images import ImagesPipeline
 
 from hotqueue import HotQueue
 
 from apparelrow import settings
 from theimp.models import Product, Vendor
+
+class ImporterImagesPipeline(ImagesPipeline):
+
+    def item_completed(self, results, item, info):
+        if 'images' in item.fields:
+            resulsts = [x for ok, x in results if ok]
+            if results:
+                item['images'] = results
+
+        return item
 
 
 class DatabaseHandler:
@@ -42,12 +55,6 @@ class DatabaseHandler:
         return False
 
     def spider_opened(self, spider):
-        self.vendor, created = Vendor.objects.get_or_create(name=spider.name)
-        query = 'SELECT id, key FROM theimp_product WHERE vendor_id = %s'
-        products = Product.objects.raw(query, [self.vendor.pk])
-        product_urls = [x.key for x in products if self._is_valid_url(x.key)]
-
-        spider.start_urls = product_urls + spider.start_urls
         spider.log('Opened spider: %s' % spider.name)
 
     def spider_closed(self, spider):
@@ -86,7 +93,7 @@ class DatabaseHandler:
         product, created = Product.objects.get_or_create(key=item['key'], defaults={'json': json_string, 'vendor': vendor})
         if not created:
             json_data = json.loads(product.json)
-            json_data['scraped'] = dict(item)
+            json_data['scraped'].update(dict(item))
             product.json = json.dumps(json_data)
             product.vendor = vendor
             product.dropped = False
@@ -98,7 +105,7 @@ class DatabaseHandler:
 
 
 class RequiredFieldsPipeline:
-    required_fields = ['key', 'name', 'vendor', 'brand', 'url', 'category']
+    required_fields = ['key', 'name', 'vendor', 'url']
 
     def process_item(self, item, spider):
         for field in self.required_fields:
@@ -172,7 +179,7 @@ class PricePipeline:
         discount_price, discount_currency = self.parse_price(discount_price)
 
         if not regular_price and not discount_price:
-            raise DropItem('Missing price')
+            return item
 
         if discount_price and not regular_price:
             item['regular_price'] = str(discount_price)
@@ -182,10 +189,6 @@ class PricePipeline:
             item['discount_price'] = str(discount_price)
 
         currency_list = [currency, regular_currency, discount_currency]
-        currency = next((x for x in currency_list if x), None)
-        if not currency:
-            raise DropItem('Missing currency')
-
-        item['currency'] = currency
+        item['currency'] = next((x for x in currency_list if x), None)
 
         return item

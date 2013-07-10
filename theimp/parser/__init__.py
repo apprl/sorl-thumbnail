@@ -15,9 +15,9 @@ logger = logging.getLogger(__name__)
 class Parser(object):
 
     required_fields = ['name', 'description', 'brand', 'category', 'gender', 'images',
-                       'currency', 'regular_price', 'buy_url']
+                       'currency', 'regular_price', 'buy_url', 'vendor_id']
     required_field_values = ['name', 'brand', 'category', 'gender', 'images',
-                             'currency', 'regular_price', 'buy_url']
+                             'currency', 'regular_price', 'buy_url', 'vendor_id']
     required_layers = ['scraped', 'parsed', 'final']
     gender_values = ['M', 'W', 'U']
 
@@ -30,7 +30,6 @@ class Parser(object):
             'theimp.parser.modules.price.Price',
         ]
         self.load_modules()
-        self.load_vendors()
         self.parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
                                     host=settings.THEIMP_REDIS_HOST,
                                     port=settings.THEIMP_REDIS_PORT,
@@ -39,8 +38,6 @@ class Parser(object):
                                    host=settings.THEIMP_REDIS_HOST,
                                    port=settings.THEIMP_REDIS_PORT,
                                    db=settings.THEIMP_REDIS_DB)
-
-
 
     def load_modules(self):
         """
@@ -54,14 +51,6 @@ class Parser(object):
                 self.loaded_modules.append(getattr(loaded_module, module_name)(self))
             except (ImportError, AttributeError):
                 logger.exception('Could not load module')
-
-    def load_vendors(self):
-        """
-        Load vendors.
-        """
-        self.vendors = {}
-        for vendor in get_model('theimp', 'Vendor').objects.iterator():
-            self.vendors[vendor.name] = vendor
 
     def run(self):
         """
@@ -87,6 +76,9 @@ class Parser(object):
                 continue
 
             item, vendor = self.validate_vendor(product, item)
+            if not vendor:
+                continue
+
             item = self.initial_parse(item)
 
             scraped_item = item['scraped']
@@ -122,20 +114,16 @@ class Parser(object):
 
     def validate_vendor(self, product, item):
         scraped_vendor = item['scraped']['vendor']
+        try:
+            vendor = get_model('theimp', 'Vendor').objects.get(name=scraped_vendor)
+        except get_model('theimp', 'Vendor').DoesNotExist:
+            logger.error('Could not find vendor for %s' % (scraped_vendor,))
+            return item, None
 
-        if scraped_vendor not in self.vendors:
-            new_vendor, _ = Vendor.objects.get_or_create(name=scraped_vendor)
-            self.vendors[scraped_vendor] = new_vendor
-            logger.warning('Created vendor %s during parse step.' % (scraped_vendor,))
-
-        vendor = self.vendors[scraped_vendor]
-
-        if product.vendor_id != vendor.pk:
-            product.vendor_id = vendor.pk
-            product.save()
-            logger.warning('Update product vendor to %s' % (scraped_vendor,))
-
-        item['scraped']['vendor_id'] = vendor.pk
+        if vendor.vendor_id:
+            item['scraped']['vendor_id'] = vendor.vendor_id
+        else:
+            item['scraped']['vendor_id'] = None
 
         return item, vendor
 
@@ -143,7 +131,6 @@ class Parser(object):
         # TODO: might move this / parts of it to a module
         item['parsed']['name'] = strip_tags(item['scraped']['name']).strip()
         item['parsed']['description'] = strip_tags(item['scraped']['description']).strip()
-        item['parsed']['vendor'] = item['scraped']['vendor']
         item['parsed']['vendor_id'] = item['scraped']['vendor_id']
         item['parsed']['affiliate'] = item['scraped']['affiliate']
         item['parsed']['in_stock'] = item['scraped']['in_stock']

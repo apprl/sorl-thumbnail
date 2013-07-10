@@ -20,7 +20,7 @@ SPIDER_MODULES = ['spiderpig.spiders']
 NEWSPIDER_MODULE = 'spiderpig.spiders'
 
 ITEM_PIPELINES = [
-    'scrapy.contrib.pipeline.images.ImagesPipeline',
+    'spiderpig.pipelines.ImporterImagesPipeline',
     'spiderpig.pipelines.RequiredFieldsPipeline',
     'spiderpig.pipelines.PricePipeline',
 ]

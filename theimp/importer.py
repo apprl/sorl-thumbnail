@@ -81,12 +81,13 @@ class Importer(object):
         site_product.static_brand = product_json.get('brand')
         site_product.gender = product_json.get('gender')
         site_product.availability = bool(product_json.get('in_stock', False))
-        site_product.save()
 
         self._update_vendor_product(product_json, site_product)
 
         # TODO: product options
         self._update_product_options(product_json, site_product)
+
+        site_product.save()
 
         logger.info('[%s] Update product on live site: %s' % (product.pk, site_product))
 
@@ -94,6 +95,9 @@ class Importer(object):
         site_product = self._find_site_product(product)
         if site_product:
             site_product.availability = False
+            for vendor_product in site_product.vendorproduct.all():
+                vendor_product.availability = 0
+                vendor_product.save()
             site_product.save()
             logger.info('[%s] Hide product on live site: %s' % (product.pk, site_product))
         else:
