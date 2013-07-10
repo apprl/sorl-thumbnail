@@ -8,9 +8,21 @@ class CategoryMapperTest(TestCase):
     fixtures = ['initial.json']
 
     def setUp(self):
+        self.category = get_model('apparel', 'Category').objects.create(name='Category',
+                                                                        name_en='Category',
+                                                                        name_sv='Category',
+                                                                        name_da='Category',
+                                                                        name_no='Category',
+                                                                        name_order_en='A',
+                                                                        name_order_sv='A',
+                                                                        name_order_da='A',
+                                                                        name_order_no='A')
         self.vendor = get_model('theimp', 'Vendor').objects.create(name='TestVendor')
-        get_model('theimp', 'CategoryMapping').objects.create(vendor=self.vendor, category='test-category', mapped_category='Test Category')
-        get_model('theimp', 'CategoryMapping').objects.create(vendor=self.vendor, category='unmapped-category')
+        get_model('theimp', 'CategoryMapping').objects.create(vendor=self.vendor,
+                                                              category='test-category',
+                                                              mapped_category=self.category)
+        get_model('theimp', 'CategoryMapping').objects.create(vendor=self.vendor,
+                                                              category='unmapped-category')
 
         self.module = CategoryMapper(None)
 
@@ -19,7 +31,8 @@ class CategoryMapperTest(TestCase):
         self.assertEqual(parsed_item, {})
 
         parsed_item = self.module({'category': 'test-category'}, {}, self.vendor)
-        self.assertEqual(parsed_item.get('category'), 'Test Category')
+        self.assertEqual(parsed_item.get('category'), 'Category')
+        self.assertEqual(parsed_item.get('category_id'), 1)
 
     def test_map_category_invalid_vendor(self):
         parsed_item = self.module({'category': 'test-category'}, {}, None)

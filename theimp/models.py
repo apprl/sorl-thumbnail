@@ -33,6 +33,7 @@ class Vendor(BaseModel):
     affiliate_identifier = models.CharField(max_length=128, null=True, blank=True)
     is_active = models.BooleanField(default=True, null=False, blank=False)
     comment  = models.TextField(blank=True, default='')
+    vendor = models.ForeignKey('apparel.Vendor', null=True, blank=True)
 
     def __unicode__(self):
         return u'%s' % (self.name,)
@@ -43,8 +44,8 @@ class Vendor(BaseModel):
 
 class BrandMapping(BaseModel):
     vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
-    brand = models.CharField(max_length=512)
-    mapped_brand = models.CharField(max_length=512, blank=True)
+    brand = models.CharField(max_length=1024)
+    mapped_brand = models.ForeignKey('apparel.Brand', null=True, blank=True)
 
     def __unicode__(self):
         if self.mapped_brand:
@@ -55,8 +56,8 @@ class BrandMapping(BaseModel):
 
 class CategoryMapping(BaseModel):
     vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
-    category = models.CharField(max_length=512)
-    mapped_category = models.CharField(max_length=512, blank=True)
+    category = models.CharField(max_length=1024)
+    mapped_category = models.ForeignKey('apparel.Category', null=True, blank=True)
 
     def __unicode__(self):
         if self.mapped_category:

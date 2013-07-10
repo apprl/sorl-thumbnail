@@ -13,8 +13,10 @@ class BrandMapper(BaseModule):
 
         brand_mapping, _ = get_model('theimp', 'BrandMapping').objects.get_or_create(brand=scraped_item['brand'], vendor_id=vendor.pk)
         if brand_mapping.mapped_brand:
-            parsed_item['brand'] = brand_mapping.mapped_brand
+            parsed_item['brand'] = brand_mapping.mapped_brand.name
+            parsed_item['brand_id'] = brand_mapping.mapped_brand.pk
         else:
             self.delete_value(parsed_item, 'brand')
+            self.delete_value(parsed_item, 'brand_id')
 
         return parsed_item

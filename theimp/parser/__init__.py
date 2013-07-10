@@ -85,9 +85,8 @@ class Parser(object):
                 logger.error('Invalid layer specification')
                 continue
 
-            vendor = self.validate_vendor(product, item)
-
-            item = self.setup(item)
+            item, vendor = self.validate_vendor(product, item)
+            item = self.initial_parse(item)
 
             scraped_item = item['scraped']
             parsed_item = item['parsed']
@@ -124,25 +123,31 @@ class Parser(object):
         scraped_vendor = item['scraped']['vendor']
 
         if scraped_vendor not in self.vendors:
-            vendor, _ = Vendor.objects.get_or_create(name=scraped_vendor)
-            self.vendors[scraped_vendor] = vendor
+            new_vendor, _ = Vendor.objects.get_or_create(name=scraped_vendor)
+            self.vendors[scraped_vendor] = new_vendor
             logger.warning('Created vendor %s during parse step.' % (scraped_vendor,))
 
-        if product.vendor_id != self.vendors[scraped_vendor].pk:
-            product.vendor_id = self.vendors[scraped_vendor].pk
+        vendor = self.vendors[scraped_vendor]
+
+        if product.vendor_id != vendor.pk:
+            product.vendor_id = vendor.pk
             product.save()
             logger.warning('Update product vendor to %s' % (scraped_vendor,))
 
-        return self.vendors[scraped_vendor]
+        item['scraped']['vendor_id'] = vendor.pk
 
-    def setup(self, item):
+        return item, vendor
+
+    def initial_parse(self, item):
         # TODO: might move this / parts of it to a module
         item['parsed']['name'] = item['scraped']['name']
         item['parsed']['description'] = item['scraped']['description']
         item['parsed']['vendor'] = item['scraped']['vendor']
+        item['parsed']['vendor_id'] = item['scraped']['vendor_id']
         item['parsed']['affiliate'] = item['scraped']['affiliate']
         # TODO: how should we handle images? we need to upload to s3 somehow
         item['parsed']['images'] = item['scraped']['images']
+        item['parsed']['in_stock'] = item['scraped']['in_stock']
 
         return item
 
