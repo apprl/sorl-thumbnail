@@ -4,6 +4,7 @@ import decimal
 
 from django.conf import settings
 from django.db.models.loading import get_model
+from django.utils.html import strip_tags
 
 from hotqueue import HotQueue
 
@@ -140,14 +141,13 @@ class Parser(object):
 
     def initial_parse(self, item):
         # TODO: might move this / parts of it to a module
-        item['parsed']['name'] = item['scraped']['name']
-        item['parsed']['description'] = item['scraped']['description']
+        item['parsed']['name'] = strip_tags(item['scraped']['name']).strip()
+        item['parsed']['description'] = strip_tags(item['scraped']['description']).strip()
         item['parsed']['vendor'] = item['scraped']['vendor']
         item['parsed']['vendor_id'] = item['scraped']['vendor_id']
         item['parsed']['affiliate'] = item['scraped']['affiliate']
-        # TODO: how should we handle images? we need to upload to s3 somehow
-        item['parsed']['images'] = item['scraped']['images']
         item['parsed']['in_stock'] = item['scraped']['in_stock']
+        item['parsed']['images'] = item['scraped']['images']
 
         return item
 
