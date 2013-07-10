@@ -128,6 +128,8 @@ class PricePipeline:
         if price_string.isdigit():
             return (decimal.Decimal(price_string), None)
 
+        price_string = re.sub(r',(\d\d)(?![^ ])', r'.\1', price_string)
+
         currency = []
         price = []
         for token in list(price_string):
