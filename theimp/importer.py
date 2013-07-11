@@ -121,7 +121,7 @@ class Importer(object):
         vendor_product.original_discount_price = product_json.get('discount_price')
         vendor_product.original_discount_currency = product_json.get('currency')
         vendor_product.availability = bool(product_json.get('in_stock', False))
-        # TODO: is original price variables enough?
+        # XXX: price, currency and discount_price should not be used
         #vendor_product.price = product_json.get('regular_price') or '0.0'
         #vendor_product.currency = product_json.get('currency')
         #vendor_product.discount_price = product_json.get('discount_price')

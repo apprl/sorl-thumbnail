@@ -373,9 +373,6 @@ class ProductList(View):
 
             rate = currency_exchange(language_currency, currency)
 
-            #product._original_price = product.price
-            #product._original_discount_price = product.discount_price
-
             price = rate * decimal.Decimal(price)
             product.price = price.quantize(decimal.Decimal('1'),
                                            rounding=decimal.ROUND_HALF_UP)
