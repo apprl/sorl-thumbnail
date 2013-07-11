@@ -21,24 +21,38 @@ class SpiderpigPricePipelineTest(TestCase):
     def test_price(self):
         self.assertEqual(self.pipeline.parse_price('1 299'), (Decimal('1299'), None))
         self.assertEqual(self.pipeline.parse_price('100.99'), (Decimal('100.99'), None))
+        self.assertEqual(self.pipeline.parse_price('100,99'), (Decimal('100.99'), None))
         self.assertEqual(self.pipeline.parse_price('1,000.99'), (Decimal('1000.99'), None))
         self.assertEqual(self.pipeline.parse_price('1 234 567.89'), (Decimal('1234567.89'), None))
         self.assertEqual(self.pipeline.parse_price('1,234,567.89'), (Decimal('1234567.89'), None))
         self.assertEqual(self.pipeline.parse_price('12,34,567.89'), (Decimal('1234567.89'), None))
-
-        # TODO: how to handle ',' as decimal comma
-        #self.assertEqual(self.pipeline.parse_price('100,99'), (Decimal('100.99'), None))
-        #self.assertEqual(self.pipeline.parse_price('1 234 567,89'), (Decimal('1234567.89'), None))
-        #self.assertEqual(self.pipeline.parse_price('1.234.567,89'), (Decimal('1234567.89'), None))
+        self.assertEqual(self.pipeline.parse_price('1 234 567,89'), (Decimal('1234567.89'), None))
+        self.assertEqual(self.pipeline.parse_price('1.234.567,89'), (Decimal('1234567.89'), None))
 
     def test_price_and_currency(self):
         self.assertEqual(self.pipeline.parse_price('1299 SEK'), (Decimal('1299'), 'SEK'))
         self.assertEqual(self.pipeline.parse_price('1 299 SEK'), (Decimal('1299'), 'SEK'))
         self.assertEqual(self.pipeline.parse_price('1,299 SEK'), (Decimal('1299'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('1,299.99 SEK'), (Decimal('1299.99'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('1.299,99 SEK'), (Decimal('1299.99'), 'SEK'))
 
         self.assertEqual(self.pipeline.parse_price('SEK 1299'), (Decimal('1299'), 'SEK'))
         self.assertEqual(self.pipeline.parse_price('SEK 1 299'), (Decimal('1299'), 'SEK'))
         self.assertEqual(self.pipeline.parse_price('SEK 1,299'), (Decimal('1299'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('SEK 1,299.99'), (Decimal('1299.99'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('SEK 1.299,99'), (Decimal('1299.99'), 'SEK'))
+
+        self.assertEqual(self.pipeline.parse_price('SEK1299'), (Decimal('1299'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('SEK1 299'), (Decimal('1299'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('SEK1,299'), (Decimal('1299'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('SEK1,299.99'), (Decimal('1299.99'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('SEK1.299,99'), (Decimal('1299.99'), 'SEK'))
+
+        self.assertEqual(self.pipeline.parse_price('1299SEK'), (Decimal('1299'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('1 299SEK'), (Decimal('1299'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('1,299SEK'), (Decimal('1299'), 'SEK'))
+        self.assertEqual(self.pipeline.parse_price('1,299.99SEK'), (Decimal('1299.99'), 'SEK'))
+        #self.assertEqual(self.pipeline.parse_price('1.299,99SEK'), (Decimal('1299.99'), 'SEK'))
 
     def test_price_and_non_standard_currency(self):
         self.assertEqual(self.pipeline.parse_price(u'1299 kr'), (Decimal('1299'), 'SEK'))

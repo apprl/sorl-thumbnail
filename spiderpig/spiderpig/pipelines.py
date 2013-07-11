@@ -136,6 +136,12 @@ class PricePipeline:
             return (decimal.Decimal(price_string), None)
 
         price_string = re.sub(r',(\d\d)(?![^ ])', r'.\1', price_string)
+        price_first, _, price_second = price_string.rpartition('.')
+        price_first = price_first.replace('.', '')
+        if price_first:
+            price_string = ''.join([price_first, '.', price_second])
+        else:
+            price_string = price_second
 
         currency = []
         price = []
