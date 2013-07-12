@@ -18,7 +18,7 @@ class ImporterImagesPipeline(ImagesPipeline):
 
     def item_completed(self, results, item, info):
         if 'images' in item.fields:
-            resulsts = [x for ok, x in results if ok]
+            results = [x for ok, x in results if ok]
             if results:
                 item['images'] = results
 
