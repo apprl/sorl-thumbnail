@@ -1,5 +1,6 @@
 import logging
 import json
+import os.path
 
 from django.conf import settings
 from django.db.models.loading import get_model
@@ -59,7 +60,8 @@ class Importer(object):
             manufacturer = product_json.get('brand_id'),
             static_brand = product_json.get('brand'),
             gender = product_json.get('gender'),
-            availability = bool(product_json.get('in_stock', False))
+            availability = bool(product_json.get('in_stock', False)),
+            product_image = self._product_image(product_json)
         )
 
         self._update_vendor_product(product_json, site_product)
@@ -81,6 +83,7 @@ class Importer(object):
         site_product.static_brand = product_json.get('brand')
         site_product.gender = product_json.get('gender')
         site_product.availability = bool(product_json.get('in_stock', False))
+        site_product.product_image = self._product_image(product_json)
 
         self._update_vendor_product(product_json, site_product)
 
@@ -107,6 +110,11 @@ class Importer(object):
     #
     # HELPERS
     #
+
+    def _product_image(self, product_json):
+        # TODO: only returns first product image for now
+        return os.path.join(settings.APPAREL_PRODUCT_IMAGE_ROOT,
+                            product_json.get('images')[0]['path'])
 
     def _update_product_options(self, product_json, site_product):
         pass

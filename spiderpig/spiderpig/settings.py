@@ -29,11 +29,6 @@ EXTENSIONS = {
     'spiderpig.pipelines.DatabaseHandler': 500,
 }
 
-#IMAGES_STORE = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'images')
-IMAGES_EXPIRES = 90
-AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
-AWS_SECRET_ACCESS_KEY = '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'
-
 DOWNLOADER_MIDDLEWARES = {
     'spiderpig.middlewares.RelCanonicalMiddleware': 1000,
     #'spiderpig.middlewares.RandomUserAgentMiddleware': 1000,
@@ -53,7 +48,14 @@ sys.path.append('/home/tote/coding/apparelrow/apparelrow')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'apparelrow.settings')
 from django.conf import settings
 
-IMAGES_STORE = 's3://%s/static/products/' % (settings.AWS_STORAGE_BUCKET_NAME,)
+IMAGES_EXPIRES = 90
+IMAGES_STORE = os.path.join(settings.PROJECT_ROOT, 'media', settings.APPAREL_PRODUCT_IMAGE_ROOT)
+#IMAGES_STORE = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'images')
+if 'S3' in settings.DEFAULT_FILE_STORAGE:
+    AWS_ACCESS_KEY_ID = settings.AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY = settings.AWS_SECRET_ACCESS_KEY
+    IMAGES_STORE = 's3://%s/%s/' % (settings.AWS_STORAGE_BUCKET_NAME,
+                                    settings.APPAREL_PRODUCT_IMAGE_ROOT)
 #def setup_django_env(path):
     #print path
     #import imp, os
