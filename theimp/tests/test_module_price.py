@@ -49,7 +49,12 @@ class PriceModuleTest(TestCase):
         self.assertEqual(parsed_item['currency'], 'SEK')
         self.assertEqual(parsed_item['is_discount'], True)
 
-    def test_missing_currency(self):
+    def test_missing_currency_field(self):
+        parsed_item = self.module({'price': '1234'}, {}, None)
+
+        self.assertEqual(parsed_item, {})
+
+    def test_missing_currency_value(self):
         parsed_item = self.module({'price': '1 234', 'currency': ''}, {}, None)
 
         self.assertEqual(parsed_item, {})

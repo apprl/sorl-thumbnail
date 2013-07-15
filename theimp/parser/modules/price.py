@@ -19,7 +19,7 @@ class Price(BaseModule):
         return price
 
     def __call__(self, scraped_item, parsed_item, vendor):
-        currency = scraped_item.get('currency')
+        currency = scraped_item.get('currency', '')
         is_discount = scraped_item.get('is_discount')
 
         discount_price = self.parse_price(scraped_item.get('discount_price'))
