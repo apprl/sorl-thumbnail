@@ -58,15 +58,15 @@ def get_facebook_user(request):
     return FacebookAccessor(fb_user) if fb_user else None
 
 
-def slugify_unique(value, model, slugfield="slug"):
-        suffix = 0
-        potential = base = slugify(value)
-        while True:
-            if suffix:
-                potential = '-'.join([base, str(suffix)])
-            if not model.objects.filter(**{slugfield: potential}).count():
-                return potential
-            suffix += 1
+def slugify_unique(value, model, slugfield='slug'):
+    suffix = 0
+    potential = base = slugify(value)
+    while True:
+        if suffix:
+            potential = '-'.join([base, str(suffix)])
+        if not model.objects.filter(**{slugfield: potential}).count():
+            return potential
+        suffix += 1
 
 
 def get_current_user(view_func):
