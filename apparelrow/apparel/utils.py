@@ -159,6 +159,9 @@ def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
     # Our network
     elif vendor_feed.provider_class == 'aan':
         url = set_query_parameter(url, 'custom', sid)
+    # Default to our own network
+    else:
+        url = set_query_parameter(url, 'custom', sid)
 
     return url
 
