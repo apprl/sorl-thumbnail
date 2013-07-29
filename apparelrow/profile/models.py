@@ -2,15 +2,13 @@
 
 import uuid
 import os.path
-import datetime
 
 from django.db import models
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import get_language, ugettext_lazy as _, ugettext
+from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
-from django.contrib.comments.models import Comment
 from django.contrib.auth.signals import user_logged_in
 from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -18,7 +16,6 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError
 
 from sorl.thumbnail import get_thumbnail
-from django_extensions.db.fields import AutoSlugField
 
 from apparelrow.activity_feed.tasks import update_activity_feed
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
