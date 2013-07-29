@@ -152,7 +152,7 @@ class Transaction(models.Model):
             self.status = Transaction.ACCEPTED
             self.save()
 
-            store.balance += self.commission
+            store.balance -= self.commission
             store.save()
 
     def __unicode__(self):

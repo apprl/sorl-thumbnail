@@ -29,7 +29,7 @@ def calculate_balance(store_id):
         if not balance:
             balance = 0
         store = Store.objects.get(identifier=store_id)
-        store.balance = balance
+        store.balance = -balance
         store.save()
 
         return balance

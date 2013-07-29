@@ -392,7 +392,7 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         self.assertTrue(transaction.status_date)
 
         store = Store.objects.get(user=self.user1)
-        self.assertEqual(store.balance, decimal.Decimal('29.16'))
+        self.assertEqual(store.balance, decimal.Decimal('-29.16'))
 
         store_history = StoreHistory.objects.filter(store=store)
         self.assertEqual(store_history.count(), 2)
@@ -403,7 +403,7 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         response = self.client.post(reverse('advertiser-admin-accept', args=[transaction.pk]))
 
         store = Store.objects.get(user=self.user1)
-        self.assertEqual(store.balance, decimal.Decimal('31.16'))
+        self.assertEqual(store.balance, decimal.Decimal('-31.16'))
 
         store_history = StoreHistory.objects.filter(store=store)
         self.assertEqual(store_history.count(), 3)
