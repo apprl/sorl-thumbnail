@@ -165,7 +165,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     elif view == 'brands':
         brand_ids = []
         if is_authenticated:
-            brand_ids = get_model('apparel', 'Brand').objects.filter(user__followers__user=request.user).values_list('id', flat=True)
+            brand_ids = get_model('apparel', 'Brand').objects.filter(user__followers__user=request.user, user__followers__active=True).values_list('id', flat=True)
         else:
             result.update(extra_html=loader.render_to_string('apparel/fragments/browse_follow_brand.html', {}, context_instance=RequestContext(request)))
         brand_ids_or = ' OR '.join(str(x) for x in (list(brand_ids) + [0]))
