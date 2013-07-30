@@ -337,10 +337,7 @@ def dashboard_complete(request):
 
 
 def dashboard_info(request):
-    if request.user.is_authenticated():
-        return render(request, 'dashboard/info.html')
-
-    return render(request, 'dashboard/info_unauthenticated.html')
+    return render(request, 'dashboard/info.html')
 
 def dashboard_more_info(request):
     return render(request, 'dashboard/more_info.html')
