@@ -233,8 +233,42 @@ STATICSITEMAPS_PING_GOOGLE = False
 STATICSITEMAPS_REFRESH_AFTER = 60 * 8 # 8 hours in minutes
 
 # - PIPELINE SETTINGS -
+PIPELINE_COMPILERS = (
+    'pipeline.compilers.less.LessCompiler',
+)
+PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.cssmin.CSSMinCompressor'
+PIPELINE_CSS = {
+    'bootstrap': {
+        'source_filenames': (
+            'bootstrap/less/bootstrap.less',
+            'bootstrap/less/responsive.less'
+        ),
+        'output_filename': 'css/b.css',
+        'extra_context': {
+            'media': 'screen,projection',
+        },
+    }
+}
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
 PIPELINE_JS = {
+    'bootstrap': {
+        'source_filenames': (
+          'bootstrap/js/transition.js',
+          'bootstrap/js/alert.js',
+          'bootstrap/js/modal.js',
+          'bootstrap/js/dropdown.js',
+          'bootstrap/js/scrollspy.js',
+          'bootstrap/js/tab.js',
+          'bootstrap/js/tooltip.js',
+          'bootstrap/js/popover.js',
+          'bootstrap/js/button.js',
+          'bootstrap/js/collapse.js',
+          'bootstrap/js/carousel.js',
+          'bootstrap/js/typeahead.js',
+          'bootstrap/js/affix.js',
+        ),
+        'output_filename': 'js/b.js',
+    },
     'apparel': {
         'source_filenames': ('js/apparel.js',
                              'js/jquery/jquery.infinitescroll.js',),

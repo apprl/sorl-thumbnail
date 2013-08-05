@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static "styles/print.css" %}" type="text/css" media="print">
     <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
     <link href='http://fonts.googleapis.com/css?family=Lato:400|IM+Fell+Great+Primer:400italic' rel='stylesheet' type='text/css'>
+    {% compressed_css 'bootstrap' %}
     {% block extra-styles %}
     {% endblock extra-styles %}
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -41,6 +42,7 @@
         }
     </script>
     <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
+    {% compressed_js 'bootstrap' %}
     {% compressed_js 'jquery' %}
     {% compressed_js 'apparel' %}
     <script type="text/javascript">
