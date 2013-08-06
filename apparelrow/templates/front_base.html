@@ -11,7 +11,7 @@
             google.load("jquery", "1.4.2");
         </script>
         {% block scripts %}{% endblock %}
-        {% block background_image %}<style>body{background-image: url('{% static image %}');}</style>{% endblock %}
+        {% block background_image %}{% if image %}<style>body{background-image: url('{% static image %}');}</style>{% endif %}{% endblock %}
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
