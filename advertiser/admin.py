@@ -19,6 +19,7 @@ class StoreHistoryInline(admin.TabularInline):
 class StoreAdmin(admin.ModelAdmin):
     list_display = ('identifier', 'user')
     inlines = (StoreHistoryInline,)
+    raw_id_fields = ('user',)
 
 admin.site.register(Store, StoreAdmin)
 
