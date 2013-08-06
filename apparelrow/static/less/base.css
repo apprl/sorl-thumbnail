@@ -1,0 +1,10 @@
+footer {
+  background-color: #e6e6e6;
+}
+#feedback {
+  position: fixed;
+  right: 0;
+  top: 320px;
+  z-index: 999999;
+  cursor: pointer;
+}

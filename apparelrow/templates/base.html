@@ -1,13 +1,14 @@
 {% load i18n l10n apparel_extras compressed login_bar %}
 {% load static from staticfiles %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
     <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - Social Shopping{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
-    <link rel="stylesheet" href="{% static "styles/screen.css" %}" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="{% static "styles/print.css" %}" type="text/css" media="print">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<link rel="stylesheet" href="{% static "styles/screen.css" %}" type="text/css" media="screen, projection">-->
+    <!--<link rel="stylesheet" href="{% static "styles/print.css" %}" type="text/css" media="print">-->
     <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
     <link href='http://fonts.googleapis.com/css?family=Lato:400|IM+Fell+Great+Primer:400italic' rel='stylesheet' type='text/css'>
     {% compressed_css 'bootstrap' %}
@@ -137,7 +138,7 @@
 </head>
 <body class="{% block body-classes %}{% endblock %}">
 
-<div id="outer">
+<div id="outer" class="container">
     {% block header %}
     <div id="header">
         <div id="inner-header">
@@ -256,70 +257,71 @@
             {% block body %}{% endblock %}
         </div>
     </div>
-
-    <div id="footer">
-        <div id="inner-footer">
-            <ul class="copyright">
-                <li><h3>Apprl Fashion AB</h3></li>
-                <li>Sigtunagatan 6</li>
-                <li>113 22 Stockholm</li>
-                <li>{% trans "Sweden" %}</li>
-            </ul>
-            <ul>
-                <li><h3>{% trans "Shop" %}</h3></li>
-                <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
-                <li><a class="men" href="{% gender_url 'M' 'shop' %}">{% trans "Men" %}</a></li>
-                <li><a href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
-                <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
-            </ul>
-            <ul>
-                <li><h3>{% trans "Social" %}</h3></li>
-                {% if not request.user.is_authenticated %}
-                <li><a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
-                {% endif %}
-                <li><a href="{% url 'user-list' %}">{% trans "Members" %}</a></li>
-                {% if request.user.is_authenticated and request.user.facebook_user_id %}
-                <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
-                {% endif %}
-                {% if request.user.is_authenticated %}
-                <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
-                {% else %}
-                <li><a class="open-dialog" href="{% url 'dialog-create-look' %}">{% trans "+ Create look" %}</a>
-                {% endif %}
-            </ul>
-            <ul>
-                <li><h3>{% trans "Follow us" %}</h3></li>
-                <li><a target="_blank" href="http://www.facebook.com/apprl">{% trans "Facebook" %}</a></li>
-                <li><a target="_blank" href="http://pinterest.com/apprl/">{% trans "Pinterest" %}</a></li>
-                <li><a target="_blank" href="{% url 'newsletter-redirect' %}">{% trans "E-mail newsletter" %}</a></li>
-            </ul>
-            <ul>
-                <li><h3>{% trans "Apprl" %}</h3></li>
-                <li><a href="mailto:info@apprl.com">{% trans "Contact" %}</a></li>
-                <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Privacy & Terms" %}</a></li>
-                <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
-                <li><a href="{% url 'dashboard' %}">{% trans "Bloggers" %}</a></li>
-            </ul>
-            <div class="footer-last">
-                <div class="footer-social">
-                    <div>
-                        <div class="fb-like" data-href="https://facebook.com/apprl/" data-layout="button_count" data-send="false" data-width="100" data-show-faces="false"></div>
-                    </div>
-                    <div class="last">
-                        <a data-pin-do="buttonFollow" href="http://pinterest.com/apprl/">APPRL</a>
-                    </div>
-                </div>
-                {% if not request.user.is_partner %}
-                <a href="{% url 'dashboard' %}" class="btn btn-block btn-upper btn-footer-partner">{% trans "Become a partner blogger" %}</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
 </div>
 
-<a class="feedback" href="mailto:feedback@apprl.com?subject={% trans "Hi Apprl! I have a question / idea / complaint / complement" %}">
-    <img src="{% static "images/feedback-button.png" %}">
-</a>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <ul class="list-unstyled">
+                        <li><h3>{% trans "Shop" %}</h3></li>
+                        <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
+                        <li><a class="men" href="{% gender_url 'M' 'shop' %}">{% trans "Men" %}</a></li>
+                        <li><a href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
+                        <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <ul class="list-unstyled">
+                        <li><h3>{% trans "Join" %}</h3></li>
+                        {% if not request.user.is_authenticated %}
+                        <li><a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'dashboard' %}">{% trans "Bloggers" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <ul class="list-unstyled">
+                        <li><h3>{% trans "Follow us" %}</h3></li>
+                        <li><a target="_blank" href="http://www.facebook.com/apprl">{% trans "Facebook" %}</a></li>
+                        <li><a target="_blank" href="http://pinterest.com/apprl/">{% trans "Pinterest" %}</a></li>
+                        <li><a target="_blank" href="{% url 'newsletter-redirect' %}">{% trans "E-mail newsletter" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <ul class="list-unstyled">
+                        <li><h3>{% trans "Apprl" %}</h3></li>
+                        <li><a href="mailto:info@apprl.com">{% trans "Contact" %}</a></li>
+                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Privacy & Terms" %}</a></li>
+                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <ul class="list-unstyled copyright">
+                        <li><h3>Apprl Fashion AB</h3></li>
+                        <li>Sigtunagatan 6</li>
+                        <li>113 22 Stockholm</li>
+                        <li>{% trans "Sweden" %}</li>
+                    </ul>
+                    <div class="footer-last">
+                        <div class="footer-social">
+                            <div>
+                                <div class="fb-like" data-href="https://facebook.com/apprl/" data-layout="button_count" data-send="false" data-width="100" data-show-faces="false"></div>
+                            </div>
+                            <div class="last">
+                                <a data-pin-do="buttonFollow" href="http://pinterest.com/apprl/">APPRL</a>
+                            </div>
+                        </div>
+                        {% if not request.user.is_partner %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-block btn-upper btn-footer-partner">{% trans "Become a partner blogger" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a id="feedback" href="mailto:feedback@apprl.com?subject={% trans "Hi Apprl! I have a question / idea / complaint / complement" %}"><img src="{% static "images/feedback-button.png" %}"></a>
 
 <script type="text/javascript" src="{% static "js/money.min.js" %}"></script>
 <script type="text/javascript">

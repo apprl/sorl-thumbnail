@@ -241,7 +241,8 @@ PIPELINE_CSS = {
     'bootstrap': {
         'source_filenames': (
             'bootstrap/less/bootstrap.less',
-            'bootstrap/less/responsive.less'
+            'bootstrap/less/responsive.less',
+            'less/base.less',
         ),
         'output_filename': 'css/b.css',
         'extra_context': {
