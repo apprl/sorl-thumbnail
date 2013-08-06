@@ -2212,7 +2212,7 @@ msgstr "Tjäna pengar med looks på din blogg/site"
 
 #: templates/dashboard/info.html:19 templates/dashboard/info.html.py:63
 msgid "Create an APPRL-shop for your site/blog"
-msgstr "Skapa en APPRL-shop för din site/blogg"
+msgstr "Skapa en APPRL-shop till din site/blogg"
 
 #: templates/dashboard/info.html:20 templates/dashboard/info.html.py:69
 msgid "Our stores & brands"

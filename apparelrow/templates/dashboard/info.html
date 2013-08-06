@@ -25,7 +25,9 @@
 <div id="content" class="content">
     <h2>{% trans "How it works" %}</h2>
     <div class="dashboard-content">
+        {% if not request.user.is_partner %}
         <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PARTNER BLOGGER HERE" %}</a></p>
+        {% endif %}
         <p class="center">{% trans "Questions? Let us know on" %} <a href="mailto:partner@apprl.com">partner@apprl.com</a></p>
 
         <p>{% trans "As a fashion blogger you can apply to our partner program. As a partner blogger you make money when linking to Apprl products. If someone buys a product that you have linked to, you make up to 10&#37; of the order value. As a partner blogger you will also grow your blog and create looks to share with your readers." %}</p>
@@ -74,7 +76,9 @@
         <p>{% trans "You will be able to follow how much you’re making day by day." %}</p>
         <img src="{% static "images/dashboard_statistics.png" %}">
 
+        {% if not request.user.is_partner %}
         <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PARTNER BLOGGER HERE" %}</a></p>
+        {% endif %}
         <p id="questions" class="center">{% trans "Questions? Let us know on" %} <a href="mailto:partner@apprl.com">partner@apprl.com</a></p>
 
     </div>
