@@ -240,8 +240,6 @@ PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.cssmin.CSSMinCompressor'
 PIPELINE_CSS = {
     'bootstrap': {
         'source_filenames': (
-            'bootstrap/less/bootstrap.less',
-            'bootstrap/less/responsive.less',
             'less/base.less',
         ),
         'output_filename': 'css/b.css',
