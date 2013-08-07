@@ -10,7 +10,7 @@ def login_bar(request_path):
 
     if request_path.startswith('/product'):
         text = ugettext('Sign up to get sale alerts when the price drops on products you like!')
-    elif request_path.startswith('/accounts') or request_path.startswith('/partner'):
+    elif request_path.startswith('/accounts'):
         disabled = True
 
     return {'text': text, 'disabled': disabled}

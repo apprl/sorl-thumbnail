@@ -1,12 +1,11 @@
 {% load i18n %}
 {% if not disabled %}
-<div id="sticky-login-placeholder" style="display:none;"></div>
-<div id="sticky-login-bar">
-    <div id="sticky-inner-login-bar">
-        <p>{{ text }}</p>
-        <ul>
-            <li class="first"><a href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
-            <li class="last"><a class="btn btn-upper btn-positive" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
+<div class="loginbar loginbar-fixed-top visible-lg">
+    <div class="container">
+        <p class="pull-left">{{ text }}</p>
+        <ul class="list-inline pull-right">
+            <li><a class="btn btn-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
+            <li><a class="btn btn-primary" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
         </ul>
     </div>
 </div>

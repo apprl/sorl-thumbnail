@@ -335,23 +335,35 @@ def getdictattribute(value, arg):
 
 register.filter('getdictattribute', getdictattribute)
 
+
+@register.simple_tag
+def get_language_text(language_code):
+    if language_code not in settings.SHORT_LANGUAGES_LIST_DISPLAY:
+        return settings.SHORT_LANGUAGES_DISPLAY[0][1]
+
+    for lang, lang_text in settings.SHORT_LANGUAGES_DISPLAY:
+        if lang == language_code:
+            return lang_text
+
+    return settings.SHORT_LANGUAGES_DISPLAY[0][1]
+
 @register.simple_tag
 def selected_url(request, *args):
     for pattern in args:
         if pattern == '/':
             if request.path.startswith('/men') or request.path.startswith('/women'):
-                return 'selected'
+                return 'selected active'
             elif request.path == pattern:
-                return 'selected'
+                return 'selected active'
         elif pattern == '/profile':
             slug = '--------------------------------------'
             if request.user.is_authenticated():
                 slug = request.user.slug
             if not request.path.startswith('/profile/%s' % (slug,)) and not request.path.startswith('/profile/settings') and request.path.startswith(pattern):
-                return 'selected'
+                return 'selected active'
         else:
             if request.path.startswith(pattern):
-                return 'selected'
+                return 'selected active'
 
     return ''
 
