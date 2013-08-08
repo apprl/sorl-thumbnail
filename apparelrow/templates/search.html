@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block 'extra-scripts' %}
+<script type="text/javascript">
+    $(document).ready(function() {
+            ApparelSearch.search(null, '{{ q }}');
+    });
+</script>
+{% endblock 'extra-scripts' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>{% trans "Search result for" %} '<span id="search-query">{{ q }}</span>'</h1>
+    </div>
+</div>
+
+<div id="search-result" class="row" style="display: block;">
+    <div class="wide result-container col-lg-4">
+        <h2 class="search-result-products">{% trans "Matching products" %}</h2>
+        <div class="product-list"><ul id="search-result-products" class="list"></ul></div>
+        <div class="search-link"><a class="search-result-products btn btn-block btn-upper" href="#" style="display:none;">{% trans "Show all products" %}</a></div>
+    </div>
+    <div class="result-container col-lg-4">
+        <h2 class="search-result-looks">{% trans "Matching looks" %}</h2>
+        <ul id="search-result-looks" class="looks"></ul>
+        <div class="search-link"><a class="search-result-looks btn btn-block btn-upper" href="#" style="display:none;">{% trans "Show all looks" %}</a></div>
+    </div>
+    <div class="last result-container col-lg-4">
+        <h2 class="search-result-manufacturers">{% trans "Matching brands" %}</h2>
+        <ul id="search-result-manufacturers"></ul>
+        <div class="search-link"><a class="search-result-manufacturers btn btn-block btn-upper" href="#" style="display:none;">{% trans "Show all manufacturers" %}</a></div>
+
+        <h2 class="search-result-stores">{% trans "Matching stores" %}</h2>
+        <ul id="search-result-stores"></ul>
+
+        <h2 class="search-result-profiles">{% trans "Matching members" %}</h2>
+        <ul id="search-result-profiles"></ul>
+    </div>
+</div>
+
+{% endblock %}

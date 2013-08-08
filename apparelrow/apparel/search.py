@@ -4,6 +4,7 @@ import logging
 import re
 
 from django.conf import settings
+from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
@@ -443,6 +444,15 @@ def decode_store_facet(data):
 #
 # Generic search
 #
+
+def search(request):
+    """
+    Search page
+    """
+    query = request.GET.get('q', '')
+
+    return render(request, 'search.html', {'q': query})
+
 
 def search_view(request, model_name):
     """

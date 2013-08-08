@@ -28,6 +28,7 @@ urlpatterns = patterns('',
     (r'^home/friends/$', 'apparelrow.apparel.views.facebook_friends_widget'),
 
     # Search
+    url(r'^search/$', 'apparelrow.apparel.search.search', name='search'),
     (r'^search/(?P<model_name>\w+)/', 'apparelrow.apparel.search.search_view'),
 
     # Notifications

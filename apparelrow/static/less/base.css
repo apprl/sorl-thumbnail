@@ -4631,6 +4631,17 @@ body.account {
   padding-top: 12px;
   padding-bottom: 12px;
 }
+#search-result {
+  display: none;
+}
+#cancel-search {
+  display: none;
+  position: absolute;
+  right: 38px;
+  top: 18px;
+  height: 12px;
+  width: 12px;
+}
 .loginbar {
   width: 100%;
   background-color: #e6e6e6;
@@ -4646,6 +4657,7 @@ body.account {
 .loginbar-fixed-top {
   position: fixed;
   top: 50px;
+  z-index: 10020;
 }
 footer {
   margin-top: 20px;

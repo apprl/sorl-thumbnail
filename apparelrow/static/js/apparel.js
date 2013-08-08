@@ -654,7 +654,7 @@ ApparelSearch = {
         // Clears and hides all
         this.hide();
         this.clear();
-        updateHash('!s', '', true);
+        //updateHash('!s', '', true);
         jQuery('#search > input').val('');
     },
     search: function(callback, query) {
@@ -673,7 +673,9 @@ ApparelSearch = {
         ApparelSearch.clear();
         ApparelSearch.last_query = s;
 
-        updateHash('!s', s, false);
+        $('#search-query').text(s);
+
+        //updateHash('!s', s, false);
 
         ApparelSearch._doSearch({
             model: 'product',
@@ -919,6 +921,9 @@ jQuery(document).ready(function() {
                 return false;
             case 13: // enter
                 ApparelSearch.search();
+                if ($('.navbar-toggle').is(':visible')) {
+                    $('.navbar-responsive-collapse').collapse('hide');
+                }
                 return false;
             case 27: // escape
                 ApparelSearch.cancel();
@@ -929,6 +934,8 @@ jQuery(document).ready(function() {
         }
     });
 
+    /**
+     * Disable search hash change
     jQuery(window).bind('hashchange', function() {
         var hash_query = getHashParameterByName('!s');
         if(hash_query && ApparelSearch.last_query != hash_query) {
@@ -940,6 +947,7 @@ jQuery(document).ready(function() {
     if(hash_query && ApparelSearch.last_query != hash_query) {
         ApparelSearch.search(null, hash_query);
     }
+    */
 
     jQuery('#cancel-search').click(function(e) {
         ApparelSearch.cancel();
