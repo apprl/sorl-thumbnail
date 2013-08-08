@@ -1,24 +1,22 @@
 import logging
 import collections
 
-import xmltodict
-
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.db.models import get_model
 
-from apparelrow.importer.framework.provider.aan import Provider as AanProvider, AanMapper
+from apparelrow.importer.framework.mapper import DataMapper
+from apparelrow.importer.framework.provider import CSVProvider
 
 from advertiser.utils import make_advertiser_url
 
 logger = logging.getLogger('apparel.importer')
 
 
-class VrientsMapper(AanMapper):
+class VrientsMapper(DataMapper):
     def get_product_id(self):
-        return self.record.get('@id')
+        return self.record.get('id')
 
     def get_product_name(self):
-        return self.record.get('name')
+        return self.record.get('title')
 
     def get_description(self):
         return self.record.get('description')
@@ -36,38 +34,22 @@ class VrientsMapper(AanMapper):
         return make_advertiser_url(store_id, self.record.get('link'))
 
     def get_category(self):
-        categories = self.record.get('categories')
-        if categories:
-            category_list = categories.get('category')
-            if not isinstance(category_list, list):
-                category_list = [category_list]
-
-            merged_categories = collections.OrderedDict()
-            for category in category_list:
-                for category_part in category.split(' - '):
-                    merged_categories[category_part] = 1
-
-            return ' / '.join(merged_categories.keys())
-
-        return 'Unknown'
+        return self.record.get('categories')
 
     def get_gender(self):
-        return self.map_gender(self.record.get('name', '') + self.record.get('description', ''))
+        return 'M'
 
     def get_price(self):
-        return self.record.get('price').get('#text')
+        return self.record.get('price')
+
+    def get_discount_price(self):
+        return self.record.get('sale_price')
 
     def get_currency(self):
-        return self.record.get('price').get('@currency')
+        return 'EUR'
 
     def get_image_url(self):
-        images = self.record.get('images')
-        if images:
-            image = images.get('image')[0].get('@url')
-
-            return [(image, self.IMAGE_LARGE)]
-
-        return []
+        return [(self.record.get('image_link'), self.IMAGE_LARGE)]
 
     def get_availability(self):
         return None
@@ -87,16 +69,7 @@ class VrientsMapper(AanMapper):
         return variations
 
 
-class Provider(AanProvider):
+class Provider(CSVProvider):
     def __init__(self, *args, **kwargs):
         super(Provider, self).__init__(*args, **kwargs)
-        self.extension = 'xml'
         self.mapper=VrientsMapper
-
-    def process(self):
-        content = self.file.read()
-        xml_dict = xmltodict.parse(content)
-
-        for record in xml_dict['products']['product']:
-            record = self.mapper(self, record).translate()
-            self.import_data(record)
