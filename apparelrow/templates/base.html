@@ -241,13 +241,9 @@
                 <!--</div>-->
             <!--</div>-->
 
-    <div id="outer" class="container">
-        <div id="container">
-            <div id="inner-container">
-                {% block body-header %}{% endblock %}
-                {% block body %}{% endblock %}
-            </div>
-        </div>
+    <div id="container" class="container">
+        {% block body-header %}{% endblock %}
+        {% block body %}{% endblock %}
     </div>
 
     <footer>

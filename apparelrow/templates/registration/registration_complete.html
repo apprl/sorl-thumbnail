@@ -13,7 +13,7 @@
         {% csrf_token %}
         {{ form.email.label_tag }}
         {{ form.email }}
-        <button class="btn btn-upper btn-small" type="submit">{% trans "Send e-mail again" %}</button>
+        <button class="btn btn-default" type="submit">{% trans "Send e-mail again" %}</button>
         {{ form.email.errors }}
     </form>
     {% if request.GET.sent %}
