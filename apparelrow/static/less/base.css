@@ -4575,14 +4575,14 @@ td.visible-print {
   }
 }
 body {
-  margin-top: 108px;
+  padding-top: 108px;
 }
 body.authenticated {
-  margin-top: 50px;
+  padding-top: 50px;
 }
 body.login,
 body.account {
-  margin-top: 50px;
+  padding-top: 50px;
 }
 .dropdown-menu .sub-menu {
   left: 100%;
@@ -4672,6 +4672,9 @@ footer .footer-social {
 footer .footer-social .btn {
   margin-top: 10px;
 }
+#languageform {
+  display: none;
+}
 .btn-facebook {
   background-color: #3b5999;
   color: #ffffff;
@@ -4691,7 +4694,4 @@ footer .footer-social .btn {
   top: 320px;
   z-index: 999999;
   cursor: pointer;
-}
-#languageform {
-  display: none;
 }

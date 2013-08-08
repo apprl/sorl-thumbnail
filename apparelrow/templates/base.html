@@ -114,12 +114,16 @@
 
             <!-- Place everything within .navbar-collapse to hide it until above 768px -->
             <div class="nav-collapse collapse navbar-responsive-collapse">
+                <form action="{% url 'search' %}" class="navbar-form pull-right" autocomplete="off" id="search">
+                    <input type="text" name="q" class="form-control" placeholder="{% trans "I'm looking for..." %}"></span>
+                    <!--<a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>-->
+                </form>
+
                 <ul class="nav navbar-nav">
-                    <li class="{% selected_url request "/" "/all" %}"><a href="{% if request.user.is_authenticated %}{% url 'user_feed' %}{% else %}{% url 'public_feed' %}{% endif %}">{% trans "Newsfeed" %}</a></li>
                     <li class="{% selected_url request "/shop" "/products" %}"><a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
                     <li class="{% selected_url request "/looks" %}"><a href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
                     <li class="dropdown {% selected_url request "/users" "/brand" "/profile" %}">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Looks" %} <b class="caret"></b></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Follow" %} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'user-list-popular' %}">{% trans "Members" %}</a></li>
                             <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
@@ -155,12 +159,6 @@
                             <li><a data-language="{{ language.0 }}" href="#">{% trans language.1 %}</a></li>
                             {% endfor %}
                         </ul>
-                    </li>
-                    <li>
-                        <form action="{% url 'search' %}" class="navbar-form pull-right" autocomplete="off" id="search"> <!--onSubmit="return false">-->
-                            <input type="text" name="q" class="form-control" placeholder="{% trans "I'm looking for..." %}"></span>
-                            <!--<a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>-->
-                        </form>
                     </li>
                 </ul>
             </div>

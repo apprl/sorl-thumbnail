@@ -1,23 +1,41 @@
+//
+// Setup base css
+// ----------------------------------------------------------------------------
+
+// Load custom variables
+// -------------------------
+@import "./variables.less";
+
+// Load bootstrap glyphicons
+// -------------------------
 @import "./../fonts/less/bootstrap-glyphicons.less";
+
+// Load bootstrap 3
+// -------------------------
 @import './../bootstrap/less/bootstrap.less';
 
-@footer_bg_color: #e6e6e6;
+
+//
+// Body
+// ----------------------------------------------------------------------------
 
 body {
-    margin-top: 108px;
+    padding-top: 108px;
     &.authenticated {
-        margin-top: 50px;
+        padding-top: 50px;
     }
     &.login, &.account {
-        margin-top: 50px;
+        padding-top: 50px;
     }
 }
 
 
+//
+// Navbar
+// ----------------------------------------------------------------------------
 
-
-
-
+// On hover dropdown fixes
+// -------------------------
 .dropdown-menu .sub-menu {
     left: 100%;
     position: absolute;
@@ -56,14 +74,8 @@ body {
     left: -6px;
 }
 
-
-
-
-
-
-
-
-
+// Custom navbar changes
+// -------------------------
 
 .navbar {
     background-color: #000000;
@@ -107,6 +119,11 @@ body {
     z-index: 10020;
 }
 
+
+//
+// Footer
+// ----------------------------------------------------------------------------
+
 footer {
     margin-top: 20px;
     background-color: @footer_bg_color;
@@ -121,9 +138,20 @@ footer {
     }
 }
 
+
+//
+// Hidden language form
+// ----------------------------------------------------------------------------
+
+#languageform {
+    display: none;
+}
+
+
 //
 // Facebook button
 // ----------------------------------------------------------------------------
+
 .btn-facebook {
     background-color: #3b5999;
     color: #ffffff;
@@ -138,6 +166,7 @@ footer {
     }
 }
 
+
 //
 // Feedback button
 // ----------------------------------------------------------------------------
@@ -148,8 +177,4 @@ footer {
     top: 320px;
     z-index: 999999;
     cursor: pointer;
-}
-
-#languageform {
-    display: none;
 }
