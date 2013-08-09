@@ -20,6 +20,7 @@
 // ----------------------------------------------------------------------------
 
 body {
+    background-color: @footer_bg_color;
     padding-top: 108px;
     &.authenticated {
         padding-top: 50px;
@@ -88,6 +89,17 @@ body {
         padding-top: 12px;
         padding-bottom: 12px;
     }
+    .navbar-nav > li > a {
+        color: #ffffff;
+        &:hover span {
+            padding-bottom: 4px;
+            border-bottom: 3px solid #ffffff;
+        }
+    }
+    .navbar-nav > .dropdown > a .caret {
+        border-top-color: #ffffff;
+        border-bottom-color: #ffffff;
+    }
 }
 
 #search-result {
@@ -102,12 +114,18 @@ body {
     width: 12px;
 }
 
+//
+// Login bar
+// ----------------------------------------------------------------------------
+
 .loginbar {
+    max-height: 58px;
+    overflow: hidden;
     width: 100%;
     background-color: @footer_bg_color;
     padding: 10px;
     p {
-        line-height: 38px;
+        padding: 10px 0;
     }
     p, ul {
         margin-bottom: 0;
@@ -119,13 +137,69 @@ body {
     z-index: 10020;
 }
 
+//
+// Index page
+// ----------------------------------------------------------------------------
+
+.index {
+    // TODO: hide more... and only show login
+    .navbar-nav, .navbar-form {
+        //display: none;
+    }
+    .index-choice {
+        background-color: #333333;
+        min-height: 60px;
+        a {
+            display: inline-block;
+            font-size: 20px;
+            color: #ffffff;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    }
+    .index-pre-choice {
+        padding: 30px 0;
+        h3 {
+            margin-top: 12px;
+            margin-bottom: 12px;
+            font-size: 30px;
+        }
+        .fb-facepile {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    }
+    .btn-get-access {
+        width: 100%;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        background-color: @light_green_color;
+        font-size: 20px;
+        color: #ffffff;
+        border-radius: 0;
+    }
+}
+
+.featured-container {
+    background: #000000 url('../images/index_background.jpg') no-repeat center;
+    height: 594px;
+}
+
+//
+// Content container
+// ----------------------------------------------------------------------------
+
+#content-container {
+    background-color: #ffffff;
+    /*padding-bottom: 20px;*/
+}
 
 //
 // Footer
 // ----------------------------------------------------------------------------
 
 footer {
-    margin-top: 20px;
+    padding: 20px 0;
     background-color: @footer_bg_color;
     h4 {
         font-size: 16px;

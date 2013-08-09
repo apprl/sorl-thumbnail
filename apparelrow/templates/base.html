@@ -108,7 +108,7 @@
             </button>
 
             <!-- Be sure to leave the brand out there if you want it shown -->
-            <a class="navbar-brand" href="{% if request.user.is_authenticated %}{% url 'user_feed' %}{% else %}{% url 'public_feed' %}{% endif %}">
+            <a class="navbar-brand" href="{% url 'index' %}">
                 <img src="{% static "images/logo.png" %}" alt="Apprl">
             </a>
 
@@ -120,10 +120,10 @@
                 </form>
 
                 <ul class="nav navbar-nav">
-                    <li class="{% selected_url request "/shop" "/products" %}"><a href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Shop" %}</a></li>
-                    <li class="{% selected_url request "/looks" %}"><a href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
+                    <li class="{% selected_url request "/shop" "/products" %}"><a href="{% gender_url APPAREL_GENDER 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
+                    <li class="{% selected_url request "/looks" %}"><a href="{% gender_url APPAREL_GENDER 'look-list' %}"><span>{% trans "Looks" %}</span></a></li>
                     <li class="dropdown {% selected_url request "/users" "/brand" "/profile" %}">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Follow" %} <b class="caret"></b></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>{% trans "Follow" %} <b class="caret"></b></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'user-list-popular' %}">{% trans "Members" %}</a></li>
                             <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
@@ -133,10 +133,10 @@
 
                 <ul class="nav navbar-nav pull-right">
                     {% if not request.user.is_authenticated %}
-                    <li><a href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
+                    <li><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>
                     {% else %}
                     <li class="dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ request.user.display_name }} <b class="caret"></b></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>{{ request.user.display_name }} <b class="caret"></b></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ request.user.url_likes }}">{% trans "Your profile" %}</a></li>
                             {% if request.user.is_partner %}
@@ -153,7 +153,7 @@
                     </li>
                     {% endif %}
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'django.views.i18n.set_language' %}">{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'django.views.i18n.set_language' %}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
                         <ul id="language-dropdown" class="dropdown-menu">
                             {% for language in LANGUAGES_DISPLAY %}
                             <li><a data-language="{{ language.0 }}" href="#">{% trans language.1 %}</a></li>
@@ -195,9 +195,13 @@
         <!--</div>-->
     <!--</div>-->
 
-    <div id="container" class="container">
-        {% block body-header %}{% endblock %}
-        {% block body %}{% endblock %}
+    <div id="content-container">
+        {% block full-body %}
+        <div class="container">
+            {% block body-header %}{% endblock %}
+            {% block body %}{% endblock %}
+        </div>
+        {% endblock %}
     </div>
 
     <footer>
@@ -239,19 +243,23 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="row">
-                        <ul class="list-unstyled col-sm-6 copyright">
+                        <ul class="list-unstyled col-6 copyright">
                             <li><h4>Apprl Fashion AB</h4></li>
                             <li>Sigtunagatan 6</li>
                             <li>113 22 Stockholm</li>
                             <li>{% trans "Sweden" %}</li>
                         </ul>
-                        <div class="footer-social col-sm-6">
+                        <div class="footer-social col-6">
                             <div class="fb-like" data-href="https://facebook.com/apprl/" data-layout="button_count" data-send="false" data-width="100" data-show-faces="false"></div>
                             <div class="last">
                                 <a data-pin-do="buttonFollow" href="http://pinterest.com/apprl/">APPRL</a>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
                             {% if not request.user.is_partner %}
-                            <a href="{% url 'dashboard' %}" class="btn btn-default">{% trans "Become a partner blogger" %}</a>
+                            <a href="{% url 'dashboard' %}" class="btn btn-default btn-block">{% trans "Become a partner blogger" %}</a>
                             {% endif %}
                         </div>
                     </div>

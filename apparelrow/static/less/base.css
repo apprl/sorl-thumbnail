@@ -4575,6 +4575,7 @@ td.visible-print {
   }
 }
 body {
+  background-color: #e6e6e6;
   padding-top: 108px;
 }
 body.authenticated {
@@ -4631,6 +4632,17 @@ body.account {
   padding-top: 12px;
   padding-bottom: 12px;
 }
+.navbar .navbar-nav > li > a {
+  color: #ffffff;
+}
+.navbar .navbar-nav > li > a:hover span {
+  padding-bottom: 4px;
+  border-bottom: 3px solid #ffffff;
+}
+.navbar .navbar-nav > .dropdown > a .caret {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
+}
 #search-result {
   display: none;
 }
@@ -4643,12 +4655,14 @@ body.account {
   width: 12px;
 }
 .loginbar {
+  max-height: 58px;
+  overflow: hidden;
   width: 100%;
   background-color: #e6e6e6;
   padding: 10px;
 }
 .loginbar p {
-  line-height: 38px;
+  padding: 10px 0;
 }
 .loginbar p,
 .loginbar ul {
@@ -4659,8 +4673,49 @@ body.account {
   top: 50px;
   z-index: 10020;
 }
+.index .index-choice {
+  background-color: #333333;
+  min-height: 60px;
+}
+.index .index-choice a {
+  display: inline-block;
+  font-size: 20px;
+  color: #ffffff;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.index .index-pre-choice {
+  padding: 30px 0;
+}
+.index .index-pre-choice h3 {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-size: 30px;
+}
+.index .index-pre-choice .fb-facepile {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.index .btn-get-access {
+  width: 100%;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  background-color: #60d1ab;
+  font-size: 20px;
+  color: #ffffff;
+  border-radius: 0;
+}
+.featured-container {
+  background: #000000 url('../images/index_background.jpg') no-repeat center;
+  height: 594px;
+}
+#content-container {
+  background-color: #ffffff;
+  /*padding-bottom: 20px;*/
+
+}
 footer {
-  margin-top: 20px;
+  padding: 20px 0;
   background-color: #e6e6e6;
 }
 footer h4 {

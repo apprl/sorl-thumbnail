@@ -1,12 +1,26 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block body %}
 
 <div class="row">
     <div class="col-lg-12">
-        <h1>Store static page</h1>
+        <h1>{% trans "Are you an online store?" %}</h1>
     </div>
+</div>
+
+<div class="featurette">
+    <img class="featurette-image pull-right img-responsive" src="{% static 'images/browser-icon-chrome.png' %}">
+    <h2 class="featurette-heading">First featurette headling. <span class="muted">It'll blow your mind.</span></h2>
+    <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+</div>
+
+<hr style="margin: 80px 0;">
+
+<div class="featurette">
+    <img class="featurette-image pull-left img-responsive" src="{% static 'images/browser-icon-chrome.png' %}">
+    <h2 class="featurette-heading">Oh yeah, it's that good. <span class="muted">See for yourself.</span></h2>
+    <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
 </div>
 
 {% endblock %}

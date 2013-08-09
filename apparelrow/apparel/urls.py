@@ -8,8 +8,8 @@ from apparelrow.apparel.views.looks import LookView
 urlpatterns = patterns('',
     # Index
     url(r'^$', 'apparelrow.apparel.views.index', name='index'),
-    url(r'^publisher/$', 'apparelrow.apparel.views.publisher', name='publisher'),
-    url(r'^store/$', 'apparelrow.apparel.views.store', name='store'),
+    url(r'^publisher/$', 'apparelrow.apparel.views.publisher', name='index-publisher'),
+    url(r'^store/$', 'apparelrow.apparel.views.store', name='index-store'),
 
     # Feed
     url(r'^feed/$', 'apparelrow.activity_feed.views.user_feed', name='user_feed'),
