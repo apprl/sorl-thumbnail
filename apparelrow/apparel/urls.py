@@ -6,8 +6,13 @@ from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
 
 urlpatterns = patterns('',
+    # Index
+    url(r'^$', 'apparelrow.apparel.views.index', name='index'),
+    url(r'^publisher/$', 'apparelrow.apparel.views.publisher', name='publisher'),
+    url(r'^store/$', 'apparelrow.apparel.views.store', name='store'),
+
     # Feed
-    url(r'^$', 'apparelrow.activity_feed.views.user_feed', name='user_feed'),
+    url(r'^feed/$', 'apparelrow.activity_feed.views.user_feed', name='user_feed'),
     url(r'^all/$', 'apparelrow.activity_feed.views.public_feed', name='public_feed'),
     url(r'^all/men/$', 'apparelrow.activity_feed.views.public_feed', {'gender': 'M'}, name='public_feed-men'),
     url(r'^all/women/$', 'apparelrow.activity_feed.views.public_feed', {'gender': 'W'}, name='public_feed-women'),

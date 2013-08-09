@@ -16,8 +16,8 @@ from django.core.urlresolvers import reverse
 import redis
 
 from apparelrow.apparel.models import Product, Look
-from apparelrow.apparel.views import get_top_looks_in_network, get_top_products_in_network
-from apparelrow.apparel.utils import get_gender_from_cookie
+from apparelrow.apparel.utils import get_top_looks_in_network, get_top_products_in_network, get_gender_from_cookie
+
 from apparelrow.activity_feed.models import Activity, ActivityFeed
 from apparelrow.activity_feed.tasks import get_feed_key
 
@@ -126,10 +126,10 @@ def public_feed(request, gender=None):
             'current_page': paged_result
         })
 
-    popular_products = Product.valid_objects.filter(gender__in=[gender, 'U']) \
-                                            .order_by('-popularity')
-    popular_looks = Look.published_objects.filter(gender__in=[gender, 'U']) \
-                                          .order_by('-popularity', '-created')
+    popular_products = get_model('apparel', 'Product').valid_objects.filter(gender__in=[gender, 'U']) \
+                                                                    .order_by('-popularity')
+    popular_looks = get_model('apparel', 'Look').published_objects.filter(gender__in=[gender, 'U']) \
+                                                                  .order_by('-popularity', '-created')
     popular_brands = get_user_model().objects.filter(is_active=True, is_brand=True) \
                                              .order_by('-followers_count')
     popular_members = get_user_model().objects.filter(is_active=True, is_brand=False, gender=gender) \

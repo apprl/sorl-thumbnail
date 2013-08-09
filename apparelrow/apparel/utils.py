@@ -16,6 +16,32 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 
 
+def get_top_looks_in_network(profile, limit=None):
+    Follow = get_model('profile', 'Follow')
+    Look = get_model('apparel', 'Look')
+
+    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
+    looks = Look.published_objects.distinct().filter(user__in=user_ids).order_by('-popularity', '-created')
+
+    if limit:
+        return looks[:limit]
+
+    return looks
+
+
+def get_top_products_in_network(profile, limit=None):
+    Follow = get_model('profile', 'Follow')
+    Product = get_model('apparel', 'Product')
+
+    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
+    products = Product.valid_objects.distinct().filter(likes__active=True, likes__user__in=user_ids).order_by('-popularity')
+
+    if limit:
+        return products[:limit]
+
+    return products
+
+
 def get_product_alternative(product, default=None):
     """
     Return shop url to product alternatives based on color and category.

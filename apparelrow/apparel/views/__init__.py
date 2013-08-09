@@ -36,8 +36,10 @@ from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Opt
 from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
-from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative
+from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative, get_top_looks_in_network
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity
+
+from apparelrow.activity_feed.views import user_feed
 
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
@@ -738,6 +740,25 @@ def gender(request, *args, **kwargs):#view=None, gender=None):
 
     return HttpResponseRedirect(reverse('%s-women' % (view,), args=args))
 
+
+#
+# Index page for unauthenticated users
+#
+
+def index(request):
+    if request.user.is_authenticated():
+        return user_feed(request)
+
+    return render(request, 'apparel/index.html', {})
+
+def publisher(request):
+    return render(request, 'apparel/publisher.html', {'object': get_model('apparel', 'Product').valid_objects.all()[:1][0]})
+
+def store(request):
+    return render(request, 'apparel/store.html')
+
+
+
 def about(request):
     return render_to_response('apparel/about.html', {}, context_instance=RequestContext(request))
 
@@ -822,26 +843,3 @@ def facebook_friends_widget(request):
     return render_to_response('apparel/fragments/facebook_friends.html', {
             'facebook_friends': friends,
         }, context_instance=RequestContext(request))
-
-#
-# Utility routines. FIXME: Move these out
-#
-
-def get_top_looks_in_network(profile, limit=None):
-    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
-    # TODO: add active/published flag here later
-    looks = Look.published_objects.distinct().filter(user__in=user_ids).order_by('-popularity', '-created')
-
-    if limit:
-        return looks[:limit]
-
-    return looks
-
-def get_top_products_in_network(profile, limit=None):
-    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
-    products = Product.valid_objects.distinct().filter(likes__active=True, likes__user__in=user_ids).order_by('-popularity')
-
-    if limit:
-        return products[:limit]
-
-    return products
