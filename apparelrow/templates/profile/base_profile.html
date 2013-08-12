@@ -55,7 +55,7 @@
 {% endwith %}
 {% endblock body-header %}
 
-{% block body-classes %}three-columns profile{% endblock body-classes %}
+{% block body-classes %}profile{% endblock body-classes %}
 {% block body %}
     <div class="sidebar">
         <div id="profile-image">
@@ -66,7 +66,7 @@
             {% include 'profile/fragments/change_image_form.html' with form_enctype='multipart/form-data' %}
             {% endif %}
         </div>
-        {% include 'apparel/fragments/follow.html' with classes="btn btn-upper btn-block" %}
+        {% include 'apparel/fragments/follow.html' with classes="btn btn-default" %}
         <div id="profile-about">
             {% if profile.about %}
             <p class="description">{{ profile.about|urlize_target_blank|linebreaksbr }}</p>

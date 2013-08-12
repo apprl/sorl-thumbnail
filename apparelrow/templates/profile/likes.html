@@ -10,7 +10,7 @@
     </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}two-columns profile profile-likes{% endblock body-classes %}
+{% block body-classes %}profile profile-likes{% endblock body-classes %}
 
 {% block extended_content %}
 <div id="content">
@@ -26,9 +26,7 @@
                 {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
             </div>
         </div>
-        <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
     </div>
-    <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
     <div class="clear"></div>
     {% else %}
     <div class="empty">
@@ -53,5 +51,5 @@
 {% endblock extended_content %}
 
 {% block sidebar %}
-    {% include 'apparel/fragments/product_menu_browse.html' %}
+    {% include 'apparel/fragments/product_filter.html' %}
 {% endblock %}

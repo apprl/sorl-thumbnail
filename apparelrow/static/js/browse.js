@@ -45,19 +45,16 @@ jQuery(document).ready(function() {
     // Full reset button
     jQuery(document).on('click', '#reset, .btn-reset', function() {
         // Every selected element is deselected
-        jQuery('#inner-container .selected:not(#option-M, #option-W), .container .selected:not(#option-M, #option-W)').removeClass('selected');
+        jQuery('.product-list-container .selected:not(#option-M, #option-W), .container .selected:not(#option-M, #option-W)').removeClass('selected');
 
         // Every active element is deactivated
-        jQuery('#inner-container .active, .container .active').removeClass('active');
+        jQuery('.product-list-container .active, .container .active').removeClass('active');
 
         // Hide level 1 and 2 categories
         jQuery('#product-category .level-1, #product-category .level-2').hide();
 
-        // Initiate individual reset for brands filter
-        jQuery('#product-manufacturers').prev().find('.reset').click();
-
-        // Initiate individual reset for stores filter
-        jQuery('#product-stores').prev().find('.reset').click();
+        // Initiate individual reset
+        jQuery('#product-filter-accordion .reset').click();
 
         // Select both genders (only embed and profile)
         if(typeof embed_shop_user_id !== 'undefined' || typeof profile_shop_user_id !== 'undefined') {
@@ -66,7 +63,7 @@ jQuery(document).ready(function() {
         }
 
         // Sort by
-        $('.browse-sort li:nth-child(2) a').addClass('selected');
+        $('#product-sort li:nth-child(1) a').addClass('selected');
 
         // Shop view
         $('.shop-view li:nth-child(1) a').addClass('selected');
@@ -83,47 +80,33 @@ jQuery(document).ready(function() {
     });
 
     // Individual reset button
-    jQuery('#product-category-header .reset').click(function(e) {
+    $('#product-filter-accordion .reset').click(function(e) {
         e.preventDefault();
 
-        jQuery('#product-category .selected, #product-category-header .selected').removeClass('selected');
-        jQuery('#product-category .active, #product-category-header .active').removeClass('active');
+        var accordionGroup = $(this).parents('.accordion-group');
+        var accordionInner = accordionGroup.find('.accordion-inner');
 
-        // Hide level 1 and 2 categories
-        jQuery('#product-category .level-1, #product-category .level-2').hide();
+        accordionGroup.removeClass('active');
+        accordionInner.find('.selected').removeClass('selected');
 
-        filter(getQuery());
-    });
-    jQuery('#product-options .header .reset').click(function(e) {
-        var link = jQuery(this);
-        link.closest('li').next().find('.selected').removeClass('selected');
-        link.parents('li.active').removeClass('active');
+        switch(accordionInner.attr('id')) {
+            case 'product-category':
+                $('#product-category .level-1, #product-category .level-2').hide();
 
-        switch(link.closest('li').next().attr('id')) {
+                break;
             case 'product-price':
                 // Move slider to min and max
-                var slider = jQuery('#price-slider').data('slider');
+                var slider = $('#price-slider').data('slider');
                     slider.values([slider.option('min'), slider.option('max')]);
                 break;
 
-            case 'product-color':
-                break;
-
             case 'product-manufacturers':
-                jQuery('input[name=brand]').val('').blur();
-                jQuery('#selected-manufacturers > li').remove();
+                $('input[name=brand]').val('').blur();
+                $('#selected-manufacturers > li').remove();
                 break;
-
-            case 'product-stores':
-                jQuery('#selected-stores > li').remove();
-                break;
-
-            default:
-                return false;
         }
 
         filter(getQuery());
-        return false;
     });
 
     // Filter price on form submit but never actually submit the form
@@ -158,20 +141,8 @@ jQuery(document).ready(function() {
 
     // Click handler for stores
     $(document).on('click', '#available-stores a', function(e) {
-        var element = $(this);
-        var selected_stores = $('#selected-stores');
-        var id = 'store-' + getElementId(element);
-
-        if(element.hasClass('selected')) {
-            $('#' + id, selected_stores).click(); // selected class is removed in this click handler
-        } else {
-            element.addClass('selected');
-            element.clone().attr('id', id).appendTo(
-                $('<li>').prependTo(selected_stores)
-            );
-            filter(getQuery());
-        }
-
+        jQuery(this).toggleClass('selected');
+        filter(getQuery());
         return false;
     });
 
@@ -204,19 +175,10 @@ jQuery(document).ready(function() {
         return false;
     });
 
-    // Click handler for list of selected stores
-    $(document).on('click', '#selected-stores a', function(e) {
-        $('#available-store-' + getElementId(this)).removeClass('selected');
-        $(this).closest('li').remove();
-        filter(getQuery());
-
-        return false;
-    });
-
     // Sort by
-    jQuery(document).on('click', '.browse-sort li a', function(e) {
-        jQuery('.browse-sort li a').removeClass('selected');
-        jQuery(this).addClass('selected');
+    $(document).on('click', '#product-sort li a', function(e) {
+        $('#product-sort li a').removeClass('selected');
+        $(this).addClass('selected');
         filter(getQuery());
         return false;
     });
@@ -320,7 +282,7 @@ window.getQuery = function(query, reset) {
     query = query || {}
     reset = typeof(reset) != 'undefined' ? reset : false;
 
-    sort_by = $('.browse-sort li a.selected').data('sort');
+    sort_by = $('#product-sort li a.selected').data('sort');
     if(typeof sort_by !== 'undefined' && sort_by !== null && sort_by != 'pop') {
         query['sort'] = sort_by;
     }
@@ -330,67 +292,65 @@ window.getQuery = function(query, reset) {
         query['view'] = shop_view;
     }
 
-    category_list = getElementIds(jQuery('#product-category li > a.selected'));
+    category_list = getElementIds($('#product-category li > a.selected'));
     if(category_list.length > 0) {
         query['category'] = category_list.join(',');
-        jQuery('#product-category-header').addClass('active');
+        $('#product-category').closest('.accordion-group').addClass('active');
     } else {
-        jQuery('#product-category-header').removeClass('active');
+        $('#product-category').closest('.accordion-group').removeClass('active');
     }
 
-    manufacturer_list = getElementIds(jQuery('#selected-manufacturers li > a'));
+    manufacturer_list = getElementIds($('#selected-manufacturers li > a'));
     if(manufacturer_list.length > 0) {
         query['manufacturer'] = manufacturer_list.join(',');
-        jQuery('#product-manufacturers').addClass('active').prev().addClass('active');
+        $('#product-manufacturers').closest('.accordion-group').addClass('active');
     } else {
-        jQuery('#product-manufacturers').removeClass('active').prev().removeClass('active');
+        $('#product-manufacturers').closest('.accordion-group').removeClass('active');
     }
 
-    store_list = getElementIds(jQuery('#selected-stores li > a'));
+    store_list = getElementIds($('#product-stores > ul > li > a.selected'));
     if(store_list.length > 0) {
         query['store'] = store_list.join(',');
-        jQuery('#product-stores').addClass('active').prev().addClass('active');
+        $('#product-stores').closest('.accordion-group').addClass('active');
     } else {
-        jQuery('#product-stores').removeClass('active').prev().removeClass('active');
+        $('#product-stores').closest('.accordion-group').removeClass('active');
     }
 
     // Only embed and profile
     if(typeof embed_shop_user_id !== 'undefined' || typeof profile_shop_user_id !== 'undefined') {
-        gender_list = getElementIds(jQuery('#product-gender li > a.selected'));
+        gender_list = getElementIds($('#product-gender li > a.selected'));
         if(gender_list.length > 0 && gender_list[0]) {
             query['gender'] = gender_list[0];
         }
     }
 
-    color_list = getElementIds(jQuery('#product-color a.color.selected'));
+    color_list = getElementIds($('#product-color a.color.selected'));
     if(color_list.length > 0) {
         query['color'] = color_list.join(',');
-        // Mark color filter as active
-        jQuery('#product-color').prev().addClass('active');
+        $('#product-color').closest('.accordion-group').addClass('active');
     }
 
-    pattern_list = getElementIds(jQuery('#product-color a.pattern.selected'));
+    pattern_list = getElementIds($('#product-color a.pattern.selected'));
     if(pattern_list.length > 0) {
         query['pattern'] = pattern_list.join(',');
-        // Mark color filter as active
-        jQuery('#product-color').prev().addClass('active');
+        $('#product-color').closest('.accordion-group').addClass('active');
     }
 
     if(color_list.length == 0 && pattern_list.length == 0) {
-        jQuery('#product-color').prev().removeClass('active');
+        $('#product-color').closest('.accordion-group').removeClass('active');
     }
 
-    if(jQuery('#price-slider').is('.selected')) {
+    if($('#price-slider').is('.selected')) {
         query['price'] =
-              jQuery("input[name=pricerange_min]").val()
+              $("input[name=pricerange_min]").val()
             + ','
-            + jQuery("input[name=pricerange_max]").val();
-        jQuery('#product-price').prev().addClass('active');
+            + $("input[name=pricerange_max]").val();
+        $('#product-price').closest('.accordion-group').addClass('active');
     }
 
-    if(jQuery('#discount-price').is('.selected')) {
+    if($('#discount-price').is('.selected')) {
         query['discount'] = 1;
-        jQuery('#product-price').prev().addClass('active');
+        $('#product-price').closest('.accordion-group').addClass('active');
     }
 
     if(!reset && window.location.hash.length > 0) {
@@ -489,7 +449,7 @@ function filterCriteria(criteria_filter) {
         });
     }
 
-    if('stores' in criteria_filter && !$('#product-stores').prev().hasClass('active')) {
+    if('stores' in criteria_filter && !$('#product-stores').closest('.accordion-group').hasClass('active')) {
         $('#available-stores').html('');
         $.each(criteria_filter['stores'], function(i, store) {
             var $a = $('<a>')
@@ -562,7 +522,7 @@ function updateSelected(products) {
             category.siblings('ul').show();
             category.parents('ul').show();
         });
-        jQuery('#product-category-header').addClass('active');
+        jQuery('#product-category').closest('.accordion-group').addClass('active');
     }
 
     // Select gender
@@ -579,13 +539,13 @@ function updateSelected(products) {
 
     // Select price
     if(products.selected_price) {
-        jQuery('#price-slider').data('slider').values(products.selected_price);
-        jQuery('#product-price').prev().addClass('active');
+        $('#price-slider').data('slider').values(products.selected_price);
+        $('#product-price').closest('.accordion-group').addClass('active');
     }
 
     // Select discount
     if(products.selected_discount) {
-        jQuery('#discount-price').addClass('selected');
+        $('#discount-price').addClass('selected');
     }
 
     // Select colors
@@ -593,7 +553,7 @@ function updateSelected(products) {
         jQuery.each(products.selected_colors, function(i, id) {
             jQuery('#option-' + id).addClass('selected');
         });
-        jQuery('#product-color').prev().addClass('active');
+        $('#product-color').closest('.accordion-group').addClass('active');
     }
 
     // Select patterns
@@ -601,7 +561,7 @@ function updateSelected(products) {
         jQuery.each(products.selected_patterns, function(i, id) {
             jQuery('#option-' + id).addClass('selected');
         });
-        jQuery('#product-color').prev().addClass('active');
+        $('#product-color').closest('.accordion-group').addClass('active');
     }
 
     // Select brands
@@ -613,7 +573,7 @@ function updateSelected(products) {
                 jQuery('<a>').attr({id: 'manufacturer-' + id, href: data['href']}).text(data['name'])
             ).prependTo('#selected-manufacturers');
         });
-        jQuery('#product-manufacturers').addClass('active').prev().addClass('active');
+        $('#product-manufacturers').closest('.accordion-group').addClass('active');
     }
 
     // Select store
@@ -625,12 +585,12 @@ function updateSelected(products) {
                 jQuery('<a>').attr({id: 'store-' + id, href: data['href']}).text(data['name'])
             ).prependTo('#selected-stores');
         });
-        jQuery('#product-stores').addClass('active').prev().addClass('active');
+        jQuery('#product-stores').closest('.accordion-group').addClass('active');
     }
 
     // Select sort
     if(products.selected_sort) {
-        $('.browse-sort li a').each(function(i, e) {
+        $('#product-sort li a').each(function(i, e) {
             var elem = $(e);
             if(elem.data('sort') == products.selected_sort) {
                 elem.addClass('selected');
@@ -655,7 +615,8 @@ function updateSelected(products) {
 
 function updateEmbeddedProducts($list) {
     if(typeof embed_shop_user_id !== 'undefined') {
-        $list.find('.product-container').each(function(i, element) {
+        // TODO: remove product-container later?
+        $list.find('.product-container, .product-shop-thumbnail').each(function(i, element) {
             var buy_url = $(element).find('.btn-buy').attr('href');
             buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
             $('.product-image, .product-footer h4 a', element).attr('href', buy_url);
@@ -666,7 +627,8 @@ function updateEmbeddedProducts($list) {
             $('.hover', element).remove();
         });
     } else if(typeof profile_shop_user_id !== 'undefined') {
-        $list.find('.product-container').each(function(i, element) {
+        // TODO: remove product-container later?
+        $list.find('.product-container, .product-shop-thumbnail').each(function(i, element) {
             var buy_url = $(element).find('.btn-buy').attr('href');
             if(typeof buy_url != 'undefined') {
                 buy_url = buy_url.replace('Shop/0/', 'Profile/' + profile_shop_user_id + '/');

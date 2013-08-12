@@ -1,7 +1,7 @@
 {% spaceless %}
-<ul class="list group">
+<ul class="list list-unstyled">
     {% for html in current_page.html %}
-        {{ html|safe }}
+    <li>{{ html|safe }}</li>
     {% endfor %}
 </ul>
 <div id="pagination-bottom" class="pagination">
