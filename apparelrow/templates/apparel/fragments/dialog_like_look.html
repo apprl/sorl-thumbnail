@@ -1,9 +1,9 @@
 {% extends 'dialog_base.html' %}
-{% load apparel_extras %}
 {% load i18n %}
 
-{% block title %}{% trans "Like a look" %}{% endblock %}
-{% block content %}
+{% block modal_id %}modal_like_look{% endblock %}
+{% block modal_title %}{% trans "Like a look" %}{% endblock %}
+{% block modal_content %}
 <p>{% trans "You need to become a member to ♥ a look." %}</p>
 {% include 'registration/fragments/registration.html' %}
 {% endblock %}

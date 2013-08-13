@@ -1,10 +1,10 @@
 {% spaceless %}
-<ul class="list list-unstyled">
+<ul class="list list-inline">
     {% for html in current_page.html %}
     <li>{{ html|safe }}</li>
     {% endfor %}
 </ul>
-<div id="pagination-bottom" class="pagination">
+<div class="pagination">
     {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
 </div>
 {% endspaceless %}

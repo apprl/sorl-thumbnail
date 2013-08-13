@@ -1,15 +1,15 @@
 {% extends 'dialog_base.html' %}
-{% load apparel_extras %}
 {% load i18n %}
 
-{% block title %}
+{% block modal_id %}modal_follow_user{% endblock %}
+{% block modal_title %}
     {% if brand %}
         {% trans "Follow a brand" %}
     {% else %}
         {% trans "Follow a member" %}
     {% endif %}
 {% endblock %}
-{% block content %}
+{% block modal_content %}
 <p>{% trans "You need to become a member to follow someone." %}</p>
 {% include 'registration/fragments/registration.html' %}
 {% endblock %}

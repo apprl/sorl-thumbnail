@@ -752,7 +752,10 @@ def index(request):
     return render(request, 'apparel/index.html', {})
 
 def publisher(request):
-    return render(request, 'apparel/publisher.html', {'object': get_model('apparel', 'Product').valid_objects.all()[:1][0]})
+    #p = get_model('apparel', 'Product').valid_objects.get(slug='kappa-kool-kombat-traningstrojor-blatt')
+    p = get_model('apparel', 'Product').published_objects.all()[:10][7]
+    has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=p).exists()
+    return render(request, 'apparel/publisher.html', {'object': p, 'has_looks': has_looks})
 
 def store(request):
     return render(request, 'apparel/store.html')
@@ -788,23 +791,20 @@ def dialog_like_product(request):
     Display a dialog tailored for the product detail page with information
     about facebook login. On successful login redirect to same page.
     """
-    return render_to_response('apparel/fragments/dialog_like_product.html',
-            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+    return render(request, 'apparel/fragments/dialog_like_product.html', {'next': request.GET.get('next', '/')})
 
 def dialog_like_look(request):
     """
     Display a dialog tailored for the look detail page with information about
     facebook login. On successful login redirect to same page.
     """
-    return render_to_response('apparel/fragments/dialog_like_look.html',
-            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+    return render(request, 'apparel/fragments/dialog_like_look.html', {'next': request.GET.get('next', '/')})
 
 def dialog_create_look(request):
     """
     Dialog create look for unauthenticated users.
     """
-    return render_to_response('apparel/fragments/dialog_create_look.html',
-            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
+    return render(request, 'apparel/fragments/dialog_create_look.html', {'next': request.GET.get('next', '/')})
 
 def dialog_follow_user(request):
     """
@@ -817,9 +817,8 @@ def dialog_follow_user(request):
     except ValueError:
         pass
 
-    return render_to_response('apparel/fragments/dialog_follow_user.html',
-            {'next': request.GET.get('next', '/'),
-             'brand': brand}, context_instance=RequestContext(request))
+    return render(request, 'apparel/fragments/dialog_follow_user.html', {'next': request.GET.get('next', '/'), 'brand': brand})
+
 
 def facebook_friends_widget(request):
     """

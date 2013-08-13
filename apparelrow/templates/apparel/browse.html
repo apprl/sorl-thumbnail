@@ -11,7 +11,7 @@
 {% endblock 'extra-scripts' %}
 
 {% block body-classes %}shop product-list{% endblock body-classes %}
-{% block body %}
+{% block full-body %}
 <div class="container">
     <div class="row content-header">
         <div class="col-lg-5">
@@ -63,4 +63,4 @@
 </div>
 
         {% include 'apparel/fragments/shop_empty.html' %}
-{% endblock body %}
+{% endblock full-body %}

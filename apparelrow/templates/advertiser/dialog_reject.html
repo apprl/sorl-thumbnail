@@ -1,13 +1,15 @@
 {% extends 'dialog_base.html' %}
-{% load apparel_extras %}
 {% load i18n %}
 
-{% block title %}{% trans "Reject transaction?" %}{% endblock %}
-{% block content %}
+{% block modal_id %}modal_store_reject{% endblock %}
+{% block modal_title %}{% trans "Reject transaction?" %}{% endblock %}
+{% block modal_content %}
 <p>
     <label id="status_message_label" for="status_message">{% trans "Describe your reason to reject the transaction." %}</label><br>
     <textarea name="status_message" id="status_message"></textarea>
 </p>
+{% endblock %}
+{% block modal_footer %}
 <p>
     <a class="btn btn-upper btn-negative btn-yes close" href="#">{% trans "Reject" %}</a>
     <a class="btn btn-upper close" href="#">{% trans "Cancel" %}</a>

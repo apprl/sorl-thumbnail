@@ -47,6 +47,14 @@ body {
     }
 }
 
+.modal {
+    z-index: 10040;
+}
+.modal-backdrop {
+    z-index: 10035;
+}
+
+
 //
 // Content container
 // ----------------------------------------------------------------------------
@@ -268,13 +276,94 @@ footer {
     cursor: pointer;
 }
 
+//
+// Pagination
+// ----------------------------------------------------------------------------
+.pagination {
+    width: 100%;
+    .btn-pagination {
+        img {
+            display: none;
+            padding-left: 10px;
+        }
+        &.hover img {
+            display: inline-block;
+        }
+    }
+}
+
 
 //
 // Shop / Product list
 // ----------------------------------------------------------------------------
 
+.price, .sold-out {
+    color: @gray_color;
+    &.discounted {
+        text-decoration: line-through;
+    }
+}
+.discount-price {
+    color: @red_like_color;
+}
+
+
 .product-medium {
+    margin: 0 auto;
+    max-width: 280px;
+    position: relative;
     border: 0;
+    padding: 0;
+    h4 {
+        text-align: center;
+        font-size: 16px;
+        margin: 0;
+        a {
+            display: inline-block;
+            padding: 6px 0;
+            color: #000000;
+            /*text-decoration: none;*/
+        }
+    }
+    ul {
+        text-align: center;
+        margin: 0;
+    }
+    p {
+        min-height: 20px;
+        margin: 0;
+        text-align: center;
+        a {
+            color: #000000;
+        }
+    }
+    .hover {
+        display: none;
+        position: absolute;
+        top: 88px;
+        left: 30px;
+        ul {
+            width: 220px;
+            margin-bottom: 0;
+            li {
+                margin-bottom: 15px;
+            }
+        }
+    }
+}
+
+.product-list-container {
+    .list > li {
+        width: 100%;
+        text-align: center;
+        vertical-align: top;
+        padding: 5px;
+    }
+    @media screen and (min-width: @grid-float-breakpoint) {
+        .list li {
+            width: auto;
+        }
+    }
 }
 
 body.shop, body.profile-likes {

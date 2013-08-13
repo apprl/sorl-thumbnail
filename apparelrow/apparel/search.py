@@ -270,7 +270,7 @@ def get_product_document(instance):
 
         has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
 
-        template_browse = render_to_string('apparel/fragments/product_shop.html', {'object': instance, 'has_looks': has_looks})
+        template_browse = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks})
         template_mlt = render_to_string('apparel/fragments/product_small_no_price.html', {'object': instance})
 
         document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)

@@ -148,7 +148,6 @@ jQuery(document).ready(function() {
     jQuery('.subnav-handle, .subnav-gray-handle').on('mouseenter', open).on('mouseleave', timer);
 
     // Track custom events
-
     function trackEvent(category, action) {
         return function() {
             var el = $(this),
@@ -172,7 +171,6 @@ jQuery(document).ready(function() {
     }
 
     // Track buy clicks
-
     $(document).on('click', '#search-result a.btn-buy', trackEvent('Search', 'BuyReferral'))
                .on('click', 'body.product .product-info a.btn-buy', trackEvent('Product', 'BuyReferral'))
                .on('click', 'body.page-shop #content a.btn-buy', trackEvent('Shop', 'BuyReferral'))
@@ -181,13 +179,11 @@ jQuery(document).ready(function() {
                .on('click', '.tooltip a.btn-buy', trackEvent('Look', 'BuyReferral'));
 
     // Track likes
-
-    $(document).on('click', 'body.product a.product-like', trackEvent('Product', 'ProductLike'))
-               .on('click', 'body.page-shop a.product-like', trackEvent('Shop', 'ProductLike'))
-               .on('click', 'body.profile a.product-like', trackEvent('Profile', 'ProductLike'));
+    $(document).on('click', 'body.product .btn-product-like', trackEvent('Product', 'ProductLike'))
+               .on('click', 'body.shop .btn-product-like', trackEvent('Shop', 'ProductLike'))
+               .on('click', 'body.profile .btn-product-like', trackEvent('Profile', 'ProductLike'));
 
     // Track invites
-
     $(document).on('click', '#nav-user .facebook-invite', trackInviteEvent('Menu'))
                .on('click', 'body.feed .sidebar .facebook-invite', trackInviteEvent('Profile'))
                .on('click', 'body.profiles #body-header .facebook-invite', trackInviteEvent('Members'))
@@ -401,22 +397,23 @@ jQuery(document).ready(function() {
     jQuery().enableApprlTooltip('.look-large .product, .look-medium .product');
 
     // Product like - show tooltip if no previously likes
-    jQuery(document).on('mousenter', '.product-like', function() {
-        if(hasLiked == false) {
-            var element = jQuery(this);
-            if(element.children().length == 0) {
-                element.append('<a href="#" class="product-heart-tooltip"><span>' + gettext('Like products to save it to your profile and get sale alerts') + '</span></a>');
-            } else {
-                element.children().show();
-            }
-        }
-    }).on('mouseleave', '.product-like', function() {
-        jQuery(this).children().hide();
-    });
+    // TODO: fix later
+    //jQuery(document).on('mousenter', '.btn-product-like', function() {
+        //if(hasLiked == false) {
+            //var element = jQuery(this);
+            //if(element.children().length == 0) {
+                //element.append('<a href="#" class="product-heart-tooltip"><span>' + gettext('Like products to save it to your profile and get sale alerts') + '</span></a>');
+            //} else {
+                //element.children().show();
+            //}
+        //}
+    //}).on('mouseleave', '.btn-product-like', function() {
+        //jQuery(this).children().hide();
+    //});
 
     // Click on like hearts
-    jQuery('body').on('click', '.product-like', {type: 'product'}, ApparelActivity.like_handler)
-                  .on('click', '.look-like', {type: 'look'}, ApparelActivity.like_handler);
+    $(document).on('click', '.btn-product-like', {type: 'product'}, ApparelActivity.like_handler)
+               .on('click', '.look-like', {type: 'look'}, ApparelActivity.like_handler);
 
     // Update likes count
     jQuery(document).on('like', function(event, element, type, id) {
@@ -439,58 +436,63 @@ jQuery(document).ready(function() {
     });
 
     // Product hover, works with medium and feed
-    jQuery(document).on('mouseenter', '.product-medium, .product-feed', function() {
-        var element = jQuery(this);
+    $(document).on('mouseenter', '.product-medium', function() {
+        var element = $(this);
         var product_id = getElementId(element);
         if(!element.data('load_data')) {
             element.find('.buy').text(gettext('Buy'));
-            jQuery.getJSON(product_popup_url + '?id=' + product_id, function(json) {
+            like_element = element.find('.btn-product-like');
+            $.getJSON(product_popup_url + '?id=' + product_id, function(json) {
                 if(json[0].liked == true) {
-                    element.find('.product-like').addClass('liked');
-                }
-                if(json[0].likes > 0) {
-                    element.find('.likes').show().text(json[0].likes);
+                    likeElement(like_element);
                 } else {
-                    element.find('.likes').hide();
+                    unlikeElement(like_element);
                 }
-                if(json[0].comments > 0) {
-                    element.find('.comments').show().text(json[0].comments);
-                } else {
-                    element.find('.comments').hide();
-                }
+                // TODO: might display comments / likes later
+                //if(json[0].likes > 0) {
+                    //element.find('.likes').show().text(json[0].likes);
+                //} else {
+                    //element.find('.likes').hide();
+                //}
+                //if(json[0].comments > 0) {
+                    //element.find('.comments').show().text(json[0].comments);
+                //} else {
+                    //element.find('.comments').hide();
+                //}
             });
         }
         element.data('load_data', true);
         element.find('.hover').show();
         element.find('.product-image').css({opacity: 0.3});
-    }).on('mouseleave', '.product-medium, .product-feed', function() {
-        jQuery(this).css({opacity: 1}).find('.hover').hide();
-        jQuery('.product-image').css({opacity: 1});
+    }).on('mouseleave', '.product-medium', function() {
+        $(this).css({opacity: 1}).find('.hover').hide();
+        $('.product-image').css({opacity: 1});
     });
 
     ApparelActivity.setup_share();
 
     // Back to top
-	$("#back-top").hide();
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 1500) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 400);
-			return false;
-		});
-	});
+    // TODO: renable later
+	//$("#back-top").hide();
+	//$(function () {
+		//$(window).scroll(function () {
+			//if ($(this).scrollTop() > 1500) {
+				//$('#back-top').fadeIn();
+			//} else {
+				//$('#back-top').fadeOut();
+			//}
+		//});
+		//$('#back-top a').click(function () {
+			//$('body,html').animate({
+				//scrollTop: 0
+			//}, 400);
+			//return false;
+		//});
+	//});
 
 
     // Facebook invite
-    jQuery('.facebook-invite').on('click', function(event) {
+    $('.facebook-invite').on('click', function(event) {
         FB.ui({method: 'apprequests', message: 'I think you should try Apprl! All the best stores in one place and you can follow friends, bloggers & brands.', filters: ['app_non_users']});
         event.preventDefault();
     });
@@ -501,6 +503,14 @@ function getElementId(element, numeric) {
         return parseInt(jQuery(element).attr('id').split('-').pop(), 10);
     }
     return jQuery(element).attr('id').split('-').pop()
+}
+
+function likeElement($element) {
+    $element.addClass('liked').text($element.data('unlike-text'));
+}
+
+function unlikeElement($element) {
+    $element.removeClass('liked').text($element.data('like-text'));
 }
 
 /**
@@ -515,27 +525,33 @@ ApparelActivity = {
      */
     like_handler: function(event) {
         if(isAuthenticated == false) {
-            create_html_dialog(window['dialog_like_' + event.data.type]);
+            $('#modal_like_' + event.data.type).modal();
         } else {
-            var element = jQuery(this);
+            var element = $(this);
             if(element.hasClass('liked')) {
-                jQuery.post(element.data('unlike-url'), function(data) {
+                unlikeElement(element);
+                $.post(element.data('unlike-url'), function(data) {
                     if(data && data['success'] == true) {
-                        jQuery(document).trigger('unlike', [element, event.data.type, element.data('id')]);
-                        element.removeClass('liked');
+                        $(document).trigger('unlike', [element, event.data.type, element.data('id')]);
+                        unlikeElement(element);
 
                         // Try to remove from facebook
                         //var data = {'object_type': element.data('type'), 'object_url': element.data('url'), 'action': element.data('action')}
                         //jQuery.post('/facebook/pull/', data, function(response) {
                             //if(response && response['success'] == true) { }
                         //});
+                    } else {
+                        likeElement(element);
                     }
                 });
             } else {
-                jQuery.post(element.data('like-url'), function(data) {
+                likeElement(element);
+                $.post(element.data('like-url'), function(data) {
                     if(data['success'] == true) {
-                        jQuery(document).trigger('like', [element, event.data.type, element.data('id')]);
+                        $(document).trigger('like', [element, event.data.type, element.data('id')]);
+                        likeElement(element);
                         element.addClass('liked');
+                        element.text(element.data('unlike-text'));
 
                         // Push likes to google analytics
                         _gaq.push(['_trackEvent', event.data.type.capitalize(), 'Like', element.data('slug')]);
@@ -544,6 +560,8 @@ ApparelActivity = {
                         if(share_settings['like_' + event.data.type] === false) {
                             ApparelActivity.notification('like', event.data.type, element.data('id'));
                         }
+                    } else {
+                        unlikeElement(element);
                     }
                 });
             }
@@ -1003,19 +1021,19 @@ jQuery(document).ready(function() {
         return false;
     }
 
-    var $body = jQuery('body'),
-        $pagination = jQuery('.pagination');
+    var $body = $('body'),
+        $pagination = $('.pagination');
 
     // Set up infinite scroll on all pages with pagination except shop,
     // which has it's own pagination logic
-    if($pagination.length && !$body.hasClass('page-shop') && !$body.hasClass('profile-likes')) {
+    if($pagination.length && !$body.hasClass('shop') && !$body.hasClass('profile-likes')) {
         var $container = $pagination.prev();
 
         var last_link = null;
         function getPage(link, callback) {
             if(link.attr('href') != last_link) {
                 last_link = link.attr('href');
-                jQuery.get(last_link, function(data, statusText, xhr) {
+                $.get(last_link, function(data, statusText, xhr) {
                     var $data = $($.parseHTML(data)),
                         newPagination = $data.filter('.pagination'),
                         content = newPagination.prev();
@@ -1023,7 +1041,7 @@ jQuery(document).ready(function() {
                     $container.append(content.html());
                     $pagination.html(newPagination.html());
 
-                    jQuery(document).trigger('infinite_scroll_data');
+                    $(document).trigger('infinite_scroll_data');
 
                     if('function' == typeof callback) callback();
                 });
@@ -1033,8 +1051,8 @@ jQuery(document).ready(function() {
         // Fetch via ajax on pagination clicks
         $pagination.on('click', 'a.next', function() {
             // Keep fetching automatically after the first click
-            var $this = jQuery(this);
-            $this.addClass('btn-disabled hover').find('span').text($this.data('loading-text'));
+            var $this = $(this);
+            $this.addClass('disabled hover').find('span').text($this.data('loading-text'));
 
             $(window).data('dont-scroll', false);
 
