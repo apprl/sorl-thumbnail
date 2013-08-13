@@ -21,7 +21,7 @@
 <a class="btn btn-default btn-block btn-filter" data-toggle="collapse" data-target="#product-filter-accordion">{% trans "Filter by" %}</a>
 
 <div class="accordion in" id="product-filter-accordion">
-    <div class="accordion-group">
+    <div class="accordion-group{% if selected_categories %} active{% endif %}">
         <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseOne">{% trans "Categories" %}</a>
             <a class="reset" href="">{% trans "Reset" %}</a>
@@ -41,7 +41,7 @@
             </div>
         </div>
     </div>
-    <div class="accordion-group">
+    <div class="accordion-group{% if selected_price or selected_discount %} active{% endif %}">
         <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">{% trans "Price" %}</a>
             <a class="reset" href="">{% trans "Reset" %}</a>
@@ -68,12 +68,12 @@
                     <input type="hidden" name="pricerange_min" value="{{ pricerange.selected_min }}" class="price-range">
                     <input type="hidden" name="price" value="{{ pricerange.selected }}">
 
-                    <a id="discount-price" href="?discount=1">{% trans "Only show products on sale" %}</a>
+                    <a id="discount-price"{% if selected_discount %} class="selected"{% endif %} href="?discount=1">{% trans "Only show products on sale" %}</a>
                 </form>
             </div>
         </div>
     </div>
-    <div class="accordion-group">
+    <div class="accordion-group{% if selected_colors or selected_patterns %} active{% endif %}">
         <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">{% trans "Colors" %}</a>
             <a class="reset" href="">{% trans "Reset" %}</a>
@@ -83,12 +83,12 @@
                 <ul class="list-inline">
                     {% for color in default_colors %}
                     <li>
-                    <a href="?color={{ color.pk }}" class="color {{ color.value }}{% if color.pk not in colors %} filtered{% endif %}{% if selected_colors and color.value in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}" title="{{ color.value }}">{{ color.value }}</a>
+                    <a href="?color={{ color.pk }}" class="color {{ color.value }}{% if color.pk not in colors %} filtered{% endif %}{% if selected_colors and color.pk in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}" title="{{ color.value }}">{{ color.value }}</a>
                     </li>
                     {% endfor %}
                     {% for pattern in default_patterns %}
                     <li>
-                    <a href="?pattern={{ pattern.pk }}" class="pattern {{ pattern.value }}{% if pattern.pk not in colors %} filtered{% endif %}{% if selected_patterns and pattern.value in selected_patterns %} selected{% endif %}" id="option-{{ pattern.pk }}" title="{{ pattern.value }}">{{ pattern.value }}</a>
+                    <a href="?pattern={{ pattern.pk }}" class="pattern {{ pattern.value }}{% if pattern.pk not in colors %} filtered{% endif %}{% if selected_patterns and pattern.pk in selected_patterns %} selected{% endif %}" id="option-{{ pattern.pk }}" title="{{ pattern.value }}">{{ pattern.value }}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -107,11 +107,15 @@
                     <input type="text" name="brand" value="{% trans "Search brands" %}" class="form-control" />
                     <ul id="available-manufacturers" class="list-unstyled">
                         {% for manufacturer in manufacturers %}
-                        <li><a id="available-manufacturer-{{ manufacturer.0 }}" href="?manufacturer={{ manufacturer.0 }}">{{ manufacturer.1 }}</a></li>
+                        <li><a{% if selected_brands and manufacturer.0 in selected_brands %} class="selected"{% endif %} id="available-manufacturer-{{ manufacturer.0 }}" href="?manufacturer={{ manufacturer.0 }}">{{ manufacturer.1 }}</a></li>
                         {% endfor %}
                     </ul>
                 </form>
-                <ul id="selected-manufacturers" class="level-1 list-unstyled"></ul>
+                <ul id="selected-manufacturers" class="level-1 list-unstyled">
+                    {% for brand in selected_brands_data.items %}
+                    <li><a id="manufacturer-{{ brand.1.id }}" href="{{ brand.1.href }}" class="selected">{{ brand.1.name }}</a></li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>
