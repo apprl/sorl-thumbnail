@@ -290,11 +290,11 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     # Update selected
     selected_colors = request.GET.get('color', None)
     if selected_colors:
-        selected_colors = selected_colors.split(',')
+        selected_colors = map(int, selected_colors.split(','))
 
     selected_patterns = request.GET.get('pattern', None)
     if selected_patterns:
-        selected_patterns = selected_patterns.split(',')
+        selected_patterns = map(int, selected_patterns.split(','))
 
     selected_price = request.GET.get('price', None)
     if selected_price:

@@ -1,5 +1,4 @@
 jQuery(document).ready(function() {
-
     // Translate
     updateTranslations();
 
@@ -9,35 +8,10 @@ jQuery(document).ready(function() {
     // Embedded products
     updateEmbeddedProducts($('#product-list ul.list'));
 
-    // Initialize jquery history plugin with our filter
-    var firstLoad = true;
-    jQuery.history.init(function(hash) {
-        // This is slightly contrived. On first load, only filter if we have something in the hash.
-        // If so, hide the content to avoid flashing the products in the page, then show content again
-        // and render products.
-        // If it's not the first load, just filter products.
-        if(firstLoad) {
-            firstLoad = false;
-            if(hash != "") {
-                jQuery('#content').hide();
-                doFilter(hash, function(response) {
-                    jQuery('#content').show();
-                    renderProducts(response);
-                    updateSelected(response);
-                });
-            } else {
-                // No hash, but we must selected all genders if no gender is selected
-                // TODO: Move this to a function if more functionality is needed.
-                // FIXME: Is this necessary?
-                if(!jQuery('#product-gender li > a').hasClass('selected')) {
-                    jQuery('#product-gender li:first > a').addClass('selected');
-                }
-            }
-        } else {
-            doFilter(hash, this.filterCallback);
-            this.filterCallback = null;
-        }
-    });
+    //History.Adapter.bind(window, 'statechange', function() { // Note: We are using statechange instead of popstate
+        //var state = History.getState(); // Note: We are using History.getState() instead of event.state
+        //console.log('STATE', state);
+    //});
 
     // Initially hide level 1 and 2 categories
     jQuery('#product-category .level-1, #product-category .level-2').hide();
@@ -117,6 +91,13 @@ jQuery(document).ready(function() {
 
     // Disable form submit when filtering manufacturers
     jQuery('#product-manufacturers form').submit(function() {
+        return false;
+    });
+
+    $(document).on('click', '#product-gender a', function(e) {
+        $('#product-gender a').removeClass('selected');
+        var href = $(this).addClass('selected').attr('href');
+        filter({}, null, href);
         return false;
     });
 
@@ -353,8 +334,8 @@ window.getQuery = function(query, reset) {
         $('#product-price').closest('.accordion-group').addClass('active');
     }
 
-    if(!reset && window.location.hash.length > 0) {
-        var pairs = window.location.hash.substr(1).split('&');
+    if(!reset && window.location.search.length > 0) {
+        var pairs = window.location.search.substr(1).split('&');
         for(var i = 0; i < pairs.length; i++) {
             keyval = pairs[i].split('=');
             if(keyval[0] == 'q') {
@@ -386,23 +367,23 @@ function getElementIds(elements) {
     return jQuery.map(elements, getElementId);
 }
 
-function filter(query, callback) {
-    // FIXME: History hack. It is not possible to set window.location.hash and then call
-    // doFilter(...) as that will invoke the call twice with a different callback
-    // The current workaround is this:
-    // 1) Only let the jQuery.history callback invoke doFilter()
-    // 2) If a callback other than renderProducts is required, set the filterCallback property
-    //    It will be cleaned up after first use
-    // Anyone with a better, cleaner idea how to solve this, just go ahead and implement it. This doesn't feel so nice
-    jQuery.history.filterCallback = callback;
-    window.location.hash = decodeURIComponent(jQuery.param(query, true)) || '!';
-}
-function doFilter(query, callback) {
-    if(!query.hasOwnProperty('page')) {
-        jQuery('#product-list').css('opacity', 0.3);
+/**
+ * Filter by AJAX
+ */
+function filter(query, callback, path) {
+    var queryWithoutPage = $.extend({}, query);
+    delete queryWithoutPage['page'];
+    var querystring = decodeURIComponent($.param(queryWithoutPage, true));
+    var pathname = path || window.location.pathname;
+    if (!querystring) {
+        History.pushState(null, null, pathname);
+    } else {
+        History.pushState(null, null, pathname + '?' + querystring);
     }
+    $('#product-list').css('opacity', 0.3);
     jQuery.getJSON(window.location.pathname, query, callback || renderProducts);
 }
+
 function renderPage(products) {
     var $html = $(products.html);
     var $list = $html.filter('ul.list');
@@ -428,7 +409,7 @@ function renderPage(products) {
 
     $('#product-list').trigger('post_browse_render');
 
-    if(window.location.hash && window.location.hash != '#!') {
+    if(window.location.search && window.location.search != '?') {
         $('#reset').show()
     } else {
         $('#reset').hide()
