@@ -338,6 +338,3 @@ def dashboard_complete(request):
 
 def dashboard_info(request):
     return render(request, 'dashboard/info.html')
-
-def dashboard_more_info(request):
-    return render(request, 'dashboard/more_info.html')

@@ -1,0 +1,41 @@
+{% extends 'dialog_base.html' %}
+{% load i18n %}
+
+{% block modal_id %}modal_store_reject_{{ transaction.id }}{% endblock %}
+{% block modal_title %}{% trans "Reject transaction?" %}{% endblock %}
+{% block modal_content %}
+<dl class="dl-horizontal">
+    <dt>{% trans "Order ID" %}</dt>
+    <dd>{{ transaction.order_id }}</dd>
+    <dt>{% trans "Order Value" %}</dt>
+    <dd>{{ transaction.order_value }} {{ transaction.currency }}</dd>
+    <dt>{% trans "Commission" %}</dt>
+    <dd>{{ transaction.commission }} {{ transaction.currency }}</dd>
+    <dt>{% trans "Time" %}</dt>
+    <dd>{{ transaction.created }}</dd>
+</dl>
+<div class="form-group">
+    <label id="status_message_label" for="status_message" class="control-label">{% trans "Describe your reason to reject the transaction." %}</label>
+    <textarea class="form-control" name="status_message" id="status_message"></textarea>
+</div>
+{% endblock %}
+{% block modal_footer %}
+<p>
+    <a class="btn btn-success btn-reject-transaction" href="#">{% trans "Reject" %}</a>
+    <a class="btn btn-danger" data-dismiss="modal" href="#">{% trans "Cancel" %}</a>
+</p>
+<script type="text/javascript">
+    $(function() {
+        $('#modal_store_reject_{{ transaction.id }} .btn-reject-transaction').on('click', function() {
+            var message = $('#modal_store_reject_{{ transaction.id }} #status_message').val();
+            if(message) {
+                $.post('{% url 'advertiser-admin-reject' transaction.id %}', {message: message}, function() { window.location.reload(); });
+            } else {
+                $('#modal_store_reject_{{ transaction.id }} .form-group').addClass('has-error');;
+            }
+
+            return false;
+        });
+    });
+</script>
+{% endblock %}

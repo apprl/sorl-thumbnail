@@ -279,10 +279,11 @@
         </select>
     </form>
 
-    {% include 'apparel/fragments/dialog_like_product.html' %}
-    {% include 'apparel/fragments/dialog_like_look.html' %}
-    {% include 'apparel/fragments/dialog_create_look.html' %}
-    {% include 'apparel/fragments/dialog_follow_user.html' %}
+    {% include 'apparel/fragments/dialog_like_product.html' with request=request only %}
+    {% include 'apparel/fragments/dialog_like_look.html' with request=request only %}
+    {% include 'apparel/fragments/dialog_create_look.html' with request=request only %}
+    {% include 'apparel/fragments/dialog_follow_user.html' with request=request only %}
+    {% include 'activity_feed/dialog_user_feed.html' with request=request only %}
 
 <script type="text/javascript" src="{% static "js/money.min.js" %}"></script>
 <script type="text/javascript">

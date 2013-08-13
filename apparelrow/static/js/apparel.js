@@ -76,33 +76,6 @@ window.create_modal_dialog = function(header, messages, yes_action, no_action) {
     jQuery('.no', modal_dialog).click(function() { no_action(jQuery(modal_dialog).overlay()); });
 };
 
-/**
- * Creates a dialog from html loaded through ajax, only alternativ is close
- */
-function create_html_dialog(url_to_html, close_callback) {
-    var dialog = jQuery('<div id="popup-slim" class="dialog center"></div>');
-
-    // TODO: replace overlay with something better... look editor popup dispatcher but global...
-    dialog.load(url_to_html).appendTo('body').overlay({
-        mask: {
-            color: '#000000',
-            loadSpeed: 200,
-            opacity: 0.5
-        },
-        load: true,
-        closeOnClick: true,
-        close: '.close',
-        top: 150,
-        onClose: function(e) {
-            if(close_callback !== undefined && close_callback) {
-                close_callback();
-            } else {
-                this.getTrigger().remove();
-            }
-        }
-    });
-}
-
 jQuery(document).ready(function() {
     // Define an empty console.log if it's not available
     if(!'console' in window)
@@ -190,12 +163,6 @@ jQuery(document).ready(function() {
                .on('click', 'body.profile-login-flow #content .facebook-invite', trackInviteEvent('Welcome'))
                .on('click', '#footer .facebook-invite', trackInviteEvent('Footer'));
 
-    // All elements with class open-dialog should open a dialog and load html from href-url
-    $(document).on('click', '.open-dialog', function(event) {
-        create_html_dialog(jQuery(this).attr('href'));
-        event.preventDefault();
-    });
-
     // Make sure that a dialog can be closed by the element with class 'close'
     $(document).on('click', '.dialog .close', function(event) {
         $('.dialog').overlay().close();
@@ -258,7 +225,7 @@ jQuery(document).ready(function() {
     });
 
     // New follow button, uses only a single element
-    jQuery(document).on('click', '.btn-follow:not(.open-dialog), .btn-unfollow:not(.open-dialog)', function(event) {
+    jQuery(document).on('click', '.btn-follow, .btn-unfollow', function(event) {
         var element = jQuery(this);
         if(element.hasClass('btn-follow')) {
             jQuery.post(element.data('follow-url'), function(data) {
