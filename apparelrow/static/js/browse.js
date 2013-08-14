@@ -57,8 +57,8 @@ jQuery(document).ready(function() {
     $('#product-filter-accordion .reset').click(function(e) {
         e.preventDefault();
 
-        var accordionGroup = $(this).parents('.accordion-group');
-        var accordionInner = accordionGroup.find('.accordion-inner');
+        var accordionGroup = $(this).parents('.panel');
+        var accordionInner = accordionGroup.find('.panel-body');
 
         accordionGroup.removeClass('active');
         accordionInner.find('.selected').removeClass('selected');
@@ -276,25 +276,25 @@ window.getQuery = function(query, reset) {
     category_list = getElementIds($('#product-category li > a.selected'));
     if(category_list.length > 0) {
         query['category'] = category_list.join(',');
-        $('#product-category').closest('.accordion-group').addClass('active');
+        $('#product-category').closest('.panel').addClass('active');
     } else {
-        $('#product-category').closest('.accordion-group').removeClass('active');
+        $('#product-category').closest('.panel').removeClass('active');
     }
 
     manufacturer_list = getElementIds($('#selected-manufacturers li > a'));
     if(manufacturer_list.length > 0) {
         query['manufacturer'] = manufacturer_list.join(',');
-        $('#product-manufacturers').closest('.accordion-group').addClass('active');
+        $('#product-manufacturers').closest('.panel').addClass('active');
     } else {
-        $('#product-manufacturers').closest('.accordion-group').removeClass('active');
+        $('#product-manufacturers').closest('.panel').removeClass('active');
     }
 
     store_list = getElementIds($('#product-stores > ul > li > a.selected'));
     if(store_list.length > 0) {
         query['store'] = store_list.join(',');
-        $('#product-stores').closest('.accordion-group').addClass('active');
+        $('#product-stores').closest('.panel').addClass('active');
     } else {
-        $('#product-stores').closest('.accordion-group').removeClass('active');
+        $('#product-stores').closest('.panel').removeClass('active');
     }
 
     // Only embed and profile
@@ -308,17 +308,17 @@ window.getQuery = function(query, reset) {
     color_list = getElementIds($('#product-color a.color.selected'));
     if(color_list.length > 0) {
         query['color'] = color_list.join(',');
-        $('#product-color').closest('.accordion-group').addClass('active');
+        $('#product-color').closest('.panel').addClass('active');
     }
 
     pattern_list = getElementIds($('#product-color a.pattern.selected'));
     if(pattern_list.length > 0) {
         query['pattern'] = pattern_list.join(',');
-        $('#product-color').closest('.accordion-group').addClass('active');
+        $('#product-color').closest('.panel').addClass('active');
     }
 
     if(color_list.length == 0 && pattern_list.length == 0) {
-        $('#product-color').closest('.accordion-group').removeClass('active');
+        $('#product-color').closest('.panel').removeClass('active');
     }
 
     if($('#price-slider').is('.selected')) {
@@ -326,12 +326,12 @@ window.getQuery = function(query, reset) {
               $("input[name=pricerange_min]").val()
             + ','
             + $("input[name=pricerange_max]").val();
-        $('#product-price').closest('.accordion-group').addClass('active');
+        $('#product-price').closest('.panel').addClass('active');
     }
 
     if($('#discount-price').is('.selected')) {
         query['discount'] = 1;
-        $('#product-price').closest('.accordion-group').addClass('active');
+        $('#product-price').closest('.panel').addClass('active');
     }
 
     if(!reset && window.location.search.length > 0) {
@@ -430,7 +430,7 @@ function filterCriteria(criteria_filter) {
         });
     }
 
-    if('stores' in criteria_filter && !$('#product-stores').closest('.accordion-group').hasClass('active')) {
+    if('stores' in criteria_filter && !$('#product-stores').closest('.panel').hasClass('active')) {
         $('#available-stores').html('');
         $.each(criteria_filter['stores'], function(i, store) {
             var $a = $('<a>')
@@ -503,7 +503,7 @@ function updateSelected(products) {
             category.siblings('ul').show();
             category.parents('ul').show();
         });
-        jQuery('#product-category').closest('.accordion-group').addClass('active');
+        jQuery('#product-category').closest('.panel').addClass('active');
     }
 
     // Select gender
@@ -521,7 +521,7 @@ function updateSelected(products) {
     // Select price
     if(products.selected_price) {
         $('#price-slider').data('slider').values(products.selected_price);
-        $('#product-price').closest('.accordion-group').addClass('active');
+        $('#product-price').closest('.panel').addClass('active');
     }
 
     // Select discount
@@ -534,7 +534,7 @@ function updateSelected(products) {
         jQuery.each(products.selected_colors, function(i, id) {
             jQuery('#option-' + id).addClass('selected');
         });
-        $('#product-color').closest('.accordion-group').addClass('active');
+        $('#product-color').closest('.panel').addClass('active');
     }
 
     // Select patterns
@@ -542,7 +542,7 @@ function updateSelected(products) {
         jQuery.each(products.selected_patterns, function(i, id) {
             jQuery('#option-' + id).addClass('selected');
         });
-        $('#product-color').closest('.accordion-group').addClass('active');
+        $('#product-color').closest('.panel').addClass('active');
     }
 
     // Select brands
@@ -554,7 +554,7 @@ function updateSelected(products) {
                 jQuery('<a>').attr({id: 'manufacturer-' + id, href: data['href']}).text(data['name'])
             ).prependTo('#selected-manufacturers');
         });
-        $('#product-manufacturers').closest('.accordion-group').addClass('active');
+        $('#product-manufacturers').closest('.panel').addClass('active');
     }
 
     // Select store
@@ -566,7 +566,7 @@ function updateSelected(products) {
                 jQuery('<a>').attr({id: 'store-' + id, href: data['href']}).text(data['name'])
             ).prependTo('#selected-stores');
         });
-        jQuery('#product-stores').closest('.accordion-group').addClass('active');
+        jQuery('#product-stores').closest('.panel').addClass('active');
     }
 
     // Select sort

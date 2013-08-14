@@ -2,11 +2,17 @@
 {% if not disabled %}
 <div class="loginbar loginbar-fixed-top">
     <div class="container">
-        <p class="pull-left">{{ text }}</p>
-        <ul class="list-inline pull-right">
-            <li><a class="btn btn-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
-            <li><a class="btn btn-primary" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
-        </ul>
+        <div class="row">
+            <div class="col-xs-6">
+                <p>{{ text }}</p>
+            </div>
+            <div class="col-xs-6">
+                <ul class="list-inline">
+                    <li><a class="btn btn-link" href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
+                    <li><a class="btn btn-primary" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 {% endif %}

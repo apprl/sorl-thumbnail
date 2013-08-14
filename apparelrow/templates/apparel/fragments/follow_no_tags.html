@@ -3,15 +3,15 @@
 {% if request.user.is_authenticated and request.user != profile %}
 
     {% if profile.is_following %}
-    <a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} btn-unfollow" href="#" data-follow-url="{% url 'follow' profile.pk %}" data-unfollow-url="{% url 'unfollow' profile.pk %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Following" %}</a>
+    <a class="{% if classes %}{{ classes }}{% else %}btn btn-sm{% endif %} btn-unfollow" href="#" data-follow-url="{% url 'follow' profile.pk %}" data-unfollow-url="{% url 'unfollow' profile.pk %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Following" %}</a>
     {% else %}
-    <a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} btn-positive btn-follow" href="#" data-follow-url="{% url 'follow' profile.pk %}" data-unfollow-url="{% url 'unfollow' profile.pk %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Follow" %}</a>
+    <a class="{% if classes %}{{ classes }}{% else %}btn btn-sm{% endif %} btn-positive btn-follow" href="#" data-follow-url="{% url 'follow' profile.pk %}" data-unfollow-url="{% url 'unfollow' profile.pk %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Follow" %}</a>
     {% endif %}
 
 {% else %}
 
     {% if request.user != profile %}
-    <a class="{% if classes %}{{ classes }}{% else %}btn btn-small{% endif %} btn-success" data-toggle="modal" href="#" data-target="#modal_follow_user">{% trans "Follow" %}</a>
+    <a class="{% if classes %}{{ classes }}{% else %}btn btn-sm{% endif %} btn-success" data-toggle="modal" href="#" data-target="#modal_follow_user">{% trans "Follow" %}</a>
     {% endif %}
 
 {% endif %}
