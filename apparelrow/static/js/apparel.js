@@ -229,21 +229,21 @@ jQuery(document).ready(function() {
         var element = jQuery(this);
         if(element.hasClass('btn-follow')) {
             jQuery.post(element.data('follow-url'), function(data) {
-                element.removeClass('btn-follow').addClass('btn-unfollow').text(element.data('unfollow-text')).removeClass('btn-positive');
+                element.removeClass('btn-follow').addClass('btn-unfollow').text(element.data('unfollow-text')).removeClass('btn-success');
                 if(share_settings['follow_profile'] === false) {
                     ApparelActivity.notification('follow', element.data('profile-type'), element.data('profile-id'));
                 }
             });
         } else {
             jQuery.post(element.data('unfollow-url'), function(data) {
-                element.removeClass('btn-unfollow').addClass('btn-follow').text(element.data('follow-text')).removeClass('btn-negative').addClass('btn-positive');
+                element.removeClass('btn-unfollow').addClass('btn-follow').text(element.data('follow-text')).removeClass('btn-danger').addClass('btn-success');
             });
         }
         return false;
     }).on('mouseenter', '.btn-unfollow', function(event) {
-        jQuery(this).text(jQuery(this).data('unfollow-hover')).addClass('btn-negative');
+        jQuery(this).text(jQuery(this).data('unfollow-hover')).addClass('btn-danger');
     }).on('mouseleave', '.btn-unfollow', function(event) {
-        jQuery(this).text(jQuery(this).data('unfollow-text')).removeClass('btn-negative');
+        jQuery(this).text(jQuery(this).data('unfollow-text')).removeClass('btn-danger');
     });
 
     // Send proper CSRF token in all ajax request

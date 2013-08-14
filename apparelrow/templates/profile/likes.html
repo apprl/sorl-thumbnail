@@ -12,44 +12,27 @@
 
 {% block body-classes %}profile profile-likes{% endblock body-classes %}
 
-{% block extended_content %}
-<div id="content">
+{% block content %}
     {% if current_page.paginator.count != 0 %}
-    <div id="product-list" class="product-list">
-        <div id="product-list" class="product-list">
-            <ul class="list group">
-            {% for html in current_page.html %}
-                {{ html|safe }}
-            {% endfor %}
-            </ul>
-            <div id="pagination-bottom" class="pagination">
-                {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
-            </div>
-        </div>
-    </div>
-    <div class="clear"></div>
+        {% include 'apparel/product_list.html' %}
     {% else %}
-    <div class="empty">
-        {% url 'profile-likes' request.user.slug as profile_likes_url %}
-        {% if request.path == profile_likes_url and not user.is_brand %}
+    <div class="row">
+        <div class="col-lg-12">
+            {% url 'profile-likes' request.user.slug as profile_likes_url %}
+            {% if request.path == profile_likes_url and not user.is_brand %}
             <div class="message warning">
                 <p>{% trans "Welcome to your Apprl profile!" %}</p>
                 <p>{% trans "All the items that you ♥ will end up here<br>(and you will get alerts once they go on sale)." %}</p>
                 <a class="btn btn-upper btn-block btn-positive" href="{% gender_url APPAREL_GENDER 'shop' %}">{% trans "Go find items!" %}</a>
             </div>
-        {% else %}
-            {% if profile.is_brand %}
-            <div class="message warning">{{ profile.display_name }} {% trans "currently does not have any products." %}</div>
             {% else %}
-            <div class="message warning">{{ profile.display_name }} {% trans "does not like any products so far." %}</div>
+            {% if profile.is_brand %}
+            <p>{{ profile.display_name }} {% trans "currently does not have any products." %}</p>
+            {% else %}
+            <p>{{ profile.display_name }} {% trans "does not like any products so far." %}</p>
             {% endif %}
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
     {% endif %}
-</div>
-
-{% endblock extended_content %}
-
-{% block sidebar %}
-    {% include 'apparel/fragments/product_filter.html' %}
 {% endblock %}

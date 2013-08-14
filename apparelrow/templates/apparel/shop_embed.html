@@ -11,10 +11,6 @@
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
         <script type="text/javascript">
-            var pricerange = {
-                min: {{ pricerange.min }},
-                max: {{ pricerange.max }}
-            };
             var embed_shop_user_id = {{ user_id }};
             $(function () {
                 $("#back-top").hide();
@@ -89,31 +85,11 @@
         }
         </script>
     </head>
-    <body class="shop-embed">
+    <body class="shop shop-embed">
         <div class="container">
-            <div id="inner-container">
-                <div class="sidebar">
-                    {% include 'apparel/fragments/product_filter.html' %}
-                </div>
-                <div id="content">
-                    <h2 id="product-count">
-                        <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
-                    </h2>
-                    <div id="product-list" class="product-list">
-                        <ul class="list group">
-                        {% for html in current_page.html %}
-                            {{ html|safe }}
-                        {% endfor %}
-                        </ul>
-                        <div id="pagination-bottom" class="pagination">
-                            {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
-                        </div>
-                    </div>
-                    <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
-                </div>
-            </div>
-            {% include 'apparel/fragments/shop_empty.html' %}
+            {% include 'apparel/product_list.html' %}
+            <!--{% include 'apparel/fragments/shop_empty.html' %}-->
         </div>
-      </body>
+    </body>
 </html>
 {% endspaceless %}
