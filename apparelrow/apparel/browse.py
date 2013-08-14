@@ -287,6 +287,9 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     paged_result.html = [o.template for o in paged_result.object_list if o]
     paged_result.object_list = []
 
+    if not paged_result.html:
+        result.update(extra_html=loader.render_to_string('apparel/fragments/shop_empty.html', {}, context_instance=RequestContext(request)))
+
     # Update selected
     selected_colors = request.GET.get('color', None)
     if selected_colors:

@@ -23,29 +23,6 @@
                 <li><a href="?view=friends" data-view="friends">{% trans "My friends" %}</a></li>
                 <li><a href="?view=brands" data-view="brands">{% trans "My brands" %}</a></li>
             </ul>
-
-{% if user_id and user_gender != 'A' %}
-
-{% elif user_id and user_gender == 'A' %}
-<h2>
-    <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %}</a>
-</h2>
-<ul id="product-gender" class="list-inline">
-    <li class="first"><a href="">{% trans "All" %}</a></li>
-    <li class="women"><a id="option-W" href="?gender=W">{% trans "Women" %}</a></li>
-    <li class="men"><a id="option-M" href="?gender=M">{% trans "Men" %}</a></li>
-</ul>
-{% else %}
-<h2>
-    <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %}</a>
-</h2>
-<ul id="product-gender" class="list-inline">
-    <li class="first women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} href="/shop/women/">{% trans "Women" %}</a></li>
-    <li class="last men"><a id="option-M"{% if gender == "M" %} class="selected"{% endif %} href="/shop/men/">{% trans "Men" %}</a></li>
-</ul>
-{% endif %}
-
-
         </div>
     </div>
     {% include 'apparel/product_list.html' %}
