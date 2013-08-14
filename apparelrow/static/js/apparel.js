@@ -58,25 +58,10 @@ function increase_counts(counts, new_count) {
  * Creates a modal dialog with yes/no as alternatives.
  */
 window.create_modal_dialog = function(header, messages, yes_action, no_action) {
-    var modal_dialog = jQuery('<div class="dialog"></div>').html(
-        _.template($('#error_dialog_template').html(), {header: header, messages: messages})
-    ).appendTo('body').overlay({
-        mask: {
-            color: '#000',
-            loadSpeed: 200,
-            opacity: 0.5
-        },
-        load: true,
-        closeOnClick: false,
-        top: 100,
-        onClose: function(e) { this.getTrigger().remove() }
-    });
-
-    jQuery('.yes', modal_dialog).click(function() { yes_action(jQuery(modal_dialog).overlay()); });
-    jQuery('.no', modal_dialog).click(function() { no_action(jQuery(modal_dialog).overlay()); });
+    // TODO: replace this on looks and look_detail
 };
 
-jQuery(document).ready(function() {
+$(document).ready(function() {
     // Define an empty console.log if it's not available
     if(!'console' in window)
         window.console = { log: function() {} };
@@ -84,41 +69,12 @@ jQuery(document).ready(function() {
     // Make all textareas autogrow
     //jQuery('textarea').autosize();
 
-    // Subnav dropdown code
-
-    var closetimer = false;
-    var subnav = false;
-    function close(event) {
-        if(subnav) {
-            subnav.hide();
-            subnav.siblings('a').removeClass('suppress-selected');
-            subnav = false;
-        }
-    }
-    function timer(event) {
-        closetimer = window.setTimeout(function() { close(event) }, 300);
-    }
-    function cancel(event) {
-        if(closetimer) {
-            jQuery(this).find('a').addClass('suppress-selected');
-            window.clearTimeout(closetimer);
-        }
-    }
-    function open(event) {
-        cancel(event);
-        var link_handle = jQuery(this).find('a').addClass('suppress-selected');
-        var temp_subnav = jQuery(this);
-        if(temp_subnav.hasClass('subnav-handle')) {
-            temp_subnav = temp_subnav.find('.subnav');
-        } else if(temp_subnav.hasClass('subnav-gray-handle')) {
-            temp_subnav = temp_subnav.find('.subnav-gray');
-        }
-        if(temp_subnav && subnav && temp_subnav.attr('id') != subnav.attr('id')) {
-            close(event);
-        }
-        subnav = temp_subnav.show();
-    }
-    jQuery('.subnav-handle, .subnav-gray-handle').on('mouseenter', open).on('mouseleave', timer);
+    // Language dropdown submit form
+    $(document).on('click', '#language-dropdown li', function() {
+        $('#languageform select').val($('a', this).data('language'));
+        $('#languageform').submit();
+        return false;
+    });
 
     // Track custom events
     function trackEvent(category, action) {
@@ -163,11 +119,6 @@ jQuery(document).ready(function() {
                .on('click', 'body.profile-login-flow #content .facebook-invite', trackInviteEvent('Welcome'))
                .on('click', '#footer .facebook-invite', trackInviteEvent('Footer'));
 
-    // Make sure that a dialog can be closed by the element with class 'close'
-    $(document).on('click', '.dialog .close', function(event) {
-        $('.dialog').overlay().close();
-        event.preventDefault();
-    });
 
     // Comments posting
     var comment_area = jQuery('.comment-box textarea');
