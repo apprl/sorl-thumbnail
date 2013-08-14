@@ -1,7 +1,34 @@
+{% load i18n %}
+
 <div class="featured-container">
     <div class="container">
         <div class="row">
-            <p class="col-lg-12">FEATURED CONTENT</p>
+            {% for activity in featured %}
+            <div class="col-md-4">
+                <div class="featured-feed-item panel">
+                    <div class="panel-heading">
+                        <img class="img-circle" src="{{ activity.user.avatar }}">
+                        {% if activity.verb == 'like_product' %}
+                        {% if activity.user.is_partner %}
+                        <p>{% trans "Selected by" %} <a href="{{ activity.user.get_absolute_url }}">{{ activity.user.display_name }}</a></p>
+                        {% else %}
+                        <p>{% trans "Liked by" %} <a href="{{ activity.user.get_absolute_url }}">{{ activity.user.display_name }}</a></p>
+                        {% endif %}
+                        {% else %}
+                        <p>{% trans "Created by" %} <a href="{{ activity.user.get_absolute_url }}">{{ activity.user.display_name }}</a></p>
+                        {% endif %}
+                        {% include 'apparel/fragments/follow.html' with request=request profile=activity.user only %}
+                    </div>
+                    <div class="panel-body">
+                    {% if activity.verb == 'like_product' %}
+                    {% include 'apparel/fragments/product_medium.html' with object=activity.activity_object %}
+                    {% else %}
+                    {% include 'apparel/fragments/look_medium.html' with object=activity.activity_object %}
+                    {% endif %}
+                </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>

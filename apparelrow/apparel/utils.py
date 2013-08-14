@@ -15,6 +15,12 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 
+def get_featured_activity_today():
+    today = datetime.date.today()
+    # TODO: if no featured date, default to something?
+
+    return get_model('activity_feed', 'Activity').objects.filter(featured_date=today)[:3]
+
 
 def get_top_looks_in_network(profile, limit=None):
     Follow = get_model('profile', 'Follow')

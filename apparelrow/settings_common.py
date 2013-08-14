@@ -499,6 +499,7 @@ CELERY_ROUTES = ({
     'statistics.tasks.active_users': {'queue': 'standard'},
     'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
     'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},
+    'apparelrow.activity_feed.tasks.featured_activity': {'queue': 'standard'},
 },)
 
 # LOGGING CONFIGURATION

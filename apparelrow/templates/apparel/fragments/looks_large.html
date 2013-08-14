@@ -18,7 +18,7 @@
                         {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
                     {% endfor %}
                     {% endcache %}
-                    <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
+                    <a class="btn-look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
                     </div>
                 {% else %}
                     {% cache CACHE_TIMEOUT look_large_content object.id LANGUAGE_CODE %}
@@ -31,7 +31,7 @@
                         {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
                     {% endfor %}
                     {% endcache %}
-                    <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
+                    <a class="btn-look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
                 {% endif %}
             </div>
             {% cache CACHE_TIMEOUT look_large_footer object.id LANGUAGE_CODE %}

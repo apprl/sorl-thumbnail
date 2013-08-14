@@ -1,0 +1,46 @@
+{% load i18n cache thumbnail apparel_extras %}
+<div class="look-container" data-id="{{ object.id }}">
+    <div class="look-medium {% if object.display_with_component == 'P' %}photo{% else %}collage{% endif %}">
+        {% if object.display_with_component == 'P' %}
+            {% cache CACHE_TIMEOUT look_medium_content object.id LANGUAGE_CODE %}
+            <div id="photo-background" class="look-photo"
+                {% if object.image %}
+                {% thumbnail object.image "450x334" as im %}
+                style="background-image: url('{{ im.url }}'); width: {{ im.width }}px; height: {{ im.height }}px"
+                {% endthumbnail %}
+                {% endif %}
+            >
+            {% for component in object.photo_components.all %}
+                <a href="{% internal_referral_url component.product.get_absolute_url object.user.pk %}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style_middle }}display:none;"></a>
+                {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
+            {% endfor %}
+            {% endcache %}
+            <a class="btn-look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
+            </div>
+        {% else %}
+            {% cache CACHE_TIMEOUT look_medium_content object.id LANGUAGE_CODE %}
+            {% for component in object.collage_components.all %}
+                <a href="{% internal_referral_url component.product.get_absolute_url object.user.pk %}" id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_middle }}">
+                    {% thumbnail component.product.product_image "450x334" crop="noop" format="PNG" transparent=True as im %}
+                    <img src="{{ im.url }}" title="{{ component.product }}" crossorigin="anonymous" />
+                    {% endthumbnail %}
+                </a>
+                {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
+            {% endfor %}
+            {% endcache %}
+            <a class="btn-look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
+        {% endif %}
+    </div>
+    {% cache CACHE_TIMEOUT look_medium_footer object.id LANGUAGE_CODE %}
+    <div class="look-footer look-footer-medium">
+        <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
+        <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></p>
+        <div class="stats">
+            <div class="likes"><a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.score }}</a></div>
+            {% if object.comment_count > 0 %}
+            <div class="comments"><a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.comment_count }}</a></div>
+            {% endif %}
+        </div>
+    </div>
+    {% endcache %}
+</div>

@@ -3,8 +3,8 @@ from django.contrib import admin
 from apparelrow.activity_feed.models import Activity, ActivityFeed
 
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('user', 'verb', 'content_type', 'object_id', 'created', 'modified', 'active')
-    list_filter = ('verb',)
+    list_display = ('user', 'verb', 'content_type', 'object_id', 'created', 'modified', 'active', 'featured_date')
+    list_filter = ('verb', 'featured_date',)
     raw_id_fields = ('user',)
 
 admin.site.register(Activity, ActivityAdmin)

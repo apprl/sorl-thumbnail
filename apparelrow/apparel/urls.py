@@ -87,8 +87,10 @@ urlpatterns = patterns('',
     url(r'^brand/(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='brand-followers'),
     url(r'^brand/(?:([^\/]+?)/)?following/$', 'apparelrow.profile.views.following', name='brand-following'),
 
-    # Shop
-    url(r'^shop/popup/$', 'apparelrow.apparel.views.product_popup', name='product-popup'),
+    # Look / Product popup
+    url(r'^popup/product/$', 'apparelrow.apparel.views.product_popup', name='product-popup'),
+    url(r'^popup/look/$', 'apparelrow.apparel.views.look_popup', name='look-popup'),
+
 
     # Looks
     url(r'^looks/create/$', 'apparelrow.apparel.views.looks.create', name='look-create'),
@@ -109,13 +111,6 @@ urlpatterns = patterns('',
     url(r'^looks/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_detail', name='look-detail'),
     url(r'^looks/(?P<slug>[\w-]+?)/delete/$', 'apparelrow.apparel.views.look_delete', name='look-delete'),
     url(r'^looks/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.look_like', name='look-like'),
-
-    # Dialogs
-    url(r'^dialog/like-product/$', 'apparelrow.apparel.views.dialog_like_product', name='dialog-like-product'),
-    url(r'^dialog/like-look/$', 'apparelrow.apparel.views.dialog_like_look', name='dialog-like-look'),
-    url(r'^dialog/create-look/$', 'apparelrow.apparel.views.dialog_create_look', name='dialog-create-look'),
-    url(r'^dialog/follow-user/$', 'apparelrow.apparel.views.dialog_follow_user', name='dialog-follow-user'),
-    url(r'^dialog/user-feed/$', 'apparelrow.activity_feed.views.dialog_user_feed', name='dialog-user-feed'),
 
     # Look embed + dialog + widget
     url(r'^embed/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.embed', name='look-embed'),

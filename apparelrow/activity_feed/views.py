@@ -16,10 +16,11 @@ from django.core.urlresolvers import reverse
 import redis
 
 from apparelrow.apparel.models import Product, Look
-from apparelrow.apparel.utils import get_top_looks_in_network, get_top_products_in_network, get_gender_from_cookie
+from apparelrow.apparel.utils import get_top_looks_in_network, get_top_products_in_network, get_gender_from_cookie, get_featured_activity_today
 
 from apparelrow.activity_feed.models import Activity, ActivityFeed
 from apparelrow.activity_feed.tasks import get_feed_key
+
 
 class ActivityFeedRender:
     """
@@ -126,34 +127,14 @@ def public_feed(request, gender=None):
             'current_page': paged_result
         })
 
-    popular_products = get_model('apparel', 'Product').valid_objects.filter(gender__in=[gender, 'U']) \
-                                                                    .order_by('-popularity')
-    popular_looks = get_model('apparel', 'Look').published_objects.filter(gender__in=[gender, 'U']) \
-                                                                  .order_by('-popularity', '-created')
-    popular_brands = get_user_model().objects.filter(is_active=True, is_brand=True) \
-                                             .order_by('-followers_count')
-    popular_members = get_user_model().objects.filter(is_active=True, is_brand=False, gender=gender) \
-                                              .order_by('-popularity', '-followers_count')
-    if request.user and request.user.is_authenticated():
-        follow_ids = get_model('profile', 'follow').objects.filter(user=request.user).values_list('user_follow', flat=True)
-        popular_brands = popular_brands.exclude(id__in=follow_ids)
-        popular_members = popular_members.exclude(id=request.user.pk).exclude(id__in=follow_ids)
-
-    response = render(request, 'activity_feed/public_feed.html', {
+    response = render(request, 'activity_feed/user_feed.html', {
+            'featured': get_featured_activity_today(),
             'current_page': paged_result,
             'next': request.get_full_path(),
-            'popular_products': popular_products[:4],
-            'popular_looks': popular_looks[:3],
-            'popular_brands': popular_brands[:5],
-            'popular_members': popular_members[:5],
         })
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
 
     return response
-
-
-def dialog_user_feed(request):
-    return render(request, 'activity_feed/dialog_user_feed.html', {'next': request.GET.get('next', '/')})
 
 
 def user_feed(request, gender=None):
@@ -185,22 +166,10 @@ def user_feed(request, gender=None):
             'current_page': paged_result
         })
 
-    popular_brands = get_user_model().objects.filter(is_active=True, is_brand=True).order_by('-followers_count')
-    popular_members = get_user_model().objects.filter(is_active=True, is_brand=False, gender=gender) \
-                                              .order_by('-popularity', '-followers_count')
-
-    if request.user and request.user.is_authenticated():
-        follow_ids = get_model('profile', 'follow').objects.filter(user=request.user).values_list('user_follow', flat=True)
-        popular_brands = popular_brands.exclude(id__in=follow_ids)
-        popular_members = popular_members.exclude(id=request.user.pk).exclude(id__in=follow_ids)
-
     response = render(request, 'activity_feed/user_feed.html', {
+            'featured': get_featured_activity_today(),
             'current_page': paged_result,
             'next': request.get_full_path(),
-            'popular_products': get_top_products_in_network(request.user, 4),
-            'popular_looks': get_top_looks_in_network(request.user, 3),
-            'popular_brands': popular_brands[:5],
-            'popular_members': popular_members[:5],
         })
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
 

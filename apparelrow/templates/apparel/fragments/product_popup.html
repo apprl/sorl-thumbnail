@@ -6,7 +6,7 @@
         {% thumbnail object.product_image "224x291" crop=False as im %}
         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" style="margin:{{ im|positive_margin:'224x291' }}">
         {% endthumbnail %}
-        <a class="product-like heart{% if user|likes_product:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-product' %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"></a>
+        <a class="btn-product-like heart{% if user|likes_product:object %} liked{% endif %}" href="#" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"></a>
     </div>
 
     {% cache CACHE_TIMEOUT product_popup object.id LANGUAGE_CODE %}

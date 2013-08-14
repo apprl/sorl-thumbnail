@@ -331,7 +331,7 @@ $(document).ready(function() {
 
     // Click on like hearts
     $(document).on('click', '.btn-product-like', {type: 'product'}, ApparelActivity.like_handler)
-               .on('click', '.look-like', {type: 'look'}, ApparelActivity.like_handler);
+               .on('click', '.btn-look-like', {type: 'look'}, ApparelActivity.like_handler);
 
     // Update likes count
     jQuery(document).on('like', function(event, element, type, id) {
@@ -353,7 +353,7 @@ $(document).ready(function() {
       jQuery('#likes a[href="' + avatar.attr('href') + '"]').parent().remove();
     });
 
-    // Product hover, works with medium and feed
+    // Product hover, works with medium
     $(document).on('mouseenter', '.product-medium', function() {
         var element = $(this);
         var product_id = getElementId(element);
@@ -385,6 +385,28 @@ $(document).ready(function() {
     }).on('mouseleave', '.product-medium', function() {
         $(this).css({opacity: 1}).find('.hover').hide();
         $('.product-image').css({opacity: 1});
+    });
+
+    // Look hover, works with medium
+    $(document).on('mouseenter', '.look-medium', function() {
+        var element = $(this);
+        var look_id = getElementId(element);
+        if(!element.data('load_data')) {
+            like_element = element.find('.btn-look-like');
+            $.getJSON(look_popup_url + '?id=' + look_id, function(json) {
+                if(json[0].liked == true) {
+                    likeElement(like_element);
+                } else {
+                    unlikeElement(like_element);
+                }
+            });
+        }
+        element.data('load_data', true);
+        element.find('.hover').show();
+        element.find('.look-image').css({opacity: 0.3});
+    }).on('mouseleave', '.look-medium', function() {
+        $(this).css({opacity: 1}).find('.hover').hide();
+        $('.look-image').css({opacity: 1});
     });
 
     ApparelActivity.setup_share();
@@ -439,7 +461,7 @@ ApparelActivity = {
     /**
      * Like handler for products and looks
      *
-     * Required data attributes: unlike-url, like-url, slug, id, (dialog-url)
+     * Required data attributes: unlike-url, like-url, slug, id
      */
     like_handler: function(event) {
         if(isAuthenticated == false) {

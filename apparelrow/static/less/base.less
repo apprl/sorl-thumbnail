@@ -31,6 +31,10 @@ body {
     }
 }
 
+.fb_dialog {
+    margin-top: 60px;
+}
+
 
 .content-header {
     h1 {
@@ -235,6 +239,23 @@ body {
 .featured-container {
     background: #000000 url('../images/index_background.jpg') no-repeat center;
     height: 594px;
+    overflow: hidden;
+    .featured-feed-item {
+        height: 474px;
+        margin-top: 60px;
+        margin-bottom: 60px;
+        border: 0;
+        border-radius: 0;
+        .panel-heading {
+            background-color: #ffffff;
+            border: 0;
+            text-align: center;
+            img {
+                margin-bottom: 5px;
+            }
+        }
+        .panel-body .caption { display: none; }
+    }
 }
 
 //

@@ -73,6 +73,7 @@ class Activity(models.Model):
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     active = models.BooleanField(default=True, db_index=True)
+    featured_date = models.DateField(null=True, blank=True)
 
     objects = ActivityManager()
 

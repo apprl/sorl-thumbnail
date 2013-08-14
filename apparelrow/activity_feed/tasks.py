@@ -3,12 +3,14 @@ import datetime
 import redis
 import json
 import time
+import itertools
 
 from django.conf import settings
 from django.utils import timezone
 from django.db.models.loading import get_model
 
-from celery.task import task
+from celery.task import task, periodic_task
+from celery.schedules import crontab
 
 logger = logging.getLogger('activity_feed.tasks')
 
@@ -247,3 +249,51 @@ def update_activity_feed(profile, followee, add=True):
                                                 active=True):
             remove_aggregate(r, profile, 'M', activity)
             remove_aggregate(r, profile, 'W', activity)
+
+
+@periodic_task(name='activity_feed.tasks.featured_activity', run_every=crontab(hour='23'), max_retries=1, ignore_result=True)
+def featured_activity():
+    Activity = get_model('activity_feed', 'activity')
+    since = datetime.datetime.now() - datetime.timedelta(days=4)
+
+    # Like product
+    like_product_activities = []
+    for activity in Activity.objects.filter(verb='like_product',
+                                            created__gte=since,
+                                            active=True,
+                                            featured_date__isnull=True) \
+                                    .order_by('-user__is_partner', '-user__popularity')[:3]:
+        like_product_activities.append(activity)
+
+    if len(like_product_activities) != 3:
+        for activity in Activity.objects.filter(verb='like_product',
+                                                active=True,
+                                                featured_date__isnull=True) \
+                                        .order_by('-created')[:3-len(like_product_activities)]:
+            like_product_activities.append(activity)
+
+    # Create look
+    create_look_activities = []
+    for activity in Activity.objects.filter(verb='create',
+                                            created__gte=since,
+                                            active=True,
+                                            featured_date__isnull=True) \
+                                    .order_by('-user__is_partner', '-user__popularity')[:3]:
+        create_look_activities.append(activity)
+
+    if len(create_look_activities) != 3:
+        for activity in Activity.objects.filter(verb='create',
+                                                active=True,
+                                                featured_date__isnull=True) \
+                                        .order_by('-created')[:3-len(create_look_activities)]:
+            create_look_activities.append(activity)
+
+    # Combined activities
+    iters = [iter(like_product_activities), iter(create_look_activities)]
+    activitites = list(it.next() for it in itertools.cycle(iters))
+    next_day = datetime.date.today() + datetime.timedelta(days=1)
+
+    if not Activity.objects.filter(featured_date=next_day).exists():
+        for activity in activitites[:3]:
+            activity.featured_date = next_day
+            activity.save()

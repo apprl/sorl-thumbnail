@@ -23,6 +23,6 @@
     </div>
 </div>
 
-{% include 'apparel/fragments/featured.html' %}
+{% include 'apparel/fragments/featured.html' with request=request featured=featured only %}
 
 {% endblock %}

@@ -36,7 +36,7 @@ from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Opt
 from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
-from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative, get_top_looks_in_network
+from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative, get_top_looks_in_network, get_featured_activity_today
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity
 
 from apparelrow.activity_feed.views import user_feed
@@ -376,6 +376,29 @@ def product_popup(request):
         result.append(product_result)
 
     return HttpResponse(json.dumps(result), mimetype='application/json')
+
+
+def look_popup(request):
+    look_ids = []
+    try:
+        look_ids = map(int, request.GET.get('id', '').split(','))
+    except ValueError:
+        pass
+
+    result = []
+
+    content_type = ContentType.objects.get_for_model(Look)
+    for look in look_ids:
+        temp_result = {'liked': False}
+        if request.user and request.user.is_authenticated():
+            temp_result['liked'] = LookLike.objects.filter(look=look, active=True, user=request.user).exists()
+        #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
+        #product_result['comments'] = Comment.objects.filter(content_type=content_type, object_pk=product, is_removed=False, is_public=True).count()
+
+        result.append(temp_result)
+
+    return HttpResponse(json.dumps(result), mimetype='application/json')
+
 
 @login_required
 def product_action(request, pk, action):
@@ -749,7 +772,7 @@ def index(request):
     if request.user.is_authenticated():
         return user_feed(request)
 
-    return render(request, 'apparel/index.html', {})
+    return render(request, 'apparel/index.html', {'featured': get_featured_activity_today()})
 
 def publisher(request):
     #p = get_model('apparel', 'Product').valid_objects.get(slug='kappa-kool-kombat-traningstrojor-blatt')
@@ -784,40 +807,6 @@ def apparel_set_language(request):
         request.user.save()
 
     return set_language(request)
-
-
-def dialog_like_product(request):
-    """
-    Display a dialog tailored for the product detail page with information
-    about facebook login. On successful login redirect to same page.
-    """
-    return render(request, 'apparel/fragments/dialog_like_product.html', {'next': request.GET.get('next', '/')})
-
-def dialog_like_look(request):
-    """
-    Display a dialog tailored for the look detail page with information about
-    facebook login. On successful login redirect to same page.
-    """
-    return render(request, 'apparel/fragments/dialog_like_look.html', {'next': request.GET.get('next', '/')})
-
-def dialog_create_look(request):
-    """
-    Dialog create look for unauthenticated users.
-    """
-    return render(request, 'apparel/fragments/dialog_create_look.html', {'next': request.GET.get('next', '/')})
-
-def dialog_follow_user(request):
-    """
-    Display a dialog tailored for the look detail page with information about
-    facebook login. On successful login redirect to same page.
-    """
-    brand = 0
-    try:
-        brand = int(request.GET.get('brand', 0))
-    except ValueError:
-        pass
-
-    return render(request, 'apparel/fragments/dialog_follow_user.html', {'next': request.GET.get('next', '/'), 'brand': brand})
 
 
 def facebook_friends_widget(request):
