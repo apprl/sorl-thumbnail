@@ -3,6 +3,7 @@
 
 {% block extra-title %}{{ profile.display_name }} - {% trans "Looks" %} | {% endblock %}
 {% block 'extra-scripts' %}
+{{ block.super }}
 <script type="text/javascript">
     jQuery(document).ready(function() {
         jQuery(document).on('click', '.large-looks .btn-delete', function(event) {

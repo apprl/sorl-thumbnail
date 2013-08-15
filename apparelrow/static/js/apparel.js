@@ -210,10 +210,6 @@ $(document).ready(function() {
         return false;
     });
 
-    if (isAuthenticated) {
-        $('.profile-header .description').enableEditable('/profile/settings/description/');
-    }
-
     // Look-like and hotspots
     if (!is_mobile()) {
         $('.look-medium .hotspot, .look-large .hotspot').hide();

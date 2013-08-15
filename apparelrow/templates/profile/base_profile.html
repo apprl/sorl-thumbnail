@@ -17,6 +17,16 @@
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
 {% endblock extra-styles %}
 
+{% block 'extra-scripts' %}
+{% if request.user.is_authenticated and request.user == profile %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.profile-header .description').enableEditable('{% url 'settings-save-description' %}');
+});
+</script>
+{% endif %}
+{% endblock 'extra-scripts' %}
+
 {% block body-classes %}profile{% endblock body-classes %}
 {% block full-body %}
 <div class="profile-header">
