@@ -1,10 +1,12 @@
 import logging
 import uuid
 import itertools
+import HTMLParser
 
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
+from django.template import Context, Template
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.contrib import auth
@@ -16,6 +18,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.translation import ugettext_lazy as _, ugettext
+from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist
 
 from apparelrow.apparel.models import Product
@@ -57,6 +60,30 @@ def get_profile_sidebar_info(request, profile):
     info['following'] = Follow.objects.filter(user=profile, active=True).count()
 
     return info
+
+
+@login_required
+def save_description(request):
+    """
+    Save user description and return a parsed version for display.
+    """
+    html_parser = HTMLParser.HTMLParser()
+
+    description = request.POST.get('description', '')
+    description = description.replace('<br>', '\n')
+    description = description.replace('<br/>', '\n')
+    description = description.replace('<br />', '\n')
+    description = html_parser.unescape(strip_tags(description).strip())
+
+    request.user.about = description
+    request.user.save()
+
+    t = Template('{% load apparel_extras %}{{ description|urlize_target_blank|linebreaksbr }}')
+    c = Context({'description': description})
+    description_html = t.render(c)
+
+    return HttpResponse(description_html, mimetype='text/html')
+
 
 @get_current_user
 @avatar_change

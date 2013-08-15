@@ -27,12 +27,12 @@ function getCookie(name) {
     return cookieValue;
 }
 
-var csrftoken = getCookie('csrftoken');
-
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+
+var csrftoken = getCookie('csrftoken');
 
 $.ajaxSetup({
     crossDomain: false, // obviates need for sameOrigin test
@@ -49,8 +49,7 @@ function increase_counts(counts, new_count) {
         $(this)
             .hide()
             .html(typeof new_count != "undefined" ? new_count : parseInt($(this).html()) + 1)
-            .fadeIn()
-            ;
+            .fadeIn();
     });
 }
 
@@ -65,9 +64,6 @@ $(document).ready(function() {
     // Define an empty console.log if it's not available
     if(!'console' in window)
         window.console = { log: function() {} };
-
-    // Make all textareas autogrow
-    //jQuery('textarea').autosize();
 
     // Language dropdown submit form
     $(document).on('click', '#language-dropdown li', function() {
@@ -148,26 +144,6 @@ $(document).ready(function() {
         return false;
     });
 
-    // From: http://www.w3.org/TR/html5/number-state.html#file-upload-state
-    function extractFilename(path) {
-        var x = path.lastIndexOf('\\');
-        if (x >= 0) // Windows-based path
-            return path.substr(x+1);
-        x = path.lastIndexOf('/');
-        if (x >= 0) // Unix-based path
-            return path.substr(x+1);
-        return path; // just the filename
-    }
-
-    jQuery('.upload-field input[type="text"], .upload-field .button').click(function(e) {
-        // Forward click events from the fake controls to file object. This doesn't work in FF
-        jQuery('input[type=file]', jQuery(this).parent()).focus();
-        return false;
-    });
-    jQuery('.upload-field input[type="file"]').change(function(e) {
-        jQuery('input[type="text"]', jQuery(this).closest('.upload-field')).val(extractFilename(this.value));
-    });
-
     // Show follow button over avatar lager follow element
     jQuery(document).on('mouseenter', '.avatar-large-follow', function(event) {
         jQuery(this).find('.follow-container').show();
@@ -197,37 +173,6 @@ $(document).ready(function() {
         jQuery(this).text(jQuery(this).data('unfollow-text')).removeClass('btn-danger');
     });
 
-    // Send proper CSRF token in all ajax request
-    $('html').ajaxSend(function(event, xhr, settings) {
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-            // Only send the token to relative URLs i.e. locally.
-            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-        }
-    });
-
-    jQuery('#nav-main a, #footer a').click(function(event) {
-        var target = $(this).attr('href');
-        if(target.indexOf('/shop/?') >= 0) {
-            event.preventDefault();
-            window.location = target.replace('?', '#');
-        }
-    });
-
     // Sort categories in client, this is a solution to the problem where the category tree is only sorted for one language.
     function sort_lexical(a, b) {
         return jQuery('a', a).attr('data-order') > jQuery('a', b).attr('data-order') ? 1 : -1;
@@ -239,9 +184,9 @@ $(document).ready(function() {
     });
 
     // Profile image and about inline form
-    var $profileImage = jQuery('#profile-image');
-    if(!$profileImage.hasClass('no-hover')) {
     var hover_edit_button = true;
+    var $profileImage = $('#profile-image');
+    if(!$profileImage.hasClass('no-hover')) {
         $profileImage.hover(
             function() { if (hover_edit_button) $('.btn-edit', this).show() },
             function() { if (hover_edit_button) $('.btn-edit', this).hide() }
@@ -249,70 +194,45 @@ $(document).ready(function() {
     } else {
         $profileImage.find('.btn-edit').show();
     }
-    jQuery('#profile-image .btn-edit').click(function() {
-        jQuery('#profile-about form, #profile-about .btn-cancel').hide();
-        jQuery('#profile-about .description').show();
+    $('#profile-image .btn-edit').click(function() {
+        $('#profile-about form, #profile-about .btn-cancel').hide();
+        $('#profile-about .description').show();
         hover_about_edit = true;
-        jQuery('#profile-image .btn-cancel').show();
-        jQuery(this).hide().siblings('form').show();
+        $('#profile-image .btn-cancel').show();
+        $(this).hide().siblings('form').show();
         hover_edit_button = false;
         return false;
     });
-    jQuery('#profile-image .btn-cancel').click(function() {
-        jQuery('#profile-image .btn-edit').show();
-        jQuery(this).hide().siblings('form').hide();
+    $('#profile-image .btn-cancel').click(function() {
+        $('#profile-image .btn-edit').show();
+        $(this).hide().siblings('form').hide();
         hover_edit_button = true;
         return false;
     });
 
-    var hover_about_edit = true;
-    jQuery('#profile-about textarea').autosize();
-    jQuery('#profile-about').hover(
-        function() { if (hover_about_edit) $('.btn-edit', this).show() },
-        function() { if (hover_about_edit) $('.btn-edit', this).hide() }
-    );
-    jQuery('#profile-about .btn-edit, #profile-about .btn-add').on('click', function() {
-        jQuery('#profile-about .description').hide();
-        jQuery('#profile-image form, #profile-image .btn-cancel').hide();
-        hover_edit_button = true;
-        jQuery('#profile-about .btn-cancel').show();
-        jQuery(this).hide().siblings('form').show().find('textarea').focus();
-        hover_about_edit = false;
-        return false;
-    });
-    jQuery('#profile-about .btn-cancel').on('click', function() {
-        jQuery('#profile-about .description').show();
-        jQuery('#profile-about .btn-edit').show();
-        jQuery(this).hide().siblings('form').hide();
-        hover_about_edit = true;
-        return false;
-    });
-
+    if (isAuthenticated) {
+        $('.profile-header .description').enableEditable('/profile/settings/description/');
+    }
 
     // Look-like and hotspots
     if (!is_mobile()) {
-        jQuery('.look-medium .look-like, .look-large .look-like, .look-medium .hotspot, .look-large .hotspot').hide();
+        $('.look-medium .hotspot, .look-large .hotspot').hide();
         // Hide hotspots and look-like on new data from infinite scroll plugin
-        jQuery(document).on('infinite_scroll_data', function(e) {
-            jQuery('.look-medium .look-like, .look-large .look-like, .look-medium .hotspot, .look-large .hotspot').hide();
+        $(document).on('infinite_scroll_data', function(e) {
+            $('.look-medium .hotspot, .look-large .hotspot').hide();
         });
-        // Look medium and large hover
-        jQuery(document).on('mouseenter', '.look-medium, .look-large', function() {
-            jQuery('.look-like', this).show();
-            jQuery('.hotspot', this).show();
-        }).on('mouseleave', '.look-medium, .look-large', function() {
-            jQuery('.look-like').hide();
-            jQuery('.hotspot').hide();
-        });
+        // Look medium and large hotspot hover
+        $(document).on('mouseenter', '.look-medium, .look-large', function() { $('.hotspot', this).show(); })
+                   .on('mouseleave', '.look-medium, .look-large', function() { $('.hotspot').hide(); });
     } else {
-        jQuery(document).on('infinite_scroll_data', function(e) {
-            jQuery('.look-like, .hotspot').show();
+        $(document).on('infinite_scroll_data', function(e) {
+            $('.hotspot').show();
         });
-        jQuery('.look-like, .hotspot').show();
+        $('.hotspot').show();
     }
 
     // Enable tooltip for large and medium looks
-    jQuery().enableApprlTooltip('.look-large .product, .look-medium .product');
+    jQuery().enableApprlTooltip('.look-large .product');
 
     // Product like - show tooltip if no previously likes
     // TODO: fix later
@@ -329,11 +249,12 @@ $(document).ready(function() {
         //jQuery(this).children().hide();
     //});
 
-    // Click on like hearts
+    // Click on like buttons
     $(document).on('click', '.btn-product-like', {type: 'product'}, ApparelActivity.like_handler)
                .on('click', '.btn-look-like', {type: 'look'}, ApparelActivity.like_handler);
 
     // Update likes count
+    // TODO: still in use? does it work?
     jQuery(document).on('like', function(event, element, type, id) {
       var containers = jQuery('.' + type + '-container[data-id=' + id + ']');
       containers.find('.heart').addClass('liked');

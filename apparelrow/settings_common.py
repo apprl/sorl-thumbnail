@@ -282,6 +282,7 @@ PIPELINE_JS = {
                              'js/jquery/jquery.scrollable.js',
                              'js/jquery/jquery.apprl-sticky.js',
                              'js/jquery/jquery.apprl-tooltip.js',
+                             'js/jquery/jquery.textarea.js',
                              'js/apparel.js'),
         'output_filename': 'js/compiled/main.js',
     },

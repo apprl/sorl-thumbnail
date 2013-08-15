@@ -7,7 +7,7 @@
             <div class="col-md-4">
                 <div class="featured-feed-item panel">
                     <div class="panel-heading">
-                        <img class="img-circle" src="{{ activity.user.avatar }}">
+                        <a href="{{ activity.user.get_absolute_url }}"><img class="img-circle" src="{{ activity.user.avatar }}"></a>
                         {% if activity.verb == 'like_product' %}
                         {% if activity.user.is_partner %}
                         <p>{% trans "Selected by" %} <a href="{{ activity.user.get_absolute_url }}">{{ activity.user.display_name }}</a></p>

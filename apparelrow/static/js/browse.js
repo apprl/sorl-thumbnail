@@ -5,6 +5,13 @@ $(document).ready(function() {
         $('#product-filter-accordion').collapse('show');
         $('#product-filter-accordion .panel-collapse').collapse('show');
     }
+    // Expand also on resize
+    $(window).on('resize', function() {
+        if (!$('#product-filter-button').is(':visible')) {
+            $('#product-filter-accordion').collapse('show');
+            $('#product-filter-accordion .panel-collapse').collapse('show');
+        }
+    });
 
     // Translate
     updateTranslations();

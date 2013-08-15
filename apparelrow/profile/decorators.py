@@ -38,23 +38,13 @@ def avatar_change(view_func):
                     image_form.save()
 
                     return HttpResponseRedirect(request.get_full_path())
-
-            elif request.POST.get('change_about_form'):
-                about_form = ProfileAboutForm(request.POST, request.FILES, instance=profile)
-                if about_form.is_valid():
-                    about_form.save()
-
-                    return HttpResponseRedirect(request.get_full_path())
             else:
                 image_form = ProfileImageForm(instance=profile)
-                about_form = ProfileAboutForm(instance=profile)
 
         else:
             image_form = ProfileImageForm(instance=profile)
-            about_form = ProfileAboutForm(instance=profile)
 
-        forms = [('change_image_form', image_form),
-                 ('change_about_form', about_form)]
+        forms = [('change_image_form', image_form)]
 
         return view_func(request, profile, forms, *args, **kwargs)
 

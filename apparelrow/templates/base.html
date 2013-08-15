@@ -122,7 +122,7 @@
                 <li><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>
                 {% else %}
                 <li class="dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>{{ request.user.display_name }} <b class="caret"></b></span></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.user.url_likes }}"><span>{{ request.user.display_name }} <b class="caret"></b></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ request.user.url_likes }}">{% trans "Your profile" %}</a></li>
                         {% if request.user.is_partner %}
