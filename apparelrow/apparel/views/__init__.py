@@ -504,25 +504,7 @@ def brand_list(request, gender=None):
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    # Most popular brand pages
-    # Using a raw query to annotate the popular brand profile list with is_following
-    if request.user.is_authenticated():
-        popular_brands = get_user_model().objects.raw('SELECT pu.*, pf.id AS is_following FROM profile_user pu LEFT OUTER JOIN profile_follow pf ON pf.user_follow_id = pu.id AND pf.user_id = %s WHERE pu.is_brand = true AND pu.is_active = true ORDER BY pu.followers_count DESC LIMIT 20', [request.user.pk])
-    else:
-        popular_brands = get_user_model().objects.raw('SELECT *, false AS is_following FROM profile_user WHERE is_brand = true AND is_active = true ORDER BY followers_count DESC LIMIT 20')
-
-    # Most popular products
-    popular_products = None
-    if request.user.is_authenticated():
-        follows = Follow.objects.filter(user=request.user, active=True).values('user_follow_id')
-        popular_products = Product.valid_objects.distinct() \
-                                                .filter(likes__user__in=follows) \
-                                                .order_by('-popularity') \
-                                                .select_related('manufacturer')[:10]
-
     response = render_to_response('apparel/brand_list.html', {
-                'popular_brands': popular_brands,
-                'popular_products': popular_products,
                 'next': request.get_full_path(),
                 'APPAREL_GENDER': gender
             }, context_instance=RequestContext(request))
@@ -690,12 +672,6 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
     paged_result, pagination = get_pagination_page(queryset,
             10, request.GET.get('page', 1), 1, 2)
 
-    # Latest active members
-    latest_members = get_user_model().objects.filter(is_active=True,
-                                                     is_brand=False,
-                                                     advertiser_store__isnull=True) \
-                                             .order_by('-date_joined')[:13]
-
     if request.is_ajax():
         response = render_to_response('apparel/fragments/user_list.html', {
                     'pagination': pagination,
@@ -707,7 +683,6 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
                 'current_page': paged_result,
                 'next': request.get_full_path(),
                 'view_gender': view_gender[0] if len(view_gender) > 0 and view_gender[0] in ['W', 'M'] else 'A',
-                'latest_members': latest_members,
                 'APPAREL_GENDER': gender
             }, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)

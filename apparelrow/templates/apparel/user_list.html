@@ -4,74 +4,37 @@
 
 {% block extra-title %}{% trans "Members" %} | {% endblock %}
 
-{% block body-header %}
-<div id="body-header">
-    <div class="column_one">
-        <h1 class="max-width">{% trans "Members" %}</h1>
-    </div>
-    <div class="column_two">
-        <ul>
-            <li><a class="first latest{% if 'popular' in request.path %} current{% endif %}" href="{% url 'user-list-popular' %}">{% trans "Popular" %}</a></li>
-            <li><a class="last popular{% if 'popular' not in request.path %} current{% endif %}" href="{% url 'user-list' %}">{% trans "In alphabetical order" %}</a></li>
-        </ul>
-    </div>
-    {% if request.user.is_authenticated %}
-    <a class="btn btn-positive btn-upper facebook-invite" href="#invite">{% trans "+ Invite your friends" %}</a>
-    {% endif %}
-</div>
-{% endblock body-header %}
-{% block body-classes %}three-columns profiles{% endblock body-classes %}
+{% block body-classes %}user-list{% endblock %}
 {% block body %}
-    <div class="sidebar">
-        <h2>{% trans "Latest members" %}</h2>
-        <ul class="suggested-friends">
-        {% for profile in latest_members %}
-            <li>
-            {% include 'apparel/fragments/avatar_link_no_cache.html' %}
-            </li>
-        {% endfor %}
-        </ul>
-    </div>
-    <div id="content">
-        <ul class="gender-tabs">
-            {% if 'popular' in request.path %}
-            <li {% if view_gender == 'A' %}class="active"{% endif %} ><a href="{% url 'user-list-popular' %}">{% trans "All" %}</a></li>
-            <li {% if view_gender == 'W' %}class="active"{% endif %} ><a href="{% url 'user-list-popular-women' %}">{% trans "Females" %}</a></li>
-            <li {% if view_gender == 'M' %}class="active"{% endif %} ><a href="{% url 'user-list-popular-men' %}">{% trans "Males" %}</a></li>
-            {% else %}
-            <li {% if view_gender == 'A' %}class="active"{% endif %} ><a href="{% url 'user-list' %}">{% trans "All" %}</a></li>
-            <li {% if view_gender == 'W' %}class="active"{% endif %} ><a href="{% url 'user-list-women' %}">{% trans "Females" %}</a></li>
-            <li {% if view_gender == 'M' %}class="active"{% endif %} ><a href="{% url 'user-list-men' %}">{% trans "Males" %}</a></li>
-            {% endif %}
-        </ul>
-        {% include 'apparel/fragments/user_list.html' %}
-    </div>
-    <div class="sidebar last">
-        <h2>{% trans "Follow your friends!" %}</h2>
-        {% if not request.user.is_authenticated %}
-        <div>{% trans "Sign up to find your friends." %}</div>
-        <a class="btn btn-upper btn-positive btn-signup" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
-        {% else %}
-        <div class="facebook-friends">
-            {% if not request.user.facebook_user_id %}
-                <p>{% trans "Connect your Facebook account to find your friends." %}</p>
-                {% facebook_button connect='yes' %}<br>
-                {% if request.GET.error %}
-                    <p class="error">{% trans "It is not possible to connect this account with Facebook." %}</p>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="content-header">
+                <h1><span class="icon-slash-a"></span>{% trans "Members" %}</h1>
+                <ul class="list-inline">
+                    <li><h2><a{% if 'popular' in request.path %} class="selected"{% endif %} href="{% url 'user-list-popular' %}">{% trans "Popular" %}</a></h2></li>
+                    <li><h2><a{% if 'popular' not in request.path %} class="selected"{% endif %} href="{% url 'user-list' %}">{% trans "In alphabetical order" %}</a></h2></li>
+                </ul>
+                {% if request.user.is_authenticated %}
+                <a class="btn btn-success pull-right facebook-invite" href="#invite">{% trans "+ Invite your friends" %}</a>
                 {% endif %}
-            {% endif %}
+            </div>
         </div>
-        {% endif %}
     </div>
-{% endblock body %}
 
-{% block facebook_code %}
-{% if request.user.is_authenticated and request.user.facebook_user_id %}
-FB.api('/me/friends', function(response) {
-    var fids = jQuery.map(response.data, function(value) {
-        return value['id'];
-    });
-    jQuery('.facebook-friends').load('/home/friends/', {'fids': fids.join(',')});
-});
-{% endif %}
+    <div class="row">
+        <div class="col-lg-12">
+        <!--<ul class="gender-tabs">-->
+            <!--{% if 'popular' in request.path %}-->
+            <!--<li {% if view_gender == 'A' %}class="active"{% endif %} ><a href="{% url 'user-list-popular' %}">{% trans "All" %}</a></li>-->
+            <!--<li {% if view_gender == 'W' %}class="active"{% endif %} ><a href="{% url 'user-list-popular-women' %}">{% trans "Females" %}</a></li>-->
+            <!--<li {% if view_gender == 'M' %}class="active"{% endif %} ><a href="{% url 'user-list-popular-men' %}">{% trans "Males" %}</a></li>-->
+            <!--{% else %}-->
+            <!--<li {% if view_gender == 'A' %}class="active"{% endif %} ><a href="{% url 'user-list' %}">{% trans "All" %}</a></li>-->
+            <!--<li {% if view_gender == 'W' %}class="active"{% endif %} ><a href="{% url 'user-list-women' %}">{% trans "Females" %}</a></li>-->
+            <!--<li {% if view_gender == 'M' %}class="active"{% endif %} ><a href="{% url 'user-list-men' %}">{% trans "Males" %}</a></li>-->
+            <!--{% endif %}-->
+        <!--</ul>-->
+            {% include 'apparel/fragments/user_list.html' %}
+        </div>
+    </div>
 {% endblock %}

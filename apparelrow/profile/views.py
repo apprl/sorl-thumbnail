@@ -162,7 +162,7 @@ def looks(request, profile, form, page=0):
     else:
         queryset = profile.look.filter(published=True).order_by('-created')
 
-    paged_result, pagination = get_pagination_page(queryset, 6,
+    paged_result, pagination = get_pagination_page(queryset, 12,
             request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
@@ -186,14 +186,14 @@ def looks(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def followers(request, profile, form, page=0):
-    content_type = ContentType.objects.get_for_model(get_user_model())
-    queryset = Follow.objects.filter(user_follow=profile, active=True)
+    queryset = get_user_model().objects.filter(following__user_follow=profile, following__active=True) \
+                                       .order_by('name', 'first_name', 'username')
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
-        return render(request, 'profile/fragments/followers.html', {
+        return render(request, 'profile/fragments/user_list.html', {
                 'pagination': pagination,
                 'current_page': paged_result
         })
@@ -204,7 +204,6 @@ def followers(request, profile, form, page=0):
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.look.filter(published=True).order_by('-modified')[:4]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
@@ -214,14 +213,14 @@ def followers(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def following(request, profile, form, page=0):
-    content_type = ContentType.objects.get_for_model(get_user_model())
-    queryset = Follow.objects.filter(user=profile, active=True)
+    queryset = get_user_model().objects.filter(followers__user=profile, followers__active=True) \
+                                       .order_by('name', 'first_name', 'username')
 
     paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
-        return render(request, 'profile/fragments/following.html', {
+        return render(request, 'apparel/fragments/user_list.html', {
                 'pagination': pagination,
                 'current_page': paged_result
         })
@@ -232,7 +231,6 @@ def following(request, profile, form, page=0):
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.look.filter(published=True).order_by('-modified')[:4]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))

@@ -1,0 +1,26 @@
+{% load i18n follow_tags humanize apparel_extras %}
+
+<div class="panel">
+    <div class="panel-heading">
+        <div class="media">
+            <a class="pull-left" href="{{ profile.get_absolute_url }}">
+                <img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>
+            </a>
+            <div class="media-body">
+                <a href="{{ profile.get_absolute_url }}"><h4 class="media-heading">{{ profile.display_name }}</h4></a>
+                {% include 'apparel/fragments/follow.html' %}
+                {% if user.is_authenticated %}
+                    {% if profile|is_following_profile:request.user %}<span class="btn btn-default btn-sm disabled btn-follow-you">{% trans "Following you" %}</span>{% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <ul>
+            <li>look or product grid item</li>
+            <li>look or product grid item</li>
+            <li>look or product grid item</li>
+            <li>look or product grid item</li>
+        </ul>
+    </div>
+</div>

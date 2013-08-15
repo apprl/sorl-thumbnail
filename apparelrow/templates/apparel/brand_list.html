@@ -3,42 +3,23 @@
 
 {% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Brands Men" %}{% else %}{% trans "Brands Women" %}{% endif %} | {% endblock %}
 
-{% block body-header %}
-<div id="body-header">
-    <div class="column_one">
-        <h1 class="max-width">{% trans "Brands" %}</h1>
-    </div>
-</div>
-{% endblock body-header %}
-{% block body-classes %}three-columns brand-list{% endblock body-classes %}
+{% block body-classes %}brand-list{% endblock %}
 {% block body %}
-    <div class="sidebar">
-        <h2>{% trans "Most followed" %}</h2>
-        <ul class="suggested-friends">
-            {% for brand in popular_brands %}
-            <li>
-                <a class="profile-link" href="{% url 'brand-likes' brand.slug %}"><img class="avatar" src="{{ brand.avatar }}" alt="{{ brand.display_name }}"/>{{ brand.display_name }}</a>
-                <br>
-                {% include 'apparel/fragments/follow_no_tags.html' with request=request profile=brand only %}
-            </li>
-        {% endfor %}
-        </ul>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="content-header">
+                <h1><span class="icon-slash-a"></span>{% trans "Brands" %}</h1>
+            </div>
+        </div>
     </div>
-    <div id="content">
-        {% if APPAREL_GENDER = 'M' %}
-            {% include 'apparel/generated/brand_list_men.html' only %}
-        {% elif APPAREL_GENDER = 'W' %}
-            {% include 'apparel/generated/brand_list_women.html' only %}
-        {% endif %}
-        <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
+
+    <div class="row">
+        <div class="col-lg-12">
+            {% if APPAREL_GENDER = 'M' %}
+                {% include 'apparel/generated/brand_list_men.html' only %}
+            {% elif APPAREL_GENDER = 'W' %}
+                {% include 'apparel/generated/brand_list_women.html' only %}
+            {% endif %}
+        </div>
     </div>
-    <div class="sidebar last">
-        <h2>{% trans "Your friends like" %}</h2>
-        {% if request.user.is_authenticated %}
-            {% include 'apparel/fragments/products_sidebar_simple.html' with products=popular_products CACHE_TIMEOUT=CACHE_TIMEOUT LANGUAGE_CODE=LANGUAGE_CODE only %}
-        {% else %}
-            <div>{% trans "Sign up to see what your friends like." %}</div>
-            <a class="btn btn-upper btn-positive btn-signup" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
-        {% endif %}
-    </div>
-{% endblock body %}
+{% endblock %}
