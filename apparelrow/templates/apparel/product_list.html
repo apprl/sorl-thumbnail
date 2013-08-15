@@ -1,10 +1,10 @@
 {% load i18n apparel_extras %}
 
 <div class="row product-list-container">
-    <div class="col-sm-3">
+    <div class="col-md-3">
         {% include 'apparel/fragments/product_filter.html' %}
     </div>
-    <div id="product-list" class="product-list col-sm-9">
+    <div id="product-list" class="product-list col-md-9">
         {% if extra_html %}
             {{ extra_html }}
         {% else %}

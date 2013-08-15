@@ -8,11 +8,14 @@
 
 {% block body-classes %}look-create{% endblock %}
 {% block body %}
-<div class="row content-header">
+<div class="row">
     <div class="col-lg-12">
-        <h1><span class="icon-slash-a"></span>{% trans "Create a new look" %}</h1>
+        <div class="content-header">
+            <h1><span class="icon-slash-a"></span>{% trans "Create a new look" %}</h1>
+        </div>
     </div>
 </div>
+
 <div class="row look-choice">
     <div class="col-lg-6">
         <a href="{% url 'look-editor' 'photo' %}"><img class="img-responsive" src="{% static "images/look_example_photo.jpg" %}"></a>

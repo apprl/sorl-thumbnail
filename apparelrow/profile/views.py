@@ -166,7 +166,7 @@ def looks(request, profile, form, page=0):
             request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
-        return render(request, 'apparel/fragments/looks_large.html', {
+        return render(request, 'apparel/fragments/look_list.html', {
                 'pagination': pagination,
                 'current_page': paged_result
             })

@@ -1,0 +1,8 @@
+<ul class="look-list list-inline">
+    {% for object in current_page.object_list %}
+    <li>{% include 'apparel/fragments/look_medium.html' %}</li>
+    {% endfor %}
+</ul>
+<div class="pagination">
+    {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
+</div>

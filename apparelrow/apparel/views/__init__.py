@@ -47,7 +47,7 @@ from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_u
 logger = logging.getLogger(__name__)
 
 FAVORITES_PAGE_SIZE = 30
-LOOK_PAGE_SIZE = 6
+LOOK_PAGE_SIZE = 12
 
 #
 # Sitemap
@@ -568,7 +568,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
             request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
-        response = render_to_response('apparel/fragments/looks_medium.html', {
+        response = render_to_response('apparel/fragments/look_list.html', {
                     'pagination': pagination,
                     'current_page': paged_result,
                 }, context_instance=RequestContext(request))

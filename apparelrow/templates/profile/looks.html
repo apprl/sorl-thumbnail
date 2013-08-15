@@ -1,5 +1,5 @@
 {% extends "profile/base_profile.html" %}
-{% load i18n cache thumbnail apparel_extras %}
+{% load i18n %}
 
 {% block extra-title %}{{ profile.display_name }} - {% trans "Looks" %} | {% endblock %}
 {% block 'extra-scripts' %}
@@ -56,10 +56,10 @@
 </script>
 {% endblock 'extra-scripts' %}
 
-{% block body-classes %}two-columns profile profile-looks{% endblock body-classes %}
+{% block body-classes %}profile profile-looks{% endblock body-classes %}
 {% block content %}
     {% if current_page.object_list %}
-        {% include 'apparel/fragments/looks_large.html' %}
+        {% include 'apparel/fragments/look_list.html' %}
     {% else %}
         <div class="empty">
         {% if profile == request.user %}
@@ -73,5 +73,3 @@
         </div>
     {% endif %}
 {% endblock %}
-
-{% block profile_right_sidebar %}{% endblock %}
