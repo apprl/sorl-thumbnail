@@ -226,13 +226,6 @@ class User(AbstractUser):
         return reverse('profile-likes', args=[self.slug])
 
     @cached_property
-    def url_updates(self):
-        if self.is_brand:
-            return reverse('brand-updates', args=[self.slug])
-
-        return reverse('profile-updates', args=[self.slug])
-
-    @cached_property
     def url_looks(self):
         if self.is_brand:
             return reverse('brand-looks', args=[self.slug])

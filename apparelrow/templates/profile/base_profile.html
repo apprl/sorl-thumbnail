@@ -49,7 +49,7 @@ $(document).ready(function() {
                 {% else %}
                 {% include 'apparel/fragments/follow.html' with classes="btn btn-default btn-profile-follow" %}
                 {% endif %}
-                {% with likes_url=profile.url_likes updates_url=profile.url_updates looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
+                {% with likes_url=profile.url_likes looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
                 <ul class="list-inline">
                     <li>
                     {% if profile and profile.is_brand %}
@@ -63,11 +63,6 @@ $(document).ready(function() {
                             {% blocktrans count products as product_count %}{{product_count}} like{% plural %}{{product_count}} likes{% endblocktrans %}
                         </a>
                     {% endif %}
-                    </li>
-                    <li>
-                        <a{% if request.path == updates_url %} class="selected"{% endif %} href="{{ updates_url }}">
-                            {% trans "Updates" %}
-                        </a>
                     </li>
                     <li>
                         <a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">

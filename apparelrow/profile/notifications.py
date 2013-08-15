@@ -58,7 +58,7 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     extra_context['domain'] = Site.objects.get_current().domain
     extra_context['sender_name'] = sender.display_name
     extra_context['sender_link'] = 'http://%s%s' % (extra_context['domain'], sender.get_absolute_url())
-    extra_context['sender_updates_link'] = 'http://%s%s' % (extra_context['domain'], reverse('profile-updates', args=[sender.slug]))
+    extra_context['sender_updates_link'] = 'http://%s%s' % (extra_context['domain'], reverse('profile-likes', args=[sender.slug]))
     if 'object_link' in extra_context:
         extra_context['object_link'] = 'http://%s%s' % (extra_context['domain'], extra_context['object_link'])
 

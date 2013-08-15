@@ -17,6 +17,8 @@ logger = logging.getLogger('activity_feed.tasks')
 
 HARD_MAX = 100
 
+# XXX: private feed is not used anymore, should remove it from here and then remove this comment
+
 
 def get_feed_key(profile, gender, private=False):
     if profile is None:

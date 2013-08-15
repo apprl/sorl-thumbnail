@@ -1,4 +1,6 @@
 from django.conf.urls import patterns, url
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import RedirectView
 
 urlpatterns = patterns('',
     url(r'^flow/$', 'apparelrow.profile.views.flow', name='login-flow-redirect'),
@@ -16,7 +18,7 @@ urlpatterns = patterns('',
     url(r'^welcome/brands/$', 'apparelrow.profile.views.login_flow_brands', name='login-flow-brands'),
     url(r'^welcome/complete/$', 'apparelrow.profile.views.login_flow_complete', name='login-flow-complete'),
     url(r'^(?:([^\/]+?)/)?$', 'apparelrow.profile.views.likes', name='profile-likes'),
-    url(r'^(?:([^\/]+?)/)?updates/$', 'apparelrow.profile.views.profile', name='profile-updates'),
+    url(r'^(?:([^\/]+?)/)?updates/$', RedirectView.as_view(url=reverse_lazy('profile-likes')), name='redirect-profile-updates'),
     url(r'^(?:([^\/]+?)/)?looks/$', 'apparelrow.profile.views.looks', name='profile-looks'),
     url(r'^(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='profile-followers'),
     url(r'^(?:([^\/]+?)/)?following/$', 'apparelrow.profile.views.following', name='profile-following'),

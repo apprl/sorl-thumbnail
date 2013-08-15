@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
-from django.views.generic import TemplateView
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import TemplateView, RedirectView
 
 from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
@@ -82,7 +83,7 @@ urlpatterns = patterns('',
     url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.apparel.views.gender', {'view': 'brand-likes'}, name='brand-likes'),
     url(r'^brand/(?:([^\/]+?)/)?men/$', 'apparelrow.profile.views.likes', {'gender': 'M'}, name='brand-likes-men'),
     url(r'^brand/(?:([^\/]+?)/)?women/$', 'apparelrow.profile.views.likes', {'gender': 'W'}, name='brand-likes-women'),
-    url(r'^brand/(?:([^\/]+?)/)?updates/$', 'apparelrow.profile.views.profile', name='brand-updates'),
+    url(r'^brand/(?:([^\/]+?)/)?updates/$', RedirectView.as_view(url=reverse_lazy('brand-likes')), name='redirect-brand-updates'),
     url(r'^brand/(?:([^\/]+?)/)?looks/$', 'apparelrow.profile.views.looks', name='brand-looks'),
     url(r'^brand/(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='brand-followers'),
     url(r'^brand/(?:([^\/]+?)/)?following/$', 'apparelrow.profile.views.following', name='brand-following'),

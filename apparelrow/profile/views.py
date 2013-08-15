@@ -1,6 +1,4 @@
-import logging
 import uuid
-import itertools
 import HTMLParser
 
 from django.conf import settings
@@ -8,20 +6,19 @@ from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
 from django.template import Context, Template
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib import messages
 from django.contrib import auth
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
-from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.loading import get_model
 
-from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
 from apparelrow.apparel.tasks import facebook_push_graph
 from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail
@@ -29,7 +26,6 @@ from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task
 from apparelrow.profile.decorators import avatar_change, login_flow
-from apparelrow.activity_feed.views import ActivityFeedRender
 
 from apparelrow.apparel.browse import browse_products
 
@@ -52,9 +48,9 @@ def get_profile_sidebar_info(request, profile):
 
     if profile.is_brand:
         gender = get_gender_from_cookie(request)
-        info['products'] = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added').count()
+        info['products'] = get_model('apparel', 'Product').valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added').count()
     else:
-        info['products'] = Product.published_objects.filter(likes__user=profile, likes__active=True).count()
+        info['products'] = get_model('apparel', 'Product').published_objects.filter(likes__user=profile, likes__active=True).count()
 
     content_type = ContentType.objects.get_for_model(get_user_model())
     info['following'] = Follow.objects.filter(user=profile, active=True).count()
@@ -119,40 +115,6 @@ def likes(request, profile, form, page=0, gender=None):
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 
-@get_current_user
-@avatar_change
-def profile(request, profile, form, page=0):
-    """
-    Displays the profile page
-    """
-    gender = get_gender_from_cookie(request)
-    htmlset = ActivityFeedRender(request, gender, profile, private=True)
-    paginator = Paginator(htmlset, 5)
-
-    page = request.GET.get('page')
-    try:
-        paged_result = paginator.page(page)
-    except PageNotAnInteger:
-        paged_result = paginator.page(1)
-    except EmptyPage:
-        paged_result = paginator.page(paginator.num_pages)
-
-    if request.is_ajax():
-        return render(request, 'activity_feed/feed.html', {
-            'current_page': paged_result
-        })
-
-    content = {
-        'current_page': paged_result,
-        'next': request.get_full_path(),
-        'profile': profile,
-        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.look.filter(published=True).order_by('-modified')[:10]
-        }
-    content.update(form)
-    content.update(get_profile_sidebar_info(request, profile))
-
-    return render(request, 'profile/profile.html', content)
 
 @get_current_user
 @avatar_change
