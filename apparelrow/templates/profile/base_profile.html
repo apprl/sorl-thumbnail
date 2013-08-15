@@ -43,35 +43,40 @@
                 <ul class="list-inline">
                     <li>
                     {% if profile and profile.is_brand %}
-                    {% url 'brand-likes-men' profile.slug as likes_url_men %}
-                    {% url 'brand-likes-women' profile.slug as likes_url_women %}
-                    <a class="{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %}selected{% else %}first{% endif %}" href="{{ likes_url }}">{% trans "Shop" %}</a>
+                        {% url 'brand-likes-men' profile.slug as likes_url_men %}
+                        {% url 'brand-likes-women' profile.slug as likes_url_women %}
+                        <a{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %} class="selected"{% endif %} href="{{ likes_url }}">
+                            {% blocktrans count products as product_count %}{{product_count}} item{% plural %}{{product_count}} items{% endblocktrans %}
+                        </a>
                     {% else %}
-                    <a class="{% if request.path == likes_url %}selected{% else %}first{% endif %}" href="{{ likes_url }}">{% trans "Likes" %}</a>
+                        <a{% if request.path == likes_url %} class="selected"{% endif %} href="{{ likes_url }}">
+                            {% blocktrans count products as product_count %}{{product_count}} like{% plural %}{{product_count}} likes{% endblocktrans %}
+                        </a>
                     {% endif %}
                     </li>
-                    <li><a class="{% if request.path == updates_url %}selected{% endif %}" href="{{ updates_url }}">{% trans "Updates" %}</a></li>
-                    <li><a class="{% if request.path == looks_url %} selected{% endif %}" href="{{ looks_url }}">{% trans "Looks" %}</a></li>
-                    <li><a class="{% if request.path == followers_url %} selected{% endif %}" href="{{ followers_url }}">{% trans "Followers" %}</a></li>
-                    <li><a class="last{% if request.path == following_url %} selected{% endif %}" href="{{ following_url }}">{% trans "Following" %}</a></li>
+                    <li>
+                        <a{% if request.path == updates_url %} class="selected"{% endif %} href="{{ updates_url }}">
+                            {% trans "Updates" %}
+                        </a>
+                    </li>
+                    <li>
+                        <a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">
+                            {% blocktrans count profile.looks as look_count %}{{look_count}} look{% plural %}{{look_count}} looks{% endblocktrans %}
+                        </a>
+                    </li>
+                    <li>
+                    <a{% if request.path == followers_url %} class="selected"{% endif %} href="{{ followers_url }}">
+                            {% blocktrans count profile.followers_count as followers_count %}{{followers_count}} follower{% plural %}{{followers_count}} followers{% endblocktrans %}
+                        </a>
+                    </li>
+                    <li>
+                    <a{% if request.path == following_url %} class="selected"{% endif %} href="{{ following_url }}">
+                            {% blocktrans count following as following_count %}{{following_count}} following{% plural %}{{following_count}} following{% endblocktrans %}
+                        </a>
+                    </li>
                 </ul>
                 {% endwith %}
-
                 <p class="description">{% if profile.about %}{{ profile.about|urlize_target_blank|linebreaksbr }}{% else %}{% if request.user.is_authenticated and request.user == profile %}{% trans "Add your description by clicking here." %}{% endif %}{% endif %}</p>
-
-                <ul class="list-inline">
-                    {% with likes_url=profile.url_likes looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
-                    {% if profile.is_brand %}
-                    <li class="left"><a href="{{ likes_url }}">{% blocktrans count products as prod %}{{prod}} product{% plural %}{{prod}} products{% endblocktrans %}</a></li>
-                    {% else %}
-                    <li class="left"><a href="{{ likes_url }}">{% blocktrans count products as prod %}Likes {{prod}} product{% plural %}Likes {{prod}} products{% endblocktrans %}</a></li>
-                    {% endif %}
-                    <li class="right"><a href="{{ looks_url }}">{% blocktrans count profile.looks as look_count %}Created {{look_count}} look{% plural %}Created {{look_count}} looks{% endblocktrans %}</a></li>
-                    <li class="left"><a href="{{ followers_url }}">{% trans "Followed by" %} {{ profile.followers_count }}</a></li>
-                    <li class="right"><a href="{{ following_url }}">{% trans "Following" %} {{ following }}</a></li>
-                    {% endwith %}
-                </ul>
-
             </div>
         </div>
     </div>
