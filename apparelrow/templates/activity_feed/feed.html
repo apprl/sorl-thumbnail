@@ -1,11 +1,9 @@
 {% load i18n %}
-<section id="feed-activity">
-{% for object in current_page.object_list %}
-    {{ object|safe }}
-{% empty %}
-    <h3>{% trans "No updates" %}</h3>
-{% endfor %}
-</section>
+<ul class="list-inline">
+    {% for object in current_page.object_list %}
+    <li>{{ object|safe }}</li>
+    {% endfor %}
+</ul>
 <div class="pagination">
-    {% include 'apparel/fragments/pagination.html' %}
+    {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
 </div>

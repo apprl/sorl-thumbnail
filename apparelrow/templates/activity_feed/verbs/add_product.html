@@ -12,15 +12,15 @@
 
 {% block activity_content %}
     {% if total_objects == 1 %}
-        {% include 'apparel/fragments/product_feed_452.html' with object=objects.0 width="452" %}
+        {% include 'apparel/fragments/product_medium.html' with object=objects.0 %}
     {% else %}
         <ul class="group">
             {% for object in objects %}
-                <li>{% include 'apparel/fragments/product_feed_226.html' with object=object width="226" %}</li>
+                <li>{% include 'apparel/fragments/product_medium.html' with object=object %}</li>
             {% endfor %}
         </ul>
         {% if total_objects > 4 %}
-            <a href="{{ users.0.get_absolute_url }}" class="btn btn-block btn-upper">{% blocktrans with count=remaining_objects %}+ {{ count }} more{% endblocktrans %}</a>
+            <a href="{{ users.0.get_absolute_url }}" class="btn btn-default btn-block">{% blocktrans with count=remaining_objects %}+ {{ count }} more{% endblocktrans %}</a>
         {% endif %}
     {% endif %}
 {% endblock %}

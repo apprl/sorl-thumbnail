@@ -1,32 +1,25 @@
 {% load apparel_extras comments i18n cache %}
-<article class="activity {{ verb }}">
-    <header class="activity-header">
-        <div class="activity-image">
-            {% with user=users.0 %}
-            <a href="{{ user.get_absolute_url }}"><img src="{{ user.avatar }}" width="50" height="50"></a>
-            {% endwith %}
-        </div>
-        <div class="activity-short">
-            <h3>{% block activity_header %}{% endblock %}</h3>
-            <p class="activity-date">{{ created|since }}</p>
-        </div>
-    </header>
-    <div class="activity-content">{% block activity_content %}{% endblock %}</div>
-    {% if enable_comments and total_objects == 1 %}
-    {% if comment_count > 0 or current_user.is_authenticated %}
-    <div class="activity-comment comment-box">
-        {% if comment_count > 2 %}
-        <a class="comment-count" href="{{ objects.0.get_absolute_url }}#comments">{% blocktrans with comment_count=comment_count %}See all {{comment_count}} comments{% endblocktrans %}</a>
-        {% endif %}
-        <ul class="comments-list">
-        {% for comment in comments reversed %}
-            {% include 'comments/comment.html' %}
-        {% endfor %}
-        </ul>
-        {% if current_user and current_user.is_authenticated %}
-        {% render_comment_form for objects.0 %}
-        {% endif %}
+<div class="feed-item panel feed-verb-{{ verb }}">
+    <div class="panel-heading">
+        <a href="{{ users.0.get_absolute_url }}"><img class="img-circle" src="{{ users.0.avatar }}"></a>
+        <p>{% block activity_header %}{% endblock %}</p>
+        <p class="activity-date">{{ created|since }}</p>
     </div>
-    {% endif %}
-    {% endif %}
-</article>
+    <div class="panel-body">
+        {% block activity_content %}{% endblock %}
+    </div>
+</div>
+<!--<article class="activity {{ verb }}">-->
+    <!--<header class="activity-header">-->
+        <!--<div class="activity-image">-->
+            <!--{% with user=users.0 %}-->
+            <!--<a href="{{ user.get_absolute_url }}"><img src="{{ user.avatar }}" width="50" height="50"></a>-->
+            <!--{% endwith %}-->
+        <!--</div>-->
+        <!--<div class="activity-short">-->
+            <!--<h3></h3>-->
+            <!--<p class="activity-date">{{ created|since }}</p>-->
+        <!--</div>-->
+    <!--</header>-->
+    <!--<div class="activity-content"></div>-->
+<!--</article>-->

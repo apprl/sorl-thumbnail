@@ -5,7 +5,7 @@
         <div class="row">
             {% for activity in featured %}
             <div class="col-md-4">
-                <div class="featured-feed-item panel">
+                <div class="feed-item panel">
                     <div class="panel-heading">
                         <a href="{{ activity.user.get_absolute_url }}"><img class="img-circle" src="{{ activity.user.avatar }}"></a>
                         {% if activity.verb == 'like_product' %}

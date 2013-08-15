@@ -85,18 +85,6 @@ class ActivityFeedRender:
             if len(context['objects']) < 1:
                 continue
 
-            # Comments
-            if context['total_objects'] == 1:
-                context['comments'] = Comment.objects.filter(content_type=result['ct'],
-                                                             object_pk=context['objects'][0].pk,
-                                                             is_public=True,
-                                                             is_removed=False)
-                context['comment_count'] = context['comments'].count()
-                context['comments'] = context['comments'].order_by('-submit_date').select_related('user')[:2]
-                context['enable_comments'] = False
-                if result['v'] in ['like_product', 'like_look', 'create']:
-                    context['enable_comments'] = True
-
             template_name = 'activity_feed/verbs/%s.html' % (result['v'],)
             rendered_templates.append(render_to_string(template_name, context))
 
