@@ -1,13 +1,33 @@
 {% load i18n apparel_extras mptt_tags %}
 
 
-<a id="product-filter-button" class="btn btn-default btn-block btn-filter collapsed" data-toggle="collapse" data-target="#product-filter-accordion">{% trans "Filter products" %}</a>
+<a id="product-filter-button" class="btn btn-default btn-block btn-filter" data-toggle="collapse" data-target="#product-filter-accordion">{% trans "Filter products" %}<!--<span class="icon-arrow"></span>--></a>
 
 <div class="panel-group collapse" id="product-filter-accordion">
 
+    {% if not user_id or user_gender == 'A' %}
+    <div class="panel{% if selected_categories %} active{% endif %}">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseGender">{% trans "Show" %}<span class="icon-arrow"></span></a>
+            <!--<a class="reset" href="">{% trans "Reset" %}</a>-->
+        </div>
+        <div id="collapseGender" class="panel-collapse collapse">
+            <div class="panel-body" id="product-gender">
+                <ul id="product-gender" class="list-unstyled">
+                    {% if user_gender == 'A' %}
+                    <li class="all"><a{% if not gender or gender == 'A' %} class="selected"{% endif %} href="/shop/">{% trans "Both" %}</a></li>
+                    {% endif %}
+                    <li class="women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} href="/shop/women/">{% trans "Womens" %}</a></li>
+                    <li class="men"><a id="option-M"{% if gender == "M" %} class="selected"{% endif %} href="/shop/men/">{% trans "Mens" %}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="panel panel-product-sort">
         <div class="panel-heading">
-            <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapseSort">{% trans "Sort by" %}</a>
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseSort">{% trans "Sort by" %}<span class="icon-arrow"></span></a>
         </div>
         <div id="collapseSort" class="panel-collapse collapse">
             <div class="panel-body" id="product-sort">
@@ -21,29 +41,9 @@
         </div>
     </div>
 
-    {% if not user_id or user_gender == 'A' %}
     <div class="panel{% if selected_categories %} active{% endif %}">
         <div class="panel-heading">
-            <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapseGender">{% trans "Gender" %}</a>
-            <!--<a class="reset" href="">{% trans "Reset" %}</a>-->
-        </div>
-        <div id="collapseGender" class="panel-collapse collapse">
-            <div class="panel-body" id="product-gender">
-                <ul id="product-gender" class="list-unstyled">
-                    {% if user_gender == 'A' %}
-                    <li class="all"><a{% if not gender or gender == 'A' %} class="selected"{% endif %} href="/shop/">{% trans "All" %}</a></li>
-                    {% endif %}
-                    <li class="women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} href="/shop/women/">{% trans "Women" %}</a></li>
-                    <li class="men"><a id="option-M"{% if gender == "M" %} class="selected"{% endif %} href="/shop/men/">{% trans "Men" %}</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <div class="panel{% if selected_categories %} active{% endif %}">
-        <div class="panel-heading">
-            <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapseOne">{% trans "Categories" %}</a>
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseOne">{% trans "Categories" %}<span class="icon-arrow"></span></a>
             <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseOne" class="panel-collapse collapse">
@@ -63,7 +63,7 @@
     </div>
     <div class="panel{% if selected_price or selected_discount %} active{% endif %}">
         <div class="panel-heading">
-            <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapseTwo">{% trans "Price" %}</a>
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">{% trans "Price" %}<span class="icon-arrow"></span></a>
             <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseTwo" class="panel-collapse collapse">
@@ -95,7 +95,7 @@
     </div>
     <div class="panel{% if selected_colors or selected_patterns %} active{% endif %}">
         <div class="panel-heading">
-            <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapseThree">{% trans "Colors" %}</a>
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">{% trans "Colors" %}<span class="icon-arrow"></span></a>
             <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseThree" class="panel-collapse collapse">
@@ -118,7 +118,7 @@
     {% if not is_brand %}
     <div class="panel{% if selected_brands %} active{% endif %}">
         <div class="panel-heading">
-            <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapseFour">{% trans "Designers" %}</a>
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseFour">{% trans "Designers" %}<span class="icon-arrow"></span></a>
             <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseFour" class="panel-collapse collapse">
@@ -142,7 +142,7 @@
     {% endif %}
     <div class="panel{% if selected_stores %} active{% endif %}">
         <div class="panel-heading">
-            <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapseFive">{% trans "Stores" %}</a>
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseFive">{% trans "Stores" %}<span class="icon-arrow"></span></a>
             <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseFive" class="panel-collapse collapse">
