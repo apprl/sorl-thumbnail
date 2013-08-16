@@ -3,15 +3,14 @@
 
 {% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Looks Men" %}{% else %}{% trans "Looks Women" %}{% endif %} | {% endblock %}
 
-{% block body-classes %}look-list{% endblock %}
+{% block body-classes %}look-list-page{% endblock %}
 {% block body %}
     <div class="row">
         <div class="col-lg-12">
             <div class="content-header">
                 <h1><span class="icon-slash-a"></span>{% if APPAREL_GENDER == 'M' %}{% trans "Looks Men" %}{% else %}{% trans "Looks Women" %}{% endif %}</h1>
                 <ul class="list-inline">
-                    <li><h2><a{% if 'popular' not in request.path %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Popular looks" %}</a></h2></li>
-                    <li><h2><a{% if 'popular' in request.path %} class="selected"{% endif %} href="{% url 'popular-look-list' %}">{% trans "Popular looks in your network" %}</a></h2></li>
+                    <li><h2><a class="selected" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Popular looks" %}</a></h2></li>
                 </ul>
                 {% include 'apparel/fragments/create_look_button.html' with extra_classes='pull-right' request=request only %}
             </div>
