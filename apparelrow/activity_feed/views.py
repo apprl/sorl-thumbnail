@@ -111,11 +111,11 @@ def public_feed(request, gender=None):
         paged_result = paginator.page(paginator.num_pages)
 
     if request.is_ajax():
-        return render(request, 'activity_feed/feed.html', {
+        return render(request, 'activity_feed/fragments/feed_list.html', {
             'current_page': paged_result
         })
 
-    response = render(request, 'activity_feed/user_feed.html', {
+    response = render(request, 'activity_feed/feed_list.html', {
             'featured': get_featured_activity_today(),
             'current_page': paged_result,
             'next': request.get_full_path(),
@@ -150,11 +150,11 @@ def user_feed(request, gender=None):
         paged_result = paginator.page(paginator.num_pages)
 
     if request.is_ajax():
-        return render(request, 'activity_feed/feed.html', {
+        return render(request, 'activity_feed/fragments/feed_list.html', {
             'current_page': paged_result
         })
 
-    response = render(request, 'activity_feed/user_feed.html', {
+    response = render(request, 'activity_feed/feed_list.html', {
             'featured': get_featured_activity_today(),
             'current_page': paged_result,
             'next': request.get_full_path(),

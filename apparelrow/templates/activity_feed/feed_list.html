@@ -4,7 +4,7 @@
 {% block full-title %}Apprl - Social Shopping | {% trans "Apparel, shoes, bags & accessories from the best online stores" %}{% endblock %}
 {% block meta_description %}{% trans "Follow your favourite brands, bloggers & friends to discover fashion you love." %}{% endblock %}
 
-{% block body-classes %}feed{% endblock body-classes %}
+{% block body-classes %}feed-list-page{% endblock body-classes %}
 {% block full-body %}
 
     {% include 'apparel/fragments/featured.html' with request=request featured=featured %}
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        {% include 'activity_feed/feed.html' %}
+        {% include 'activity_feed/fragments/feed_list.html' %}
     </div>
 
 {% endblock %}
