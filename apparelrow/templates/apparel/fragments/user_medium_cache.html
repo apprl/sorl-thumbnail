@@ -1,0 +1,4 @@
+{% load cache %}
+{% cache CACHE_TIMEOUT user_medium profile.id LANGUAGE_CODE %}
+{% include 'apparel/fragments/user_medium.html' with cached=True %}
+{% endcache %}

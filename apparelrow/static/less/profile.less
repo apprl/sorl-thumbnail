@@ -1,3 +1,84 @@
+//
+// User medium template styling
+// ----------------------------------------------------------------------------
+
+.user-medium {
+    margin-bottom: 30px;
+    .panel-heading {
+        background-color: #ffffff;
+        .btn-follow-you {
+            display: none;
+        }
+    }
+    .media-heading {
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        a {
+            color: #000000;
+            font-size: 14px;
+        }
+    }
+    .panel-body {
+        padding: 0;
+        ul {
+            li:nth-child(1) {
+                padding-right: 0;
+            }
+            li:nth-child(2) {
+                padding-left: 0;
+            }
+            li:nth-child(3) {
+                padding-right: 0;
+                img {
+                    border-bottom-left-radius: 4px;
+                }
+            }
+            li:nth-child(4) {
+                padding-left: 0;
+                img {
+                    border-bottom-right-radius: 4px;
+                }
+            }
+            li img { }
+        }
+    }
+}
+
+//
+// Profile page styling
+// ----------------------------------------------------------------------------
+
+body.follow-list {
+    .alphabet {
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        color: #333333;
+        li {
+            padding-left: 2px;
+            padding-right: 2px;
+            &:first-child {
+                padding-left: 0;
+            }
+        }
+        li a {
+            padding: 5px;
+            color: @light_gray_color;
+            &.selected {
+                color: #000000;
+            }
+            &:first-child {
+                padding-left: 0;
+            }
+        }
+    }
+}
+
+//
+// User medium template styling
+// ----------------------------------------------------------------------------
+
 body.profile {
     .profile-header {
         padding-top: 20px;

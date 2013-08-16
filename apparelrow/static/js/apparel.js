@@ -898,7 +898,7 @@ jQuery(document).ready(function() {
                     $container.append(content.html());
                     $pagination.html(newPagination.html());
 
-                    $(document).trigger('infinite_scroll_data');
+                    $(document).trigger('infinite_scroll_data', [content]);
 
                     if('function' == typeof callback) callback();
                 });

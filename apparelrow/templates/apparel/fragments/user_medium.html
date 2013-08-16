@@ -1,26 +1,35 @@
-{% load i18n follow_tags humanize apparel_extras %}
+{% load i18n follow_tags humanize apparel_extras thumbnail %}
 
-<div class="panel">
+<div class="user-medium panel" id="user-medium-{{ profile.pk }}">
     <div class="panel-heading">
         <div class="media">
             <a class="pull-left" href="{{ profile.get_absolute_url }}">
-                <img class="avatar" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>
+                <img class="img-circle" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>
             </a>
             <div class="media-body">
-                <a href="{{ profile.get_absolute_url }}"><h4 class="media-heading">{{ profile.display_name }}</h4></a>
+                <h4 class="media-heading"><a href="{{ profile.get_absolute_url }}">{{ profile.display_name }}</a></h4>
+                {% if cached %}
+                {% include 'apparel/fragments/follow_cache.html' %}
+                {% else %}
                 {% include 'apparel/fragments/follow.html' %}
+                {% endif %}
+                {% comment %}
                 {% if user.is_authenticated %}
                     {% if profile|is_following_profile:request.user %}<span class="btn btn-default btn-sm disabled btn-follow-you">{% trans "Following you" %}</span>{% endif %}
                 {% endif %}
+                {% endcomment %}
             </div>
         </div>
     </div>
     <div class="panel-body">
-        <ul>
-            <li>look or product grid item</li>
-            <li>look or product grid item</li>
-            <li>look or product grid item</li>
-            <li>look or product grid item</li>
+        <ul class="list-unstyled row">
+            {% for x in profile.profile_content %}
+            {% thumbnail x.1 "192x192" crop="center" format="PNG" as im %}
+            <li class="col-xs-6"><a href="{{ x.0 }}"><img class="img-responsive" src="{{ im.url}}"></a></li>
+            {% empty %}
+            <li class="col-xs-6"><a href="{{ profile.get_absolute_url }}"><img class="img-responsive" src="{{ profile.avatar_large }}"></a></li>
+            {% endthumbnail %}
+            {% endfor %}
         </ul>
     </div>
 </div>

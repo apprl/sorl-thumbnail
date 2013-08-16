@@ -29,7 +29,7 @@ from apparelrow.profile.decorators import avatar_change, login_flow
 
 from apparelrow.apparel.browse import browse_products
 
-PROFILE_PAGE_SIZE = 30
+PROFILE_PAGE_SIZE = 16
 
 def get_facebook_friends(request):
     facebook_user = get_facebook_user(request)

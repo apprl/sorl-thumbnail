@@ -1,9 +1,26 @@
 {% load i18n %}
-<ul class="list-inline">
+<ul class="list-unstyled row">
     {% for profile in current_page.object_list %}
-    <li>{% include 'apparel/fragments/user_medium.html' %}</li>
+    <li class="col-sm-3">{% include 'apparel/fragments/user_medium_cache.html' %}</li>
+    {% empty %}
+    <li class="col-lg-12">{% trans "No results" %}</li>
     {% endfor %}
 </ul>
 <div class="pagination">
     {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
 </div>
+<script type="text/javascript">
+(function() {
+    function follow(uids) {
+        $.post('{% url 'follow-backend' %}', {uids: uids}, function(response) {
+            $.each(response, function(i, obj) {
+                $('#user-medium-' + obj['id'] + ' .btn-follow-placeholder').replaceWith(obj['html']);
+            });
+        });
+    }
+    follow($('.user-medium').map(function() { return $(this).attr('id').split('-')[2]; }).get().join(','));
+    $(document).on('infinite_scroll_data', function(event, content) {
+        follow($('.user-medium', content).map(function() { return $(this).attr('id').split('-')[2]; }).get().join(','));
+    });
+})()
+</script>

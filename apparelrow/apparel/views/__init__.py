@@ -4,6 +4,7 @@ import re
 import json
 import datetime
 import os.path
+import string
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
@@ -12,7 +13,7 @@ from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.db.models import Q, Max, Min, Count, Sum, connection, signals, get_model
 from django.template import RequestContext, loader
-from django.template.loader import get_template
+from django.template.loader import render_to_string
 from django.template.defaultfilters import floatformat
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth import get_user_model
@@ -497,19 +498,6 @@ def look_like(request, slug, action):
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
-def brand_list(request, gender=None):
-    """
-    List all brands.
-    """
-    if not gender:
-        gender = get_gender_from_cookie(request)
-
-    response = render_to_response('apparel/brand_list.html', {
-                'next': request.get_full_path(),
-                'APPAREL_GENDER': gender
-            }, context_instance=RequestContext(request))
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-    return response
 
 def look_list(request, popular=None, search=None, contains=None, page=0, gender=None):
     """
@@ -650,7 +638,20 @@ def csrf_failure(request, reason=None):
     logging.debug("CSRF failure: %s" % reason)
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
 
-def user_list(request, popular=None, gender=None, view_gender=[]):
+
+@login_required
+@require_POST
+def follow_backend(request):
+    uids = request.POST.get('uids', '').split(',')
+    follows = []
+    for profile in get_user_model().objects.filter(id__in=uids):
+        follow_html = render_to_string('apparel/fragments/follow.html', {'profile': profile}, context_instance=RequestContext(request))
+        follows.append({'id': profile.pk, 'html': follow_html})
+
+    return HttpResponse(json.dumps(follows), mimetype='application/json')
+
+
+def user_list(request, gender=None, brand=False):
     """
     Displays a list of profiles
     """
@@ -658,19 +659,24 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
         gender = get_gender_from_cookie(request)
 
     queryset = get_user_model().objects.filter(is_active=True,
-                                               is_brand=False,
+                                               is_brand=brand,
                                                advertiser_store__isnull=True)
-
-    if view_gender and set(view_gender).issubset(set(['W', 'M'])):
-        queryset = queryset.filter(gender__in=view_gender)
-
-    if popular:
-        queryset = queryset.order_by('-popularity', '-followers_count', 'first_name', 'last_name', 'username')
+    if not brand:
+        queryset = queryset.filter(gender=gender)
     else:
-        queryset = queryset.order_by('first_name', 'last_name', 'username')
+        # XXX: is this solution good enough?
+        queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender=gender).distinct()
 
-    paged_result, pagination = get_pagination_page(queryset,
-            10, request.GET.get('page', 1), 1, 2)
+    alphabet = request.GET.get('alphabet')
+    if alphabet:
+        if alphabet == '0-9':
+            queryset = queryset.filter(name__regex=r'^\d.+')
+        elif alphabet in  string.lowercase:
+            queryset = queryset.filter(name__istartswith=alphabet)
+
+    queryset = queryset.order_by('-popularity', '-followers_count', 'first_name', 'last_name', 'username')
+
+    paged_result, pagination = get_pagination_page(queryset, 12, request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
         response = render_to_response('apparel/fragments/user_list.html', {
@@ -682,7 +688,8 @@ def user_list(request, popular=None, gender=None, view_gender=[]):
                 'pagination': pagination,
                 'current_page': paged_result,
                 'next': request.get_full_path(),
-                'view_gender': view_gender[0] if len(view_gender) > 0 and view_gender[0] in ['W', 'M'] else 'A',
+                'alphabet': string.lowercase,
+                'selected_alphabet': alphabet,
                 'APPAREL_GENDER': gender
             }, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)

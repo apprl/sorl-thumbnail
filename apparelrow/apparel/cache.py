@@ -63,6 +63,7 @@ new_template_cache_map = {
         'product_thumb': ['id_language', lambda x: x.product_id],
         'look_embed_tooltip': ['id_language', lambda x: x.product_id],
         'look_product_tooltip': ['id_language', lambda x: x.product_id],
+        'user_medium': ['id_language', lambda x: x.user_id],
     },
     'Look': {
         'look_widget': ['id_language', lambda x: x.pk],
@@ -115,6 +116,7 @@ new_template_cache_map = {
         'look_large_content': ['id_language', lambda x: x.look_id],
         'look_large_footer': ['id_language', lambda x: x.look_id],
         'look_sidebar': ['id_language', lambda x: x.look_id],
+        'user_medium': ['id_language', lambda x: x.user_id],
     },
     'Comment': {
         'look_medium_footer': ['id_language', lambda x: x.object_pk],

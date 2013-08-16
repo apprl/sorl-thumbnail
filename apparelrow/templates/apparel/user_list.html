@@ -2,38 +2,35 @@
 {% load i18n %}
 {% load apparel_extras %}
 
-{% block extra-title %}{% trans "Members" %} | {% endblock %}
+{% block extra-title %}{% trans "Follow" %} | {% endblock %}
 
-{% block body-classes %}user-list{% endblock %}
+{% block body-classes %}follow-list{% endblock %}
 {% block body %}
     <div class="row">
         <div class="col-lg-12">
             <div class="content-header">
-                <h1><span class="icon-slash-a"></span>{% trans "Members" %}</h1>
+                <h1><span class="icon-slash-a"></span>{% trans "Follow" %}</h1>
                 <ul class="list-inline">
-                    <li><h2><a{% if 'popular' in request.path %} class="selected"{% endif %} href="{% url 'user-list-popular' %}">{% trans "Popular" %}</a></h2></li>
-                    <li><h2><a{% if 'popular' not in request.path %} class="selected"{% endif %} href="{% url 'user-list' %}">{% trans "In alphabetical order" %}</a></h2></li>
+                    <li><h2><a{% if 'users' in request.path %} class="selected"{% endif %} href="{% url 'user-list' %}">{% trans "Members" %}</a></h2></li>
+                    <li><h2><a{% if 'brands' in request.path %} class="selected"{% endif %} href="{% url 'brand-list' %}">{% trans "Brands" %}</a></h2></li>
                 </ul>
                 {% if request.user.is_authenticated %}
                 <a class="btn btn-success pull-right facebook-invite" href="#invite">{% trans "+ Invite your friends" %}</a>
                 {% endif %}
             </div>
         </div>
+        <div class="col-lg-12">
+            <ul class="alphabet list-inline">
+                <li><a{% if not selected_alphabet %} class="selected"{% endif %} href="{{ request.path }}">{% trans "Show all" %}</a></li>
+                <li><a{% if selected_alphabet == '0-9' %} class="selected"{% endif %} href="?alphabet=0-9">0-9</a></li>
+                {% for character in alphabet %}
+                <li><a{% if selected_alphabet == character %} class="selected"{% endif %} href="?alphabet={{ character }}">{{ character }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-
     <div class="row">
         <div class="col-lg-12">
-        <!--<ul class="gender-tabs">-->
-            <!--{% if 'popular' in request.path %}-->
-            <!--<li {% if view_gender == 'A' %}class="active"{% endif %} ><a href="{% url 'user-list-popular' %}">{% trans "All" %}</a></li>-->
-            <!--<li {% if view_gender == 'W' %}class="active"{% endif %} ><a href="{% url 'user-list-popular-women' %}">{% trans "Females" %}</a></li>-->
-            <!--<li {% if view_gender == 'M' %}class="active"{% endif %} ><a href="{% url 'user-list-popular-men' %}">{% trans "Males" %}</a></li>-->
-            <!--{% else %}-->
-            <!--<li {% if view_gender == 'A' %}class="active"{% endif %} ><a href="{% url 'user-list' %}">{% trans "All" %}</a></li>-->
-            <!--<li {% if view_gender == 'W' %}class="active"{% endif %} ><a href="{% url 'user-list-women' %}">{% trans "Females" %}</a></li>-->
-            <!--<li {% if view_gender == 'M' %}class="active"{% endif %} ><a href="{% url 'user-list-men' %}">{% trans "Males" %}</a></li>-->
-            <!--{% endif %}-->
-        <!--</ul>-->
             {% include 'apparel/fragments/user_list.html' %}
         </div>
     </div>

@@ -2,6 +2,7 @@ from urlparse import parse_qs, urlsplit, urlunsplit
 import json
 import decimal
 import datetime
+import itertools
 
 from django.conf import settings
 from django.core.cache import cache
@@ -14,6 +15,20 @@ from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+
+
+def roundrobin(*iterables):
+    "roundrobin('ABC', 'D', 'EF') --> A D E B F C"
+    # Recipe credited to George Sakkis
+    pending = len(iterables)
+    nexts = itertools.cycle(iter(it).next for it in iterables)
+    while pending:
+        try:
+            for next in nexts:
+                yield next()
+        except StopIteration:
+            pending -= 1
+            nexts = itertools.cycle(itertools.islice(nexts, pending))
 
 def get_featured_activity_today():
     today = datetime.date.today()

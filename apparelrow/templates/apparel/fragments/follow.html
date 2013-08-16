@@ -11,7 +11,7 @@
 {% else %}
 
     {% if request.user != profile %}
-    <a class="{% if classes %}{{ classes }}{% else %}btn btn-success btn-sm{% endif %}" data-toggle="modal" href="#" data-target="#modal_follow_user">{% trans "Follow" %}</a>
+    <a class="{% if classes %}{{ classes }}{% else %}btn btn-success btn-sm btn-follow-placeholder{% endif %}" data-toggle="modal" href="#" data-target="#modal_follow_user">{% trans "Follow" %}</a>
     {% endif %}
 
 {% endif %}

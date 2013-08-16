@@ -1,4 +1,4 @@
-{% load i18n l10n apparel_extras compressed login_bar %}
+{% load i18n l10n apparel_extras compressed login_bar cache %}
 {% load static from staticfiles %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
@@ -108,13 +108,7 @@
             <ul class="nav navbar-nav">
                 <li class="{% selected_url request "/shop" "/products" %}"><a href="{% gender_url APPAREL_GENDER 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
                 <li class="{% selected_url request "/looks" %}"><a href="{% gender_url APPAREL_GENDER 'look-list' %}"><span>{% trans "Looks" %}</span></a></li>
-                <li class="dropdown {% selected_url request "/users" "/brand" "/profile" %}">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>{% trans "Follow" %} <b class="caret"></b></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{% url 'user-list-popular' %}">{% trans "Members" %}</a></li>
-                        <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
-                    </ul>
-                </li>
+                <li class="{% selected_url request "/brands" "/users" %}"><a href="{% gender_url APPAREL_GENDER 'user-list' %}"><span>{% trans "Follow" %}</span></a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">

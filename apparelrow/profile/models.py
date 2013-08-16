@@ -1,5 +1,4 @@
 # coding=utf-8
-
 import uuid
 import os.path
 
@@ -18,6 +17,7 @@ from django.core.exceptions import ValidationError
 from sorl.thumbnail import get_thumbnail
 
 from apparelrow.activity_feed.tasks import update_activity_feed
+from apparelrow.apparel.utils import roundrobin
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
 
 
@@ -139,6 +139,31 @@ class User(AbstractUser):
     @cached_property
     def look_likes_count(self):
         return self.look_likes.filter(active=True).count()
+
+    @cached_property
+    def profile_content(self):
+        # TODO: better algorithm for finding out content to fill user_medium.html templates with
+        if self.is_brand and self.brand:
+            products = list(self.brand.products.filter(vendorproduct__isnull=False, availability=True, published=True)[:4])
+        else:
+            products = list(self.product_likes.filter(active=True).order_by('-created')[:4])
+
+        look_likes = list(self.look_likes.filter(active=True).order_by('-created')[:4])
+
+        items = []
+        for item in list(roundrobin(look_likes, products))[:4]:
+            if self.is_brand and self.brand and not hasattr(item, 'look'):
+                items.append((item.get_absolute_url(), item.product_image))
+            elif not self.is_brand and hasattr(item, 'product'):
+                items.append((item.product.get_absolute_url(), item.product.product_image))
+            elif hasattr(item, 'look'):
+                items.append((item.look.get_absolute_url(), item.look.static_image))
+
+        if len(items) < 4:
+            for _ in xrange(4 - len(items)):
+                items.append((False, self.avatar_large))
+
+        return items
 
     @cached_property
     def display_name(self):

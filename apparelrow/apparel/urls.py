@@ -76,8 +76,8 @@ urlpatterns = patterns('',
     # Brand
     url(r'^brands/(?P<pk>[\d]+)/$', 'apparelrow.apparel.views.brand_redirect', name='brand-redirect'),
     url(r'^brands/$', 'apparelrow.apparel.views.gender', {'view': 'brand-list'}, name='brand-list'),
-    url(r'^brands/men/$', 'apparelrow.apparel.views.brand_list', {'gender': 'M'}, name='brand-list-men'),
-    url(r'^brands/women/$', 'apparelrow.apparel.views.brand_list', {'gender': 'W'}, name='brand-list-women'),
+    url(r'^brands/men/$', 'apparelrow.apparel.views.user_list', {'gender': 'M', 'brand': True}, name='brand-list-men'),
+    url(r'^brands/women/$', 'apparelrow.apparel.views.user_list', {'gender': 'W', 'brand': True}, name='brand-list-women'),
 
     # Brand profile
     url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.apparel.views.gender', {'view': 'brand-likes'}, name='brand-likes'),
@@ -92,6 +92,8 @@ urlpatterns = patterns('',
     url(r'^popup/product/$', 'apparelrow.apparel.views.product_popup', name='product-popup'),
     url(r'^popup/look/$', 'apparelrow.apparel.views.look_popup', name='look-popup'),
 
+    # Follow backend
+    url(r'^backend/follow/$', 'apparelrow.apparel.views.follow_backend', name='follow-backend'),
 
     # Looks
     url(r'^looks/create/$', 'apparelrow.apparel.views.looks.create', name='look-create'),
@@ -120,12 +122,12 @@ urlpatterns = patterns('',
     url(r'^widget/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.widget', name='look-widget'),
 
     # Users
-    url(r'^users/$', 'apparelrow.apparel.views.user_list', name='user-list'),
-    url(r'^users/men/$', 'apparelrow.apparel.views.user_list', {'view_gender': 'M'}, name='user-list-men'),
-    url(r'^users/women/$', 'apparelrow.apparel.views.user_list', {'view_gender': 'W'}, name='user-list-women'),
-    url(r'^users/popular/$', 'apparelrow.apparel.views.user_list', {'popular': True }, name='user-list-popular'),
-    url(r'^users/men/popular/$', 'apparelrow.apparel.views.user_list', {'view_gender': 'M', 'popular': True}, name='user-list-popular-men'),
-    url(r'^users/women/popular/$', 'apparelrow.apparel.views.user_list', {'view_gender': 'W', 'popular': True}, name='user-list-popular-women'),
+    url(r'^users/$', 'apparelrow.apparel.views.gender', {'view': 'user-list'}, name='user-list'),
+    url(r'^users/men/$', 'apparelrow.apparel.views.user_list', {'gender': 'M', 'brand': False}, name='user-list-men'),
+    url(r'^users/women/$', 'apparelrow.apparel.views.user_list', {'gender': 'W', 'brand': False}, name='user-list-women'),
+    url(r'^users/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular'),
+    url(r'^users/men/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-men'),
+    url(r'^users/women/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-women'),
 
     # Gender selection
     url(r'^gender/change/$', 'apparelrow.apparel.views.change_gender', name='change-gender'),
