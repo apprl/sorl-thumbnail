@@ -9,7 +9,6 @@
     <div class="panel{% if selected_categories %} active{% endif %}">
         <div class="panel-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseGender">{% trans "Show" %}<span class="icon-arrow"></span></a>
-            <!--<a class="reset" href="">{% trans "Reset" %}</a>-->
         </div>
         <div id="collapseGender" class="panel-collapse collapse">
             <div class="panel-body" id="product-gender">
@@ -44,10 +43,10 @@
     <div class="panel{% if selected_categories %} active{% endif %}">
         <div class="panel-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseOne">{% trans "Categories" %}<span class="icon-arrow"></span></a>
-            <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseOne" class="panel-collapse collapse">
             <div class="panel-body" id="product-category">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
                 {% for category, structure in categories_all|tree_info %}
                 {% if structure.new_level %}
                 <ul class="level-{{ category.get_level }} list-unstyled">
@@ -64,10 +63,10 @@
     <div class="panel{% if selected_price or selected_discount %} active{% endif %}">
         <div class="panel-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">{% trans "Price" %}<span class="icon-arrow"></span></a>
-            <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseTwo" class="panel-collapse collapse">
             <div class="panel-body" id="product-price">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
                 <form>
                     <div id="price-min">{% trans "Min" %} <span>{{ pricerange.min }}</span> {% trans CURRENCY %}</div>
                     {% if pricerange.selected_max >= pricerange.max %}
@@ -96,10 +95,10 @@
     <div class="panel{% if selected_colors or selected_patterns %} active{% endif %}">
         <div class="panel-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">{% trans "Colors" %}<span class="icon-arrow"></span></a>
-            <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseThree" class="panel-collapse collapse">
             <div class="panel-body" id="product-color">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
                 <ul class="list-inline">
                     {% for color in default_colors %}
                     <li>
@@ -119,10 +118,10 @@
     <div class="panel{% if selected_brands %} active{% endif %}">
         <div class="panel-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseFour">{% trans "Designers" %}<span class="icon-arrow"></span></a>
-            <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseFour" class="panel-collapse collapse">
             <div class="panel-body" id="product-manufacturers">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
                 <form>
                     <input type="text" name="brand" value="{% trans "Search brands" %}" class="form-control" />
                     <ul id="available-manufacturers" class="list-unstyled">
@@ -143,10 +142,10 @@
     <div class="panel{% if selected_stores %} active{% endif %}">
         <div class="panel-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseFive">{% trans "Stores" %}<span class="icon-arrow"></span></a>
-            <a class="reset" href="">{% trans "Reset" %}</a>
         </div>
         <div id="collapseFive" class="panel-collapse collapse">
             <div class="panel-body" id="product-stores">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
                 <ul id="available-stores" class="list-unstyled">
                     {% for store in stores %}
                     <li><a{% if store.0 in selected_stores %} class="selected"{% endif %} id="available-store-{{ store.0 }}" href="?store={{ store.0 }}">{{ store.1 }}</a></li>

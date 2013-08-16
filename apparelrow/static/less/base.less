@@ -500,13 +500,7 @@ body.shop, body.profile-likes {
                     color: #ffffff;
                     text-align: center;
                     text-decoration: none;
-                    &.reset {
-                        display: none;
-                    }
                 }
-            }
-            &.active .panel-heading .reset {
-                display: block;
             }
             .panel-body {
                 padding: 10px;
@@ -515,7 +509,21 @@ body.shop, body.profile-likes {
                 > ul {
                     margin-bottom: 0;
                 }
+                .reset {
+                    margin: 5px 0;
+                    display: none;
+                    color: #000000;
+                    text-decoration: none;
+                    .glyphicon:before {
+                        vertical-align: text-top;
+                        font-size: 16px;
+                    }
+                    &:hover {
+                        color: #666666;
+                    }
+                }
             }
+            &.active .panel-body .reset { display: block; }
         }
     }
 
