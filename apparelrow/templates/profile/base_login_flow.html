@@ -1,16 +1,7 @@
-{% extends "profile/base_profile.html" %}
+{% extends "base.html" %}
 {% load i18n apparel_extras %}
 
-{% block body-classes %}two-columns profile profile-login-flow{% endblock body-classes %}
-
-{% block head-data %}{% endblock head-data %}
-{% block extra-styles %}{% endblock extra-styles %}
-{% block body-header %}{% endblock body-header %}
-{% block body-scripts %}
-<script type="text/javascript">
-    $(function() { $('.page-logo').attr('href', ''); });
-</script>
-{% endblock body-scripts %}
+{% block body-classes %}profile-login-flow{% endblock %}
 
 {% block body %}
     <div class="sidebar">

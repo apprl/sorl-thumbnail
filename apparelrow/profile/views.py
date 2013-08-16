@@ -382,7 +382,8 @@ def login_flow_friends(request, profile, forms):
     context = {
         'login_flow_step': 'step-initial',
         'next_url': reverse('login-flow-featured'),
-        'profiles': get_facebook_friends(request)
+        'profiles': get_facebook_friends(request),
+        'profile': profile,
     }
     context.update(forms)
     return render(request, 'profile/login_flow_friends.html', context)
@@ -428,6 +429,7 @@ def login_flow_featured(request, profile, forms):
         'login_flow_step': 'step-members',
         'next_url': reverse('login-flow-brands'),
         'profiles': profiles[:21],
+        'profile': profile,
     }
     context.update(forms)
     return render(request, 'profile/login_flow_featured.html', context)
@@ -446,7 +448,8 @@ def login_flow_brands(request, profile, forms):
     context = {
         'login_flow_step': 'step-brands',
         'next_url': reverse('login-flow-complete'),
-        'profiles': get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:21]
+        'profiles': get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:21],
+        'profile': profile,
     }
     context.update(forms)
     return render(request, 'profile/login_flow_brands.html', context)

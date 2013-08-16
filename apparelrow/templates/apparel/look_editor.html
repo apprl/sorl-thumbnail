@@ -4,16 +4,6 @@
 
 {% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
 
-{% block header %}
-
-    <div id="header" class="small">
-        <div id="inner-header">
-            {% include 'apparel/shared_header.html' %}
-        </div>
-    </div>
-
-{% endblock %}
-
 {% block body-classes %}look-editor{% endblock %}
 {% block body %}
 
