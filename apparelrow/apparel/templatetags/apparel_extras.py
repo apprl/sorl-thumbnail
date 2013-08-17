@@ -32,7 +32,7 @@ def facebook_button(context, text=None, next=None, connect=False):
         next = context['next']
 
     if text is None:
-        text = _('Connect with Facebook')
+        text = _('Login with Facebook')
     else:
         text = _(text)
 

@@ -16,25 +16,47 @@
 
 
 //
+// Buttons
+// ----------------------------------------------------------------------------
+
+// Default button (used for non-important actions)
+// -------------------------
+.btn-default {
+    .button-variant(#ffffff, @gray_color, @gray_color);
+}
+
+// Primary button (used for every standard action)
+.btn-primary {
+    .button-variant(#ffffff, #000000, #000000);
+}
+
+// Facebook button
+// -------------------------
+.btn-facebook {
+    .button-variant(#ffffff, #3b5999, #3b5999);
+    .btn-facebook-icon {
+        display: inline-block;
+        width: 16px;
+        height: 15px;
+        margin-top: 1px;
+        vertical-align: text-top;
+        background-image: url('../images/facebook-icon.png');
+        background-repeat: no-repeat;
+    }
+}
+
+
+//
 // Body
 // ----------------------------------------------------------------------------
 
 body {
     background-color: @footer_bg_color;
     padding-top: 50px;
-    /*padding-top: 94px; // disabled loginbar for now*/
-    &.authenticated {
-        padding-top: 50px;
-    }
-    &.login, &.account {
-        padding-top: 50px;
+    .fb_dialog {
+        margin-top: 60px;
     }
 }
-
-.fb_dialog {
-    margin-top: 60px;
-}
-
 
 .content-header {
     margin-top: 30px;
@@ -231,10 +253,7 @@ body.index {
     #content-container {
         padding-bottom: 0;
     }
-    // TODO: hide more... and only show login
-    .navbar-nav, .navbar-form {
-        //display: none;
-    }
+    footer, .navbar-nav-main, .navbar-form { display: none; }
     .index-choice {
         background-color: #333333;
         min-height: 60px;
@@ -244,6 +263,11 @@ body.index {
             color: #ffffff;
             padding-top: 20px;
             padding-bottom: 20px;
+            span {
+                font-size: 24px;
+                position: absolute;
+                top: 18px;
+            }
         }
     }
     .index-pre-choice {
@@ -320,32 +344,6 @@ footer {
 
 #languageform {
     display: none;
-}
-
-
-//
-// Facebook button
-// ----------------------------------------------------------------------------
-
-.btn-facebook {
-    background-color: #3b5999;
-    color: #ffffff;
-    border-color: #3b5999;
-    .btn-facebook-icon {
-        display: inline-block;
-        width: 16px;
-        height: 15px;
-        margin-top: 1px;
-        vertical-align: text-top;
-        background-image: url('../images/facebook-icon.png');
-        background-repeat: no-repeat;
-    }
-    &:hover, &:focus, &:active, &.active {
-        background-color: #3b59aa;
-        color: #ffffff;
-        border-color: #3b59aa;
-    }
-
 }
 
 

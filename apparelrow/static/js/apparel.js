@@ -163,14 +163,14 @@ $(document).ready(function() {
             });
         } else {
             jQuery.post(element.data('unfollow-url'), function(data) {
-                element.removeClass('btn-unfollow').addClass('btn-follow').text(element.data('follow-text')).removeClass('btn-danger').addClass('btn-success');
+                element.removeClass('btn-unfollow').addClass('btn-follow').text(element.data('follow-text')).removeClass('btn-default btn-danger').addClass('btn-success');
             });
         }
         return false;
     }).on('mouseenter', '.btn-unfollow', function(event) {
-        jQuery(this).text(jQuery(this).data('unfollow-hover')).addClass('btn-danger');
+        jQuery(this).text(jQuery(this).data('unfollow-hover')).addClass('btn-danger').removeClass('btn-default');
     }).on('mouseleave', '.btn-unfollow', function(event) {
-        jQuery(this).text(jQuery(this).data('unfollow-text')).removeClass('btn-danger');
+        jQuery(this).text(jQuery(this).data('unfollow-text')).removeClass('btn-danger').addClass('btn-default');
     });
 
     // Sort categories in client, this is a solution to the problem where the category tree is only sorted for one language.

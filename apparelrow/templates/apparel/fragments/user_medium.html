@@ -13,11 +13,6 @@
                 {% else %}
                 {% include 'apparel/fragments/follow.html' %}
                 {% endif %}
-                {% comment %}
-                {% if user.is_authenticated %}
-                    {% if profile|is_following_profile:request.user %}<span class="btn btn-default btn-sm disabled btn-follow-you">{% trans "Following you" %}</span>{% endif %}
-                {% endif %}
-                {% endcomment %}
             </div>
         </div>
     </div>

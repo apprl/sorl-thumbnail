@@ -19,8 +19,5 @@
                 <li>{% include 'apparel/fragments/product_medium.html' with object=object %}</li>
             {% endfor %}
         </ul>
-        {% if total_objects > 4 %}
-            <a href="{{ users.0.get_absolute_url }}" class="btn btn-default btn-block">{% blocktrans with count=remaining_objects %}+ {{ count }} more{% endblocktrans %}</a>
-        {% endif %}
     {% endif %}
 {% endblock %}

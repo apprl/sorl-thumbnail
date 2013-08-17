@@ -4,8 +4,16 @@
 
 .user-medium {
     margin-bottom: 30px;
+    /*background-color: @light_gray_color;*/
+    /*border-radius: 0;*/
+    /*border: 0;*/
+    /*box-shadow: none;*/
     .panel-heading {
-        background-color: #ffffff;
+        background-color: transparent;
+        /*background-color: @light_gray_color;//#ffffff;*/
+        /*border: 0;*/
+        padding: 10px;
+        /*padding-bottom: 15px;*/
         .btn-follow-you {
             display: none;
         }
@@ -21,27 +29,36 @@
         }
     }
     .panel-body {
+        background-color: #eeeeee;
+        /*padding: 10px 10px 10px 10px;*/
         padding: 0;
         ul {
             li:nth-child(1) {
                 padding-right: 0;
+                /*padding-right: 5px;*/
+                /*padding-bottom: 5px;*/
             }
             li:nth-child(2) {
                 padding-left: 0;
+                /*padding-left: 5px;*/
+                /*padding-bottom: 5px;*/
             }
             li:nth-child(3) {
                 padding-right: 0;
+                /*padding-right: 5px;*/
+                /*padding-top: 5px;*/
                 img {
                     border-bottom-left-radius: 4px;
                 }
             }
             li:nth-child(4) {
                 padding-left: 0;
+                /*padding-left: 5px;*/
+                /*padding-top: 5px;*/
                 img {
                     border-bottom-right-radius: 4px;
                 }
             }
-            li img { }
         }
     }
 }

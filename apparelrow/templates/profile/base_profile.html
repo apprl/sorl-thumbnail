@@ -45,9 +45,9 @@ $(document).ready(function() {
             <div class="col-sm-10">
                 <h1><!--<span class="icon-slash-a">--></span>{{ profile.display_name }}</h1>
                 {% if request.user.is_authenticated and request.user.is_partner and request.user == profile %}
-                <a href="{% url 'profile-embed-shop' %}" class="btn btn-default btn-create-shop">{% trans "Create a shop on your site" %}</a>
+                <a href="{% url 'profile-embed-shop' %}" class="btn btn-primary btn-create-shop">{% trans "Create a shop on your site" %}</a>
                 {% else %}
-                {% include 'apparel/fragments/follow.html' with classes="btn btn-default btn-profile-follow" %}
+                {% include 'apparel/fragments/follow.html' %}
                 {% endif %}
                 {% with likes_url=profile.url_likes looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
                 <ul class="list-inline">

@@ -105,13 +105,13 @@
                 <!--<a href="{{ request.url }}" id="cancel-search">{% trans "Cancel" %}</a>-->
             </form>
 
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav navbar-nav-main">
                 <li class="{% selected_url request "/shop" "/products" %}"><a href="{% gender_url APPAREL_GENDER 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
                 <li class="{% selected_url request "/looks" %}"><a href="{% gender_url APPAREL_GENDER 'look-list' %}"><span>{% trans "Looks" %}</span></a></li>
                 <li class="{% selected_url request "/brands" "/users" %}"><a href="{% gender_url APPAREL_GENDER 'user-list' %}"><span>{% trans "Discover" %}</span></a></li>
             </ul>
 
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-nav-login navbar-right">
                 {% if not request.user.is_authenticated %}
                 <li><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>
                 {% else %}
@@ -132,14 +132,6 @@
                     </ul>
                 </li>
                 {% endif %}
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'django.views.i18n.set_language' %}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
-                    <ul id="language-dropdown" class="dropdown-menu">
-                        {% for language in LANGUAGES_DISPLAY %}
-                        <li><a data-language="{{ language.0 }}" href="#">{% trans language.1 %}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
             </ul>
         </div>
     </nav>
@@ -198,11 +190,15 @@
                             <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
                         </ul>
                         <ul class="list-unstyled col-xs-6">
-                            <li><h4>{% trans "Join" %}</h4></li>
-                            {% if not request.user.is_authenticated %}
-                            <li><a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a></li>
-                            {% endif %}
-                            <li><a href="{% url 'dashboard' %}">{% trans "Bloggers" %}</a></li>
+                            <li><h4>{% trans "Language" %}</h4></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'django.views.i18n.set_language' %}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
+                                <ul id="language-dropdown" class="dropdown-menu">
+                                    {% for language in LANGUAGES_DISPLAY %}
+                                    <li><a data-language="{{ language.0 }}" href="#">{% trans language.1 %}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -216,6 +212,8 @@
                         </ul>
                         <ul class="list-unstyled col-xs-6">
                             <li><h4>{% trans "Apprl" %}</h4></li>
+                            <li><a href="{% url 'index-publisher' %}">{% trans "Bloggers" %}</a></li>
+                            <li><a href="{% url 'index-store' %}">{% trans "Stores" %}</a></li>
                             <li><a href="mailto:info@apprl.com">{% trans "Contact" %}</a></li>
                             <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Privacy & Terms" %}</a></li>
                             <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
@@ -235,13 +233,6 @@
                             <div class="last">
                                 <a data-pin-do="buttonFollow" href="http://pinterest.com/apprl/">APPRL</a>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            {% if not request.user.is_partner %}
-                            <a href="{% url 'dashboard' %}" class="btn btn-success btn-block">{% trans "Become a partner blogger" %}</a>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
