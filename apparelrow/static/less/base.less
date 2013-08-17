@@ -154,6 +154,10 @@ body {
         float: left;
         margin-right: 15px;
         border: 1px solid #000000;
+        padding: 9px 10px 9px 0;
+        &:hover, &:focus {
+            background-color: transparent;
+        }
     }
     .navbar-brand {
         line-height: 18px;
@@ -346,18 +350,6 @@ footer {
 
 
 //
-// Feedback button
-// ----------------------------------------------------------------------------
-
-#feedback {
-    position: fixed;
-    right: 0;
-    top: 320px;
-    z-index: 999999;
-    cursor: pointer;
-}
-
-//
 // Pagination
 // ----------------------------------------------------------------------------
 .pagination {
@@ -455,7 +447,7 @@ body.shop, body.profile-likes {
     .btn-filter {
         border: 0;
         border-radius: 0;
-        background-color: #000000;
+        background-color: @dark_gray_color;
         color: #ffffff;
         margin-bottom: 10px;
         font-weight: normal;
@@ -519,7 +511,7 @@ body.shop, body.profile-likes {
                         font-size: 16px;
                     }
                     &:hover {
-                        color: #666666;
+                        color: @dark_gray_color;
                     }
                 }
             }

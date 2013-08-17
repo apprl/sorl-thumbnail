@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+    // Expand collapsable panels
     var filter_button = $('#product-filter-button');
     var filter_accordion = $('#product-filter-accordion');
     var filters = filter_accordion.find('.panel-collapse');
@@ -8,27 +9,22 @@ $(document).ready(function() {
     filter_accordion.collapse({toggle: false});
     filters.collapse({toggle: false});
 
-    // Expand collapsable panels
     if (filter_button.is(':hidden')) {
         filter_accordion.collapse('show');
         filters.collapse('show');
         filters_toggle.removeClass('collapsed');
+        filter_button.removeClass('collapsed');
     } else {
         filter_accordion.collapse('hide');
         filters.collapse('hide');
         filters_toggle.addClass('collapsed');
+        filter_button.addClass('collapsed');
     }
-
-    // Expand also on resize
     $(window).on('resize', function() {
         if (filter_button.is(':hidden')) {
             filter_accordion.collapse('show');
             filters.collapse('show');
             filters_toggle.removeClass('collapsed');
-        } else {
-            filter_accordion.collapse('hide');
-            filters.collapse('hide');
-            filters_toggle.addClass('collapsed');
         }
     });
 

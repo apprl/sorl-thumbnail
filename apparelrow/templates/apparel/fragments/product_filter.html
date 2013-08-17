@@ -1,7 +1,7 @@
 {% load i18n apparel_extras mptt_tags %}
 
 
-<a id="product-filter-button" class="btn btn-default btn-block btn-filter" data-toggle="collapse" data-target="#product-filter-accordion">{% trans "Filter products" %}<!--<span class="icon-arrow"></span>--></a>
+<a id="product-filter-button" class="btn btn-default btn-block btn-filter collapsed" data-toggle="collapse" data-target="#product-filter-accordion">{% trans "Filter products" %}<span class="icon-arrow"></span></a>
 
 <div class="panel-group collapse" id="product-filter-accordion">
 
@@ -46,7 +46,7 @@
         </div>
         <div id="collapseOne" class="panel-collapse collapse">
             <div class="panel-body" id="product-category">
-                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
                 {% for category, structure in categories_all|tree_info %}
                 {% if structure.new_level %}
                 <ul class="level-{{ category.get_level }} list-unstyled">
@@ -66,7 +66,7 @@
         </div>
         <div id="collapseTwo" class="panel-collapse collapse">
             <div class="panel-body" id="product-price">
-                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
                 <form>
                     <div id="price-min">{% trans "Min" %} <span>{{ pricerange.min }}</span> {% trans CURRENCY %}</div>
                     {% if pricerange.selected_max >= pricerange.max %}
@@ -98,7 +98,7 @@
         </div>
         <div id="collapseThree" class="panel-collapse collapse">
             <div class="panel-body" id="product-color">
-                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
                 <ul class="list-inline">
                     {% for color in default_colors %}
                     <li>
@@ -121,7 +121,7 @@
         </div>
         <div id="collapseFour" class="panel-collapse collapse">
             <div class="panel-body" id="product-manufacturers">
-                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
                 <form>
                     <input type="text" name="brand" value="{% trans "Search brands" %}" class="form-control" />
                     <ul id="available-manufacturers" class="list-unstyled">
@@ -145,7 +145,7 @@
         </div>
         <div id="collapseFive" class="panel-collapse collapse">
             <div class="panel-body" id="product-stores">
-                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove"></span></a>
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
                 <ul id="available-stores" class="list-unstyled">
                     {% for store in stores %}
                     <li><a{% if store.0 in selected_stores %} class="selected"{% endif %} id="available-store-{{ store.0 }}" href="?store={{ store.0 }}">{{ store.1 }}</a></li>
