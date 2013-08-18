@@ -30,8 +30,35 @@
 }
 
 // Primary button (used for every standard action)
+// -------------------------
 .btn-primary {
     .button-variant(#ffffff, #000000, #000000);
+    &:hover {
+        background-color: #333333;
+        border-color: #222222;
+    }
+}
+
+// Like button
+// -------------------------
+.btn-look-like, .btn-product-like {
+    &:after {
+        font-family: 'Glyphicons Halflings';
+        font-style: normal;
+        font-weight: normal;
+        font-size: 17px;
+        line-height: 1;
+        vertical-align: text-top;
+        padding-left: 5px;
+        -webkit-font-smoothing: antialiased;
+        content: "\e005";
+    }
+    &.liked:after {
+        color: @like-color;
+    }
+    &:not(.liked):hover:after {
+        color: @like-color;
+    }
 }
 
 // Facebook button
@@ -431,13 +458,12 @@ footer {
 // ----------------------------------------------------------------------------
 
 .price, .sold-out {
-    color: @gray_color;
     &.discounted {
         text-decoration: line-through;
     }
 }
 .discount-price {
-    color: @red_like_color;
+    color: @like-color;
 }
 
 
@@ -449,7 +475,8 @@ footer {
     padding: 0;
     h4 {
         text-align: center;
-        font-size: 16px;
+        font-size: 14px;
+        font-weight: bold;
         margin: 0;
         a {
             display: inline-block;
@@ -459,10 +486,12 @@ footer {
         }
     }
     ul {
+        font-weight: bold;
         text-align: center;
         margin: 0;
     }
     p {
+        font-weight: bold;
         min-height: 20px;
         margin: 0;
         text-align: center;
@@ -473,8 +502,13 @@ footer {
     .hover {
         display: none;
         position: absolute;
-        top: 88px;
-        left: 30px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 220px;
+        height: 200px;
+        margin: auto;
         ul {
             width: 220px;
             margin-bottom: 0;
@@ -624,7 +658,7 @@ body.shop, body.profile-likes {
         #discount-price {
             display: inline-block;
             padding: 2px 0;
-            color: @red_like_color;
+            color: @like-color;
             &:before {
                 margin-right: 5px;
                 display: inline-block;
