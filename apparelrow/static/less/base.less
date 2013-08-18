@@ -100,8 +100,7 @@ body {
             padding-left: 0;
             padding-right: 15px;
             h2 {
-                font-size: 24px;
-                text-transform: uppercase;
+                font-size: 16px;
             }
             a {
                 color: @light_gray_color;
@@ -126,6 +125,11 @@ body {
                 font-size: 64px;
                 content: "\005C";
             }
+        }
+    }
+    @media screen and (min-width: @grid-float-breakpoint) {
+        ul > li > h2 {
+            font-size: 22px;
         }
     }
 }
@@ -196,18 +200,14 @@ body {
 // -------------------------
 
 .navbar {
+    .box-shadow(0 1px 10px rgba(0, 0, 0, 0.3));
     background-color: #000000;
     z-index: 10030;
     margin-bottom: 0;
     border: 0;
-    .navbar-collapse {
-        .box-shadow(0 1px 10px rgba(0, 0, 0, 0.3));
-    }
     .navbar-toggle {
-        float: left;
         margin-right: 15px;
         border: 1px solid #000000;
-        padding: 9px 10px 9px 0;
         &:hover, &:focus {
             background-color: transparent;
         }
@@ -220,14 +220,42 @@ body {
     }
     .navbar-form {
         border: 0;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .navbar-nav > li > a {
+        font-weight: bold;
+        &.dropdown-avatar {
+            padding-top: 9px;
+            padding-bottom: 9px;
+            img {
+                display: none;
+            }
+        }
     }
     .navbar-nav > .active > a {
-        background-color: #222222;
+        /*background-color: #222222;*/
     }
     .navbar-nav > .dropdown.selected > a .caret {
         border-top-color: #ffffff;
         border-bottom-color: #ffffff;
     }
+    @media screen and (min-width: @grid-float-breakpoint) {
+        .navbar-form, .navbar-collapse {
+            padding-right: 0;
+        }
+        .navbar-form input {
+            width: 250px;
+        }
+        .navbar-nav > li > a.dropdown-avatar {
+            span { display: none; }
+            img { display: inline; }
+        }
+    }
+}
+
+.dropdown-menu > li > a:hover {
+    background-color: #000000;
 }
 
 //
@@ -319,7 +347,8 @@ body.index {
         }
     }
     .index-pre-choice {
-        padding: 30px 0 20px 0;
+        padding-top: 30px;
+        padding-bottom: 20px;
         h3 {
             margin-top: 12px;
             margin-bottom: 12px;

@@ -14,9 +14,6 @@
                     <li><h2><a{% if 'users' in request.path %} class="selected"{% endif %} href="{% url 'user-list' %}">{% trans "Members" %}</a></h2></li>
                     <li><h2><a{% if 'brands' in request.path %} class="selected"{% endif %} href="{% url 'brand-list' %}">{% trans "Brands" %}</a></h2></li>
                 </ul>
-                {% if request.user.is_authenticated %}
-                <a class="btn btn-success pull-right facebook-invite" href="#invite">{% trans "+ Invite your friends" %}</a>
-                {% endif %}
             </div>
         </div>
         <div class="col-lg-12">
