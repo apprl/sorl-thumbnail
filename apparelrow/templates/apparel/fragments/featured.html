@@ -2,9 +2,26 @@
 
 <div class="featured-container">
     <div class="container">
+        {% if index_page %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="content-header">
+                    <h1><span class="icon-slash-a"></span>{% trans "Today's featured" %}</h1>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         <div class="row">
             {% for activity in featured %}
-            <div class="col-md-4">
+            {% if forloop.counter == 1 %}
+            <div class="col-md-8">
+                <div class="row">
+            {% endif %}
+            {% if forloop.counter == 3 %}
+                </div>
+            </div>
+            {% endif %}
+            <div class="{% if forloop.counter == 3 %}col-md-4{% else %}col-sm-6{% endif %}">
                 <div class="feed-item panel">
                     <div class="panel-heading">
                         <a href="{{ activity.user.get_absolute_url }}"><img class="img-circle" src="{{ activity.user.avatar }}"></a>
@@ -20,12 +37,12 @@
                         {% include 'apparel/fragments/follow.html' with request=request profile=activity.user only %}
                     </div>
                     <div class="panel-body">
-                    {% if activity.verb == 'like_product' %}
-                    {% include 'apparel/fragments/product_medium.html' with object=activity.activity_object %}
-                    {% else %}
-                    {% include 'apparel/fragments/look_medium.html' with object=activity.activity_object %}
-                    {% endif %}
-                </div>
+                        {% if activity.verb == 'like_product' %}
+                        {% include 'apparel/fragments/product_medium.html' with object=activity.activity_object %}
+                        {% else %}
+                        {% include 'apparel/fragments/look_medium.html' with object=activity.activity_object %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             {% endfor %}

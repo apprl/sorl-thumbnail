@@ -381,10 +381,12 @@ ApparelActivity = {
      * Required data attributes: unlike-url, like-url, slug, id
      */
     like_handler: function(event) {
+        var element = $(this);
         if(isAuthenticated == false) {
-            $('#modal_like_' + event.data.type).modal();
+            if(typeof element.attr('data-target') === 'undefined') {
+                $('#modal_like_' + event.data.type).modal();
+            }
         } else {
-            var element = $(this);
             if(element.hasClass('liked')) {
                 unlikeElement(element);
                 $.post(element.data('unlike-url'), function(data) {

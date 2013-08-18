@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block body-classes %}index frontpage{% endblock body-classes %}
+{% block body-scripts %}
+<script type="text/javascript">
+    $('.feed-item a').attr({'data-target': '#modal_become_member', 'data-toggle': 'modal'});
+</script>
+{% endblock %}
+{% block body-classes %}index frontpage{% endblock %}
 {% block full-body %}
 
 <div class="container index-pre-choice">
     <div class="row">
-        <div class="col-sm-4"><h3>{% trans "Follow stylemakers, bloggers and designers" %}</h3></div>
-        <div class="col-sm-4"><a href="{% url 'auth_login' %}" class="btn btn-get-access">{% trans "Get access" %}</a></div>
-        <div class="col-sm-4">
+        <div class="col-sm-4"><h2>{% trans "Apprl is a place to discover fashion selected by bloggers, your friends & other stylemakers." %}</h2></div>
+        <div class="col-sm-4"><a href="{% url 'auth_login' %}" class="btn btn-get-access">{% trans "Get started" %}</a></div>
+        <div class="col-sm-4 facepile-container">
             <div class="fb-facepile" data-max-rows="3" data-width="222" data-app-id="{{ FACEBOOK_APP_ID }}"></div>
         </div>
     </div>
@@ -17,12 +22,12 @@
 <div class="index-choice">
     <div class="container">
         <div class="row">
-            <div class="col-sm-8"><a href="{% url 'index-store' %}">{% trans "Are you an online store?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
-            <div class="col-sm-4"><a href="{% url 'index-publisher' %}">{% trans "Are you a blogger?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
+            <div class="col-sm-4 col-sm-push-8"><a href="{% url 'index-publisher' %}">{% trans "Are you a blogger?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
+            <div class="col-sm-6 col-sm-offset-2 col-sm-pull-6"><a href="{% url 'index-store' %}">{% trans "Are you an online store?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
         </div>
     </div>
 </div>
 
-{% include 'apparel/fragments/featured.html' with request=request featured=featured %}
+{% include 'apparel/fragments/featured.html' with request=request featured=featured index_page=True %}
 
 {% endblock %}
