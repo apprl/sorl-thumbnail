@@ -4,10 +4,21 @@
 
 {% block extra-title %}{% trans "Create a new look" %} | {% endblock %}
 
-{% block 'extra-scripts' %}{% endblock 'extra-scripts' %}
-
+{% block body-scripts %}
+<script type="text/javascript">
+    if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+        $('.alert').removeClass('hidden');
+    }
+</script>
+{% endblock %}
 {% block body-classes %}look-create-page{% endblock %}
 {% block body %}
+
+<div class="alert alert-dismissable hidden">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    {% trans "If this is a touch device certain features might not work properly in our look editor." %}
+</div>
+
 <div class="row">
     <div class="col-lg-12">
         <div class="content-header">
