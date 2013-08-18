@@ -906,7 +906,7 @@ jQuery(document).ready(function() {
         }
 
         // Fetch via ajax on pagination clicks
-        $pagination.on('click', 'a.next', function() {
+        $pagination.on('click', '.btn-pagination', function() {
             // Keep fetching automatically after the first click
             var $this = $(this);
             $this.addClass('disabled hover').find('span').text($this.data('loading-text'));
@@ -919,7 +919,7 @@ jQuery(document).ready(function() {
 
         // Set up infinite scroll
         infiniteScroll(function(callback) {
-            var link = $pagination.find('a.next');
+            var link = $pagination.find('.btn-pagination');
 
             if(link.length)
                 getPage(link, callback);

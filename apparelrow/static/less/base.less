@@ -19,10 +19,14 @@
 // Buttons
 // ----------------------------------------------------------------------------
 
+.btn {
+    border-radius: 0;
+}
+
 // Default button (used for non-important actions)
 // -------------------------
 .btn-default {
-    .button-variant(#ffffff, @gray_color, @gray_color);
+    .button-variant(#ffffff, @btn-custom-default-color, @btn-custom-default-color);
 }
 
 // Primary button (used for every standard action)
@@ -353,6 +357,7 @@ footer {
 .pagination {
     width: 100%;
     .btn-pagination {
+        .btn-primary;
         img {
             display: none;
             padding-left: 10px;

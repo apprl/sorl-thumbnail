@@ -237,7 +237,7 @@ $(document).ready(function() {
     });
 
     infiniteScroll(function(callback) {
-        var page = parsePage($('.pagination .next'));
+        var page = parsePage($('.pagination .btn-pagination'));
         if (page) {
             fetchPage(page, callback);
         } else {

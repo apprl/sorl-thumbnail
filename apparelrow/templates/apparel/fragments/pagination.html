@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load static from staticfiles %}
 {% if current_page.has_next %}
-<a class="next btn btn-block btn-primary btn-large btn-pagination" data-loading-text="{% trans "More on the way" %}" href="{{ request.path }}?page={{ current_page.next_page_number }}">
+<a class="btn btn-block btn-lg btn-pagination" data-loading-text="{% trans "More on the way" %}" href="{{ request.path }}?page={{ current_page.next_page_number }}">
     <span>{% trans "Show me more!" %}</span>
     <img src="{% static "images/loading.gif" %}">
 </a>
