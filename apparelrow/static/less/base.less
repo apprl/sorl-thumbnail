@@ -473,6 +473,12 @@ footer {
     position: relative;
     border: 0;
     padding: 0;
+    .product-image-container {
+        height: 320px;
+    }
+    .caption {
+        max-height: 85px;
+    }
     h4 {
         text-align: center;
         font-size: 14px;
@@ -506,29 +512,15 @@ footer {
         right: 0;
         bottom: 0;
         left: 0;
-        width: 220px;
+        width: 180px;
         height: 200px;
         margin: auto;
         ul {
-            width: 220px;
+            width: 180px;
             margin-bottom: 0;
             li {
                 margin-bottom: 15px;
             }
-        }
-    }
-}
-
-.product-list-container {
-    .list > li {
-        width: 100%;
-        text-align: center;
-        vertical-align: top;
-        padding: 5px;
-    }
-    @media screen and (min-width: @grid-float-breakpoint) {
-        .list li {
-            width: auto;
         }
     }
 }

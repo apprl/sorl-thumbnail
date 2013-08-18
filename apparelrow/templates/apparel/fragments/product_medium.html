@@ -1,9 +1,11 @@
 {% load l10n i18n thumbnail thumbnail_extras apparel_extras buy_extras %}
 
 <div class="thumbnail product-medium" id="product-{{ object.id }}" data-id="{{ object.id }}">
-    {% thumbnail object.product_image "280x320" crop=False format='PNG' transparent=True as im %}
-    <img class="product-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|positive_margin:'280x320' }}">
-    {% endthumbnail %}
+    <div class="product-image-container">
+        {% thumbnail object.product_image "280x320" crop=False format='PNG' transparent=True as im %}
+        <img class="product-image img-responsive" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+    </div>
     <div class="hover">
         <ul class="list-unstyled">
             <li><a class="btn btn-primary btn-block btn-product-like btn-danger" href="#" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Like" %}</a></li>

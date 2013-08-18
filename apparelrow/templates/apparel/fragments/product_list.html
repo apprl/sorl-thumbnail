@@ -1,7 +1,7 @@
 {% spaceless %}
-<ul class="list list-inline">
+<ul class="list list-unstyled row">
     {% for html in current_page.html %}
-    <li>{{ html|safe }}</li>
+    <li class="col-md-4">{{ html|safe }}</li>
     {% endfor %}
 </ul>
 <div class="pagination">
