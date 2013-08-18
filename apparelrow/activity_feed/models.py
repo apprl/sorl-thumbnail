@@ -6,13 +6,16 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+
 
 from apparelrow.activity_feed.tasks import push_activity_feed
 from apparelrow.activity_feed.tasks import pull_activity_feed
 
 logger = logging.getLogger('activity_feed.models')
+
 
 #
 # ACTIVITY
@@ -80,6 +83,9 @@ class Activity(models.Model):
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
         super(Activity, self).save(*args, **kwargs)
+
+    def get_template(self):
+        return 'activity_feed/verbs/%s.html' % (self.verb,)
 
     def __unicode__(self):
         return u'%s %s (%s %s)' % (self.user, self.verb, self.content_type, self.object_id)

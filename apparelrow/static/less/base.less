@@ -94,7 +94,6 @@ body {
         .icon-slash-a {
             display: inline-block;
             width: 30px;
-            height: 40px;
             &:before {
                 font-weight: normal;
                 font-size: 64px;
@@ -334,15 +333,35 @@ body.index {
     overflow: hidden;
     .feed-item {
         height: 494px;
-        /*margin-top: 50px;*/
         margin-bottom: 50px;
         .panel-body .caption, .panel-body .hover { display: none; }
+        p {
+            font-weight: bold;
+            color: #7d8991;
+        }
+    }
+    .col-sm-6:not(:first-child) > .feed-item, .col-md-4 > .feed-item {
+        display: none;
+    }
+    @media screen and (min-width: @grid-float-breakpoint) {
+        .feed-item {
+            display: block !important;
+        }
+    }
+}
+
+.feed-list-page .featured-container {
+    height: 594px;
+    .feed-item {
+        margin-top: 50px;
     }
 }
 
 .feed-item {
     border: 0;
     border-radius: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
     .panel-heading {
         background-color: #ffffff;
         border: 0;
@@ -350,10 +369,7 @@ body.index {
         img {
             margin-bottom: 10px;
         }
-        p {
-            font-weight: bold;
-            color: #7d8991;
-        }
+
         p > a {
             font-weight: bold;
             color: #000000;

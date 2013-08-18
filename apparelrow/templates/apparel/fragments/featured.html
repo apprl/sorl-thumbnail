@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n cache %}
 
 <div class="featured-container">
     <div class="container">
@@ -22,7 +22,8 @@
             </div>
             {% endif %}
             <div class="{% if forloop.counter == 3 %}col-md-4{% else %}col-sm-6{% endif %}">
-                <div class="feed-item panel">
+                <div class="feed-item panel" id="user-featured-{{ activity.user_id }}">
+                    {% cache CACHE_TIMEOUT activity_featured_header activity.id LANGUAGE_CODE %}
                     <div class="panel-heading">
                         <a href="{{ activity.user.get_absolute_url }}"><img class="img-circle" src="{{ activity.user.avatar }}"></a>
                         {% if activity.verb == 'like_product' %}
@@ -34,13 +35,18 @@
                         {% else %}
                         <p>{% trans "Created by" %} <a href="{{ activity.user.get_absolute_url }}">{{ activity.user.display_name }}</a></p>
                         {% endif %}
-                        {% include 'apparel/fragments/follow.html' with request=request profile=activity.user only %}
+                        {% include 'apparel/fragments/follow_cache.html' only %}
                     </div>
+                    {% endcache %}
                     <div class="panel-body">
                         {% if activity.verb == 'like_product' %}
+                        {% cache CACHE_TIMEOUT product_medium activity.object_id LANGUAGE_CODE %}
                         {% include 'apparel/fragments/product_medium.html' with object=activity.activity_object %}
+                        {% endcache %}
                         {% else %}
+                        {% cache CACHE_TIMEOUT look_medium activity.object_id LANGUAGE_CODE %}
                         {% include 'apparel/fragments/look_medium.html' with object=activity.activity_object %}
+                        {% endcache %}
                         {% endif %}
                     </div>
                 </div>
@@ -49,3 +55,15 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+(function() {
+    function follow(uids) {
+        $.post('{% url 'follow-backend' %}', {uids: uids}, function(response) {
+            $.each(response, function(i, obj) {
+                $('#user-featured-' + obj['id'] + ' .btn-follow-placeholder').replaceWith(obj['html']);
+            });
+        });
+    }
+    follow($('.featured-container .feed-item').map(function() { return $(this).attr('id').split('-')[2]; }).get().join(','));
+})()
+</script>

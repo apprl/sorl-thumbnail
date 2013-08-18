@@ -1,9 +1,9 @@
 {% load i18n %}
 <ul class="feed-list list-unstyled row">
     {% for object in current_page.object_list %}
-    <li class="col-sm-3">{{ object|safe }}</li>
+    <li class="col-sm-3">{% include object.get_template %}</li>
     {% empty %}
-    <li class="col-lg-12">{% trans "No results" %}</li>
+    <li class="col-lg-12">{% trans "Follow members &amp; brands to fill your feed" %}</li>
     {% endfor %}
 </ul>
 <div class="pagination">

@@ -11,7 +11,7 @@ def login_flow(view_func):
     """
     def _decorator(request, profile, *args, **kwargs):
         if profile.login_flow == 'complete':
-            return HttpResponseRedirect(reverse('user_feed'))
+            return HttpResponseRedirect(reverse('index'))
 
         return view_func(request, profile, *args, **kwargs)
 

@@ -22,7 +22,7 @@ from apparelrow.activity_feed.models import Activity, ActivityFeed
 from apparelrow.activity_feed.tasks import get_feed_key
 
 
-class ActivityFeedRender:
+class OldActivityFeedRender:
     """
     ActivityFeed render class.
     """
@@ -91,55 +91,35 @@ class ActivityFeedRender:
         return rendered_templates
 
 
-def public_feed(request, gender=None):
-    if not gender:
-        gender_cookie = get_gender_from_cookie(request)
-        if gender_cookie == 'W':
-            return HttpResponseRedirect(reverse('public_feed-women'))
-        elif gender_cookie == 'M':
-            return HttpResponseRedirect(reverse('public_feed-men'))
-
-    htmlset = ActivityFeedRender(request, gender, None)
-    paginator = Paginator(htmlset, 5)
-
-    page = request.GET.get('page')
-    try:
-        paged_result = paginator.page(page)
-    except PageNotAnInteger:
-        paged_result = paginator.page(1)
-    except EmptyPage:
-        paged_result = paginator.page(paginator.num_pages)
-
-    if request.is_ajax():
-        return render(request, 'activity_feed/fragments/feed_list.html', {
-            'current_page': paged_result
-        })
-
-    response = render(request, 'activity_feed/feed_list.html', {
-            'featured': get_featured_activity_today(),
-            'current_page': paged_result,
-            'next': request.get_full_path(),
-        })
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-
-    return response
+class ActivityFeedRender(object):
 
 
+    def __init__(self, request, gender, user):
+        self.request = request
+        self.gender = gender
+        self.user = user
+
+        self.verbs = ['like_look', 'like_product', 'add_product', 'create']
+
+    def run(self):
+        user_ids = self.user.following.filter(active=True).values('user_follow')
+        return get_model('activity_feed', 'Activity').objects.filter(active=True,
+                                                                     user__in=user_ids,
+                                                                     verb__in=self.verbs)
+
+@login_required
 def user_feed(request, gender=None):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('public_feed'))
+    #if not gender:
+        #gender_cookie = get_gender_from_cookie(request)
+        #if gender_cookie == 'W':
+            #gender = 'W'
+        #elif gender_cookie == 'M':
+            #gender = 'M'
+        #else:
+            #gender = 'W'
 
-    if not gender:
-        gender_cookie = get_gender_from_cookie(request)
-        if gender_cookie == 'W':
-            gender = 'W'
-        elif gender_cookie == 'M':
-            gender = 'M'
-        else:
-            gender = 'W'
-
-    htmlset = ActivityFeedRender(request, gender, request.user)
-    paginator = Paginator(htmlset, 5)
+    htmlset = ActivityFeedRender(request, gender, request.user).run()
+    paginator = Paginator(htmlset, 12)
 
     page = request.GET.get('page')
     try:

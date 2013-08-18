@@ -13,18 +13,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="content-header">
-                    <h1><span class="icon-slash-a"></span>{% trans "Newsfeed" %}</h1>
-                    {% url 'user_feed' as user_feed %}
-                    {% url 'public_feed-men' as public_feed_men %}
-                    {% url 'public_feed-women' as public_feed_women %}
-                    <ul class="list-inline">
-                        <li><h2><a{% if request.path == public_feed_men or request.path == public_feed_women %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'public_feed' %}">{% trans "Everyone" %}</a></h2></li>
-                        {% if not request.user.is_authenticated %}
-                        <li><h2><a data-toggle="modal" href="#" data-target="#modal_user_feed">{% trans "My Follows" %}</a></h2></li>
-                        {% else %}
-                        <li><h2><a{% if request.path == user_feed or request.path == '/' %} class="selected"{% endif %} href="{% url 'user_feed' %}">{% trans "My Follows" %}</a></h2></li>
-                        {% endif %}
-                    </ul>
+                    <h1><span class="icon-slash-a"></span>{% trans "Your APPRL" %}</h1>
                 </div>
             </div>
         </div>

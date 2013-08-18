@@ -1,25 +1,13 @@
-{% load apparel_extras comments i18n cache %}
-<div class="feed-item panel feed-verb-{{ verb }}">
+{% load i18n cache %}
+<div class="feed-item panel feed-verb-{{ object.verb }}">
+
+    {% cache CACHE_TIMEOUT activity_header object.id LANGUAGE_CODE %}
     <div class="panel-heading">
-        <a href="{{ users.0.get_absolute_url }}"><img class="img-circle" src="{{ users.0.avatar }}"></a>
+        <a href="{{ object.user.get_absolute_url }}"><img class="img-circle" src="{{ object.user.avatar }}"></a>
         <p>{% block activity_header %}{% endblock %}</p>
-        <p class="activity-date">{{ created|since }}</p>
     </div>
+    {% endcache %}
     <div class="panel-body">
         {% block activity_content %}{% endblock %}
     </div>
 </div>
-<!--<article class="activity {{ verb }}">-->
-    <!--<header class="activity-header">-->
-        <!--<div class="activity-image">-->
-            <!--{% with user=users.0 %}-->
-            <!--<a href="{{ user.get_absolute_url }}"><img src="{{ user.avatar }}" width="50" height="50"></a>-->
-            <!--{% endwith %}-->
-        <!--</div>-->
-        <!--<div class="activity-short">-->
-            <!--<h3></h3>-->
-            <!--<p class="activity-date">{{ created|since }}</p>-->
-        <!--</div>-->
-    <!--</header>-->
-    <!--<div class="activity-content"></div>-->
-<!--</article>-->

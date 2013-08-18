@@ -566,8 +566,7 @@ def _get_next(request):
     elif 'next' in request.POST:
         return request.POST.get('next')
 
-    #return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
-    return reverse('user_feed')
+    return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
 
 def flow(request):

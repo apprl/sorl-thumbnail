@@ -1,7 +1,7 @@
 {% load i18n %}
 <ul class="look-list list-unstyled row">
     {% for object in current_page.object_list %}
-    <li class="col-sm-6">{% include 'apparel/fragments/look_medium.html' %}</li>
+    <li class="col-sm-6">{% include 'apparel/fragments/look_medium_cache.html' %}</li>
     {% empty %}
     <li class="col-lg-12">{% trans "No results" %}</li>
     {% endfor %}
