@@ -96,12 +96,13 @@ body {
     ul {
         display: inline-block;
         margin-bottom: 0;
+        li, li > h2 {
+            font-size: 16px;
+            font-weight: 500;
+        }
         li {
             padding-left: 0;
             padding-right: 15px;
-            h2 {
-                font-size: 16px;
-            }
             a {
                 color: @light_gray_color;
                 text-decoration: none;
@@ -128,8 +129,9 @@ body {
         }
     }
     @media screen and (min-width: @grid-float-breakpoint) {
-        ul > li > h2 {
+        ul > li, ul > li > h2 {
             font-size: 22px;
+            font-weight: 500;
         }
     }
 }
@@ -941,6 +943,22 @@ body.shop, body.profile-likes {
         &.selected:before {
             background-position: -14px 0px;
         }
+    }
+}
+
+.publisher-page, .store-page {
+    .subnav-page {
+        margin-bottom: 40px;
+    }
+    .subnav-page > div {
+        font-size: 16px;
+        text-align: center;
+    }
+    .monthly-list {
+        text-align: center;
+    }
+    .publisher-admin ul, .publisher-admin p {
+        text-align: center;
     }
 }
 

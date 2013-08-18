@@ -51,95 +51,110 @@
     </script>
 {% endblock %}
 
-{% block body-header %}
-<div id="body-header">
-    <div class="column_one">
-        <h1 class="max-width">{% trans "Publisher admin" %}</h1>
-    </div>
-</div>
-{% endblock body-header %}
-{% block body-classes %}one-column dashboard{% endblock body-classes %}
+{% block body-classes %}publisher-page{% endblock body-classes %}
 {% block body %}
-<div id="content">
-    <div class="content-chart group">
-        <div class="chart-menu">
-            <label>{% trans "Show: " %}
-                <select>
-                    {% for date in dates %}
-                    <option data-year="{{ date.year }}" data-month="{{ date.month }}"{% if date.year == year and date.month == month %} selected{%endif %}>{{ date|date:"F Y" }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-            <p>{% blocktrans %}Total commission {{ month_commission }} SEK{% endblocktrans %}</p>
-            <p>{% blocktrans %}Publisher commission {{ partner }} SEK{% endblocktrans %}</p>
-            <p>{% blocktrans %}Apprl commission {{ apprl }} SEK{% endblocktrans %}</p>
-            <br><br>
-            <p>{% blocktrans %}Sales {{ sales_count }}{% endblocktrans %}</p>
-            <p>{% blocktrans with conversion_rate=conversion_rate|floatformat:2 %}Conversion rate {{ conversion_rate }}%{% endblocktrans %}</p>
-            <br><br>
-            <p>{% blocktrans %}Total click {{ click_total }}{% endblocktrans %}</p>
-            <p>{% blocktrans %}Publisher click {{ click_partner }}{% endblocktrans %}</p>
-            <p>{% blocktrans %}Apprl click {{ click_apprl }}{% endblocktrans %}</p>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="content-header">
+                <h1><span class="icon-slash-a"></span>{% trans "Publisher Admin" %}</h1>
+            </div>
         </div>
-        <div id="charts">
-            <div id="chart_div" style="width: 960px; height: 300px"></div>
-            <div id="clicks_chart" style="width: 960px; height: 300px;"></div>
-            <table class="top">
-                <tr>
-                    <td class="first">
-                        <h2>{% trans "Most clicked products" %}</h2>
-                        <table class="content half">
-                            <thead>
-                                <tr>
-                                    <th class="col1 product-image">{% trans "Product" %}</th>
-                                    <th class="col2"></th>
-                                    <th class="col3 center">{% trans "Clicks" %}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for product in most_clicked_products %}
-                                <tr>
-                                    <td class="col1 product-image"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
-                                    <td class="col2"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
-                                    <td class="col3 center">{{ product.clicks }}</td>
-                                </tr>
-                               {% empty %}
-                                <tr>
-                                    <td colspan="3">{% trans "No sales yet." %}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </td>
-                    <td class="last">
-                        <h2>{% trans "Generated most sales" %}</h2>
-                        <table class="content half">
-                            <thead>
-                                <tr>
-                                    <th class="col1 product-image">{% trans "Product" %}</th>
-                                    <th class="col2"></th>
-                                    <th class="col3 center">{% trans "Sales" %}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for product in most_sold_products %}
-                                <tr>
-                                    <td class="col1 product-image"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
-                                    <td class="col2"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
-                                    <td class="col3 center">{{ product.sales }}</td>
-                                </tr>
-                               {% empty %}
-                                <tr>
-                                    <td colspan="3">{% trans "No sales yet." %}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
+    </div>
+
+    <div class="row publisher-admin">
+        <div class="col-lg-12">
+            <p>
+                <label>{% trans "Show: " %}
+                    <select>
+                        {% for date in dates %}
+                        <option data-year="{{ date.year }}" data-month="{{ date.month }}"{% if date.year == year and date.month == month %} selected{%endif %}>{{ date|date:"F Y" }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </p>
+            <ul class="list-inline">
+                <li>{% blocktrans %}Total commission {{ month_commission }} SEK{% endblocktrans %}</li>
+                <li>{% blocktrans %}Publisher commission {{ partner }} SEK{% endblocktrans %}</li>
+                <li>{% blocktrans %}Apprl commission {{ apprl }} SEK{% endblocktrans %}</li>
+            </ul>
+            <ul class="list-inline">
+                <li>{% blocktrans %}Sales {{ sales_count }}{% endblocktrans %}</li>
+                <li>{% blocktrans with conversion_rate=conversion_rate|floatformat:2 %}Conversion rate {{ conversion_rate }}%{% endblocktrans %}</li>
+            </ul>
+            <ul class="list-inline">
+                <li>{% blocktrans %}Total click {{ click_total }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Publisher click {{ click_partner }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Apprl click {{ click_apprl }}{% endblocktrans %}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="chart_div" style="width: 100%; height: 300px"></div>
+            <div id="clicks_chart" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>{% trans "Most clicked products" %}</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="product-image">{% trans "Product" %}</th>
+                        <th></th>
+                        <th class="center">{% trans "Clicks" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in most_clicked_products %}
+                    <tr>
+                        <td class="product-image"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
+                        <td><a href="{{ product.product_link }}">{{ product.product }}</a></td>
+                        <td class="center">{{ product.clicks }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
-            <h2 class="sales-header">{% trans "Your sales" %}</h2>
-            <table class="sortable sales content">
+
+        </div>
+        <div class="col-md-6">
+            <h2>{% trans "Generated most sales" %}</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="product-image">{% trans "Product" %}</th>
+                        <th></th>
+                        <th class="center">{% trans "Sales" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in most_sold_products %}
+                    <tr>
+                        <td class="product-image"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
+                        <td><a href="{{ product.product_link }}">{{ product.product }}</a></td>
+                        <td class="center">{{ product.sales }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>{% trans "All sales" %}</h2>
+            <table class="sortable table">
                 <thead>
                     <tr>
                         <th>{% trans "Date" %}</th>
@@ -156,7 +171,7 @@
                     {% for sale in sales_table %}
                     <tr>
                         <td data-sort="{{ sale.created|date:"U" }}">{{ sale.created.date }}</td>
-                        <td class="product-image"><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
+                        <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
                         <td><a href="{{ sale.product_link }}">{{ sale.product }}</a></td>
                         <td>{{ sale.user }}</td>
                         <td>{{ sale.link }}</td>
@@ -173,5 +188,5 @@
             </table>
         </div>
     </div>
-</div>
+
 {% endblock body %}

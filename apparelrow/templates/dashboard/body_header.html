@@ -1,15 +1,15 @@
 {% load i18n %}
-<div id="body-header">
-    <div class="column_one">
-        <h1 class="max-width">{% trans "Publisher" %}</h1>
-    </div>
-    <div class="column_two">
-        <ul>
-            <li><a class="first{% if 'info' not in request.path %} current{% endif %}" href="{% url 'dashboard' %}">{% if request.user.is_authenticated and request.user.is_partner %}{% trans "Your statistics" %}{% else %}{% trans "Become a publisher" %}{% endif %}</a></li>
-            <li><a class="{% if 'info' in request.path %} current{% endif %}" href="{% url 'dashboard-info' %}">{% trans "How it works" %}</a></li>
-            {% if request.user.is_authenticated %}
-            <li><a class="last" href="{% url 'settings-publisher' %}">{% trans "Settings" %}</a></li>
-            {% endif %}
-        </ul>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="content-header">
+            <h1><span class="icon-slash-a"></span>{% trans "Publisher" %}</h1>
+            <ul class="list-inline">
+                <li><a{% if 'info' not in request.path %} class="selected"{% endif %} href="{% url 'dashboard' %}">{% if request.user.is_authenticated and request.user.is_partner %}{% trans "Your statistics" %}{% else %}{% trans "Become a publisher" %}{% endif %}</a></li>
+                <li><a{% if 'info' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-info' %}">{% trans "How it works" %}</a></li>
+                {% if request.user.is_authenticated %}
+                <li><a href="{% url 'settings-publisher' %}">{% trans "Settings" %}</a></li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
 </div>
