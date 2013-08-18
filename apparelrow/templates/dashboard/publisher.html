@@ -2,7 +2,7 @@
 {% load i18n l10n cache %}
 {% load static from staticfiles %}
 
-{% block extra-title %}{% trans "Partner" %} | {% endblock %}
+{% block extra-title %}{% trans "Publisher" %} | {% endblock %}
 {% block 'extra-scripts' %}
     <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
     <script type='text/javascript' src='http://www.google.com/jsapi'></script>
@@ -64,7 +64,7 @@
                 var year = $selected.data('year');
                 var month = $selected.data('month');
 
-                window.location.href = '/partner/' + year + '/' + month + '/';
+                window.location.href = '/publisher/dashboard/' + year + '/' + month + '/';
             });
             new Tablesort($('table.sortable').get(0));
         });

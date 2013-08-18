@@ -325,7 +325,7 @@ def settings_facebook(request):
 
 
 @login_required
-def settings_partner(request):
+def settings_publisher(request):
     """
     Handles the partner settings form.
     """
@@ -345,12 +345,12 @@ def settings_partner(request):
             instance.user = request.user
             instance.save()
 
-        return HttpResponseRedirect(reverse('settings-partner'))
+        return HttpResponseRedirect(reverse('settings-publisher'))
 
     form = PartnerSettingsForm(instance=request.user)
     details_form = PartnerPaymentDetailForm(instance=instance)
 
-    return render(request, 'profile/settings_partner.html', {'form': form, 'details_form': details_form})
+    return render(request, 'profile/settings_publisher.html', {'form': form, 'details_form': details_form})
 
 #
 # Welcome login flow

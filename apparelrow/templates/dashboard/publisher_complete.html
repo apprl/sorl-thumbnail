@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n cache %}
 
-{% block extra-title %}{% trans "Become a partner" %} | {% endblock %}
+{% block extra-title %}{% trans "Become a publisher" %} | {% endblock %}
 
 {% block body-classes %}one-column dashboard dashboard-complete{% endblock body-classes %}
 {% block body %}
@@ -11,6 +11,6 @@
 </div>
 <script type="text/javascript">
   var _gaq = _gaq || [];
-  _gaq.push(['_trackEvent', 'Partner', 'Signup', '{{ request.session.partner_info }}']);
+  _gaq.push(['_trackEvent', 'Publisher', 'Signup', '{{ request.session.publisher_info }}']);
 </script>
 {% endblock %}

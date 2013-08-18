@@ -2,7 +2,7 @@
 {% load i18n cache %}
 {% load static from staticfiles %}
 
-{% block extra-title %}{% trans "Partner" %} | {% endblock %}
+{% block extra-title %}{% trans "Publisher" %} | {% endblock %}
 
 {% block body-header %}
     {% include 'dashboard/body_header.html' %}
@@ -26,11 +26,11 @@
     <h2>{% trans "How it works" %}</h2>
     <div class="dashboard-content">
         {% if not request.user.is_partner %}
-        <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PARTNER BLOGGER HERE" %}</a></p>
+        <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PUBLISHER BLOGGER HERE" %}</a></p>
         {% endif %}
-        <p class="center">{% trans "Questions? Let us know on" %} <a href="mailto:partner@apprl.com">partner@apprl.com</a></p>
+        <p class="center">{% trans "Questions? Let us know on" %} <a href="mailto:publisher@apprl.com">publisher@apprl.com</a></p>
 
-        <p>{% trans "As a fashion blogger you can apply to our partner program. As a partner blogger you make money when linking to Apprl products. If someone buys a product that you have linked to, you make up to 10&#37; of the order value. As a partner blogger you will also grow your blog and create looks to share with your readers." %}</p>
+        <p>{% trans "As a fashion blogger you can apply to our publisher program. As a publisher blogger you make money when linking to Apprl products. If someone buys a product that you have linked to, you make up to 10&#37; of the order value. As a publisher blogger you will also grow your blog and create looks to share with your readers." %}</p>
 
         <h4 id="blog">{% trans "Grow your blog and gain followers" %}</h4>
         <p>{% trans "Every time you “like” a product on Apprl.com, we show that the product is selected by you with a link back to your blog." %}</p>
@@ -46,7 +46,7 @@
         </p>
 
         <h4 id="product">{% trans "Make money on product links" %}</h4>
-        <p>{% trans "The easiest way to start making money is to simply link to our products. As a partner blogger just click the “Get product link”-button and share the link on your blog, Facebook page or elsewhere." %}</p>
+        <p>{% trans "The easiest way to start making money is to simply link to our products. As a publisher blogger just click the “Get product link”-button and share the link on your blog, Facebook page or elsewhere." %}</p>
         <img src="{% static "images/dashboard_product_link_"|add:LANGUAGE_CODE|add:".png" %}">
 
         <h4 id="profile">{% trans "Make money from your profile" %}</h4>
@@ -60,7 +60,7 @@
         <p>{% trans "To put a look on your blog, just click the “EMBED ON YOUR BLOG / SITE”-button and follow instructions to choose the width & language of your look." %}</p>
         <img src="{% static "images/dashboard_look_embed_"|add:LANGUAGE_CODE|add:".png" %}">
         <img src="{% static "images/dashboard_look_blog_"|add:LANGUAGE_CODE|add:".png" %}">
-        <p>{% trans "As a partner blogger you will now make money on every person that clicks and buys a product from your look." %}</p>
+        <p>{% trans "As a publisher blogger you will now make money on every person that clicks and buys a product from your look." %}</p>
 
         <h4 id="shop">{% trans "Create an APPRL-shop for your site/blog" %}</h4>
         <p>{% trans "It’s super easy to create an APPRL-shop for your blog/site. Just click the “CREATE A SHOP ON YOUR SITE”-button on your profile page and follow instructions to choose the width, height and language for your shop." %}</p>
@@ -77,9 +77,9 @@
         <img src="{% static "images/dashboard_statistics.png" %}">
 
         {% if not request.user.is_partner %}
-        <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PARTNER BLOGGER HERE" %}</a></p>
+        <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PUBLISHER BLOGGER HERE" %}</a></p>
         {% endif %}
-        <p id="questions" class="center">{% trans "Questions? Let us know on" %} <a href="mailto:partner@apprl.com">partner@apprl.com</a></p>
+        <p id="questions" class="center">{% trans "Questions? Let us know on" %} <a href="mailto:publisher@apprl.com">publisher@apprl.com</a></p>
 
     </div>
 </div>

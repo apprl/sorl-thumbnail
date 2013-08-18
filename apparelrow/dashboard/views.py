@@ -302,39 +302,44 @@ def dashboard(request, year=None, month=None):
         # Enable sales listing after 2013-06-01 00:00:00
         is_after_june = True if (year >= 2013 and month >= 6) or request.GET.get('override') else False
 
-        return render(request, 'dashboard/partner.html', {'data_per_day': data_per_day,
-                                                          'total_sales': sales_total,
-                                                          'total_confirmed': sales_confirmed,
-                                                          'pending_payment': pending_payment,
-                                                          'month_commission': sum([x[0] for x in data_per_day.values()]),
-                                                          'month_clicks': month_clicks,
-                                                          'month_sales': month_sales,
-                                                          'month_conversion_rate': conversion_rate,
-                                                          'dates': dates,
-                                                          'year': year,
-                                                          'month': month,
-                                                          'sales': sales,
-                                                          'is_after_june': is_after_june,
-                                                          'most_sold_products': most_sold_products,
-                                                          'most_clicked_products': most_clicked_products})
+        return render(request, 'dashboard/publisher.html', {'data_per_day': data_per_day,
+                                                            'total_sales': sales_total,
+                                                            'total_confirmed': sales_confirmed,
+                                                            'pending_payment': pending_payment,
+                                                            'month_commission': sum([x[0] for x in data_per_day.values()]),
+                                                            'month_clicks': month_clicks,
+                                                            'month_sales': month_sales,
+                                                            'month_conversion_rate': conversion_rate,
+                                                            'dates': dates,
+                                                            'year': year,
+                                                            'month': month,
+                                                            'sales': sales,
+                                                            'is_after_june': is_after_june,
+                                                            'most_sold_products': most_sold_products,
+                                                            'most_clicked_products': most_clicked_products})
 
+
+    return HttpResponseRedirect(reverse('index-publisher'))
+
+
+def dashboard_complete(request):
+    return render(request, 'dashboard/publisher_complete.html')
+
+
+def dashboard_info(request):
+    return render(request, 'dashboard/info.html')
+
+
+def index(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
             # Save name and blog URL on session, for Google Analytics
-            request.session['partner_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
+            request.session['publisher_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
             form.save()
 
         return HttpResponseRedirect(reverse('dashboard-complete'))
 
     form = SignupForm()
 
-    return render(request, 'dashboard/partner_signup.html', {'form': form})
-
-
-def dashboard_complete(request):
-    return render(request, 'dashboard/partner_complete.html')
-
-
-def dashboard_info(request):
-    return render(request, 'dashboard/info.html')
+    return render(request, 'dashboard/index.html', {'form': form})

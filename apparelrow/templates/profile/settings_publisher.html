@@ -25,8 +25,8 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-        <h2 id="events">{% trans "Partner" %}</h2>
-        <form id="partner-form" action="{% url 'settings-partner' %}" method="post">{% csrf_token %}
+        <h2 id="events">{% trans "Publisher" %}</h2>
+        <form id="publisher-form" action="{% url 'settings-publisher' %}" method="post">{% csrf_token %}
             <h3>{% trans "Your blog" %}</h3>
             <div class="group" style="clear: both; padding: 0 0 1em 0;">
                 {% for field in form %}

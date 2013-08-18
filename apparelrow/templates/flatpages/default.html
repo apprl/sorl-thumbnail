@@ -17,7 +17,7 @@
         <ul class="about-list">
             <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Terms of Use" %}</a></li>
             {% if request.user.is_authenticated and request.user.is_partner %}
-            <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/partner-villkor/' %}">{% trans "Partner terms" %}</a></li>
+            <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/partner-villkor/' %}">{% trans "Publisher terms" %}</a></li>
             {% endif %}
             <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/privacy-policy/' %}">{% trans "Privacy Policy" %}</a></li>
             <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/acceptable-use-policy/' %}">{% trans "Acceptable Use Policy" %}</a></li>
