@@ -3,7 +3,7 @@
 
 {% block extra-title %}{{ profile.display_name }} - {% trans "Followers" %} | {% endblock %}
 
-{% block body-classes %}profile profile-followers{% endblock body-classes %}
+{% block body-classes %}profile-page profile-followers{% endblock body-classes %}
 {% block content %}
     {% if current_page.object_list %}
         {% include 'apparel/fragments/user_list.html' %}
