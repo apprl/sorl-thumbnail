@@ -675,17 +675,18 @@ body.shop, body.profile-likes {
     }
 
     .accordion-toggle, .btn-filter {
-        .icon-arrow {
-            float: right;
-            display: inline-block;
-            width: 12px;
-            height: 20px;
-            background-image: url('../images/product-filter-arrow.png');
-            background-repeat: no-repeat;
-            background-position: -12px center;
+        position: relative;
+        .glyphicon-chevron-up {
+            position: absolute;
+            top: 12px;
+            right: 10px;
         }
-        &.collapsed .icon-arrow {
-            background-position: 0px center;
+        &.collapsed .glyphicon-chevron-up {
+            right: 11px;
+            top: 13px;
+            &:before {
+                content: "\e114";
+            }
         }
     }
 
