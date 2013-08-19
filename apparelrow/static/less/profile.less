@@ -67,7 +67,7 @@
 // Profile page styling
 // ----------------------------------------------------------------------------
 
-body.follow-list {
+.discover-list-page {
     .alphabet {
         text-transform: uppercase;
         margin-bottom: 15px;
@@ -90,51 +90,61 @@ body.follow-list {
             }
         }
     }
+    .discover-list > .col-discover-item {
+        .make-sm-column(12);
+        @media (min-width: @screen-tablet) {
+            .make-sm-column(6);
+        }
+        @media (min-width: @screen-desktop) {
+            .make-sm-column(4);
+        }
+        @media (min-width: @screen-lg-desktop) {
+            .make-sm-column(3);
+        }
+    }
 }
 
 //
-// User medium template styling
+// Profile page header
 // ----------------------------------------------------------------------------
 
-body.profile {
-    .profile-header {
-        padding-top: 20px;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
-        background-color: #eeeeee;
-        h1 {
-            font-family: "Lato", sans-serif;
-            font-size: 24px;
-            text-transform: uppercase;
-            margin-top: 5px;
-            margin-right: 10px;
-            display: inline-block
+body.profile .profile-header {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    background-color: #eeeeee;
+    h1 {
+        font-family: "Lato", sans-serif;
+        font-size: 24px;
+        text-transform: uppercase;
+        margin-top: 5px;
+        margin-right: 10px;
+        display: inline-block
+    }
+    .btn-profile-follow, .btn-create-shop {
+        display: inline-block;
+        margin-top: -10px;
+    }
+    #profile-image {
+        text-align: center;
+        position: relative;
+        margin-bottom: 10px;
+        img {
+            z-index: 1;
         }
-        .btn-profile-follow, .btn-create-shop {
-            display: inline-block;
-            margin-top: -10px;
+        form {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 2;
         }
-        #profile-image {
-            text-align: center;
-            position: relative;
-            margin-bottom: 10px;
-            img {
-                z-index: 1;
-            }
-            form {
-                display: none;
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                z-index: 2;
-            }
-            .btn-edit, .btn-cancel {
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: 2;
-                margin-top: 0;
-            }
+        .btn-edit, .btn-cancel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            margin-top: 0;
         }
     }
 }

@@ -35,7 +35,7 @@ $(document).ready(function() {
     currencyConversion(jQuery('#product-list').find('.price, .discount-price'));
 
     // Embedded products
-    updateEmbeddedProducts($('#product-list > .list'));
+    updateEmbeddedProducts($('#product-list > .product-list'));
 
     History.Adapter.bind(window, 'statechange', function() { // Note: We are using statechange instead of popstate
         var state = History.getState(); // Note: We are using History.getState() instead of event.state
@@ -445,13 +445,13 @@ function doFilter(callback, url, page) {
 
 function renderPage(products) {
     var $html = $(products.html);
-    var $list = $html.filter('ul.list');
+    var $list = $html.filter('.product-list');
     var $pagination = $html.filter('.pagination');
 
     currencyConversion($list.find('.price, .discount-price'));
     updateEmbeddedProducts($list);
 
-    $('#product-list > ul.list').append($list.html());
+    $('#product-list > .product-list').append($list.html());
     $('.pagination').html($pagination.html());
 
     $('#product-list').trigger('post_browse_render');
@@ -680,7 +680,7 @@ function updateTranslations() {
 }
 
 function renderProducts(products) {
-    $('#product-list > .list').empty();
+    $('#product-list > .product-llist').empty();
     $('#product-count span').text(products.browse_text);
 
     renderPage(products);

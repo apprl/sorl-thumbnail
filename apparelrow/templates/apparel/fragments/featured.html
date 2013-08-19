@@ -13,15 +13,7 @@
         {% endif %}
         <div class="row">
             {% for activity in featured %}
-            {% if forloop.counter == 1 %}
-            <div class="col-md-8">
-                <div class="row">
-            {% endif %}
-            {% if forloop.counter == 3 %}
-                </div>
-            </div>
-            {% endif %}
-            <div class="{% if forloop.counter == 3 %}col-md-4{% else %}col-sm-6{% endif %}">
+            <div class="col-featured-item">
                 <div class="feed-item panel" id="user-featured-{{ activity.user_id }}">
                     {% cache CACHE_TIMEOUT activity_featured_header activity.id LANGUAGE_CODE %}
                     <div class="panel-heading">

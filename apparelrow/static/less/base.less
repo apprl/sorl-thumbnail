@@ -235,6 +235,7 @@ body {
             padding-top: 9px;
             padding-bottom: 9px;
             img {
+                height: 32px;
                 display: none;
             }
         }
@@ -402,36 +403,65 @@ body.index {
             color: #7d8991;
         }
     }
-    .col-sm-6:not(:first-child) > .feed-item, .col-md-4 > .feed-item {
-        display: none;
-    }
-    @media screen and (min-width: @grid-float-breakpoint) {
-        .feed-item {
+
+    /* Columns for featured item in screen size: 1 - 2 - 2 - 3 */
+    .col-featured-item {
+        .make-sm-column(12);
+        &:not(:first-child) {
+            display: none;
+        }
+        @media (min-width: @screen-tablet) {
             display: block !important;
+            &:last-child {
+                display: none;
+            }
+            .make-sm-column(6);
+        }
+        @media (min-width: @screen-lg-desktop) {
+            .make-sm-column(4);
         }
     }
 }
 
-.feed-list-page .featured-container {
-    height: 594px;
-    .feed-item {
-        margin-top: 50px;
+.feed-list-page {
+    .featured-container {
+        height: 594px;
+        .feed-item {
+            margin-top: 50px;
+        }
+    }
+    .feed-list .col-feed-item {
+        .make-sm-column(12);
+        @media (min-width: @screen-tablet) {
+            .make-sm-column(6);
+        }
+        @media (min-width: @screen-desktop) {
+            .make-sm-column(4);
+        }
+        @media (min-width: @screen-lg-desktop) {
+            .make-sm-column(3);
+        }
     }
 }
 
 .feed-item {
     border: 0;
     border-radius: 0;
+    border-bottom: 3px solid #000000;
     box-shadow: none;
     -webkit-box-shadow: none;
+    margin-bottom: 30px;
     .panel-heading {
         background-color: #ffffff;
         border: 0;
         text-align: center;
+        > p {
+            min-height: 40px;
+            margin-bottom: 0;
+        }
         img {
             margin-bottom: 10px;
         }
-
         p > a {
             font-weight: bold;
             color: #000000;
@@ -439,6 +469,10 @@ body.index {
                 text-decoration: underline;
             }
         }
+    }
+    .panel-body {
+        min-height: 405px;
+        padding: 0;
     }
 }
 
@@ -510,6 +544,9 @@ footer {
     padding: 0;
     .product-image-container {
         height: 320px;
+        img {
+            margin: auto;
+        }
     }
     .caption {
         max-height: 85px;
@@ -523,7 +560,10 @@ footer {
             display: inline-block;
             padding: 6px 0;
             color: #000000;
-            /*text-decoration: none;*/
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            text-decoration: none;
         }
     }
     ul {
@@ -547,14 +587,52 @@ footer {
         right: 0;
         bottom: 0;
         left: 0;
-        width: 180px;
+        width: 140px;
         height: 200px;
         margin: auto;
         ul {
-            width: 180px;
+            width: 140px;
             margin-bottom: 0;
             li {
                 margin-bottom: 15px;
+            }
+        }
+    }
+}
+
+/* Setup columns for product list pages */
+.product-list-container {
+    .col-product-filter { .make-sm-column(12); }
+    .col-product-list {
+        .make-sm-column(12);
+        .col-product-item {
+            .make-sm-column(12);
+        }
+    }
+    @media (min-width: @screen-tablet) {
+        .col-product-filter { .make-sm-column(5); }
+        .col-product-list {
+            .make-sm-column(7);
+            .col-product-item {
+                .make-sm-column(12);
+            }
+        }
+    }
+    @media (min-width: @screen-desktop) {
+        .col-product-filter { .make-sm-column(4); }
+        .col-product-list {
+            .make-sm-column(8);
+            .col-product-item {
+                .make-sm-column(4);
+            }
+        }
+    }
+    @media (min-width: @screen-lg-desktop) {
+        .col-product-filter { .make-sm-column(3); }
+        .col-product-list {
+            .make-sm-column(9);
+            .col-product-item {
+                .make-sm-column(3);
             }
         }
     }
@@ -949,6 +1027,11 @@ body.shop, body.profile-likes {
         }
     }
 }
+
+
+//
+// Publisher and store pages
+// ----------------------------------------------------------------------------
 
 .publisher-page, .store-page {
     .subnav-page {
