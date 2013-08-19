@@ -29,14 +29,14 @@ from apparelrow.profile.decorators import avatar_change, login_flow
 
 from apparelrow.apparel.browse import browse_products
 
-PROFILE_PAGE_SIZE = 16
+PROFILE_PAGE_SIZE = 24
 
 def get_facebook_friends(request):
     facebook_user = get_facebook_user(request)
     if request.user.is_authenticated() and facebook_user:
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
-        return get_user_model().objects.filter(username__in=friends_uids)
+        return get_user_model().objects.filter(is_active=True, username__in=friends_uids)
 
 def get_profile_sidebar_info(request, profile):
     """
@@ -356,115 +356,59 @@ def settings_publisher(request):
 # Welcome login flow
 #
 
-@get_current_user
 @login_flow
-@avatar_change
-def login_flow_friends(request, profile, forms):
+@login_required
+def login_flow_brands(request):
     """
-    Step 1: Friends
+    Step 1: Brands
     """
-    profile.login_flow = 'friends'
-    profile.save()
+    request.user.login_flow = 'brands'
+    request.user.save()
 
-    if request.method == 'POST':
-        for friend in get_user_model().objects.filter(id__in=request.POST.getlist('profile_ids', [])):
-            follow, created = Follow.objects.get_or_create(user=profile, user_follow=friend)
+    if not request.user.following.exists():
+        facebook_friends = get_facebook_friends(request)
+
+        profiles = get_user_model().objects.filter(is_active=True, is_brand=False)
+        profiles = profiles.exclude(pk=request.user.pk)
+        if request.user.gender == 'M':
+            profiles = profiles.order_by('-popularity_men', '-followers_count')
+        else:
+            profiles = profiles.order_by('-popularity', '-followers_count')
+
+
+        facebook_user = get_facebook_user(request)
+        for friend in list(facebook_friends) + list(profiles[:20]):
+            follow, created = Follow.objects.get_or_create(user=request.user, user_follow=friend)
             if not created and follow.active == False:
                 follow.active = True
                 follow.save()
 
-            facebook_user = get_facebook_user(request)
-            if facebook_user:
-                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
-
-        return HttpResponseRedirect(reverse('login-flow-featured'))
-
-    context = {
-        'login_flow_step': 'step-initial',
-        'next_url': reverse('login-flow-featured'),
-        'profiles': get_facebook_friends(request),
-        'profile': profile,
-    }
-    context.update(forms)
-    return render(request, 'profile/login_flow_friends.html', context)
-
-
-@get_current_user
-@login_flow
-@avatar_change
-def login_flow_featured(request, profile, forms):
-    """
-    Step 2: Featured members
-    """
-    profile.login_flow = 'featured'
-    profile.save()
-
-    if request.method == 'POST':
-        for friend in get_user_model().objects.filter(id__in=request.POST.getlist('profile_ids', [])):
-            follow, created = Follow.objects.get_or_create(user=profile, user_follow=friend)
-            if not created and follow.active == False:
-                follow.active = True
-                follow.save()
-
-            facebook_user = get_facebook_user(request)
             if facebook_user:
                 facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
 
         return HttpResponseRedirect(reverse('login-flow-brands'))
 
-    profiles = get_user_model().objects.filter(is_brand=False)
-    if profile.gender == 'M':
-        profiles = profiles.order_by('-popularity_men', '-followers_count')
-    else:
-        profiles = profiles.order_by('-popularity', '-followers_count')
-
-    facebook_user = get_facebook_user(request)
-    if request.user.is_authenticated() and facebook_user:
-        friends = facebook_user.graph.get_connections('me', 'friends')
-        friends_uids = [f['id'] for f in friends['data']]
-        profiles = profiles.exclude(username__in=friends_uids)
-        profiles = profiles.exclude(pk=profile.pk)
+    queryset = get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:24]
+    paged_result, pagination = get_pagination_page(queryset, 24, request.GET.get('page', 1), 1, 2)
 
     context = {
-        'login_flow_step': 'step-members',
-        'next_url': reverse('login-flow-brands'),
-        'profiles': profiles[:21],
-        'profile': profile,
-    }
-    context.update(forms)
-    return render(request, 'profile/login_flow_featured.html', context)
-
-
-@get_current_user
-@login_flow
-@avatar_change
-def login_flow_brands(request, profile, forms):
-    """
-    Step 3: Brands
-    """
-    profile.login_flow = 'brands'
-    profile.save()
-
-    context = {
-        'login_flow_step': 'step-brands',
+        'pagination': pagination,
+        'current_page': paged_result,
         'next_url': reverse('login-flow-complete'),
-        'profiles': get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:21],
-        'profile': profile,
     }
-    context.update(forms)
-    return render(request, 'profile/login_flow_brands.html', context)
+    return render(request, 'profile/login_flow_welcome.html', context)
 
 
-@get_current_user
 @login_flow
-def login_flow_complete(request, profile):
+@login_required
+def login_flow_complete(request):
     """
-    Step 4: Login flow is complete
+    Step 2: Login flow is complete
     """
-    profile.login_flow = 'complete'
-    profile.save()
+    request.user.login_flow = 'complete'
+    request.user.save()
 
-    return HttpResponseRedirect(reverse('profile-likes', args=[profile.slug]))
+    return HttpResponseRedirect('%s?first=1' % (reverse('index'),))
 
 
 #
@@ -577,11 +521,16 @@ def flow(request):
         pass
 
     if request.user.login_flow != 'complete' and not request.user.is_brand:
-        url = reverse('login-flow-%s' % (request.user.login_flow))
+        if request.user.login_flow == 'brands' or request.user.login_flow == 'complete':
+            url = reverse('login-flow-%s' % (request.user.login_flow))
+        else:
+            url = reverse('login-flow-brands')
+
         response = HttpResponseRedirect(url)
         response.set_cookie(settings.APPAREL_GENDER_COOKIE,
                             value=request.user.gender,
                             max_age=365 * 24 * 60 * 60)
+
         return response
 
     return HttpResponseRedirect(_get_next(request))

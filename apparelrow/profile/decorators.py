@@ -9,11 +9,11 @@ def login_flow(view_func):
     Login flow decorator. If login flow already is complete, redirect to user
     activity feed.
     """
-    def _decorator(request, profile, *args, **kwargs):
-        if profile.login_flow == 'complete':
+    def _decorator(request, *args, **kwargs):
+        if request.user.login_flow == 'complete':
             return HttpResponseRedirect(reverse('index'))
 
-        return view_func(request, profile, *args, **kwargs)
+        return view_func(request, *args, **kwargs)
 
     _decorator.__name__ = view_func.__name__
     _decorator.__dict__ = view_func.__dict__

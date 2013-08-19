@@ -107,6 +107,8 @@
                     </div>
                 </form>
 
+                {% block custom_navigation %}{% endblock %}
+
                 <ul class="nav navbar-nav navbar-nav-login navbar-right">
                     {% if not request.user.is_authenticated %}
                     <li><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>

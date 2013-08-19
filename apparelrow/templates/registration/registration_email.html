@@ -1,56 +1,91 @@
 {% extends "base.html" %}
-{% load i18n apparel_extras %}
+{% load i18n %}
 
-{% block body-classes %}one-column accounts{% endblock body-classes %}
+{% block body-classes %}account registration-email{% endblock body-classes %}
 {% block body %}
 
-<div id="content">
-    <h1>{% trans "Become a member" %}</h1>
-    <form action="{% url 'auth_register_email' %}" method="post" class="standard-form">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="content-header">
+                <h1><span class="icon-slash-a"></span>{% trans "Become a member" %}</h1>
+            </div>
+        </div>
+    </div>
+
+    <form action="{% url 'auth_register_email' %}" method="post" class="form-horizontal">
         {% csrf_token %}
-        <ul>
-            <li>
-                {{ form.first_name.label_tag }}
-                {{ form.first_name }}
-                {{ form.first_name.errors }}
-            </li>
-            <li>
-                {{ form.last_name.label_tag }}
-                {{ form.last_name }}
-                {{ form.last_name.errors }}
-            </li>
-            <li>
-                {{ form.username.label_tag }}
-                {{ form.username }}
-                {{ form.username.errors }}
-            </li>
-            <li>
-                {{ form.email.label_tag }}
-                {{ form.email }}
-                {{ form.email.errors }}
-            </li>
-            <li>
-                {{ form.password1.label_tag }}
-                {{ form.password1 }}
-                {{ form.password1.errors }}
-            </li>
-            <li>
-                {{ form.password2.label_tag }}
-                {{ form.password2 }}
-                {{ form.password2.errors }}
-            </li>
-            <li class="gender">
-                {{ form.gender.label_tag }}
-                {{ form.gender }}
-                {{ form.gender.errors }}
-            </li>
-            <li>
-                <button class="btn btn-primary" type="submit">{% trans "Sign up" %}</button>
-            </li>
-        </ul>
+
+        <div class="form-group{% if form.first_name.errors %} has-error{% endif %}">
+            <label for="id_{{ form.first_name.html_name }}" class="col-sm-2 control-label">{{ form.first_name.label }}</label>
+            <div class="col-sm-4">
+                <input name="{{ form.first_name.html_name }}" type="text" class="form-control" id="id_{{ form.first_name.html_name }}" value="{{ form.first_name.value }}" placeholder="{{ form.first_name.label }}">
+            </div>
+        </div>
+
+        <div class="form-group{% if form.last_name.errors %} has-error{% endif %}">
+            <label for="id_{{ form.last_name.html_name }}" class="col-sm-2 control-label">{{ form.last_name.label }}</label>
+            <div class="col-sm-4">
+                <input name="{{ form.last_name.html_name }}" type="text" class="form-control" id="id_{{ form.last_name.html_name }}" value="{{ form.last_name.value }}" placeholder="{{ form.last_name.label }}">
+            </div>
+        </div>
+
+        <div class="form-group{% if form.username.errors %} has-error{% endif %}">
+            <label for="id_{{ form.username.html_name }}" class="col-sm-2 control-label">{{ form.username.label }}</label>
+            <div class="col-sm-4">
+                <input name="{{ form.username.html_name }}" type="text" class="form-control" id="id_{{ form.username.html_name }}" value="{{ form.username.value }}" placeholder="{{ form.username.label }}">
+            </div>
+        </div>
+
+        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+            <label for="id_{{ form.email.html_name }}" class="col-sm-2 control-label">{{ form.email.label }}</label>
+            <div class="col-sm-4">
+                <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{{ form.email.value }}" placeholder="{{ form.email.label }}">
+            </div>
+        </div>
+
+        <div class="form-group{% if form.password1.errors %} has-error{% endif %}">
+            <label for="id_{{ form.password1.html_name }}" class="col-sm-2 control-label">{{ form.password1.label }}</label>
+            <div class="col-sm-4">
+                <input name="{{ form.password1.html_name }}" type="password" class="form-control" id="id_{{ form.password1.html_name }}" placeholder="{{ form.password1.label }}">
+            </div>
+        </div>
+
+        <div class="form-group{% if form.password2.errors %} has-error{% endif %}">
+            <label for="id_{{ form.password2.html_name }}" class="col-sm-2 control-label">{{ form.password2.label }}</label>
+            <div class="col-sm-4">
+                <input name="{{ form.password2.html_name }}" type="password" class="form-control" id="id_{{ form.password2.html_name }}" placeholder="{{ form.password2.label }}">
+            </div>
+        </div>
+
+        <div class="form-group{% if form.gender.errors %} has-error{% endif %}">
+            <label class="col-sm-2 control-label">{{ form.gender.label }}</label>
+            <div class="col-sm-4">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M" checked>
+                        {% trans "Man" %}
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W">
+                        {% trans "Woman" %}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-2">
+                <button type="submit" class="btn btn-primary">{% trans "Sign up" %}</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
+            <p>{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
+        </div>
+
     </form>
-    {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
-    <p class="privacy">{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
-</div>
 
 {% endblock %}
