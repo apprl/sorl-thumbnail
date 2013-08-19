@@ -1,6 +1,5 @@
-{% load i18n cache thumbnail thumbnail_extras apparel_extras %}
+{% load i18n thumbnail thumbnail_extras apparel_extras %}
 
-{% cache CACHE_TIMEOUT look_medium object.id LANGUAGE_CODE %}
 <div class="thumbnail look-medium {% if object.display_with_component == 'P' %}look-photo{% else %}look-collage{% endif %}" id="look-{{ object.id }}" data-id="{{ object.id }}">
     {% thumbnail object.static_image "560x640" crop=False format='PNG' as im %}
     <img class="look-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
@@ -16,4 +15,3 @@
         <p>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></p>
     </div>
 </div>
-{% endcache %}

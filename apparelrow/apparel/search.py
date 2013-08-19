@@ -382,7 +382,7 @@ def get_look_document(instance):
     product_manufacturers = instance.product_manufacturers
     if product_manufacturers and product_manufacturers[0]:
         document['manufacturer_name'] = ', '.join(product_manufacturers)
-    document['template'] = render_to_string('apparel/fragments/look_search_content.html', {'object': instance})
+    document['template'] = render_to_string('apparel/fragments/look_medium.html', {'object': instance})
     document['published'] = instance.published
 
     return document, boost

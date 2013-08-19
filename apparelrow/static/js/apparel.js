@@ -507,7 +507,6 @@ ApparelActivity = {
  */
 
 ApparelSearch = {
-    last_query: false,
     hide: function() {
         // Hides search result dialog
         jQuery('#search-result').hide();
@@ -524,31 +523,28 @@ ApparelSearch = {
         // Clears displayed results and cached resultsets and queries
         jQuery('#search-result ul')
             .data('last-query', null)
-            .data('last-result', null)
             .empty();
     },
     cancel: function() {
         // Clears and hides all
         this.hide();
         this.clear();
-        //updateHash('!s', '', true);
         jQuery('#search > input').val('');
     },
     search: function(callback, query) {
         // Preforms a search
         var s = '';
         if(query) {
-            jQuery('#search > input').val(query);
+            $('#search > input').val(query);
             s = query;
         } else {
-            s = jQuery('#search > input').val();
+            s = $('#search > input').val();
         }
 
         if(s.length == 0)
             return;
 
         ApparelSearch.clear();
-        ApparelSearch.last_query = s;
 
         $('#search-query').text(s);
 
@@ -558,7 +554,7 @@ ApparelSearch = {
             model: 'product',
             query: {
                 'q': s,
-                'limit': 12
+                'limit': 3
             },
             selector: '#search-result-products',
             text: {
@@ -573,7 +569,7 @@ ApparelSearch = {
             model: 'look',
             query: {
                 'q': s,
-                'limit': 5
+                'limit': 3
             },
             selector: '#search-result-looks',
             text: {
@@ -651,8 +647,8 @@ ApparelSearch = {
             },
             success: function(response, status, request) {
                 if(!response) return;
-                var list = jQuery(opts.selector);
-                jQuery.each(response.object_list, function(i, object) {
+                var list = $(opts.selector);
+                $.each(response.object_list, function(i, object) {
                     var root;
                     if(opts.model == 'product') {
                         root = list;
@@ -662,22 +658,12 @@ ApparelSearch = {
                     var $object = jQuery($.parseHTML(object));
                     currencyConversion($object.find('.price, .discount-price'));
                     root.append($object);
-
-                    var item = list.children(':last');
-                    item.addClass((i % 2 == 0) ? 'even' : 'odd');
-                    if(i == 0)
-                        item.addClass('first');
-                    if(i == response.object_list.length - 1)
-                        item.addClass('last');
-
-                    if(opts.template == 'product_template' && i % 4 == 3)
-                        item.addClass('edge');
                 });
 
                 var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1) + ' search';
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
-                var h2 = jQuery('h2.' + opts.selector.substring(1)).text(
+                $('h3.' + opts.selector.substring(1)).text(
                     interpolate(
                         ngettext(
                             opts.text.header_singular,
@@ -689,7 +675,18 @@ ApparelSearch = {
                     )
                 );
 
-                var abutton = jQuery('a.' + opts.selector.substring(1)).text(
+                var href_attr = '#';
+                switch(opts.selector) {
+                    case '#search-result-products':
+                        href_attr = browse_url + '?' + ApparelSearch.format_query(opts.query);
+                        break;
+
+                    case '#search-result-looks':
+                        href_attr = '/looks/search/?' + ApparelSearch.format_query(opts.query);
+                        break;
+                }
+
+                var abutton = $('a.' + opts.selector.substring(1)).text(
                     interpolate(
                         ngettext(
                             opts.text.button_singular,
@@ -699,14 +696,13 @@ ApparelSearch = {
                         { count: response.paginator.count },
                         true
                     )
-                ).hide();
+                ).attr('href', href_attr).hide();
 
                 if(response.paginator.count > opts.query['limit']) {
                     abutton.show();
                 }
 
                 list.data('last-query', opts.query);
-                list.data('last-result', response);
             }
         });
     },
@@ -727,14 +723,15 @@ ApparelSearch = {
     },
 
     format_query: function(query) {
+        var query_copy = $.extend({}, query);
         // Takes a query as an object and stringifies if after removing the
         // size-property
 
-        if('limit' in query)
-            delete(query['limit']);
+        if('limit' in query_copy)
+            delete(query_copy['limit']);
 
         var pairs = [];
-        for(var key in query) {
+        for(var key in query_copy) {
             pairs.push(
                encodeURIComponent(key)
                 + '='
@@ -746,41 +743,41 @@ ApparelSearch = {
     }
 };
 
-function getHashParameterByName(name) {
-    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-    var regexS = "[\\?&]?" + name + "=([^&#]*)";
-    var regex = new RegExp(regexS);
-    var results = regex.exec(window.location.hash);
-    if(results == null)
-        return "";
-    else
-        return decodeURIComponent(results[1].replace(/\+/g, " "));
-}
+//function getHashParameterByName(name) {
+    //name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    //var regexS = "[\\?&]?" + name + "=([^&#]*)";
+    //var regex = new RegExp(regexS);
+    //var results = regex.exec(window.location.hash);
+    //if(results == null)
+        //return "";
+    //else
+        //return decodeURIComponent(results[1].replace(/\+/g, " "));
+//}
 
-function updateHash(name, value, remove) {
-    var hash_object = {};
-    var found = false;
-    if(window.location.hash.substring(1)) {
-        jQuery.each(window.location.hash.substring(1).split('&'), function(index, elem) {
-            var pair = elem.split('=');
-            if(pair[0] == name) {
-                pair[1] = value;
-                found = true;
-            }
-            if(!(remove && found)) {
-                if (pair[1]) {
-                    hash_object[pair[0]] = pair[1];
-                }
-            }
-        });
-    }
-    if(!found && !remove) {
-        hash_object[name] = value;
-    }
+//function updateHash(name, value, remove) {
+    //var hash_object = {};
+    //var found = false;
+    //if(window.location.hash.substring(1)) {
+        //jQuery.each(window.location.hash.substring(1).split('&'), function(index, elem) {
+            //var pair = elem.split('=');
+            //if(pair[0] == name) {
+                //pair[1] = value;
+                //found = true;
+            //}
+            //if(!(remove && found)) {
+                //if (pair[1]) {
+                    //hash_object[pair[0]] = pair[1];
+                //}
+            //}
+        //});
+    //}
+    //if(!found && !remove) {
+        //hash_object[name] = value;
+    //}
 
-    // Use decodeURIComponent because jQuery.param returns it encoded
-    window.location.hash = decodeURIComponent(jQuery.param(hash_object));
-}
+    //// Use decodeURIComponent because jQuery.param returns it encoded
+    //window.location.hash = decodeURIComponent(jQuery.param(hash_object));
+//}
 
 // DOM bindings
 
@@ -826,24 +823,24 @@ jQuery(document).ready(function() {
     }
     */
 
-    jQuery('#cancel-search').click(function(e) {
+    $('#cancel-search').click(function(e) {
         ApparelSearch.cancel();
         return false;
     });
 
-    $('#search-result').on('click', '.search-result-products:not(.disabled)', function(e) {
-            return search_link_action('search-result-products');
-        }).on('click', '.search-result-looks:not(.disabled)', function(e) {
-            return search_link_action('search-result-looks');
-        }).on('click', '.search-result-manufacturers:not(.disabled)', function(e) {
-            return search_link_action('search-result-manufacturers');
-        });
+    //$('#search-result').on('click', '.search-result-products:not(.disabled)', function(e) {
+            //return search_link_action('search-result-products');
+        //}).on('click', '.search-result-looks:not(.disabled)', function(e) {
+            //return search_link_action('search-result-looks');
+        //}).on('click', '.search-result-manufacturers:not(.disabled)', function(e) {
+            //return search_link_action('search-result-manufacturers');
+        //});
 
-    $(document).on('click', '#search-result #search-result-stores li a', function(e) {
-        if(window.location.pathname.slice(0, 5) == '/shop') {
-            ApparelSearch.cancel();
-        }
-    });
+    //$(document).on('click', '#search-result #search-result-stores li a', function(e) {
+        //if(window.location.pathname.slice(0, 5) == '/shop') {
+            //ApparelSearch.cancel();
+        //}
+    //});
 
     function search_link_action(type) {
         var query = jQuery('#' + type).data('last-query');
@@ -855,7 +852,7 @@ jQuery(document).ready(function() {
                     break;
                 }
 
-                window.location.href = browse_url + '#' + ApparelSearch.format_query(query);
+                window.location.href = browse_url + '?' + ApparelSearch.format_query(query);
                 if(window.location.pathname == browse_url) {
                     ApparelSearch.cancel();
                     window.location.reload();
