@@ -18,7 +18,7 @@
     <div class="caption">
         <h4><a href="{{ object.get_absolute_url }}">{{ object.manufacturer }}</a></h4>
         <ul class="list-inline">
-            {% if object.default_vendor and object.default_vendor.availability != 0 and object.availability %}
+            {% if object.availability and object.default_vendor and object.default_vendor.availability != 0 %}
             {% if object.default_vendor.discount_price %}
             <li class="discount-price" data-price="{{ object.default_vendor.original_discount_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_discount_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.original_currency }}</li>
             <li class="price discounted" data-price="{{ object.default_vendor.original_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.original_currency }}</li>

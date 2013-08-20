@@ -8,13 +8,27 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'Activity.is_available'
+        db.add_column(u'activity_feed_activity', 'is_available',
+                      self.gf('django.db.models.fields.BooleanField')(default=True, db_index=True),
+                      keep_default=False)
+
         # Adding field 'Activity.featured_date'
         db.add_column(u'activity_feed_activity', 'featured_date',
                       self.gf('django.db.models.fields.DateField')(null=True, blank=True),
                       keep_default=False)
 
+        # Adding index on 'Activity', fields ['gender']
+        db.create_index(u'activity_feed_activity', ['gender'])
+
 
     def backwards(self, orm):
+        # Removing index on 'Activity', fields ['gender']
+        db.delete_index(u'activity_feed_activity', ['gender'])
+
+        # Deleting field 'Activity.is_available'
+        db.delete_column(u'activity_feed_activity', 'is_available')
+
         # Deleting field 'Activity.featured_date'
         db.delete_column(u'activity_feed_activity', 'featured_date')
 
@@ -26,8 +40,9 @@ class Migration(SchemaMigration):
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'featured_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'gender': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '1', 'null': 'True', 'blank': 'True'}),
+            'gender': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '1', 'null': 'True', 'db_index': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_available': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'db_index': 'True'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'activities'", 'to': u"orm['profile.User']"}),
@@ -113,7 +128,7 @@ class Migration(SchemaMigration):
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'like_look_created': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
-            'login_flow': ('django.db.models.fields.CharField', [], {'default': "'friends'", 'max_length': '20'}),
+            'login_flow': ('django.db.models.fields.CharField', [], {'default': "'brands'", 'max_length': '20'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'newsletter': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'partner_group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Group']", 'null': 'True', 'blank': 'True'}),

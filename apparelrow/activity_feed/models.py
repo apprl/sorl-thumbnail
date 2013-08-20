@@ -52,6 +52,16 @@ class ActivityManager(models.Manager):
         except Activity.DoesNotExist:
             pass
 
+    def update_activity(self, activity_object):
+        content_type = ContentType.objects.get_for_model(activity_object)
+
+        if content_type.app_label == 'apparel' and content_type.model == 'product':
+            available = False
+            if activity_object.availability and activity_object.default_vendor and activity_object.default_vendor.availability != 0:
+                available = True
+
+            self.filter(content_type=content_type, object_id=activity_object.pk).update(is_available=available)
+
     def get_for_user(self, user):
         return Activity.objects.filter(user=user, active=True) \
                                .select_related('user', 'owner') \
@@ -72,10 +82,11 @@ class Activity(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     activity_object = generic.GenericForeignKey('content_type', 'object_id')
-    gender = models.CharField(max_length=1, choices=GENDERS, null=True, blank=True, default=None)
+    gender = models.CharField(max_length=1, choices=GENDERS, null=True, blank=True, default=None, db_index=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     active = models.BooleanField(default=True, db_index=True)
+    is_available = models.BooleanField(default=True, db_index=True)
     featured_date = models.DateField(null=True, blank=True)
 
     objects = ActivityManager()

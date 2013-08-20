@@ -254,7 +254,7 @@ def update_activity_feed(profile, followee, add=True):
 
 
 @periodic_task(name='activity_feed.tasks.featured_activity', run_every=crontab(hour='23'), max_retries=1, ignore_result=True)
-def featured_activity():
+def featured_activity(next_day=True):
     Activity = get_model('activity_feed', 'activity')
     since = datetime.datetime.now() - datetime.timedelta(days=4)
 
@@ -293,9 +293,12 @@ def featured_activity():
     # Combined activities
     iters = [iter(like_product_activities), iter(create_look_activities)]
     activitites = list(it.next() for it in itertools.cycle(iters))
-    next_day = datetime.date.today() + datetime.timedelta(days=1)
+    if next_day:
+        day = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        day = datetime.date.today()
 
-    if not Activity.objects.filter(featured_date=next_day).exists():
+    if not Activity.objects.filter(featured_date=day).exists():
         for activity in activitites[:3]:
-            activity.featured_date = next_day
+            activity.featured_date = day
             activity.save()

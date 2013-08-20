@@ -755,11 +755,17 @@ def gender(request, *args, **kwargs):#view=None, gender=None):
 # Index page for unauthenticated users
 #
 
-def index(request):
+def index(request, gender=None):
     if request.user.is_authenticated():
-        return user_feed(request)
+        return user_feed(request, gender=gender)
 
-    return render(request, 'apparel/index.html', {'featured': get_featured_activity_today()})
+    if request.path != '/':
+        return HttpResponseRedirect('/')
+
+    response = render(request, 'apparel/index.html', {'APPAREL_GENDER': gender, 'featured': get_featured_activity_today()})
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value='A', max_age=365 * 24 * 60 * 60)
+
+    return response
 
 def publisher(request):
     #p = get_model('apparel', 'Product').valid_objects.get(slug='kappa-kool-kombat-traningstrojor-blatt')

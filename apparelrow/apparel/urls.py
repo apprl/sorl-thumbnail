@@ -8,7 +8,9 @@ from apparelrow.apparel.views.looks import LookView
 
 urlpatterns = patterns('',
     # Index
-    url(r'^$', 'apparelrow.apparel.views.index', name='index'),
+    url(r'^$', 'apparelrow.apparel.views.index', {'gender': 'A'}, name='index'),
+    url(r'^men/$', 'apparelrow.apparel.views.index', {'gender': 'M'}, name='index-men'),
+    url(r'^women/$', 'apparelrow.apparel.views.index', {'gender': 'W'}, name='index-women'),
     url(r'^store/$', 'apparelrow.apparel.views.store', name='index-store'),
 
     # Feed

@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.loading import get_model
+from django.db.models import Q
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.middleware import csrf
@@ -99,24 +100,27 @@ class ActivityFeedRender(object):
         self.gender = gender
         self.user = user
 
+        self.gender_list = {'A': ['W', 'M', 'U'],
+                            'M': ['M', 'U'],
+                            'W': ['W', 'U']}
         self.verbs = ['like_look', 'like_product', 'add_product', 'create']
 
     def run(self):
         user_ids = self.user.following.filter(active=True).values('user_follow')
-        return get_model('activity_feed', 'Activity').objects.filter(active=True,
-                                                                     user__in=user_ids,
-                                                                     verb__in=self.verbs)
+        query = get_model('activity_feed', 'Activity').objects.filter(active=True,
+                                                                      is_available=True,
+                                                                      user__in=user_ids,
+                                                                      verb__in=self.verbs)
+        query = query.filter(Q(gender__in=self.gender_list.get(self.gender)) | Q(gender__isnull=True))
+        query = query.order_by('-created')
+
+        return query
+
 
 @login_required
 def user_feed(request, gender=None):
-    #if not gender:
-        #gender_cookie = get_gender_from_cookie(request)
-        #if gender_cookie == 'W':
-            #gender = 'W'
-        #elif gender_cookie == 'M':
-            #gender = 'M'
-        #else:
-            #gender = 'W'
+    if not gender:
+        gender = get_gender_from_cookie(request)
 
     htmlset = ActivityFeedRender(request, gender, request.user).run()
     paginator = Paginator(htmlset, 12)
@@ -138,6 +142,7 @@ def user_feed(request, gender=None):
             'featured': get_featured_activity_today(),
             'current_page': paged_result,
             'next': request.get_full_path(),
+            'APPAREL_GENDER': gender,
         })
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
 

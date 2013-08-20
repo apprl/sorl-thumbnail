@@ -368,6 +368,10 @@ class Product(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=Product)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Product)
 
+@receiver(post_save, sender=Product, dispatch_uid='product_update_activity_post_save')
+def product_update_activity_post_save(sender, instance, **kwargs):
+    get_model('activity_feed', 'activity').objects.update_activity(instance)
+
 
 #
 # ProductLike

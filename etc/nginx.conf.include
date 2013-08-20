@@ -12,11 +12,6 @@ location /favicon.ico { alias $deploy_dir/$project_name/static/images/favicon.ic
 location /channel.html { alias $deploy_dir/$project_name/static/channel.html; }
 location /media { alias $deploy_base/shared; }
 
-# TODO: Not sure about this one
-location ~ ^/(?:wo)?men.*$ {
-    rewrite ^/(?:wo)?men.*$ /shop/$1 permanent;
-}
-
 location /embed/shop {
     default_type "text/html; charset=utf-8";
     if ($is_args = '') {
