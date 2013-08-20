@@ -232,7 +232,9 @@ $(document).ready(function() {
 
     // Click on like buttons
     $(document).on('click', '.btn-product-like', {type: 'product'}, ApparelActivity.like_handler)
-               .on('click', '.btn-look-like', {type: 'look'}, ApparelActivity.like_handler);
+               .on('click', '.btn-look-like', {type: 'look'}, ApparelActivity.like_handler)
+               .on('mouseenter', '.btn-look-like, .btn-product-like', ApparelActivity.like_handler_enter)
+               .on('mouseleave', '.btn-look-like, .btn-product-like', ApparelActivity.like_handler_leave);
 
     // Update likes count
     // TODO: still in use? does it work?
@@ -347,11 +349,11 @@ function getElementId(element, numeric) {
 }
 
 function likeElement($element) {
-    $element.addClass('liked').text($element.data('unlike-text'));
+    $element.addClass('liked').find('span:first').text($element.data('liked-text'));
 }
 
 function unlikeElement($element) {
-    $element.removeClass('liked').text($element.data('like-text'));
+    $element.removeClass('liked').find('span:first').text($element.data('like-text'));
 }
 
 /**
@@ -359,6 +361,20 @@ function unlikeElement($element) {
  */
 
 ApparelActivity = {
+    like_handler_enter: function(event) {
+        var element = $(this);
+        if (element.hasClass('liked')) {
+            element.find('span:first').text(element.data('unlike-text'));
+        }
+    },
+
+    like_handler_leave: function(event) {
+        var element = $(this);
+        if (element.hasClass('liked')) {
+            element.find('span:first').text(element.data('liked-text'));
+        }
+    },
+
     /**
      * Like handler for products and looks
      *
@@ -393,8 +409,6 @@ ApparelActivity = {
                     if(data['success'] == true) {
                         $(document).trigger('like', [element, event.data.type, element.data('id')]);
                         likeElement(element);
-                        element.addClass('liked');
-                        element.text(element.data('unlike-text'));
 
                         // Push likes to google analytics
                         _gaq.push(['_trackEvent', event.data.type.capitalize(), 'Like', element.data('slug')]);
