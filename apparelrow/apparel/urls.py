@@ -30,7 +30,9 @@ urlpatterns = patterns('',
     (r'^home/friends/$', 'apparelrow.apparel.views.facebook_friends_widget'),
 
     # Search
-    url(r'^search/$', 'apparelrow.apparel.search.search', name='search'),
+    url(r'^search/$', 'apparelrow.apparel.search.search', {'gender': 'A'}, name='search'),
+    url(r'^search/men/$', 'apparelrow.apparel.search.search', {'gender': 'M'}, name='search-men'),
+    url(r'^search/women/$', 'apparelrow.apparel.search.search', {'gender': 'W'}, name='search-women'),
     (r'^search/(?P<model_name>\w+)/', 'apparelrow.apparel.search.search_view'),
 
     # Notifications
@@ -71,7 +73,7 @@ urlpatterns = patterns('',
 
     # Brand
     url(r'^brands/(?P<pk>[\d]+)/$', 'apparelrow.apparel.views.brand_redirect', name='brand-redirect'),
-    url(r'^brands/$', 'apparelrow.apparel.views.gender', {'view': 'brand-list'}, name='brand-list'),
+    url(r'^brands/$', 'apparelrow.apparel.views.user_list', {'gender': 'A', 'brand': True}, name='brand-list'),
     url(r'^brands/men/$', 'apparelrow.apparel.views.user_list', {'gender': 'M', 'brand': True}, name='brand-list-men'),
     url(r'^brands/women/$', 'apparelrow.apparel.views.user_list', {'gender': 'W', 'brand': True}, name='brand-list-women'),
 
@@ -100,11 +102,11 @@ urlpatterns = patterns('',
     url(r'^look/$', LookView.as_view(), name='look_list'),
     url(r'^look/(?P<pk>\d+)/?$', LookView.as_view(), name='look'),
 
-    url(r'^looks/$', 'apparelrow.apparel.views.gender', {'view': 'look-list'}, name='look-list'),
+    url(r'^looks/$', 'apparelrow.apparel.views.look_list', {'gender': 'A'}, name='look-list'),
     url(r'^looks/men/$', 'apparelrow.apparel.views.look_list', {'gender': 'M'}, name='look-list-men'),
     url(r'^looks/women/$', 'apparelrow.apparel.views.look_list', {'gender': 'W'}, name='look-list-women'),
-    url(r'^looks/popular/$', 'apparelrow.apparel.views.look_list', {'popular': True}, name='popular-look-list'),
     url(r'^looks/search/$', 'apparelrow.apparel.views.look_list', {'search': True}, name='search-look-list'),
+    url(r'^looks/popular/$', RedirectView.as_view(url=reverse_lazy('look-list'))),
     url(r'^looks/(?P<slug>[\w-]+)/publish/$', 'apparelrow.apparel.views.looks.publish', name='look-publish'),
     url(r'^looks/(?P<slug>[\w-]+)/unpublish/$', 'apparelrow.apparel.views.looks.unpublish', name='look-unpublish'),
     url(r'^looks/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_detail', name='look-detail'),
@@ -118,7 +120,7 @@ urlpatterns = patterns('',
     url(r'^widget/look/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.widget', name='look-widget'),
 
     # Users
-    url(r'^users/$', 'apparelrow.apparel.views.gender', {'view': 'user-list'}, name='user-list'),
+    url(r'^users/$', 'apparelrow.apparel.views.user_list', {'gender': 'A', 'brand': False}, name='user-list'),
     url(r'^users/men/$', 'apparelrow.apparel.views.user_list', {'gender': 'M', 'brand': False}, name='user-list-men'),
     url(r'^users/women/$', 'apparelrow.apparel.views.user_list', {'gender': 'W', 'brand': False}, name='user-list-women'),
     url(r'^users/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular'),

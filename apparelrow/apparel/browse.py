@@ -368,15 +368,10 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         current_page = paged_result,
     )
 
-    # Do not update overall gender on shop
-    # Set APPAREL_GENDER
-    #result.update(APPAREL_GENDER=gender)
-
     # Added remaining kwargs for rendering
     result.update(kwargs)
 
     response = render_to_response(template, result, context_instance=RequestContext(request))
-    #response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
 
     translation.deactivate()
 

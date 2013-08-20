@@ -12,11 +12,21 @@
 {% block body-classes %}search-page{% endblock %}
 {% block body %}
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="content-header">
-                <h1><span class="icon-slash-a"></span>{% trans "Search result for" %} '<span id="search-query">{{ q }}</span>'</h1>
-            </div>
+    <div class="body-header">
+        <div class="body-header-col-left">
+            <h1>{% trans "Search result for" %} '<span id="search-query">{{ q }}</span>'</h1>
+        </div>
+        <div class="body-header-col-right">
+            <ul class="list-inline">
+                <li>
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if APPAREL_GENDER == 'M' %}{% trans "Men" %}{% elif APPAREL_GENDER == 'W' %}{% trans "Women" %}{% else %}{% trans "All" %}{% endif %} <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'search' %}?q={{ q }}">{% trans "All" %}</a></li>
+                        <li><a href="{% url 'search-men' %}?q={{ q }}">{% trans "Men" %}</a></li>
+                        <li><a href="{% url 'search-women' %}?q={{ q }}">{% trans "Women" %}</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
 

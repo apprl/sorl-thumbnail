@@ -445,13 +445,23 @@ def decode_store_facet(data):
 # Generic search
 #
 
-def search(request):
+def search(request, gender=None):
     """
     Search page
     """
+    if not gender:
+        gender = get_gender_from_cookie(request)
+
+    gender_list = {'A': ['W', 'M', 'U'],
+                   'M': ['M', 'U'],
+                   'W': ['W', 'U']}
+
     query = request.GET.get('q', '')
 
-    return render(request, 'search.html', {'q': query})
+    response = render(request, 'search.html', {'q': query, 'APPAREL_GENDER': gender})
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+
+    return response
 
 
 def search_view(request, model_name):
@@ -471,7 +481,7 @@ def search_view(request, model_name):
 
     # Gender field
     gender = get_gender_from_cookie(request)
-    if not gender:
+    if not gender or gender == 'A':
         gender_field = 'gender:(U OR M OR W)'
     else:
         gender_field = 'gender:(U OR %s)' % (gender,)

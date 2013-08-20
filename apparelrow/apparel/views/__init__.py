@@ -499,7 +499,7 @@ def look_like(request, slug, action):
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
 
-def look_list(request, popular=None, search=None, contains=None, page=0, gender=None):
+def look_list(request, search=None, contains=None, gender=None):
     """
     This view can list looks in four ways:
 
@@ -512,13 +512,12 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    if popular:
-        if request.user.is_authenticated():
-            queryset = get_top_looks_in_network(request.user)
-        else:
-            queryset = Look.objects.none()
-    elif search:
-        if not gender:
+    gender_list = {'A': ['W', 'M', 'U'],
+                   'M': ['M', 'U'],
+                   'W': ['W', 'U']}
+
+    if search:
+        if not gender or gender == 'A':
             gender_field = 'gender:(U OR M OR W)'
         else:
             gender_field = 'gender:(U OR %s)' % (gender,)
@@ -532,7 +531,7 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     elif contains:
         queryset = Look.published_objects.filter(components__product__slug=contains).distinct()
     else:
-        queryset = Look.published_objects.filter(gender__in=[gender, 'U']).order_by('-popularity')
+        queryset = Look.published_objects.filter(gender__in=gender_list.get(gender)).order_by('-popularity')
 
     paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
             request.GET.get('page', 1), 1, 2)
@@ -658,14 +657,19 @@ def user_list(request, gender=None, brand=False):
     if not gender:
         gender = get_gender_from_cookie(request)
 
+    gender_list = {'A': ['W', 'M', 'U'],
+                   'M': ['M', 'U'],
+                   'W': ['W', 'U']}
+
     queryset = get_user_model().objects.filter(is_active=True,
                                                is_brand=brand,
                                                advertiser_store__isnull=True)
+
     if not brand:
-        queryset = queryset.filter(gender=gender)
+        queryset = queryset.filter(gender__in=gender_list.get(gender))
     else:
         # XXX: is this solution good enough?
-        queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender=gender).distinct()
+        queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender__in=gender_list.get(gender)).distinct()
 
     alphabet = request.GET.get('alphabet')
     if alphabet:
@@ -690,7 +694,8 @@ def user_list(request, gender=None, brand=False):
                 'next': request.get_full_path(),
                 'alphabet': string.lowercase,
                 'selected_alphabet': alphabet,
-                'APPAREL_GENDER': gender
+                'APPAREL_GENDER': gender,
+                'is_brand': brand,
             }, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response

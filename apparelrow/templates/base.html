@@ -125,7 +125,7 @@
                     {% endif %}
                 </ul>
 
-                <form action="{% url 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
+                <form action="{% gender_url APPAREL_GENDER 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
                     <div class="form-group">
                         <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
                     </div>
@@ -147,34 +147,6 @@
     {% if not user.is_authenticated %}
     {% login_bar request.path %}
     {% endif %}
-    {% endcomment %}
-
-    {% comment %}
-    <!--<div id="search-result" class="container">-->
-        <!--<div id="inner-search-result" class="row">-->
-            <!--<div class="wide result-container col-lg-4">-->
-                <!--<h2 class="search-result-products">{% trans "Matching products" %}</h2>-->
-                <!--<div class="product-list"><ul id="search-result-products" class="list"></ul></div>-->
-                <!--<div class="search-link"><a class="search-result-products btn btn-block btn-upper" href="#" style="display:none;">{% trans "Show all products" %}</a></div>-->
-            <!--</div>-->
-            <!--<div class="result-container col-lg-4">-->
-                <!--<h2 class="search-result-looks">{% trans "Matching looks" %}</h2>-->
-                <!--<ul id="search-result-looks" class="looks"></ul>-->
-                <!--<div class="search-link"><a class="search-result-looks btn btn-block btn-upper" href="#" style="display:none;">{% trans "Show all looks" %}</a></div>-->
-            <!--</div>-->
-            <!--<div class="last result-container col-lg-4">-->
-                <!--<h2 class="search-result-manufacturers">{% trans "Matching brands" %}</h2>-->
-                <!--<ul id="search-result-manufacturers"></ul>-->
-                <!--<div class="search-link"><a class="search-result-manufacturers btn btn-block btn-upper" href="#" style="display:none;">{% trans "Show all manufacturers" %}</a></div>-->
-
-                <!--<h2 class="search-result-stores">{% trans "Matching stores" %}</h2>-->
-                <!--<ul id="search-result-stores"></ul>-->
-
-                <!--<h2 class="search-result-profiles">{% trans "Matching members" %}</h2>-->
-                <!--<ul id="search-result-profiles"></ul>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
     {% endcomment %}
 
     <div id="content-container">
@@ -221,11 +193,11 @@
                         </ul>
                         <ul class="list-unstyled col-xs-6">
                             <li><h4>{% trans "Apprl" %}</h4></li>
-                            <li><a href="{% url 'index-publisher' %}">{% trans "Bloggers" %}</a></li>
-                            <li><a href="{% url 'index-store' %}">{% trans "Stores" %}</a></li>
                             <li><a href="mailto:info@apprl.com">{% trans "Contact" %}</a></li>
                             <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Privacy & Terms" %}</a></li>
                             <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
+                            <li><a href="{% url 'index-publisher' %}">{% trans "Bloggers" %}</a></li>
+                            <li><a href="{% url 'index-store' %}">{% trans "Stores" %}</a></li>
                         </ul>
                     </div>
                 </div>

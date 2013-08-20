@@ -367,6 +367,7 @@ def selected_url(request, *args):
 
     return ''
 
+
 @register.simple_tag
 def selected_reverse(request, url):
     path = request.path
@@ -374,19 +375,6 @@ def selected_reverse(request, url):
         return 'selected'
     return ''
 
-@register.simple_tag
-def change_gender_url(request, current_gender, gender):
-    """
-    Calculate new url from current gender and the gender to be.
-    """
-    if current_gender == 'M':
-        current_gender = 'men'
-    elif current_gender == 'W':
-        current_gender = 'women'
-    else:
-        current_gender = False
-
-    return reverse('shop-%s' % (gender,))
 
 @register.simple_tag
 def gender_url(gender, named_url):
@@ -399,6 +387,7 @@ def gender_url(gender, named_url):
         return reverse('%s-women' % (named_url,))
 
     return reverse(named_url)
+
 
 @register.filter
 def urlize_target_blank(value, limit=None, autoescape=None):

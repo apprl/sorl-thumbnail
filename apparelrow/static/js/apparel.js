@@ -647,7 +647,7 @@ ApparelSearch = {
                 var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1) + ' search';
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
-                $('h3.' + opts.selector.substring(1)).text(
+                var h3 = $('h3.' + opts.selector.substring(1)).text(
                     interpolate(
                         ngettext(
                             opts.text.header_singular,
@@ -663,10 +663,14 @@ ApparelSearch = {
                 switch(opts.selector) {
                     case '#search-result-products':
                         href_attr = browse_url + '?' + ApparelSearch.format_query(opts.query);
+                        var a_tag = $('<a>').attr('href', href_attr).text(h3.text());
+                        h3.html(a_tag);
                         break;
 
                     case '#search-result-looks':
                         href_attr = '/looks/search/?' + ApparelSearch.format_query(opts.query);
+                        var a_tag = $('<a>').attr('href', href_attr).text(h3.text());
+                        h3.html(a_tag);
                         break;
                 }
 
