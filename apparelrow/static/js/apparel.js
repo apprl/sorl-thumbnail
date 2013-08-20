@@ -230,21 +230,6 @@ $(document).ready(function() {
     // Enable tooltip for large and medium looks
     jQuery().enableApprlTooltip('.look-large .product');
 
-    // Product like - show tooltip if no previously likes
-    // TODO: fix later
-    //jQuery(document).on('mousenter', '.btn-product-like', function() {
-        //if(hasLiked == false) {
-            //var element = jQuery(this);
-            //if(element.children().length == 0) {
-                //element.append('<a href="#" class="product-heart-tooltip"><span>' + gettext('Like products to save it to your profile and get sale alerts') + '</span></a>');
-            //} else {
-                //element.children().show();
-            //}
-        //}
-    //}).on('mouseleave', '.btn-product-like', function() {
-        //jQuery(this).children().hide();
-    //});
-
     // Click on like buttons
     $(document).on('click', '.btn-product-like', {type: 'product'}, ApparelActivity.like_handler)
                .on('click', '.btn-look-like', {type: 'look'}, ApparelActivity.like_handler);
@@ -255,7 +240,6 @@ $(document).ready(function() {
       var containers = jQuery('.' + type + '-container[data-id=' + id + ']');
       containers.find('.heart').addClass('liked');
       ApparelActivity.update_count(containers.find('.likes'), true);
-      hasLiked = true;
       ApparelActivity.update_count(jQuery('.stats-box .likes .count'), true);
       var avatar = jQuery('.comment-poster-avatar a').clone();
       jQuery('#likes').prepend(jQuery('<li>').append(avatar));

@@ -14,7 +14,6 @@
     {% endblock extra-styles %}
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
-        var hasLiked = {% if user.is_authenticated and user.has_liked %}true{% else %}false{% endif %};
         var product_popup_url = '{% url "product-popup" %}';
         var look_popup_url = '{% url "look-popup" %}';
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
