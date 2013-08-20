@@ -6,10 +6,6 @@
 // -------------------------
 @import "./variables.less";
 
-// Load bootstrap glyphicons
-// -------------------------
-@import "./../fonts/less/bootstrap-glyphicons.less";
-
 // Load bootstrap 3
 // -------------------------
 @import './../bootstrap/less/bootstrap.less';
@@ -362,7 +358,7 @@ body.index {
                 padding-left: 20px;
                 font-size: 24px;
                 position: absolute;
-                top: 2px;
+                top: 14px;
                 right: 15px;
             }
             @media (min-width: @screen-desktop) {
@@ -409,35 +405,62 @@ body.index {
     }
 }
 
+/* Disable hover on featured content when not authenticated */
+body:not(.authenticated) .featured-container .feed-item .panel-body img { opacity: 1 !important; }
+body:not(.authenticated) .featured-container .feed-item .panel-body .hover { display: none !important; }
+
 .featured-container {
     background: #000000 url('../images/index_background.jpg') no-repeat center top;
     height: 624px;
     overflow: hidden;
     .feed-item {
+        display: inline-block;
         height: 494px;
         margin-bottom: 50px;
-        .panel-body .caption, .panel-body .hover { display: none; }
+        .panel-heading { min-height: 150px; }
+        .panel-body .caption { display: none; }
         p {
             font-weight: bold;
             color: #7d8991;
         }
     }
 
-    /* Columns for featured item in screen size: 1 - 2 - 2 - 3 */
+    /* Columns for featured item in screen size: 1 - 2 - 3 - 3 */
     .col-featured-item {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
         .make-sm-column(12);
         &:not(:first-child) {
             display: none;
         }
         @media (min-width: @screen-tablet) {
+            .make-sm-column(6);
             display: block !important;
+            &:first-child {
+                text-align: left;
+            }
+            &:nth-child(2) {
+                text-align: right;
+            }
             &:last-child {
                 display: none;
             }
-            .make-sm-column(6);
         }
-        @media (min-width: @screen-lg-desktop) {
+        @media (min-width: @screen-desktop) {
             .make-sm-column(4);
+            &:first-child {
+                text-align: left;
+            }
+            &:nth-child(2) {
+                margin-left: auto;
+                margin-right: auto;
+                text-align: center;
+            }
+            &:last-child {
+                text-align: right;
+            }
+
         }
     }
 }
@@ -491,7 +514,8 @@ body.index {
     }
     .panel-body {
         min-height: 405px;
-        padding: 0;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 }
 

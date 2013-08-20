@@ -32,8 +32,8 @@
                         {% include 'apparel/fragments/product_medium.html' with object=activity.activity_object %}
                         {% endcache %}
                         {% else %}
-                        {% cache CACHE_TIMEOUT look_medium activity.object_id LANGUAGE_CODE %}
-                        {% include 'apparel/fragments/look_medium.html' with object=activity.activity_object %}
+                        {% cache CACHE_TIMEOUT look_medium_featured activity.object_id LANGUAGE_CODE %}
+                        {% include 'apparel/fragments/look_medium.html' with featured=True object=activity.activity_object %}
                         {% endcache %}
                         {% endif %}
                     </div>

@@ -1,9 +1,15 @@
 {% load i18n thumbnail thumbnail_extras apparel_extras %}
 
 <div class="thumbnail look-medium {% if object.display_with_component == 'P' %}look-photo{% else %}look-collage{% endif %}" id="look-{{ object.id }}" data-id="{{ object.id }}">
+    {% if featured %}
+    {% thumbnail object.static_image "280x320" keep_size=True crop=False format='PNG' as im %}
+    <img class="look-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% endthumbnail %}
+    {% else %}
     {% thumbnail object.static_image "560x640" crop=False format='PNG' as im %}
     <img class="look-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
+    {% endif %}
     <div class="hover">
         <ul class="list-unstyled">
             <li><a class="btn btn-primary btn-block btn-look-like btn-danger" href="#" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}">{% trans "Like" %}</a></li>
