@@ -24,6 +24,7 @@
     </div>
     {% endif %}
 
+    {% if not user_id %}
     <div class="panel panel-product-sort">
         <div class="panel-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseSort">{% trans "Sort by" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
@@ -39,6 +40,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
     <div class="panel{% if selected_categories %} active{% endif %}">
         <div class="panel-heading">

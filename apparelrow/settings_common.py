@@ -251,21 +251,19 @@ PIPELINE_CSS = {
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
 PIPELINE_JS = {
     'bootstrap': {
-        'source_filenames': (
-          'bootstrap/js/transition.js',
-          'bootstrap/js/alert.js',
-          'bootstrap/js/modal.js',
-          'bootstrap/js/dropdown.js',
-          'bootstrap/js/scrollspy.js',
-          'bootstrap/js/tab.js',
-          'bootstrap/js/tooltip.js',
-          'bootstrap/js/popover.js',
-          'bootstrap/js/button.js',
-          'bootstrap/js/collapse.js',
-          'bootstrap/js/carousel.js',
-          'bootstrap/js/typeahead.js',
-          'bootstrap/js/affix.js',
-        ),
+        'source_filenames': ('bootstrap/js/transition.js',
+                             'bootstrap/js/alert.js',
+                             'bootstrap/js/modal.js',
+                             'bootstrap/js/dropdown.js',
+                             'bootstrap/js/scrollspy.js',
+                             'bootstrap/js/tab.js',
+                             'bootstrap/js/tooltip.js',
+                             'bootstrap/js/popover.js',
+                             'bootstrap/js/button.js',
+                             'bootstrap/js/collapse.js',
+                             'bootstrap/js/carousel.js',
+                             'bootstrap/js/typeahead.js',
+                             'bootstrap/js/affix.js'),
         'output_filename': 'js/compiled/b.js',
     },
     'embed': {
@@ -288,6 +286,8 @@ PIPELINE_JS = {
     },
     'shop': {
         'source_filenames': ('js/vendor/jquery.history.js',
+                             'bootstrap/js/collapse.js',
+                             'bootstrap/js/transition.js',
                              'js/filtersetup.js',
                              'js/browse.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',

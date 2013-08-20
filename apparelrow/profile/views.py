@@ -201,15 +201,6 @@ def following(request, profile, form, page=0):
 
 
 #
-# Shop embed
-#
-
-@login_required
-def embed_shop(request):
-    return render(request, 'profile/embed_shop.html')
-
-
-#
 # Settings
 #
 
