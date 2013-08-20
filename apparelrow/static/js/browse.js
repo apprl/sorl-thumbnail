@@ -448,6 +448,8 @@ function renderPage(products) {
     var $list = $html.filter('.product-list');
     var $pagination = $html.filter('.pagination');
 
+    console.log($html, $list, $pagination);
+
     currencyConversion($list.find('.price, .discount-price'));
     updateEmbeddedProducts($list);
 
@@ -680,12 +682,12 @@ function updateTranslations() {
 }
 
 function renderProducts(products) {
-    $('#product-list > .product-llist').empty();
+    $('#product-list > .product-list').empty();
     $('#product-count span').text(products.browse_text);
 
     renderPage(products);
 
-    var product_list = jQuery('#product-list');
+    var product_list = $('#product-list');
     product_list.children().show();
     product_list.find('#product-infotext').remove();
     if(products.extra_html) {

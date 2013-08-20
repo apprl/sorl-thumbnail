@@ -11,7 +11,7 @@
 
 <div class="container index-pre-choice">
     <div class="row">
-        <div class="col-sm-4"><h2>{% trans "Apprl is a place to discover fashion selected by bloggers, your friends & other stylemakers." %}</h2></div>
+        <div class="col-sm-4"><h2>{% trans "Discover fashion selected by bloggers, your friends & other stylemakers." %}</h2></div>
         <div class="col-sm-4"><a href="{% url 'auth_login' %}" class="btn btn-get-access">{% trans "Get started" %}</a></div>
         <div class="col-sm-4 facepile-container">
             <div class="fb-facepile" data-max-rows="3" data-width="222" data-app-id="{{ FACEBOOK_APP_ID }}"></div>
@@ -22,8 +22,8 @@
 <div class="index-choice">
     <div class="container">
         <div class="row">
-            <div class="col-sm-4 col-sm-push-8"><a href="{% url 'index-publisher' %}">{% trans "Are you a blogger?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
-            <div class="col-sm-6 col-sm-offset-2 col-sm-pull-6"><a href="{% url 'index-store' %}">{% trans "Are you an online store?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
+            <div class="col-md-4 col-md-push-8"><a href="{% url 'index-publisher' %}">{% trans "Are you a blogger?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
+            <div class="col-md-6 col-md-offset-2 col-md-pull-6"><a href="{% url 'index-store' %}">{% trans "Are you an online store?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
         </div>
     </div>
 </div>

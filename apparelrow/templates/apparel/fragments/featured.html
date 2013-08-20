@@ -19,11 +19,7 @@
                     <div class="panel-heading">
                         <a href="{{ activity.user.get_absolute_url }}"><img class="img-circle" src="{{ activity.user.avatar }}"></a>
                         {% if activity.verb == 'like_product' %}
-                        {% if activity.user.is_partner %}
                         <p>{% trans "Selected by" %} <a href="{{ activity.user.get_absolute_url }}">{{ activity.user.display_name }}</a></p>
-                        {% else %}
-                        <p>{% trans "Liked by" %} <a href="{{ activity.user.get_absolute_url }}">{{ activity.user.display_name }}</a></p>
-                        {% endif %}
                         {% else %}
                         <p>{% trans "Created by" %} <a href="{{ activity.user.get_absolute_url }}">{{ activity.user.display_name }}</a></p>
                         {% endif %}

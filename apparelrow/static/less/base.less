@@ -117,7 +117,7 @@ body {
         padding-left: 0;
         padding-right: 15px;
         a {
-            color: @light_gray_color;
+            color: #aaaaaa;
             text-decoration: none;
             &:hover, &.selected {
                 color: #000000;
@@ -232,6 +232,8 @@ body {
         border: 0;
         margin-top: 10px;
         margin-bottom: 10px;
+        box-shadow: none;
+        -webkit-box-shadow: none;
     }
     .navbar-nav > li > a {
         font-weight: bold;
@@ -351,6 +353,7 @@ body.index {
             line-height: 60px;
         }
         a {
+            width: 100%;
             display: inline-block;
             font-size: 24px;
             font-weight: bold;
@@ -361,7 +364,10 @@ body.index {
                 position: absolute;
                 top: 2px;
                 right: 15px;
-                @media screen and (min-width: @grid-float-breakpoint) {
+            }
+            @media (min-width: @screen-desktop) {
+                width: auto;
+                span {
                     right: auto;
                 }
             }
@@ -370,12 +376,11 @@ body.index {
     .index-pre-choice {
         padding-top: 30px;
         padding-bottom: 20px;
-        h3 {
-            margin-top: 12px;
+        h2 {
+            margin-top: 0;
             margin-bottom: 12px;
-            font-size: 30px;
         }
-        .facepile-container {
+        h2, .facepile-container {
             text-align: center;
             @media screen and (min-width: @grid-float-breakpoint) {
                 text-align: left;
@@ -558,13 +563,14 @@ footer {
     border: 0;
     padding: 0;
     .product-image-container {
-        height: 320px;
         img {
             margin: auto;
         }
     }
     .caption {
-        max-height: 85px;
+        max-height: 76px;
+        padding-bottom: 0;
+        margin-bottom: 30px;
     }
     h4 {
         text-align: center;
@@ -625,11 +631,11 @@ footer {
         }
     }
     @media (min-width: @screen-tablet) {
-        .col-product-filter { .make-sm-column(5); }
+        .col-product-filter { .make-sm-column(4); }
         .col-product-list {
-            .make-sm-column(7);
+            .make-sm-column(8);
             .col-product-item {
-                .make-sm-column(12);
+                .make-sm-column(6);
             }
         }
     }

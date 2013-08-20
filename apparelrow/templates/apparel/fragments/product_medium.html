@@ -2,7 +2,7 @@
 
 <div class="thumbnail product-medium" id="product-{{ object.id }}" data-id="{{ object.id }}">
     <div class="product-image-container">
-        {% thumbnail object.product_image "280x320" crop=False format='PNG' transparent=True as im %}
+        {% thumbnail object.product_image "280x320" keep_size=True crop=False format='PNG' transparent=True as im %}
         <img class="product-image img-responsive" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}
     </div>
