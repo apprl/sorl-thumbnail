@@ -7,7 +7,7 @@
 {% block body-classes %}feed-list-page{% endblock body-classes %}
 {% block full-body %}
 
-    {% if not request.COOKIES.ar_featured %}
+    {% if not request.COOKIES.ar_featured and not request.GET.first %}
     {% include 'apparel/fragments/featured.html' with request=request featured=featured in_feed=True %}
     {% endif %}
 
@@ -16,7 +16,11 @@
         <div class="alert alert-success alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             {% url 'profile-likes' request.user.slug as profile_url %}
-            {% blocktrans with profile_url=profile_url %}You have followed a few featured members. This is your feed. You can visit your profile <a href="{{profile_url}}">here</a> to make changes.{% endblocktrans %}
+            {% if request.user.facebook_user_id %}
+            {% blocktrans with profile_url=profile_url %}This is your personal Apprl feed with the latest from your follows. You have automatically followed your friends &amp; some of our featured members. To manage who you follow go to <a href="{{profile_url}}">your profile</a>.{% endblocktrans %}
+            {% else %}
+            {% blocktrans with profile_url=profile_url %}This is your personal Apprl feed with the latest from your follows. You have automatically followed some of our featured members. To manage who you follow go to <a href="{{profile_url}}">your profile</a>.{% endblocktrans %}
+            {% endif %}
         </div>
     </div>
     {% endif %}
