@@ -67,7 +67,7 @@ $(document).ready(function() {
                         </a>
                     {% else %}
                         <a{% if request.path == likes_url %} class="selected"{% endif %} href="{{ likes_url }}">
-                            {% blocktrans count products as product_count %}{{product_count}} like{% plural %}{{product_count}} likes{% endblocktrans %}
+                            {% blocktrans count products as product_count %}{{product_count}} item{% plural %}{{product_count}} items{% endblocktrans %}
                         </a>
                     {% endif %}
                     </li>

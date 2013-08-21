@@ -2,15 +2,16 @@
 
 <div class="featured-container">
     <div class="container">
-        {% if index_page %}
         <div class="row">
             <div class="col-lg-12">
                 <div class="content-header">
                     <h1><span class="icon-slash-a"></span>{% trans "Today's featured" %}</h1>
+                    {% if in_feed %}
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        {% endif %}
         <div class="row">
             {% for activity in featured %}
             <div class="col-featured-item">
@@ -53,5 +54,11 @@
         });
     }
     follow($('.featured-container .feed-item').map(function() { return $(this).attr('id').split('-')[2]; }).get().join(','));
+    $('.featured-container .close').click(function() {
+        $('.featured-container').slideUp(400);
+        var date = new Date();
+        date.setHours(24, 0, 0, 0);
+        document.cookie = "ar_featured=1; expires="+date.toString()+"; path=/";
+    });
 })()
 </script>

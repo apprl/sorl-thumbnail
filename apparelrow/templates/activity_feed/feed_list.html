@@ -7,7 +7,9 @@
 {% block body-classes %}feed-list-page{% endblock body-classes %}
 {% block full-body %}
 
-    {% include 'apparel/fragments/featured.html' with request=request featured=featured %}
+    {% if not request.COOKIES.ar_featured %}
+    {% include 'apparel/fragments/featured.html' with request=request featured=featured in_feed=True %}
+    {% endif %}
 
     {% if request.GET.first and request.user.is_authenticated %}
     <div class="container">
