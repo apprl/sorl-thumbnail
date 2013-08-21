@@ -102,6 +102,12 @@
             <div class="navbar-collapse collapse navbar-responsive-collapse">
                 {% block custom_navigation %}{% endblock %}
 
+                <form action="{% gender_url APPAREL_GENDER 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
+                    <div class="form-group">
+                        <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
+                    </div>
+                </form>
+
                 <ul class="nav navbar-nav navbar-nav-login navbar-right">
                     {% if not request.user.is_authenticated %}
                     <li><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>
@@ -124,12 +130,6 @@
                     </li>
                     {% endif %}
                 </ul>
-
-                <form action="{% gender_url APPAREL_GENDER 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
-                    <div class="form-group">
-                        <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
-                    </div>
-                </form>
 
                 <ul class="nav navbar-nav navbar-nav-main">
                     {% if request.user.is_authenticated %}
