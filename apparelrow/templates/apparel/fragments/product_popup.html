@@ -1,17 +1,16 @@
-{% load i18n thumbnail comments apparel_extras buy_extras cache thumbnail_extras %}
+{% load i18n thumbnail apparel_extras buy_extras cache thumbnail_extras %}
 
-<div class="product-container group">
+<div class="product-container row">
 
-    <div class="product-image">
+    <div class="product-image col-xs-4">
         {% thumbnail object.product_image "224x291" crop=False as im %}
-        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" style="margin:{{ im|positive_margin:'224x291' }}">
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" style="margin:{{ im|positive_margin:'224x291' }}" class="img-responsive">
         {% endthumbnail %}
-        <a class="btn-product-like heart{% if user|likes_product:object %} liked{% endif %}" href="#" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"></a>
     </div>
 
     {% cache CACHE_TIMEOUT product_popup object.id LANGUAGE_CODE %}
-    <div class="product-info">
-        <div class="breadcrumb">{{ object.manufacturer }} - {{ object.product_name }}</div>
+    <div class="product-info col-xs-8">
+        <h4>{{ object.manufacturer }} - {{ object.product_name }}</h4>
         <p class="bodycopy description">{{ object.description }}</p>
         <div class="product-vendors group">
             <div class="product-vendor">
@@ -22,24 +21,12 @@
                     <span class="price"{% if object.default_vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.default_vendor.locale_price|floatformat:0|apprl_intcomma }}</span>
                     <span class="currency">{{ object.default_vendor.locale_currency }}</span>
                 </div>
-                {% if object.default_vendor.locale_currency != object.default_vendor.original_currency %}
-                <div class="original-price">
-                    {% if object.default_vendor.locale_discount_price %}
-                    <span class="discount-price price">{{ object.default_vendor.original_discount_price|floatformat:0|apprl_intcomma }}</span>
-                    {% endif %}
-                    <span class="price"{% if object.default_vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.default_vendor.original_price|floatformat:0|apprl_intcomma }}</span>
-                    <span class="currency">{{ object.default_vendor.original_currency }}</span>
-                </div>
+                {% if object.default_vendor.original_currency != object.default_vendor.locale_currency %}
+                <small>{% blocktrans with object.default_vendor.original_currency as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}</small>
                 {% endif %}
             </div>
-            <a href="#" class="btn btn-upper btn-positive btn-add">{% trans "Add to look" %}</a>
+            <a href="#" class="btn btn-success btn-add">{% trans "Add to look" %}</a>
         </div>
-
-        {% if object.original_currency_list %}
-        <div class="product-original-currency">
-            {% blocktrans with object.original_currency_list|join:", " as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}
-        </div>
-        {% endif %}
     </div>
     {% endcache %}
 

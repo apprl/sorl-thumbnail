@@ -50,11 +50,11 @@ App.Views.LookEdit = Backbone.View.extend({
         }
 
         // TODO: move this to another view or expand this view
-        $('.button-container').on('click', '.btn-reset', _.bind(this.look_reset, this))
-                              .on('click', '.btn-delete', _.bind(this.look_delete, this))
-                              .on('click', '.btn-save', _.bind(this.look_save, this))
-                              .on('click', '.btn-publish', _.bind(this.look_publish, this))
-                              .on('click', '.btn-unpublish', _.bind(this.look_unpublish, this));
+        $('.body-header').on('click', '.btn-reset', _.bind(this.look_reset, this))
+                         .on('click', '.btn-delete', _.bind(this.look_delete, this))
+                         .on('click', '.btn-save', _.bind(this.look_save, this))
+                         .on('click', '.btn-publish', _.bind(this.look_publish, this))
+                         .on('click', '.btn-unpublish', _.bind(this.look_unpublish, this));
 
         this.model.on('change:published', function(model, value, options) {
             if(value === false) {

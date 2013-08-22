@@ -8,7 +8,7 @@ App.Views.LookEditFilterTabs = Backbone.View.extend({
 
     initialize: function() {
         var $tab_likes = this.$el.find('.tab-likes');
-        if($tab_likes.hasClass('selected')) {
+        if($tab_likes.parent().hasClass('active')) {
             this.model.set('user_id', $tab_likes.data('user'), {silent: true});
         }
     },
@@ -25,8 +25,9 @@ App.Views.LookEditFilterTabs = Backbone.View.extend({
             this.model.unset('user_id');
         }
 
-        $target.parent().siblings().find('a').removeClass('selected');
-        $target.addClass('selected');
+        $target.parent().siblings().removeClass('active');
+        //$target.parent().siblings().find('a').removeClass('selected');
+        $target.parent().addClass('active');
 
         e.preventDefault();
     }
