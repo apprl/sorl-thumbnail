@@ -1,4 +1,5 @@
 {% load i18n follow_tags humanize apparel_extras thumbnail %}
+{% load static from staticfiles %}
 
 <div class="user-medium panel" id="user-medium-{{ profile.pk }}">
     <div class="panel-heading">
@@ -22,7 +23,7 @@
             {% thumbnail x.1 "192x192" crop="center" format="PNG" as im %}
             <li class="col-xs-6"><a href="{{ x.0 }}"><img class="img-responsive" src="{{ im.url}}"></a></li>
             {% empty %}
-            <li class="col-xs-6"><a href="{{ profile.get_absolute_url }}"><img class="img-responsive" src="{{ profile.avatar_large }}"></a></li>
+            <li class="col-xs-6"><a href="{{ profile.get_absolute_url }}"><img class="img-responsive" src="{% static 'images/brand-avatar-large.png' %}"></a></li>
             {% endthumbnail %}
             {% endfor %}
         </ul>

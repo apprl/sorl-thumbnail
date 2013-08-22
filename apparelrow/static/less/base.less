@@ -83,12 +83,12 @@
 
 // Success button (used for positive actions and more visible actions)
 .btn-success {
-    .button-variant(#ffffff, @light_green_color, @light_green_color);
+    .button-variant(#ffffff, @brand-success, @brand-success);
 }
 
 // Danger button (used for negative actions)
 .btn-danger {
-    .button-variant(#ffffff, @like-color, @like-color);
+    .button-variant(#ffffff, @brand-danger, @brand-danger);
 }
 
 // Like button
@@ -103,7 +103,7 @@
 
 // Facebook button
 .btn-facebook {
-    .button-variant(#ffffff, #3b5999, #3b5999);
+    .button-variant(#ffffff, @brand-facebook, @brand-facebook);
     .btn-facebook-icon {
         display: inline-block;
         width: 16px;
@@ -222,10 +222,10 @@ body {
                 font-size: 22px;
             }
             a {
-                color: #aaaaaa;
+                color: @gray-light;
                 text-decoration: none;
                 &:hover, &.selected {
-                    color: #000000;
+                    color: @gray-dark;
                 }
             }
         }
@@ -275,10 +275,10 @@ body {
         padding-left: 0;
         padding-right: 15px;
         a {
-            color: #aaaaaa;
+            color: @gray-light;
             text-decoration: none;
             &:hover, &.selected {
-                color: #000000;
+                color: @gray-dark;
             }
         }
     }
@@ -344,7 +344,7 @@ body {
         -webkit-box-shadow: none;
     }
     .navbar-nav > li > a {
-        font-weight: bold;
+        font-weight: 500;
         &.dropdown-avatar {
             padding-top: 9px;
             padding-bottom: 9px;
@@ -447,9 +447,15 @@ body.index {
         a {
             width: 100%;
             display: inline-block;
-            font-size: 24px;
+            font-size: 22px;
+            @media (min-width: @screen-tablet) {
+                font-size: 24px;
+            }
             font-weight: bold;
             color: #ffffff;
+            &:hover {
+                color: darken(#ffffff, 35%);
+            }
             span {
                 padding-left: 20px;
                 font-size: 24px;
@@ -457,7 +463,7 @@ body.index {
                 top: 14px;
                 right: 15px;
             }
-            @media (min-width: @screen-desktop) {
+            @media (min-width: @screen-tablet) {
                 width: auto;
                 span {
                     right: auto;
@@ -507,7 +513,7 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         .panel-heading { min-height: 150px; }
         .panel-body .caption { display: none; }
         p {
-            font-weight: bold;
+            font-weight: 500;
             color: @blue-gray-color;
         }
     }
@@ -518,12 +524,18 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         margin-top: 0;
         margin-bottom: 0;
         h1 {
-            font-size: 32px;
+            font-size: 22px;
+            @media (min-width: @screen-tablet) {
+                font-size: 32px;
+            }
             margin-bottom: 20px;
         }
         .close {
             color: #ffffff;
             font-size: 40px;
+            position: absolute;
+            top: 10px;
+            right: 15px;
         }
     }
 
@@ -599,13 +611,6 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         }
         img {
             margin-bottom: 10px;
-        }
-        p > a {
-            font-weight: bold;
-            color: #000000;
-            &:hover {
-                text-decoration: underline;
-            }
         }
     }
     .panel-body {
@@ -704,12 +709,10 @@ footer {
     h4 {
         text-align: center;
         font-size: 14px;
-        font-weight: bold;
         margin: 0;
         a {
             display: inline-block;
             padding: 6px 0;
-            color: #000000;
             white-space: nowrap;
             overflow-x: hidden;
             text-overflow: ellipsis;
@@ -717,18 +720,15 @@ footer {
         }
     }
     ul {
-        font-weight: bold;
+        font-weight: 500;
         text-align: center;
         margin: 0;
     }
     p {
-        font-weight: bold;
+        font-weight: 500;
         min-height: 20px;
         margin: 0;
         text-align: center;
-        a {
-            color: #000000;
-        }
     }
     .hover {
         display: none;
@@ -854,15 +854,7 @@ body.shop, body.profile-likes {
                 .reset {
                     margin: 5px 0;
                     display: none;
-                    color: #000000;
                     text-decoration: none;
-                    .glyphicon:before {
-                        vertical-align: text-top;
-                        font-size: 16px;
-                    }
-                    &:hover {
-                        color: @dark_gray_color;
-                    }
                 }
             }
             &.active .panel-body .reset { display: block; }
@@ -873,7 +865,6 @@ body.shop, body.profile-likes {
         li > a {
             display: inline-block;
             padding: 2px 0;
-            color: #000000;
             &:before {
                 margin-right: 5px;
                 display: inline-block;
@@ -1123,7 +1114,6 @@ body.shop, body.profile-likes {
         #selected-manufacturers li a {
             display: inline-block;
             padding: 2px 0;
-            color: #000000;
             &:before {
                 margin-right: 5px;
                 display: inline-block;
@@ -1144,7 +1134,6 @@ body.shop, body.profile-likes {
             li > a {
                 display: inline-block;
                 padding: 2px 0;
-                color: #000000;
                 &:before {
                     margin-right: 5px;
                     display: inline-block;
@@ -1163,7 +1152,6 @@ body.shop, body.profile-likes {
     #product-stores ul > li > a {
         display: inline-block;
         padding: 2px 0;
-        color: #000000;
         &:before {
             margin-right: 5px;
             display: inline-block;

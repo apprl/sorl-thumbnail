@@ -159,7 +159,7 @@ class User(AbstractUser):
 
         if len(items) < 4:
             for _ in xrange(4 - len(items)):
-                items.append((False, self.avatar_large))
+                items.append((False, False))
 
         return items
 
