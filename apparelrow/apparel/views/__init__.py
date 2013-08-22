@@ -211,18 +211,12 @@ def follow_unfollow(request, profile_id, do_follow=True):
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, published=True, gender__isnull=False)
 
-    is_in_wardrobe = False
-    user_looks = []
+    is_liked = False
     if request.user.is_authenticated():
-        user_looks = Look.published_objects.filter(user=request.user)
-        is_in_wardrobe = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
+        is_liked = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
 
     looks_with_product = Look.published_objects.filter(components__product=product).distinct().order_by('-modified')[:2]
-    looks_with_product_count = Look.published_objects.filter(components__product=product).distinct().count()
-
-    # Comments
-    content_type = ContentType.objects.get_for_model(Product)
-    comments =  Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_public=True, is_removed=False).select_related('user')
+    #looks_with_product_count = Look.published_objects.filter(components__product=product).distinct().count()
 
     # Likes
     likes = product.likes.filter(active=True).order_by('modified').select_related('user')
@@ -240,16 +234,6 @@ def product_detail(request, slug):
     product_brand_full_url = ''
     if product.manufacturer and product.manufacturer.user:
         product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
-
-    # Partner user
-    product_short_link = None
-    if request.user.is_authenticated() and request.user.is_partner:
-        try:
-            partner_short = ShortProductLink.objects.get(product=product, user=request.user)
-            product_short_link = reverse('product-short-link', args=[partner_short.link()])
-            product_short_link = request.build_absolute_uri(product_short_link)
-        except ShortProductLink.DoesNotExist:
-            pass
 
     # More like this body
     mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors), ', '.join([x.name for x in product.categories]))
@@ -269,19 +253,16 @@ def product_detail(request, slug):
             'apparel/product_detail.html',
             {
                 'object': product,
-                'user_looks': user_looks,
-                'is_in_wardrobe': is_in_wardrobe,
+                'is_liked': is_liked,
                 'looks_with_product': looks_with_product,
-                'looks_with_product_count': looks_with_product_count,
+                #'looks_with_product_count': looks_with_product_count,
                 'object_url': request.build_absolute_uri(),
                 'more_like_this': more_like_this_product(mlt_body, product.gender, 20),
-                'comments': comments,
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
                 'product_full_image': product_full_image,
                 'product_brand_full_url': product_brand_full_url,
                 'likes': regular_likes,
                 'partner_likes': partner_likes,
-                'product_short_link': product_short_link,
                 'referral_sid': referral_sid,
                 'alternative': alternative,
                 'alternative_url': alternative_url,

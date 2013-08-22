@@ -59,6 +59,12 @@
 // All buttons
 .btn {
     border-radius: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    &.btn-sm, &.btn-xs {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
 }
 
 // Default button (used for non-important actions)
@@ -113,6 +119,14 @@
 //
 // Changes to bootstrap components
 // ----------------------------------------------------------------------------
+
+a {
+    font-weight: 500;
+    &:hover, &:focus {
+        color: lighten(@brand-primary, 25%);
+        text-decoration: none;
+    }
+}
 
 .dropdown-menu {
     border-radius: 0;
@@ -194,10 +208,10 @@ body {
         }
     }
 
-    h1 + ul {
+    h1 + ul, h1 + h2 {
         margin-bottom: 0;
         display: inline-block;
-        li, li > h2 {
+        li, li > h2, & {
             font-size: 16px;
             font-weight: 500;
             @media screen and (min-width: @grid-float-breakpoint) {
@@ -1194,3 +1208,7 @@ body.shop, body.profile-likes {
 // Load profile css
 // -------------------------
 @import "./profile.less";
+
+// Load product css
+// -------------------------
+@import "./product.less";

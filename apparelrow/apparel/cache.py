@@ -22,6 +22,8 @@ def invalidate_template_cache(fragment_name, variables):
 new_template_cache_map = {
     'Product': {
         'product_detail_fragment': ['id_language', lambda x: x.pk],
+        'product_detail_selected_by': ['id_language', lambda x: x.pk],
+        'product_detail_likes': ['id_language', lambda x: x.pk],
         'product_detail_metaextra': ['id_language', lambda x: x.pk],
         'product_detail_title': ['id_language', lambda x: x.pk],
         'product_popup': ['id_language', lambda x: x.pk],
@@ -33,6 +35,8 @@ new_template_cache_map = {
     },
     'VendorProduct': {
         'product_detail_fragment': ['id_language', lambda x: x.product_id],
+        'product_detail_likes': ['id_language', lambda x: x.product_id],
+        'product_detail_selected_by': ['id_language', lambda x: x.product_id],
         'product_detail_metaextra': ['id_language', lambda x: x.product_id],
         'product_detail_title': ['id_language', lambda x: x.product_id],
         'product_popup': ['id_language', lambda x: x.product_id],
@@ -44,6 +48,8 @@ new_template_cache_map = {
     },
     'ProductLike': {
         'product_detail_fragment': ['id_language', lambda x: x.product_id],
+        'product_detail_likes': ['id_language', lambda x: x.product_id],
+        'product_detail_selected_by': ['id_language', lambda x: x.product_id],
         'product_detail_metaextra': ['id_language', lambda x: x.product_id],
         'product_detail_title': ['id_language', lambda x: x.product_id],
         'product_popup': ['id_language', lambda x: x.product_id],
@@ -95,11 +101,7 @@ new_template_cache_map = {
         'look_large_content': ['id_language', lambda x: x.look_id],
         'look_large_footer': ['id_language', lambda x: x.look_id],
         'user_medium': ['id_language', lambda x: x.user_id],
-    },
-    'Comment': {
-        'look_medium_footer': ['id_language', lambda x: x.object_pk],
-        'look_large_footer': ['id_language', lambda x: x.object_pk],
-    },
+    }
 }
 
 AVAILABLE_GENDERS = ['M', 'W']

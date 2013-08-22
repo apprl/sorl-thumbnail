@@ -66,7 +66,7 @@ def more_alternatives(product, limit):
     docs = search.get_docs()
     if docs:
         shop_reverse = 'shop-men' if product.gender == 'M' else 'shop-women'
-        shop_url = '%s#category=%s' % (reverse(shop_reverse), product.category_id)
+        shop_url = '%s?category=%s' % (reverse(shop_reverse), product.category_id)
         if colors_pk:
             shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
 
