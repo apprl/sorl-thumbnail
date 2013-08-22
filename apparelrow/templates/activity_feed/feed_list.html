@@ -48,3 +48,15 @@
     </div>
 
 {% endblock %}
+
+{% block body-scripts %}
+<script type="text/javascript">
+(function() {
+    currencyConversion($('.feed-list').find('.price, .discount-price'));
+    $(document).on('infinite_scroll_data', function(event, content) {
+        currencyConversion(content.find('.price, .discount-price'));
+    });
+})()
+
+</script>
+{% endblock %}

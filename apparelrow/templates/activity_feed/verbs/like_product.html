@@ -1,7 +1,7 @@
 {% extends 'activity_feed/verbs/base.html' %}
 {% load i18n cache %}
 
-{% block activity_header %}<a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "liked" %}</span>{% endblock %}
+{% block activity_header %}<a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "likes" %}</span>{% endblock %}
 {% block activity_content %}
     {% cache CACHE_TIMEOUT product_medium object.object_id LANGUAGE_CODE %}
     {% include 'apparel/fragments/product_medium.html' with object=object.activity_object %}

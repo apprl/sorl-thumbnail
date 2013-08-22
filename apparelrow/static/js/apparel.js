@@ -896,10 +896,10 @@ jQuery(document).ready(function() {
                         newPagination = $data.filter('.pagination'),
                         content = newPagination.prev();
 
+                    $(document).trigger('infinite_scroll_data', [content]);
+
                     $container.append(content.html());
                     $pagination.html(newPagination.html());
-
-                    $(document).trigger('infinite_scroll_data', [content]);
 
                     if('function' == typeof callback) callback();
                 });

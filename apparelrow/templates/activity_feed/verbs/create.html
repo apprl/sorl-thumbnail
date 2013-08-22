@@ -3,7 +3,7 @@
 
 {% block activity_header %}<a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "created a look" %}</span>{% endblock %}
 {% block activity_content %}
-    {% cache CACHE_TIMEOUT look_medium object.object_id LANGUAGE_CODE %}
-    {% include 'apparel/fragments/look_medium.html' with object=object.activity_object %}
+    {% cache CACHE_TIMEOUT look_medium_featured object.object_id LANGUAGE_CODE %}
+    {% include 'apparel/fragments/look_medium.html' with object=object.activity_object featured=True %}
     {% endcache %}
 {% endblock %}
