@@ -138,7 +138,7 @@
                     {% endif %}
                     <li class="{% selected_url request "/shop" "/products" %}"><a href="{% gender_url APPAREL_GENDER 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
                     <li class="{% selected_url request "/looks" %}"><a href="{% gender_url APPAREL_GENDER 'look-list' %}"><span>{% trans "Looks" %}</span></a></li>
-                    <li class="{% selected_url request "/brands" "/users" %}"><a href="{% gender_url APPAREL_GENDER 'user-list' %}"><span>{% trans "Discover" %}</span></a></li>
+                    <li class="{% selected_url request "/brands" "/users" %}"><a href="{% url 'user-list' %}"><span>{% trans "Discover" %}</span></a></li>
                 </ul>
             </div>
         </div>
