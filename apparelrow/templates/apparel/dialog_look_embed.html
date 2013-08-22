@@ -1,8 +1,48 @@
-{% extends "base.html" %}
 {% load i18n %}
 {% load static from staticfiles %}
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">{% trans "Embed look on your site / blog" %}</h4>
+        </div>
+        <div class="modal-body">
 
-{% block 'extra-scripts' %}
+            <p>{% trans "It's easy to embed a look on your blog/site.  Enter your preferred format below and paste the embed-code (In HTML-mode) into your blog/site." %}</p>
+
+            <form id="embed_look_form" class="form">
+                <div class="form-group">
+                    <label class="control-label" for="id_look_width">{% trans "Width" %}</label>
+                    <div class="input-group">
+                        <input id="id_look_width" type="text" name="width" class="form-control" placeholder="600">
+                        <span class="input-group-addon">{% trans "pixels" %}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="id_look_language">{% trans "Language" %}</label>
+                    <div class="controls">
+                        <select id="id_look_language" name="language" class="form-control">
+                            {% for language in LANGUAGES %}
+                            <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block">{% trans "Get embed code" %}</button>
+                </div>
+                <div class="form-group" style="display:none;">
+                    <label class="control-label" for="id_look_embed_code">{% trans "Embed code" %}</label>
+                    <textarea class="form-control" id="id_look_embed_code" rows="8" name="embed_code"></textarea>
+                </div>
+            </form>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     function updateQueryStringParameter(uri, key, value) {
         var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
@@ -13,77 +53,36 @@
             return uri + separator + key + "=" + value;
         }
     }
-    jQuery(document).ready(function() {
-        jQuery('#id_embed_code')
+$(document).ready(function() {
+        $('#modal_embed_look').on('show.bs.modal', function () {
+            $('#id_look_embed_code').parent().hide();
+        });
+        $('#id_look_embed_code')
             .focus(function(e) { this.select(); })
             .mouseup(function(e) { e.preventDefault() });
 
-        jQuery('#embed_shop_form').on('submit', function() {
+        $('#embed_look_form').on('submit', function() {
             var data = {
-                width: jQuery('#id_width').val(),
-                language: jQuery('#id_language').val(),
+                width: jQuery('#id_look_width').val(),
+                language: jQuery('#id_look_language').val(),
             };
 
+            if(!data['width']) {
+                data['width'] = '600';
+                $('#id_look_width').val(data['width']);
+            }
 
-            $('#id_embed_code').hide().parents('.control-group').show().find('.controls').append('<img style="margin-top:6px;" id="loading_image" src="{% static "images/loading_white.gif" %}">');
+            $('#id_look_embed_code').hide().parent().show().append('<img style="margin-top:6px;" id="loading_image" src="{% static "images/loading_white.gif" %}">');
 
-            jQuery.post("{% url 'look-widget' look.slug %}", data, function(response) {
+            $.post("{% url 'look-widget' look.slug %}", data, function(response) {
                 var actual_width = $(response).css('width').replace(/px/, '');
-                var width = $('#id_width').val();
-                if (actual_width != width) {
-                    $('.interval').addClass('error');
-                } else {
-                    $('.interval').removeClass('error');
-                }
-                $('#id_width').val(actual_width);
-                $('#id_embed_code').val(response).show();
+                $('#id_look_width').val(actual_width);
+                $('#id_look_embed_code').val(response).show();
                 $('#loading_image').remove();
+                $('#modal_embed_look').animate({scrollTop: 800});
             });
 
             return false;
         });
     });
 </script>
-{% endblock %}
-
-{% block body-classes %}one-column profile-embed-shop{% endblock body-classes %}
-{% block body %}
-<div id="content">
-    <h1>{% trans "Embed look on your site / blog" %}</h1>
-    <p>{% trans "It's easy to embed a look on your blog/site.  Enter your preferred format below and paste the embed-code (In HTML-mode) into your blog/site." %}</p>
-    <form id="embed_shop_form" class="form-horizontal">
-        <div class="control-group">
-            <label class="control-label" for="id_width">{% trans "Width" %}</label>
-            <div class="controls">
-                <input type="text" id="id_width" name="width" value="{{ default_width }}"> {% trans "pixels" %}<br><span class="interval">(min. 600, max. {{ max_width }})</span>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="id_language">{% trans "Language" %}</label>
-            <div class="controls">
-                <select id="id_language" name="language">
-                    {% for language in LANGUAGES %}
-                    <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <button class="btn btn-upper btn-block">{% trans "Get embed code" %}</button>
-            </div>
-        </div>
-        <div class="control-group" style="display:none;">
-            <label class="control-label" for="id_embed_code">{% trans "Embed code" %}</label>
-            <div class="controls">
-                <textarea id="id_embed_code" name="embed_code"></textarea>
-            </div>
-        </div>
-        <div class="control-group go-back">
-            <div class="controls">
-                <a class="go-back" href="{% url 'look-detail' slug=look.slug %}">{% trans "« Go back to your look" %}</a>
-            </div>
-        </div>
-    </form>
-</div>
-{% endblock %}

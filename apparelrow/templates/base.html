@@ -242,6 +242,8 @@
     {% include 'apparel/fragments/dialog_become_member.html' with request=request only %}
     {% if request.user.is_authenticated %}
     {% include 'profile/dialog_embed_shop.html' with request=request LANGUAGES=LANGUAGES only %}
+    <div class="modal fade" id="modal_embed_shop"></div>
+    <div class="modal fade" id="modal_embed_look"></div>
     {% endif %}
 
 <script type="text/javascript" src="{% static "js/money.min.js" %}"></script>

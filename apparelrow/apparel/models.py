@@ -973,7 +973,7 @@ class LookComponent(models.Model):
     # FIXME: Scale product image on initial save and store height and width
     # properties
 
-    def _style(self, scale=1):
+    def _style(self, scale=1, percentage=False):
         s = []
 
         if self.component_of == 'P':
@@ -989,7 +989,7 @@ class LookComponent(models.Model):
         else:
             for attr in ('top', 'left', 'width', 'height'):
                 if(attr in self.__dict__.keys() and self.__dict__[attr] is not None):
-                    s.append("%s: %spx;" % (attr, self.__dict__[attr] * scale))
+                    s.append("%s: %spx;" % (attr, self.__dict__[attr] * scale),)
 
         if self.z_index:
             s.append('z-index: %s;' % (self.z_index,))
@@ -1024,6 +1024,26 @@ class LookComponent(models.Model):
     @property
     def style_search(self):
         return self._style(self._calculate_width(200, 149) / float(self.look.width))
+
+    @property
+    def style_percentage(self):
+        s = []
+        s.append('width: %s%%;' % (self.width / float(self.look.width) * 100,))
+        s.append('height: %s%%;' % (self.height / float(self.look.height) * 100,))
+        s.append('top: %s%%;' % (self.top / float(self.look.height) * 100,))
+        s.append('left: %s%%;' % (self.left / float(self.look.width) * 100,))
+
+        if self.z_index:
+            s.append('z-index: %s;' % (self.z_index,))
+
+        if self.rotation:
+            s.append('transform: rotate(%sdeg); ' % self.rotation)
+            s.append('-moz-transform: rotate(%sdeg); ' % self.rotation)
+            s.append('-webkit-transform: rotate(%sdeg); ' % self.rotation)
+            s.append('-o-transform: rotate%sdeg); ' % self.rotation)
+            s.append('-ms-transform: rotate(%sdeg); ' % self.rotation)
+
+        return ' '.join(s)
 
     @property
     def style(self):

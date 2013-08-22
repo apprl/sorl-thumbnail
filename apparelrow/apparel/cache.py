@@ -23,7 +23,6 @@ new_template_cache_map = {
     'Product': {
         'product_detail_fragment': ['id_language', lambda x: x.pk],
         'product_detail_selected_by': ['id_language', lambda x: x.pk],
-        'product_detail_likes': ['id_language', lambda x: x.pk],
         'product_detail_metaextra': ['id_language', lambda x: x.pk],
         'product_detail_title': ['id_language', lambda x: x.pk],
         'product_popup': ['id_language', lambda x: x.pk],
@@ -35,7 +34,6 @@ new_template_cache_map = {
     },
     'VendorProduct': {
         'product_detail_fragment': ['id_language', lambda x: x.product_id],
-        'product_detail_likes': ['id_language', lambda x: x.product_id],
         'product_detail_selected_by': ['id_language', lambda x: x.product_id],
         'product_detail_metaextra': ['id_language', lambda x: x.product_id],
         'product_detail_title': ['id_language', lambda x: x.product_id],
@@ -76,7 +74,7 @@ new_template_cache_map = {
     'LookComponent': {
         'look_small': ['id_language', lambda x: x.look_id],
         'look_small_like': ['id_language', lambda x: x.look_id],
-        'look_small_like_product': ['id_language', lambda x: x.pk],
+        'look_small_like_product': ['id_language', lambda x: x.look_id],
         'look_detail1': ['id_language', lambda x: x.look_id],
         'look_detail2': ['id_language', lambda x: x.look_id],
         'look_detail3': ['id_language', lambda x: x.look_id],
@@ -90,7 +88,8 @@ new_template_cache_map = {
     'LookLike': {
         'look_small': ['id_language', lambda x: x.look_id],
         'look_small_like': ['id_language', lambda x: x.look_id],
-        'look_small_like_product': ['id_language', lambda x: x.pk],
+        'look_small_like_product': ['id_language', lambda x: x.look_id],
+        'look_detail_likes': ['id_language', lambda x: x.look_id],
         'look_detail1': ['id_language', lambda x: x.look_id],
         'look_detail2': ['id_language', lambda x: x.look_id],
         'look_detail3': ['id_language', lambda x: x.look_id],

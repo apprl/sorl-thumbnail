@@ -101,7 +101,7 @@ $(document).ready(function() {
                .on('click', 'body.page-shop #content a.btn-buy', trackEvent('Shop', 'BuyReferral'))
                .on('click', 'body.profile #content a.btn-buy', trackEvent('Profile', 'BuyReferral'))
                .on('click', 'body.feed #content a.btn-buy', trackEvent('Feed', 'BuyReferral'))
-               .on('click', '.tooltip a.btn-buy', trackEvent('Look', 'BuyReferral'));
+               .on('click', '.popover-product a.btn-buy', trackEvent('Look', 'BuyReferral'));
 
     // Track likes
     $(document).on('click', 'body.product .btn-product-like', trackEvent('Product', 'ProductLike'))
@@ -211,24 +211,21 @@ $(document).ready(function() {
     });
 
     // Look-like and hotspots
-    if (!is_mobile()) {
-        $('.look-medium .hotspot, .look-large .hotspot').hide();
-        // Hide hotspots and look-like on new data from infinite scroll plugin
-        $(document).on('infinite_scroll_data', function(e) {
-            $('.look-medium .hotspot, .look-large .hotspot').hide();
-        });
-        // Look medium and large hotspot hover
-        $(document).on('mouseenter', '.look-medium, .look-large', function() { $('.hotspot', this).show(); })
-                   .on('mouseleave', '.look-medium, .look-large', function() { $('.hotspot').hide(); });
-    } else {
-        $(document).on('infinite_scroll_data', function(e) {
-            $('.hotspot').show();
-        });
-        $('.hotspot').show();
-    }
-
-    // Enable tooltip for large and medium looks
-    jQuery().enableApprlTooltip('.look-large .product');
+    //if (!is_mobile()) {
+        //$('.look-medium .hotspot, .look-large .hotspot').hide();
+        //// Hide hotspots and look-like on new data from infinite scroll plugin
+        //$(document).on('infinite_scroll_data', function(e) {
+            //$('.look-medium .hotspot, .look-large .hotspot').hide();
+        //});
+        //// Look medium and large hotspot hover
+        //$(document).on('mouseenter', '.look-medium, .look-large', function() { $('.hotspot', this).show(); })
+                   //.on('mouseleave', '.look-medium, .look-large', function() { $('.hotspot').hide(); });
+    //} else {
+        //$(document).on('infinite_scroll_data', function(e) {
+            //$('.hotspot').show();
+        //});
+        //$('.hotspot').show();
+    //}
 
     // Click on like buttons
     $(document).on('click', '.btn-product-like', {type: 'product'}, ApparelActivity.like_handler)

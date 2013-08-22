@@ -1,3 +1,34 @@
+.look-detail-page {
+    .body-header {
+        border-bottom: 0;
+        margin-bottom: 15px;
+        h2 {
+            color: @btn-custom-default-color;
+        }
+    }
+
+    h3 {
+        font-size: 14px;
+        border-bottom: 3px solid #000000;
+        padding-bottom: 5px;
+    }
+
+    // Looks component
+    .list-looks {
+        .make-row(10px);
+        .col-list-look {
+            .make-sm-column(6, 10px);
+            @media (min-width: @screen-desktop) {
+                .make-sm-column(12, 10px);
+            }
+            img {
+                margin: 0 auto;
+            }
+        }
+    }
+}
+
+
 .look-create-page {
    .look-choice {
        margin-bottom: 20px;
@@ -13,6 +44,36 @@
            margin-bottom: 30px;
        }
    }
+}
+
+//
+// Look product popovers
+// -----------------------------------------------------------------------------
+
+.popover {
+    border-radius: 0;
+    .popover-content {
+        padding: 9px;
+    }
+    .popover-product {
+        min-width: 200px;
+        max-width: 280px;
+        h4 {
+            font-size: 14px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        ul {
+            margin-bottom: 0;
+            li:first-child {
+                padding-left: 0;
+                padding-right: 10px;
+            }
+            li:last-child {
+                padding: 0;
+            }
+        }
+    }
 }
 
 //
@@ -88,6 +149,17 @@
         left: auto;
         right: 5px;
         top: 5px;
+    }
+}
+
+.look-large {
+    position: relative;
+    &.collage {
+        height: 524px;
+        border: 1px solid @gray-lighter;
+    }
+    .product {
+        position: absolute;
     }
 }
 

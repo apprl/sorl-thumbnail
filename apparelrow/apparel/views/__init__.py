@@ -542,7 +542,11 @@ def look_detail(request, slug):
     if not look.published and look.user != request.user:
         raise Http404()
 
-    looks_by_user = Look.published_objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:8]
+    is_liked = False
+    if request.user.is_authenticated():
+        is_liked = LookLike.objects.filter(user=request.user, look=look, active=True).exists()
+
+    looks_by_user = Look.published_objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:4]
 
     look_created = False
     if 'look_created' in request.session:
@@ -588,7 +592,8 @@ def look_detail(request, slug):
                 'look_saved': look_saved,
                 'look_created': look_created,
                 'likes': likes,
-                'base_url': base_url
+                'base_url': base_url,
+                'is_liked': is_liked,
             },
             context_instance=RequestContext(request),
         )
