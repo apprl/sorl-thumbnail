@@ -1,23 +1,19 @@
 {% load i18n %}
 
-<form action="{{ request.path }}" method="post" class="form-horizontal"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %}>
+<form action="{{ request.path }}" method="post"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %} class="default-form">
     {% csrf_token %}
     {% block extra_fields %}{% endblock %}
 
     {% for field in form %}
     <div class="form-group">
-        <label for="id_{{ field.html_name }}" class="col-sm-2 control-label">{{ field.label }}</label>
-        <div class="col-sm-10">
-            {{ field }}
-        </div>
+        <label for="id_{{ field.html_name }}" class="control-label">{{ field.label }}</label>
+        {{ field }}
         {{ field.errors }}
     </div>
     {% endfor %}
 
     <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary">{% trans submit_text %}</button>
-        </div>
+        <button type="submit" class="btn btn-primary">{% trans submit_text %}</button>
     </div>
 
 </form>

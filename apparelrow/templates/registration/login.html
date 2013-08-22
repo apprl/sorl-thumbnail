@@ -13,7 +13,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-5">
             {% url 'login-flow-redirect' as next_url %}
             {% if request.GET.next %}
             {% with next_url|add:"?next="|add:request.GET.next as next_url_extra %}{% facebook_button next=next_url_extra %}{% endwith %}
@@ -21,38 +21,31 @@
             {% facebook_button next=next_url %}
             {% endif %}
             <br><p>{% trans "or:" %}</p>
+
+            <form action="{% url 'auth_login' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
+                <div class="form-group{% if form.errors %} has-error{% endif %}">
+                    <label for="inputEmail" class="control-label">{{ form.username.label }}</label>
+                    <input name="username" type="text" class="form-control" id="inputEmail" placeholder="{{ form.username.label }}">
+                </div>
+                <div class="form-group{% if form.errors %} has-error{% endif %}">
+                    <label for="inputPassword" class="control-label">{{ form.password.label }}</label>
+                    <input name="password" type="password" class="form-control" id="inputPassword" placeholder="{{ form.password.label }}">
+                </div>
+                <div class="form-group">
+                    {% if form.errors %}
+                    <p>{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
+                </div>
+                <div class="form-group">
+                    <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
+                    <a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
+                </div>
+            </form>
+
         </div>
     </div>
-
-    <form action="{% url 'auth_login' %}" method="post" class="form-horizontal">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
-        <div class="form-group{% if form.errors %} has-error{% endif %}">
-            <label for="inputEmail" class="col-sm-2 control-label">{{ form.username.label }}</label>
-            <div class="col-sm-4">
-                <input name="username" type="text" class="form-control" id="inputEmail" placeholder="{{ form.username.label }}">
-            </div>
-        </div>
-        <div class="form-group{% if form.errors %} has-error{% endif %}">
-            <label for="inputPassword" class="col-sm-2 control-label">{{ form.password.label }}</label>
-            <div class="col-sm-4">
-                <input name="password" type="password" class="form-control" id="inputPassword" placeholder="{{ form.password.label }}">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-4 col-sm-offset-2">
-                {% if form.errors %}
-                <p>{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
-                {% endif %}
-                <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-4 col-sm-offset-2">
-                <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
-                <a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
-            </div>
-        </div>
-    </form>
 
 {% endblock %}

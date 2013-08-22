@@ -12,80 +12,70 @@
         </div>
     </div>
 
-    <form action="{% url 'auth_register_email' %}" method="post" class="form-horizontal">
-        {% csrf_token %}
+    <div class="row">
+        <div class="col-sm-5">
 
-        <div class="form-group{% if form.first_name.errors %} has-error{% endif %}">
-            <label for="id_{{ form.first_name.html_name }}" class="col-sm-2 control-label">{{ form.first_name.label }}</label>
-            <div class="col-sm-4">
-                <input name="{{ form.first_name.html_name }}" type="text" class="form-control" id="id_{{ form.first_name.html_name }}" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}" placeholder="{{ form.first_name.label }}">
-            </div>
-        </div>
+            <form action="{% url 'auth_register_email' %}" method="post">
+                {% csrf_token %}
 
-        <div class="form-group{% if form.last_name.errors %} has-error{% endif %}">
-            <label for="id_{{ form.last_name.html_name }}" class="col-sm-2 control-label">{{ form.last_name.label }}</label>
-            <div class="col-sm-4">
-                <input name="{{ form.last_name.html_name }}" type="text" class="form-control" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" placeholder="{{ form.last_name.label }}">
-            </div>
-        </div>
-
-        <div class="form-group{% if form.username.errors %} has-error{% endif %}">
-            <label for="id_{{ form.username.html_name }}" class="col-sm-2 control-label">{{ form.username.label }}</label>
-            <div class="col-sm-4">
-                <input name="{{ form.username.html_name }}" type="text" class="form-control" id="id_{{ form.username.html_name }}" value="{% if form.username.value %}{{ form.username.value }}{% endif %}" placeholder="{{ form.username.label }}">
-            </div>
-        </div>
-
-        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-            <label for="id_{{ form.email.html_name }}" class="col-sm-2 control-label">{{ form.email.label }}</label>
-            <div class="col-sm-4">
-                <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" placeholder="{{ form.email.label }}">
-            </div>
-        </div>
-
-        <div class="form-group{% if form.password1.errors %} has-error{% endif %}">
-            <label for="id_{{ form.password1.html_name }}" class="col-sm-2 control-label">{{ form.password1.label }}</label>
-            <div class="col-sm-4">
-                <input name="{{ form.password1.html_name }}" type="password" class="form-control" id="id_{{ form.password1.html_name }}" placeholder="{{ form.password1.label }}">
-            </div>
-        </div>
-
-        <div class="form-group{% if form.password2.errors %} has-error{% endif %}">
-            <label for="id_{{ form.password2.html_name }}" class="col-sm-2 control-label">{{ form.password2.label }}</label>
-            <div class="col-sm-4">
-                <input name="{{ form.password2.html_name }}" type="password" class="form-control" id="id_{{ form.password2.html_name }}" placeholder="{{ form.password2.label }}">
-            </div>
-        </div>
-
-        <div class="form-group{% if form.gender.errors %} has-error{% endif %}">
-            <label class="col-sm-2 control-label">{{ form.gender.label }}</label>
-            <div class="col-sm-4">
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M" checked>
-                        {% trans "Man" %}
-                    </label>
+                <div class="form-group{% if form.first_name.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.first_name.html_name }}" class="control-label">{{ form.first_name.label }}</label>
+                    <input name="{{ form.first_name.html_name }}" type="text" class="form-control" id="id_{{ form.first_name.html_name }}" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}" placeholder="{{ form.first_name.label }}">
                 </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W">
-                        {% trans "Woman" %}
-                    </label>
+
+                <div class="form-group{% if form.last_name.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.last_name.html_name }}" class="control-label">{{ form.last_name.label }}</label>
+                    <input name="{{ form.last_name.html_name }}" type="text" class="form-control" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" placeholder="{{ form.last_name.label }}">
                 </div>
-            </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-sm-4 col-sm-offset-2">
-                <button type="submit" class="btn btn-primary">{% trans "Sign up" %}</button>
-            </div>
-        </div>
+                <div class="form-group{% if form.username.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.username.html_name }}" class="control-label">{{ form.username.label }}</label>
+                    <input name="{{ form.username.html_name }}" type="text" class="form-control" id="id_{{ form.username.html_name }}" value="{% if form.username.value %}{{ form.username.value }}{% endif %}" placeholder="{{ form.username.label }}">
+                </div>
 
-        <div class="form-group">
-            {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
-            <p>{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
-        </div>
+                <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.email.html_name }}" class="control-label">{{ form.email.label }}</label>
+                    <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" placeholder="{{ form.email.label }}">
+                </div>
 
-    </form>
+                <div class="form-group{% if form.password1.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.password1.html_name }}" class="control-label">{{ form.password1.label }}</label>
+                    <input name="{{ form.password1.html_name }}" type="password" class="form-control" id="id_{{ form.password1.html_name }}" placeholder="{{ form.password1.label }}">
+                </div>
+
+                <div class="form-group{% if form.password2.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.password2.html_name }}" class="control-label">{{ form.password2.label }}</label>
+                    <input name="{{ form.password2.html_name }}" type="password" class="form-control" id="id_{{ form.password2.html_name }}" placeholder="{{ form.password2.label }}">
+                </div>
+
+                <div class="form-group{% if form.gender.errors %} has-error{% endif %}">
+                    <label class="control-label">{{ form.gender.label }}</label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M" checked>
+                            {% trans "Man" %}
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W">
+                            {% trans "Woman" %}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{% trans "Sign up" %}</button>
+                </div>
+
+                <div class="form-group">
+                    {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
+                    <p>{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
+                </div>
+
+            </form>
+
+        </div>
+    </div>
 
 {% endblock %}
