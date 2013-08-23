@@ -7,7 +7,7 @@
 {% block body %}
     <div class="body-header">
         <div class="body-header-col-left">
-            <h1>{% trans "Discover" %}</h1>
+            <h1>{% trans "Follow" %}</h1>
             <ul class="list-inline">
                 <li><h2><a{% if 'users' in request.path %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'user-list' %}">{% trans "Members" %}</a></h2></li>
                 <li><h2><a{% if 'brands' in request.path %} class="selected"{% endif %} href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></h2></li>

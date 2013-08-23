@@ -495,6 +495,15 @@ body.index {
         h2 {
             margin-top: 0;
             margin-bottom: 12px;
+            @media (min-width: @screen-tablet) {
+                font-size: 22px;
+            }
+            @media (min-width: @screen-desktop) {
+                font-size: 26px;
+            }
+            @media (min-width: @screen-lg-desktop) {
+                font-size: 30px;
+            }
         }
         h2, .facepile-container {
             text-align: center;
@@ -512,7 +521,13 @@ body.index {
         width: 100%;
         padding-top: 30px;
         padding-bottom: 30px;
-        font-size: 20px;
+        font-size: 28px;
+    }
+    .featured-container .btn-follow-placeholder {
+        background-color: #000000;
+        border-color: #000000;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 }
 
@@ -528,7 +543,7 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         display: inline-block;
         height: 494px;
         margin-bottom: 50px;
-        .panel-heading { min-height: 150px; }
+        .panel-heading { min-height: 150px; max-height: 160px; }
         .panel-body .caption { display: none; }
         p {
             font-weight: 500;
