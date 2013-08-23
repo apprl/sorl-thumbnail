@@ -16,16 +16,16 @@
         <div class="body-header-col-right">
             <ul class="list-inline">
                 <li class="dropdown">
-                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if APPAREL_GENDER == 'M' %}{% trans "Men" %}{% elif APPAREL_GENDER == 'W' %}{% trans "Women" %}{% else %}{% trans "All" %}{% endif %} <span class="caret"></span></button>
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if APPAREL_GENDER == 'M' %}{% trans "Only men’s" %}{% elif APPAREL_GENDER == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
                         {% if is_brand %}
-                        <li><a href="{% url 'brand-list' %}">{% trans "All" %}</a></li>
-                        <li><a href="{% url 'brand-list-men' %}">{% trans "Men" %}</a></li>
-                        <li><a href="{% url 'brand-list-women' %}">{% trans "Women" %}</a></li>
+                        <li><a href="{% url 'brand-list' %}">{% trans "Show all" %}</a></li>
+                        <li><a href="{% url 'brand-list-men' %}">{% trans "Only men’s" %}</a></li>
+                        <li><a href="{% url 'brand-list-women' %}">{% trans "Only women’s" %}</a></li>
                         {% else %}
-                        <li><a href="{% url 'user-list' %}">{% trans "All" %}</a></li>
-                        <li><a href="{% url 'user-list-men' %}">{% trans "Men" %}</a></li>
-                        <li><a href="{% url 'user-list-women' %}">{% trans "Women" %}</a></li>
+                        <li><a href="{% url 'user-list' %}">{% trans "Show all" %}</a></li>
+                        <li><a href="{% url 'user-list-men' %}">{% trans "Only men’s" %}</a></li>
+                        <li><a href="{% url 'user-list-women' %}">{% trans "Only women’s" %}</a></li>
                         {% endif %}
                     </ul>
                 </li>

@@ -14,11 +14,11 @@
             <ul class="list-inline">
                 <li>{% include 'apparel/fragments/create_look_button.html' with request=request only %}</li>
                 <li>
-                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if APPAREL_GENDER == 'M' %}{% trans "Men" %}{% elif APPAREL_GENDER == 'W' %}{% trans "Women" %}{% else %}{% trans "All" %}{% endif %} <span class="caret"></span></button>
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if APPAREL_GENDER == 'M' %}{% trans "Only men’s" %}{% elif APPAREL_GENDER == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'look-list' %}">{% trans "All" %}</a></li>
-                        <li><a href="{% url 'look-list-men' %}">{% trans "Men" %}</a></li>
-                        <li><a href="{% url 'look-list-women' %}">{% trans "Women" %}</a></li>
+                        <li><a href="{% url 'look-list' %}">{% trans "Show all" %}</a></li>
+                        <li><a href="{% url 'look-list-men' %}">{% trans "Only men’s" %}</a></li>
+                        <li><a href="{% url 'look-list-women' %}">{% trans "Only women’s" %}</a></li>
                     </ul>
                 </li>
             </ul>
