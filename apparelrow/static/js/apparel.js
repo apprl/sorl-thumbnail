@@ -233,24 +233,30 @@ $(document).ready(function() {
                .on('mouseenter', '.btn-look-like, .btn-product-like', ApparelActivity.like_handler_enter)
                .on('mouseleave', '.btn-look-like, .btn-product-like', ApparelActivity.like_handler_leave);
 
-    // Update likes count
-    // TODO: still in use? does it work?
-    jQuery(document).on('like', function(event, element, type, id) {
-      var containers = jQuery('.' + type + '-container[data-id=' + id + ']');
-      containers.find('.heart').addClass('liked');
-      ApparelActivity.update_count(containers.find('.likes'), true);
-      ApparelActivity.update_count(jQuery('.stats-box .likes .count'), true);
-      var avatar = jQuery('.comment-poster-avatar a').clone();
-      jQuery('#likes').prepend(jQuery('<li>').append(avatar));
+    // Update likes box
+    $(document).on('like', function(event, element, type, id) {
+        if (typeof userID !== 'undefined' && !isPartnerUser) {
+            var likes_box = $('#likes-box');
+            likes_box.find('> li:first-child').after($('#user_like_template').clone().html());
+            //$('#user_like_template').clone().first().insertAfter(likes_box.find('> li:first-child'));
+            if(likes_box.find('> li').length == 1) {
+                likes_box.find('> li:first-child').removeClass('hide');
+            } else {
+                likes_box.find('> li:first-child').addClass('hide');
+            }
+        }
     });
 
-    jQuery(document).on('unlike', function(event, element, type, id) {
-      var containers = jQuery('.' + type + '-container[data-id=' + id + ']');
-      containers.find('.heart').removeClass('liked');
-      ApparelActivity.update_count(containers.find('.likes'), false);
-      ApparelActivity.update_count(jQuery('.stats-box .likes .count'), false);
-      var avatar = jQuery('.comment-poster-avatar a');
-      jQuery('#likes a[href="' + avatar.attr('href') + '"]').parent().remove();
+    $(document).on('unlike', function(event, element, type, id) {
+        if (typeof userID !== 'undefined' && !isPartnerUser) {
+            var likes_box = $('#likes-box');
+            likes_box.find('[data-user-id=' + userID + ']').remove();
+            if(likes_box.find('> li').length == 1) {
+                likes_box.find('> li:first-child').removeClass('hide');
+            } else {
+                likes_box.find('> li:first-child').addClass('hide');
+            }
+        }
     });
 
     // Product hover, works with medium

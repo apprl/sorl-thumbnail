@@ -18,6 +18,10 @@
         var look_popup_url = '{% url "look-popup" %}';
         var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
+        {% if request.user.is_authenticated %}
+        var userID = {{ request.user.pk }};
+        var isPartnerUser = {% if request.user.is_partner %}true{% else %}false{% endif %};
+        {% endif %}
         var share_settings = {
             'like_product': {% if user.is_authenticated and user.fb_share_like_product %}true{% else %}false{% endif %},
             'like_look': {% if user.is_authenticated and user.fb_share_like_look %}true{% else %}false{% endif %},
@@ -244,6 +248,9 @@
     {% include 'profile/dialog_embed_shop.html' with request=request LANGUAGES=LANGUAGES only %}
     <div class="modal fade" id="modal_embed_shop"></div>
     <div class="modal fade" id="modal_embed_look"></div>
+    <script type="text/html" id="user_like_template">
+        <li data-user-id="{{ request.user.pk }}"><a href="{{ request.user.get_absolute_url }}" title="{{ request.user.display_name }}"><img class="img-circle" alt="{{ request.user.display_name }}" title="{{ request.user.display_name }}" src="{{ request.user.avatar }}"></a></li>
+    </script>
     {% endif %}
 
 <script type="text/javascript" src="{% static "js/money.min.js" %}"></script>

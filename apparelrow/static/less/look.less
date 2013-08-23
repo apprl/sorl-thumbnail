@@ -18,13 +18,25 @@
         .make-row(10px);
         .col-list-look {
             .make-sm-column(6, 10px);
-            @media (min-width: @screen-desktop) {
-                .make-sm-column(12, 10px);
-            }
             img {
                 margin: 0 auto;
             }
         }
+    }
+
+    .btn-look-like + .btn-block, .share {
+        margin-top: 20px;
+    }
+
+    .tooltip {
+        display: none;
+    }
+
+    .look-large {
+        margin-top: 40px;
+        margin-bottom: 10px;
+        padding-top: 10px;
+        border-top: 3px solid #000000;
     }
 }
 
