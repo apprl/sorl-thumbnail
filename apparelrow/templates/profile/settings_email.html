@@ -10,6 +10,6 @@
 <form action="{% url 'settings-email' %}" method="post">{% csrf_token %}
     <p>{% trans "Current e-mail address:" %} {{ request.user.email }}</p>
     {{ email_form.as_p }}
-    <input type="submit" value="{% trans "Update" %}" />
+    <input class="btn btn-primary" type="submit" value="{% trans "Update" %}" />
 </form>
 {% endblock content %}

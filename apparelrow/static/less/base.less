@@ -120,6 +120,10 @@
 // Changes to bootstrap components
 // ----------------------------------------------------------------------------
 
+.center {
+    text-align: center;
+}
+
 a {
     font-weight: 500;
     &:hover, &:focus {
@@ -134,6 +138,20 @@ a {
 
 .modal {
     z-index: 10040;
+    .modal-content {
+        border-radius: 0;
+    }
+    .modal-header {
+        background-color: #000000;
+        color: #ffffff;
+        .close {
+            color: #ffffff;
+        }
+    }
+    .modal-footer {
+        padding: 10px;
+        margin-top: 10px;
+    }
 }
 .modal-backdrop {
     z-index: 10035;
@@ -1188,6 +1206,9 @@ body.shop, body.profile-likes {
     }
 }
 
+.settings-page h2 {
+    margin-top: 0;
+}
 
 //
 // Setup per page css
