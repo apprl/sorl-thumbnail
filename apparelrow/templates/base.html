@@ -239,11 +239,11 @@
         </select>
     </form>
 
-    {% include 'apparel/fragments/dialog_like_product.html' with request=request only %}
-    {% include 'apparel/fragments/dialog_like_look.html' with request=request only %}
-    {% include 'apparel/fragments/dialog_create_look.html' with request=request only %}
-    {% include 'apparel/fragments/dialog_follow_user.html' with request=request only %}
-    {% include 'apparel/fragments/dialog_become_member.html' with request=request only %}
+    {% include 'apparel/fragments/dialog_like_product.html' with request=request csrf_token=csrf_token next=next only %}
+    {% include 'apparel/fragments/dialog_like_look.html' with request=request csrf_token=csrf_token next=next only %}
+    {% include 'apparel/fragments/dialog_create_look.html' with request=request csrf_token=csrf_token next=next only %}
+    {% include 'apparel/fragments/dialog_follow_user.html' with request=request csrf_token=csrf_token next=next only %}
+    {% include 'apparel/fragments/dialog_become_member.html' with request=request csrf_token=csrf_token next=next only %}
     {% if request.user.is_authenticated %}
     {% include 'profile/dialog_embed_shop.html' with request=request LANGUAGES=LANGUAGES only %}
     <div class="modal fade" id="modal_embed_shop"></div>
