@@ -710,12 +710,12 @@ class Look(models.Model):
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     gender      = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=False, blank=False, default='U')
     popularity  = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
-    width       = models.IntegerField(blank=False, null=False, default=694)
-    height      = models.IntegerField(blank=False, null=False, default=524)
+    width       = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0] - 2)
+    height      = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1] - 2)
     published   = models.BooleanField(default=False)
 
-    image_width = models.IntegerField(blank=False, null=False, default=694)
-    image_height = models.IntegerField(blank=False, null=False, default=524)
+    image_width = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0] - 2)
+    image_height = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1] - 2)
 
     objects = models.Manager()
     published_objects = LookManager()

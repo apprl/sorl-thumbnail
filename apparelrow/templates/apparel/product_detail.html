@@ -190,7 +190,7 @@
                             {% for look in looks_with_product %}
                             <li class="col-list-look">
                                 {% cache CACHE_TIMEOUT look_small_like_product look.id LANGUAGE_CODE %}
-                                <a title="{{ look.title }}" href="{% if looks_with_product|length == 1 %}{% url 'look-detail' slug=look.slug %}{% else %}{% url 'product-look-list' contains=object.slug %}{% endif %}">
+                                <a title="{{ look.title }}" href="{% url 'look-detail' slug=look.slug %}">
                                     <div class="look">
                                         {% thumbnail look.static_image "300x69" crop="noop" format="PNG" transparent=True as im %}
                                         <img id="look-{{ look.id }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-responsive" />

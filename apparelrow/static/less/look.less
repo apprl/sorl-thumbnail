@@ -13,6 +13,10 @@
         padding-bottom: 5px;
     }
 
+    div > h3:first-child {
+        margin-top: 0;
+    }
+
     // Looks component
     .list-looks {
         .make-row(10px);
@@ -33,7 +37,7 @@
     }
 
     .look-large {
-        margin-top: 40px;
+        margin-top: 20px;
         margin-bottom: 10px;
         padding-top: 10px;
         border-top: 3px solid #000000;
@@ -164,12 +168,9 @@
     }
 }
 
-.look-large {
+#collage-background {
     position: relative;
-    &.collage {
-        height: 524px;
-        border: 1px solid @gray-lighter;
-    }
+    border: 1px solid @gray-lighter;
     .product {
         position: absolute;
     }
