@@ -235,10 +235,9 @@ $(document).ready(function() {
 
     // Update likes box
     $(document).on('like', function(event, element, type, id) {
-        if (typeof userID !== 'undefined' && !isPartnerUser) {
+        if (typeof userID !== 'undefined' && (!isPartnerUser || type == 'look')) {
             var likes_box = $('#likes-box');
             likes_box.find('> li:first-child').after($('#user_like_template').clone().html());
-            //$('#user_like_template').clone().first().insertAfter(likes_box.find('> li:first-child'));
             if(likes_box.find('> li').length == 1) {
                 likes_box.find('> li:first-child').removeClass('hide');
             } else {
@@ -248,7 +247,7 @@ $(document).ready(function() {
     });
 
     $(document).on('unlike', function(event, element, type, id) {
-        if (typeof userID !== 'undefined' && !isPartnerUser) {
+        if (typeof userID !== 'undefined' && (!isPartnerUser || type == 'look')) {
             var likes_box = $('#likes-box');
             likes_box.find('[data-user-id=' + userID + ']').remove();
             if(likes_box.find('> li').length == 1) {

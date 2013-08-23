@@ -93,12 +93,15 @@
 
 // Like button
 .btn-look-like, .btn-product-like {
-    &.liked > span:last-child {
+    span:last-child {
         color: @like-color;
     }
-    &:not(.liked):hover > span:last-child {
-        color: @like-color;
-    }
+    /*&.liked {*/
+        /*.btn-default;*/
+    /*}*/
+    /*&:not(.liked):hover > span:last-child {*/
+        /*color: @like-color;*/
+    /*}*/
 }
 
 // Facebook button
@@ -234,6 +237,7 @@ body {
         margin-bottom: 0;
         display: inline-block;
         li, li > h2, & {
+            color: @gray-light;
             font-size: 16px;
             font-weight: 500;
             @media screen and (min-width: @grid-float-breakpoint) {
@@ -255,12 +259,6 @@ body {
             border-top-color: #ffffff;
             border-bottom-color: #ffffff;
         }
-        /*.button-variant(@brand-primary, #ffffff, #ffffff);*/
-        /*&:hover, &:focus {*/
-            /*background-color: #ffffff;*/
-            /*border-color: #ffffff;*/
-            /*box-shadow: none;*/
-        /*}*/
     }
 }
 
@@ -667,6 +665,10 @@ footer {
     a, a:hover, a:focus, address {
         font-size: 13px;
         color: #555555;
+        font-weight: normal;
+    }
+    a:hover {
+        color: @gray-darker;
     }
     .footer-social {
         margin: 10px 0;
