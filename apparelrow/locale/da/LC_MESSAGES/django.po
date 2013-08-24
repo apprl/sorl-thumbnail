@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 14:54+0200\n"
+"POT-Creation-Date: 2013-08-25 00:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -551,8 +551,6 @@ msgid "Number of products created or updated"
 msgstr ""
 
 #: importer/models.py:121 templates/apparel/look_editor.html:193
-#: templates/apparel/fragments/look_medium.html:16
-#: templates/apparel/fragments/product_medium.html:12
 #: templates/profile/fragments/product_likes.html:15
 msgid "Info"
 msgstr ""
@@ -573,7 +571,7 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: importer/models.py:129 templates/dashboard/admin.html:160
+#: importer/models.py:129 templates/dashboard/admin.html:159
 #: templates/dashboard/publisher.html:174
 msgid "Date"
 msgstr ""
@@ -596,7 +594,7 @@ msgstr ""
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:60 templates/base.html:203
+#: profile/admin.py:60 templates/base.html:202
 #: templates/profile/base_settings.html:20
 #: templates/profile/base_settings.html:23
 #: templates/profile/settings_facebook.html:5
@@ -607,7 +605,7 @@ msgstr ""
 msgid "Brand"
 msgstr "Brand"
 
-#: profile/admin.py:64 templates/dashboard/body_header.html:5
+#: profile/admin.py:64 templates/dashboard/body_header.html:4
 #: templates/dashboard/info.html:5 templates/dashboard/publisher.html:5
 #: templates/profile/base_settings.html:21
 #: templates/profile/settings_publisher.html:28
@@ -619,7 +617,7 @@ msgid "Extra"
 msgstr ""
 
 #: profile/admin.py:66 templates/base.html:132
-#: templates/dashboard/body_header.html:10
+#: templates/dashboard/body_header.html:9
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:10
 msgid "Settings"
@@ -634,12 +632,12 @@ msgid "Permissions"
 msgstr ""
 
 #: profile/forms.py:28 profile/forms.py:123
-#: templates/registration/registration_email.html:56
+#: templates/registration/registration_email.html:54
 msgid "Man"
 msgstr ""
 
 #: profile/forms.py:28 profile/forms.py:123
-#: templates/registration/registration_email.html:62
+#: templates/registration/registration_email.html:60
 msgid "Woman"
 msgstr ""
 
@@ -750,7 +748,7 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: profile/models.py:47 templates/base.html:187
+#: profile/models.py:47 templates/base.html:186
 #: templates/apparel/dialog_look_embed.html:22
 #: templates/profile/dialog_embed_shop.html:29
 msgid "Language"
@@ -890,13 +888,13 @@ msgstr ""
 msgid "Your profile"
 msgstr ""
 
-#: templates/base.html:125 templates/dashboard/body_header.html:7
+#: templates/base.html:125 templates/dashboard/body_header.html:6
 #: templates/dashboard/info.html:21 templates/dashboard/info.html.py:76
 msgid "Your statistics"
 msgstr ""
 
 #: templates/base.html:128 templates/advertiser/store_admin.html:4
-#: templates/advertiser/store_admin.html:44
+#: templates/advertiser/store_admin.html:43
 msgid "Your store"
 msgstr ""
 
@@ -918,24 +916,21 @@ msgstr ""
 msgid "Your APPRL"
 msgstr ""
 
-#: templates/base.html:143 templates/base.html.py:180
-#: templates/apparel/browse.html:18
+#: templates/base.html:143 templates/base.html.py:179
+#: templates/apparel/browse.html:17
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:144 templates/base.html.py:183
+#: templates/base.html:144 templates/base.html.py:182
 #: templates/apparel/look_detail.html:4 templates/apparel/look_editor.html:5
 #: templates/apparel/look_list.html:11
 #: templates/apparel/product_detail.html:184 templates/profile/looks.html:4
 msgid "Looks"
 msgstr ""
 
-#: templates/base.html:145
-msgid "Discover"
-msgstr ""
-
-#: templates/base.html:147 templates/activity_feed/verbs/follow.html:14
+#: templates/base.html:146 templates/activity_feed/verbs/follow.html:14
 #: templates/apparel/user_list.html:4 templates/apparel/user_list.html:10
+#: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
@@ -944,62 +939,62 @@ msgstr ""
 msgid "Follow"
 msgstr ""
 
-#: templates/base.html:149 templates/apparel/user_list.html:12
+#: templates/base.html:148 templates/apparel/user_list.html:12
 msgid "Members"
 msgstr ""
 
-#: templates/base.html:150 templates/base.html.py:184
+#: templates/base.html:149 templates/base.html.py:183
 #: templates/apparel/user_list.html:13
 #: templates/apparel/fragments/product_filter.html:122
 msgid "Brands"
 msgstr ""
 
-#: templates/base.html:181 templates/apparel/look_editor.html:46
+#: templates/base.html:180 templates/apparel/look_editor.html:46
 msgid "Women"
 msgstr "Kvinder"
 
-#: templates/base.html:182 templates/apparel/look_editor.html:47
+#: templates/base.html:181 templates/apparel/look_editor.html:47
 msgid "Men"
 msgstr "Mænd"
 
-#: templates/base.html:202
+#: templates/base.html:201
 msgid "Follow us"
 msgstr ""
 
-#: templates/base.html:204
+#: templates/base.html:203
 msgid "Pinterest"
 msgstr ""
 
-#: templates/base.html:205
+#: templates/base.html:204
 msgid "E-mail newsletter"
 msgstr ""
 
-#: templates/base.html:208
+#: templates/base.html:207
 msgid "Apprl"
 msgstr ""
 
-#: templates/base.html:209
+#: templates/base.html:208
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:210
+#: templates/base.html:209
 msgid "Privacy & Terms"
 msgstr ""
 
-#: templates/base.html:211 templates/flatpages/default.html:27
+#: templates/base.html:210 templates/flatpages/default.html:27
 msgid "Cookies"
 msgstr ""
 
-#: templates/base.html:212
+#: templates/base.html:211
 msgid "Bloggers"
 msgstr ""
 
-#: templates/base.html:213 templates/apparel/fragments/product_filter.html:146
+#: templates/base.html:212 templates/apparel/fragments/product_filter.html:146
 #, fuzzy
 msgid "Stores"
 msgstr "Butik"
 
-#: templates/base.html:225
+#: templates/base.html:224
 msgid "Sweden"
 msgstr ""
 
@@ -1028,7 +1023,6 @@ msgstr "Søg brands"
 #: templates/activity_feed/feed_list.html:39
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:20
 #: templates/apparel/user_list.html:19 templates/apparel/user_list.html:23
-#: templates/apparel/user_list.html:27
 msgid "Only men’s"
 msgstr ""
 
@@ -1037,13 +1031,12 @@ msgstr ""
 #: templates/activity_feed/feed_list.html:40
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:21
 #: templates/apparel/user_list.html:19 templates/apparel/user_list.html:24
-#: templates/apparel/user_list.html:28
 msgid "Only women’s"
 msgstr ""
 
 #: templates/search.html:22 templates/search.html.py:24
 #: templates/activity_feed/feed_list.html:36
-#: templates/activity_feed/feed_list.html:38 templates/apparel/browse.html:20
+#: templates/activity_feed/feed_list.html:38 templates/apparel/browse.html:19
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:19
 #: templates/apparel/user_list.html:19 templates/apparel/user_list.html:22
 #: templates/apparel/user_list.html:26 templates/apparel/user_list.html:39
@@ -1152,26 +1145,26 @@ msgstr ""
 
 #: templates/advertiser/modal_accept.html:8
 #: templates/advertiser/modal_reject.html:8
-#: templates/advertiser/store_admin.html:81
+#: templates/advertiser/store_admin.html:79
 msgid "Order ID"
 msgstr ""
 
 #: templates/advertiser/modal_accept.html:10
 #: templates/advertiser/modal_reject.html:10
-#: templates/advertiser/store_admin.html:82
+#: templates/advertiser/store_admin.html:80
 msgid "Order Value"
 msgstr ""
 
 #: templates/advertiser/modal_accept.html:12
 #: templates/advertiser/modal_reject.html:12
-#: templates/advertiser/store_admin.html:83
+#: templates/advertiser/store_admin.html:81
 #: templates/dashboard/publisher.html:179
 msgid "Commission"
 msgstr ""
 
 #: templates/advertiser/modal_accept.html:14
 #: templates/advertiser/modal_reject.html:14
-#: templates/advertiser/store_admin.html:85
+#: templates/advertiser/store_admin.html:83
 msgid "Time"
 msgstr ""
 
@@ -1193,7 +1186,7 @@ msgid "Describe your reason to reject the transaction."
 msgstr ""
 
 #: templates/advertiser/modal_reject.html:24
-#: templates/advertiser/store_admin.html:102
+#: templates/advertiser/store_admin.html:100
 msgid "Reject"
 msgstr ""
 
@@ -1201,43 +1194,43 @@ msgstr ""
 msgid "Transactions"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:15 templates/dashboard/admin.html:108
-#: templates/dashboard/admin.html.py:165 templates/dashboard/publisher.html:16
+#: templates/advertiser/store_admin.html:15 templates/dashboard/admin.html:107
+#: templates/dashboard/admin.html.py:164 templates/dashboard/publisher.html:16
 #: templates/dashboard/publisher.html:46
 #: templates/dashboard/publisher.html:120
 #: templates/dashboard/publisher.html:178
 msgid "Clicks"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:50
+#: templates/advertiser/store_admin.html:48
 msgid "Balance:"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:51
+#: templates/advertiser/store_admin.html:49
 msgid "Total accepted commission:"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:58 templates/dashboard/admin.html:68
+#: templates/advertiser/store_admin.html:56 templates/dashboard/admin.html:67
 msgid "Show: "
 msgstr ""
 
-#: templates/advertiser/store_admin.html:66
+#: templates/advertiser/store_admin.html:64
 msgid "Accepted commission this month:"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:84
+#: templates/advertiser/store_admin.html:82
 msgid "Order Detail"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:86
+#: templates/advertiser/store_admin.html:84
 msgid "Order Status"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:101
+#: templates/advertiser/store_admin.html:99
 msgid "Accept"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:111
+#: templates/advertiser/store_admin.html:109
 msgid "No transactions"
 msgstr ""
 
@@ -1283,19 +1276,19 @@ msgid ""
 "products or mix & match collages!"
 msgstr ""
 
-#: templates/apparel/browse.html:4 templates/apparel/browse.html.py:18
+#: templates/apparel/browse.html:4 templates/apparel/browse.html.py:17
 msgid "Shop Men"
 msgstr ""
 
-#: templates/apparel/browse.html:4 templates/apparel/browse.html.py:18
+#: templates/apparel/browse.html:4 templates/apparel/browse.html.py:17
 msgid "Shop Women"
 msgstr ""
 
-#: templates/apparel/browse.html:21
+#: templates/apparel/browse.html:20
 msgid "My friends"
 msgstr ""
 
-#: templates/apparel/browse.html:22
+#: templates/apparel/browse.html:21
 msgid "My brands"
 msgstr ""
 
@@ -1338,28 +1331,28 @@ msgstr ""
 msgid "Are you an online store?"
 msgstr ""
 
-#: templates/apparel/look_create.html:5 templates/apparel/look_create.html:25
+#: templates/apparel/look_create.html:5 templates/apparel/look_create.html:24
 msgid "Create a new look"
 msgstr ""
 
 #: templates/apparel/look_create.html:19
 msgid ""
-"It looks like you are on a mobile device, some of the features in our look "
-"tool work better on a desktop/laptop computer."
+"Sorry, but our create look tool currently doesn’t work on mobile devices. "
+"We’re working on that!"
 msgstr ""
 
-#: templates/apparel/look_create.html:33 templates/apparel/look_editor.html:12
+#: templates/apparel/look_create.html:31 templates/apparel/look_editor.html:12
 msgid "Create a tagged photo"
 msgstr ""
 
-#: templates/apparel/look_create.html:37 templates/apparel/look_editor.html:12
+#: templates/apparel/look_create.html:35 templates/apparel/look_editor.html:12
 msgid "Create a collage"
 msgstr ""
 
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:135
 #: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
 #: templates/apparel/product_detail.html:4
-#: templates/apparel/fragments/look_medium.html:21
+#: templates/apparel/fragments/look_medium.html:22
 msgid "by"
 msgstr ""
 
@@ -1390,21 +1383,20 @@ msgstr ""
 
 #: templates/apparel/look_detail.html:134
 #: templates/apparel/look_editor.html:12
-#: templates/apparel/fragments/looks_large.html:40
 msgid "Draft"
 msgstr ""
 
 #: templates/apparel/look_detail.html:140
 #: templates/apparel/product_detail.html:143
-#: templates/apparel/fragments/look_medium.html:15
-#: templates/apparel/fragments/product_medium.html:11
+#: templates/apparel/fragments/look_medium.html:17
+#: templates/apparel/fragments/product_medium.html:13
 msgid "Liked"
 msgstr ""
 
 #: templates/apparel/look_detail.html:140
 #: templates/apparel/product_detail.html:143
-#: templates/apparel/fragments/look_medium.html:15
-#: templates/apparel/fragments/product_medium.html:11
+#: templates/apparel/fragments/look_medium.html:17
+#: templates/apparel/fragments/product_medium.html:13
 msgid "Unlike"
 msgstr ""
 
@@ -1412,18 +1404,16 @@ msgstr ""
 #: templates/apparel/look_detail.html:142
 #: templates/apparel/product_detail.html:143
 #: templates/apparel/product_detail.html:145
-#: templates/apparel/fragments/look_medium.html:15
-#: templates/apparel/fragments/product_medium.html:11
+#: templates/apparel/fragments/look_medium.html:17
+#: templates/apparel/fragments/product_medium.html:13
 msgid "Like"
 msgstr ""
 
 #: templates/apparel/look_detail.html:154 templates/apparel/look_editor.html:5
-#: templates/apparel/fragments/looks_large.html:53
 msgid "Edit"
 msgstr ""
 
 #: templates/apparel/look_detail.html:155
-#: templates/apparel/fragments/looks_large.html:54
 msgid "Delete"
 msgstr ""
 
@@ -1431,14 +1421,12 @@ msgstr ""
 #: templates/apparel/look_detail.html:159
 #: templates/apparel/look_editor.html:23 templates/apparel/look_editor.html:25
 #: templates/apparel/look_editor.html:135
-#: templates/apparel/fragments/looks_large.html:56
 msgid "Publish"
 msgstr ""
 
 #: templates/apparel/look_detail.html:157
 #: templates/apparel/look_detail.html:159
 #: templates/apparel/look_editor.html:23 templates/apparel/look_editor.html:25
-#: templates/apparel/fragments/looks_large.html:56
 msgid "Unpublish"
 msgstr ""
 
@@ -1637,7 +1625,7 @@ msgstr "Udsolgt"
 #: templates/apparel/product_detail.html:124
 #: templates/apparel/fragments/look_embed_tooltip.html:25
 #: templates/apparel/fragments/look_product_tooltip.html:23
-#: templates/apparel/fragments/product_medium.html:14
+#: templates/apparel/fragments/product_medium.html:15
 #: templates/profile/fragments/product_likes.html:19
 msgid "Buy"
 msgstr "Køb"
@@ -1647,7 +1635,7 @@ msgid "Get product link"
 msgstr ""
 
 #: templates/apparel/product_detail.html:158
-#: templates/apparel/fragments/featured.html:23
+#: templates/apparel/fragments/featured.html:21
 msgid "Selected by"
 msgstr ""
 
@@ -1686,6 +1674,19 @@ msgstr ""
 msgid "You may also like"
 msgstr ""
 
+#: templates/apparel/product_list.html:5
+#: templates/apparel/fragments/product_filter.html:4
+msgid "Filter products"
+msgstr ""
+
+#: templates/apparel/user_list.html:27
+msgid "Only men"
+msgstr ""
+
+#: templates/apparel/user_list.html:28
+msgid "Only women"
+msgstr ""
+
 #: templates/apparel/fragments/browse_follow_brand.html:4
 msgid "Create your personal shop based on the brands you follow."
 msgstr ""
@@ -1695,8 +1696,8 @@ msgid "Create your personal shop based on the people you follow."
 msgstr ""
 
 #: templates/apparel/fragments/dialog_become_member.html:5
-#: templates/registration/registration.html:10
-#: templates/registration/registration_email.html:10
+#: templates/registration/registration.html:9
+#: templates/registration/registration_email.html:9
 msgid "Become a member"
 msgstr ""
 
@@ -1713,14 +1714,6 @@ msgid "You need to become a member to create a look."
 msgstr ""
 
 #: templates/apparel/fragments/dialog_follow_user.html:7
-msgid "Follow a brand"
-msgstr ""
-
-#: templates/apparel/fragments/dialog_follow_user.html:9
-msgid "Follow a member"
-msgstr ""
-
-#: templates/apparel/fragments/dialog_follow_user.html:13
 msgid "You need to become a member to follow someone."
 msgstr ""
 
@@ -1740,11 +1733,11 @@ msgstr ""
 msgid "You need to become a member to ♥ a product."
 msgstr ""
 
-#: templates/apparel/fragments/featured.html:8
+#: templates/apparel/fragments/featured.html:7
 msgid "Spotlight"
 msgstr ""
 
-#: templates/apparel/fragments/featured.html:25
+#: templates/apparel/fragments/featured.html:23
 msgid "Created by"
 msgstr ""
 
@@ -1757,14 +1750,6 @@ msgstr ""
 msgid "No results"
 msgstr ""
 
-#: templates/apparel/fragments/looks_large.html:42
-msgid "By"
-msgstr ""
-
-#: templates/apparel/fragments/looks_large.html:67
-msgid "Back to Top"
-msgstr "Tilbage til toppen"
-
 #: templates/apparel/fragments/pagination.html:4
 msgid "More on the way"
 msgstr ""
@@ -1773,17 +1758,12 @@ msgstr ""
 msgid "Show me more!"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:4
-msgid "Filter products"
-msgstr ""
-
 #: templates/apparel/fragments/product_filter.html:11
-#: templates/profile/dialog_embed_shop.html:37
-msgid "Show"
+msgid "Women’s / Men’s"
 msgstr ""
 
 #: templates/apparel/fragments/product_filter.html:17
-msgid "Both"
+msgid "Show everything"
 msgstr ""
 
 #: templates/apparel/fragments/product_filter.html:19
@@ -1854,7 +1834,7 @@ msgstr "Søg brands"
 msgid "No matching stores"
 msgstr "Ingen matchende produkter"
 
-#: templates/apparel/fragments/product_medium.html:32
+#: templates/apparel/fragments/product_medium.html:33
 msgid "See looks »"
 msgstr "Se looks »"
 
@@ -1906,8 +1886,8 @@ msgid "Always share when you ♥ a product"
 msgstr ""
 
 #: templates/apparel/tags/login_bar.html:12
-#: templates/registration/login.html:44
-#: templates/registration/registration_email.html:68
+#: templates/registration/login.html:42
+#: templates/registration/registration_email.html:66
 msgid "Sign up"
 msgstr ""
 
@@ -1919,98 +1899,98 @@ msgstr ""
 msgid "Publisher Admin"
 msgstr ""
 
-#: templates/dashboard/admin.html:77
+#: templates/dashboard/admin.html:76
 #, python-format
 msgid "Total commission %(month_commission)s SEK"
 msgstr ""
 
-#: templates/dashboard/admin.html:78
+#: templates/dashboard/admin.html:77
 #, python-format
 msgid "Publisher commission %(partner)s SEK"
 msgstr ""
 
-#: templates/dashboard/admin.html:79
+#: templates/dashboard/admin.html:78
 #, python-format
 msgid "Apprl commission %(apprl)s SEK"
 msgstr ""
 
-#: templates/dashboard/admin.html:82
+#: templates/dashboard/admin.html:81
 #, python-format
 msgid "Sales %(sales_count)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:83
+#: templates/dashboard/admin.html:82
 #, python-format
 msgid "Conversion rate %(conversion_rate)s%%"
 msgstr ""
 
-#: templates/dashboard/admin.html:86
+#: templates/dashboard/admin.html:85
 #, python-format
 msgid "Total click %(click_total)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:87
+#: templates/dashboard/admin.html:86
 #, python-format
 msgid "Publisher click %(click_partner)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:88
+#: templates/dashboard/admin.html:87
 #, python-format
 msgid "Apprl click %(click_apprl)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:102 templates/dashboard/publisher.html:114
+#: templates/dashboard/admin.html:101 templates/dashboard/publisher.html:114
 msgid "Most clicked products"
 msgstr ""
 
-#: templates/dashboard/admin.html:106 templates/dashboard/admin.html.py:132
-#: templates/dashboard/admin.html:161 templates/dashboard/publisher.html:118
+#: templates/dashboard/admin.html:105 templates/dashboard/admin.html.py:131
+#: templates/dashboard/admin.html:160 templates/dashboard/publisher.html:118
 #: templates/dashboard/publisher.html:145
 #: templates/dashboard/publisher.html:175
 msgid "Product"
 msgstr ""
 
-#: templates/dashboard/admin.html:120 templates/dashboard/admin.html.py:146
-#: templates/dashboard/admin.html:184 templates/dashboard/publisher.html:132
+#: templates/dashboard/admin.html:119 templates/dashboard/admin.html.py:145
+#: templates/dashboard/admin.html:183 templates/dashboard/publisher.html:132
 #: templates/dashboard/publisher.html:159
 #: templates/dashboard/publisher.html:194
 msgid "No sales yet."
 msgstr ""
 
-#: templates/dashboard/admin.html:128 templates/dashboard/publisher.html:141
+#: templates/dashboard/admin.html:127 templates/dashboard/publisher.html:141
 msgid "Generated most sales"
 msgstr ""
 
-#: templates/dashboard/admin.html:134 templates/dashboard/publisher.html:147
+#: templates/dashboard/admin.html:133 templates/dashboard/publisher.html:147
 msgid "Sales"
 msgstr ""
 
-#: templates/dashboard/admin.html:156
+#: templates/dashboard/admin.html:155
 msgid "All sales"
 msgstr ""
 
-#: templates/dashboard/admin.html:163
+#: templates/dashboard/admin.html:162
 msgid "User"
 msgstr ""
 
-#: templates/dashboard/admin.html:164 templates/dashboard/publisher.html:177
+#: templates/dashboard/admin.html:163 templates/dashboard/publisher.html:177
 msgid "From"
 msgstr ""
 
-#: templates/dashboard/admin.html:166
+#: templates/dashboard/admin.html:165
 msgid "Our Comm"
 msgstr ""
 
-#: templates/dashboard/admin.html:167
+#: templates/dashboard/admin.html:166
 msgid "Publisher Comm"
 msgstr ""
 
-#: templates/dashboard/body_header.html:7
+#: templates/dashboard/body_header.html:6
 #: templates/dashboard/publisher_complete.html:4
 msgid "Become a publisher"
 msgstr ""
 
-#: templates/dashboard/body_header.html:8 templates/dashboard/info.html:26
+#: templates/dashboard/body_header.html:7 templates/dashboard/info.html:26
 msgid "How it works"
 msgstr ""
 
@@ -2394,6 +2374,10 @@ msgstr ""
 msgid "Height"
 msgstr ""
 
+#: templates/profile/dialog_embed_shop.html:37
+msgid "Show"
+msgstr ""
+
 #: templates/profile/dialog_embed_shop.html:47
 msgid "Only women's"
 msgstr ""
@@ -2490,15 +2474,15 @@ msgid "does not like any products so far."
 msgstr ""
 
 #: templates/profile/login_flow_welcome.html:6
-#: templates/profile/login_flow_welcome.html:29
+#: templates/profile/login_flow_welcome.html:27
 msgid "Continue to APPRL"
 msgstr ""
 
-#: templates/profile/login_flow_welcome.html:16
+#: templates/profile/login_flow_welcome.html:15
 msgid "Welcome"
 msgstr ""
 
-#: templates/profile/login_flow_welcome.html:23
+#: templates/profile/login_flow_welcome.html:21
 msgid ""
 "Scroll down and follow a few of your favourite brands to personalise your "
 "Apprl experience."
@@ -2727,19 +2711,19 @@ msgstr ""
 msgid "%(brand_name)s %(product_name)s has been further reduced"
 msgstr ""
 
-#: templates/registration/login.html:10 templates/registration/login.html:40
+#: templates/registration/login.html:9 templates/registration/login.html:38
 msgid "Login"
 msgstr ""
 
-#: templates/registration/login.html:23
+#: templates/registration/login.html:21
 msgid "or:"
 msgstr ""
 
-#: templates/registration/login.html:38
+#: templates/registration/login.html:36
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
-#: templates/registration/login.html:43
+#: templates/registration/login.html:41
 msgid "Forgot password?"
 msgstr ""
 
@@ -2802,11 +2786,11 @@ msgstr ""
 msgid "Your username, in case you've forgotten:"
 msgstr ""
 
-#: templates/registration/password_reset_form.html:9
+#: templates/registration/password_reset_form.html:8
 msgid "Forgotten your password?"
 msgstr ""
 
-#: templates/registration/password_reset_form.html:16
+#: templates/registration/password_reset_form.html:14
 msgid ""
 "Enter your e-mail address below, and we'll e-mail instructions for setting a "
 "new one."
@@ -2817,49 +2801,52 @@ msgid ""
 "Just click this link to verify your e-mail address and start using Apprl: "
 msgstr ""
 
-#: templates/registration/registration_complete.html:10
+#: templates/registration/registration_complete.html:9
 msgid "Check your e-mail!"
 msgstr ""
 
-#: templates/registration/registration_complete.html:17
+#: templates/registration/registration_complete.html:15
 msgid ""
 "We have sent an e-mail to you.<br>To complete your signup, open that e-mail "
 "and click the link."
 msgstr ""
 
-#: templates/registration/registration_complete.html:19
+#: templates/registration/registration_complete.html:17
 msgid ""
 "If you can't find the confirmation e-mail,<br>check your spam folder or send "
 "the e-mail again:"
 msgstr ""
 
-#: templates/registration/registration_complete.html:26
+#: templates/registration/registration_complete.html:24
 msgid "Send e-mail again"
 msgstr ""
 
-#: templates/registration/registration_complete.html:28
+#: templates/registration/registration_complete.html:26
 msgid "E-mail sent."
 msgstr ""
 
-#: templates/registration/registration_email.html:73
-#: templates/registration/fragments/registration.html:6
+#: templates/registration/registration_email.html:71
+#: templates/registration/fragments/registration.html:8
 #, python-format
 msgid ""
 "By signing up you are agreeing to our <a class=\"underline\" target=\"_blank"
 "\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
 msgstr ""
 
-#: templates/registration/registration_invalid_activation.html:10
+#: templates/registration/registration_invalid_activation.html:9
 msgid "Invalid activation key"
 msgstr ""
 
-#: templates/registration/registration_invalid_activation.html:17
+#: templates/registration/registration_invalid_activation.html:15
 msgid "Could not activate account, the activation key is invalid."
 msgstr ""
 
-#: templates/registration/fragments/registration.html:4
+#: templates/registration/fragments/registration.html:6
 msgid "or sign up with e-mail"
 msgstr ""
+
+#~ msgid "Back to Top"
+#~ msgstr "Tilbage til toppen"
 
 #~ msgid "%(counter)s product"
 #~ msgid_plural "%(counter)s products"
