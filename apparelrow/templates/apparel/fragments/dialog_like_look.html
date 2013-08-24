@@ -5,5 +5,5 @@
 {% block modal_title %}{% trans "Like a look" %}{% endblock %}
 {% block modal_content %}
 <p>{% trans "You need to become a member to ♥ a look." %}</p>
-{% include 'registration/fragments/registration.html' %}
+{% include 'registration/fragments/registration.html' with next_url=request.path disable_flow=True %}
 {% endblock %}

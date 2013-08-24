@@ -535,6 +535,7 @@ def facebook_login(request):
     if request.POST:
         access_token = request.POST.get('access_token', '')
         uid = request.POST.get('uid', '')
+        disable_flow = request.POST.get('disable_flow', False)
 
         user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token)
         if user and user.is_active:
@@ -542,7 +543,7 @@ def facebook_login(request):
             if request.is_ajax():
                 return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
 
-            if user.login_flow != 'complete':
+            if user.login_flow != 'complete' and not disable_flow:
                 response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
                 response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
                 return response
