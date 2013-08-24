@@ -33,8 +33,18 @@
         img {
             margin-right: 10px;
         }
-        .col-xs-12 {
-            margin-left: 60px;
+        .selected-by-text {
+            font-size: 12px;
+            max-width: 260px;
+            @media (min-width: @screen-lg-desktop) {
+                max-width: 96px;
+            }
+            a {
+                display: inline-block;
+                &:last-child {
+                    margin-top: 3px;
+                }
+            }
         }
     }
 

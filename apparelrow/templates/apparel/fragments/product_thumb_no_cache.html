@@ -1,7 +1,0 @@
-<a href="{{ product.get_absolute_url }}">
-    {% thumbnail product.product_image "42" crop="center" as im %}
-    <img src="{{ im.url }}" alt="{{ product.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
-    {% endthumbnail %}
-    <h4>{{ product.product_name }}</h4>
-    <p>{{ product.manufacturer.name }}</p>
-</a>
