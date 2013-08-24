@@ -24,7 +24,11 @@
                         {% else %}
                         <p>{% trans "Created by" %} <a href="{{ activity.user.get_absolute_url }}">{{ activity.user.display_name }}</a></p>
                         {% endif %}
+                        {% if not in_feed %}
+                        {% include 'apparel/fragments/follow_cache.html' with class="btn-primary" only %}
+                        {% else %}
                         {% include 'apparel/fragments/follow_cache.html' only %}
+                        {% endif %}
                     </div>
                     {% endcache %}
                     <div class="panel-body">
