@@ -87,17 +87,17 @@ $(document).ready(function() {
     }
 
     // Track buy clicks
-    $(document).on('click', '#search-result a.btn-buy', trackEvent('Search', 'BuyReferral'))
-               .on('click', 'body.product .product-info a.btn-buy', trackEvent('Product', 'BuyReferral'))
-               .on('click', 'body.page-shop #content a.btn-buy', trackEvent('Shop', 'BuyReferral'))
-               .on('click', 'body.profile #content a.btn-buy', trackEvent('Profile', 'BuyReferral'))
-               .on('click', 'body.feed #content a.btn-buy', trackEvent('Feed', 'BuyReferral'))
+    $(document).on('click', 'body.search-page a.btn-buy', trackEvent('Search', 'BuyReferral'))
+               .on('click', 'body.product-detail-page a.btn-buy', trackEvent('Product', 'BuyReferral'))
+               .on('click', 'body.shop a.btn-buy', trackEvent('Shop', 'BuyReferral'))
+               .on('click', 'body.profile-page a.btn-buy', trackEvent('Profile', 'BuyReferral'))
+               .on('click', 'body.feed-list-page a.btn-buy', trackEvent('Feed', 'BuyReferral'))
                .on('click', '.popover-product a.btn-buy', trackEvent('Look', 'BuyReferral'));
 
     // Track likes
-    $(document).on('click', 'body.product .btn-product-like', trackEvent('Product', 'ProductLike'))
+    $(document).on('click', 'body.product-detail-page .btn-product-like', trackEvent('Product', 'ProductLike'))
                .on('click', 'body.shop .btn-product-like', trackEvent('Shop', 'ProductLike'))
-               .on('click', 'body.profile .btn-product-like', trackEvent('Profile', 'ProductLike'));
+               .on('click', 'body.profile-page .btn-product-like', trackEvent('Profile', 'ProductLike'));
 
     // Track invites
     $(document).on('click', '#nav-user .facebook-invite', trackInviteEvent('Menu'))
