@@ -4,17 +4,21 @@
 {% block body-classes %}publisher-index-page{% endblock body-classes %}
 {% block body %}
 
+<div class="body-header">
+    <div class="body-header-col-full">
+        <h1>{% trans "Are you a blogger/publisher?" %}</h1>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-lg-12">
-        <h1>{% trans "Are you a blogger?" %}</h1>
-
-        <form action="" method="post">{% csrf_token %}
-            <div class="form-content group">
-                {{ form.as_p }}
-            </div>
-            <button class="btn btn-block btn-upper btn-positive btn-apply">{% trans "Apply to become a publisher" %}</button>
+        <p>{% trans "Apprl is an invitation-only digital service for fashion influencers, bloggers & magazines that helps you earn money on your blog/site through our tools." %}</p>
+        <p>{% trans "Apply for an invitation:" %}</p>
+        <form action="" method="post" class="form-inline">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-primary btn-block btn-apply">{% trans "APPLY" %}</button>
         </form>
-        <p class="center">{% trans "Questions? Let us know on" %} <a href="mailto:publisher@apprl.com">publisher@apprl.com</a></p>
     </div>
 </div>
 

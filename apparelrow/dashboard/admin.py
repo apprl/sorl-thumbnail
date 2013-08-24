@@ -48,6 +48,6 @@ admin.site.register(Cut, CutAdmin)
 admin.site.register(Group)
 
 class SignupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'blog', 'created')
+    list_display = ('name', 'email', 'blog', 'store', 'created')
 
 admin.site.register(Signup, SignupAdmin)

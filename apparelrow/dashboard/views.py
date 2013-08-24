@@ -128,6 +128,19 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
 
 class SignupForm(ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        is_store_form = False
+        if 'is_store_form' in kwargs:
+            is_store_form = True
+            del kwargs['is_store_form']
+
+        super(SignupForm, self).__init__(*args, **kwargs)
+
+        if is_store_form:
+            self.fields['blog'].label = 'Store URL'
+        else:
+            self.fields['blog'].label = 'URL'
+
     class Meta:
         model = Signup
         fields = ('name', 'email', 'blog')
@@ -329,6 +342,22 @@ def dashboard_complete(request):
 def dashboard_info(request):
     return render(request, 'dashboard/info.html')
 
+
+def store(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST, is_store_form=True)
+        if form.is_valid():
+            # Save name and blog URL on session, for Google Analytics
+            request.session['publisher_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
+            instance = form.save(commit=False)
+            instance.store = True
+            instance.save()
+
+        return HttpResponseRedirect(reverse('index-store-complete'))
+
+    form = SignupForm(is_store_form=True)
+
+    return render(request, 'apparel/store.html', {'form': form})
 
 def index(request):
     if request.method == 'POST':
