@@ -105,6 +105,7 @@ def setup(snapshot='master'):
     require('hosts', provided_by=[localhost,demo,prod])
     require('path')
     # install Python environment
+    sudo('add-apt-repository -y ppa:chris-lea/node.js')
     sudo('apt-get update')
     sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev')
     # install some version control systems, since we need Django modules in development
@@ -114,7 +115,8 @@ def setup(snapshot='master'):
     # install java (for solr)
     sudo('apt-get install -y openjdk-6-jre-headless')
     # install lessc
-    sudo('apt-get install -y node-less')
+    sudo('apt-get install -y nodejs')
+    sudo('sudo npm install -g less')
 
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
