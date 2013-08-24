@@ -113,14 +113,16 @@ def setup(snapshot='master'):
     sudo('apt-get install -y memcached')
     # install java (for solr)
     sudo('apt-get install -y openjdk-6-jre-headless')
+    # install lessc
+    sudo('apt-get install -y node-less')
 
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
     sudo('easy_install pip')
 
     # Install Compass
-    sudo('apt-get install -y rubygems')
-    sudo('gem install compass --no-rdoc --no-ri')
+    #sudo('apt-get install -y rubygems')
+    #sudo('gem install compass --no-rdoc --no-ri')
 
     if env.dbserver=='mysql':
         sudo('apt-get install -y libmysqlclient-dev')
@@ -301,7 +303,7 @@ def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         sudo('chown -R %(run_user)s:%(run_group)s ./static' % env, pty=True)
-        sudo('cd ./sass; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
+        #sudo('cd ./sass; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
         run('mkdir media', pty=True)
         sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
