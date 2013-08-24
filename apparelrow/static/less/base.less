@@ -53,6 +53,10 @@
 @import "./../bootstrap/less/responsive-utilities.less";
 
 
+
+@import "./retina.less";
+
+
 //
 // Buttons
 // ----------------------------------------------------------------------------
@@ -115,6 +119,13 @@
     }
 }
 
+.btn-cancel { .btn-primary; }
+.btn-reset { .btn-primary; }
+.btn-publish { .btn-success; }
+.btn-unpublish { .btn-danger; }
+.btn-save { .btn-success; }
+.btn-edit { .btn-success; }
+.btn-delete { .btn-danger; }
 
 //
 // Changes to bootstrap components
@@ -357,7 +368,9 @@ body {
     .navbar-brand {
         line-height: 18px;
         img {
+            width: 120px;
             height: 18px;
+            .at2x("../images/logo.png", 120px, 18px);
         }
     }
     .navbar-form {
@@ -367,8 +380,16 @@ body {
         box-shadow: none;
         -webkit-box-shadow: none;
     }
+    .navbar-nav > li {
+        > a:hover span, &.active > a span {
+            padding-bottom: 3px;
+            border-bottom: 3px solid #ffffff;
+        }
+    }
     .navbar-nav > li > a {
-        font-weight: 500;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: bold;
         &.dropdown-avatar {
             padding-top: 9px;
             padding-bottom: 9px;
@@ -378,10 +399,7 @@ body {
             }
         }
     }
-    .navbar-nav > .active > a {
-        /*background-color: #222222;*/
-    }
-    .navbar-nav > .dropdown.selected > a .caret {
+    .navbar-nav > .dropdown > a .caret {
         border-top-color: #ffffff;
         border-bottom-color: #ffffff;
     }
@@ -529,6 +547,10 @@ body.index {
         padding-bottom: 30px;
         font-size: 28px;
         max-height: 100px;
+        margin-top: 20px;
+        @media (min-width: @grid-float-breakpoint) {
+            margin-top: 0;
+        }
     }
     .featured-container {
         .btn-follow-placeholder {

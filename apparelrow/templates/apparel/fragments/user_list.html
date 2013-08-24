@@ -9,6 +9,7 @@
 <div class="pagination">
     {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
 </div>
+{% if request.user.is_authenticated %}
 <script type="text/javascript">
 (function() {
     function follow(uids) {
@@ -24,3 +25,4 @@
     });
 })()
 </script>
+{% endif %}

@@ -57,7 +57,9 @@
             });
         });
     }
+    {% if request.user.is_authenticated %}
     follow($('.featured-container .feed-item').map(function() { return $(this).attr('id').split('-')[2]; }).get().join(','));
+    {% endif %}
     $('.featured-container .close').click(function() {
         $('.featured-container').slideUp(400);
         var date = new Date();

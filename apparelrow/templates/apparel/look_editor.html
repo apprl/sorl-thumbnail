@@ -14,15 +14,15 @@
         <div class="body-header-col-right">
             <ul class="list-inline">
                 {% if object and object.slug %}
-                <li><button class="btn btn-danger btn-delete" name="look_delete">{% trans "Delete look" %}</button></li>
+                <li><button class="btn btn-delete" name="look_delete">{% trans "Delete look" %}</button></li>
                 {% else %}
-                <li><button class="btn btn-primary btn-reset" name="look_reset">{% trans "Reset look" %}</button></li>
+                <li><button class="btn btn-reset" name="look_reset">{% trans "Reset look" %}</button></li>
                 {% endif %}
-                <li><button class="btn btn-primary btn-save" name="look_save">{% if object and object.published %}{% trans "Save" %}{% else %}{% trans "Save draft" %}{% endif %}</button></li>
+                <li><button class="btn btn-save" name="look_save">{% if object and object.published %}{% trans "Save" %}{% else %}{% trans "Save draft" %}{% endif %}</button></li>
                 {% if object and object.published %}
-                <li><button class="btn btn-success btn-unpublish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Unpublish" %}</button></li>
+                <li><button class="btn btn-unpublish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Unpublish" %}</button></li>
                 {% else %}
-                <li><button class="btn btn-success btn-publish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Publish" %}</button></li>
+                <li><button class="btn btn-publish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Publish" %}</button></li>
                 {% endif %}
             </ul>
         </div>
@@ -116,8 +116,8 @@
             <textarea name="description" id="look_description" class="form-control"><%= description %></textarea>
         </div>
 
-        <a href="#" class="btn btn-primary btn-block btn-cancel">{% trans "Cancel" %}</a>
-        <a href="#" class="btn btn-success btn-block btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
+        <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
+        <a href="#" class="btn btn-block btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
     </script>
 
     <script type="text/template" id="dialog_publish_template">
@@ -131,8 +131,8 @@
             <textarea name="description" id="look_description" class="form-control"><%= description %></textarea>
         </div>
 
-        <a href="#" class="btn btn-primary btn-block btn-cancel">{% trans "Cancel" %}</a>
-        <a href="#" class="btn btn-success btn-block btn-publish">{% trans "Publish" %}</a>
+        <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
+        <a href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</a>
     </script>
 
     <script type="text/template" id="popup_slim_template">

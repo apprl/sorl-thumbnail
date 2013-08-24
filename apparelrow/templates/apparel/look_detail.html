@@ -151,12 +151,12 @@
                 <div class="look-main-content">
                     {% if object.user != request.user %}
                     {% else %}
-                    <a class="btn btn-success btn-edit" href="{% url 'look-editor' object.slug %}">{% trans "Edit" %}</a>
-                    <a class="btn btn-danger btn-delete" title="{{ object.title }}" href="{% url 'look-delete' object.slug %}">{% trans "Delete" %}</a>
+                    <a class="btn btn-edit" href="{% url 'look-editor' object.slug %}">{% trans "Edit" %}</a>
+                    <a class="btn btn-delete" title="{{ object.title }}" href="{% url 'look-delete' object.slug %}">{% trans "Delete" %}</a>
                     {% if object.published %}
-                    <a class="btn btn-danger btn-unpublish" data-href="{% url 'look-publish' object.slug %}" data-text="{% trans "Publish" %}" title="{{ object.title }}" href="{% url 'look-unpublish' object.slug %}">{% trans "Unpublish" %}</a>
+                    <a class="btn btn-unpublish" data-href="{% url 'look-publish' object.slug %}" data-text="{% trans "Publish" %}" title="{{ object.title }}" href="{% url 'look-unpublish' object.slug %}">{% trans "Unpublish" %}</a>
                     {% else %}
-                    <a class="btn btn-success btn-publish" data-href="{% url 'look-unpublish' object.slug %}" data-text="{% trans "Unpublish" %}" title="{{ object.title }}" href="{% url 'look-publish' object.slug %}">{% trans "Publish" %}</a>
+                    <a class="btn btn-publish" data-href="{% url 'look-unpublish' object.slug %}" data-text="{% trans "Unpublish" %}" title="{{ object.title }}" href="{% url 'look-publish' object.slug %}">{% trans "Publish" %}</a>
                     {% endif %}
                     {% endif %}
 
