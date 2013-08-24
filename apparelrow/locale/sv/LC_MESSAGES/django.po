@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 01:28+0200\n"
+"POT-Creation-Date: 2013-08-23 15:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -402,7 +402,6 @@ msgid ""
 msgstr ""
 
 #: apparel/templatetags/apparel_extras.py:35
-#, fuzzy
 msgid "Login with Facebook"
 msgstr "Logga in med Facebook"
 
@@ -414,9 +413,8 @@ msgstr "sedan"
 msgid ""
 "Follow our stylemakers, bloggers & brands to discover fashion from the "
 "world's best online stores."
-msgstr ""
-"Följ våra bloggare & varumärken för att upptäcka mode från världens bästa "
-"onlinebutiker."
+msgstr "Mode från världens bästa butiker utvalt av bloggare, designers & dina vänner."
+
 
 #: apparel/templatetags/login_bar.py:12
 msgid "Sign up to get sale alerts when the price drops on products you like!"
@@ -424,7 +422,7 @@ msgstr "Bli medlem för att bli meddelad när produkter du gillat prissänks!"
 
 #: apparel/views/__init__.py:160
 msgid "Check your browser settings."
-msgstr ""
+msgstr "Undersök din webbläsares inställningar"
 
 #: apparel/views/__init__.py:167
 msgid "Shared to your Facebook timeline!"
@@ -615,9 +613,8 @@ msgstr "Varumärke"
 #: templates/dashboard/info.html:5 templates/dashboard/publisher.html:5
 #: templates/profile/base_settings.html:21
 #: templates/profile/settings_publisher.html:28
-#, fuzzy
 msgid "Publisher"
-msgstr "Publicera"
+msgstr "Apprl Partner"
 
 #: profile/admin.py:65
 msgid "Extra"
@@ -737,7 +734,12 @@ msgstr "En användare med den e-postadressen existerar redan."
 msgid "E-mail does not exist or account is already confirmed."
 msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 
-#: profile/models.py:25
+#: profile/models.py:25 templates/search.html:22 templates/search.html.py:24
+#: templates/activity_feed/feed_list.html:36
+#: templates/activity_feed/feed_list.html:38
+#: templates/apparel/look_list.html:17 templates/apparel/look_list.html:19
+#: templates/apparel/user_list.html:19 templates/apparel/user_list.html:22
+#: templates/apparel/user_list.html:26
 msgid "All"
 msgstr "Alla"
 
@@ -878,17 +880,15 @@ msgstr "Ett fel uppstod"
 
 #: templates/base.html:96
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Växla navigation"
 
 #: templates/base.html:111
-#, fuzzy
 msgid "Search for products, members & brands"
-msgstr "Sök efter dina produkter här..."
+msgstr "Sök produkter, medlemmar & varumärken"
 
 #: templates/base.html:117 templates/apparel/index.html:15
-#, fuzzy
 msgid "Get started"
-msgstr "Gå vidare"
+msgstr "Börja här"
 
 #: templates/base.html:118 templates/apparel/tags/login_bar.html:11
 #: templates/registration/password_reset_complete.html:9
@@ -925,12 +925,12 @@ msgstr "Logga ut"
 
 #: templates/base.html:141 templates/activity_feed/feed_list.html:31
 msgid "Your APPRL"
-msgstr ""
+msgstr "Din APPRL"
 
 #: templates/base.html:143 templates/base.html.py:180
 #: templates/apparel/browse.html:18
 msgid "Shop"
-msgstr ""
+msgstr "Shop"
 
 #: templates/base.html:144 templates/base.html.py:183
 #: templates/apparel/look_detail.html:4 templates/apparel/look_editor.html:5
@@ -941,7 +941,7 @@ msgstr "Looks"
 
 #: templates/base.html:145 templates/apparel/user_list.html:4
 msgid "Discover"
-msgstr ""
+msgstr "Följ"
 
 #: templates/base.html:147 templates/activity_feed/verbs/follow.html:14
 #: templates/apparel/user_list.html:10
@@ -963,11 +963,21 @@ msgstr "Medlemmar"
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:181 templates/apparel/look_editor.html:46
+#: templates/base.html:181 templates/search.html:22
+#: templates/search.html.py:26 templates/activity_feed/feed_list.html:36
+#: templates/activity_feed/feed_list.html:40
+#: templates/apparel/look_editor.html:46 templates/apparel/look_list.html:17
+#: templates/apparel/look_list.html:21 templates/apparel/user_list.html:19
+#: templates/apparel/user_list.html:24 templates/apparel/user_list.html:28
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:182 templates/apparel/look_editor.html:47
+#: templates/base.html:182 templates/search.html:22
+#: templates/search.html.py:25 templates/activity_feed/feed_list.html:36
+#: templates/activity_feed/feed_list.html:39
+#: templates/apparel/look_editor.html:47 templates/apparel/look_list.html:17
+#: templates/apparel/look_list.html:20 templates/apparel/user_list.html:19
+#: templates/apparel/user_list.html:23 templates/apparel/user_list.html:27
 msgid "Men"
 msgstr "Herr"
 
@@ -981,7 +991,7 @@ msgstr ""
 
 #: templates/base.html:205
 msgid "E-mail newsletter"
-msgstr "E-post"
+msgstr "E-post nyhetsbrev"
 
 #: templates/base.html:208
 msgid "Apprl"
@@ -1004,9 +1014,8 @@ msgid "Bloggers"
 msgstr "Bloggare"
 
 #: templates/base.html:213 templates/apparel/fragments/product_filter.html:146
-#, fuzzy
 msgid "Stores"
-msgstr "Butik"
+msgstr "Butiker"
 
 #: templates/base.html:225
 msgid "Sweden"
@@ -1016,7 +1025,7 @@ msgstr "Sverige"
 #: templates/apparel/fragments/product_short_link.html:14
 #: templates/profile/dialog_embed_shop.html:68
 msgid "Close"
-msgstr ""
+msgstr "Stäng"
 
 #: templates/redirect.html:34
 #, python-format
@@ -1028,38 +1037,8 @@ msgid "The product URL is no longer valid."
 msgstr "Produktlänken är inte längre giltig."
 
 #: templates/search.html:17
-#, fuzzy
 msgid "Search result for"
-msgstr "Sök bland varumärken"
-
-#: templates/search.html:22 templates/search.html.py:25
-#: templates/activity_feed/feed_list.html:36
-#: templates/activity_feed/feed_list.html:39
-#: templates/apparel/look_list.html:17 templates/apparel/look_list.html:20
-#: templates/apparel/user_list.html:19 templates/apparel/user_list.html:23
-#: templates/apparel/user_list.html:27
-#, fuzzy
-msgid "Only men’s"
-msgstr "Bara herr"
-
-#: templates/search.html:22 templates/search.html.py:26
-#: templates/activity_feed/feed_list.html:36
-#: templates/activity_feed/feed_list.html:40
-#: templates/apparel/look_list.html:17 templates/apparel/look_list.html:21
-#: templates/apparel/user_list.html:19 templates/apparel/user_list.html:24
-#: templates/apparel/user_list.html:28
-#, fuzzy
-msgid "Only women’s"
-msgstr "Bara dam"
-
-#: templates/search.html:22 templates/search.html.py:24
-#: templates/activity_feed/feed_list.html:36
-#: templates/activity_feed/feed_list.html:38 templates/apparel/browse.html:20
-#: templates/apparel/look_list.html:17 templates/apparel/look_list.html:19
-#: templates/apparel/user_list.html:19 templates/apparel/user_list.html:22
-#: templates/apparel/user_list.html:26 templates/apparel/user_list.html:39
-msgid "Show all"
-msgstr "Visa alla"
+msgstr "Sökresultat för"
 
 #: templates/search.html:35
 msgid "Matching products"
@@ -1091,15 +1070,14 @@ msgstr "Träffar bland medlemmar"
 
 #: templates/activity_feed/feed_list.html:4
 msgid "Apparel, shoes, bags & accessories from the best online stores"
-msgstr "Kläder, skor, väskor & accessoarer från de bästa online-butikerna"
+msgstr "Kläder, skor, väskor & accessoarer från de bästa onlinebutikerna utvalt av bloggare och designers"
 
 #: templates/activity_feed/feed_list.html:5
 msgid ""
 "Follow your favourite brands, bloggers & friends to discover fashion you "
 "love."
 msgstr ""
-"Följ dina favoritvarumärken, bloggare & vänner för att upptäcka mode du "
-"älskar."
+"Upptäck inspirerande mode från världens bästa butiker genom bloggare, vänner & designers."
 
 #: templates/activity_feed/feed_list.html:20
 #, python-format
@@ -1107,7 +1085,9 @@ msgid ""
 "This is your personal Apprl feed with the latest from your follows. You have "
 "automatically followed your friends &amp; some of our featured members. To "
 "manage who you follow go to <a href=\"%(profile_url)s\">your profile</a>."
-msgstr ""
+msgstr "Det här är ditt personliga nyhetsflöde med det senare från de du följer. Du har "
+"automatiskt börjat följa dina vänner & ett antal av våra populära medlemmar. För "
+"att välja vilka du ska följa gå till <a href=\"%(profile_url)s\">din profil</a>."
 
 #: templates/activity_feed/feed_list.html:22
 #, python-format
@@ -1115,21 +1095,21 @@ msgid ""
 "This is your personal Apprl feed with the latest from your follows. You have "
 "automatically followed some of our featured members. To manage who you "
 "follow go to <a href=\"%(profile_url)s\">your profile</a>."
-msgstr ""
+msgstr "Det här är ditt personliga nyhetsflöde med det senare från de du följer. Du har "
+"automatiskt börjat följa ett antal av våra populära medlemmar. För "
+"att välja vilka du ska följa gå till <a href=\"%(profile_url)s\">din profil</a>."
 
 #: templates/activity_feed/fragments/feed_list.html:6
-msgid "Follow members &amp; brands to fill your feed"
-msgstr ""
+msgid "Follow members &amp; brands to fill your feed."
+msgstr "Följ medlemmar & varumärken för att fylla ditt nyhetsflöde."
 
 #: templates/activity_feed/verbs/add_product.html:4
-#, fuzzy
 msgid "added"
-msgstr "Tid tillagd"
+msgstr "har lagt till"
 
 #: templates/activity_feed/verbs/create.html:4
-#, fuzzy
 msgid "created a look"
-msgstr "Skapa en look"
+msgstr "skapade en look"
 
 #: templates/activity_feed/verbs/follow.html:5
 msgid "and"
@@ -1152,14 +1132,12 @@ msgid "Stop following"
 msgstr "Sluta följa"
 
 #: templates/activity_feed/verbs/like_look.html:4
-#, fuzzy
 msgid "likes a look"
-msgstr "Gilla en look"
+msgstr "gillar en look"
 
 #: templates/activity_feed/verbs/like_product.html:4
-#, fuzzy
 msgid "likes"
-msgstr "Gillar"
+msgstr "gillar"
 
 #: templates/advertiser/modal_accept.html:5
 msgid "Accept transaction?"
@@ -1169,7 +1147,7 @@ msgstr "Godkänn transaktion?"
 #: templates/advertiser/modal_reject.html:8
 #: templates/advertiser/store_admin.html:81
 msgid "Order ID"
-msgstr ""
+msgstr "Order ID"
 
 #: templates/advertiser/modal_accept.html:10
 #: templates/advertiser/modal_reject.html:10
@@ -1312,6 +1290,10 @@ msgstr "Shop Herr"
 msgid "Shop Women"
 msgstr "Shop Dam"
 
+#: templates/apparel/browse.html:20 templates/apparel/user_list.html:39
+msgid "Show all"
+msgstr "Visa alla"
+
 #: templates/apparel/browse.html:21
 msgid "My friends"
 msgstr "Mina vänner"
@@ -1356,16 +1338,15 @@ msgstr "Embed-kod"
 #: templates/apparel/index.html:14
 msgid ""
 "Discover fashion selected by bloggers, your friends & other stylemakers."
-msgstr ""
+msgstr "Upptäck inspirerande mode genom bloggare, dina vänner & designers."
 
 #: templates/apparel/index.html:25 templates/dashboard/index.html:9
 msgid "Are you a blogger?"
 msgstr "Är du bloggare?"
 
 #: templates/apparel/index.html:26 templates/apparel/store.html:8
-#, fuzzy
 msgid "Are you an online store?"
-msgstr "Är du bloggare?"
+msgstr "Är du en online butik?"
 
 #: templates/apparel/look_create.html:5 templates/apparel/look_create.html:25
 msgid "Create a new look"
@@ -1375,7 +1356,8 @@ msgstr "Skapa en ny look"
 msgid ""
 "It looks like you are on a mobile device, some of the features in our look "
 "tool work better on a desktop/laptop computer."
-msgstr ""
+msgstr "Du verkar använda en mobil enhet, en del av funktionerna för att skapa looks"
+"fungerar bättre om du använder en dator"
 
 #: templates/apparel/look_create.html:33 templates/apparel/look_editor.html:12
 msgid "Create a tagged photo"
@@ -1423,90 +1405,87 @@ msgstr "Är du säker på att du vill avpublicera looken så att ingen kan se de
 msgid "Draft"
 msgstr "Utkast"
 
-#: templates/apparel/look_detail.html:140
-#: templates/apparel/product_detail.html:143
-#: templates/apparel/fragments/look_medium.html:15
-#: templates/apparel/fragments/product_medium.html:11
-#, fuzzy
-msgid "Liked"
-msgstr "Gillar"
-
-#: templates/apparel/look_detail.html:140
-#: templates/apparel/product_detail.html:143
-#: templates/apparel/fragments/look_medium.html:15
-#: templates/apparel/fragments/product_medium.html:11
-msgid "Unlike"
-msgstr ""
-
-#: templates/apparel/look_detail.html:140
-#: templates/apparel/look_detail.html:142
-#: templates/apparel/product_detail.html:143
-#: templates/apparel/product_detail.html:145
-#: templates/apparel/fragments/look_medium.html:15
-#: templates/apparel/fragments/product_medium.html:11
-#, fuzzy
-msgid "Like"
-msgstr "Gillar"
-
-#: templates/apparel/look_detail.html:154 templates/apparel/look_editor.html:5
+#: templates/apparel/look_detail.html:143 templates/apparel/look_editor.html:5
 #: templates/apparel/fragments/looks_large.html:53
 msgid "Edit"
 msgstr "Redigera"
 
-#: templates/apparel/look_detail.html:155
+#: templates/apparel/look_detail.html:144
 #: templates/apparel/fragments/looks_large.html:54
 msgid "Delete"
 msgstr "Ta bort"
 
-#: templates/apparel/look_detail.html:157
-#: templates/apparel/look_detail.html:159
+#: templates/apparel/look_detail.html:146
+#: templates/apparel/look_detail.html:148
 #: templates/apparel/look_editor.html:23 templates/apparel/look_editor.html:25
 #: templates/apparel/look_editor.html:135
 #: templates/apparel/fragments/looks_large.html:56
 msgid "Publish"
 msgstr "Publicera"
 
-#: templates/apparel/look_detail.html:157
-#: templates/apparel/look_detail.html:159
+#: templates/apparel/look_detail.html:146
+#: templates/apparel/look_detail.html:148
 #: templates/apparel/look_editor.html:23 templates/apparel/look_editor.html:25
 #: templates/apparel/fragments/looks_large.html:56
 msgid "Unpublish"
 msgstr "Avpublicera"
 
-#: templates/apparel/look_detail.html:212
-#, fuzzy
+#: templates/apparel/look_detail.html:204
 msgid "Look details"
 msgstr "Beskrivning"
 
-#: templates/apparel/look_detail.html:221
+#: templates/apparel/look_detail.html:213
 #, python-format
 msgid "%(number)s article"
 msgid_plural "%(number)s articles"
 msgstr[0] "%(number)s artikel"
 msgstr[1] "%(number)s artiklar"
 
-#: templates/apparel/look_detail.html:227
+#: templates/apparel/look_detail.html:219
 msgid "Created"
 msgstr "Skapad"
 
-#: templates/apparel/look_detail.html:230
+#: templates/apparel/look_detail.html:222
+#: templates/apparel/product_detail.html:143
+#: templates/apparel/fragments/look_medium.html:15
+#: templates/apparel/fragments/product_medium.html:11
+msgid "Liked"
+msgstr "Gillar"
+
+#: templates/apparel/look_detail.html:222
+#: templates/apparel/product_detail.html:143
+#: templates/apparel/fragments/look_medium.html:15
+#: templates/apparel/fragments/product_medium.html:11
+msgid "Unlike"
+msgstr "Sluta gilla"
+
+#: templates/apparel/look_detail.html:222
+#: templates/apparel/look_detail.html:224
+#: templates/apparel/product_detail.html:143
+#: templates/apparel/product_detail.html:145
+#: templates/apparel/fragments/look_medium.html:15
+#: templates/apparel/fragments/product_medium.html:11
+msgid "Like"
+msgstr "Gillar"
+
+#: templates/apparel/look_detail.html:228
 msgid "Embed on your blog / site"
 msgstr "Lägg in looken på din blogg / site"
 
-#: templates/apparel/look_detail.html:240
+#: templates/apparel/look_detail.html:237
 msgid "More looks by"
 msgstr "Fler looks av"
 
-#: templates/apparel/look_detail.html:256
+#: templates/apparel/look_detail.html:253
 msgid "See all looks"
 msgstr "Visa alla looks"
 
-#: templates/apparel/look_detail.html:260
+#: templates/apparel/look_detail.html:257
 #: templates/apparel/product_detail.html:207
 msgid "Likes"
 msgstr "Gillar"
 
-#: templates/apparel/look_detail.html:262
+#: templates/apparel/look_detail.html:259
 msgid "Be the first one to like this look!"
 msgstr "Bli den första att gilla den här looken!"
 
@@ -1539,7 +1518,7 @@ msgstr "Alla produkter"
 
 #: templates/apparel/look_editor.html:44
 msgid "Search for your product here..."
-msgstr "Sök efter dina produkter här..."
+msgstr "Sök produkter & varumärken..."
 
 #: templates/apparel/look_editor.html:49
 #: templates/apparel/fragments/shop_empty.html:5
@@ -1643,9 +1622,8 @@ msgid "See all members"
 msgstr "Se alla medlemmar"
 
 #: templates/apparel/product_detail.html:87
-#, fuzzy
 msgid "Product info"
-msgstr "Produkt"
+msgstr "Produktinformation"
 
 #: templates/apparel/product_detail.html:95
 msgid "Was available at "
@@ -1781,12 +1759,11 @@ msgstr "Du behöver bli medlem för att kunna ♥ produkter."
 
 #: templates/apparel/fragments/featured.html:8
 msgid "Today's featured"
-msgstr ""
+msgstr "Spotlight"
 
 #: templates/apparel/fragments/featured.html:25
-#, fuzzy
 msgid "Created by"
-msgstr "Skapad"
+msgstr "Skapad av"
 
 #: templates/apparel/fragments/look_embed_tooltip.html:30
 msgid "More alternatives from "
@@ -1795,7 +1772,7 @@ msgstr "Fler alternativ från "
 #: templates/apparel/fragments/look_list.html:6
 #: templates/apparel/fragments/user_list.html:6
 msgid "No results"
-msgstr ""
+msgstr "Inga resultat"
 
 #: templates/apparel/fragments/looks_large.html:42
 msgid "By"
@@ -1824,21 +1801,19 @@ msgstr "Visa"
 
 #: templates/apparel/fragments/product_filter.html:17
 msgid "Both"
-msgstr ""
+msgstr "Båda"
 
 #: templates/apparel/fragments/product_filter.html:19
-#, fuzzy
 msgid "Womens"
 msgstr "Dam"
 
 #: templates/apparel/fragments/product_filter.html:20
 msgid "Mens"
-msgstr ""
+msgstr "Herr"
 
 #: templates/apparel/fragments/product_filter.html:30
-#, fuzzy
 msgid "Sort by"
-msgstr "Sortera på: "
+msgstr "Sortera på"
 
 #: templates/apparel/fragments/product_filter.html:35
 msgid "trending"
@@ -1857,34 +1832,31 @@ msgid "high price"
 msgstr "dyrast"
 
 #: templates/apparel/fragments/product_filter.html:47
-#, fuzzy
-msgid "Categories"
-msgstr "kategori"
+msgid "Choose Category"
+msgstr "Välj kategori"
 
 #: templates/apparel/fragments/product_filter.html:51
 #: templates/apparel/fragments/product_filter.html:71
 #: templates/apparel/fragments/product_filter.html:103
 #: templates/apparel/fragments/product_filter.html:126
 #: templates/apparel/fragments/product_filter.html:150
-#, fuzzy
 msgid "Reset this filter"
 msgstr "Nollställ sökning"
 
 #: templates/apparel/fragments/product_filter.html:73
 msgid "Min"
-msgstr ""
+msgstr "Min"
 
 #: templates/apparel/fragments/product_filter.html:75
 #: templates/apparel/fragments/product_filter.html:77
 msgid "Max"
-msgstr ""
+msgstr "Max"
 
 #: templates/apparel/fragments/product_filter.html:92
 msgid "Only show products on sale"
 msgstr "Visa endast prissänkta varor"
 
 #: templates/apparel/fragments/product_filter.html:99
-#, fuzzy
 msgid "Colors"
 msgstr "Färg"
 
@@ -1893,9 +1865,8 @@ msgid "Search brands"
 msgstr "Sök bland varumärken"
 
 #: templates/apparel/fragments/product_filter.html:155
-#, fuzzy
 msgid "No matching stores"
-msgstr "Inga produkter matchar ditt urval"
+msgstr "Inga butiker matchar ditt urval"
 
 #: templates/apparel/fragments/product_medium.html:32
 msgid "See looks »"
@@ -1959,9 +1930,8 @@ msgid "Comment"
 msgstr "Kommentera"
 
 #: templates/dashboard/admin.html:5 templates/dashboard/admin.html.py:60
-#, fuzzy
 msgid "Publisher Admin"
-msgstr "Publicera"
+msgstr "Publisher Admin"
 
 #: templates/dashboard/admin.html:77
 #, python-format
@@ -1969,9 +1939,9 @@ msgid "Total commission %(month_commission)s SEK"
 msgstr "Din provision: %(month_commission)s SEK"
 
 #: templates/dashboard/admin.html:78
-#, fuzzy, python-format
+#, python-format
 msgid "Publisher commission %(partner)s SEK"
-msgstr "Din provision: %(total_sales)s SEK"
+msgstr "Publisher provision: %(partner)s SEK"
 
 #: templates/dashboard/admin.html:79
 #, python-format
@@ -2030,7 +2000,6 @@ msgid "Sales"
 msgstr "Köp"
 
 #: templates/dashboard/admin.html:156
-#, fuzzy
 msgid "All sales"
 msgstr "Dina försäljningar"
 
@@ -2047,24 +2016,21 @@ msgid "Our Comm"
 msgstr "Vår Comm"
 
 #: templates/dashboard/admin.html:167
-#, fuzzy
 msgid "Publisher Comm"
-msgstr "Publicera look"
+msgstr ""
 
 #: templates/dashboard/body_header.html:7
 #: templates/dashboard/publisher_complete.html:4
-#, fuzzy
 msgid "Become a publisher"
-msgstr "Bli medlem "
+msgstr "Bli Apprl partner"
 
 #: templates/dashboard/body_header.html:8 templates/dashboard/info.html:26
 msgid "How it works"
 msgstr "Så funkar det"
 
 #: templates/dashboard/index.html:15
-#, fuzzy
 msgid "Apply to become a publisher"
-msgstr "Ansök om att bli partnerbloggare"
+msgstr "Ansök om att bli Apprl partner"
 
 #: templates/dashboard/index.html:17 templates/dashboard/info.html:31
 #: templates/dashboard/info.html.py:83
@@ -2104,12 +2070,10 @@ msgid "Questions?"
 msgstr "Frågor?"
 
 #: templates/dashboard/info.html:29 templates/dashboard/info.html.py:81
-#, fuzzy
 msgid "APPLY TO BECOME A PUBLISHER BLOGGER HERE"
-msgstr "ANSÖK TILL ATT BLI PARTNERBLOGGARE HÄR"
+msgstr "ANSÖK TILL ATT BLI APPRL PARTNER HÄR"
 
 #: templates/dashboard/info.html:33
-#, fuzzy
 msgid ""
 "As a fashion blogger you can apply to our publisher program. As a publisher "
 "blogger you make money when linking to Apprl products. If someone buys a "
@@ -2117,11 +2081,11 @@ msgid ""
 "As a publisher blogger you will also grow your blog and create looks to "
 "share with your readers."
 msgstr ""
-"Som modebloggare kan du ansöka till vårt partnerprogram. Det innebär att du "
+"Som modebloggare eller annan media kan du ansöka till vårt partnerprogram. Det innebär att du "
 "tjänar pengar när du länkar till produkter via Apprl. Om någon köper en "
 "produkt som du har länkat till så tjänar du upp till 10&#37; av ordervärdet. "
-"Som partnerbloggare kommer du även kunna få fler bloggläsare och skapa "
-"snygga looks att dela på din blogg."
+"Som Apprl partner kommer du även kunna få fler läsare och skapa "
+"snygga looks att dela på din blogg/site."
 
 #: templates/dashboard/info.html:36
 msgid ""
@@ -2129,7 +2093,7 @@ msgid ""
 "selected by you with a link back to your blog."
 msgstr ""
 "Varje gång du “gillar” en produkt på Apprl.com så visar vi att produkten är "
-"utvald av dig med en länk till din blogg."
+"utvald av dig med en länk till din blogg/site."
 
 #: templates/dashboard/info.html:38
 msgid ""
@@ -2138,11 +2102,10 @@ msgid ""
 "linking them to your profile:"
 msgstr ""
 "Genom att skaffa dig följare på Apprl.com kommer fler att upptäcka din "
-"blogg. Det kan du göra genom att länka till din profilsida med någon av de "
+"blogg/site. Det kan du göra genom att länka till din profilsida med någon av de "
 "här follow-knapparna:"
 
 #: templates/dashboard/info.html:50
-#, fuzzy
 msgid ""
 "The easiest way to start making money is to simply link to our products. As "
 "a publisher blogger just click the “Get product link”-button and share the "
@@ -2173,12 +2136,11 @@ msgstr ""
 "PÅ DIN BLOGG / SITE\" och följ instruktionerna för att välja bredd och språk."
 
 #: templates/dashboard/info.html:64
-#, fuzzy
 msgid ""
 "As a publisher blogger you will now make money on every person that clicks "
 "and buys a product from your look."
 msgstr ""
-"Som partnerbloggare kommer du nu att tjäna pengar på alla klick på produkter "
+"Som Apprl partner kommer du nu att tjäna pengar på alla klick på produkter "
 "i din look som leder till köp."
 
 #: templates/dashboard/info.html:67
@@ -2277,23 +2239,20 @@ msgid "Commission (SEK)"
 msgstr "Provision (SEK)"
 
 #: templates/dashboard/publisher.html:78
-#, fuzzy
 msgid "Your commission: "
-msgstr "Provision"
+msgstr "Din provision:"
 
 #: templates/dashboard/publisher.html:79
-#, fuzzy
 msgid "Confirmed commission: "
-msgstr "Konverterad provision"
+msgstr "Bekräftad provision:"
 
 #: templates/dashboard/publisher.html:80
 msgid "Pending payment: "
-msgstr ""
+msgstr "Att utbetalas:"
 
 #: templates/dashboard/publisher.html:88
-#, fuzzy
 msgid "Show statistics for: "
-msgstr "Din statistik"
+msgstr "Din statistik för:"
 
 #: templates/dashboard/publisher.html:96
 #, python-format
@@ -2381,7 +2340,6 @@ msgid "Terms of Use"
 msgstr ""
 
 #: templates/flatpages/default.html:21
-#, fuzzy
 msgid "Publisher terms"
 msgstr "Partnervillkor"
 
@@ -2411,7 +2369,7 @@ msgstr "Skapa en shop till din site"
 
 #: templates/profile/base_profile.html:53
 msgid "Add your description by clicking here."
-msgstr ""
+msgstr "Lägg till en beskrivning om dig "
 
 #: templates/profile/base_profile.html:66
 #: templates/profile/base_profile.html:70
@@ -2422,18 +2380,18 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/profile/base_profile.html:76
-#, fuzzy, python-format
+#, python-format
 msgid "%(look_count)s look"
 msgid_plural "%(look_count)s looks"
-msgstr[0] "Skapat %(look_count)s look"
-msgstr[1] "Skapat %(look_count)s looks"
+msgstr[0] "%(look_count)s look"
+msgstr[1] "%(look_count)s looks"
 
 #: templates/profile/base_profile.html:81
-#, fuzzy, python-format
+#, python-format
 msgid "%(followers_count)s follower"
 msgid_plural "%(followers_count)s followers"
-msgstr[0] "Följs av %(follower_count)s"
-msgstr[1] "Följs av %(follower_count)s"
+msgstr[0] "%(followers_count)s följare"
+msgstr[1] "%(followers_count)s följare"
 
 #: templates/profile/base_profile.html:86
 #, python-format
@@ -2554,7 +2512,6 @@ msgstr ""
 "personliga newsfeed</a>."
 
 #: templates/profile/email_welcome.html:11
-#, fuzzy
 msgid ""
 "Are you blogging? Apply to <a href=\"http://apprl.com/publisher/?"
 "utm_source=notification&utm_medium=email&utm_campaign=welcome\">become a "
@@ -2630,8 +2587,7 @@ msgstr ""
 
 #: templates/profile/login_flow_welcome.html:23
 msgid ""
-"Scroll down and follow a few of your favourite brands to personalise your "
-"Apprl experience."
+"Follow a few of your favourite brands to personalise your Apprl experience."
 msgstr ""
 
 #: templates/profile/looks.html:14
