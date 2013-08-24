@@ -533,11 +533,16 @@ body.index {
         font-size: 28px;
         max-height: 100px;
     }
-    .featured-container .btn-follow-placeholder {
-        background-color: #000000;
-        border-color: #000000;
-        padding-top: 10px;
-        padding-bottom: 10px;
+    .featured-container {
+        .btn-follow-placeholder {
+            background-color: #000000;
+            border-color: #000000;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .feed-item .panel-heading {
+            padding-bottom: 20px;
+        }
     }
 }
 
@@ -649,15 +654,20 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         border: 0;
         text-align: center;
         > p {
-            min-height: 40px;
-            margin-bottom: 0;
+            margin-bottom: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 260px;
+            margin-left: auto;
+            margin-right: auto;
         }
         img {
             margin-bottom: 10px;
         }
     }
     .panel-body {
-        min-height: 405px;
+        min-height: 414px;
         padding-top: 0;
         padding-bottom: 0;
     }
@@ -759,7 +769,7 @@ footer {
         margin: 0;
         a {
             display: inline-block;
-            padding: 6px 0;
+            padding: 0;
             white-space: nowrap;
             overflow-x: hidden;
             text-overflow: ellipsis;
@@ -770,6 +780,7 @@ footer {
         font-weight: 500;
         text-align: center;
         margin: 0;
+        line-height: 1.1;
     }
     p {
         font-weight: 500;

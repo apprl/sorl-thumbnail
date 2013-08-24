@@ -2,11 +2,11 @@
 
 <div class="thumbnail look-medium {% if object.display_with_component == 'P' %}look-photo{% else %}look-collage{% endif %}" id="look-{{ object.id }}" data-id="{{ object.id }}">
     {% if featured %}
-    {% thumbnail object.static_image "280x320" keep_size=True crop=False format='PNG' as im %}
+    {% thumbnail object.static_image "280x320" is_collage=object.is_collage keep_size=True crop=False format='PNG' as im %}
     <img class="look-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
     {% else %}
-    {% thumbnail object.static_image "560x640" crop=False format='PNG' as im %}
+    {% thumbnail object.static_image "560x420" is_collage=object.is_collage keep_size=True crop=False format='PNG' as im %}
     <img class="look-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
     {% endif %}

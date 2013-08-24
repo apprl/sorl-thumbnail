@@ -829,6 +829,13 @@ class Look(models.Model):
         return 'C'
 
     @cached_property
+    def is_collage(self):
+        if self.component == 'C':
+            return True
+
+        return False
+
+    @cached_property
     def product_manufacturers(self):
         return [x for x in self.display_components.values_list('product__manufacturer__name', flat=True) if x]
 

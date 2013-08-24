@@ -62,6 +62,13 @@ class ActivityManager(models.Manager):
 
             self.filter(content_type=content_type, object_id=activity_object.pk).update(is_available=available)
 
+        elif content_type.app_label == 'apparel' and content_type.model == 'look':
+            available = False
+            if activity_object.published:
+                available = True
+
+            self.filter(content_type=content_type, object_id=activity_object.pk).update(is_available=available)
+
     def get_for_user(self, user):
         return Activity.objects.filter(user=user, active=True) \
                                .select_related('user', 'owner') \

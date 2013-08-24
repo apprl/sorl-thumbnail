@@ -2,9 +2,9 @@ from sorl.thumbnail.base import ThumbnailBackend
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 
 try:
-    from PIL import Image
+    from PIL import Image, ImageDraw
 except ImportError:
-    import Image
+    import Image, ImageDraw
 
 import os.path
 from os.path import basename
@@ -20,16 +20,22 @@ class Engine(PILEngine):
     def scale(self, image, geometry, options):
         keep_size = options.get('keep_size', False)
         if keep_size:
-            return self._keep_size(image, geometry)
+            is_collage = options.get('is_collage', False)
+            return self._keep_size(image, geometry, is_collage)
 
         return super(PILEngine, self).scale(image, geometry, options)
 
-    def _keep_size(self, image, geometry):
+    def _keep_size(self, image, geometry, is_collage=False):
         empty_image = Image.new('RGBA', (geometry[0], geometry[1]), (255, 255, 255, 0))
         empty_image_w, empty_image_h = empty_image.size
 
         image.thumbnail((geometry[0], geometry[1]), resample=Image.ANTIALIAS)
         image_w, image_h = image.size
+
+        if is_collage:
+            image_draw = ImageDraw.Draw(image)
+            image_draw.rectangle(((0,0), (image_w - 1, image_h - 1)), outline=(238, 238, 238, 255))
+            del image_draw
 
         offset = ((empty_image_w - image_w) / 2, (empty_image_h - image_h) / 2)
         empty_image.paste(image, offset)
