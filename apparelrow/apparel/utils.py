@@ -252,6 +252,15 @@ def exchange_amount(to_currency, from_currency, amount, precision=None, fixed_ra
     return amount, fixed_rate
 
 
+def get_gender_url(gender, named_url):
+    if gender == 'M':
+        return reverse('%s-men' % (named_url,))
+    elif gender == 'W':
+        return reverse('%s-women' % (named_url,))
+
+    return reverse(named_url)
+
+
 def get_gender_from_cookie(request):
     """
     Get gender from cookie in a safe way.

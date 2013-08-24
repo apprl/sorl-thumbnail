@@ -18,7 +18,11 @@ from django.utils.html import urlize
 from django.utils.safestring import mark_safe
 from django.contrib.staticfiles.storage import staticfiles_storage
 
+from apparelrow.apparel.utils import get_gender_url
+
+
 register = Library()
+
 
 @register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)
 def facebook_button(context, text=None, next=None, connect=False):
@@ -381,12 +385,7 @@ def gender_url(gender, named_url):
     """
     Reverse named_url with correct gender.
     """
-    if gender == 'M':
-        return reverse('%s-men' % (named_url,))
-    elif gender == 'W':
-        return reverse('%s-women' % (named_url,))
-
-    return reverse(named_url)
+    return get_gender_url(gender, named_url)
 
 
 @register.filter

@@ -19,7 +19,7 @@ from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 
-from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
+from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse, get_gender_url
 from apparelrow.apparel.tasks import facebook_push_graph
 from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
@@ -399,7 +399,7 @@ def login_flow_complete(request):
     request.user.login_flow = 'complete'
     request.user.save()
 
-    return HttpResponseRedirect('%s?first=1' % (reverse('index'),))
+    return HttpResponseRedirect('%s?first=1' % (get_gender_url(request.user.gender, 'index'),))
 
 
 #
@@ -431,7 +431,11 @@ def register_email(request):
             # Send confirmation email
             send_confirmation_email(request, instance)
 
-            return HttpResponseRedirect(reverse('auth_register_complete'))
+            response = HttpResponseRedirect(reverse('auth_register_complete'))
+            response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=instance.gender, max_age=365 * 24 * 60 * 60)
+
+            return response
+
     else:
         form = RegisterForm()
 
