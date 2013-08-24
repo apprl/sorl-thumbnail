@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 01:28+0200\n"
+"POT-Creation-Date: 2013-08-24 14:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,17 +50,17 @@ msgstr ""
 msgid "Nor (NOK)"
 msgstr ""
 
-#: activity_feed/models.py:86 activity_feed/models.py:140
-#: apparel/models.py:386 apparel/models.py:707 apparel/models.py:905
-#: apparel/models.py:920 apparel/models.py:1100 apparel/models.py:1134
+#: activity_feed/models.py:93 activity_feed/models.py:147
+#: apparel/models.py:386 apparel/models.py:707 apparel/models.py:912
+#: apparel/models.py:927 apparel/models.py:1107 apparel/models.py:1141
 #: dashboard/models.py:59 dashboard/models.py:78 dashboard/models.py:112
 #: profile/models.py:359 statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
 msgstr ""
 
-#: activity_feed/models.py:87 apparel/models.py:224 apparel/models.py:387
+#: activity_feed/models.py:94 apparel/models.py:224 apparel/models.py:387
 #: apparel/models.py:454 apparel/models.py:505 apparel/models.py:708
-#: apparel/models.py:921 dashboard/models.py:60 dashboard/models.py:79
+#: apparel/models.py:928 dashboard/models.py:60 dashboard/models.py:79
 #: profile/models.py:360
 msgid "Time modified"
 msgstr ""
@@ -363,56 +363,55 @@ msgstr ""
 msgid "What compontent to show"
 msgstr ""
 
-#: apparel/models.py:965
+#: apparel/models.py:972
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:966
+#: apparel/models.py:973
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:967
+#: apparel/models.py:974
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:968
+#: apparel/models.py:975
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:969
+#: apparel/models.py:976
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:970
+#: apparel/models.py:977
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1120
+#: apparel/models.py:1127
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1164
+#: apparel/models.py:1171
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1164
+#: apparel/models.py:1171
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:35
+#: apparel/templatetags/apparel_extras.py:39
 msgid "Login with Facebook"
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:280
+#: apparel/templatetags/apparel_extras.py:284
 msgid "ago"
 msgstr ""
 
-#: apparel/templatetags/login_bar.py:8
+#: apparel/templatetags/login_bar.py:8 templates/apparel/index.html:14
 msgid ""
-"Follow our stylemakers, bloggers & brands to discover fashion from the "
-"world's best online stores."
+"Discover fashion selected by bloggers, your friends & other stylemakers."
 msgstr ""
 
 #: apparel/templatetags/login_bar.py:12
@@ -878,7 +877,7 @@ msgstr ""
 msgid "Search for products, members & brands"
 msgstr ""
 
-#: templates/base.html:117 templates/apparel/index.html:15
+#: templates/base.html:117 templates/apparel/index.html:18
 msgid "Get started"
 msgstr ""
 
@@ -927,16 +926,16 @@ msgstr ""
 #: templates/base.html:144 templates/base.html.py:183
 #: templates/apparel/look_detail.html:4 templates/apparel/look_editor.html:5
 #: templates/apparel/look_list.html:11
-#: templates/apparel/product_detail.html:188 templates/profile/looks.html:4
+#: templates/apparel/product_detail.html:184 templates/profile/looks.html:4
 msgid "Looks"
 msgstr ""
 
-#: templates/base.html:145 templates/apparel/user_list.html:4
+#: templates/base.html:145
 msgid "Discover"
 msgstr ""
 
 #: templates/base.html:147 templates/activity_feed/verbs/follow.html:14
-#: templates/apparel/user_list.html:10
+#: templates/apparel/user_list.html:4 templates/apparel/user_list.html:10
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
@@ -1080,13 +1079,15 @@ msgid "Matching members"
 msgstr ""
 
 #: templates/activity_feed/feed_list.html:4
-msgid "Apparel, shoes, bags & accessories from the best online stores"
+msgid ""
+"Apparel, shoes, bags & accessories from the best online stores selected by "
+"bloggers & brands"
 msgstr ""
 
 #: templates/activity_feed/feed_list.html:5
 msgid ""
-"Follow your favourite brands, bloggers & friends to discover fashion you "
-"love."
+"Discover fashion from the world's best stores selected by bloggers, your "
+"friends & other stylemakers."
 msgstr ""
 
 #: templates/activity_feed/feed_list.html:20
@@ -1329,11 +1330,6 @@ msgstr ""
 msgid "Embed code"
 msgstr ""
 
-#: templates/apparel/index.html:14
-msgid ""
-"Discover fashion selected by bloggers, your friends & other stylemakers."
-msgstr ""
-
 #: templates/apparel/index.html:25 templates/dashboard/index.html:9
 msgid "Are you a blogger?"
 msgstr ""
@@ -1474,7 +1470,7 @@ msgid "See all looks"
 msgstr ""
 
 #: templates/apparel/look_detail.html:260
-#: templates/apparel/product_detail.html:207
+#: templates/apparel/product_detail.html:203
 msgid "Likes"
 msgstr ""
 
@@ -1510,7 +1506,7 @@ msgid "All products"
 msgstr ""
 
 #: templates/apparel/look_editor.html:44
-msgid "Search for your product here..."
+msgid "Search products & brands here…"
 msgstr ""
 
 #: templates/apparel/look_editor.html:49
@@ -1655,38 +1651,38 @@ msgstr ""
 msgid "Selected by"
 msgstr ""
 
-#: templates/apparel/product_detail.html:170
-#: templates/apparel/product_detail.html:179
+#: templates/apparel/product_detail.html:165
+#: templates/apparel/product_detail.html:175
 msgid "Go to blog »"
 msgstr ""
 
-#: templates/apparel/product_detail.html:204
+#: templates/apparel/product_detail.html:200
 msgid "Add your look"
 msgstr ""
 
-#: templates/apparel/product_detail.html:209
+#: templates/apparel/product_detail.html:205
 msgid "Be the first one to like this product!"
 msgstr ""
 
-#: templates/apparel/product_detail.html:227
+#: templates/apparel/product_detail.html:223
 msgid "Similar"
 msgstr ""
 
-#: templates/apparel/product_detail.html:228
+#: templates/apparel/product_detail.html:224
 msgid "See all »"
 msgstr "Nulstille alt"
 
-#: templates/apparel/product_detail.html:231
-#: templates/apparel/product_detail.html:243
+#: templates/apparel/product_detail.html:227
+#: templates/apparel/product_detail.html:239
 msgid "Previous"
 msgstr ""
 
-#: templates/apparel/product_detail.html:237
-#: templates/apparel/product_detail.html:249
+#: templates/apparel/product_detail.html:233
+#: templates/apparel/product_detail.html:245
 msgid "Next"
 msgstr ""
 
-#: templates/apparel/product_detail.html:241
+#: templates/apparel/product_detail.html:237
 msgid "You may also like"
 msgstr ""
 
@@ -1745,7 +1741,7 @@ msgid "You need to become a member to ♥ a product."
 msgstr ""
 
 #: templates/apparel/fragments/featured.html:8
-msgid "Today's featured"
+msgid "Spotlight"
 msgstr ""
 
 #: templates/apparel/fragments/featured.html:25
@@ -2060,36 +2056,36 @@ msgid "Questions?"
 msgstr ""
 
 #: templates/dashboard/info.html:29 templates/dashboard/info.html.py:81
-msgid "APPLY TO BECOME A PUBLISHER BLOGGER HERE"
+msgid "APPLY TO BECOME A PUBLISHER HERE"
 msgstr ""
 
 #: templates/dashboard/info.html:33
 msgid ""
 "As a fashion blogger you can apply to our publisher program. As a publisher "
-"blogger you make money when linking to Apprl products. If someone buys a "
-"product that you have linked to, you make up to 10&#37; of the order value. "
-"As a publisher blogger you will also grow your blog and create looks to "
-"share with your readers."
+"you make money when linking to Apprl products. If someone buys a product "
+"that you have linked to, you make up to 10&#37; of the order value. As a "
+"publisher you will also grow your blog/site and create looks to share with "
+"your readers."
 msgstr ""
 
 #: templates/dashboard/info.html:36
 msgid ""
 "Every time you “like” a product on Apprl.com, we show that the product is "
-"selected by you with a link back to your blog."
+"selected by you with a link back to your blog/site."
 msgstr ""
 
 #: templates/dashboard/info.html:38
 msgid ""
-"By getting followers on Apprl, more people will discover your blog. You can "
-"promote your Apprl profile by putting one of these badges on your blog and "
-"linking them to your profile:"
+"By getting followers on Apprl, more people will discover your blog/site. You "
+"can promote your Apprl profile by putting one of these badges on your blog/"
+"site and linking them to your profile:"
 msgstr ""
 
 #: templates/dashboard/info.html:50
 msgid ""
 "The easiest way to start making money is to simply link to our products. As "
-"a publisher blogger just click the “Get product link”-button and share the "
-"link on your blog, Facebook page or elsewhere."
+"a publisher just click the “Get product link”-button and share the link on "
+"your blog, Facebook page or elsewhere."
 msgstr ""
 
 #: templates/dashboard/info.html:54
@@ -2104,14 +2100,14 @@ msgstr ""
 
 #: templates/dashboard/info.html:61
 msgid ""
-"To put a look on your blog, just click the “EMBED ON YOUR BLOG / SITE”-"
+"To put a look on your blog/site, just click the “EMBED ON YOUR BLOG / SITE”-"
 "button and follow instructions to choose the width & language of your look."
 msgstr ""
 
 #: templates/dashboard/info.html:64
 msgid ""
-"As a publisher blogger you will now make money on every person that clicks "
-"and buys a product from your look."
+"As a publisher you will now make money on every person that clicks and buys "
+"a product from your look."
 msgstr ""
 
 #: templates/dashboard/info.html:67
