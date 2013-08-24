@@ -24,8 +24,8 @@
                         <li><a href="{% url 'brand-list-women' %}">{% trans "Only women’s" %}</a></li>
                         {% else %}
                         <li><a href="{% url 'user-list' %}">{% trans "Show all" %}</a></li>
-                        <li><a href="{% url 'user-list-men' %}">{% trans "Only men’s" %}</a></li>
-                        <li><a href="{% url 'user-list-women' %}">{% trans "Only women’s" %}</a></li>
+                        <li><a href="{% url 'user-list-men' %}">{% trans "Only men" %}</a></li>
+                        <li><a href="{% url 'user-list-women' %}">{% trans "Only women" %}</a></li>
                         {% endif %}
                     </ul>
                 </li>

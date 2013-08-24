@@ -27,13 +27,13 @@ $(document).ready(function() {
 {% block content %}
         <h2 id="events">{% trans "Publisher" %}</h2>
         <form id="publisher-form" action="{% url 'settings-publisher' %}" method="post">{% csrf_token %}
-            <h3>{% trans "Your blog" %}</h3>
+            <h4>{% trans "Your blog" %}</h4>
             <div class="group" style="clear: both; padding: 0 0 1em 0;">
                 {% for field in form %}
                 <p><label>{{ field.label }} {{ field }}</label></p>
                 {% endfor %}
             </div>
-            <h3>{% trans "Your payment settings" %}</h3>
+            <h4>{% trans "Your payment settings" %}</h4>
             <div class="group">
                 {% for field in details_form %}
                 {% if field.label == "Company" %}

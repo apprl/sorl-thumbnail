@@ -1841,7 +1841,7 @@ msgstr "dyrast"
 
 #: templates/apparel/fragments/product_filter.html:47
 msgid "Categories"
-msgstr "kategorier"
+msgstr "Kategorier"
 
 #: templates/apparel/fragments/product_filter.html:51
 #: templates/apparel/fragments/product_filter.html:71

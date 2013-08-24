@@ -6,14 +6,14 @@
         <p>{% trans "Here you can set which notifications you want to be notified about via email:" %}</p>
         <form action="{% url 'settings-notification' %}" method="post">{% csrf_token %}
             <div class="form-content">
-                <h3 class="left">{% trans "Who?" %}</h3>
-                <h3 class="right">{% trans "Notifications" %}</h3>
+                <h4>{% trans "Who?" %}</h4>
+                <h4>{% trans "Notifications" %}</h4>
                 {% for field in notification_form %}
-                <div class="left">{{ field }}</div>
-                <div class="right">{{ field.help_text }}</div>
+                <div>{{ field }}</div>
+                <div>{{ field.help_text }}</div>
                 {% endfor %}
             </div>
-            <div style="clear: both; padding: 1em 0;">
+            <div>
                 {% for field in newsletter_form %}
                     <p>{{ field }} {{ field.help_text }}</p>
                 {% endfor %}

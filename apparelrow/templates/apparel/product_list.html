@@ -2,9 +2,11 @@
 
 <div class="row product-list-container">
     <div class="col-product-filter">
+        <h3>{% trans "Filter products" %}</h3>
         {% include 'apparel/fragments/product_filter.html' %}
     </div>
     <div id="product-list" class="col-product-list">
+        <h3>&nbsp;</h3>
         {% if extra_html %}
             {{ extra_html }}
         {% else %}

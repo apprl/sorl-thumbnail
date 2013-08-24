@@ -556,15 +556,13 @@ function updateSelected(products) {
 
     // Select gender
     if(products.selected_gender && products.selected_gender.length > 0) {
-        $('#product-gender-text').text($('#product-gender li > a.selected').data('text'));
         products.selected_gender = products.selected_gender.split();
-        jQuery.each(products.selected_gender, function(i, id) {
-            jQuery('#option-' + id).addClass('selected');
+        $.each(products.selected_gender, function(i, id) {
+            $('#option-' + id).addClass('selected');
         });
     } else {
-        $('#product-gender-text').text($('#product-gender li > a.selected').data('text'));
-        if(!jQuery('#product-gender li > a').hasClass('selected')) {
-            jQuery('#product-gender li:first > a').addClass('selected');
+        if(!$('#product-gender li > a').hasClass('selected')) {
+            $('#product-gender li:first > a').addClass('selected');
         }
     }
 

@@ -145,6 +145,9 @@ a {
 
 .dropdown-menu {
     border-radius: 0;
+    > li > a:hover, > li > a:focus {
+        background-color: #000000;
+    }
 }
 
 .modal {
@@ -196,6 +199,13 @@ body {
     }
 }
 
+body.shop .body-header,
+body.discover-list-page .body-header,
+body.product-detail-page .body-header,
+body.look-detail-page .body-header {
+    border-bottom: 0;
+}
+
 .body-header {
     .make-row;
     margin-left: 0;
@@ -204,16 +214,28 @@ body {
     border-bottom: 3px solid #000000;
 
     .body-header-col-left {
-        .make-sm-column(8);
+        .make-sm-column(12);
         padding-left: 0;
         padding-right: 0;
-        text-align: left;
+        text-align: center;
+        @media (min-width: @grid-float-breakpoint) {
+            .make-sm-column(7);
+            padding-left: 0;
+            padding-right: 0;
+            text-align: left;
+        }
     }
     .body-header-col-right {
-        .make-sm-column(4);
+        .make-sm-column(12);
         padding-left: 0;
         padding-right: 0;
-        text-align: right;
+        text-align: center;
+        @media (min-width: @grid-float-breakpoint) {
+            .make-sm-column(5);
+            padding-left: 0;
+            padding-right: 0;
+            text-align: right;
+        }
         > ul {
             @media (min-width: @grid-float-breakpoint) {
                 margin-top: 36px;
@@ -238,39 +260,8 @@ body {
         padding-right: 0;
     }
 
-    h1 {
-        display: inline-block;
-        margin-bottom: 0;
-        padding-right: 20px;
-        text-transform: uppercase;
-        &:before {
-            display: inline-block;
-            width: 30px;
-            font-weight: normal;
-            font-size: 64px;
-            content: "\005C";
-        }
-    }
-
-    h1 + ul, h1 + h2 {
-        margin-bottom: 0;
-        display: inline-block;
-        li, li > h2, & {
-            color: @gray-light;
-            font-size: 16px;
-            font-weight: 500;
-            @media screen and (min-width: @grid-float-breakpoint) {
-                font-size: 22px;
-            }
-            a {
-                color: @gray-light;
-                text-decoration: none;
-                &:hover, &.selected {
-                    color: @gray-dark;
-                }
-            }
-        }
-    }
+    h1 { .body-header-h1; }
+    h1 + ul, h1 + h2 { .body-header-ul; }
 
     .btn-gender {
         .btn-primary;
@@ -281,56 +272,76 @@ body {
     }
 }
 
+h3 {
+    font-size: 14px;
+    border-bottom: 3px solid #000000;
+    margin-top: 0;
+    padding-bottom: 5px;
+}
 
-.content-header-h1 {
+.body-header-h1 {
     display: inline-block;
+    margin-bottom: 0;
     padding-right: 20px;
-    /*font-family: "Lato", sans-serif;*/
-    /*font-size: 24px;*/
     text-transform: uppercase;
-    .icon-slash-a {
+    font-family: "Lato", sans-serif;
+    &:before {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         display: inline-block;
         width: 30px;
+        font-weight: 500;
+        font-size: 64px;
+        content: "\005C";
+    }
+
+    // Custom styles for mobile
+    @media (max-width: @screen-xs-max) {
+        display: block;
+        font-size: 28px;
+        text-align: center;
         &:before {
-            font-weight: normal;
-            font-size: 64px;
-            content: "\005C";
+            font-size: 56px;
         }
     }
 }
 
-.content-header-ul {
-    display: inline-block;
+.body-header-ul {
     margin-bottom: 0;
-    li, li > h2 {
+    display: inline-block;
+    li, li > h2, & {
+        color: @gray-light;
+        font-family: "IM Fell Great Primer", sans-serif;
+        font-style: italic;
         font-size: 16px;
         font-weight: 500;
-    }
-    li {
-        padding-left: 0;
-        padding-right: 15px;
+        @media screen and (min-width: @grid-float-breakpoint) {
+            font-size: 22px;
+        }
         a {
             color: @gray-light;
             text-decoration: none;
             &:hover, &.selected {
                 color: @gray-dark;
+                border-bottom: 3px solid @gray-dark;
+                padding-bottom: 8px;
             }
         }
     }
-    @media screen and (min-width: @grid-float-breakpoint) {
-        > li, > li > h2 {
-            font-size: 22px;
-            font-weight: 500;
+    li {
+        padding-left: 3px;
+        padding-right: 3px;
+        @media screen and (min-width: @grid-float-breakpoint) {
+            padding-left: 5px;
+            padding-right: 5px;
         }
     }
-}
 
-.content-header {
-    margin-top: 30px;
-    margin-bottom: @grid-gutter-width;
-    border-bottom: 3px solid #000000;
-    > h1 { .content-header-h1; }
-    > ul { .content-header-ul; }
+    // Custom styles for mobile
+    @media (max-width: @screen-xs-max) {
+        display: block;
+        text-align: center;
+        margin-bottom: 15px;
+    }
 }
 
 
@@ -388,8 +399,8 @@ body {
     }
     .navbar-nav > li > a {
         color: #ffffff;
-        font-size: 15px;
-        font-weight: bold;
+        font-size: 14px;
+        font-weight: 500;
         &.dropdown-avatar {
             padding-top: 9px;
             padding-bottom: 9px;
@@ -397,6 +408,11 @@ body {
                 height: 32px;
                 display: none;
             }
+        }
+    }
+    @media (max-width: @screen-xs-max) {
+        .navbar-nav .open .dropdown-menu > li > a {
+            color: #ffffff;
         }
     }
     .navbar-nav > .dropdown > a .caret {
@@ -584,7 +600,7 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         }
     }
 
-    .content-header {
+    .body-header {
         color: #ffffff;
         border: 0;
         margin-top: 0;
