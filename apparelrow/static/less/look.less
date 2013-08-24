@@ -203,7 +203,7 @@
     padding: 0;
     .caption {
         margin-bottom: 30px;
-        max-height: 76px;
+        height: @caption_height;
     }
     h4 {
         text-align: center;
@@ -223,20 +223,9 @@
     .hover {
         display: none;
         position: absolute;
-        top: 0;
         right: 0;
-        bottom: 0;
+        bottom: @caption_height;
         left: 0;
-        width: 140px;
-        height: 84px;
-        margin: auto;
-        ul {
-            width: 140px;
-            margin-bottom: 0;
-            li {
-                margin-bottom: 15px;
-            }
-        }
     }
 }
 

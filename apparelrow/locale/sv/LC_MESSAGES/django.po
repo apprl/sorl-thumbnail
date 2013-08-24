@@ -1434,7 +1434,7 @@ msgstr "Sluta gilla"
 #: templates/apparel/fragments/look_medium.html:15
 #: templates/apparel/fragments/product_medium.html:11
 msgid "Like"
-msgstr "Gillar"
+msgstr "Gilla"
 
 #: templates/apparel/look_detail.html:154 templates/apparel/look_editor.html:5
 #: templates/apparel/fragments/looks_large.html:53

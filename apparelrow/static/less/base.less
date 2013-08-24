@@ -576,6 +576,7 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         height: 494px;
         margin-bottom: 50px;
         .panel-heading { min-height: 150px; max-height: 160px; }
+        .panel-body .hover { bottom: 0; }
         .panel-body .caption { display: none; }
         p {
             font-weight: 500;
@@ -776,7 +777,7 @@ footer {
         }
     }
     .caption {
-        max-height: 76px;
+        height: @caption_height;
         padding-bottom: 0;
         margin-bottom: 30px;
     }
@@ -808,20 +809,9 @@ footer {
     .hover {
         display: none;
         position: absolute;
-        top: 0;
         right: 0;
-        bottom: 0;
+        bottom: @caption_height;
         left: 0;
-        width: 140px;
-        height: 200px;
-        margin: auto;
-        ul {
-            width: 140px;
-            margin-bottom: 0;
-            li {
-                margin-bottom: 15px;
-            }
-        }
     }
 }
 
