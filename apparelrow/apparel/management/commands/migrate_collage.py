@@ -23,6 +23,7 @@ class Command(BaseCommand):
             empty_image.save(empty_image_io, format='PNG')
 
             empty_image_file = InMemoryUploadedFile(empty_image_io, None, '%s.png' % (look.slug,), 'image/png', empty_image_io.len, None)
+            empty_image_file.seek(0)
 
             look.image = empty_image_file
             look.image_width = look.width
