@@ -93,7 +93,7 @@ class Activity(models.Model):
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     active = models.BooleanField(default=True, db_index=True)
-    is_available = models.BooleanField(default=True, db_index=True)
+    is_available = models.BooleanField(default=True)
     featured_date = models.DateField(null=True, blank=True)
 
     objects = ActivityManager()
@@ -110,6 +110,10 @@ class Activity(models.Model):
 
     class Meta:
         unique_together = ('user', 'verb', 'content_type', 'object_id')
+        index_together = [
+            ['active', 'verb', 'is_available', 'user', 'gender'],
+            ['active', 'featured_date'],
+        ]
 
 @receiver(pre_delete, sender=Activity, dispatch_uid='activity_feed.models.delete_activity')
 def delete_activity(sender, instance, **kwargs):

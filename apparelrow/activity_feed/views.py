@@ -112,7 +112,7 @@ class ActivityFeedRender(object):
                                                                       user__in=user_ids,
                                                                       verb__in=self.verbs)
         query = query.filter(Q(gender__in=self.gender_list.get(self.gender)) | Q(gender__isnull=True))
-        query = query.order_by('-created')
+        query = query.order_by('-id')
 
         return query
 
