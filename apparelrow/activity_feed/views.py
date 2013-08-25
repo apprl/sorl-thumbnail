@@ -124,6 +124,7 @@ def user_feed(request, gender=None):
 
     htmlset = ActivityFeedRender(request, gender, request.user).run()
     paginator = Paginator(htmlset, 12)
+    paginator._count = 10000 # disable count sql query
 
     page = request.GET.get('page')
     try:

@@ -6,7 +6,7 @@ import itertools
 
 from django.conf import settings
 from django.core.cache import cache
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.paginator import Paginator, InvalidPage, PageNotAnInteger, EmptyPage
 from django.db import connections, models
 from django.db.models.loading import get_model
 from django.utils import translation
@@ -270,6 +270,20 @@ def get_gender_from_cookie(request):
         return cookie_value
 
     return 'W'
+
+
+def get_paged_result(queryset, per_page, page_num):
+    paginator = Paginator(queryset, per_page)
+    paginator._count = 10000
+    try:
+        paged_result = paginator.page(page_num)
+    except PageNotAnInteger:
+        paged_result = paginator.page(1)
+    except EmptyPage:
+        paged_result = paginator.page(paginator.num_pages)
+
+    return paged_result
+
 
 def get_pagination_page(queryset, per_page, page_num, on_ends=2, on_each_side=3):
     """

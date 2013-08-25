@@ -19,7 +19,7 @@ from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 
-from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse, get_gender_url
+from apparelrow.apparel.utils import get_paged_result, get_gender_from_cookie, JSONResponse, get_gender_url
 from apparelrow.apparel.tasks import facebook_push_graph
 from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
@@ -124,17 +124,14 @@ def looks(request, profile, form, page=0):
     else:
         queryset = profile.look.filter(published=True).order_by('-created')
 
-    paged_result, pagination = get_pagination_page(queryset, 12,
-            request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/look_list.html', {
-                'pagination': pagination,
                 'current_page': paged_result
             })
 
     content = {
-        'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         'profile': profile,
@@ -151,17 +148,14 @@ def followers(request, profile, form, page=0):
     queryset = get_user_model().objects.filter(following__user_follow=profile, following__active=True) \
                                        .order_by('name', 'first_name', 'username')
 
-    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
-            request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/user_list.html', {
-                'pagination': pagination,
                 'current_page': paged_result
         })
 
     content = {
-        'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         'profile': profile,
@@ -178,17 +172,14 @@ def following(request, profile, form, page=0):
     queryset = get_user_model().objects.filter(followers__user=profile, followers__active=True) \
                                        .order_by('name', 'first_name', 'username')
 
-    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
-            request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/user_list.html', {
-                'pagination': pagination,
                 'current_page': paged_result
         })
 
     content = {
-        'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         'profile': profile,
@@ -362,10 +353,9 @@ def login_flow_brands(request):
         return HttpResponseRedirect(reverse('login-flow-brands'))
 
     queryset = get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:24]
-    paged_result, pagination = get_pagination_page(queryset, 24, request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, 24, request.GET.get('page'))
 
     context = {
-        'pagination': pagination,
         'current_page': paged_result,
         'next_url': reverse('login-flow-complete'),
     }

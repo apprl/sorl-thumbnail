@@ -10,17 +10,13 @@ from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.core.urlresolvers import reverse
-from django.db import IntegrityError
-from django.db.models import Q, Max, Min, Count, Sum, connection, signals, get_model
+from django.db.models import Q, get_model
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.template.defaultfilters import floatformat
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.comments.models import Comment
-from django.contrib.sites.models import Site
 from django.views.i18n import set_language
 from django.views.decorators.http import require_POST
 from django.utils import translation
@@ -37,7 +33,7 @@ from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Opt
 from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
-from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative, get_top_looks_in_network, get_featured_activity_today
+from apparelrow.apparel.utils import get_paged_result, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative, get_top_looks_in_network, get_featured_activity_today
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity
 
 from apparelrow.activity_feed.views import user_feed
@@ -352,8 +348,7 @@ def product_popup(request):
         product_result = {'liked': False}
         if request.user and request.user.is_authenticated():
             product_result['liked'] = ProductLike.objects.filter(product=product, active=True, user=request.user).exists()
-        product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
-        product_result['comments'] = Comment.objects.filter(content_type=content_type, object_pk=product, is_removed=False, is_public=True).count()
+        #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
 
         result.append(product_result)
 
@@ -375,7 +370,6 @@ def look_popup(request):
         if request.user and request.user.is_authenticated():
             temp_result['liked'] = LookLike.objects.filter(look=look, active=True, user=request.user).exists()
         #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
-        #product_result['comments'] = Comment.objects.filter(content_type=content_type, object_pk=product, is_removed=False, is_public=True).count()
 
         result.append(temp_result)
 
@@ -514,19 +508,16 @@ def look_list(request, search=None, contains=None, gender=None):
     else:
         queryset = Look.published_objects.filter(gender__in=gender_list.get(gender)).order_by('-popularity')
 
-    paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
-            request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page'))
 
     if request.is_ajax():
         response = render_to_response('apparel/fragments/look_list.html', {
-                    'pagination': pagination,
                     'current_page': paged_result,
                 }, context_instance=RequestContext(request))
     else:
         response = render_to_response('apparel/look_list.html', {
                     'query': request.GET.get('q'),
                     'paginator': paged_result.paginator,
-                    'pagination': pagination,
                     'current_page': paged_result,
                     'next': request.get_full_path(),
                     'APPAREL_GENDER': gender
@@ -668,16 +659,14 @@ def user_list(request, gender=None, brand=False):
 
     queryset = queryset.order_by('-popularity', '-followers_count', 'first_name', 'last_name', 'username')
 
-    paged_result, pagination = get_pagination_page(queryset, 12, request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
 
     if request.is_ajax():
         response = render_to_response('apparel/fragments/user_list.html', {
-                    'pagination': pagination,
                     'current_page': paged_result,
             }, context_instance=RequestContext(request))
     else:
         response = render_to_response('apparel/user_list.html', {
-                'pagination': pagination,
                 'current_page': paged_result,
                 'next': request.get_full_path(),
                 'alphabet': string.lowercase,

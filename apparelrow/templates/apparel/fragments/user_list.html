@@ -3,11 +3,13 @@
     {% for profile in current_page.object_list %}
     <li class="col-discover-item">{% include 'apparel/fragments/user_medium_cache.html' %}</li>
     {% empty %}
+    {% if current_page.number == 1 %}
     <li class="col-lg-12">{% trans "No results" %}</li>
+    {% endif %}
     {% endfor %}
 </ul>
 <div class="pagination">
-    {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
+    {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page only %}
 </div>
 {% if request.user.is_authenticated %}
 <script type="text/javascript">
