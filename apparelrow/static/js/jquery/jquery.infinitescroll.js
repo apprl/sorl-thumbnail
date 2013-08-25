@@ -10,7 +10,7 @@ window.resetInfiniteScroll = function() {
     var $window = $(window);
     $window.data('first-scroll', true);
     $window.data('dont-scroll', false);
-}
+};
 
 window.infiniteScroll = function infiniteScroll(callback) {
     var $window = $(window),
@@ -50,4 +50,4 @@ window.infiniteScroll = function infiniteScroll(callback) {
         // Store offset to see scroll direction
         lastOffset = offset;
     });
-}
+};
