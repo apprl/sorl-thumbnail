@@ -655,7 +655,9 @@ def user_list(request, gender=None, brand=False):
         queryset = queryset.filter(gender__in=gender_list.get(gender))
     else:
         # XXX: is this solution good enough?
-        queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender__in=gender_list.get(gender)).distinct()
+        # XXX: nope, too slow
+        #queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender__in=gender_list.get(gender)).distinct()
+        queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
 
     alphabet = request.GET.get('alphabet')
     if alphabet:
