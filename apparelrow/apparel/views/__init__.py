@@ -772,6 +772,10 @@ def jobs(request):
         }, context_instance=RequestContext(request))
 
 
+def contest_stylesearch(request):
+    return render(request, 'apparel/contest_stylesearch.html')
+
+
 def apparel_set_language(request):
     language = request.POST.get('language', translation.get_language())
     if request.user.is_authenticated():

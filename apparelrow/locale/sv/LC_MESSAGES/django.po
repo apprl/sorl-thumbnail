@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-25 23:17+0200\n"
+"POT-Creation-Date: 2013-08-26 00:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1307,6 +1307,91 @@ msgstr "Mina vänner"
 msgid "My brands"
 msgstr "Mina varumärken"
 
+#: templates/apparel/contest_stylesearch.html:5
+#: templates/apparel/contest_stylesearch.html:11
+#: templates/apparel/contest_stylesearch.html:20
+#: templates/apparel/contest_stylesearch.html:47
+msgid "Fashion week style search"
+msgstr "Fashion week style search"
+
+#: templates/apparel/contest_stylesearch.html:12
+msgid "Create your fall look in 5 mins for a chance to win €500 to shop for"
+msgstr ""
+"Skapa din höstlook på 5 minuter för en chans att vinna 5000kr att shoppa för"
+
+#: templates/apparel/contest_stylesearch.html:23
+#: templates/apparel/contest_stylesearch.html:49
+msgid "Competition open 26th Aug - Sept 1st"
+msgstr "Tävlingen är öppen 26 augusti - 1 september"
+
+#: templates/apparel/contest_stylesearch.html:24
+#: templates/apparel/contest_stylesearch.html:50
+msgid "The looks with most votes by the end of Sept 1st enter the final."
+msgstr "De looks som har fått flest röster efter 1:a september går till final"
+
+#: templates/apparel/contest_stylesearch.html:26
+#: templates/apparel/contest_stylesearch.html:52
+msgid "To join:"
+msgstr "För att delta:"
+
+#: templates/apparel/contest_stylesearch.html:29
+#: templates/apparel/contest_stylesearch.html:55
+msgid "Like APPRL on Facebook here:"
+msgstr "Gilla APPRL på Facebook här:"
+
+#: templates/apparel/contest_stylesearch.html:33
+#: templates/apparel/contest_stylesearch.html:59
+msgid "Create your fall look here:"
+msgstr "Skapa din höstlook här:"
+
+#: templates/apparel/contest_stylesearch.html:35
+#: templates/apparel/contest_stylesearch.html:37
+#: templates/apparel/contest_stylesearch.html:61
+#: templates/apparel/contest_stylesearch.html:63
+msgid "+ CREATE LOOK"
+msgstr "+ SKAPA LOOK"
+
+#: templates/apparel/contest_stylesearch.html:40
+msgid ""
+"Promote your look - the 10 looks with the most <span class=\"heart\">♥</"
+"span> likes on APPRL enter the final round."
+msgstr ""
+"Sprid din look - de 10 som flest har <span class=\"heart\">♥</span> gillat "
+"på APPRL går till final"
+
+#: templates/apparel/contest_stylesearch.html:41
+#: templates/apparel/contest_stylesearch.html:67
+msgid ""
+"Top blogger <strong>Elin Kling</strong> selects the final winner on our "
+"Facebook page."
+msgstr "<strong>Elin Kling</strong> väljer ut vinnaren på vår Facebooksida"
+
+#: templates/apparel/contest_stylesearch.html:66
+msgid "Promote your look - the 10 looks with the most <span class=\\"
+msgstr "Sprid din look - de 10 som flest har ♥ gillat på APPRL går till final"
+
+#: templates/apparel/contest_stylesearch.html:74
+msgid ""
+"All looks created between 26th of August and 1st of September are included "
+"in the contest. The 10 looks with most likes on Apprl by the end of "
+"September 1st are published on our Facebook page where blogger Elin Kling "
+"chooses the winner. The winning prize is products for €500 at any of the "
+"stores connected to Apprl, following Apprl's process for this. The "
+"contestant is responsible to pay any taxes if required and that uploaded "
+"images (if any) follows Apprl's Terms of Service. Apprl holds the right to "
+"disqualify contestants for suspected cheating, abuse or other reason. Our "
+"general terms of service & privacy policy apply."
+msgstr ""
+"Alla looks skapade mellan 26 augusti - 1 september är med i tävlingen. De 10 "
+"looks som flest personer har gillat på Apprl efter 1:a september publiceras "
+"på vår Facebooksida där Elin Kling väljer ut en vinnare. Priset består av "
+"rätten till produkter till ett värde av €500 från någon av de butiker som är "
+"kopplade till Apprl enligt Apprls process för detta. Den tävlande betalar "
+"eventuell vinstskatt och är ansvarig för att eventuellt uppladdat innehåll "
+"följer Apprl's Användarvillkor. Apprl förbehåller sig rätten att "
+"diskvalificera en tävlande för misstanke om fusk, oetiskt uppträdande eller "
+"av annan anledning. Apprls Användarvillkor gäller."
+
 #: templates/apparel/dialog_look_embed.html:7
 msgid "Embed look on your site / blog"
 msgstr "Lägg in looken på din blogg eller site"
@@ -1741,7 +1826,9 @@ msgstr "Bli medlem "
 
 #: templates/apparel/fragments/dialog_become_member.html:7
 msgid "Sign up to get access to featured products, sale alerts and more."
-msgstr "Bli medlem för att följa bloggare, dina vänner & designers och bli meddelad när dina favoritprodukter prissänks."
+msgstr ""
+"Bli medlem för att följa bloggare, dina vänner & designers och bli meddelad "
+"när dina favoritprodukter prissänks."
 
 #: templates/apparel/fragments/dialog_create_look.html:5
 msgid "Create a look"

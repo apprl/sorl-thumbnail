@@ -14,6 +14,9 @@ urlpatterns = patterns('',
     url(r'^store/$', 'apparelrow.dashboard.views.store', name='index-store'),
     url(r'^store/complete/$', 'apparelrow.dashboard.views.dashboard_complete', name='index-store-complete'),
 
+    # Contests
+    url(r'^stylesearch/$', 'apparelrow.apparel.views.contest_stylesearch', name='contest-stylesearch'),
+
     # Feed
     url(r'^all/$', RedirectView.as_view(url='/')),
 

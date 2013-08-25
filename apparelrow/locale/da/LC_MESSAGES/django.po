@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-25 23:17+0200\n"
+"POT-Creation-Date: 2013-08-26 00:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1290,6 +1290,79 @@ msgstr ""
 
 #: templates/apparel/browse.html:18
 msgid "My brands"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:5
+#: templates/apparel/contest_stylesearch.html:11
+#: templates/apparel/contest_stylesearch.html:20
+#: templates/apparel/contest_stylesearch.html:47
+msgid "Fashion week style search"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:12
+msgid "Create your fall look in 5 mins for a chance to win €500 to shop for"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:23
+#: templates/apparel/contest_stylesearch.html:49
+msgid "Competition open 26th Aug - Sept 1st"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:24
+#: templates/apparel/contest_stylesearch.html:50
+msgid "The looks with most votes by the end of Sept 1st enter the final."
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:26
+#: templates/apparel/contest_stylesearch.html:52
+msgid "To join:"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:29
+#: templates/apparel/contest_stylesearch.html:55
+msgid "Like APPRL on Facebook here:"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:33
+#: templates/apparel/contest_stylesearch.html:59
+msgid "Create your fall look here:"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:35
+#: templates/apparel/contest_stylesearch.html:37
+#: templates/apparel/contest_stylesearch.html:61
+#: templates/apparel/contest_stylesearch.html:63
+msgid "+ CREATE LOOK"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:40
+msgid ""
+"Promote your look - the 10 looks with the most <span class=\"heart\">♥</"
+"span> likes on APPRL enter the final round."
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:41
+#: templates/apparel/contest_stylesearch.html:67
+msgid ""
+"Top blogger <strong>Elin Kling</strong> selects the final winner on our "
+"Facebook page."
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:66
+msgid "Promote your look - the 10 looks with the most <span class=\\"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:74
+msgid ""
+"All looks created between 26th of August and 1st of September are included "
+"in the contest. The 10 looks with most likes on Apprl by the end of "
+"September 1st are published on our Facebook page where blogger Elin Kling "
+"chooses the winner. The winning prize is products for €500 at any of the "
+"stores connected to Apprl, following Apprl's process for this. The "
+"contestant is responsible to pay any taxes if required and that uploaded "
+"images (if any) follows Apprl's Terms of Service. Apprl holds the right to "
+"disqualify contestants for suspected cheating, abuse or other reason. Our "
+"general terms of service & privacy policy apply."
 msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:7
