@@ -146,16 +146,16 @@ class User(AbstractUser):
         else:
             products = list(self.product_likes.filter(active=True).order_by('-created')[:4])
 
-        look_likes = list(self.look_likes.filter(active=True).order_by('-created')[:4])
+        looks = list(self.look.filter(published=True).order_by('-created')[:4])
 
         items = []
-        for item in list(roundrobin(look_likes, products))[:4]:
-            if self.is_brand and self.brand and not hasattr(item, 'look'):
+        for item in list(roundrobin(looks, products))[:4]:
+            if self.is_brand and self.brand and not hasattr(item, 'component'):
                 items.append((item.get_absolute_url(), item.product_image))
             elif not self.is_brand and hasattr(item, 'product'):
                 items.append((item.product.get_absolute_url(), item.product.product_image))
-            elif hasattr(item, 'look'):
-                items.append((item.look.get_absolute_url(), item.look.static_image))
+            elif hasattr(item, 'component'):
+                items.append((item.get_absolute_url(), item.static_image))
 
         if len(items) < 4:
             for _ in xrange(4 - len(items)):
