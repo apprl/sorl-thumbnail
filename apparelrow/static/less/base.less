@@ -585,10 +585,12 @@ body.index {
 /* Disable hover on featured content when not authenticated */
 body:not(.authenticated) .featured-container .feed-item .panel-body img { opacity: 1 !important; }
 body:not(.authenticated) .featured-container .feed-item .panel-body .hover { display: none !important; }
+@media (max-width: @screen-xs-max) {
+    body.authenticated .featured-container .col-featured-item:not(:first-child) { display: none; }
+}
 
 .featured-container {
     background: #000000 url('../images/index_background.jpg') no-repeat center top;
-    height: 624px;
     overflow: hidden;
     .feed-item {
         display: inline-block;
@@ -630,12 +632,8 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         margin-right: auto;
         text-align: center;
         .make-sm-column(12);
-        &:not(:first-child) {
-            display: none;
-        }
         @media (min-width: @screen-tablet) {
             .make-sm-column(6);
-            display: block !important;
             &:first-child {
                 text-align: left;
             }
@@ -658,6 +656,7 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
             }
             &:last-child {
                 text-align: right;
+                display: block;
             }
 
         }
