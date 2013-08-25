@@ -412,7 +412,7 @@ msgstr "sedan"
 #: apparel/templatetags/login_bar.py:8 templates/apparel/index.html:14
 msgid ""
 "Discover fashion selected by bloggers, your friends & other stylemakers."
-msgstr "Upptäck inspirerande mode genom bloggare, dina vänner & designers."
+msgstr "Håll koll på bloggare, designers och dina vänners favoriter."
 
 #: apparel/templatetags/login_bar.py:12
 msgid "Sign up to get sale alerts when the price drops on products you like!"
