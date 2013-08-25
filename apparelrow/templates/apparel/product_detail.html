@@ -23,16 +23,6 @@
     {% endcache %}
 {% endblock extra-styles %}
 
-{% block 'extra-scripts' %}
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-            jQuery('#more-like-this ul').simple_scrollable(532);
-            jQuery('#more-alternatives ul').simple_scrollable(532);
-        });
-    </script>
-{% endblock 'extra-scripts' %}
-
-
 {% block body-classes %}product-detail-page{% endblock %}
 {% block full-body %}
 
