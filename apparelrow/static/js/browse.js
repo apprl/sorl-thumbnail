@@ -651,23 +651,23 @@ function updateSelected(products) {
 function updateEmbeddedProducts($list) {
     if(typeof embed_shop_user_id !== 'undefined') {
         // TODO: remove product-container later?
-        $list.find('.product-container, .product-shop-thumbnail').each(function(i, element) {
-            var buy_url = $(element).find('.btn-buy').attr('href');
+        $list.find('.product-medium').each(function(i, element) {
+            var buy_url = $(element).find('.btn-product-buy').attr('href');
             buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
-            $('.product-image, .product-footer h4 a', element).attr('href', buy_url);
-            $('.product-image, .product-footer a', element).attr('target', '_blank');
-            var looks_elem = $('.product-footer a.looks', element);
+            $('.product-image-container > a, .caption > h4 > a', element).attr('href', buy_url);
+            $('.product-image-container > a, .caption a', element).attr('target', '_blank');
+            var looks_elem = $('.caption a.looks', element);
             var looks_href = looks_elem.attr('href');
             looks_elem.attr('href', looks_href + '?aid=' + embed_shop_user_id + '&alink=Ext-Shop');
             $('.hover', element).remove();
         });
     } else if(typeof profile_shop_user_id !== 'undefined') {
         // TODO: remove product-container later?
-        $list.find('.product-container, .product-shop-thumbnail').each(function(i, element) {
-            var buy_url = $(element).find('.btn-buy').attr('href');
+        $list.find('.product-medium').each(function(i, element) {
+            var buy_url = $(element).find('.btn-product-buy').attr('href');
             if(typeof buy_url != 'undefined') {
                 buy_url = buy_url.replace('Shop/0/', 'Profile/' + profile_shop_user_id + '/');
-                $('.hover-footer a.btn-buy', element).attr('href', buy_url);
+                $('.hover .btn-product-buy', element).attr('href', buy_url);
             }
         });
     }

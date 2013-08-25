@@ -9,10 +9,11 @@
         {% compressed_css 'bootstrap' %}
         <style>body { background-color: #fff; }</style>
         <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
         <script type="text/javascript">
             var embed_shop_user_id = {{ user_id }};
+        </script>
+        {% compressed_js 'shop' %}
+        <script type="text/javascript">
             $(function () {
                 $(document).on('click', '.product-image, .product-footer a.looks', function() {
                     var slug = $(this).data('slug');
@@ -31,7 +32,6 @@
                 });
             });
         </script>
-        {% compressed_js 'shop' %}
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);

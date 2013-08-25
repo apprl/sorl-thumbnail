@@ -13,6 +13,7 @@
     {% block extra-styles %}
     {% endblock extra-styles %}
     <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
+    {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
     <script type="text/javascript">
         var product_popup_url = '{% url "product-popup" %}';

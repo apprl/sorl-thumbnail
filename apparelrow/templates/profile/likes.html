@@ -3,12 +3,11 @@
 
 {% block extra-title %}{{ profile.display_name }} | {% endblock %}
 
-{% block 'extra-scripts' %}
-    {{ block.super }}
-    <script type="text/javascript">
-        var profile_shop_user_id = {{ profile.pk }};
-    </script>
-{% endblock 'extra-scripts' %}
+{% block pre-extra-scripts %}
+<script type="text/javascript">
+    var profile_shop_user_id = {{ profile.pk }};
+</script>
+{% endblock %}
 
 {% block body-classes %}profile-page profile-likes{% endblock body-classes %}
 
