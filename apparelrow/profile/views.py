@@ -357,28 +357,7 @@ def login_flow_brands(request):
     request.user.save()
 
     if not request.user.following.exists():
-        facebook_friends = get_facebook_friends(request)
-
-        profiles = get_user_model().objects.filter(is_active=True, is_brand=False)
-        profiles = profiles.exclude(pk=request.user.pk)
-        if request.user.gender == 'M':
-            profiles = profiles.order_by('-popularity_men', '-followers_count')
-        else:
-            profiles = profiles.order_by('-popularity', '-followers_count')
-
-        friends = list(profiles[:20])
-        if facebook_friends:
-            friends = friends + list(facebook_friends)
-
-        facebook_user = get_facebook_user(request)
-        for friend in friends:
-            follow, created = Follow.objects.get_or_create(user=request.user, user_follow=friend)
-            if not created and follow.active == False:
-                follow.active = True
-                follow.save()
-
-            if facebook_user:
-                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
+        follow_featured_auto(request)
 
         return HttpResponseRedirect(reverse('login-flow-brands'))
 
@@ -408,6 +387,32 @@ def login_flow_complete(request):
 #
 # Register view
 #
+
+
+def follow_featured_auto(request):
+    facebook_friends = get_facebook_friends(request)
+
+    profiles = get_user_model().objects.filter(is_active=True, is_brand=False)
+    profiles = profiles.exclude(pk=request.user.pk)
+    if request.user.gender == 'M':
+        profiles = profiles.order_by('-popularity_men', '-followers_count')
+    else:
+        profiles = profiles.order_by('-popularity', '-followers_count')
+
+    friends = list(profiles[:20])
+    if facebook_friends:
+        friends = friends + list(facebook_friends)
+
+    facebook_user = get_facebook_user(request)
+    for friend in friends:
+        follow, created = Follow.objects.get_or_create(user=request.user, user_follow=friend)
+        if not created and follow.active == False:
+            follow.active = True
+            follow.save()
+
+        if facebook_user:
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
+
 
 def send_confirmation_email(request, instance):
     subject = ugettext('Nearly created your membership...')
@@ -550,6 +555,8 @@ def facebook_login(request):
                 response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
                 response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
                 return response
+            elif user.login_flow != 'complete' and disable_flow:
+                follow_featured_auto(request)
 
             return HttpResponseRedirect(_get_next(request))
 
