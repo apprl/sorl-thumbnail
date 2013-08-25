@@ -366,9 +366,12 @@ def login_flow_brands(request):
         else:
             profiles = profiles.order_by('-popularity', '-followers_count')
 
+        friends = list(profiles[:20])
+        if facebook_friends:
+            friends = friends + list(facebook_friends)
 
         facebook_user = get_facebook_user(request)
-        for friend in list(facebook_friends) + list(profiles[:20]):
+        for friend in friends:
             follow, created = Follow.objects.get_or_create(user=request.user, user_follow=friend)
             if not created and follow.active == False:
                 follow.active = True
