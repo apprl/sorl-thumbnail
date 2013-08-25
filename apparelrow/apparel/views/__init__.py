@@ -618,11 +618,13 @@ def csrf_failure(request, reason=None):
 @login_required
 @require_POST
 def follow_backend(request):
-    uids = request.POST.get('uids', '').split(',')
     follows = []
-    for profile in get_user_model().objects.filter(id__in=uids):
-        follow_html = render_to_string('apparel/fragments/follow.html', {'profile': profile}, context_instance=RequestContext(request))
-        follows.append({'id': profile.pk, 'html': follow_html})
+    uids = request.POST.get('uids')
+    if uids:
+        uids = uids.split(',')
+        for profile in get_user_model().objects.filter(id__in=uids):
+            follow_html = render_to_string('apparel/fragments/follow.html', {'profile': profile}, context_instance=RequestContext(request))
+            follows.append({'id': profile.pk, 'html': follow_html})
 
     return HttpResponse(json.dumps(follows), mimetype='application/json')
 
