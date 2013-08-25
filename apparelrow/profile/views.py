@@ -155,7 +155,7 @@ def followers(request, profile, form, page=0):
             request.GET.get('page', 1), 1, 2)
 
     if request.is_ajax():
-        return render(request, 'profile/fragments/user_list.html', {
+        return render(request, 'apparel/fragments/user_list.html', {
                 'pagination': pagination,
                 'current_page': paged_result
         })
