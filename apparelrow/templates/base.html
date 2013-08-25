@@ -12,7 +12,8 @@
     {% compressed_css 'bootstrap' %}
     {% block extra-styles %}
     {% endblock extra-styles %}
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
+    {% compressed_js 'main' %}
     <script type="text/javascript">
         var product_popup_url = '{% url "product-popup" %}';
         var look_popup_url = '{% url "look-popup" %}';
@@ -41,11 +42,6 @@
                 }
             });
         }
-    </script>
-    <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
-    {% compressed_js 'bootstrap' %}
-    {% compressed_js 'main' %}
-    <script type="text/javascript">
         window.login_function = function(callback) {
             FB.login(function(response) {
                 if(response.authResponse) {
