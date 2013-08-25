@@ -443,6 +443,7 @@ class LookView(View):
             empty_image.save(empty_image_io, format='PNG')
 
             json_data['image'] = InMemoryUploadedFile(empty_image_io, None, '%s.png' % (uuid.uuid4().hex,), 'image/png', empty_image_io.len, None)
+            json_data['image'].seek(0)
 
         # Add user
         json_data['user'] = request.user
