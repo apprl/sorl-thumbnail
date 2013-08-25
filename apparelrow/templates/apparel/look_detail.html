@@ -244,7 +244,7 @@
                                 {% cache CACHE_TIMEOUT look_small_like_product look.id LANGUAGE_CODE %}
                                 <a title="{{ look.title }}" href="{% url 'look-detail' slug=look.slug %}">
                                     <div class="look-small {% if look.display_with_component == 'P' %}look-photo{% else %}look-collage{% endif %}">
-                                        {% thumbnail look.static_image "300x69" crop="noop" format="PNG" transparent=True as im %}
+                                        {% thumbnail look.static_image "300x226" is_collage=look.is_collage keep_size=True crop=False format="PNG" as im %}
                                         <img id="look-{{ look.id }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-responsive" />
                                         {% endthumbnail %}
                                     </div>
