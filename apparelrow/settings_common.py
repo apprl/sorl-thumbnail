@@ -248,7 +248,8 @@ PIPELINE_CSS = {
         },
     }
 }
-PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
+#PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
+PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.uglifyjs.UglifyJSCompressor'
 PIPELINE_JS = {
     'bootstrap': {
         'source_filenames': ('bootstrap/js/transition.js',

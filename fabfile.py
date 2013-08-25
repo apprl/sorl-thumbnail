@@ -116,7 +116,8 @@ def setup(snapshot='master'):
     sudo('apt-get install -y openjdk-6-jre-headless')
     # install lessc
     sudo('apt-get install -y nodejs')
-    sudo('sudo npm install -g less')
+    sudo('npm install -g less')
+    sudo('npm install -g uglify-js')
 
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
