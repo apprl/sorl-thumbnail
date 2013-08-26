@@ -9,7 +9,7 @@
     {% endfor %}
 </ul>
 <div class="pagination">
-    {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page only %}
+    {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page extra_parameter=extra_parameter only %}
 </div>
 {% if request.user.is_authenticated %}
 <script type="text/javascript">

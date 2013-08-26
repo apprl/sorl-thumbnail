@@ -652,12 +652,16 @@ def user_list(request, gender=None, brand=False):
         #queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender__in=gender_list.get(gender)).distinct()
         queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
 
+    extra_parameter = None
+
     alphabet = request.GET.get('alphabet')
     if alphabet:
         if alphabet == '0-9':
             queryset = queryset.filter(name__regex=r'^\d.+')
         elif alphabet in  string.lowercase:
             queryset = queryset.filter(name__istartswith=alphabet)
+
+        extra_parameter = 'alphabet=%s' % (alphabet,)
 
     queryset = queryset.order_by('-popularity', '-followers_count', 'first_name', 'last_name', 'username')
 
@@ -666,6 +670,7 @@ def user_list(request, gender=None, brand=False):
     if request.is_ajax():
         response = render_to_response('apparel/fragments/user_list.html', {
                     'current_page': paged_result,
+                    'extra_parameter': extra_parameter,
             }, context_instance=RequestContext(request))
     else:
         response = render_to_response('apparel/user_list.html', {
@@ -675,6 +680,7 @@ def user_list(request, gender=None, brand=False):
                 'selected_alphabet': alphabet,
                 'APPAREL_GENDER': gender,
                 'is_brand': brand,
+                'extra_parameter': extra_parameter,
             }, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
