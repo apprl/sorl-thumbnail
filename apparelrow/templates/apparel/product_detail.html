@@ -161,8 +161,7 @@
                             <li class="clearfix">
                                 <a class="pull-left" href="{{ user.get_absolute_url }}"><img class="img-circle" src="{{ user.avatar }}" alt="{{ user.display_name }}"/></a>
                                 <div class="pull-left selected-by-text">
-                                    <a href="{{ user.get_absolute_url }}">{{ user.display_name }}</a><br>
-                                    <a target="_blank" href="{{ user.blog_url_external }}">{% trans "Go to blog »" %}</a>
+                                    <a href="{{ user.get_absolute_url }}">{{ user.display_name }}</a>
                                 </div>
                                 <div class="pull-right">{% include 'apparel/fragments/follow.html' with request=request profile=user only %}</div>
                             </li>
