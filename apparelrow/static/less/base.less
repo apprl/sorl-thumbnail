@@ -237,20 +237,12 @@ body.look-detail-page .body-header {
         padding-left: 0;
         padding-right: 0;
         text-align: center;
-        @media (min-width: @grid-float-breakpoint) {
-            .make-sm-column(5);
-            padding-left: 0;
-            padding-right: 0;
-            text-align: right;
-        }
         > ul {
-            @media (min-width: @grid-float-breakpoint) {
-                margin-top: 36px;
-            }
             > li {
                 padding-right: 0;
                 padding-left: 10px;
                 > .btn {
+                    margin-top: 10px;
                     padding-top: 10px;
                     padding-bottom: 10px;
                 }
@@ -258,6 +250,18 @@ body.look-detail-page .body-header {
             .dropdown-menu {
                 left: auto;
                 right: 0;
+            }
+        }
+        @media (min-width: @grid-float-breakpoint) {
+            .make-sm-column(5);
+            padding-left: 0;
+            padding-right: 0;
+            text-align: right;
+            > ul {
+                margin-top: 36px;
+                > li > .btn {
+                    margin-top: 0;
+                }
             }
         }
     }
