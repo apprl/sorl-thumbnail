@@ -1882,7 +1882,7 @@ msgstr "Visa mer!"
 
 #: templates/apparel/fragments/product_filter.html:11
 msgid "Women’s / Men’s"
-msgstr ""
+msgstr "Dam / Herr"
 
 #: templates/apparel/fragments/product_filter.html:17
 msgid "Show everything"
