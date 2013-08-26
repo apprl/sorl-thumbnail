@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 00:49+0200\n"
+"POT-Creation-Date: 2013-08-26 15:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -926,7 +926,7 @@ msgstr "Shop"
 #: templates/base.html:141 templates/base.html.py:179
 #: templates/apparel/look_detail.html:4 templates/apparel/look_editor.html:5
 #: templates/apparel/look_list.html:11
-#: templates/apparel/product_detail.html:174 templates/profile/looks.html:4
+#: templates/apparel/product_detail.html:173 templates/profile/looks.html:4
 msgid "Looks"
 msgstr "Looks"
 
@@ -1310,7 +1310,6 @@ msgstr "Mina varumärken"
 #: templates/apparel/contest_stylesearch.html:5
 #: templates/apparel/contest_stylesearch.html:11
 #: templates/apparel/contest_stylesearch.html:20
-#: templates/apparel/contest_stylesearch.html:47
 msgid "Fashion week style search"
 msgstr "Fashion week style search"
 
@@ -1320,34 +1319,27 @@ msgstr ""
 "Skapa din höstlook på 5 minuter för en chans att vinna 5000kr att shoppa för"
 
 #: templates/apparel/contest_stylesearch.html:23
-#: templates/apparel/contest_stylesearch.html:49
 msgid "Competition open 26th Aug - Sept 1st"
 msgstr "Tävlingen är öppen 26 augusti - 1 september"
 
 #: templates/apparel/contest_stylesearch.html:24
-#: templates/apparel/contest_stylesearch.html:50
 msgid "The looks with most votes by the end of Sept 1st enter the final."
 msgstr "De looks som har fått flest röster efter 1:a september går till final"
 
 #: templates/apparel/contest_stylesearch.html:26
-#: templates/apparel/contest_stylesearch.html:52
 msgid "To join:"
 msgstr "För att delta:"
 
 #: templates/apparel/contest_stylesearch.html:29
-#: templates/apparel/contest_stylesearch.html:55
 msgid "Like APPRL on Facebook here:"
 msgstr "Gilla APPRL på Facebook här:"
 
 #: templates/apparel/contest_stylesearch.html:33
-#: templates/apparel/contest_stylesearch.html:59
 msgid "Create your fall look here:"
 msgstr "Skapa din höstlook här:"
 
 #: templates/apparel/contest_stylesearch.html:35
 #: templates/apparel/contest_stylesearch.html:37
-#: templates/apparel/contest_stylesearch.html:61
-#: templates/apparel/contest_stylesearch.html:63
 msgid "+ CREATE LOOK"
 msgstr "+ SKAPA LOOK"
 
@@ -1360,17 +1352,12 @@ msgstr ""
 "på APPRL går till final"
 
 #: templates/apparel/contest_stylesearch.html:41
-#: templates/apparel/contest_stylesearch.html:67
 msgid ""
 "Top blogger <strong>Elin Kling</strong> selects the final winner on our "
 "Facebook page."
 msgstr "<strong>Elin Kling</strong> väljer ut vinnaren på vår Facebooksida"
 
-#: templates/apparel/contest_stylesearch.html:66
-msgid "Promote your look - the 10 looks with the most <span class=\\"
-msgstr "Sprid din look - de 10 som flest har ♥ gillat på APPRL går till final"
-
-#: templates/apparel/contest_stylesearch.html:74
+#: templates/apparel/contest_stylesearch.html:51
 msgid ""
 "All looks created between 26th of August and 1st of September are included "
 "in the contest. The 10 looks with most likes on Apprl by the end of "
@@ -1391,6 +1378,10 @@ msgstr ""
 "följer Apprl's Användarvillkor. Apprl förbehåller sig rätten att "
 "diskvalificera en tävlande för misstanke om fusk, oetiskt uppträdande eller "
 "av annan anledning. Apprls Användarvillkor gäller."
+
+#: templates/apparel/contest_stylesearch.html:52
+msgid "For questions & info contact "
+msgstr "För frågor & info kontakta "
 
 #: templates/apparel/dialog_look_embed.html:7
 msgid "Embed look on your site / blog"
@@ -1429,7 +1420,7 @@ msgstr "Embed-kod"
 msgid "Are you a blogger?"
 msgstr "Är du bloggare?"
 
-#: templates/apparel/index.html:26 templates/apparel/store.html:8
+#: templates/apparel/index.html:26 templates/apparel/store.html:11
 msgid "Are you an online store?"
 msgstr "Är du en onlinebutik?"
 
@@ -1560,7 +1551,7 @@ msgid "See all looks"
 msgstr "Visa alla looks"
 
 #: templates/apparel/look_detail.html:260
-#: templates/apparel/product_detail.html:193
+#: templates/apparel/product_detail.html:192
 msgid "Likes"
 msgstr "Gillar"
 
@@ -1748,37 +1739,36 @@ msgid "Selected by"
 msgstr "Utvald av"
 
 #: templates/apparel/product_detail.html:155
-#: templates/apparel/product_detail.html:165
 msgid "Go to blog »"
 msgstr "Till bloggen »"
 
-#: templates/apparel/product_detail.html:190
+#: templates/apparel/product_detail.html:189
 msgid "Add your look"
 msgstr "Lägg till din look"
 
-#: templates/apparel/product_detail.html:195
+#: templates/apparel/product_detail.html:194
 msgid "Be the first one to like this product!"
 msgstr "Bli den första att gilla den här produkten!"
 
-#: templates/apparel/product_detail.html:213
+#: templates/apparel/product_detail.html:212
 msgid "Similar"
 msgstr "Liknande"
 
-#: templates/apparel/product_detail.html:214
+#: templates/apparel/product_detail.html:213
 msgid "See all »"
 msgstr "Se alla »"
 
-#: templates/apparel/product_detail.html:217
-#: templates/apparel/product_detail.html:229
+#: templates/apparel/product_detail.html:216
+#: templates/apparel/product_detail.html:228
 msgid "Previous"
 msgstr "Föregående"
 
-#: templates/apparel/product_detail.html:223
-#: templates/apparel/product_detail.html:235
+#: templates/apparel/product_detail.html:222
+#: templates/apparel/product_detail.html:234
 msgid "Next"
 msgstr "Nästa"
 
-#: templates/apparel/product_detail.html:227
+#: templates/apparel/product_detail.html:226
 msgid "You may also like"
 msgstr "Se även"
 
@@ -1787,18 +1777,18 @@ msgstr "Se även"
 msgid "Filter products"
 msgstr "Filtrera produkter"
 
-#: templates/apparel/store.html:14
+#: templates/apparel/store.html:18
 msgid ""
 "Apprl is a digital service that helps online stores to drive sales & "
 "engagement through the social platform Apprl.com and our network of fashion "
 "influencers, bloggers & magazines."
 msgstr ""
 
-#: templates/apparel/store.html:15
+#: templates/apparel/store.html:19
 msgid "Apply and we'll get in touch with you:"
 msgstr ""
 
-#: templates/apparel/store.html:19 templates/dashboard/index.html:20
+#: templates/apparel/store.html:43 templates/dashboard/index.html:42
 msgid "APPLY"
 msgstr ""
 
@@ -2116,18 +2106,18 @@ msgstr "Bli Apprl partner"
 msgid "How it works"
 msgstr "Så funkar det"
 
-#: templates/dashboard/index.html:9
+#: templates/dashboard/index.html:11
 msgid "Are you a blogger/publisher?"
 msgstr "Är du bloggare?"
 
-#: templates/dashboard/index.html:15
+#: templates/dashboard/index.html:18
 msgid ""
 "Apprl is an invitation-only digital service for fashion influencers, "
 "bloggers & magazines that helps you earn money on your blog/site through our "
 "tools."
 msgstr ""
 
-#: templates/dashboard/index.html:16
+#: templates/dashboard/index.html:19
 msgid "Apply for an invitation:"
 msgstr ""
 
@@ -3072,6 +3062,10 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:6
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
+
+#~ msgid "Promote your look - the 10 looks with the most <span class=\\"
+#~ msgstr ""
+#~ "Sprid din look - de 10 som flest har ♥ gillat på APPRL går till final"
 
 #~ msgid "Apply to become a publisher"
 #~ msgstr "Ansök om att bli Apprl partner"

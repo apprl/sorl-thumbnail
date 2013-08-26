@@ -55,11 +55,16 @@ body.contest-stylesearch {
         }
     }
 
-    small {
+    .small-text {
         margin-top: 60px;
         margin-bottom: 10px;
-        display: inline-block;
-        text-align: center;
-        color: @gray-light;
+        small {
+            display: block;
+            text-align: center;
+            color: @gray-light;
+            &:last-child {
+                margin-top: 20px;
+            }
+        }
     }
 }
