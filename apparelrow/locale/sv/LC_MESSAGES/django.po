@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 15:43+0200\n"
+"POT-Creation-Date: 2013-08-26 15:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1420,7 +1420,7 @@ msgstr "Embed-kod"
 msgid "Are you a blogger?"
 msgstr "Är du bloggare?"
 
-#: templates/apparel/index.html:26 templates/apparel/store.html:11
+#: templates/apparel/index.html:26
 msgid "Are you an online store?"
 msgstr "Är du en onlinebutik?"
 
@@ -1777,20 +1777,27 @@ msgstr "Se även"
 msgid "Filter products"
 msgstr "Filtrera produkter"
 
+#: templates/apparel/store.html:11
+msgid "APPRL FOR ONLINE STORES"
+msgstr "APPRL FÖR ONLINEBUTIKER"
+
 #: templates/apparel/store.html:18
 msgid ""
-"Apprl is a digital service that helps online stores to drive sales & "
-"engagement through the social platform Apprl.com and our network of fashion "
-"influencers, bloggers & magazines."
+"Apprl is a digital & social platform that helps online stores to drive sales "
+"& engagement through the social platform Apprl.com and our network of "
+"fashion influencers, bloggers & online magazines."
 msgstr ""
+"Apprl är en digital & social plattform som hjälper retailers och varumärken "
+"att driva försäljning och öka sin räckvidd genom apprl.com och vårt nätverk "
+"av bloggare och onlinemedier."
 
 #: templates/apparel/store.html:19
 msgid "Apply and we'll get in touch with you:"
-msgstr ""
+msgstr "Ansök nedan så kontaktar vi dig:"
 
 #: templates/apparel/store.html:43 templates/dashboard/index.html:42
 msgid "APPLY"
-msgstr ""
+msgstr "ANSÖK"
 
 #: templates/apparel/user_list.html:27
 msgid "Only men"
@@ -2107,8 +2114,8 @@ msgid "How it works"
 msgstr "Så funkar det"
 
 #: templates/dashboard/index.html:11
-msgid "Are you a blogger/publisher?"
-msgstr "Är du bloggare?"
+msgid "APPRL FOR BLOGGERS & MEDIA"
+msgstr "APPRL FÖR BLOGGARE & MEDIER"
 
 #: templates/dashboard/index.html:18
 msgid ""
@@ -2116,10 +2123,12 @@ msgid ""
 "bloggers & magazines that helps you earn money on your blog/site through our "
 "tools."
 msgstr ""
+"Apprl är en digital tjänst bloggare och onlinemedier som hjälper dig att "
+"tjäna pengar på din stil genom våra digitala verktyg."
 
 #: templates/dashboard/index.html:19
 msgid "Apply for an invitation:"
-msgstr ""
+msgstr "Ansök om att bli Apprl partner här:"
 
 #: templates/dashboard/info.html:13
 msgid "Sections"
@@ -3062,6 +3071,9 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:6
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
+
+#~ msgid "Are you a blogger/publisher?"
+#~ msgstr "Är du bloggare?"
 
 #~ msgid "Promote your look - the 10 looks with the most <span class=\\"
 #~ msgstr ""

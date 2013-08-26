@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 15:44+0200\n"
+"POT-Creation-Date: 2013-08-26 15:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1391,7 +1391,7 @@ msgstr ""
 msgid "Are you a blogger?"
 msgstr ""
 
-#: templates/apparel/index.html:26 templates/apparel/store.html:11
+#: templates/apparel/index.html:26
 msgid "Are you an online store?"
 msgstr ""
 
@@ -1742,11 +1742,15 @@ msgstr ""
 msgid "Filter products"
 msgstr ""
 
+#: templates/apparel/store.html:11
+msgid "APPRL FOR ONLINE STORES"
+msgstr ""
+
 #: templates/apparel/store.html:18
 msgid ""
-"Apprl is a digital service that helps online stores to drive sales & "
-"engagement through the social platform Apprl.com and our network of fashion "
-"influencers, bloggers & magazines."
+"Apprl is a digital & social platform that helps online stores to drive sales "
+"& engagement through the social platform Apprl.com and our network of "
+"fashion influencers, bloggers & online magazines."
 msgstr ""
 
 #: templates/apparel/store.html:19
@@ -2073,7 +2077,7 @@ msgid "How it works"
 msgstr ""
 
 #: templates/dashboard/index.html:11
-msgid "Are you a blogger/publisher?"
+msgid "APPRL FOR BLOGGERS & MEDIA"
 msgstr ""
 
 #: templates/dashboard/index.html:18
