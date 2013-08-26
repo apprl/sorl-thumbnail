@@ -2474,8 +2474,8 @@ msgstr "Lägg till en beskrivning om dig "
 #, python-format
 msgid "%(product_count)s item"
 msgid_plural "%(product_count)s items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(product_count)s produkt"
+msgstr[1] "%(product_count)s produkter"
 
 #: templates/profile/base_profile.html:76
 #, python-format
@@ -2495,8 +2495,8 @@ msgstr[1] "%(followers_count)s följare"
 #, python-format
 msgid "%(following_count)s following"
 msgid_plural "%(following_count)s following"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Följer %(following_count)s"
+msgstr[1] "Följer %(following_count)s"
 
 #: templates/profile/base_settings.html:17
 #: templates/profile/settings_notification.html:5
