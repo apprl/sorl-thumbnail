@@ -645,7 +645,7 @@ def user_list(request, gender=None, brand=False):
                                                advertiser_store__isnull=True)
 
     if not brand:
-        queryset = queryset.filter(gender__in=gender_list.get(gender))
+        queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
     else:
         # XXX: is this solution good enough?
         # XXX: nope, too slow
