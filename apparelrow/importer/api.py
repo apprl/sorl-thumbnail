@@ -18,6 +18,7 @@ from django.db.models import Count
 from django.conf import settings
 from django.db.models.loading import get_model
 from django.utils.encoding import smart_str
+from django.utils.http import urlquote
 
 from apparelrow.importer.framework.fetcher import fetch
 
@@ -183,6 +184,11 @@ class API(object):
 
         self.__vendor_options()
         self.__product_options()
+
+        # If stored product image path is not the same as imported product
+        # image path try to download it again
+        if self.product.product_image != self._get_first_product_image_path():
+            self.product.product_image = self.product_image
 
         self.product.save()
 
@@ -380,6 +386,16 @@ class API(object):
         if not isinstance(self.dataset['product']['image-url'], list):
             raise IncompleteDataSet('image-url', 'The field image-url must be a list, not %s' % (type(self.dataset['product']['image-url']),))
 
+        # Check for empty image-url
+        image_url_empty = True
+        for image_url in self.dataset['product']['image-url']:
+            if image_url[0]:
+                image_url_empty = False
+                break
+
+        if image_url_empty:
+            raise IncompleteDataSet('image-url', 'The field image-url contains an empty list')
+
         # Make sure the variations is a list
         if not isinstance(self.dataset['product']['variations'], list):
             raise IncompleteDataSet('variations', 'The field variations must be a list, not %s' % (type(self.dataset['product']['variations']),))
@@ -517,7 +533,6 @@ class API(object):
 
         APPAREL_PRODUCT_IMAGE_ROOT/vendor_name/image_number__product_id__orignal_image_filename
         """
-
         try:
             root, ext = os.path.splitext(url)
         except TypeError, AttributeError:
@@ -531,7 +546,7 @@ class API(object):
             slugify(brand_name),
             slugify(self.dataset['product']['product-name']),
             slugify(self.dataset['product']['product-id']),
-            ext
+            urlquote(ext)
         )
 
     def _download_product_image(self, product_image, url, min_content_length):
@@ -559,6 +574,10 @@ class API(object):
             storage.default_storage.save(product_image, ContentFile(request_handler.content))
 
         return True
+
+    def _get_first_product_image_path(self):
+        for url, content_length in self.dataset['product']['image-url']:
+            return self._product_image_path(url)
 
     @property
     def product_image(self):
