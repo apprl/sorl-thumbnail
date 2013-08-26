@@ -779,7 +779,11 @@ def jobs(request):
 
 
 def contest_stylesearch(request):
-    return render(request, 'apparel/contest_stylesearch.html')
+    image = 'images/stylesearch.png'
+    if request.LANGUAGE_CODE == 'sv':
+        image = 'images/stylesearch_sv.png'
+
+    return render(request, 'apparel/contest_stylesearch.html', {'image': image})
 
 
 def apparel_set_language(request):
