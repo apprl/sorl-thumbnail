@@ -160,7 +160,13 @@ a {
         background-color: #000000;
         color: #ffffff;
         .close {
-            color: #ffffff;
+            .at2x('../images/apprl_kryss.png', 28px, 28px);
+            width: 28px;
+            height: 28px;
+            opacity: 0.8;
+            &:hover {
+                opacity: 1.0;
+            }
         }
     }
     .modal-footer {
@@ -637,11 +643,19 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
             margin-bottom: 20px;
         }
         .close {
-            color: #ffffff;
-            font-size: 40px;
+            .at2x('../images/apprl_kryss.png', 28px, 28px);
+            width: 28px;
+            height: 28px;
             position: absolute;
-            top: 10px;
-            right: 15px;
+            top: 50px;
+            @media (max-width: @screen-xs-max) {
+                top: 28px;
+            }
+            right: 0;
+            opacity: 0.8;
+            &:hover {
+                opacity: 1.0;
+            }
         }
     }
 

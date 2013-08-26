@@ -31,7 +31,6 @@ def facebook_button(context, text=None, next=None, connect=False, disable_flow=F
 
     Make sure that the translation for a custom text is picked up correctly.
     """
-    facebook_icon = staticfiles_storage.url('images/facebook-icon.png')
     if 'next' in context and next is None:
         next = context['next']
 
@@ -40,7 +39,7 @@ def facebook_button(context, text=None, next=None, connect=False, disable_flow=F
     else:
         text = _(text)
 
-    return dict(next=next, text=text, facebook_icon=facebook_icon, connect=connect, disable_flow=disable_flow, request=context['request'])
+    return dict(next=next, text=text, connect=connect, disable_flow=disable_flow, request=context['request'])
 
 @register.filter
 def category_descendants_id(category, include_self=True):
