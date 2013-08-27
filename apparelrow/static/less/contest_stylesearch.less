@@ -2,50 +2,29 @@ body.contest-stylesearch-charts {
     .look-medium {
         margin-bottom: 20px;
         .caption { display: none; }
+        .hover { bottom: 0; }
     }
 
-    .col-text {
-        height: 100px;
-        > div {
-            > p {
+    .feed-item .panel-heading {
+        font-size: 20px;
+        font-weight: 500;
+        > p {
+            max-width: initial;
+            overflow: visible;
+            white-space: normal;
+        }
+        > p:nth-child(2) {
+            margin-bottom: 0;
+        }
+        > p:last-child {
+            > span {
                 font-size: 24px;
+                color: @like-color;
             }
-        }
-
-        @media (min-width: @grid-float-breakpoint) {
-            position: relative;
-            > div {
-                display: table;
-                width: 100%;
-                height: auto;
-                margin: auto;
-                position: absolute;
-                top: 0; left: 0; bottom: 0; right: 0;
-                text-align: center;
-            }
-        }
-
-        @media (min-width: @screen-tablet) {
-            height: 279px;
-            > div {
-                width: 375px;
-            }
-        }
-
-        @media (min-width: @screen-desktop) {
-            height: 361px;
-            > div {
-                width: 485px;
-            }
-        }
-
-        @media (min-width: @screen-lg-desktop) {
-            height: 416px;
-            > div {
-                width: 585px;
-            }
+            font-size: 20px;
         }
     }
+    .feed-item .panel-body { min-height: initial; }
 }
 
 body.contest-stylesearch {
@@ -68,6 +47,9 @@ body.contest-stylesearch {
         margin-left: auto;
         margin-right: auto;
         text-align: left;
+        .btn-block {
+            margin-top: 10px;
+        }
     }
 
     .contest-image {

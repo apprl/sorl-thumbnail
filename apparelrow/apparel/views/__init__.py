@@ -10,7 +10,7 @@ from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.core.urlresolvers import reverse
-from django.db.models import Q, get_model
+from django.db.models import Q, Count, get_model
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.template.defaultfilters import floatformat
@@ -790,7 +790,16 @@ def contest_stylesearch(request):
 
 
 def contest_stylesearch_charts(request):
-    looks = get_model('apparel', 'Look').published_objects.all()[:10]
+    start_date = datetime.datetime(2013, 8, 26, 0, 0, 0)
+    end_date = datetime.datetime(2013, 9, 1, 23, 59, 59)
+
+    looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date),
+                                                                  published=True) \
+                                                          .filter(Q(likes__created__lte=end_date) | Q(likes__isnull=True)) \
+                                                          .annotate(num_likes=Count('likes')) \
+                                                          .order_by('-num_likes')[:10]
+
+    print looks.query.sql_with_params()
 
     return render(request, 'apparel/contest_stylesearch_charts.html', {'looks': looks})
 

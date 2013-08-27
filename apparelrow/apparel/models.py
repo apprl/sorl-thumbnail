@@ -775,6 +775,10 @@ class Look(models.Model):
         return self.likes.filter(active=True).count()
 
     @cached_property
+    def contest_score(self):
+        return self.likes.filter(active=True, created__lte=datetime.datetime(2013, 9, 1, 23, 59, 59)).count()
+
+    @cached_property
     def comment_count(self):
         return Comment.objects.for_model(self).filter(is_removed=False, is_public=True).count()
 

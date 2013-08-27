@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-26 15:54+0200\n"
+"POT-Creation-Date: 2013-08-27 14:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -400,11 +400,11 @@ msgid ""
 "\"#\"."
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:39
+#: apparel/templatetags/apparel_extras.py:38
 msgid "Login with Facebook"
 msgstr ""
 
-#: apparel/templatetags/apparel_extras.py:284
+#: apparel/templatetags/apparel_extras.py:283
 msgid "ago"
 msgstr ""
 
@@ -1020,7 +1020,6 @@ msgstr ""
 #: templates/activity_feed/feed_list.html:36
 #: templates/activity_feed/feed_list.html:39
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:20
-#: templates/apparel/user_list.html:19 templates/apparel/user_list.html:23
 msgid "Only men’s"
 msgstr ""
 
@@ -1028,7 +1027,6 @@ msgstr ""
 #: templates/activity_feed/feed_list.html:36
 #: templates/activity_feed/feed_list.html:40
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:21
-#: templates/apparel/user_list.html:19 templates/apparel/user_list.html:24
 msgid "Only women’s"
 msgstr ""
 
@@ -1036,8 +1034,8 @@ msgstr ""
 #: templates/activity_feed/feed_list.html:36
 #: templates/activity_feed/feed_list.html:38 templates/apparel/browse.html:16
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:19
-#: templates/apparel/user_list.html:19 templates/apparel/user_list.html:22
-#: templates/apparel/user_list.html:26 templates/apparel/user_list.html:39
+#: templates/apparel/user_list.html:20 templates/apparel/user_list.html:22
+#: templates/apparel/user_list.html:35
 msgid "Show all"
 msgstr ""
 
@@ -1293,6 +1291,8 @@ msgstr ""
 #: templates/apparel/contest_stylesearch.html:5
 #: templates/apparel/contest_stylesearch.html:11
 #: templates/apparel/contest_stylesearch.html:20
+#: templates/apparel/contest_stylesearch_charts.html:5
+#: templates/apparel/contest_stylesearch_charts.html:13
 msgid "Fashion week style search"
 msgstr ""
 
@@ -1337,7 +1337,11 @@ msgid ""
 "Facebook page."
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:51
+#: templates/apparel/contest_stylesearch.html:44
+msgid "SEE THE LEADERBOARD"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:52
 msgid ""
 "All looks created between 26th of August and 1st of September are included "
 "in the contest. The 10 looks with most likes on Apprl by the end of "
@@ -1350,8 +1354,24 @@ msgid ""
 "general terms of service & privacy policy apply."
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:52
+#: templates/apparel/contest_stylesearch.html:53
 msgid "For questions & info contact "
+msgstr ""
+
+#: templates/apparel/contest_stylesearch_charts.html:12
+msgid "Leaderboard"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch_charts.html:17
+msgid "+ ENTER CONTEST"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch_charts.html:27
+#: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:135
+#: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
+#: templates/apparel/product_detail.html:4
+#: templates/apparel/fragments/look_medium.html:22
+msgid "by"
 msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:7
@@ -1409,13 +1429,6 @@ msgstr ""
 
 #: templates/apparel/look_create.html:35 templates/apparel/look_editor.html:12
 msgid "Create a collage"
-msgstr ""
-
-#: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:135
-#: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
-#: templates/apparel/product_detail.html:4
-#: templates/apparel/fragments/look_medium.html:22
-msgid "by"
 msgstr ""
 
 #: templates/apparel/look_detail.html:48
@@ -1759,11 +1772,11 @@ msgstr ""
 msgid "APPLY"
 msgstr ""
 
-#: templates/apparel/user_list.html:27
+#: templates/apparel/user_list.html:20 templates/apparel/user_list.html:23
 msgid "Only men"
 msgstr ""
 
-#: templates/apparel/user_list.html:28
+#: templates/apparel/user_list.html:20 templates/apparel/user_list.html:24
 msgid "Only women"
 msgstr ""
 

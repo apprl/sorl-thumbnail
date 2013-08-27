@@ -66,6 +66,7 @@ new_template_cache_map = {
         'look_medium_featured': ['id_language', lambda x: x.pk],
         'look_large_content': ['id_language', lambda x: x.pk],
         'look_large_footer': ['id_language', lambda x: x.pk],
+        'contest_panel_header': ['id_language', lambda x: x.pk],
     },
     'LookComponent': {
         'look_small': ['id_language', lambda x: x.look_id],
@@ -94,6 +95,7 @@ new_template_cache_map = {
         'look_large_content': ['id_language', lambda x: x.look_id],
         'look_large_footer': ['id_language', lambda x: x.look_id],
         'user_medium': ['id_language', lambda x: x.user_id],
+        'contest_panel_header': ['id_language', lambda x: x.look_id],
     }
 }
 

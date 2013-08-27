@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
-{% load static from staticfiles %}
+{% load i18n cache %}
 
 {% block extra-title %}{% trans "Fashion week style search" %} | {% endblock %}
 
@@ -8,21 +7,31 @@
 {% block body %}
 
     <div class="body-header">
-        <div class="body-header-col-full">
-            <h1>{% trans "Fashion week style hunt" %}</h1>
+        <div class="body-header-col-left">
+            <h1>{% trans "Leaderboard" %}</h1>
+            <h2>{% trans "Fashion week style search" %}</h2>
+        </div>
+        <div class="body-header-col-right">
+            <ul class="list-inline">
+                <li><a class="btn btn-success" href="{% url 'contest-stylesearch' %}">{% trans "+ ENTER CONTEST" %}</a></li>
         </div>
     </div>
 
     <div class="row">
         {% for look in looks %}
-        <div class="col-sm-6 col-text">
-            <div class="col-text-content">
-                <p>{{ forloop.counter }}. {{ look }}</p>
-                <p>{{ look.score }}</p>
+        <div class="col-sm-12">
+            <div class="feed-item panel">
+                {% cache CACHE_TIMEOUT contest_panel_header look.id LANGUAGE_CODE %}
+                <div class="panel-heading">
+                    <a href="{{ look.user.get_absolute_url }}"><img class="img-circle" src="{{ look.user.avatar }}"></a>
+                    <p><a href="{{ look.get_absolute_url }}">{{ forloop.counter }}. {{ look.title }}</a> {% trans "by" %} {{ look.user.display_name }}</p>
+                    <p><span>♥</span> {{ look.contest_score }}</p>
+                </div>
+                {% endcache %}
+                <div class="panel-body">
+                    {% include 'apparel/fragments/look_medium_cache.html' with object=look %}
+                </div>
             </div>
-        </div>
-        <div class="col-sm-6 col-look">
-            {% include 'apparel/fragments/look_medium_cache.html' with object=look %}
         </div>
         {% endfor %}
     </div>
