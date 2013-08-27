@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% block extra-title %}{% trans "Fashion week style search" %} | {% endblock %}
+
+{% block body-classes %}contest-stylesearch-charts{% endblock %}
+{% block body %}
+
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Fashion week style hunt" %}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for look in looks %}
+        <div class="col-sm-6 col-text">
+            <div class="col-text-content">
+                <p>{{ forloop.counter }}. {{ look }}</p>
+                <p>{{ look.score }}</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-look">
+            {% include 'apparel/fragments/look_medium_cache.html' with object=look %}
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

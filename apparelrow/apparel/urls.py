@@ -16,6 +16,7 @@ urlpatterns = patterns('',
 
     # Contests
     url(r'^stylesearch/$', 'apparelrow.apparel.views.contest_stylesearch', name='contest-stylesearch'),
+    url(r'^stylesearch/toplist/$', 'apparelrow.apparel.views.contest_stylesearch_charts', name='contest-stylesearch-charts'),
 
     # Feed
     url(r'^all/$', RedirectView.as_view(url='/')),

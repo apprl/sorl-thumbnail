@@ -777,6 +777,9 @@ def jobs(request):
             'image': str(image)
         }, context_instance=RequestContext(request))
 
+#
+# Contest Stylesearch
+#
 
 def contest_stylesearch(request):
     image = 'images/stylesearch.png'
@@ -784,6 +787,13 @@ def contest_stylesearch(request):
         image = 'images/stylesearch_sv.png'
 
     return render(request, 'apparel/contest_stylesearch.html', {'image': image})
+
+
+def contest_stylesearch_charts(request):
+    looks = get_model('apparel', 'Look').published_objects.all()[:10]
+
+    return render(request, 'apparel/contest_stylesearch_charts.html', {'looks': looks})
+
 
 
 def apparel_set_language(request):
