@@ -795,11 +795,9 @@ def contest_stylesearch_charts(request):
 
     looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date),
                                                                   published=True) \
-                                                          .filter(Q(likes__created__lte=end_date) | Q(likes__isnull=True)) \
+                                                          .filter(likes__created__lte=end_date, likes__active=True) \
                                                           .annotate(num_likes=Count('likes')) \
-                                                          .order_by('-num_likes')[:10]
-
-    print looks.query.sql_with_params()
+                                                          .order_by('-num_likes', 'created')[:20]
 
     return render(request, 'apparel/contest_stylesearch_charts.html', {'looks': looks})
 
