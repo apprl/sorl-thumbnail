@@ -21,13 +21,13 @@
         {% for look in looks %}
         <div class="col-sm-12">
             <div class="feed-item panel">
-                {% cache CACHE_TIMEOUT contest_panel_header look.id LANGUAGE_CODE %}
                 <div class="panel-heading">
                     <a href="{{ look.user.get_absolute_url }}"><img class="img-circle" src="{{ look.user.avatar }}"></a>
                     <p><a href="{{ look.get_absolute_url }}">{{ forloop.counter }}. {{ look.title }}</a> {% trans "by" %} {{ look.user.display_name }}</p>
+                    {% cache CACHE_TIMEOUT contest_stylesearch_panel_header look.id LANGUAGE_CODE %}
                     <p><span>♥</span> {{ look.contest_score }}</p>
+                    {% endcache %}
                 </div>
-                {% endcache %}
                 <div class="panel-body">
                     {% include 'apparel/fragments/look_medium_cache.html' with object=look %}
                 </div>
