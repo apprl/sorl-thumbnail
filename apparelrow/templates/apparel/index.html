@@ -19,6 +19,8 @@
     </div>
 </div>
 
+{% include 'apparel/fragments/featured.html' with request=request featured=featured %}
+
 <div class="index-choice">
     <div class="container">
         <div class="row">
@@ -27,8 +29,6 @@
         </div>
     </div>
 </div>
-
-{% include 'apparel/fragments/featured.html' with request=request featured=featured %}
 
 <div class="index-footer">
     <div class="container">
