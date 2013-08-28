@@ -9,6 +9,16 @@
 
 {% block body-classes %}shop product-list{% endblock %}
 {% block body %}
+
+    {% if request.GET.first and request.user.is_authenticated %}
+    <div class="container">
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {% blocktrans with shop_url=request.path %}For any item you ♥ like you will get a sale alert via e-mail when the price drops. You can personalize your shop by selecting <a href="{{shop_url}}?view=brands">My Brands</a> to only show brands you are following.{% endblocktrans %}
+        </div>
+    </div>
+    {% endif %}
+
     <div class="body-header">
         <div class="body-header-col-full">
             <h1>{% trans "Shop" %}</h1>

@@ -5,6 +5,18 @@
 
 {% block body-classes %}discover-list-page{% endblock %}
 {% block body %}
+
+    {% if request.GET.first and request.user.is_authenticated %}
+    <div class="container">
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {% url 'index' as feed_url %}
+            {% url 'shop' as shop_url %}
+            {% blocktrans with feed_url=feed_url shop_friend=shop_url|add:"?view=friends" shop_brand=shop_url|add:"?view=brands" %}Follow members and brands to see their items and looks in your <a href="{{feed_url}}">APPRL feed</a> and under <a href="{{shop_friend}}">Shop > My Friends</a> & <a href="{{shop_brand}}">Shop > My Brands</a>.{% endblocktrans %}
+        </div>
+    </div>
+    {% endif %}
+
     <div class="body-header">
         <div class="{% if is_brand %}body-header-col-full{% else %}body-header-col-left{% endif %}">
             <h1>{% trans "Follow" %}</h1>

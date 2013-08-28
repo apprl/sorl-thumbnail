@@ -4,23 +4,6 @@ from django.core.urlresolvers import reverse
 from apparelrow.profile.forms import ProfileImageForm, ProfileAboutForm
 
 
-def login_flow(view_func):
-    """
-    Login flow decorator. If login flow already is complete, redirect to user
-    activity feed.
-    """
-    def _decorator(request, *args, **kwargs):
-        if request.user.is_authenticated() and request.user.login_flow == 'complete':
-            return HttpResponseRedirect(reverse('index'))
-
-        return view_func(request, *args, **kwargs)
-
-    _decorator.__name__ = view_func.__name__
-    _decorator.__dict__ = view_func.__dict__
-    _decorator.__doc__  = view_func.__doc__
-
-    return _decorator
-
 def avatar_change(view_func):
     """
     Handle profile image/about form.

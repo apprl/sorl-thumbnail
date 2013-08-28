@@ -25,7 +25,7 @@ from apparelrow.profile.utils import get_facebook_user, get_current_user, send_w
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task
-from apparelrow.profile.decorators import avatar_change, login_flow
+from apparelrow.profile.decorators import avatar_change
 
 from apparelrow.apparel.browse import browse_products
 
@@ -338,12 +338,15 @@ def settings_publisher(request):
 # Welcome login flow
 #
 
-@login_flow
 @login_required
 def login_flow_brands(request):
     """
     Step 1: Brands
     """
+    if request.user.is_authenticated() and request.user.login_flow == 'complete':
+        return HttpResponseRedirect(reverse('login-flow-complete'))
+
+
     request.user.login_flow = 'brands'
     request.user.save()
 
@@ -362,7 +365,6 @@ def login_flow_brands(request):
     return render(request, 'profile/login_flow_welcome.html', context)
 
 
-@login_flow
 @login_required
 def login_flow_complete(request):
     """
@@ -371,7 +373,9 @@ def login_flow_complete(request):
     request.user.login_flow = 'complete'
     request.user.save()
 
-    return HttpResponseRedirect('%s?first=1' % (get_gender_url(request.user.gender, 'index'),))
+    return render(request, 'profile/login_flow_complete.html')
+
+    #return HttpResponseRedirect('%s?first=1' % (get_gender_url(request.user.gender, 'index'),))
 
 
 #

@@ -728,12 +728,10 @@ def gender(request, *args, **kwargs):#view=None, gender=None):
         return HttpResponseNotFound()
 
     gender_cookie = get_gender_from_cookie(request)
-    if gender_cookie == 'W':
-        return HttpResponseRedirect(reverse('%s-women' % (view,), args=args))
-    elif gender_cookie == 'M':
-        return HttpResponseRedirect(reverse('%s-men' % (view,), args=args))
+    if gender_cookie == 'M':
+        return HttpResponseRedirect('%s?%s' % (reverse('%s-men' % (view,), args=args), request.GET.urlencode()))
 
-    return HttpResponseRedirect(reverse('%s-women' % (view,), args=args))
+    return HttpResponseRedirect('%s?%s' % (reverse('%s-women' % (view,), args=args), request.GET.urlencode()))
 
 
 #

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-28 16:52+0200\n"
+"POT-Creation-Date: 2013-08-28 19:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -837,7 +837,7 @@ msgstr "Lösenordet är uppdaterat"
 msgid "Password was added"
 msgstr "Lösenordet är tillagt"
 
-#: profile/views.py:408
+#: profile/views.py:412
 msgid "Nearly created your membership..."
 msgstr "Ditt medlemskap är nästan klart..."
 
@@ -939,7 +939,7 @@ msgid "Your APPRL"
 msgstr "Din APPRL"
 
 #: templates/base.html:154 templates/base.html.py:190
-#: templates/apparel/browse.html:4 templates/apparel/browse.html.py:14
+#: templates/apparel/browse.html:4 templates/apparel/browse.html.py:24
 msgid "Shop"
 msgstr "Shop"
 
@@ -951,7 +951,7 @@ msgid "Looks"
 msgstr "Looks"
 
 #: templates/base.html:157 templates/activity_feed/verbs/follow.html:14
-#: templates/apparel/user_list.html:4 templates/apparel/user_list.html:10
+#: templates/apparel/user_list.html:4 templates/apparel/user_list.html:22
 #: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
@@ -961,12 +961,12 @@ msgstr "Looks"
 msgid "Follow"
 msgstr "Följ"
 
-#: templates/base.html:159 templates/apparel/user_list.html:12
+#: templates/base.html:159 templates/apparel/user_list.html:24
 msgid "Members"
 msgstr "Medlemmar"
 
 #: templates/base.html:160 templates/base.html.py:194
-#: templates/apparel/user_list.html:13
+#: templates/apparel/user_list.html:25
 #: templates/apparel/fragments/product_filter.html:122
 msgid "Brands"
 msgstr "Varumärken"
@@ -1054,10 +1054,10 @@ msgstr "Bara dam"
 
 #: templates/search.html:22 templates/search.html.py:24
 #: templates/activity_feed/feed_list.html:36
-#: templates/activity_feed/feed_list.html:38 templates/apparel/browse.html:16
+#: templates/activity_feed/feed_list.html:38 templates/apparel/browse.html:26
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:19
-#: templates/apparel/user_list.html:20 templates/apparel/user_list.html:22
-#: templates/apparel/user_list.html:35
+#: templates/apparel/user_list.html:32 templates/apparel/user_list.html:34
+#: templates/apparel/user_list.html:47
 msgid "Show all"
 msgstr "Visa alla"
 
@@ -1310,10 +1310,21 @@ msgstr ""
 "foton med plagg eller mixa och matcha kollage!"
 
 #: templates/apparel/browse.html:17
+#, python-format
+msgid ""
+"For any item you ♥ like you will get a sale alert via e-mail when the price "
+"drops. You can personalize your shop by selecting <a href=\"%(shop_url)s?"
+"view=brands\">My Brands</a> to only show brands you are following."
+msgstr ""
+"För varje produkt du ♥ gillar får du ett mail när den prissänks. Klicka på "
+"<a href=\"%(shop_url)s?view=brands\">Mina Varumärken</a> för att enbart visa "
+"varumärken som du följer."
+
+#: templates/apparel/browse.html:27
 msgid "My friends"
 msgstr "Mina vänner"
 
-#: templates/apparel/browse.html:18
+#: templates/apparel/browse.html:28
 msgid "My brands"
 msgstr "Mina varumärken"
 
@@ -1819,11 +1830,22 @@ msgstr "Ansök nedan så kontaktar vi dig:"
 msgid "APPLY"
 msgstr "ANSÖK"
 
-#: templates/apparel/user_list.html:20 templates/apparel/user_list.html:23
+#: templates/apparel/user_list.html:15
+#, python-format
+msgid ""
+"Follow members and brands to see their items and looks in your <a href="
+"\"%(feed_url)s\">APPRL feed</a> and under <a href=\"%(shop_friend)s\">Shop > "
+"My Friends</a> & <a href=\"%(shop_brand)s\">Shop > My Brands</a>."
+msgstr ""
+"Följ medlemmar och varumärken för att se deras produkter och looks i din <a "
+"href=\"%(feed_url)s\">APPRL feed</a> och på <a href=\"%(shop_friend)s\">Shop "
+"> Mina vänner</a> & <a href=\"%(shop_brand)s\">Shop > Mina varumären</a>."
+
+#: templates/apparel/user_list.html:32 templates/apparel/user_list.html:35
 msgid "Only men"
 msgstr "Bara herr"
 
-#: templates/apparel/user_list.html:20 templates/apparel/user_list.html:24
+#: templates/apparel/user_list.html:32 templates/apparel/user_list.html:36
 msgid "Only women"
 msgstr "Bara dam"
 
@@ -2697,20 +2719,39 @@ msgstr "har just nu inga produkter."
 msgid "does not like any products so far."
 msgstr "gillar inte några produkter än."
 
+#: templates/profile/login_flow_complete.html:9
+#, python-format
+msgid "Welcome inside %(firstname)s, now you can:"
+msgstr "Välkommen in %(firstname)s, vill du:"
+
+#: templates/profile/login_flow_complete.html:15
+msgid "1. CHECK OUT YOUR PERSONAL APPRL FEED"
+msgstr "1. GÅ TILL DIN APPRL FEED"
+
+#: templates/profile/login_flow_complete.html:18
+msgid "2. BROWSE PRODUCTS IN OUR SHOP"
+msgstr "2. GÅ TILL VÅR SHOP"
+
+#: templates/profile/login_flow_complete.html:21
+msgid "3. FIND MORE PEOPLE & BRANDS TO FOLLOW"
+msgstr "3. HITTA FLER MEDLEMMAR OCH VARUMÄRKEN ATT FÖLJA"
+
 #: templates/profile/login_flow_welcome.html:6
 #: templates/profile/login_flow_welcome.html:27
 msgid "Continue to APPRL"
-msgstr ""
+msgstr "Fortsätt till APPRL"
 
 #: templates/profile/login_flow_welcome.html:15
 msgid "Welcome"
-msgstr ""
+msgstr "Välkommen"
 
 #: templates/profile/login_flow_welcome.html:21
 msgid ""
-"Scroll down and follow a few of your favourite brands to personalise your "
-"Apprl experience."
+"Scroll down and follow a few of our most popular brands to personalise your "
+"APPRL experience. (Once you're signed in you can follow more of our brands)"
 msgstr ""
+"Scrolla ner och följ några av våra mest populära varumärken för att göra "
+"APPRL mer anpassat efter dig. (Du kan följa fler varumärken senare)"
 
 #: templates/profile/looks.html:14
 msgid "All looks that you create end up here."
