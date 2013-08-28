@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-28 10:56+0200\n"
+"POT-Creation-Date: 2013-08-28 12:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -593,7 +593,7 @@ msgstr ""
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:60 templates/base.html:199
+#: profile/admin.py:60 templates/base.html:212
 #: templates/profile/base_settings.html:20
 #: templates/profile/base_settings.html:23
 #: templates/profile/settings_facebook.html:5
@@ -615,7 +615,7 @@ msgstr ""
 msgid "Extra"
 msgstr ""
 
-#: profile/admin.py:66 templates/base.html:129
+#: profile/admin.py:66 templates/base.html:142
 #: templates/dashboard/body_header.html:9
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:10
@@ -747,7 +747,7 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: profile/models.py:47 templates/base.html:183
+#: profile/models.py:47 templates/base.html:196
 #: templates/apparel/dialog_look_embed.html:22
 #: templates/profile/dialog_embed_shop.html:29
 msgid "Language"
@@ -866,68 +866,80 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
-#: templates/base.html:93
+#: templates/base.html:92 templates/apparel/contest_stylesearch.html:5
+#: templates/apparel/contest_stylesearch.html:11
+#: templates/apparel/contest_stylesearch.html:20
+#: templates/apparel/contest_stylesearch_charts.html:4
+#: templates/apparel/contest_stylesearch_charts.html:12
+msgid "Fashion week style search"
+msgstr ""
+
+#: templates/base.html:95
+msgid "+ ENTER"
+msgstr ""
+
+#: templates/base.html:106
 msgid "Toggle navigation"
 msgstr ""
 
-#: templates/base.html:108
+#: templates/base.html:121
 msgid "Search for products, members & brands"
 msgstr ""
 
-#: templates/base.html:114 templates/apparel/index.html:18
+#: templates/base.html:127 templates/apparel/index.html:18
 msgid "Get started"
 msgstr ""
 
-#: templates/base.html:115 templates/apparel/tags/login_bar.html:11
+#: templates/base.html:128 templates/apparel/tags/login_bar.html:11
 #: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr ""
 
-#: templates/base.html:120
+#: templates/base.html:133
 msgid "Your profile"
 msgstr ""
 
-#: templates/base.html:122 templates/dashboard/body_header.html:6
+#: templates/base.html:135 templates/dashboard/body_header.html:6
 #: templates/dashboard/info.html:21 templates/dashboard/info.html.py:76
 msgid "Your statistics"
 msgstr ""
 
-#: templates/base.html:125 templates/advertiser/store_admin.html:4
+#: templates/base.html:138 templates/advertiser/store_admin.html:4
 #: templates/advertiser/store_admin.html:43
 msgid "Your store"
 msgstr ""
 
-#: templates/base.html:127
+#: templates/base.html:140
 msgid "+ Invite friends"
 msgstr ""
 
-#: templates/base.html:128
+#: templates/base.html:141
 #: templates/apparel/fragments/create_look_button.html:3
 #: templates/apparel/fragments/create_look_button.html:5
 msgid "+ Create look"
 msgstr ""
 
-#: templates/base.html:130
+#: templates/base.html:143
 msgid "Log out"
 msgstr ""
 
-#: templates/base.html:138 templates/activity_feed/feed_list.html:31
+#: templates/base.html:151 templates/activity_feed/feed_list.html:31
 msgid "Your APPRL"
 msgstr ""
 
-#: templates/base.html:140 templates/base.html.py:176
+#: templates/base.html:153 templates/base.html.py:189
 #: templates/apparel/browse.html:14
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:141 templates/base.html.py:179
+#: templates/base.html:154 templates/base.html.py:192
 #: templates/apparel/look_detail.html:4 templates/apparel/look_editor.html:5
 #: templates/apparel/look_list.html:11
 #: templates/apparel/product_detail.html:173 templates/profile/looks.html:4
 msgid "Looks"
 msgstr ""
 
-#: templates/base.html:143 templates/activity_feed/verbs/follow.html:14
+#: templates/base.html:156 templates/activity_feed/verbs/follow.html:14
 #: templates/apparel/user_list.html:4 templates/apparel/user_list.html:10
 #: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
@@ -938,62 +950,62 @@ msgstr ""
 msgid "Follow"
 msgstr ""
 
-#: templates/base.html:145 templates/apparel/user_list.html:12
+#: templates/base.html:158 templates/apparel/user_list.html:12
 msgid "Members"
 msgstr ""
 
-#: templates/base.html:146 templates/base.html.py:180
+#: templates/base.html:159 templates/base.html.py:193
 #: templates/apparel/user_list.html:13
 #: templates/apparel/fragments/product_filter.html:122
 msgid "Brands"
 msgstr ""
 
-#: templates/base.html:177 templates/apparel/look_editor.html:46
+#: templates/base.html:190 templates/apparel/look_editor.html:46
 msgid "Women"
 msgstr "Kvinner"
 
-#: templates/base.html:178 templates/apparel/look_editor.html:47
+#: templates/base.html:191 templates/apparel/look_editor.html:47
 msgid "Men"
 msgstr "Menn"
 
-#: templates/base.html:198
+#: templates/base.html:211
 msgid "Follow us"
 msgstr ""
 
-#: templates/base.html:200
+#: templates/base.html:213
 msgid "Pinterest"
 msgstr ""
 
-#: templates/base.html:201
+#: templates/base.html:214
 msgid "E-mail newsletter"
 msgstr ""
 
-#: templates/base.html:204
+#: templates/base.html:217
 msgid "Apprl"
 msgstr ""
 
-#: templates/base.html:205
+#: templates/base.html:218
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:206
+#: templates/base.html:219
 msgid "Privacy & Terms"
 msgstr ""
 
-#: templates/base.html:207 templates/flatpages/default.html:27
+#: templates/base.html:220 templates/flatpages/default.html:27
 msgid "Cookies"
 msgstr ""
 
-#: templates/base.html:208
+#: templates/base.html:221
 msgid "Bloggers"
 msgstr ""
 
-#: templates/base.html:209 templates/apparel/fragments/product_filter.html:146
+#: templates/base.html:222 templates/apparel/fragments/product_filter.html:146
 #, fuzzy
 msgid "Stores"
 msgstr "Butikk"
 
-#: templates/base.html:221
+#: templates/base.html:234
 msgid "Sweden"
 msgstr ""
 
@@ -1287,14 +1299,6 @@ msgstr ""
 
 #: templates/apparel/browse.html:18
 msgid "My brands"
-msgstr ""
-
-#: templates/apparel/contest_stylesearch.html:5
-#: templates/apparel/contest_stylesearch.html:11
-#: templates/apparel/contest_stylesearch.html:20
-#: templates/apparel/contest_stylesearch_charts.html:4
-#: templates/apparel/contest_stylesearch_charts.html:12
-msgid "Fashion week style search"
 msgstr ""
 
 #: templates/apparel/contest_stylesearch.html:12

@@ -204,6 +204,9 @@ body {
     .fb_dialog {
         margin-top: 60px;
     }
+    &.contest {
+        padding-top: 90px;
+    }
 }
 
 body.shop .body-header,
@@ -383,6 +386,7 @@ h3 {
     z-index: 10030;
     margin-bottom: 0;
     border: 0;
+    top: 40px;
     .navbar-toggle {
         padding-right: 0;
         border: 0;
@@ -475,6 +479,31 @@ h3 {
 //
 // Login bar
 // ----------------------------------------------------------------------------
+
+.contest-bar {
+    max-height: 40px;
+    overflow: hidden;
+    width: 100%;
+    background-color: @gray-lighter;
+    position: fixed;
+    top: 0;
+    z-index: 10020;
+    > .container > div > div {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    p {
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 30px;
+        @media (min-width: @screen-tablet) {
+            font-size: 21px;
+            font-weight: 500;
+        }
+        text-transform: uppercase;
+        margin-bottom: 0;
+    }
+}
 
 .loginbar {
     max-height: 44px;
