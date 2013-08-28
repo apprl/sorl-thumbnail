@@ -233,40 +233,86 @@ STATICSITEMAPS_PING_GOOGLE = False
 STATICSITEMAPS_REFRESH_AFTER = 60 * 8 # 8 hours in minutes
 
 # - PIPELINE SETTINGS -
-PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
+PIPELINE_COMPILERS = (
+    'pipeline.compilers.less.LessCompiler',
+)
+PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.cssmin.CSSMinCompressor'
+PIPELINE_CSS = {
+    'bootstrap': {
+        'source_filenames': (
+            'less/base.less',
+        ),
+        'output_filename': 'css/ender.css',
+        'extra_context': {
+            'media': 'screen,projection',
+        },
+    }
+}
+#PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
+PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.uglifyjs.UglifyJSCompressor'
 PIPELINE_JS = {
-    'apparel': {
-        'source_filenames': ('js/apparel.js',
-                             'js/jquery/jquery.infinitescroll.js',),
-        'output_filename': 'js/compiled/apparel.js',
-    },
-    'widget': {
-        'source_filenames': ('js/jquery/jquery-1.9.1.min.js',
-                             'js/widget.js'),
-        'output_filename': 'js/compiled/widget.js',
+    'bootstrap': {
+        'source_filenames': ('bootstrap/js/transition.js',
+                             'bootstrap/js/alert.js',
+                             'bootstrap/js/modal.js',
+                             'bootstrap/js/dropdown.js',
+                             'bootstrap/js/scrollspy.js',
+                             'bootstrap/js/tab.js',
+                             'bootstrap/js/tooltip.js',
+                             'bootstrap/js/popover.js',
+                             'bootstrap/js/button.js',
+                             'bootstrap/js/collapse.js',
+                             'bootstrap/js/carousel.js',
+                             'bootstrap/js/typeahead.js',
+                             'bootstrap/js/affix.js'),
+        'output_filename': 'js/compiled/b.js',
     },
     'embed': {
         'source_filenames': ('js/embed.js',
                              'js/jquery/jquery.apprl-tooltip.js'),
         'output_filename': 'js/compiled/embed.js',
     },
-    'jquery': {
+    'main': {
         'source_filenames': ('js/vendor/underscore.js',
-                             'js/jquery/jquery.hypersubmit.js',
-                             'js/jquery/jquery.tools.overlay.js',
-                             'js/jquery/jquery.history.js',
-                             'js/jquery/jquery.html5-placeholder-shim.js',
-                             'js/jquery/jquery.autosize-min.js',
-                             'js/jquery/jquery.scrollable.js',
+                             'js/vendor/jquery-1.9.1.js',
+                             'js/vendor/jquery-ui-1.9.2.custom.js',
+                             'js/jquery/jquery.ui.touch-punch.min.js',
+                             'bootstrap/js/transition.js',
+                             'bootstrap/js/alert.js',
+                             'bootstrap/js/modal.js',
+                             'bootstrap/js/dropdown.js',
+                             'bootstrap/js/scrollspy.js',
+                             'bootstrap/js/tab.js',
+                             'bootstrap/js/tooltip.js',
+                             'bootstrap/js/popover.js',
+                             'bootstrap/js/button.js',
+                             'bootstrap/js/collapse.js',
+                             'bootstrap/js/carousel.js',
+                             'bootstrap/js/typeahead.js',
+                             'bootstrap/js/affix.js',
+                             'js/vendor/jquery.history.js',
+                             'js/jquery/jquery.infinitescroll.js',
+                             #'js/jquery/jquery.html5-placeholder-shim.js',
+                             #'js/jquery/jquery.autosize-min.js',
+                             #'js/jquery/jquery.scrollable.js',
                              'js/jquery/jquery.apprl-sticky.js',
-                             'js/jquery/jquery.apprl-tooltip.js'),
-        'output_filename': 'js/compiled/jquery.js',
+                             'js/jquery/jquery.apprl-tooltip.js',
+                             'js/jquery/jquery.textarea.js',
+                             'js/apparel.js',
+                             'js/filtersetup.js',
+                             'js/browse.js',
+                             ),
+        'output_filename': 'js/compiled/main.js',
     },
     'shop': {
-        'source_filenames': ('js/filtersetup.js',
-                             'js/browse.js',
+        'source_filenames': ('js/vendor/jquery-1.9.1.js',
+                             'js/vendor/jquery-ui-1.9.2.custom.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
-                             'js/jquery/jquery.history.js',
+                             'js/vendor/jquery.history.js',
+                             'bootstrap/js/collapse.js',
+                             'bootstrap/js/transition.js',
+                             'js/filtersetup.js',
+                             'js/browse.js',
                              'js/jquery/jquery.infinitescroll.js',),
         'output_filename': 'js/compiled/shop.js',
     },
@@ -467,7 +513,6 @@ CELERY_ROUTES = ({
     'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
     'apparel.facebook_push_graph': {'queue': 'standard'},
     'apparel.facebook_pull_graph': {'queue': 'standard'},
-    'apparel.tasks.generate_brand_list_template': {'queue': 'standard'},
     'apparelrow.apparel.tasks.empty_embed_shop_cache': {'queue': 'standard'},
     'apparelrow.apparel.tasks.empty_embed_look_cache': {'queue': 'standard'},
     'apparelrow.apparel.tasks.look_popularity': {'queue': 'background'},
@@ -476,6 +521,7 @@ CELERY_ROUTES = ({
     'statistics.tasks.active_users': {'queue': 'standard'},
     'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
     'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},
+    'apparelrow.activity_feed.tasks.featured_activity': {'queue': 'standard'},
 },)
 
 # LOGGING CONFIGURATION

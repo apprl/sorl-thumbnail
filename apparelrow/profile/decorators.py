@@ -9,11 +9,11 @@ def login_flow(view_func):
     Login flow decorator. If login flow already is complete, redirect to user
     activity feed.
     """
-    def _decorator(request, profile, *args, **kwargs):
-        if profile.login_flow == 'complete':
-            return HttpResponseRedirect(reverse('user_feed'))
+    def _decorator(request, *args, **kwargs):
+        if request.user.login_flow == 'complete':
+            return HttpResponseRedirect(reverse('index'))
 
-        return view_func(request, profile, *args, **kwargs)
+        return view_func(request, *args, **kwargs)
 
     _decorator.__name__ = view_func.__name__
     _decorator.__dict__ = view_func.__dict__
@@ -38,23 +38,13 @@ def avatar_change(view_func):
                     image_form.save()
 
                     return HttpResponseRedirect(request.get_full_path())
-
-            elif request.POST.get('change_about_form'):
-                about_form = ProfileAboutForm(request.POST, request.FILES, instance=profile)
-                if about_form.is_valid():
-                    about_form.save()
-
-                    return HttpResponseRedirect(request.get_full_path())
             else:
                 image_form = ProfileImageForm(instance=profile)
-                about_form = ProfileAboutForm(instance=profile)
 
         else:
             image_form = ProfileImageForm(instance=profile)
-            about_form = ProfileAboutForm(instance=profile)
 
-        forms = [('change_image_form', image_form),
-                 ('change_about_form', about_form)]
+        forms = [('change_image_form', image_form)]
 
         return view_func(request, profile, forms, *args, **kwargs)
 

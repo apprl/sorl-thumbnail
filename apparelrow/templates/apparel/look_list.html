@@ -1,52 +1,48 @@
 {% extends 'base.html' %}
-{% load i18n cache thumbnail apparel_extras %}
+{% load i18n apparel_extras %}
 
 {% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Looks Men" %}{% else %}{% trans "Looks Women" %}{% endif %} | {% endblock %}
 
-{% block body-header %}
-<div id="body-header">
-    <div class="column_one">
-        <h1 class="max-width">{% if APPAREL_GENDER == 'M' %}{% trans "Looks Men" %}{% else %}{% trans "Looks Women" %}{% endif %}</h1>
-    </div>
-    <div class="column_two">
-        <ul>
-            {% url 'popular-look-list' as popular_look_list_url %}
-            <li><a class="first latest{% if 'popular' not in request.path %} current{% endif %}" href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Popular looks" %}</a></li>
-            <li><a class="last popular{% if 'popular' in request.path %} current{% endif %}" href="{{ popular_look_list_url }}">{% trans "Popular looks in your network" %}</a></li>
-        </ul>
-    </div>
-    {% include 'apparel/fragments/create_look_button.html' with request=request only %}
-</div>
-{% endblock body-header %}
-{% block body-classes %}one-column look-list{% endblock body-classes %}
+{% block body-classes %}look-list-page{% endblock %}
 {% block body %}
-    <div id="content">
-        {% url 'look-list-men' as look_list_men %}
-        {% url 'look-list-women' as look_list_women %}
-        {% url 'popular-look-list' as popular_look_list_url %}
-        {% if request.path == look_list_women or request.path == look_list_men or request.path == popular_look_list_url %}
-        {% else %}
-            {% if 'products/' in request.path %}
-            <h2>{% trans "Showing" %} {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
-            {% else %}
-            <h2>{% trans "Showing" %} '{{ query|escape }}', {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
-            {% endif %}
-        {% endif %}
 
-        {% if not user.is_authenticated and request.path == popular_look_list_url %}
-            <div class="empty-content">
-                <p>{% trans "To see popular looks in your network you need to sign up." %}</p>
-                <a class="btn btn-upper btn-positive btn-signup" href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
-            </div>
-        {% else %}
+    <div class="body-header">
+        <div class="body-header-col-left">
+            <h1>{% trans "Looks" %}</h1>
+        </div>
+        <div class="body-header-col-right">
+            <ul class="list-inline">
+                <li>{% include 'apparel/fragments/create_look_button.html' with request=request only %}</li>
+                <li>
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if APPAREL_GENDER == 'M' %}{% trans "Only men’s" %}{% elif APPAREL_GENDER == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'look-list' %}">{% trans "Show all" %}</a></li>
+                        <li><a href="{% url 'look-list-men' %}">{% trans "Only men’s" %}</a></li>
+                        <li><a href="{% url 'look-list-women' %}">{% trans "Only women’s" %}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            {% url 'search-look-list' as search_url %}
+            {% url 'product-look-list' as product_url %}
+            {% if request.path == product_url %}
+                <h2>{% trans "Showing" %} {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
+            {% elif request.path == search_url %}
+                <h2>{% trans "Showing" %} '{{ query|escape }}', {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
+            {% endif %}
+
             {% if not current_page.object_list and request.path == popular_look_list_url %}
             <div class="empty-content">
                 <p>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</p>
                 <a class="btn btn-upper" href="{% url 'user-list-popular' %}">{% trans "See all members" %}</a>
             </div>
             {% else %}
-                {% include 'apparel/fragments/looks_medium.html' %}
+            {% include 'apparel/fragments/look_list.html' %}
             {% endif %}
-        {% endif %}
+        </div>
     </div>
 {% endblock body %}

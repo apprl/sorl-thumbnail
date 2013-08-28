@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% load i18n apparel_extras %}
 
-{% block body-classes %}one-column accounts{% endblock body-classes %}
+{% block body-classes %}account registration{% endblock body-classes %}
 {% block body %}
 
-<div id="content">
-    <h1>{% trans "Become a member" %}</h1>
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Become a member" %}</h1>
+        </div>
+    </div>
+
     {% include 'registration/fragments/registration.html' %}
-</div>
 
 {% endblock %}

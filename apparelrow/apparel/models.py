@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Sum, Min
 from django.db.models.loading import get_model
 from django.contrib.comments.models import Comment
+from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
@@ -368,6 +369,13 @@ class Product(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=Product)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Product)
 
+@receiver(post_save, sender=Product, dispatch_uid='product_update_activity_post_save')
+def product_update_activity_post_save(sender, instance, **kwargs):
+    # TODO: this might solve deadlock in database (stupid mysql)
+    content_type = ContentType.objects.get_for_model(instance)
+    get_model('activity_feed', 'activity').objects.filter(content_type=content_type, object_id=instance.pk).update(is_available=instance.availability)
+    #get_model('activity_feed', 'activity').objects.update_activity(instance)
+
 
 #
 # ProductLike
@@ -706,12 +714,12 @@ class Look(models.Model):
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     gender      = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=False, blank=False, default='U')
     popularity  = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
-    width       = models.IntegerField(blank=False, null=False, default=694)
-    height      = models.IntegerField(blank=False, null=False, default=524)
+    width       = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0] - 2)
+    height      = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1] - 2)
     published   = models.BooleanField(default=False)
 
-    image_width = models.IntegerField(blank=False, null=False, default=694)
-    image_height = models.IntegerField(blank=False, null=False, default=524)
+    image_width = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0] - 2)
+    image_height = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1] - 2)
 
     objects = models.Manager()
     published_objects = LookManager()
@@ -771,6 +779,10 @@ class Look(models.Model):
         return self.likes.filter(active=True).count()
 
     @cached_property
+    def contest_score(self):
+        return self.likes.filter(active=True, created__lte=datetime.datetime(2013, 9, 1, 23, 59, 59)).count()
+
+    @cached_property
     def comment_count(self):
         return Comment.objects.for_model(self).filter(is_removed=False, is_public=True).count()
 
@@ -823,6 +835,13 @@ class Look(models.Model):
         if self.component: return self.component
         if self.photo_components.count() > 0: return 'P'
         return 'C'
+
+    @cached_property
+    def is_collage(self):
+        if self.component == 'C':
+            return True
+
+        return False
 
     @cached_property
     def product_manufacturers(self):
@@ -969,7 +988,7 @@ class LookComponent(models.Model):
     # FIXME: Scale product image on initial save and store height and width
     # properties
 
-    def _style(self, scale=1):
+    def _style(self, scale=1, percentage=False):
         s = []
 
         if self.component_of == 'P':
@@ -985,7 +1004,7 @@ class LookComponent(models.Model):
         else:
             for attr in ('top', 'left', 'width', 'height'):
                 if(attr in self.__dict__.keys() and self.__dict__[attr] is not None):
-                    s.append("%s: %spx;" % (attr, self.__dict__[attr] * scale))
+                    s.append("%s: %spx;" % (attr, self.__dict__[attr] * scale),)
 
         if self.z_index:
             s.append('z-index: %s;' % (self.z_index,))
@@ -1020,6 +1039,26 @@ class LookComponent(models.Model):
     @property
     def style_search(self):
         return self._style(self._calculate_width(200, 149) / float(self.look.width))
+
+    @property
+    def style_percentage(self):
+        s = []
+        s.append('width: %s%%;' % (self.width / float(self.look.width) * 100,))
+        s.append('height: %s%%;' % (self.height / float(self.look.height) * 100,))
+        s.append('top: %s%%;' % (self.top / float(self.look.height) * 100,))
+        s.append('left: %s%%;' % (self.left / float(self.look.width) * 100,))
+
+        if self.z_index:
+            s.append('z-index: %s;' % (self.z_index,))
+
+        if self.rotation:
+            s.append('transform: rotate(%sdeg); ' % self.rotation)
+            s.append('-moz-transform: rotate(%sdeg); ' % self.rotation)
+            s.append('-webkit-transform: rotate(%sdeg); ' % self.rotation)
+            s.append('-o-transform: rotate%sdeg); ' % self.rotation)
+            s.append('-ms-transform: rotate(%sdeg); ' % self.rotation)
+
+        return ' '.join(s)
 
     @property
     def style(self):

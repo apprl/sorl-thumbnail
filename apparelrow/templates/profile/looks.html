@@ -1,65 +1,12 @@
 {% extends "profile/base_profile.html" %}
-{% load i18n cache thumbnail apparel_extras %}
+{% load i18n %}
 
 {% block extra-title %}{{ profile.display_name }} - {% trans "Looks" %} | {% endblock %}
-{% block 'extra-scripts' %}
-<script type="text/javascript">
-    jQuery(document).ready(function() {
-        jQuery(document).on('click', '.large-looks .btn-delete', function(event) {
-            var title = jQuery(this).prev('a').attr('title');
-            var href = jQuery(this).attr('href');
-            var li = jQuery(this).closest('li');
-            create_modal_dialog(
-                '{% trans "Are you sure?" %}',
-                ['{% trans "Do you really want to delete look" %} <span class="bold">' + title + '</span>?'],
-                function (modal_dialog) {
-                    jQuery.ajax({
-                        url: href,
-                        success: function(data) {
-                            if (data.data) {
-                                li.remove();
-                            }
-                        },
-                        complete: function() { modal_dialog.close(); }
-                    });
-                },
-                function (modal_dialog) { modal_dialog.close(); }
-            );
-            event.preventDefault();
-        });
 
-        jQuery(document).on('click', '.btn-publish', function(e) {
-            var $this = $(this);
-            var href = $this.attr('href');
-            var $a = $this.parents('.look-container').find('h3 a');
-            create_modal_dialog(
-                '{% trans "Publish look" %}',
-                ['{% trans "Do you want to publish this look?" %}'],
-                function (modal_dialog) {
-                    $.ajax({url: href,
-                            success: function(data) {
-                                $this.remove();
-                                var text = $a.text();
-                                if(text.indexOf('(') > -1) {
-                                    $a.text(text.substring(0, text.lastIndexOf('(') - 1));
-                                }
-                            },
-                            complete: function() { modal_dialog.close(); }
-                        });
-                },
-                function (modal_dialog) { modal_dialog.close(); }
-            );
-            return false;
-        });
-
-    });
-</script>
-{% endblock 'extra-scripts' %}
-
-{% block body-classes %}two-columns profile profile-looks{% endblock body-classes %}
+{% block body-classes %}profile-page profile-looks{% endblock body-classes %}
 {% block content %}
     {% if current_page.object_list %}
-        {% include 'apparel/fragments/looks_large.html' %}
+        {% include 'apparel/fragments/look_list.html' %}
     {% else %}
         <div class="empty">
         {% if profile == request.user %}
@@ -73,5 +20,3 @@
         </div>
     {% endif %}
 {% endblock %}
-
-{% block profile_right_sidebar %}{% endblock %}

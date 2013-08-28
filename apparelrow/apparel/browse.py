@@ -287,14 +287,17 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     paged_result.html = [o.template for o in paged_result.object_list if o]
     paged_result.object_list = []
 
+    if not paged_result.html:
+        result.update(extra_html=loader.render_to_string('apparel/fragments/shop_empty.html', {}, context_instance=RequestContext(request)))
+
     # Update selected
     selected_colors = request.GET.get('color', None)
     if selected_colors:
-        selected_colors = selected_colors.split(',')
+        selected_colors = map(int, selected_colors.split(','))
 
     selected_patterns = request.GET.get('pattern', None)
     if selected_patterns:
-        selected_patterns = selected_patterns.split(',')
+        selected_patterns = map(int, selected_patterns.split(','))
 
     selected_price = request.GET.get('price', None)
     if selected_price:
@@ -365,15 +368,10 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         current_page = paged_result,
     )
 
-    # Do not update overall gender on shop
-    # Set APPAREL_GENDER
-    #result.update(APPAREL_GENDER=gender)
-
     # Added remaining kwargs for rendering
     result.update(kwargs)
 
     response = render_to_response(template, result, context_instance=RequestContext(request))
-    #response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
 
     translation.deactivate()
 

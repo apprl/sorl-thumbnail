@@ -310,7 +310,7 @@ def store_admin_accept(request, transaction_id):
     if request.method == 'POST':
         transaction.accept()
 
-    return render(request, 'advertiser/dialog_accept.html', {'transaction': transaction})
+    return render(request, 'advertiser/modal_accept.html', {'transaction': transaction})
 
 
 @login_required
@@ -338,7 +338,7 @@ def store_admin_reject(request, transaction_id):
                                                                        'order_id': transaction.order_id})
         mail_superusers('Transaction rejected', email_body)
 
-    return render(request, 'advertiser/dialog_reject.html', {'transaction': transaction})
+    return render(request, 'advertiser/modal_reject.html', {'transaction': transaction})
 
 
 def test_link(request):

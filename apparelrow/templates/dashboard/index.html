@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body-classes %}publisher-index-page{% endblock %}
+{% block full-body %}
+
+<div class="background">
+    <div class="container">
+        <div class="body-header">
+            <div class="body-header-col-full">
+                <h1>{% trans "APPRL FOR BLOGGERS & MEDIA" %}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="inner-content">
+                    <p>{% trans "Apprl is an invitation-only digital service for fashion influencers, bloggers & magazines that helps you earn money on your blog/site through our tools." %}</p>
+                    <p>{% trans "Apply for an invitation:" %}</p>
+                    <form action="" method="post" class="form-horizontal">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_{{ form.name.html_name }}" class="col-sm-2 control-label">{{ form.name.label }}</label>
+                            <div class="col-sm-6">
+                                <input name="{{ form.name.html_name }}" type="text" class="form-control" id="id_{{ form.name.html_name }}" placeholder="{{ form.name.label }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_{{ form.email.html_name }}" class="col-sm-2 control-label">{{ form.email.label }}</label>
+                            <div class="col-sm-6">
+                                <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" placeholder="{{ form.email.label }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_{{ form.blog.html_name }}" class="col-sm-2 control-label">{{ form.blog.label }}</label>
+                            <div class="col-sm-6">
+                                <input name="{{ form.blog.html_name }}" type="text" class="form-control" id="id_{{ form.blog.html_name }}" placeholder="{{ form.blog.label }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-6">
+                                <button class="btn btn-primary btn-block btn-apply">{% trans "APPLY" %}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

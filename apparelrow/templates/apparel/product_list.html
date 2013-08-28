@@ -1,16 +1,16 @@
-{% extends 'base.html' %}
+{% load i18n apparel_extras %}
 
-{% block body %}
-{% if object_list %}
-<div class="container">
-    <ul>
-    {% for object in object_list %}
-        <li><a href="{{ object.id }}">{{ object.product_name }}</a>
-        {% include 'apparel/fragments/product_shop.html' %}</li>
-    {% endfor %}
-    </ul>
+<div class="row product-list-container">
+    <div class="col-product-filter">
+        <h3>{% trans "Filter products" %}</h3>
+        {% include 'apparel/fragments/product_filter.html' %}
+    </div>
+    <div id="product-list" class="col-product-list">
+        <h3>&nbsp;</h3>
+        {% if extra_html %}
+            {{ extra_html }}
+        {% else %}
+            {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination only %}
+        {% endif %}
+    </div>
 </div>
-{% else %}
-    <p>No products found!</p>
-{% endif %}
-{% endblock body %}

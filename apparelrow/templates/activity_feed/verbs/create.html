@@ -1,11 +1,9 @@
 {% extends 'activity_feed/verbs/base.html' %}
-{% load i18n %}
+{% load i18n cache %}
 
-{% block activity_header %}
-    {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
-    {% trans "created the look" %} <a href="{{objects.0.get_absolute_url}}">{{objects.0.title}}</a>
-{% endblock %}
-
+{% block activity_header %}<a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "created a look" %}</span>{% endblock %}
 {% block activity_content %}
-    {% include 'apparel/fragments/look_medium.html' with object=objects.0 %}
+    {% cache CACHE_TIMEOUT look_medium_featured object.object_id LANGUAGE_CODE %}
+    {% include 'apparel/fragments/look_medium.html' with object=object.activity_object featured=True %}
+    {% endcache %}
 {% endblock %}

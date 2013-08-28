@@ -4,22 +4,19 @@ import re
 import json
 import datetime
 import os.path
+import string
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.core.urlresolvers import reverse
-from django.db import IntegrityError
-from django.db.models import Q, Max, Min, Count, Sum, connection, signals, get_model
+from django.db.models import Q, Count, get_model
 from django.template import RequestContext, loader
-from django.template.loader import get_template
+from django.template.loader import render_to_string
 from django.template.defaultfilters import floatformat
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.comments.models import Comment
-from django.contrib.sites.models import Site
 from django.views.i18n import set_language
 from django.views.decorators.http import require_POST
 from django.utils import translation
@@ -36,8 +33,10 @@ from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Opt
 from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
-from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative
+from apparelrow.apparel.utils import get_paged_result, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative, get_top_looks_in_network, get_featured_activity_today
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity
+
+from apparelrow.activity_feed.views import user_feed
 
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
@@ -45,7 +44,7 @@ from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_u
 logger = logging.getLogger(__name__)
 
 FAVORITES_PAGE_SIZE = 30
-LOOK_PAGE_SIZE = 6
+LOOK_PAGE_SIZE = 12
 
 #
 # Sitemap
@@ -208,18 +207,12 @@ def follow_unfollow(request, profile_id, do_follow=True):
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, published=True, gender__isnull=False)
 
-    is_in_wardrobe = False
-    user_looks = []
+    is_liked = False
     if request.user.is_authenticated():
-        user_looks = Look.published_objects.filter(user=request.user)
-        is_in_wardrobe = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
+        is_liked = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
 
     looks_with_product = Look.published_objects.filter(components__product=product).distinct().order_by('-modified')[:2]
-    looks_with_product_count = Look.published_objects.filter(components__product=product).distinct().count()
-
-    # Comments
-    content_type = ContentType.objects.get_for_model(Product)
-    comments =  Comment.objects.filter(content_type=content_type, object_pk=product.pk, is_public=True, is_removed=False).select_related('user')
+    #looks_with_product_count = Look.published_objects.filter(components__product=product).distinct().count()
 
     # Likes
     likes = product.likes.filter(active=True).order_by('modified').select_related('user')
@@ -238,22 +231,12 @@ def product_detail(request, slug):
     if product.manufacturer and product.manufacturer.user:
         product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
 
-    # Partner user
-    product_short_link = None
-    if request.user.is_authenticated() and request.user.is_partner:
-        try:
-            partner_short = ShortProductLink.objects.get(product=product, user=request.user)
-            product_short_link = reverse('product-short-link', args=[partner_short.link()])
-            product_short_link = request.build_absolute_uri(product_short_link)
-        except ShortProductLink.DoesNotExist:
-            pass
-
     # More like this body
     mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors), ', '.join([x.name for x in product.categories]))
 
     # More alternatives
     #alternative = get_product_alternative(product)
-    alternative, alternative_url = more_alternatives(product, 15)
+    alternative, alternative_url = more_alternatives(product, 12)
 
     # Referral SID
     referral_sid = request.GET.get('sid', 0)
@@ -266,19 +249,16 @@ def product_detail(request, slug):
             'apparel/product_detail.html',
             {
                 'object': product,
-                'user_looks': user_looks,
-                'is_in_wardrobe': is_in_wardrobe,
+                'is_liked': is_liked,
                 'looks_with_product': looks_with_product,
-                'looks_with_product_count': looks_with_product_count,
+                #'looks_with_product_count': looks_with_product_count,
                 'object_url': request.build_absolute_uri(),
-                'more_like_this': more_like_this_product(mlt_body, product.gender, 20),
-                'comments': comments,
+                'more_like_this': more_like_this_product(mlt_body, product.gender, 12),
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
                 'product_full_image': product_full_image,
                 'product_brand_full_url': product_brand_full_url,
                 'likes': regular_likes,
                 'partner_likes': partner_likes,
-                'product_short_link': product_short_link,
                 'referral_sid': referral_sid,
                 'alternative': alternative,
                 'alternative_url': alternative_url,
@@ -368,12 +348,33 @@ def product_popup(request):
         product_result = {'liked': False}
         if request.user and request.user.is_authenticated():
             product_result['liked'] = ProductLike.objects.filter(product=product, active=True, user=request.user).exists()
-        product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
-        product_result['comments'] = Comment.objects.filter(content_type=content_type, object_pk=product, is_removed=False, is_public=True).count()
+        #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
 
         result.append(product_result)
 
     return HttpResponse(json.dumps(result), mimetype='application/json')
+
+
+def look_popup(request):
+    look_ids = []
+    try:
+        look_ids = map(int, request.GET.get('id', '').split(','))
+    except ValueError:
+        pass
+
+    result = []
+
+    content_type = ContentType.objects.get_for_model(Look)
+    for look in look_ids:
+        temp_result = {'liked': False}
+        if request.user and request.user.is_authenticated():
+            temp_result['liked'] = LookLike.objects.filter(look=look, active=True, user=request.user).exists()
+        #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
+
+        result.append(temp_result)
+
+    return HttpResponse(json.dumps(result), mimetype='application/json')
+
 
 @login_required
 def product_action(request, pk, action):
@@ -472,39 +473,8 @@ def look_like(request, slug, action):
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
-def brand_list(request, gender=None):
-    """
-    List all brands.
-    """
-    if not gender:
-        gender = get_gender_from_cookie(request)
 
-    # Most popular brand pages
-    # Using a raw query to annotate the popular brand profile list with is_following
-    if request.user.is_authenticated():
-        popular_brands = get_user_model().objects.raw('SELECT pu.*, pf.id AS is_following FROM profile_user pu LEFT OUTER JOIN profile_follow pf ON pf.user_follow_id = pu.id AND pf.user_id = %s WHERE pu.is_brand = true AND pu.is_active = true ORDER BY pu.followers_count DESC LIMIT 20', [request.user.pk])
-    else:
-        popular_brands = get_user_model().objects.raw('SELECT *, false AS is_following FROM profile_user WHERE is_brand = true AND is_active = true ORDER BY followers_count DESC LIMIT 20')
-
-    # Most popular products
-    popular_products = None
-    if request.user.is_authenticated():
-        follows = Follow.objects.filter(user=request.user, active=True).values('user_follow_id')
-        popular_products = Product.valid_objects.distinct() \
-                                                .filter(likes__user__in=follows) \
-                                                .order_by('-popularity') \
-                                                .select_related('manufacturer')[:10]
-
-    response = render_to_response('apparel/brand_list.html', {
-                'popular_brands': popular_brands,
-                'popular_products': popular_products,
-                'next': request.get_full_path(),
-                'APPAREL_GENDER': gender
-            }, context_instance=RequestContext(request))
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-    return response
-
-def look_list(request, popular=None, search=None, contains=None, page=0, gender=None):
+def look_list(request, search=None, contains=None, gender=None):
     """
     This view can list looks in four ways:
 
@@ -517,13 +487,12 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    if popular:
-        if request.user.is_authenticated():
-            queryset = get_top_looks_in_network(request.user)
-        else:
-            queryset = Look.objects.none()
-    elif search:
-        if not gender:
+    gender_list = {'A': ['W', 'M', 'U'],
+                   'M': ['M', 'U'],
+                   'W': ['W', 'U']}
+
+    if search:
+        if not gender or gender == 'A':
             gender_field = 'gender:(U OR M OR W)'
         else:
             gender_field = 'gender:(U OR %s)' % (gender,)
@@ -537,21 +506,18 @@ def look_list(request, popular=None, search=None, contains=None, page=0, gender=
     elif contains:
         queryset = Look.published_objects.filter(components__product__slug=contains).distinct()
     else:
-        queryset = Look.published_objects.filter(gender__in=[gender, 'U']).order_by('-popularity')
+        queryset = Look.published_objects.filter(gender__in=gender_list.get(gender)).order_by('-popularity')
 
-    paged_result, pagination = get_pagination_page(queryset, LOOK_PAGE_SIZE,
-            request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page'))
 
     if request.is_ajax():
-        response = render_to_response('apparel/fragments/looks_medium.html', {
-                    'pagination': pagination,
+        response = render_to_response('apparel/fragments/look_list.html', {
                     'current_page': paged_result,
                 }, context_instance=RequestContext(request))
     else:
         response = render_to_response('apparel/look_list.html', {
                     'query': request.GET.get('q'),
                     'paginator': paged_result.paginator,
-                    'pagination': pagination,
                     'current_page': paged_result,
                     'next': request.get_full_path(),
                     'APPAREL_GENDER': gender
@@ -567,7 +533,11 @@ def look_detail(request, slug):
     if not look.published and look.user != request.user:
         raise Http404()
 
-    looks_by_user = Look.published_objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:8]
+    is_liked = False
+    if request.user.is_authenticated():
+        is_liked = LookLike.objects.filter(user=request.user, look=look, active=True).exists()
+
+    looks_by_user = Look.published_objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:4]
 
     look_created = False
     if 'look_created' in request.session:
@@ -613,7 +583,8 @@ def look_detail(request, slug):
                 'look_saved': look_saved,
                 'look_created': look_created,
                 'likes': likes,
-                'base_url': base_url
+                'base_url': base_url,
+                'is_liked': is_liked,
             },
             context_instance=RequestContext(request),
         )
@@ -643,47 +614,73 @@ def csrf_failure(request, reason=None):
     logging.debug("CSRF failure: %s" % reason)
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
 
-def user_list(request, popular=None, gender=None, view_gender=[]):
+
+@login_required
+@require_POST
+def follow_backend(request):
+    follows = []
+    uids = request.POST.get('uids')
+    if uids:
+        uids = uids.split(',')
+        for profile in get_user_model().objects.filter(id__in=uids):
+            follow_html = render_to_string('apparel/fragments/follow.html', {'profile': profile}, context_instance=RequestContext(request))
+            follows.append({'id': profile.pk, 'html': follow_html})
+
+    return HttpResponse(json.dumps(follows), mimetype='application/json')
+
+
+def user_list(request, gender=None, brand=False):
     """
     Displays a list of profiles
     """
     if not gender:
         gender = get_gender_from_cookie(request)
 
+    gender_list = {'A': ['W', 'M', 'U'],
+                   'M': ['M', 'U'],
+                   'W': ['W', 'U']}
+
     queryset = get_user_model().objects.filter(is_active=True,
-                                               is_brand=False,
+                                               is_brand=brand,
                                                advertiser_store__isnull=True)
 
-    if view_gender and set(view_gender).issubset(set(['W', 'M'])):
-        queryset = queryset.filter(gender__in=view_gender)
-
-    if popular:
-        queryset = queryset.order_by('-popularity', '-followers_count', 'first_name', 'last_name', 'username')
+    if not brand:
+        queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
     else:
-        queryset = queryset.order_by('first_name', 'last_name', 'username')
+        # XXX: is this solution good enough?
+        # XXX: nope, too slow
+        #queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender__in=gender_list.get(gender)).distinct()
+        queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
 
-    paged_result, pagination = get_pagination_page(queryset,
-            10, request.GET.get('page', 1), 1, 2)
+    extra_parameter = None
 
-    # Latest active members
-    latest_members = get_user_model().objects.filter(is_active=True,
-                                                     is_brand=False,
-                                                     advertiser_store__isnull=True) \
-                                             .order_by('-date_joined')[:13]
+    alphabet = request.GET.get('alphabet')
+    if alphabet:
+        if alphabet == '0-9':
+            queryset = queryset.filter(name__regex=r'^\d.+')
+        elif alphabet in  string.lowercase:
+            queryset = queryset.filter(name__istartswith=alphabet)
+
+        extra_parameter = 'alphabet=%s' % (alphabet,)
+
+    queryset = queryset.order_by('-popularity', '-followers_count', 'first_name', 'last_name', 'username')
+
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
 
     if request.is_ajax():
         response = render_to_response('apparel/fragments/user_list.html', {
-                    'pagination': pagination,
                     'current_page': paged_result,
+                    'extra_parameter': extra_parameter,
             }, context_instance=RequestContext(request))
     else:
         response = render_to_response('apparel/user_list.html', {
-                'pagination': pagination,
                 'current_page': paged_result,
                 'next': request.get_full_path(),
-                'view_gender': view_gender[0] if len(view_gender) > 0 and view_gender[0] in ['W', 'M'] else 'A',
-                'latest_members': latest_members,
-                'APPAREL_GENDER': gender
+                'alphabet': string.lowercase,
+                'selected_alphabet': alphabet,
+                'APPAREL_GENDER': gender,
+                'is_brand': brand,
+                'extra_parameter': extra_parameter,
             }, context_instance=RequestContext(request))
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
@@ -738,6 +735,34 @@ def gender(request, *args, **kwargs):#view=None, gender=None):
 
     return HttpResponseRedirect(reverse('%s-women' % (view,), args=args))
 
+
+#
+# Index page for unauthenticated users
+#
+
+def index(request, gender=None):
+    if request.user.is_authenticated():
+        return user_feed(request, gender=gender)
+
+    if request.path != '/':
+        return HttpResponseRedirect('/')
+
+    response = render(request, 'apparel/index.html', {'APPAREL_GENDER': gender, 'featured': get_featured_activity_today()})
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value='A', max_age=365 * 24 * 60 * 60)
+
+    return response
+
+def publisher(request):
+    #p = get_model('apparel', 'Product').valid_objects.get(slug='kappa-kool-kombat-traningstrojor-blatt')
+    p = get_model('apparel', 'Product').published_objects.all()[:10][7]
+    has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=p).exists()
+    return render(request, 'apparel/publisher.html', {'object': p, 'has_looks': has_looks})
+
+def store(request):
+    return render(request, 'apparel/store.html')
+
+
+
 def about(request):
     return render_to_response('apparel/about.html', {}, context_instance=RequestContext(request))
 
@@ -752,6 +777,32 @@ def jobs(request):
             'image': str(image)
         }, context_instance=RequestContext(request))
 
+#
+# Contest Stylesearch
+#
+
+def contest_stylesearch(request):
+    image = 'images/stylesearch.png'
+    if request.LANGUAGE_CODE == 'sv':
+        image = 'images/stylesearch_sv.png'
+
+    return render(request, 'apparel/contest_stylesearch.html', {'image': image})
+
+
+def contest_stylesearch_charts(request):
+    start_date = datetime.datetime(2013, 8, 26, 0, 0, 0)
+    end_date = datetime.datetime(2013, 9, 1, 23, 59, 59)
+
+    looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date),
+                                                                  published=True) \
+                                                          .filter(likes__created__lte=end_date, likes__active=True) \
+                                                          .annotate(num_likes=Count('likes')) \
+                                                          .select_related('user') \
+                                                          .order_by('-num_likes', 'created')[:20]
+
+    return render(request, 'apparel/contest_stylesearch_charts.html', {'looks': looks})
+
+
 
 def apparel_set_language(request):
     language = request.POST.get('language', translation.get_language())
@@ -761,44 +812,6 @@ def apparel_set_language(request):
 
     return set_language(request)
 
-
-def dialog_like_product(request):
-    """
-    Display a dialog tailored for the product detail page with information
-    about facebook login. On successful login redirect to same page.
-    """
-    return render_to_response('apparel/fragments/dialog_like_product.html',
-            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
-
-def dialog_like_look(request):
-    """
-    Display a dialog tailored for the look detail page with information about
-    facebook login. On successful login redirect to same page.
-    """
-    return render_to_response('apparel/fragments/dialog_like_look.html',
-            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
-
-def dialog_create_look(request):
-    """
-    Dialog create look for unauthenticated users.
-    """
-    return render_to_response('apparel/fragments/dialog_create_look.html',
-            {'next': request.GET.get('next', '/')}, context_instance=RequestContext(request))
-
-def dialog_follow_user(request):
-    """
-    Display a dialog tailored for the look detail page with information about
-    facebook login. On successful login redirect to same page.
-    """
-    brand = 0
-    try:
-        brand = int(request.GET.get('brand', 0))
-    except ValueError:
-        pass
-
-    return render_to_response('apparel/fragments/dialog_follow_user.html',
-            {'next': request.GET.get('next', '/'),
-             'brand': brand}, context_instance=RequestContext(request))
 
 def facebook_friends_widget(request):
     """
@@ -822,26 +835,3 @@ def facebook_friends_widget(request):
     return render_to_response('apparel/fragments/facebook_friends.html', {
             'facebook_friends': friends,
         }, context_instance=RequestContext(request))
-
-#
-# Utility routines. FIXME: Move these out
-#
-
-def get_top_looks_in_network(profile, limit=None):
-    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
-    # TODO: add active/published flag here later
-    looks = Look.published_objects.distinct().filter(user__in=user_ids).order_by('-popularity', '-created')
-
-    if limit:
-        return looks[:limit]
-
-    return looks
-
-def get_top_products_in_network(profile, limit=None):
-    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
-    products = Product.valid_objects.distinct().filter(likes__active=True, likes__user__in=user_ids).order_by('-popularity')
-
-    if limit:
-        return products[:limit]
-
-    return products

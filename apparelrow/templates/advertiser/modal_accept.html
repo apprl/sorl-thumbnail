@@ -1,0 +1,31 @@
+{% extends 'dialog_base.html' %}
+{% load i18n %}
+
+{% block modal_id %}modal_store_accept_{{ transaction.id }}{% endblock %}
+{% block modal_title %}{% trans "Accept transaction?" %}{% endblock %}
+{% block modal_content %}
+<dl class="dl-horizontal">
+    <dt>{% trans "Order ID" %}</dt>
+    <dd>{{ transaction.order_id }}</dd>
+    <dt>{% trans "Order Value" %}</dt>
+    <dd>{{ transaction.order_value }} {{ transaction.currency }}</dd>
+    <dt>{% trans "Commission" %}</dt>
+    <dd>{{ transaction.commission }} {{ transaction.currency }}</dd>
+    <dt>{% trans "Time" %}</dt>
+    <dd>{{ transaction.created }}</dd>
+</dl>
+{% endblock %}
+{% block modal_footer %}
+<p>
+    <a class="btn btn-success btn-accept-transaction" href="#">{% trans "Yes" %}</a>
+    <a class="btn btn-danger" data-dismiss="modal" href="#">{% trans "Cancel" %}</a>
+</p>
+<script type="text/javascript">
+    $(function() {
+        $('#modal_store_accept_{{ transaction.id }} .btn-accept-transaction').on('click', function() {
+            $.post('{% url 'advertiser-admin-accept' transaction.id %}', function() { window.location.reload(); });
+            return false;
+        });
+    });
+</script>
+{% endblock %}

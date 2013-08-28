@@ -2,10 +2,11 @@ from urlparse import parse_qs, urlsplit, urlunsplit
 import json
 import decimal
 import datetime
+import itertools
 
 from django.conf import settings
 from django.core.cache import cache
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.paginator import Paginator, InvalidPage, PageNotAnInteger, EmptyPage
 from django.db import connections, models
 from django.db.models.loading import get_model
 from django.utils import translation
@@ -14,6 +15,52 @@ from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+
+
+def roundrobin(*iterables):
+    "roundrobin('ABC', 'D', 'EF') --> A D E B F C"
+    # Recipe credited to George Sakkis
+    pending = len(iterables)
+    nexts = itertools.cycle(iter(it).next for it in iterables)
+    while pending:
+        try:
+            for next in nexts:
+                yield next()
+        except StopIteration:
+            pending -= 1
+            nexts = itertools.cycle(itertools.islice(nexts, pending))
+
+def get_featured_activity_today():
+    today = datetime.date.today()
+    # TODO: if no featured date, default to something?
+
+    return get_model('activity_feed', 'Activity').objects.filter(active=True, featured_date=today)[:3]
+
+
+def get_top_looks_in_network(profile, limit=None):
+    Follow = get_model('profile', 'Follow')
+    Look = get_model('apparel', 'Look')
+
+    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
+    looks = Look.published_objects.distinct().filter(user__in=user_ids).order_by('-popularity', '-created')
+
+    if limit:
+        return looks[:limit]
+
+    return looks
+
+
+def get_top_products_in_network(profile, limit=None):
+    Follow = get_model('profile', 'Follow')
+    Product = get_model('apparel', 'Product')
+
+    user_ids = Follow.objects.filter(user=profile, active=True).values_list('user_follow', flat=True)
+    products = Product.valid_objects.distinct().filter(likes__active=True, likes__user__in=user_ids).order_by('-popularity')
+
+    if limit:
+        return products[:limit]
+
+    return products
 
 
 def get_product_alternative(product, default=None):
@@ -205,6 +252,15 @@ def exchange_amount(to_currency, from_currency, amount, precision=None, fixed_ra
     return amount, fixed_rate
 
 
+def get_gender_url(gender, named_url):
+    if gender == 'M':
+        return reverse('%s-men' % (named_url,))
+    elif gender == 'W':
+        return reverse('%s-women' % (named_url,))
+
+    return reverse(named_url)
+
+
 def get_gender_from_cookie(request):
     """
     Get gender from cookie in a safe way.
@@ -214,6 +270,20 @@ def get_gender_from_cookie(request):
         return cookie_value
 
     return 'W'
+
+
+def get_paged_result(queryset, per_page, page_num):
+    paginator = Paginator(queryset, per_page)
+    paginator._count = 10000
+    try:
+        paged_result = paginator.page(page_num)
+    except PageNotAnInteger:
+        paged_result = paginator.page(1)
+    except EmptyPage:
+        paged_result = paginator.page(paginator.num_pages)
+
+    return paged_result
+
 
 def get_pagination_page(queryset, per_page, page_num, on_ends=2, on_each_side=3):
     """

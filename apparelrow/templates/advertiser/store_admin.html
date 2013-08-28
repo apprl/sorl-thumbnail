@@ -24,7 +24,7 @@
             chart.draw(data, options);
         }
         $(document).ready(function() {
-            $('#content select').change(function() {
+            $('.monthly-list select').change(function() {
                 var $selected = $(this).find(':selected');
                 var year = $selected.data('year');
                 var month = $selected.data('month');
@@ -35,43 +35,51 @@
     </script>
 {% endblock %}
 
-{% block body-header %}
-<div id="body-header">
-    <div class="column_one">
-        <h1 class="max-width">{% trans "Your store" %}</h1>
-    </div>
-</div>
-{% endblock body-header %}
-{% block body-classes %}one-column advertiser{% endblock body-classes %}
+{% block body-classes %}store-page{% endblock body-classes %}
 {% block body %}
-<div id="content">
-    <ul class="total-stats group">
-        <li class="first">{% trans "Balance:" %} {{ store.balance }} EUR</li>
-        <li class="last">{% trans "Total accepted commission:" %} {{ total_accepted_commission|floatformat:2|intcomma }} EUR</li>
-    </ul>
-    <ul class="monthly-stats group">
-        <li class="first">
-            <label>{% trans "Show: " %}
-                <select>
-                    {% for date in dates %}
-                    <option data-year="{{ date.year }}" data-month="{{ date.month }}"{% if date.year == year and date.month == month %} selected{%endif %}>{{ date|date:"F Y" }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-        </li>
-        <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatformat:2|intcomma }} EUR</li>
-    </ul>
-    <div class="transaction-charts group" style="margin: 10px 0;">
-        <div id="transaction_chart" style="width: 100%; height: 240px;"></div>
+
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Your store" %}</h1>
+        </div>
     </div>
-    <div class="transaction-table group">
-        <div class="transaction-table-content">
-            <table>
+
+    <div class="row subnav-page">
+        <div class="col-md-6">{% trans "Balance:" %} <strong>{{ store.balance }} EUR</strong></div>
+        <div class="col-md-6">{% trans "Total accepted commission:" %} <strong>{{ total_accepted_commission|floatformat:2|intcomma }} EUR</strong></div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="list-inline monthly-list">
+                <li class="first">
+                    <label>{% trans "Show: " %}
+                        <select>
+                            {% for date in dates %}
+                            <option data-year="{{ date.year }}" data-month="{{ date.month }}"{% if date.year == year and date.month == month %} selected{%endif %}>{{ date|date:"F Y" }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </li>
+                <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatformat:2|intcomma }} EUR</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="transaction_chart" style="width: 100%; height: 240px; margin: 20px 0;"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-condensed">
                 <tr>
                     <th>{% trans "Order ID" %}</th>
                     <th>{% trans "Order Value" %}</th>
                     <th>{% trans "Commission" %}</th>
-                    <th>{% trans "Order Detail" %}</th>
+                    <th class="hidden-xs">{% trans "Order Detail" %}</th>
                     <th>{% trans "Time" %}</th>
                     <th>{% trans "Order Status" %}</th>
                 </tr>
@@ -80,7 +88,7 @@
                     <td>{{ transaction.order_id }}</td>
                     <td>{{ transaction.order_value }} {{ transaction.currency }}</td>
                     <td>{{ transaction.commission }} {{ transaction.currency }}</td>
-                    <td>
+                    <td class="hidden-xs">
                         {% for product in transaction.products.all %}
                             {{ product.quantity }} {{ product.sku }} {{ product.price }} {{ transaction.currency }}<br>
                         {% endfor %}
@@ -88,8 +96,8 @@
                     <td>{{ transaction.created }}</td>
                     <td>
                         {% if transaction.status == 'P' %}
-                        <a class="open-dialog btn btn-upper btn-positive" href="{% url 'advertiser-admin-accept' transaction.id %}">{% trans "Accept" %}</a>
-                        <a class="open-dialog btn btn-upper btn-negative" href="{% url 'advertiser-admin-reject' transaction.id %}">{% trans "Reject" %}</a>
+                        <a data-toggle="modal" class="btn btn-success" href="#" data-target="#modal_store_accept_{{ transaction.id }}">{% trans "Accept" %}</a>
+                        <a data-toggle="modal" class="btn btn-danger" href="#" data-target="#modal_store_reject_{{ transaction.id }}">{% trans "Reject" %}</a>
                         {% else %}
                         {{ transaction.get_status_display }}<br>
                         {{ transaction.status_date }}
@@ -104,5 +112,10 @@
             </table>
         </div>
     </div>
-</div>
+{% for transaction in transactions %}
+    {% if transaction.status == 'P' %}
+    {% include 'advertiser/modal_accept.html' with transaction=transaction only %}
+    {% include 'advertiser/modal_reject.html' with transaction=transaction only %}
+    {% endif %}
+{% endfor %}
 {% endblock body %}

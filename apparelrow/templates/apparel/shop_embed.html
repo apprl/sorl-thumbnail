@@ -5,32 +5,16 @@
 <html lang="{{ request.LANGUAGE_CODE }}">
     <head>
         <title>Shop | Apprl - Social Shopping</title>
-        <link rel="stylesheet" href="{% static 'styles/embed_shop.css' %}">
         <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+        {% compressed_css 'bootstrap' %}
+        <style>body { background-color: #fff; }</style>
         <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
         <script type="text/javascript">
-            var pricerange = {
-                min: {{ pricerange.min }},
-                max: {{ pricerange.max }}
-            };
             var embed_shop_user_id = {{ user_id }};
+        </script>
+        {% compressed_js 'shop' %}
+        <script type="text/javascript">
             $(function () {
-                $("#back-top").hide();
-                $(window).scroll(function () {
-                    if ($(this).scrollTop() > 1500) {
-                        $('#back-top').fadeIn();
-                    } else {
-                        $('#back-top').fadeOut();
-                    }
-                });
-                $('#back-top a').click(function () {
-                    $('body,html').animate({
-                        scrollTop: 0
-                    }, 400);
-                    return false;
-                });
                 $(document).on('click', '.product-image, .product-footer a.looks', function() {
                     var slug = $(this).data('slug');
                     var vendor = $(this).data('vendor');
@@ -48,7 +32,6 @@
                 });
             });
         </script>
-        {% compressed_js 'shop' %}
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
@@ -89,31 +72,10 @@
         }
         </script>
     </head>
-    <body class="shop-embed">
+    <body class="shop shop-embed">
         <div class="container">
-            <div id="inner-container">
-                <div class="sidebar">
-                    {% include 'apparel/fragments/product_menu_browse.html' %}
-                </div>
-                <div id="content">
-                    <h2 id="product-count">
-                        <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
-                    </h2>
-                    <div id="product-list" class="product-list">
-                        <ul class="list group">
-                        {% for html in current_page.html %}
-                            {{ html|safe }}
-                        {% endfor %}
-                        </ul>
-                        <div id="pagination-bottom" class="pagination">
-                            {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
-                        </div>
-                    </div>
-                    <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
-                </div>
-            </div>
-            {% include 'apparel/fragments/shop_empty.html' %}
+            {% include 'apparel/product_list.html' %}
         </div>
-      </body>
+    </body>
 </html>
 {% endspaceless %}

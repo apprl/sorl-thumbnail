@@ -2,16 +2,8 @@
 <form action="{{ request.path }}" method="post"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %}>
     {% csrf_token %}
     <input type="hidden" name="change_image_form" value="yes">
-    {% block extra_fields %}{% endblock %}
-    <ul>
-    {% for field in change_image_form %}
-        <li class="profile-avatar-upload">
-            {{ field }}
-            {{ field.errors }}
-        </li>
-    {% endfor %}
-        <li>
-            <button type="submit" class="btn btn-upper btn-small btn-block btn-positive">{% trans "Save picture" %}</button>
-        </li>
-    </ul>
+    <div class="form-group">
+        <input type="file" class="form-control" name="image" id="id_image">
+    </div>
+    <button type="submit" class="btn btn-success btn-sm btn-block">{% trans "Save picture" %}</button>
 </form>

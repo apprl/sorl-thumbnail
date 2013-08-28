@@ -6,9 +6,15 @@
  * To reset, set $(window).data('first-scroll', true)
  * */
 
+window.resetInfiniteScroll = function() {
+    var $window = $(window);
+    $window.data('first-scroll', true);
+    $window.data('dont-scroll', false);
+};
+
 window.infiniteScroll = function infiniteScroll(callback) {
-    var $window = jQuery(window),
-        $document = jQuery(document),
+    var $window = $(window),
+        $document = $(document),
         lastOffset = $window.scrollTop(),
         loading = false;
 
@@ -18,10 +24,12 @@ window.infiniteScroll = function infiniteScroll(callback) {
 
     // Keep track of the first auto-scroll
     $window.data('first-scroll', true);
+    $window.data('dont-scroll', false);
 
-    $window.bind('scroll', function() {
-        if($window.data('dont-scroll'))
+    $window.on('scroll', function() {
+        if($window.data('dont-scroll')) {
             return;
+        }
 
         var offset = $window.scrollTop(),
             height = $window.height();
@@ -42,4 +50,4 @@ window.infiniteScroll = function infiniteScroll(callback) {
         // Store offset to see scroll direction
         lastOffset = offset;
     });
-}
+};

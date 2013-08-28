@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load i18n cache %}
+
+{% block extra-title %}{% trans "Become a publisher" %} | {% endblock %}
+
+{% block body-classes %}publisher-index-page-complete{% endblock body-classes %}
+{% block body %}
+<div class="body-header">
+    <div class="body-header-col-full">
+        <h1>{% trans "Thanks for your application!" %}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <p class="col-lg-12">{% trans "We will soon get in touch with you." %}</p>
+</div>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_trackEvent', 'Publisher', 'Signup', '{{ request.session.publisher_info }}']);
+</script>
+{% endblock %}

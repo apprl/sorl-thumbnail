@@ -1,10 +1,10 @@
 {% spaceless %}
-<ul class="list group">
+<ul class="product-list list-unstyled row">
     {% for html in current_page.html %}
-        {{ html|safe }}
+    <li class="col-product-item">{{ html|safe }}</li>
     {% endfor %}
 </ul>
-<div id="pagination-bottom" class="pagination">
-    {% include 'apparel/fragments/pagination.html' with request=request pagination=paginaton current_page=current_page only %}
+<div class="pagination">
+    {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page is_shop=True only %}
 </div>
 {% endspaceless %}

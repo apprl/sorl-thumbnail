@@ -1,46 +1,24 @@
-{% load i18n cache thumbnail apparel_extras %}
-<div class="look-container" data-id="{{ object.id }}">
-    <div class="look-medium {% if object.display_with_component == 'P' %}photo{% else %}collage{% endif %}">
-        {% if object.display_with_component == 'P' %}
-            {% cache CACHE_TIMEOUT look_medium_content object.id LANGUAGE_CODE %}
-            <div id="photo-background" class="look-photo"
-                {% if object.image %}
-                {% thumbnail object.image "450x334" as im %}
-                style="background-image: url('{{ im.url }}'); width: {{ im.width }}px; height: {{ im.height }}px"
-                {% endthumbnail %}
-                {% endif %}
-            >
-            {% for component in object.photo_components.all %}
-                <a href="{% internal_referral_url component.product.get_absolute_url object.user.pk %}" class="hotspot product" id="hotspot-{{ component.product.id }}" style="{{ component.style_middle }}display:none;"></a>
-                {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
-            {% endfor %}
-            {% endcache %}
-            <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
-            </div>
+{% load i18n thumbnail thumbnail_extras apparel_extras %}
+
+<div class="thumbnail look-medium {% if object.display_with_component == 'P' %}look-photo{% else %}look-collage{% endif %}" id="look-{{ object.id }}" data-id="{{ object.id }}">
+    <a href="{{ object.get_absolute_url }}">
+        {% if featured %}
+        {% thumbnail object.static_image "280x320" is_collage=object.is_collage keep_size=True crop=False format='PNG' as im %}
+        <img class="img-responsive look-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
         {% else %}
-            {% cache CACHE_TIMEOUT look_medium_content object.id LANGUAGE_CODE %}
-            {% for component in object.collage_components.all %}
-                <a href="{% internal_referral_url component.product.get_absolute_url object.user.pk %}" id="product-{{ component.product.id }}" class="product collage-image" style="{{ component.style_middle }}">
-                    {% thumbnail component.product.product_image "450x334" crop="noop" format="PNG" transparent=True as im %}
-                    <img src="{{ im.url }}" title="{{ component.product }}" crossorigin="anonymous" />
-                    {% endthumbnail %}
-                </a>
-                {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
-            {% endfor %}
-            {% endcache %}
-            <a class="look-like heart{% if user|likes_look:object %} liked{% endif %}" href="#" data-dialog-url="{% url 'dialog-like-look' %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"></a>
+        {% thumbnail object.static_image "560x420" is_collage=object.is_collage keep_size=True crop=False format='PNG' as im %}
+        <img class="img-responsive look-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
         {% endif %}
-    </div>
-    {% cache CACHE_TIMEOUT look_medium_footer object.id LANGUAGE_CODE %}
-    <div class="look-footer look-footer-medium">
-        <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
-        <p>{% trans "By" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></p>
-        <div class="stats">
-            <div class="likes"><a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.score }}</a></div>
-            {% if object.comment_count > 0 %}
-            <div class="comments"><a href="{{ object.get_absolute_url }}" title="{{ object.title }}">{{ object.comment_count }}</a></div>
-            {% endif %}
+    </a>
+    <div class="hover">
+        <div class="btn-group btn-group-justified">
+            <a class="btn btn-primary btn-block btn-look-like" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span>{% trans "Like" %}</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
         </div>
     </div>
-    {% endcache %}
+    <div class="caption">
+        <h4><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h4>
+        <p>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></p>
+    </div>
 </div>

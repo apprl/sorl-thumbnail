@@ -6,13 +6,16 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+
 
 from apparelrow.activity_feed.tasks import push_activity_feed
 from apparelrow.activity_feed.tasks import pull_activity_feed
 
 logger = logging.getLogger('activity_feed.models')
+
 
 #
 # ACTIVITY
@@ -49,6 +52,23 @@ class ActivityManager(models.Manager):
         except Activity.DoesNotExist:
             pass
 
+    def update_activity(self, activity_object):
+        content_type = ContentType.objects.get_for_model(activity_object)
+
+        if content_type.app_label == 'apparel' and content_type.model == 'product':
+            available = False
+            if activity_object.availability and activity_object.default_vendor and activity_object.default_vendor.availability != 0:
+                available = True
+
+            self.filter(content_type=content_type, object_id=activity_object.pk).update(is_available=available)
+
+        elif content_type.app_label == 'apparel' and content_type.model == 'look':
+            available = False
+            if activity_object.published:
+                available = True
+
+            self.filter(content_type=content_type, object_id=activity_object.pk).update(is_available=available)
+
     def get_for_user(self, user):
         return Activity.objects.filter(user=user, active=True) \
                                .select_related('user', 'owner') \
@@ -69,10 +89,12 @@ class Activity(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     activity_object = generic.GenericForeignKey('content_type', 'object_id')
-    gender = models.CharField(max_length=1, choices=GENDERS, null=True, blank=True, default=None)
+    gender = models.CharField(max_length=1, choices=GENDERS, null=True, blank=True, default=None, db_index=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     active = models.BooleanField(default=True, db_index=True)
+    is_available = models.BooleanField(default=True)
+    featured_date = models.DateField(null=True, blank=True)
 
     objects = ActivityManager()
 
@@ -80,11 +102,18 @@ class Activity(models.Model):
         self.modified = timezone.now()
         super(Activity, self).save(*args, **kwargs)
 
+    def get_template(self):
+        return 'activity_feed/verbs/%s.html' % (self.verb,)
+
     def __unicode__(self):
         return u'%s %s (%s %s)' % (self.user, self.verb, self.content_type, self.object_id)
 
     class Meta:
         unique_together = ('user', 'verb', 'content_type', 'object_id')
+        index_together = [
+            ['active', 'verb', 'is_available', 'user', 'gender'],
+            ['active', 'featured_date'],
+        ]
 
 @receiver(pre_delete, sender=Activity, dispatch_uid='activity_feed.models.delete_activity')
 def delete_activity(sender, instance, **kwargs):

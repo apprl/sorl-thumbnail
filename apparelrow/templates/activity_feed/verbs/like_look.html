@@ -1,17 +1,9 @@
 {% extends 'activity_feed/verbs/base.html' %}
-{% load i18n %}
+{% load i18n cache %}
 
-{% block activity_header %}
-    {% for user in users %}{% if not forloop.first %}{% if forloop.last %} {% trans "and" %} {% else %}, {% endif %}{% endif %}<a href="{{user.get_absolute_url}}">{{user.display_name}}</a>{% endfor %}
-    {% if objects|length > 1 %}
-    {% blocktrans with count=objects|length %}<span class="likes-text">likes</span> {{count}} looks{% endblocktrans %}
-    {% else %}
-    {% blocktrans with object_url=objects.0.get_absolute_url title=objects.0.title user_url=objects.0.user.get_absolute_url user_name=objects.0.user.display_name %}
-    <span class="likes-text">likes</span> the look <a href="{{object_url}}">{{title}}</a> by <a href="{{user_url}}">{{user_name}}</a> 
-    {% endblocktrans %}
-    {% endif %}
-{% endblock %}
-
+{% block activity_header %}<a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "likes a look" %}</span>{% endblock %}
 {% block activity_content %}
-    {% include 'apparel/fragments/look_medium.html' with object=objects.0 %}
+    {% cache CACHE_TIMEOUT look_medium_featured object.object_id LANGUAGE_CODE %}
+    {% include 'apparel/fragments/look_medium.html' with object=object.activity_object featured=True %}
+    {% endcache %}
 {% endblock %}

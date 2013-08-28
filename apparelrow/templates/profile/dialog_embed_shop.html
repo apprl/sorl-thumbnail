@@ -1,0 +1,118 @@
+{% load i18n %}
+<div class="modal fade" id="modal_embed_shop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">{% trans "Create a shop for your site/blog" %}</h4>
+            </div>
+            <div class="modal-body">
+
+                <p>{% trans "It's easy to create a shop for your site/blog that includes all the products that you like on Apprl. Enter your preferred format below and paste the embed-code (in HTML-mode) into your site."%}</p>
+
+                <form id="embed_shop_form" class="form">
+                    <div class="form-group">
+                        <label class="control-label" for="id_width">{% trans "Width" %}</label>
+                        <div class="input-group">
+                            <input id="id_width" type="text" name="width" class="form-control" placeholder="960">
+                            <span class="input-group-addon">{% trans "pixels" %}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_height">{% trans "Height" %}</label>
+                        <div class="input-group">
+                            <input id="id_height" type="text" name="height" class="form-control" placeholder="600">
+                            <span class="input-group-addon">{% trans "pixels" %}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_language">{% trans "Language" %}</label>
+                        <select id="id_language" name="language" class="form-control">
+                            {% for language in LANGUAGES %}
+                            <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_gender_0">{% trans "Show" %}</label>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="gender" id="id_gender_0" value="A" checked>
+                                {% trans "All products" %}
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="gender" id="id_gender_1" value="W">
+                                {% trans "Only women's" %}
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="gender" id="id_gender_2" value="M">
+                                {% trans "Only men's" %}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">{% trans "Get embed code" %}</button>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <label class="control-label" for="id_embed_code">{% trans "Embed code" %}</label>
+                        <textarea id="id_embed_code" name="embed_code" rows="8" class="form-control"></textarea>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        } else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+    $(document).ready(function() {
+        $('#modal_embed_shop').on('show.bs.modal', function () {
+            $('#id_embed_code').parent().hide();
+        });
+        $('#id_embed_code')
+            .focus(function(e) { this.select(); })
+            .mouseup(function(e) { e.preventDefault() });
+
+        $('#embed_shop_form').on('submit', function() {
+            var data = {
+                width: $('#id_width').val(),
+                height: $('#id_height').val(),
+                language: $('#id_language').val(),
+                gender: $('input[name=gender]:checked').val()
+            };
+
+            if(!data['height']) {
+                data['height'] = '600';
+                $('#id_height').val(data['height']);
+            }
+
+            if(!data['width']) {
+                data['width'] = '960';
+                $('#id_width').val(data['width']);
+            }
+
+            $.post("{% url 'shop-widget' %}", data, function(response) {
+                $('#id_embed_code').val(response);
+                $('#id_embed_code').parents('.form-group').show();
+                $('#modal_embed_shop').animate({scrollTop: 800});
+            });
+
+            return false;
+        });
+    });
+</script>

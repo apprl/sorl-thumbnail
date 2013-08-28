@@ -4,6 +4,7 @@ import logging
 import re
 
 from django.conf import settings
+from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
@@ -65,7 +66,7 @@ def more_alternatives(product, limit):
     docs = search.get_docs()
     if docs:
         shop_reverse = 'shop-men' if product.gender == 'M' else 'shop-women'
-        shop_url = '%s#category=%s' % (reverse(shop_reverse), product.category_id)
+        shop_url = '%s?category=%s' % (reverse(shop_reverse), product.category_id)
         if colors_pk:
             shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
 
@@ -269,7 +270,7 @@ def get_product_document(instance):
 
         has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
 
-        template_browse = render_to_string('apparel/fragments/product_shop.html', {'object': instance, 'has_looks': has_looks})
+        template_browse = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks})
         template_mlt = render_to_string('apparel/fragments/product_small_no_price.html', {'object': instance})
 
         document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
@@ -381,7 +382,7 @@ def get_look_document(instance):
     product_manufacturers = instance.product_manufacturers
     if product_manufacturers and product_manufacturers[0]:
         document['manufacturer_name'] = ', '.join(product_manufacturers)
-    document['template'] = render_to_string('apparel/fragments/look_search_content.html', {'object': instance})
+    document['template'] = render_to_string('apparel/fragments/look_medium.html', {'object': instance})
     document['published'] = instance.published
 
     return document, boost
@@ -444,6 +445,25 @@ def decode_store_facet(data):
 # Generic search
 #
 
+def search(request, gender=None):
+    """
+    Search page
+    """
+    if not gender:
+        gender = get_gender_from_cookie(request)
+
+    gender_list = {'A': ['W', 'M', 'U'],
+                   'M': ['M', 'U'],
+                   'W': ['W', 'U']}
+
+    query = request.GET.get('q', '')
+
+    response = render(request, 'search.html', {'q': query, 'APPAREL_GENDER': gender})
+    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
+
+    return response
+
+
 def search_view(request, model_name):
     """
     Generic search view
@@ -461,7 +481,7 @@ def search_view(request, model_name):
 
     # Gender field
     gender = get_gender_from_cookie(request)
-    if not gender:
+    if not gender or gender == 'A':
         gender_field = 'gender:(U OR M OR W)'
     else:
         gender_field = 'gender:(U OR %s)' % (gender,)

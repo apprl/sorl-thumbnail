@@ -4,26 +4,40 @@
 
 {% block extra-title %}{% trans "Create a new look" %} | {% endblock %}
 
-{% block 'extra-scripts' %}{% endblock 'extra-scripts' %}
+{% block body-scripts %}
+<script type="text/javascript">
+    if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+        $('.alert').removeClass('hidden');
+    }
+</script>
+{% endblock %}
+{% block body-classes %}look-create-page{% endblock %}
+{% block body %}
 
-{% block body-classes %}create-look one-column{% endblock %}
-{% block body-header %}
-<div id="body-header">
-    <div class="column_one">
+<div class="alert alert-warning alert-dismissable visible-xs">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    {% trans "Sorry, but our create look tool currently doesn’t work on mobile devices. Get a laptop and come back!" %}
+</div>
+
+<div class="body-header">
+    <div class="body-header-col-left">
         <h1>{% trans "Create a new look" %}</h1>
-        <h2>{% trans "Choose type" %}</h2>
     </div>
 </div>
-{% endblock body-header %}
-{% block body %}
-<div id="content">
-    <div class="left">
-        <a href="{% url 'look-editor' 'photo' %}"><img src="{% static "images/look_example_photo.jpg" %}"></a>
-        <a href="{% url 'look-editor' 'photo' %}" class="btn btn-block btn-upper">{% trans "Create a tagged photo" %}</a>
+
+<div class="row look-choice hidden-xs">
+    <div class="col-sm-6">
+        <a href="{% url 'look-editor' 'photo' %}"><img class="img-responsive" src="{% static "images/look_example_photo.jpg" %}"></a>
+        <a href="{% url 'look-editor' 'photo' %}" class="btn btn-primary btn-block btn-large">{% trans "Create a tagged photo" %}</a>
     </div>
-    <div class="right">
-        <a href="{% url 'look-editor' 'collage' %}"><img src="{% static "images/look_example_collage.jpg" %}"></a>
-        <a href="{% url 'look-editor' 'collage' %}" class="btn btn-block btn-upper">{% trans "Create a collage" %}</a>
+    <div class="col-sm-6">
+        <a href="{% url 'look-editor' 'collage' %}"><img class="img-responsive" src="{% static "images/look_example_collage.jpg" %}"></a>
+        <a href="{% url 'look-editor' 'collage' %}" class="btn btn-primary btn-block btn-large">{% trans "Create a collage" %}</a>
     </div>
+</div>
+
+<div class="row look-choice visible-xs">
+    <div class="col-sm-6"><img class="img-responsive" src="{% static "images/look_example_photo.jpg" %}"></div>
+    <div class="col-sm-6"><img class="img-responsive" src="{% static "images/look_example_collage.jpg" %}"></div>
 </div>
 {% endblock body %}

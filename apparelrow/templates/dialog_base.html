@@ -1,8 +1,19 @@
 {% load i18n %}
-<div class="header group">
-    <h5 class="title">{% block title %}{% endblock %}</h5>
-    <a href="#" class="close"></a>
-</div>
-<div class="content-container">
-    <div class="content">{% block content %}{% endblock %}</div>
+<div class="modal fade" id="{% block modal_id %}{% endblock %}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">{% block modal_title %}{% endblock %}</h4>
+            </div>
+            <div class="modal-body">
+                {% block modal_content %}{% endblock %}
+            </div>
+            <div class="modal-footer">
+                {% block modal_footer %}
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
 </div>

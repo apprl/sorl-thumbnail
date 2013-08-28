@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import patterns, url, include, handler404, handler500
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.generic import RedirectView
 admin.autodiscover()
 
 from sitemaps import sitemaps
@@ -26,7 +27,8 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     (r'^newsletter/', include('apparelrow.newsletter.urls')),
     (r'', include('apparelrow.apparel.urls')),
-    (r'^partner/', include('apparelrow.dashboard.urls')),
+    (r'^partner/', RedirectView.as_view(url='/publisher/dashboard/')),
+    (r'^publisher/', include('apparelrow.dashboard.urls')),
     (r'^s/', include('apparelrow.statistics.urls')),
     url(r'^facebook/login', 'apparelrow.profile.views.facebook_login', name='facebook_login'),
     url(r'^facebook/connect', 'apparelrow.profile.views.facebook_connect', name='facebook_connect'),

@@ -1,0 +1,4 @@
+{% load cache %}
+{% cache CACHE_TIMEOUT look_medium object.id LANGUAGE_CODE %}
+{% include 'apparel/fragments/look_medium.html' %}
+{% endcache %}

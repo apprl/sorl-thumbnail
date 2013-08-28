@@ -18,25 +18,28 @@ from django.utils.html import urlize
 from django.utils.safestring import mark_safe
 from django.contrib.staticfiles.storage import staticfiles_storage
 
+from apparelrow.apparel.utils import get_gender_url
+
+
 register = Library()
 
+
 @register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)
-def facebook_button(context, text=None, next=None, connect=False):
+def facebook_button(context, text=None, next=None, connect=False, disable_flow=False):
     """
     Facebook button templatetag.
 
     Make sure that the translation for a custom text is picked up correctly.
     """
-    facebook_icon = staticfiles_storage.url('images/facebook-icon.png')
     if 'next' in context and next is None:
         next = context['next']
 
     if text is None:
-        text = _('Connect with Facebook')
+        text = _('Login with Facebook')
     else:
         text = _(text)
 
-    return dict(next=next, text=text, facebook_icon=facebook_icon, connect=connect, request=context['request'])
+    return dict(next=next, text=text, connect=connect, disable_flow=disable_flow, request=context['request'])
 
 @register.filter
 def category_descendants_id(category, include_self=True):
@@ -335,25 +338,38 @@ def getdictattribute(value, arg):
 
 register.filter('getdictattribute', getdictattribute)
 
+
+@register.simple_tag
+def get_language_text(language_code):
+    if language_code not in settings.SHORT_LANGUAGES_LIST_DISPLAY:
+        return settings.SHORT_LANGUAGES_DISPLAY[0][1]
+
+    for lang, lang_text in settings.SHORT_LANGUAGES_DISPLAY:
+        if lang == language_code:
+            return lang_text
+
+    return settings.SHORT_LANGUAGES_DISPLAY[0][1]
+
 @register.simple_tag
 def selected_url(request, *args):
     for pattern in args:
         if pattern == '/':
             if request.path.startswith('/men') or request.path.startswith('/women'):
-                return 'selected'
+                return 'selected active'
             elif request.path == pattern:
-                return 'selected'
+                return 'selected active'
         elif pattern == '/profile':
             slug = '--------------------------------------'
             if request.user.is_authenticated():
                 slug = request.user.slug
             if not request.path.startswith('/profile/%s' % (slug,)) and not request.path.startswith('/profile/settings') and request.path.startswith(pattern):
-                return 'selected'
+                return 'selected active'
         else:
             if request.path.startswith(pattern):
-                return 'selected'
+                return 'selected active'
 
     return ''
+
 
 @register.simple_tag
 def selected_reverse(request, url):
@@ -362,31 +378,14 @@ def selected_reverse(request, url):
         return 'selected'
     return ''
 
-@register.simple_tag
-def change_gender_url(request, current_gender, gender):
-    """
-    Calculate new url from current gender and the gender to be.
-    """
-    if current_gender == 'M':
-        current_gender = 'men'
-    elif current_gender == 'W':
-        current_gender = 'women'
-    else:
-        current_gender = False
-
-    return reverse('shop-%s' % (gender,))
 
 @register.simple_tag
 def gender_url(gender, named_url):
     """
     Reverse named_url with correct gender.
     """
-    if gender == 'M':
-        return reverse('%s-men' % (named_url,))
-    elif gender == 'W':
-        return reverse('%s-women' % (named_url,))
+    return get_gender_url(gender, named_url)
 
-    return reverse(named_url)
 
 @register.filter
 def urlize_target_blank(value, limit=None, autoescape=None):

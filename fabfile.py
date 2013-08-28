@@ -105,6 +105,7 @@ def setup(snapshot='master'):
     require('hosts', provided_by=[localhost,demo,prod])
     require('path')
     # install Python environment
+    sudo('add-apt-repository -y ppa:chris-lea/node.js')
     sudo('apt-get update')
     sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev')
     # install some version control systems, since we need Django modules in development
@@ -113,14 +114,18 @@ def setup(snapshot='master'):
     sudo('apt-get install -y memcached')
     # install java (for solr)
     sudo('apt-get install -y openjdk-6-jre-headless')
+    # install lessc
+    sudo('apt-get install -y nodejs')
+    sudo('npm install -g less')
+    sudo('npm install -g uglify-js')
 
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
     sudo('easy_install pip')
 
     # Install Compass
-    sudo('apt-get install -y rubygems')
-    sudo('gem install compass --no-rdoc --no-ri')
+    #sudo('apt-get install -y rubygems')
+    #sudo('gem install compass --no-rdoc --no-ri')
 
     if env.dbserver=='mysql':
         sudo('apt-get install -y libmysqlclient-dev')
@@ -301,11 +306,12 @@ def build_styles_and_scripts():
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         sudo('chown -R %(run_user)s:%(run_group)s ./static' % env, pty=True)
-        sudo('cd ./sass; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
+        #sudo('cd ./sass; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
         run('mkdir media', pty=True)
         sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
-        sudo('%(path)s/bin/python ../manage.py collectstatic --noinput' % env, pty=True, user=env.run_user)
+        with prefix('. ../../../bin/activate'):
+            sudo('%(path)s/bin/python ../manage.py collectstatic --noinput' % env, pty=True, user=env.run_user)
 
 def migrate_s3():
     """

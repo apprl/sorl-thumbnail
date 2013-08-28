@@ -43,7 +43,9 @@ class MenlookMapper(DataMapper):
         return '%s > %s' % (self.get_gender(), self.record.get('google product category'))
 
     def get_image_url(self):
-        return  [(self.record.get('image link', ''), self.IMAGE_SMALL)]
+        image_url = self.record.get('image link', '')
+        image_url = image_url.replace('?sw=460', '')
+        return  [(image_url, self.IMAGE_MEDIUM)]
 
     def get_price(self):
         return self.record['price']

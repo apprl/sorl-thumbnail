@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body-scripts %}
+<script type="text/javascript">
+    $('.feed-item a').attr({'href': '#', 'data-target': '#modal_become_member', 'data-toggle': 'modal'});
+</script>
+{% endblock %}
+{% block body-classes %}index frontpage{% endblock %}
+{% block full-body %}
+
+<div class="container index-pre-choice">
+    <div class="row">
+        <div class="col-sm-4"><h2>{% trans "Discover fashion selected by bloggers, your friends & other stylemakers." %}</h2></div>
+        <div class="col-sm-4 facepile-container">
+            <div class="fb-facepile" data-max-rows="2" data-width="222" data-app-id="{{ FACEBOOK_APP_ID }}"></div>
+        </div>
+        <div class="col-sm-4"><a class="btn btn-get-access" data-toggle="modal" href="#get-started" data-target="#modal_become_member">{% trans "Get started" %}</a></div>
+    </div>
+</div>
+
+{% include 'apparel/fragments/featured.html' with request=request featured=featured %}
+
+<div class="index-choice">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-push-8"><a href="{% url 'index-publisher' %}">{% trans "Are you a blogger?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
+            <div class="col-md-6 col-md-offset-2 col-md-pull-6"><a href="{% url 'index-store' %}">{% trans "Are you an online store?" %}<span class="glyphicon glyphicon-chevron-right"></span></a></div>
+        </div>
+    </div>
+</div>
+
+<div class="index-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <p>&copy; APPRL 2013</p>
+                <p><a target="_blank" href="mailto:info@apprl.com">info@apprl.com</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

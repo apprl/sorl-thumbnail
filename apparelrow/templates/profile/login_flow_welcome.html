@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n apparel_extras %}
+
+{% block custom_navigation %}
+<ul class="nav navbar-nav navbar-right">
+    <li><a href="{{ next_url }}">{% trans "Continue to APPRL" %}</a></li>
+</ul>
+{% endblock %}
+
+{% block body-classes %}profile-welcome{% endblock %}
+{% block body %}
+
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Welcome" %} {{ request.user.display_name }}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <p>{% trans "Scroll down and follow a few of your favourite brands to personalise your Apprl experience." %}</p>
+        </div>
+    </div>
+
+    {% include 'apparel/fragments/user_list.html' %}
+
+    <a class="btn btn-primary btn-lg btn-block" href="{{ next_url }}">{% trans "Continue to APPRL" %}</a>
+
+{% endblock %}

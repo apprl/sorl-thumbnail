@@ -3,6 +3,7 @@ import base64
 import uuid
 import math
 import decimal
+import StringIO
 
 from django.conf import settings
 from django.core.cache import get_cache
@@ -15,6 +16,12 @@ from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 from django.utils import translation
 from django.contrib.auth.decorators import login_required
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+try:
+    from PIL import Image
+except ImportError:
+    import Image
 
 from sorl.thumbnail import get_thumbnail
 
@@ -430,6 +437,13 @@ class LookView(View):
                 json_data['image'] = ContentFile(temp_image.image.read())
                 json_data['image'].name = temp_image.image.name
                 del json_data['image_id']
+        else:
+            empty_image = Image.new('RGBA', (settings.APPAREL_LOOK_SIZE[0] - 2, settings.APPAREL_LOOK_SIZE[1] - 2), (255, 255, 255, 0))
+            empty_image_io = StringIO.StringIO()
+            empty_image.save(empty_image_io, format='PNG')
+
+            json_data['image'] = InMemoryUploadedFile(empty_image_io, None, '%s.png' % (uuid.uuid4().hex,), 'image/png', empty_image_io.len, None)
+            json_data['image'].seek(0)
 
         # Add user
         json_data['user'] = request.user

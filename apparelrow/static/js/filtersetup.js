@@ -3,6 +3,11 @@ jQuery(document).ready(function() {
     var rangemin = jQuery("input[name=pricerange_min]");
     var rangemax = jQuery("input[name=pricerange_max]");
 
+    var pricerange = {
+        min: $('#price-ruler .min').data('min'),
+        max: $('#price-ruler .max').data('max')
+    };
+
     var display_min = jQuery('#price-min span');
     var display_max = jQuery('#price-max span');
 

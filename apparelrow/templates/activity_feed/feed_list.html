@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block full-title %}Apprl - Social Shopping | {% trans "Apparel, shoes, bags & accessories from the best online stores selected by bloggers & brands" %}{% endblock %}
+{% block meta_description %}{% trans "Discover fashion from the world's best stores selected by bloggers, your friends & other stylemakers." %}{% endblock %}
+
+{% block body-classes %}feed-list-page{% endblock body-classes %}
+{% block full-body %}
+
+    {% if not request.COOKIES.ar_featured and not request.GET.first %}
+    {% include 'apparel/fragments/featured.html' with request=request featured=featured in_feed=True %}
+    {% endif %}
+
+    {% if request.GET.first and request.user.is_authenticated %}
+    <div class="container">
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {% url 'profile-likes' request.user.slug as profile_url %}
+            {% if request.user.facebook_user_id %}
+            {% blocktrans with profile_url=profile_url %}This is your personal Apprl feed with the latest from your follows. You have automatically followed your friends &amp; some of our featured members. To manage who you follow go to <a href="{{profile_url}}">your profile</a>.{% endblocktrans %}
+            {% else %}
+            {% blocktrans with profile_url=profile_url %}This is your personal Apprl feed with the latest from your follows. You have automatically followed some of our featured members. To manage who you follow go to <a href="{{profile_url}}">your profile</a>.{% endblocktrans %}
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="container">
+        <div class="body-header">
+            <div class="body-header-col-left">
+                <h1>{% trans "Your APPRL" %}</h1>
+            </div>
+            <div class="body-header-col-right">
+                <ul class="list-inline">
+                    <li class="dropdown">
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if APPAREL_GENDER == 'M' %}{% trans "Only men’s" %}{% elif APPAREL_GENDER == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'index' %}">{% trans "Show all" %}</a></li>
+                        <li><a href="{% url 'index-men' %}">{% trans "Only men’s" %}</a></li>
+                        <li><a href="{% url 'index-women' %}">{% trans "Only women’s" %}</a></li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        {% include 'activity_feed/fragments/feed_list.html' %}
+    </div>
+
+{% endblock %}
+
+{% block body-scripts %}
+<script type="text/javascript">
+(function() {
+    currencyConversion($('.feed-list').find('.price, .discount-price'));
+    $(document).on('infinite_scroll_data', function(event, content) {
+        currencyConversion(content.find('.price, .discount-price'));
+    });
+})()
+
+</script>
+{% endblock %}

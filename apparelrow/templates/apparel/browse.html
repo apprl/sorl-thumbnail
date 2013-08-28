@@ -1,72 +1,23 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load apparel_extras %}
 
-{% block extra-title %}{% if gender == 'M' %}{% trans "Shop Men" %}{% else %}{% trans "Shop Women" %}{% endif %} | {% endblock %}
+{% block extra-title %}{% trans "Shop" %} | {% endblock %}
 
 {% block extra-styles %}
-    <style type="text/css">
-        .tooltip {
-            display: none;
-            width: 699px;
-            height: 478px;
-            -moz-box-shadow: 0 0 1em black;
-            -webkit-box-shadow: 0 0 1em black;
-            z-index: 200;
-        }
-    </style>
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
 {% endblock extra-styles %}
-{% block 'extra-scripts' %}
-    {% if not request.user.is_authenticated and gender == 'W' %}
-    <script src="//cdn.optimizely.com/js/180383028.js"></script>
-    {% endif %}
-    {% include 'apparel/fragments/browse_scripts.html' %}
-{% endblock 'extra-scripts' %}
 
-{% block body-header %}
-<div id="body-header">
-    <div class="column_one">
-        <h1>{% if gender == 'M' %}{% trans "Shop Men" %}{% else %}{% trans "Shop Women" %}{% endif %}</h1>
-    </div>
-    <div class="column_two">
-        <ul class="shop-view">
-            <li><a href="?view=all" data-view="all" class="selected">{% trans "Show all" %}</a></li>
-            <li><a href="?view=friends" data-view="friends">{% trans "My friends" %}</a></li>
-            <li><a href="?view=brands" data-view="brands">{% trans "My brands" %}</a></li>
-        </ul>
-    </div>
-</div>
-{% endblock body-header %}
-{% block body-classes %}two-columns page-shop{% endblock body-classes %}
+{% block body-classes %}shop product-list{% endblock %}
 {% block body %}
-        <div class="sidebar">
-            {% include 'apparel/fragments/product_menu_browse.html' %}
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Shop" %}</h1>
+            <ul class="shop-view list-inline">
+                <li><h2><a href="?view=all" data-view="all" class="selected">{% trans "Show all" %}</a></h2></li>
+                <li><h2><a href="?view=friends" data-view="friends">{% trans "My friends" %}</a></h2></li>
+                <li><h2><a href="?view=brands" data-view="brands">{% trans "My brands" %}</a></h2></li>
+            </ul>
         </div>
-        <div id="content">
-            <div class="product-list-header group">
-                <ul class="browse-sort group">
-                    <li class="first">{% trans "Sort by: " %}</li>
-                    <li><a href="?sort=pop" data-sort="pop" class="selected">{% trans "trending" %}</a></li>
-                    <li class="sep">/</li>
-                    <li><a href="?sort=lat" data-sort="lat">{% trans "latest" %}</a></li>
-                    <li class="sep">/</li>
-                    <li><a href="?sort=che" data-sort="che">{% trans "low price" %}</a></li>
-                    <li class="sep">/</li>
-                    <li><a href="?sort=exp" data-sort="exp">{% trans "high price" %}</a></li>
-                </ul>
-                <h2 id="product-count">
-                    <span>{% blocktrans count current_page.paginator.count as counter %}{{ counter }} product{% plural %}{{ counter }} products{% endblocktrans %}</span>
-                </h2>
-            </div>
-            <div id="product-list" class="product-list">
-                {% if extra_html %}
-                    {{ extra_html }}
-                {% else %}
-                    {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination only %}
-                {% endif %}
-            </div>
-            <p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
-        </div>
-        {% include 'apparel/fragments/shop_empty.html' %}
-{% endblock body %}
+    </div>
+    {% include 'apparel/product_list.html' %}
+{% endblock %}

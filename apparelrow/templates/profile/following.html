@@ -3,16 +3,16 @@
 
 {% block extra-title %}{{ profile.display_name }} - {% trans "Follows" %} | {% endblock %}
 
-{% block body-classes %}three-columns profile profile-following{% endblock body-classes %}
+{% block body-classes %}profile-page profile-following{% endblock body-classes %}
 {% block content %}
     {% if current_page.object_list %}
-        {% include 'profile/fragments/following.html' %}
+        {% include 'apparel/fragments/user_list.html' %}
     {% else %}
         <div class="empty">
         {% if profile == request.user %}
             <div class="message warning">
                 <p>{% trans "You currently don't follow anyone." %}</p>
-                <a class="btn btn-upper btn-block btn-positive" href="{% url 'user-list-popular' %}">{% trans "Find members to follow!" %}</a>
+                <a class="btn btn-success btn-block" href="{% url 'user-list-popular' %}">{% trans "Find members to follow!" %}</a>
             </div>
         {% else %}
             <div class="message warning">{% blocktrans with profile.display_name as display_name %}{{ display_name }} is not following anyone yet.{% endblocktrans %}</div>

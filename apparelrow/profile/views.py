@@ -1,43 +1,42 @@
-import logging
 import uuid
-import itertools
+import HTMLParser
 
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
+from django.template import Context, Template
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotAllowed, HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib import messages
 from django.contrib import auth
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
-from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.translation import ugettext_lazy as _, ugettext
+from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.loading import get_model
 
-from apparelrow.apparel.models import Product
-from apparelrow.apparel.utils import get_pagination_page, get_gender_from_cookie, JSONResponse
+from apparelrow.apparel.utils import get_paged_result, get_gender_from_cookie, JSONResponse, get_gender_url
 from apparelrow.apparel.tasks import facebook_push_graph
 from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task
 from apparelrow.profile.decorators import avatar_change, login_flow
-from apparelrow.activity_feed.views import ActivityFeedRender
 
 from apparelrow.apparel.browse import browse_products
 
-PROFILE_PAGE_SIZE = 30
+PROFILE_PAGE_SIZE = 24
 
 def get_facebook_friends(request):
     facebook_user = get_facebook_user(request)
     if request.user.is_authenticated() and facebook_user:
         friends = facebook_user.graph.get_connections('me', 'friends')
         friends_uids = [f['id'] for f in friends['data']]
-        return get_user_model().objects.filter(username__in=friends_uids)
+        return get_user_model().objects.filter(is_active=True, username__in=friends_uids)
 
 def get_profile_sidebar_info(request, profile):
     """
@@ -49,14 +48,38 @@ def get_profile_sidebar_info(request, profile):
 
     if profile.is_brand:
         gender = get_gender_from_cookie(request)
-        info['products'] = Product.valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added').count()
+        info['products'] = get_model('apparel', 'Product').valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added').count()
     else:
-        info['products'] = Product.published_objects.filter(likes__user=profile, likes__active=True).count()
+        info['products'] = get_model('apparel', 'Product').published_objects.filter(likes__user=profile, likes__active=True).count()
 
     content_type = ContentType.objects.get_for_model(get_user_model())
     info['following'] = Follow.objects.filter(user=profile, active=True).count()
 
     return info
+
+
+@login_required
+def save_description(request):
+    """
+    Save user description and return a parsed version for display.
+    """
+    html_parser = HTMLParser.HTMLParser()
+
+    description = request.POST.get('description', '')
+    description = description.replace('<br>', '\n')
+    description = description.replace('<br/>', '\n')
+    description = description.replace('<br />', '\n')
+    description = html_parser.unescape(strip_tags(description).strip())
+
+    request.user.about = description
+    request.user.save()
+
+    t = Template('{% load apparel_extras %}{{ description|urlize_target_blank|linebreaksbr }}')
+    c = Context({'description': description})
+    description_html = t.render(c)
+
+    return HttpResponse(description_html, mimetype='text/html')
+
 
 @get_current_user
 @avatar_change
@@ -92,40 +115,6 @@ def likes(request, profile, form, page=0, gender=None):
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
     return response
 
-@get_current_user
-@avatar_change
-def profile(request, profile, form, page=0):
-    """
-    Displays the profile page
-    """
-    gender = get_gender_from_cookie(request)
-    htmlset = ActivityFeedRender(request, gender, profile, private=True)
-    paginator = Paginator(htmlset, 5)
-
-    page = request.GET.get('page')
-    try:
-        paged_result = paginator.page(page)
-    except PageNotAnInteger:
-        paged_result = paginator.page(1)
-    except EmptyPage:
-        paged_result = paginator.page(paginator.num_pages)
-
-    if request.is_ajax():
-        return render(request, 'activity_feed/feed.html', {
-            'current_page': paged_result
-        })
-
-    content = {
-        'current_page': paged_result,
-        'next': request.get_full_path(),
-        'profile': profile,
-        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.look.filter(published=True).order_by('-modified')[:10]
-        }
-    content.update(form)
-    content.update(get_profile_sidebar_info(request, profile))
-
-    return render(request, 'profile/profile.html', content)
 
 @get_current_user
 @avatar_change
@@ -135,17 +124,14 @@ def looks(request, profile, form, page=0):
     else:
         queryset = profile.look.filter(published=True).order_by('-created')
 
-    paged_result, pagination = get_pagination_page(queryset, 6,
-            request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
 
     if request.is_ajax():
-        return render(request, 'apparel/fragments/looks_large.html', {
-                'pagination': pagination,
+        return render(request, 'apparel/fragments/look_list.html', {
                 'current_page': paged_result
             })
 
     content = {
-        'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         'profile': profile,
@@ -159,25 +145,21 @@ def looks(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def followers(request, profile, form, page=0):
-    content_type = ContentType.objects.get_for_model(get_user_model())
-    queryset = Follow.objects.filter(user_follow=profile, active=True)
+    queryset = get_user_model().objects.filter(following__user_follow=profile, following__active=True) \
+                                       .order_by('name', 'first_name', 'username')
 
-    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
-            request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
 
     if request.is_ajax():
-        return render(request, 'profile/fragments/followers.html', {
-                'pagination': pagination,
+        return render(request, 'apparel/fragments/user_list.html', {
                 'current_page': paged_result
         })
 
     content = {
-        'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.look.filter(published=True).order_by('-modified')[:4]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
@@ -187,39 +169,26 @@ def followers(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def following(request, profile, form, page=0):
-    content_type = ContentType.objects.get_for_model(get_user_model())
-    queryset = Follow.objects.filter(user=profile, active=True)
+    queryset = get_user_model().objects.filter(followers__user=profile, followers__active=True) \
+                                       .order_by('name', 'first_name', 'username')
 
-    paged_result, pagination = get_pagination_page(queryset, PROFILE_PAGE_SIZE,
-            request.GET.get('page', 1), 1, 2)
+    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
 
     if request.is_ajax():
-        return render(request, 'profile/fragments/following.html', {
-                'pagination': pagination,
+        return render(request, 'apparel/fragments/user_list.html', {
                 'current_page': paged_result
         })
 
     content = {
-        'pagination': pagination,
         'current_page': paged_result,
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'recent_looks': profile.look.filter(published=True).order_by('-modified')[:4]
         }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/following.html', content)
-
-
-#
-# Shop embed
-#
-
-@login_required
-def embed_shop(request):
-    return render(request, 'profile/embed_shop.html')
 
 
 #
@@ -338,7 +307,7 @@ def settings_facebook(request):
 
 
 @login_required
-def settings_partner(request):
+def settings_publisher(request):
     """
     Handles the partner settings form.
     """
@@ -358,128 +327,82 @@ def settings_partner(request):
             instance.user = request.user
             instance.save()
 
-        return HttpResponseRedirect(reverse('settings-partner'))
+        return HttpResponseRedirect(reverse('settings-publisher'))
 
     form = PartnerSettingsForm(instance=request.user)
     details_form = PartnerPaymentDetailForm(instance=instance)
 
-    return render(request, 'profile/settings_partner.html', {'form': form, 'details_form': details_form})
+    return render(request, 'profile/settings_publisher.html', {'form': form, 'details_form': details_form})
 
 #
 # Welcome login flow
 #
 
-@get_current_user
 @login_flow
-@avatar_change
-def login_flow_friends(request, profile, forms):
+@login_required
+def login_flow_brands(request):
     """
-    Step 1: Friends
+    Step 1: Brands
     """
-    profile.login_flow = 'friends'
-    profile.save()
+    request.user.login_flow = 'brands'
+    request.user.save()
 
-    if request.method == 'POST':
-        for friend in get_user_model().objects.filter(id__in=request.POST.getlist('profile_ids', [])):
-            follow, created = Follow.objects.get_or_create(user=profile, user_follow=friend)
-            if not created and follow.active == False:
-                follow.active = True
-                follow.save()
-
-            facebook_user = get_facebook_user(request)
-            if facebook_user:
-                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
-
-        return HttpResponseRedirect(reverse('login-flow-featured'))
-
-    context = {
-        'login_flow_step': 'step-initial',
-        'next_url': reverse('login-flow-featured'),
-        'profiles': get_facebook_friends(request)
-    }
-    context.update(forms)
-    return render(request, 'profile/login_flow_friends.html', context)
-
-
-@get_current_user
-@login_flow
-@avatar_change
-def login_flow_featured(request, profile, forms):
-    """
-    Step 2: Featured members
-    """
-    profile.login_flow = 'featured'
-    profile.save()
-
-    if request.method == 'POST':
-        for friend in get_user_model().objects.filter(id__in=request.POST.getlist('profile_ids', [])):
-            follow, created = Follow.objects.get_or_create(user=profile, user_follow=friend)
-            if not created and follow.active == False:
-                follow.active = True
-                follow.save()
-
-            facebook_user = get_facebook_user(request)
-            if facebook_user:
-                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
+    if not request.user.following.exists():
+        follow_featured_auto(request)
 
         return HttpResponseRedirect(reverse('login-flow-brands'))
 
-    profiles = get_user_model().objects.filter(is_brand=False)
-    if profile.gender == 'M':
-        profiles = profiles.order_by('-popularity_men', '-followers_count')
-    else:
-        profiles = profiles.order_by('-popularity', '-followers_count')
-
-    facebook_user = get_facebook_user(request)
-    if request.user.is_authenticated() and facebook_user:
-        friends = facebook_user.graph.get_connections('me', 'friends')
-        friends_uids = [f['id'] for f in friends['data']]
-        profiles = profiles.exclude(username__in=friends_uids)
-        profiles = profiles.exclude(pk=profile.pk)
+    queryset = get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:24]
+    paged_result = get_paged_result(queryset, 24, request.GET.get('page'))
 
     context = {
-        'login_flow_step': 'step-members',
-        'next_url': reverse('login-flow-brands'),
-        'profiles': profiles[:21],
-    }
-    context.update(forms)
-    return render(request, 'profile/login_flow_featured.html', context)
-
-
-@get_current_user
-@login_flow
-@avatar_change
-def login_flow_brands(request, profile, forms):
-    """
-    Step 3: Brands
-    """
-    profile.login_flow = 'brands'
-    profile.save()
-
-    context = {
-        'login_flow_step': 'step-brands',
+        'current_page': paged_result,
         'next_url': reverse('login-flow-complete'),
-        'profiles': get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:21]
     }
-    context.update(forms)
-    return render(request, 'profile/login_flow_brands.html', context)
+    return render(request, 'profile/login_flow_welcome.html', context)
 
 
-@get_current_user
 @login_flow
-def login_flow_complete(request, profile):
+@login_required
+def login_flow_complete(request):
     """
-    Step 4: Login flow is complete
+    Step 2: Login flow is complete
     """
-    profile.login_flow = 'complete'
-    profile.save()
+    request.user.login_flow = 'complete'
+    request.user.save()
 
-    return HttpResponseRedirect(reverse('profile-likes', args=[profile.slug]))
+    return HttpResponseRedirect('%s?first=1' % (get_gender_url(request.user.gender, 'index'),))
 
 
 #
 # Register view
 #
+
+
+def follow_featured_auto(request):
+    facebook_friends = get_facebook_friends(request)
+
+    profiles = get_user_model().objects.filter(is_active=True, is_brand=False)
+    profiles = profiles.exclude(pk=request.user.pk)
+    if request.user.gender == 'M':
+        profiles = profiles.order_by('-popularity_men', '-followers_count')
+    else:
+        profiles = profiles.order_by('-popularity', '-followers_count')
+
+    friends = list(profiles[:20])
+    if facebook_friends:
+        friends = friends + list(facebook_friends)
+
+    facebook_user = get_facebook_user(request)
+    for friend in friends:
+        follow, created = Follow.objects.get_or_create(user=request.user, user_follow=friend)
+        if not created and follow.active == False:
+            follow.active = True
+            follow.save()
+
+        if facebook_user:
+            facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
+
 
 def send_confirmation_email(request, instance):
     subject = ugettext('Nearly created your membership...')
@@ -506,7 +429,11 @@ def register_email(request):
             # Send confirmation email
             send_confirmation_email(request, instance)
 
-            return HttpResponseRedirect(reverse('auth_register_complete'))
+            response = HttpResponseRedirect(reverse('auth_register_complete'))
+            response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=instance.gender, max_age=365 * 24 * 60 * 60)
+
+            return response
+
     else:
         form = RegisterForm()
 
@@ -576,8 +503,7 @@ def _get_next(request):
     elif 'next' in request.POST:
         return request.POST.get('next')
 
-    #return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
-    return reverse('user_feed')
+    return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
 
 
 def flow(request):
@@ -588,11 +514,16 @@ def flow(request):
         pass
 
     if request.user.login_flow != 'complete' and not request.user.is_brand:
-        url = reverse('login-flow-%s' % (request.user.login_flow))
+        if request.user.login_flow == 'brands' or request.user.login_flow == 'complete':
+            url = reverse('login-flow-%s' % (request.user.login_flow))
+        else:
+            url = reverse('login-flow-brands')
+
         response = HttpResponseRedirect(url)
         response.set_cookie(settings.APPAREL_GENDER_COOKIE,
                             value=request.user.gender,
                             max_age=365 * 24 * 60 * 60)
+
         return response
 
     return HttpResponseRedirect(_get_next(request))
@@ -602,6 +533,7 @@ def facebook_login(request):
     if request.POST:
         access_token = request.POST.get('access_token', '')
         uid = request.POST.get('uid', '')
+        disable_flow = request.POST.get('disable_flow', False)
 
         user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token)
         if user and user.is_active:
@@ -609,10 +541,12 @@ def facebook_login(request):
             if request.is_ajax():
                 return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
 
-            if user.login_flow != 'complete':
+            if user.login_flow != 'complete' and not disable_flow:
                 response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
                 response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
                 return response
+            elif user.login_flow != 'complete' and disable_flow:
+                follow_featured_auto(request)
 
             return HttpResponseRedirect(_get_next(request))
 

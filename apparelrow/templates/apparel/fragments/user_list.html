@@ -1,12 +1,30 @@
 {% load i18n %}
-<ul class="users">
-{% for profile in current_page.object_list %}
-    <li>
-        {% if profile %}{% include 'profile/fragments/follow_profile.html' %}{% endif %}
-    </li>
-{% endfor %}
+<ul class="discover-list list-unstyled row">
+    {% for profile in current_page.object_list %}
+    <li class="col-discover-item">{% include 'apparel/fragments/user_medium_cache.html' %}</li>
+    {% empty %}
+    {% if current_page.number == 1 %}
+    <li class="col-lg-12">{% trans "No results" %}</li>
+    {% endif %}
+    {% endfor %}
 </ul>
 <div class="pagination">
-    {% include 'apparel/fragments/pagination.html' %}
+    {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page extra_parameter=extra_parameter only %}
 </div>
-<p id="back-top"><a href="#top"><span>{% trans "Back to Top" %}</span></a></p>
+{% if request.user.is_authenticated %}
+<script type="text/javascript">
+(function() {
+    function follow(uids) {
+        $.post('{% url 'follow-backend' %}', {uids: uids}, function(response) {
+            $.each(response, function(i, obj) {
+                $('#user-medium-' + obj['id'] + ' .btn-follow-placeholder').replaceWith(obj['html']);
+            });
+        });
+    }
+    follow($('.user-medium').map(function() { return $(this).attr('id').split('-')[2]; }).get().join(','));
+    $(document).on('infinite_scroll_data', function(event, content) {
+        follow($('.user-medium', content).map(function() { return $(this).attr('id').split('-')[2]; }).get().join(','));
+    });
+})()
+</script>
+{% endif %}

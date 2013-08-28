@@ -1,0 +1,161 @@
+{% load i18n apparel_extras mptt_tags %}
+
+
+<a id="product-filter-button" class="btn btn-primary btn-block btn-filter collapsed" data-toggle="collapse" data-target="#product-filter-accordion">{% trans "Filter products" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
+
+<div class="panel-group collapse" id="product-filter-accordion">
+
+    {% if not user_id or user_gender == 'A' %}
+    <div class="panel{% if selected_categories %} active{% endif %}">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseGender"><span id="product-gender-text">{% trans "Women’s / Men’s" %}</span><span class="glyphicon glyphicon-chevron-up"></span></a>
+        </div>
+        <div id="collapseGender" class="panel-collapse collapse">
+            <div class="panel-body" id="product-gender">
+                <ul id="product-gender" class="list-unstyled">
+                    {% if user_gender == 'A' %}
+                    <li class="all"><a{% if not gender or gender == 'A' %} class="selected"{% endif %} href="/shop/">{% trans "Show everything" %}</a></li>
+                    {% endif %}
+                    <li class="women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} href="/shop/women/">{% trans "Womens" %}</a></li>
+                    <li class="men"><a id="option-M"{% if gender == "M" %} class="selected"{% endif %} href="/shop/men/">{% trans "Mens" %}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not user_id %}
+    <div class="panel panel-product-sort">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseSort">{% trans "Sort by" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
+        </div>
+        <div id="collapseSort" class="panel-collapse collapse">
+            <div class="panel-body" id="product-sort">
+                <ul class="list-unstyled">
+                    <li><a href="?sort=pop" data-sort="pop" class="selected">{% trans "trending" %}</a></li>
+                    <li><a href="?sort=lat" data-sort="lat">{% trans "latest" %}</a></li>
+                    <li><a href="?sort=che" data-sort="che">{% trans "low price" %}</a></li>
+                    <li><a href="?sort=exp" data-sort="exp">{% trans "high price" %}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="panel{% if selected_categories %} active{% endif %}">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseOne">{% trans "Categories" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+            <div class="panel-body" id="product-category">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
+                {% for category, structure in categories_all|tree_info %}
+                {% if structure.new_level %}
+                <ul class="level-{{ category.get_level }} list-unstyled">
+                    {% else %}
+                    </li>
+                    {% endif %}
+                    <li class="{% if categories and category.id not in categories %} to_filter{% endif %}">
+                    <a data-order="{{ category.name_order }}" id="category-{{ category.id }}" class="{% if category.id in selected_categories %} selected{% endif %}" href="?category={{ category.id }}">{{ category.name }} <span class="category-count">({{ categories|getdictattribute:category.id }})</span></a>
+                    {% for level in structure.closed_levels %}</li></ul>{% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="panel{% if selected_price or selected_discount %} active{% endif %}">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">{% trans "Price" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse">
+            <div class="panel-body" id="product-price">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
+                <form>
+                    <div id="price-min">{% trans "Min" %} <span>{{ pricerange.min }}</span> {% trans CURRENCY %}</div>
+                    {% if pricerange.selected_max >= pricerange.max %}
+                    <div id="price-max">{% trans "Max" %} <span>{{ pricerange.selected_max }}+</span> {% trans CURRENCY %}</div>
+                    {% else %}
+                    <div id="price-max">{% trans "Max" %} <span>{{ pricerange.selected_max }}</span> {% trans CURRENCY %}</div>
+                    {% endif %}
+
+                    <div id="price-slider"></div>
+
+                    <div id="price-ruler">
+                        <div class="point min" data-min="{{ pricerange.min }}">{{ pricerange.min }}</div>
+                        <div class="point mid">{% calc_half pricerange.max pricerange.min %}</div>
+                        <div class="point max" data-max="{{ pricerange.max }}">{{ pricerange.max }}+</div>
+                    </div>
+
+                    <input type="hidden" name="pricerange_max" value="{{ pricerange.selected_max }}" class="price-range">
+                    <input type="hidden" name="pricerange_min" value="{{ pricerange.selected_min }}" class="price-range">
+                    <input type="hidden" name="price" value="{{ pricerange.selected }}">
+
+                    <a id="discount-price"{% if selected_discount %} class="selected"{% endif %} href="?discount=1">{% trans "Only show products on sale" %}</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel{% if selected_colors or selected_patterns %} active{% endif %}">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">{% trans "Colors" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse">
+            <div class="panel-body" id="product-color">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
+                <ul class="list-inline">
+                    {% for color in default_colors %}
+                    <li>
+                    <a href="?color={{ color.pk }}" class="color {{ color.value }}{% if color.pk not in colors %} filtered{% endif %}{% if selected_colors and color.pk in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}" title="{{ color.value }}">{{ color.value }}</a>
+                    </li>
+                    {% endfor %}
+                    {% for pattern in default_patterns %}
+                    <li>
+                    <a href="?pattern={{ pattern.pk }}" class="pattern {{ pattern.value }}{% if pattern.pk not in colors %} filtered{% endif %}{% if selected_patterns and pattern.pk in selected_patterns %} selected{% endif %}" id="option-{{ pattern.pk }}" title="{{ pattern.value }}">{{ pattern.value }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% if not is_brand %}
+    <div class="panel{% if selected_brands %} active{% endif %}">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseFour">{% trans "Brands" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse">
+            <div class="panel-body" id="product-manufacturers">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
+                <form>
+                    <input type="text" name="brand" value="{% trans "Search brands" %}" class="form-control" />
+                    <ul id="available-manufacturers" class="list-unstyled">
+                        {% for manufacturer in manufacturers %}
+                        <li><a{% if selected_brands and manufacturer.0 in selected_brands %} class="selected"{% endif %} id="available-manufacturer-{{ manufacturer.0 }}" href="?manufacturer={{ manufacturer.0 }}">{{ manufacturer.1 }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </form>
+                <ul id="selected-manufacturers" class="level-1 list-unstyled">
+                    {% for brand in selected_brands_data.items %}
+                    <li><a id="manufacturer-{{ brand.1.id }}" href="{{ brand.1.href }}" class="selected">{{ brand.1.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="panel{% if selected_stores %} active{% endif %}">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseFive">{% trans "Stores" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
+        </div>
+        <div id="collapseFive" class="panel-collapse collapse">
+            <div class="panel-body" id="product-stores">
+                <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
+                <ul id="available-stores" class="list-unstyled">
+                    {% for store in stores %}
+                    <li><a{% if store.0 in selected_stores %} class="selected"{% endif %} id="available-store-{{ store.0 }}" href="?store={{ store.0 }}">{{ store.1 }}</a></li>
+                    {% empty %}
+                    <li>{% trans "No matching stores" %}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

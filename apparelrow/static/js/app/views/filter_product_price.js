@@ -64,7 +64,7 @@ App.Views.FilterProductPrice = Backbone.View.extend({
 
     render: function() {
         this.$el.find('ul').remove();
-        var $ul = $(this.make('ul'));
+        var $ul = $(this.make('ul')).addClass('dropdown-menu');
         $ul.append(this.make_element(0, gettext('Reset')));
         this.collection.each(_.bind(function(model) {
             $ul.append(this.make_element(model.get('id'), model.get('name'), model.get('count')))

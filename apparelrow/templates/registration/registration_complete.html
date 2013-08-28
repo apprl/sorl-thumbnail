@@ -1,23 +1,32 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block body-classes %}one-column accounts{% endblock body-classes %}
+{% block body-classes %}account registration-complete{% endblock body-classes %}
 {% block body %}
 
-<div id="content">
-    <h1>{% trans "Check your e-mail!" %}</h1>
-    <p>{% trans "We have sent an e-mail to you.<br>To complete your signup, open that e-mail and click the link." %}</p>
-    <br>
-    <p>{% trans "If you can't find the confirmation e-mail,<br>check your spam folder or send the e-mail again:" %}</p>
-    <form action="{% url 'auth_register_complete' %}" method="post" class="standard-form registration-complete-form">
-        {% csrf_token %}
-        {{ form.email.label_tag }}
-        {{ form.email }}
-        <button class="btn btn-upper btn-small" type="submit">{% trans "Send e-mail again" %}</button>
-        {{ form.email.errors }}
-    </form>
-    {% if request.GET.sent %}
-    <p class="success">{% trans "E-mail sent." %}</p>
-    {% endif %}
-</div>
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Check your e-mail!" %}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <p>{% trans "We have sent an e-mail to you.<br>To complete your signup, open that e-mail and click the link." %}</p>
+            <br>
+            <p>{% trans "If you can't find the confirmation e-mail,<br>check your spam folder or send the e-mail again:" %}</p>
+            <form action="{% url 'auth_register_complete' %}" method="post" class="form-inline">
+                {% csrf_token %}
+                <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+                    <label class="sr-only" for="id_{{ form.email.html_name }}">{{ form.email.label }}</label>
+                    <input type="email" name="{{ form.email.html_name }}" class="form-control" id="id_{{ form.email.html_name }}" placeholder="{{ form.email.label }}">
+                </div>
+                <button class="btn btn-primary" type="submit">{% trans "Send e-mail again" %}</button>
+                {% if request.GET.sent %}
+                <span>{% trans "E-mail sent." %}</span>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
 {% endblock %}

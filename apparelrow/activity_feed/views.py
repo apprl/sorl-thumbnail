@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.loading import get_model
+from django.db.models import Q
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.middleware import csrf
@@ -16,12 +17,13 @@ from django.core.urlresolvers import reverse
 import redis
 
 from apparelrow.apparel.models import Product, Look
-from apparelrow.apparel.views import get_top_looks_in_network, get_top_products_in_network
-from apparelrow.apparel.utils import get_gender_from_cookie
+from apparelrow.apparel.utils import get_top_looks_in_network, get_top_products_in_network, get_gender_from_cookie, get_featured_activity_today
+
 from apparelrow.activity_feed.models import Activity, ActivityFeed
 from apparelrow.activity_feed.tasks import get_feed_key
 
-class ActivityFeedRender:
+
+class OldActivityFeedRender:
     """
     ActivityFeed render class.
     """
@@ -84,93 +86,45 @@ class ActivityFeedRender:
             if len(context['objects']) < 1:
                 continue
 
-            # Comments
-            if context['total_objects'] == 1:
-                context['comments'] = Comment.objects.filter(content_type=result['ct'],
-                                                             object_pk=context['objects'][0].pk,
-                                                             is_public=True,
-                                                             is_removed=False)
-                context['comment_count'] = context['comments'].count()
-                context['comments'] = context['comments'].order_by('-submit_date').select_related('user')[:2]
-                context['enable_comments'] = False
-                if result['v'] in ['like_product', 'like_look', 'create']:
-                    context['enable_comments'] = True
-
             template_name = 'activity_feed/verbs/%s.html' % (result['v'],)
             rendered_templates.append(render_to_string(template_name, context))
 
         return rendered_templates
 
 
-def public_feed(request, gender=None):
-    if not gender:
-        gender_cookie = get_gender_from_cookie(request)
-        if gender_cookie == 'W':
-            return HttpResponseRedirect(reverse('public_feed-women'))
-        elif gender_cookie == 'M':
-            return HttpResponseRedirect(reverse('public_feed-men'))
-
-    htmlset = ActivityFeedRender(request, gender, None)
-    paginator = Paginator(htmlset, 5)
-
-    page = request.GET.get('page')
-    try:
-        paged_result = paginator.page(page)
-    except PageNotAnInteger:
-        paged_result = paginator.page(1)
-    except EmptyPage:
-        paged_result = paginator.page(paginator.num_pages)
-
-    if request.is_ajax():
-        return render(request, 'activity_feed/feed.html', {
-            'current_page': paged_result
-        })
-
-    popular_products = Product.valid_objects.filter(gender__in=[gender, 'U']) \
-                                            .order_by('-popularity')
-    popular_looks = Look.published_objects.filter(gender__in=[gender, 'U']) \
-                                          .order_by('-popularity', '-created')
-    popular_brands = get_user_model().objects.filter(is_active=True, is_brand=True) \
-                                             .order_by('-followers_count')
-    popular_members = get_user_model().objects.filter(is_active=True, is_brand=False, gender=gender) \
-                                              .order_by('-popularity', '-followers_count')
-    if request.user and request.user.is_authenticated():
-        follow_ids = get_model('profile', 'follow').objects.filter(user=request.user).values_list('user_follow', flat=True)
-        popular_brands = popular_brands.exclude(id__in=follow_ids)
-        popular_members = popular_members.exclude(id=request.user.pk).exclude(id__in=follow_ids)
-
-    response = render(request, 'activity_feed/public_feed.html', {
-            'current_page': paged_result,
-            'next': request.get_full_path(),
-            'popular_products': popular_products[:4],
-            'popular_looks': popular_looks[:3],
-            'popular_brands': popular_brands[:5],
-            'popular_members': popular_members[:5],
-        })
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-
-    return response
+class ActivityFeedRender(object):
 
 
-def dialog_user_feed(request):
-    return render(request, 'activity_feed/dialog_user_feed.html', {'next': request.GET.get('next', '/')})
+    def __init__(self, request, gender, user):
+        self.request = request
+        self.gender = gender
+        self.user = user
+
+        self.gender_list = {'A': ['W', 'M', 'U'],
+                            'M': ['M', 'U'],
+                            'W': ['W', 'U']}
+        self.verbs = ['like_look', 'like_product', 'add_product', 'create']
+
+    def run(self):
+        user_ids = self.user.following.filter(active=True).values('user_follow')
+        query = get_model('activity_feed', 'Activity').objects.filter(active=True,
+                                                                      is_available=True,
+                                                                      user__in=user_ids,
+                                                                      verb__in=self.verbs)
+        query = query.filter(Q(gender__in=self.gender_list.get(self.gender)) | Q(gender__isnull=True))
+        query = query.order_by('-id')
+
+        return query
 
 
+@login_required
 def user_feed(request, gender=None):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('public_feed'))
-
     if not gender:
-        gender_cookie = get_gender_from_cookie(request)
-        if gender_cookie == 'W':
-            gender = 'W'
-        elif gender_cookie == 'M':
-            gender = 'M'
-        else:
-            gender = 'W'
+        gender = get_gender_from_cookie(request)
 
-    htmlset = ActivityFeedRender(request, gender, request.user)
-    paginator = Paginator(htmlset, 5)
+    htmlset = ActivityFeedRender(request, gender, request.user).run()
+    paginator = Paginator(htmlset, 12)
+    paginator._count = 10000 # disable count sql query
 
     page = request.GET.get('page')
     try:
@@ -181,26 +135,15 @@ def user_feed(request, gender=None):
         paged_result = paginator.page(paginator.num_pages)
 
     if request.is_ajax():
-        return render(request, 'activity_feed/feed.html', {
+        return render(request, 'activity_feed/fragments/feed_list.html', {
             'current_page': paged_result
         })
 
-    popular_brands = get_user_model().objects.filter(is_active=True, is_brand=True).order_by('-followers_count')
-    popular_members = get_user_model().objects.filter(is_active=True, is_brand=False, gender=gender) \
-                                              .order_by('-popularity', '-followers_count')
-
-    if request.user and request.user.is_authenticated():
-        follow_ids = get_model('profile', 'follow').objects.filter(user=request.user).values_list('user_follow', flat=True)
-        popular_brands = popular_brands.exclude(id__in=follow_ids)
-        popular_members = popular_members.exclude(id=request.user.pk).exclude(id__in=follow_ids)
-
-    response = render(request, 'activity_feed/user_feed.html', {
+    response = render(request, 'activity_feed/feed_list.html', {
+            'featured': get_featured_activity_today(),
             'current_page': paged_result,
             'next': request.get_full_path(),
-            'popular_products': get_top_products_in_network(request.user, 4),
-            'popular_looks': get_top_looks_in_network(request.user, 3),
-            'popular_brands': popular_brands[:5],
-            'popular_members': popular_members[:5],
+            'APPAREL_GENDER': gender,
         })
     response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
 

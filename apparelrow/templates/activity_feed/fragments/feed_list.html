@@ -1,0 +1,13 @@
+{% load i18n %}
+<ul class="feed-list list-unstyled row">
+    {% for object in current_page.object_list %}
+    <li class="col-feed-item">{% include object.get_template %}</li>
+    {% empty %}
+    {% if current_page.number == 1 %}
+    <li class="col-lg-12">{% trans "Follow members &amp; brands to fill your feed" %}</li>
+    {% endif %}
+    {% endfor %}
+</ul>
+<div class="pagination">
+    {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page only %}
+</div>
