@@ -66,7 +66,10 @@ def look_popularity(look):
     if item_half_hour_age > 0:
         popularity += decimal.Decimal(like_count / float(pow(item_half_hour_age, 1.53)))
 
+    look.popularity = popularity
     look.save(update_fields=['popularity'])
+
+    return look.popularity
 
 
 @task(name='apparelrow.apparel.tasks.product_popularity', max_retries=5, ignore_result=True)
