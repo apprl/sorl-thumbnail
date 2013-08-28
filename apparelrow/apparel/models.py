@@ -372,7 +372,7 @@ models.signals.post_delete.connect(invalidate_model_handler, sender=Product)
 @receiver(post_save, sender=Product, dispatch_uid='product_update_activity_post_save')
 def product_update_activity_post_save(sender, instance, **kwargs):
     # TODO: this might solve deadlock in database (stupid mysql)
-    content_type = ContentType.objects.get_for_model(activity_object)
+    content_type = ContentType.objects.get_for_model(instance)
     get_model('activity_feed', 'activity').objects.filter(content_type=content_type, object_id=instance.pk).update(is_available=instance.availability)
     #get_model('activity_feed', 'activity').objects.update_activity(instance)
 
