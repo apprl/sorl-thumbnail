@@ -10,7 +10,7 @@ def login_flow(view_func):
     activity feed.
     """
     def _decorator(request, *args, **kwargs):
-        if request.user.login_flow == 'complete':
+        if request.user.is_authenticated() and reguest.user.login_flow == 'complete':
             return HttpResponseRedirect(reverse('index'))
 
         return view_func(request, *args, **kwargs)
