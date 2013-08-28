@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-28 13:43+0200\n"
+"POT-Creation-Date: 2013-08-28 16:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1566,8 +1566,9 @@ msgid "More looks by"
 msgstr "Fler looks av"
 
 #: templates/apparel/look_detail.html:256
-msgid "See all looks"
-msgstr "Visa alla looks"
+#, python-format
+msgid "See all looks by %(firstname)s"
+msgstr "Se alla looks av %(firstname)s"
 
 #: templates/apparel/look_detail.html:260
 #: templates/apparel/product_detail.html:192

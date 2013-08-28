@@ -253,7 +253,7 @@
                             </li>
                             {% endfor %}
                         </ul>
-                        <a class="btn btn-primary btn-block" href="{% url 'profile-looks' object.user.slug %}">{% trans "See all looks" %}</a>
+                        <a class="btn btn-primary btn-block" href="{% url 'profile-looks' object.user.slug %}">{% blocktrans with firstname=object.user.first_name %}See all looks by {{firstname}}{% endblocktrans %}</a>
                         {% endif %}
 
                         {% cache CACHE_TIMEOUT look_detail_likes object.id LANGUAGE_CODE %}
