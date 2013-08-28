@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Sum, Min
 from django.db.models.loading import get_model
 from django.contrib.comments.models import Comment
+from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
@@ -370,7 +371,10 @@ models.signals.post_delete.connect(invalidate_model_handler, sender=Product)
 
 @receiver(post_save, sender=Product, dispatch_uid='product_update_activity_post_save')
 def product_update_activity_post_save(sender, instance, **kwargs):
-    get_model('activity_feed', 'activity').objects.update_activity(instance)
+    # TODO: this might solve deadlock in database (stupid mysql)
+    content_type = ContentType.objects.get_for_model(activity_object)
+    get_model('activity_feed', 'activity').objects.filter(content_type=content_type, object_id=instance.pk).update(is_available=instance.availability)
+    #get_model('activity_feed', 'activity').objects.update_activity(instance)
 
 
 #
