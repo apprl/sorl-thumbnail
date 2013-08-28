@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block extra-title %}{% if gender == 'M' %}{% trans "Shop Men" %}{% else %}{% trans "Shop Women" %}{% endif %} | {% endblock %}
+{% block extra-title %}{% trans "Shop" %} | {% endblock %}
 
 {% block extra-styles %}
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
@@ -11,7 +11,7 @@
 {% block body %}
     <div class="body-header">
         <div class="body-header-col-full">
-            <h1>{% if gender == 'M' %}{% trans "Shop Men" %}{% elif gender == 'W' %}{% trans "Shop Women" %}{% else %}{% trans "Shop" %}{% endif %}</h1>
+            <h1>{% trans "Shop" %}</h1>
             <ul class="shop-view list-inline">
                 <li><h2><a href="?view=all" data-view="all" class="selected">{% trans "Show all" %}</a></h2></li>
                 <li><h2><a href="?view=friends" data-view="friends">{% trans "My friends" %}</a></h2></li>
