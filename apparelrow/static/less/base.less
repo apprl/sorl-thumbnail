@@ -492,7 +492,7 @@ h3 {
         padding-top: 5px;
         padding-bottom: 5px;
     }
-    p {
+    p > a {
         font-size: 12px;
         font-weight: bold;
         line-height: 30px;
@@ -500,8 +500,27 @@ h3 {
             font-size: 21px;
             font-weight: 500;
         }
+        &:hover {
+            color: @gray-darker;
+        }
         text-transform: uppercase;
         margin-bottom: 0;
+        span {
+            display: none;
+            color: @gray;
+            font-family: "IM Fell Great Primer", sans-serif;
+            font-style: italic;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: none;
+        }
+        @media (min-width: @screen-tablet) {
+            span.short { display: inline; }
+        }
+        @media (min-width: @screen-desktop) {
+            span.short { display: none; }
+            span.long { display: inline; }
+        }
     }
 }
 
