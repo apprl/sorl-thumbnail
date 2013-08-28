@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n apparel_extras %}
+
+{% block body-classes %}profile-welcome profile-welcome-complete{% endblock %}
+{% block body %}
+
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% blocktrans with firstname=request.user.first_name %}Welcome inside {{firstname}}, now you can:{% endblocktrans %}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <a class="btn btn-primary btn-block" href="{% url 'index' %}?first=1"><span>{% trans "1. CHECK OUT YOUR PERSONAL APPRL FEED" %}</span></a>
+        </div>
+        <div class="col-sm-4">
+            <a class="btn btn-primary btn-block" href="{% gender_url request.user.gender 'shop' %}?first=1"><span>{% trans "2. BROWSE PRODUCTS IN OUR SHOP" %}</span></a>
+        </div>
+        <div class="col-sm-4">
+            <a class="btn btn-primary btn-block" href="{% url 'user-list' %}?first=1"><span>{% trans "3. FIND MORE PEOPLE & BRANDS TO FOLLOW" %}</span></a>
+        </div>
+    </div>
+
+{% endblock %}
