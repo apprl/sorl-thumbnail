@@ -38,25 +38,9 @@ body.contest-stylesearch {
         margin-bottom: 40px !important;
     }
 
-    .media-container {
-        text-align: center;
-    }
-
-    .media {
-        display: inline-block;
-        margin-left: auto;
-        margin-right: auto;
-        text-align: left;
-        .btn-block {
-            margin-top: 10px;
-        }
-    }
-
-    .contest-image {
-        @media (min-width: @grid-float-breakpoint) {
-            .pull-left;
-            margin-right: 10px;
-        }
+    .col-contest-image {
+        .make-sm-column(6);
+        margin-bottom: 20px;
         text-align: center;
         img {
             margin-left: auto;
@@ -64,26 +48,62 @@ body.contest-stylesearch {
         }
     }
 
-    .contest-text {
-        @media (min-width: @grid-float-breakpoint) {
-            max-width: 300px;
-        }
+    .col-contest-text {
+        .make-sm-column(6);
         > p:first-child {
             margin-top: 20px;
         }
         > p:first-child, > p:nth-child(3) {
             margin-bottom: 0;
         }
-
         ol p {
             margin-bottom: 5px;
         }
-
         .btn {
             margin-bottom: 5px;
         }
         .heart {
             color: @like-color;
+        }
+
+    }
+
+    .col-contest-button {
+        .make-sm-column(12);
+        .btn {
+            margin-top: 20px;
+        }
+    }
+
+    @media (min-width: @screen-desktop) {
+        .col-contest-image {
+            .make-sm-column(5);
+            .make-sm-column-offset(1);
+        }
+
+        .col-contest-text {
+            .make-sm-column(5);
+        }
+
+        .col-contest-button {
+            .make-sm-column(10);
+            .make-sm-column-offset(1);
+        }
+    }
+
+    @media (min-width: @screen-lg-desktop) {
+        .col-contest-image {
+            .make-sm-column(4);
+            .make-sm-column-offset(2);
+        }
+
+        .col-contest-text {
+            .make-sm-column(4);
+        }
+
+        .col-contest-button {
+            .make-sm-column(8);
+            .make-sm-column-offset(2);
         }
     }
 
