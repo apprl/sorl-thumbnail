@@ -63,27 +63,27 @@ $(document).ready(function() {
                         {% url 'brand-likes-men' profile.slug as likes_url_men %}
                         {% url 'brand-likes-women' profile.slug as likes_url_women %}
                         <a{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %} class="selected"{% endif %} href="{{ likes_url }}">
-                            {% blocktrans count products as product_count %}{{product_count}} item{% plural %}{{product_count}} items{% endblocktrans %}
+                            {% blocktrans count products as product_count %}{{product_count}} Item{% plural %}{{product_count}} Items{% endblocktrans %}
                         </a>
                     {% else %}
                         <a{% if request.path == likes_url %} class="selected"{% endif %} href="{{ likes_url }}">
-                            {% blocktrans count products as product_count %}{{product_count}} item{% plural %}{{product_count}} items{% endblocktrans %}
+                            {% blocktrans count products as product_count %}{{product_count}} Item{% plural %}{{product_count}} Items{% endblocktrans %}
                         </a>
                     {% endif %}
                     </li>
                     <li>
                         <a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">
-                            {% blocktrans count profile.looks as look_count %}{{look_count}} look{% plural %}{{look_count}} looks{% endblocktrans %}
+                            {% blocktrans count profile.looks as look_count %}{{look_count}} Look{% plural %}{{look_count}} Looks{% endblocktrans %}
                         </a>
                     </li>
                     <li>
                     <a{% if request.path == followers_url %} class="selected"{% endif %} href="{{ followers_url }}">
-                            {% blocktrans count profile.followers_count as followers_count %}{{followers_count}} follower{% plural %}{{followers_count}} followers{% endblocktrans %}
+                            {% blocktrans count profile.followers_count as followers_count %}{{followers_count}} Follower{% plural %}{{followers_count}} Followers{% endblocktrans %}
                         </a>
                     </li>
                     <li>
                     <a{% if request.path == following_url %} class="selected"{% endif %} href="{{ following_url }}">
-                            {% blocktrans count following as following_count %}{{following_count}} following{% plural %}{{following_count}} following{% endblocktrans %}
+                            {% blocktrans count following as following_count %}{{following_count}} Following{% plural %}{{following_count}} Following{% endblocktrans %}
                         </a>
                     </li>
                 </ul>
