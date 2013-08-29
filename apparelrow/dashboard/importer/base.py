@@ -116,9 +116,10 @@ class BaseImporter:
         return True, data
 
     def map_vendor(self, vendor_string):
-        closest_match, score = process.extractOne(vendor_string, self.vendor_map.keys())
-        if score > 50:
-            return closest_match, self.vendor_map[closest_match]
+        if vendor_string:
+            closest_match, score = process.extractOne(vendor_string, self.vendor_map.keys())
+            if score > 50:
+                return closest_match, self.vendor_map[closest_match]
 
         return None, None
 

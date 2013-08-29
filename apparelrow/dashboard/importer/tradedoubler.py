@@ -47,13 +47,13 @@ class Importer(BaseImporter):
                 data_row = {}
                 data_row['original_sale_id'] = row['orderNR']
                 data_row['affiliate'] = self.name
-                _, data_row['vendor'] = self.map_vendor(row['programName'])
+                _, data_row['vendor'] = self.map_vendor(row.get('programName', None))
                 data_row['original_commission'] = row['affiliateCommission']
                 data_row['original_currency'] = 'SEK'
                 data_row['original_amount'] = row['orderValue']
                 data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row['epi1'])
                 data_row['status'] = self.map_status(row['pendingStatus'])
-                data_row['sale_date'] = dateutil.parser.parse(row['timeOfEvent'])
+                data_row['sale_date'] = dateutil.parser.parse(row.get('timeOfEvent', '') or '')
 
                 data_row = self.validate(data_row)
                 if not data_row:

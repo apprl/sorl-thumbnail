@@ -48,6 +48,6 @@ class Command(BaseCommand):
                 try:
                     for row in instance.get_data(start_date, end_date):
                         logger.debug('Updating row: %s' % (row,))
-                        instance = self.update(row)
+                        sale_instance = self.update(row)
                 except Exception as e:
                     logger.exception('Failed to import %s for interval %s-%s' % (instance.name, start_date, end_date))
