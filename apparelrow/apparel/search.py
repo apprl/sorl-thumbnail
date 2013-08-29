@@ -423,7 +423,7 @@ def get_profile_document(instance):
     document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
     document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)
     document['django_id'] = instance.pk
-    document['name'] = instance.display_name
+    document['name'] = instance.display_name_live
     document['gender'] = instance.gender
     document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
 
