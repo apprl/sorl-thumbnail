@@ -130,18 +130,16 @@
 
     <div class="container" itemscope itemtype="http://data-vocabulary.org/Product">
         <div class="body-header">
-            <div class="body-header-col-left">
+            <div class="body-header-col-full">
+                <div class="float-container">
                 <h1>{{ object.title }}{% if not object.published %} ({% trans "Draft" %}){% endif %}</h1>
+                {% if request.user.is_authenticated %}
+                <a class="btn btn-primary btn-look-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span>{% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+                {% else %}
+                <a class="btn btn-primary" data-toggle="modal" href="#" data-target="#modal_like_look"><span>{% trans "Like" %}</span> <span class="glyphicon glyphicon-heart"></span></a>
+                {% endif %}
+                </div>
                 <h2>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></h2>
-            </div>
-            <div class="body-header-col-right">
-                <ul class="list-inline">
-                    {% if request.user.is_authenticated %}
-                    <li><a class="btn btn-primary btn-look-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span>{% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a></li>
-                    {% else %}
-                    <li><a class="btn btn-primary" data-toggle="modal" href="#" data-target="#modal_like_look"><span>{% trans "Like" %}</span> <span class="glyphicon glyphicon-heart"></span></a></li>
-                    {% endif %}
-                </ul>
             </div>
         </div>
 

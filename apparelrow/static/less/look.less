@@ -1,12 +1,19 @@
 .look-detail-page {
-    h3 {
-        font-size: 14px;
-        border-bottom: 3px solid #000000;
-        padding-bottom: 5px;
+    .body-header h2 {
+        .body-header-ul;
+        display: block;
+        margin-top: 10px;
+        a:hover {
+            border: 0;
+        }
     }
-
-    div > h3:first-child {
-        margin-top: 0;
+    // Float like button after look title
+    @media (min-width: @screen-tablet) {
+        .body-header-col-full > .float-container {
+            > * { float: left; }
+            .btn { margin-top: 18px; }
+            .clearfix;
+        }
     }
 
     // Looks component
@@ -21,12 +28,7 @@
         }
     }
 
-    .body-header-col-right .btn {
-        padding-left: 30px;
-        padding-right: 30px;
-    }
-
-    .btn-look-like + .btn-block, .share {
+    .share {
         margin-top: 20px;
     }
 
