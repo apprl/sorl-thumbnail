@@ -176,10 +176,19 @@
             margin-top: 0;
         }
     }
+    .profile-content { text-align: center; }
+    .profile-content .btn { vertical-align: text-bottom; }
+    @media (min-width: @screen-tablet) {
+        .profile-content { text-align: left; }
+    }
     .profile-navigation > div > ul {
         .body-header-ul;
         margin-top: 10px;
         margin-bottom: 10px;
         display: block;
+        li {
+            padding-right: 10px;
+            padding-left: 0;
+        }
     }
 }
