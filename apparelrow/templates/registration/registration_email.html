@@ -19,31 +19,37 @@
                 <div class="form-group{% if form.first_name.errors %} has-error{% endif %}">
                     <label for="id_{{ form.first_name.html_name }}" class="control-label">{{ form.first_name.label }}</label>
                     <input name="{{ form.first_name.html_name }}" type="text" class="form-control" id="id_{{ form.first_name.html_name }}" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}" placeholder="{{ form.first_name.label }}">
+                    {% if form.first_name.errors %}<span class="help-block">{{ form.first_name.errors.as_text }}</span>{% endif %}
                 </div>
 
                 <div class="form-group{% if form.last_name.errors %} has-error{% endif %}">
                     <label for="id_{{ form.last_name.html_name }}" class="control-label">{{ form.last_name.label }}</label>
                     <input name="{{ form.last_name.html_name }}" type="text" class="form-control" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" placeholder="{{ form.last_name.label }}">
+                    {% if form.last_name.errors %}<span class="help-block">{{ form.last_name.errors.as_text }}</span>{% endif %}
                 </div>
 
                 <div class="form-group{% if form.username.errors %} has-error{% endif %}">
                     <label for="id_{{ form.username.html_name }}" class="control-label">{{ form.username.label }}</label>
                     <input name="{{ form.username.html_name }}" type="text" class="form-control" id="id_{{ form.username.html_name }}" value="{% if form.username.value %}{{ form.username.value }}{% endif %}" placeholder="{{ form.username.label }}">
+                    {% if form.username.errors %}<span class="help-block">{{ form.username.errors.as_text }}</span>{% endif %}
                 </div>
 
                 <div class="form-group{% if form.email.errors %} has-error{% endif %}">
                     <label for="id_{{ form.email.html_name }}" class="control-label">{{ form.email.label }}</label>
                     <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" placeholder="{{ form.email.label }}">
+                    {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
                 </div>
 
                 <div class="form-group{% if form.password1.errors %} has-error{% endif %}">
                     <label for="id_{{ form.password1.html_name }}" class="control-label">{{ form.password1.label }}</label>
                     <input name="{{ form.password1.html_name }}" type="password" class="form-control" id="id_{{ form.password1.html_name }}" placeholder="{{ form.password1.label }}">
+                    {% if form.password1.errors %}<span class="help-block">{{ form.password1.errors.as_text }}</span>{% endif %}
                 </div>
 
                 <div class="form-group{% if form.password2.errors %} has-error{% endif %}">
                     <label for="id_{{ form.password2.html_name }}" class="control-label">{{ form.password2.label }}</label>
                     <input name="{{ form.password2.html_name }}" type="password" class="form-control" id="id_{{ form.password2.html_name }}" placeholder="{{ form.password2.label }}">
+                    {% if form.password2.errors %}<span class="help-block">{{ form.password2.errors.as_text }}</span>{% endif %}
                 </div>
 
                 <div class="form-group{% if form.gender.errors %} has-error{% endif %}">
@@ -60,6 +66,7 @@
                             {% trans "Woman" %}
                         </label>
                     </div>
+                    {% if form.gender.errors %}<span class="help-block">{{ form.gender.errors.as_text }}</span>{% endif %}
                 </div>
 
                 <div class="form-group">
