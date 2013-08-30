@@ -15,7 +15,7 @@
             <a class="btn btn-primary btn-block" href="{% url 'index' %}?first=1"><span>{% trans "1. CHECK OUT YOUR PERSONAL APPRL FEED" %}</span></a>
         </div>
         <div class="col-sm-4">
-            <a class="btn btn-primary btn-block" href="{% gender_url request.user.gender 'shop' %}?first=1"><span>{% trans "2. BROWSE PRODUCTS IN OUR SHOP" %}</span></a>
+            <a class="btn btn-primary btn-block" href="{% gender_url request.user.gender 'shop' %}?view=brands&first=1"><span>{% trans "2. BROWSE PRODUCTS IN OUR SHOP" %}</span></a>
         </div>
         <div class="col-sm-4">
             <a class="btn btn-primary btn-block" href="{% url 'user-list' %}?first=1"><span>{% trans "3. FIND MORE PEOPLE & BRANDS TO FOLLOW" %}</span></a>

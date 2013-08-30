@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-30 11:45+0200\n"
+"POT-Creation-Date: 2013-08-30 12:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -631,12 +631,12 @@ msgid "Permissions"
 msgstr ""
 
 #: profile/forms.py:28 profile/forms.py:123
-#: templates/registration/registration_email.html:54
+#: templates/registration/registration_email.html:60
 msgid "Man"
 msgstr ""
 
 #: profile/forms.py:28 profile/forms.py:123
-#: templates/registration/registration_email.html:60
+#: templates/registration/registration_email.html:66
 msgid "Woman"
 msgstr ""
 
@@ -1297,8 +1297,9 @@ msgstr ""
 #, python-format
 msgid ""
 "For any item you ♥ like you will get a sale alert via e-mail when the price "
-"drops. You can personalize your shop by selecting <a href=\"%(shop_url)s?"
-"view=brands\">My Brands</a> to only show brands you are following."
+"drops. You can personalize your shop to see only <a href=\"%(shop_url)s?"
+"view=brands\">My Brands</a>, <a href=\"%(shop_url)s?view=friends\">My "
+"Friends</a> or to show <a href=\"%(shop_url)s\">Everything</a>."
 msgstr ""
 
 #: templates/apparel/browse.html:27
@@ -2006,7 +2007,7 @@ msgstr ""
 
 #: templates/apparel/tags/login_bar.html:12
 #: templates/registration/login.html:42
-#: templates/registration/registration_email.html:66
+#: templates/registration/registration_email.html:73
 msgid "Sign up"
 msgstr ""
 
@@ -2971,7 +2972,7 @@ msgstr ""
 msgid "E-mail sent."
 msgstr ""
 
-#: templates/registration/registration_email.html:71
+#: templates/registration/registration_email.html:78
 #: templates/registration/fragments/registration.html:8
 #, python-format
 msgid ""
