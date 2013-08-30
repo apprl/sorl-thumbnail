@@ -147,7 +147,7 @@ $(document).ready(function() {
         var element = jQuery(this);
         if(element.hasClass('btn-follow')) {
             jQuery.post(element.data('follow-url'), function(data) {
-                element.removeClass('btn-follow').addClass('btn-unfollow').text(element.data('unfollow-text')).removeClass('btn-success');
+                element.removeClass('btn-follow').addClass('btn-unfollow').text(element.data('unfollow-text')).removeClass('btn-success').addClass('btn-default');
                 if(share_settings['follow_profile'] === false) {
                     ApparelActivity.notification('follow', element.data('profile-type'), element.data('profile-id'));
                 }
