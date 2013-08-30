@@ -512,12 +512,12 @@ def _get_next(request):
 
 def flow(request):
     try:
-        if request.user.advertiser_store:
+        if request.user.is_authenticated() and request.user.advertiser_store:
             return HttpResponseRedirect(reverse('advertiser-store-admin'))
     except ObjectDoesNotExist:
         pass
 
-    if request.user.login_flow != 'complete' and not request.user.is_brand:
+    if request.user.is_authenticated() and request.user.login_flow != 'complete' and not request.user.is_brand:
         if request.user.login_flow == 'brands' or request.user.login_flow == 'complete':
             url = reverse('login-flow-%s' % (request.user.login_flow))
         else:
