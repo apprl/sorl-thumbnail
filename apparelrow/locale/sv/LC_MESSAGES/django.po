@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-29 15:49+0200\n"
+"POT-Creation-Date: 2013-08-30 11:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -897,7 +897,7 @@ msgstr "Växla navigation"
 msgid "Search for products, members & brands"
 msgstr "Sök produkter, medlemmar & varumärken"
 
-#: templates/base.html:128 templates/apparel/index.html:18
+#: templates/base.html:128
 msgid "Get started"
 msgstr "Börja här"
 
@@ -1450,6 +1450,10 @@ msgstr "Hämta embed-kod"
 #: templates/profile/dialog_embed_shop.html:61
 msgid "Embed code"
 msgstr "Embed-kod"
+
+#: templates/apparel/index.html:18
+msgid "Get Access"
+msgstr "Börja här"
 
 #: templates/apparel/index.html:27
 msgid "Are you a blogger?"
