@@ -3,7 +3,7 @@ import datetime
 import redis
 import json
 import time
-import itertools
+import random
 
 from django.conf import settings
 from django.utils import timezone
@@ -258,47 +258,46 @@ def featured_activity(next_day=True):
     Activity = get_model('activity_feed', 'activity')
     since = datetime.datetime.now() - datetime.timedelta(days=4)
 
-    # Like product
-    like_product_activities = []
-    for activity in Activity.objects.filter(verb='like_product',
-                                            created__gte=since,
-                                            active=True,
-                                            featured_date__isnull=True) \
-                                    .order_by('-user__is_partner', '-user__popularity')[:3]:
-        like_product_activities.append(activity)
+    switch_activity_verb = {'like_product': 'create', 'create': 'like_product'}
 
-    if len(like_product_activities) != 3:
-        for activity in Activity.objects.filter(verb='like_product',
-                                                active=True,
-                                                featured_date__isnull=True) \
-                                        .order_by('-created')[:3-len(like_product_activities)]:
-            like_product_activities.append(activity)
+    break_inf_loop = 0
+    exclude_uids = []
+    activity_list = []
+    activity_verb = random.choice(switch_activity_verb.keys())
+    while len(activity_list) < 3:
+        activity = Activity.objects.filter(verb=activity_verb,
+                                           created__gte=since,
+                                           active=True,
+                                           featured_date__isnull=True) \
+                                   .exclude(user_id__in=exclude_uids) \
+                                   .order_by('-user__is_partner', '-user__popularity')[:1]
+        if activity:
+            activity = activity[0]
+            exclude_uids.append(activity.user_id)
+            activity_list.append(activity)
+        else:
+            activity = Activity.objects.filter(verb=activity_verb,
+                                               active=True,
+                                               featured_date__isnull=True) \
+                                       .exclude(user_id__in=exclude_uids) \
+                                       .order_by('-user__is_partner', '-user__popularity')[:1]
+            if activity:
+                activity = activity[0]
+                exclude_uids.append(activity.user_id)
+                activity_list.append(activity)
 
-    # Create look
-    create_look_activities = []
-    for activity in Activity.objects.filter(verb='create',
-                                            created__gte=since,
-                                            active=True,
-                                            featured_date__isnull=True) \
-                                    .order_by('-user__is_partner', '-user__popularity')[:3]:
-        create_look_activities.append(activity)
+        activity_verb = switch_activity_verb.get(activity_verb)
 
-    if len(create_look_activities) != 3:
-        for activity in Activity.objects.filter(verb='create',
-                                                active=True,
-                                                featured_date__isnull=True) \
-                                        .order_by('-created')[:3-len(create_look_activities)]:
-            create_look_activities.append(activity)
+        break_inf_loop = break_inf_loop + 1
+        if break_inf_loop > 10:
+            break
 
-    # Combined activities
-    iters = [iter(like_product_activities), iter(create_look_activities)]
-    activitites = list(it.next() for it in itertools.cycle(iters))
     if next_day:
         day = datetime.date.today() + datetime.timedelta(days=1)
     else:
         day = datetime.date.today()
 
     if not Activity.objects.filter(featured_date=day).exists():
-        for activity in activitites[:3]:
+        for activity in activity_list:
             activity.featured_date = day
             activity.save()
