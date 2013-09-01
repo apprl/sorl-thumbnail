@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-30 12:53+0200\n"
+"POT-Creation-Date: 2013-09-01 22:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -883,8 +883,8 @@ msgstr ""
 msgid "Create your fall look and compete with Elin Kling to win €500"
 msgstr ""
 
-#: templates/base.html:96
-msgid "+ ENTER"
+#: templates/base.html:96 templates/apparel/contest_stylesearch_charts.html:11
+msgid "FINALISTS"
 msgstr ""
 
 #: templates/base.html:107
@@ -1316,47 +1316,51 @@ msgid "Create your fall look in 5 mins for a chance to win €500 to shop for"
 msgstr ""
 
 #: templates/apparel/contest_stylesearch.html:23
-msgid "Competition open 26th Aug - Sept 1st"
+msgid "Competition is now closed"
 msgstr ""
 
 #: templates/apparel/contest_stylesearch.html:24
+msgid "Competition open 26th Aug - Sept 1st"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch.html:25
 msgid "The looks with most votes by the end of Sept 1st enter the final."
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:26
+#: templates/apparel/contest_stylesearch.html:27
 msgid "To join:"
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:29
+#: templates/apparel/contest_stylesearch.html:30
 msgid "Like APPRL on Facebook here:"
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:33
+#: templates/apparel/contest_stylesearch.html:34
 msgid "Create your fall look here:"
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:35
-#: templates/apparel/contest_stylesearch.html:37
+#: templates/apparel/contest_stylesearch.html:36
+#: templates/apparel/contest_stylesearch.html:38
 msgid "+ CREATE LOOK"
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:40
+#: templates/apparel/contest_stylesearch.html:41
 msgid ""
 "Promote your look - the 10 looks with the most <span class=\"heart\">♥</"
 "span> likes on APPRL enter the final round."
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:41
+#: templates/apparel/contest_stylesearch.html:42
 msgid ""
 "Top blogger <strong>Elin Kling</strong> selects the final winner on our "
 "Facebook page."
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:44
-msgid "SEE THE LEADERBOARD"
+#: templates/apparel/contest_stylesearch.html:45
+msgid "SEE FINALISTS"
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:53
+#: templates/apparel/contest_stylesearch.html:54
 msgid ""
 "All looks created between 26th of August and 1st of September are included "
 "in the contest. The 10 looks with most likes on Apprl by the end of "
@@ -1369,19 +1373,15 @@ msgid ""
 "general terms of service & privacy policy apply."
 msgstr ""
 
-#: templates/apparel/contest_stylesearch.html:54
+#: templates/apparel/contest_stylesearch.html:55
 msgid "For questions & info contact "
 msgstr ""
 
-#: templates/apparel/contest_stylesearch_charts.html:11
-msgid "Leaderboard"
-msgstr ""
-
 #: templates/apparel/contest_stylesearch_charts.html:16
-msgid "+ ENTER CONTEST"
+msgid "ABOUT THE CONTEST"
 msgstr ""
 
-#: templates/apparel/contest_stylesearch_charts.html:26
+#: templates/apparel/contest_stylesearch_charts.html:27
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:162
 #: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
 #: templates/apparel/product_detail.html:4

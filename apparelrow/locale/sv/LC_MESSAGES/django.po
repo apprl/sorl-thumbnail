@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-30 12:53+0200\n"
+"POT-Creation-Date: 2013-09-01 22:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -885,9 +885,9 @@ msgstr "Tävla med Elin Kling om 5000kr"
 msgid "Create your fall look and compete with Elin Kling to win €500"
 msgstr "Skapa din höstlook och tävla med Elin Kling för att vinna 5000kr"
 
-#: templates/base.html:96
-msgid "+ ENTER"
-msgstr "+ TÄVLA"
+#: templates/base.html:96 templates/apparel/contest_stylesearch_charts.html:11
+msgid "FINALISTS"
+msgstr "FINALISTER"
 
 #: templates/base.html:107
 msgid "Toggle navigation"
@@ -1336,31 +1336,35 @@ msgstr ""
 "Skapa din höstlook på 5 minuter för en chans att vinna 5000kr att shoppa för"
 
 #: templates/apparel/contest_stylesearch.html:23
+msgid "Competition is now closed"
+msgstr "Tävlingen är nu avslutad"
+
+#: templates/apparel/contest_stylesearch.html:24
 msgid "Competition open 26th Aug - Sept 1st"
 msgstr "Tävlingen är öppen 26 augusti - 1 september"
 
-#: templates/apparel/contest_stylesearch.html:24
+#: templates/apparel/contest_stylesearch.html:25
 msgid "The looks with most votes by the end of Sept 1st enter the final."
 msgstr "De looks som har fått flest röster efter 1:a september går till final"
 
-#: templates/apparel/contest_stylesearch.html:26
+#: templates/apparel/contest_stylesearch.html:27
 msgid "To join:"
 msgstr "För att delta:"
 
-#: templates/apparel/contest_stylesearch.html:29
+#: templates/apparel/contest_stylesearch.html:30
 msgid "Like APPRL on Facebook here:"
 msgstr "Gilla APPRL på Facebook här:"
 
-#: templates/apparel/contest_stylesearch.html:33
+#: templates/apparel/contest_stylesearch.html:34
 msgid "Create your fall look here:"
 msgstr "Skapa din höstlook här:"
 
-#: templates/apparel/contest_stylesearch.html:35
-#: templates/apparel/contest_stylesearch.html:37
+#: templates/apparel/contest_stylesearch.html:36
+#: templates/apparel/contest_stylesearch.html:38
 msgid "+ CREATE LOOK"
 msgstr "+ SKAPA LOOK"
 
-#: templates/apparel/contest_stylesearch.html:40
+#: templates/apparel/contest_stylesearch.html:41
 msgid ""
 "Promote your look - the 10 looks with the most <span class=\"heart\">♥</"
 "span> likes on APPRL enter the final round."
@@ -1368,17 +1372,17 @@ msgstr ""
 "Sprid din look - de 10 som flest har <span class=\"heart\">♥</span> gillat "
 "på APPRL går till final"
 
-#: templates/apparel/contest_stylesearch.html:41
+#: templates/apparel/contest_stylesearch.html:42
 msgid ""
 "Top blogger <strong>Elin Kling</strong> selects the final winner on our "
 "Facebook page."
 msgstr "<strong>Elin Kling</strong> väljer ut vinnaren på vår Facebooksida"
 
-#: templates/apparel/contest_stylesearch.html:44
-msgid "SEE THE LEADERBOARD"
-msgstr "SE TOPPLISTAN"
+#: templates/apparel/contest_stylesearch.html:45
+msgid "SEE FINALISTS"
+msgstr "SE FINALISTER"
 
-#: templates/apparel/contest_stylesearch.html:53
+#: templates/apparel/contest_stylesearch.html:54
 msgid ""
 "All looks created between 26th of August and 1st of September are included "
 "in the contest. The 10 looks with most likes on Apprl by the end of "
@@ -1400,19 +1404,15 @@ msgstr ""
 "diskvalificera en tävlande för misstanke om fusk, oetiskt uppträdande eller "
 "av annan anledning. Apprls Användarvillkor gäller."
 
-#: templates/apparel/contest_stylesearch.html:54
+#: templates/apparel/contest_stylesearch.html:55
 msgid "For questions & info contact "
 msgstr "För frågor & info kontakta "
 
-#: templates/apparel/contest_stylesearch_charts.html:11
-msgid "Leaderboard"
-msgstr "Topplista"
-
 #: templates/apparel/contest_stylesearch_charts.html:16
-msgid "+ ENTER CONTEST"
-msgstr "+ TÄVLA HÄR"
+msgid "ABOUT THE CONTEST"
+msgstr "OM TÄVLINGEN"
 
-#: templates/apparel/contest_stylesearch_charts.html:26
+#: templates/apparel/contest_stylesearch_charts.html:27
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:162
 #: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
 #: templates/apparel/product_detail.html:4
@@ -3138,6 +3138,15 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:6
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
+
+#~ msgid "+ ENTER"
+#~ msgstr "+ TÄVLA"
+
+#~ msgid "SEE THE LEADERBOARD"
+#~ msgstr "SE TOPPLISTAN"
+
+#~ msgid "Leaderboard"
+#~ msgstr "Topplista"
 
 #~ msgid "Shop Men"
 #~ msgstr "Shop Herr"

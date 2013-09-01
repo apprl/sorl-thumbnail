@@ -20,7 +20,8 @@
                     <img src="{% static image %}" alt="{% trans "Fashion week style search" %}" class="img-responsive">
                 </div>
                 <div class="col-contest-text">
-                    <p><strong>{% trans "Competition open 26th Aug - Sept 1st" %}</strong></p>
+                    <p><strong>{% trans "Competition is now closed" %}</strong></p>
+                    <p><strong style="text-decoration: line-through;">{% trans "Competition open 26th Aug - Sept 1st" %}</strong></p>
                     <p>{% trans "The looks with most votes by the end of Sept 1st enter the final." %}</p>
 
                     <p><strong>{% trans "To join:" %}</strong></p>
@@ -41,7 +42,7 @@
                         <li>{% trans "Top blogger <strong>Elin Kling</strong> selects the final winner on our Facebook page." %}</li>
                     </ol>
                 </div>
-                <div class="col-contest-button"><a class="btn btn-primary btn-block" href="{% url 'contest-stylesearch-charts' %}">{% trans "SEE THE LEADERBOARD" %}</a></div>
+                <div class="col-contest-button"><a class="btn btn-primary btn-block" href="{% url 'contest-stylesearch-charts' %}">{% trans "SEE FINALISTS" %}</a></div>
 
             </div>
 
