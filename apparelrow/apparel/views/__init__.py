@@ -796,7 +796,7 @@ def contest_stylesearch_charts(request):
                                                           .filter(likes__created__lte=end_date, likes__active=True) \
                                                           .annotate(num_likes=Count('likes')) \
                                                           .select_related('user') \
-                                                          .order_by('-num_likes', 'created')[:20]
+                                                          .order_by('-num_likes', 'created')[:10]
 
     return render(request, 'apparel/contest_stylesearch_charts.html', {'looks': looks})
 
