@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-01 22:46+0200\n"
+"POT-Creation-Date: 2013-09-02 22:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -885,9 +885,9 @@ msgstr "Tävla med Elin Kling om 5000kr"
 msgid "Create your fall look and compete with Elin Kling to win €500"
 msgstr "Skapa din höstlook och tävla med Elin Kling för att vinna 5000kr"
 
-#: templates/base.html:96 templates/apparel/contest_stylesearch_charts.html:11
-msgid "FINALISTS"
-msgstr "FINALISTER"
+#: templates/base.html:96
+msgid "WINNER"
+msgstr "VINNARE"
 
 #: templates/base.html:107
 msgid "Toggle navigation"
@@ -1408,11 +1408,19 @@ msgstr ""
 msgid "For questions & info contact "
 msgstr "För frågor & info kontakta "
 
+#: templates/apparel/contest_stylesearch_charts.html:11
+msgid "FINALISTS"
+msgstr "FINALISTER"
+
 #: templates/apparel/contest_stylesearch_charts.html:16
 msgid "ABOUT THE CONTEST"
 msgstr "OM TÄVLINGEN"
 
-#: templates/apparel/contest_stylesearch_charts.html:27
+#: templates/apparel/contest_stylesearch_charts.html:23
+msgid "SEE THE WINNER ON OUR FACEBOOK PAGE"
+msgstr "SE VINNAREN PÅ VÅR FACEBOOKSIDA"
+
+#: templates/apparel/contest_stylesearch_charts.html:30
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:162
 #: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
 #: templates/apparel/product_detail.html:4

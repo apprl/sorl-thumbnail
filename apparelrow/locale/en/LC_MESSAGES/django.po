@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-01 22:46+0200\n"
+"POT-Creation-Date: 2013-09-02 22:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -882,8 +882,8 @@ msgstr ""
 msgid "Create your fall look and compete with Elin Kling to win €500"
 msgstr ""
 
-#: templates/base.html:96 templates/apparel/contest_stylesearch_charts.html:11
-msgid "FINALISTS"
+#: templates/base.html:96
+msgid "WINNER"
 msgstr ""
 
 #: templates/base.html:107
@@ -1375,11 +1375,19 @@ msgstr ""
 msgid "For questions & info contact "
 msgstr ""
 
+#: templates/apparel/contest_stylesearch_charts.html:11
+msgid "FINALISTS"
+msgstr ""
+
 #: templates/apparel/contest_stylesearch_charts.html:16
 msgid "ABOUT THE CONTEST"
 msgstr ""
 
-#: templates/apparel/contest_stylesearch_charts.html:27
+#: templates/apparel/contest_stylesearch_charts.html:23
+msgid "SEE THE WINNER ON OUR FACEBOOK PAGE"
+msgstr ""
+
+#: templates/apparel/contest_stylesearch_charts.html:30
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:162
 #: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
 #: templates/apparel/product_detail.html:4
