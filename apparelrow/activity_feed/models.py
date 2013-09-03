@@ -89,10 +89,10 @@ class Activity(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     activity_object = generic.GenericForeignKey('content_type', 'object_id')
-    gender = models.CharField(max_length=1, choices=GENDERS, null=True, blank=True, default=None, db_index=True)
+    gender = models.CharField(max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
-    active = models.BooleanField(default=True, db_index=True)
+    active = models.BooleanField(default=True)
     is_available = models.BooleanField(default=True)
     featured_date = models.DateField(null=True, blank=True)
 
@@ -113,6 +113,7 @@ class Activity(models.Model):
         index_together = [
             ['active', 'verb', 'is_available', 'user', 'gender'],
             ['active', 'featured_date'],
+            ['content_type', 'object_id'],
         ]
 
 @receiver(pre_delete, sender=Activity, dispatch_uid='activity_feed.models.delete_activity')
