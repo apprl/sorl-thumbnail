@@ -107,7 +107,7 @@ def setup(snapshot='master'):
     # install Python environment
     sudo('add-apt-repository -y ppa:chris-lea/node.js')
     sudo('apt-get update')
-    sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev')
+    sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv python-libxml2 python-libxslt1 libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev')
     # install some version control systems, since we need Django modules in development
     sudo('apt-get install -y git-core subversion')
     # install memcached

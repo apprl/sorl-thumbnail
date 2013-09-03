@@ -1,5 +1,6 @@
-import libxml2, logging
-from xml.sax.saxutils import unescape
+import logging
+
+from lxml import etree
 
 from apparelrow.importer.framework.provider import Provider as BaseProvider
 from apparelrow.importer.framework.mapper import DataMapper
@@ -59,29 +60,16 @@ class Provider(BaseProvider):
 
 
     def process(self):
-        doc = libxml2.readFd(self.file.fileno(), None, 'utf8', libxml2.XML_PARSE_NOENT)
-        ctx = doc.xpathNewContext()
-        
-        # FIXME: check version, date and vendor here
-        
-        for p in ctx.xpathEval('//product'):
+        doc = etree.parse(self.file)
+        for p in doc.xpath('//product'):
             record = dict([
-                (e.name, self.process_text(e.getContent())) 
-                for e in p.xpathEval('./*')
+                (e.tag, e.text)
+                for e in p.xpath('./*')
             ])
 
             record['variations'] = []
-            
-            for v in p.xpathEval('./variations/*'):
-                record['variations'].append(
-                    dict([
-                        (a.name, self.process_text( a.content )) 
-                        for a in v.xpathEval('./@*')
-                    ])
-                )
+            for v in p.xpath('./variations/*'):
+                record['variations'].append(dict(v.attrib))
 
             record = self.mapper(self, record).translate()
             self.import_data(record)
-        
-    def process_text(self, text):
-        return unicode( unescape( text ), 'utf-8')
