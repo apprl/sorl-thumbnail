@@ -173,7 +173,6 @@ def deploy(param='', snapshot='master'):
     copy_solr()
     build_styles_and_scripts()
     migrate(param)
-    build_brand_list()
     copy_sitemap()
     symlink_current_release()
     restart_celeryd()
