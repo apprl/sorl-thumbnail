@@ -100,11 +100,7 @@ $(document).ready(function() {
                .on('click', 'body.profile-page .btn-product-like', trackEvent('Profile', 'ProductLike'));
 
     // Track invites
-    $(document).on('click', '#nav-user .facebook-invite', trackInviteEvent('Menu'))
-               .on('click', 'body.feed .sidebar .facebook-invite', trackInviteEvent('Profile'))
-               .on('click', 'body.profiles #body-header .facebook-invite', trackInviteEvent('Members'))
-               .on('click', 'body.profile-login-flow #content .facebook-invite', trackInviteEvent('Welcome'))
-               .on('click', '#footer .facebook-invite', trackInviteEvent('Footer'));
+    $(document).on('click', '.navbar .facebook-invite', trackInviteEvent('Menu'));
 
 
     // Comments posting
