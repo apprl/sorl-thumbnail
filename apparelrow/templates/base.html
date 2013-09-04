@@ -84,8 +84,9 @@
         })();
     </script>
 </head>
-<body class="contest {% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
+<body class="{% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
 
+    {% comment %}
     <div class="contest-bar">
         <div class="container">
             <div class="row">
@@ -98,6 +99,7 @@
             </div>
         </div>
     </div>
+    {% endcomment %}
 
     <nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
         <div class="container">
