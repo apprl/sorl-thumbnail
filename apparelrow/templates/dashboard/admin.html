@@ -12,8 +12,8 @@
       function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Date');
-        data.addColumn('number', 'Total commission (SEK)');
-        data.addColumn('number', 'Publisher commission (SEK)');
+        data.addColumn('number', 'Total commission ({{ currency }})');
+        data.addColumn('number', 'Publisher commission ({{ currency }})');
         data.addRows([
           {% for sale_date, commission in sales.items %}
           [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission.0|unlocalize }}, {{ commission.1|unlocalize }}],
@@ -73,9 +73,9 @@
                 </label>
             </p>
             <ul class="list-inline">
-                <li>{% blocktrans %}Total commission {{ month_commission }} SEK{% endblocktrans %}</li>
-                <li>{% blocktrans %}Publisher commission {{ partner }} SEK{% endblocktrans %}</li>
-                <li>{% blocktrans %}Apprl commission {{ apprl }} SEK{% endblocktrans %}</li>
+                <li>{% blocktrans %}Total commission {{ month_commission }} {{ currency }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Publisher commission {{ partner }} {{ currency }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Apprl commission {{ apprl }} {{ currency }}{% endblocktrans %}</li>
             </ul>
             <ul class="list-inline">
                 <li>{% blocktrans %}Sales {{ sales_count }}{% endblocktrans %}</li>

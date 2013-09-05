@@ -230,7 +230,8 @@ def dashboard_admin(request, year=None, month=None):
                                                         'conversion_rate': conversion_rate,
                                                         'sales_table': sales,
                                                         'most_sold_products': most_sold_products,
-                                                        'most_clicked_products': most_clicked_products})
+                                                        'most_clicked_products': most_clicked_products,
+                                                        'currency': 'SEK'})
 
     return HttpResponseNotFound()
 
@@ -329,7 +330,8 @@ def dashboard(request, year=None, month=None):
                                                             'sales': sales,
                                                             'is_after_june': is_after_june,
                                                             'most_sold_products': most_sold_products,
-                                                            'most_clicked_products': most_clicked_products})
+                                                            'most_clicked_products': most_clicked_products,
+                                                            'currency': 'SEK'})
 
 
     return HttpResponseRedirect(reverse('index-publisher'))
