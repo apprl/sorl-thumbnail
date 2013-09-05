@@ -185,11 +185,11 @@ def dashboard_admin(request, year=None, month=None):
 
         # Clicks per month
         clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
-                                                               .order_by('created')
+                                                               .values('created', 'user_id')
         for click in clicks:
-            data_per_month[click.created.date()][2] += 1
-            if click.user_id:
-                data_per_month[click.created.date()][3] += 1
+            data_per_month[click['created'].date()][2] += 1
+            if click['user_id']:
+                data_per_month[click['created'].date()][3] += 1
 
         click_total = sum([x[2] for x in data_per_month.values()])
         click_partner = sum([x[3] for x in data_per_month.values()])
@@ -266,9 +266,9 @@ def dashboard(request, year=None, month=None):
         # Clicks
         clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
                                                                .filter(user_id=request.user.pk) \
-                                                               .order_by('created')
+                                                               .values_list('created', flat=True)
         for click in clicks:
-            data_per_day[click.created.date()][1] += 1
+            data_per_day[click.date()][1] += 1
 
         # Enumerate months
         dt1 = request.user.date_joined.date()
