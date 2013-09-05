@@ -14,7 +14,6 @@ TEMPLATE_DEBUG = DEBUG
 FORCE_SCRIPT_NAME = ''
 
 ADMINS = (
-    ('Hansson & Larsson', 'admin@hanssonlarsson.se'),
     ('Joel Bohman', 'joelboh@gmail.com'),
 )
 
