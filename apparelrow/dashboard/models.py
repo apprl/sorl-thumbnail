@@ -64,7 +64,11 @@ class Sale(models.Model):
         super(Sale, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%s - %s: %s %s %s' % (self.affiliate, self.vendor.name, self.commission, self.currency, self.status)
+        vendor_name = 'None'
+        if self.vendor:
+            vendor_name = self.vendor.name
+
+        return u'%s - %s: %s %s %s' % (self.affiliate, vendor_name, self.commission, self.currency, self.status)
 
     class Meta:
         ordering = ['-sale_date']
