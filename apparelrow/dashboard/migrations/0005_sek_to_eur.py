@@ -31,9 +31,9 @@ class Migration(DataMigration):
 
                 sale.converted_amount = exchange_rate * sale.original_amount
                 sale.converted_commission = exchange_rate * sale.original_commission
-                sale.amount = exchange_rate * sale.amount
+                sale.amount = exchange_rate * sale.original_amount
                 sale.currency = 'EUR'
-                sale.commission = exchange_rate * sale.commission
+                sale.commission = exchange_rate * (sale.commission / sale.exchange_rate)
                 sale.exchange_rate = exchange_rate
                 sale.save()
 
