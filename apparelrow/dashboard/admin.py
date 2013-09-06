@@ -12,10 +12,10 @@ class SaleAdmin(admin.ModelAdmin):
 admin.site.register(Sale, SaleAdmin)
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('custom_user', 'amount', 'paid', 'cancelled', 'modified', 'created')
+    list_display = ('custom_user', 'amount', 'currency', 'paid', 'cancelled', 'modified', 'created')
     list_filter = ('paid', 'cancelled')
     raw_id_fields = ('user',)
-    readonly_fields = ('details', 'user', 'amount', 'paid', 'cancelled', 'modified', 'created')
+    readonly_fields = ('details', 'user', 'amount', 'currency', 'paid', 'cancelled', 'modified', 'created')
     actions = ('mark_as_paid',)
 
     #def user_link(self, obj):
