@@ -104,14 +104,14 @@ class BaseImporter:
         if instance and instance.exchange_rate:
             exchange_rate = instance.exchange_rate
         else:
-            exchange_rate = currency_exchange('SEK', data['original_currency'])
+            exchange_rate = currency_exchange('EUR', data['original_currency'])
 
         data['exchange_rate'] = exchange_rate
         data['converted_commission'] = exchange_rate * data['original_commission']
         data['converted_amount'] = exchange_rate * data['original_amount']
         data['commission'] = exchange_rate * data['original_commission']
         data['amount'] = exchange_rate * data['original_amount']
-        data['currency'] = 'SEK'
+        data['currency'] = 'EUR'
 
         return True, data
 

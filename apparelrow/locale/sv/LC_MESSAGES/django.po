@@ -2393,19 +2393,19 @@ msgstr "Provision (SEK)"
 
 #: templates/dashboard/publisher.html:78
 msgid "Your commission: "
-msgstr "Din provision:"
+msgstr "Din provision: "
 
 #: templates/dashboard/publisher.html:79
 msgid "Confirmed commission: "
-msgstr "Bekräftad provision:"
+msgstr "Bekräftad provision: "
 
 #: templates/dashboard/publisher.html:80
 msgid "Pending payment: "
-msgstr "Att utbetalas:"
+msgstr "Att utbetalas: "
 
 #: templates/dashboard/publisher.html:88
 msgid "Show statistics for: "
-msgstr "Din statistik för:"
+msgstr "Din statistik för: "
 
 #: templates/dashboard/publisher.html:96
 #, python-format

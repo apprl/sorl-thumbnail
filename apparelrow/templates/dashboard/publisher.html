@@ -12,7 +12,7 @@
         function drawChart () {
             var data = new google.visualization.DataTable();
             data.addColumn('date', 'X');
-            data.addColumn('number', '{% trans "Commission (SEK)" %}');
+            data.addColumn('number', '{% trans "Commission" %} ({{ currency }})');
             data.addColumn('number', '{% trans "Clicks" %}');
             data.addRows([
             {% for sale_date, data in data_per_day.items %}
@@ -36,7 +36,7 @@
                         0: {
                             minValue: 0,
                             maxValue: (left.min == 0 && left.max == 0) ? 1 : null,
-                            title: '{% trans "Commission (SEK)" %}',
+                            title: '{% trans "Commission" %} ({{ currency }})',
                             textStyle: {color: '#3366cc'},
                             titleTextStyle: {color: '#3366cc'}
                         },
@@ -75,9 +75,9 @@
     {% include 'dashboard/body_header.html' %}
 
     <div class="row subnav-page">
-        <div class="col-sm-3">{% trans "Your commission: " %}<strong>{{ total_sales }} SEK</strong></div>
-        <div class="col-sm-3">{% trans "Confirmed commission: " %}<strong>{{ total_confirmed }} SEK</strong></div>
-        <div class="col-sm-3">{% trans "Pending payment: " %}<strong>{{ pending_payment }} SEK</strong></div>
+        <div class="col-sm-3">{% trans "Your commission: " %}<strong>{{ total_sales }} {{ currency }}</strong></div>
+        <div class="col-sm-3">{% trans "Confirmed commission: " %}<strong>{{ total_confirmed }} {{ currency }}</strong></div>
+        <div class="col-sm-3">{% trans "Pending payment: " %}<strong>{{ pending_payment }} {{ currency }}</strong></div>
         <div class="col-sm-3"><a data-toggle="modal" href="#modal_publisher_info">{% trans "How payments work" %}</a></div>
     </div>
 

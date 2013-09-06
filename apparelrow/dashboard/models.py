@@ -50,10 +50,10 @@ class Sale(models.Model):
     converted_commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Converted sale commission'))
     amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
     commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale commission'))
-    currency = models.CharField(null=False, blank=False, default='SEK', max_length=3, help_text=_('Currency as three-letter ISO code'))
+    currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
     original_amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale amount'))
     original_commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale commission'))
-    original_currency = models.CharField(null=False, blank=False, default='SEK', max_length=3, help_text=_('Original currency as three-letter ISO code'))
+    original_currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Original currency as three-letter ISO code'))
 
     sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
@@ -64,7 +64,11 @@ class Sale(models.Model):
         super(Sale, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%s - %s: %s %s %s' % (self.affiliate, self.vendor.name, self.commission, self.currency, self.status)
+        vendor_name = 'None'
+        if self.vendor:
+            vendor_name = self.vendor.name
+
+        return u'%s - %s: %s %s %s' % (self.affiliate, vendor_name, self.commission, self.currency, self.status)
 
     class Meta:
         ordering = ['-sale_date']
@@ -73,6 +77,7 @@ class Payment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, blank=False, on_delete=models.CASCADE)
     details = models.ForeignKey('profile.PaymentDetail', null=False, blank=False, on_delete=models.CASCADE)
     amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
+    currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
     paid = models.BooleanField(default=False, null=False, blank=False)
     cancelled = models.BooleanField(default=False, null=False, blank=False)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
