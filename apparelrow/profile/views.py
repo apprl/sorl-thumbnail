@@ -483,7 +483,7 @@ def register_activate(request, key):
         auth.login(request, user)
 
         mail_subject = 'New email user activation: %s' % (user.display_name_live,)
-        mail_managers_task.delay(mail_subject, 'URL: %s' % (user.get_absolute_url(),))
+        mail_managers_task.delay(mail_subject, 'URL: %s' % (request.build_absolute_uri(user.get_absolute_url()),))
 
         response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
         response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
