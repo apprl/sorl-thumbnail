@@ -24,7 +24,7 @@ from apparelrow.apparel.tasks import facebook_push_graph
 from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
-from apparelrow.profile.tasks import send_email_confirm_task
+from apparelrow.profile.tasks import send_email_confirm_task, mail_managers_task
 from apparelrow.profile.decorators import avatar_change
 
 from apparelrow.apparel.browse import browse_products
@@ -481,6 +481,9 @@ def register_activate(request, key):
         # XXX: Bypass authenticate step by settings backend on user
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         auth.login(request, user)
+
+        mail_subject = 'New email user activation: %s' % (user.display_name_live,)
+        mail_managers_task.delay(mail_subject, 'URL: %s' % (user.get_absolute_url(),))
 
         response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
         response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
