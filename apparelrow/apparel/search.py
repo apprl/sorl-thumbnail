@@ -452,10 +452,6 @@ def search(request, gender=None):
     if not gender:
         gender = get_gender_from_cookie(request)
 
-    gender_list = {'A': ['W', 'M', 'U'],
-                   'M': ['M', 'U'],
-                   'W': ['W', 'U']}
-
     query = request.GET.get('q', '')
 
     response = render(request, 'search.html', {'q': query, 'APPAREL_GENDER': gender})
@@ -480,7 +476,10 @@ def search_view(request, model_name):
     model_name = model_name.lower()
 
     # Gender field
-    gender = get_gender_from_cookie(request)
+    gender = request.REQUEST.get('gender')
+    if not gender:
+        gender = get_gender_from_cookie(request)
+
     if not gender or gender == 'A':
         gender_field = 'gender:(U OR M OR W)'
     else:

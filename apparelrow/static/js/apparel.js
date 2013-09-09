@@ -501,7 +501,7 @@ ApparelSearch = {
         this.clear();
         jQuery('#search > input').val('');
     },
-    search: function(callback, query) {
+    search: function(callback, query, gender) {
         // Preforms a search
         var s = '';
         if(query) {
@@ -524,7 +524,8 @@ ApparelSearch = {
             model: 'product',
             query: {
                 'q': s,
-                'limit': 3
+                'limit': 3,
+                'gender': gender
             },
             selector: '#search-result-products',
             text: {
@@ -539,7 +540,8 @@ ApparelSearch = {
             model: 'look',
             query: {
                 'q': s,
-                'limit': 3
+                'limit': 3,
+                'gender': gender
             },
             selector: '#search-result-looks',
             text: {
@@ -554,7 +556,8 @@ ApparelSearch = {
             model: 'manufacturer',
             query: {
                 'q': s,
-                'limit': 20
+                'limit': 20,
+                'gender': gender
             },
             selector: '#search-result-manufacturers',
             text: {
@@ -569,7 +572,8 @@ ApparelSearch = {
             model: 'store',
             query: {
                 'q': s,
-                'limit': 10
+                'limit': 10,
+                'gender': gender
             },
             selector: '#search-result-stores',
             text: {
@@ -584,7 +588,8 @@ ApparelSearch = {
             model: 'user',
             query: {
                 'q': s,
-                'limit': 10
+                'limit': 10,
+                'gender': gender
             },
             selector: '#search-result-profiles',
             text: {
@@ -756,51 +761,53 @@ ApparelSearch = {
 // DOM bindings
 
 jQuery(document).ready(function() {
-    jQuery('#search > input').keyup(function(e) {
-        var j = jQuery(this);
-        clearTimeout(j.data('tid'));
+    //jQuery('#search > input').keyup(function(e) {
+        //var j = jQuery(this);
+        //clearTimeout(j.data('tid'));
 
-        switch(e.keyCode) {
-            case 0: // command+tab
-            case 9: // tab
-            case 17: // ctrl
-            case 18: // alt
-            case 224: // command
-                return false;
-            case 13: // enter
-                ApparelSearch.search();
-                if ($('.navbar-toggle').is(':visible')) {
-                    $('.navbar-responsive-collapse').collapse('hide');
-                }
-                return false;
-            case 27: // escape
-                ApparelSearch.cancel();
-                return false;
+        //console.log('heeere');
 
-            default:
-                j.data('tid', setTimeout(ApparelSearch.search, 1000));
-        }
-    });
+        //switch(e.keyCode) {
+            //case 0: // command+tab
+            //case 9: // tab
+            //case 17: // ctrl
+            //case 18: // alt
+            //case 224: // command
+                //return false;
+            //case 13: // enter
+                //ApparelSearch.search();
+                //if ($('.navbar-toggle').is(':visible')) {
+                    //$('.navbar-responsive-collapse').collapse('hide');
+                //}
+                //return false;
+            //case 27: // escape
+                //ApparelSearch.cancel();
+                //return false;
+
+            //default:
+                //j.data('tid', setTimeout(ApparelSearch.search, 1000));
+        //}
+    //});
 
     /**
      * Disable search hash change
-    jQuery(window).bind('hashchange', function() {
-        var hash_query = getHashParameterByName('!s');
-        if(hash_query && ApparelSearch.last_query != hash_query) {
-            ApparelSearch.search(null, hash_query);
-        }
-    });
+     */
+    //jQuery(window).bind('hashchange', function() {
+        //var hash_query = getHashParameterByName('!s');
+        //if(hash_query && ApparelSearch.last_query != hash_query) {
+            //ApparelSearch.search(null, hash_query);
+        //}
+    //});
 
-    var hash_query = getHashParameterByName('!s');
-    if(hash_query && ApparelSearch.last_query != hash_query) {
-        ApparelSearch.search(null, hash_query);
-    }
-    */
+    //var hash_query = getHashParameterByName('!s');
+    //if(hash_query && ApparelSearch.last_query != hash_query) {
+        //ApparelSearch.search(null, hash_query);
+    //}
 
-    $('#cancel-search').click(function(e) {
-        ApparelSearch.cancel();
-        return false;
-    });
+    //$('#cancel-search').click(function(e) {
+        //ApparelSearch.cancel();
+        //return false;
+    //});
 
     //$('#search-result').on('click', '.search-result-products:not(.disabled)', function(e) {
             //return search_link_action('search-result-products');
@@ -816,40 +823,40 @@ jQuery(document).ready(function() {
         //}
     //});
 
-    function search_link_action(type) {
-        var query = jQuery('#' + type).data('last-query');
+    //function search_link_action(type) {
+        //var query = jQuery('#' + type).data('last-query');
 
-        switch(type) {
-            case 'search-result-products':
-                if(!query) {
-                    console.error('Could not find search query');
-                    break;
-                }
+        //switch(type) {
+            //case 'search-result-products':
+                //if(!query) {
+                    //console.error('Could not find search query');
+                    //break;
+                //}
 
-                window.location.href = browse_url + '?' + ApparelSearch.format_query(query);
-                if(window.location.pathname == browse_url) {
-                    ApparelSearch.cancel();
-                    window.location.reload();
-                }
+                //window.location.href = browse_url + '?' + ApparelSearch.format_query(query);
+                //if(window.location.pathname == browse_url) {
+                    //ApparelSearch.cancel();
+                    //window.location.reload();
+                //}
 
-                break;
+                //break;
 
-            case 'search-result-looks':
-                if(!query) {
-                    console.error('Could not find search query');
-                    break;
-                }
+            //case 'search-result-looks':
+                //if(!query) {
+                    //console.error('Could not find search query');
+                    //break;
+                //}
 
-                window.location.href = '/looks/search/?' + ApparelSearch.format_query(query);
-                break;
+                //window.location.href = '/looks/search/?' + ApparelSearch.format_query(query);
+                //break;
 
-            case 'search-result-manufacturers':
-                window.location.href = browse_url + '?brands_filter=' + encodeURIComponent(query.q);
-                break;
-        }
+            //case 'search-result-manufacturers':
+                //window.location.href = browse_url + '?brands_filter=' + encodeURIComponent(query.q);
+                //break;
+        //}
 
-        return false;
-    }
+        //return false;
+    //}
 
     var $body = $('body'),
         $pagination = $('.pagination');

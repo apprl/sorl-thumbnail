@@ -4,7 +4,7 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     $(document).ready(function() {
-            ApparelSearch.search(null, '{{ q }}');
+            ApparelSearch.search(null, '{{ q }}', '{{ APPAREL_GENDER }}');
     });
 </script>
 {% endblock 'extra-scripts' %}
