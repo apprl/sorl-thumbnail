@@ -13,7 +13,7 @@ from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
-
+from apparelrow.profile.tasks import mail_managers_task
 
 def map_placement(placement):
     link = _('Unknown')
@@ -337,12 +337,20 @@ def dashboard(request, year=None, month=None):
     return HttpResponseRedirect(reverse('index-publisher'))
 
 
-def dashboard_complete(request):
-    return render(request, 'dashboard/publisher_complete.html')
-
-
 def dashboard_info(request):
     return render(request, 'dashboard/info.html')
+
+
+#
+# Publisher / Store signup
+#
+
+def index_complete(request, view):
+    analytics_identifier = 'Publisher'
+    if view == 'store':
+        analytics_identifier = 'Store'
+
+    return render(request, 'dashboard/publisher_complete.html', {'analytics_identifier': analytics_identifier})
 
 
 def store(request):
@@ -350,14 +358,19 @@ def store(request):
         form = SignupForm(request.POST, is_store_form=True)
         if form.is_valid():
             # Save name and blog URL on session, for Google Analytics
-            request.session['publisher_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
+            request.session['index_complete_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
             instance = form.save(commit=False)
             instance.store = True
             instance.save()
 
-        return HttpResponseRedirect(reverse('index-store-complete'))
+            mail_managers_task.delay('New store signup: %s' % (form.cleaned_data['name'],),
+                    'Name: %s\nEmail: %s\nURL: %s' % (form.cleaned_data['name'],
+                                                      form.cleaned_data['email'],
+                                                      form.cleaned_data['blog']))
 
-    form = SignupForm(is_store_form=True)
+            return HttpResponseRedirect(reverse('index-store-complete'))
+    else:
+        form = SignupForm(is_store_form=True)
 
     return render(request, 'apparel/store.html', {'form': form})
 
@@ -366,11 +379,16 @@ def index(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             # Save name and blog URL on session, for Google Analytics
-            request.session['publisher_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
+            request.session['index_complete_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
             form.save()
 
-        return HttpResponseRedirect(reverse('dashboard-complete'))
+            mail_managers_task.delay('New publisher signup: %s' % (form.cleaned_data['name'],),
+                    'Name: %s\nEmail: %s\nBlog: %s' % (form.cleaned_data['name'],
+                                                       form.cleaned_data['email'],
+                                                       form.cleaned_data['blog']))
 
-    form = SignupForm()
+            return HttpResponseRedirect(reverse('index-dashboard-complete'))
+    else:
+        form = SignupForm()
 
     return render(request, 'dashboard/index.html', {'form': form})

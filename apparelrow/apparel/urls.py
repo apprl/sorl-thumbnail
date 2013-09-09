@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     url(r'^men/$', 'apparelrow.apparel.views.index', {'gender': 'M'}, name='index-men'),
     url(r'^women/$', 'apparelrow.apparel.views.index', {'gender': 'W'}, name='index-women'),
     url(r'^store/$', 'apparelrow.dashboard.views.store', name='index-store'),
-    url(r'^store/complete/$', 'apparelrow.dashboard.views.dashboard_complete', name='index-store-complete'),
+    url(r'^store/complete/$', 'apparelrow.dashboard.views.index_complete', {'view': 'store'}, name='index-store-complete'),
 
     # Contests
     url(r'^stylesearch/$', 'apparelrow.apparel.views.contest_stylesearch', name='contest-stylesearch'),

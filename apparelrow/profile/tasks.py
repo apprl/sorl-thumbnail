@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, mail_managers
 from django.utils.html import strip_tags
 from celery.task import task
 
@@ -9,5 +9,11 @@ def send_email_confirm_task(subject, body, recipient, **kwargs):
     msg = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, [recipient])
     msg.attach_alternative(body, 'text/html')
     msg.send()
+
+
+@task(name='apparelrow.profile.tasks.mail_managers_task', max_retries=5, ignore_result=True)
+def mail_managers_task(subject, message):
+    mail_managers(subject, message)
+
 
 import apparelrow.profile.notifications

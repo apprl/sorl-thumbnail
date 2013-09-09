@@ -517,6 +517,7 @@ CELERY_ROUTES = ({
     'apparelrow.apparel.tasks.look_popularity': {'queue': 'background'},
     'apparelrow.apparel.tasks.product_popularity': {'queue': 'background'},
     'apparelrow.apparel.tasks.build_static_look_image': {'queue': 'standard'},
+    'apparelrow.profile.tasks.mail_managers_task': {'queue': 'standard'},
     'statistics.tasks.active_users': {'queue': 'standard'},
     'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
     'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},

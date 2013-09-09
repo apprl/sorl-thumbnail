@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
-{% load i18n cache %}
+{% load i18n %}
 
-{% block extra-title %}{% trans "Become a publisher" %} | {% endblock %}
-
-{% block body-classes %}publisher-index-page-complete{% endblock body-classes %}
+{% block body-classes %}index-page-complete{% endblock body-classes %}
 {% block body %}
 <div class="body-header">
     <div class="body-header-col-full">
@@ -16,6 +14,6 @@
 </div>
 <script type="text/javascript">
   var _gaq = _gaq || [];
-  _gaq.push(['_trackEvent', 'Publisher', 'Signup', '{{ request.session.publisher_info }}']);
+  _gaq.push(['_trackEvent', '{{ analytics_identifier }}', 'Signup', '{{ request.session.index_complete_info }}']);
 </script>
 {% endblock %}

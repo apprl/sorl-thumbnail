@@ -20,22 +20,25 @@
 
                     <form action="" method="post" class="form-horizontal">
                         {% csrf_token %}
-                        <div class="form-group">
+                        <div class="form-group{% if form.name.errors %} has-error{% endif %}">
                             <label for="id_{{ form.name.html_name }}" class="col-sm-2 control-label">{{ form.name.label }}</label>
                             <div class="col-sm-6">
-                                <input name="{{ form.name.html_name }}" type="text" class="form-control" id="id_{{ form.name.html_name }}" placeholder="{{ form.name.label }}">
+                                <input name="{{ form.name.html_name }}" type="text" class="form-control" id="id_{{ form.name.html_name }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}" placeholder="{{ form.name.label }}">
+                                {% if form.name.errors %}<span class="help-block">{{ form.name.errors.as_text }}</span>{% endif %}
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
                             <label for="id_{{ form.email.html_name }}" class="col-sm-2 control-label">{{ form.email.label }}</label>
                             <div class="col-sm-6">
-                                <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" placeholder="{{ form.email.label }}">
+                                <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" placeholder="{{ form.email.label }}">
+                                {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group{% if form.blog.errors %} has-error{% endif %}">
                             <label for="id_{{ form.blog.html_name }}" class="col-sm-2 control-label">{{ form.blog.label }}</label>
                             <div class="col-sm-6">
-                                <input name="{{ form.blog.html_name }}" type="text" class="form-control" id="id_{{ form.blog.html_name }}" placeholder="{{ form.blog.label }}">
+                                <input name="{{ form.blog.html_name }}" type="text" class="form-control" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}" placeholder="{{ form.blog.label }}">
+                                {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
                             </div>
                         </div>
                         <div class="form-group">

@@ -750,16 +750,6 @@ def index(request, gender=None):
 
     return response
 
-def publisher(request):
-    #p = get_model('apparel', 'Product').valid_objects.get(slug='kappa-kool-kombat-traningstrojor-blatt')
-    p = get_model('apparel', 'Product').published_objects.all()[:10][7]
-    has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=p).exists()
-    return render(request, 'apparel/publisher.html', {'object': p, 'has_looks': has_looks})
-
-def store(request):
-    return render(request, 'apparel/store.html')
-
-
 
 def about(request):
     return render_to_response('apparel/about.html', {}, context_instance=RequestContext(request))
