@@ -136,8 +136,8 @@ def pixel(request):
             mail_superusers('Advertiser Pixel Warning: length of every product parameter is not consistent', email_body)
 
         try:
-            prices = [decimal.Decimal(x) for x in prices]
-            quantities = [int(x) for x in quantities]
+            prices = [decimal.Decimal(x) for x in prices if x]
+            quantities = [int(x) for x in quantities if x]
         except Exception as e:
             email_body = render_to_string('advertiser/email_default_error.txt', locals())
             mail_superusers('Advertiser Pixel Error: could not convert price or quantity', email_body)

@@ -203,6 +203,13 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
         self.assertEqual(mail.outbox[1].subject, 'Advertiser Pixel Error: could not convert price or quantity')
 
 
+    def test_optional_parameters_trailing_caret(self):
+        self.visit_link('mystore')
+        self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK', sku='ProductABC^ProductXYZ^', quantity='1^1^', price='1000^234^')
+        self.assertEqual(len(mail.outbox), 0)
+
+
+
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class AdvertiserLinkTest(TransactionTestCase, AdvertiserMixin):
 

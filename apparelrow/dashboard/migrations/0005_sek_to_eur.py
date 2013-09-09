@@ -9,7 +9,10 @@ from apparelrow.apparel.utils import currency_exchange
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        exchange_rate = currency_exchange('EUR', 'SEK')
+        exchange_rate = None
+        if orm['dashboard.Sale'].objects.count() > 0:
+            exchange_rate = currency_exchange('EUR', 'SEK')
+
         for payment in orm['dashboard.Payment'].objects.filter(paid=False):
             payment.currency = 'EUR'
             payment.amount = payment.amount * exchange_rate

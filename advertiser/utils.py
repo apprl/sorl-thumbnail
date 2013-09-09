@@ -4,8 +4,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 from django.db.models import get_model, Sum
 
-site_object = Site.objects.get_current()
-
 
 def get_transactions(store):
     Transaction = get_model('advertiser', 'Transaction')
@@ -38,9 +36,10 @@ def calculate_balance(store_id):
 
 
 def make_advertiser_url(store_id, url, request=None):
-    base_url = 'http://%s%s' % (site_object.domain, reverse('advertiser-link'))
-
     if request:
         return request.build_absolute_uri('%s?store_id=%s&url=%s' % (reverse('advertiser-link'), store_id, urllib.quote(url, '')))
+
+    site_object = Site.objects.get_current()
+    base_url = 'http://%s%s' % (site_object.domain, reverse('advertiser-link'))
 
     return '%s?store_id=%s&url=%s' % (base_url, store_id, urllib.quote(url, ''))
