@@ -93,7 +93,7 @@
                     </select>
                 </label>
                 </li>
-                <li>{% blocktrans %}Your commission: {{ month_commission }} SEK{% endblocktrans %}</li>
+                <li>{% blocktrans %}Your commission: {{ month_commission }} {{ currency }}{% endblocktrans %}</li>
                 <li>{% blocktrans %}Clicks: {{month_clicks}}{% endblocktrans %}</li>
                 <li>{% blocktrans %}Sales: {{month_sales}}{% endblocktrans %}</li>
                 <li>{% blocktrans with conversion_rate=month_conversion_rate|floatformat:2 %}Conversion rate: {{ conversion_rate }}%{% endblocktrans %}</li>
