@@ -37,7 +37,10 @@ def calculate_balance(store_id):
         pass
 
 
-def make_advertiser_url(store_id, url):
+def make_advertiser_url(store_id, url, request=None):
     base_url = 'http://%s%s' % (site_object.domain, reverse('advertiser-link'))
+
+    if request:
+        return request.build_absolute_uri('%s?store_id=%s&url=%s' % (reverse('advertiser-link'), store_id, urllib.quote(url, '')))
 
     return '%s?store_id=%s&url=%s' % (base_url, store_id, urllib.quote(url, ''))

@@ -12,13 +12,14 @@ from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.template.loader import render_to_string
-from django.core.urlresolvers import reverse
 
 import dateutil.parser
 
 from apparelrow.statistics.utils import get_client_ip
-from advertiser.tasks import send_text_email_task
 from apparelrow.apparel.utils import exchange_amount
+
+from advertiser.tasks import send_text_email_task
+from advertiser.utils import make_advertiser_url
 
 
 logger = logging.getLogger('advertiser')
@@ -348,6 +349,6 @@ def test_link(request):
     url = request.GET.get('url')
     store_id = request.GET.get('store_id')
 
-    link = request.build_absolute_uri('%s?url=%s&store_id=%s' % (reverse('advertiser-link'), url, store_id))
+    link = make_advertiser_url(store_id, url, request)
 
-    return HttpResponse('<a href="%s">Click me: %s</a>' % (link, link))
+    return HttpResponse('<a target="_blank" href="%s">Click me: %s</a>' % (link, link))
