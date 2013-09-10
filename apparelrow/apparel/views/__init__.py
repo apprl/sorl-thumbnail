@@ -506,7 +506,7 @@ def look_list(request, search=None, contains=None, gender=None):
     elif contains:
         queryset = Look.published_objects.filter(components__product__slug=contains).distinct()
     else:
-        queryset = Look.published_objects.filter(gender__in=gender_list.get(gender)).order_by('-popularity')
+        queryset = Look.published_objects.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
 
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page'))
 
