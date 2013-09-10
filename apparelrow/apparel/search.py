@@ -191,6 +191,10 @@ def product_save(instance, **kwargs):
             connection.add([document], commit=True, boost=boost)
         else:
             connection.add([document], commit=False, boost=boost, commitWithin=False)
+    elif document is not None and not document['published']:
+        result = ApparelSearch('id:apparel.product.%s AND published:true' % (instance.id,), connection=connection)
+        if len(result) == 1:
+            connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.id))
 
 @receiver(post_delete, sender=Product, dispatch_uid='product_delete')
 def product_delete(instance, **kwargs):
