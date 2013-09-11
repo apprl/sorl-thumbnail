@@ -349,8 +349,9 @@ def dashboard_info(request):
 #
 
 def referral(request):
-    referrals = get_user_model().objects.filter(referral_partner_parent=request.user)
+    referrals = get_user_model().objects.filter(referral_partner_parent=request.user, is_partner=True)
     return render(request, 'dashboard/referral.html', {'referrals': referrals})
+
 
 def referral_signup(request, code):
     user_id = None

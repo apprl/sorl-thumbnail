@@ -1,3 +1,5 @@
+import datetime
+
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save
@@ -143,3 +145,6 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
     else:
         instance.referral_partner = False
         instance.referral_partner_code = None
+
+    if instance.referral_partner_parent and instance.is_partner and not instance.referral_partner_parent_date:
+        instance.referral_partner_parent_date = timezone.now() + datetime.timedelta(days=180)

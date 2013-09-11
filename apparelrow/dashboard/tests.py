@@ -113,9 +113,11 @@ class TestDashboard(TransactionTestCase, DashboardMixin):
         referral_user.is_partner = True
         referral_user.save()
 
+        # Visit referral URL
         response = self.client.get(referral_user.get_referral_url())
         self.assertRedirects(response, reverse('index-publisher'))
 
+        # Register by email
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
                                                                      'last_name': 'svensson',
                                                                      'username': 'test',
@@ -124,14 +126,21 @@ class TestDashboard(TransactionTestCase, DashboardMixin):
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
 
+        # Click on activation email
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         response = self.client.get(activation_url)
 
+        # We should now be marked with a parent user (from referral URL)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
-        self.assertIsNotNone(registered_user.referral_partner_parent_date)
+        self.assertIsNone(registered_user.referral_partner_parent_date)
         self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
+
+        # Admin goes in and mark the user as partner which in turn sets the parent date
+        registered_user.is_partner = True
+        registered_user.save()
+        self.assertIsNotNone(registered_user.referral_partner_parent_date)
 
     def test_signup_from_invalid_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
@@ -139,6 +148,7 @@ class TestDashboard(TransactionTestCase, DashboardMixin):
         referral_user.is_partner = True
         referral_user.save()
 
+        # Visit referral URL
         response = self.client.get(referral_user.get_referral_url())
         self.assertRedirects(response, reverse('index-publisher'))
 
@@ -168,6 +178,7 @@ class TestDashboard(TransactionTestCase, DashboardMixin):
         referral_user.is_partner = True
         referral_user.save()
 
+        # Visit referral URL, register by email and activate account
         response = self.client.get(referral_user.get_referral_url())
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
                                                                      'last_name': 'svensson',
@@ -176,16 +187,22 @@ class TestDashboard(TransactionTestCase, DashboardMixin):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
-
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         response = self.client.get(activation_url)
 
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
+        self.assertIsNone(registered_user.referral_partner_parent_date)
         self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
 
+        # Must delete cookie manually because the test suite does not remove
+        # invalid cookies like a browser
         del response.client.cookies[settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME]
+
+        # Admin goes in and mark the user as partner which in turn sets the parent date
+        registered_user.is_partner = True
+        registered_user.save()
 
         another_user = get_user_model().objects.create_user('another_user', 'another@xvid.se', 'another')
         another_user.referral_partner = True
@@ -197,6 +214,7 @@ class TestDashboard(TransactionTestCase, DashboardMixin):
 
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
+        self.assertIsNotNone(registered_user.referral_partner_parent_date)
         self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
 
     def test_referral_sale(self):
