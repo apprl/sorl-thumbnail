@@ -2,12 +2,15 @@ import datetime
 import calendar
 import decimal
 
-from django.shortcuts import render
+from django.conf import settings
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.db.models import get_model, Sum, Count
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
+from django.contrib.auth import get_user_model
 
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
@@ -339,6 +342,30 @@ def dashboard(request, year=None, month=None):
 
 def dashboard_info(request):
     return render(request, 'dashboard/info.html')
+
+
+#
+# Referral
+#
+
+def referral(request):
+    referrals = get_user_model().objects.filter(referral_partner_parent=request.user)
+    return render(request, 'dashboard/referral.html', {'referrals': referrals})
+
+def referral_signup(request, code):
+    user_id = None
+    try:
+        user = get_user_model().objects.get(referral_partner_code=code)
+        user_id = user.pk
+    except:
+        pass
+
+    response = redirect(reverse('index-publisher'))
+    if user_id:
+        expires_datetime = timezone.now() + datetime.timedelta(days=15)
+        response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime, httponly=True)
+
+    return response
 
 
 #

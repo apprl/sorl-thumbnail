@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 from apparelrow.profile.models import Follow
 from apparelrow.profile.models import NotificationCache
@@ -50,8 +51,9 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = ('username', 'slug', 'name', 'first_name', 'last_name', 'email', 'is_brand', 'date_joined')
     list_filter = ('is_brand', 'is_partner', 'is_active', 'is_staff', 'is_superuser')
-    raw_id_fields = ('brand',)
+    raw_id_fields = ('brand', 'referral_partner_parent')
     search_fields = ('username', 'name', 'slug')
+    readonly_fields = ('referral_partner_code', 'referral_partner_url')
     fieldsets = (
         (None, {'fields': [('username', 'password'),]}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'name',
@@ -61,7 +63,13 @@ class CustomUserAdmin(UserAdmin):
                                     'facebook_access_token',
                                     'facebook_access_token_expire')}),
         (_('Brand'), {'fields': ('is_brand', 'brand')}),
-        (_('Publisher'), {'fields': ('is_partner', 'partner_group')}),
+        (_('Publisher'), {'fields': ('is_partner',
+                                     'partner_group',
+                                     'referral_partner',
+                                     'referral_partner_code',
+                                     'referral_partner_url',
+                                     'referral_partner_parent',
+                                     'referral_partner_parent_date')}),
         (_('Extra'), {'fields': ('slug', 'login_flow', 'popularity', 'popularity_men', 'followers_count')}),
         (_('Settings'), {'fields': ('newsletter', 'discount_notification',
                                     'fb_share_like_product', 'fb_share_like_look',
@@ -78,6 +86,17 @@ class CustomUserAdmin(UserAdmin):
                                    'groups', 'user_permissions'),
                             'classes': ('collapse',)}),
     )
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = list(self.readonly_fields)
+        if obj.referral_partner_parent_date > timezone.now():
+            readonly_fields.extend(['referral_partner'])
+        return readonly_fields
+
+    def referral_partner_url(self, obj):
+        return obj.get_referral_url()
+    referral_partner_url.allow_tags = False
+    referral_partner_url.short_description = 'Referral URL'
 
 admin.site.register(get_user_model(), CustomUserAdmin)
 admin.site.unregister(Group)

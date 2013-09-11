@@ -173,6 +173,7 @@ MIDDLEWARE_CLASSES = (
     'apparelrow.profile.middleware.ImpersonateMiddleware',
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',
+    'apparelrow.dashboard.middleware.ReferralMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -430,6 +431,7 @@ SOLR_RELOAD_URL = 'http://localhost:8983/solr/admin/cores?action=RELOAD&core=col
 # DASHBOARD
 APPAREL_DASHBOARD_CUT_DEFAULT = 0.5
 APPAREL_DASHBOARD_MINIMUM_PAYOUT = 50 # EUR
+APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME = 'referral_cookie'
 
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'

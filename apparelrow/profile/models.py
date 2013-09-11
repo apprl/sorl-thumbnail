@@ -79,6 +79,12 @@ class User(AbstractUser):
     is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
     partner_group = models.ForeignKey('dashboard.Group', null=True, blank=True)
 
+    # referral partner
+    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Referral partner user'))
+    referral_partner_code = models.CharField(max_length=16, blank=True, null=True)
+    referral_partner_parent = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    referral_partner_parent_date = models.DateTimeField(null=True, blank=True)
+
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone commented on a product that I have liked'))
@@ -268,6 +274,19 @@ class User(AbstractUser):
             return reverse('brand-following', args=[self.slug])
 
         return reverse('profile-following', args=[self.slug])
+
+    def get_referral_domain_url(self):
+        if self.referral_partner and self.referral_partner_code:
+            site_object = Site.objects.get_current()
+            return 'http://%s%s' % (site_object.domain, self.get_referral_url())
+
+        return None
+
+    def get_referral_url(self):
+        if self.referral_partner and self.referral_partner_code:
+            return reverse('dashboard-referral-signup', args=[self.referral_partner_code])
+
+        return None
 
     @models.permalink
     def get_absolute_url(self):

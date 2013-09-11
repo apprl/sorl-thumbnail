@@ -1,7 +1,13 @@
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth import get_user_model
+
+from apparelrow.apparel.base_62_converter import dehydrate
+
 
 class Sale(models.Model):
     """
@@ -54,6 +60,10 @@ class Sale(models.Model):
     original_amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale amount'))
     original_commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale commission'))
     original_currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Original currency as three-letter ISO code'))
+
+    # referral sale
+    is_referral_sale = models.BooleanField(default=False, null=False, blank=False)
+    referral_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
 
     sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
@@ -119,3 +129,17 @@ class Signup(models.Model):
 
     def __unicode__(self):
         return '%s' % (self.name,)
+
+
+
+#
+# Model signals
+#
+
+@receiver(pre_save, sender=get_user_model(), dispatch_uid='pre_save_update_referral_code')
+def pre_save_update_referral_code(sender, instance, *args, **kwargs):
+    if instance.is_partner and instance.referral_partner and instance.pk:
+        instance.referral_partner_code = dehydrate(1000000 + instance.pk)
+    else:
+        instance.referral_partner = False
+        instance.referral_partner_code = None
