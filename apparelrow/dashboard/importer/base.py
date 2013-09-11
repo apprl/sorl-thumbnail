@@ -78,6 +78,7 @@ class BaseImporter:
 
     def calculate_cut(self, data):
         if 'user_id' in data and data['user_id']:
+            logger.debug('Running calculate cut for user id: %s' % (data['user_id'],))
             cut = settings.APPAREL_DASHBOARD_CUT_DEFAULT
             profile = get_user_model().objects.filter(pk=data['user_id'])
             if profile:
@@ -86,7 +87,7 @@ class BaseImporter:
                     instance = profile.partner_group.cuts.filter(vendor=data['vendor'])
                     if instance:
                         cut = instance[0].cut
-                        logger.debug('Using custom cut for profile %s: %s' % (profile, cut))
+                        logger.debug('Using non-default cut for profile %s: %s' % (profile, cut))
 
             data['commission'] = decimal.Decimal(cut) * decimal.Decimal(data['commission'])
             if data['currency'] != data['original_currency']:
