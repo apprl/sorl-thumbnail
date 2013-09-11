@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body-classes %}publisher-referral-page{% endblock body-classes %}
+{% block body %}
+
+{% include 'dashboard/body_header.html' %}
+
+<h2>{% trans "Earn money by inviting other bloggers" %}</h2>
+<p>{% trans "As one of our top publishers you will be rewarded when a blogger that you invite to APPRL joins and starts driving sales. If the blogger you invite via the link below joins APPRL, they will receive €20 on their APPRL account." %}</p>
+
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="referral-link-container">
+            <h4>{% trans "Your invitation link:" %}</h4>
+            <input type="text" class="form-control" value="{{ request.user.get_referral_domain_url }}">
+            <p>{% trans "copy and share with other bloggers to get rewarded" %}</p>
+        </div>
+    </div>
+</div>
+
+<p><strong>{% trans "This is how it works:" %}</strong></p>
+<ol>
+    <li>{% trans "Share your invitation link with the person you wish to invite and ask them to click it and sign up on Apprl.com." %}</li>
+    <li>{% trans "For every blogger that signs up to APPRL via your invitation link, they will become a “referral publisher” to you for 6 months." %}</li>
+    <li>{% trans "During these 6 months, you will make half the amount the bloggers you have invited make on every sale. For example, if they make €20 on one sale, you make €10." %}</li>
+</ol>
+
+<p><strong>{% trans "So far these have successfully signed up via your invitation link:" %}</strong></p>
+{% if referrals %}
+<ul class="list-unstyled">
+    {% for referral in referrals %}
+    <li><a href="{{ referral.get_absolute_url }}">{{ referral.display_name }}</a> {{ referral.referral_partner_parent_date }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}
