@@ -116,10 +116,19 @@ class TestDashboard(TransactionTestCase):
         self.assertIsNone(registered_user.referral_partner_parent_date)
         self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
 
-        # Admin goes in and mark the user as partner which in turn sets the parent date
+        # Admin goes in and mark the user as partner which in turn sets the
+        # parent date and adds 20 EUR to the account
         registered_user.is_partner = True
         registered_user.save()
         self.assertIsNotNone(registered_user.referral_partner_parent_date)
+
+        sale = get_model('dashboard', 'Sale').objects.get(is_promo=True)
+        self.assertFalse(sale.is_referral_sale)
+        self.assertIsNone(sale.referral_user)
+        self.assertTrue(sale.is_promo)
+        self.assertEqual(sale.commission, decimal.Decimal(20))
+        self.assertEqual(sale.currency, 'EUR')
+
 
     def test_signup_from_invalid_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
@@ -150,6 +159,9 @@ class TestDashboard(TransactionTestCase):
         self.assertIsNone(registered_user.referral_partner_parent)
         self.assertIsNone(registered_user.referral_partner_parent_date)
         self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
+
+        # Invalid referral link should not result in a promo sale of 20 EUR
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 0)
 
     def test_visit_two_referral_links(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
@@ -183,6 +195,8 @@ class TestDashboard(TransactionTestCase):
         registered_user.is_partner = True
         registered_user.save()
 
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
         another_user = get_user_model().objects.create_user('another_user', 'another@xvid.se', 'another')
         another_user.referral_partner = True
         another_user.is_partner = True
@@ -195,6 +209,8 @@ class TestDashboard(TransactionTestCase):
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
         self.assertIsNotNone(registered_user.referral_partner_parent_date)
         self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
 
     def test_referral_sale(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
@@ -238,10 +254,10 @@ class TestDashboard(TransactionTestCase):
         # Import the sale transaction
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
 
-        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 2)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 3)
 
         # Verify it
-        normal_sale = get_model('dashboard', 'Sale').objects.get(is_referral_sale=False)
+        normal_sale = get_model('dashboard', 'Sale').objects.get(is_promo=False, is_referral_sale=False)
         self.assertFalse(normal_sale.is_referral_sale)
         self.assertIsNone(normal_sale.referral_user)
         self.assertEqual(normal_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
@@ -254,10 +270,10 @@ class TestDashboard(TransactionTestCase):
         # Repeat the import of the sale transaction
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
 
-        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 2)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 3)
 
         # Verify it
-        normal_sale = get_model('dashboard', 'Sale').objects.get(is_referral_sale=False)
+        normal_sale = get_model('dashboard', 'Sale').objects.get(is_promo=False, is_referral_sale=False)
         self.assertFalse(normal_sale.is_referral_sale)
         self.assertIsNone(normal_sale.referral_user)
         self.assertEqual(normal_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
@@ -341,3 +357,59 @@ class TestDashboardCuts(TransactionTestCase):
         sale = get_model('dashboard', 'Sale').objects.get()
         self.assertIsNotNone(sale)
         self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal('0.9'))
+
+    #def test_do_not_update_after_paid_ready_status(self):
+        ## Create a partner user
+        #user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        #user.is_partner = True
+        #user.save()
+        #payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c', user=user)
+
+        ## Create a sale transactions
+        #store_id = 'mystore'
+        #store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        #vendor = get_model('apparel', 'Vendor').objects.create(name=store_id)
+        #store = get_model('advertiser', 'Store').objects.create(identifier=store_id, user=store_user, commission_percentage='0.2', vendor=vendor)
+        #url = 'http://www.mystore.com/myproduct/'
+        #custom = '%s-Shop' % (user.pk,)
+        #response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        #self.assertEqual(response.status_code, 302)
+        #response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='1000', currency='EUR'))))
+        #self.assertEqual(response.status_code, 200)
+
+        ## Import the sale transaction
+        #management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        ## Verify sale transaction
+        #self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        #sale = get_model('dashboard', 'Sale').objects.get()
+        #self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+
+        #transaction = get_model('advertiser', 'Transaction').objects.get()
+        #transaction.status = get_model('advertiser', 'Transaction').ACCEPTED
+        #transaction.save()
+
+        ## Import again
+        #management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        ## Verify sale transaction
+        #self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        #sale = get_model('dashboard', 'Sale').objects.get()
+        #self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+
+        ## Ready payments
+        #management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+        ## Update commission after the sale transaction has been marked as ready for payment
+        #transaction = get_model('advertiser', 'Transaction').objects.get()
+        #transaction.order_value = decimal.Decimal('500')
+        #transaction.commission = decimal.Decimal('100')
+        #transaction.save()
+
+        ## Import again
+        #management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        ## Verify that sale transaction is not updated
+        #self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        #sale = get_model('dashboard', 'Sale').objects.get()
+        #self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))

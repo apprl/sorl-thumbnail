@@ -84,7 +84,8 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
         values = [start_date, end_date, user_id, Sale.PENDING, Sale.CONFIRMED, start_date, end_date]
 
     sale_table = Sale.objects.raw("""
-            SELECT ds.id, ds.created, ds.commission, ds.currency, ds.placement, ds.converted_commission, ds.user_id, ds.is_referral_sale, ds.referral_user_id,
+            SELECT ds.id, ds.created, ds.commission, ds.currency, ds.placement, ds.converted_commission, ds.user_id,
+                   ds.is_referral_sale, ds.referral_user_id, ds.is_promo,
                    ap.slug, ap.product_name, ap.product_image, ab.name AS brand_name, COUNT(sp.id) AS clicks, pu.name
             FROM dashboard_sale ds
             LEFT OUTER JOIN profile_user pu ON pu.id = ds.user_id
@@ -113,10 +114,15 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
         apprl_commission = sale.converted_commission if sale.user_id == 0 else sale.converted_commission - sale.commission
         referral_user = None
         if sale.is_referral_sale:
-            referral_user = get_user_model().objects.get(pk=sale.referral_user_id)
+            try:
+                referral_user = get_user_model().objects.get(pk=sale.referral_user_id)
+            except get_user_model().DoesNotExist:
+                pass
+
             apprl_commission = decimal.Decimal('0')
 
         temp = {
+            'is_promo': sale.is_promo,
             'is_referral_sale': sale.is_referral_sale,
             'referral_user': referral_user,
             'link': map_placement(sale.placement),

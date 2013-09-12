@@ -67,6 +67,8 @@ class Sale(models.Model):
     is_referral_sale = models.BooleanField(default=False, null=False, blank=False)
     referral_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
 
+    is_promo = models.BooleanField(default=False, null=False, blank=False)
+
     sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
@@ -151,3 +153,23 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
 
     if instance.referral_partner_parent and instance.is_partner and not instance.referral_partner_parent_date:
         instance.referral_partner_parent_date = timezone.now() + datetime.timedelta(days=180)
+
+        data = {
+            'affiliate': 'referral_promo',
+            'original_sale_id': 'referral_promo_%s' % (instance.pk,),
+            'user_id': instance.pk,
+            'is_referral_sale': False,
+            'is_promo': True,
+            'exchange_rate': '1',
+            'converted_amount': settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION,
+            'converted_commission': settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION,
+            'amount': settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION,
+            'commission': settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION,
+            'currency': 'EUR',
+            'original_amount': settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION,
+            'original_commission': settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION,
+            'original_currency': 'EUR',
+            'status': Sale.CONFIRMED,
+        }
+
+        instance, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)

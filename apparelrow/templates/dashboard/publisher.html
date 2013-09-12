@@ -187,12 +187,17 @@
                         <td data-sort="{{ sale.created|date:"U" }}">{{ sale.created.date }}</td>
 
                         {% if sale.is_referral_sale %}
-                        <td class="product-image"><a href="{{ sale.referral_user.get_absolute_url }}"><img src="{{ sale.referral_user.avatar_small }}"></a></td>
+                        <td><a href="{{ sale.referral_user.get_absolute_url }}"><img src="{{ sale.referral_user.avatar_small }}"></a></td>
                         <td class="hidden-xs"><a href="{{ sale.referral_user.get_absolute_url }}">{{ sale.referral_user.display_name }}</a></td>
                         <td>{% trans "Referral" %}</td>
                         <td class="center"></td>
+                        {% elif sale.is_promo %}
+                        <td></td>
+                        <td class="hidden-xs"></td>
+                        <td>{% trans "Referral promo" %}</td>
+                        <td class="center"></td>
                         {% else %}
-                        <td class="product-image"><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
+                        <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
                         <td class="hidden-xs">{% if sale.product_link %}<a href="{{ sale.product_link }}">{{ sale.product }}</a>{% else %}{{ sale.product }}{% endif %}</td>
                         <td>{{ sale.link }}</td>
                         <td class="center">{{ sale.clicks }}</td>
