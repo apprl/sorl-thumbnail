@@ -13,13 +13,14 @@
             var data = new google.visualization.DataTable();
             data.addColumn('date', 'X');
             data.addColumn('number', '{% trans "Commission" %} ({{ currency }})');
+            data.addColumn('number', '{% trans "Referral Commission" %} ({{ currency }})');
             data.addColumn('number', '{% trans "Clicks" %}');
             data.addRows([
             {% for sale_date, data in data_per_day.items %}
                 {% if forloop.last %}
-                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1 }}]
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.1 }}]
                 {% else %}
-                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1 }}],
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.1 }}],
                 {% endif %}
             {% endfor %}
             ]);
@@ -50,7 +51,8 @@
                     },
                     series: {
                         0: {targetAxisIndex: 0},
-                        1: {targetAxisIndex: 1}
+                        1: {targetAxisIndex: 0, color: '#ff9900'},
+                        2: {targetAxisIndex: 1, color: '#dc3912'}
                     }
                 }
             });
@@ -183,10 +185,19 @@
                     {% for sale in sales %}
                     <tr>
                         <td data-sort="{{ sale.created|date:"U" }}">{{ sale.created.date }}</td>
+
+                        {% if sale.is_referral_sale %}
+                        <td class="product-image"><a href="{{ sale.referral_user.get_absolute_url }}"><img src="{{ sale.referral_user.avatar_small }}"></a></td>
+                        <td class="hidden-xs"><a href="{{ sale.referral_user.get_absolute_url }}">{{ sale.referral_user.display_name }}</a></td>
+                        <td>{% trans "Referral" %}</td>
+                        <td class="center"></td>
+                        {% else %}
                         <td class="product-image"><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
-                        <td class="hidden-xs"><a href="{{ sale.product_link }}">{{ sale.product }}</a></td>
+                        <td class="hidden-xs">{% if sale.product_link %}<a href="{{ sale.product_link }}">{{ sale.product }}</a>{% else %}{{ sale.product }}{% endif %}</td>
                         <td>{{ sale.link }}</td>
                         <td class="center">{{ sale.clicks }}</td>
+                        {% endif %}
+
                         <td data-sort="{{ sale.commission }}">{{ sale.commission }} {{ sale.currency }}</td>
                     </tr>
                     {% empty %}

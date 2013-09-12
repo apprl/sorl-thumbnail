@@ -14,6 +14,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import Site
+from django.utils import timezone
 
 from sorl.thumbnail import get_thumbnail
 
@@ -274,6 +275,12 @@ class User(AbstractUser):
             return reverse('brand-following', args=[self.slug])
 
         return reverse('profile-following', args=[self.slug])
+
+    def is_referral_parent_valid(self):
+        if self.referral_partner_parent and self.referral_partner_parent_date and self.referral_partner_parent_date > timezone.now():
+            return True
+
+        return False
 
     def get_referral_domain_url(self):
         if self.referral_partner and self.referral_partner_code:

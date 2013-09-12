@@ -116,10 +116,13 @@ class Group(models.Model):
 class Cut(models.Model):
     group = models.ForeignKey('dashboard.Group', null=False, blank=False, on_delete=models.PROTECT, related_name='cuts')
     vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, on_delete=models.CASCADE)
-    cut = models.DecimalField(null=False, blank=False, default='0.5', max_digits=10, decimal_places=3, help_text=_('Between 1 and 0'))
+    cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_CUT_DEFAULT), max_digits=10, decimal_places=3,
+                              help_text='Between 1 and 0, default %s' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
+    referral_cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10, decimal_places=3,
+                                       help_text='Between 1 and 0, default %s' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
 
     def __unicode__(self):
-        return u'%s - %s: %s' % (self.group, self.vendor, self.cut)
+        return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
 
 
 class Signup(models.Model):

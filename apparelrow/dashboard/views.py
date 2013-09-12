@@ -61,9 +61,14 @@ def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
         product_image = ''
         if product.product_image:
             product_image = get_thumbnail(ImageField().to_python(product.product_image), '50', crop='noop').url
+
+        product_link = None
+        if product.slug:
+            product_link = reverse('product-detail', args=[product.slug])
+
         most_clicked_products.append({
             'product_image': product_image,
-            'product_link': reverse('product-detail', args=[product.slug]),
+            'product_link': product_link,
             'product': '%s %s' % (product.brand_name, product.product_name) if product.product_name else _('Unknown'),
             'clicks': product.clicks
         })
@@ -79,7 +84,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
         values = [start_date, end_date, user_id, Sale.PENDING, Sale.CONFIRMED, start_date, end_date]
 
     sale_table = Sale.objects.raw("""
-            SELECT ds.id, ds.created, ds.commission, ds.currency, ds.placement, ds.converted_commission, ds.user_id,
+            SELECT ds.id, ds.created, ds.commission, ds.currency, ds.placement, ds.converted_commission, ds.user_id, ds.is_referral_sale, ds.referral_user_id,
                    ap.slug, ap.product_name, ap.product_image, ab.name AS brand_name, COUNT(sp.id) AS clicks, pu.name
             FROM dashboard_sale ds
             LEFT OUTER JOIN profile_user pu ON pu.id = ds.user_id
@@ -101,14 +106,26 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
         if sale.product_image:
             product_image = get_thumbnail(ImageField().to_python(sale.product_image), '50', crop='noop').url
 
+        product_link = None
+        if sale.slug:
+            product_link = reverse('product-detail', args=[sale.slug])
+
+        apprl_commission = sale.converted_commission if sale.user_id == 0 else sale.converted_commission - sale.commission
+        referral_user = None
+        if sale.is_referral_sale:
+            referral_user = get_user_model().objects.get(pk=sale.referral_user_id)
+            apprl_commission = decimal.Decimal('0')
+
         temp = {
+            'is_referral_sale': sale.is_referral_sale,
+            'referral_user': referral_user,
             'link': map_placement(sale.placement),
             'commission': 0 if sale.user_id == 0 else sale.commission,
-            'apprl_commission': sale.converted_commission if sale.user_id == 0 else sale.converted_commission - sale.commission,
+            'apprl_commission': apprl_commission,
             'currency': sale.currency,
             'created': sale.created,
             'product_image': product_image,
-            'product_link': reverse('product-detail', args=[sale.slug]),
+            'product_link': product_link,
             'product': '%s %s' % (sale.brand_name, sale.product_name) if sale.product_name else _('Unknown'),
             'clicks': sale.clicks,
             'sales': 0,
@@ -255,7 +272,7 @@ def dashboard(request, year=None, month=None):
         # Commission per month
         data_per_day = {}
         for day in range(1, (end_date - start_date).days + 2):
-            data_per_day[start_date.replace(day=day)] = [0, 0]
+            data_per_day[start_date.replace(day=day)] = [0, 0, 0]
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
@@ -264,8 +281,11 @@ def dashboard(request, year=None, month=None):
                                 .filter(created__range=(start_date_query, end_date_query)) \
                                 .filter(user_id=request.user.pk) \
                                 .order_by('created') \
-                                .values('created', 'commission'):
-            data_per_day[sale['created'].date()][0] += sale['commission']
+                                .values('created', 'commission', 'is_referral_sale'):
+            if sale['is_referral_sale']:
+                data_per_day[sale['created'].date()][2] += sale['commission']
+            else:
+                data_per_day[sale['created'].date()][0] += sale['commission']
 
         # Clicks
         clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
@@ -323,7 +343,7 @@ def dashboard(request, year=None, month=None):
                                                             'total_sales': sales_total,
                                                             'total_confirmed': sales_confirmed,
                                                             'pending_payment': pending_payment,
-                                                            'month_commission': sum([x[0] for x in data_per_day.values()]),
+                                                            'month_commission': sum([x[0]+x[2] for x in data_per_day.values()]),
                                                             'month_clicks': month_clicks,
                                                             'month_sales': month_sales,
                                                             'month_conversion_rate': conversion_rate,

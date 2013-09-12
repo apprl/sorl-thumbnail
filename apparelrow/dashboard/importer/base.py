@@ -76,25 +76,52 @@ class BaseImporter:
 
         return data
 
+    def _get_user_and_cuts(self, data):
+        user = None
+        try:
+            user = get_user_model().objects.get(pk=data['user_id'])
+            if user.partner_group:
+                try:
+                    cuts = user.partner_group.cuts.get(vendor=data['vendor'])
+                    logger.debug('Using non-default cut for user %s: %s' % (user, cuts))
+                    return user, cuts.cut, cuts.referral_cut
+                except:
+                    pass
+        except get_user_model().DoesNotExist():
+            pass
+
+        return user, decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT), decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+
     def calculate_cut(self, data):
         if 'user_id' in data and data['user_id']:
             logger.debug('Running calculate cut for user id: %s' % (data['user_id'],))
-            cut = settings.APPAREL_DASHBOARD_CUT_DEFAULT
-            profile = get_user_model().objects.filter(pk=data['user_id'])
-            if profile:
-                profile = profile[0]
-                if profile.partner_group:
-                    instance = profile.partner_group.cuts.filter(vendor=data['vendor'])
-                    if instance:
-                        cut = instance[0].cut
-                        logger.debug('Using non-default cut for profile %s: %s' % (profile, cut))
 
-            data['commission'] = decimal.Decimal(cut) * decimal.Decimal(data['commission'])
+            user, cut, referral_cut = self._get_user_and_cuts(data)
+
+            self.create_referral_sale(data, user, referral_cut)
+
+            data['commission'] = cut * decimal.Decimal(data['commission'])
             if data['currency'] != data['original_currency']:
                 data['commission'] = data['commission'] * decimal.Decimal('0.95')
 
         return data
 
+    def create_referral_sale(self, data, user, referral_cut):
+        if user and user.is_referral_parent_valid():
+            temp_data = data.copy()
+
+            temp_data['original_sale_id'] = '%s-%s' % (temp_data['original_sale_id'], user.referral_partner_parent_id)
+            temp_data['is_referral_sale'] = True
+            temp_data['referral_user'] = user
+            temp_data['user_id'] = user.referral_partner_parent_id
+
+            temp_data['commission'] = referral_cut * decimal.Decimal(temp_data['commission'])
+            if temp_data['currency'] != temp_data['original_currency']:
+                temp_data['commission'] = temp_data['commission'] * decimal.Decimal('0.95')
+
+            instance, created = get_model('dashboard', 'Sale').objects.get_or_create(original_sale_id=temp_data['original_sale_id'], defaults=temp_data)
+            if created:
+                logger.debug('Created referral sale object: %s' % (instance,))
 
     def exchange_commission(self, data, instance):
         # Do not update if the original commission value is unchanged.
