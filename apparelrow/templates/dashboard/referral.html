@@ -13,7 +13,7 @@
     <div class="col-sm-4 col-sm-offset-4">
         <div class="referral-link-container">
             <h4>{% trans "Your invitation link:" %}</h4>
-            <input type="text" class="form-control" value="{{ request.user.get_referral_domain_url }}">
+            <input onFocus="this.select()" onMouseUp="return false" type="text" class="form-control" value="{{ request.user.get_referral_domain_url }}">
             <p>{% trans "copy and share with other bloggers to get rewarded" %}</p>
         </div>
     </div>
