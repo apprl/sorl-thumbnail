@@ -10,7 +10,14 @@
 </div>
 
 <div class="row">
-    <p class="col-lg-12">{% trans "We will soon get in touch with you." %}</p>
+    <div class="col-lg-12">
+        {% if analytics_identifier == 'Publisher' %}
+        <p>{% trans "We will soon get in touch with you." %} {% trans "In the meantime, create your account:" %}</p>
+        <a class="btn btn-primary" href="{% url 'auth_register' %}">{% trans "CREATE YOUR ACCOUNT" %}</a>
+        {% else %}
+        <p>{% trans "We will soon get in touch with you." %}</p>
+        {% endif %}
+    </div>
 </div>
 <script type="text/javascript">
   var _gaq = _gaq || [];
