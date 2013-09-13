@@ -1,3 +1,5 @@
+import decimal
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
@@ -12,3 +14,22 @@ def get_referral_user_from_cookie(request):
             pass
 
     return user
+
+
+def get_cuts_for_user_and_vendor(user_id, vendor):
+    user = None
+    normal_cut = decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)
+    referral_cut = decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+    try:
+        user = get_user_model().objects.get(pk=user_id)
+        if user.partner_group:
+            try:
+                cuts = user.partner_group.cuts.get(vendor=vendor)
+                normal_cut = cuts.cut
+                referral_cut = cuts.referral_cut
+            except:
+                pass
+    except get_user_model().DoesNotExist:
+        pass
+
+    return user, normal_cut, referral_cut

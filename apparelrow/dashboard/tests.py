@@ -12,6 +12,8 @@ from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from django.core import management
 
+from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
+
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestDashboard(TransactionTestCase):
@@ -340,14 +342,23 @@ class TestDashboardCuts(TransactionTestCase):
         FXRate.objects.create(currency='SEK', base_currency='EUR', rate='8.612600')
         FXRate.objects.create(currency='EUR', base_currency='EUR', rate='1.00')
 
-    def test_default_cut(self):
-        # Create a partner user
+    def _create_partner_user(self):
         user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
         user.is_partner = True
         user.save()
 
-        # Create a sale transactions
-        store_id = 'mystore'
+        return user
+
+    def _create_transaction(self, user, store_id=None, order_value=None, order_id=None):
+        if store_id is None:
+            store_id = 'mystore'
+
+        if order_value is None:
+            order_value = '500'
+
+        if order_id is None:
+            order_id = '1234-order'
+
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = get_model('apparel', 'Vendor').objects.create(name=store_id)
         store = get_model('advertiser', 'Store').objects.create(identifier=store_id, user=store_user, commission_percentage='0.2', vendor=vendor)
@@ -355,8 +366,14 @@ class TestDashboardCuts(TransactionTestCase):
         custom = '%s-Shop' % (user.pk,)
         response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id=order_id, order_value=order_value, currency='EUR'))))
         self.assertEqual(response.status_code, 200)
+
+        return vendor, get_model('advertiser', 'Transaction').objects.get(store_id=store_id, order_id=order_id)
+
+    def test_default_cut(self):
+        user = self._create_partner_user()
+        vendor, transaction = self._create_transaction(user, order_value='500')
 
         # Import the sale transaction
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
@@ -368,22 +385,8 @@ class TestDashboardCuts(TransactionTestCase):
         self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
     def test_non_default_cut(self):
-        # Create a partner user
-        user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
-        user.is_partner = True
-        user.save()
-
-        # Create a sale transactions
-        store_id = 'mystore'
-        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
-        vendor = get_model('apparel', 'Vendor').objects.create(name=store_id)
-        store = get_model('advertiser', 'Store').objects.create(identifier=store_id, user=store_user, commission_percentage='0.2', vendor=vendor)
-        url = 'http://www.mystore.com/myproduct/'
-        custom = '%s-Shop' % (user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
-        self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
-        self.assertEqual(response.status_code, 200)
+        user = self._create_partner_user()
+        vendor, transaction = self._create_transaction(user, order_value='500')
 
         # Create group + cut for store vendor
         group = get_model('dashboard', 'Group').objects.create(name='group_name')
@@ -400,24 +403,45 @@ class TestDashboardCuts(TransactionTestCase):
         self.assertIsNotNone(sale)
         self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal('0.9'))
 
-    def test_do_not_update_after_paid_ready_status(self):
-        # Create a partner user
-        user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
-        user.is_partner = True
-        user.save()
-        payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c', user=user)
+    def test_update_cut(self):
+        user = self._create_partner_user()
+        vendor, transaction = self._create_transaction(user, order_value='500')
 
-        # Create a sale transactions
-        store_id = 'mystore'
-        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
-        vendor = get_model('apparel', 'Vendor').objects.create(name=store_id)
-        store = get_model('advertiser', 'Store').objects.create(identifier=store_id, user=store_user, commission_percentage='0.2', vendor=vendor)
-        url = 'http://www.mystore.com/myproduct/'
-        custom = '%s-Shop' % (user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
-        self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='1000', currency='EUR'))))
-        self.assertEqual(response.status_code, 200)
+        # Create group + cut for store vendor
+        group = get_model('dashboard', 'Group').objects.create(name='group_name')
+        cuts = get_model('dashboard', 'Cut').objects.create(vendor=vendor, group=group, cut='0.8')
+        user.partner_group = group
+        user.save()
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        # Verify sale transaction
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertIsNotNone(sale)
+        self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal('0.8'))
+        self.assertEqual(sale.cut, decimal.Decimal('0.8'))
+
+        # Update cut
+        cuts.cut = '0.5'
+        cuts.save()
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        # Verify sale transaction
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertIsNotNone(sale)
+        self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal('0.8'))
+        self.assertEqual(sale.cut, decimal.Decimal('0.8'))
+
+
+    def test_do_not_update_after_paid_ready_status(self):
+        user = self._create_partner_user()
+        payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c', user=user)
+        vendor, transaction = self._create_transaction(user, order_value='1000')
 
         # 1. Import the sale transaction and verify it
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
@@ -470,3 +494,38 @@ class TestDashboardCuts(TransactionTestCase):
         self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         self.assertEqual(sale.status, get_model('dashboard', 'Sale').CONFIRMED)
         self.assertEqual(sale.paid, get_model('dashboard', 'Sale').PAID_READY)
+
+
+
+
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
+class TestDashboardUtils(TransactionTestCase):
+
+    def test_cuts(self):
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+
+        user, normal_cut, referral_cut = get_cuts_for_user_and_vendor(temp_user.pk, None)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(normal_cut, decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        self.assertEqual(referral_cut, decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT))
+
+        user, normal_cut, referral_cut = get_cuts_for_user_and_vendor(20321323, None)
+
+        self.assertIsNone(user)
+        self.assertEqual(normal_cut, decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        self.assertEqual(referral_cut, decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT))
+
+    def test_custom_cuts(self):
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='vendor_name')
+        group = get_model('dashboard', 'Group').objects.create(name='group_name')
+        cuts = get_model('dashboard', 'Cut').objects.create(vendor=vendor, group=group, cut='0.5', referral_cut='0.3')
+        temp_user.partner_group = group
+        temp_user.save()
+
+        user, normal_cut, referral_cut = get_cuts_for_user_and_vendor(temp_user.pk, vendor)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(normal_cut, decimal.Decimal('0.5'))
+        self.assertEqual(referral_cut, decimal.Decimal('0.3'))

@@ -53,6 +53,7 @@ class Sale(models.Model):
     adjusted = models.BooleanField(null=False, blank=False, default=False)
     adjusted_date = models.DateTimeField(default=None, null=True, blank=True)
 
+    cut = models.DecimalField(null=False, blank=False, default='1.0', max_digits=10, decimal_places=3)
     exchange_rate = models.DecimalField(null=False, blank=False, default='1', max_digits=10, decimal_places=6)
     converted_amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Converted sale amount'))
     converted_commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Converted sale commission'))

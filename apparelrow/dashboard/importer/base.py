@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from fuzzywuzzy import process
 
+from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
 from apparelrow.dashboard.models import Sale
 from apparelrow.apparel.utils import currency_exchange, parse_sid
 
@@ -70,36 +71,24 @@ class BaseImporter:
             except Sale.DoesNotExist:
                 pass
 
-        update, data = self.exchange_commission(data, instance)
-        if update:
-            data = self.calculate_cut(data)
+        data = self.exchange_commission(data, instance)
+        data = self.calculate_cut(data, instance)
 
         return data
 
-    def _get_user_and_cuts(self, data):
-        user = None
-        try:
-            user = get_user_model().objects.get(pk=data['user_id'])
-            if user.partner_group:
-                try:
-                    cuts = user.partner_group.cuts.get(vendor=data['vendor'])
-                    logger.debug('Using non-default cut for user %s: %s' % (user, cuts))
-                    return user, cuts.cut, cuts.referral_cut
-                except:
-                    pass
-        except get_user_model().DoesNotExist():
-            pass
-
-        return user, decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT), decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
-
-    def calculate_cut(self, data):
+    def calculate_cut(self, data, instance):
         if 'user_id' in data and data['user_id']:
+            print data
             logger.debug('Running calculate cut for user id: %s' % (data['user_id'],))
 
-            user, cut, referral_cut = self._get_user_and_cuts(data)
+            user, cut, referral_cut = get_cuts_for_user_and_vendor(data['user_id'], data['vendor'])
 
             self.create_referral_sale(data, user, referral_cut)
 
+            if instance and instance.cut:
+                cut = instance.cut
+
+            data['cut'] = cut
             data['commission'] = cut * decimal.Decimal(data['commission'])
             if data['currency'] != data['original_currency']:
                 data['commission'] = data['commission'] * decimal.Decimal('0.95')
@@ -120,15 +109,12 @@ class BaseImporter:
                 temp_data['commission'] = temp_data['commission'] * decimal.Decimal('0.95')
 
             instance, created = get_model('dashboard', 'Sale').objects.get_or_create(original_sale_id=temp_data['original_sale_id'], defaults=temp_data)
+            print 'to many times', created
             if created:
                 logger.debug('Created referral sale object: %s' % (instance,))
 
     def exchange_commission(self, data, instance):
-        # Do not update if the original commission value is unchanged.
-        if instance is not None and data['original_commission'] == instance.original_commission:
-            return False, data
-
-        # Use saved exchange rate if we need to update
+        # Use saved exchange rate
         if instance and instance.exchange_rate:
             exchange_rate = instance.exchange_rate
         else:
@@ -141,7 +127,7 @@ class BaseImporter:
         data['amount'] = exchange_rate * data['original_amount']
         data['currency'] = 'EUR'
 
-        return True, data
+        return data
 
     def map_vendor(self, vendor_string):
         if vendor_string:
