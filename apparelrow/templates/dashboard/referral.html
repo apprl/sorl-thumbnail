@@ -26,11 +26,14 @@
     <li>{% trans "During these 6 months, you will make half the amount the bloggers you have invited make on every sale. For example, if they make €20 on one sale, you make €10." %}</li>
 </ol>
 
+<br>
 <p><strong>{% trans "So far these have successfully signed up via your invitation link:" %}</strong></p>
 {% if referrals %}
 <ul class="list-unstyled">
     {% for referral in referrals %}
-    <li><a href="{{ referral.get_absolute_url }}">{{ referral.display_name }}</a> {{ referral.referral_partner_parent_date }}</li>
+    <li><a href="{{ referral.get_absolute_url }}">{{ referral.display_name }}</a> - {% blocktrans with date_joined=referral.date_joined|date:"d F Y" referral_end=referral.referral_partner_parent_date|date:"d F Y" %}Signed up {{date_joined}}, your referral period ends {{referral_end}}{% endblocktrans %}</li>
+    {% empty %}
+    <li>{% trans "None so far." %}</li>
     {% endfor %}
 </ul>
 {% endif %}

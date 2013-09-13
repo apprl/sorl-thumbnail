@@ -275,30 +275,8 @@ def dashboard(request, year=None, month=None):
         end_date = start_date
         end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
 
-        # Commission per month
-        data_per_day = {}
-        for day in range(1, (end_date - start_date).days + 2):
-            data_per_day[start_date.replace(day=day)] = [0, 0, 0]
-
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
-
-        for sale in Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
-                                .filter(created__range=(start_date_query, end_date_query)) \
-                                .filter(user_id=request.user.pk) \
-                                .order_by('created') \
-                                .values('created', 'commission', 'is_referral_sale'):
-            if sale['is_referral_sale']:
-                data_per_day[sale['created'].date()][2] += sale['commission']
-            else:
-                data_per_day[sale['created'].date()][0] += sale['commission']
-
-        # Clicks
-        clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
-                                                               .filter(user_id=request.user.pk) \
-                                                               .values_list('created', flat=True)
-        for click in clicks:
-            data_per_day[click.date()][1] += 1
 
         # Enumerate months
         dt1 = request.user.date_joined.date()
@@ -334,12 +312,35 @@ def dashboard(request, year=None, month=None):
         # Most clicked products
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, user_id=request.user.pk)
 
+        # Sales count
+        sales_count = 0
+        referral_sales_count = 0
+
+        # Sales and commission per day
+        data_per_day = {}
+        for day in range(1, (end_date - start_date).days + 2):
+            data_per_day[start_date.replace(day=day)] = [0, 0, 0]
+
+        for sale in sales:
+            if sale['is_referral_sale']:
+                data_per_day[sale['created'].date()][2] += sale['commission']
+                referral_sales_count += 1
+            else:
+                data_per_day[sale['created'].date()][0] += sale['commission']
+                sales_count += 1
+
+        # Clicks per day
+        clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
+                                                               .filter(user_id=request.user.pk) \
+                                                               .values_list('created', flat=True)
+        for click in clicks:
+            data_per_day[click.date()][1] += 1
+
         # Conversion rate
         conversion_rate = 0
         month_clicks = sum([x[1] for x in data_per_day.values()])
-        month_sales = len(sales)
         if month_clicks > 0:
-            conversion_rate = decimal.Decimal(month_sales) / decimal.Decimal(month_clicks)
+            conversion_rate = decimal.Decimal(sales_count) / decimal.Decimal(month_clicks)
             conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
 
         # Enable sales listing after 2013-06-01 00:00:00
@@ -349,9 +350,9 @@ def dashboard(request, year=None, month=None):
                                                             'total_sales': sales_total,
                                                             'total_confirmed': sales_confirmed,
                                                             'pending_payment': pending_payment,
-                                                            'month_commission': sum([x[0]+x[2] for x in data_per_day.values()]),
+                                                            'month_commission': sum([x[0] for x in data_per_day.values()]),
                                                             'month_clicks': month_clicks,
-                                                            'month_sales': month_sales,
+                                                            'month_sales': sales_count,
                                                             'month_conversion_rate': conversion_rate,
                                                             'dates': dates,
                                                             'year': year,
@@ -360,6 +361,8 @@ def dashboard(request, year=None, month=None):
                                                             'is_after_june': is_after_june,
                                                             'most_sold_products': most_sold_products,
                                                             'most_clicked_products': most_clicked_products,
+                                                            'referral_sales': referral_sales_count,
+                                                            'referral_commission': sum([x[2] for x in data_per_day.values()]),
                                                             'currency': 'EUR'})
 
 

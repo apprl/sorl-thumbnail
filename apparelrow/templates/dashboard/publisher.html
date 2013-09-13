@@ -28,6 +28,20 @@
             var left = data.getColumnRange(1);
             var right = data.getColumnRange(2);
             var view = new google.visualization.DataView(data);
+
+            {% if request.user.referral_partner %}
+            var series = {
+                    0: {targetAxisIndex: 0},
+                    1: {targetAxisIndex: 0, color: '#ff9900'},
+                    2: {targetAxisIndex: 1, color: '#dc3912'}
+                };
+            {% else %}
+            var series = {
+                    0: {targetAxisIndex: 0},
+                    1: {targetAxisIndex: 1, color: '#dc3912'}
+                };
+            view.setColumns([0, 1, 3]);
+            {% endif %}
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
                 containerId: 'graph',
@@ -49,11 +63,7 @@
                             titleTextStyle: {color: '#dc3912'}
                         }
                     },
-                    series: {
-                        0: {targetAxisIndex: 0},
-                        1: {targetAxisIndex: 0, color: '#ff9900'},
-                        2: {targetAxisIndex: 1, color: '#dc3912'}
-                    }
+                    series: series
                 }
             });
             chart.draw();
@@ -78,8 +88,8 @@
 
     <div class="row subnav-page">
         <div class="col-sm-3">{% trans "Your commission: " %}<strong>{{ total_sales }} {{ currency }}</strong></div>
-        <div class="col-sm-3">{% trans "Confirmed commission: " %}<strong>{{ total_confirmed }} {{ currency }}</strong></div>
-        <div class="col-sm-3">{% trans "Pending payment: " %}<strong>{{ pending_payment }} {{ currency }}</strong></div>
+        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Confirmed commission: " %}<strong>{{ total_confirmed }} {{ currency }}</strong></div>
+        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Pending payment: " %}<strong>{{ pending_payment }} {{ currency }}</strong></div>
         <div class="col-sm-3"><a data-toggle="modal" href="#modal_publisher_info">{% trans "How payments work" %}</a></div>
     </div>
 
@@ -95,17 +105,33 @@
                     </select>
                 </label>
                 </li>
+            </ul>
+            <ul class="list-inline monthly-list">
                 <li>{% blocktrans %}Your commission: {{ month_commission }} {{ currency }}{% endblocktrans %}</li>
                 <li>{% blocktrans %}Clicks: {{month_clicks}}{% endblocktrans %}</li>
                 <li>{% blocktrans %}Sales: {{month_sales}}{% endblocktrans %}</li>
                 <li>{% blocktrans with conversion_rate=month_conversion_rate|floatformat:2 %}Conversion rate: {{ conversion_rate }}%{% endblocktrans %}</li>
             </ul>
+            {% if request.user.referral_partner %}
+            <ul class="list-inline monthly-list">
+                <li>{% blocktrans %}Referral commission: {{ referral_commission }} {{ currency }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Sales: {{referral_sales}}{% endblocktrans %}</li>
+            </ul>
+            {% endif %}
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12">
             <div id="graph" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            {% if request.user.referral_partner %}
+            <a class="btn btn-primary btn-uppercase" href="{% url 'dashboard-referral' %}">{% trans "Earn money by inviting other bloggers" %}</a>
+            {% endif %}
         </div>
     </div>
 
@@ -188,13 +214,13 @@
 
                         {% if sale.is_referral_sale %}
                         <td><a href="{{ sale.referral_user.get_absolute_url }}"><img src="{{ sale.referral_user.avatar_small }}"></a></td>
-                        <td class="hidden-xs"><a href="{{ sale.referral_user.get_absolute_url }}">{{ sale.referral_user.display_name }}</a></td>
+                        <td class="hidden-xs">{% trans "Referral sale by" %} <a href="{{ sale.referral_user.get_absolute_url }}">{{ sale.referral_user.display_name }}</a></td>
                         <td>{% trans "Referral" %}</td>
                         <td class="center"></td>
                         {% elif sale.is_promo %}
                         <td></td>
                         <td class="hidden-xs"></td>
-                        <td>{% trans "Referral promo" %}</td>
+                        <td>{% trans "Welcome to APPRL" %}</td>
                         <td class="center"></td>
                         {% else %}
                         <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
