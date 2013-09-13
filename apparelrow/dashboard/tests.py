@@ -60,7 +60,7 @@ class TestDashboard(TransactionTestCase):
         referral_url = referral_user.get_referral_url()
         self.assertRegexpMatches(referral_url, r'\/i\/\w{4,16}')
 
-        response = self.client.get(referral_url)
+        response = self.client.get(referral_url, follow=True)
         self.assertRedirects(response, reverse('index-publisher'))
         self.assertIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
@@ -82,9 +82,51 @@ class TestDashboard(TransactionTestCase):
         referral_user.referral_partner = False
         referral_user.save()
 
-        response = self.client.get(referral_url)
+        response = self.client.get(referral_url, follow=True)
         self.assertRedirects(response, reverse('index-publisher'))
         self.assertNotIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
+
+    def test_publisher_signup_from_referral_link(self):
+        referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
+        referral_user.referral_partner = True
+        referral_user.is_partner = True
+        referral_user.save()
+
+        normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+
+        response = self.client.get(referral_user.get_referral_url(), follow=True)
+        response = self.client.post(reverse('index-publisher'), {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
+
+        instance = get_model('dashboard', 'Signup').objects.get()
+        self.assertEqual(instance.name, 'test')
+        self.assertEqual(instance.email, 'test@test.com')
+        self.assertEqual(instance.blog, 'blog')
+        self.assertEqual(instance.store, False)
+        self.assertEqual(instance.referral_user, referral_user)
+
+        self.assertEqual(len(mail.outbox), 3)
+
+    def test_publisher_signup_from_referral_link_already_authenticated(self):
+        referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
+        referral_user.referral_partner = True
+        referral_user.is_partner = True
+        referral_user.save()
+
+        normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+
+        response = self.client.get(referral_user.get_referral_url(), follow=True)
+        response = self.client.post(reverse('index-publisher'), {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
+
+        instance = get_model('dashboard', 'Signup').objects.get()
+        self.assertEqual(instance.name, 'test')
+        self.assertEqual(instance.email, 'test@test.com')
+        self.assertEqual(instance.blog, 'blog')
+        self.assertEqual(instance.store, False)
+        self.assertEqual(instance.referral_user, referral_user)
+
+        self.assertEqual(len(mail.outbox), 3)
 
     def test_signup_from_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
@@ -93,7 +135,7 @@ class TestDashboard(TransactionTestCase):
         referral_user.save()
 
         # Visit referral URL
-        response = self.client.get(referral_user.get_referral_url())
+        response = self.client.get(referral_user.get_referral_url(), follow=True)
         self.assertRedirects(response, reverse('index-publisher'))
 
         # Register by email
@@ -137,7 +179,7 @@ class TestDashboard(TransactionTestCase):
         referral_user.save()
 
         # Visit referral URL
-        response = self.client.get(referral_user.get_referral_url())
+        response = self.client.get(referral_user.get_referral_url(), follow=True)
         self.assertRedirects(response, reverse('index-publisher'))
 
         referral_user.referral_partner = False
@@ -170,7 +212,7 @@ class TestDashboard(TransactionTestCase):
         referral_user.save()
 
         # Visit referral URL, register by email and activate account
-        response = self.client.get(referral_user.get_referral_url())
+        response = self.client.get(referral_user.get_referral_url(), follow=True)
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
                                                                      'last_name': 'svensson',
                                                                      'username': 'test',
@@ -202,7 +244,7 @@ class TestDashboard(TransactionTestCase):
         another_user.is_partner = True
         another_user.save()
 
-        response = self.client.get(another_user.get_referral_url())
+        response = self.client.get(another_user.get_referral_url(), follow=True)
         response = self.client.get('/')
 
         registered_user = get_user_model().objects.get(email='test@xvid.se')
@@ -219,7 +261,7 @@ class TestDashboard(TransactionTestCase):
         referral_user.save()
 
         # Visit referral URL, register by email and activate account
-        response = self.client.get(referral_user.get_referral_url())
+        response = self.client.get(referral_user.get_referral_url(), follow=True)
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
                                                                      'last_name': 'svensson',
                                                                      'username': 'test',

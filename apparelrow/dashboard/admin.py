@@ -48,6 +48,7 @@ admin.site.register(Cut, CutAdmin)
 admin.site.register(Group)
 
 class SignupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'blog', 'store', 'created')
+    list_display = ('name', 'email', 'blog', 'store', 'referral_user', 'created')
+    raw_id_fields = ('referral_user',)
 
 admin.site.register(Signup, SignupAdmin)

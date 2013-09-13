@@ -11,11 +11,13 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
+from apparelrow.dashboard.utils import get_referral_user_from_cookie
 from apparelrow.profile.tasks import mail_managers_task
 
 def map_placement(placement):
@@ -440,12 +442,25 @@ def index(request):
         if form.is_valid():
             # Save name and blog URL on session, for Google Analytics
             request.session['index_complete_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
-            form.save()
+            instance = form.save(commit=False)
+            instance.referral_user = get_referral_user_from_cookie(request)
+            instance.save()
 
-            mail_managers_task.delay('New publisher signup: %s' % (form.cleaned_data['name'],),
-                    'Name: %s\nEmail: %s\nBlog: %s' % (form.cleaned_data['name'],
-                                                       form.cleaned_data['email'],
-                                                       form.cleaned_data['blog']))
+            if instance.referral_user:
+                site_object = Site.objects.get_current()
+                referral_user_url = 'http://%s%s' % (site_object.domain, instance.referral_user.get_absolute_url())
+
+                mail_managers_task.delay('New publisher signup by referral: %s' % (form.cleaned_data['name'],),
+                        'Name: %s\nEmail: %s\nBlog: %s\nReferral User: %s - %s\n' % (form.cleaned_data['name'],
+                                                           form.cleaned_data['email'],
+                                                           form.cleaned_data['blog'],
+                                                           instance.referral_user.display_name,
+                                                           referral_user_url))
+            else:
+                mail_managers_task.delay('New publisher signup: %s' % (form.cleaned_data['name'],),
+                        'Name: %s\nEmail: %s\nBlog: %s' % (form.cleaned_data['name'],
+                                                           form.cleaned_data['email'],
+                                                           form.cleaned_data['blog']))
 
             return HttpResponseRedirect(reverse('index-dashboard-complete'))
     else:
