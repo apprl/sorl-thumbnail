@@ -400,58 +400,73 @@ class TestDashboardCuts(TransactionTestCase):
         self.assertIsNotNone(sale)
         self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal('0.9'))
 
-    #def test_do_not_update_after_paid_ready_status(self):
-        ## Create a partner user
-        #user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
-        #user.is_partner = True
-        #user.save()
-        #payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c', user=user)
+    def test_do_not_update_after_paid_ready_status(self):
+        # Create a partner user
+        user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        user.is_partner = True
+        user.save()
+        payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c', user=user)
 
-        ## Create a sale transactions
-        #store_id = 'mystore'
-        #store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
-        #vendor = get_model('apparel', 'Vendor').objects.create(name=store_id)
-        #store = get_model('advertiser', 'Store').objects.create(identifier=store_id, user=store_user, commission_percentage='0.2', vendor=vendor)
-        #url = 'http://www.mystore.com/myproduct/'
-        #custom = '%s-Shop' % (user.pk,)
-        #response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
-        #self.assertEqual(response.status_code, 302)
-        #response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='1000', currency='EUR'))))
-        #self.assertEqual(response.status_code, 200)
+        # Create a sale transactions
+        store_id = 'mystore'
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name=store_id)
+        store = get_model('advertiser', 'Store').objects.create(identifier=store_id, user=store_user, commission_percentage='0.2', vendor=vendor)
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='1000', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
 
-        ## Import the sale transaction
-        #management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+        # 1. Import the sale transaction and verify it
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
+        self.assertEqual(sale.paid, get_model('dashboard', 'Sale').PAID_PENDING)
 
-        ## Verify sale transaction
-        #self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
-        #sale = get_model('dashboard', 'Sale').objects.get()
-        #self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        # Set transaction as accepted
+        transaction = get_model('advertiser', 'Transaction').objects.get()
+        transaction.status = get_model('advertiser', 'Transaction').ACCEPTED
+        transaction.save()
 
-        #transaction = get_model('advertiser', 'Transaction').objects.get()
-        #transaction.status = get_model('advertiser', 'Transaction').ACCEPTED
-        #transaction.save()
+        # 2. Import the sale transaction again and verify it
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').CONFIRMED)
+        self.assertEqual(sale.paid, get_model('dashboard', 'Sale').PAID_PENDING)
 
-        ## Import again
-        #management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+        # Update commission after the sale transaction has been marked as ready for payment
+        transaction = get_model('advertiser', 'Transaction').objects.get()
+        transaction.order_value = decimal.Decimal('2000')
+        transaction.commission = decimal.Decimal('400')
+        transaction.save()
 
-        ## Verify sale transaction
-        #self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
-        #sale = get_model('dashboard', 'Sale').objects.get()
-        #self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        # 3. Import the sale transaction again and verify it
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').CONFIRMED)
+        self.assertEqual(sale.paid, get_model('dashboard', 'Sale').PAID_PENDING)
 
-        ## Ready payments
-        #management.call_command('dashboard_payment', verbosity=0, interactive=False)
+        # Ready payments
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
 
-        ## Update commission after the sale transaction has been marked as ready for payment
-        #transaction = get_model('advertiser', 'Transaction').objects.get()
-        #transaction.order_value = decimal.Decimal('500')
-        #transaction.commission = decimal.Decimal('100')
-        #transaction.save()
+        # Update commission after the sale transaction has been marked as ready for payment
+        transaction = get_model('advertiser', 'Transaction').objects.get()
+        transaction.order_value = decimal.Decimal('500')
+        transaction.commission = decimal.Decimal('100')
+        transaction.save()
 
-        ## Import again
-        #management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
-
-        ## Verify that sale transaction is not updated
-        #self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
-        #sale = get_model('dashboard', 'Sale').objects.get()
-        #self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        # 4. Import the sale transaction again and verify it
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').CONFIRMED)
+        self.assertEqual(sale.paid, get_model('dashboard', 'Sale').PAID_READY)
