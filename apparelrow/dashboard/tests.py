@@ -158,7 +158,6 @@ class TestDashboard(TransactionTestCase):
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
         self.assertIsNone(registered_user.referral_partner_parent_date)
-        self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
 
         # Admin goes in and mark the user as partner which in turn sets the
         # parent date and adds 20 EUR to the account
@@ -202,7 +201,6 @@ class TestDashboard(TransactionTestCase):
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertIsNone(registered_user.referral_partner_parent)
         self.assertIsNone(registered_user.referral_partner_parent_date)
-        self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
 
         # Invalid referral link should not result in a promo sale of 20 EUR
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 0)
@@ -229,11 +227,6 @@ class TestDashboard(TransactionTestCase):
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
         self.assertIsNone(registered_user.referral_partner_parent_date)
-        self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
-
-        # Must delete cookie manually because the test suite does not remove
-        # invalid cookies like a browser
-        del response.client.cookies[settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME]
 
         # Admin goes in and mark the user as partner which in turn sets the parent date
         registered_user.is_partner = True
@@ -252,7 +245,6 @@ class TestDashboard(TransactionTestCase):
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
         self.assertIsNotNone(registered_user.referral_partner_parent_date)
-        self.assertEqual(response.client.cookies.get(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME).value, '')
 
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
 

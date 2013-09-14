@@ -13,6 +13,4 @@ class ReferralMiddleware(object):
                     request.user.referral_partner_parent = user
                     request.user.save()
 
-            response.delete_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME)
-
         return response
