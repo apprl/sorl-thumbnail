@@ -466,4 +466,6 @@ def index(request):
     else:
         form = SignupForm()
 
-    return render(request, 'dashboard/index.html', {'form': form})
+    referral_user = get_referral_user_from_cookie(request)
+
+    return render(request, 'dashboard/index.html', {'form': form, 'referral_user': referral_user})

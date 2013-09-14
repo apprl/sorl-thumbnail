@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-13 17:41+0200\n"
+"POT-Creation-Date: 2013-09-14 19:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,14 +53,14 @@ msgstr ""
 #: activity_feed/models.py:93 activity_feed/models.py:152
 #: apparel/models.py:390 apparel/models.py:711 apparel/models.py:920
 #: apparel/models.py:935 apparel/models.py:1115 apparel/models.py:1149
-#: dashboard/models.py:73 dashboard/models.py:97 dashboard/models.py:135
+#: dashboard/models.py:74 dashboard/models.py:98 dashboard/models.py:137
 #: profile/models.py:396 statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
 msgstr ""
 
 #: activity_feed/models.py:94 apparel/models.py:225 apparel/models.py:391
 #: apparel/models.py:458 apparel/models.py:509 apparel/models.py:712
-#: apparel/models.py:936 dashboard/models.py:74 dashboard/models.py:98
+#: apparel/models.py:936 dashboard/models.py:75 dashboard/models.py:99
 #: profile/models.py:397
 msgid "Time modified"
 msgstr ""
@@ -308,7 +308,7 @@ msgid "Original currency"
 msgstr ""
 
 #: apparel/models.py:547 apparel/models.py:549 apparel/models.py:551
-#: dashboard/models.py:61 dashboard/models.py:94
+#: dashboard/models.py:62 dashboard/models.py:95
 msgid "Currency as three-letter ISO code"
 msgstr ""
 
@@ -430,83 +430,83 @@ msgstr ""
 msgid "E-mail address"
 msgstr ""
 
-#: dashboard/models.py:57
+#: dashboard/models.py:58
 msgid "Converted sale amount"
 msgstr ""
 
-#: dashboard/models.py:58
+#: dashboard/models.py:59
 msgid "Converted sale commission"
 msgstr ""
 
-#: dashboard/models.py:59 dashboard/models.py:93
+#: dashboard/models.py:60 dashboard/models.py:94
 msgid "Sale amount"
 msgstr ""
 
-#: dashboard/models.py:60
+#: dashboard/models.py:61
 msgid "Sale commission"
 msgstr ""
 
-#: dashboard/models.py:62
+#: dashboard/models.py:63
 msgid "Original sale amount"
 msgstr ""
 
-#: dashboard/models.py:63
+#: dashboard/models.py:64
 msgid "Original sale commission"
 msgstr ""
 
-#: dashboard/models.py:64
+#: dashboard/models.py:65
 msgid "Original currency as three-letter ISO code"
 msgstr ""
 
-#: dashboard/models.py:72
+#: dashboard/models.py:73
 msgid "Time of sale"
 msgstr ""
 
-#: dashboard/models.py:131 profile/forms.py:27
+#: dashboard/models.py:132 profile/forms.py:27
 msgid "Your name"
 msgstr ""
 
-#: dashboard/models.py:132
+#: dashboard/models.py:133
 msgid "E-mail"
 msgstr ""
 
-#: dashboard/models.py:133
+#: dashboard/models.py:134
 msgid "Blog URL"
 msgstr ""
 
-#: dashboard/views.py:22 dashboard/views.py:72 dashboard/views.py:135
+#: dashboard/views.py:24 dashboard/views.py:74 dashboard/views.py:137
 msgid "Unknown"
 msgstr ""
 
-#: dashboard/views.py:24
+#: dashboard/views.py:26
 msgid "Shop on your site"
 msgstr ""
 
-#: dashboard/views.py:26
+#: dashboard/views.py:28
 msgid "Look on your site"
 msgstr ""
 
-#: dashboard/views.py:28
+#: dashboard/views.py:30
 msgid "Product link on your site"
 msgstr ""
 
-#: dashboard/views.py:30
+#: dashboard/views.py:32
 msgid "Look on Apprl.com"
 msgstr ""
 
-#: dashboard/views.py:32
+#: dashboard/views.py:34
 msgid "Shop on Apprl.com"
 msgstr ""
 
-#: dashboard/views.py:34
+#: dashboard/views.py:36
 msgid "Feed on Apprl.com"
 msgstr ""
 
-#: dashboard/views.py:36
+#: dashboard/views.py:38
 msgid "Your profile on Apprl.com"
 msgstr ""
 
-#: dashboard/views.py:38
+#: dashboard/views.py:40
 msgid "Product page"
 msgstr ""
 
@@ -568,7 +568,7 @@ msgid "Message"
 msgstr ""
 
 #: importer/models.py:129 templates/dashboard/admin.html:159
-#: templates/dashboard/publisher.html:184
+#: templates/dashboard/publisher.html:202
 msgid "Date"
 msgstr ""
 
@@ -1156,8 +1156,8 @@ msgstr ""
 #: templates/advertiser/modal_accept.html:12
 #: templates/advertiser/modal_reject.html:12
 #: templates/advertiser/store_admin.html:81
-#: templates/dashboard/publisher.html:15 templates/dashboard/publisher.html:40
-#: templates/dashboard/publisher.html:189
+#: templates/dashboard/publisher.html:15 templates/dashboard/publisher.html:54
+#: templates/dashboard/publisher.html:207
 msgid "Commission"
 msgstr ""
 
@@ -1195,9 +1195,9 @@ msgstr ""
 
 #: templates/advertiser/store_admin.html:15 templates/dashboard/admin.html:107
 #: templates/dashboard/admin.html.py:164 templates/dashboard/publisher.html:17
-#: templates/dashboard/publisher.html:47
-#: templates/dashboard/publisher.html:130
-#: templates/dashboard/publisher.html:188
+#: templates/dashboard/publisher.html:61
+#: templates/dashboard/publisher.html:148
+#: templates/dashboard/publisher.html:206
 msgid "Clicks"
 msgstr ""
 
@@ -1785,7 +1785,7 @@ msgstr ""
 msgid "Apply and we'll get in touch with you:"
 msgstr ""
 
-#: templates/apparel/store.html:46 templates/dashboard/index.html:45
+#: templates/apparel/store.html:46 templates/dashboard/index.html:48
 msgid "APPLY"
 msgstr ""
 
@@ -2057,29 +2057,29 @@ msgstr ""
 msgid "Apprl click %(click_apprl)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:101 templates/dashboard/publisher.html:124
+#: templates/dashboard/admin.html:101 templates/dashboard/publisher.html:142
 msgid "Most clicked products"
 msgstr ""
 
 #: templates/dashboard/admin.html:105 templates/dashboard/admin.html.py:131
-#: templates/dashboard/admin.html:160 templates/dashboard/publisher.html:128
-#: templates/dashboard/publisher.html:155
-#: templates/dashboard/publisher.html:185
+#: templates/dashboard/admin.html:160 templates/dashboard/publisher.html:146
+#: templates/dashboard/publisher.html:173
+#: templates/dashboard/publisher.html:203
 msgid "Product"
 msgstr ""
 
 #: templates/dashboard/admin.html:119 templates/dashboard/admin.html.py:145
-#: templates/dashboard/admin.html:193 templates/dashboard/publisher.html:142
-#: templates/dashboard/publisher.html:169
-#: templates/dashboard/publisher.html:218
+#: templates/dashboard/admin.html:193 templates/dashboard/publisher.html:160
+#: templates/dashboard/publisher.html:187
+#: templates/dashboard/publisher.html:236
 msgid "No sales yet."
 msgstr ""
 
-#: templates/dashboard/admin.html:127 templates/dashboard/publisher.html:151
+#: templates/dashboard/admin.html:127 templates/dashboard/publisher.html:169
 msgid "Generated most sales"
 msgstr ""
 
-#: templates/dashboard/admin.html:133 templates/dashboard/publisher.html:157
+#: templates/dashboard/admin.html:133 templates/dashboard/publisher.html:175
 msgid "Sales"
 msgstr ""
 
@@ -2091,7 +2091,7 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: templates/dashboard/admin.html:163 templates/dashboard/publisher.html:187
+#: templates/dashboard/admin.html:163 templates/dashboard/publisher.html:205
 msgid "From"
 msgstr ""
 
@@ -2103,7 +2103,7 @@ msgstr ""
 msgid "Publisher Comm"
 msgstr ""
 
-#: templates/dashboard/admin.html:178 templates/dashboard/publisher.html:200
+#: templates/dashboard/admin.html:178 templates/dashboard/publisher.html:218
 msgid "Referral"
 msgstr ""
 
@@ -2123,14 +2123,21 @@ msgstr ""
 msgid "APPRL FOR BLOGGERS & MEDIA"
 msgstr ""
 
-#: templates/dashboard/index.html:18
+#: templates/dashboard/index.html:19
+#, python-format
+msgid ""
+"You have been invited by %(name)s. Therefore we will put €20 in your Apprl "
+"account to start with if you apply below."
+msgstr ""
+
+#: templates/dashboard/index.html:21
 msgid ""
 "Apprl is an invitation-only digital service for fashion influencers, "
 "bloggers & magazines that helps you earn money on your blog/site through our "
 "tools."
 msgstr ""
 
-#: templates/dashboard/index.html:19
+#: templates/dashboard/index.html:22
 msgid "Apply for an invitation:"
 msgstr ""
 
@@ -2258,7 +2265,7 @@ msgid "You will be able to follow how much you’re making day by day."
 msgstr ""
 
 #: templates/dashboard/modal_more_info.html:5
-#: templates/dashboard/publisher.html:83
+#: templates/dashboard/publisher.html:93
 msgid "How payments work"
 msgstr ""
 
@@ -2296,76 +2303,87 @@ msgid "Let us know any questions on"
 msgstr ""
 
 #: templates/dashboard/publisher.html:16
-msgid "Referral Commission"
-msgstr ""
-
-#: templates/dashboard/publisher.html:80
-msgid "Your commission: "
-msgstr ""
-
-#: templates/dashboard/publisher.html:81
-msgid "Confirmed commission: "
-msgstr ""
-
-#: templates/dashboard/publisher.html:82
-msgid "Pending payment: "
+msgid "Referral commission"
 msgstr ""
 
 #: templates/dashboard/publisher.html:90
+msgid "Your commission: "
+msgstr ""
+
+#: templates/dashboard/publisher.html:91
+msgid "Confirmed commission: "
+msgstr ""
+
+#: templates/dashboard/publisher.html:92
+msgid "Pending payment: "
+msgstr ""
+
+#: templates/dashboard/publisher.html:100
 msgid "Show statistics for: "
 msgstr ""
 
-#: templates/dashboard/publisher.html:98
+#: templates/dashboard/publisher.html:110
 #, python-format
 msgid "Your commission: %(month_commission)s %(currency)s"
 msgstr ""
 
-#: templates/dashboard/publisher.html:99
+#: templates/dashboard/publisher.html:111
 #, python-format
 msgid "Clicks: %(month_clicks)s"
 msgstr ""
 
-#: templates/dashboard/publisher.html:100
+#: templates/dashboard/publisher.html:112
 #, python-format
 msgid "Sales: %(month_sales)s"
 msgstr ""
 
-#: templates/dashboard/publisher.html:101
+#: templates/dashboard/publisher.html:113
 #, python-format
 msgid "Conversion rate: %(conversion_rate)s%%"
 msgstr ""
 
-#: templates/dashboard/publisher.html:115 templates/dashboard/referral.html:9
+#: templates/dashboard/publisher.html:117
+#, python-format
+msgid "Referral commission: %(referral_commission)s %(currency)s"
+msgstr ""
+
+#: templates/dashboard/publisher.html:118
+#, python-format
+msgid "Referrals: %(referral_sales)s"
+msgstr ""
+
+#: templates/dashboard/publisher.html:133 templates/dashboard/referral.html:9
 msgid "Earn money by inviting other bloggers"
 msgstr ""
 
-#: templates/dashboard/publisher.html:180
+#: templates/dashboard/publisher.html:198
 msgid "Your sales"
 msgstr ""
 
-#: templates/dashboard/publisher.html:199
+#: templates/dashboard/publisher.html:217
 msgid "Referral sale by"
 msgstr ""
 
-#: templates/dashboard/publisher.html:205
+#: templates/dashboard/publisher.html:223
 msgid "Welcome to APPRL"
 msgstr ""
 
-#: templates/dashboard/publisher_complete.html:8
+#: templates/dashboard/publisher_complete.html:11
+msgid "GET AN APPRL ACCOUNT"
+msgstr ""
+
+#: templates/dashboard/publisher_complete.html:11
 msgid "Thanks for your application!"
 msgstr ""
 
-#: templates/dashboard/publisher_complete.html:15
-#: templates/dashboard/publisher_complete.html:18
+#: templates/dashboard/publisher_complete.html:19
+msgid ""
+"Thank you for the application, your next step now is to create your Apprl "
+"account."
+msgstr ""
+
+#: templates/dashboard/publisher_complete.html:22
 msgid "We will soon get in touch with you."
-msgstr ""
-
-#: templates/dashboard/publisher_complete.html:15
-msgid "In the meantime, create your account:"
-msgstr ""
-
-#: templates/dashboard/publisher_complete.html:16
-msgid "CREATE YOUR ACCOUNT"
 msgstr ""
 
 #: templates/dashboard/referral.html:10

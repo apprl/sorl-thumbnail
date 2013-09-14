@@ -13,7 +13,7 @@
             var data = new google.visualization.DataTable();
             data.addColumn('date', 'X');
             data.addColumn('number', '{% trans "Commission" %} ({{ currency }})');
-            data.addColumn('number', '{% trans "Referral Commission" %} ({{ currency }})');
+            data.addColumn('number', '{% trans "Referral commission" %} ({{ currency }})');
             data.addColumn('number', '{% trans "Clicks" %}');
             data.addRows([
             {% for sale_date, data in data_per_day.items %}
@@ -115,7 +115,7 @@
             {% if request.user.referral_partner %}
             <ul class="list-inline monthly-list">
                 <li>{% blocktrans %}Referral commission: {{ referral_commission }} {{ currency }}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Sales: {{referral_sales}}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Referrals: {{referral_sales}}{% endblocktrans %}</li>
             </ul>
             {% endif %}
         </div>

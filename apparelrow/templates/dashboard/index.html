@@ -15,6 +15,9 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="inner-content">
+                    {% if referral_user %}
+                    <div class="alert alert-warning">{% blocktrans with name=referral_user.display_name %}You have been invited by {{name}}. Therefore we will put €20 in your Apprl account to start with if you apply below.{% endblocktrans %}</div>
+                    {% endif %}
                     <p>{% trans "Apprl is an invitation-only digital service for fashion influencers, bloggers & magazines that helps you earn money on your blog/site through our tools." %}</p>
                     <p>{% trans "Apply for an invitation:" %}</p>
                     <form action="" method="post" class="form-horizontal">

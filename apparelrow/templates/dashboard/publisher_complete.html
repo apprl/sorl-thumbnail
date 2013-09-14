@@ -1,26 +1,34 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block body-classes %}index-page-complete{% endblock body-classes %}
-{% block body %}
-<div class="body-header">
-    <div class="body-header-col-full">
-        <h1>{% trans "Thanks for your application!" %}</h1>
-    </div>
-</div>
+{% block body-classes %}{% if analytics_identifier == 'Publisher' %}publisher-index-page{% else %}store-index-page{% endif %} index-page-complete{% endblock body-classes %}
+{% block full-body %}
 
-<div class="row">
-    <div class="col-lg-12">
-        {% if analytics_identifier == 'Publisher' %}
-        <p>{% trans "We will soon get in touch with you." %} {% trans "In the meantime, create your account:" %}</p>
-        <a class="btn btn-primary" href="{% url 'auth_register' %}">{% trans "CREATE YOUR ACCOUNT" %}</a>
-        {% else %}
-        <p>{% trans "We will soon get in touch with you." %}</p>
-        {% endif %}
+<div class="background">
+    <div class="container">
+        <div class="body-header">
+            <div class="body-header-col-full">
+                <h1>{% if analytics_identifier == 'Publisher' %}{% trans "GET AN APPRL ACCOUNT" %}{% else %}{% trans "Thanks for your application!" %}{% endif %}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="inner-content">
+                    {% if analytics_identifier == 'Publisher' %}
+                    <p>{% trans "Thank you for the application, your next step now is to create your Apprl account." %}</p>
+                    {% include 'registration/fragments/registration.html' %}
+                    {% else %}
+                    <p>{% trans "We will soon get in touch with you." %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_trackEvent', '{{ analytics_identifier }}', 'Signup', '{{ request.session.index_complete_info }}']);
 </script>
+
 {% endblock %}

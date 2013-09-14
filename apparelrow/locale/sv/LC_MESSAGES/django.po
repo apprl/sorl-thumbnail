@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-13 17:41+0200\n"
+"POT-Creation-Date: 2013-09-14 19:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,14 +53,14 @@ msgstr ""
 #: activity_feed/models.py:93 activity_feed/models.py:152
 #: apparel/models.py:390 apparel/models.py:711 apparel/models.py:920
 #: apparel/models.py:935 apparel/models.py:1115 apparel/models.py:1149
-#: dashboard/models.py:73 dashboard/models.py:97 dashboard/models.py:135
+#: dashboard/models.py:74 dashboard/models.py:98 dashboard/models.py:137
 #: profile/models.py:396 statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
 msgstr "Tid tillagd"
 
 #: activity_feed/models.py:94 apparel/models.py:225 apparel/models.py:391
 #: apparel/models.py:458 apparel/models.py:509 apparel/models.py:712
-#: apparel/models.py:936 dashboard/models.py:74 dashboard/models.py:98
+#: apparel/models.py:936 dashboard/models.py:75 dashboard/models.py:99
 #: profile/models.py:397
 msgid "Time modified"
 msgstr "Tid ändrad"
@@ -308,7 +308,7 @@ msgid "Original currency"
 msgstr "Ursprunglig valuta"
 
 #: apparel/models.py:547 apparel/models.py:549 apparel/models.py:551
-#: dashboard/models.py:61 dashboard/models.py:94
+#: dashboard/models.py:62 dashboard/models.py:95
 msgid "Currency as three-letter ISO code"
 msgstr "Valuta som ISO-kod (3 bokstäver, t ex SEK)"
 
@@ -430,83 +430,83 @@ msgstr "Delad till din Facebook timeline!"
 msgid "E-mail address"
 msgstr "E-postadress"
 
-#: dashboard/models.py:57
+#: dashboard/models.py:58
 msgid "Converted sale amount"
 msgstr "Konverterat säljpris"
 
-#: dashboard/models.py:58
+#: dashboard/models.py:59
 msgid "Converted sale commission"
 msgstr "Konverterad provision"
 
-#: dashboard/models.py:59 dashboard/models.py:93
+#: dashboard/models.py:60 dashboard/models.py:94
 msgid "Sale amount"
 msgstr ""
 
-#: dashboard/models.py:60
+#: dashboard/models.py:61
 msgid "Sale commission"
 msgstr ""
 
-#: dashboard/models.py:62
+#: dashboard/models.py:63
 msgid "Original sale amount"
 msgstr "Ursprungligt säljpris"
 
-#: dashboard/models.py:63
+#: dashboard/models.py:64
 msgid "Original sale commission"
 msgstr "Ursprungligt provision"
 
-#: dashboard/models.py:64
+#: dashboard/models.py:65
 msgid "Original currency as three-letter ISO code"
 msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: dashboard/models.py:72
+#: dashboard/models.py:73
 msgid "Time of sale"
 msgstr "Tid för köp"
 
-#: dashboard/models.py:131 profile/forms.py:27
+#: dashboard/models.py:132 profile/forms.py:27
 msgid "Your name"
 msgstr "Ditt namn"
 
-#: dashboard/models.py:132
+#: dashboard/models.py:133
 msgid "E-mail"
 msgstr "E-postadress"
 
-#: dashboard/models.py:133
+#: dashboard/models.py:134
 msgid "Blog URL"
 msgstr "Blogg-URL"
 
-#: dashboard/views.py:22 dashboard/views.py:72 dashboard/views.py:135
+#: dashboard/views.py:24 dashboard/views.py:74 dashboard/views.py:137
 msgid "Unknown"
 msgstr "Okänt"
 
-#: dashboard/views.py:24
+#: dashboard/views.py:26
 msgid "Shop on your site"
 msgstr "Shop på din site"
 
-#: dashboard/views.py:26
+#: dashboard/views.py:28
 msgid "Look on your site"
 msgstr "Look på din site"
 
-#: dashboard/views.py:28
+#: dashboard/views.py:30
 msgid "Product link on your site"
 msgstr "Produktlänk på din site"
 
-#: dashboard/views.py:30
+#: dashboard/views.py:32
 msgid "Look on Apprl.com"
 msgstr "Look på Apprl.com"
 
-#: dashboard/views.py:32
+#: dashboard/views.py:34
 msgid "Shop on Apprl.com"
 msgstr "Shop på Apprl.com"
 
-#: dashboard/views.py:34
+#: dashboard/views.py:36
 msgid "Feed on Apprl.com"
 msgstr "Feed på Apprl.com"
 
-#: dashboard/views.py:36
+#: dashboard/views.py:38
 msgid "Your profile on Apprl.com"
 msgstr "Din profil på Apprl.com"
 
-#: dashboard/views.py:38
+#: dashboard/views.py:40
 msgid "Product page"
 msgstr "Produktsida"
 
@@ -568,7 +568,7 @@ msgid "Message"
 msgstr "Meddelande"
 
 #: importer/models.py:129 templates/dashboard/admin.html:159
-#: templates/dashboard/publisher.html:184
+#: templates/dashboard/publisher.html:202
 msgid "Date"
 msgstr "Datum"
 
@@ -1165,8 +1165,8 @@ msgstr "Order Värde"
 #: templates/advertiser/modal_accept.html:12
 #: templates/advertiser/modal_reject.html:12
 #: templates/advertiser/store_admin.html:81
-#: templates/dashboard/publisher.html:15 templates/dashboard/publisher.html:40
-#: templates/dashboard/publisher.html:189
+#: templates/dashboard/publisher.html:15 templates/dashboard/publisher.html:54
+#: templates/dashboard/publisher.html:207
 msgid "Commission"
 msgstr "Provision"
 
@@ -1204,9 +1204,9 @@ msgstr "Transaktioner"
 
 #: templates/advertiser/store_admin.html:15 templates/dashboard/admin.html:107
 #: templates/dashboard/admin.html.py:164 templates/dashboard/publisher.html:17
-#: templates/dashboard/publisher.html:47
-#: templates/dashboard/publisher.html:130
-#: templates/dashboard/publisher.html:188
+#: templates/dashboard/publisher.html:61
+#: templates/dashboard/publisher.html:148
+#: templates/dashboard/publisher.html:206
 msgid "Clicks"
 msgstr "Klick"
 
@@ -1829,7 +1829,7 @@ msgstr ""
 msgid "Apply and we'll get in touch with you:"
 msgstr "Ansök nedan så kontaktar vi dig:"
 
-#: templates/apparel/store.html:46 templates/dashboard/index.html:45
+#: templates/apparel/store.html:46 templates/dashboard/index.html:48
 msgid "APPLY"
 msgstr "ANSÖK"
 
@@ -2103,29 +2103,29 @@ msgstr ""
 msgid "Apprl click %(click_apprl)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:101 templates/dashboard/publisher.html:124
+#: templates/dashboard/admin.html:101 templates/dashboard/publisher.html:142
 msgid "Most clicked products"
 msgstr "Mest klickade produkter"
 
 #: templates/dashboard/admin.html:105 templates/dashboard/admin.html.py:131
-#: templates/dashboard/admin.html:160 templates/dashboard/publisher.html:128
-#: templates/dashboard/publisher.html:155
-#: templates/dashboard/publisher.html:185
+#: templates/dashboard/admin.html:160 templates/dashboard/publisher.html:146
+#: templates/dashboard/publisher.html:173
+#: templates/dashboard/publisher.html:203
 msgid "Product"
 msgstr "Produkt"
 
 #: templates/dashboard/admin.html:119 templates/dashboard/admin.html.py:145
-#: templates/dashboard/admin.html:193 templates/dashboard/publisher.html:142
-#: templates/dashboard/publisher.html:169
-#: templates/dashboard/publisher.html:218
+#: templates/dashboard/admin.html:193 templates/dashboard/publisher.html:160
+#: templates/dashboard/publisher.html:187
+#: templates/dashboard/publisher.html:236
 msgid "No sales yet."
 msgstr "Inga försäljningar än."
 
-#: templates/dashboard/admin.html:127 templates/dashboard/publisher.html:151
+#: templates/dashboard/admin.html:127 templates/dashboard/publisher.html:169
 msgid "Generated most sales"
 msgstr "Genererat flest köp"
 
-#: templates/dashboard/admin.html:133 templates/dashboard/publisher.html:157
+#: templates/dashboard/admin.html:133 templates/dashboard/publisher.html:175
 msgid "Sales"
 msgstr "Köp"
 
@@ -2137,7 +2137,7 @@ msgstr "Dina försäljningar"
 msgid "User"
 msgstr "Anv"
 
-#: templates/dashboard/admin.html:163 templates/dashboard/publisher.html:187
+#: templates/dashboard/admin.html:163 templates/dashboard/publisher.html:205
 msgid "From"
 msgstr "Från"
 
@@ -2149,7 +2149,7 @@ msgstr "Vår Comm"
 msgid "Publisher Comm"
 msgstr ""
 
-#: templates/dashboard/admin.html:178 templates/dashboard/publisher.html:200
+#: templates/dashboard/admin.html:178 templates/dashboard/publisher.html:218
 msgid "Referral"
 msgstr ""
 
@@ -2169,7 +2169,16 @@ msgstr ""
 msgid "APPRL FOR BLOGGERS & MEDIA"
 msgstr "APPRL FÖR BLOGGARE & MEDIER"
 
-#: templates/dashboard/index.html:18
+#: templates/dashboard/index.html:19
+#, python-format
+msgid ""
+"You have been invited by %(name)s. Therefore we will put €20 in your Apprl "
+"account to start with if you apply below."
+msgstr ""
+"Du har blivit inbjuden av %(name)s. Du kommer därför att ha 20 Euro på ditt "
+"konto redan från början om du ansöker nedan."
+
+#: templates/dashboard/index.html:21
 msgid ""
 "Apprl is an invitation-only digital service for fashion influencers, "
 "bloggers & magazines that helps you earn money on your blog/site through our "
@@ -2178,7 +2187,7 @@ msgstr ""
 "Apprl är en digital tjänst bloggare och onlinemedier som hjälper dig att "
 "tjäna pengar på din stil genom våra digitala verktyg."
 
-#: templates/dashboard/index.html:19
+#: templates/dashboard/index.html:22
 msgid "Apply for an invitation:"
 msgstr "Ansök om att bli Apprl partner här:"
 
@@ -2333,7 +2342,7 @@ msgid "You will be able to follow how much you’re making day by day."
 msgstr "På din statistik kan du följa hur mycket du tjänar dag för dag."
 
 #: templates/dashboard/modal_more_info.html:5
-#: templates/dashboard/publisher.html:83
+#: templates/dashboard/publisher.html:93
 msgid "How payments work"
 msgstr "Hur utbetalningar fungerar"
 
@@ -2384,78 +2393,89 @@ msgid "Let us know any questions on"
 msgstr "Vid frågor kontakta oss på"
 
 #: templates/dashboard/publisher.html:16
-#, fuzzy
-msgid "Referral Commission"
-msgstr "Provision"
+msgid "Referral commission"
+msgstr "Referral-provision"
 
-#: templates/dashboard/publisher.html:80
+#: templates/dashboard/publisher.html:90
 msgid "Your commission: "
 msgstr "Din provision: "
 
-#: templates/dashboard/publisher.html:81
+#: templates/dashboard/publisher.html:91
 msgid "Confirmed commission: "
 msgstr "Bekräftad provision: "
 
-#: templates/dashboard/publisher.html:82
+#: templates/dashboard/publisher.html:92
 msgid "Pending payment: "
 msgstr "Att utbetalas: "
 
-#: templates/dashboard/publisher.html:90
+#: templates/dashboard/publisher.html:100
 msgid "Show statistics for: "
 msgstr "Din statistik för: "
 
-#: templates/dashboard/publisher.html:98
+#: templates/dashboard/publisher.html:110
 #, python-format
 msgid "Your commission: %(month_commission)s %(currency)s"
 msgstr "Din provision: %(month_commission)s %(currency)s"
 
-#: templates/dashboard/publisher.html:99
+#: templates/dashboard/publisher.html:111
 #, python-format
 msgid "Clicks: %(month_clicks)s"
 msgstr "Klick: %(month_clicks)s"
 
-#: templates/dashboard/publisher.html:100
+#: templates/dashboard/publisher.html:112
 #, python-format
 msgid "Sales: %(month_sales)s"
 msgstr "Antal försäljningar: %(month_sales)s"
 
-#: templates/dashboard/publisher.html:101
+#: templates/dashboard/publisher.html:113
 #, python-format
 msgid "Conversion rate: %(conversion_rate)s%%"
 msgstr "Konverteringsgrad: %(conversion_rate)s%%"
 
-#: templates/dashboard/publisher.html:115 templates/dashboard/referral.html:9
-msgid "Earn money by inviting other bloggers"
-msgstr ""
+#: templates/dashboard/publisher.html:117
+#, python-format
+msgid "Referral commission: %(referral_commission)s %(currency)s"
+msgstr "Referral-provision: %(referral_commission)s %(currency)s"
 
-#: templates/dashboard/publisher.html:180
+#: templates/dashboard/publisher.html:118
+#, python-format
+msgid "Referrals: %(referral_sales)s"
+msgstr "Referrals: %(referral_sales)s"
+
+#: templates/dashboard/publisher.html:133 templates/dashboard/referral.html:9
+msgid "Earn money by inviting other bloggers"
+msgstr "Tjäna pengar på att bjuda in andra bloggare"
+
+#: templates/dashboard/publisher.html:198
 msgid "Your sales"
 msgstr "Dina försäljningar"
 
-#: templates/dashboard/publisher.html:199
+#: templates/dashboard/publisher.html:217
 msgid "Referral sale by"
 msgstr "Försäljning av"
 
-#: templates/dashboard/publisher.html:205
+#: templates/dashboard/publisher.html:223
 msgid "Welcome to APPRL"
 msgstr "Välkommen till APPRL"
 
-#: templates/dashboard/publisher_complete.html:8
+#: templates/dashboard/publisher_complete.html:11
+msgid "GET AN APPRL ACCOUNT"
+msgstr "SKAFFA ETT APPRL-KONTO"
+
+#: templates/dashboard/publisher_complete.html:11
 msgid "Thanks for your application!"
 msgstr "Tack för din ansökan!"
 
-#: templates/dashboard/publisher_complete.html:15
-#: templates/dashboard/publisher_complete.html:18
+#: templates/dashboard/publisher_complete.html:19
+msgid ""
+"Thank you for the application, your next step now is to create your Apprl "
+"account."
+msgstr ""
+"Tack för din ansökan, ditt nästa steg nu är att skapa ditt Apprl-konto."
+
+#: templates/dashboard/publisher_complete.html:22
 msgid "We will soon get in touch with you."
 msgstr "Vi hör av oss till dig inom kort."
-
-#: templates/dashboard/publisher_complete.html:15
-msgid "In the meantime, create your account:"
-msgstr "Så länge kan du skapa ditt konto på APPRL."
-
-#: templates/dashboard/publisher_complete.html:16
-msgid "CREATE YOUR ACCOUNT"
-msgstr "SKAPA KONTO"
 
 #: templates/dashboard/referral.html:10
 msgid ""
@@ -2504,7 +2524,7 @@ msgstr ""
 #: templates/dashboard/referral.html:34
 #, python-format
 msgid "Signed up %(date_joined)s, your referral period ends %(referral_end)s"
-msgstr ""
+msgstr "Gick med %(date_joined)s, din referral-period slutar %(referral_end)s"
 
 #: templates/dashboard/referral.html:36
 msgid "None so far."
@@ -3217,6 +3237,9 @@ msgstr "Kan inte aktivera kontot, aktiveringsnyckeln är ogiltig."
 #: templates/registration/fragments/registration.html:6
 msgid "or sign up with e-mail"
 msgstr "eller skapa ett konto med din e-postadress"
+
+#~ msgid "In the meantime, create your account:"
+#~ msgstr "Så länge kan du skapa ditt konto på APPRL."
 
 #~ msgid "Between 1 and 0"
 #~ msgstr "Mellan 1 och 0"
