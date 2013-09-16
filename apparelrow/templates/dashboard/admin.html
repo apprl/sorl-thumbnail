@@ -170,11 +170,21 @@
                     {% for sale in sales_table %}
                     <tr>
                         <td data-sort="{{ sale.created|date:"U" }}">{{ sale.created.date }}</td>
+
+                        {% if sale.is_referral_sale %}
+                        <td><a href="{{ sale.referral_user.get_absolute_url }}"><img src="{{ sale.referral_user.avatar_small }}"></a></td>
+                        <td><a href="{{ sale.referral_user.get_absolute_url }}">{{ sale.referral_user.display_name }}</a></td>
+                        <td>{{ sale.user }}</td>
+                        <td>{% trans "Referral" %}</td>
+                        <td class="center"></td>
+                        {% else %}
                         <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
                         <td><a href="{{ sale.product_link }}">{{ sale.product }}</a></td>
                         <td>{{ sale.user }}</td>
                         <td>{{ sale.link }}</td>
                         <td class="center">{{ sale.clicks }}</td>
+                        {% endif %}
+
                         <td data-sort="{{ sale.apprl_commission }}">{{ sale.apprl_commission }} {{ sale.currency }}</td>
                         <td data-sort="{{ sale.commission }}">{{ sale.commission }} {{ sale.currency }}</td>
                     </tr>

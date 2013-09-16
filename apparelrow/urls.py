@@ -19,6 +19,9 @@ urlpatterns = patterns('',
     url(r'^accounts/reset/$', 'django.contrib.auth.views.password_reset', name='auth_password_reset'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^a/', include('advertiser.urls')),
+
+    url(r'^i/(?P<code>[\w-]+)/$', 'apparelrow.dashboard.views.referral_signup', name='dashboard-referral-signup'),
+
     (r'^profile/', include('apparelrow.profile.urls')),
 
     (r'^comments/', include('django.contrib.comments.urls')),

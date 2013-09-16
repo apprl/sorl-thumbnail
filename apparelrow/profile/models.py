@@ -14,6 +14,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import Site
+from django.utils import timezone
 
 from sorl.thumbnail import get_thumbnail
 
@@ -78,6 +79,12 @@ class User(AbstractUser):
     # partner
     is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
     partner_group = models.ForeignKey('dashboard.Group', null=True, blank=True)
+
+    # referral partner
+    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Referral partner user'))
+    referral_partner_code = models.CharField(max_length=16, blank=True, null=True)
+    referral_partner_parent = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    referral_partner_parent_date = models.DateTimeField(null=True, blank=True)
 
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
@@ -268,6 +275,25 @@ class User(AbstractUser):
             return reverse('brand-following', args=[self.slug])
 
         return reverse('profile-following', args=[self.slug])
+
+    def is_referral_parent_valid(self):
+        if self.referral_partner_parent and self.referral_partner_parent_date and self.referral_partner_parent_date > timezone.now():
+            return True
+
+        return False
+
+    def get_referral_domain_url(self):
+        if self.referral_partner and self.referral_partner_code:
+            site_object = Site.objects.get_current()
+            return 'http://%s%s' % (site_object.domain, self.get_referral_url())
+
+        return None
+
+    def get_referral_url(self):
+        if self.referral_partner and self.referral_partner_code:
+            return reverse('dashboard-referral-signup', args=[self.referral_partner_code])
+
+        return None
 
     @models.permalink
     def get_absolute_url(self):

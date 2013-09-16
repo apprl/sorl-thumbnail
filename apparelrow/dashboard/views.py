@@ -2,17 +2,22 @@ import datetime
 import calendar
 import decimal
 
-from django.shortcuts import render
+from django.conf import settings
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.db.models import get_model, Sum, Count
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
+from apparelrow.dashboard.utils import get_referral_user_from_cookie
 from apparelrow.profile.tasks import mail_managers_task
 
 def map_placement(placement):
@@ -58,9 +63,14 @@ def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
         product_image = ''
         if product.product_image:
             product_image = get_thumbnail(ImageField().to_python(product.product_image), '50', crop='noop').url
+
+        product_link = None
+        if product.slug:
+            product_link = reverse('product-detail', args=[product.slug])
+
         most_clicked_products.append({
             'product_image': product_image,
-            'product_link': reverse('product-detail', args=[product.slug]),
+            'product_link': product_link,
             'product': '%s %s' % (product.brand_name, product.product_name) if product.product_name else _('Unknown'),
             'clicks': product.clicks
         })
@@ -77,6 +87,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
 
     sale_table = Sale.objects.raw("""
             SELECT ds.id, ds.created, ds.commission, ds.currency, ds.placement, ds.converted_commission, ds.user_id,
+                   ds.is_referral_sale, ds.referral_user_id, ds.is_promo,
                    ap.slug, ap.product_name, ap.product_image, ab.name AS brand_name, COUNT(sp.id) AS clicks, pu.name
             FROM dashboard_sale ds
             LEFT OUTER JOIN profile_user pu ON pu.id = ds.user_id
@@ -98,14 +109,31 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
         if sale.product_image:
             product_image = get_thumbnail(ImageField().to_python(sale.product_image), '50', crop='noop').url
 
+        product_link = None
+        if sale.slug:
+            product_link = reverse('product-detail', args=[sale.slug])
+
+        apprl_commission = sale.converted_commission if sale.user_id == 0 else sale.converted_commission - sale.commission
+        referral_user = None
+        if sale.is_referral_sale:
+            try:
+                referral_user = get_user_model().objects.get(pk=sale.referral_user_id)
+            except get_user_model().DoesNotExist:
+                pass
+
+            apprl_commission = decimal.Decimal('0')
+
         temp = {
+            'is_promo': sale.is_promo,
+            'is_referral_sale': sale.is_referral_sale,
+            'referral_user': referral_user,
             'link': map_placement(sale.placement),
             'commission': 0 if sale.user_id == 0 else sale.commission,
-            'apprl_commission': sale.converted_commission if sale.user_id == 0 else sale.converted_commission - sale.commission,
+            'apprl_commission': apprl_commission,
             'currency': sale.currency,
             'created': sale.created,
             'product_image': product_image,
-            'product_link': reverse('product-detail', args=[sale.slug]),
+            'product_link': product_link,
             'product': '%s %s' % (sale.brand_name, sale.product_name) if sale.product_name else _('Unknown'),
             'clicks': sale.clicks,
             'sales': 0,
@@ -249,27 +277,8 @@ def dashboard(request, year=None, month=None):
         end_date = start_date
         end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
 
-        # Commission per month
-        data_per_day = {}
-        for day in range(1, (end_date - start_date).days + 2):
-            data_per_day[start_date.replace(day=day)] = [0, 0]
-
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
-
-        for sale in Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
-                                .filter(created__range=(start_date_query, end_date_query)) \
-                                .filter(user_id=request.user.pk) \
-                                .order_by('created') \
-                                .values('created', 'commission'):
-            data_per_day[sale['created'].date()][0] += sale['commission']
-
-        # Clicks
-        clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
-                                                               .filter(user_id=request.user.pk) \
-                                                               .values_list('created', flat=True)
-        for click in clicks:
-            data_per_day[click.date()][1] += 1
 
         # Enumerate months
         dt1 = request.user.date_joined.date()
@@ -305,12 +314,35 @@ def dashboard(request, year=None, month=None):
         # Most clicked products
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, user_id=request.user.pk)
 
+        # Sales count
+        sales_count = 0
+        referral_sales_count = 0
+
+        # Sales and commission per day
+        data_per_day = {}
+        for day in range(1, (end_date - start_date).days + 2):
+            data_per_day[start_date.replace(day=day)] = [0, 0, 0]
+
+        for sale in sales:
+            if sale['is_referral_sale']:
+                data_per_day[sale['created'].date()][2] += sale['commission']
+                referral_sales_count += 1
+            else:
+                data_per_day[sale['created'].date()][0] += sale['commission']
+                sales_count += 1
+
+        # Clicks per day
+        clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
+                                                               .filter(user_id=request.user.pk) \
+                                                               .values_list('created', flat=True)
+        for click in clicks:
+            data_per_day[click.date()][1] += 1
+
         # Conversion rate
         conversion_rate = 0
         month_clicks = sum([x[1] for x in data_per_day.values()])
-        month_sales = len(sales)
         if month_clicks > 0:
-            conversion_rate = decimal.Decimal(month_sales) / decimal.Decimal(month_clicks)
+            conversion_rate = decimal.Decimal(sales_count) / decimal.Decimal(month_clicks)
             conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
 
         # Enable sales listing after 2013-06-01 00:00:00
@@ -322,7 +354,7 @@ def dashboard(request, year=None, month=None):
                                                             'pending_payment': pending_payment,
                                                             'month_commission': sum([x[0] for x in data_per_day.values()]),
                                                             'month_clicks': month_clicks,
-                                                            'month_sales': month_sales,
+                                                            'month_sales': sales_count,
                                                             'month_conversion_rate': conversion_rate,
                                                             'dates': dates,
                                                             'year': year,
@@ -331,6 +363,8 @@ def dashboard(request, year=None, month=None):
                                                             'is_after_june': is_after_june,
                                                             'most_sold_products': most_sold_products,
                                                             'most_clicked_products': most_clicked_products,
+                                                            'referral_sales': referral_sales_count,
+                                                            'referral_commission': sum([x[2] for x in data_per_day.values()]),
                                                             'currency': 'EUR'})
 
 
@@ -339,6 +373,34 @@ def dashboard(request, year=None, month=None):
 
 def dashboard_info(request):
     return render(request, 'dashboard/info.html')
+
+
+#
+# Referral
+#
+
+def referral(request):
+    if request.user.is_authenticated() and request.user.is_partner and request.user.referral_partner:
+        referrals = get_user_model().objects.filter(referral_partner_parent=request.user, is_partner=True)
+        return render(request, 'dashboard/referral.html', {'referrals': referrals})
+
+    return HttpResponseRedirect(reverse('index-publisher'))
+
+
+def referral_signup(request, code):
+    user_id = None
+    try:
+        user = get_user_model().objects.get(referral_partner_code=code)
+        user_id = user.pk
+    except:
+        pass
+
+    response = redirect(reverse('index-publisher'))
+    if user_id:
+        expires_datetime = timezone.now() + datetime.timedelta(days=15)
+        response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime, httponly=True)
+
+    return response
 
 
 #
@@ -380,15 +442,30 @@ def index(request):
         if form.is_valid():
             # Save name and blog URL on session, for Google Analytics
             request.session['index_complete_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
-            form.save()
+            instance = form.save(commit=False)
+            instance.referral_user = get_referral_user_from_cookie(request)
+            instance.save()
 
-            mail_managers_task.delay('New publisher signup: %s' % (form.cleaned_data['name'],),
-                    'Name: %s\nEmail: %s\nBlog: %s' % (form.cleaned_data['name'],
-                                                       form.cleaned_data['email'],
-                                                       form.cleaned_data['blog']))
+            if instance.referral_user:
+                site_object = Site.objects.get_current()
+                referral_user_url = 'http://%s%s' % (site_object.domain, instance.referral_user.get_absolute_url())
+
+                mail_managers_task.delay('New publisher signup by referral: %s' % (form.cleaned_data['name'],),
+                        'Name: %s\nEmail: %s\nBlog: %s\nReferral User: %s - %s\n' % (form.cleaned_data['name'],
+                                                           form.cleaned_data['email'],
+                                                           form.cleaned_data['blog'],
+                                                           instance.referral_user.display_name,
+                                                           referral_user_url))
+            else:
+                mail_managers_task.delay('New publisher signup: %s' % (form.cleaned_data['name'],),
+                        'Name: %s\nEmail: %s\nBlog: %s' % (form.cleaned_data['name'],
+                                                           form.cleaned_data['email'],
+                                                           form.cleaned_data['blog']))
 
             return HttpResponseRedirect(reverse('index-dashboard-complete'))
     else:
         form = SignupForm()
 
-    return render(request, 'dashboard/index.html', {'form': form})
+    referral_user = get_referral_user_from_cookie(request)
+
+    return render(request, 'dashboard/index.html', {'form': form, 'referral_user': referral_user})
