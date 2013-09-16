@@ -1040,13 +1040,30 @@ class LookComponent(models.Model):
     def style_search(self):
         return self._style(self._calculate_width(200, 149) / float(self.look.width))
 
-    @property
-    def style_percentage(self):
+    def style_percentage(self, width=None, height=None):
         s = []
-        s.append('width: %s%%;' % (self.width / float(self.look.width) * 100,))
-        s.append('height: %s%%;' % (self.height / float(self.look.height) * 100,))
-        s.append('top: %s%%;' % (self.top / float(self.look.height) * 100,))
-        s.append('left: %s%%;' % (self.left / float(self.look.width) * 100,))
+        if self.component_of == 'P':
+            if width is None:
+                width = self.width
+
+            if height is None:
+                height = self.height
+
+            canvas_width = self.width / float(self.look.width) * 100
+            canvas_height = self.height / float(self.look.height) * 100
+
+            real_width = self.width / float(width) * 100
+            real_height = self.height / float(height) * 100
+
+            s.append('width: %s%%;' % (real_width,))
+            s.append('height: %s%%;' % (real_height,))
+            s.append('top: %s%%;' % ((self.top / float(self.look.height) * 100) + canvas_height / 2 - real_height / 2,))
+            s.append('left: %s%%;' % ((self.left / float(self.look.width) * 100) + canvas_width / 2 - real_width / 2,))
+        else:
+            s.append('width: %s%%;' % (self.width / float(self.look.width) * 100,))
+            s.append('height: %s%%;' % (self.height / float(self.look.height) * 100,))
+            s.append('top: %s%%;' % (self.top / float(self.look.height) * 100,))
+            s.append('left: %s%%;' % (self.left / float(self.look.width) * 100,))
 
         if self.z_index:
             s.append('z-index: %s;' % (self.z_index,))

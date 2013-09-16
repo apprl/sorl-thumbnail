@@ -404,3 +404,8 @@ def internal_referral_url(url, sid):
         return '%s?sid=%s' % (url, sid)
 
     return url
+
+
+@register.simple_tag
+def look_component_style(component, width, height):
+    return component.style_percentage(width, height)
