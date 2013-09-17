@@ -268,7 +268,7 @@ def featured_activity(next_day=True):
         activity = Activity.objects.filter(verb=activity_verb,
                                            created__gte=since,
                                            active=True,
-                                           is_available=True
+                                           is_available=True,
                                            featured_date__isnull=True) \
                                    .exclude(user_id__in=exclude_uids) \
                                    .order_by('-user__is_partner', '-user__popularity')[:1]
