@@ -48,7 +48,7 @@ def get_profile_sidebar_info(request, profile):
 
     if profile.is_brand:
         gender = get_gender_from_cookie(request)
-        info['products'] = get_model('apparel', 'Product').valid_objects.filter(manufacturer=profile.brand_id, gender__in=['U', gender]).order_by('-date_added').count()
+        info['products'] = get_model('apparel', 'Product').valid_objects.filter(manufacturer=profile.brand_id).order_by('-date_added').count()
     else:
         info['products'] = get_model('apparel', 'Product').published_objects.filter(likes__user=profile, likes__active=True).count()
 
