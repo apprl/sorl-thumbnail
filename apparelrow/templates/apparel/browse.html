@@ -23,9 +23,9 @@
         <div class="body-header-col-full">
             <h1>{% trans "Shop" %}</h1>
             <ul class="shop-view list-inline">
-                <li><h2><a href="?view=all" data-view="all" class="selected">{% trans "Show all" %}</a></h2></li>
-                <li><h2><a href="?view=friends" data-view="friends">{% trans "My friends" %}</a></h2></li>
-                <li><h2><a href="?view=brands" data-view="brands">{% trans "My brands" %}</a></h2></li>
+                <li><h2><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Show all" %}</a></h2></li>
+                <li><h2><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></h2></li>
+                <li><h2><a href="?view=brands" data-view="brands"{% if request.GET.view == 'brands' %} class="selected"{% endif %}>{% trans "My brands" %}</a></h2></li>
             </ul>
         </div>
     </div>
