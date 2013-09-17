@@ -34,6 +34,8 @@ App.Views.FilterProductCategory = Backbone.View.extend({
             App.Events.trigger('product:category_selected', category_id);
             this.$el.find('span').text(category.get('name'));
         }
+
+        e.preventDefault();
     },
 
     open: function(e) {

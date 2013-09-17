@@ -31,6 +31,8 @@ App.Views.FilterProductColor = Backbone.View.extend({
         } else {
             this.$el.find('span').text(color.get('name'));
         }
+
+        e.preventDefault();
     },
 
     open: function(e) {

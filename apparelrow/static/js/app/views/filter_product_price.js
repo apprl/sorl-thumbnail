@@ -31,6 +31,8 @@ App.Views.FilterProductPrice = Backbone.View.extend({
         } else {
             this.$el.find('span').text(category.get('name'));
         }
+
+        e.preventDefault();
     },
 
     open: function(e) {

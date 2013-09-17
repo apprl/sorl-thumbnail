@@ -32,6 +32,8 @@ App.Views.FilterProductSubCategory = Backbone.View.extend({
             this.$el.find('span').text(category.get('name'));
             App.Events.trigger('product:facet', {type: 'category', value: category_id});
         }
+
+        e.preventDefault();
     },
 
     open: function(e) {
