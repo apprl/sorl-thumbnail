@@ -27,5 +27,5 @@ jQuery(document).ready(function() {
 
     // Initialize
     window.look_editor_router = new App.Routers.LookEditor();
-    Backbone.history.start({pushState: true});
+    Backbone.history.start({pushState: !!(window.history && window.history.pushState)});
 });
