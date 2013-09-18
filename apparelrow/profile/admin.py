@@ -49,6 +49,8 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
 
+    change_form_template = 'profile/admin_change_form.html'
+
     list_display = ('username', 'slug', 'name', 'first_name', 'last_name', 'email', 'is_brand', 'date_joined')
     list_filter = ('is_brand', 'is_partner', 'is_active', 'is_staff', 'is_superuser')
     raw_id_fields = ('brand', 'referral_partner_parent')

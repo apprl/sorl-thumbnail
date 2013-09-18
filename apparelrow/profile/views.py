@@ -5,8 +5,8 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
 from django.template import Context, Template
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib import messages
 from django.contrib import auth
 from django.contrib.auth import get_user_model
@@ -582,3 +582,19 @@ def facebook_connect(request):
         return HttpResponseRedirect('%s?error=1' % (_get_next(request),))
 
     return HttpResponseRedirect(_get_next(request))
+
+
+def login_as_user(request, user_id):
+    if request.user.is_authenticated() and request.user.is_superuser:
+        target_user = get_object_or_404(get_user_model(), pk=user_id)
+        if target_user and target_user.is_active:
+            for backend in auth.get_backends():
+                if target_user == backend.get_user(target_user.pk):
+                    target_user.backend = '%s.%s' % (backend.__module__, backend.__class__.__name__)
+                    break
+
+            auth.login(request, target_user)
+
+            return HttpResponseRedirect('/')
+
+    raise Http404

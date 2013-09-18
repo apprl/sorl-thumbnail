@@ -19,5 +19,6 @@ urlpatterns = patterns('',
     url(r'^(?:([^\/]+?)/)?looks/$', 'apparelrow.profile.views.looks', name='profile-looks'),
     url(r'^(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='profile-followers'),
     url(r'^(?:([^\/]+?)/)?following/$', 'apparelrow.profile.views.following', name='profile-following'),
+    url(r'^login/(?P<user_id>\d+)/$', 'apparelrow.profile.views.login_as_user', name='login-as-user'),
 )
 
