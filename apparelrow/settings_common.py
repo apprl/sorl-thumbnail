@@ -173,6 +173,7 @@ MIDDLEWARE_CLASSES = (
     'apparelrow.profile.middleware.ImpersonateMiddleware',
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',
+    'apparelrow.apparel.middleware.GenderMiddleware',
     'apparelrow.dashboard.middleware.ReferralMiddleware',
 )
 
@@ -437,6 +438,7 @@ APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '20'
 
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'
+APPAREL_MULTI_GENDER_COOKIE = 'multigender'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)

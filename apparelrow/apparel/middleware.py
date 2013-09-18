@@ -1,6 +1,7 @@
 import datetime
 import logging
 import uuid
+import json
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -14,6 +15,25 @@ REFERRAL_COOKIE_NAME = 'aid_cookie'
 REFERRAL_COOKIE_DAYS = 30
 
 logger = logging.getLogger('apparelrow.apparel.middleware')
+
+
+class GenderMiddleware(object):
+    def process_request(self, request):
+        cookie_value = request.COOKIES.get(settings.APPAREL_MULTI_GENDER_COOKIE, None)
+        try:
+            request.app_multi_gender = json.loads(cookie_value)
+        except:
+            request.app_multi_gender = {'feed': 'A', 'look': 'A', 'user': 'A', 'shop': 'A'}
+
+    def process_response(self, request, response):
+        if hasattr(request, 'app_multi_gender'):
+            try:
+                cookie_value = json.dumps(request.app_multi_gender, separators=(',', ':'))
+                response.set_cookie(settings.APPAREL_MULTI_GENDER_COOKIE, value=cookie_value, max_age=365 * 24 * 60 * 60)
+            except:
+                pass
+
+        return response
 
 
 class InternalReferralMiddleware(object):

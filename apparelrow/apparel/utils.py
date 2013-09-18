@@ -261,6 +261,15 @@ def get_gender_url(gender, named_url):
     return reverse(named_url)
 
 
+def select_from_multi_gender(request, gender_key, gender=None):
+    if gender is None:
+        gender = request.app_multi_gender.get(gender_key, 'A')
+    else:
+        request.app_multi_gender[gender_key] = gender
+
+    return gender
+
+
 def get_gender_from_cookie(request):
     """
     Get gender from cookie in a safe way.

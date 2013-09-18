@@ -380,6 +380,17 @@ def selected_reverse(request, url):
 
 
 @register.simple_tag
+def multi_gender_url(request, gender_key, named_url):
+    gender = request.app_multi_gender.get(gender_key, 'A')
+    if gender == 'M':
+        return reverse('%s-men' % (named_url,))
+    elif gender == 'W':
+        return reverse('%s-women' % (named_url,))
+
+    return reverse(named_url)
+
+
+@register.simple_tag
 def gender_url(gender, named_url):
     """
     Reverse named_url with correct gender.
