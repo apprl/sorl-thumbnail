@@ -134,12 +134,6 @@ urlpatterns = patterns('',
     url(r'^users/men/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-men'),
     url(r'^users/women/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-women'),
 
-    # Gender selection
-    url(r'^gender/change/$', 'apparelrow.apparel.views.change_gender', name='change-gender'),
-    url(r'^gender/men/$', 'apparelrow.apparel.views.gender', {'gender': 'M'}, name='gender-men'),
-    url(r'^gender/women/$', 'apparelrow.apparel.views.gender', {'gender': 'W'}, name='gender-women'),
-    url(r'^gender/(?P<view>[\w-]+)/$', 'apparelrow.apparel.views.gender', name='gender'),
-
     # Jobs
     url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
 
