@@ -8,6 +8,7 @@ class SaleAdmin(admin.ModelAdmin):
     list_display = ('id', 'affiliate', 'vendor', 'status', 'user_id', 'product_id', 'placement', 'cut', 'commission', 'currency', 'sale_date', 'adjusted', 'paid')
     list_filter = ('affiliate', 'vendor', 'status', 'placement', 'sale_date')
     readonly_fields = ('original_sale_id', 'affiliate', 'paid', 'modified', 'created')
+    raw_id_fields = ('referral_user',)
 
 admin.site.register(Sale, SaleAdmin)
 
